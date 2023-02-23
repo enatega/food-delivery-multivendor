@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "Enatega Multivendor Rider",
+    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "version": "1.1.15",
+    "slug": "food-delivery-rider-multivendor",
+    "privacy": "public",
+    "androidStatusBar": {
+      "backgroundColor": "#000"
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#6FCF97"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.enatega.multirider",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!.",
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ]
+      }
+    },
+    "android": {
+      "versionCode": 22,
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "permissions":[
+        "ACCESS_COARSE_LOCATION", 
+        "ACCESS_FINE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
+        }
+      },
+      "package": "com.enatega.multirider"
+    }
+  },
+  "hooks": {
+    "postPublish": [
+      {
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "ninjas-code",
+          "project": "enatega-multivendor-app",
+          "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
+        }
+      }
+    ]
+  }
+}
