@@ -1,0 +1,77 @@
+{
+  "name": "enatega",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.3.6",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "^5.0.0-alpha.48",
+    "@mui/material": "^5.0.1",
+    "@mui/styles": "^5.0.1",
+    "@react-google-maps/api": "^2.0.2",
+    "@sentry/react": "^6.16.1",
+    "@sentry/tracing": "^6.16.1",
+    "@types/react": "^17.0.24",
+    "amplitude-js": "^8.14.1",
+    "autosuggest-highlight": "^3.1.1",
+    "clsx": "^1.1.1",
+    "date-fns": "^2.0.0-beta.5",
+    "env-cmd": "^10.1.0",
+    "firebase": "^9.4.0",
+    "flatlist-react": "^1.5.0",
+    "graphql": "^15.4.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-geocode": "^0.2.2",
+    "react-google-login": "^5.2.2",
+    "react-mentions": "^4.3.1",
+    "react-otp-input": "^2.4.0",
+    "react-paypal-button-v2": "^2.6.3",
+    "react-phone-input-2": "^2.15.0",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "4.0.0",
+    "react-scroll": "^1.8.2",
+    "react-scrollspy": "^3.4.3",
+    "react-spinners": "^0.11.0",
+    "react-stripe-checkout": "^2.6.3",
+    "source-map-explorer": "^2.5.2",
+    "subscriptions-transport-ws": "^0.9.19",
+    "uuid": "^8.3.2",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "start": "PORT=3006 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "start:staging": "env-cmd -f .env.staging react-scripts start",
+    "start:dev": "PORT=3006 env-cmd -f .env.development react-scripts start",
+    "start:prod": "env-cmd -f .env.production react-scripts start",
+    "build:dev": "env-cmd -f .env.dev react-scripts build",
+    "build:prod": "env-cmd -f .env.production react-scripts build",
+    "build:staging": "env-cmd -f .env.staging react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
