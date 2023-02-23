@@ -73,8 +73,8 @@ function Currency(props) {
                 currencyCodeError === false
                   ? globalClasses.inputError
                   : currencyCodeError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}>
               {stripeCurrencies.map(val => (
                 <MenuItem
@@ -100,8 +100,8 @@ function Currency(props) {
                 currencySymbolError === false
                   ? globalClasses.inputError
                   : currencySymbolError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}>
               {stripeCurrencies.map(val => (
                 <MenuItem

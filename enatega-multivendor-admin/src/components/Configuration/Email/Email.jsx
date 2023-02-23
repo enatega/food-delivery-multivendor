@@ -87,8 +87,8 @@ function Email(props) {
                 emailError === false
                   ? globalClasses.inputError
                   : emailError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -106,8 +106,8 @@ function Email(props) {
                 emailNameError === false
                   ? globalClasses.inputError
                   : emailNameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -127,8 +127,8 @@ function Email(props) {
                 passwordError === false
                   ? globalClasses.inputError
                   : passwordError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

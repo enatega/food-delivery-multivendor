@@ -102,7 +102,7 @@ const VendorProfile = () => {
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async () => {
+  const uploadImageToCloudinary = async() => {
     if (imgUrl === '') return imgUrl
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
@@ -218,8 +218,8 @@ const VendorProfile = () => {
                       usernameError === false
                         ? globalClasses.inputError
                         : usernameError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                   <Input
@@ -234,8 +234,8 @@ const VendorProfile = () => {
                       passwordError === false
                         ? globalClasses.inputError
                         : passwordError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                 </Box>
@@ -252,8 +252,8 @@ const VendorProfile = () => {
                       nameError === false
                         ? globalClasses.inputError
                         : nameError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                   <Input
@@ -268,8 +268,8 @@ const VendorProfile = () => {
                       addressError === false
                         ? globalClasses.inputError
                         : addressError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                 </Box>
@@ -286,8 +286,8 @@ const VendorProfile = () => {
                       deliveryTimeError === false
                         ? globalClasses.inputError
                         : deliveryTimeError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                   <Input
@@ -302,8 +302,8 @@ const VendorProfile = () => {
                       minimumOrderError === false
                         ? globalClasses.inputError
                         : minimumOrderError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                 </Box>
@@ -320,8 +320,8 @@ const VendorProfile = () => {
                       salesTaxError === false
                         ? globalClasses.inputError
                         : salesTaxError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                   <Input
@@ -336,8 +336,8 @@ const VendorProfile = () => {
                       prefixError === false
                         ? globalClasses.inputError
                         : prefixError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                 </Box>

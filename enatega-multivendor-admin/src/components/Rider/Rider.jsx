@@ -181,8 +181,8 @@ function Rider(props) {
                 nameError === false
                   ? globalClasses.inputError
                   : nameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -200,8 +200,8 @@ function Rider(props) {
                 usernameError === false
                   ? globalClasses.inputError
                   : usernameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -221,8 +221,8 @@ function Rider(props) {
                 passwordError === false
                   ? globalClasses.inputError
                   : passwordError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -241,8 +241,8 @@ function Rider(props) {
                 phoneError === false
                   ? globalClasses.inputError
                   : phoneError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -261,8 +261,8 @@ function Rider(props) {
                 zoneError === false
                   ? globalClasses.inputError
                   : zoneError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}>
               {!zone && (
                 <MenuItem sx={{ color: 'black' }} value={''}>

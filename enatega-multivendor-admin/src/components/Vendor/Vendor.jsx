@@ -61,9 +61,9 @@ function Vendor(props) {
     const passwordError = props.vendor
       ? true
       : !validateFunc(
-          { password: formRef.current['input-password'].value },
-          'password'
-        )
+        { password: formRef.current['input-password'].value },
+        'password'
+      )
 
     emailErrorSetter(emailError)
     passErrorSetter(passwordError)
@@ -102,8 +102,8 @@ function Vendor(props) {
               emailError === false
                 ? globalClasses.inputError
                 : emailError === true
-                ? globalClasses.inputSuccess
-                : ''
+                  ? globalClasses.inputSuccess
+                  : ''
             ]}
             defaultValue={email}
             onBlur={event =>
@@ -119,8 +119,8 @@ function Vendor(props) {
                 passError === false
                   ? globalClasses.inputError
                   : passError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
               id="input-password"
               name="input-password"

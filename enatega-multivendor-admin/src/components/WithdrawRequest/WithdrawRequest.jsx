@@ -177,8 +177,8 @@ function WithdrawRequest(props) {
                 nameError === false
                   ? globalClasses.inputError
                   : nameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -196,8 +196,8 @@ function WithdrawRequest(props) {
                 usernameError === false
                   ? globalClasses.inputError
                   : usernameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -218,8 +218,8 @@ function WithdrawRequest(props) {
                 phoneError === false
                   ? globalClasses.inputError
                   : phoneError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -237,8 +237,8 @@ function WithdrawRequest(props) {
                 passwordError === false
                   ? globalClasses.inputError
                   : passwordError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -256,8 +256,8 @@ function WithdrawRequest(props) {
                 zoneError === false
                   ? globalClasses.inputError
                   : zoneError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}>
               {!zone && (
                 <MenuItem style={{ color: 'black' }} value={''}>

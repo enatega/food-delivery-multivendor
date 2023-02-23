@@ -86,8 +86,8 @@ const Notifications = props => {
                           titleError === false
                             ? globalClasses.inputError
                             : titleError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                       <Input
@@ -104,8 +104,8 @@ const Notifications = props => {
                           bodyError === false
                             ? globalClasses.inputError
                             : bodyError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>

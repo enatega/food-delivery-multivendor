@@ -119,8 +119,8 @@ function Category(props) {
                 titleError === false
                   ? globalClasses.inputError
                   : titleError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -138,8 +138,8 @@ function Category(props) {
                 discountError === false
                   ? globalClasses.inputError
                   : discountError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

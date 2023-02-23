@@ -22,14 +22,14 @@ function Option(props) {
     props.option
       ? [{ ...props.option, titleError: false, priceError: false }]
       : [
-          {
-            title: '',
-            description: '',
-            price: 0,
-            titleError: false,
-            priceError: false
-          }
-        ]
+        {
+          title: '',
+          description: '',
+          price: 0,
+          titleError: false,
+          priceError: false
+        }
+      ]
   )
   const [mainError, mainErrorSetter] = useState('')
   const [success, successSetter] = useState('')
@@ -220,32 +220,32 @@ function Option(props) {
                 if (validate()) {
                   props.option
                     ? mutate({
-                        variables: {
-                          optionInput: {
-                            options: {
-                              _id: props.option._id,
-                              title: option[0].title,
-                              description: option[0].description,
-                              price: +option[0].price
-                            },
-                            restaurant: restaurantId
-                          }
+                      variables: {
+                        optionInput: {
+                          options: {
+                            _id: props.option._id,
+                            title: option[0].title,
+                            description: option[0].description,
+                            price: +option[0].price
+                          },
+                          restaurant: restaurantId
                         }
-                      })
+                      }
+                    })
                     : mutate({
-                        variables: {
-                          optionInput: {
-                            options: option.map(
-                              ({ title, description, price }) => ({
-                                title,
-                                description,
-                                price: +price
-                              })
-                            ),
-                            restaurant: restaurantId
-                          }
+                      variables: {
+                        optionInput: {
+                          options: option.map(
+                            ({ title, description, price }) => ({
+                              title,
+                              description,
+                              price: +price
+                            })
+                          ),
+                          restaurant: restaurantId
                         }
-                      })
+                      }
+                    })
                 }
               }}>
               SAVE

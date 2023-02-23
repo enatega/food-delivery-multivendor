@@ -106,8 +106,8 @@ function Tipping(props) {
                 tip1Error === false
                   ? globalClasses.inputError
                   : tip1Error === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -126,8 +126,8 @@ function Tipping(props) {
                 tip2Error === false
                   ? globalClasses.inputError
                   : tip2Error === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -148,8 +148,8 @@ function Tipping(props) {
                 tip3Error === false
                   ? globalClasses.inputError
                   : tip3Error === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

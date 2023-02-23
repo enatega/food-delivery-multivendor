@@ -64,28 +64,28 @@ function Addon(props) {
   const [addon, addonSetter] = useState(
     props.addon
       ? [
-          {
-            ...props.addon,
-            options: props.addon.options,
-            titleError: false,
-            optionsError: false,
-            quantityMinimumError: false,
-            quantityMaximumError: false
-          }
-        ]
+        {
+          ...props.addon,
+          options: props.addon.options,
+          titleError: false,
+          optionsError: false,
+          quantityMinimumError: false,
+          quantityMaximumError: false
+        }
+      ]
       : [
-          {
-            title: '',
-            description: '',
-            quantityMinimum: 0,
-            quantityMaximum: 1,
-            options: [],
-            titleError: false,
-            optionsError: false,
-            quantityMinimumError: false,
-            quantityMaximumError: false
-          }
-        ]
+        {
+          title: '',
+          description: '',
+          quantityMinimum: 0,
+          quantityMaximum: 1,
+          options: [],
+          titleError: false,
+          optionsError: false,
+          quantityMinimumError: false,
+          quantityMaximumError: false
+        }
+      ]
   )
   const [modal, modalSetter] = useState(false)
   const [addonIndex, addonIndexSetter] = useState(0)
@@ -367,42 +367,42 @@ function Addon(props) {
               if (validate()) {
                 props.addon
                   ? mutate({
-                      variables: {
-                        addonInput: {
-                          addons: {
-                            _id: props.addon._id,
-                            title: addon[0].title,
-                            description: addon[0].description,
-                            options: addon[0].options,
-                            quantityMinimum: +addon[0].quantityMinimum,
-                            quantityMaximum: +addon[0].quantityMaximum
-                          },
-                          restaurant: restaurantId
-                        }
+                    variables: {
+                      addonInput: {
+                        addons: {
+                          _id: props.addon._id,
+                          title: addon[0].title,
+                          description: addon[0].description,
+                          options: addon[0].options,
+                          quantityMinimum: +addon[0].quantityMinimum,
+                          quantityMaximum: +addon[0].quantityMaximum
+                        },
+                        restaurant: restaurantId
                       }
-                    })
+                    }
+                  })
                   : mutate({
-                      variables: {
-                        addonInput: {
-                          addons: addon.map(
-                            ({
-                              title,
-                              description,
-                              options,
-                              quantityMinimum,
-                              quantityMaximum
-                            }) => ({
-                              title,
-                              description,
-                              options,
-                              quantityMinimum: +quantityMinimum,
-                              quantityMaximum: +quantityMaximum
-                            })
-                          ),
-                          restaurant: restaurantId
-                        }
+                    variables: {
+                      addonInput: {
+                        addons: addon.map(
+                          ({
+                            title,
+                            description,
+                            options,
+                            quantityMinimum,
+                            quantityMaximum
+                          }) => ({
+                            title,
+                            description,
+                            options,
+                            quantityMinimum: +quantityMinimum,
+                            quantityMaximum: +quantityMaximum
+                          })
+                        ),
+                        restaurant: restaurantId
                       }
-                    })
+                    }
+                  })
               }
             }}>
             SAVE

@@ -68,8 +68,8 @@ function Stripe(props) {
                 publishError === false
                   ? globalClasses.inputError
                   : publishError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -92,8 +92,8 @@ function Stripe(props) {
                 secretError === false
                   ? globalClasses.inputError
                   : secretError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

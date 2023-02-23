@@ -113,7 +113,7 @@ const Login = props => {
   }
   const [mutate] = useMutation(LOGIN, { onError, onCompleted })
 
-  const loginFunc = async () => {
+  const loginFunc = async() => {
     if (validate()) {
       mutate({ variables: { ...stateData } })
     }
@@ -197,8 +197,8 @@ const Login = props => {
                       stateData.emailError === false
                         ? globalClasses.inputError
                         : stateData.emailError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                 </Box>
@@ -224,8 +224,8 @@ const Login = props => {
                       stateData.passwordError === false
                         ? globalClasses.inputError
                         : stateData.passwordError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                          ? globalClasses.inputSuccess
+                          : ''
                     ]}
                   />
                 </Box>

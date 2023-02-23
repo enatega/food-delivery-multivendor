@@ -106,8 +106,8 @@ const ResetPassword = props => {
                   passwordError === false
                     ? globalClasses.inputError
                     : passwordError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                      ? globalClasses.inputSuccess
+                      : ''
                 ]}
               />
             </Box>
@@ -129,8 +129,8 @@ const ResetPassword = props => {
                   confirmPasswordError === false
                     ? globalClasses.inputError
                     : confirmPasswordError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                      ? globalClasses.inputSuccess
+                      : ''
                 ]}
               />
             </Box>

@@ -210,12 +210,12 @@ const Food = props => {
     searchQuery.length < 3
       ? foodsList(data && data.restaurant.categories)
       : foodsList(data && data.restaurant.categories).filter(food => {
-          return (
-            food.title.toLowerCase().search(regex) > -1 ||
+        return (
+          food.title.toLowerCase().search(regex) > -1 ||
             food.description.toLowerCase().search(regex) > -1 ||
             food.category.toLowerCase().search(regex) > -1
-          )
-        })
+        )
+      })
   const globalClasses = useGlobalStyles()
 
   return (

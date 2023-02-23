@@ -74,8 +74,8 @@ function Paypal(props) {
                 clientIdError === false
                   ? globalClasses.inputError
                   : clientIdError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -99,8 +99,8 @@ function Paypal(props) {
                 clientSecretError === false
                   ? globalClasses.inputError
                   : clientSecretError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

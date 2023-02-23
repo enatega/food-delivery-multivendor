@@ -92,7 +92,7 @@ const CreateRestaurant = props => {
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async () => {
+  const uploadImageToCloudinary = async() => {
     if (imgUrl === '') return imgUrl
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
@@ -227,8 +227,8 @@ const CreateRestaurant = props => {
                 usernameError === false
                   ? globalClasses.inputError
                   : usernameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -243,8 +243,8 @@ const CreateRestaurant = props => {
                 passwordError === false
                   ? globalClasses.inputError
                   : passwordError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -261,8 +261,8 @@ const CreateRestaurant = props => {
                 nameError === false
                   ? globalClasses.inputError
                   : nameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -277,8 +277,8 @@ const CreateRestaurant = props => {
                 addressError === false
                   ? globalClasses.inputError
                   : addressError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -294,8 +294,8 @@ const CreateRestaurant = props => {
                 deliveryTimeError === false
                   ? globalClasses.inputError
                   : deliveryTimeError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -309,8 +309,8 @@ const CreateRestaurant = props => {
                 minimumOrderError === false
                   ? globalClasses.inputError
                   : minimumOrderError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
@@ -326,8 +326,8 @@ const CreateRestaurant = props => {
                 salesTaxError === false
                   ? globalClasses.inputError
                   : salesTaxError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

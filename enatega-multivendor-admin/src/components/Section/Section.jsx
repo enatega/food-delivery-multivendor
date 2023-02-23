@@ -150,8 +150,8 @@ function Section(props) {
                 nameError === false
                   ? globalClasses.inputError
                   : nameError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

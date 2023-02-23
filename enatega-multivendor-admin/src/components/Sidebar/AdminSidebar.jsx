@@ -139,7 +139,7 @@ function AdminSidebar(props) {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              background: `linear-gradient(180deg, #90EA93 50%, transparent 50%)`,
+              background: 'linear-gradient(180deg, #90EA93 50%, transparent 50%)',
               borderRight: 'none'
             }
           }}

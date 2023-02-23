@@ -94,25 +94,25 @@ function Food(props) {
   const [variation, variationSetter] = useState(
     props.food
       ? props.food.variations.map(({ title, price, discounted, addons }) => {
-          return {
-            title,
-            price,
-            discounted,
-            addons,
-            titleError: null,
-            priceError: null
-          }
-        })
+        return {
+          title,
+          price,
+          discounted,
+          addons,
+          titleError: null,
+          priceError: null
+        }
+      })
       : [
-          {
-            title: '',
-            price: '',
-            discounted: '',
-            addons: [],
-            titleError: null,
-            priceError: null
-          }
-        ]
+        {
+          title: '',
+          price: '',
+          discounted: '',
+          addons: [],
+          titleError: null,
+          priceError: null
+        }
+      ]
   )
   const onBlur = (setter, field, state) => {
     setter(!validateFunc({ [field]: state }, field))
@@ -196,8 +196,8 @@ function Food(props) {
       variationItem.titleError = error
         ? !error
         : variations.length > 1
-        ? !validateFunc({ title: variationItem.title }, 'title')
-        : true
+          ? !validateFunc({ title: variationItem.title }, 'title')
+          : true
 
       return variationItem
     })
@@ -279,7 +279,7 @@ function Food(props) {
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async () => {
+  const uploadImageToCloudinary = async() => {
     if (imgMenu === '') return imgMenu
     if (props.food && props.food.image === imgMenu) return imgMenu
 
@@ -335,8 +335,8 @@ function Food(props) {
                 titleError === false
                   ? globalClasses.inputError
                   : titleError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -370,8 +370,8 @@ function Food(props) {
                   categoryError === false
                     ? globalClasses.inputError
                     : categoryError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                      ? globalClasses.inputSuccess
+                      : ''
                 ]}>
                 {!category && (
                   <MenuItem value="" style={{ color: 'black' }}>
@@ -449,8 +449,8 @@ function Food(props) {
                             variationItem.titleError === false
                               ? globalClasses.inputError
                               : variationItem.titleError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                                ? globalClasses.inputSuccess
+                                : ''
                           ]}
                         />
                         <Typography sx={{ fontSize: 10, fontWeight: 'bold' }}>
@@ -479,8 +479,8 @@ function Food(props) {
                           variationItem.priceError === false
                             ? globalClasses.inputError
                             : variationItem.priceError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                       <Input

@@ -14,9 +14,7 @@ function Currency(props) {
   const [deliveryRate, setDeliveryRate] = useState(props.deliveryRate || 0)
 
   const [deliveryRateError, setDeliveryRateError] = useState(null)
-  const [mutate, { loading }] = useMutation(
-    SAVE_DELIVERY_RATE_CONFIGURATION
-  )
+  const [mutate, { loading }] = useMutation(SAVE_DELIVERY_RATE_CONFIGURATION)
 
   const validateInput = () => {
     const deliveryRateErrors = !validateFunc(
@@ -60,8 +58,8 @@ function Currency(props) {
                 deliveryRateError === false
                   ? globalClasses.inputError
                   : deliveryRateError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>

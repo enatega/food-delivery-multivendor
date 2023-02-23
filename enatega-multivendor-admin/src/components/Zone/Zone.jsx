@@ -165,8 +165,8 @@ const Zone = props => {
                 titleError === false
                   ? globalClasses.inputError
                   : titleError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
             <Input
@@ -183,8 +183,8 @@ const Zone = props => {
                 descriptionError === false
                   ? globalClasses.inputError
                   : descriptionError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                    ? globalClasses.inputSuccess
+                    : ''
               ]}
             />
           </Box>
