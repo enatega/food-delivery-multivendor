@@ -1,0 +1,38 @@
+/*****************************
+* environment.js
+* path: '/environment.js' (root of your project)
+******************************/
+
+import Constants from 'expo-constants';
+
+const ENV = {
+    development: {
+        GRAPHQL_URL:'' ,
+        SERVER_URL: '', // put / at the end of server url
+        IOS_CLIENT_ID_GOOGLE: "",
+        ANDROID_CLIENT_ID_GOOGLE: "",
+        AMPLITUDE_API_KEY: "",
+    },
+    production: {
+       GRAPHQL_URL:'' ,
+        SERVER_URL: '', // put / at the end of server url
+        IOS_CLIENT_ID_GOOGLE: "",
+        ANDROID_CLIENT_ID_GOOGLE: "",
+        AMPLITUDE_API_KEY: "",
+    }
+};
+
+const getEnvVars = (env = Constants.manifest.releaseChannel) => {
+    // What is __DEV__ ?
+    // This variable is set to true when react-native is running in Dev mode.
+    // __DEV__ is true when run locally, but false when published.
+    if (__DEV__) {
+        return ENV.development;
+    } else if (env === 'production') {
+        return ENV.production;
+    } else {
+        return ENV.development;
+    }
+};
+
+export default getEnvVars;
