@@ -1,0 +1,35 @@
+{
+    "build": {
+      "development":{
+        "developmentClient": false,
+        "releaseChannel": "development",
+        "distribution": "internal"
+      },
+      "staging": {
+        "developmentClient": false,
+        "releaseChannel": "staging",
+        "distribution": "internal"
+      },
+      "production": {
+        "developmentClient": false,
+        "releaseChannel": "production"
+      }
+    },
+    "submit": {
+      "production": {
+        "android": {
+          "serviceAccountKeyPath": "./google-service-account.json",
+          "track": "production"
+        },
+        "ios": {
+          "appleId": "sharan.gohar@icloud.com",
+          "ascAppId": "1526672537",
+          "appleTeamId": "GDFK7MVY6P"
+        }
+      }
+    },
+    "cli": {
+      "version": ">= 0.43.0"
+    }
+  }
+  

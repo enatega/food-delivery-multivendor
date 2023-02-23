@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Enatega Multivendor Restaurant",
+    "slug": "enatega-multivendor-restaurant",
+    "version": "1.0.20",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#6FCF97"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "multivendor.enatega.restaurant",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio", "remote-notification"]
+      }
+    },
+    "android": {
+      "versionCode": 26,
+      "useNextNotificationsApi": true,
+      "package": "multivendor.enatega.restaurant",
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "ninjas-code",
+            "project": "enatega-multivendor-app",
+            "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
+          }
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
