@@ -1,0 +1,16 @@
+export const GOOGLE_MAPS_KEY = process.env.REACT_APP_GOOGLE_API_KEY
+export const FIREBASE_KEY = process.env.REACT_APP_FIREBASE_KEY
+export const APP_ID = process.env.REACT_APP_APP_ID
+export const DB_URL = process.env.REACT_APP_DB_URL
+export const AUTH_DOMAIN = process.env.REACT_APP_AUTH_DOMAIN
+export const STORAGE_BUCKET = process.env.REACT_APP_STORAGE_BUCKET
+export const MSG_SENDER_ID = process.env.REACT_APP_MSG_SENDER_ID
+export const MEASUREMENT_ID = process.env.REACT_APP_MEASUREMENT_ID
+export const PROJECT_ID = process.env.REACT_APP_PROJECT_ID
+export const SERVER_URL = process.env.REACT_APP_SERVER_URL
+export const WS_SERVER_URL = process.env.REACT_APP_WS_SERVER_URL
+export const PUBLIC_VAPID_KEY = process.env.REACT_APP_PUBLIC_VAPID_KEY
+export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN
+export const CLOUDINARY_UPLOAD_URL = process.env.REACT_APP_CLOUDINARY_UPLOAD_URL
+export const CLOUDINARY_FOOD = process.env.REACT_APP_CLOUDINARY_FOOD
+export const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY

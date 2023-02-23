@@ -1,0 +1,94 @@
+{
+  "name": "enatega-multivendor",
+  "version": "2.0.0",
+  "description": "Enatega MultiVendor dashboard",
+  "main": "index.js",
+  "homepage": "https://multivendor-admin.ninjascode.com/",
+  "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint:fix": "eslint . --ext .js,.jsx --fix",
+    "format": "prettier --write '**/*.{js,jsx}'",
+    "start:staging": "env-cmd -f .env.staging react-scripts start",
+    "start:dev": "SET PORT=3000 env-cmd -f .env.development react-scripts start",
+    "start:prod": "env-cmd -f .env.production react-scripts start",
+    "build:dev": "env-cmd -f .env.dev react-scripts build",
+    "build:prod": "env-cmd -f .env.production react-scripts build",
+    "build:staging": "env-cmd -f .env.staging react-scripts build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run format",
+      "npm run lint:fix"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "dependencies": {
+    "@apollo/client": "^3.5.8",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.8.3",
+    "@mui/material": "^5.8.3",
+    "@mui/styles": "^5.8.3",
+    "@react-google-maps/api": "^1.9.7",
+    "@sentry/react": "^6.16.1",
+    "@sentry/tracing": "^6.16.1",
+    "@wojtekmaj/react-timerange-picker": "^3.0.0",
+    "apollo-boost": "^0.4.9",
+    "chart.js": "^3.6.0",
+    "env-cmd": "^10.1.0",
+    "firebase": "^9.4.0",
+    "graphql": "^14.7.0",
+    "i18next": "^15.1.3",
+    "moment": "2.24.0",
+    "node-sass": "4.14.0",
+    "nouislider": "13.1.1",
+    "react": "^18.1.0",
+    "react-bootstrap-typeahead": "^3.4.5",
+    "react-chartjs-2": "^4.0.0",
+    "react-data-table-component": "^6.9.3",
+    "react-datetime": "2.16.3",
+    "react-dom": "^18.1.0",
+    "react-i18next": "^10.10.0",
+    "react-loader-spinner": "^3.1.14",
+    "react-router-dom": "5.1.2",
+    "react-scripts": "2.1.8",
+    "reactstrap": "^7.1.0",
+    "source-map-explorer": "^2.5.2",
+    "styled-components": "^5.1.1",
+    "subscriptions-transport-ws": "^0.11.0",
+    "validate.js": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/googlemaps": "3.30.18",
+    "@types/markerclustererplus": "2.1.33",
+    "@types/react": "16.8.7",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.7",
+    "prettier": "2.0.5",
+    "prettier-config-standard": "^1.0.1",
+    "typescript": "3.3.3333"
+  }
+}
