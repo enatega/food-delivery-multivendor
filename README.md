@@ -113,9 +113,13 @@ NOTE: Email provider has been only been tested for gmail accounts
 | :-----------------------: | :-----------------------: | :-----------------------: |
 | ![](./assets/rider1.jpeg) | ![](./assets/rider2.jpeg) | ![](./assets/rider3.jpeg) |
 
-|        Customer Login        |    Customer Menu Details     |      Restaurants Items       |
+|    Customer Order Detail     |    Customer Menu Details     |      Customer Location       |
 | :--------------------------: | :--------------------------: | :--------------------------: |
 | ![](./assets/customer1.jpeg) | ![](./assets/customer2.jpeg) | ![](./assets/customer3.jpeg) |
+
+|       Restaurant Orders       |        Restaurant Menu         |      Restaurant Delivered      |
+| :---------------------------: | :----------------------------: | :----------------------------: |
+| ![](./assets/restaurant1.png) | ![](./assets/restaurant2.jpeg) | ![](./assets/restaurant3.jpeg) |
 
 ## High Level Architecture
 
