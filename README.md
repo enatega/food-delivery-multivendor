@@ -105,9 +105,13 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## Screenshots:
 
-|   Admin Vendor Overview   | Admin Restaurant Overview | Admin Restaurant Overview |
-| :-----------------------: | :-----------------------: | :-----------------------: |
-| ![](./assets/admin1.jpeg) | ![](./assets/admin2.jpeg) | ![](./assets/admin3.jpeg) |
+|  Admin Vendor Overview   |   Admin Rider Overview   | Admin Restaurant Overview |
+| :----------------------: | :----------------------: | :-----------------------: |
+| ![](./assets/admin1.png) | ![](./assets/admin2.png) | ![](./assets/admin3.png)  |
+
+|     Customer Web Homepage      |    Customer Web Restaurants    |      Customer Web Profile      |
+| :----------------------------: | :----------------------------: | :----------------------------: |
+| ![](./assets/customerWeb1.png) | ![](./assets/customerWeb2.png) | ![](./assets/customerWeb3.png) |
 
 |        Rider Menu         |    Rider Order Details    |    Rider Items Details    |
 | :-----------------------: | :-----------------------: | :-----------------------: |
