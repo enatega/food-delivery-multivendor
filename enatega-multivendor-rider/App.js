@@ -32,6 +32,7 @@ LogBox.ignoreLogs([
   'Constants.deviceYearClass'
 ]) // Ignore log notification by message
 LogBox.ignoreAllLogs() // Ignore all log notifications
+
 const client = setupApolloClient()
 const { SENTRY_DSN } = getEnvVars()
 Sentry.init({
@@ -52,9 +53,9 @@ export default function App() {
       await SplashScreen.preventAutoHideAsync()
       await i18n.initAsync()
       await Font.loadAsync({
-        MuseoSans300: require('./assets/font/MuseoSans/MuseoSans300.ttf'),
-        MuseoSans500: require('./assets/font/MuseoSans/MuseoSans500.ttf'),
-        MuseoSans700: require('./assets/font/MuseoSans/MuseoSans700.ttf')
+        MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
+        MuseoSans500: require('./src/assets/font/MuseoSans//MuseoSans500.ttf'),
+        MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
       const token = await AsyncStorage.getItem('rider-token')
       if (token) setToken(token)
