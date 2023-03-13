@@ -3,6 +3,7 @@ import Svg, { Path, G, Circle } from 'react-native-svg'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 
+
 function LocationPermission(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]

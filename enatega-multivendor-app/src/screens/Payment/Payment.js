@@ -42,8 +42,11 @@ function Payment(props) {
       title: i18n.t('titlePayment')
     })
   }, [props.navigation])
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_PAYMENT)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_PAYMENT)
+    }
+    Track()
   }, [])
   function onSelectPayment(paymentMethod) {
     props.navigation.navigate('Cart', { coupon, paymentMethod })

@@ -187,8 +187,11 @@ function Cart(props) {
     if (!data) return
     didFocus()
   }, [data])
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_CART)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_CART)
+    }
+    Track()
   }, [])
   useEffect(() => {
     if (cart && cartCount > 0) {

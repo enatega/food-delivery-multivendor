@@ -74,8 +74,11 @@ function Settings(props) {
     onError,
     refetchQueries: [{ query: PROFILE }]
   })
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_SETTINGS)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_SETTINGS)
+    }
+    Track()
   }, [])
   useEffect(() => {
     if (Platform.OS === 'android') {

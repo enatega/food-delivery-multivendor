@@ -8,6 +8,7 @@ import { login } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import * as Google from 'expo-auth-session/providers/google'
+import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from 'expo-auth-session'
 import { useMutation } from '@apollo/client'
 import * as AppleAuthentication from 'expo-apple-authentication'
@@ -26,6 +27,8 @@ const {
 const LOGIN = gql`
   ${login}
 `
+WebBrowser.maybeCompleteAuthSession();
+
 export const useCreateAccount = () => {
   const navigation = useNavigation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
@@ -35,19 +38,18 @@ export const useCreateAccount = () => {
   const { setTokenAsync } = useContext(AuthContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
   const [
-    googleRequest,
+   googleRequest,
     googleResponse,
     googlePromptAsync
-  ] = Google.useAuthRequest({
+   ] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID_GOOGLE,
-    iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
-    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-    androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
-    redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
-    scopes: ['profile', 'email']
+     iosClientId: IOS_CLIENT_ID_GOOGLE,
+      iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
+     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+     androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
+     redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
+     scopes: ['profile', 'email'],
   })
 
   const navigateToLogin = () => {
@@ -60,10 +62,10 @@ export const useCreateAccount = () => {
     navigation.navigate('PhoneNumber')
   }
   const navigateToMain = () => {
-    navigation.navigate({
-      name: 'Main',
-      merge: true
-    })
+     navigation.navigate({
+       name: 'Main',
+       merge: true
+     })
   }
 
   async function mutateLogin(user) {
@@ -149,7 +151,7 @@ export const useCreateAccount = () => {
         })
       }
       setTokenAsync(data.login.token)
-      // eslint-disable-next-line no-unused-expressions
+      //eslint-disable-next-line no-unused-expressions
       data.login?.phone === '' ? navigateToPhone() : navigateToMain()
     } catch (e) {
       console.log(e)
