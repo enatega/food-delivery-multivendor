@@ -116,7 +116,7 @@ function TabNavigator() {
         listeners={({ navigation }) => ({
           tabPress: e => {
             e.preventDefault()
-            console.log('tabPress')
+            // console.log('tabPress')
             navigation.openDrawer()
           }
         })}
