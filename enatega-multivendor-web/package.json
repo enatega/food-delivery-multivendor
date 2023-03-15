@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@amplitude/analytics-react-native": "^1.1.1",
     "@apollo/client": "^3.3.6",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@expo/webpack-config": "^18.0.1",
     "@mui/icons-material": "^5.0.1",
     "@mui/lab": "^5.0.0-alpha.48",
     "@mui/material": "^5.0.1",
@@ -16,14 +18,17 @@
     "@types/react": "^17.0.24",
     "amplitude-js": "^8.14.1",
     "autosuggest-highlight": "^3.1.1",
+    "babel-loader": "^8.1.0",
     "clsx": "^1.1.1",
     "date-fns": "^2.0.0-beta.5",
     "env-cmd": "^10.1.0",
     "firebase": "^9.4.0",
     "flatlist-react": "^1.5.0",
     "graphql": "^15.4.0",
+    "husky": "^8.0.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "query-string": "^8.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-geocode": "^0.2.2",
@@ -41,11 +46,13 @@
     "source-map-explorer": "^2.5.2",
     "subscriptions-transport-ws": "^0.9.19",
     "uuid": "^8.3.2",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "webpack": "^4.44.2",
+    "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "PORT=3006 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -62,16 +69,9 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
 }
