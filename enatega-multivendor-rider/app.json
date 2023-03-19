@@ -41,8 +41,8 @@
       "versionCode": 22,
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
-      "permissions":[
-        "ACCESS_COARSE_LOCATION", 
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ],
       "config": {
@@ -51,6 +51,11 @@
         }
       },
       "package": "com.enatega.multirider"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d2459419-b373-4ff5-a34a-431baef88d12"
+      }
     }
   },
   "hooks": {
