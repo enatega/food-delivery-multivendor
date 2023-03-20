@@ -80,12 +80,7 @@
     "@types/googlemaps": "3.30.18",
     "@types/markerclustererplus": "2.1.33",
     "@types/react": "16.8.7",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.20.0",
-    "eslint-plugin-standard": "^4.0.1",
+   
     "husky": "^4.2.5",
     "lint-staged": "^10.2.7",
     "prettier": "2.0.5",
