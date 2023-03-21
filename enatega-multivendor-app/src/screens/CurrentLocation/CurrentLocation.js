@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, StatusBar, TouchableOpacity, Linking,Text } from 'react-native'
+import { View, StatusBar, TouchableOpacity, Linking } from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation } from '@react-navigation/native'

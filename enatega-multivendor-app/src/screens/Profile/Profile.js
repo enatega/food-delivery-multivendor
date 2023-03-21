@@ -11,8 +11,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  StatusBar,
-  Text
+  StatusBar
 } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -174,12 +173,12 @@ function Profile(props) {
   }
   return (
     <>
-      {/* <ChangePassword
+      <ChangePassword
         modalVisible={modelVisible}
         hideModal={() => {
           setModalVisible(false)
         }}
-      /> */}
+      />
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -333,8 +332,8 @@ function Profile(props) {
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-       </View>
-           </>
+      </View>
+    </>
   )
 }
 
