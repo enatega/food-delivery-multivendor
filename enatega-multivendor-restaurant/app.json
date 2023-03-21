@@ -24,7 +24,7 @@
       }
     },
     "android": {
-      "versionCode": 26,
+      "versionCode": 27,
       "useNextNotificationsApi": true,
       "package": "multivendor.enatega.restaurant",
       "googleServicesFile": "./google-services.json",
