@@ -26,7 +26,6 @@ import Analytics from '../../utils/analytics'
 function ItemDetail(props) {
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
-  console.log(addons)
 
   const [selectedVariation, setSelectedVariation] = useState({
     ...food.variations[0],
