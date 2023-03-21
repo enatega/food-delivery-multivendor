@@ -20,7 +20,7 @@ const ENV = {
   production: {
     GRAPHQL_URL: 'https://prodenategamultivendorapi.herokuapp.com/graphql',
     WS_GRAPHQL_URL: 'wss://prodenategamultivendorapi.herokuapp.com/graphql',
-    SENTRY_DSN: '' // [Add your own Sentry DSN link][example: https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/5135261]
+    SENTRY_DSN: 'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933' // [Add your own Sentry DSN link][example: https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/5135261]
   }
 }
 
