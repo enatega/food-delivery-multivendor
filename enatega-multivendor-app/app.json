@@ -46,7 +46,7 @@
       "androidCollapsedTitle": "Enatega Multivendor"
     },
     "android": {
-      "versionCode": 22,
+      "versionCode": 23,
       "package": "com.enatega.multivendor",
       "googleServicesFile": "./google-services.json",
       "config": {
