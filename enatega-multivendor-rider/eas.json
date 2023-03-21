@@ -12,10 +12,7 @@
       },
       "production": {
         "developmentClient": false,
-        "releaseChannel": "production",
-        "android": {
-          "buildType": "apk"
-        }
+        "releaseChannel": "production"
       }
     },
     "submit": {
