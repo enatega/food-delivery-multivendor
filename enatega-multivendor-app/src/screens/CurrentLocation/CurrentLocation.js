@@ -21,8 +21,11 @@ export default function CurrentLocation() {
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation, getLocationPermission } = useLocation()
 
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
+    }
+    Track()
   }, [])
 
   const setCurrentLocation = async() => {

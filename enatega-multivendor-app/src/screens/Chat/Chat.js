@@ -24,8 +24,11 @@ function Chat() {
     }
     StatusBar.setBarStyle('light-content')
   })
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_CHAT)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_CHAT)
+    }
+    Track()
   }, [])
   return (
     <WebView

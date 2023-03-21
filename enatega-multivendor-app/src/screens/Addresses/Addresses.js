@@ -39,8 +39,11 @@ function Addresses() {
     }
     StatusBar.setBarStyle('light-content')
   })
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_ADDRESS)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_ADDRESS)
+    }
+    Track()
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions({

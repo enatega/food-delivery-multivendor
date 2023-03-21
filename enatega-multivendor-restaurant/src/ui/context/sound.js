@@ -19,7 +19,7 @@ export const SoundContextProvider = ({ children }) => {
   const playSound = async () => {
     await stopSound()
     const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/beep3.mp3')
+      require('../../assets/beep.mp3')
     )
     await sound.setIsLoopingAsync(true)
     await Audio.setAudioModeAsync({
@@ -27,7 +27,6 @@ export const SoundContextProvider = ({ children }) => {
       staysActiveInBackground: true,
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS,
       playsInSilentModeIOS: true,
-
       shouldDuckAndroid: true,
       interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
       playThroughEarpieceAndroid: false
