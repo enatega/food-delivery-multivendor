@@ -135,9 +135,13 @@ NOTE: Email provider has been only been tested for gmail accounts
 - Restaurant App communicates API Server
 - Errors are reported to Sentry by Customer App, Restaurant App, Rider App, Web Customer App and API Server
 
-## Documentation:
+## Documentation and Demo Videos:
 
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
+
+To check out video demo of admin dashboard please click [here](https://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode)
+
+To check out video demo of mobile applications please click [here](https://www.youtube.com/watch?v=2HdHS2I-p6g&ab_channel=NinjasCode)
 
 ## Demos:
 
@@ -167,4 +171,4 @@ The frontend source code for our solution is completely open source. However, th
 
 ## Contact Us:
 
-sharan@ninjascode.com
+sales@ninjascode.com
