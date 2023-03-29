@@ -80,8 +80,11 @@ function NewAddress(props) {
   const regionObj = props.route.params ? props.route.params.regionChange : null
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_NEWADDRESS)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_NEWADDRESS)
+    }
+    Track()
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({

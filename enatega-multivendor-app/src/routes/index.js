@@ -62,13 +62,13 @@ function Drawer() {
     <SideDrawer.Navigator drawerContent={props => <SideBar {...props} />}>
       <SideDrawer.Screen
         options={{ headerShown: false }}
-        name="noDrawer"
-        component={noDrawer}
+        name="NoDrawer"
+        component={NoDrawer}
       />
     </SideDrawer.Navigator>
   )
 }
-function noDrawer() {
+function NoDrawer() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
@@ -87,7 +87,7 @@ function noDrawer() {
         component={Restaurant}
         options={{ header: () => null }}
       />
-      <NavigationStack.Screen name="ItemDetail" component={ItemDetail} />
+      {<NavigationStack.Screen name="ItemDetail" component={ItemDetail} />}
       <NavigationStack.Screen name="Cart" component={Cart} />
       <NavigationStack.Screen name="Profile" component={Profile} />
       <NavigationStack.Screen name="Addresses" component={Addresses} />

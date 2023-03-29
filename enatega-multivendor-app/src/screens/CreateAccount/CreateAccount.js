@@ -64,7 +64,7 @@ const CreateAccount = props => {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL
               ]
             })
-            if (credential) {
+            {
               const user = {
                 appleId: credential.user,
                 phone: '',

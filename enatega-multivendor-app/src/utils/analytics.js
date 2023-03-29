@@ -1,4 +1,4 @@
-import * as Amplitude from 'expo-analytics-amplitude'
+import * as amplitude from '@amplitude/analytics-react-native'
 import { getTrackingPermissions } from './useAppTrackingTrasparency'
 import getEnvVars from '../../environment'
 const { AMPLITUDE_API_KEY } = getEnvVars()
@@ -46,8 +46,7 @@ export async function initialize() {
   if (isInitialized || !apiKey || trackingStatus !== 'granted') {
     return
   }
-
-  await Amplitude.initializeAsync(apiKey)
+  await amplitude.init(apiKey)
   isInitialized = true
 }
 
@@ -59,12 +58,14 @@ export async function identify(options, userId) {
 
   if (!apiKey) return
   if (userId) {
-    await Amplitude.setUserIdAsync(userId)
+    amplitude.setUserId(userId)
   }
   if (properties) {
-    await Amplitude.setUserPropertiesAsync(properties)
+    amplitude.Identify(properties)
   } else {
-    await Amplitude.clearUserPropertiesAsync()
+    const identifyObj = new amplitude.Identify()
+    identifyObj.remove(properties)
+    amplitude.Identify(identifyObj)
   }
 }
 export async function track(event, options) {
@@ -75,9 +76,9 @@ export async function track(event, options) {
   if (!apiKey) return
 
   if (properties) {
-    await Amplitude.logEventWithPropertiesAsync(event, properties)
+    await amplitude.track(event, properties)
   } else {
-    await Amplitude.logEventAsync(event)
+    await amplitude.track(event)
   }
 }
 
