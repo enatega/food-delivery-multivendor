@@ -1,3 +1,11 @@
+export const User = `
+query Users {
+  users {
+    _id
+   email
+ }
+}`
+
 export const profile = `
         query{
           profile{
@@ -8,6 +16,7 @@ export const profile = `
             email
             emailIsVerified
             notificationToken
+            isActive
             isOrderNotification
             isOfferNotification
             addresses{

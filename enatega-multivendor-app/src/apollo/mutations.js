@@ -294,12 +294,20 @@ export const sendOtpToPhoneNumber = `
     }
   }
   `
+  export const Deactivate = `
+  mutation deactivated($isActive: Boolean!, $email: String!) {
+    Deactivate(isActive: $isActive,email: $email) {
+      isActive
+    }
+  }
+  `
 export const login = `
   mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String){
     login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken){
      userId
      token
      tokenExpiration
+     isActive
      name
      email
      phone

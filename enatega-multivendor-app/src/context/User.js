@@ -8,6 +8,7 @@ import { LocationContext } from './Location'
 import AuthContext from './Auth'
 import Analytics from '../utils/analytics'
 
+
 const PROFILE = gql`
   ${profile}
 `
@@ -33,7 +34,6 @@ export const UserProvider = props => {
     onCompleted,
     skip: !token
   })
-
   useEffect(() => {
     let isSubscribed = true
     ;(async() => {
@@ -57,7 +57,7 @@ export const UserProvider = props => {
         userId,
         name,
         email,
-        phone
+        phone,
       },
       userId
     )
