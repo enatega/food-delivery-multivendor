@@ -46,7 +46,6 @@ export async function initialize() {
   if (isInitialized || !apiKey || trackingStatus !== 'granted') {
     return
   }
-
   await amplitude.init(apiKey)
   isInitialized = true
 }

@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
-index d59ba34..27478b7 100644
+index d59ba34..48a520a 100644
 --- a/node_modules/react-native/index.js
 +++ b/node_modules/react-native/index.js
-@@ -434,34 +434,21 @@ module.exports = {
+@@ -434,34 +434,22 @@ module.exports = {
        );
    },
    // Deprecated Prop Types
@@ -34,6 +34,7 @@ index d59ba34..27478b7 100644
 -        "ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
 -    );
 -  },
++ // Deprecated Prop Types
 +get ColorPropType(): $FlowFixMe {
 +  return require('deprecated-react-native-prop-types').ColorPropType;
 +},

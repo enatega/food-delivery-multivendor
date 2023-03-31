@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import amplitude from "amplitude-js";
+//import * as amplitude from '@amplitude/analytics-react-native';
 import { AMPLITUDE_API_KEY } from "../config/constants";
 let isInitialized = false;
 const apiKey = AMPLITUDE_API_KEY;

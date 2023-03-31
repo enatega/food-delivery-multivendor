@@ -98,8 +98,7 @@ function Main(props) {
     )
   })
   useEffect(() => {
-    async function Track() 
-    {
+    async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()

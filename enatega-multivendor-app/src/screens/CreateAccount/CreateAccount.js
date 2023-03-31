@@ -12,7 +12,7 @@ import i18n from '../../../i18n'
 import navigationOptions from './screenOptions'
 
 const CreateAccount = props => {
-    const {
+  const {
     enableApple,
     loginButton,
     loginButtonSetter,
@@ -26,7 +26,7 @@ const CreateAccount = props => {
     openTerms,
     openPrivacyPolicy,
     navigation
-    } = useCreateAccount()
+  } = useCreateAccount()
 
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -64,7 +64,7 @@ const CreateAccount = props => {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL
               ]
             })
-            if (credential) {
+            {
               const user = {
                 appleId: credential.user,
                 phone: '',
@@ -114,7 +114,7 @@ const CreateAccount = props => {
         loadingIcon={loading && loginButton === 'Email'}
         onPress={() => {
           loginButtonSetter('Email')
-          //eslint-disable-next-line no-unused-expressions
+          // eslint-disable-next-line no-unused-expressions
           navigateToLogin()
         }}
       />
