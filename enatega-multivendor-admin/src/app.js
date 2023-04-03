@@ -59,6 +59,7 @@ const App = () => {
             .catch(console.log)
 
           onMessage(messaging, function(payload) {
+            console.log(payload);
             // Customize notification here
             // const { title, body } = payload.notification
             // eslint-disable-next-line no-restricted-globals

@@ -18,7 +18,7 @@ import screenOptions from './screenOptions'
 import CountryPicker from 'react-native-country-picker-modal'
 import usePhoneNumber from './usePhoneNumber'
 import i18n from '../../../i18n'
-import PhoneInput from "react-native-phone-number-input"
+import PhoneInput from 'react-native-phone-number-input'
 
 function PhoneNumber(props) {
   const {
@@ -43,7 +43,7 @@ function PhoneNumber(props) {
       })
     )
   }, [props.navigation])
-  const phoneInput = useRef<PhoneInput>(null);
+  const phoneInput = useRef < PhoneInput > null
 
   return (
     <SafeAreaView
@@ -107,21 +107,24 @@ function PhoneNumber(props) {
                       {country?.cca2}
                     </TextDefault>
                   </View>
-                  <View style={[
+                  <View
+                    style={[
                       styles(currentTheme).textField,
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
                     ]}>
-                  <View style={{flexDirection:'row', paddingTop: 10}}>
-                  <Text>+{country.callingCode[0]} </Text>
-                  <TextInput                
-                    placeholder="Mobile Number"
-                    style ={{marginTop: Platform.OS === 'android' ? -4 : 0 }}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={phone}
-                    onChangeText={e => setPhone(e)}                    
-                  />
-                  </View>
+                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                      <Text>+{country.callingCode[0]} </Text>
+                      <TextInput
+                        placeholder="Mobile Number"
+                        style={{
+                          marginTop: Platform.OS === 'android' ? -4 : 0
+                        }}
+                        placeholderTextColor={currentTheme.fontSecondColor}
+                        value={phone}
+                        onChangeText={e => setPhone(e)}
+                      />
+                    </View>
                   </View>
                 </View>
                 {phoneError && (

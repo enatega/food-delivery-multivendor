@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   Linking,
-  StatusBar, 
+  StatusBar,
   Button
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -16,8 +16,12 @@ import Modal from 'react-native-modal'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { profile } from '../../apollo/queries'
-import { pushToken, updateNotificationStatus,Deactivate } from '../../apollo/mutations'
-import {User} from '../../apollo/queries'
+import {
+  pushToken,
+  updateNotificationStatus,
+  Deactivate
+} from '../../apollo/mutations'
+import { User } from '../../apollo/queries'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import styles from './styles'
@@ -61,14 +65,19 @@ const DEACTIVATE = gql`
 
 function Settings(props) {
   const { token, setToken } = useContext(AuthContext)
-  const { profile, loadingProfile, errorProfile,logout, isLoggedIn } = useContext(UserContext)
+  const {
+    profile,
+    loadingProfile,
+    errorProfile,
+    logout,
+    isLoggedIn
+  } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  
-  
+
   const [languageName, languageNameSetter] = useState('English')
   const [orderNotification, orderNotificationSetter] = useState()
-  const [offerNotification, offerNotificationSetter] = useState() 
+  const [offerNotification, offerNotificationSetter] = useState()
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
   const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
@@ -82,7 +91,7 @@ function Settings(props) {
     onError,
     refetchQueries: [{ query: PROFILE }]
   })
-  const [deactivated ] = useMutation(DEACTIVATE)
+  const [deactivated] = useMutation(DEACTIVATE)
   const modalizeRef = useRef(null)
   useEffect(() => {
     async function Track() {
@@ -110,9 +119,8 @@ function Settings(props) {
     checkPermission()
   }, [props.navigation])
 
-  async function deactivatewithemail()
-  {
-    deactivated({ variables: { isActive: false,email: profile.email } })
+  async function deactivatewithemail() {
+    deactivated({ variables: { isActive: false, email: profile.email } })
   }
 
   const _handleAppStateChange = async nextAppState => {
@@ -353,21 +361,13 @@ function Settings(props) {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => toggleTheme()}
+          onPress={() => {
+            modalizeRef.current.open('top')
+          }}
           style={[styles(currentTheme).notificationContainer, styles().shadow]}>
           <View style={styles().notificationChekboxContainer}>
-          <Ionicons
-            name="trash-outline"
-            size={30}
-            color={'red'}
-          />
-            <Button 
-            color={'red'}
-            title="DELETE ACCOUNT"
-            onPress={() => {
-              modalizeRef.current.open("top")
-            }}
-            />
+            <Ionicons name="trash-outline" size={30} color={'red'} />
+            <TextDefault textColor="red"> Delete Account</TextDefault>
           </View>
         </TouchableOpacity>
         <View style={styles().versionContainer}>
@@ -450,41 +450,38 @@ function Settings(props) {
         handlePosition="inside"
         avoidKeyboardLikeIOS={Platform.select({
           ios: true,
-          android: true,
+          android: true
         })}
         keyboardAvoidingOffset={2}
-        keyboardAvoidingBehavior="height"
-      >
-        <View style={{ flex: 1, alignItems: "center" }}>
+        keyboardAvoidingBehavior="height">
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <TextDefault bolder H5 style={{ marginTop: 20 }}>
             Are you Sure you want to delete Account?
           </TextDefault>
           <TouchableOpacity
             activeOpacity={0.7}
             style={{
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
               backgroundColor: currentTheme.main,
               borderRadius: 10,
-              width: "70%",
+              width: '70%',
               padding: 15,
-              ...alignment.MTlarge,
+              ...alignment.MTlarge
             }}
             onPress={async () => {
               await deactivatewithemail()
-            logout()
-            navigation.reset({
-              routes: [{name: "Menu"}]
-            })
-            }}
-          >
-            <TextDefault center bold>Delete Account</TextDefault>
+              logout()
+              props.navigation.navigate({ name: 'Main' })
+            }}>
+            <TextDefault center bold>
+              Delete Account
+            </TextDefault>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.7}
-            style={{width: '100%', paddingTop: 30, paddingBottom: 40}}
-            onPress={() => onClose()}
-          >
+            style={{ width: '100%', paddingTop: 30, paddingBottom: 40 }}
+            onPress={() => onClose()}>
             <TextDefault center>Cancel</TextDefault>
           </TouchableOpacity>
         </View>

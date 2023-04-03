@@ -38,7 +38,7 @@ export const useLogin = () => {
 
   const [LoginMutation, { loading: loginLoading }] = useMutation(LOGIN, {
     onCompleted: onLoginCompleted,
-    onError: onLoginError,
+    onError: onLoginError
   })
 
   function validateCredentials() {
@@ -63,7 +63,7 @@ export const useLogin = () => {
     return result
   }
 
-  function onCompleted({ emailExist}) {
+  function onCompleted({ emailExist }) {
     if (validateCredentials()) {
       if (emailExist._id !== null) {
         if (
@@ -95,12 +95,9 @@ export const useLogin = () => {
     }
   }
   async function onLoginCompleted(data) {
-    if(data.login.isActive == false)
-    {
-      FlashMessage({message: "Account Deactivated"})
-    }
-    else
-    {
+    if (data.login.isActive == false) {
+      FlashMessage({ message: "Can't Login, This Account is Deleted!" })
+    } else {
       try {
         await Analytics.identify(
           {

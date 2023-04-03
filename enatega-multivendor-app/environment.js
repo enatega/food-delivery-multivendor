@@ -6,6 +6,9 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
+    // GRAPHQL_URL: 'http://172.20.10.2:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://172.20.10.2:8001/graphql',
+    // SERVER_URL: '172.20.10.2', // put / at the end of server url
     GRAPHQL_URL: 'https://prodenategamultivendorapi.herokuapp.com/graphql',
     WS_GRAPHQL_URL: 'wss://prodenategamultivendorapi.herokuapp.com/graphql',
     SERVER_URL: 'https://prodenategamultivendorapi.herokuapp.com/', // put / at the end of server url
@@ -16,7 +19,7 @@ const ENV = {
     AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f',
     GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
+      '850899622985-juecg38u5pb4hjj1e8b0ob1skouu24jt.apps.googleusercontent.com',
     SENTRY_DSN:
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',

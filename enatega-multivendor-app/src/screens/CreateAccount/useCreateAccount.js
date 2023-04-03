@@ -28,7 +28,6 @@ const LOGIN = gql`
   ${login}
 `
 
-
 export const useCreateAccount = () => {
   const navigation = useNavigation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
@@ -90,7 +89,7 @@ export const useCreateAccount = () => {
   const googleSignUp = () => {
     if (googleResponse?.type === 'success') {
       const { authentication } = googleResponse
-      ;(async() => {
+      ;(async () => {
         const userInfoResponse = await fetch(
           'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
           {
@@ -104,7 +103,7 @@ export const useCreateAccount = () => {
           password: '',
           name: googleUser.name,
           picture: googleUser.picture,
-          type: 'google',
+          type: 'google'
         }
         mutateLogin(user)
       })()
@@ -124,13 +123,10 @@ export const useCreateAccount = () => {
   }
 
   async function onCompleted(data) {
-    if(data.login.isActive == false)
-    {
-      FlashMessage({message: "Account Deactivated"})
+    if (data.login.isActive == false) {
+      FlashMessage({ message: "Can't Login, This Account is Deleted!" })
       setLoading(false)
-    }
-    else 
-    {
+    } else {
       try {
         if (data.login.inNewUser) {
           await Analytics.identify(
