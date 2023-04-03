@@ -17,7 +17,7 @@ import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
-import { updateUser } from '../../apollo/mutations'
+import { updateUser, login } from '../../apollo/mutations'
 import i18n from '../../../i18n'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
@@ -36,9 +36,10 @@ const UPDATEUSER = gql`
   ${updateUser}
 `
 
+
+
 function Profile(props) {
   const refName = useRef()
-
   const [nameError, setNameError] = useState('')
   const [toggleView, setToggleView] = useState(true)
   const [modelVisible, setModalVisible] = useState(false)
@@ -48,7 +49,6 @@ function Profile(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const backScreen = props.route.params ? props.route.params.backScreen : null
-
   const [mutate, { loading: loadingMutation }] = useMutation(UPDATEUSER, {
     onCompleted,
     onError

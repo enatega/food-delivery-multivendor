@@ -1,11 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import {
   AppState,
   View,
   TouchableOpacity,
   Platform,
   Linking,
-  StatusBar
+  StatusBar, 
+  Button
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Updates from 'expo-updates'
@@ -13,8 +14,10 @@ import * as Notifications from 'expo-notifications'
 import * as Localization from 'expo-localization'
 import Modal from 'react-native-modal'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
 import { profile } from '../../apollo/queries'
-import { pushToken, updateNotificationStatus } from '../../apollo/mutations'
+import { pushToken, updateNotificationStatus,Deactivate } from '../../apollo/mutations'
+import {User} from '../../apollo/queries'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import styles from './styles'
@@ -25,11 +28,14 @@ import Spinner from '../../components/Spinner/Spinner'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
+import { Modalize } from 'react-native-modalize'
+import { useNavigation } from '@react-navigation/native'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import Constants from 'expo-constants'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import * as Device from 'expo-device'
+import AuthContext from '../../context/Auth'
 import Analytics from '../../utils/analytics'
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -49,23 +55,25 @@ const UPDATE_NOTIFICATION_TOKEN = gql`
 const PROFILE = gql`
   ${profile}
 `
+const DEACTIVATE = gql`
+  ${Deactivate}
+`
 
 function Settings(props) {
-  const { profile, loadingProfile, errorProfile } = useContext(UserContext)
+  const { token, setToken } = useContext(AuthContext)
+  const { profile, loadingProfile, errorProfile,logout, isLoggedIn } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
+  
+  
   const [languageName, languageNameSetter] = useState('English')
-  const [offerNotification, offerNotificationSetter] = useState(
-    profile.isOfferNotification
-  )
-  const [orderNotification, orderNotificationSetter] = useState(
-    profile.isOrderNotification
-  )
+  const [orderNotification, orderNotificationSetter] = useState()
+  const [offerNotification, offerNotificationSetter] = useState() 
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
   const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
   const [btnText, setBtnText] = useState(null)
+  const navigation = useNavigation()
   // eslint-disable-next-line no-unused-vars
   const [appState, setAppState] = useState(AppState.currentState)
   const [uploadToken] = useMutation(PUSH_TOKEN)
@@ -74,6 +82,8 @@ function Settings(props) {
     onError,
     refetchQueries: [{ query: PROFILE }]
   })
+  const [deactivated ] = useMutation(DEACTIVATE)
+  const modalizeRef = useRef(null)
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_SETTINGS)
@@ -99,6 +109,11 @@ function Settings(props) {
     selectLanguage()
     checkPermission()
   }, [props.navigation])
+
+  async function deactivatewithemail()
+  {
+    deactivated({ variables: { isActive: false,email: profile.email } })
+  }
 
   const _handleAppStateChange = async nextAppState => {
     if (nextAppState === 'active') {
@@ -140,6 +155,9 @@ function Settings(props) {
   async function getPermission() {
     const { status } = await Notifications.getPermissionsAsync()
     return status
+  }
+  const onClose = () => {
+    modalizeRef.current.close()
   }
   function toggleTheme() {
     if (themeContext.ThemeValue === 'Pink') {
@@ -333,6 +351,25 @@ function Settings(props) {
             </TextDefault>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => toggleTheme()}
+          style={[styles(currentTheme).notificationContainer, styles().shadow]}>
+          <View style={styles().notificationChekboxContainer}>
+          <Ionicons
+            name="trash-outline"
+            size={30}
+            color={'red'}
+          />
+            <Button 
+            color={'red'}
+            title="DELETE ACCOUNT"
+            onPress={() => {
+              modalizeRef.current.open("top")
+            }}
+            />
+          </View>
+        </TouchableOpacity>
         <View style={styles().versionContainer}>
           <TextDefault textColor={currentTheme.statusSecondColor}>
             Version: {Constants.manifest.version}
@@ -407,6 +444,51 @@ function Settings(props) {
           </View>
         </View>
       </Modal>
+      <Modalize
+        ref={modalizeRef}
+        adjustToContentHeight
+        handlePosition="inside"
+        avoidKeyboardLikeIOS={Platform.select({
+          ios: true,
+          android: true,
+        })}
+        keyboardAvoidingOffset={2}
+        keyboardAvoidingBehavior="height"
+      >
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <TextDefault bolder H5 style={{ marginTop: 20 }}>
+            Are you Sure you want to delete Account?
+          </TextDefault>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: currentTheme.main,
+              borderRadius: 10,
+              width: "70%",
+              padding: 15,
+              ...alignment.MTlarge,
+            }}
+            onPress={async () => {
+              await deactivatewithemail()
+            logout()
+            navigation.reset({
+              routes: [{name: "Menu"}]
+            })
+            }}
+          >
+            <TextDefault center bold>Delete Account</TextDefault>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={{width: '100%', paddingTop: 30, paddingBottom: 40}}
+            onPress={() => onClose()}
+          >
+            <TextDefault center>Cancel</TextDefault>
+          </TouchableOpacity>
+        </View>
+      </Modalize>
     </SafeAreaView>
   )
 }

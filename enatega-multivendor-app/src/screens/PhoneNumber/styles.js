@@ -80,7 +80,7 @@ const styles = (props = null) =>
       marginRight: '3%'
     },
     phoneNumber: {
-      width: '70%'
+      width: '70%',
     },
     error: {
       marginTop: 3

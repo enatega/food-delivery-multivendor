@@ -38,7 +38,7 @@ export const useLogin = () => {
 
   const [LoginMutation, { loading: loginLoading }] = useMutation(LOGIN, {
     onCompleted: onLoginCompleted,
-    onError: onLoginError
+    onError: onLoginError,
   })
 
   function validateCredentials() {
@@ -63,7 +63,7 @@ export const useLogin = () => {
     return result
   }
 
-  function onCompleted({ emailExist }) {
+  function onCompleted({ emailExist}) {
     if (validateCredentials()) {
       if (emailExist._id !== null) {
         if (
@@ -94,27 +94,33 @@ export const useLogin = () => {
       })
     }
   }
-
   async function onLoginCompleted(data) {
-    try {
-      await Analytics.identify(
-        {
-          userId: data.login.userId
-        },
-        data.login.userId
-      )
-      await Analytics.track(Analytics.events.USER_LOGGED_IN, {
-        userId: data.login.userId,
-        name: data.login.name,
-        email: data.login.email
-      })
-      setTokenAsync(data.login.token)
-      navigation.navigate({
-        name: 'Main',
-        merge: true
-      })
-    } catch (e) {
-      console.log(e)
+    if(data.login.isActive == false)
+    {
+      FlashMessage({message: "Account Deactivated"})
+    }
+    else
+    {
+      try {
+        await Analytics.identify(
+          {
+            userId: data.login.userId
+          },
+          data.login.userId
+        )
+        await Analytics.track(Analytics.events.USER_LOGGED_IN, {
+          userId: data.login.userId,
+          name: data.login.name,
+          email: data.login.email
+        })
+        setTokenAsync(data.login.token)
+        navigation.navigate({
+          name: 'Main',
+          merge: true
+        })
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
   function onLoginError(error) {

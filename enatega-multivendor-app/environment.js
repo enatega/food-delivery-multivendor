@@ -10,15 +10,15 @@ const ENV = {
     WS_GRAPHQL_URL: 'wss://prodenategamultivendorapi.herokuapp.com/graphql',
     SERVER_URL: 'https://prodenategamultivendorapi.herokuapp.com/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
-      '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com', // [Add your Google client id see documentation for more information on how to generate it][example: 967541328677 - ge2hpr1n095d0nro56kot0t4q388dsll.apps.googleusercontent.com]
+      '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
-      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com', // [Add your Android google client id see documentation][example: 977541328677-u9lbhmiesp67j3md9b8nk6mkhooeljur.apps.googleusercontent.com]
-    AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f', // [Add your Amplitude api key see documentation for more information][example: 3114f5db4c014dc7ad4ed2ad747341b5]
-    GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA', // [Add your Google map key see documentation for more information][example: BIzaSyCzNP5qQql2a5y8lOoO - 1yj1lj_tzjVImA],
+      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+    AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f',
+    GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com', // [Add your Expo Client Id see documentation for more information][example: 977541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com]
+      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
     SENTRY_DSN:
-      'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933', // [Add your own Sentry DSN link][example: https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/5135261]
+      'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',
     PRIVACY_POLICY: 'https://enatega.ninjascode.com/privacy-policy',
     TEST_OTP: '111111'
@@ -42,15 +42,15 @@ const ENV = {
     WS_GRAPHQL_URL: 'wss://prodenategamultivendorapi.herokuapp.com/graphql',
     SERVER_URL: 'https://prodenategamultivendorapi.herokuapp.com/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
-      '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com', // [Add your Google client id see documentation for more information on how to generate it][example: 967541328677 - ge2hpr1n095d0nro56kot0t4q388dsll.apps.googleusercontent.com]
+      '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
-      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com', // [Add your Android google client id see documentation][example: 977541328677-u9lbhmiesp67j3md9b8nk6mkhooeljur.apps.googleusercontent.com]
-    AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f', // [Add your Amplitude api key see documentation for more information][example: 3114f5db4c014dc7ad4ed2ad747341b5]
-    GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA', // [Add your Google map key see documentation for more information][example: BIzaSyCzNP5qQql2a5y8lOoO - 1yj1lj_tzjVImA],
+      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+    AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f',
+    GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com', // [Add your Expo Client Id see documentation for more information][example: 977541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com]
+      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
     SENTRY_DSN:
-      'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933', // [Add your own Sentry DSN link][example: https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/5135261]
+      'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',
     PRIVACY_POLICY: 'https://enatega.ninjascode.com/privacy-policy',
     TEST_OTP: '111111'
