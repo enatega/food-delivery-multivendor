@@ -24,10 +24,6 @@ Our solution also comes with the following:
 - Analytics Dashboard with Expo Amplitude
 - Error crash reporting with Sentry
 
-<!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/oeMfEUvnazs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
-
-[![Demo video](https://img.youtube.com/vi/oeMfEUvnazs/0.jpg)](https://www.youtube.com/watch?v=oeMfEUvnazs&ab_channel=NinjasCode)
-
 ## Features:
 
 - Authentication using Google, Apple, and Facebook
