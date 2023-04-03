@@ -1,6 +1,10 @@
 # Enatega Multi-vendor
 
-![Project thumbnail](./assets/thumbnail.png)
+<!-- ![Project thumbnail](./assets/thumbnail.png) -->
+<!-- <img src="./assets/thumbnail.png" width="600"/> -->
+
+[![Demo video](https://i.imgur.com/araSrCj.png)](https://www.youtube.com/watch?v=oeMfEUvnazs&ab_channel=NinjasCode)
+
 <br/>
 
 Our Enatega Multi-vendor food delivery solution is perfect for customers looking to deploy a readymade and easy to use platform for their food delivery and logistics business. Just like foodpanda and ubereats, our solution can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own foodpanda clone instantaneously.
