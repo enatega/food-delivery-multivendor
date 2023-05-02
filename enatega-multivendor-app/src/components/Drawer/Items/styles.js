@@ -7,12 +7,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   leftContainer: {
     height: '100%',
-    width: '15%',
+    width: '20%',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   rightContainer: {
     height: '80%',
-    width: '75%',
+    width: '60%',
     justifyContent: 'center'
   }
 })

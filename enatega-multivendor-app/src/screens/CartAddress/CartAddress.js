@@ -36,11 +36,8 @@ function CartAddresses(props) {
       title: i18n.t('myAddresses')
     })
   }, [props.navigation])
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_CARTADDRESS)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_CARTADDRESS)
   }, [])
   function onError(error) {
     console.log(error)

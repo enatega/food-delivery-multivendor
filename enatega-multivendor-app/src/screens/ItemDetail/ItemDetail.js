@@ -31,7 +31,7 @@ function ItemDetail(props) {
     ...food.variations[0],
     addons: food.variations[0].addons.map(fa => {
       const addon = addons.find(a => a._id === fa)
-      const addonOptions = addon.options.map(ao => {
+      const addonOptions = addon?.options.map(ao => {
         return options.find(o => o._id === ao)
       })
       return {
@@ -60,16 +60,13 @@ function ItemDetail(props) {
     }
     StatusBar.setBarStyle('light-content')
   })
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.OPENED_RESTAURANT_ITEM, {
-        restaurantID: restaurant,
-        foodID: food._id,
-        foodName: food.title,
-        foodRestaurantName: food.restaurantName
-      })
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.OPENED_RESTAURANT_ITEM, {
+      restaurantID: restaurant,
+      foodID: food._id,
+      foodName: food.title,
+      foodRestaurantName: food.restaurantName
+    })
   })
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -131,8 +128,10 @@ function ItemDetail(props) {
   const addToCart = async(quantity, clearFlag) => {
     const addons = selectedAddons.map(addon => ({
       ...addon,
-      options: addon.options.map(({ _id }) => ({
-        _id
+      options: addon?.options.map(({ _id, title, price }) => ({
+        _id,
+        title,
+        price
       }))
     }))
 
@@ -151,8 +150,8 @@ function ItemDetail(props) {
               )
 
               if (!cartAddon) return false
-              const optionsResult = newAddon.options.every(newOption => {
-                const cartOption = cartAddon.options.find(
+              const optionsResult = newAddon?.options.every(newOption => {
+                const cartOption = cartAddon?.options.find(
                   op => op._id === newOption._id
                 )
 
@@ -171,13 +170,28 @@ function ItemDetail(props) {
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
-      await addCartItem(
-        food._id,
-        selectedVariation._id,
+      const newFood = {
+        _id: food._id,
+        title: food.title,
+        image: food.image,
         quantity,
-        addons,
-        clearFlag,
-        specialInstructions
+        specialInstructions,
+        price: selectedVariation.price, // variation price + options price
+        variation: {
+          _id: selectedVariation._id,
+          title: selectedVariation.title,
+          price: selectedVariation.price
+        },
+        addons
+      }
+      await addCartItem(
+        newFood,
+        // food._id,
+        // selectedVariation._id,
+        // quantity,
+        // addons,
+        clearFlag
+        // specialInstructions
       )
     } else {
       await addQuantity(cartItem.key, quantity)
@@ -190,7 +204,7 @@ function ItemDetail(props) {
       ...variation,
       addons: variation.addons.map(fa => {
         const addon = addons.find(a => a._id === fa)
-        const addonOptions = addon.options.map(ao => {
+        const addonOptions = addon?.options.map(ao => {
           return options.find(o => o._id === ao)
         })
         return {
@@ -222,7 +236,11 @@ function ItemDetail(props) {
         }
       }
     } else {
-      selectedAddons.push({ _id: addon._id, options: [option] })
+      selectedAddons.push({
+        _id: addon._id,
+        title: addon.title,
+        options: [option]
+      })
     }
     setSelectedAddons([...selectedAddons])
   }
@@ -231,7 +249,7 @@ function ItemDetail(props) {
     const variation = selectedVariation.price
     let addons = 0
     selectedAddons.forEach(addon => {
-      addons += addon.options.reduce((acc, option) => {
+      addons += addon?.options.reduce((acc, option) => {
         return acc + option.price
       }, 0)
     })
@@ -261,14 +279,14 @@ function ItemDetail(props) {
     if (addon.quantityMinimum === 1 && addon.quantityMaximum === 1) {
       return (
         <RadioComponent
-          options={addon.options}
+          options={addon?.options}
           onPress={onSelectOption.bind(this, addon)}
         />
       )
     } else {
       return (
         <CheckComponent
-          options={addon.options}
+          options={addon?.options}
           onPress={onSelectOption.bind(this, addon)}
         />
       )
@@ -286,64 +304,66 @@ function ItemDetail(props) {
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>
             {!!food.image && <ImageHeader image={food.image} />}
-            <View style={styles().subContainer}>
-              <HeadingComponent
-                title={food.title}
-                price={calculatePrice()}
-                desc={food.description}
-              />
-              <View style={styles(currentTheme).line}></View>
-              {food.variations.length > 1 && (
-                <View>
+            <View style={styles(currentTheme).lowerContainer}>
+              <View style={styles().subContainer}>
+                <HeadingComponent
+                  title={food.title}
+                  price={calculatePrice()}
+                  desc={food.description}
+                />
+                <View style={styles(currentTheme).line}></View>
+                {food.variations.length > 1 && (
+                  <View>
+                    <TitleComponent
+                      title="Select Variation"
+                      subTitle="Select one"
+                      status="Required"
+                    />
+                    <RadioComponent
+                      options={food.variations}
+                      selected={selectedVariation}
+                      onPress={onSelectVariation}
+                    />
+                  </View>
+                )}
+                {selectedVariation.addons.map(addon => (
+                  <View key={addon._id}>
+                    <TitleComponent
+                      title={addon.title}
+                      subTitle={addon.description}
+                      error={addon.error}
+                      status={
+                        addon.quantityMinimum === 0
+                          ? 'OPTIONAL'
+                          : `${addon.quantityMinimum} Required`
+                      }
+                    />
+                    {renderOption(addon)}
+                  </View>
+                ))}
+                <View style={styles(currentTheme).line}></View>
+                <View style={{ width: '100%', alignSelf: 'center' }}>
                   <TitleComponent
-                    title="Select Variation"
-                    subTitle="Select one"
-                    status="Required"
+                    title="Special instructions"
+                    subTitle="Any specific preferences?"
+                    status="Optional"
                   />
-                  <RadioComponent
-                    options={food.variations}
-                    selected={selectedVariation}
-                    onPress={onSelectVariation}
+                  <TextField
+                    placeholder={'E.g No mayo'}
+                    value={specialInstructions}
+                    onChangeText={setSpecialInstructions}
+                    labelFontSize={scale(12)}
+                    fontSize={scale(12)}
+                    labelHeight={10}
+                    maxLength={144}
+                    multiline
+                    textColor={currentTheme.fontMainColor}
+                    baseColor={currentTheme.fontSecondColor}
+                    errorColor={currentTheme.textErrorColor}
+                    tintColor={currentTheme.iconColorPink}
                   />
                 </View>
-              )}
-              {selectedVariation.addons.map(addon => (
-                <View key={addon._id}>
-                  <TitleComponent
-                    title={addon.title}
-                    subTitle={addon.description}
-                    error={addon.error}
-                    status={
-                      addon.quantityMinimum === 0
-                        ? 'OPTIONAL'
-                        : `${addon.quantityMinimum} REQUIRED`
-                    }
-                  />
-                  {renderOption(addon)}
-                </View>
-              ))}
-            </View>
-            <View style={styles(currentTheme).line}></View>
-            <View style={{ width: '90%', alignSelf: 'center' }}>
-              <TitleComponent
-                title="Special instructions"
-                subTitle="Any specific preferences?"
-                status="Optional"
-              />
-              <TextField
-                placeholder={'E.g No mayo'}
-                value={specialInstructions}
-                onChangeText={setSpecialInstructions}
-                labelFontSize={scale(12)}
-                fontSize={scale(12)}
-                labelHeight={10}
-                maxLength={144}
-                multiline
-                textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
-                errorColor={currentTheme.textErrorColor}
-                tintColor={currentTheme.iconColorPink}
-              />
+              </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

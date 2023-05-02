@@ -37,7 +37,7 @@ function DrawerProfile(props) {
                 {profile.name.substr(0, 1).toUpperCase()}
               </TextDefault>
             </View>
-            <TextDefault textColor={currentTheme.fontWhite} bold H5>
+            <TextDefault textColor={currentTheme.fontWhite} bold H3>
               {profile.name}
             </TextDefault>
           </View>

@@ -97,11 +97,8 @@ function EditAddress(props) {
   useEffect(() => {
     if (regionObj !== null) regionChange(regionObj)
   }, [regionObj])
-  useEffect(() => {
-    async function Track() {
-      await analytics.track(analytics.events.NAVIGATE_TO_EDITADDRESS)
-    }
-    Track()
+  useEffect(async() => {
+    await analytics.track(analytics.events.NAVIGATE_TO_EDITADDRESS)
   }, [])
   function regionChange(region) {
     Location.reverseGeocodeAsync({ ...region })

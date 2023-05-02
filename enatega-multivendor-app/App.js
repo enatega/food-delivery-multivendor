@@ -2,10 +2,18 @@ import React, { useState, useEffect, useReducer } from 'react'
 import AppContainer from './src/routes'
 import * as Notifications from 'expo-notifications'
 import * as Font from 'expo-font'
-import 'react-native-gesture-handler'
+import * as Updates from 'expo-updates'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Sentry from 'sentry-expo'
-import { BackHandler, Platform, StatusBar, LogBox } from 'react-native'
+import {
+  BackHandler,
+  Platform,
+  StatusBar,
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  LogBox
+} from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import i18n from './i18n'
 import { exitAlert } from './src/utils/androidBackButton'
@@ -20,6 +28,8 @@ import { theme as Theme } from './src/utils/themeColors'
 import { LocationContext } from './src/context/Location'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'expo-dev-client'
+import TextDefault from './src/components/Text/TextDefault/TextDefault'
+import { FlashMessage as DefaultFlashMessage } from './src/ui/FlashMessage/FlashMessage'
 import getEnvVars, { isProduction } from './environment'
 import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
 import { OrdersProvider } from './src/context/Orders'
@@ -46,6 +56,7 @@ Sentry.init({
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
   const [location, setLocation] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false)
   // Theme Reducer
   const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
   useEffect(() => {
@@ -87,6 +98,38 @@ export default function App() {
       AsyncStorage.setItem('location', JSON.stringify(location))
     })()
   }, [location])
+
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    if (__DEV__) return
+    const updatesErrorListener = Updates.addListener(event => {
+      if (event.type === Updates.UpdateEventType.ERROR) {
+        DefaultFlashMessage({
+          message: 'An error occured while updating the app'
+        })
+      }
+      if (event.type === Updates.UpdateEventType.UPDATE_AVAILABLE) {
+        Updates.reloadAsync()
+      }
+    })
+
+    ;(async() => {
+      const { isAvailable } = await Updates.checkForUpdateAsync()
+      if (isAvailable) {
+        try {
+          setIsUpdating(true)
+          await Updates.fetchUpdateAsync()
+        } catch (error) {
+          console.log('error while updating app', JSON.stringify(error))
+        } finally {
+          setIsUpdating(false)
+        }
+      }
+    })()
+    return () => {
+      updatesErrorListener.remove()
+    }
+  }, [])
 
   useEffect(() => {
     requestTrackingPermissions()
@@ -143,6 +186,22 @@ export default function App() {
     }
   }
 
+  if (isUpdating) {
+    return (
+      <View
+        style={[
+          styles.flex,
+          styles.mainContainer,
+          { backgroundColor: Theme[theme].startColor }
+        ]}>
+        <TextDefault textColor={Theme[theme].white} bold>
+          Please wait while app is updating
+        </TextDefault>
+        <ActivityIndicator size="large" color={Theme[theme].white} />
+      </View>
+    )
+  }
+
   if (appIsReady) {
     return (
       <ApolloProvider client={client}>
@@ -171,3 +230,13 @@ export default function App() {
     return null
   }
 }
+
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1
+  },
+  mainContainer: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
