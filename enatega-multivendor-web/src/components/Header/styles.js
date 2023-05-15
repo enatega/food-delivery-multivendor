@@ -9,6 +9,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     backgroundColor: theme.palette.primary.light,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   font700: {
     fontWeight: 700,
@@ -25,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
   },
   menuItem: {
     padding: "14px 40px",
+    width: "100%",
+    borderTop: "1px solid #737373",
     "& .MuiTouchRipple-root span": {
       backgroundColor: "rgba(0,0,0,0.3)",
     },
@@ -49,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     height: "50px",
     width: "50px",
+  },
+  icon: {
+    color: theme.palette.common.black,
   },
 }));
 

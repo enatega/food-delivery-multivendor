@@ -6,9 +6,8 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import clsx from "clsx";
 import React, { useContext, useEffect, useState } from "react";
-import DeliveryIcon from "../../../assets/icons/DeliveryIcon";
+import RiderImage from "../../../assets/images/rider.png";
 import UserContext from "../../../context/User";
 import { useRestaurant } from "../../../hooks";
 import CartItem from "./CartItem";
@@ -52,7 +51,7 @@ function CartView(props) {
             variationItem.title ? `(${variationItem.title})` : ""
           }`;
           let foodItemPrice = variationItem.price;
-          let optionTitles=[]
+          let optionTitles = [];
           if (cartItem.addons) {
             cartItem.addons.forEach((addon) => {
               const cartAddon = addons.find((add) => add._id === addon._id);
@@ -63,7 +62,7 @@ function CartView(props) {
                 );
                 if (!cartOption) return null;
                 foodItemPrice += cartOption.price;
-                optionTitles.push(cartOption.title)
+                optionTitles.push(cartOption.title);
               });
             });
           }
@@ -115,45 +114,62 @@ function CartView(props) {
     <>
       <Box
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: theme.spacing(2),
+          background:
+            "linear-gradient(260.99deg, #90EA93 2.79%, #6FCF97 96.54%)",
+          borderRadius: "20px",
+          padding: "30px 20px",
         }}
+        display="flex"
+        alignItems={"center"}
       >
-        <DeliveryIcon />
-        <Typography
+        <Box display="flex" alignItems="center" justifyContent="center">
+          {/* <DeliveryIcon /> */}
+          <img src={RiderImage} alt="rider" />
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
           style={{
-            marginLeft: theme.spacing(1),
-            ...theme.typography.body1,
-            color: theme.palette.text.disabled,
-            fontSize: "0.875rem",
+            marginLeft: "5px",
           }}
         >
-          {`${restaurantData?.deliveryTime ?? "..."}  min`}
-        </Typography>
-      </Box>
-      <Box
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          background: theme.palette.common.white,
-        }}
-      >
-        <Typography
-          variant="h6"
-          color="textSecondary"
-          className={clsx(classes.mediumFont, classes.textBold)}
-        >
-          {`Your order from ${restaurantData?.name ?? "..."}`}
-        </Typography>
+          <Typography
+            style={{
+              ...theme.typography.body1,
+              color: theme.palette.common.black,
+              fontSize: "1.275rem",
+              fontWeight: 600,
+            }}
+          >
+            Delivery Time
+          </Typography>
+          <Typography
+            style={{
+              ...theme.typography.body1,
+              color: theme.palette.text.disabled,
+              fontSize: "0.875rem",
+            }}
+          >
+            {`${restaurantData?.deliveryTime ?? "..."}  min`}
+          </Typography>
+          <Typography
+            variant="h6"
+            color="textSecondary"
+            style={{ fontSize: "0.78rem" }}
+            className={classes.textBold}
+          >
+            {`Your order from ${restaurantData?.name ?? "..."}`}
+          </Typography>
+        </Box>
       </Box>
       <Container
         style={{
           maxHeight: "30vh",
-          overflow: "scroll",
+          overflowY: "scroll",
           paddingBottom: theme.spacing(2),
           background: theme.palette.common.white,
+          marginBottom: 10,
         }}
       >
         {cart?.map((foodItem) => (

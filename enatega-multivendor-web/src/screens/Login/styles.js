@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.875rem",
   },
   fontGrey: {
-    color: theme.palette.primary.dark,
+    color: theme.palette.common.black,
   },
   fontSubHead: {
     color: theme.palette.primary.main,
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "20px",
   },
   customBtn: {
-    background: theme.palette.primary.dark,
+    background: theme.palette.common.black,
     width: "70%",
   },
   gButton: {

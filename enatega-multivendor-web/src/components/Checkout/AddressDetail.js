@@ -7,6 +7,7 @@ import gql from "graphql-tag";
 import React, { useCallback, useState } from "react";
 import { createAddress, editAddress } from "../../apollo/server";
 import useStyle from "./styles";
+import MarkerImage from "../../assets/images/marker.png";
 
 const EDIT_ADDRESS = gql`
   ${editAddress}
@@ -106,6 +107,7 @@ function AddressDetail({ addressDetail, locationModal, toggleDetail, notificatio
                 lat: addressDetail?.lat,
                 lng: addressDetail?.lng,
               }}
+              icon={MarkerImage}
             />
           </GoogleMap>
         </Grid>

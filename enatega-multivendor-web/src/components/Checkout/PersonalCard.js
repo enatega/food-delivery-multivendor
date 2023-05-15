@@ -5,101 +5,172 @@ import {
   Paper,
   Typography,
   useTheme,
+  Divider,
 } from "@mui/material";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import PencilIcon from "../../assets/icons/PencilIcon";
 import UserContext from "../../context/User";
 import useStyle from "./styles";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-function PersonalCard() {
+function PersonalCard({ toggleModal, location }) {
   const theme = useTheme();
   const classes = useStyle();
   const { profile } = useContext(UserContext);
+
   return (
-    <Paper
-      style={{
-        background: theme.palette.common.white,
-        borderRadius: "inherit",
-        paddingBottom: theme.spacing(2),
-        paddingTop: theme.spacing(2),
-        marginTop: theme.spacing(4),
-      }}
-    >
-      <Container>
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Box display="flex">
-            <Box
-              style={{
-                background: theme.palette.primary.main,
-                width: "32px",
-                height: "32px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography style={theme.typography.body1}><ArrowForwardIcon style={{ paddingTop: 5}} /></Typography>
-            </Box>
-            <Box ml={theme.spacing(1)} />
-            <Typography variant="h5" color="textSecondary">
-              Personal Details
-            </Typography>
-          </Box>
-          <Link to="/profile" className={classes.link}>
-            <Button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                maxWidth: "auto",
-                padding: 0,
-              }}
-            >
-              <PencilIcon />
+    <>
+      <Paper
+        style={{
+          background: theme.palette.common.white,
+          paddingBottom: theme.spacing(2),
+          paddingTop: theme.spacing(2),
+          borderRadius: 20,
+          boxShadow: "0px 0px 5px 1px rgba(0,0,0,0.2)",
+        }}
+      >
+        <Container>
+          <Box>
+            <Box display="flex" alignItems="center">
+              <LocationOnIcon
+                style={{ paddingTop: 5, color: theme.palette.primary.main }}
+              />
               <Box ml={theme.spacing(1)} />
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                fontWeight={800}
+              >
+                Contact Information
+              </Typography>
+            </Box>
+            <Divider
+              orientation="horizontal"
+              style={{
+                backgroundColor: "rgb(72 71 71 / 66%)",
+                marginTop: theme.spacing(1),
+              }}
+            />
+          </Box>
+
+          <Box mt={theme.spacing(4)}>
+            <Box display="flex" justifyContent="space-between">
               <Typography
                 style={{
                   ...theme.typography.body1,
-                  color: theme.palette.primary.main,
+                  color: theme.palette.text.secondary,
                   fontSize: "0.875rem",
                 }}
               >
-                Edit
+                Name :
               </Typography>
-            </Button>
-          </Link>
-        </Box>
-        <Box mt={theme.spacing(4)}>
-          <Typography
-            style={{
-              ...theme.typography.body1,
-              color: theme.palette.text.secondary,
-              fontWeight: 700,
-              fontSize: "0.875rem",
-            }}
-          >
-            {profile?.name ?? ".."}
-          </Typography>
-          <Typography
-            style={{
-              ...theme.typography.caption,
-              color: theme.palette.text.secondary,
-            }}
-          >
-            {profile?.email ?? ""}
-          </Typography>
-          <Typography
-            style={{
-              ...theme.typography.caption,
-              color: theme.palette.text.secondary,
-            }}
-          >
-            {profile?.phone ?? ""}
-          </Typography>
-        </Box>
-      </Container>
-    </Paper>
+              <Typography
+                style={{
+                  ...theme.typography.body1,
+                  color: theme.palette.common.black,
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                }}
+              >
+                {profile?.name ?? ".."}
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              className={classes.MV2}
+            >
+              <Typography
+                style={{
+                  ...theme.typography.body1,
+                  color: theme.palette.text.secondary,
+                  fontSize: "0.875rem",
+                }}
+              >
+                Email :
+              </Typography>
+              <Typography
+                style={{
+                  ...theme.typography.caption,
+                  color: theme.palette.common.black,
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                }}
+              >
+                {profile?.email ?? ""}
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="space-between">
+              <Typography
+                style={{
+                  ...theme.typography.body1,
+                  color: theme.palette.text.secondary,
+                  fontSize: "0.875rem",
+                }}
+              >
+                Phone :
+              </Typography>
+              <Typography
+                style={{
+                  ...theme.typography.caption,
+                  color: theme.palette.common.black,
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                }}
+              >
+                {profile?.phone ?? ""}
+              </Typography>
+            </Box>
+            <Divider
+              orientation="horizontal"
+              className={classes.MV2}
+              style={{
+                backgroundColor: "rgb(72 71 71 / 66%)",
+              }}
+            />
+            <Box display="flex" justifyContent="space-between">
+              <Typography
+                style={{
+                  ...theme.typography.body1,
+                  color: theme.palette.text.secondary,
+                  fontSize: "0.875rem",
+                }}
+              >
+                Address: 
+              </Typography>
+              <Typography
+                style={{
+                  ...theme.typography.caption,
+                  color: theme.palette.common.black,
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                  paddingLeft: 10
+                }}
+              >
+                {location?.deliveryAddress.split(",")[0] ?? ""}
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Button
+                variant="contained"
+                disableElevation
+                color="primary"
+                className={classes.addressBtn}
+                onClick={toggleModal}
+              >
+                <Typography
+                  variant="caption"
+                  color="black"
+                  fontWeight={800}
+                  style={{ textTransform: "capitalize" }}
+                >
+                  Change Address
+                </Typography>
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      </Paper>
+    </>
   );
 }
 

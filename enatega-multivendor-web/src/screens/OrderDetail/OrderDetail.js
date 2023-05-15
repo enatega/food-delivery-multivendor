@@ -26,10 +26,12 @@ import { ORDER_STATUS } from "../../utils/constantValues";
 import Background from "./Background";
 import useStyles from "./styles";
 import { mapStyles } from "./mapStyles";
+import { useLocationContext } from "../../context/Location";
 import Promotion from "../../components/Promotion/Promotion";
 import { Chat } from "../../components/Chat";
 import RestMarker from "../../assets/images/rest-map-2.png";
 import DestMarker from "../../assets/images/dest-map-2.png";
+import MarkerImage from "../../assets/images/marker.png";
 import TrackingRider from "../../components/Orders/OrderDetail/TrackingRider";
 import { useSubscription } from "@apollo/client";
 import { subscriptionOrder } from "../../apollo/server";
@@ -49,6 +51,7 @@ function OrderDetail() {
   let restCoordinates = {};
   const queryParams = useQuery();
   const [toggleChat, setToggleChat] = useState(false);
+  const { location } = useLocationContext();
 
   useSubscription(
     gql`
@@ -94,7 +97,6 @@ function OrderDetail() {
     );
   }
   const order = orders.find((o) => o._id === id);
-  console.log("order detail", order);
   if (loadingOrders || !order) {
     return (
       <Grid container className={classes.spinnerContainer}>
@@ -140,8 +142,21 @@ function OrderDetail() {
                     onLoad={destCoordinates && onLoad}
                     options={{
                       styles: mapStyles,
+                      zoomControl: true,
+                      zoomControlOptions: {
+                        position: window.google.maps.ControlPosition.RIGHT_TOP,
+                      },
                     }}
                   >
+                    {location && (
+                      <Marker
+                        position={{
+                          lat: location?.latitude,
+                          lng: location?.longitude,
+                        }}
+                        icon={MarkerImage}
+                      />
+                    )}
                     <Marker position={restCoordinates} icon={RestMarker} />
                     <Marker position={destCoordinates} icon={DestMarker} />
                     {order.rider && <TrackingRider id={order.rider._id} />}

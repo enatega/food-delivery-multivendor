@@ -5,11 +5,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import CartIcon from "../../../assets/icons/CartIcon";
-import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import useStyle from "./styles";
 import { ReactComponent as Logo } from "../../../assets/images/logo.svg";
 import { useTheme } from "@emotion/react";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import PersonIcon from "@mui/icons-material/Person";
 
 function LoginDesktopHeader({ title, showIcon, showCart = false }) {
   const classes = useStyle();
@@ -39,7 +39,7 @@ function LoginDesktopHeader({ title, showIcon, showCart = false }) {
               <Divider flexItem orientation="vertical" light />
               <RouterLink to={"/login"} className={classes.linkDecoration}>
                 <Button aria-controls="simple-menu" aria-haspopup="true">
-                  <ProfileIcon />
+                  <PersonIcon style={{ color: "#000" }} />
                   <Typography
                     variant="button"
                     color="textSecondary"
@@ -56,7 +56,7 @@ function LoginDesktopHeader({ title, showIcon, showCart = false }) {
             <Box style={{ alignSelf: "center" }}>
               <RouterLink to="/" className={classes.linkDecoration}>
                 <Button>
-                  <CartIcon />
+                  <LocalMallIcon style={{ color: "#000" }} />
                 </Button>
               </RouterLink>
             </Box>

@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -7,6 +7,10 @@ const useStyle = makeStyles((theme) => ({
     },
     "& .MuiInputBase-input": {
       color: theme.palette.text.secondary,
+    },
+    "& .MuiDialog-paper": {
+      backgroundColor: "transparent",
+      borderRadius: 40,
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
@@ -30,7 +34,7 @@ const useStyle = makeStyles((theme) => ({
   },
   itemTitle: {
     ...theme.typography.h5,
-    fontWeight: 700,
+    fontWeight: 500,
     color: theme.palette.text.secondary,
   },
   priceTitle: {
@@ -40,31 +44,49 @@ const useStyle = makeStyles((theme) => ({
   infoStyle: {
     ...theme.typography.caption,
     textTransform: "uppercase",
-    background: "rgba(39,111,191,0.1)",
-    color: "#276FBF",
+    background: "black",
+    color: "white",
     padding: "4px 6px",
-    fontWeight: 700,
+    fontWeight: 500,
+    borderRadius: 10,
   },
   checkoutContainer: {
-    borderRadius: 0,
-    width: "80%",
+    width: "200px",
+    borderRadius: "12px !important",
     padding: "10px 0px",
     "&:hover": {
       background: theme.palette.primary.main,
     },
   },
+  imageContainer: {
+    width: "100%",
+    height: "180px",
+    backgroundImage: `url('https://images.deliveryhero.io/image/fd-pk/LH/v1bq-hero.jpg?width=2000&amp;height=500')`,
+    backgroundSize: "cover",
+    backgroundPositionX: "center",
+    backgroundPositionY: "center",
+    position: "relative",
+    borderRadius: 40,
+    boxShadow:
+      "inset 0 0 0 1000px rgba(0, 0, 0, 0), inset 0 0 0 1000px #00000040",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   checkoutText: {
     ...theme.typography.h6,
-    fontWeight: 600,
+    fontWeight: 700,
     fontSize: "0.875rem",
+    color: theme.palette.common.black,
   },
   closeContainer: {
-    background: theme.palette.grey[300],
-    minWidth: "auto",
-    marginRight: theme.spacing(1),
-    marginTop: theme.spacing(1),
+    background: theme.palette.common.white,
+    width: "54px",
+    height: "54px",
     borderRadius: "50%",
-    padding: theme.spacing(1),
+    position: "absolute",
+    right: 0,
+    top: 0,
   },
   itemError: {
     color: theme.palette.common.white,
@@ -75,6 +97,22 @@ const useStyle = makeStyles((theme) => ({
     "&:hover": {
       background: theme.palette.grey[400],
     },
+  },
+  outerContainer: {
+    borderRadius: 40,
+    background: "#F5F6F6",
+  },
+  innerContainer: {
+    background: "#F5F6F6",
+    padding: "20px 40px",
+  },
+  lowerContainer: {
+    background: theme.palette.common.white,
+    boxShadow: theme.shadows["2"],
+    borderRadius: 20,
+  },
+  mr: {
+    marginRight: theme.spacing(1),
   },
 }));
 

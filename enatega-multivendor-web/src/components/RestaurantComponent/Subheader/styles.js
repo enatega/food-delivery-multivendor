@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -14,6 +14,7 @@ const useStyle = makeStyles((theme) => ({
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
         borderColor: theme.palette.grey["300"],
+        borderRadius: 20,
       },
       "&:hover fieldset": {
         borderColor: theme.palette.grey["300"],
@@ -29,13 +30,26 @@ const useStyle = makeStyles((theme) => ({
   },
   mainContainer: {
     position: "fixed",
-    width: "100%",
+    minWidth: "670px",
     zIndex: 1300,
     top: "63px",
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: "#ffffffd1",
+    borderRadius: 20,
+    margin: 10,
+    [theme.breakpoints.down("sm")]: {
+      minWidth: "300px",
+      width: "95%",
+      top: "63px",
+    },
   },
   upperContainer: {
     padding: "20px 20px",
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    [theme.breakpoints.down("sm")]: {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+    },
   },
   mr10: {
     marginRight: "10px",
@@ -46,19 +60,31 @@ const useStyle = makeStyles((theme) => ({
   textBold: {
     fontWeight: theme.typography.fontWeightBold,
   },
+  textMBold: {
+    fontWeight: theme.typography.fontWeightMedium,
+  },
   button: {
     width: "70px",
     backgroundColor: theme.palette.primary.main,
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
-    borderRadius: "0px",
+    padding: 10,
+    borderRadius: 10,
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
     },
   },
   shadow: {
     boxShadow: theme.shadows["1"],
+  },
+  addressBtn: {
+    textAlign: "inherit",
+    justifyContent: "flex-start",
+    padding: 0,
+    width: "100%",
+    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+    borderRadius: 20,
   },
 }));
 

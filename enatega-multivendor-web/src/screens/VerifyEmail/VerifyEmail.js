@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  TextField,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -24,6 +23,7 @@ import VerifyEmailIcon from "../../assets/images/emailLock.png";
 import { LoginWrapper } from "../Wrapper";
 import { createUser, sendOtpToEmail } from "../../apollo/server";
 import UserContext from "../../context/User";
+import OtpInput from "react-otp-input";
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -42,7 +42,7 @@ function VerifyEmail() {
   const { setTokenAsync } = useContext(UserContext);
   const [otpError, setOtpError] = useState(false);
   const [seconds, setSeconds] = useState(30);
-  const [otp, setOtp] = useState();
+  const [otp, setOtp] = useState("");
   const [otpFrom, setOtpFrom] = useState(
     Math.floor(100000 + Math.random() * 900000).toString()
   );
@@ -138,11 +138,10 @@ function VerifyEmail() {
   const resendOtp = () => {
     setOtpFrom(Math.floor(100000 + Math.random() * 900000).toString());
   };
-  const handleCreateUser = async (e) => {
-    const code = await e.target.value;
-    setOtp(code);
-    if (code.length === 6) {
-      onCodeFilled(code);
+  const handleCreateUser = (val) => {
+    setOtp(val);
+    if (val.length === 6) {
+      onCodeFilled(val);
     }
   };
   return user?.email ? (
@@ -182,23 +181,39 @@ function VerifyEmail() {
             variant="caption"
             className={`${classes.caption} ${classes.fontGrey}`}
           >
-            Please enter the OTP we sent to your email
+            Please enter the OTP we sent to your email updated
           </Typography>
           <Box mt={theme.spacing(2)} />
-          <TextField
-            name={"otp"}
-            defaultValue={otp}
-            error={Boolean(otpError)}
+          <OtpInput
+            value={otp}
             onChange={handleCreateUser}
-            fullWidth
-            variant="outlined"
-            label="Enter Digits"
-            InputLabelProps={{
-              style: {
-                color: theme.palette.grey[600],
-              },
+            numInputs={6}
+            containerStyle={{
+              width: "100%",
+              display: "flex",
+              alignSelf: "center",
+              backgroundColor: theme.palette.common.white,
             }}
+            inputStyle={{
+              width: 45,
+              height: 45,
+              margin: 5,
+              borderRadius: 5,
+              fontSize: theme.typography.h2,
+              border: `1px solid ${theme.palette.grey[400]}`,
+              boxShadow: theme.shadows[3],
+            }}
+            focusStyle={{
+              outlineColor: theme.palette.grey[900],
+            }}
+            editable
           />
+          <Box mt={2} />
+          {otpError && (
+            <Typography variant={"h6"} style={{ color: "red", fontSize: 14 }}>
+              Invalid code, please check and enter again
+            </Typography>
+          )}
           <Box mt={theme.spacing(8)} />
           <Button
             variant="contained"

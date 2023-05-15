@@ -113,6 +113,7 @@ function NewLogin() {
           helperText={error}
           variant="outlined"
           label="Email"
+          type={"email"}
           fullWidth
           InputLabelProps={{
             style: {

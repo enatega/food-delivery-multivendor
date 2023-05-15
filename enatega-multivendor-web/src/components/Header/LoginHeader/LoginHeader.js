@@ -11,6 +11,8 @@ const REGISTRATION_PATH = [
   "/login-email",
   "/forgot-password",
   "/email-sent",
+  "/phone-number",
+  "/verify-email"
 ];
 
 function Header({ showIcon = false }) {

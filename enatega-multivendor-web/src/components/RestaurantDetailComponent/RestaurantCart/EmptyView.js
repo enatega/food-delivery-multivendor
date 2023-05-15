@@ -3,29 +3,60 @@ import clsx from "clsx";
 import React, { useContext } from "react";
 import ConfigurationContext from "../../../context/Configuration";
 import useStyles from "./styles";
+import RiderImage from "../../../assets/images/rider.png";
 
 function EmptyView() {
-  const configuration = useContext(ConfigurationContext)
+  const configuration = useContext(ConfigurationContext);
   const classes = useStyles();
   const theme = useTheme();
   return (
     <>
-      <Box style={{ display: "flex", justifyContent: "center" }}>
-        <Typography variant="h6" color="textSecondary" className={clsx(classes.mediumFont, classes.textBold)}>
-          Your cart
-        </Typography>
-      </Box>
       <Box
         style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: theme.spacing(2),
+          background:
+            "linear-gradient(260.99deg, #90EA93 2.79%, #6FCF97 96.54%)",
+          borderRadius: "20px",
+          padding: "30px 20px",
         }}
+        display="flex"
+        alignItems={"center"}
       >
-        <Typography variant="body1" className={classes.disabledText}>
-          Start adding items to your cart
-        </Typography>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          {/* <DeliveryIcon /> */}
+          <img src={RiderImage} alt="rider" />
+        </Box>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            marginLeft: "5px",
+          }}
+        >
+          <Typography
+            style={{
+              ...theme.typography.body1,
+              color: theme.palette.common.black,
+              fontSize: "1.275rem",
+              fontWeight: 600,
+            }}
+            align="left"
+          >
+            Your cart
+          </Typography>
+
+          <Typography
+            variant="h6"
+            color="textSecondary"
+            style={{ fontSize: "0.875rem", marginTop: 10 }}
+            className={classes.textBold}
+            align="center"
+          >
+            Start adding items to your cart
+          </Typography>
+        </Box>
       </Box>
+
       <Container>
         <Box
           style={{
@@ -48,11 +79,19 @@ function EmptyView() {
             marginTop: theme.spacing(2),
           }}
         >
-          <Typography variant="body1" color="textSecondary" className={clsx(classes.textBold, classes.smallFont)}>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            className={clsx(classes.textBold, classes.smallFont)}
+          >
             Total (Incl. TAX)
           </Typography>
-          <Typography variant="body1" color="textSecondary" className={clsx(classes.textBold, classes.smallFont)}>
-          {`${configuration.currencySymbol}`} 0.00
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            className={clsx(classes.textBold, classes.smallFont)}
+          >
+            {`${configuration.currencySymbol}`} 0.00
           </Typography>
         </Box>
         <Box
@@ -63,7 +102,11 @@ function EmptyView() {
           }}
         >
           <Button fullWidth disabled className={classes.checkoutContainer}>
-            <Typography className={clsx(classes.checkoutText, classes.whiteText)}>GO TO CHECKOUT</Typography>
+            <Typography
+              className={clsx(classes.checkoutText, classes.whiteText)}
+            >
+              GO TO CHECKOUT
+            </Typography>
           </Button>
         </Box>
       </Container>

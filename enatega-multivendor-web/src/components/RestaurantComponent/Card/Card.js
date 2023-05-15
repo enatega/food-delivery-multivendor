@@ -7,6 +7,7 @@ import {
   Card as ICard,
   Typography,
   CardActionArea,
+  useTheme,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -26,26 +27,58 @@ const PROFILE = gql`
   ${profile}
 `;
 
-function PricingDelivery({ grid, minimum, deliveryCharges, currencySymbol }) {
+function PricingDelivery({
+  grid,
+  minimum,
+  deliveryCharges,
+  currencySymbol,
+  isSmall,
+  index,
+}) {
   const classes = useStyles();
-  const containerStyle = grid
-    ? { display: "flex", alignItems: "center" }
+  const theme = useTheme();
+  const containerStyle = !grid
+    ? {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: isSmall ? "center" : "flex-start",
+      }
     : { display: "block" };
   return (
     <Box style={containerStyle}>
-      <Box style={{ display: "flex" }}>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+        }}
+      >
         <Typography
           variant="subtitle1"
           color="textSecondary"
           className={classes.priceText}
+          style={{
+            color: isSmall
+              ? index % 2 === 0
+                ? theme.palette.primary.main
+                : "#5A5858"
+              : "#5A5858",
+          }}
         >
           {currencySymbol} {minimum}
         </Typography>
         <Typography
-          style={{ marginLeft: "4px" }}
           className={classes.priceDescription}
+          style={{
+            marginLeft: "4px",
+            color: isSmall
+              ? index % 2 === 0
+                ? theme.palette.primary.main
+                : "#5A5858"
+              : "#5A5858",
+          }}
         >
-          minumum
+          Minimum
         </Typography>
       </Box>
       {grid && (
@@ -78,6 +111,7 @@ function Card(props) {
   const item = props.data ?? null;
   const navigateTo = useNavigate();
   const { profile } = useContext(UserContext);
+  const theme = useTheme();
   const grid = props.grid ? props.grid : false;
   const heart = profile ? profile.favourite.includes(item?._id) : false;
   const cardImageHeight = props.cardImageHeight
@@ -115,14 +149,25 @@ function Card(props) {
   }, [navigateTo, item._id]);
 
   return (
-    <ICard className={classes.card}>
+    <ICard
+      className={classes.card}
+      style={{
+        backgroundColor: props.isSmall
+          ? props.index % 2 === 0
+            ? "black"
+            : theme.palette.primary.main
+          : "white",
+      }}
+    >
       <CardActionArea
         onClick={(e) => {
           e.preventDefault();
           navigate();
         }}
       >
-        <Box style={{ minWidth: "200px" }}>
+        <Box
+          className={props.isSmall ? classes.smallWidth : classes.largeWidth}
+        >
           <Box
             style={{
               height: cardImageHeight,
@@ -145,6 +190,7 @@ function Card(props) {
                 {item.deliveryTime}
               </Typography>
               <Typography color="textSecondary" className={classes.timeText}>
+                {" "}
                 MIN
               </Typography>
             </Box>
@@ -165,62 +211,124 @@ function Card(props) {
                   mutate({ variables: { id: item._id } });
                 }
               }}
-              className={classes.heartBtn}
+              className={
+                props.isSmall ? classes.smallHeartBtn : classes.heartBtn
+              }
             >
               {loading ? (
                 <CircularProgress size={15} />
               ) : heart ? (
-                <FavoriteIcon fontSize="small" color="primary" />
+                <FavoriteIcon fontSize="small" className={classes.icon} />
               ) : (
-                <FavoriteBorderIcon fontSize="small" color="primary" />
+                <FavoriteBorderIcon fontSize="small" className={classes.icon} />
               )}
             </Box>
           </Box>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            className={classes.row}
+            flexDirection={props.isSmall ? "column" : "row"}
+          >
             <Typography
               variant="subtitle1"
               color="textSecondary"
               className={classes.textBold}
+              noWrap
+              align={props.isSmall ? "center" : "left"}
+              style={{
+                color: props.isSmall
+                  ? props.index % 2 === 0
+                    ? theme.palette.primary.main
+                    : "black"
+                  : "black",
+              }}
             >
               {item.name}
             </Typography>
-            <Box style={{ display: "flex", alignItems: "center" }}>
-              <StarSharpIcon style={{ fontSize: "14px", color: "#276fa5" }} />
+            <Box
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: props.isSmall ? "center" : "flex-end",
+              }}
+            >
+              <StarSharpIcon style={{ fontSize: "16px", color: "#448B7B" }} />
               <Typography
                 variant="caption"
                 color="textSecondary"
-                className={classes.textBold}
+                className={`${classes.textBold} ${classes.totalRatingText}`}
+                style={{
+                  color: props.isSmall
+                    ? props.index % 2 === 0
+                      ? "white"
+                      : "#5A5858"
+                    : "#5A5858",
+                }}
               >
                 {item.reviewData.ratings}
               </Typography>
-              <Typography variant="caption" className={classes.totalRatingText}>
+              <Typography
+                variant="caption"
+                className={classes.totalRatingText}
+                style={{
+                  color: props.isSmall
+                    ? props.index % 2 === 0
+                      ? "white"
+                      : "#5A5858"
+                    : "#5A5858",
+                }}
+              >
                 /5
               </Typography>
               <Typography
                 variant="caption"
-                style={{ fontSize: "0.875rem", marginLeft: "3px" }}
                 className={classes.totalRatingText}
+                style={{
+                  color: props.isSmall
+                    ? props.index % 2 === 0
+                      ? "white"
+                      : "#5A5858"
+                    : "#5A5858",
+                  fontSize: "0.875rem",
+                  marginLeft: "3px",
+                }}
               >
                 ({item.reviewData.reviews.length})
               </Typography>
             </Box>
           </Box>
-          <Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            className={classes.row}
+            flexDirection={props.isSmall ? "column" : "row"}
+          >
             <Typography
               display="inline"
               noWrap
               variant="caption"
               className={classes.subDescription}
+              align={props.isSmall ? "center" : "left"}
+              style={{
+                color: props.isSmall
+                  ? props.index % 2 === 0
+                    ? theme.palette.primary.main
+                    : "#5A5858"
+                  : "#5A5858",
+              }}
             >
               {category.toString()}
             </Typography>
+            <PricingDelivery
+              minimum={item.minimumOrder ?? 0}
+              deliveryCharges={item.deliveryCharges ?? 0}
+              grid={grid}
+              currencySymbol={configuration.currencySymbol}
+              isSmall={props.isSmall}
+              index={props.index}
+            />
           </Box>
-          <PricingDelivery
-            minimum={item.minimumOrder ?? 0}
-            deliveryCharges={item.deliveryCharges ?? 0}
-            grid={grid}
-            currencySymbol={configuration.currencySymbol}
-          />
         </Box>
       </CardActionArea>
     </ICard>

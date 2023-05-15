@@ -1,9 +1,17 @@
 import { gql, useMutation } from "@apollo/client";
-import { Button, CircularProgress, Divider, Grid, TextField, Typography, useTheme } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+  Box,
+  useTheme,
+} from "@mui/material";
 import React, { useCallback, useRef, useState } from "react";
 import { changePassword } from "../../../apollo/server";
 import FlashMessage from "../../FlashMessage";
 import useStyle from "./styles";
+import PasswordIcon from "@mui/icons-material/Password";
 
 const CHANGE_PASSWORD = gql`
   ${changePassword}
@@ -41,6 +49,7 @@ function PasswordCard() {
   }, []);
 
   const handleAction = () => {
+    console.log(passError + " " + confirmError);
     clearErrors();
     let validate = true;
     const oldPassword = formRef.current["currentPassword"].value;
@@ -74,48 +83,45 @@ function PasswordCard() {
         alertMessage={error.message}
         handleClose={toggleSnackbar}
       />
-      <Grid item xs={12}>
-        <Typography variant="body2" align="center" color="textSecondary" className={classes.textBold}>
-          PASSWORD
-        </Typography>
-      </Grid>
-      <Grid item xs={12} sm={10} md={8} lg={6} className={classes.profileContainer}>
-        <Divider light orientation="horizontal" className={classes.MH3} />
-        <form ref={formRef}>
-          <TextField
-            name={"currentPassword"}
-            variant="outlined"
-            label="Current Password"
-            type="password"
-            error={Boolean(passError)}
-            helperText={passError}
-            fullWidth
-            InputLabelProps={{
-              style: {
-                color: theme.palette.grey[600],
-              },
-            }}
-          />
-          <TextField
-            name={"newPassword"}
-            variant="outlined"
-            label="New Password"
-            type="password"
-            error={Boolean(confirmError)}
-            helperText={confirmError}
-            fullWidth
-            InputLabelProps={{
-              style: {
-                color: theme.palette.grey[600],
-              },
-            }}
-          />
+      <Grid
+        item
+        xs={12}
+        sm={10}
+        md={8}
+        lg={6}
+        className={classes.profileContainer}
+      >
+        <Box className={classes.headerBar}>
+          <Typography className={classes.titleText}>Password Info</Typography>
+        </Box>
+        {/* <Divider light orientation="horizontal" className={classes.MH3} /> */}
+        <form ref={formRef} className={classes.formMargin}>
+          <Box className={classes.fieldWrapper}>
+            <PasswordIcon style={{ marginRight: 10 }} />
+            <input
+              name="currentPassword"
+              className={classes.textField}
+              type="password"
+              placeholder="Current Password"
+            />
+          </Box>
+          <Box className={classes.fieldWrapper}>
+            <PasswordIcon style={{ marginRight: 10 }} />
+
+            <input
+              type="password"
+              name="newPassword"
+              className={classes.textField}
+              placeholder="New Password"
+              autoComplete="off"
+            />
+          </Box>
           <Grid item xs={12} className={classes.btnContainer}>
             <Button
               disableElevation
               disabled={loading}
               variant="contained"
-              color="primary"
+              className={classes.btn}
               onClick={(e) => {
                 e.preventDefault();
                 handleAction();
@@ -124,7 +130,11 @@ function PasswordCard() {
               {loading ? (
                 <CircularProgress size={25} />
               ) : (
-                <Typography variant="body2" color="secondary" className={classes.textBold}>
+                <Typography
+                  variant="caption"
+                  style={{ color: theme.palette.common.black }}
+                  className={classes.textBold}
+                >
                   SAVE
                 </Typography>
               )}

@@ -190,7 +190,7 @@ export default function StatusCard(props) {
   );
 }
 
-function StatusRow({ first, isEta, status, time, number, last }) {
+export function StatusRow({ first, isEta, status, time, number, last }) {
   const theme = useTheme();
   const classes = useStyles();
   const small = useMediaQuery(theme.breakpoints.down("sm"));

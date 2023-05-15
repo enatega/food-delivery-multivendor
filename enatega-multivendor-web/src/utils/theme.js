@@ -1,7 +1,11 @@
-import { blue } from "@mui/material/colors"
+import { blue } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  breakpoints: {
+    keys: ["xs", "sm", "md", "lg", "xl"],
+    values: { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1400}
+  },
   overrides: {
     MuiPickersToolbar: {
       toolbar: {
@@ -35,7 +39,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ["Open Sans", "sans-serif"].join(),
+    fontFamily: ["Poppins", "Open Sans", "sans-serif"].join(),
     htmlFontSize: 16,
     fontSize: 14,
     fontWeightLight: 300,
@@ -142,9 +146,9 @@ const theme = createTheme({
       white: "#fff",
     },
     primary: {
-      main: "#6FCF97",
+      main: "#90EA93",
       light: "#fff",
-      dark: "#000",
+      dark: "#F4F4F4",
       contrastText: "#fff",
     },
     secondary: {

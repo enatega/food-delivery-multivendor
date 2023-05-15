@@ -38,7 +38,9 @@ function StoreContainer() {
             </Grid>
             <Grid item>
               <RouterLink
-                to= "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
+                to={{
+                  pathname: "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093",
+                }}
                 target="_blank"
                 className={classes.linkDecoration}
               >
@@ -53,7 +55,9 @@ function StoreContainer() {
                 </Button>
               </RouterLink>
               <RouterLink
-                to= "https://play.google.com/store/apps/details?id=com.enatega.multivendor&hl=en_US&gl=US"                
+                to={{
+                  pathname: "https://play.google.com/store/apps/details?id=com.enatega.multivendor&hl=en_US&gl=US",
+                }}
                 target="_blank"
                 className={classes.linkDecoration}
               >

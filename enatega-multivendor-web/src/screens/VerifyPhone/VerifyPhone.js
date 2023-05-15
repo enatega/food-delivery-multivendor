@@ -184,7 +184,7 @@ function VerifyPhone() {
               margin: 5,
               borderRadius: 5,
               fontSize: theme.typography.h2,
-              border: "none",
+              border: `1px solid ${theme.palette.grey[400]}`,
               boxShadow: theme.shadows[3],
             }}
             focusStyle={{

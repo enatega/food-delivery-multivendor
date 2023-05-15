@@ -11,93 +11,99 @@ function CartItem(props) {
   const configuration = useContext(ConfigurationContext);
 
   return (
-    <Box style={{ marginTop: theme.spacing(4) }}>
-      <Box style={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography className={classes.itemTextStyle}>
-          {props.foodTitle ? props.foodTitle : ""}
-        </Typography>
-        <Typography
-          style={{ color: theme.palette.text.disabled }}
-          className={classes.subtotalText}
+    <Box
+      style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(3) }}
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.preventDefault();
+            props.removeQuantity();
+          }}
+          style={{ background: theme.palette.primary.main }}
         >
-          {` ${configuration.currencySymbol}  ${parseFloat(
-            props.dealPrice
-          ).toFixed(2)}`}
+          <RemoveIcon fontSize="small" style={{ color: "#000" }} />
+        </IconButton>
+        <Typography
+          style={{
+            ...theme.typography.caption,
+            fontWeight: theme.typography.fontWeightBold,
+            color: theme.palette.common.black,
+            padding: "5px 10px",
+            borderRadius: 5,
+            border: "1px solid #000",
+            margin: "0 8px",
+          }}
+        >
+          {props.quantity ? props.quantity : 0}
         </Typography>
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.preventDefault();
+            props.addQuantity();
+          }}
+          style={{ background: theme.palette.primary.main }}
+        >
+          <AddIcon fontSize="small" color="primary" style={{ color: "#000" }} />
+        </IconButton>
       </Box>
       <Box
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-        }}
+        display="flex"
+        flexDirection="column"
+        flexGrow={1}
+        ml={1}
+        justifyContent="flex-end"
       >
-        <Box>
-          <Typography
-            style={{
-              color: theme.palette.text.secondary,
-              fontSize: "0.7rem",
-              marginTop: theme.spacing(0.5)
-            }}
-            className={classes.itemTextStyle}
-          >
-            {props.variationTitle ? `(${props.variationTitle})` : ""}
-          </Typography>
-          {props?.optionTitles?.map((title,index) => (
-            <Box
-              key={index}
-              style={{
-                display: "flex",
-              }}
-            >
-              <Typography
-                style={{
-                  color: theme.palette.text.disabled,
-                  fontSize: "0.7rem",
-                }}
-                className={classes.optionTextStyle}
-              >
-                +{title}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-        <Box display="flex" alignItems="flex-start" width="75px">
-          <Box
-            style={{
-              display: "flex",
-              alignItems: "center",
-              width: "75px",
-              justifyContent: "space-between",
-            }}
-          >
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.preventDefault();
-                props.removeQuantity();
-              }}
-            >
-              <RemoveIcon fontSize="small" color="primary" />
-            </IconButton>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          style={{
+            flexGrow: 1,
+          }}
+        >
+          <Box>
+            <Typography className={classes.itemTextStyle}>
+              {props.foodTitle ? props.foodTitle : ""}
+            </Typography>
             <Typography
               style={{
-                ...theme.typography.caption,
-                fontWeight: 700,
-                color: theme.palette.text.secondary,
+                color: theme.palette.common.black,
+                fontSize: "0.7rem",
+                marginTop: theme.spacing(0.5),
               }}
+              className={classes.itemTextStyle}
             >
-              {props.quantity ? props.quantity : 0}
+              {props.variationTitle ? `(${props.variationTitle})` : ""}
             </Typography>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.preventDefault();
-                props.addQuantity();
-              }}
+            {props?.optionTitles?.map((title, index) => (
+              <Box key={index} display="flex">
+                <Typography
+                  style={{
+                    color: theme.palette.common.black,
+                    fontSize: "0.7rem",
+                  }}
+                  className={classes.optionTextStyle}
+                >
+                  +{title}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+          <Box>
+            <Typography
+              style={{ color: theme.palette.common.black }}
+              className={classes.subtotalText}
             >
-              <AddIcon fontSize="small" color="primary" />
-            </IconButton>
+              {` ${configuration.currencySymbol}  ${parseFloat(
+                props.dealPrice
+              ).toFixed(2)}`}
+            </Typography>
           </Box>
         </Box>
       </Box>

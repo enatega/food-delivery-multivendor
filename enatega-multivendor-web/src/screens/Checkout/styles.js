@@ -1,4 +1,5 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
+import Bg from "../../assets/images/bg-invert.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,9 +15,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 3),
   },
   mainContainer: {
-    marginTop: "70px",
-    padding: theme.spacing(6, 0),
+    marginTop: "-10px",
     background: theme.palette.grey[100],
+    backgroundImage: `url(${Bg})`,
+    backgroundPositionX: "left",
+    backgroundPositionY: "bottom",
+    backgroundSize: "400px",
+    backgroundRepeat: "no-repeat",
   },
   center: {
     justifyContent: "center",
@@ -67,6 +72,63 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     marginTop: theme.spacing(4),
     border: `1px solid ${theme.palette.grey[300]}`,
+  },
+  containerCard: {
+    marginTop: "-90px",
+    zIndex: 99,
+  },
+  headerBar: {
+    background: "linear-gradient(260.99deg, #90EA93 2.79%, #6FCF97 96.54%)",
+    borderRadius: "20px",
+    padding: "30px 20px",
+  },
+  PH1: {
+    padding: theme.spacing(0, 1),
+  },
+  PB2: {
+    paddingBottom: theme.spacing(2),
+  },
+  PT2: {
+    paddingTop: theme.spacing(2),
+  },
+  MV1: {
+    margin: theme.spacing(1, 0),
+  },
+  MV2: {
+    margin: theme.spacing(2, 0),
+  },
+
+  divider: {
+    width: "75%",
+    background: "black",
+    margin: `${theme.spacing(2)} auto`,
+  },
+  deliveryPaperProfile: {
+    background: theme.palette.primary.main,
+    borderRadius: 10,
+    cursor: "pointer",
+    border: "none",
+  },
+  closeContainer: {
+    position: "absolute",
+    background: "black",
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  footerContainer: {
+    width: "100%",
+    background: theme.palette.grey[100],
+  },
+  footerWrapper: {
+    backgroundColor: theme.palette.primary.main,
+    width: "90%",
+    display: "flex",
+    marginLeft: "auto",
+    borderTopLeftRadius: "5rem",
+    borderBottomLeftRadius: "5rem",
   },
 }));
 

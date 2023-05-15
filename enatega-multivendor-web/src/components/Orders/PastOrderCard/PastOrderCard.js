@@ -5,12 +5,15 @@ import {
   Typography,
   useTheme,
   CircularProgress,
+  Divider,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import ConfigurationContext from "../../../context/Configuration";
 import UserContext from "../../../context/User";
 import useStyles from "./styles";
+import { Status } from "../Status/Status";
 
 function PastOrderCard({ item }) {
   const theme = useTheme();
@@ -19,6 +22,16 @@ function PastOrderCard({ item }) {
   const [loading, setLoading] = useState(false);
   const configuration = useContext(ConfigurationContext);
   const { setCartRestaurant, addCartItem } = useContext(UserContext);
+  const small = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const STATUS_ORDER = [
+    "PENDING",
+    "ACCEPTED",
+    "ASSIGNED",
+    "PICKED",
+    "DELIVERED",
+    "CANCELLED",
+  ];
 
   const onAddToCart = async () => {
     setLoading(true);
@@ -54,74 +67,130 @@ function PastOrderCard({ item }) {
     }
   };
   return (
-    <Grid item xs={12}>
-      <Box pb={theme.spacing(4)} />
+    <Grid item xs={12} className={classes.card}>
       <Box display="flex" justifyContent="space-between">
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          className={classes.textBold}
-        >
-          {item.restaurant?.name ?? "..."}
-        </Typography>
-        <Typography
-          variant="body2"
-          className={`${classes.textBold} ${classes.disabledText}`}
-        >
-          {`${configuration.currencySymbol} ${parseFloat(
-            item.orderAmount
-          ).toFixed(2)}`}
-        </Typography>
-      </Box>
-      <Box display="flex" justifyContent="space-between" pt={theme.spacing(1)}>
-        <Box display="flex">
-          <Typography
-            variant="caption"
-            className={`${classes.disabledText} ${classes.smallText}`}
+        <Box>
+          <Box
+            style={{ display: small ? "block" : "flex" }}
+            alignItems="center"
           >
-            delivery by
-          </Typography>
-          <Box ml={theme.spacing(1)} />
-          <Typography
-            className={`${classes.textBold} ${classes.smallText}`}
-            color="textSecondary"
-          >
-            {item.rider?.name ?? "..."}
-          </Typography>
-        </Box>
-        <Button
-          disabled={loading}
-          style={{
-            maxWidth: "auto",
-            border: `1px solid ${theme.palette.primary.main}`,
-            borderRadius: 0,
-            padding: `0px ${theme.spacing(1)}`,
-          }}
-          onClick={(e) => {
-            e.preventDefault();
-            onAddToCart();
-          }}
-        >
-          {loading ? (
-            <CircularProgress color="primary" size={15} />
-          ) : (
             <Typography
-              variant="caption"
-              color="primary"
+              variant="body2"
+              color="textSecondary"
               className={classes.textBold}
             >
-              REORDER
+              {item.restaurant?.name ?? "..."}
             </Typography>
-          )}
-        </Button>
+            <Box display="flex">
+              <Status isEta={false} first={true} last={false} isActive={true} />
+              <Status
+                firstCol="#90EA93"
+                secondCol="#C4C4C4"
+                isEta={STATUS_ORDER.indexOf(item.orderStatus) < 1}
+                first={false}
+                last={false}
+                isActive={true}
+              />
+              <Status
+              firstCol="#90EA93"
+              secondCol="#C4C4C4"
+                isEta={STATUS_ORDER.indexOf(item.orderStatus) < 2}
+                first={false}
+                last={false}
+                isActive={true}
+              />
+              <Status
+              firstCol="#90EA93"
+              secondCol="#C4C4C4"
+                isEta={STATUS_ORDER.indexOf(item.orderStatus) < 4}
+                first={false}
+                last={true}
+                isActive={true}
+              />
+            </Box>
+          </Box>
+          <Typography
+            variant="body2"
+            className={`${classes.textBold} ${classes.disabledText}`}
+            pt={theme.spacing(1)}
+          >
+            {item?.items.length} item(s) |{" "}
+            {`${configuration.currencySymbol} ${parseFloat(
+              item.orderAmount
+            ).toFixed(2)}`}
+          </Typography>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            pt={theme.spacing(1)}
+          >
+            <Box display="flex">
+            <Typography
+              gutterBottom
+              className={classes.smallText}
+              style={{ color: "black", }}
+            >
+              {/* {props?.items?.length} item(s) |
+              {`${configuration.currencySymbol} ${parseFloat(
+                props.orderAmount
+              ).toFixed(2)}`} */}
+              {item?.orderStatus === "CANCELLED"
+                ? "Your order has been cancelled"
+                : item?.orderStatus === "DELIVERED"
+                ? "Order completed successfully. Thankyou for placing order"
+                : null}
+            </Typography>
+              <Box ml={theme.spacing(1)} />
+              {/* <Typography
+                className={`${classes.textBold} ${classes.smallText}`}
+                color="textSecondary"
+              >
+                {item.rider?.name ?? "..."}
+              </Typography> */}
+            </Box>
+          </Box>
+          <Typography
+            gutterBottom
+            className={`${classes.disabledText} ${classes.smallText}`}
+          >
+            {new Date(item.createdAt).toDateString()}
+          </Typography>
+          <Button
+            disabled={loading}
+            style={{
+              maxWidth: "auto",
+              border: `1px solid ${theme.palette.primary.main}`,
+              borderRadius: 0,
+              padding: `0px ${theme.spacing(1)}`,
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              onAddToCart();
+            }}
+          >
+            {loading ? (
+              <CircularProgress color="primary" size={15} />
+            ) : (
+              <Typography
+                variant="caption"
+                color="#3C8F7C"
+                className={classes.textBold}
+              >
+                REORDER
+              </Typography>
+            )}
+          </Button>
+        </Box>
+        <Box>
+          <img
+            src={item.restaurant.image}
+            alt="Restaurant"
+            className={classes.img}
+          />
+        </Box>
       </Box>
-      <Typography
-        gutterBottom
-        className={`${classes.disabledText} ${classes.smallText}`}
-      >
-        {new Date(item.createdAt).toDateString()}
-      </Typography>
-      {item.items.map((item) => (
+
+      {/* {item.items.map((item) => (
         <Grid item key={item._id}>
           <Typography
             variant="caption"
@@ -141,7 +210,24 @@ function PastOrderCard({ item }) {
             ))
           )}
         </Grid>
-      ))}
+      ))} */}
+      <Divider orientation="horizontal" className={classes.divider} />
+      <Box display="flex" justifyContent="center">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          className={classes.status}
+        >
+          <Typography
+            variant="body2"
+            color="#3C8F7C"
+            style={{ fontWeight: 600 }}
+          >
+            {item?.orderStatus}
+          </Typography>
+        </Box>
+      </Box>
     </Grid>
   );
 }

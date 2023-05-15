@@ -19,6 +19,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "../../../hooks";
 import FlashMessage from "../../FlashMessage";
 import useStyle from "./styles";
+import MarkerImage from "../../../assets/images/marker.png";
 
 function AddressModal({ toggleModal, isVisible, regionDetail, changeAddress }) {
   const classes = useStyle();
@@ -169,6 +170,7 @@ function AddressModal({ toggleModal, isVisible, regionDetail, changeAddress }) {
                 position={region}
                 draggable={true}
                 onDragEnd={changeCoordinates}
+                icon={MarkerImage}
               />
             </GoogleMap>
           </Box>
