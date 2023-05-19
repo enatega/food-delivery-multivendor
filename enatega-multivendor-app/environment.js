@@ -9,9 +9,9 @@ const ENV = {
     // GRAPHQL_URL: 'http://172.20.10.2:8001/graphql',
     // WS_GRAPHQL_URL: 'ws://172.20.10.2:8001/graphql',
     // SERVER_URL: '172.20.10.2', // put / at the end of server url
-    GRAPHQL_URL: 'https://prodenategamultivendorapi.herokuapp.com/graphql',
-    WS_GRAPHQL_URL: 'wss://prodenategamultivendorapi.herokuapp.com/graphql',
-    SERVER_URL: 'https://prodenategamultivendorapi.herokuapp.com/', // put / at the end of server url
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
@@ -27,9 +27,9 @@ const ENV = {
     TEST_OTP: '111111'
   },
   staging: {
-    GRAPHQL_URL: 'https://stagingenategamultivendorapi.herokuapp.com/graphql',
-    WS_GRAPHQL_URL: 'wss://stagingenategamultivendorapi.herokuapp.com/graphql',
-    SERVER_URL: 'https://stagingenategamultivendorapi.herokuapp.com/', // put / at the end of server url
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE: '', // [Add your Google client id see documentation for more information on how to generate it][example: 967541328677 - ge2hpr1n095d0nro56kot0t4q388dsll.apps.googleusercontent.com]
     ANDROID_CLIENT_ID_GOOGLE: '', // [Add your Android google client id see documentation][example: 977541328677-u9lbhmiesp67j3md9b8nk6mkhooeljur.apps.googleusercontent.com]
     AMPLITUDE_API_KEY: '', // [Add your Amplitude api key see documentation for more information][example: 3114f5db4c014dc7ad4ed2ad747341b5]
@@ -41,9 +41,9 @@ const ENV = {
     TEST_OTP: '111111'
   },
   production: {
-    GRAPHQL_URL: 'https://prodenategamultivendorapi.herokuapp.com/graphql',
-    WS_GRAPHQL_URL: 'wss://prodenategamultivendorapi.herokuapp.com/graphql',
-    SERVER_URL: 'https://prodenategamultivendorapi.herokuapp.com/', // put / at the end of server url
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
