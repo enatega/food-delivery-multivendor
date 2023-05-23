@@ -4,11 +4,12 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
-  Platform
+  Platform,
+  ImageBackground
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'
-import { AntDesign, EvilIcons, SimpleLineIcons } from '@expo/vector-icons'
+import { AntDesign, FontAwesome, Entypo } from '@expo/vector-icons'
 import gql from 'graphql-tag'
 import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
@@ -39,11 +40,8 @@ function Addresses() {
     }
     StatusBar.setBarStyle('light-content')
   })
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_ADDRESS)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_ADDRESS)
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -56,11 +54,6 @@ function Addresses() {
     })
   }, [])
 
-  const addressIcons = {
-    Home: 'home',
-    Work: 'briefcase',
-    Other: 'location-pin'
-  }
   function emptyView() {
     return (
       <View style={styles().subContainerImage}>
@@ -94,71 +87,98 @@ function Addresses() {
           ItemSeparatorComponent={() => (
             <View style={styles(currentTheme).line} />
           )}
-          ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
+          contentContainerStyle={{ height: '100%', ...alignment.Mmedium }}
+          ListHeaderComponent={() => (
+            <View style={styles(currentTheme).upperContainer}>
+              <ImageBackground
+                source={require('../../assets/images/address.png')}
+                style={styles().backgroundImage}
+                resizeMode="contain"
+              />
+            </View>
+          )}
+          ListFooterComponent={() => {
+            return (
+              <View style={styles(currentTheme).containerButton}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles().addButton}
+                  onPress={() => navigation.navigate('NewAddress')}>
+                  <AntDesign
+                    name="plus"
+                    size={scale(30)}
+                    color={currentTheme.tagColor}
+                  />
+                </TouchableOpacity>
+              </View>
+            )
+          }}
           renderItem={({ item: address }) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles().width100, styles(currentTheme).containerSpace]}
-              onPress={() => {
-                navigation.navigate('EditAddress', { ...address })
-              }}>
-              <View style={styles().width100}>
+            <View style={styles(currentTheme).lower}>
+              <TouchableOpacity
+                style={styles(currentTheme).containerHeading}
+                activeOpacity={0.7}
+                onPress={() => {
+                  navigation.navigate('EditAddress', { ...address })
+                }}>
                 <View style={[styles().titleAddress, styles().width100]}>
                   <View style={[styles().homeIcon]}>
-                    <SimpleLineIcons
-                      name={addressIcons[address.label]}
-                      size={scale(14)}
-                      color={currentTheme.iconColorPink}
-                    />
+                    <FontAwesome name="home" size={20} color="black" />
                   </View>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={{ width: '60%', textAlignVertical: 'bottom' }}>
-                    {address.label}
-                  </TextDefault>
-                  <View style={[styles().width10, { alignItems: 'center' }]}>
-                    <SimpleLineIcons
-                      name="pencil"
-                      size={scale(13)}
-                      color={currentTheme.iconColorPink}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    disabled={loadingMutation}
-                    style={styles().width10}
-                    onPress={() => {
-                      mutate({ variables: { id: address._id } })
+                  <View
+                    style={{
+                      width: '80%',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      ...alignment.PLxSmall
                     }}>
-                    <EvilIcons
-                      name="trash"
-                      size={scale(20)}
-                      color={currentTheme.iconColorPink}
-                      style={styles().width100}
-                    />
-                  </TouchableOpacity>
+                    <View>
+                      <TextDefault
+                        bolder
+                        textColor={currentTheme.fontMainColor}>
+                        {address.label}
+                      </TextDefault>
+
+                      <View style={styles().addressDetail}>
+                        <TextDefault
+                          textColor={currentTheme.fontMainColor}
+                          small>
+                          {address.deliveryAddress}
+                        </TextDefault>
+                      </View>
+                    </View>
+
+                    <View
+                      style={[
+                        styles().width10,
+                        { alignItems: 'center', ...alignment.MRsmall }
+                      ]}>
+                      <Entypo
+                        name="edit"
+                        size={scale(18)}
+                        color={currentTheme.fontMainColor}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      disabled={loadingMutation}
+                      style={styles().width10}
+                      onPress={() => {
+                        mutate({ variables: { id: address._id } })
+                      }}>
+                      <FontAwesome
+                        name="trash"
+                        size={scale(20)}
+                        color={currentTheme.fontMainColor}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <View style={{ ...alignment.MTxSmall }}></View>
-                <View style={styles().addressDetail}>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small>
-                    {address.deliveryAddress}
-                  </TextDefault>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small>
-                    {address.details}
-                  </TextDefault>
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           )}
         />
-        <View style={styles(currentTheme).containerButton}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles().addButton}
-            onPress={() => navigation.navigate('NewAddress')}>
-            <AntDesign name="plus" size={scale(30)} color={'#FFF'} />
-          </TouchableOpacity>
-        </View>
       </View>
       <View
         style={{

@@ -5,8 +5,7 @@ import { alignment } from '../../../utils/alignment'
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      flex: 1,
-      backgroundColor: props !== null ? props.headerBackground : 'transparent'
+      flex: 1
     },
     logInContainer: {
       width: '100%',
@@ -21,10 +20,8 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     subContainer: {
-      width: '85%',
-      height: '80%',
-      justifyContent: 'space-between',
-      ...alignment.MBlarge
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     imgContainer: {
       width: scale(70),
@@ -33,7 +30,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: props !== null ? props.fontWhite : 'transparent',
-      ...alignment.MTlarge
+      ...alignment.MBlarge
     }
   })
 

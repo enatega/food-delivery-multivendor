@@ -32,11 +32,8 @@ function About(props) {
   }
 
   const [pager, pagerSetter] = useState(tab)
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_ABOUT)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_ABOUT)
   }, [])
   function emptyView() {
     return (

@@ -48,7 +48,7 @@ const { height } = Dimensions.get('screen')
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
 const HEADER_MAX_HEIGHT = height * 0.3
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const HEADER_MIN_HEIGHT = height * 0.12 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
 
@@ -69,7 +69,6 @@ function Restaurant(props) {
   const circle = useValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
@@ -85,7 +84,6 @@ function Restaurant(props) {
   const { data, refetch, networkStatus, loading, error } = useRestaurant(
     propsData._id
   )
-
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
@@ -94,11 +92,8 @@ function Restaurant(props) {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
   })
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_RESTAURANTS)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_RESTAURANTS)
   }, [])
   useEffect(() => {
     if (
@@ -201,7 +196,22 @@ function Restaurant(props) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
       if (result.exist) await addQuantity(result.key)
-      else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
+      else {
+        const newFood = {
+          _id: food._id,
+          title: food.title,
+          price: food.variations[0].price, // variation + options price
+          image: food.image,
+          quantity: 1,
+          variation: {
+            _id: food.variations[0]._id,
+            title: food.variations[0].title,
+            price: food.variations[0].price
+          },
+          addons: []
+        }
+        await addCartItem(newFood, clearFlag)
+      }
       animate()
     } else {
       if (clearFlag) await clearCart()
@@ -209,7 +219,8 @@ function Restaurant(props) {
         food,
         addons: restaurant.addons,
         options: restaurant.options,
-        restaurant: restaurant._id
+        restaurant: restaurant._id,
+        restaurantImage: restaurant.image
       })
     }
   }
@@ -400,22 +411,6 @@ function Restaurant(props) {
     '%'
   )
 
-  const circleSize = interpolateNode(circle, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [scale(18), scale(24), scale(18)],
-    extrapolate: Extrapolate.CLAMP
-  })
-  const radiusSize = interpolateNode(circle, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [scale(9), scale(12), scale(9)],
-    extrapolate: Extrapolate.CLAMP
-  })
-  const fontChange = interpolateNode(circle, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [scale(8), scale(12), scale(8)],
-    extrapolate: Extrapolate.CLAMP
-  })
-
   if (loading) {
     return (
       <Animated.View
@@ -463,12 +458,14 @@ function Restaurant(props) {
                   duration={600}
                 />
               )}
-              Left={PlaceholderMedia}
+              Left={props => (
+                <PlaceholderMedia style={[{ marginLeft: '5%' }, props.style]} />
+              )}
               style={{
                 padding: 12
               }}>
-              <PlaceholderLine width={80} />
-              <PlaceholderLine width={80} />
+              <PlaceholderLine width={80} style={{ alignSelf: 'center' }} />
+              <PlaceholderLine width={80} style={{ alignSelf: 'center' }} />
             </Placeholder>
           ))}
         </View>
@@ -486,7 +483,7 @@ function Restaurant(props) {
 
   return (
     <SafeAreaView style={styles().flex}>
-      <Animated.View style={styles().flex}>
+      <Animated.View style={[styles(currentTheme).flex]}>
         <ImageHeader
           ref={flatListRef}
           iconColor={iconColor}
@@ -512,7 +509,10 @@ function Restaurant(props) {
             flexGrow: 1,
             zIndex: -1,
             paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-            marginTop: HEADER_MIN_HEIGHT
+            marginTop: HEADER_MIN_HEIGHT,
+            width: '90%',
+            alignSelf: 'center',
+            marginBottom: 60
           }}
           // Important
           contentContainerStyle={{
@@ -626,40 +626,45 @@ function Restaurant(props) {
           )}
         />
         {cartCount > 0 && (
-          <View style={styles(currentTheme).buttonContainer}>
+          <View style={[styles(currentTheme).buttonContainer]}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles(currentTheme).button}
-              onPress={() => navigation.navigate('Cart')}>
+              style={styles(currentTheme).button}>
               <View style={styles().buttontLeft}>
-                <Animated.View
-                  style={[
-                    styles(currentTheme).buttonLeftCircle,
-                    {
-                      width: circleSize,
-                      height: circleSize,
-                      borderRadius: radiusSize
-                    }
-                  ]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Animated.Text style={[styles(currentTheme).buttonTextLeft]}>
+                    {`${configuration.currencySymbol}`} 200
+                  </Animated.Text>
+                  <Animated.Text style={[styles(currentTheme).buttonTextLeft]}>
+                    .
+                  </Animated.Text>
                   <Animated.Text
                     style={[
                       styles(currentTheme).buttonTextLeft,
-                      { fontSize: fontChange }
+                      styles(currentTheme).two
                     ]}>
                     {cartCount}
                   </Animated.Text>
-                </Animated.View>
+                  <Animated.Text style={[styles(currentTheme).buttonTextLeft]}>
+                    .
+                  </Animated.Text>
+                </View>
               </View>
-              <TextDefault
-                style={styles().buttonText}
-                textColor={currentTheme.buttonTextPink}
-                uppercase
-                center
-                bolder
-                small>
-                {i18n.t('viewCart')}
-              </TextDefault>
-              <View style={styles().buttonTextRight} />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Cart')}
+                style={[
+                  styles().buttonText,
+                  { backgroundColor: currentTheme?.startColor }
+                ]}>
+                <TextDefault
+                  textColor={currentTheme.backIconBackground}
+                  uppercase
+                  center
+                  bolder
+                  small>
+                  {i18n.t('viewCart')}
+                </TextDefault>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
         )}

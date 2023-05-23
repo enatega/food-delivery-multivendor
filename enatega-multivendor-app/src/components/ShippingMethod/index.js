@@ -6,36 +6,49 @@ import DatePicker from '@react-native-community/datetimepicker'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
+import TextDefault from '../Text/TextDefault/TextDefault'
+import { SHIPPING_METHOD } from '../../utils/enums'
 
-function PickUp(props) {
+function ShippingMethod({
+  shippingMethod,
+  setShippingMethod,
+  orderDate,
+  setOrderDate,
+  minimumTime
+}) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [showPicker, setShowPicker] = useState(false)
-  const currentDate = props.minimumTime
+  const currentDate = minimumTime
+  const isPickUpOrder = shippingMethod === SHIPPING_METHOD.PICKUP
   return (
     <View style={{ paddingTop: 50 }}>
       <View style={styles().tabContainer}>
         <TouchableOpacity
           onPress={() => {
-            props.setIsPickedUp(true)
+            setShippingMethod(SHIPPING_METHOD.PICKUP)
           }}
           style={
-            props.isPickedUp
+            isPickUpOrder
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text>PickUp</Text>
+          <TextDefault bold textColor={isPickUpOrder ? '#fff' : '#000'}>
+            PickUp
+          </TextDefault>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            props.setIsPickedUp(false)
+            setShippingMethod(SHIPPING_METHOD.DELIVERY)
           }}
           style={
-            !props.isPickedUp
+            !isPickUpOrder
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text>Delivery</Text>
+          <TextDefault bold textColor={!isPickUpOrder ? '#fff' : '#000'}>
+            Delivery
+          </TextDefault>
         </TouchableOpacity>
       </View>
       <View
@@ -43,7 +56,7 @@ function PickUp(props) {
           flexDirection: 'row',
           justifyContent: 'center',
           alignContent: 'center',
-          paddingTop: 4
+          paddingTop: 5
         }}>
         <TouchableOpacity
           disabled={Platform.OS === 'ios'}
@@ -56,7 +69,7 @@ function PickUp(props) {
                 ? styles().androidDateFormat
                 : styles().iosDateFormat
             }>
-            {props.orderDate.format('MM-D-YYYY, h:mm a')}{' '}
+            {orderDate.format('MM-D-YYYY, h:mm a')}{' '}
             {Platform.OS === 'android' && (
               <FontAwesome
                 name="edit"
@@ -74,13 +87,13 @@ function PickUp(props) {
             minimumDate={currentDate}
             mode={'time'}
             display={'spinner'}
-            value={new Date(props.orderDate)}
+            value={new Date(orderDate)}
             onChange={(event, date) => {
               if (
                 date !== undefined &&
                 currentDate.getTime() <= date.getTime()
               ) {
-                props.setOrderDate(moment(date))
+                setOrderDate(moment(date))
               }
               Platform.OS === 'android' && setShowPicker(false)
             }}
@@ -91,4 +104,4 @@ function PickUp(props) {
   )
 }
 
-export default PickUp
+export default ShippingMethod

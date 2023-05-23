@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
   AppState,
   View,
@@ -6,7 +6,8 @@ import {
   Platform,
   Linking,
   StatusBar,
-  Button
+  Image,
+  ActivityIndicator
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Updates from 'expo-updates'
@@ -14,14 +15,8 @@ import * as Notifications from 'expo-notifications'
 import * as Localization from 'expo-localization'
 import Modal from 'react-native-modal'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
 import { profile } from '../../apollo/queries'
-import {
-  pushToken,
-  updateNotificationStatus,
-  Deactivate
-} from '../../apollo/mutations'
-import { User } from '../../apollo/queries'
+import { pushToken, updateNotificationStatus } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import styles from './styles'
@@ -32,14 +27,11 @@ import Spinner from '../../components/Spinner/Spinner'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
-import { Modalize } from 'react-native-modalize'
-import { useNavigation } from '@react-navigation/native'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import Constants from 'expo-constants'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import * as Device from 'expo-device'
-import AuthContext from '../../context/Auth'
 import Analytics from '../../utils/analytics'
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -59,30 +51,23 @@ const UPDATE_NOTIFICATION_TOKEN = gql`
 const PROFILE = gql`
   ${profile}
 `
-const DEACTIVATE = gql`
-  ${Deactivate}
-`
 
 function Settings(props) {
-  const { token, setToken } = useContext(AuthContext)
-  const {
-    profile,
-    loadingProfile,
-    errorProfile,
-    logout,
-    isLoggedIn
-  } = useContext(UserContext)
+  const { profile, loadingProfile, errorProfile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
   const [languageName, languageNameSetter] = useState('English')
-  const [orderNotification, orderNotificationSetter] = useState()
-  const [offerNotification, offerNotificationSetter] = useState()
+  const [offerNotification, offerNotificationSetter] = useState(
+    profile.isOfferNotification
+  )
+  const [orderNotification, orderNotificationSetter] = useState(
+    profile.isOrderNotification
+  )
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
   const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
   const [btnText, setBtnText] = useState(null)
-  const navigation = useNavigation()
   // eslint-disable-next-line no-unused-vars
   const [appState, setAppState] = useState(AppState.currentState)
   const [uploadToken] = useMutation(PUSH_TOKEN)
@@ -91,13 +76,8 @@ function Settings(props) {
     onError,
     refetchQueries: [{ query: PROFILE }]
   })
-  const [deactivated] = useMutation(DEACTIVATE)
-  const modalizeRef = useRef(null)
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_SETTINGS)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_SETTINGS)
   }, [])
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -118,10 +98,6 @@ function Settings(props) {
     selectLanguage()
     checkPermission()
   }, [props.navigation])
-
-  async function deactivatewithemail() {
-    deactivated({ variables: { isActive: false, email: profile.email } })
-  }
 
   const _handleAppStateChange = async nextAppState => {
     if (nextAppState === 'active') {
@@ -163,9 +139,6 @@ function Settings(props) {
   async function getPermission() {
     const { status } = await Notifications.getPermissionsAsync()
     return status
-  }
-  const onClose = () => {
-    modalizeRef.current.close()
   }
   function toggleTheme() {
     if (themeContext.ThemeValue === 'Pink') {
@@ -256,127 +229,143 @@ function Settings(props) {
         barStyle="light-content"
         backgroundColor={currentTheme.headerBackground}
       /> */}
+
       <View style={styles().flex}>
-        {Platform.OS === 'android' && (
-          <View
-            style={[styles(currentTheme).languageContainer, styles().shadow]}>
-            <View style={styles().changeLanguage}>
-              <View style={styles().width85}>
-                <TextDefault
-                  numberOfLines={1}
-                  textColor={currentTheme.fontSecondColor}>
-                  Language
-                </TextDefault>
+        <View style={styles(currentTheme).topContainer}>
+          <Image
+            source={require('../../assets/images/settings.png')}
+            PlaceholderContent={<ActivityIndicator />}
+            style={{ resizeMode: 'contain', flex: 1, aspectRatio: 1 }}
+          />
+        </View>
+        <View
+          style={[
+            styles(currentTheme).lowerContainer,
+            {
+              backgroundColor: currentTheme.white
+            }
+          ]}>
+          {Platform.OS === 'android' && (
+            <View style={[styles(currentTheme).languageContainer]}>
+              <View style={styles().changeLanguage}>
+                <View style={styles().width85}>
+                  <TextDefault
+                    numberOfLines={1}
+                    textColor={currentTheme.menuBar}>
+                    Language
+                  </TextDefault>
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => modalVisibleSetter(true)}
+                  style={styles().button}>
+                  <TextDefault
+                    textColor={currentTheme.tagColor}
+                    small
+                    B700
+                    bolder>
+                    Edit
+                  </TextDefault>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => modalVisibleSetter(true)}
-                style={styles().button}>
-                <TextDefault
-                  textColor={currentTheme.tagColor}
-                  small
-                  B700
-                  bolder>
-                  Edit
-                </TextDefault>
-              </TouchableOpacity>
-            </View>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder H5 B700>
-              {languageName}
-            </TextDefault>
-          </View>
-        )}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            updateNotificationStatus('offer')
-            setBtnText('offer')
-          }}
-          style={[styles(currentTheme).notificationContainer, styles().shadow]}>
-          <View style={styles().notificationChekboxContainer}>
-            <CheckboxBtn
-              checked={offerNotification}
-              onPress={() => {
-                updateNotificationStatus('offer')
-                setBtnText('offer')
-              }}
-            />
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.statusSecondColor}
-              style={alignment.MLsmall}>
-              {' '}
-              Receive Special Offers{' '}
-            </TextDefault>
-          </View>
-          {loading && btnText === 'offer' && (
-            <View>
-              <Spinner size="small" backColor="transparent" />
+              <TextDefault
+                textColor={currentTheme.fontMainColor}
+                bolder
+                H5
+                B700>
+                {languageName}
+              </TextDefault>
             </View>
           )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            updateNotificationStatus('order')
-            setBtnText('order')
-          }}
-          style={[styles(currentTheme).notificationContainer, styles().shadow]}>
-          <View style={styles().notificationChekboxContainer}>
-            <CheckboxBtn
-              checked={orderNotification}
-              onPress={() => {
-                updateNotificationStatus('order')
-                setBtnText('order')
-              }}
-            />
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.statusSecondColor}
-              style={alignment.MLsmall}>
-              {' '}
-              Get updates on your order status!{' '}
-            </TextDefault>
-          </View>
-          {loading && btnText === 'order' && (
-            <View>
-              <Spinner size="small" backColor="transparent" />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              updateNotificationStatus('offer')
+              setBtnText('offer')
+            }}
+            style={[
+              styles(currentTheme).notificationContainer,
+              styles().shadow
+            ]}>
+            <View style={styles().notificationChekboxContainer}>
+              <CheckboxBtn
+                checked={offerNotification}
+                onPress={() => {
+                  updateNotificationStatus('offer')
+                  setBtnText('offer')
+                }}
+              />
+              <TextDefault
+                numberOfLines={1}
+                textColor={currentTheme.fontMainColor}
+                style={alignment.MLsmall}>
+                {' '}
+                Receive Special Offers{' '}
+              </TextDefault>
             </View>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => toggleTheme()}
-          style={[styles(currentTheme).notificationContainer, styles().shadow]}>
-          <View style={styles().notificationChekboxContainer}>
-            <CheckboxBtn checked={darkTheme} onPress={() => toggleTheme()} />
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.statusSecondColor}
-              style={alignment.MLsmall}>
-              {' '}
-              Turn on Dark Theme
+            {loading && btnText === 'offer' && (
+              <View>
+                <Spinner size="small" backColor="transparent" />
+              </View>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              updateNotificationStatus('order')
+              setBtnText('order')
+            }}
+            style={[
+              styles(currentTheme).notificationContainer,
+              styles().shadow
+            ]}>
+            <View style={styles().notificationChekboxContainer}>
+              <CheckboxBtn
+                checked={orderNotification}
+                onPress={() => {
+                  updateNotificationStatus('order')
+                  setBtnText('order')
+                }}
+              />
+              <TextDefault
+                numberOfLines={1}
+                textColor={currentTheme.fontMainColor}
+                style={alignment.MLsmall}>
+                {' '}
+                Get updates on your order status!{' '}
+              </TextDefault>
+            </View>
+            {loading && btnText === 'order' && (
+              <View>
+                <Spinner size="small" backColor="transparent" />
+              </View>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => toggleTheme()}
+            style={[
+              styles(currentTheme).notificationContainer,
+              styles().shadow
+            ]}>
+            <View style={styles().notificationChekboxContainer}>
+              <CheckboxBtn checked={darkTheme} onPress={() => toggleTheme()} />
+              <TextDefault
+                numberOfLines={1}
+                textColor={currentTheme.fontMainColor}
+                style={alignment.MLsmall}>
+                {' '}
+                Turn on Dark Theme
+              </TextDefault>
+            </View>
+          </TouchableOpacity>
+          <View style={styles().versionContainer}>
+            <TextDefault textColor={currentTheme.statusSecondColor}>
+              Version: {Constants.manifest.version}
             </TextDefault>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            modalizeRef.current.open('top')
-          }}
-          style={[styles(currentTheme).notificationContainer, styles().shadow]}>
-          <View style={styles().notificationChekboxContainer}>
-            <Ionicons name="trash-outline" size={30} color={'red'} />
-            <TextDefault textColor="red"> Delete Account</TextDefault>
-          </View>
-        </TouchableOpacity>
-        <View style={styles().versionContainer}>
-          <TextDefault textColor={currentTheme.statusSecondColor}>
-            Version: {Constants.manifest.version}
-          </TextDefault>
         </View>
       </View>
-
       {/* Modal for language Changes */}
 
       <Modal
@@ -444,48 +433,6 @@ function Settings(props) {
           </View>
         </View>
       </Modal>
-      <Modalize
-        ref={modalizeRef}
-        adjustToContentHeight
-        handlePosition="inside"
-        avoidKeyboardLikeIOS={Platform.select({
-          ios: true,
-          android: true
-        })}
-        keyboardAvoidingOffset={2}
-        keyboardAvoidingBehavior="height">
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <TextDefault bolder H5 style={{ marginTop: 20 }}>
-            Are you Sure you want to delete Account?
-          </TextDefault>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: currentTheme.main,
-              borderRadius: 10,
-              width: '70%',
-              padding: 15,
-              ...alignment.MTlarge
-            }}
-            onPress={async () => {
-              await deactivatewithemail()
-              logout()
-              props.navigation.navigate({ name: 'Main' })
-            }}>
-            <TextDefault center bold>
-              Delete Account
-            </TextDefault>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={{ width: '100%', paddingTop: 30, paddingBottom: 40 }}
-            onPress={() => onClose()}>
-            <TextDefault center>Cancel</TextDefault>
-          </TouchableOpacity>
-        </View>
-      </Modalize>
     </SafeAreaView>
   )
 }

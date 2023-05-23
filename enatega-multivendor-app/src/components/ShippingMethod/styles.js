@@ -13,21 +13,23 @@ const styles = (props = null) => {
     },
     tabContainer: {
       flexDirection: 'row',
-      justifyContent: 'center'
+      width: '90%',
+      alignSelf: 'center',
+      justifyContent: 'center',
+      backgroundColor: props !== null ? props.tagColor : '#90EA93',
+      borderRadius: 20
     },
     activeLabel: {
       flex: 1,
-      borderWidth: 2,
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
-      borderColor: props !== null ? props.tagColor : 'transparent',
       height: scale(35),
+      backgroundColor: '#000',
+      borderRadius: 20,
       alignItems: 'center'
     },
     labelButton: {
       flex: 1,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props !== null ? props.horizontalLine : 'transparent',
       justifyContent: 'center',
       height: scale(35),
       alignItems: 'center'
