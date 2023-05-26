@@ -6,6 +6,7 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
+
     GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
@@ -16,7 +17,7 @@ const ENV = {
     AMPLITUDE_API_KEY: '2114f5db4c014dc7ad4ed2ad747341b5',
     GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
+      '630195385603-82e52jpb722a8l0huhkspq3tqh2d6r6f.apps.googleusercontent.com',
     SENTRY_DSN:
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',
