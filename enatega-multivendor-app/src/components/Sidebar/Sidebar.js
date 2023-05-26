@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View } from 'react-native'
+import { View, ImageBackground } from 'react-native'
 import SideDrawerItems from '../Drawer/Items/DrawerItems'
 import SideDrawerProfile from '../Drawer/Profile/DrawerProfile'
 import i18n from '../../../i18n'
@@ -9,6 +9,7 @@ import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import styles from './styles'
 import Analytics from '../../utils/analytics'
+import bg from '../../assets/images/sidebar-bg.png'
 const datas = [
   {
     title: 'titleFavourite',
@@ -19,7 +20,7 @@ const datas = [
   {
     title: 'titleOrders',
     icon: 'layers',
-    navigateTo: 'MyOrders',
+    navigateTo: 'My Orders',
     isAuth: true
   },
   {
@@ -61,53 +62,55 @@ function SidebBar(props) {
   const currentTheme = theme[themeContext.ThemeValue]
 
   return (
-    <View
-      style={[
-        styles().flex,
-        {
-          justifyContent: 'space-between',
-          paddingBottom: inset.bottom,
-          backgroundColor: currentTheme.themeBackground
-        }
-      ]}>
-      <View style={{ flexGrow: 1 }}>
-        <View style={styles(currentTheme).topContainer}>
-          <SideDrawerProfile navigation={props.navigation} />
-        </View>
-        <View style={styles().botContainer}>
-          {datas.map((dataItem, ind) => (
-            <View key={ind} style={styles().item}>
-              <SideDrawerItems
-                onPress={async() => {
-                  if (dataItem.isAuth && !isLoggedIn) {
-                    props.navigation.navigate('CreateAccount')
-                  } else {
-                    props.navigation.navigate(dataItem.navigateTo)
-                  }
-                }}
-                icon={dataItem.icon}
-                title={i18n.t(dataItem.title)}
-              />
-            </View>
-          ))}
-          {isLoggedIn && (
-            <View style={styles().item}>
-              <SideDrawerItems
-                onPress={async() => {
-                  await Analytics.track(Analytics.events.USER_LOGGED_OUT)
-                  await Analytics.identify(null, null)
+    <ImageBackground source={bg} resizeMode="cover" style={styles().image}>
+      <View
+        style={[
+          styles().flex,
+          {
+            justifyContent: 'space-between',
+            paddingBottom: inset.bottom,
+            backgroundColor: '#2c2c2cd4'
+          }
+        ]}>
+        <View style={{ flexGrow: 1 }}>
+          <View style={styles(currentTheme).topContainer}>
+            <SideDrawerProfile navigation={props.navigation} />
+          </View>
+          <View style={styles().botContainer}>
+            {datas.map((dataItem, ind) => (
+              <View key={ind} style={styles().item}>
+                <SideDrawerItems
+                  onPress={async() => {
+                    if (dataItem.isAuth && !isLoggedIn) {
+                      props.navigation.navigate('CreateAccount')
+                    } else {
+                      props.navigation.navigate(dataItem.navigateTo)
+                    }
+                  }}
+                  icon={dataItem.icon}
+                  title={i18n.t(dataItem.title)}
+                />
+              </View>
+            ))}
+            {isLoggedIn && (
+              <View style={styles().item}>
+                <SideDrawerItems
+                  onPress={async() => {
+                    await Analytics.track(Analytics.events.USER_LOGGED_OUT)
+                    await Analytics.identify(null, null)
 
-                  logout()
-                  props.navigation.closeDrawer()
-                }}
-                icon={'logout'}
-                title={i18n.t('titleLogout')}
-              />
-            </View>
-          )}
+                    logout()
+                    props.navigation.closeDrawer()
+                  }}
+                  icon={'logout'}
+                  title={i18n.t('titleLogout')}
+                />
+              </View>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   )
 }
 export default SidebBar

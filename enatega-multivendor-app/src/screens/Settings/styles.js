@@ -11,17 +11,16 @@ const styles = (props = null) =>
       width: '85%'
     },
     shadow: {
-      shadowOffset: { width: 0, height: scale(2) },
+      shadowOffset: { width: 0, height: scale(0.5) },
       shadowColor: 'black',
       shadowOpacity: 0.3,
       shadowRadius: scale(1),
-      elevation: 5,
+      elevation: 3,
       borderWidth: 0.4,
-      borderColor: '#e1e1e1'
+      borderColor: props !== null ? props.secondaryBackground : '#FFF'
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.PxSmall
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     languageContainer: {
       width: '100%',
@@ -29,7 +28,8 @@ const styles = (props = null) =>
       ...alignment.PRmedium,
       ...alignment.PTlarge,
       ...alignment.PBlarge,
-      ...alignment.PLmedium
+      ...alignment.PLmedium,
+      borderRadius: 10
     },
     changeLanguage: {
       flexDirection: 'row',
@@ -39,18 +39,23 @@ const styles = (props = null) =>
     },
     button: {
       width: '15%',
-      alignItems: 'flex-end'
+      alignItems: 'flex-end',
+      backgroundColor: props !== null ? props.secondaryBackground : '#FFF',
+      justifyContent: 'center',
+      borderRadius: 5,
+      ...alignment.PxSmall
     },
     notificationContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      backgroundColor: props !== null ? props.secondaryBackground : '#FFF',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      borderRadius: scale(20),
       ...alignment.PTmedium,
       ...alignment.PBmedium,
       ...alignment.PRsmall,
       ...alignment.PLsmall,
-      ...alignment.MTxSmall
+      ...alignment.MTsmall
     },
     notificationChekboxContainer: {
       flexDirection: 'row',
@@ -87,6 +92,29 @@ const styles = (props = null) =>
       marginBottom: 0,
       ...alignment.PTxSmall,
       ...alignment.PBxSmall
+    },
+    topContainer: {
+      backgroundColor: props !== null ? props.white : 'white',
+      flex: 0.3,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...alignment.PTmedium,
+      ...alignment.PBmedium
+    },
+    lowerContainer: {
+      backgroundColor: props !== null ? props.white : 'white',
+      shadowColor: props !== null ? props.fontSecondColor : 'grey',
+      shadowOffset: {
+        width: 0,
+        height: 12
+      },
+      shadowOpacity: 0.58,
+      shadowRadius: 16.0,
+      elevation: 24,
+      flex: 0.7,
+      borderTopRightRadius: 30,
+      borderTopLeftRadius: 30,
+      ...alignment.Psmall
     }
   })
 

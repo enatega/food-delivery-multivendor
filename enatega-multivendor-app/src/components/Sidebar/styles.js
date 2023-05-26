@@ -8,15 +8,17 @@ const styles = (props = null) => {
     },
     topContainer: {
       height: '30%',
-      borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: props !== null ? props.horizontalLine : 'transparent'
     },
     botContainer: {
-      ...alignment.MTsmall
+      ...alignment.MTsmall,
+      alignItems: 'center'
     },
     item: {
-      height: '9.5%',
-      ...alignment.MBxsmall
+      height: '9.5%'
+    },
+    image: {
+      flex: 1
     }
   })
 }

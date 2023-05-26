@@ -1,11 +1,17 @@
+import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../utils/scaling'
-import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+
+const { height, width } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1
+    },
+    map: {
+      width: width,
+      height: height * 0.6
     },
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF'
@@ -14,6 +20,13 @@ const styles = (props = null) =>
       width: '100%',
       height: '100%',
       alignSelf: 'center'
+    },
+    restaurantsContainer: {
+      backgroundColor: '#F3F4F8',
+      width: '100%',
+      height: '100%',
+      borderTopRightRadius: scale(25),
+      borderTopLeftRadius: scale(25)
     },
     ML20: {
       ...alignment.MLlarge
@@ -85,6 +98,25 @@ const styles = (props = null) =>
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+    },
+    filterContainer: {
+      width: '95%',
+      backgroundColor: '#2c2c2c',
+      ...alignment.Pmedium,
+      alignSelf: 'center',
+      position: 'absolute',
+      bottom: 0,
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20
+    },
+    aboveFilterContainer: {
+      width: '95%',
+      backgroundColor: '#2c2c2c',
+      ...alignment.Pmedium,
+      alignSelf: 'center',
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
+      marginTop: 80
     }
   })
 export default styles

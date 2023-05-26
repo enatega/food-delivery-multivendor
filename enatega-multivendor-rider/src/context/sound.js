@@ -8,9 +8,12 @@ export const SoundContextProvider = ({ children }) => {
   const { active } = useTabsContext()
   const { assignedOrders } = useUserContext()
   useEffect(() => {
+    if(assignedOrders)
+    {
     const shouldPlaySound = assignedOrders.some(o => o.isRiderRinged)
     if (shouldPlaySound) playSound()
     else stopSound()
+    }
   }, [assignedOrders])
   const playSound = async() => {
     if (active === 'NewOrders') {

@@ -20,18 +20,20 @@ const styles = (props = null) =>
       shadowOpacity: 0.3,
       shadowRadius: verticalScale(3),
       height: scale(220),
-      width: '99%',
-      ...alignment.Psmall,
-      ...alignment.MBsmall
+      padding: 3,
+      ...alignment.MBmedium,
+      marginHorizontal: 10,
+      borderRadius: 20
     },
     imageContainer: {
-      position: 'relative',
       alignItems: 'center',
+      position: 'relative',
       height: '70%'
     },
     img: {
       width: '100%',
-      height: '100%'
+      height: '100%',
+      borderRadius: 20
     },
     overlayRestaurantContainer: {
       position: 'absolute',
@@ -55,6 +57,18 @@ const styles = (props = null) =>
     },
     deliveryRestaurantOverlay: {
       position: 'absolute',
+      top: 5,
+      left: 5,
+      width: scale(50),
+      height: scale(20),
+      borderRadius: scale(10),
+      backgroundColor: props != null ? props.menuBar : 'white',
+      zIndex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    dealsRestaurantOverlay: {
+      position: 'absolute',
       bottom: 5,
       left: 5,
       width: scale(50),
@@ -66,13 +80,15 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     aboutRestaurant: {
-      alignItems: 'center',
       flexDirection: 'row',
-      justifyContent: 'flex-end'
+      width: '100%',
+      justifyContent: 'space-between',
+      ...alignment.MTxSmall
     },
     descriptionContainer: {
       height: '30%',
-      width: '100%',
+      width: '90%',
+      alignSelf: 'center',
       ...alignment.PTsmall
     },
     offerCategoty: {
@@ -102,6 +118,10 @@ const styles = (props = null) =>
       alignSelf: 'flex-start',
       maxWidth: '100%',
       backgroundColor: props != null ? props.tagColor : 'black'
+    },
+    rating: {
+      flexDirection: 'row',
+      alignItems: 'center'
     }
   })
 export default styles

@@ -1,6 +1,7 @@
 # Enatega Multi-vendor
 
-![Project thumbnail](./assets/thumbnail.png)
+[![Demo video](https://i.imgur.com/araSrCj.png)](https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode)
+
 <br/>
 
 Our Enatega Multi-vendor food delivery solution is perfect for customers looking to deploy a readymade and easy to use platform for their food delivery and logistics business. Just like foodpanda and ubereats, our solution can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own foodpanda clone instantaneously.
@@ -135,9 +136,13 @@ NOTE: Email provider has been only been tested for gmail accounts
 - Restaurant App communicates API Server
 - Errors are reported to Sentry by Customer App, Restaurant App, Rider App, Web Customer App and API Server
 
-## Documentation:
+## Documentation and Demo Videos:
 
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
+
+To check out video demo of admin dashboard please click [here](https://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode)
+
+To check out video demo of mobile applications please click [here](https://www.youtube.com/watch?v=2HdHS2I-p6g&ab_channel=NinjasCode)
 
 ## Demos:
 
@@ -167,4 +172,4 @@ The frontend source code for our solution is completely open source. However, th
 
 ## Contact Us:
 
-sharan@ninjascode.com
+sales@ninjascode.com

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 
@@ -23,4 +23,5 @@ export const ConfigurationProvider = props => {
   )
 }
 export const ConfigurationConsumer = ConfigurationContext.Consumer
+export const useConfigurationContext = () => useContext(ConfigurationContext)
 export default ConfigurationContext

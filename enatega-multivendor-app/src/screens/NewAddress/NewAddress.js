@@ -1,22 +1,15 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useContext,
-  useLayoutEffect
-} from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import {
   View,
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet
+  ScrollView
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import i18n from '../../../i18n'
 import styles from './styles'
-import { OutlinedTextField } from 'react-native-material-textfield'
+import { FilledTextField } from 'react-native-material-textfield'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import * as Location from 'expo-location'
 import gql from 'graphql-tag'
@@ -30,11 +23,13 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { textStyles } from '../../utils/textStyles'
 import { LocationContext } from '../../context/Location'
-import { mapStyle } from '../../utils/mapStyle'
+import { MapStyles } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import SearchModal from '../../components/Address/SearchModal'
-import AddressText from '../../components/Address/AddressText'
 import Analytics from '../../utils/analytics'
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
+import BackArrowBlackBg from '../../assets/SVG/back-arrow-black-bg'
+
 const CREATE_ADDRESS = gql`
   ${createAddress}
 `
@@ -42,15 +37,18 @@ const CREATE_ADDRESS = gql`
 const labelValues = [
   {
     title: 'Home',
-    value: 'Home'
+    value: 'Home',
+    icon: <FontAwesome5 name="home" size={24} color="black" />
   },
   {
     title: 'Work',
-    value: 'Work'
+    value: 'Work',
+    icon: <MaterialIcons name="work" size={24} color="black" />
   },
   {
     title: 'Other',
-    value: 'Other'
+    value: 'Other',
+    icon: <MaterialIcons name="favorite" size={24} color="black" />
   }
 ]
 
@@ -83,12 +81,17 @@ function NewAddress(props) {
   useEffect(async() => {
     await Analytics.track(Analytics.events.NAVIGATE_TO_NEWADDRESS)
   }, [])
-  useLayoutEffect(() => {
+  // useLayoutEffect(() => {
+  //   props.navigation.setOptions({
+  //     headerRight: null,
+  //     title: i18n.t('addAddress')
+  //   })
+  // }, [props.navigation])
+  useEffect(() => {
     props.navigation.setOptions({
-      headerRight: null,
-      title: i18n.t('addAddress')
+      headerShown: false
     })
-  }, [props.navigation])
+  }, [])
 
   useEffect(() => {
     if (!regionObj) return regionChange(region)
@@ -113,7 +116,7 @@ function NewAddress(props) {
             .join(' ')
           setDeliveryAddress(deliveryAddress)
           setRegion(region)
-          addressRef.current.setValue(deliveryAddress)
+          addressRef?.current.setValue(deliveryAddress)
         } else console.log('location not recognized')
       })
       .catch(error => {
@@ -134,7 +137,7 @@ function NewAddress(props) {
     })
     if (cartAddress === 'Cart') {
       props.navigation.navigate('Cart')
-    } else props.navigation.goBack()
+    } else props.navigation.pop(2)
   }
 
   function onError(error) {
@@ -144,9 +147,6 @@ function NewAddress(props) {
     })
   }
 
-  const onOpen = () => {
-    setModalVisible(true)
-  }
   const onClose = () => {
     setModalVisible(false)
   }
@@ -169,88 +169,100 @@ function NewAddress(props) {
         keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
         style={styles().flex}
         enabled={!modalVisible}>
-        <View style={styles().flex}>
-          <View style={styles().mapContainer}>
-            <MapView
-              style={styles().flex}
-              scrollEnabled={false}
-              zoomEnabled={false}
-              zoomControlEnabled={false}
-              rotateEnabled={false}
-              cacheEnabled={true}
-              showsUserLocation={false}
-              customMapStyle={
-                themeContext.ThemeValue === 'Dark' ? mapStyle : null
-              }
-              initialRegion={{
-                latitude: LATITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitude: LONGITUDE,
-                longitudeDelta: LONGITUDE_DELTA
-              }}
-              region={region}
-              provider={PROVIDER_GOOGLE}
-              onPress={() => {
-                props.navigation.navigate('FullMap', {
-                  latitude: region.latitude,
-                  longitude: region.longitude,
-                  currentScreen: 'NewAddress'
-                })
-              }}></MapView>
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                zIndex: 1,
-                translateX: -25,
-                translateY: -25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                transform: [{ translateX: -25 }, { translateY: -25 }]
-              }}>
-              <CustomMarker
-                width={40}
-                height={40}
-                transform={[{ translateY: -20 }]}
-                translateY={-20}
-              />
-            </View>
-          </View>
+        <ScrollView
+          style={styles().flex}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles().flex}>
+            <View style={styles().mapContainer}>
+              <MapView
+                style={styles().flex}
+                scrollEnabled={false}
+                zoomEnabled={false}
+                zoomControlEnabled={false}
+                rotateEnabled={false}
+                cacheEnabled={true}
+                showsUserLocation={false}
+                initialRegion={{
+                  latitude: LATITUDE,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitude: LONGITUDE,
+                  longitudeDelta: LONGITUDE_DELTA
+                }}
+                region={region}
+                provider={PROVIDER_GOOGLE}
+                onPress={() => {
+                  props.navigation.navigate('FullMap', {
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                    currentScreen: 'NewAddress'
+                  })
+                }}
+                customMapStyle={MapStyles}></MapView>
 
-          <ScrollView
-            style={styles().flex}
-            contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}>
-            <View style={styles(currentTheme).subContainer}>
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  zIndex: 1,
+                  translateX: -25,
+                  translateY: -25,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transform: [{ translateX: -25 }, { translateY: -25 }]
+                }}>
+                <CustomMarker
+                  width={40}
+                  height={40}
+                  transform={[{ translateY: -20 }]}
+                  translateY={-20}
+                />
+              </View>
+            </View>
+
+            <View
+              style={[
+                styles(currentTheme).subContainer,
+                { backgroundColor: currentTheme.white, marginTop: -10 }
+              ]}>
               <View style={styles().upperContainer}>
                 <View style={styles().addressContainer}>
+                  <TextDefault bolder>Add a new address</TextDefault>
+
                   <View style={styles().geoLocation}>
-                    <View style={{ width: '90%' }}>
-                      <OutlinedTextField
+                    <View
+                      style={{
+                        width: '100%',
+                        ...alignment.MTmedium,
+                        ...alignment.MBmedium
+                      }}>
+                      <FilledTextField
+                        editable={false}
                         error={deliveryAddressError}
                         ref={addressRef}
                         value={deliveryAddress}
                         label={i18n.t('fullDeliveryAddress')}
                         labelFontSize={scale(8)}
                         fontSize={scale(10)}
-                        lineWidth={StyleSheet.hairlineWidth}
-                        activeLineWidth={StyleSheet.hairlineWidth}
+                        inputContainerStyle={{
+                          borderRadius: 5,
+                          backgroundColor: currentTheme.inputBackground
+                        }}
+                        lineWidth={0}
+                        activeLineWidth={0}
+                        lineType="none"
                         maxLength={100}
                         textColor={currentTheme.fontMainColor}
-                        baseColor={currentTheme.fontSecondColor}
+                        baseColor={currentTheme.fontMainColor}
                         errorColor={currentTheme.textErrorColor}
                         tintColor={
                           !deliveryAddressError
                             ? currentTheme.fontMainColor
                             : 'red'
                         }
-                        labelTextStyle={{
-                          ...textStyles.Normal,
-                          paddingTop: scale(1)
-                        }}
                         onChangeText={text => {
                           setDeliveryAddress(text)
                         }}
@@ -263,22 +275,21 @@ function NewAddress(props) {
                         }}
                       />
                     </View>
-                    <AddressText
-                      deliveryAddress={deliveryAddress}
-                      onPress={onOpen}
-                    />
                   </View>
-                  <View style={{ ...alignment.MTsmall }}></View>
-                  <OutlinedTextField
+                  <FilledTextField
                     error={deliveryDetailsError}
                     value={deliveryDetails}
                     label={i18n.t('deliveryDetails')}
                     labelFontSize={scale(8)}
+                    lineWidth={0}
+                    activeLineWidth={0}
                     fontSize={scale(10)}
                     textAlignVertical="top"
+                    inputContainerStyle={{
+                      borderRadius: 5,
+                      backgroundColor: currentTheme.inputBackground
+                    }}
                     multiline={false}
-                    lineWidth={StyleSheet.hairlineWidth}
-                    activeLineWidth={StyleSheet.hairlineWidth}
                     maxLength={30}
                     textColor={currentTheme.fontMainColor}
                     baseColor={currentTheme.fontSecondColor}
@@ -302,13 +313,21 @@ function NewAddress(props) {
                     }}
                   />
                 </View>
+                <View
+                  style={{
+                    width: '80%',
+                    height: 1,
+                    backgroundColor: currentTheme.main,
+                    marginVertical: '5%'
+                  }}
+                />
                 <View style={styles().labelButtonContainer}>
                   <View style={styles().labelTitleContainer}>
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
                       B700
                       bolder>
-                      Label as
+                      Add Label
                     </TextDefault>
                   </View>
                   <View style={styles().buttonInline}>
@@ -324,17 +343,17 @@ function NewAddress(props) {
                         onPress={() => {
                           setSelectedLabel(label.value)
                         }}>
+                        {label.icon}
                         <TextDefault
                           style={
-                            selectedLabel === label.value && {
+                            (selectedLabel === label.value && {
                               ...textStyles.Bolder
-                            }
+                            },
+                            {
+                              ...alignment.MTsmall
+                            })
                           }
-                          textColor={
-                            selectedLabel === label.value
-                              ? currentTheme.tagColor
-                              : currentTheme.fontSecondColor
-                          }
+                          textColor={currentTheme.fontMainColor}
                           small
                           center>
                           {label.title}
@@ -344,7 +363,6 @@ function NewAddress(props) {
                   </View>
                 </View>
               </View>
-
               <TouchableOpacity
                 disabled={loading}
                 onPress={() => {
@@ -377,12 +395,20 @@ function NewAddress(props) {
                 }}
                 activeOpacity={0.5}
                 style={styles(currentTheme).saveBtnContainer}>
-                <TextDefault textColor={currentTheme.buttonText} H4 bold>
-                  {i18n.t('saveContBtn')}
+                <TextDefault textColor={currentTheme.fontMainColor} H5 bold>
+                  {'save and continue'}
                 </TextDefault>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
+        </ScrollView>
+        <View
+          style={[styles().header, { backgroundColor: currentTheme.black }]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={props.navigation.goBack}>
+            <BackArrowBlackBg />
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
       <View

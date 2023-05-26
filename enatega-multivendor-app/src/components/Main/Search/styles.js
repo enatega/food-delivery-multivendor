@@ -10,22 +10,8 @@ const styles = (props = null) =>
       fontSize: scale(14),
       color: props != null ? props.fontMainColor : 'black'
     },
-    mainContainerHolder: {
-      width: '100%',
-      alignItems: 'center',
-      backgroundColor: props != null ? props.headerMenuBackground : '#fafafa',
-      shadowColor: props != null ? props.shadowColor : 'black',
-      shadowOffset: {
-        width: 0,
-        height: verticalScale(1)
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: verticalScale(1),
-      ...alignment.MBmedium
-    },
     mainContainer: {
-      width: '90%',
-      height: scale(60),
+      height: scale(50),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
@@ -37,8 +23,9 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.2,
       shadowRadius: verticalScale(1),
-      ...alignment.MTlarge,
-      ...alignment.MBmedium
+      borderRadius: 20,
+      ...alignment.PLsmall,
+      ...alignment.PRsmall
     },
     subContainer: {
       width: '90%',
@@ -64,11 +51,12 @@ const styles = (props = null) =>
       ...alignment.MLxSmall,
       ...alignment.MRxSmall
     },
-    filterContainer: {
+    cancelContainer: {
       width: '10%',
       height: '80%',
       justifyContent: 'center',
       alignItems: 'center'
-    }
+    },
+    filterContainer: {}
   })
 export default styles

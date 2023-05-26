@@ -6,7 +6,8 @@ import { textStyles } from '../../utils/textStyles'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: 1,
+      backgroundColor: props != null ? props.secondaryBackground : 'white'
     },
     navbarContainer: {
       paddingBottom: 0,
@@ -63,37 +64,51 @@ const styles = (props = null) =>
     sectionSeparator: {
       width: '100%',
       height: scale(15),
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props.secondaryBackground : 'white'
     },
     buttonContainer: {
       position: 'absolute',
       bottom: 0,
       width: '100%',
-      height: scale(40),
-      backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      overflow: 'hidden',
+      backgroundColor: 'transparent'
     },
     button: {
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props != null ? props.buttonBackgroundPink : 'red',
+      backgroundColor: props != null ? props.themeBackground : 'red',
       height: '100%',
       width: '100%',
+      ...alignment.PTmedium,
       ...alignment.PLsmall,
-      ...alignment.PRsmall
+      ...alignment.PRsmall,
+      elevation: 4,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 2,
+        height: verticalScale(2)
+      },
+      borderTopLeftRadius: scale(10),
+      borderTopRightRadius: scale(10),
+      shadowOpacity: 0.6,
+      shadowRadius: verticalScale(2),
+      zIndex: 1
     },
     buttonText: {
-      width: '30%'
-    },
-    buttonTextRight: {
-      width: '35%'
+      width: '50%',
+      ...alignment.MBmedium,
+      ...alignment.PTmedium,
+      ...alignment.PBmedium,
+      borderRadius: scale(10)
     },
     buttontLeft: {
-      width: '35%',
-      height: '50%',
-      justifyContent: 'center'
+      width: '50%',
+      justifyContent: 'center',
+      ...alignment.MBmedium,
+      alignItems: 'center'
     },
     buttonLeftCircle: {
       backgroundColor: props != null ? props.buttonTextPink : 'white',
@@ -104,8 +119,11 @@ const styles = (props = null) =>
       ...textStyles.Bold,
       ...textStyles.Center,
       ...textStyles.Smaller,
+      fontSize: 20,
+      ...alignment.MLxSmall,
+      ...alignment.MRxSmall,
       backgroundColor: 'transparent',
-      color: props != null ? props.buttonBackground : 'black'
+      color: props != null ? props.backIconBackground : 'black'
     },
     triangleCorner: {
       position: 'absolute',
@@ -127,6 +145,14 @@ const styles = (props = null) =>
       top: 1,
       right: 0,
       textAlign: 'center'
+    },
+    two: {
+      borderWidth: 1,
+      borderColor: props != null ? props.backIconBackground : 'black',
+      ...alignment.PxSmall,
+      ...alignment.PLsmall,
+      ...alignment.PRsmall,
+      borderRadius: scale(5)
     }
   })
 export default styles

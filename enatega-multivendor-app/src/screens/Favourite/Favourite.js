@@ -7,7 +7,8 @@ import {
   Platform,
   StatusBar,
   TouchableOpacity,
-  View
+  View,
+  Image
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import i18n from '../../../i18n'
@@ -107,7 +108,11 @@ function Favourite() {
         style={[styles().flex, styles(currentTheme).container]}
         contentContainerStyle={styles().contentContainer}
         ListEmptyComponent={emptyView()}
-        ListHeaderComponent={null}
+        ListHeaderComponent={
+          <View style={{ alignSelf: 'center' }}>
+            <Image source={require('../../assets/images/favourites.png')} />
+          </View>
+        }
         renderItem={({ item }) => <Item item={item} />}
       />
     </SafeAreaView>

@@ -501,3 +501,22 @@ export const chat = `query Chat($order: ID!) {
     createdAt
   }
 }`
+export const cartItems = `query CartItems($cart:CartItemsInput!){
+  cartItems(cart:$cart){
+        key
+        title
+        price
+        quantity
+        variation {
+          title
+          price
+        }
+        addons {
+          title
+          options {
+            title
+            price
+          }
+        }
+      }
+}`
