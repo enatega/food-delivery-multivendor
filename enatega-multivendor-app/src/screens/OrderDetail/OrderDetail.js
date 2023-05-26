@@ -23,10 +23,13 @@ function OrderDetail(props) {
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
-      orderId: id
-    })
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
+        orderId: id
+      })
+    }
+    Track()
   }, [])
 
   const order = orders.find(o => o._id === id)

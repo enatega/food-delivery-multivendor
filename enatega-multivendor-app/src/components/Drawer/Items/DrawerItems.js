@@ -26,8 +26,8 @@ function DrawerItems(props) {
         <View style={styles.rightContainer}>
           <TextDefault
             style={{ alignSelf: 'flex-start' }}
-            textColor={currentTheme.menuBar}
-            medium
+            textColor={currentTheme.fontMainColor}
+            small
             bold>
             {props.title}
           </TextDefault>

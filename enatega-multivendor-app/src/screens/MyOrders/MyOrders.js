@@ -1,17 +1,15 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useContext, useEffect, useLayoutEffect } from 'react'
 import {
   View,
   FlatList,
-  ActivityIndicator,
   TouchableOpacity,
   StatusBar,
-  Platform,
-  Image,
-  Pressable
+  Platform
 } from 'react-native'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import ActiveOrders from '../../components/MyOrders/ActiveOrders'
 import Spinner from '../../components/Spinner/Spinner'
+import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './style'
@@ -24,11 +22,11 @@ import SearchFood from '../../assets/SVG/imageComponents/SearchFood'
 import { scale } from '../../utils/scaling'
 import analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
-import InActiveOrders from '../../components/MyOrders/InActiveOrders'
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED']
 
 function MyOrders(props) {
+  const configuration = useContext(ConfigurationContext)
   const {
     orders,
     loadingOrders,
@@ -37,19 +35,15 @@ function MyOrders(props) {
     fetchMoreOrdersFunc,
     networkStatusOrders
   } = useContext(OrdersContext)
-  const [active, setActive] = useState(0)
+
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const inset = useSafeAreaInsets()
-  const activeOrdersLength = orders.filter(o =>
-    orderStatusActive.includes(o.orderStatus)
-  ).length
-  const inActiveOrdersLength = orders.filter(o =>
-    orderStatusInactive.includes(o.orderStatus)
-  ).length
-
-  useEffect(async() => {
-    await analytics.track(analytics.events.NAVIGATE_TO_MYORDERS)
+  useEffect(() => {
+    async function Track() {
+      await analytics.track(analytics.events.NAVIGATE_TO_MYORDERS)
+    }
+    Track()
   }, [])
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -61,6 +55,17 @@ function MyOrders(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(screenOptions(currentTheme.headerText))
   }, [props.navigation])
+
+  const getItems = items => {
+    return items
+      .map(
+        item =>
+          `${item.quantity}x ${item.title}${
+            item.variation.title ? `(${item.variation.title})` : ''
+          }`
+      )
+      .join('\n')
+  }
 
   function emptyView() {
     if (loadingOrders) return <Spinner visible={loadingOrders} />
@@ -116,126 +121,115 @@ function MyOrders(props) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: currentTheme.menuBar }}>
-      <View style={styles(currentTheme).topContainer}>
-        <Image
-          source={require('../../assets/images/my-orders.png')}
-          PlaceholderContent={<ActivityIndicator />}
-          style={{ resizeMode: 'contain', flex: 1, aspectRatio: 1 }}
-        />
-      </View>
-      <View
-        style={[
-          styles(currentTheme).lowerContainer,
-          {
-            backgroundColor: currentTheme.white
-          }
-        ]}>
-        <View style={styles(currentTheme).barContainer}>
-          <Pressable
-            onPress={() => setActive(0)}
-            style={[
-              styles(currentTheme).barContent,
-              {
-                backgroundColor:
-                  active === 0
-                    ? currentTheme.themeBackground
-                    : currentTheme.tagColor
-              }
-            ]}>
-            <TextDefault bolder style={{ color: currentTheme.fontMainColor }}>
-              Active Orders
-            </TextDefault>
-            {active === 1 && activeOrdersLength > 0 && (
-              <View style={styles(currentTheme).badge}>
-                <TextDefault style={{ color: currentTheme.tagColor }}>
-                  {activeOrdersLength}
+    <>
+      <FlatList
+        data={
+          loadingOrders || errorOrders
+            ? []
+            : orders.filter(o => orderStatusInactive.includes(o.orderStatus))
+        }
+        showsVerticalScrollIndicator={false}
+        style={styles(currentTheme).container}
+        contentContainerStyle={styles().contentContainer}
+        ListEmptyComponent={emptyView()}
+        ListHeaderComponent={
+          <ActiveOrders
+            showActiveHeader={
+              orders.filter(o => orderStatusActive.includes(o.orderStatus))
+                .length > 0
+            }
+            showPastHeader={
+              orders.filter(o => orderStatusInactive.includes(o.orderStatus))
+                .length > 0
+            }
+            navigation={props.navigation}
+            activeOrders={orders.filter(o =>
+              orderStatusActive.includes(o.orderStatus)
+            )}
+            loading={loadingOrders}
+            error={errorOrders}
+          />
+        }
+        keyExtractor={item => item._id}
+        refreshing={networkStatusOrders === 4}
+        onRefresh={() => networkStatusOrders === 7 && reFetchOrders()}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() =>
+              props.navigation.navigate('OrderDetail', {
+                _id: item._id,
+                currencySymbol: configuration.currencySymbol,
+                restaurant: item.restaurant,
+                user: item.user
+              })
+            }>
+            <View style={styles(currentTheme).subContainer}>
+              <View style={styles().subContainerLeft}>
+                <TextDefault
+                  textColor={currentTheme.fontMainColor}
+                  uppercase
+                  style={alignment.MBxSmall}>
+                  {' '}
+                  {item.restaurant.name}
+                </TextDefault>
+                <TextDefault
+                  numberOfLines={1}
+                  style={{ ...alignment.MTxSmall }}
+                  textColor={currentTheme.fontSecondColor}
+                  small>
+                  {' '}
+                  {getItems(item.items)}
+                </TextDefault>
+                <TextDefault
+                  numberOfLines={1}
+                  style={{ ...alignment.MTxSmall }}
+                  textColor={currentTheme.fontSecondColor}
+                  small>
+                  {' '}
+                  {new Date(item.createdAt).toDateString()}
                 </TextDefault>
               </View>
-            )}
-          </Pressable>
-          <Pressable
-            onPress={() => setActive(1)}
-            style={[
-              styles(currentTheme).barContent,
-              {
-                backgroundColor:
-                  active === 1
-                    ? currentTheme.themeBackground
-                    : currentTheme.tagColor
-              }
-            ]}>
-            <TextDefault bolder style={{ color: currentTheme.fontMainColor }}>
-              Past Orders
-            </TextDefault>
-            {active === 0 && activeOrdersLength > 0 && (
-              <View style={styles(currentTheme).badge}>
-                <TextDefault style={{ color: currentTheme.tagColor }}>
-                  {inActiveOrdersLength}
+              <View style={styles().subContainerRight}>
+                <TextDefault
+                  numberOfLines={1}
+                  textColor={currentTheme.fontSecondColor}
+                  small
+                  right>
+                  {' '}
+                  {configuration.currencySymbol}
+                  {parseFloat(item.orderAmount).toFixed(2)}
                 </TextDefault>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles(currentTheme).subContainerButton}
+                  onPress={() =>
+                    props.navigation.navigate('Reorder', { item })
+                  }>
+                  <TextDefault
+                    textColor={currentTheme.buttonText}
+                    smaller
+                    bolder
+                    B700
+                    center
+                    uppercase>
+                    {' '}
+                    Reorder
+                  </TextDefault>
+                </TouchableOpacity>
               </View>
-            )}
-          </Pressable>
-        </View>
-        {active === 0 ? (
-          <FlatList
-            data={
-              loadingOrders || errorOrders
-                ? []
-                : orders.filter(o => orderStatusActive.includes(o.orderStatus))
-            }
-            showsVerticalScrollIndicator={false}
-            style={styles(currentTheme).container}
-            contentContainerStyle={styles(currentTheme).contentContainer}
-            ListEmptyComponent={emptyView()}
-            keyExtractor={item => item._id}
-            refreshing={networkStatusOrders === 4}
-            onRefresh={() => networkStatusOrders === 7 && reFetchOrders()}
-            renderItem={({ item }) => (
-              <ActiveOrders
-                navigation={props.navigation}
-                order={item}
-                loading={loadingOrders}
-                error={errorOrders}
-              />
-            )}
-            onEndReached={fetchMoreOrdersFunc}
-          />
-        ) : (
-          <FlatList
-            data={
-              loadingOrders || errorOrders
-                ? []
-                : orders.filter(o =>
-                  orderStatusInactive.includes(o.orderStatus)
-                )
-            }
-            showsVerticalScrollIndicator={false}
-            style={styles(currentTheme).container}
-            contentContainerStyle={styles().contentContainer}
-            ListEmptyComponent={emptyView()}
-            keyExtractor={item => item._id}
-            refreshing={networkStatusOrders === 4}
-            onRefresh={() => networkStatusOrders === 7 && reFetchOrders()}
-            renderItem={({ item }) => (
-              <InActiveOrders
-                navigation={props.navigation}
-                order={item}
-                loading={loadingOrders}
-                error={errorOrders}
-              />
-            )}
-            onEndReached={fetchMoreOrdersFunc}
-          />
+            </View>
+          </TouchableOpacity>
         )}
-        <View
-          style={{
-            paddingBottom: inset.bottom,
-            backgroundColor: currentTheme.menuBar
-          }}
-        />
-      </View>
-    </SafeAreaView>
+        onEndReached={fetchMoreOrdersFunc}
+      />
+      <View
+        style={{
+          paddingBottom: inset.bottom,
+          backgroundColor: currentTheme.themeBackground
+        }}
+      />
+    </>
   )
 }
 

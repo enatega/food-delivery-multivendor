@@ -40,8 +40,7 @@ const styles = (props = null) =>
       shadowOpacity: 0.3,
       shadowRadius: verticalScale(3),
       borderWidth: 1,
-      borderColor: props !== null ? props.tagColor : 'black',
-      borderRadius: 10,
+      borderColor: '#FFF',
       paddingBottom: scale(15)
     },
     cardViewContainer: {
@@ -75,24 +74,26 @@ const styles = (props = null) =>
     },
     title: {
       color: props !== null ? props.statusSecondColor : 'grey',
-      fontSize: verticalScale(12),
+      fontSize: verticalScale(16),
       fontFamily: fontStyles.MuseoSans500
     },
     description: {
       color: props !== null ? props.fontMainColor : '#000',
-      fontSize: verticalScale(14),
+      fontSize: verticalScale(18),
       fontFamily: fontStyles.MuseoSans500,
       marginTop: scale(2)
     },
     statusText: {
       color: props !== null ? props.statusSecondColor : 'grey',
-      fontSize: verticalScale(12),
+      fontSize: verticalScale(13),
       fontFamily: fontStyles.MuseoSans500,
       marginBottom: scale(10)
     },
     timeText: {
       color: props !== null ? props.iconColorPink : 'red',
-      fontSize: verticalScale(12)
+      fontSize: verticalScale(24),
+      fontFamily: fontStyles.MuseoSans300,
+      marginLeft: -10
     },
     statusCircle: {
       marginRight: scale(5),

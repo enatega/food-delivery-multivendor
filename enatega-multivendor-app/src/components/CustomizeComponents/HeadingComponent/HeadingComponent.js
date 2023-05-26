@@ -19,7 +19,7 @@ function HeadingComponent(props) {
             numberOfLines={1}
             textColor={currentTheme.fontMainColor}
             H4
-            bolder>
+            bold>
             {props.title}
           </TextDefault>
         </View>

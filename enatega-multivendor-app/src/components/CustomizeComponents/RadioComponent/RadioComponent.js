@@ -40,7 +40,7 @@ function RadioComponent(props) {
             <TextDefault
               textColor={currentTheme.fontSecondColor}
               style={alignment.MLsmall}
-              H6
+              H5
               bold>
               {option.title}
             </TextDefault>

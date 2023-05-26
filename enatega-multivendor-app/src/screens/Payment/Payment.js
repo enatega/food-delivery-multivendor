@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity, ImageBackground } from 'react-native'
+import { View, Image, TouchableOpacity } from 'react-native'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import styles from './styles'
 import i18n from '../../../i18n'
@@ -9,7 +9,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import Analytics from '../../utils/analytics'
-
 function Payment(props) {
   const { paymentMethod, coupon } = props.route.params
   const inset = useSafeAreaInsets()
@@ -43,8 +42,11 @@ function Payment(props) {
       title: i18n.t('titlePayment')
     })
   }, [props.navigation])
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_PAYMENT)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_PAYMENT)
+    }
+    Track()
   }, [])
   function onSelectPayment(paymentMethod) {
     props.navigation.navigate('Cart', { coupon, paymentMethod })
@@ -52,62 +54,46 @@ function Payment(props) {
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <View style={styles(currentTheme).upperContainer}>
-          <ImageBackground
-            source={require('../../assets/images/payment.png')}
-            style={styles().backgroundImage}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles(currentTheme).lowerContainer}>
-          <View>
-            <TextDefault bolder H5 style={{ marginLeft: 10 }}>
-              Add a payment method
+        {CASH.map((item, index) => (
+          <TouchableOpacity
+            style={[styles().radioGroup, styles().pT20]}
+            key={index.toString()}
+            onPress={() => {
+              onSelectPayment(item)
+            }}>
+            <View style={styles().radioContainer}>
+              <RadioButton
+                animation={'bounceIn'}
+                outerColor={currentTheme.radioOuterColor}
+                innerColor={currentTheme.radioColor}
+                isSelected={paymentMethod.index === item.index}
+                onPress={() => {
+                  onSelectPayment(item)
+                }}
+              />
+            </View>
+            <TextDefault
+              numberOfLines={1}
+              textColor={currentTheme.fontMainColor}
+              style={{ width: '60%' }}>
+              {item.label}
             </TextDefault>
-          </View>
-          {CASH.map((item, index) => (
-            <TouchableOpacity
-              style={[styles(currentTheme).radioGroup, styles().pT20]}
-              key={index.toString()}
-              onPress={() => {
-                onSelectPayment(item)
-              }}>
-              <View style={styles().radioContainer}>
-                <RadioButton
-                  animation={'bounceIn'}
-                  outerColor={currentTheme.radioOuterColor}
-                  innerColor={currentTheme.radioColor}
-                  isSelected={paymentMethod.index === item.index}
-                  onPress={() => {
-                    onSelectPayment(item)
-                  }}
+            <View style={styles().iconContainer}>
+              {item.icon1 && (
+                <Image
+                  resizeMode="cover"
+                  style={[styles().iconStyle, { ...alignment.MRxSmall }]}
+                  source={item.icon1}
                 />
-              </View>
-              <View style={styles(currentTheme).infoGroup}>
-                <TextDefault
-                  numberOfLines={1}
-                  textColor={currentTheme.fontMainColor}
-                  style={{ width: '60%' }}>
-                  {item.label}
-                </TextDefault>
-                <View style={styles().iconContainer}>
-                  {item.icon1 && (
-                    <Image
-                      resizeMode="cover"
-                      style={[styles().iconStyle, { ...alignment.MRxSmall }]}
-                      source={item.icon1}
-                    />
-                  )}
-                  <Image
-                    resizeMode="cover"
-                    style={styles().iconStyle}
-                    source={item.icon}
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+              )}
+              <Image
+                resizeMode="cover"
+                style={styles().iconStyle}
+                source={item.icon}
+              />
+            </View>
+          </TouchableOpacity>
+        ))}
       </View>
       <View
         style={{

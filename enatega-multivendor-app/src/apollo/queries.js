@@ -1,3 +1,11 @@
+export const User = `
+query Users {
+  users {
+    _id
+   email
+ }
+}`
+
 export const profile = `
         query{
           profile{
@@ -8,6 +16,7 @@ export const profile = `
             email
             emailIsVerified
             notificationToken
+            isActive
             isOrderNotification
             isOfferNotification
             addresses{
@@ -500,23 +509,4 @@ export const chat = `query Chat($order: ID!) {
     }
     createdAt
   }
-}`
-export const cartItems = `query CartItems($cart:CartItemsInput!){
-  cartItems(cart:$cart){
-        key
-        title
-        price
-        quantity
-        variation {
-          title
-          price
-        }
-        addons {
-          title
-          options {
-            title
-            price
-          }
-        }
-      }
 }`

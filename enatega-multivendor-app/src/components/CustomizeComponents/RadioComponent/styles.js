@@ -14,8 +14,7 @@ const styles = StyleSheet.create({
   },
   rightContainer: {
     width: '30%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'center'
   }
 })
 export default styles

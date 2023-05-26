@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -15,7 +15,6 @@ import RandomShape from '../../../assets/SVG/RandomShape'
 import Analytics from '../../../utils/analytics'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
-import TextDefault from '../../Text/TextDefault/TextDefault'
 
 const orderStatuses = [
   {
@@ -113,56 +112,45 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
           <RandomShape width={scale(300)} height={scale(300)} />
         </View>
         <View style={styles().textContainer}>
-          <View>
-            <TextDefault style={styles(currentTheme).title}>
-              Your order from:
-            </TextDefault>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginTop: scale(8),
-                marginBottom: scale(8)
-              }}>
-              <TextDefault style={styles(currentTheme).description}>
-                {item.restaurant.name}
-              </TextDefault>
-              <View style={{ marginLeft: 15, flexDirection: 'row' }}>
-                {Array(checkStatus(item.orderStatus).status)
-                  .fill(0)
-                  .map((item, index) => (
-                    <FontAwesome
-                      key={index}
-                      name="circle"
-                      size={15}
-                      color={currentTheme.iconColorPink}
-                      style={styles().statusCircle}
-                    />
-                  ))}
-                {Array(4 - checkStatus(item.orderStatus).status)
-                  .fill(0)
-                  .map((item, index) => (
-                    <FontAwesome
-                      key={index}
-                      name="circle"
-                      size={15}
-                      color={currentTheme.radioOuterColor}
-                      style={styles().statusCircle}
-                    />
-                  ))}
-              </View>
-            </View>
+          <Text style={styles(currentTheme).title}>Your order from:</Text>
+          <Text style={styles(currentTheme).description}>
+            {item.restaurant.name}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              marginTop: scale(10),
+              marginBottom: scale(8)
+            }}>
+            {Array(checkStatus(item.orderStatus).status)
+              .fill(0)
+              .map((item, index) => (
+                <FontAwesome
+                  key={index}
+                  name="circle"
+                  size={15}
+                  color={currentTheme.iconColorPink}
+                  style={styles().statusCircle}
+                />
+              ))}
+            {Array(4 - checkStatus(item.orderStatus).status)
+              .fill(0)
+              .map((item, index) => (
+                <FontAwesome
+                  key={index}
+                  name="circle"
+                  size={15}
+                  color={currentTheme.radioOuterColor}
+                  style={styles().statusCircle}
+                />
+              ))}
           </View>
-
-          <TextDefault
-            numberOfLines={1}
-            style={styles(currentTheme).statusText}>
+          <Text numberOfLines={1} style={styles(currentTheme).statusText}>
             {checkStatus(item.orderStatus).status}.{' '}
             {checkStatus(item.orderStatus).statusText}
-          </TextDefault>
-          <TextDefault style={styles(currentTheme).timeText} bolder>
-            {item.orderStatus}
-          </TextDefault>
+          </Text>
+          <Text style={styles(currentTheme).timeText}> {item.orderStatus}</Text>
         </View>
       </View>
     </TouchableOpacity>

@@ -6,7 +6,6 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
-
     GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
@@ -26,8 +25,8 @@ const ENV = {
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   },
   staging: {
-        GRAPHQL_URL: 'https://stagingenategamultivendorapi.herokuapp.com/graphql',
-    WS_GRAPHQL_URL: 'wss://stagingenategamultivendorapi.herokuapp.com/graphql',
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SERVER_URL: 'https://stagingenategamultivendorapi.herokuapp.com/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',

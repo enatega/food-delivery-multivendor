@@ -14,8 +14,6 @@ const styles = StyleSheet.create({
   priceContainer: {
     width: '30%',
     justifyContent: 'center',
-    alignItems: 'center',
-
     ...alignment.MTsmall,
     ...alignment.MBsmall
   },

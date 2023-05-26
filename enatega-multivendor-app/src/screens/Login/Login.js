@@ -45,9 +45,7 @@ function Login(props) {
       })
     )
   }, [props.navigation])
-  const handleClick = e => {
-    setEmail(e)
-  }
+
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
@@ -103,7 +101,7 @@ function Login(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={email}
-                    onChangeText={e => handleClick(e)}
+                    onChangeText={e => setEmail(e.toLowerCase().trim())}
                   />
                   {emailError !== null && (
                     <TextDefault

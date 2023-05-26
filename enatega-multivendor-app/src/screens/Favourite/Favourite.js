@@ -7,8 +7,7 @@ import {
   Platform,
   StatusBar,
   TouchableOpacity,
-  View,
-  Image
+  View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import i18n from '../../../i18n'
@@ -44,8 +43,11 @@ function Favourite() {
       fetchPolicy: 'network-only'
     }
   )
-  useEffect(async() => {
-    await analytics.track(analytics.events.NAVIGATE_TO_FAVOURITES)
+  useEffect(() => {
+    async function Track() {
+      await analytics.track(analytics.events.NAVIGATE_TO_FAVOURITES)
+    }
+    Track()
   }, [])
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -108,11 +110,7 @@ function Favourite() {
         style={[styles().flex, styles(currentTheme).container]}
         contentContainerStyle={styles().contentContainer}
         ListEmptyComponent={emptyView()}
-        ListHeaderComponent={
-          <View style={{ alignSelf: 'center' }}>
-            <Image source={require('../../assets/images/favourites.png')} />
-          </View>
-        }
+        ListHeaderComponent={null}
         renderItem={({ item }) => <Item item={item} />}
       />
     </SafeAreaView>

@@ -29,8 +29,11 @@ function StripeCheckout(props) {
     // showMessage here
     props.navigation.goBack()
   }
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_STRIPE)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_STRIPE)
+    }
+    Track()
   }, [])
   async function onPaymentSuccess() {
     const result = await client.query({

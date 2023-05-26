@@ -8,54 +8,25 @@ import { scale } from '../../../utils/scaling'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
-import { AntDesign, Ionicons } from '@expo/vector-icons'
-import { addFavouriteRestaurant } from '../../../apollo/mutations'
-import { profile } from '../../../apollo/queries'
-import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import { useMutation, gql } from '@apollo/client'
-import Spinner from '../../Spinner/Spinner'
-import UserContext from '../../../context/User'
+import { Ionicons } from '@expo/vector-icons'
 
-const ADD_FAVOURITE = gql`
-  ${addFavouriteRestaurant}
-`
-const PROFILE = gql`
-  ${profile}
-`
 function RestaurantCard(props) {
   const configuration = useContext(ConfigurationContext)
-  const { profile: user } = useContext(UserContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const index = props?.index
-  const heart = user ? user.favourite.includes(props._id) : false
-
-  const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
-    onCompleted,
-    refetchQueries: [{ query: PROFILE }]
-  })
-
-  function onCompleted() {
-    FlashMessage({ message: 'Favourite list updated.' })
-  }
 
   return (
     <View style={{ ...alignment.PRsmall }}>
       <TouchableOpacity
-        style={[styles(currentTheme, index).offerContainer, styles().ML20]}
+        style={[styles(currentTheme).offerContainer, styles().ML20]}
         activeOpacity={1}
         onPress={() => navigation.navigate('Restaurant', { ...props })}>
-        <View style={[styles().imageContainer]}>
+        <View style={styles().imageContainer}>
           <Image
             resizeMode="cover"
             source={{ uri: props.image }}
-            style={{
-              width: scale(125),
-              height: '100%',
-              borderRadius: 20,
-              alignSelf: 'center'
-            }}
+            style={{ width: scale(220), height: '100%' }}
           />
           <View style={styles().overlayContainer}>
             <View style={styles(currentTheme).deliveryOverlay}>
@@ -64,73 +35,38 @@ function RestaurantCard(props) {
                 numberOfLines={2}
                 smaller
                 center>
-                {`${props.deliveryTime} MIN`}
+                {props.deliveryTime}
               </TextDefault>
-            </View>
-            <View style={styles(currentTheme).labelOverlay}>
               <TextDefault
                 textColor={currentTheme.fontMainColor}
-                numberOfLines={2}
+                bold
                 smaller
                 center>
-                {`${props.name}`}
+                {'MIN'}
               </TextDefault>
             </View>
-            <TouchableOpacity
-              activeOpacity={0}
-              disabled={loadingMutation}
-              onPress={() =>
-                profile ? mutate({ variables: { id: props._id } }) : null
-              }
-              style={styles(currentTheme).favouriteOverlay}>
-              <TextDefault
-                textColor={currentTheme.fontMainColor}
-                numberOfLines={2}
-                smaller
-                center>
-                {loadingMutation ? (
-                  <Spinner size={'small'} backColor={'transparent'} />
-                ) : (
-                  <AntDesign
-                    name={heart ? 'heart' : 'hearto'}
-                    size={scale(15)}
-                    color="black"
-                  />
-                )}
-              </TextDefault>
-            </TouchableOpacity>
           </View>
         </View>
         <View style={styles().descriptionContainer}>
           <View style={styles().aboutRestaurant}>
             <TextDefault
-              style={{ width: '100%' }}
+              style={{ width: '77%' }}
               numberOfLines={1}
-              textColor={
-                index % 2 === 0 ? currentTheme.fontMainColor : currentTheme.main
-              }
+              textColor={currentTheme.fontMainColor}
               bolder>
               {props.name}
             </TextDefault>
-            <View style={[styles().rating]}>
-              <Ionicons name="md-star" size={scale(10)} color="green" />
+            <View style={[styles().aboutRestaurant, { width: '23%' }]}>
+              <Ionicons name="md-star" size={scale(10)} color="blue" />
               <TextDefault
-                textColor={
-                  index % 2 === 0
-                    ? currentTheme.fontMainColor
-                    : currentTheme.main
-                }
+                textColor={currentTheme.fontMainColor}
                 style={{ marginLeft: 2 }}
                 bold
                 smaller>
                 {props.reviewData.ratings}
               </TextDefault>
               <TextDefault
-                textColor={
-                  index % 2 === 0
-                    ? currentTheme.fontMainColor
-                    : currentTheme.main
-                }
+                textColor={currentTheme.fontSecondColor}
                 style={{ marginLeft: 2 }}
                 bold
                 smaller>
@@ -139,32 +75,24 @@ function RestaurantCard(props) {
             </View>
           </View>
           <TextDefault
-            textColor={
-              index % 2 === 0 ? currentTheme.fontMainColor : currentTheme.main
-            }
+            textColor={currentTheme.fontSecondColor}
             numberOfLines={1}
-            bolder
+            bold
             small
             style={styles().offerCategoty}>
             {props.categories.map(category => category.title).toString()}
           </TextDefault>
           <TextDefault
-            textColor={
-              index % 2 === 0 ? currentTheme.fontMainColor : currentTheme.main
-            }
+            textColor={currentTheme.fontMainColor}
             numberOfLines={1}
             style={{ marginTop: 3 }}
-            bolder
-            medium>
-            <TextDefault
-              textColor={
-                index % 2 === 0 ? currentTheme.fontMainColor : currentTheme.main
-              }
-              small>
-              {' '}
-              minimum{' '}
-            </TextDefault>
+            bold
+            small>
             {configuration.currencySymbol} {props.minimumOrder}
+            <TextDefault textColor={currentTheme.fontSecondColor} small>
+              {' '}
+              minimum
+            </TextDefault>
           </TextDefault>
         </View>
       </TouchableOpacity>

@@ -25,8 +25,11 @@ function Tip(props) {
       title: 'Tipping'
     })
   }, [navigation])
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_TIPS)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_TIPS)
+    }
+    Track()
   }, [])
   function onTipping() {
     const tipAmount = tipRef.current.value()

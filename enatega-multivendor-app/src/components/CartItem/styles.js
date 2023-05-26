@@ -1,40 +1,33 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
     itemContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      borderBottomWidth: 0.5,
-      paddingVertical: 15
+      width: '100%'
     },
     actionContainer: {
-      width: '25%',
+      width: '20%',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: props !== null ? props.cartContainer : 'transparent'
     },
     actionContainerBtns: {
-      width: 20,
-      height: 20,
-      backgroundColor: props !== null ? props.tagColor : 'transparent',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 50
-    },
-    actionContainerView: {
+      width: '33%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
-      borderWidth: 1,
-      ...alignment.PxSmall,
-      borderRadius: scale(5),
-      marginHorizontal: 10,
-      width: 30
+      ...alignment.PTxSmall,
+      ...alignment.PBxSmall
+    },
+    actionContainerView: {
+      width: '33%',
+      backgroundColor: props !== null ? props.cartContainer : 'transparent',
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   })
 export default styles

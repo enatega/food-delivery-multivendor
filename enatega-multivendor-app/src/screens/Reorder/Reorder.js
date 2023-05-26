@@ -11,7 +11,7 @@ import styles from './styles'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
 function Reorder(props) {
-  const { order } = props.route.params
+  const order = props.route.params.item
   const themeContext = useContext(ThemeContext)
   const { setCartRestaurant, addCartItem } = useContext(UserContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -22,8 +22,11 @@ function Reorder(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(screenOptions(currentTheme.headerText))
   }, [props.navigation])
-  useEffect(async() => {
-    await analytics.track(analytics.events.NAVIGATE_TO_REORDER)
+  useEffect(() => {
+    async function Track() {
+      await analytics.track(analytics.events.NAVIGATE_TO_REORDER)
+    }
+    Track()
   }, [])
   const onSelect = index => {
     if (selectedItems.includes(index)) {
@@ -37,7 +40,7 @@ function Reorder(props) {
   const onAddToCart = async() => {
     await setCartRestaurant(order.restaurant._id)
     selectedItems.forEach(async index => {
-      const item = order?.items[index]
+      const item = order.items[index]
       const addons = item.addons.map(addon => ({
         _id: addon._id,
         options: addon.options.map(({ _id }) => ({
@@ -71,7 +74,7 @@ function Reorder(props) {
             textColor={currentTheme.fontMainColor}>
             Select Items
           </TextDefault>
-          {order?.items.map((item, index) => {
+          {order.items.map((item, index) => {
             return (
               <View
                 key={index}

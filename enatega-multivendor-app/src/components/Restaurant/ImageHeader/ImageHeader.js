@@ -20,7 +20,7 @@ import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
 
 const { height } = Dimensions.get('screen')
-const TOP_BAR_HEIGHT = height * 0.075
+const TOP_BAR_HEIGHT = height * 0.05
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
 
@@ -85,7 +85,7 @@ function ImageTextCenterHeader(props, ref) {
           height: props.height,
           backgroundColor: props.loading
             ? 'transparent'
-            : currentTheme.secondaryBackground
+            : currentTheme.headerBackground
         }
       ]}>
       <Animated.View
@@ -169,7 +169,16 @@ function ImageTextCenterHeader(props, ref) {
               <TextDefault H4 bolder Center textColor={currentTheme.fontWhite}>
                 {aboutObject.restaurantName}
               </TextDefault>
-
+              {!props.loading && (
+                <View style={styles(currentTheme).deliveryBox}>
+                  <TextDefault
+                    style={[alignment.PRxSmall, alignment.PLxSmall]}
+                    textColor="white"
+                    bold>
+                    Delivery {aboutObject.deliveryTime} Minute
+                  </TextDefault>
+                </View>
+              )}
               {!props.loading && (
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -193,16 +202,6 @@ function ImageTextCenterHeader(props, ref) {
                   </TextDefault>
                 </TouchableOpacity>
               )}
-              {!props.loading && (
-                <View style={styles(currentTheme).deliveryBox}>
-                  <TextDefault
-                    style={[alignment.PRxSmall, alignment.PLxSmall]}
-                    textColor="white"
-                    bold>
-                    Delivery {aboutObject.deliveryTime} Minute
-                  </TextDefault>
-                </View>
-              )}
             </View>
           </Animated.View>
         </Animated.View>
@@ -223,7 +222,7 @@ function ImageTextCenterHeader(props, ref) {
               style={
                 props.selectedLabel === index
                   ? styles(currentTheme).activeHeader
-                  : styles(currentTheme).inActiveHeader
+                  : null
               }>
               <RectButton
                 activeOpacity={0.05}

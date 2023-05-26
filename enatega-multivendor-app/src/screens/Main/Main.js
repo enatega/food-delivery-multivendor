@@ -1,6 +1,11 @@
 /* eslint-disable react/display-name */
-import React, { useLayoutEffect, useEffect } from 'react'
-import { Modalize } from 'react-native-modalize'
+import React, {
+  useRef,
+  useContext,
+  useLayoutEffect,
+  useState,
+  useEffect
+} from 'react'
 import {
   View,
   SafeAreaView,
@@ -10,59 +15,78 @@ import {
   Platform,
   RefreshControl
 } from 'react-native'
-import { MaterialIcons, SimpleLineIcons } from '@expo/vector-icons'
-import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
-
+import { Modalize } from 'react-native-modalize'
+import {
+  MaterialIcons,
+  SimpleLineIcons,
+  AntDesign,
+  MaterialCommunityIcons
+} from '@expo/vector-icons'
+import { useQuery, useMutation } from '@apollo/client'
+import {
+  useCollapsibleSubHeader,
+  CollapsibleSubHeaderAnimator
+} from 'react-navigation-collapsible'
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
+import gql from 'graphql-tag'
+import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import Item from '../../components/Main/Item/Item'
-import { scale } from '../../utils/scaling'
+import UserContext from '../../context/User'
+import { restaurantList } from '../../apollo/queries'
+import { selectAddress } from '../../apollo/mutations'
+import { verticalScale, scale } from '../../utils/scaling'
 import styles from './styles'
 import TextError from '../../components/Text/TextError/TextError'
-import { useFocusEffect } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import { alignment } from '../../utils/alignment'
-
+import Spinner from '../../components/Spinner/Spinner'
 import Analytics from '../../utils/analytics'
-import Categories from '../../components/Main/Categories/Categories'
-import MapSection from '../../components/Main/MapSection'
-import useMainScreen from './useMainScreen'
-import {
-  EmptyComponent,
-  LoadingComponent,
-  ModalFooter,
-  ModalHeader
-} from './Main.components'
 
-function Main({ navigation }) {
-  const {
-    currentTheme,
-    onOpen,
-    themeContext,
-    setCurrentLocation,
-    busy,
-    error,
-    loading,
-    mutationLoading,
-    loadingOrders,
-    data,
-    isLoggedIn,
-    modalRef,
-    search,
-    setSearch,
-    networkStatus,
-    refetch,
-    profile,
-    setAddressLocation,
-    addressIcons,
-    location
-  } = useMainScreen()
+const RESTAURANTS = gql`
+  ${restaurantList}
+`
+const SELECT_ADDRESS = gql`
+  ${selectAddress}
+`
+
+function Main(props) {
+  const [busy, setBusy] = useState(false)
+  const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
+  const { location, setLocation } = useContext(LocationContext)
+  const [search, setSearch] = useState('')
+  const modalRef = useRef(null)
+  const navigation = useNavigation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
+  const { getCurrentLocation } = useLocation()
+
+  const { data, refetch, networkStatus, loading, error } = useQuery(
+    RESTAURANTS,
+    {
+      variables: {
+        longitude: location.longitude || null,
+        latitude: location.latitude || null,
+        ip: null
+      },
+      fetchPolicy: 'network-only'
+    }
+  )
+  const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
+    onError
+  })
 
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
-    scrollIndicatorInsetTop
+    scrollIndicatorInsetTop /* number */,
+    translateY
   } = useCollapsibleSubHeader()
 
   useFocusEffect(() => {
@@ -74,7 +98,10 @@ function Main({ navigation }) {
     )
   })
   useEffect(() => {
-    Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
+    }
+    Track()
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -88,11 +115,178 @@ function Main({ navigation }) {
     )
   }, [navigation, currentTheme])
 
+  const onOpen = () => {
+    const modal = modalRef.current
+    if (modal) {
+      modal.open()
+    }
+  }
+
+  function onError(error) {
+    console.log(error)
+  }
+
+  const addressIcons = {
+    Home: 'home',
+    Work: 'briefcase',
+    Other: 'location-pin'
+  }
+
+  const setAddressLocation = async address => {
+    setLocation({
+      _id: address._id,
+      label: address.label,
+      latitude: Number(address.location.coordinates[1]),
+      longitude: Number(address.location.coordinates[0]),
+      deliveryAddress: address.deliveryAddress,
+      details: address.details
+    })
+    mutate({ variables: { id: address._id } })
+    modalRef.current.close()
+  }
+
+  const setCurrentLocation = async() => {
+    setBusy(true)
+    const { error, coords } = await getCurrentLocation()
+    if (error) navigation.navigate('SelectLocation')
+    else {
+      modalRef.current.close()
+      setLocation({
+        label: 'Current Location',
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        deliveryAddress: 'Current Location'
+      })
+    }
+    setBusy(false)
+  }
+
+  const modalHeader = () => (
+    <View style={[styles().content, styles().addressbtn]}>
+      <TouchableOpacity
+        style={[styles(currentTheme).addressContainer]}
+        activeOpacity={0.7}
+        onPress={setCurrentLocation}>
+        <View style={styles().addressSubContainer}>
+          <MaterialCommunityIcons
+            name="target"
+            size={scale(15)}
+            color={currentTheme.iconColorPink}
+          />
+          <View style={styles().mL5p} />
+          <TextDefault bold>Current Location</TextDefault>
+        </View>
+      </TouchableOpacity>
+      <View style={styles().addressTick}>
+        {location.label === 'Current Location' && (
+          <MaterialIcons
+            name="check"
+            size={scale(15)}
+            color={currentTheme.iconColorPink}
+          />
+        )}
+        {busy && (
+          <Spinner size={'small'} backColor={currentTheme.cartContainer} />
+        )}
+      </View>
+    </View>
+  )
+
+  const emptyView = () => {
+    if (loading || mutationLoading || loadingOrders) return loadingScreen()
+    else {
+      return (
+        <View
+          style={{
+            width: '100%',
+            height: verticalScale(40),
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <TextDefault textColor={currentTheme.fontMainColor}>
+            No Restaurants
+          </TextDefault>
+        </View>
+      )
+    }
+  }
+
+  const modalFooter = () => (
+    <View style={styles().addressbtn}>
+      <View style={styles(currentTheme).addressContainer}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            if (isLoggedIn) {
+              navigation.navigate('NewAddress')
+            } else {
+              const modal = modalRef.current
+              modal?.close()
+              props.navigation.navigate({ name: 'CreateAccount' })
+            }
+          }}>
+          <View style={styles().addressSubContainer}>
+            <AntDesign
+              name="pluscircleo"
+              size={scale(12)}
+              color={currentTheme.iconColorPink}
+            />
+            <View style={styles().mL5p} />
+            <TextDefault bold>Add New Address</TextDefault>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <View style={styles().addressTick}></View>
+    </View>
+  )
+
+  function loadingScreen() {
+    return (
+      <View style={styles(currentTheme).screenBackground}>
+        <Search search={''} setSearch={() => {}} />
+        <Placeholder
+          Animation={props => (
+            <Fade
+              {...props}
+              style={styles(currentTheme).placeHolderFadeColor}
+              duration={600}
+            />
+          )}
+          style={styles(currentTheme).placeHolderContainer}>
+          <PlaceholderLine style={styles().height200} />
+          <PlaceholderLine />
+        </Placeholder>
+        <Placeholder
+          Animation={props => (
+            <Fade
+              {...props}
+              style={styles(currentTheme).placeHolderFadeColor}
+              duration={600}
+            />
+          )}
+          style={styles(currentTheme).placeHolderContainer}>
+          <PlaceholderLine style={styles().height200} />
+          <PlaceholderLine />
+        </Placeholder>
+        <Placeholder
+          Animation={props => (
+            <Fade
+              {...props}
+              style={styles(currentTheme).placeHolderFadeColor}
+              duration={600}
+            />
+          )}
+          style={styles(currentTheme).placeHolderContainer}>
+          <PlaceholderLine style={styles().height200} />
+          <PlaceholderLine />
+        </Placeholder>
+      </View>
+    )
+  }
+
   if (error) return <TextError text={'Error menu ' + JSON.stringify(error)} />
 
-  if (loading || mutationLoading || loadingOrders) {
-    return <LoadingComponent currentTheme={currentTheme} />
-  }
+  if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
   const { restaurants, sections } = data.nearByRestaurants
 
@@ -140,135 +334,113 @@ function Main({ navigation }) {
       .flat()
   }))
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']}>
-      <View style={styles().restaurantsContainer}>
-        <Animated.FlatList
-          contentInset={{ top: containerPaddingTop }}
-          contentContainerStyle={{
-            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop
-          }}
-          // style={{ marginBottom: 75 }}
-          contentOffset={{ y: -containerPaddingTop }}
-          onScroll={onScroll}
-          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            search ? (
-              <View style={styles().aboveFilterContainer}>
-                <Search setSearch={setSearch} search={search} open={onOpen} />
-                <Categories />
-              </View>
-            ) : (
-              <>
-                <View>
-                  <MapSection location={location} restaurants={restaurants} />
-                  <View style={styles().filterContainer}>
-                    <Search
-                      setSearch={setSearch}
-                      search={search}
-                      open={onOpen}
+    <>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
+        <View style={[styles().flex, styles(currentTheme).screenBackground]}>
+          <View style={styles().flex}>
+            <View style={styles().mainContentContainer}>
+              <View style={styles().flex}>
+                <Animated.FlatList
+                  contentInset={{ top: containerPaddingTop }}
+                  contentContainerStyle={{
+                    paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop
+                  }}
+                  contentOffset={{ y: -containerPaddingTop }}
+                  onScroll={onScroll}
+                  scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+                  showsVerticalScrollIndicator={false}
+                  ListHeaderComponent={
+                    search ? null : (
+                      <ActiveOrdersAndSections sections={restaurantSections} />
+                    )
+                  }
+                  ListEmptyComponent={emptyView()}
+                  keyExtractor={(item, index) => index.toString()}
+                  refreshControl={
+                    <RefreshControl
+                      progressViewOffset={containerPaddingTop}
+                      colors={[currentTheme.iconColorPink]}
+                      refreshing={networkStatus === 4}
+                      onRefresh={() => {
+                        if (networkStatus === 7) {
+                          refetch()
+                        }
+                      }}
                     />
-                    <Categories />
-                  </View>
-                </View>
-                <ActiveOrdersAndSections sections={restaurantSections} />
-              </>
-            )
-          }
-          ListEmptyComponent={<EmptyComponent currentTheme={currentTheme} />}
-          keyExtractor={(item, index) => index.toString()}
-          refreshControl={
-            <RefreshControl
-              progressViewOffset={containerPaddingTop}
-              colors={[currentTheme.iconColorPink]}
-              refreshing={networkStatus === 4}
-              onRefresh={() => {
-                if (networkStatus === 7) {
-                  refetch()
-                }
-              }}
-            />
-          }
-          data={search ? searchRestaurants(search) : restaurants}
-          renderItem={({ item }) => <Item item={item} />}
-        />
-      </View>
-      <Modalize
-        ref={modalRef}
-        modalStyle={styles(currentTheme).modal}
-        modalHeight={350}
-        overlayStyle={styles().overlay}
-        handleStyle={styles().handle}
-        handlePosition="inside"
-        openAnimationConfig={{
-          timing: { duration: 400 },
-          spring: { speed: 20, bounciness: 10 }
-        }}
-        closeAnimationConfig={{
-          timing: { duration: 400 },
-          spring: { speed: 20, bounciness: 10 }
-        }}
-        flatListProps={{
-          data: isLoggedIn && profile ? profile.addresses : '',
-          ListHeaderComponent: (
-            <ModalHeader
-              currentTheme={currentTheme}
-              setCurrentLocation={setCurrentLocation}
-              location={location}
-              busy={busy}
-            />
-          ),
-          ListFooterComponent: (
-            <ModalFooter
-              currentTheme={currentTheme}
-              isLoggedIn={isLoggedIn}
-              navigation={navigation}
-              modalRef={modalRef}
-            />
-          ),
-          showsVerticalScrollIndicator: false,
-          keyExtractor: item => item._id,
-          renderItem: ({ item: address }) => (
-            <View style={styles().addressbtn}>
-              <TouchableOpacity
-                style={styles(currentTheme).addressContainer}
-                activeOpacity={0.7}
-                onPress={() => setAddressLocation(address)}>
-                <View style={styles().addressSubContainer}>
-                  <SimpleLineIcons
-                    name={addressIcons[address.label]}
-                    size={scale(12)}
-                    color={currentTheme.iconColorPink}
-                  />
-                  <View style={styles().mL5p} />
-                  <TextDefault bold>{address.label}</TextDefault>
-                </View>
-                <View style={styles().addressTextContainer}>
-                  <TextDefault
-                    style={{ ...alignment.PLlarge }}
-                    textColor={currentTheme.fontSecondColor}
-                    small>
-                    {address.deliveryAddress}
-                  </TextDefault>
-                </View>
-              </TouchableOpacity>
-              <View style={styles().addressTick}>
-                {address.selected &&
-                  !['Current Location', 'Selected Location'].includes(
-                    location.label
-                  ) && (
-                  <MaterialIcons
-                    name="check"
-                    size={scale(15)}
-                    color={currentTheme.iconColorPink}
-                  />
-                )}
+                  }
+                  data={search ? searchRestaurants(search) : restaurants}
+                  renderItem={({ item }) => <Item item={item} />}
+                />
+                <CollapsibleSubHeaderAnimator translateY={translateY}>
+                  <Search setSearch={setSearch} search={search} />
+                </CollapsibleSubHeaderAnimator>
               </View>
             </View>
-          )
-        }}
-      />
-    </SafeAreaView>
+          </View>
+
+          <Modalize
+            ref={modalRef}
+            modalStyle={styles(currentTheme).modal}
+            modalHeight={350}
+            overlayStyle={styles().overlay}
+            handleStyle={styles().handle}
+            handlePosition="inside"
+            openAnimationConfig={{
+              timing: { duration: 400 },
+              spring: { speed: 20, bounciness: 10 }
+            }}
+            closeAnimationConfig={{
+              timing: { duration: 400 },
+              spring: { speed: 20, bounciness: 10 }
+            }}
+            flatListProps={{
+              data: isLoggedIn && profile ? profile.addresses : '',
+              ListHeaderComponent: modalHeader(),
+              ListFooterComponent: modalFooter(),
+              showsVerticalScrollIndicator: false,
+              keyExtractor: item => item._id,
+              renderItem: ({ item: address }) => (
+                <View style={styles().addressbtn}>
+                  <TouchableOpacity
+                    style={styles(currentTheme).addressContainer}
+                    activeOpacity={0.7}
+                    onPress={() => setAddressLocation(address)}>
+                    <View style={styles().addressSubContainer}>
+                      <SimpleLineIcons
+                        name={addressIcons[address.label]}
+                        size={scale(12)}
+                        color={currentTheme.iconColorPink}
+                      />
+                      <View style={styles().mL5p} />
+                      <TextDefault bold>{address.label}</TextDefault>
+                    </View>
+                    <View style={styles().addressTextContainer}>
+                      <TextDefault
+                        style={{ ...alignment.PLlarge }}
+                        textColor={currentTheme.fontSecondColor}
+                        small>
+                        {address.deliveryAddress}
+                      </TextDefault>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles().addressTick}>
+                    {address.selected &&
+                      !['Current Location', 'Selected Location'].includes(
+                        location.label
+                      ) && (
+                      <MaterialIcons
+                        name="check"
+                        size={scale(15)}
+                        color={currentTheme.iconColorPink}
+                      />
+                    )}
+                  </View>
+                </View>
+              )
+            }}></Modalize>
+        </View>
+      </SafeAreaView>
+    </>
   )
 }
 

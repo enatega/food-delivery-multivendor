@@ -5,12 +5,14 @@ import { alignment } from '../../utils/alignment'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: 1,
+      backgroundColor: '#FAFAFA'
     },
     subContainer: {
       flex: 1,
       alignItems: 'center',
-      borderRadius: 20,
+      justifyContent: 'space-between',
+      backgroundColor: props !== null ? props.cartContainer : 'transparent',
       ...alignment.PTlarge
     },
     upperContainer: {
@@ -20,52 +22,45 @@ const styles = (props = null) =>
     addressContainer: {
       paddingTop: 0,
       width: '100%',
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
+      ...alignment.PLsmall,
+      ...alignment.PRsmall
     },
     labelButtonContainer: {
       width: '100%',
       ...alignment.MTxSmall
     },
     labelTitleContainer: {
-      ...alignment.Psmall,
-      ...alignment.PLlarge
+      ...alignment.Psmall
     },
     buttonInline: {
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
       ...alignment.PLsmall,
-      ...alignment.PRsmall,
-      ...alignment.MBmedium
+      ...alignment.PRsmall
     },
     labelButton: {
-      width: '15%',
+      width: '30%',
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props !== null ? props.tagColor : 'transparent',
-      backgroundColor: props !== null ? props.tagColor : 'transparent',
-      borderRadius: 10,
+      borderColor: props !== null ? props.horizontalLine : 'transparent',
+      borderRadius: 30,
       justifyContent: 'center',
-      alignItems: 'center',
       ...alignment.PxSmall
     },
     activeLabel: {
-      width: '15%',
+      width: '30%',
       borderWidth: 1,
-      borderRadius: 10,
+      borderRadius: 30,
       justifyContent: 'center',
-      alignItems: 'center',
+      color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',
-      backgroundColor: props !== null ? props.menuBar : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {
-      width: '60%',
+      width: '100%',
       height: verticalScale(40),
-      ...alignment.MTlarge,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 10,
       backgroundColor: props !== null ? props.buttonBackground : 'transparent'
     },
     fakeMarkerContainer: {
@@ -85,22 +80,11 @@ const styles = (props = null) =>
       width: scale(40)
     },
     mapContainer: {
-      height: '30%',
+      height: '40%',
       backgroundColor: 'transparent'
     },
     geoLocation: {
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    details: {
-      backgroundColor: '#ECECEC',
-      borderRadius: 10
-    },
-    header: {
-      position: 'absolute',
-      borderRadius: 10,
-      alignItems: 'center',
-      margin: 15
+      flexDirection: 'row'
     }
   })
 export default styles

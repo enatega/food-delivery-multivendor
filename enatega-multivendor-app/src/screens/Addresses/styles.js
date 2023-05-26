@@ -1,7 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-const { height } = Dimensions.get('window')
+
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -10,62 +10,9 @@ const styles = (props = null) =>
     containerInfo: {
       width: '100%',
       flex: 1,
-      backgroundColor:
-        props !== null ? props.secondaryBackground : 'transparent',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       position: 'relative'
-    },
-    wrapper: {
-      height: '100%',
-      width: '100%',
-      backgroundColor: 'red'
-    },
-    backgroundImage: {
-      width: 180,
-      height: 180,
-      position: 'relative',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    headingTitle: {
-      width: '50%'
-    },
-    headingLink: {
-      width: '50%',
-      flexDirection: 'row',
-      justifyContent: 'flex-end'
-    },
-    containerHeading: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: props !== null ? props.tagColor : 'black',
-      ...alignment.Plarge,
-      borderRadius: 20
-    },
-    headingButton: {
-      justifyContent: 'center',
-      backgroundColor: props !== null ? props.secondaryBackground : 'black',
-      alignItems: 'center',
-      borderRadius: 5,
-      ...alignment.PxSmall
-    },
-    lower: {
-      backgroundColor: props !== null ? props.menuBar : 'transparent',
-      alignSelf: 'center',
-      width: '100%',
-      borderRadius: 20,
-      borderWidth:
-        props !== null && props.themeBackground !== '#FAFAFA' ? 2 : 0,
-      borderColor: props !== null ? props.shadowColor : 'transparent',
-      ...alignment.MBlarge,
-      ...alignment.Pmedium
-    },
-    upperContainer: {
-      height: height * 0.3,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor:
-        props !== null ? props.secondaryBackground : 'transparent'
     },
     subContainerImage: {
       width: '100%',
@@ -80,11 +27,13 @@ const styles = (props = null) =>
       ...alignment.Msmall
     },
     containerButton: {
-      backgroundColor: props !== null ? props.horizontalLine : 'transparent',
-      width: scale(100),
-      height: scale(30),
-      borderRadius: 40,
-      alignSelf: 'center',
+      backgroundColor: props !== null ? props.iconColorPink : 'transparent',
+      width: scale(40),
+      height: scale(40),
+      borderRadius: 50,
+      position: 'absolute',
+      right: scale(20),
+      bottom: verticalScale(20),
       zIndex: 1,
       elevation: 7,
       shadowColor: props !== null ? props.shadowColor : 'transparent',
@@ -118,7 +67,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     homeIcon: {
-      width: '10%',
+      width: '20%',
       alignItems: 'center',
       justifyContent: 'center'
     },
@@ -127,6 +76,8 @@ const styles = (props = null) =>
       height: scale(15)
     },
     addressDetail: {
+      width: '80%',
+      alignSelf: 'flex-end',
       ...alignment.PRsmall
     },
     line: {

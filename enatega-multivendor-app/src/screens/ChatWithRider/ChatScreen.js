@@ -59,7 +59,6 @@ const ChatScreen = ({ navigation, route }) => {
   const renderChatEmpty = props => {
     return (
       <View>
-        <Image source={require('../../assets/images/support.png')} />
         <TextDefault
           style={styles().emptyChat}
           textColor={currentTheme.fontSecondColor}

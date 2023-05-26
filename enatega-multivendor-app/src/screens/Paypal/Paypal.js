@@ -18,8 +18,11 @@ function Paypal(props) {
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
   const [_id] = useState(props.route.params._id ?? null)
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_PAYPAL)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_PAYPAL)
+    }
+    Track()
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({
