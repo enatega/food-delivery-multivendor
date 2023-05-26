@@ -63,95 +63,105 @@ function Item(props) {
   return (
     <TouchableOpacity
       activeOpacity={1}
+      key={item._id}
       onPress={() => navigation.navigate('Restaurant', { ...item })}>
-      <View key={item._id} style={styles().mainContainer}>
-        <View style={[styles(currentTheme).restaurantContainer]}>
-          <View style={styles().imageContainer}>
-            <Image
-              resizeMode="cover"
-              source={{ uri: item.image }}
-              style={styles().img}
-            />
-            <View style={styles().overlayRestaurantContainer}>
-              <TouchableOpacity
-                activeOpacity={0}
-                disabled={loadingMutation}
-                style={styles(currentTheme).favOverlay}
-                onPress={() =>
-                  profile ? mutate({ variables: { id: item._id } }) : null
-                }>
-                {loadingMutation ? (
-                  <Spinner size={'small'} backColor={'transparent'} />
-                ) : (
-                  <AntDesign
-                    name={heart ? 'heart' : 'hearto'}
-                    size={scale(15)}
-                    color="black"
-                  />
-                )}
-              </TouchableOpacity>
-              {(!isAvailable || !isOpen()) && (
-                <View style={{ ...styles().featureOverlay, top: 40 }}>
-                  <TextDefault
-                    style={[
-                      styles(currentTheme).featureText,
-                      {
-                        ...alignment.MTxSmall,
-                        ...alignment.PLsmall,
-                        ...alignment.PRsmall,
-                        ...alignment.PTxSmall,
-                        ...alignment.PBxSmall
-                      }
-                    ]}
-                    textColor={currentTheme.fontWhite}
-                    numberOfLines={1}
-                    small
-                    bold
-                    uppercase>
-                    Closed
-                  </TextDefault>
-                </View>
+      <View style={[styles(currentTheme).restaurantContainer, styles().ML20]}>
+        <View style={styles().imageContainer}>
+          <Image
+            resizeMode="cover"
+            source={{ uri: item.image }}
+            style={styles().img}
+          />
+          <View style={styles().overlayRestaurantContainer}>
+            <TouchableOpacity
+              activeOpacity={0}
+              disabled={loadingMutation}
+              style={styles(currentTheme).favOverlay}
+              onPress={() =>
+                profile ? mutate({ variables: { id: item._id } }) : null
+              }>
+              {loadingMutation ? (
+                <Spinner size={'small'} backColor={'transparent'} />
+              ) : (
+                <AntDesign
+                  name={heart ? 'heart' : 'hearto'}
+                  size={scale(15)}
+                  color="black"
+                />
               )}
-              <View style={styles(currentTheme).deliveryRestaurantOverlay}>
+            </TouchableOpacity>
+            {(!isAvailable || !isOpen()) && (
+              <View style={{ ...styles().featureOverlay, top: 40 }}>
                 <TextDefault
-                  textColor={currentTheme.fontMainColor}
+                  style={[
+                    styles(currentTheme).featureText,
+                    {
+                      ...alignment.MTxSmall,
+                      ...alignment.PLsmall,
+                      ...alignment.PRsmall,
+                      ...alignment.PTxSmall,
+                      ...alignment.PBxSmall
+                    }
+                  ]}
+                  textColor={currentTheme.fontWhite}
                   numberOfLines={1}
                   small
-                  bolder
-                  center>
-                  {item.deliveryTime}
-                  {' min'}
+                  bold
+                  uppercase>
+                  Closed
                 </TextDefault>
               </View>
+            )}
+            <View style={styles(currentTheme).deliveryRestaurantOverlay}>
+              <TextDefault
+                textColor={currentTheme.fontMainColor}
+                numberOfLines={1}
+                small
+                bolder
+                center>
+                {item.deliveryTime}
+                {' min'}
+              </TextDefault>
+            </View>
+            <View style={styles(currentTheme).dealsRestaurantOverlay}>
+              <TextDefault
+                textColor={currentTheme.fontMainColor}
+                numberOfLines={1}
+                small
+                bolder
+                center>
+                {item.deliveryTime}
+              </TextDefault>
             </View>
           </View>
-          <View style={styles().descriptionContainer}>
-            <View style={styles().aboutRestaurant}>
+        </View>
+        <View style={styles().descriptionContainer}>
+          <View style={styles().aboutRestaurant}>
+            <TextDefault
+              numberOfLines={1}
+              textColor={currentTheme.fontMainColor}
+              bolder>
+              {item.name}
+            </TextDefault>
+            <View style={styles().rating}>
+              <Ionicons name="md-star" size={scale(11)} color="green" />
               <TextDefault
-                style={{ width: '77%' }}
-                numberOfLines={1}
                 textColor={currentTheme.fontMainColor}
-                bolder>
-                {item.name}
+                style={{ marginLeft: 2 }}
+                bolder
+                smaller>
+                {item.reviewData.ratings}
               </TextDefault>
-              <View style={[styles().aboutRestaurant, { width: '23%' }]}>
-                <Ionicons name="md-star" size={scale(11)} color="#4165b9" />
-                <TextDefault
-                  textColor={currentTheme.fontMainColor}
-                  style={{ marginLeft: 2 }}
-                  bolder
-                  smaller>
-                  {item.reviewData.ratings}
-                </TextDefault>
-                <TextDefault
-                  textColor={currentTheme.fontSecondColor}
-                  style={{ marginLeft: 2 }}
-                  bold
-                  smaller>
-                  ({item.reviewData.reviews.length})
-                </TextDefault>
-              </View>
+              <TextDefault
+                textColor={currentTheme.fontSecondColor}
+                style={{ marginLeft: 2 }}
+                bold
+                smaller>
+                ({item.reviewData.reviews.length})
+              </TextDefault>
             </View>
+          </View>
+          <View style={[styles().aboutRestaurant]}>
             <TextDefault
               style={styles().offerCategoty}
               textColor={currentTheme.fontSecondColor}
@@ -160,19 +170,18 @@ function Item(props) {
               {category.toString()}
             </TextDefault>
             <View style={styles().priceRestaurant}>
+              <TextDefault textColor={currentTheme.fontSecondColor} small>
+                {' '}
+                {'Min'}{' '}
+              </TextDefault>
               <TextDefault
                 style={styles().offerCategoty}
                 textColor={currentTheme.fontMainColor}
                 numberOfLines={1}
-                small
+                medium
                 bold>
                 {configuration.currencySymbol + ' ' + item.minimumOrder}{' '}
-                <TextDefault textColor={currentTheme.fontSecondColor} small>
-                  {' '}
-                  {'minimum'}
-                </TextDefault>
               </TextDefault>
-              <View style={styles(currentTheme).verticalLine} />
             </View>
           </View>
         </View>

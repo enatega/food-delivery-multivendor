@@ -6,11 +6,8 @@ import analytics from '../../utils/analytics'
 function HelpBrowser(props) {
   const { title, url } = props.route.params
   const [loading, loadingSetter] = useState(true)
-  useEffect(() => {
-    async function Track() {
-      await analytics.track(analytics.events.NAVIGATE_TO_HELPBROWSER)
-    }
-    Track()
+  useEffect(async() => {
+    await analytics.track(analytics.events.NAVIGATE_TO_HELPBROWSER)
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({

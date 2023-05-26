@@ -26,11 +26,8 @@ const links = [
 function Help(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_HELP)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_HELP)
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({

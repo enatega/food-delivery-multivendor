@@ -45,13 +45,10 @@ function OrderDetail(props) {
   const themeContext = useContext(ThemeContext)
   const [remainingTime, setRemainingTime] = useState(0)
   const currentTheme = theme[themeContext.ThemeValue]
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
-        orderId: id
-      })
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
+      orderId: id
+    })
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions(screenOptions(currentTheme.headerText))

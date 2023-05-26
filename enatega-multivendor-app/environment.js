@@ -6,9 +6,10 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
-    GRAPHQL_URL: 'http://10.97.16.62:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://10.97.16.62:8001/graphql',
-    SERVER_URL: 'http://10.97.16.62:8001/', // put / at the end of server url
+
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '967541328677-uq7f7odvmeea2pb2sq0l7q320ds86536.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
@@ -25,7 +26,7 @@ const ENV = {
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   },
   staging: {
-    GRAPHQL_URL: 'https://stagingenategamultivendorapi.herokuapp.com/graphql',
+        GRAPHQL_URL: 'https://stagingenategamultivendorapi.herokuapp.com/graphql',
     WS_GRAPHQL_URL: 'wss://stagingenategamultivendorapi.herokuapp.com/graphql',
     SERVER_URL: 'https://stagingenategamultivendorapi.herokuapp.com/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:

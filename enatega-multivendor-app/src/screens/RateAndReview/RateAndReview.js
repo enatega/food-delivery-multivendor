@@ -38,11 +38,8 @@ function RateAndReview(props) {
       headerRight: null
     })
   }, [props.navigation])
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_RATEANDREVIEW)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_RATEANDREVIEW)
   }, [])
   function onFinishRating(rating) {
     setRating(rating)

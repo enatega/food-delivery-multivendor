@@ -37,7 +37,7 @@ import SelectLocation from '../screens/SelectLocation'
 import CurrentLocation from '../screens/CurrentLocation'
 import ThemeContext from '../ui/ThemeContext/ThemeContext'
 import { theme } from '../utils/themeColors'
-import screenOptions from './screenOptions'
+import screenOptions, { tabIcon } from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
 import Chat from '../screens/Chat/Chat'
@@ -49,26 +49,17 @@ import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
 import PhoneNumber from '../screens/PhoneNumber/PhoneNumber'
+import PaymentMethod from '../screens/PaymentMethod'
 import { useApolloClient, gql } from '@apollo/client'
 import { myOrders } from '../apollo/queries'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 const NavigationStack = createStackNavigator()
-const MainStack = createStackNavigator()
 const SideDrawer = createDrawerNavigator()
 const Location = createStackNavigator()
+const Tab = createBottomTabNavigator()
 
-function Drawer() {
-  return (
-    <SideDrawer.Navigator drawerContent={props => <SideBar {...props} />}>
-      <SideDrawer.Screen
-        options={{ headerShown: false }}
-        name="NoDrawer"
-        component={NoDrawer}
-      />
-    </SideDrawer.Navigator>
-  )
-}
-function NoDrawer() {
+function noDrawer() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
@@ -81,13 +72,18 @@ function NoDrawer() {
         textColor: currentTheme.headerText,
         iconColor: currentTheme.iconColorPink
       })}>
-      <NavigationStack.Screen name="Main" component={Main} />
+      <NavigationStack.Screen
+        name="Tabs"
+        options={{ headerShown: false }}
+        component={MyTabs}
+      />
+      {/* <NavigationStack.Screen name="Main" component={Main} /> */}
       <NavigationStack.Screen
         name="Restaurant"
         component={Restaurant}
         options={{ header: () => null }}
       />
-      {<NavigationStack.Screen name="ItemDetail" component={ItemDetail} />}
+      <NavigationStack.Screen name="ItemDetail" component={ItemDetail} />
       <NavigationStack.Screen name="Cart" component={Cart} />
       <NavigationStack.Screen name="Profile" component={Profile} />
       <NavigationStack.Screen name="Addresses" component={Addresses} />
@@ -111,7 +107,7 @@ function NoDrawer() {
         }}
       />
       <NavigationStack.Screen name="Settings" component={Settings} />
-      <NavigationStack.Screen name="MyOrders" component={MyOrders} />
+      {/* <NavigationStack.Screen name="MyOrders" component={MyOrders} /> */}
       <NavigationStack.Screen name="Reorder" component={Reorder} />
       <NavigationStack.Screen name="Chat" component={Chat} />
       <NavigationStack.Screen name="Help" component={Help} />
@@ -156,6 +152,7 @@ function NoDrawer() {
       />
       <NavigationStack.Screen name="Favourite" component={Favourite} />
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
+      <NavigationStack.Screen name="PaymentMethod" component={PaymentMethod} />
     </NavigationStack.Navigator>
   )
 }
@@ -170,6 +167,37 @@ function LocationStack() {
       />
       <Location.Screen name="SelectLocation" component={SelectLocation} />
     </Location.Navigator>
+  )
+}
+
+function MyTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={({ route }) => tabIcon(route)}
+      tabBarLabelStyle={{
+        color: '#6FCF97'
+      }}>
+      <Tab.Screen name="Home" component={Main} options={{ title: 'Home' }} />
+      <Tab.Screen
+        name="My Orders"
+        component={MyOrders}
+        options={{ title: 'My Orders' }}
+      />
+      <Tab.Screen name="Cart" component={Cart} options={{ title: 'Cart' }} />
+      <Tab.Screen
+        name="Profile"
+        component={noDrawer}
+        options={{ title: 'Profile' }}
+        screenOptions={{ drawerPosition: 'right' }}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            e.preventDefault()
+            navigation.openDrawer()
+          }
+        })}
+      />
+    </Tab.Navigator>
   )
 }
 
@@ -229,13 +257,16 @@ function AppContainer() {
         {!location ? (
           <LocationStack />
         ) : (
-          <MainStack.Navigator initialRouteName="Drawer">
-            <MainStack.Screen
+          <SideDrawer.Navigator
+            drawerType="slide"
+            drawerPosition="right"
+            drawerContent={props => <SideBar {...props} />}>
+            <SideDrawer.Screen
+              name="noDrawer"
               options={{ headerShown: false }}
-              name="Drawer"
-              component={Drawer}
+              component={noDrawer}
             />
-          </MainStack.Navigator>
+          </SideDrawer.Navigator>
         )}
       </NavigationContainer>
     </SafeAreaProvider>

@@ -31,11 +31,8 @@ export default function FullMap(props) {
     longitudeDelta: LONGITUDE_DELTA
   })
   const backScreen = props.route.params.currentScreen ?? null
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
-    }
-    Track()
+  useEffect(async() => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({
