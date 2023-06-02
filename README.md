@@ -152,7 +152,7 @@ To check out video demo of mobile applications please click [here](https://www.y
 - [Rider App iOS](https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511)
 - [Restaurant App Android](https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant)
 - [Restaurant App iOS](https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537)
-- [Customer Web App](pensive-liskov-5320d4.netlify.app)
+- [Customer Web App](https://pensive-liskov-5320d4.netlify.app)
 - [Admin Dashboard](https://practical-minsky-95a652.netlify.app/)
 
 ## Contributing:
