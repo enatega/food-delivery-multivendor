@@ -13,7 +13,7 @@ const PROFILE = gql`
 `
 
 const PRODUCT_URL = 'http://www.beta.enatega.com/'
-const PRIVACY_URL = 'https://multivendor-enatega.ninjascode.com/#/privacy'
+const PRIVACY_URL = 'https://pensive-liskov-5320d4.netlify.app/#/privacy'
 const ABOUT_URL = 'https://ninjascode.com/'
 
 // constants

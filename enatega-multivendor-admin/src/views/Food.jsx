@@ -145,6 +145,7 @@ const Food = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                  //uncomment this for paid version
                   //toggleModal(row)
                   setIsOpen(true)
                   setTimeout(() => {
@@ -160,6 +161,7 @@ const Food = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                  //uncomment this for paid version
                   // mutate({
                   //   variables: {
                   //     id: row._id,

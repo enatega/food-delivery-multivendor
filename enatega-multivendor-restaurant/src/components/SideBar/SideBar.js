@@ -201,8 +201,12 @@ export default function SideBar() {
             style={styles.logout}
             activeOpacity={0.8}
             onPress={() =>
-              Linking.canOpenURL(PRIVACY_URL).then(() => {
-                Linking.openURL(PRIVACY_URL)
+              Linking.canOpenURL(
+                'https://pensive-liskov-5320d4.netlify.app/#/privacy'
+              ).then(() => {
+                Linking.openURL(
+                  'https://pensive-liskov-5320d4.netlify.app/#/privacy'
+                )
               })
             }>
             <View style={styles.icon}>
