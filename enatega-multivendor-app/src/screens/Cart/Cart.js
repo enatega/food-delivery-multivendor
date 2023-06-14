@@ -143,7 +143,7 @@ function Cart(props) {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async() => {
+    ;(async () => {
       if (data && !!data.restaurant) {
         const latOrigin = Number(data.restaurant.location.coordinates[1])
         const lonOrigin = Number(data.restaurant.location.coordinates[0])
@@ -280,6 +280,7 @@ function Cart(props) {
         ]
       })
     } else if (paymentMethod.payment === 'PAYPAL') {
+      console.log('here')
       props.navigation.replace('Paypal', {
         _id: data.placeOrder.orderId,
         currency: configuration.currency

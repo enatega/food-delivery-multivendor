@@ -6,6 +6,9 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
+    // GRAPHQL_URL: 'http://10.97.28.129:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://10.97.28.129:8001/graphql',
+    // SERVER_URL: 'http://10.97.28.129:8001/', // put / at the end of server url
     GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
@@ -21,13 +24,18 @@ const ENV = {
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',
     PRIVACY_POLICY: 'https://enatega.ninjascode.com/privacy-policy',
+    STRIPE_PUBLIC_KEY: 'pk_test_lEaBbVGnTkzja2FyFiNlbqtw',
+
+    STRIPE_IMAGE_URL:
+      'https://prod-enatega-single-api.herokuapp.com/assets/images/logo.png',
+    STRIPE_STORE_NAME: 'Enatega',
     TEST_OTP: '111111',
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   },
   staging: {
     GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://stagingenategamultivendorapi.herokuapp.com/', // put / at the end of server url
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
@@ -40,6 +48,10 @@ const ENV = {
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',
     PRIVACY_POLICY: 'https://enatega.ninjascode.com/privacy-policy',
+    STRIPE_PUBLIC_KEY: 'pk_test_lEaBbVGnTkzja2FyFiNlbqtw',
+    STRIPE_IMAGE_URL:
+      'https://prod-enatega-single-api.herokuapp.com/assets/images/logo.png',
+    STRIPE_STORE_NAME: 'Enatega',
     TEST_OTP: '111111',
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   },
@@ -59,6 +71,10 @@ const ENV = {
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: 'https://enatega.ninjascode.com/privacy-policy',
     PRIVACY_POLICY: 'https://enatega.ninjascode.com/privacy-policy',
+    STRIPE_PUBLIC_KEY: 'pk_test_lEaBbVGnTkzja2FyFiNlbqtw',
+    STRIPE_IMAGE_URL:
+      'https://prod-enatega-single-api.herokuapp.com/assets/images/logo.png',
+    STRIPE_STORE_NAME: 'Enatega',
     TEST_OTP: '111111',
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   }

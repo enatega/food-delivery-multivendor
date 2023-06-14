@@ -35,22 +35,29 @@ function StripeCheckout(props) {
     }
     Track()
   }, [])
-  async function onPaymentSuccess() {
-    const result = await client.query({
-      query: MYORDERS,
-      fetchPolicy: 'network-only'
-    })
-    const order = result.data.orders.find(order => order.orderId === _id)
-    await clearCart()
-    props.navigation.reset({
-      routes: [
-        { name: 'Main' },
-        {
-          name: 'OrderDetail',
-          params: { _id: order._id }
-        }
-      ]
-    })
+
+  async function handleResponse(data) {
+    if (data.url.includes('stripe/success')) {
+      const result = await client.query({
+        query: MYORDERS,
+        fetchPolicy: 'network-only'
+      })
+      const order = result.data.orders.find(order => order.orderId === _id)
+      await clearCart()
+      console.log('cart clear')
+      props.navigation.reset({
+        routes: [
+          { name: 'Main' },
+          {
+            name: 'OrderDetail',
+            params: { _id: order._id }
+          }
+        ]
+      })
+    } else if (data.url.includes('stripe/cancel')) {
+      props.navigation.goBack()
+      // goBack on Payment Screen
+    }
   }
 
   return (
@@ -61,15 +68,14 @@ function StripeCheckout(props) {
         bounces={false}
         onLoad={() => {
           loadingSetter(false)
+          console.log(loading)
         }}
         source={{
-          uri: SERVER_URL + 'stripe/create-checkout-session?id=' + _id
+          uri: `${SERVER_URL}stripe/create-checkout-session?id=${_id}`
         }}
         scalesPageToFit={true}
         onNavigationStateChange={data => {
-          if (data.title === 'cancel') onClose(true)
-          if (data.title === 'failed') onClose(false)
-          if (data.title === 'success') onPaymentSuccess()
+          handleResponse(data)
         }}
       />
       {loading ? (
