@@ -8,8 +8,8 @@ import { AuthContext } from '../context'
 export default function useLogin() {
   const [errors, setErrors] = useState()
   const { login } = useContext(AuthContext)
-  const [username, setUserName] = useState('ChinaWest')
-  const [password, setPassword] = useState('123123')
+  const [username, setUserName] = useState('Bakeshop')
+  const [password, setPassword] = useState('12345')
   const usernameRef = useRef()
   const passwordRef = useRef()
   const [mutate, { loading, error }] = useMutation(
