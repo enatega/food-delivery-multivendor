@@ -66,8 +66,10 @@ const styles = (props = null) =>
       marginBottom: scale(20)
     },
     dateReview: {
+      marginTop: -8,
       width: '100%',
       textAlign: 'left',
+      fontSize: 10,
       ...alignment.PTsmall,
       ...alignment.PBxSmall
     },

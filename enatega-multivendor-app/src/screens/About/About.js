@@ -47,7 +47,7 @@ function About(props) {
     )
   }
   function line() {
-    return <View style={[styles(currentTheme).line, styles().MB15]} />
+    return <View style={styles().MB15} />
   }
   function header() {
     return (
@@ -170,13 +170,20 @@ function About(props) {
         ItemSeparatorComponent={line}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <View style={[styles().MB15]}>
+          <View
+            style={{
+              marginHorizontal: 5,
+              zIndex: 1,
+              elevation: 1,
+              backgroundColor: 'black',
+              padding: 10,
+              borderRadius: 10
+            }}>
             <View style={styles().reviewerContainer}>
               <TextDefault
                 style={styles().reviewerName}
-                textColor={currentTheme.fontMainColor}
-                bold
-                small>
+                textColor={'white'}
+                bolder>
                 {item.order.user.name}
               </TextDefault>
               <View style={styles().ratingContainer}>
@@ -188,8 +195,8 @@ function About(props) {
                         <MaterialIcons
                           key={index}
                           name="star"
-                          size={scale(10)}
-                          color={'blue'}
+                          size={scale(13)}
+                          color={'#E2C077'}
                         />
                       )
                     } else if (index >= item.rating && index < 5) {
@@ -197,8 +204,8 @@ function About(props) {
                         <MaterialIcons
                           key={index}
                           name="star"
-                          size={scale(10)}
-                          color={currentTheme.radioOuterColor}
+                          size={scale(13)}
+                          color={'white'}
                         />
                       )
                     }
@@ -207,12 +214,12 @@ function About(props) {
             </View>
             <TextDefault
               style={styles().dateReview}
-              textColor={currentTheme.fontSecondColor}
+              textColor={'#D9D9D9'}
               numberOfLines={1}
               small>
               {formatDate(item.createdAt)}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontSecondColor} small>
+            <TextDefault textColor={'white'} small bold>
               {item.description}
             </TextDefault>
           </View>
