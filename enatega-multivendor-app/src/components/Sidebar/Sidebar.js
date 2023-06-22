@@ -78,7 +78,7 @@ function SidebBar(props) {
           {datas.map((dataItem, ind) => (
             <View key={ind} style={styles().item}>
               <SideDrawerItems
-                onPress={async() => {
+                onPress={async () => {
                   if (dataItem.isAuth && !isLoggedIn) {
                     props.navigation.navigate('CreateAccount')
                   } else {
@@ -93,7 +93,7 @@ function SidebBar(props) {
           {isLoggedIn && (
             <View style={styles().item}>
               <SideDrawerItems
-                onPress={async() => {
+                onPress={async () => {
                   await Analytics.track(Analytics.events.USER_LOGGED_OUT)
                   await Analytics.identify(null, null)
 

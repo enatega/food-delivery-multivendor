@@ -93,7 +93,14 @@ function ImageTextCenterHeader(props, ref) {
         <Animated.Image
           resizeMode="cover"
           source={{ uri: aboutObject.restaurantImage }}
-          style={[styles().flex, { opacity: props.opacity }]}
+          style={[
+            styles().flex,
+            {
+              opacity: props.opacity,
+              borderBottomLeftRadius: 25,
+              borderBottomRightRadius: 25
+            }
+          ]}
         />
         <Animated.View style={styles().overlayContainer}>
           <View style={styles().fixedViewNavigation}>

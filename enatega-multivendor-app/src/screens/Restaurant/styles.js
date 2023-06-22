@@ -31,7 +31,7 @@ const styles = (props = null) =>
     deal: {
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+
       ...alignment.PTsmall,
       ...alignment.PBsmall
     },
@@ -39,7 +39,8 @@ const styles = (props = null) =>
       position: 'relative',
       backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
-      ...alignment.PRxSmall
+      ...alignment.PRxSmall,
+      borderRadius: 25
     },
     dealDescription: {
       flex: 1,
@@ -81,6 +82,8 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.buttonBackgroundPink : 'red',
       height: '100%',
       width: '100%',
+      borderRadius: 25,
+
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },

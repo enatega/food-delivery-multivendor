@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -56,28 +56,42 @@ const ActiveOrders = () => {
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
+  const activeOrders = orders.filter(o =>
+    orderStatusActive.includes(o.orderStatus)
+  )
+
   const currentTheme = theme[themeContext.ThemeValue]
+  const [showAll, setShowAll] = useState(false)
+
+  const displayOrders = showAll ? activeOrders : activeOrders.slice(0, 2)
 
   if (loadingOrders) return <Spinner />
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   return (
-    <FlatList
-      contentContainerStyle={{ paddingRight: scale(10) }}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      horizontal={true}
-      data={orders.filter(o => orderStatusActive.includes(o.orderStatus))}
-      keyExtractor={item => item._id}
-      renderItem={({ item, index }) => (
-        <Item
-          key={index}
-          navigation={navigation}
-          configuration={configuration}
-          currentTheme={currentTheme}
-          item={item}
+    <>
+      <FlatList
+        contentContainerStyle={{ paddingRight: scale(10) }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        data={displayOrders}
+        keyExtractor={item => item._id}
+        renderItem={({ item, index }) => (
+          <Item
+            key={index}
+            navigation={navigation}
+            configuration={configuration}
+            currentTheme={currentTheme}
+            item={item}
+          />
+        )}
+      />
+      {activeOrders.length > 2 && (
+        <Button
+          title={showAll ? 'See Less' : 'See More'}
+          onPress={() => setShowAll(!showAll)}
         />
       )}
-    />
+    </>
   )
 }
 const Item = ({ navigation, configuration, currentTheme, item }) => {
@@ -94,7 +108,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
     })
     return obj[0]
   }
-
+  console.log(item.expectedTime)
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -108,20 +122,23 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
         })
       }}>
       <View style={styles(currentTheme).statusContainer}>
-        <View style={styles().randomShapeContainer}>
+        {/* <View style={styles().randomShapeContainer}>
           <RandomShape width={scale(300)} height={scale(300)} />
-        </View>
+        </View> */}
         <View style={styles().textContainer}>
-          <Text style={styles(currentTheme).title}>Your order from:</Text>
+          {/* <Text style={styles(currentTheme).title}>Your order from:</Text> */}
           <Text style={styles(currentTheme).description}>
             {item.restaurant.name}
           </Text>
+          {/* <Text style={styles(currentTheme).description}>
+            {new Date(item.expectedTime).getUTCHours()}
+          </Text> */}
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
-              marginTop: scale(10),
-              marginBottom: scale(8)
+              marginTop: scale(2),
+              marginBottom: scale(2)
             }}>
             {Array(checkStatus(item.orderStatus).status)
               .fill(0)
@@ -150,7 +167,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
             {checkStatus(item.orderStatus).status}.{' '}
             {checkStatus(item.orderStatus).statusText}
           </Text>
-          <Text style={styles(currentTheme).timeText}> {item.orderStatus}</Text>
+          {/* <Text style={styles(currentTheme).timeText}> {item.orderStatus}</Text> */}
         </View>
       </View>
     </TouchableOpacity>

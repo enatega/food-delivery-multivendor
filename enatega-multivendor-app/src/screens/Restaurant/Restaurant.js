@@ -183,7 +183,7 @@ function Restaurant(props) {
           },
           {
             text: 'OK',
-            onPress: async() => {
+            onPress: async () => {
               await addToCart(food, true)
             }
           }
@@ -193,7 +193,7 @@ function Restaurant(props) {
     }
   }
 
-  const addToCart = async(food, clearFlag) => {
+  const addToCart = async (food, clearFlag) => {
     if (
       food.variations.length === 1 &&
       food.variations[0].addons.length === 0

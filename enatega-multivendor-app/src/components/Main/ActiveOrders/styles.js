@@ -25,12 +25,12 @@ const styles = (props = null) =>
     },
     statusContainer: {
       overflow: 'hidden',
-      width: scale(270),
+      width: '97%',
       alignSelf: 'center',
-      backgroundColor: props !== null ? props.cartContainer : 'white',
+      backgroundColor: '#90EA93',
+      borderRadius: 25,
       marginTop: verticalScale(5),
       marginBottom: verticalScale(10),
-      marginLeft: scale(15),
       elevation: 7,
       shadowColor: props != null ? props.shadowColor : 'grey',
       shadowOffset: {
@@ -40,8 +40,7 @@ const styles = (props = null) =>
       shadowOpacity: 0.3,
       shadowRadius: verticalScale(3),
       borderWidth: 1,
-      borderColor: '#FFF',
-      paddingBottom: scale(15)
+      borderColor: '#FFF'
     },
     cardViewContainer: {
       width: '98%',
@@ -80,8 +79,7 @@ const styles = (props = null) =>
     description: {
       color: props !== null ? props.fontMainColor : '#000',
       fontSize: verticalScale(18),
-      fontFamily: fontStyles.MuseoSans500,
-      marginTop: scale(2)
+      fontFamily: fontStyles.MuseoSans500
     },
     statusText: {
       color: props !== null ? props.statusSecondColor : 'grey',

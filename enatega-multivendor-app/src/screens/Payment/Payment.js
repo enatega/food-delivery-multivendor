@@ -53,54 +53,52 @@ function Payment(props) {
   }
   return (
     <>
-      <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        {CASH.map((item, index) => (
-          <TouchableOpacity
-            style={[styles().radioGroup, styles().pT20]}
-            key={index.toString()}
-            onPress={() => {
-              onSelectPayment(item)
-            }}>
-            <View style={styles().radioContainer}>
-              <RadioButton
-                animation={'bounceIn'}
-                outerColor={currentTheme.radioOuterColor}
-                innerColor={currentTheme.radioColor}
-                isSelected={paymentMethod.index === item.index}
-                onPress={() => {
-                  onSelectPayment(item)
-                }}
-              />
-            </View>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontMainColor}
-              style={{ width: '60%' }}>
-              {item.label}
-            </TextDefault>
-            <View style={styles().iconContainer}>
-              {item.icon1 && (
-                <Image
-                  resizeMode="cover"
-                  style={[styles().iconStyle, { ...alignment.MRxSmall }]}
-                  source={item.icon1}
+      <View style={[styles(currentTheme).mainContainer]}>
+        <View style={{ backgroundColor: 'white', borderRadius: 20 }}>
+          {CASH.map((item, index) => (
+            <TouchableOpacity
+              style={[styles().radioGroup, styles().pT20]}
+              key={index.toString()}
+              onPress={() => {
+                onSelectPayment(item)
+              }}>
+              <View style={styles().radioContainer}>
+                <RadioButton
+                  animation={'bounceIn'}
+                  outerColor={currentTheme.radioOuterColor}
+                  innerColor={currentTheme.radioColor}
+                  isSelected={paymentMethod.index === item.index}
+                  onPress={() => {
+                    onSelectPayment(item)
+                  }}
                 />
-              )}
-              <Image
-                resizeMode="cover"
-                style={styles().iconStyle}
-                source={item.icon}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
+              </View>
+              <View style={styles().paymentMethod}>
+                <TextDefault
+                  numberOfLines={1}
+                  textColor={currentTheme.fontMainColor}
+                  style={{ width: '60%' }}>
+                  {item.label}
+                </TextDefault>
+                <View style={styles().iconContainer}>
+                  {item.icon1 && (
+                    <Image
+                      resizeMode="cover"
+                      style={[styles().iconStyle, { ...alignment.MRsmall }]}
+                      source={item.icon1}
+                    />
+                  )}
+                  <Image
+                    resizeMode="cover"
+                    style={styles().iconStyle}
+                    source={item.icon}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-      <View
-        style={{
-          paddingBottom: inset.bottom,
-          backgroundColor: currentTheme.themeBackground
-        }}
-      />
     </>
   )
 }
