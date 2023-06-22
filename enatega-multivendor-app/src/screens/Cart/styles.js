@@ -87,7 +87,7 @@ const styles = (props = null) =>
       textAlign: 'right'
     },
     horizontalLine: {
-      borderBottomColor: props !== null ? props.horizontalLine : 'black',
+      borderBottomColor: props !== null ? props.black : 'black',
       borderBottomWidth: StyleSheet.hairlineWidth
     },
     arrowRight: {
@@ -134,8 +134,8 @@ const styles = (props = null) =>
       borderRadius: scale(9)
     },
     iconStyle: {
-      height: verticalScale(15),
-      width: verticalScale(20)
+      height: verticalScale(18),
+      width: verticalScale(18)
     },
     subContainerImage: {
       flex: 1,
@@ -205,6 +205,7 @@ const styles = (props = null) =>
     },
     labelButton: {
       marginRight: 10,
+
       borderRadius: scale(10),
       width: '22%',
       borderWidth: StyleSheet.hairlineWidth,
@@ -215,8 +216,9 @@ const styles = (props = null) =>
     activeLabel: {
       marginRight: 10,
       borderRadius: scale(10),
+      backgroundColor: props !== null ? props.main : 'transparent',
       width: '22%',
-      borderWidth: 2,
+      //borderWidth: 2,
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',

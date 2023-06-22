@@ -2,6 +2,7 @@ export const theme = {
   Pink: {
     black: '#000',
     white: '#FFF',
+    darkGreen: '#3C8F7C',
     themeBackground: '#FAFAFA',
     menuBar: '#FFF',
     iconColor: '#333333',
