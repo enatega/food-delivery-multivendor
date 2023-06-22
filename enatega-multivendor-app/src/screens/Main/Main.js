@@ -48,6 +48,7 @@ import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSe
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import Analytics from '../../utils/analytics'
+import MapSection from '../MapSection/index'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -106,10 +107,10 @@ function Main(props) {
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
-        headerMenuBackground: currentTheme.headerMenuBackground,
-        horizontalLine: currentTheme.horizontalLine,
+        headerMenuBackground: '#90EA93',
+        horizontalLine: '#90EA93',
         fontMainColor: currentTheme.fontMainColor,
-        iconColorPink: currentTheme.iconColorPink,
+        iconColorPink: "black",
         open: onOpen
       })
     )
@@ -373,8 +374,9 @@ function Main(props) {
                   data={search ? searchRestaurants(search) : restaurants}
                   renderItem={({ item }) => <Item item={item} />}
                 />
-                <CollapsibleSubHeaderAnimator translateY={translateY}>
+                <CollapsibleSubHeaderAnimator translateY={translateY}>                  
                   <Search setSearch={setSearch} search={search} />
+                  <MapSection location={location} restaurants={restaurants} />
                 </CollapsibleSubHeaderAnimator>
               </View>
             </View>

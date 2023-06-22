@@ -18,11 +18,11 @@ const styles = (props = null) =>
         height: verticalScale(0)
       },
       borderRadius: 25,
-      shadowOpacity: 0.3,
-      shadowRadius: verticalScale(3),
+      // shadowOpacity: 0.3,
+      // shadowRadius: verticalScale(3),
       height: scale(220),
       width: '99%',
-      padding: 5,
+      padding: 15,
       //...alignment.Psmall,
       ...alignment.MBsmall
     },

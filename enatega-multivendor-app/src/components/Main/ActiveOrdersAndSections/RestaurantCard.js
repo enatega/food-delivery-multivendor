@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
-import { TouchableOpacity, View, Image } from 'react-native'
+import { TouchableOpacity, View, Image, Text } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { alignment } from '../../../utils/alignment'
@@ -84,7 +84,7 @@ function RestaurantCard(props) {
           <TextDefault
             textColor={currentTheme.fontMainColor}
             numberOfLines={1}
-            style={{ marginTop: 3 }}
+            style={{ marginTop: 3,fontSize: 15}}
             bold
             small>
             {configuration.currencySymbol} {props.minimumOrder}

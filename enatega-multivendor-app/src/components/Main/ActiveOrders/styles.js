@@ -79,13 +79,15 @@ const styles = (props = null) =>
     description: {
       color: props !== null ? props.fontMainColor : '#000',
       fontSize: verticalScale(18),
-      fontFamily: fontStyles.MuseoSans500
+      fontFamily: fontStyles.MuseoSans500,
+      paddingLeft: 5
     },
     statusText: {
       color: props !== null ? props.statusSecondColor : 'grey',
       fontSize: verticalScale(13),
       fontFamily: fontStyles.MuseoSans500,
-      marginBottom: scale(10)
+      marginBottom: scale(10),
+      paddingLeft: 40
     },
     timeText: {
       color: props !== null ? props.iconColorPink : 'red',

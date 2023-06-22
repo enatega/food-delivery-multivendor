@@ -11,6 +11,7 @@ const styles = (props = null) =>
       color: props != null ? props.fontMainColor : 'black'
     },
     mainContainerHolder: {
+      zIndex: 333,
       width: '100%',
       alignItems: 'center',
       borderBottomLeftRadius: 25,

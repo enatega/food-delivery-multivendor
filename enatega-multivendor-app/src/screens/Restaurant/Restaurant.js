@@ -192,6 +192,16 @@ function Restaurant(props) {
       )
     }
   }
+  function wrapContentAfterWords(content, numWords) {
+  const words = content.split(' ');
+  const wrappedContent = [];
+
+  for (let i = 0; i < words.length; i += numWords) {
+    wrappedContent.push(words.slice(i, i + numWords).join(' '));
+  }
+
+  return wrappedContent.join('\n');
+}
 
   const addToCart = async (food, clearFlag) => {
     if (
@@ -550,6 +560,7 @@ function Restaurant(props) {
           }}
           renderSectionHeader={({ section: { title } }) => {
             return (
+              
               <TextDefault
                 style={styles(currentTheme).sectionHeaderText}
                 textColor={currentTheme.fontMainColor}
@@ -582,11 +593,12 @@ function Restaurant(props) {
                     {item.title}
                   </TextDefault>
                   <View style={styles().dealDescription}>
-                    <TextDefault
-                      style={{ width: '100%' }}
+                  <TextDefault
+                      style={{ width: '100%', wordWrap: 'break-word' }}
                       textColor={currentTheme.fontSecondColor}
-                      small>
-                      {item.description}
+                      small
+                    >
+                      {wrapContentAfterWords(item.description, 5)}
                     </TextDefault>
                     <View style={styles().dealPrice}>
                       <TextDefault

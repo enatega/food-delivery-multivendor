@@ -39,7 +39,7 @@ function BackButton(props) {
     return (
       <Ionicons
         name="ios-menu"
-        size={16}
+        size={20}
         style={styles().leftIconPadding}
         color={props.iconColor}
       />
@@ -48,7 +48,7 @@ function BackButton(props) {
     return (
       <MaterialCommunityIcons
         name="dots-vertical"
-        size={16}
+        size={20}
         color={props.iconColor}
       />
     )
@@ -57,7 +57,7 @@ function BackButton(props) {
       <MaterialIcons name="my-location" size={16} color={props.iconColor} />
     )
   } else if (props.icon === 'fav') {
-    return <AntDesign name="hearto" size={16} color={props.iconColor} />
+    return <AntDesign name="hearto" size={20} color="black" />
   } else {
     return (
       <EvilIcons
@@ -154,12 +154,12 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={[styles().rightContainer, { ...alignment.PRsmall }]}>
-        <CartIcon width={16} height={16} />
+        <MaterialIcons name="shopping-bag" size={20} color="black" />
         <View
           style={
             styles(
               route.name === 'Main'
-                ? currentTheme.iconColorPink
+                ? "black"
                 : currentTheme.white
             ).absoluteContainer
           }>
@@ -242,6 +242,7 @@ function RightButton(props) {
             labelVisible={false}
             backImage={cartIcon}
             onPress={navigateCart}
+            
           />
         )}
       </View>

@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
@@ -85,12 +86,15 @@ const ActiveOrders = () => {
           />
         )}
       />
+      <View style={{paddingTop: 20, paddingBottom: 40}}>
       {activeOrders.length > 2 && (
         <Button
-          title={showAll ? 'See Less' : 'See More'}
+          title={showAll ? 'View Less' : 'View All'}
           onPress={() => setShowAll(!showAll)}
+          color="black"
         />
       )}
+      </View>
     </>
   )
 }
@@ -122,23 +126,23 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
         })
       }}>
       <View style={styles(currentTheme).statusContainer}>
-        {/* <View style={styles().randomShapeContainer}>
+        <View style={styles().randomShapeContainer}>
           <RandomShape width={scale(300)} height={scale(300)} />
-        </View> */}
+        </View>
         <View style={styles().textContainer}>
-          {/* <Text style={styles(currentTheme).title}>Your order from:</Text> */}
+          <View style={{flexDirection: 'row'}}>
+          <MaterialIcons name="radio-button-checked" size={30} color="black" />
           <Text style={styles(currentTheme).description}>
             {item.restaurant.name}
           </Text>
-          {/* <Text style={styles(currentTheme).description}>
-            {new Date(item.expectedTime).getUTCHours()}
-          </Text> */}
+          </View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
               marginTop: scale(2),
-              marginBottom: scale(2)
+              marginBottom: scale(2),
+              paddingLeft: 40
             }}>
             {Array(checkStatus(item.orderStatus).status)
               .fill(0)
@@ -164,10 +168,8 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
               ))}
           </View>
           <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-            {checkStatus(item.orderStatus).status}.{' '}
             {checkStatus(item.orderStatus).statusText}
           </Text>
-          {/* <Text style={styles(currentTheme).timeText}> {item.orderStatus}</Text> */}
         </View>
       </View>
     </TouchableOpacity>
