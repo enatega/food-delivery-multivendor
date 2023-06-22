@@ -12,17 +12,17 @@ const styles = (props = null) =>
     mainContainer: {
       width: '100%',
       position: 'absolute',
-      // height: height * 0.3,
+      height: height * 0.3,
       top: 0,
       left: 0,
       right: 0,
-      shadowColor: props != null ? props.shadowColor : 'black',
-      shadowOpacity: 0.7,
-      shadowOffset: {
-        height: scale(1),
-        width: 0
-      },
-      shadowRadius: scale(3),
+      //shadowColor: props != null ? props.shadowColor : 'black',
+      //shadowOpacity: 0.7,
+      // shadowOffset: {
+      //   height: scale(1),
+      //   width: 0
+      // },
+      //shadowRadius: scale(3),
       elevation: 5
     },
     touchArea: {
@@ -51,8 +51,14 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     fixedText: {
-      width: '100%',
-      alignItems: 'center'
+      padding: 10,
+      borderRadius: 20,
+      borderColor: "white",
+      borderWidth: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      width: '50%',
+      alignItems: 'center',
+      alignSelf: 'center'
     },
     deliveryBox: {
       color: props != null ? props.fontWhite : 'white',
@@ -98,23 +104,33 @@ const styles = (props = null) =>
     },
     headerContainer: {
       height: '100%',
+      width: '100%',
+      display:"flex",
       backgroundColor: props != null ? props.menuBar : 'white',
-      alignItems: 'center',
+      alignItems: "center",
       justifyContent: 'center',
-      ...alignment.PxSmall,
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
+      ...alignment.PLlarge,
+      ...alignment.PRlarge,
+      borderRadius: 100
     },
     activeHeader: {
-      borderBottomWidth: scale(2),
+      borderBottomWidth: scale(4),
       borderColor: props != null ? props.tagColor : 'red',
       padding: scale(0),
       height: '100%'
     },
+    heading: {
+      fontWeight: "bold",
+    },
     navbarTextContainer: {
+      //backgroundColor:"black",
+      display:"flex",
+      flex:1,
+      flexDirection:"row",
       height: '100%',
       justifyContent: 'center',
-      alignItems: 'center'
+       alignItems: 'center',
+      
     }
   })
 export default styles

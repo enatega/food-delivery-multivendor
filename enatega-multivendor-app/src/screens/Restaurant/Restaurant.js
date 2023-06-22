@@ -495,6 +495,7 @@ function Restaurant(props) {
   }))
 
   return (
+    <>
     <SafeAreaView style={styles().flex}>
       <Animated.View style={styles().flex}>
         <ImageHeader
@@ -519,10 +520,11 @@ function Restaurant(props) {
           ref={scrollRef}
           sections={deals}
           style={{
+            backgroundColor: "white",
             flexGrow: 1,
             zIndex: -1,
             paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-            marginTop: HEADER_MIN_HEIGHT
+            marginTop: HEADER_MIN_HEIGHT,
           }}
           // Important
           contentContainerStyle={{
@@ -534,9 +536,9 @@ function Restaurant(props) {
           refreshing={networkStatus === 4}
           onRefresh={() => networkStatus === 7 && refetch()}
           onViewableItemsChanged={onViewableItemsChanged}
-          // onScrollEndDrag={event => {
-          //   onScrollEndSnapToEdge(event)
-          // }}
+          onScrollEndDrag={event => {
+            onScrollEndSnapToEdge(event)
+          }}
           onMomentumScrollEnd={event => {
             onScrollEndSnapToEdge(event)
           }}
@@ -560,7 +562,6 @@ function Restaurant(props) {
           }}
           renderSectionHeader={({ section: { title } }) => {
             return (
-              
               <TextDefault
                 style={styles(currentTheme).sectionHeaderText}
                 textColor={currentTheme.fontMainColor}
@@ -595,7 +596,7 @@ function Restaurant(props) {
                   <View style={styles().dealDescription}>
                   <TextDefault
                       style={{ width: '100%', wordWrap: 'break-word' }}
-                      textColor={currentTheme.fontSecondColor}
+                      
                       small
                     >
                       {wrapContentAfterWords(item.description, 5)}
@@ -677,6 +678,7 @@ function Restaurant(props) {
         )}
       </Animated.View>
     </SafeAreaView>
+    </>
   )
 }
 

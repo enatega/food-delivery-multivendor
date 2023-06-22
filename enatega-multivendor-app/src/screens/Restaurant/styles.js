@@ -23,17 +23,17 @@ const styles = (props = null) =>
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
-      backgroundColor: props != null ? props.cartContainer : 'white',
+     // backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
-      ...alignment.PTsmall,
-      ...alignment.PBsmall
+      ...alignment.PTlarge,
+      ...alignment.PBlarge
     },
     deal: {
       width: '100%',
       flexDirection: 'row',
 
-      ...alignment.PTsmall,
-      ...alignment.PBsmall
+      // ...alignment.PTsmall,
+      // ...alignment.PBsmall
     },
     dealSection: {
       position: 'relative',
@@ -44,16 +44,18 @@ const styles = (props = null) =>
     },
     dealDescription: {
       flex: 1,
-      justifyContent: 'space-between',
+      //justifyContent: 'space-between',
       backgroundColor: 'transparent',
-      ...alignment.PRxSmall
+      ...alignment.PRxSmall,
     },
     dealPrice: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      overflow: 'hidden'
+      overflow: 'hidden',
     },
     priceText: {
+      fontSize: 13,
+      paddingTop: 5,
       maxWidth: '100%',
       ...alignment.MRxSmall
     },
