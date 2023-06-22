@@ -23,16 +23,21 @@ const styles = (props = null) =>
       ...alignment.PRmedium
     },
     inlineFloat: {
+      width: '100%',
+      backgroundColor: 'white',
       flexDirection: 'row',
-      alignItems: 'center',
-      width: '100%'
+      alignItems: 'center'
     },
     mapContainer: {
-      height: '40%',
-      backgroundColor: 'transparent'
+      marginTop: 10,
+      borderRadius: scale(10),
+      borderColor: 'white',
+      borderWidth: 2,
+      height: '30%',
+      backgroundColor: 'white'
     },
     mainContainer: {
-      backgroundColor: props != null ? props.cartContainer : 'white'
+      backgroundColor: props != null ? '#F5F5F5' : 'white'
     },
     restaurantContainer: {
       width: '100%',
@@ -62,8 +67,10 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     timingContainer: {
-      marginLeft: scale(30),
-      marginBottom: scale(20)
+      alignItems: 'center'
+
+      // marginLeft: scale(30),
+      // marginBottom: scale(20)
     },
     dateReview: {
       marginTop: -8,
@@ -76,23 +83,32 @@ const styles = (props = null) =>
     navigationContainer: {
       flexDirection: 'row',
       alignItems: 'flex-start',
+      justifyContent: 'center',
       width: '100%',
-      ...alignment.MTlarge
+      marginTop: scale(-15)
     },
     tab: {
-      width: scale(60),
+      backgroundColor: 'white',
+      width: scale(170),
+      borderRadius: 10,
       height: verticalScale(35),
       justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.MRsmall
+      alignItems: 'center'
     },
     selectedTab: {
-      borderBottomColor: props != null ? props.tagColor : 'red',
-      borderBottomWidth: StyleSheet.hairlineWidth * 4
+      backgroundColor: props != null ? props.main : 'lightgrey',
+      borderBottomColor: props != null ? props.tagColor : 'red'
+      //marginLeft: scale(-5)
+      //borderBottomWidth: StyleSheet.hairlineWidth * 4
     },
     timingRow: {
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: props != null ? props.main : '#90EA93',
+      marginBottom: 5,
+      width: '60%',
+      padding: 8,
+      borderRadius: 20
     }
   })
 export default styles

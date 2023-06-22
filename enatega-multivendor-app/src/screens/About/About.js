@@ -71,58 +71,81 @@ function About(props) {
   function AboutTab() {
     return (
       <View style={styles().mapMainContainer}>
-        <View style={[styles().inlineFloat, styles().MB15]}>
+        <View
+          style={[
+            styles().inlineFloat,
+            styles().MB15,
+            { paddingTop: 16, paddingBottom: 16, borderRadius: scale(10) }
+          ]}>
           <EvilIcons
             name="location"
-            size={scale(20)}
-            color={currentTheme.iconColorPink}
-            style={styles().width10}
+            size={scale(25)}
+            color={currentTheme.darkGreen}
+            style={[styles().width32, { padding: 5 }]}
           />
-          <TextDefault style={styles().width90} small bold>
+          <TextDefault style={styles().width90} large bolder>
             {RestAbout.address}
           </TextDefault>
         </View>
-        <View style={[styles().inlineFloat, alignment.MBxSmall]}>
-          <EvilIcons
-            name="clock"
-            size={scale(20)}
-            color={currentTheme.iconColorPink}
-            style={styles().width10}
-          />
-          <TextDefault bold>{'Opening times'}</TextDefault>
-        </View>
+        <View
+          style={{
+            width: '100%',
+            backgroundColor: 'white',
+            padding: 8,
+            borderRadius: scale(10)
+          }}>
+          <View style={[styles().inlineFloat, alignment.MBsmall]}>
+            <EvilIcons
+              name="clock"
+              size={scale(25)}
+              color={currentTheme.darkGreen}
+              style={styles().width10}
+            />
+            <TextDefault large bolder>
+              {'Opening times'}
+            </TextDefault>
+          </View>
 
-        <View style={styles().timingContainer}>
-          {restaurantObject.openingTimes.map((v, index) => (
-            <View key={index} style={styles().timingRow}>
-              <TextDefault
-                style={{ width: scale(40) }}
-                textColor={currentTheme.fontMainColor}
-                small>
-                {v.day}{' '}
-              </TextDefault>
-              {v.times.length < 1 ? (
-                <TextDefault key={index + 8} small bold center>
-                  {'Closed all day'}
+          <View style={styles().timingContainer}>
+            {restaurantObject.openingTimes.map((v, index) => (
+              <View key={index} style={styles().timingRow}>
+                <TextDefault
+                  style={{ width: scale(45) }}
+                  textColor={currentTheme.fontMainColor}
+                  bolder
+                  small>
+                  {v.day}{' '}
                 </TextDefault>
-              ) : (
-                v.times.map(t => (
-                  <TextDefault
-                    key={index + 8}
-                    textColor={currentTheme.fontSecondColor}
-                    small>
-                    {t.startTime[0]}:{t.startTime[1]}
-                    {' - '}
-                    {t.endTime[0]}:{t.endTime[1]}
+                {v.times.length < 1 ? (
+                  <TextDefault key={index + 8} small bold center>
+                    {'Closed all day'}
                   </TextDefault>
-                ))
-              )}
-            </View>
-          ))}
+                ) : (
+                  v.times.map(t => (
+                    <TextDefault
+                      key={index + 8}
+                      textColor={currentTheme.fontMainColor}
+                      small
+                      bold
+                      right
+                      style={{ width: '70%' }}>
+                      {t.startTime[0]}:{t.startTime[1]}
+                      {' - '}
+                      {t.endTime[0]}:{t.endTime[1]}
+                    </TextDefault>
+                  ))
+                )}
+              </View>
+            ))}
+          </View>
         </View>
         <View style={styles().mapContainer}>
           <MapView
-            style={styles().flex}
+            style={[
+              styles().flex,
+              { borderRadius: scale(10), borderColor: 'white', borderWidth: 2 }
+            ]}
+            mapType="terrain"
             scrollEnabled={false}
             zoomEnabled={false}
             zoomControlEnabled={false}
@@ -240,7 +263,7 @@ function About(props) {
         iconBackColor={currentTheme.white}
       />
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <View style={styles(currentTheme).restaurantContainer}>
+        {/* <View style={styles(currentTheme).restaurantContainer}>
           <TextDefault
             numberOfLines={1}
             style={styles().restaurantTitle}
@@ -258,8 +281,8 @@ function About(props) {
               </TextDefault>
             </TextDefault>
           </View>
-        </View>
-        <View style={[styles(currentTheme).line]} />
+        </View> */}
+        {/* <View style={[styles(currentTheme).line]} /> */}
 
         <View style={styles().navigationContainer}>
           <TouchableOpacity
@@ -268,11 +291,11 @@ function About(props) {
             style={[styles().tab, pager && styles(currentTheme).selectedTab]}>
             <TextDefault
               textColor={
-                pager ? currentTheme.tagColor : currentTheme.fontMainColor
+                pager ? currentTheme.black : currentTheme.fontMainColor
               }
               bolder
               uppercase
-              small>
+              Large>
               About
             </TextDefault>
           </TouchableOpacity>
@@ -280,14 +303,18 @@ function About(props) {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => pagerSetter(false)}
-            style={[styles().tab, !pager && styles(currentTheme).selectedTab]}>
+            style={[
+              styles().tab,
+              !pager && styles(currentTheme).selectedTab,
+              { marginLeft: scale(-10) }
+            ]}>
             <TextDefault
               textColor={
-                !pager ? currentTheme.tagColor : currentTheme.fontMainColor
+                !pager ? currentTheme.black : currentTheme.fontMainColor
               }
               bolder
               uppercase
-              small>
+              Large>
               Reviews
             </TextDefault>
           </TouchableOpacity>
