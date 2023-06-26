@@ -91,7 +91,6 @@ const styles = (props = null) =>
       alignItems: 'flex-start',
       justifyContent: 'center',
       width: '100%',
-      marginTop: scale(-15)
     },
     tab: {
       width: "50%",

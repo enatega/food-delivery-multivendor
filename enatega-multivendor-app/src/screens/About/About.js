@@ -106,33 +106,15 @@ function About(props) {
                     {' - '}
                     {t.endTime[0]}:{t.endTime[1]}
                   </TextDefault>
-                ) : (
-                  v.times.map(t => (
-                    <TextDefault
-                      key={index + 8}
-                      textColor={currentTheme.fontMainColor}
-                      small
-                      bold
-                      right
-                      style={{ width: '70%' }}>
-                      {t.startTime[0]}:{t.startTime[1]}
-                      {' - '}
-                      {t.endTime[0]}:{t.endTime[1]}
-                    </TextDefault>
-                  ))
-                )}
-              </View>
-            ))}
-          </View>
+                ))
+              )}
+            </View>
+          ))}
         </View>
         </View>
         <View style={styles().mapContainer}>
           <MapView
-            style={[
-              styles().flex,
-              { borderRadius: scale(10), borderColor: 'white', borderWidth: 2 }
-            ]}
-            mapType="terrain"
+            style={styles().flex}
             scrollEnabled={false}
             zoomEnabled={false}
             zoomControlEnabled={false}
@@ -250,7 +232,7 @@ function About(props) {
         iconBackColor={currentTheme.white}
       />
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        {/* <View style={styles(currentTheme).restaurantContainer}>
+        <View style={styles(currentTheme).restaurantContainer}>
           <TextDefault
             numberOfLines={1}
             style={styles().restaurantTitle}
@@ -268,8 +250,8 @@ function About(props) {
               </TextDefault>
             </TextDefault>
           </View>
-        </View> */}
-        {/* <View style={[styles(currentTheme).line]} /> */}
+        </View>
+        <View style={[styles(currentTheme).line]} />
 
         <View style={styles().navigationContainer}>
           <TouchableOpacity
@@ -288,18 +270,12 @@ function About(props) {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => pagerSetter(false)}
-            style={[
-              styles().tab,
-              !pager && styles(currentTheme).selectedTab,
-              { marginLeft: scale(-10) }
-            ]}>
+            style={[styles().tab, !pager && styles(currentTheme).selectedTab]}>
             <TextDefault
-              textColor={
-                !pager ? currentTheme.black : currentTheme.fontMainColor
-              }
+              textColor='black'
               bolder
               uppercase
-              Large>
+              large>
               Reviews
             </TextDefault>
           </TouchableOpacity>
