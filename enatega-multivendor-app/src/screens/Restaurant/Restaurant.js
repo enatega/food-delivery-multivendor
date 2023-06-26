@@ -193,15 +193,15 @@ function Restaurant(props) {
     }
   }
   function wrapContentAfterWords(content, numWords) {
-  const words = content.split(' ');
-  const wrappedContent = [];
+    const words = content.split(' ')
+    const wrappedContent = []
 
-  for (let i = 0; i < words.length; i += numWords) {
-    wrappedContent.push(words.slice(i, i + numWords).join(' '));
+    for (let i = 0; i < words.length; i += numWords) {
+      wrappedContent.push(words.slice(i, i + numWords).join(' '))
+    }
+
+    return wrappedContent.join('\n')
   }
-
-  return wrappedContent.join('\n');
-}
 
   const addToCart = async (food, clearFlag) => {
     if (
@@ -594,7 +594,7 @@ function Restaurant(props) {
                     {item.title}
                   </TextDefault>
                   <View style={styles().dealDescription}>
-                  <TextDefault
+                    <TextDefault
                       style={{ width: '100%', wordWrap: 'break-word' }}
                       
                       small

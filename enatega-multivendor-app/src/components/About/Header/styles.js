@@ -9,7 +9,9 @@ const styles = (props = null) =>
     },
     headerImage: {
       width: '100%',
-      height: '100%'
+      height: '100%',
+      borderBottomLeftRadius: 25,
+      borderBottomRightRadius: 25
     },
     headingTitle: {
       position: 'absolute',
@@ -19,8 +21,8 @@ const styles = (props = null) =>
     overlayContainer: {
       position: 'absolute',
       width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(0,0,0,0.3)'
+      height: '100%'
+      //backgroundColor: 'rgba(0,0,0,0.3)'
     },
     touchArea: {
       position: 'absolute',

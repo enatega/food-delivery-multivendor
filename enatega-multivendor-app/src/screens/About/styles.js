@@ -31,16 +31,21 @@ const styles = (props = null) =>
       ...alignment.PRmedium
     },
     inlineFloat: {
+      width: '100%',
+      backgroundColor: 'white',
       flexDirection: 'row',
-      alignItems: 'center',
-      width: '100%'
+      alignItems: 'center'
     },
     mapContainer: {
-      height: '40%',
-      backgroundColor: 'transparent'
+      marginTop: 10,
+      borderRadius: scale(10),
+      borderColor: 'white',
+      borderWidth: 2,
+      height: '30%',
+      backgroundColor: 'white'
     },
     mainContainer: {
-      backgroundColor: props != null ? props.cartContainer : 'white'
+      backgroundColor: props != null ? '#F5F5F5' : 'white'
     },
     restaurantContainer: {
       width: '100%',
@@ -84,15 +89,15 @@ const styles = (props = null) =>
     navigationContainer: {
       flexDirection: 'row',
       alignItems: 'flex-start',
+      justifyContent: 'center',
       width: '100%',
-      ...alignment.MTlarge
+      marginTop: scale(-15)
     },
     tab: {
       width: "50%",
       height: verticalScale(35),
       justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.MRsmall
+      alignItems: 'center'
     },
     selectedTab: {
       backgroundColor: '#90EA93',
