@@ -23,8 +23,8 @@ function ImageHeader(props) {
           onPress={() => navigation.goBack()}>
           <Ionicons
             name="ios-arrow-back"
-            size={scale(20)}
-            color={props.iconColor}
+            size='30'
+            color='black'
           />
         </TouchableOpacity>
       </View>

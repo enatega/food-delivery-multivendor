@@ -26,7 +26,7 @@ const styles = (props = null) =>
       position: 'absolute',
       top: scale(20),
       left: scale(10),
-      width: scale(30),
+      width: scale(50),
       height: scale(30),
       justifyContent: 'center',
       alignItems: 'center',

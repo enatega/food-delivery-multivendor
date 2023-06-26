@@ -72,33 +72,24 @@ function About(props) {
     return (
       <View style={styles().mapMainContainer}>
         <View style={[styles().inlineFloat, styles().MB15]}>
-          <EvilIcons
-            name="location"
-            size={scale(20)}
-            color={currentTheme.iconColorPink}
-            style={styles().width10}
-          />
-          <TextDefault style={styles().width90} small bold>
+        <MaterialIcons name="location-on" size={30} color="#3C8F7C" />
+          <TextDefault style={styles().width90} large bold>
             {RestAbout.address}
           </TextDefault>
         </View>
+        <View style={[styles().MB15]}>
         <View style={[styles().inlineFloat, alignment.MBxSmall]}>
-          <EvilIcons
-            name="clock"
-            size={scale(20)}
-            color={currentTheme.iconColorPink}
-            style={styles().width10}
-          />
-          <TextDefault bold>{'Opening times'}</TextDefault>
+        <MaterialIcons name="access-time" size={30} color="#3C8F7C" />
+          <TextDefault style = {{paddingLeft: 10}}bold>{'Opening times'}</TextDefault>
         </View>
 
         <View style={styles().timingContainer}>
           {restaurantObject.openingTimes.map((v, index) => (
             <View key={index} style={styles().timingRow}>
               <TextDefault
-                style={{ width: scale(40) }}
-                textColor={currentTheme.fontMainColor}
-                small>
+                style={{ width: scale(140) }}
+                textColor='black'
+                large>
                 {v.day}{' '}
               </TextDefault>
               {v.times.length < 1 ? (
@@ -109,8 +100,8 @@ function About(props) {
                 v.times.map(t => (
                   <TextDefault
                     key={index + 8}
-                    textColor={currentTheme.fontSecondColor}
-                    small>
+                    textColor='black'
+                    large>
                     {t.startTime[0]}:{t.startTime[1]}
                     {' - '}
                     {t.endTime[0]}:{t.endTime[1]}
@@ -119,6 +110,7 @@ function About(props) {
               )}
             </View>
           ))}
+        </View>
         </View>
         <View style={styles().mapContainer}>
           <MapView
@@ -267,12 +259,10 @@ function About(props) {
             onPress={() => pagerSetter(true)}
             style={[styles().tab, pager && styles(currentTheme).selectedTab]}>
             <TextDefault
-              textColor={
-                pager ? currentTheme.tagColor : currentTheme.fontMainColor
-              }
+              textColor='black'
               bolder
               uppercase
-              small>
+              large>
               About
             </TextDefault>
           </TouchableOpacity>
@@ -282,12 +272,10 @@ function About(props) {
             onPress={() => pagerSetter(false)}
             style={[styles().tab, !pager && styles(currentTheme).selectedTab]}>
             <TextDefault
-              textColor={
-                !pager ? currentTheme.tagColor : currentTheme.fontMainColor
-              }
+              textColor='black'
               bolder
               uppercase
-              small>
+              large>
               Reviews
             </TextDefault>
           </TouchableOpacity>

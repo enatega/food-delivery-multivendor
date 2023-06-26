@@ -8,13 +8,21 @@ const styles = (props = null) =>
       flex: 1
     },
     MB15: {
-      ...alignment.MBmedium
+      padding: 10,
+      ...alignment.MBmedium,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      shadowOffset: { width: 2, height: 4 },
+      shadowColor: 'black',
+      shadowOpacity: 0.1,
+      shadowRadius: 10,
     },
     width10: {
       width: '10%'
     },
     width90: {
-      width: '90%'
+      width: '90%',
+      paddingLeft: 10
     },
     mapMainContainer: {
       flexGrow: 1,
@@ -63,7 +71,7 @@ const styles = (props = null) =>
     },
     timingContainer: {
       marginLeft: scale(30),
-      marginBottom: scale(20)
+      marginBottom: scale(20),
     },
     dateReview: {
       marginTop: -8,
@@ -80,19 +88,25 @@ const styles = (props = null) =>
       ...alignment.MTlarge
     },
     tab: {
-      width: scale(60),
+      width: "50%",
       height: verticalScale(35),
       justifyContent: 'center',
       alignItems: 'center',
       ...alignment.MRsmall
     },
     selectedTab: {
-      borderBottomColor: props != null ? props.tagColor : 'red',
-      borderBottomWidth: StyleSheet.hairlineWidth * 4
+      backgroundColor: '#90EA93',
+      borderRadius: 10
     },
     timingRow: {
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'flex-end',
+      alignSelf: 'center',
+      backgroundColor: '#90EA93',
+      borderRadius: 30,
+      padding: 10,
+      marginBottom: 10,
+      width: '90%'
     }
   })
 export default styles
