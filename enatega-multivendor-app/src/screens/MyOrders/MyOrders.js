@@ -35,7 +35,7 @@ function MyOrders(props) {
     fetchMoreOrdersFunc,
     networkStatusOrders
   } = useContext(OrdersContext)
-  console.log(orders)
+
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const inset = useSafeAreaInsets()

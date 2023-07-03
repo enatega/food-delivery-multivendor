@@ -34,6 +34,7 @@ export const theme = {
     titleComponentText: 'rgba(39,111,191,0.8)',
     titleTextError: '#FFF',
     statusSecondColor: '#5A5858',
+    starColor: '#4165b9',
     rippleColor: '#6FCF97',
     backIcon: '#fff',
     backIconBackground: '#000',
@@ -41,6 +42,7 @@ export const theme = {
     main: '#90EA93',
     secondaryBackground: '#ECECEC',
     shadow: '#707070',
+    starRating: '#E2C077',
     errorInputBack: '#F7E7E5',
     errorInputBorder: '#DB4A39'
   },

@@ -37,6 +37,10 @@ const styles = (props = null) =>
       borderBottomColor: props !== null ? props.horizontalLine : 'pink',
       borderBottomWidth: StyleSheet.hairlineWidth
     },
+    review: {
+      flexDirection: 'row',
+      justifyContent: 'space-around'
+    },
     floatView: {
       flexDirection: 'row',
       padding: 7,

@@ -133,20 +133,7 @@ function About(props) {
               themeContext.ThemeValue === 'Dark' ? mapStyle : null
             }
             provider={PROVIDER_GOOGLE}></MapView>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              zIndex: 1,
-              translateX: -25,
-              translateY: -25,
-              justifyContent: 'center',
-              alignItems: 'center',
-              transform: [{ translateX: -25 }, { translateY: -25 }]
-            }}>
+          <View style={styles().marker}>
             <CustomMarker
               width={40}
               height={40}
@@ -170,19 +157,11 @@ function About(props) {
         ItemSeparatorComponent={line}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <View
-            style={{
-              marginHorizontal: 5,
-              zIndex: 1,
-              elevation: 1,
-              backgroundColor: 'black',
-              padding: 10,
-              borderRadius: 10
-            }}>
+          <View style={styles().review}>
             <View style={styles().reviewerContainer}>
               <TextDefault
                 style={styles().reviewerName}
-                textColor={'white'}
+                textColor={currentTheme.white}
                 bolder>
                 {item.order.user.name}
               </TextDefault>
@@ -196,7 +175,7 @@ function About(props) {
                           key={index}
                           name="star"
                           size={scale(13)}
-                          color={'#E2C077'}
+                          color={currentTheme.starRating}
                         />
                       )
                     } else if (index >= item.rating && index < 5) {
@@ -205,7 +184,7 @@ function About(props) {
                           key={index}
                           name="star"
                           size={scale(13)}
-                          color={'white'}
+                          color={currentTheme.white}
                         />
                       )
                     }
@@ -214,12 +193,12 @@ function About(props) {
             </View>
             <TextDefault
               style={styles().dateReview}
-              textColor={'#D9D9D9'}
+              textColor={currentTheme.secondaryBackground}
               numberOfLines={1}
               small>
               {formatDate(item.createdAt)}
             </TextDefault>
-            <TextDefault textColor={'white'} small bold>
+            <TextDefault textColor={currentTheme.white} small bold>
               {item.description}
             </TextDefault>
           </View>
@@ -250,8 +229,12 @@ function About(props) {
             {restaurantObject.restaurantName}
           </TextDefault>
           <View style={styles().ratingContainer}>
-            <MaterialIcons name="star" size={scale(10)} color="#4165b9" />
-            <TextDefault textColor={'#4165b9'} small right>
+            <MaterialIcons
+              name="star"
+              size={scale(10)}
+              color={currentTheme.starColor}
+            />
+            <TextDefault textColor={currentTheme.starColor} small right>
               {restaurantObject.average}{' '}
               <TextDefault textColor={currentTheme.fontSecondColor} small right>
                 ({restaurantObject.total})

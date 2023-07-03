@@ -58,7 +58,7 @@ function OrderDetail(props) {
   const subTotal = total - tip - tax - deliveryCharges
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles().flex}>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
@@ -106,11 +106,7 @@ function OrderDetail(props) {
         />
 
         {order.orderStatus === 'DELIVERED' && !order.review && (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around'
-            }}>
+          <View style={styles().review}>
             <TouchableOpacity
               activeOpacity={0.7}
               style={[styles().floatView, { justifyContent: 'center' }]}
