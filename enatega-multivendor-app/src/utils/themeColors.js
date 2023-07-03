@@ -2,7 +2,7 @@ export const theme = {
   Pink: {
     black: '#000',
     white: '#FFF',
-    darkGreen: '#3C8F7C',
+    primery: '#3C8F7C',
     themeBackground: '#FAFAFA',
     menuBar: '#FFF',
     iconColor: '#333333',
@@ -43,7 +43,8 @@ export const theme = {
     secondaryBackground: '#ECECEC',
     shadow: '#707070',
     errorInputBack: '#F7E7E5',
-    errorInputBorder: '#DB4A39'
+    errorInputBorder: '#DB4A39',
+    starRating: '#E2C077'
   },
   Dark: {
     black: '#000',
