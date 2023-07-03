@@ -47,7 +47,7 @@ function About(props) {
     )
   }
   function line() {
-    return <View style={[styles(currentTheme).line, styles().MB15]} />
+    return <View style={styles().MB15} />
   }
   function header() {
     return (
@@ -133,20 +133,7 @@ function About(props) {
               themeContext.ThemeValue === 'Dark' ? mapStyle : null
             }
             provider={PROVIDER_GOOGLE}></MapView>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              zIndex: 1,
-              translateX: -25,
-              translateY: -25,
-              justifyContent: 'center',
-              alignItems: 'center',
-              transform: [{ translateX: -25 }, { translateY: -25 }]
-            }}>
+          <View style={styles().marker}>
             <CustomMarker
               width={40}
               height={40}
@@ -170,13 +157,12 @@ function About(props) {
         ItemSeparatorComponent={line}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <View style={[styles().MB15]}>
+          <View style={styles().review}>
             <View style={styles().reviewerContainer}>
               <TextDefault
                 style={styles().reviewerName}
-                textColor={currentTheme.fontMainColor}
-                bold
-                small>
+                textColor={currentTheme.white}
+                bolder>
                 {item.order.user.name}
               </TextDefault>
               <View style={styles().ratingContainer}>
@@ -188,8 +174,8 @@ function About(props) {
                         <MaterialIcons
                           key={index}
                           name="star"
-                          size={scale(10)}
-                          color={'blue'}
+                          size={scale(13)}
+                          color={currentTheme.starRating}
                         />
                       )
                     } else if (index >= item.rating && index < 5) {
@@ -197,8 +183,8 @@ function About(props) {
                         <MaterialIcons
                           key={index}
                           name="star"
-                          size={scale(10)}
-                          color={currentTheme.radioOuterColor}
+                          size={scale(13)}
+                          color={currentTheme.white}
                         />
                       )
                     }
@@ -207,12 +193,12 @@ function About(props) {
             </View>
             <TextDefault
               style={styles().dateReview}
-              textColor={currentTheme.fontSecondColor}
+              textColor={currentTheme.secondaryBackground}
               numberOfLines={1}
               small>
               {formatDate(item.createdAt)}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontSecondColor} small>
+            <TextDefault textColor={currentTheme.white} small bold>
               {item.description}
             </TextDefault>
           </View>
@@ -243,8 +229,12 @@ function About(props) {
             {restaurantObject.restaurantName}
           </TextDefault>
           <View style={styles().ratingContainer}>
-            <MaterialIcons name="star" size={scale(10)} color="#4165b9" />
-            <TextDefault textColor={'#4165b9'} small right>
+            <MaterialIcons
+              name="star"
+              size={scale(10)}
+              color={currentTheme.starColor}
+            />
+            <TextDefault textColor={currentTheme.starColor} small right>
               {restaurantObject.average}{' '}
               <TextDefault textColor={currentTheme.fontSecondColor} small right>
                 ({restaurantObject.total})

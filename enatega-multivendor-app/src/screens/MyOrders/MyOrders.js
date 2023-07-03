@@ -200,6 +200,30 @@ function MyOrders(props) {
                   {configuration.currencySymbol}
                   {parseFloat(item.orderAmount).toFixed(2)}
                 </TextDefault>
+                {!item.review && (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles(currentTheme).subContainerButton}
+                    onPress={() =>
+                      props.navigation.navigate('OrderDetail', {
+                        _id: item._id,
+                        currencySymbol: configuration.currencySymbol,
+                        restaurant: item.restaurant,
+                        user: item.user
+                      })
+                    }>
+                    <TextDefault
+                      textColor={currentTheme.buttonText}
+                      smaller
+                      bolder
+                      B700
+                      center
+                      uppercase>
+                      {' '}
+                      Review
+                    </TextDefault>
+                  </TouchableOpacity>
+                )}
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles(currentTheme).subContainerButton}
