@@ -6,7 +6,7 @@ import React, {
   useLayoutEffect,
   useRef
 } from 'react'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons,Entypo } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
@@ -51,6 +51,8 @@ import { textStyles } from '../../utils/textStyles'
 import Pickup from '../../components/Pickup'
 import { calculateDistance } from '../../utils/customFunctions'
 import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
 
 // Constants
 const PLACEORDER = gql`
@@ -177,10 +179,31 @@ function Cart(props) {
     props.navigation.setOptions({
       title: i18n.t('titleCart'),
       headerRight: null,
-      headerTitleAlign: 'left',
+      headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginLeft: scale(0)
-      }
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <Entypo name="cross" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
+      
     })
   }, [props.navigation])
 
