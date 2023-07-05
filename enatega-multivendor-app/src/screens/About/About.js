@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
-import { EvilIcons, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
@@ -72,45 +72,55 @@ function About(props) {
     return (
       <View style={styles().mapMainContainer}>
         <View style={[styles().inlineFloat, styles().MB15]}>
-        <MaterialIcons name="location-on" size={30} color="#3C8F7C" />
+          <MaterialIcons
+            name="location-on"
+            size={30}
+            color={currentTheme.primery}
+          />
           <TextDefault style={styles().width90} large bold>
             {RestAbout.address}
           </TextDefault>
         </View>
         <View style={[styles().MB15]}>
-        <View style={[styles().inlineFloat, alignment.MBxSmall]}>
-        <MaterialIcons name="access-time" size={30} color="#3C8F7C" />
-          <TextDefault style = {{paddingLeft: 10}}bold>{'Opening times'}</TextDefault>
-        </View>
+          <View style={[styles().inlineFloat, alignment.MBxSmall]}>
+            <MaterialIcons
+              name="access-time"
+              size={30}
+              color={currentTheme.primery}
+            />
+            <TextDefault style={{ paddingLeft: 10 }} bold>
+              {'Opening times'}
+            </TextDefault>
+          </View>
 
-        <View style={styles().timingContainer}>
-          {restaurantObject.openingTimes.map((v, index) => (
-            <View key={index} style={styles().timingRow}>
-              <TextDefault
-                style={{ width: scale(140) }}
-                textColor='black'
-                large>
-                {v.day}{' '}
-              </TextDefault>
-              {v.times.length < 1 ? (
-                <TextDefault key={index + 8} small bold center>
-                  {'Closed all day'}
+          <View style={styles().timingContainer}>
+            {restaurantObject.openingTimes.map((v, index) => (
+              <View key={index} style={styles().timingRow}>
+                <TextDefault
+                  style={{ width: scale(140) }}
+                  textColor="black"
+                  large>
+                  {v.day}{' '}
                 </TextDefault>
-              ) : (
-                v.times.map(t => (
-                  <TextDefault
-                    key={index + 8}
-                    textColor='black'
-                    large>
-                    {t.startTime[0]}:{t.startTime[1]}
-                    {' - '}
-                    {t.endTime[0]}:{t.endTime[1]}
+                {v.times.length < 1 ? (
+                  <TextDefault key={index + 8} small bold center>
+                    {'Closed all day'}
                   </TextDefault>
-                ))
-              )}
-            </View>
-          ))}
-        </View>
+                ) : (
+                  v.times.map(t => (
+                    <TextDefault
+                      key={index + 8}
+                      textColor={currentTheme.black}
+                      large>
+                      {t.startTime[0]}:{t.startTime[1]}
+                      {' - '}
+                      {t.endTime[0]}:{t.endTime[1]}
+                    </TextDefault>
+                  ))
+                )}
+              </View>
+            ))}
+          </View>
         </View>
         <View style={styles().mapContainer}>
           <MapView
@@ -188,7 +198,7 @@ function About(props) {
                           key={index}
                           name="star"
                           size={scale(13)}
-                          color={'#E2C077'}
+                          color={currentTheme.starRating}
                         />
                       )
                     } else if (index >= item.rating && index < 5) {
@@ -206,12 +216,12 @@ function About(props) {
             </View>
             <TextDefault
               style={styles().dateReview}
-              textColor={'#D9D9D9'}
+              textColor={currentTheme.secondaryBackground}
               numberOfLines={1}
               small>
               {formatDate(item.createdAt)}
             </TextDefault>
-            <TextDefault textColor={'white'} small bold>
+            <TextDefault textColor={currentTheme.white} small bold>
               {item.description}
             </TextDefault>
           </View>
@@ -258,11 +268,7 @@ function About(props) {
             activeOpacity={0.7}
             onPress={() => pagerSetter(true)}
             style={[styles().tab, pager && styles(currentTheme).selectedTab]}>
-            <TextDefault
-              textColor='black'
-              bolder
-              uppercase
-              large>
+            <TextDefault textColor={currentTheme.black} bolder uppercase large>
               About
             </TextDefault>
           </TouchableOpacity>
@@ -271,11 +277,7 @@ function About(props) {
             activeOpacity={0.7}
             onPress={() => pagerSetter(false)}
             style={[styles().tab, !pager && styles(currentTheme).selectedTab]}>
-            <TextDefault
-              textColor='black'
-              bolder
-              uppercase
-              large>
+            <TextDefault textColor={currentTheme.black} bolder uppercase large>
               Reviews
             </TextDefault>
           </TouchableOpacity>
