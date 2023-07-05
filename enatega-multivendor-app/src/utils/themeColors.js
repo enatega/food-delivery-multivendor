@@ -8,6 +8,7 @@ export const theme = {
     iconColor: '#333333',
     iconColorPink: '#6FCF97',
     itemCardColor: '#FFF',
+    headerColor: '#6FCF97',
     tagColor: '#6FCF97',
     radioColor: '#6FCF97',
     radioOuterColor: '#949393',

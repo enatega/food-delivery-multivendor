@@ -117,7 +117,7 @@ function ItemDetail(props) {
             },
             {
               text: 'OK',
-              onPress: async() => {
+              onPress: async () => {
                 await addToCart(quantity, true)
               }
             }
@@ -128,7 +128,7 @@ function ItemDetail(props) {
     }
   }
 
-  const addToCart = async(quantity, clearFlag) => {
+  const addToCart = async (quantity, clearFlag) => {
     const addons = selectedAddons.map(addon => ({
       ...addon,
       options: addon.options.map(({ _id }) => ({
@@ -139,35 +139,35 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find(cartItem => {
-        if (
-          cartItem._id === food._id &&
+          if (
+            cartItem._id === food._id &&
             cartItem.variation._id === selectedVariation._id
-        ) {
-          if (cartItem.addons.length === addons.length) {
-            if (addons.length === 0) return true
-            const addonsResult = addons.every(newAddon => {
-              const cartAddon = cartItem.addons.find(
-                ad => ad._id === newAddon._id
-              )
-
-              if (!cartAddon) return false
-              const optionsResult = newAddon.options.every(newOption => {
-                const cartOption = cartAddon.options.find(
-                  op => op._id === newOption._id
+          ) {
+            if (cartItem.addons.length === addons.length) {
+              if (addons.length === 0) return true
+              const addonsResult = addons.every(newAddon => {
+                const cartAddon = cartItem.addons.find(
+                  ad => ad._id === newAddon._id
                 )
 
-                if (!cartOption) return false
-                return true
+                if (!cartAddon) return false
+                const optionsResult = newAddon.options.every(newOption => {
+                  const cartOption = cartAddon.options.find(
+                    op => op._id === newOption._id
+                  )
+
+                  if (!cartOption) return false
+                  return true
+                })
+
+                return optionsResult
               })
 
-              return optionsResult
-            })
-
-            return addonsResult
+              return addonsResult
+            }
           }
-        }
-        return false
-      })
+          return false
+        })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -290,9 +290,9 @@ function ItemDetail(props) {
               <HeadingComponent
                 title={food.title}
                 price={calculatePrice()}
-                desc={food.description}
+                //desc={food.description}
               />
-              <View style={styles(currentTheme).line}></View>
+
               {food.variations.length > 1 && (
                 <View>
                   <TitleComponent
@@ -331,18 +331,19 @@ function ItemDetail(props) {
                 status="Optional"
               />
               <TextField
+                style={styles(currentTheme).input}
                 placeholder={'E.g No mayo'}
+                textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}
-                labelFontSize={scale(12)}
+                labelFontSize={scale(6)}
                 fontSize={scale(12)}
                 labelHeight={10}
                 maxLength={144}
-                multiline
                 textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
+                baseColor={currentTheme.lightHorizontalLine}
                 errorColor={currentTheme.textErrorColor}
-                tintColor={currentTheme.iconColorPink}
+                tintColor={currentTheme.themeBackground}
               />
             </View>
           </ScrollView>
