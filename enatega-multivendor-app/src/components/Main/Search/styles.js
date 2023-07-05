@@ -2,6 +2,7 @@ import { fontStyles } from '../../../utils/fontStyles'
 import { scale, verticalScale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
+import { theme } from '../../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -16,7 +17,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       borderBottomLeftRadius: 25,
       borderBottomRightRadius: 25,
-      backgroundColor: props != null ? '#90EA93' : '#fafafa',
+      backgroundColor: props != null ? theme.Pink.headerColor : '#fafafa',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,
