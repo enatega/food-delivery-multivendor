@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Image } from 'react-native'
 import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 import { subscriptionOrder } from '../../apollo/subscriptions'
@@ -30,7 +30,7 @@ const ActiveOrders = ({
   return (
     <React.Fragment>
       {showActiveHeader && (
-        <Heading headerName="Active Order" textWidth="40%" lineWidth="30%" />
+        <Heading headerName="Active Order" textWidth="40%" />
       )}
       {activeOrders.map((item, index) => (
         <Item
@@ -40,9 +40,7 @@ const ActiveOrders = ({
           currentTheme={currentTheme}
         />
       ))}
-      {showPastHeader && (
-        <Heading headerName="Past Order" textWidth="34%" lineWidth="33%" />
-      )}
+      {showPastHeader && <Heading headerName="Past Order" textWidth="34%" />}
     </React.Fragment>
   )
 }
@@ -54,30 +52,37 @@ const Item = ({ item, navigation, currentTheme }) => {
     `,
     { variables: { id: item._id } }
   )
+  console.log('item', item)
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => navigation.navigate('OrderDetail', { _id: item._id })}>
       <View style={styles(currentTheme).container}>
-        <View style={styles().leftContainer}>
-          <TextDefault
-            textColor={currentTheme.fontMainColor}
-            small
-            bold
-            style={alignment.MBxSmall}>
-            {item.restaurant.name}
-          </TextDefault>
-          <TextDefault
-            line={3}
-            textColor={currentTheme.fontSecondColor}
-            small
-            bold>
-            {item.orderStatus === 'PENDING'
-              ? "We're asking the restaurant how long it will take to deliver your food."
-              : 'The restaurant rider will be at your place around.'}
-          </TextDefault>
+        <Image
+          style={styles(currentTheme).image}
+          resizeMode="cover"
+          source={{ uri: item.restaurant.image }}
+        />
+        <View style={styles(currentTheme).textContainer}>
+          <View style={styles().leftContainer}>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              large
+              bolder
+              style={alignment.MBxSmall}>
+              {item.restaurant.name}
+            </TextDefault>
+            <TextDefault
+              line={3}
+              textColor={currentTheme.fontMainColor}
+              small
+              bold>
+              {item.orderStatus === 'PENDING'
+                ? "We're asking the restaurant how long it will take to deliver your food."
+                : 'The restaurant rider will be at your place around.'}
+            </TextDefault>
+          </View>
         </View>
-
         <View style={styles(currentTheme).line} />
         <View style={styles().rightContainer}>
           <TextDefault textColor={currentTheme.iconColorPink} bold center>
