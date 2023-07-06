@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  StatusBar, 
+  StatusBar,
   Text
 } from 'react-native'
 import { useMutation } from '@apollo/client'
@@ -33,12 +33,10 @@ import screenOptions from './screenOptions'
 import { useFocusEffect } from '@react-navigation/native'
 import Analytics from '../../utils/analytics'
 import { Feather } from '@expo/vector-icons'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 const UPDATEUSER = gql`
   ${updateUser}
 `
-
-
 
 function Profile(props) {
   const refName = useRef()
@@ -88,8 +86,6 @@ function Profile(props) {
       viewHideAndShow()
     }
   }, [backScreen])
-
-  
 
   function viewHideAndShow() {
     setToggleView(prev => !prev)
@@ -163,16 +159,24 @@ function Profile(props) {
             {profile.phone}
           </TextDefault>
           {profile.phone !== '' && (
-            <Text
-            textColor={
-              profile.phoneIsVerified
-                ? 'black'
-                : currentTheme.textErrorColor
-            }
-              style={{backgroundColor:  profile.phoneIsVerified ? '#90EA93' : 'F8A492', padding: 5, paddingLeft: 20, paddingRight: 20}}
-              >
-              {profile.phoneIsVerified ? 'Verified' : 'UnVerified'}
-            </Text>
+            <View
+              style={[
+                styles().verifiedButton,
+                {
+                  backgroundColor: profile.phoneIsVerified
+                    ? currentTheme.main
+                    : 'F8A492'
+                }
+              ]}>
+              <Text
+                textColor={
+                  profile.phoneIsVerified
+                    ? 'black'
+                    : currentTheme.textErrorColor
+                }>
+                {profile.phoneIsVerified ? 'Verified' : 'UnVerified'}
+              </Text>
+            </View>
           )}
         </View>
       </View>
@@ -186,7 +190,9 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <Text style={{padding: 25, fontSize: 20, fontWeight: '600'}}>Personal details</Text>
+      <Text style={{ padding: 25, fontSize: 20, fontWeight: '600' }}>
+        Personal details
+      </Text>
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -282,8 +288,8 @@ function Profile(props) {
                               {profile.phone === ''
                                 ? 'Add Phone'
                                 : profile.phoneIsVerified
-                                  ? 'Verified'
-                                  : 'Verify?'}
+                                ? 'Verified'
+                                : 'Verify?'}
                             </TextDefault>
                           </TouchableOpacity>
                         )}
@@ -334,7 +340,6 @@ function Profile(props) {
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
-       
     </>
   )
 }

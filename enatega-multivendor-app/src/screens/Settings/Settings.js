@@ -41,10 +41,10 @@ import { alignment } from '../../utils/alignment'
 import * as Device from 'expo-device'
 import AuthContext from '../../context/Auth'
 import Analytics from '../../utils/analytics'
-import { Divider } from 'react-native-paper';
+import { Divider } from 'react-native-paper'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
   { value: 'français', code: 'fr', index: 1 },
@@ -115,15 +115,22 @@ function Settings(props) {
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
-        backImage={() =>
-          <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
-          <MaterialIcons name="arrow-back" size={30} color="black" />
-          </View>
-        }
-        onPress={() => {
-          navigationService.goBack()
-        }}
-      />
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
       ),
       headerTitle: i18n.t('titleSettings'),
       headerTitleAlign: 'center',
@@ -133,12 +140,11 @@ function Settings(props) {
         paddingRight: 20,
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: '#F5F5F5',
-      },
-      
+        backgroundColor: '#F5F5F5'
+      }
     })
     selectLanguage()
     checkPermission()
@@ -304,105 +310,133 @@ function Settings(props) {
             </TextDefault>
           </View>
         )}
-        <View style={{backgroundColor: 'white', borderRadius: 30, shadowOffset: { width: 0},shadowColor: 'black',shadowOpacity: 0.1, marginTop: 20
-      }}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            updateNotificationStatus('offer')
-            setBtnText('offer')
-          }}
-          style={[styles(currentTheme).notificationContainer]}>
-          <View style={styles().notificationChekboxContainer}>
-            <TextDefault
-              numberOfLines={1}
-              textColor='black'
-              style={alignment.MLsmall}>
-              {' '}
-              Receive Special Offers{' '}
-            </TextDefault>
-            <View style={{paddingLeft: '50%'}}>
-            <CheckboxBtn
-              checked={offerNotification}
-              onPress={() => {
-                updateNotificationStatus('offer')
-                setBtnText('offer')
-              }}
-            />
+        <View
+          style={{
+            backgroundColor: 'white',
+            borderRadius: 30,
+            shadowOffset: { width: 0 },
+            shadowColor: 'black',
+            shadowOpacity: 0.1,
+            marginTop: 20
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              updateNotificationStatus('offer')
+              setBtnText('offer')
+            }}
+            style={[styles(currentTheme).notificationContainer]}>
+            <View style={styles().notificationChekboxContainer}>
+              <TextDefault
+                numberOfLines={1}
+                textColor="black"
+                style={alignment.MLsmall}>
+                {' '}
+                Receive Special Offers{' '}
+              </TextDefault>
+              <View style={{ paddingLeft: '44%' }}>
+                <CheckboxBtn
+                  checked={offerNotification}
+                  onPress={() => {
+                    updateNotificationStatus('offer')
+                    setBtnText('offer')
+                  }}
+                />
+              </View>
             </View>
-          </View>
-          {loading && btnText === 'offer' && (
-            <View>
-              <Spinner size="small" backColor="transparent" />
+            {loading && btnText === 'offer' && (
+              <View>
+                <Spinner size="small" backColor="transparent" />
+              </View>
+            )}
+          </TouchableOpacity>
+          <Divider
+            style={{
+              backgroundColor: 'black',
+              width: '90%',
+              alignSelf: 'center'
+            }}
+          />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              updateNotificationStatus('order')
+              setBtnText('order')
+            }}
+            style={[styles(currentTheme).notificationContainer]}>
+            <View style={styles().notificationChekboxContainer}>
+              <TextDefault
+                numberOfLines={1}
+                textColor="black"
+                style={alignment.MLsmall}>
+                {' '}
+                Get updates on your order status!{' '}
+              </TextDefault>
+              <View style={{ paddingLeft: '24%' }}>
+                <CheckboxBtn
+                  checked={orderNotification}
+                  onPress={() => {
+                    updateNotificationStatus('order')
+                    setBtnText('order')
+                  }}
+                />
+              </View>
             </View>
-          )}
-        </TouchableOpacity>
-        <Divider  style={{backgroundColor: 'black', width: '90%', alignSelf: 'center'}}/>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            updateNotificationStatus('order')
-            setBtnText('order')
-          }}
-          style={[styles(currentTheme).notificationContainer]}>
-          <View style={styles().notificationChekboxContainer}>
-            <TextDefault
-              numberOfLines={1}
-              textColor='black'
-              style={alignment.MLsmall}>
-              {' '}
-              Get updates on your order status!{' '}
-            </TextDefault>
-            <View style={{paddingLeft: '30%'}}>
-            <CheckboxBtn
-              checked={orderNotification}
-              onPress={() => {
-                updateNotificationStatus('order')
-                setBtnText('order')
-              }}
-            />
+            {loading && btnText === 'order' && (
+              <View>
+                <Spinner size="small" backColor="transparent" />
+              </View>
+            )}
+          </TouchableOpacity>
+          <Divider
+            style={{
+              backgroundColor: 'black',
+              width: '90%',
+              alignSelf: 'center'
+            }}
+          />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => toggleTheme()}
+            style={[styles(currentTheme).notificationContainer]}>
+            <View style={styles().notificationChekboxContainer}>
+              <TextDefault
+                numberOfLines={1}
+                textColor="black"
+                style={alignment.MLsmall}>
+                {' '}
+                Turn on Dark Theme
+              </TextDefault>
+              <View style={{ paddingLeft: '48%' }}>
+                <CheckboxBtn
+                  checked={darkTheme}
+                  onPress={() => toggleTheme()}
+                />
+              </View>
             </View>
-          </View>
-          {loading && btnText === 'order' && (
-            <View>
-              <Spinner size="small" backColor="transparent" />
+          </TouchableOpacity>
+          <Divider
+            style={{
+              backgroundColor: 'black',
+              width: '90%',
+              alignSelf: 'center'
+            }}
+          />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => toggleTheme()}
+            style={[styles(currentTheme).notificationContainer]}>
+            <View style={styles().notificationChekboxContainer}>
+              <Ionicons name="trash-outline" size={30} color={'red'} />
+              <Button
+                color={'red'}
+                title="DELETE ACCOUNT"
+                onPress={() => {
+                  modalizeRef.current.open('top')
+                }}
+              />
             </View>
-          )}
-        </TouchableOpacity>
-        <Divider  style={{backgroundColor: 'black', width: '90%', alignSelf: 'center'}}/>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => toggleTheme()}
-          style={[styles(currentTheme).notificationContainer]}>
-          <View style={styles().notificationChekboxContainer}>
-            <TextDefault
-              numberOfLines={1}
-              textColor='black'
-              style={alignment.MLsmall}>
-              {' '}
-              Turn on Dark Theme
-            </TextDefault>
-            <View style={{paddingLeft: '54%'}}>
-            <CheckboxBtn checked={darkTheme} onPress={() => toggleTheme()} />
-            </View>
-          </View>
-        </TouchableOpacity>
-        <Divider  style={{backgroundColor: 'black', width: '90%', alignSelf: 'center'}}/>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => toggleTheme()}
-          style={[styles(currentTheme).notificationContainer]}>
-          <View style={styles().notificationChekboxContainer}>
-            <Ionicons name="trash-outline" size={30} color={'red'} />
-            <Button
-              color={'red'}
-              title="DELETE ACCOUNT"
-              onPress={() => {
-                modalizeRef.current.open('top')
-              }}
-            />
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
         <View style={styles().versionContainer}>
           <TextDefault textColor={currentTheme.statusSecondColor}>

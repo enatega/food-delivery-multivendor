@@ -60,14 +60,21 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'flex-end',
+      borderRadius: scale(7),
       ...alignment.MTmedium,
       ...alignment.PRmedium,
       ...alignment.PLmedium
     },
+    verifiedButton: {
+      padding: 5,
+      paddingLeft: 20,
+      paddingRight: 20,
+      borderRadius: scale(6)
+    },
     // Model for password changing
     modalContainer: {
       backgroundColor: props !== null ? props.cartContainer : '#FFF',
-      borderRadius: scale(2),
+      borderRadius: scale(14),
       justifyContent: 'center',
       alignItems: 'center',
       ...alignment.PTmedium,
