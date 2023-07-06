@@ -48,7 +48,7 @@ function BackButton(props) {
     return (
       <MaterialCommunityIcons
         name="dots-vertical"
-        size={20}
+        size={25}
         color={props.iconColor}
       />
     )

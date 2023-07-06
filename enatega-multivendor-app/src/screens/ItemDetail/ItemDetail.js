@@ -22,6 +22,9 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons';
+import navigationService from '../../routes/navigationService'
 
 function ItemDetail(props) {
   const { food, addons, options, restaurant } = props.route.params
@@ -74,7 +77,31 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: 'Customize'
+      title: 'Customize',
+      headerRight: null,
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      headerTransparent: true,
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
     })
   }, [navigation])
 

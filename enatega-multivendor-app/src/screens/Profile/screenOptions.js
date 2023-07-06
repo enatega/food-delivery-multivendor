@@ -7,10 +7,14 @@ import {
 import { textStyles } from '../../utils/textStyles'
 import { scale } from '../../utils/scaling'
 import { View } from 'react-native'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons';
+import navigationService from '../../routes/navigationService'
 
 const navigationOptions = props => ({
   // eslint-disable-next-line react/display-name
   headerRight: () => (
+    <View style={{paddingRight: 10}}>
     <RightButton
       icon="dots"
       modalVisible={option => {
@@ -22,6 +26,7 @@ const navigationOptions = props => ({
       textColor="black"
       textBackColor={props.backColor}
     />
+    </View>
   ),
   title: props.title,
   headerTitleAllowFontScaling: true,
@@ -45,14 +50,16 @@ const navigationOptions = props => ({
     //marginRight: props.passChecker ? scale(100) : scale(35)
   },
   headerLeft: () => (
-    <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
-    <LeftButton
-      iconColor="black"
-      toggle={true}
-      toggleValue={props.closeIcon}
-      toggleView={option => props.closeModal(option)}
-    />
-    </View>
-  )
+    <HeaderBackButton
+    backImage={() =>
+      <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      <MaterialIcons name="arrow-back" size={30} color="black" />
+      </View>
+    }
+    onPress={() => {
+      navigationService.goBack()
+    }}
+  />
+  ),
 })
 export default navigationOptions

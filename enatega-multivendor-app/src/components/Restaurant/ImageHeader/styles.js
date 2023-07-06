@@ -97,9 +97,11 @@ const styles = (props = null) =>
       textAlign: 'center'
     },
     flatListStyle: {
-      height: '100%',
+      height: '50%',
       width: '100%',
-      backgroundColor: props != null ? props.menuBar : 'white',
+      backgroundColor: 'white',
+      borderBottomLeftRadius: 30,
+      borderBottomRightRadius: 25,
       zIndex: 2 // important
     },
     headerContainer: {
@@ -116,14 +118,12 @@ const styles = (props = null) =>
     activeHeader: {
       borderBottomWidth: scale(4),
       borderColor: props != null ? props.tagColor : 'red',
-      padding: scale(0),
-      height: '100%'
+      height: '100%',
     },
     heading: {
       fontWeight: "bold",
     },
     navbarTextContainer: {
-      //backgroundColor:"black",
       display:"flex",
       flex:1,
       flexDirection:"row",

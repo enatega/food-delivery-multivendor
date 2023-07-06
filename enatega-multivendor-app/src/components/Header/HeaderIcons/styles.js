@@ -52,7 +52,7 @@ const styles = backColor =>
       width: '100%',
       justifyContent: 'center',
       alignItems: 'flex-start',
-      borderRadius: scale(2),
+      borderRadius: scale(10),
       ...alignment.PLmedium
     },
     passwordContainer: {

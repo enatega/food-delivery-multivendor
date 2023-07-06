@@ -2,6 +2,7 @@ import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { textStyles } from '../../utils/textStyles'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -26,7 +27,7 @@ const styles = (props = null) =>
      // backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
       ...alignment.PTlarge,
-      ...alignment.PBlarge
+      ...alignment.PBlarge,
     },
     deal: {
       width: '100%',
@@ -54,25 +55,35 @@ const styles = (props = null) =>
       overflow: 'hidden',
     },
     priceText: {
-      fontSize: 13,
+      fontSize: 15,
+      paddingTop: 10,
+      maxWidth: '100%',
+      ...alignment.MRxSmall
+    },
+    headerText: {
+      fontSize: 18,
       paddingTop: 5,
       maxWidth: '100%',
       ...alignment.MRxSmall
     },
     listSeperator: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: props != null ? props.lightHorizontalLine : 'grey'
+      borderColor: theme.Pink.black,
+      paddingTop: scale(15),
+      marginBottom: scale(15),
+      width: "90%",
+      alignSelf: 'center'
     },
     sectionSeparator: {
       width: '100%',
       height: scale(15),
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props.themeBackground : 'white',
     },
     buttonContainer: {
       position: 'absolute',
       bottom: 0,
       width: '100%',
-      height: scale(40),
+      height: scale(50),
       backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center'
@@ -83,14 +94,14 @@ const styles = (props = null) =>
       alignItems: 'center',
       backgroundColor: props != null ? props.buttonBackgroundPink : 'red',
       height: '100%',
-      width: '100%',
-      borderRadius: 25,
-
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
+      width: '95%',
+      borderRadius: scale(15),
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
     },
     buttonText: {
-      width: '30%'
+      width: '30%',
+      
     },
     buttonTextRight: {
       width: '35%'

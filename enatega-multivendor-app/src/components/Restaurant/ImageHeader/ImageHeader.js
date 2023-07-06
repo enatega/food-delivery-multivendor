@@ -76,7 +76,6 @@ function ImageTextCenterHeader(props, ref) {
       </View>
     )
   }
-
   return (
     <Animated.View
       style={[
@@ -85,7 +84,7 @@ function ImageTextCenterHeader(props, ref) {
           height: props.height,
           backgroundColor: props.loading
             ? 'transparent'
-            : currentTheme.headerBackground
+            : null
         }
       ]}
       >
@@ -98,8 +97,6 @@ function ImageTextCenterHeader(props, ref) {
             styles().flex,
             {
               opacity: props.opacity,
-              //borderBottomLeftRadius: 25,
-              //borderBottomRightRadius: 25
             }
           ]}
         />

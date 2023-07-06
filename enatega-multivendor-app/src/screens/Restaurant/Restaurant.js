@@ -525,6 +525,7 @@ function Restaurant(props) {
             zIndex: -1,
             paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
             marginTop: HEADER_MIN_HEIGHT,
+            
           }}
           // Important
           contentContainerStyle={{
@@ -588,14 +589,14 @@ function Restaurant(props) {
                 <View style={styles().flex}>
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
-                    style={{ ...alignment.MBxSmall }}
+                    style={styles().headerText}
                     numberOfLines={1}
                     bolder>
                     {item.title}
                   </TextDefault>
                   <View style={styles().dealDescription}>
                     <TextDefault
-                      style={{ width: '100%', wordWrap: 'break-word' }}
+                      style={styles().priceText}
                       
                       small
                     >
@@ -606,6 +607,7 @@ function Restaurant(props) {
                         numberOfLines={1}
                         textColor={currentTheme.fontMainColor}
                         style={styles().priceText}
+                        bolder
                         small>
                         {configuration.currencySymbol}{' '}
                         {parseFloat(item.variations[0].price).toFixed(2)}
@@ -629,13 +631,14 @@ function Restaurant(props) {
                 </View>
                 {item.image ? (
                   <Image
-                    style={{ height: scale(70), width: scale(70) }}
+                    style={{ height: scale(60), width: scale(60), borderRadius: 30 }}
                     source={{ uri: item.image }}
                   />
                 ) : null}
               </View>
               {tagCart(item._id)}
             </TouchableOpacity>
+            
           )}
         />
         {cartCount > 0 && (
