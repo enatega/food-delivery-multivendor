@@ -1,6 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -22,6 +23,14 @@ const styles = (props = null) =>
     upperContainer: {
       width: '90%',
       alignItems: 'center'
+    },
+    horizontalLine: {
+      borderBottomColor: theme.Pink.tagColor,
+      borderBottomWidth: 1,
+      marginVertical: 10, // Adjust this value to control the spacing above and below the line
+      width: '90%',
+      alignSelf: 'center',
+      marginBottom: 30
     },
     addressContainer: {
       paddingTop: 0,
@@ -56,14 +65,17 @@ const styles = (props = null) =>
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',
+      backgroundColor: theme.Pink.tagColor,
       ...alignment.PxSmall
     },
     saveBtnContainer: {
-      width: '100%',
+      width: '80%',
       height: verticalScale(40),
+      borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent'
+      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      alignSelf: 'center'
     },
     fakeMarkerContainer: {
       position: 'absolute',

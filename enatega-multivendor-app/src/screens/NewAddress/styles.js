@@ -1,12 +1,21 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
       backgroundColor: '#FAFAFA'
+    },
+    horizontalLine: {
+      borderBottomColor: theme.Pink.tagColor,
+      borderBottomWidth: 1,
+      marginVertical: 10, // Adjust this value to control the spacing above and below the line
+      width: '90%',
+      alignSelf: 'center',
+      marginBottom: 30
     },
     subContainer: {
       flex: 1,
@@ -27,6 +36,7 @@ const styles = (props = null) =>
     },
     labelButtonContainer: {
       width: '100%',
+      borderRadius: 10,
       ...alignment.MTxSmall
     },
     labelTitleContainer: {
@@ -42,7 +52,7 @@ const styles = (props = null) =>
     labelButton: {
       width: '30%',
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props !== null ? props.horizontalLine : 'transparent',
+      borderColor: theme.Pink.black,
       borderRadius: 30,
       justifyContent: 'center',
       ...alignment.PxSmall
@@ -50,18 +60,21 @@ const styles = (props = null) =>
     activeLabel: {
       width: '30%',
       borderWidth: 1,
-      borderRadius: 30,
+      borderRadius: 10,
       justifyContent: 'center',
-      color: props !== null ? props.tagColor : 'transparent',
+      color: 'black',
       borderColor: props !== null ? props.tagColor : 'transparent',
+      backgroundColor: theme.Pink.tagColor,
       ...alignment.PxSmall
     },
     saveBtnContainer: {
-      width: '100%',
+      width: '80%',
       height: verticalScale(40),
+      borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent'
+      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      alignSelf: 'center'
     },
     fakeMarkerContainer: {
       position: 'absolute',

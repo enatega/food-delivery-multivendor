@@ -33,6 +33,9 @@ import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import AddressText from '../../components/Address/AddressText'
 import SearchModal from '../../components/Address/SearchModal'
 import analytics from '../../utils/analytics'
+import { MaterialIcons } from '@expo/vector-icons';
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
 
 const EDIT_ADDRESS = gql`
   ${editAddress}
@@ -95,7 +98,33 @@ function EditAddress(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('editAddress')
+      title: i18n.t('editAddress'),
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        borderRadius: 25, // Add border radius here
+      },
+  headerTitleContainerStyle: {
+    marginBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: 'black',
+    borderRadius: 30,
+    marginLeft: 0,
+  },
+  headerTitleAlign: 'center',
+  headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+        backImage={() =>
+          <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+          <MaterialIcons name="arrow-back" size={30} color="black" />
+          </View>
+        }
+        onPress={() => {
+          navigationService.goBack()
+        }}
+      />
+      ),
     })
   }, [props.navigation])
   useEffect(() => {
@@ -231,7 +260,7 @@ function EditAddress(props) {
             <View style={styles().upperContainer}>
               <View style={styles().addressContainer}>
                 <View style={styles().geoLocation}>
-                  <View style={{ width: '90%' }}>
+                  <View style={{ width: '100%' }}>
                     <OutlinedTextField
                       error={deliveryAddressError}
                       ref={addressRef}
@@ -239,6 +268,11 @@ function EditAddress(props) {
                       label={i18n.t('fullDeliveryAddress')}
                       labelFontSize={scale(12)}
                       fontSize={scale(12)}
+                      renderRightAccessory={() => (                                                   
+                        <TouchableOpacity onPress={onOpen}>                                                      
+                          <MaterialIcons name="edit" size={18} color={currentTheme.tagColor} />
+                        </TouchableOpacity>
+                      )}
                       maxLength={100}
                       textColor={currentTheme.fontMainColor}
                       baseColor={currentTheme.fontSecondColor}
@@ -262,11 +296,7 @@ function EditAddress(props) {
                         )
                       }}
                     />
-                  </View>
-                  <AddressText
-                    deliveryAddress={deliveryAddress}
-                    onPress={onOpen}
-                  />
+                  </View>                  
                 </View>
                 <View style={{ ...alignment.MTlarge }}></View>
                 <OutlinedTextField
@@ -303,8 +333,9 @@ function EditAddress(props) {
               </View>
               <View style={styles().labelButtonContainer}>
                 <View style={styles().labelTitleContainer}>
+                <View style={styles().horizontalLine} />
                   <TextDefault textColor={currentTheme.fontMainColor} H5 bolder>
-                    Label as
+                  Add Label
                   </TextDefault>
                 </View>
                 <View style={styles().buttonInline}>
@@ -323,7 +354,7 @@ function EditAddress(props) {
                       <TextDefault
                         textColor={
                           selectedLabel === label.value
-                            ? currentTheme.tagColor
+                            ? currentTheme.white
                             : currentTheme.fontMainColor
                         }
                         bold

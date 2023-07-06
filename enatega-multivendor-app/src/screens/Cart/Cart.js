@@ -188,7 +188,11 @@ function Cart(props) {
         borderRadius: 30,
         marginLeft: 0,
       },
-      
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,    
+      },
       headerTitleAlign: 'center',
       headerRight: null,
           headerLeft: () => (

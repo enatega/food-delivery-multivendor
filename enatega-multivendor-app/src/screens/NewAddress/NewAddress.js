@@ -3,7 +3,8 @@ import React, {
   useRef,
   useEffect,
   useContext,
-  useLayoutEffect
+  useLayoutEffect,
+  Text
 } from 'react'
 import {
   View,
@@ -11,7 +12,8 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  Touchable
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import i18n from '../../../i18n'
@@ -35,6 +37,9 @@ import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import SearchModal from '../../components/Address/SearchModal'
 import AddressText from '../../components/Address/AddressText'
 import Analytics from '../../utils/analytics'
+import { MaterialIcons } from '@expo/vector-icons';
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
 const CREATE_ADDRESS = gql`
   ${createAddress}
 `
@@ -76,7 +81,7 @@ function NewAddress(props) {
     longitude: location ? location.longitude : LONGITUDE,
     longitudeDelta: LONGITUDE_DELTA
   })
-
+ 
   const regionObj = props.route.params ? props.route.params.regionChange : null
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -89,7 +94,33 @@ function NewAddress(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('addAddress')
+      title: i18n.t('addAddress'),
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        borderRadius: 25, // Add border radius here
+      },
+  headerTitleContainerStyle: {
+    marginBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: 'black',
+    borderRadius: 30,
+    marginLeft: 0,
+  },
+  headerTitleAlign: 'center',
+  headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+        backImage={() =>
+          <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+          <MaterialIcons name="arrow-back" size={30} color="black" />
+          </View>
+        }
+        onPress={() => {
+          navigationService.goBack()
+        }}
+      />
+      ),
     })
   }, [props.navigation])
 
@@ -231,19 +262,24 @@ function NewAddress(props) {
               <View style={styles().upperContainer}>
                 <View style={styles().addressContainer}>
                   <View style={styles().geoLocation}>
-                    <View style={{ width: '90%' }}>
+                    <View style={{ width: '100%' }}>                      
                       <OutlinedTextField
-                        error={deliveryAddressError}
+                        error={deliveryAddressError}            
                         ref={addressRef}
                         value={deliveryAddress}
                         label={i18n.t('fullDeliveryAddress')}
+                        renderRightAccessory={() => (                                                   
+                          <TouchableOpacity onPress={onOpen}>                                                      
+                            <MaterialIcons name="edit" size={18} color={currentTheme.tagColor} />
+                          </TouchableOpacity>
+                        )}
                         labelFontSize={scale(8)}
                         fontSize={scale(10)}
                         lineWidth={StyleSheet.hairlineWidth}
                         activeLineWidth={StyleSheet.hairlineWidth}
                         maxLength={100}
                         textColor={currentTheme.fontMainColor}
-                        baseColor={currentTheme.fontSecondColor}
+                        baseColor={currentTheme.black}
                         errorColor={currentTheme.textErrorColor}
                         tintColor={
                           !deliveryAddressError
@@ -264,12 +300,8 @@ function NewAddress(props) {
                               : null
                           )
                         }}
-                      />
+                      />                  
                     </View>
-                    <AddressText
-                      deliveryAddress={deliveryAddress}
-                      onPress={onOpen}
-                    />
                   </View>
                   <View style={{ ...alignment.MTsmall }}></View>
                   <OutlinedTextField
@@ -305,14 +337,17 @@ function NewAddress(props) {
                     }}
                   />
                 </View>
+                
                 <View style={styles().labelButtonContainer}>
                   <View style={styles().labelTitleContainer}>
+                  <View style={styles().horizontalLine} />
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
                       B700
                       bolder>
-                      Label as
+                      Add Label
                     </TextDefault>
+                    
                   </View>
                   <View style={styles().buttonInline}>
                     {labelValues.map((label, index) => (
@@ -335,8 +370,8 @@ function NewAddress(props) {
                           }
                           textColor={
                             selectedLabel === label.value
-                              ? currentTheme.tagColor
-                              : currentTheme.fontSecondColor
+                              ? currentTheme.white
+                              : currentTheme.black
                           }
                           small
                           center>
@@ -347,8 +382,9 @@ function NewAddress(props) {
                   </View>
                 </View>
               </View>
-
-              <TouchableOpacity
+            </View>
+          </ScrollView>
+          <TouchableOpacity
                 disabled={loading}
                 onPress={() => {
                   const deliveryAddressError = !deliveryAddress.trim().length
@@ -380,20 +416,18 @@ function NewAddress(props) {
                 }}
                 activeOpacity={0.5}
                 style={styles(currentTheme).saveBtnContainer}>
-                <TextDefault textColor={currentTheme.buttonText} H4 bold>
+                <TextDefault textColor={currentTheme.black} H5 bold>
                   {i18n.t('saveContBtn')}
                 </TextDefault>
               </TouchableOpacity>
-            </View>
-          </ScrollView>
         </View>
       </KeyboardAvoidingView>
-      <View
-        style={{
-          paddingBottom: inset.bottom,
-          backgroundColor: currentTheme.themeBackground
-        }}
-      />
+        <View
+          style={{
+            paddingBottom: '30%',
+            backgroundColor: currentTheme.themeBackground
+          }}
+        />
       <SearchModal
         visible={modalVisible}
         onClose={onClose}
