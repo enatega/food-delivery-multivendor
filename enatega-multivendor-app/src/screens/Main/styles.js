@@ -25,18 +25,22 @@ const styles = (props = null) =>
       ...alignment.MLsmall
     },
     addressbtn: {
+      backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
+      marginLeft: scale(10),
+      marginRight: scale(10),
+      marginBottom: scale(10),
+      borderRadius: scale(10),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      padding: 5,
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
     addressContainer: {
       width: '100%',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: props != null ? props.horizontalLine : 'grey',
-      ...alignment.PTmedium,
-      ...alignment.PBmedium
+      ...alignment.PTsmall,
+      ...alignment.PBsmall
     },
     addressSubContainer: {
       width: '90%',
@@ -49,8 +53,10 @@ const styles = (props = null) =>
     },
     modal: {
       backgroundColor: props != null ? props.cartContainer : '#FFF',
+      paddingTop: scale(10),
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
+
       shadowOpacity: 0
     },
     addressTextContainer: {
@@ -61,14 +67,15 @@ const styles = (props = null) =>
     addressTick: {
       width: '10%',
       justifyContent: 'center',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
+      marginRight: 5
     },
     overlay: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
       width: 150,
-      backgroundColor: '#b0afbc'
+      backgroundColor: 'transparent'
     },
     relative: {
       position: 'relative'

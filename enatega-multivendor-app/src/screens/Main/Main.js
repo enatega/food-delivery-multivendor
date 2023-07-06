@@ -163,7 +163,7 @@ function Main(props) {
   }
 
   const modalHeader = () => (
-    <View style={[styles().content, styles().addressbtn]}>
+    <View style={[styles().addressbtn]}>
       <TouchableOpacity
         style={[styles(currentTheme).addressContainer]}
         activeOpacity={0.7}
@@ -172,7 +172,7 @@ function Main(props) {
           <MaterialCommunityIcons
             name="target"
             size={scale(15)}
-            color={currentTheme.iconColorPink}
+            color={currentTheme.black}
           />
           <View style={styles().mL5p} />
           <TextDefault bold>Current Location</TextDefault>
@@ -230,7 +230,7 @@ function Main(props) {
             <AntDesign
               name="pluscircleo"
               size={scale(12)}
-              color={currentTheme.iconColorPink}
+              color={currentTheme.black}
             />
             <View style={styles().mL5p} />
             <TextDefault bold>Add New Address</TextDefault>
@@ -374,7 +374,7 @@ function Main(props) {
                   data={search ? searchRestaurants(search) : restaurants}
                   renderItem={({ item }) => <Item item={item} />}
                 />
-                <CollapsibleSubHeaderAnimator translateY={translateY}>                  
+                <CollapsibleSubHeaderAnimator translateY={translateY}>
                   <Search setSearch={setSearch} search={search} />
                   <MapSection location={location} restaurants={restaurants} />
                 </CollapsibleSubHeaderAnimator>
@@ -413,7 +413,7 @@ function Main(props) {
                       <SimpleLineIcons
                         name={addressIcons[address.label]}
                         size={scale(12)}
-                        color={currentTheme.iconColorPink}
+                        color={currentTheme.black}
                       />
                       <View style={styles().mL5p} />
                       <TextDefault bold>{address.label}</TextDefault>
@@ -434,7 +434,7 @@ function Main(props) {
                       ) && (
                         <MaterialIcons
                           name="check"
-                          size={scale(15)}
+                          size={scale(25)}
                           color={currentTheme.iconColorPink}
                         />
                       )}

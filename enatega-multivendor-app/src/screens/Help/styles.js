@@ -8,7 +8,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     backButton: {
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: 50,
       marginLeft: 10,
       width: 55,
@@ -16,7 +16,7 @@ const styles = (props = null) =>
     },
     mainContainer: {
       paddingBottom: 20,
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: 'white',
       margin: 15,
       borderRadius: scale(15)
     },
