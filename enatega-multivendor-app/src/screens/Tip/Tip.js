@@ -33,27 +33,34 @@ function Tip(props) {
         paddingRight: 20,
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
-        shadowRadius: 0,    
+        shadowRadius: 0
       },
       headerTitleAlign: 'center',
       headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <Entypo name="cross" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [navigation])
   useEffect(() => {
@@ -83,8 +90,8 @@ function Tip(props) {
             alignment.PBsmall,
             { width: props.textWidth }
           ]}
-          small
-          bold
+          large
+          bolder
           center
           uppercase>
           {props.headerName}
@@ -100,7 +107,7 @@ function Tip(props) {
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <HeaderLine
           headerName="Tipping Amount"
-          textWidth="50%"
+          textWidth="45%"
           lineWidth="25%"
         />
         <TouchableOpacity

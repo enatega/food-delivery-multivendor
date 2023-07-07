@@ -1,4 +1,4 @@
-import { verticalScale } from '../../utils/scaling'
+import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 
@@ -28,16 +28,22 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.horizontalLine : 'grey'
     },
     upperContainer: {
-      width: '100%',
-      height: verticalScale(60),
+      backgroundColor: 'white',
+      width: '95%',
+      paddingLeft: scale(10),
+      paddingRight: scale(10),
+      height: verticalScale(70),
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      borderRadius: scale(15)
     },
     buttonContainer: {
       width: '25%',
-      height: '70%',
+      height: '40%',
+      borderRadius: scale(10),
+      ...alignment.MTmedium,
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: props !== null ? props.buttonBackground : 'pink'

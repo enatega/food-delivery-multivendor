@@ -44,27 +44,34 @@ function CartAddresses(props) {
         paddingRight: 20,
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
-        shadowRadius: 0,    
+        shadowRadius: 0
       },
       headerTitleAlign: 'center',
       headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <Entypo name="cross" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
   useEffect(() => {
@@ -157,10 +164,20 @@ function CartAddresses(props) {
         data={profile.addresses}
         keyExtractor={item => item._id}
         contentContainerStyle={{ flexGrow: 1 }}
-        ItemSeparatorComponent={() => <View style={styles().line} />}
+        ItemSeparatorComponent={() => (
+          <View style={{ ...alignment.MBmedium }} />
+        )}
         ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
         renderItem={({ item: address }) => (
-          <View style={styles().width100}>
+          <View
+            style={{
+              width: '90%',
+              alignSelf: 'center',
+              borderRadius: scale(10),
+              backgroundColor: 'white',
+              ...alignment.PTsmall,
+              ...alignment.PBsmall
+            }}>
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles().width100}

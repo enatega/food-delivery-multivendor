@@ -6,7 +6,7 @@ import React, {
   useLayoutEffect,
   useRef
 } from 'react'
-import { MaterialIcons,Entypo } from '@expo/vector-icons'
+import { MaterialIcons, Entypo } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
@@ -186,28 +186,34 @@ function Cart(props) {
         paddingRight: 20,
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
-        shadowRadius: 0,    
+        shadowRadius: 0
       },
       headerTitleAlign: 'center',
       headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <Entypo name="cross" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
-      
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
 
@@ -912,7 +918,7 @@ function Cart(props) {
                         numberOfLines={1}
                         large
                         bolder
-                        textColor={currentTheme.darkGreen}>
+                        textColor={currentTheme.primery}>
                         {i18n.t('haveVoucher')}
                       </TextDefault>
                     </TouchableOpacity>
@@ -999,7 +1005,7 @@ function Cart(props) {
                         <TextDefault
                           small
                           bold
-                          textColor={currentTheme.darkGreen}>
+                          textColor={currentTheme.primery}>
                           {tip || selectedTip ? i18n.t('remove') : null}
                         </TextDefault>
                       </TouchableOpacity>
@@ -1311,7 +1317,7 @@ function Cart(props) {
                           <TextDefault
                             small
                             bolder
-                            textColor={currentTheme.darkGreen}
+                            textColor={currentTheme.primery}
                             right>
                             {i18n.t('change')}
                           </TextDefault>
@@ -1341,7 +1347,7 @@ function Cart(props) {
                           />
                         </View>
                         <TextDefault
-                          textColor={currentTheme.darkGreen}
+                          textColor={currentTheme.primery}
                           medium
                           bolder
                           style={{ width: '45%' }}>

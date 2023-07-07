@@ -22,7 +22,7 @@ import { alignment } from '../../utils/alignment'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import EmptyAddress from '../../assets/SVG/imageComponents/EmptyAddress'
 import Analytics from '../../utils/analytics'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { HeaderBackButton } from '@react-navigation/elements'
 const DELETE_ADDRESS = gql`
@@ -60,25 +60,32 @@ function Addresses() {
         paddingRight: 20,
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#F5F5F5'
       },
       headerTitleAlign: 'center',
       headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [])
 
