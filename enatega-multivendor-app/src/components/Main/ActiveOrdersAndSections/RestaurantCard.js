@@ -84,7 +84,7 @@ function RestaurantCard(props) {
           <TextDefault
             textColor={currentTheme.fontMainColor}
             numberOfLines={1}
-            style={{ marginTop: 3,fontSize: 15}}
+            style={{ marginTop: 3, fontSize: 15 }}
             bold
             small>
             {configuration.currencySymbol} {props.minimumOrder}

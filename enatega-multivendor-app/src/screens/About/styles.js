@@ -15,7 +15,7 @@ const styles = (props = null) =>
       shadowOffset: { width: 2, height: 4 },
       shadowColor: 'black',
       shadowOpacity: 0.1,
-      shadowRadius: 10,
+      shadowRadius: 10
     },
     width10: {
       width: '10%'
@@ -75,8 +75,9 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     timingContainer: {
-      marginLeft: scale(30),
-      marginBottom: scale(20),
+      alignSelf: 'center',
+      width: '90%',
+      marginBottom: scale(20)
     },
     dateReview: {
       marginTop: -8,
@@ -91,22 +92,28 @@ const styles = (props = null) =>
       alignItems: 'flex-start',
       justifyContent: 'center',
       width: '100%',
+      zIndex: 999
     },
     tab: {
-      width: "50%",
+      backgroundColor: 'white',
+      marginTop: scale(-15),
+      width: '48%',
       height: verticalScale(35),
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      borderRadius: scale(10),
+      margin: scale(-10)
     },
     selectedTab: {
-      backgroundColor: '#90EA93',
-      borderRadius: 10
+      backgroundColor: props != null ? props.main : '#90EA93',
+      borderRadius: scale(10),
+      margin: scale(-10)
     },
     timingRow: {
       flexDirection: 'row',
       alignItems: 'flex-end',
       alignSelf: 'center',
-      backgroundColor: '#90EA93',
+      backgroundColor: props != null ? props.main : '#90EA93',
       borderRadius: 30,
       padding: 10,
       marginBottom: 10,

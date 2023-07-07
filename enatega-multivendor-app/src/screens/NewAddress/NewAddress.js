@@ -37,7 +37,7 @@ import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import SearchModal from '../../components/Address/SearchModal'
 import AddressText from '../../components/Address/AddressText'
 import Analytics from '../../utils/analytics'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 const CREATE_ADDRESS = gql`
@@ -81,7 +81,7 @@ function NewAddress(props) {
     longitude: location ? location.longitude : LONGITUDE,
     longitudeDelta: LONGITUDE_DELTA
   })
- 
+
   const regionObj = props.route.params ? props.route.params.regionChange : null
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -97,30 +97,37 @@ function NewAddress(props) {
       title: i18n.t('addAddress'),
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
-        borderRadius: 25, // Add border radius here
+        borderRadius: 25 // Add border radius here
       },
-  headerTitleContainerStyle: {
-    marginBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: 'black',
-    borderRadius: 30,
-    marginLeft: 0,
-  },
-  headerTitleAlign: 'center',
-  headerRight: null,
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
-        backImage={() =>
-          <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
-          <MaterialIcons name="arrow-back" size={30} color="black" />
-          </View>
-        }
-        onPress={() => {
-          navigationService.goBack()
-        }}
-      />
-      ),
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
 
@@ -262,15 +269,19 @@ function NewAddress(props) {
               <View style={styles().upperContainer}>
                 <View style={styles().addressContainer}>
                   <View style={styles().geoLocation}>
-                    <View style={{ width: '100%' }}>                      
+                    <View style={{ width: '100%' }}>
                       <OutlinedTextField
-                        error={deliveryAddressError}            
+                        error={deliveryAddressError}
                         ref={addressRef}
                         value={deliveryAddress}
                         label={i18n.t('fullDeliveryAddress')}
-                        renderRightAccessory={() => (                                                   
-                          <TouchableOpacity onPress={onOpen}>                                                      
-                            <MaterialIcons name="edit" size={18} color={currentTheme.tagColor} />
+                        renderRightAccessory={() => (
+                          <TouchableOpacity onPress={onOpen}>
+                            <MaterialIcons
+                              name="edit"
+                              size={18}
+                              color={currentTheme.tagColor}
+                            />
                           </TouchableOpacity>
                         )}
                         labelFontSize={scale(8)}
@@ -300,7 +311,7 @@ function NewAddress(props) {
                               : null
                           )
                         }}
-                      />                  
+                      />
                     </View>
                   </View>
                   <View style={{ ...alignment.MTsmall }}></View>
@@ -337,17 +348,16 @@ function NewAddress(props) {
                     }}
                   />
                 </View>
-                
+
                 <View style={styles().labelButtonContainer}>
                   <View style={styles().labelTitleContainer}>
-                  <View style={styles().horizontalLine} />
+                    <View style={styles().horizontalLine} />
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
                       B700
                       bolder>
                       Add Label
                     </TextDefault>
-                    
                   </View>
                   <View style={styles().buttonInline}>
                     {labelValues.map((label, index) => (
@@ -385,49 +395,49 @@ function NewAddress(props) {
             </View>
           </ScrollView>
           <TouchableOpacity
-                disabled={loading}
-                onPress={() => {
-                  const deliveryAddressError = !deliveryAddress.trim().length
-                    ? 'Delivery address is required'
-                    : null
-                  const deliveryDetailsError = !deliveryDetails.trim().length
-                    ? 'Delivery details is required'
-                    : null
+            disabled={loading}
+            onPress={() => {
+              const deliveryAddressError = !deliveryAddress.trim().length
+                ? 'Delivery address is required'
+                : null
+              const deliveryDetailsError = !deliveryDetails.trim().length
+                ? 'Delivery details is required'
+                : null
 
-                  setDeliveryAddressError(deliveryAddressError)
-                  setDeliveryDetailsError(deliveryDetailsError)
+              setDeliveryAddressError(deliveryAddressError)
+              setDeliveryDetailsError(deliveryDetailsError)
 
-                  if (
-                    deliveryAddressError === null &&
-                    deliveryDetailsError === null
-                  ) {
-                    mutate({
-                      variables: {
-                        addressInput: {
-                          latitude: `${region.latitude}`,
-                          longitude: `${region.longitude}`,
-                          deliveryAddress: deliveryAddress.trim(),
-                          details: deliveryDetails.trim(),
-                          label: selectedLabel
-                        }
-                      }
-                    })
+              if (
+                deliveryAddressError === null &&
+                deliveryDetailsError === null
+              ) {
+                mutate({
+                  variables: {
+                    addressInput: {
+                      latitude: `${region.latitude}`,
+                      longitude: `${region.longitude}`,
+                      deliveryAddress: deliveryAddress.trim(),
+                      details: deliveryDetails.trim(),
+                      label: selectedLabel
+                    }
                   }
-                }}
-                activeOpacity={0.5}
-                style={styles(currentTheme).saveBtnContainer}>
-                <TextDefault textColor={currentTheme.black} H5 bold>
-                  {i18n.t('saveContBtn')}
-                </TextDefault>
-              </TouchableOpacity>
+                })
+              }
+            }}
+            activeOpacity={0.5}
+            style={styles(currentTheme).saveBtnContainer}>
+            <TextDefault textColor={currentTheme.black} H5 bold>
+              {i18n.t('saveContBtn')}
+            </TextDefault>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-        <View
-          style={{
-            paddingBottom: '30%',
-            backgroundColor: currentTheme.themeBackground
-          }}
-        />
+      <View
+        style={{
+          paddingBottom: '30%',
+          backgroundColor: currentTheme.themeBackground
+        }}
+      />
       <SearchModal
         visible={modalVisible}
         onClose={onClose}

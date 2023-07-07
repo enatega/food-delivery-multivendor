@@ -157,6 +157,7 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
+      borderRadius: scale(10),
       width: '60%',
       height: '8%',
       backgroundColor: props !== null ? props.buttonBackground : 'transparent',

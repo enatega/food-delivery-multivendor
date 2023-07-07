@@ -13,7 +13,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import { EvilIcons } from '@expo/vector-icons'
+
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'

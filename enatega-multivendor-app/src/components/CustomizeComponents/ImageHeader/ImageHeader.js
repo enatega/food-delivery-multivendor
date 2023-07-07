@@ -10,8 +10,7 @@ function ImageHeader(props) {
       borderBottomRightRadius={25}
       resizeMode="cover"
       source={{ uri: props.image }}
-      defaultSource={require('../../../assets/images/food_placeholder.png')}>
-    </ImageBackground>
+      defaultSource={require('../../../assets/images/food_placeholder.png')}></ImageBackground>
   )
 }
 

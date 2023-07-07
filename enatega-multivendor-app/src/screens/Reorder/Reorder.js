@@ -10,7 +10,11 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
+import { MaterialIcons,Entypo } from '@expo/vector-icons'
+import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
 function Reorder(props) {
   const order = props.route.params.item
   const themeContext = useContext(ThemeContext)
@@ -21,8 +25,41 @@ function Reorder(props) {
   const [selectedItems, setItems] = useState([])
 
   useLayoutEffect(() => {
-    props.navigation.setOptions(screenOptions(currentTheme.headerText))
+    props.navigation.setOptions({
+      title: i18n.t('titleCart'),
+      headerRight: null,
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,    
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <Entypo name="cross" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
+      
+    })
   }, [props.navigation])
+
   useEffect(() => {
     async function Track() {
       await analytics.track(analytics.events.NAVIGATE_TO_REORDER)
