@@ -44,6 +44,11 @@ function Payment(props) {
       headerRight: null,
       title: i18n.t('titlePayment'),
       headerTitleAlign: 'center',
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,    
+      },
       headerTitleContainerStyle: {
         marginBottom: 10,
         paddingLeft: 20,
