@@ -10,8 +10,8 @@ const styles = (props = null) =>
     headerImage: {
       width: '100%',
       height: '100%',
-      borderBottomLeftRadius: 25,
-      borderBottomRightRadius: 25
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20
     },
     headingTitle: {
       position: 'absolute',
