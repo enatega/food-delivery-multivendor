@@ -12,7 +12,6 @@ const styles = (props = null) =>
     subContainer: {
       flexGrow: 1,
       alignItems: 'center',
-      borderWidth: scale(0.3),
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
       borderColor: 'grey',

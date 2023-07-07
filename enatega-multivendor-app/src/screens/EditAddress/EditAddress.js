@@ -399,7 +399,7 @@ function EditAddress(props) {
               }}
               activeOpacity={0.5}
               style={styles(currentTheme).saveBtnContainer}>
-              <TextDefault textColor={currentTheme.buttonText} H4 bold>
+               <TextDefault textColor={currentTheme.black} H5 bold>
                 {i18n.t('saveContBtn')}
               </TextDefault>
             </TouchableOpacity>
@@ -413,7 +413,7 @@ function EditAddress(props) {
       />
       <View
         style={{
-          paddingBottom: inset.bottom,
+          paddingBottom: 80,
           backgroundColor: currentTheme.themeBackground
         }}
       />
