@@ -24,13 +24,13 @@ export default function MapSection({ location, restaurants }) {
         <Image
           source={require('../../assets/images/user.png')}
           width={20}
-        />
+        />        
       </Marker>
       {restaurants &&
         restaurants.map((rest, index) => {
           const coord = {
-            latitude: parseFloat(rest.location.coordinates[0]),
-            longitude: parseFloat(rest.location.coordinates[1])
+            latitude: parseFloat(rest.location.coordinates[1]),
+            longitude: parseFloat(rest.location.coordinates[0])
           }
           return (
             <Marker coordinate={coord} title={rest.name} key={index}>

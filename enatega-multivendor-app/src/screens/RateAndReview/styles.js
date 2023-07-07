@@ -22,11 +22,11 @@ const styles = (props = null) =>
       width: '100%',
       height: '100%',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     reviewText: {
       padding: 10,
-      marginTop: scale(40)
+      marginTop: scale(20)
     },
     reviewTextContainerImage: {
       width: '50%',

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
-import { View, TextInput, TouchableOpacity } from 'react-native'
+import { View, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import gql from 'graphql-tag'
 import Spinner from '../../components/Spinner/Spinner'
 import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
@@ -16,6 +16,10 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { EvilIcons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons';
+import navigationService from '../../routes/navigationService'
+
 // constants
 const REVIEWORDER = gql`
   ${reviewOrder}
@@ -36,7 +40,30 @@ function RateAndReview(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerTitle: i18n.t('rateAndReview'),
-      headerRight: null
+      headerRight: null,
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      headerTransparent: true,
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
     })
   }, [props.navigation])
   useEffect(() => {

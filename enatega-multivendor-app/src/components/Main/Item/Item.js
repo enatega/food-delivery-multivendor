@@ -59,7 +59,6 @@ function Item(props) {
   function onCompleted() {
     FlashMessage({ message: 'Favourite list updated.' })
   }
-
   return (
     <TouchableOpacity
       style={{ padding: 10 }}
