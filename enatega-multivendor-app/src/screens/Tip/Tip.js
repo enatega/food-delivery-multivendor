@@ -12,6 +12,9 @@ import styles from './styles'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
+import { Entypo } from '@expo/vector-icons'
 function Tip(props) {
   const navigation = useNavigation()
   const inset = useSafeAreaInsets()
@@ -22,7 +25,35 @@ function Tip(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: 'Tipping'
+      title: 'Tipping',
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,    
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <Entypo name="cross" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
     })
   }, [navigation])
   useEffect(() => {

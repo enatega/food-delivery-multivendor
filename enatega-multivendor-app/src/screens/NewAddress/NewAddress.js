@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
-  Touchable
+  Image
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import i18n from '../../../i18n'
@@ -252,12 +252,10 @@ function NewAddress(props) {
                 alignItems: 'center',
                 transform: [{ translateX: -25 }, { translateY: -25 }]
               }}>
-              <CustomMarker
-                width={40}
-                height={40}
-                transform={[{ translateY: -20 }]}
-                translateY={-20}
-              />
+              <Image
+                  source={require('../../assets/images/user.png')}
+                  width={20}
+                />  
             </View>
           </View>
 

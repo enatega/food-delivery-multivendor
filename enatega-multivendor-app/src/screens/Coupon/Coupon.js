@@ -14,6 +14,9 @@ import { alignment } from '../../utils/alignment'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import styles from './styles'
 import analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
+import { MaterialIcons,Entypo } from '@expo/vector-icons'
 // Constants
 const GET_COUPON = gql`
   ${getCoupon}
@@ -58,9 +61,37 @@ function SelectVoucher(props) {
   }
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props.navigation.setOptions({      
+      title: 'My Vouchers',
       headerRight: null,
-      title: 'My Vouchers'
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,    
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <Entypo name="cross" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
     })
   }, [props.navigation])
 

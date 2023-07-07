@@ -15,7 +15,10 @@ import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { LocationContext } from '../../context/Location'
+import { HeaderBackButton } from '@react-navigation/elements'
 import Analytics from '../../utils/analytics'
+import navigationService from '../../routes/navigationService'
+import { Entypo } from '@expo/vector-icons'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -33,7 +36,35 @@ function CartAddresses(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('myAddresses')
+      title: i18n.t('myAddresses'),
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'black',
+        borderRadius: 30,
+        marginLeft: 0,
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,    
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+          headerLeft: () => (
+            <HeaderBackButton
+            backImage={() =>
+              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+              <Entypo name="cross" size={30} color="black" />
+              </View>
+            }
+            onPress={() => {
+              navigationService.goBack()
+            }}
+          />
+          ),
     })
   }, [props.navigation])
   useEffect(() => {

@@ -10,11 +10,11 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
-import { MaterialIcons,Entypo } from '@expo/vector-icons'
 import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
+import { MaterialIcons,Entypo } from '@expo/vector-icons'
 function Reorder(props) {
   const order = props.route.params.item
   const themeContext = useContext(ThemeContext)
@@ -26,7 +26,7 @@ function Reorder(props) {
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: i18n.t('titleCart'),
+      title: i18n.t('previous'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
@@ -59,6 +59,7 @@ function Reorder(props) {
       
     })
   }, [props.navigation])
+
 
   useEffect(() => {
     async function Track() {
