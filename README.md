@@ -172,4 +172,4 @@ The frontend source code for our solution is completely open source. However, th
 
 ## Contact Us:
 
-sales@ninjascode.com
+sales@enatega.com
