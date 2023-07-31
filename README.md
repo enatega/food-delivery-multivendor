@@ -138,7 +138,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## Documentation and Demo Videos:
 
-Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
+Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega.com/multivendor-documentation/).
 
 To check out video demo of admin dashboard please click [here](https://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode)
 
