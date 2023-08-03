@@ -154,7 +154,7 @@ function RightButton(props) {
 
   function cartIcon() {
     return (
-      <View style={[styles().rightContainer, { ...alignment.PRsmall }]}>
+      <View style={[styles().rightContainer, { ...alignment.PLsmall }]}>
         <Feather name="shopping-bag" size={25} color="black" />
         <View
           style={
@@ -228,6 +228,8 @@ function RightButton(props) {
               {BackButton({ iconColor: props.iconColor, icon: 'fav' })}
             </View>
           )}
+          center
+          bolder
           onPress={() =>
             isLoggedIn && profile
               ? navigation.navigate('Favourite')

@@ -106,15 +106,13 @@ function Main(props) {
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
-      navigationOptions(
-        {
-          headerMenuBackground: currentTheme.headerColor,
-          horizontalLine: currentTheme.headerColor,
-          fontMainColor: currentTheme.fontMainColor,
-          iconColorPink: currentTheme.black,
-          open: onOpen
-        }
-      )
+      navigationOptions({
+        headerMenuBackground: currentTheme.headerColor,
+        horizontalLine: currentTheme.headerColor,
+        fontMainColor: currentTheme.fontMainColor,
+        iconColorPink: currentTheme.black,
+        open: onOpen
+      })
     )
   }, [navigation, currentTheme])
 

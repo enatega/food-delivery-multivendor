@@ -27,13 +27,14 @@ function ActiveOrdersAndSections(props) {
             textColor={currentTheme.fontMainColor}
             style={{
               ...alignment.MLlarge,
-              ...alignment.PBsmall
+              ...alignment.PBsmall,
+              ...alignment.PTmedium
             }}
             bolder
             H3>
             {resSection.name}
           </TextDefault>
-          <View style={{ width: '100%', ...alignment.PBmedium }}>
+          <View style={{ width: '100%' }}>
             <FlatList
               style={styles().offerScroll}
               contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
