@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
@@ -70,6 +70,7 @@ const ActiveOrders = () => {
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   return (
     <>
+      {/* <View> */}
       <FlatList
         contentContainerStyle={{ paddingRight: scale(10) }}
         showsVerticalScrollIndicator={false}
@@ -86,15 +87,22 @@ const ActiveOrders = () => {
           />
         )}
       />
-      <View style={{paddingTop: 20, paddingBottom: 40}}>
-      {activeOrders.length > 2 && (
-        <Button
-          title={showAll ? 'View Less' : 'View All'}
-          onPress={() => setShowAll(!showAll)}
-          color="black"
-        />
-      )}
+      <View style={styles().viewAllButton}>
+        {activeOrders.length > 2 && (
+          <>
+            <View style={styles().btncontainer}>
+              <TouchableOpacity
+                onPress={() => setShowAll(!showAll)}
+                style={styles().button}>
+                <Text style={styles().buttonText}>
+                  {showAll ? 'View Less' : 'View All'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
+      {/* </View> */}
     </>
   )
 }
@@ -112,7 +120,6 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
     })
     return obj[0]
   }
-  console.log(item.expectedTime)
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -125,51 +132,57 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
           currencySymbol: configuration.currencySymbol
         })
       }}>
-      <View style={styles(currentTheme).statusContainer}>
-        <View style={styles().randomShapeContainer}>
-          <RandomShape width={scale(300)} height={scale(300)} />
-        </View>
-        <View style={styles().textContainer}>
-          <View style={{flexDirection: 'row'}}>
-          <MaterialIcons name="radio-button-checked" size={30} color="black" />
-          <Text style={styles(currentTheme).description}>
-            {item.restaurant.name}
-          </Text>
+      <View>
+        <View style={styles(currentTheme).statusContainer}>
+          <View style={styles().randomShapeContainer}>
+            <RandomShape width={scale(300)} height={scale(300)} />
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              marginTop: scale(2),
-              marginBottom: scale(2),
-              paddingLeft: 40
-            }}>
-            {Array(checkStatus(item.orderStatus).status)
-              .fill(0)
-              .map((item, index) => (
-                <FontAwesome
-                  key={index}
-                  name="circle"
-                  size={15}
-                  color={currentTheme.iconColorPink}
-                  style={styles().statusCircle}
-                />
-              ))}
-            {Array(4 - checkStatus(item.orderStatus).status)
-              .fill(0)
-              .map((item, index) => (
-                <FontAwesome
-                  key={index}
-                  name="circle"
-                  size={15}
-                  color={currentTheme.radioOuterColor}
-                  style={styles().statusCircle}
-                />
-              ))}
+          <View style={styles().textContainer}>
+            <View style={{ flexDirection: 'row' }}>
+              <MaterialIcons
+                name="radio-button-checked"
+                size={30}
+                color="black"
+              />
+              <Text style={styles(currentTheme).description}>
+                {item.restaurant.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                marginTop: scale(2),
+                marginBottom: scale(2),
+                paddingLeft: 40
+              }}>
+              {Array(checkStatus(item.orderStatus).status)
+                .fill(0)
+                .map((item, index) => (
+                  <FontAwesome
+                    key={index}
+                    name="circle"
+                    size={15}
+                    color={currentTheme.iconColorPink}
+                    style={styles().statusCircle}
+                  />
+                ))}
+              {Array(4 - checkStatus(item.orderStatus).status)
+                .fill(0)
+                .map((item, index) => (
+                  <FontAwesome
+                    key={index}
+                    name="circle"
+                    size={15}
+                    color={currentTheme.radioOuterColor}
+                    style={styles().statusCircle}
+                  />
+                ))}
+            </View>
+            <Text numberOfLines={1} style={styles(currentTheme).statusText}>
+              {checkStatus(item.orderStatus).statusText}
+            </Text>
           </View>
-          <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-            {checkStatus(item.orderStatus).statusText}
-          </Text>
         </View>
       </View>
     </TouchableOpacity>

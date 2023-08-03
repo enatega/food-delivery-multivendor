@@ -7,7 +7,8 @@ import { theme } from '../../utils/themeColors'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: 1,
+      backgroundColor: 'white'
     },
     navbarContainer: {
       paddingBottom: 0,
@@ -24,15 +25,14 @@ const styles = (props = null) =>
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
-     // backgroundColor: props != null ? props.cartContainer : 'white',
+      // backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
       ...alignment.PTlarge,
-      ...alignment.PBlarge,
+      ...alignment.PBlarge
     },
     deal: {
       width: '100%',
-      flexDirection: 'row',
-
+      flexDirection: 'row'
       // ...alignment.PTsmall,
       // ...alignment.PBsmall
     },
@@ -41,18 +41,18 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
       ...alignment.PRxSmall,
-      borderRadius: 25
+      borderRadius: 25,
+      paddingVertical: 10
     },
     dealDescription: {
       flex: 1,
-      //justifyContent: 'space-between',
       backgroundColor: 'transparent',
-      ...alignment.PRxSmall,
+      ...alignment.PRxSmall
     },
     dealPrice: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      overflow: 'hidden',
+      overflow: 'hidden'
     },
     priceText: {
       fontSize: 15,
@@ -71,37 +71,52 @@ const styles = (props = null) =>
       borderColor: theme.Pink.black,
       paddingTop: scale(15),
       marginBottom: scale(15),
-      width: "90%",
+      width: '90%',
       alignSelf: 'center'
     },
     sectionSeparator: {
       width: '100%',
       height: scale(15),
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white'
     },
+    // buttonContainer: {
+    //   position: 'absolute',
+    //   bottom: 0,
+    //   width: '100%',
+    //   height: scale(50),
+    //   backgroundColor: props != null ? props.themeBackground : 'white',
+    //   justifyContent: 'center',
+    //   alignItems: 'center'
+    // },
     buttonContainer: {
-      position: 'absolute',
-      bottom: 0,
       width: '100%',
-      height: scale(50),
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      height: '10%',
+      backgroundColor: props !== null ? props.themeBackground : 'black',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      elevation: 12,
+      shadowColor: props !== null ? props.shadowColor : 'black',
+      shadowOffset: {
+        width: 0,
+        height: -verticalScale(3)
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: verticalScale(2)
     },
     button: {
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props != null ? props.buttonBackgroundPink : 'red',
-      height: '100%',
+      borderRadius: scale(16),
+      backgroundColor: props !== null ? props.buttonBackground : 'black',
+      height: '75%',
       width: '95%',
-      borderRadius: scale(15),
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      ...alignment.PLsmall,
+      ...alignment.PRsmall
     },
     buttonText: {
       width: '30%',
-      
+      color: 'black'
     },
     buttonTextRight: {
       width: '35%'
@@ -112,16 +127,16 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     buttonLeftCircle: {
-      backgroundColor: props != null ? props.buttonTextPink : 'white',
+      backgroundColor: props != null ? props.black : 'black',
       justifyContent: 'center',
       alignItems: 'center'
     },
     buttonTextLeft: {
-      ...textStyles.Bold,
+      ...textStyles.Bolder,
       ...textStyles.Center,
       ...textStyles.Smaller,
       backgroundColor: 'transparent',
-      color: props != null ? props.buttonBackground : 'black'
+      color: props != null ? props.white : 'white'
     },
     triangleCorner: {
       position: 'absolute',

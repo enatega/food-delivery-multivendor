@@ -45,6 +45,7 @@ import { Divider } from 'react-native-paper'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { MaterialIcons } from '@expo/vector-icons'
+import { scale } from '../../utils/scaling'
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
   { value: 'français', code: 'fr', index: 1 },
@@ -135,11 +136,13 @@ function Settings(props) {
       headerTitle: i18n.t('titleSettings'),
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         backgroundColor: 'black',
-        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: scale(10),
         marginLeft: 0
       },
       headerStyle: {

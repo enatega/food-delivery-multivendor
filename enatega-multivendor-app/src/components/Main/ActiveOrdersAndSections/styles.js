@@ -13,7 +13,7 @@ const styles = (props = null) =>
       width: '100%'
     },
     offerContainer: {
-      //backgroundColor: props != null ? props.cartContainer : 'white',
+      backgroundColor: props != null ? props.cartContainer : 'white',
       elevation: 3,
       shadowColor: theme.Pink.white,
       // shadowOffset: {
@@ -88,6 +88,14 @@ const styles = (props = null) =>
       width: '100%',
       ...alignment.MTxSmall,
       ...alignment.MBxSmall
+    },
+    mainContainer: {
+      paddingTop: scale(15),
+      marginBottom: scale(15),
+      borderTopLeftRadius: scale(20),
+      borderTopRightRadius: scale(20),
+      borderTopColor: '#ebebeb',
+      borderTopWidth: 3
     }
   })
 

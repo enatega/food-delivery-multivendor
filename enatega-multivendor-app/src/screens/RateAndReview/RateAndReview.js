@@ -17,7 +17,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 
 // constants
@@ -42,28 +42,35 @@ function RateAndReview(props) {
       headerTitle: i18n.t('rateAndReview'),
       headerRight: null,
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
       headerTransparent: true,
       headerTitleAlign: 'center',
       headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
   useEffect(() => {

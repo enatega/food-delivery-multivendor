@@ -57,7 +57,9 @@ const styles = (props = null) =>
       ...alignment.PBmedium,
       ...alignment.PTmedium,
       ...alignment.MBsmall,
-      borderRadius: scale(20)
+      borderRadius: scale(16),
+      borderBottomWidth: 1,
+      borderBottomColor: '#DAD6D6'
     },
     width100: {
       width: '100%'
@@ -67,10 +69,22 @@ const styles = (props = null) =>
     },
     titleAddress: {
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    labelStyle: {
+      width: '60%',
+      textAlignVertical: 'bottom',
+      fontSize: scale(14),
+      fontWeight: '400'
+    },
+    midContainer: {
+      display: 'flex',
+      flexDirection: 'row'
     },
     homeIcon: {
       width: '20%',
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     },
@@ -81,13 +95,57 @@ const styles = (props = null) =>
     addressDetail: {
       width: '80%',
       alignSelf: 'flex-end',
-      ...alignment.PRsmall
+      ...alignment.PRsmall,
+      fontSize: scale(10),
+      fontWeight: '300'
     },
     line: {
       width: '80%',
       alignSelf: 'flex-end',
       borderBottomColor: props !== null ? 'transparent' : 'transparent',
       borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    buttonsAddress: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      paddingRight: 10
+    },
+    editButton: {
+      backgroundColor: '#90EA93',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: scale(6),
+      padding: 5,
+      paddingLeft: 8,
+      paddingRight: 8,
+      width: '24%',
+      marginHorizontal: 4,
+      fontSize: scale(8),
+      fontWeight: '300'
+    },
+    deleteButton: {
+      backgroundColor: '#fe0000',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: scale(6),
+      padding: 5,
+      paddingLeft: 8,
+      paddingRight: 8,
+      width: '24%',
+      marginHorizontal: 4,
+      fontSize: scale(8),
+      fontWeight: '300'
+    },
+    editIcon: {
+      paddingRight: 4
+    },
+    btnTextWhite: {
+      color: 'white'
     }
   })
 export default styles

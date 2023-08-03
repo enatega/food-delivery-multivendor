@@ -192,6 +192,7 @@ function Restaurant(props) {
       )
     }
   }
+
   function wrapContentAfterWords(content, numWords) {
     const words = content.split(' ')
     const wrappedContent = []
@@ -496,191 +497,189 @@ function Restaurant(props) {
 
   return (
     <>
-    <SafeAreaView style={styles().flex}>
-      <Animated.View style={styles().flex}>
-        <ImageHeader
-          ref={flatListRef}
-          iconColor={iconColor}
-          iconSize={iconSize}
-          height={headerHeight}
-          opacity={opacity}
-          iconBackColor={iconBackColor}
-          iconRadius={iconRadius}
-          iconTouchWidth={iconTouchWidth}
-          iconTouchHeight={iconTouchHeight}
-          headerTextFlex={headerTextFlex}
-          restaurantName={propsData.name}
-          restaurantImage={propsData.image}
-          restaurant={data.restaurant}
-          topaBarData={deals}
-          changeIndex={changeIndex}
-          selectedLabel={selectedLabel}
-        />
-        <AnimatedSectionList
-          ref={scrollRef}
-          sections={deals}
-          style={{
-            backgroundColor: "white",
-            flexGrow: 1,
-            zIndex: -1,
-            paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-            marginTop: HEADER_MIN_HEIGHT,
-            
-          }}
-          // Important
-          contentContainerStyle={{
-            paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-          }}
-          scrollEventThrottle={1}
-          stickySectionHeadersEnabled={false}
-          showsVerticalScrollIndicator={false}
-          refreshing={networkStatus === 4}
-          onRefresh={() => networkStatus === 7 && refetch()}
-          onViewableItemsChanged={onViewableItemsChanged}
-          onScrollEndDrag={event => {
-            onScrollEndSnapToEdge(event)
-          }}
-          onMomentumScrollEnd={event => {
-            onScrollEndSnapToEdge(event)
-          }}
-          // Important
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: {
-                  y: animation
+      <SafeAreaView style={styles().flex}>
+        <Animated.View style={styles().flex}>
+          <ImageHeader
+            ref={flatListRef}
+            iconColor={iconColor}
+            iconSize={iconSize}
+            height={headerHeight}
+            opacity={opacity}
+            iconBackColor={iconBackColor}
+            iconRadius={iconRadius}
+            iconTouchWidth={iconTouchWidth}
+            iconTouchHeight={iconTouchHeight}
+            headerTextFlex={headerTextFlex}
+            restaurantName={propsData.name}
+            restaurantImage={propsData.image}
+            restaurant={data.restaurant}
+            topaBarData={deals}
+            changeIndex={changeIndex}
+            selectedLabel={selectedLabel}
+          />
+          <AnimatedSectionList
+            ref={scrollRef}
+            sections={deals}
+            style={{
+              flexGrow: 1,
+              zIndex: -1,
+              paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
+              marginTop: HEADER_MIN_HEIGHT
+            }}
+            // Important
+            contentContainerStyle={{
+              paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
+            }}
+            scrollEventThrottle={1}
+            stickySectionHeadersEnabled={false}
+            showsVerticalScrollIndicator={false}
+            refreshing={networkStatus === 4}
+            onRefresh={() => networkStatus === 7 && refetch()}
+            onViewableItemsChanged={onViewableItemsChanged}
+            // onScrollEndDrag={event => {
+            //   onScrollEndSnapToEdge(event)
+            // }}
+            onMomentumScrollEnd={event => {
+              onScrollEndSnapToEdge(event)
+            }}
+            // Important
+            onScroll={Animated.event([
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    y: animation
+                  }
                 }
               }
-            }
-          ])}
-          keyExtractor={(item, index) => item + index}
-          ItemSeparatorComponent={() => (
-            <View style={styles(currentTheme).listSeperator} />
-          )}
-          SectionSeparatorComponent={props => {
-            if (!props.leadingItem) return null
-            return <View style={styles(currentTheme).sectionSeparator} />
-          }}
-          renderSectionHeader={({ section: { title } }) => {
-            return (
-              <TextDefault
-                style={styles(currentTheme).sectionHeaderText}
-                textColor={currentTheme.fontMainColor}
-                bolder
-                B700
-                H4>
-                {title}
-              </TextDefault>
-            )
-          }}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              style={styles(currentTheme).dealSection}
-              activeOpacity={0.7}
-              // Link here screen iwth itemDetail screen by passing food as parameter.
-              onPress={() =>
-                onPressItem({
-                  ...item,
-                  restaurant: restaurant._id,
-                  restaurantName: restaurant.name
-                })
-              }>
-              <View style={styles().deal}>
-                <View style={styles().flex}>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={styles().headerText}
-                    numberOfLines={1}
-                    bolder>
-                    {item.title}
-                  </TextDefault>
-                  <View style={styles().dealDescription}>
+            ])}
+            keyExtractor={(item, index) => item + index}
+            ItemSeparatorComponent={() => (
+              <View style={styles(currentTheme).listSeperator} />
+            )}
+            SectionSeparatorComponent={props => {
+              if (!props.leadingItem) return null
+              return <View style={styles(currentTheme).sectionSeparator} />
+            }}
+            renderSectionHeader={({ section: { title } }) => {
+              return (
+                <TextDefault
+                  style={styles(currentTheme).sectionHeaderText}
+                  textColor={currentTheme.fontMainColor}
+                  bolder
+                  B700
+                  H4>
+                  {title}
+                </TextDefault>
+              )
+            }}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                style={styles(currentTheme).dealSection}
+                activeOpacity={0.7}
+                // Link here screen iwth itemDetail screen by passing food as parameter.
+                onPress={() =>
+                  onPressItem({
+                    ...item,
+                    restaurant: restaurant._id,
+                    restaurantName: restaurant.name
+                  })
+                }>
+                <View style={styles().deal}>
+                  <View style={styles().flex}>
                     <TextDefault
-                      style={styles().priceText}
-                      
-                      small
-                    >
-                      {wrapContentAfterWords(item.description, 5)}
+                      textColor={currentTheme.fontMainColor}
+                      style={styles().headerText}
+                      numberOfLines={1}
+                      bolder>
+                      {item.title}
                     </TextDefault>
-                    <View style={styles().dealPrice}>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontMainColor}
-                        style={styles().priceText}
-                        bolder
-                        small>
-                        {configuration.currencySymbol}{' '}
-                        {parseFloat(item.variations[0].price).toFixed(2)}
+                    <View style={styles().dealDescription}>
+                      <TextDefault style={styles().priceText} small>
+                        {wrapContentAfterWords(item.description, 5)}
                       </TextDefault>
-                      {item.variations[0].discounted > 0 && (
+                      <View style={styles().dealPrice}>
                         <TextDefault
                           numberOfLines={1}
-                          textColor={currentTheme.fontSecondColor}
+                          textColor={currentTheme.fontMainColor}
                           style={styles().priceText}
-                          small
-                          lineOver>
+                          bolder
+                          small>
                           {configuration.currencySymbol}{' '}
-                          {(
-                            item.variations[0].price +
-                            item.variations[0].discounted
-                          ).toFixed(2)}
+                          {parseFloat(item.variations[0].price).toFixed(2)}
                         </TextDefault>
-                      )}
+                        {item.variations[0].discounted > 0 && (
+                          <TextDefault
+                            numberOfLines={1}
+                            textColor={currentTheme.fontSecondColor}
+                            style={styles().priceText}
+                            small
+                            lineOver>
+                            {configuration.currencySymbol}{' '}
+                            {(
+                              item.variations[0].price +
+                              item.variations[0].discounted
+                            ).toFixed(2)}
+                          </TextDefault>
+                        )}
+                      </View>
                     </View>
                   </View>
+                  {item.image ? (
+                    <Image
+                      style={{
+                        height: scale(60),
+                        width: scale(60),
+                        borderRadius: 30
+                      }}
+                      source={{ uri: item.image }}
+                    />
+                  ) : null}
                 </View>
-                {item.image ? (
-                  <Image
-                    style={{ height: scale(60), width: scale(60), borderRadius: 30 }}
-                    source={{ uri: item.image }}
-                  />
-                ) : null}
-              </View>
-              {tagCart(item._id)}
-            </TouchableOpacity>
-            
-          )}
-        />
-        {cartCount > 0 && (
-          <View style={styles(currentTheme).buttonContainer}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).button}
-              onPress={() => navigation.navigate('Cart')}>
-              <View style={styles().buttontLeft}>
-                <Animated.View
-                  style={[
-                    styles(currentTheme).buttonLeftCircle,
-                    {
-                      width: circleSize,
-                      height: circleSize,
-                      borderRadius: radiusSize
-                    }
-                  ]}>
-                  <Animated.Text
+                {tagCart(item._id)}
+              </TouchableOpacity>
+            )}
+          />
+          {cartCount > 0 && (
+            <View style={styles(currentTheme).buttonContainer}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles(currentTheme).button}
+                onPress={() => navigation.navigate('Cart')}
+              >
+                <View style={styles().buttontLeft}>
+                  <Animated.View
                     style={[
-                      styles(currentTheme).buttonTextLeft,
-                      { fontSize: fontChange }
+                      styles(currentTheme).buttonLeftCircle,
+                      {
+                        width: circleSize,
+                        height: circleSize,
+                        borderRadius: radiusSize
+                      }
                     ]}>
-                    {cartCount}
-                  </Animated.Text>
-                </Animated.View>
-              </View>
-              <TextDefault
-                style={styles().buttonText}
-                textColor={currentTheme.buttonTextPink}
-                uppercase
-                center
-                bolder
-                small>
-                {i18n.t('viewCart')}
-              </TextDefault>
-              <View style={styles().buttonTextRight} />
-            </TouchableOpacity>
-          </View>
-        )}
-      </Animated.View>
-    </SafeAreaView>
+                    <Animated.Text
+                      style={[
+                        styles(currentTheme).buttonTextLeft,
+                        { fontSize: fontChange }
+                      ]}>
+                      {cartCount}
+                    </Animated.Text>
+                  </Animated.View>
+                </View>
+                <TextDefault
+                  style={styles().buttonText}
+                  textColor={currentTheme.buttonTextPink}
+                  uppercase
+                  center
+                  bolder
+                  small>
+                  {i18n.t('viewCart')}
+                </TextDefault>
+                <View style={styles().buttonTextRight} />
+              </TouchableOpacity>
+            </View>
+          )}
+        </Animated.View>
+      </SafeAreaView>
     </>
   )
 }

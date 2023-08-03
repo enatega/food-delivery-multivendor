@@ -10,13 +10,12 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  ScrollView,
-  Image
+  ScrollView
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import i18n from '../../../i18n'
 import styles from './styles'
-import { OutlinedTextField, TextField } from 'react-native-material-textfield'
+import { OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import gql from 'graphql-tag'
@@ -34,9 +33,6 @@ import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import AddressText from '../../components/Address/AddressText'
 import SearchModal from '../../components/Address/SearchModal'
 import analytics from '../../utils/analytics'
-import { MaterialIcons, Entypo, Foundation } from '@expo/vector-icons'
-import { HeaderBackButton } from '@react-navigation/elements'
-import navigationService from '../../routes/navigationService'
 
 const EDIT_ADDRESS = gql`
   ${editAddress}
@@ -45,18 +41,15 @@ const EDIT_ADDRESS = gql`
 const labelValues = [
   {
     title: 'Home',
-    value: 'Home',
-    icon: <Entypo name="home" size={24} />
+    value: 'Home'
   },
   {
     title: 'Work',
-    value: 'Work',
-    icon: <MaterialIcons name="work" size={24} />
+    value: 'Work'
   },
   {
     title: 'Other',
-    value: 'Other',
-    icon: <Foundation name="heart" size={24} />
+    value: 'Other'
   }
 ]
 const LATITUDE_DELTA = 0.0022
@@ -102,43 +95,7 @@ function EditAddress(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('editAddress'),
-      headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20
-      },
-      headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
-        borderWidth: 1,
-        borderColor: 'white',
-        borderRadius: scale(10),
-        marginLeft: 0
-      },
-      headerTitleAlign: 'center',
-      headerRight: null,
-      headerLeft: () => (
-        <HeaderBackButton
-          backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
-      )
+      title: i18n.t('editAddress')
     })
   }, [props.navigation])
   useEffect(() => {
@@ -211,7 +168,7 @@ function EditAddress(props) {
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
+        keyboardVerticalOffset={20}
         style={styles().flex}
         enabled={!modalVisible}>
         <View style={styles().flex}>
@@ -234,10 +191,9 @@ function EditAddress(props) {
               loadingEnabled={true}
               loadingIndicatorColor={currentTheme.iconColorPink}
               region={region}
-              customMapStyle={mapStyle}
-              // customMapStyle={
-              //   themeContext.ThemeValue === 'Dark' ? mapStyle : null
-              // }
+              customMapStyle={
+                themeContext.ThemeValue === 'Dark' ? mapStyle : null
+              }
               provider={PROVIDER_GOOGLE}
               onPress={() => {
                 props.navigation.navigate('FullMap', {
@@ -251,7 +207,7 @@ function EditAddress(props) {
                 width: 50,
                 height: 50,
                 position: 'absolute',
-                top: '50%',
+                top: '46%',
                 left: '50%',
                 zIndex: 1,
                 translateX: -25,
@@ -260,152 +216,122 @@ function EditAddress(props) {
                 alignItems: 'center',
                 transform: [{ translateX: -25 }, { translateY: -25 }]
               }}>
-              <Image
-                source={require('../../assets/images/user.png')}
-                width={20}
+              <CustomMarker
+                width={40}
+                height={40}
+                transform={[{ translateY: -20 }]}
+                translateY={-20}
               />
             </View>
           </View>
-
           <ScrollView
             style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={styles(currentTheme).subContainer}
             showsVerticalScrollIndicator={false}>
-            <View style={styles(currentTheme).subContainer}>
-              <View style={styles().upperContainer}>
-                <View style={styles().addressContainer}>
-                  <View style={styles().geoLocation}>
-                    <View style={{ width: '100%' }}>
-                      <OutlinedTextField
-                        placeholder="Delivery Address"
-                        error={deliveryAddressError}
-                        ref={addressRef}
-                        value={deliveryAddress}
-                        label={i18n.t('fullDeliveryAddress')}
-                        labelFontSize={scale(12)}
-                        fontSize={scale(12)}
-                        renderRightAccessory={() => (
-                          <TouchableOpacity onPress={onOpen}>
-                            <MaterialIcons
-                              name="edit"
-                              size={18}
-                              color={currentTheme.fontSecondColor}
-                            />
-                          </TouchableOpacity>
-                        )}
-                        maxLength={100}
-                        backgroundColor={currentTheme.black}
-                        textColor={currentTheme.fontMainColor}
-                        baseColor={currentTheme.fontSecondColor}
-                        errorColor={currentTheme.textErrorColor}
-                        tintColor={
-                          !deliveryAddressError ? currentTheme.tagColor : 'red'
-                        }
-                        labelOffset={{ y1: -5 }}
-                        labelTextStyle={{
-                          fontSize: scale(12),
-                          paddingTop: scale(1)
-                        }}
-                        onChangeText={text => {
-                          setDeliveryAddress(text)
-                        }}
-                        onBlur={() => {
-                          setDeliveryAddressError(
-                            !deliveryAddress.trim().length
-                              ? 'Delivery address is required'
-                              : null
-                          )
-                        }}
-                      />
-                    </View>
+            <View style={styles().upperContainer}>
+              <View style={styles().addressContainer}>
+                <View style={styles().geoLocation}>
+                  <View style={{ width: '90%' }}>
+                    <OutlinedTextField
+                      error={deliveryAddressError}
+                      ref={addressRef}
+                      value={deliveryAddress}
+                      label={i18n.t('fullDeliveryAddress')}
+                      labelFontSize={scale(12)}
+                      fontSize={scale(12)}
+                      maxLength={100}
+                      textColor={currentTheme.fontMainColor}
+                      baseColor={currentTheme.fontSecondColor}
+                      errorColor={currentTheme.textErrorColor}
+                      tintColor={
+                        !deliveryAddressError ? currentTheme.tagColor : 'red'
+                      }
+                      labelOffset={{ y1: -5 }}
+                      labelTextStyle={{
+                        fontSize: scale(12),
+                        paddingTop: scale(1)
+                      }}
+                      onChangeText={text => {
+                        setDeliveryAddress(text)
+                      }}
+                      onBlur={() => {
+                        setDeliveryAddressError(
+                          !deliveryAddress.trim().length
+                            ? 'Delivery address is required'
+                            : null
+                        )
+                      }}
+                    />
                   </View>
-                  <View style={{ ...alignment.MTlarge }}></View>
-                  <OutlinedTextField
-                    placeholder="Apt / Floor"
-                    error={deliveryDetailsError}
-                    label={i18n.t('deliveryDetails')}
-                    labelFontSize={scale(12)}
-                    fontSize={scale(12)}
-                    textAlignVertical="top"
-                    multiline={false}
-                    maxLength={30}
-                    textColor={currentTheme.fontMainColor}
-                    baseColor={currentTheme.fontSecondColor}
-                    errorColor={currentTheme.textErrorColor}
-                    tintColor={
-                      !deliveryDetailsError ? currentTheme.tagColor : 'red'
-                    }
-                    labelOffset={{ y1: -5 }}
-                    labelTextStyle={{
-                      fontSize: scale(12),
-                      paddingTop: scale(1)
-                    }}
-                    value={deliveryDetails}
-                    onChangeText={text => {
-                      setDeliveryDetails(text)
-                    }}
-                    onBlur={() => {
-                      setDeliveryDetailsError(
-                        !deliveryDetails.trim().length
-                          ? 'Delivery details is required'
-                          : null
-                      )
-                    }}
+                  <AddressText
+                    deliveryAddress={deliveryAddress}
+                    onPress={onOpen}
                   />
                 </View>
-
-                <View style={styles().labelButtonContainer}>
-                  <View style={styles().labelTitleContainer}>
-                    <View style={styles().horizontalLine} />
-                    <TextDefault
-                      textColor={currentTheme.fontMainColor}
-                      H5
-                      bolder>
-                      Add Label
-                    </TextDefault>
-                  </View>
-                  <View style={styles().buttonInline}>
-                    {labelValues.map((label, index) => (
-                      <>
-                        <TouchableOpacity
-                          activeOpacity={0.5}
-                          key={index}
-                          style={
-                            selectedLabel === label.value
-                              ? styles(currentTheme).activeLabel
-                              : styles(currentTheme).labelButton
-                          }
-                          onPress={() => {
-                            setSelectedLabel(label.value)
-                          }}>
-                          <TextDefault
-                            textColor={
-                              selectedLabel === label.value
-                                ? currentTheme.white
-                                : currentTheme.fontMainColor
-                            }
-                            bold
-                            center>
-                            {label.icon}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      </>
-                    ))}
-                  </View>
-
-                  <View style={styles().textbuttonInline}>
-                    {labelValues.map((label, index) => (
-                      <>
-                        <TextDefault
-                          style={styles().titlebuttonInline}
-                          textColor={currentTheme.black}
-                          bold
-                          center>
-                          {label.title}
-                        </TextDefault>
-                      </>
-                    ))}
-                  </View>
+                <View style={{ ...alignment.MTlarge }}></View>
+                <OutlinedTextField
+                  error={deliveryDetailsError}
+                  label={i18n.t('deliveryDetails')}
+                  labelFontSize={scale(12)}
+                  fontSize={scale(12)}
+                  textAlignVertical="top"
+                  multiline={false}
+                  maxLength={30}
+                  textColor={currentTheme.fontMainColor}
+                  baseColor={currentTheme.fontSecondColor}
+                  errorColor={currentTheme.textErrorColor}
+                  tintColor={
+                    !deliveryDetailsError ? currentTheme.tagColor : 'red'
+                  }
+                  labelOffset={{ y1: -5 }}
+                  labelTextStyle={{
+                    fontSize: scale(12),
+                    paddingTop: scale(1)
+                  }}
+                  value={deliveryDetails}
+                  onChangeText={text => {
+                    setDeliveryDetails(text)
+                  }}
+                  onBlur={() => {
+                    setDeliveryDetailsError(
+                      !deliveryDetails.trim().length
+                        ? 'Delivery details is required'
+                        : null
+                    )
+                  }}
+                />
+              </View>
+              <View style={styles().labelButtonContainer}>
+                <View style={styles().labelTitleContainer}>
+                  <TextDefault textColor={currentTheme.fontMainColor} H5 bolder>
+                    Label as
+                  </TextDefault>
+                </View>
+                <View style={styles().buttonInline}>
+                  {labelValues.map((label, index) => (
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      key={index}
+                      style={
+                        selectedLabel === label.value
+                          ? styles(currentTheme).activeLabel
+                          : styles(currentTheme).labelButton
+                      }
+                      onPress={() => {
+                        setSelectedLabel(label.value)
+                      }}>
+                      <TextDefault
+                        textColor={
+                          selectedLabel === label.value
+                            ? currentTheme.tagColor
+                            : currentTheme.fontMainColor
+                        }
+                        bold
+                        center>
+                        {label.title}
+                      </TextDefault>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
             </View>
@@ -443,7 +369,7 @@ function EditAddress(props) {
               }}
               activeOpacity={0.5}
               style={styles(currentTheme).saveBtnContainer}>
-              <TextDefault textColor={currentTheme.black} H5 bold>
+              <TextDefault textColor={currentTheme.buttonText} H4 bold>
                 {i18n.t('saveContBtn')}
               </TextDefault>
             </TouchableOpacity>

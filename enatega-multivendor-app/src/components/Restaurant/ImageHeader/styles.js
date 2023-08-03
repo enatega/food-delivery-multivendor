@@ -52,23 +52,22 @@ const styles = (props = null) =>
     },
     fixedText: {
       padding: 10,
-      borderRadius: 20,
-      borderColor: "white",
+      borderRadius: 10,
+      borderColor: 'white',
       borderWidth: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backgroundColor: 'rgba(0, 0, 0, 0.74)',
       width: '50%',
       alignItems: 'center',
       alignSelf: 'center'
     },
     deliveryBox: {
       color: props != null ? props.fontWhite : 'white',
-      fontSize: scale(12),
-      borderWidth: StyleSheet.hairlineWidth * 2,
-      borderColor: props != null ? props.white : 'white',
-      backgroundColor: 'rgba(0,0,0,0.6)',
+      // fontSize: scale(12),
+      // borderWidth: StyleSheet.hairlineWidth * 2,
+      // borderColor: props != null ? props.white : 'white',
+      // backgroundColor: 'rgba(0,0,0,0.6)',
       borderRadius: scale(5),
-      ...alignment.PxSmall,
-      ...alignment.MTsmall
+      ...alignment.PxSmall
     },
     ratingBox: {
       flexDirection: 'row',
@@ -100,16 +99,16 @@ const styles = (props = null) =>
       height: '50%',
       width: '100%',
       backgroundColor: 'white',
-      borderBottomLeftRadius: 30,
+      borderBottomLeftRadius: 25,
       borderBottomRightRadius: 25,
       zIndex: 2 // important
     },
     headerContainer: {
       height: '100%',
       width: '100%',
-      display:"flex",
+      display: 'flex',
       backgroundColor: props != null ? props.menuBar : 'white',
-      alignItems: "center",
+      alignItems: 'center',
       justifyContent: 'center',
       ...alignment.PLlarge,
       ...alignment.PRlarge,
@@ -118,19 +117,18 @@ const styles = (props = null) =>
     activeHeader: {
       borderBottomWidth: scale(4),
       borderColor: props != null ? props.tagColor : 'red',
-      height: '100%',
+      height: '100%'
     },
     heading: {
-      fontWeight: "bold",
+      fontWeight: 'bold'
     },
     navbarTextContainer: {
-      display:"flex",
-      flex:1,
-      flexDirection:"row",
+      display: 'flex',
+      flex: 1,
+      flexDirection: 'row',
       height: '100%',
       justifyContent: 'center',
-       alignItems: 'center',
-      
+      alignItems: 'center'
     }
   })
 export default styles

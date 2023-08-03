@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
-import { TextField } from 'react-native-material-textfield'
+import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import { updateUser, login } from '../../apollo/mutations'
 import i18n from '../../../i18n'
@@ -41,6 +41,8 @@ const UPDATEUSER = gql`
 function Profile(props) {
   const refName = useRef()
   const [nameError, setNameError] = useState('')
+  const [toggleEmailView, setToggleEmailView] = useState(true)
+  const [toggleNameView, setToggleNameView] = useState(true)
   const [toggleView, setToggleView] = useState(true)
   const [modelVisible, setModalVisible] = useState(false)
   const [showPass, setShowPass] = useState(false)
@@ -67,28 +69,46 @@ function Profile(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions(
-      screenOptions({
-        title: profile.name,
+    props.navigation.setOptions({
+      title: i18n.t('titleProfile'),
+      headerRight: null,
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
+        backgroundColor: currentTheme.black,
+        borderRadius: scale(10),
+        borderColor: currentTheme.white,
+        borderWidth: 1,
+        marginLeft: 0
+      },
+      headerStyle: {
         fontColor: currentTheme.headerText,
-        backColor: currentTheme.headerBackground,
-        passChecker: showPass,
-        closeIcon: toggleView,
-        closeModal: setToggleView,
-        modalSetter: setModalVisible,
-        passwordButton: setShowPass
-      })
-    )
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
+      },
+      passChecker: showPass,
+      closeIcon: toggleView,
+      closeModal: setToggleView,
+      modalSetter: setModalVisible,
+      passwordButton: setShowPass
+    })
   }, [props.navigation, showPass, toggleView])
 
   useEffect(() => {
     if (backScreen) {
-      viewHideAndShow()
+      viewHideAndShowName()
+      viewHideAndShowEmail()
     }
   }, [backScreen])
 
-  function viewHideAndShow() {
-    setToggleView(prev => !prev)
+  function viewHideAndShowName() {
+    setToggleNameView(prev => !prev)
+  }
+  function viewHideAndShowEmail() {
+    setToggleEmailView(prev => !prev)
   }
 
   function onCompleted({ updateUser }) {
@@ -102,23 +122,51 @@ function Profile(props) {
     }
   }
 
-  function validateInfo() {
-    // clear errors
+  const validateName = async () => {
     setNameError('')
 
     const name = refName.current.value()
 
-    if (name === profile.name) {
-      return
+    if (name !== profile.name) {
+      if (!name.trim()) {
+        refName.current.focus()
+        setNameError('Name is required')
+        return false
+      }
+
+      try {
+        await mutate({
+          variables: {
+            name: name
+          }
+        })
+      } catch (error) {
+        return false
+      }
     }
 
-    let res = true
-    if (!name.trim()) {
-      refName.current.focus()
-      setNameError('Name is required')
-      res = false
+    return true
+  }
+
+  const updateName = async () => {
+    const isValid = await validateName()
+    if (isValid) {
+      await mutate({
+        variables: {
+          name: refName.current.value(),
+          phone: profile.phone
+        }
+      })
     }
-    return res
+  }
+
+  const handleNamePress = () => {
+    viewHideAndShowName()
+    validateName()
+  }
+  const handleNamePressUpdate = async () => {
+    await updateName()
+    viewHideAndShowName()
   }
 
   function onError(error) {
@@ -135,29 +183,65 @@ function Profile(props) {
     } catch (err) {}
   }
 
-  function changePasswordTab() {
+  function changeNameTab() {
     return (
-      <View style={styles().containerInfo}>
-        <TextDefault textColor={currentTheme.fontSecondColor} small>
-          {profile.name}
-        </TextDefault>
-
-        <View style={styles().flexRow}>
+      <>
+        <View style={styles().containerInfo}>
           <TextDefault
-            style={{ ...alignment.MTxSmall }}
             textColor={currentTheme.fontSecondColor}
-            small>
-            {profile.email}
+            style={{ fontSize: scale(13) }}
+            bolder>
+            {profile.name}
           </TextDefault>
         </View>
+      </>
+    )
+  }
 
-        <View style={styles().flexRow}>
+  function changeEmailTab() {
+    return (
+      <>
+        <View style={styles().containerInfo}>
+          <View style={styles().flexRow}>
+            <TextDefault
+              style={{ fontSize: scale(13) }}
+              textColor={currentTheme.fontSecondColor}
+              bolder>
+              {profile.email}
+            </TextDefault>
+          </View>
+        </View>
+      </>
+    )
+  }
+
+  function changePasswordTab() {
+    return (
+      <>
+        <View style={styles().containerInfo}>
           <TextDefault
-            style={{ ...alignment.MTxSmall }}
             textColor={currentTheme.fontSecondColor}
-            small>
-            {profile.phone}
+            style={{ fontSize: scale(13) }}
+            bolder>
+            ***********
           </TextDefault>
+        </View>
+      </>
+    )
+  }
+
+  function changePhoneTab() {
+    return (
+      <>
+        <View style={styles().containerInfo}>
+          <View style={styles().flexRow}>
+            <TextDefault
+              style={{ fontSize: scale(13) }}
+              textColor={currentTheme.fontSecondColor}
+              bolder>
+              {profile.phone}
+            </TextDefault>
+          </View>
           {profile.phone !== '' && (
             <View
               style={[
@@ -165,7 +249,7 @@ function Profile(props) {
                 {
                   backgroundColor: profile.phoneIsVerified
                     ? currentTheme.main
-                    : 'F8A492'
+                    : currentTheme.buttonText
                 }
               ]}>
               <Text
@@ -179,9 +263,14 @@ function Profile(props) {
             </View>
           )}
         </View>
-      </View>
+      </>
     )
   }
+
+  const showModal = () => {
+    setModalVisible(true)
+  }
+
   return (
     <>
       <ChangePassword
@@ -194,151 +283,216 @@ function Profile(props) {
         Personal details
       </Text>
       <View style={styles(currentTheme).formContainer}>
+        {/* <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={[styles(currentTheme).formContainer]}> */}
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles().flex}>
-          <ScrollView style={styles().flex}>
-            <View style={styles(currentTheme).formSubContainer}>
-              <View style={styles().containerHeading}>
-                <View style={styles().headingTitle}>
-                  <TextDefault
-                    // style={{ fontSize: scale(13)}}
-                    textColor={currentTheme.fontMainColor}
-                    H5
-                    B700
-                    bolder>
-                    Contact info
-                  </TextDefault>
-                </View>
-                {toggleView && (
+          {/* name */}
+          <View style={styles(currentTheme).formSubContainer}>
+            <View style={styles().containerHeading}>
+              {toggleNameView && (
+                <>
+                  <View style={styles().headingTitle}>
+                    <TextDefault H5 B700 bolder>
+                      Name
+                    </TextDefault>
+                  </View>
+
                   <View style={styles().headingLink}>
                     <TouchableOpacity
                       activeOpacity={0.3}
                       style={styles().headingButton}
-                      onPress={viewHideAndShow}>
+                      onPress={handleNamePress}>
                       <MaterialIcons name="edit" size={25} color="black" />
                     </TouchableOpacity>
                   </View>
-                )}
-              </View>
-              {toggleView ? (
-                changePasswordTab()
-              ) : (
-                <View style={styles().containerInfo}>
-                  <View>
-                    <View style={{ margin: scale(0) }}></View>
-                    <TextField
-                      label={i18n.t('name')}
-                      ref={refName}
-                      defaultValue={profile.name}
-                      autoFocus={true}
-                      labelFontSize={scale(12)}
-                      fontSize={scale(12)}
-                      maxLength={20}
-                      textColor={currentTheme.fontMainColor}
-                      baseColor={currentTheme.fontSecondColor}
-                      errorColor={currentTheme.textErrorColor}
-                      tintColor={!nameError ? currentTheme.tagColor : 'red'}
-                      labelTextStyle={{
-                        ...textStyles.Small,
-                        ...textStyles.Bolder,
-                        paddingTop: scale(1)
-                      }}
-                      error={nameError}
-                    />
-
-                    <View style={{ ...alignment.MTlarge }}></View>
-                    <View style={{ ...alignment.MTxSmall }}>
-                      <TextDefault bold>Email</TextDefault>
-                    </View>
-                    <View>
-                      <TextDefault>{profile.email}</TextDefault>
-                    </View>
-                    <View style={{ ...alignment.MTlarge }}></View>
-                    <View style={{ ...alignment.MTxSmall }}>
-                      <TextDefault bold>Phone</TextDefault>
-                    </View>
-                    <View style={{ ...alignment.MTxSmall }}></View>
-
-                    <View style={styles().flexRow}>
-                      <View>
-                        <TextDefault>{profile.phone}</TextDefault>
-                      </View>
-                      <View style={{ display: 'flex', flexDirection: 'row' }}>
-                        {(profile.phone === '' || !profile.phoneIsVerified) && (
-                          <TouchableOpacity
-                            onPress={() =>
-                              props.navigation.navigate(
-                                profile.phone === ''
-                                  ? 'PhoneNumber'
-                                  : 'PhoneOtp',
-                                { prevScreen: 'Profile' }
-                              )
-                            }
-                            disabled={
-                              profile.phoneIsVerified && profile.phone !== ''
-                            }>
-                            <TextDefault
-                              bolder
-                              textColor={
-                                profile.phoneIsVerified
-                                  ? currentTheme.startColor
-                                  : currentTheme.textErrorColor
-                              }>
-                              {profile.phone === ''
-                                ? 'Add Phone'
-                                : profile.phoneIsVerified
-                                ? 'Verified'
-                                : 'Verify?'}
-                            </TextDefault>
-                          </TouchableOpacity>
-                        )}
-                        {profile.phone !== '' && (
-                          <Feather
-                            style={{ marginLeft: 10, marginTop: -5 }}
-                            name="edit"
-                            size={20}
-                            color={currentTheme.iconColorPink}
-                            onPress={() =>
-                              props.navigation.navigate('PhoneNumber', {
-                                prevScreen: 'Profile'
-                              })
-                            }
-                          />
-                        )}
-                      </View>
-                    </View>
-                  </View>
-
-                  <TouchableOpacity
-                    disabled={loadingMutation}
-                    activeOpacity={0.7}
-                    style={styles(currentTheme).saveContainer}
-                    onPress={() => {
-                      if (validateInfo()) {
-                        mutate({
-                          variables: {
-                            name: refName.current.value(),
-                            phone: profile.phone
-                          }
-                        })
-                      }
-                    }}>
-                    <TextDefault
-                      textColor={currentTheme.buttonText}
-                      bolder
-                      B700
-                      small
-                      uppercase
-                      style={[alignment.MTsmall, alignment.MBsmall]}>
-                      {'Update'}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
+                </>
               )}
             </View>
-          </ScrollView>
+            {toggleNameView ? (
+              changeNameTab()
+            ) : (
+              <View>
+                <View style={styles().containerHeading}>
+                  <View style={styles().headingTitle}>
+                    <TextDefault H5 B700 bolder>
+                      Name
+                    </TextDefault>
+                  </View>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                  <OutlinedTextField
+                    ref={refName}
+                    defaultValue={profile.name}
+                    autoFocus={true}
+                    maxLength={20}
+                    textColor={currentTheme.fontMainColor}
+                    baseColor={currentTheme.fontSecondColor}
+                    errorColor={currentTheme.textErrorColor}
+                    tintColor={!nameError ? currentTheme.black : 'red'}
+                    error={nameError}
+                  />
+                </View>
+
+                <TouchableOpacity
+                  disabled={loadingMutation}
+                  activeOpacity={0.7}
+                  style={styles(currentTheme).saveContainer}
+                  onPress={handleNamePressUpdate}>
+                  <TextDefault>Update</TextDefault>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
+          {/* email */}
+          <View style={styles(currentTheme).formSubContainer}>
+            <View style={styles().containerHeading}>
+              <>
+                <View style={styles().headingTitle}>
+                  <TextDefault
+                    textColor={currentTheme.fontMainColor}
+                    H5
+                    B700
+                    bolder>
+                    Email
+                  </TextDefault>
+                </View>
+              </>
+            </View>
+            {changeEmailTab()}
+          </View>
+
+          {/* password */}
+          <View style={styles(currentTheme).formSubContainer}>
+            <View style={styles().containerHeading}>
+              <>
+                <View style={styles().headingTitle}>
+                  <TextDefault H5 B700 bolder>
+                    Password
+                  </TextDefault>
+                </View>
+
+                <View style={styles().headingLink}>
+                  <TouchableOpacity
+                    activeOpacity={0.3}
+                    style={styles().headingButton}
+                    onPress={showModal}>
+                    <MaterialIcons name="edit" size={25} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </>
+            </View>
+            {changePasswordTab()}
+          </View>
+
+          {/* phone */}
+          <View style={styles(currentTheme).formSubContainer}>
+            <View style={styles().containerHeading}>
+              {toggleView && (
+                <>
+                  <View style={styles().headingTitle}>
+                    <TextDefault
+                      // style={{ fontSize: scale(13)}}
+                      textColor={currentTheme.fontMainColor}
+                      H5
+                      B700
+                      bolder>
+                      Mobile
+                    </TextDefault>
+                  </View>
+                  <View style={styles().headingLink}>
+                    <TouchableOpacity
+                      activeOpacity={0.3}
+                      style={styles().headingButton}
+                      onPress={() =>
+                        props.navigation.navigate('PhoneNumber', {
+                          prevScreen: 'Profile'
+                        })
+                      }>
+                      <MaterialIcons name="edit" size={25} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+            </View>
+            {toggleView ? (
+              changePhoneTab()
+            ) : (
+              // <View style={styles().containerInfo}>
+              <View>
+                <View style={styles().containerHeading}>
+                  <View style={styles().headingTitle}>
+                    <TextDefault
+                      // style={{ fontSize: scale(13)}}
+                      textColor={currentTheme.fontMainColor}
+                      H5
+                      B700
+                      bolder>
+                      Mobile
+                    </TextDefault>
+                  </View>
+                </View>
+
+                <View>
+                  {/* <View style={{ margin: scale(0) }}></View> */}
+
+                  <View style={{ ...alignment.MTxSmall }}></View>
+
+                  <View style={styles().flexRow}>
+                    <View>
+                      <TextDefault>{profile.phone}</TextDefault>
+                    </View>
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                      {(profile.phone === '' || !profile.phoneIsVerified) && (
+                        <TouchableOpacity
+                          onPress={() =>
+                            props.navigation.navigate(
+                              profile.phone === '' ? 'PhoneNumber' : 'PhoneOtp',
+                              { prevScreen: 'Profile' }
+                            )
+                          }
+                          disabled={
+                            profile.phoneIsVerified && profile.phone !== ''
+                          }>
+                          <TextDefault
+                            bolder
+                            textColor={
+                              profile.phoneIsVerified
+                                ? currentTheme.startColor
+                                : currentTheme.textErrorColor
+                            }>
+                            {profile.phone === ''
+                              ? 'Add Phone'
+                              : profile.phoneIsVerified
+                              ? 'Verified'
+                              : 'Verify?'}
+                          </TextDefault>
+                        </TouchableOpacity>
+                      )}
+                      {profile.phone !== '' && (
+                        <Feather
+                          style={{ marginLeft: 10, marginTop: -5 }}
+                          name="check"
+                          size={20}
+                          color={currentTheme.black}
+                          onPress={() =>
+                            props.navigation.navigate('PhoneNumber', {
+                              prevScreen: 'Profile'
+                            })
+                          }
+                        />
+                      )}
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )}
+          </View>
         </KeyboardAvoidingView>
+        {/* </ScrollView> */}
       </View>
     </>
   )

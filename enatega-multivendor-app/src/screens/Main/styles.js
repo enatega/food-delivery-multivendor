@@ -15,6 +15,7 @@ const styles = (props = null) =>
       height: '100%',
       alignSelf: 'center'
     },
+
     ML20: {
       ...alignment.MLlarge
     },

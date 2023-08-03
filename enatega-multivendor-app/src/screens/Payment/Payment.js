@@ -47,31 +47,38 @@ function Payment(props) {
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
-        shadowRadius: 0,    
+        shadowRadius: 0
       },
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
       },
-      
+
       headerTitleAlign: 'center',
       headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <Entypo name="cross" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
   useEffect(() => {

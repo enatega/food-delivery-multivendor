@@ -6,7 +6,7 @@ const styles = (props = null) =>
     map: {
       width: width,
       height: height * 0.3,
-      marginTop: -40
+      marginTop: -30
     }
   })
 export default styles

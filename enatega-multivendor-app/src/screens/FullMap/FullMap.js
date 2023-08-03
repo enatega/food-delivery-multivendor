@@ -72,7 +72,8 @@ export default function FullMap(props) {
           onRegionChangeComplete={setRegion}
           showsUserLocation={true}
           provider={PROVIDER_GOOGLE}
-          customMapStyle={themeContext.ThemeValue === 'Dark' ? mapStyle : null}
+          customMapStyle={mapStyle}
+          // customMapStyle={themeContext.ThemeValue === 'Dark' ? mapStyle : null}
           showsMyLocationButton
           onMapReady={setMargin}
           showsTraffic={false}

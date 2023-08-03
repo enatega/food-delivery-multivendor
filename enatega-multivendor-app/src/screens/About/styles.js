@@ -38,10 +38,11 @@ const styles = (props = null) =>
     },
     mapContainer: {
       marginTop: 10,
+      marginBottom: 20,
       borderRadius: scale(10),
       borderColor: 'white',
       borderWidth: 2,
-      height: '30%',
+      height: 200,
       backgroundColor: 'white'
     },
     mainContainer: {

@@ -4,7 +4,8 @@ import {
   EvilIcons,
   MaterialIcons,
   MaterialCommunityIcons,
-  AntDesign
+  AntDesign,
+  Feather
 } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
@@ -39,7 +40,7 @@ function BackButton(props) {
     return (
       <Ionicons
         name="ios-menu"
-        size={20}
+        size={30}
         style={styles().leftIconPadding}
         color={props.iconColor}
       />
@@ -154,14 +155,11 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={[styles().rightContainer, { ...alignment.PRsmall }]}>
-        <MaterialIcons name="shopping-bag" size={20} color="black" />
+        <Feather name="shopping-bag" size={25} color="black" />
         <View
           style={
-            styles(
-              route.name === 'Main'
-                ? "black"
-                : currentTheme.white
-            ).absoluteContainer
+            styles(route.name === 'Main' ? 'black' : currentTheme.white)
+              .absoluteContainer
           }>
           <TextDefault
             textColor={
@@ -169,9 +167,9 @@ function RightButton(props) {
                 ? currentTheme.fontWhite
                 : currentTheme.black
             }
-            style={{ fontSize: scale(7) }}
+            style={{ fontSize: scale(12) }}
             center
-            bold>
+            bolder>
             {cartCount}
           </TextDefault>
         </View>
@@ -242,7 +240,6 @@ function RightButton(props) {
             labelVisible={false}
             backImage={cartIcon}
             onPress={navigateCart}
-            
           />
         )}
       </View>

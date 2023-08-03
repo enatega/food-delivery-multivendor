@@ -18,14 +18,17 @@ function ActiveOrdersAndSections(props) {
   const currentTheme = theme[themeContext.ThemeValue]
 
   return (
-    <View style={styles().PB10}>
+    <View>
       <View>{isLoggedIn && profile && <ActiveOrders />}</View>
       {sections.map(resSection => (
         <View key={resSection._id}>
           <TextDefault
             numberOfLines={1}
             textColor={currentTheme.fontMainColor}
-            style={{ ...alignment.MLlarge, ...alignment.PBsmall }}
+            style={{
+              ...alignment.MLlarge,
+              ...alignment.PBsmall
+            }}
             bolder
             H3>
             {resSection.name}

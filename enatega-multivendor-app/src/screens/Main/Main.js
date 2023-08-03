@@ -92,7 +92,7 @@ function Main(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
+      StatusBar.setBackgroundColor(currentTheme.headerColor)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -106,13 +106,15 @@ function Main(props) {
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
-      navigationOptions({
-        headerMenuBackground: currentTheme.headerColor,
-        horizontalLine: currentTheme.headerColor,
-        fontMainColor: currentTheme.fontMainColor,
-        iconColorPink: currentTheme.black,
-        open: onOpen
-      })
+      navigationOptions(
+        {
+          headerMenuBackground: currentTheme.headerColor,
+          horizontalLine: currentTheme.headerColor,
+          fontMainColor: currentTheme.fontMainColor,
+          iconColorPink: currentTheme.black,
+          open: onOpen
+        }
+      )
     )
   }, [navigation, currentTheme])
 
@@ -171,7 +173,7 @@ function Main(props) {
         <View style={styles().addressSubContainer}>
           <MaterialCommunityIcons
             name="target"
-            size={scale(15)}
+            size={scale(25)}
             color={currentTheme.black}
           />
           <View style={styles().mL5p} />
@@ -187,7 +189,10 @@ function Main(props) {
           />
         )}
         {busy && (
-          <Spinner size={'small'} backColor={currentTheme.cartContainer} />
+          <Spinner
+            size={'small'}
+            backColor={currentTheme.lightHorizontalLine}
+          />
         )}
       </View>
     </View>
@@ -342,7 +347,7 @@ function Main(props) {
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
-              <View style={styles().flex}>
+              <View style={[styles().flex, styles().subContainer]}>
                 <Animated.FlatList
                   contentInset={{ top: containerPaddingTop }}
                   contentContainerStyle={{

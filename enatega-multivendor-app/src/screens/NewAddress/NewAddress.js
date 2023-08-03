@@ -3,8 +3,7 @@ import React, {
   useRef,
   useEffect,
   useContext,
-  useLayoutEffect,
-  Text
+  useLayoutEffect
 } from 'react'
 import {
   View,
@@ -12,7 +11,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet,
   Image
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -30,14 +28,11 @@ import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { textStyles } from '../../utils/textStyles'
 import { LocationContext } from '../../context/Location'
 import { mapStyle } from '../../utils/mapStyle'
-import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import SearchModal from '../../components/Address/SearchModal'
-import AddressText from '../../components/Address/AddressText'
 import Analytics from '../../utils/analytics'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons, Entypo, Foundation } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 const CREATE_ADDRESS = gql`
@@ -47,15 +42,18 @@ const CREATE_ADDRESS = gql`
 const labelValues = [
   {
     title: 'Home',
-    value: 'Home'
+    value: 'Home',
+    icon: <Entypo name="home" size={24} />
   },
   {
     title: 'Work',
-    value: 'Work'
+    value: 'Work',
+    icon: <MaterialIcons name="work" size={24} />
   },
   {
     title: 'Other',
-    value: 'Other'
+    value: 'Other',
+    icon: <Foundation name="heart" size={24} />
   }
 ]
 
@@ -97,14 +95,17 @@ function NewAddress(props) {
       title: i18n.t('addAddress'),
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
-        borderRadius: 25 // Add border radius here
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20
       },
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         backgroundColor: 'black',
-        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: scale(10),
         marginLeft: 0
       },
       headerTitleAlign: 'center',
@@ -220,9 +221,10 @@ function NewAddress(props) {
               rotateEnabled={false}
               cacheEnabled={true}
               showsUserLocation={false}
-              customMapStyle={
-                themeContext.ThemeValue === 'Dark' ? mapStyle : null
-              }
+              customMapStyle={mapStyle}
+              // customMapStyle={
+              //   themeContext.ThemeValue === 'Dark' ? mapStyle : null
+              // }
               initialRegion={{
                 latitude: LATITUDE,
                 latitudeDelta: LATITUDE_DELTA,
@@ -253,14 +255,14 @@ function NewAddress(props) {
                 transform: [{ translateX: -25 }, { translateY: -25 }]
               }}>
               <Image
-                  source={require('../../assets/images/user.png')}
-                  width={20}
-                />  
+                source={require('../../assets/images/user.png')}
+                width={20}
+              />
             </View>
           </View>
 
           <ScrollView
-            style={styles().flex}
+            style={{ flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}>
             <View style={styles(currentTheme).subContainer}>
@@ -269,34 +271,31 @@ function NewAddress(props) {
                   <View style={styles().geoLocation}>
                     <View style={{ width: '100%' }}>
                       <OutlinedTextField
+                        placeholder="Delivery Address"
                         error={deliveryAddressError}
                         ref={addressRef}
                         value={deliveryAddress}
                         label={i18n.t('fullDeliveryAddress')}
+                        labelFontSize={scale(12)}
+                        fontSize={scale(12)}
                         renderRightAccessory={() => (
                           <TouchableOpacity onPress={onOpen}>
                             <MaterialIcons
                               name="edit"
                               size={18}
-                              color={currentTheme.tagColor}
+                              color={currentTheme.fontSecondColor}
                             />
                           </TouchableOpacity>
                         )}
-                        labelFontSize={scale(8)}
-                        fontSize={scale(10)}
-                        lineWidth={StyleSheet.hairlineWidth}
-                        activeLineWidth={StyleSheet.hairlineWidth}
                         maxLength={100}
                         textColor={currentTheme.fontMainColor}
-                        baseColor={currentTheme.black}
+                        baseColor={currentTheme.fontSecondColor}
                         errorColor={currentTheme.textErrorColor}
                         tintColor={
-                          !deliveryAddressError
-                            ? currentTheme.fontMainColor
-                            : 'red'
+                          !deliveryAddressError ? currentTheme.tagColor : 'red'
                         }
                         labelTextStyle={{
-                          ...textStyles.Normal,
+                          fontSize: scale(12),
                           paddingTop: scale(1)
                         }}
                         onChangeText={text => {
@@ -312,28 +311,28 @@ function NewAddress(props) {
                       />
                     </View>
                   </View>
-                  <View style={{ ...alignment.MTsmall }}></View>
+                  <View style={{ ...alignment.MTlarge }}></View>
                   <OutlinedTextField
+                    placeholder="Apt / Floor"
                     error={deliveryDetailsError}
-                    value={deliveryDetails}
                     label={i18n.t('deliveryDetails')}
-                    labelFontSize={scale(8)}
-                    fontSize={scale(10)}
+                    labelFontSize={scale(12)}
+                    fontSize={scale(12)}
                     textAlignVertical="top"
                     multiline={false}
-                    lineWidth={StyleSheet.hairlineWidth}
-                    activeLineWidth={StyleSheet.hairlineWidth}
                     maxLength={30}
                     textColor={currentTheme.fontMainColor}
                     baseColor={currentTheme.fontSecondColor}
                     errorColor={currentTheme.textErrorColor}
                     tintColor={
-                      !deliveryDetailsError ? currentTheme.fontMainColor : 'red'
+                      !deliveryDetailsError ? currentTheme.tagColor : 'red'
                     }
+                    labelOffset={{ y1: -5 }}
                     labelTextStyle={{
-                      ...textStyles.Normal,
+                      fontSize: scale(12),
                       paddingTop: scale(1)
                     }}
+                    value={deliveryDetails}
                     onChangeText={text => {
                       setDeliveryDetails(text)
                     }}
@@ -352,94 +351,106 @@ function NewAddress(props) {
                     <View style={styles().horizontalLine} />
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
-                      B700
+                      h5
                       bolder>
                       Add Label
                     </TextDefault>
                   </View>
                   <View style={styles().buttonInline}>
                     {labelValues.map((label, index) => (
-                      <TouchableOpacity
-                        activeOpacity={0.5}
-                        key={index}
-                        style={
-                          selectedLabel === label.value
-                            ? styles(currentTheme).activeLabel
-                            : styles(currentTheme).labelButton
-                        }
-                        onPress={() => {
-                          setSelectedLabel(label.value)
-                        }}>
-                        <TextDefault
+                      <>
+                        <TouchableOpacity
+                          activeOpacity={0.5}
+                          key={index}
                           style={
-                            selectedLabel === label.value && {
-                              ...textStyles.Bolder
-                            }
-                          }
-                          textColor={
                             selectedLabel === label.value
-                              ? currentTheme.white
-                              : currentTheme.black
+                              ? styles(currentTheme).activeLabel
+                              : styles(currentTheme).labelButton
                           }
-                          small
+                          onPress={() => {
+                            setSelectedLabel(label.value)
+                          }}>
+                          <TextDefault
+                            textColor={
+                              selectedLabel === label.value
+                                ? currentTheme.white
+                                : currentTheme.fontMainColor
+                            }
+                            bold
+                            center>
+                            {label.icon}
+                          </TextDefault>
+                        </TouchableOpacity>
+                      </>
+                    ))}
+                  </View>
+
+                  <View style={styles().textbuttonInline}>
+                    {labelValues.map((label, index) => (
+                      <>
+                        <TextDefault
+                          style={styles().titlebuttonInline}
+                          textColor={currentTheme.black}
+                          bold
                           center>
                           {label.title}
                         </TextDefault>
-                      </TouchableOpacity>
+                      </>
                     ))}
                   </View>
                 </View>
               </View>
             </View>
-          </ScrollView>
-          <TouchableOpacity
-            disabled={loading}
-            onPress={() => {
-              const deliveryAddressError = !deliveryAddress.trim().length
-                ? 'Delivery address is required'
-                : null
-              const deliveryDetailsError = !deliveryDetails.trim().length
-                ? 'Delivery details is required'
-                : null
 
-              setDeliveryAddressError(deliveryAddressError)
-              setDeliveryDetailsError(deliveryDetailsError)
+            <TouchableOpacity
+              disabled={loading}
+              onPress={() => {
+                const deliveryAddressError = !deliveryAddress.trim().length
+                  ? 'Delivery address is required'
+                  : null
+                const deliveryDetailsError = !deliveryDetails.trim().length
+                  ? 'Delivery details is required'
+                  : null
 
-              if (
-                deliveryAddressError === null &&
-                deliveryDetailsError === null
-              ) {
-                mutate({
-                  variables: {
-                    addressInput: {
-                      latitude: `${region.latitude}`,
-                      longitude: `${region.longitude}`,
-                      deliveryAddress: deliveryAddress.trim(),
-                      details: deliveryDetails.trim(),
-                      label: selectedLabel
+                setDeliveryAddressError(deliveryAddressError)
+                setDeliveryDetailsError(deliveryDetailsError)
+
+                if (
+                  deliveryAddressError === null &&
+                  deliveryDetailsError === null
+                ) {
+                  mutate({
+                    variables: {
+                      addressInput: {
+                        latitude: `${region.latitude}`,
+                        longitude: `${region.longitude}`,
+                        deliveryAddress: deliveryAddress.trim(),
+                        details: deliveryDetails.trim(),
+                        label: selectedLabel
+                      }
                     }
-                  }
-                })
-              }
-            }}
-            activeOpacity={0.5}
-            style={styles(currentTheme).saveBtnContainer}>
-            <TextDefault textColor={currentTheme.black} H5 bold>
-              {i18n.t('saveContBtn')}
-            </TextDefault>
-          </TouchableOpacity>
+                  })
+                }
+              }}
+              activeOpacity={0.5}
+              style={styles(currentTheme).saveBtnContainer}>
+              <TextDefault textColor={currentTheme.black} H5 bold>
+                {i18n.t('saveContBtn')}
+              </TextDefault>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       </KeyboardAvoidingView>
-      <View
-        style={{
-          paddingBottom: '30%',
-          backgroundColor: currentTheme.themeBackground
-        }}
-      />
       <SearchModal
         visible={modalVisible}
         onClose={onClose}
         onSubmit={onSubmit}
+      />
+      <View
+        style={{
+          paddingBottom: inset.bottom,
+          backgroundColor: currentTheme.themeBackground
+        }}
       />
     </>
   )

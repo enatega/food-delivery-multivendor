@@ -17,7 +17,7 @@ const styles = (props = null) =>
       ...alignment.MTmedium
     },
     formSubContainer: {
-      borderRadius: 30,
+      borderRadius: scale(18),
       width: '95%',
       backgroundColor: 'white',
       alignSelf: 'center',
@@ -29,7 +29,7 @@ const styles = (props = null) =>
       borderWidth:
         props !== null && props.themeBackground !== '#FAFAFA' ? 2 : 0,
       borderColor: props !== null ? props.shadowColor : 'transparent',
-      ...alignment.MBlarge,
+      // ...alignment.MBlarge,
       ...alignment.MTsmall,
       ...alignment.Pmedium
     },
@@ -55,21 +55,23 @@ const styles = (props = null) =>
       ...alignment.PLmedium
     },
     saveContainer: {
-      // width: '30%',
-      backgroundColor: props !== null ? props.buttonBackground : 'black',
+      backgroundColor: props !== null ? '#90EA93' : 'black',
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'flex-end',
-      borderRadius: scale(7),
-      ...alignment.MTmedium,
-      ...alignment.PRmedium,
-      ...alignment.PLmedium
+      borderRadius: scale(6),
+      padding: 5,
+      paddingLeft: 20,
+      paddingRight: 20,
+      width: '28%'
     },
     verifiedButton: {
       padding: 5,
       paddingLeft: 20,
       paddingRight: 20,
-      borderRadius: scale(6)
+      borderRadius: scale(6),
+      width: '28%',
+      height: 30,
+      marginTop: 10
     },
     // Model for password changing
     modalContainer: {

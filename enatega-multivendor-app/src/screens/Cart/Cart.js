@@ -181,11 +181,13 @@ function Cart(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        backgroundColor: 'black',
-        borderRadius: 30,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
+        backgroundColor: currentTheme.black,
+        borderRadius: scale(10),
+        borderColor: currentTheme.white,
+        borderWidth: 1,
         marginLeft: 0
       },
       headerStyle: {
@@ -193,8 +195,6 @@ function Cart(props) {
         shadowColor: 'transparent',
         shadowRadius: 0
       },
-      headerTitleAlign: 'center',
-      headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
@@ -1250,7 +1250,7 @@ function Cart(props) {
                           </TouchableOpacity>
                           <View
                             style={{
-                              display: 'Flex',
+                              display: 'flex',
                               justifyContent: 'center',
                               alignItems: 'center'
                             }}>
@@ -1409,16 +1409,16 @@ function Cart(props) {
                         <View style={styles().buttontLeft}>
                           <View style={styles(currentTheme).buttonLeftCircle}>
                             <TextDefault
-                              bold
+                              bolder
                               center
-                              textColor={currentTheme.buttonBackground}
+                              textColor={currentTheme.white}
                               smaller>
                               {cartCount}
                             </TextDefault>
                           </View>
                         </View>
                         <TextDefault
-                          textColor={currentTheme.buttonText}
+                          textColor={currentTheme.black}
                           style={{ width: '30%' }}
                           bolder
                           B700
@@ -1428,7 +1428,7 @@ function Cart(props) {
                           {i18n.t('orderBtn')}
                         </TextDefault>
                         <TextDefault
-                          textColor={currentTheme.buttonText}
+                          textColor={currentTheme.black}
                           style={{ width: '35%' }}
                           bold
                           small
@@ -1447,7 +1447,7 @@ function Cart(props) {
                     }}
                     style={styles(currentTheme).button}>
                     <TextDefault
-                      textColor={currentTheme.buttonText}
+                      textColor={currentTheme.black}
                       style={{ width: '100%' }}
                       H5
                       bolder

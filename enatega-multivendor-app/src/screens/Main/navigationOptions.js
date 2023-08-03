@@ -1,16 +1,18 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import { StyleSheet } from 'react-native'
 import { LeftButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import SelectedLocation from '../../components/Main/Location/Location'
 import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
 
 const navigationOptions = props => ({
+  //   const { location } = useContext(LocationContext)
+  // const currentTheme = theme[themeContext.ThemeValue]
+
   headerStyle: {
     backgroundColor: theme.Pink.headerColor,
     shadowColor: 'transparent',
-    shadowRadius: 0,    
+    shadowRadius: 0
   },
   headerTitleStyle: {
     color: props.fontMainColor

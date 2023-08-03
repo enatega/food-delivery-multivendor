@@ -126,7 +126,7 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     buttonLeftCircle: {
-      backgroundColor: props != null ? props.menuBar : '#FFF',
+      backgroundColor: props != null ? props.black : 'black',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(18),

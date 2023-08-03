@@ -23,7 +23,7 @@ import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 
 function ItemDetail(props) {
@@ -59,9 +59,9 @@ function ItemDetail(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+      StatusBar.setBackgroundColor(currentTheme.headerColor)
     }
-    StatusBar.setBarStyle('light-content')
+    StatusBar.setBackgroundColor(currentTheme.black)
   })
   useEffect(() => {
     async function Track() {
@@ -78,30 +78,41 @@ function ItemDetail(props) {
     navigation.setOptions({
       headerRight: null,
       title: 'Customize',
-      headerRight: null,
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         backgroundColor: 'black',
         borderRadius: 30,
-        marginLeft: 0,
+        marginLeft: 0
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
       },
       headerTransparent: true,
       headerTitleAlign: 'center',
-      headerRight: null,
-          headerLeft: () => (
-            <HeaderBackButton
-            backImage={() =>
-              <View style={{backgroundColor: 'white', borderRadius: 50 , marginLeft: 10, width: 55, alignItems: 'center'}}>
+
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
-              </View>
-            }
-            onPress={() => {
-              navigationService.goBack()
-            }}
-          />
-          ),
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [navigation])
 
@@ -317,7 +328,7 @@ function ItemDetail(props) {
               <HeadingComponent
                 title={food.title}
                 price={calculatePrice()}
-                //desc={food.description}
+                // desc={food.description}
               />
 
               {food.variations.length > 1 && (

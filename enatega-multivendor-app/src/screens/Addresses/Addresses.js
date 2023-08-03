@@ -4,11 +4,19 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
-  Platform
+  Platform,
+  Text,
+  ScrollView
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'
-import { AntDesign, EvilIcons, SimpleLineIcons } from '@expo/vector-icons'
+import {
+  AntDesign,
+  EvilIcons,
+  SimpleLineIcons,
+  MaterialIcons
+} from '@expo/vector-icons'
+
 import gql from 'graphql-tag'
 import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
@@ -22,9 +30,12 @@ import { alignment } from '../../utils/alignment'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import EmptyAddress from '../../assets/SVG/imageComponents/EmptyAddress'
 import Analytics from '../../utils/analytics'
-import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { HeaderBackButton } from '@react-navigation/elements'
+import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
+
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
 `
@@ -51,19 +62,22 @@ function Addresses() {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: i18n.t('myAddresses'),
-      headerTitleAlign: 'left',
       headerRight: null,
-      headerRight: null,
+      headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        backgroundColor: 'black',
-        borderRadius: 30,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
+        backgroundColor: currentTheme.black,
+        borderRadius: scale(10),
+        borderColor: currentTheme.white,
+        borderWidth: 1,
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: '#F5F5F5'
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
       },
       headerTitleAlign: 'center',
       headerRight: null,
@@ -90,10 +104,11 @@ function Addresses() {
   }, [])
 
   const addressIcons = {
-    Home: 'home',
-    Work: 'briefcase',
-    Other: 'location-pin'
+    Home: CustomHomeIcon,
+    Work: CustomWorkIcon,
+    Other: CustomOtherIcon
   }
+
   function emptyView() {
     return (
       <View style={styles().subContainerImage}>
@@ -119,80 +134,114 @@ function Addresses() {
   }
   return (
     <>
-      <View style={styles(currentTheme).containerInfo}>
-        <FlatList
-          data={profile.addresses}
-          ListEmptyComponent={emptyView}
-          keyExtractor={item => item._id}
-          ItemSeparatorComponent={() => (
-            <View style={styles(currentTheme).line} />
-          )}
-          ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
-          renderItem={({ item: address }) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles().width100, styles(currentTheme).containerSpace]}
-              onPress={() => {
-                navigation.navigate('EditAddress', { ...address })
-              }}>
-              <View style={styles().width100}>
-                <View style={[styles().titleAddress, styles().width100]}>
-                  <View style={[styles().homeIcon]}>
-                    <SimpleLineIcons
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles(currentTheme).containerInfo}>
+          <FlatList
+            data={profile.addresses}
+            ListEmptyComponent={emptyView}
+            keyExtractor={item => item._id}
+            ItemSeparatorComponent={() => (
+              <View style={styles(currentTheme).line} />
+            )}
+            ListHeaderComponent={() => (
+              <View style={{ ...alignment.MTmedium }} />
+            )}
+            renderItem={({ item: address }) => (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={[
+                  styles().width100,
+                  styles(currentTheme).containerSpace
+                ]}>
+                <View style={styles().width100}>
+                  <View style={[styles().titleAddress, styles().width100]}>
+                    <TextDefault
+                      textColor={currentTheme.fontMainColor}
+                      style={styles().labelStyle}>
+                      {/* style={{ width: '60%', textAlignVertical: 'bottom' }}> */}
+                      {address.label}
+                    </TextDefault>
+                  </View>
+                  <View style={{ ...alignment.MTxSmall }}></View>
+
+                  <View style={styles().midContainer}>
+                    <View style={[styles().homeIcon]}>
+                      {/* <FontAwesome
                       name={addressIcons[address.label]}
-                      size={scale(14)}
+                      size={scale(32)}
                       color={currentTheme.iconColorPink}
-                    />
+                    /> */}
+                      {addressIcons[address.label] ? (
+                        React.createElement(addressIcons[address.label], {
+                          // width: scale(32),
+                          // height: scale(32),
+                          fill: currentTheme.iconColorPink
+                        })
+                      ) : (
+                        <AntDesign name="question" size={24} color="black" />
+                      )}
+                    </View>
+
+                    {/* <CustomHomeIcon /> */}
+                    <View style={styles().addressDetail}>
+                      <TextDefault textColor={currentTheme.fontSecondColor}>
+                        {address.deliveryAddress}
+                      </TextDefault>
+                      <TextDefault textColor={currentTheme.fontSecondColor}>
+                        {address.details}
+                      </TextDefault>
+                    </View>
                   </View>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={{ width: '60%', textAlignVertical: 'bottom' }}>
-                    {address.label}
-                  </TextDefault>
-                  <View style={[styles().width10, { alignItems: 'center' }]}>
-                    <SimpleLineIcons
-                      name="pencil"
-                      size={scale(13)}
-                      color={currentTheme.iconColorPink}
-                    />
+
+                  <View style={[styles().buttonsAddress, styles().width100]}>
+                    {/* <TextDefault> */}
+                    {/* <View style={[styles().width10, { alignItems: 'center' }]}> */}
+
+                    <TouchableOpacity
+                      disabled={loadingMutation}
+                      activeOpacity={0.7}
+                      style={styles(currentTheme).editButton}
+                      onPress={() => {
+                        navigation.navigate('EditAddress', { ...address })
+                      }}>
+                      <SimpleLineIcons
+                        name="pencil"
+                        size={scale(13)}
+                        style={[styles().editIcon, styles().btnTextWhite]}
+                      />
+                      <Text style={styles().btnTextWhite}>Update</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      disabled={loadingMutation}
+                      style={[styles().width10, styles().deleteButton]}
+                      onPress={() => {
+                        mutate({ variables: { id: address._id } })
+                      }}>
+                      <EvilIcons
+                        name="trash"
+                        size={scale(20)}
+                        style={styles().btnTextWhite}
+                      />
+                      <Text style={styles().btnTextWhite}>Delete</Text>
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    disabled={loadingMutation}
-                    style={styles().width10}
-                    onPress={() => {
-                      mutate({ variables: { id: address._id } })
-                    }}>
-                    <EvilIcons
-                      name="trash"
-                      size={scale(20)}
-                      color={currentTheme.iconColorPink}
-                      style={styles().width100}
-                    />
-                  </TouchableOpacity>
                 </View>
-                <View style={{ ...alignment.MTxSmall }}></View>
-                <View style={styles().addressDetail}>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small>
-                    {address.deliveryAddress}
-                  </TextDefault>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small>
-                    {address.details}
-                  </TextDefault>
-                </View>
-              </View>
+              </TouchableOpacity>
+            )}
+          />
+
+          <View style={styles(currentTheme).containerButton}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles().addButton}
+              onPress={() => navigation.navigate('NewAddress')}>
+              <AntDesign name="plus" size={scale(30)} color={'#FFF'} />
             </TouchableOpacity>
-          )}
-        />
-        <View style={styles(currentTheme).containerButton}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles().addButton}
-            onPress={() => navigation.navigate('NewAddress')}>
-            <AntDesign name="plus" size={scale(30)} color={'#FFF'} />
-          </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
       <View
         style={{
           paddingBottom: inset.bottom,

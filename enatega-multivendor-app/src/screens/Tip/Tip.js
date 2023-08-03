@@ -28,9 +28,9 @@ function Tip(props) {
       title: 'Tipping',
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         backgroundColor: 'black',
         borderRadius: 30,
         marginLeft: 0

@@ -82,12 +82,9 @@ function ImageTextCenterHeader(props, ref) {
         styles(currentTheme).mainContainer,
         {
           height: props.height,
-          backgroundColor: props.loading
-            ? 'transparent'
-            : null
+          backgroundColor: props.loading ? 'transparent' : null
         }
-      ]}
-      >
+      ]}>
       <Animated.View
         style={{ height: Animated.sub(props.height, TOP_BAR_HEIGHT) }}>
         <Animated.Image
@@ -96,13 +93,11 @@ function ImageTextCenterHeader(props, ref) {
           style={[
             styles().flex,
             {
-              opacity: props.opacity,
+              opacity: props.opacity
             }
           ]}
         />
-        <Animated.View 
-        style={styles().overlayContainer}
-        >
+        <Animated.View style={styles().overlayContainer}>
           <View style={styles().fixedViewNavigation}>
             <View style={styles().fixedIcons}>
               <AnimatedBorderless
@@ -117,13 +112,12 @@ function ImageTextCenterHeader(props, ref) {
                     width: 60
                   }
                 ]}
-                onPress={() => navigation.goBack()}
-                >
+                onPress={() => navigation.goBack()}>
                 <AnimatedIon
                   name="ios-arrow-back"
                   style={{
-                    color: "black",
-                    fontSize: 30
+                    color: props.black,
+                    fontSize: props.iconSize
                   }}
                 />
               </AnimatedBorderless>
@@ -135,8 +129,7 @@ function ImageTextCenterHeader(props, ref) {
                     opacity: Animated.sub(1, props.opacity),
                     marginBottom: props.headerTextFlex
                   }
-                ]}
-                >
+                ]}>
                 Delivery {aboutObject.deliveryTime} Minute{' '}
               </Animated.Text>
               {!props.loading && (
@@ -160,12 +153,12 @@ function ImageTextCenterHeader(props, ref) {
                       },
                       tab: true
                     })
-                  }}
-                  >
+                    // console.log('button pressed')
+                  }}>
                   <AnimatedIon
                     name="ios-information-circle-outline"
                     style={{
-                      color: "black",
+                      color: props.black,
                       fontSize: props.iconSize
                     }}
                   />

@@ -24,6 +24,10 @@ import { theme } from '../../utils/themeColors'
 import screenOptions from './screenOptions'
 import styles from './styles'
 import analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons'
+import navigationService from '../../routes/navigationService'
+
 const RESTAURANTS = gql`
   ${FavouriteRestaurant}
 `
@@ -57,8 +61,52 @@ function Favourite() {
   })
 
   useLayoutEffect(() => {
-    navigation.setOptions(screenOptions(currentTheme.headerText))
+    navigation.setOptions({
+      title: i18n.t('titleFavourite'),
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerTitleContainerStyle: {
+        marginBottom: scale(10),
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
+        backgroundColor: currentTheme.black,
+        borderRadius: scale(10),
+        borderColor: currentTheme.white,
+        borderWidth: 1,
+        marginLeft: 0
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
+    })
   }, [navigation])
+  // useLayoutEffect(() => {
+  //   navigation.setOptions(screenOptions(currentTheme.headerText))
+  // }, [navigation])
+
   function emptyView() {
     return (
       <View style={[styles().flex, styles(currentTheme).mainContainerEmpty]}>
