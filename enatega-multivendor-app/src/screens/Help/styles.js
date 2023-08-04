@@ -9,23 +9,30 @@ const styles = (props = null) =>
     },
     backButton: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      borderRadius: 50,
-      marginLeft: 10,
-      width: 55,
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
       alignItems: 'center'
     },
     mainContainer: {
-      paddingBottom: 20,
-      backgroundColor: 'white',
-      margin: 15,
-      borderRadius: scale(15)
+      // paddingBottom: scale(20),
+      margin: scale(15),
+      backgroundColor: '#FAFAFA'
     },
     itemContainer: {
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: props !== null ? props.horizontalLine : 'grey',
+      // borderBottomWidth: StyleSheet.hairlineWidth,
+      margin: scale(4),
+      borderWidth: 1,
+      borderColor: '#d8d8d874',
+      borderRadius: scale(16),
+      backgroundColor: '#f5f5f5',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       ...alignment.PTlarge,
       ...alignment.PBlarge,
-      ...alignment.PLlarge
+      ...alignment.PLlarge,
+      ...alignment.PRlarge
     }
   })
 export default styles

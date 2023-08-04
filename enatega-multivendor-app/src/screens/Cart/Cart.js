@@ -181,11 +181,12 @@ function Cart(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
+        marginTop: scale(6),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
         backgroundColor: currentTheme.black,
         borderRadius: scale(10),
+        height: scale(35),
         borderColor: currentTheme.white,
         borderWidth: 1,
         marginLeft: 0

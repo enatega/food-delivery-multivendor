@@ -5,24 +5,27 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
+import { StatusBar } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
 const navigationOptions = headerText => ({
   headerTitle: i18n.t('titleOrders'),
-  headerTitleAlign: 'left',
+  headerTitleAlign: 'center',
   headerRight: null,
   headerTitleContainerStyle: {
-    marginBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: 'black',
-    border: 1,
-    borderColor: 'white',
+    marginTop: scale(10),
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
     borderRadius: scale(10),
-    marginLeft: 0
+    height: scale(28),
+    backgroundColor: 'black',
+    borderWidth: 1,
+    borderColor: 'white'
   },
   headerStyle: {
     backgroundColor: '#F5F5F5'
   },
+
   headerLeft: () => (
     <HeaderBackButton
       backImage={() => (

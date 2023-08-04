@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import { View, TouchableOpacity, Keyboard } from 'react-native'
-import { TextField } from 'react-native-material-textfield'
+import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -15,6 +15,7 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { Entypo } from '@expo/vector-icons'
+
 function Tip(props) {
   const navigation = useNavigation()
   const inset = useSafeAreaInsets()
@@ -28,11 +29,17 @@ function Tip(props) {
       title: 'Tipping',
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
+        marginTop: scale(10),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
+        // marginTop: scale(10),
+        // paddingLeft: scale(10),
+        // paddingRight: scale(10),
+        borderRadius: scale(10),
+        height: scale(28),
+        borderWidth: 1,
+        borderColor: currentTheme.white,
         backgroundColor: 'black',
-        borderRadius: 30,
         marginLeft: 0
       },
       headerStyle: {
@@ -40,8 +47,6 @@ function Tip(props) {
         shadowColor: 'transparent',
         shadowRadius: 0
       },
-      headerTitleAlign: 'center',
-      headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
@@ -78,35 +83,35 @@ function Tip(props) {
   }
 
   const HeaderLine = props => {
-    return (
-      <View style={styles().headerlineContainer}>
-        <View
-          style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
-        />
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          style={[
-            alignment.PTsmall,
-            alignment.PBsmall,
-            { width: props.textWidth }
-          ]}
-          large
-          bolder
-          center
-          uppercase>
-          {props.headerName}
-        </TextDefault>
-        <View
-          style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
-        />
-      </View>
-    )
+    // return (
+    //   <View style={styles().headerlineContainer}>
+    //     <View
+    //       style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
+    //     />
+    //     <TextDefault
+    //       textColor={currentTheme.fontMainColor}
+    //       style={[
+    //         alignment.PTsmall,
+    //         alignment.PBsmall,
+    //         { width: props.textWidth }
+    //       ]}
+    //       large
+    //       bolder
+    //       center
+    //       uppercase>
+    //       {props.headerName}
+    //     </TextDefault>
+    //     <View
+    //       style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
+    //     />
+    //   </View>
+    // )
   }
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <HeaderLine
-          headerName="Tipping Amount"
+          // headerName="Tipping Amount"
           textWidth="45%"
           lineWidth="25%"
         />
@@ -116,7 +121,7 @@ function Tip(props) {
           onPress={() => Keyboard.dismiss()}>
           <View style={styles().upperContainer}>
             <View style={{ width: '70%' }}>
-              <TextField
+              {/* <TextField
                 ref={tipRef}
                 label="Enter tip amount"
                 keyboardType="numeric"
@@ -130,6 +135,35 @@ function Tip(props) {
                 tintColor={currentTheme.iconColorPink}
                 labelOffset={{ y1: -5 }}
                 labelTextStyle={{ fontSize: scale(12), paddingTop: scale(1) }}
+              /> */}
+              <OutlinedTextField
+                ref={tipRef}
+                label={'Other amount'}
+                placeholder="add other amount"
+                labelFontSize={scale(12)}
+                fontSize={scale(12)}
+                textAlignVertical="top"
+                multiline={false}
+                maxLength={30}
+                textColor={currentTheme.fontMainColor}
+                baseColor={currentTheme.fontSecondColor}
+                errorColor={currentTheme.textErrorColor}
+                tintColor={currentTheme.iconColorPink}
+                labelOffset={{ y1: -5 }}
+                labelTextStyle={{
+                  fontSize: scale(12),
+                  paddingTop: scale(1)
+                }}
+                // onChangeText={text => {
+                //   setDeliveryDetails(text)
+                // }}
+                // onBlur={() => {
+                //   setDeliveryDetailsError(
+                //     !deliveryDetails.trim().length
+                //       ? 'Delivery details is required'
+                //       : null
+                //   )
+                // }}
               />
             </View>
             <TouchableOpacity

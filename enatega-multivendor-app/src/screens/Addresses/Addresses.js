@@ -65,14 +65,15 @@ function Addresses() {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
+        marginTop: scale(10),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
+        marginLeft: scale(20),
+        height: scale(28),
         backgroundColor: currentTheme.black,
         borderRadius: scale(10),
         borderColor: currentTheme.white,
-        borderWidth: 1,
-        marginLeft: 0
+        borderWidth: 1
       },
       headerStyle: {
         backgroundColor: currentTheme.headerColor,

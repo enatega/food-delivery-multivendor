@@ -137,8 +137,8 @@ function Settings(props) {
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
         marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
         backgroundColor: 'black',
         borderWidth: 1,
         borderColor: 'white',

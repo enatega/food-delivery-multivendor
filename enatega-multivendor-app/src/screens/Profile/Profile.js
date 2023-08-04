@@ -77,6 +77,7 @@ function Profile(props) {
         marginBottom: scale(10),
         paddingLeft: scale(20),
         paddingRight: scale(20),
+        height: scale(30),
         backgroundColor: currentTheme.black,
         borderRadius: scale(10),
         borderColor: currentTheme.white,

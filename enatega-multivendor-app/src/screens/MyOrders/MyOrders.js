@@ -57,46 +57,7 @@ function MyOrders(props) {
   })
 
   useLayoutEffect(() => {
-    // props.navigation.setOptions(screenOptions(currentTheme.headerText))
-    props.navigation.setOptions({
-      title: i18n.t('titleCart'),
-      headerRight: null,
-      headerTitleAlign: 'center',
-      headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: currentTheme.black,
-        borderRadius: scale(10),
-        borderColor: currentTheme.white,
-        borderWidth: 1,
-        marginLeft: 0
-      },
-      headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        shadowColor: 'transparent',
-        shadowRadius: 0
-      },
-      headerLeft: () => (
-        <HeaderBackButton
-          backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
-              <Entypo name="cross" size={30} color="black" />
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
-      )
-    })
+    props.navigation.setOptions(screenOptions(currentTheme.headerText))
   }, [props.navigation])
 
   const getItems = items => {

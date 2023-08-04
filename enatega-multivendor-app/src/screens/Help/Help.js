@@ -10,6 +10,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { scale } from '../../utils/scaling'
+import i18n from '../../../i18n'
 
 const links = [
   {
@@ -39,33 +40,35 @@ function Help(props) {
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      headerRight: null,
-      headerTitle: 'Help Center',
-      headerRight: null,
-      headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
-        borderWidth: 1,
-        borderColor: 'white',
-        borderRadius: 10,
-        marginLeft: 0
-      },
-      headerStyle: {
-        backgroundColor: '#F5F5F5'
-      },
+      headerTitle: i18n.t('titleHelp'),
       headerTitleAlign: 'center',
       headerRight: null,
+      headerTitleContainerStyle: {
+        marginTop: scale(10),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
+        borderRadius: scale(10),
+        height: scale(28),
+        backgroundColor: 'black',
+        borderWidth: 1,
+        borderColor: 'white'
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.themeBackground
+      },
+
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View style={styles(currentTheme).backButton}>
-              <MaterialIcons
-                name="arrow-back"
-                size={30}
-                color={currentTheme.black}
-              />
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
           onPress={() => {
@@ -88,14 +91,17 @@ function Help(props) {
         <View style={styles().mainContainer}>
           {links.map(({ title, url }, index) => (
             <TouchableOpacity
+              style={styles(currentTheme).itemContainer}
               onPress={() =>
                 props.navigation.navigate('HelpBrowser', { title, url })
               }
-              style={styles(currentTheme).itemContainer}
               key={index}>
-              <TextDefault textColor={currentTheme.fontMainColor} bolder>
-                {title}
-              </TextDefault>
+              <View>
+                <TextDefault textColor={currentTheme.fontMainColor} bolder>
+                  {title}{' '}
+                </TextDefault>
+              </View>
+              <MaterialIcons name="arrow-forward" size={20} color="black" />
             </TouchableOpacity>
           ))}
         </View>

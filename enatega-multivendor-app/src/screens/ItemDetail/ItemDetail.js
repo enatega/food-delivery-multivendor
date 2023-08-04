@@ -59,9 +59,9 @@ function ItemDetail(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerColor)
+      StatusBar.setBackgroundColor(currentTheme.white)
     }
-    StatusBar.setBackgroundColor(currentTheme.black)
+    StatusBar.setBackgroundColor(currentTheme.white)
   })
   useEffect(() => {
     async function Track() {
@@ -79,17 +79,14 @@ function ItemDetail(props) {
       headerRight: null,
       title: 'Customize',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
-        borderRadius: 30,
-        marginLeft: 0
-      },
-      headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        shadowColor: 'transparent',
-        shadowRadius: 0
+        marginTop: scale(10),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
+        borderRadius: scale(10),
+        height: scale(35),
+        backgroundColor: currentTheme.customizeOpacityBtn,
+        borderWidth: 1,
+        borderColor: currentTheme.white
       },
       headerTransparent: true,
       headerTitleAlign: 'center',
@@ -101,7 +98,6 @@ function ItemDetail(props) {
               style={{
                 backgroundColor: 'white',
                 borderRadius: 50,
-                marginLeft: 10,
                 width: 55,
                 alignItems: 'center'
               }}>
@@ -318,12 +314,11 @@ function ItemDetail(props) {
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={100}
-          style={styles().flex}>
+          keyboardVerticalOffset={100}>
+          {!!food.image && <ImageHeader image={food.image} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>
-            {!!food.image && <ImageHeader image={food.image} />}
             <View style={styles().subContainer}>
               <HeadingComponent
                 title={food.title}
@@ -362,7 +357,7 @@ function ItemDetail(props) {
               ))}
             </View>
             <View style={styles(currentTheme).line}></View>
-            <View style={{ width: '90%', alignSelf: 'center' }}>
+            <View style={styles().inputContainer}>
               <TitleComponent
                 title="Special instructions"
                 subTitle="Any specific preferences?"
@@ -374,9 +369,9 @@ function ItemDetail(props) {
                 textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}
-                labelFontSize={scale(6)}
-                fontSize={scale(12)}
-                labelHeight={10}
+                // labelFontSize={scale(6)}
+                // fontSize={scale(12)}
+                // labelHeight={50}
                 maxLength={144}
                 textColor={currentTheme.fontMainColor}
                 baseColor={currentTheme.lightHorizontalLine}

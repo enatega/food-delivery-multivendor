@@ -37,16 +37,17 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       paddingLeft: scale(10),
       paddingRight: scale(10),
-      borderRadius: scale(15)
+      borderRadius: scale(6),
+      marginTop: scale(30)
     },
     buttonContainer: {
       width: '25%',
       height: '55%',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: scale(10),
-      backgroundColor: props !== null ? props.buttonBackground : 'pink',
-      ...alignment.MTsmall
+      borderRadius: scale(6),
+      backgroundColor: props !== null ? props.buttonBackground : 'pink'
+      // ...alignment.MTsmall
     }
   })
 export default styles

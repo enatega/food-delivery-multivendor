@@ -29,7 +29,14 @@ const styles = (props = null) =>
       backgroundColor: theme.Pink.lightHorizontalLine,
       borderRadius: 10,
       height: 50,
-      paddingLeft: 10
+      paddingLeft: 10,
+      textAlignVertical: 'center'
+    },
+    inputContainer: {
+      width: '90%',
+      alignSelf: 'center',
+      zIndex: 1,
+      height: 200
     }
   })
 export default styles

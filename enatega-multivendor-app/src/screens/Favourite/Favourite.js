@@ -66,19 +66,20 @@ function Favourite() {
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: currentTheme.black,
+        marginTop: scale(10),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
         borderRadius: scale(10),
+        height: scale(28),
+        backgroundColor: currentTheme.black,
         borderColor: currentTheme.white,
-        borderWidth: 1,
-        marginLeft: 0
+        borderWidth: 1
       },
       headerStyle: {
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
-        shadowRadius: 0
+        shadowRadius: 0,
+        marginBottom: 10
       },
       headerTitleAlign: 'center',
       headerRight: null,
@@ -93,7 +94,7 @@ function Favourite() {
                 width: 55,
                 alignItems: 'center'
               }}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+              <MaterialIcons name="arrow-back" size={25} color="black" />
             </View>
           )}
           onPress={() => {
