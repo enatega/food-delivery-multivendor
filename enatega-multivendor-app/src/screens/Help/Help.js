@@ -45,11 +45,11 @@ function Help(props) {
       headerRight: null,
       headerTitleContainerStyle: {
         marginTop: scale(10),
-        paddingLeft: scale(10),
-        paddingRight: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
         borderRadius: scale(10),
         height: scale(28),
-        backgroundColor: 'black',
+        backgroundColor: currentTheme.black,
         borderWidth: 1,
         borderColor: 'white'
       },

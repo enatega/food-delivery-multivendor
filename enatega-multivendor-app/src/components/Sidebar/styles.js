@@ -17,6 +17,9 @@ const styles = (props = null) => {
     item: {
       height: '9.5%',
       ...alignment.MBxsmall
+    },
+    iconContainer: {
+      backgroundColor: 'red'
     }
   })
 }

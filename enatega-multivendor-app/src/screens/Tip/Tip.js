@@ -30,16 +30,13 @@ function Tip(props) {
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
         marginTop: scale(10),
-        paddingLeft: scale(10),
-        paddingRight: scale(10),
-        // marginTop: scale(10),
-        // paddingLeft: scale(10),
-        // paddingRight: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
         borderRadius: scale(10),
         height: scale(28),
         borderWidth: 1,
         borderColor: currentTheme.white,
-        backgroundColor: 'black',
+        backgroundColor: currentTheme.black,
         marginLeft: 0
       },
       headerStyle: {
@@ -115,70 +112,36 @@ function Tip(props) {
           textWidth="45%"
           lineWidth="25%"
         />
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles().flex}
-          onPress={() => Keyboard.dismiss()}>
-          <View style={styles().upperContainer}>
-            <View style={{ width: '70%' }}>
-              {/* <TextField
-                ref={tipRef}
-                label="Enter tip amount"
-                keyboardType="numeric"
-                labelFontSize={scale(12)}
-                fontSize={scale(12)}
-                labelHeight={10}
-                maxLength={15}
-                textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
-                errorColor={currentTheme.textErrorColor}
-                tintColor={currentTheme.iconColorPink}
-                labelOffset={{ y1: -5 }}
-                labelTextStyle={{ fontSize: scale(12), paddingTop: scale(1) }}
-              /> */}
-              <OutlinedTextField
-                ref={tipRef}
-                label={'Other amount'}
-                placeholder="add other amount"
-                labelFontSize={scale(12)}
-                fontSize={scale(12)}
-                textAlignVertical="top"
-                multiline={false}
-                maxLength={30}
-                textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
-                errorColor={currentTheme.textErrorColor}
-                tintColor={currentTheme.iconColorPink}
-                labelOffset={{ y1: -5 }}
-                labelTextStyle={{
-                  fontSize: scale(12),
-                  paddingTop: scale(1)
-                }}
-                // onChangeText={text => {
-                //   setDeliveryDetails(text)
-                // }}
-                // onBlur={() => {
-                //   setDeliveryDetailsError(
-                //     !deliveryDetails.trim().length
-                //       ? 'Delivery details is required'
-                //       : null
-                //   )
-                // }}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={onTipping}
-              style={styles(currentTheme).buttonContainer}>
-              <TextDefault
-                textColor={currentTheme.buttonText}
-                H5
-                bold
-                uppercase>
-                {i18n.t('apply')}
-              </TextDefault>
-            </TouchableOpacity>
+        <View style={styles().upperContainer}>
+          <View style={styles().innerContainer}>
+            <OutlinedTextField
+              ref={tipRef}
+              label={'Other amount'}
+              placeholder="add other amount"
+              labelFontSize={scale(12)}
+              fontSize={scale(12)}
+              textAlignVertical="top"
+              multiline={false}
+              maxLength={30}
+              textColor={currentTheme.fontMainColor}
+              baseColor={currentTheme.fontSecondColor}
+              errorColor={currentTheme.textErrorColor}
+              tintColor={currentTheme.iconColorPink}
+              labelOffset={{ y1: -5 }}
+              labelTextStyle={{
+                fontSize: scale(12),
+                paddingTop: scale(1)
+              }}
+            />
           </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onTipping}
+            style={styles(currentTheme).buttonContainer}>
+            <TextDefault textColor={currentTheme.buttonText} H5 bold uppercase>
+              {i18n.t('apply')}
+            </TextDefault>
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         style={{

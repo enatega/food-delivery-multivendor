@@ -43,9 +43,9 @@ function RateAndReview(props) {
       headerRight: null,
       headerTitleContainerStyle: {
         marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        backgroundColor: currentTheme.black,
         borderRadius: 30,
         marginLeft: 0
       },
@@ -146,7 +146,7 @@ function RateAndReview(props) {
         </View>
         <View
           style={{
-            backgroundColor: 'black',
+            backgroundColor: currentTheme.black,
             height: 0.5,
             width: '90%',
             alignSelf: 'center'

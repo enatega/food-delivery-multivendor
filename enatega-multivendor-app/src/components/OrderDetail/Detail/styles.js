@@ -4,8 +4,8 @@ import { verticalScale } from '../../../utils/scaling'
 const { width: WIDTH } = Dimensions.get('window')
 export default StyleSheet.create({
   container: theme => ({
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
     alignItems: 'center',
     backgroundColor: theme.white
   }),
@@ -24,21 +24,24 @@ export default StyleSheet.create({
     color: theme.white,
     fontFamily: fontStyles.MuseoSans500
   }),
-  shadowBox: theme => ({
-    elevation: 1,
-    shadowColor: theme.shadow,
-    shadowOffset: {
-      width: 0,
-      height: -verticalScale(2)
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: verticalScale(2),
-    borderRadius: 20,
-    backgroundColor: theme.white
-  }),
+  // shadowBox: theme => ({
+  //   elevation: 1,
+  //   shadowColor: theme.shadow,
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: -verticalScale(2)
+  //   },
+  //   shadowOpacity: 0.5,
+  //   shadowRadius: verticalScale(2),
+  //   borderRadius: 20,
+  //   backgroundColor: theme.white
+  // }),
+  orderDetailsContainer: {
+    paddingVertical: 20
+  },
   addressContainer: {
-    margin: 20,
-    paddingVertical: 25,
+    // margin: 20,
+    // paddingVertical: 25,
     width: WIDTH - 20,
     paddingLeft: 15
   },

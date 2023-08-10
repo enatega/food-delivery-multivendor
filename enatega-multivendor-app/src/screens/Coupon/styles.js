@@ -28,25 +28,30 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.horizontalLine : 'grey'
     },
     upperContainer: {
-      backgroundColor: 'white',
       width: '95%',
-      paddingLeft: scale(10),
-      paddingRight: scale(10),
-      height: verticalScale(70),
+      height: verticalScale(80),
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
+      backgroundColor: props !== null ? props.white : 'white',
       justifyContent: 'space-between',
-      borderRadius: scale(15)
+      paddingLeft: scale(10),
+      paddingRight: scale(10),
+      borderRadius: scale(6),
+      marginTop: scale(30)
+    },
+    innerContainer: {
+      width: '70%',
+      paddingTop: scale(10)
     },
     buttonContainer: {
       width: '25%',
-      height: '40%',
-      borderRadius: scale(10),
-      ...alignment.MTmedium,
+      height: '55%',
       justifyContent: 'center',
       alignItems: 'center',
+      borderRadius: scale(6),
       backgroundColor: props !== null ? props.buttonBackground : 'pink'
+      // ...alignment.MTsmall
     }
   })
 export default styles

@@ -29,7 +29,7 @@ const styles = (props = null) =>
     },
     upperContainer: {
       width: '95%',
-      height: verticalScale(60),
+      height: verticalScale(80),
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
@@ -39,6 +39,10 @@ const styles = (props = null) =>
       paddingRight: scale(10),
       borderRadius: scale(6),
       marginTop: scale(30)
+    },
+    innerContainer: {
+      width: '70%',
+      paddingTop: scale(10)
     },
     buttonContainer: {
       width: '25%',

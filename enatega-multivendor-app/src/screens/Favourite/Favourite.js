@@ -67,8 +67,8 @@ function Favourite() {
       headerRight: null,
       headerTitleContainerStyle: {
         marginTop: scale(10),
-        paddingLeft: scale(10),
-        paddingRight: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
         borderRadius: scale(10),
         height: scale(28),
         backgroundColor: currentTheme.black,
@@ -104,6 +104,7 @@ function Favourite() {
       )
     })
   }, [navigation])
+
   // useLayoutEffect(() => {
   //   navigation.setOptions(screenOptions(currentTheme.headerText))
   // }, [navigation])
@@ -116,13 +117,17 @@ function Favourite() {
             <EmptyCart width={scale(200)} height={scale(200)} />
           </View>
           <View style={styles().descriptionEmpty}>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder center>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              bolder
+              center
+              B700>
               {i18n.t('titleEmptyFav')}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontSecondColor} center>
               {i18n.t('emptyFavDesc')}
             </TextDefault>
-          </View>
+        </View>
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
@@ -133,7 +138,7 @@ function Favourite() {
               })
             }>
             <TextDefault
-              textColor={currentTheme.buttonText}
+              textColor={currentTheme.black}
               bolder
               B700
               center

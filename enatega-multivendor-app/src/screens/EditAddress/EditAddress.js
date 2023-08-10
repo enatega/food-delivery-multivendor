@@ -109,12 +109,13 @@ function EditAddress(props) {
         borderBottomRightRadius: 20
       },
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
+        marginTop: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        height: scale(28),
+        backgroundColor: currentTheme.black,
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: currentTheme.white,
         borderRadius: scale(10),
         marginLeft: 0
       },

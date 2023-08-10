@@ -12,6 +12,7 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { Entypo } from '@expo/vector-icons'
+import { scale } from '../../utils/scaling'
 function Payment(props) {
   const { paymentMethod, coupon } = props.route.params
   const inset = useSafeAreaInsets()
@@ -51,9 +52,9 @@ function Payment(props) {
       },
       headerTitleContainerStyle: {
         marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        backgroundColor: currentTheme.black,
         borderRadius: 30,
         marginLeft: 0
       },

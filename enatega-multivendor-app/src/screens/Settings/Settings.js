@@ -6,7 +6,8 @@ import {
   Platform,
   Linking,
   StatusBar,
-  Button
+  Button,
+  Text
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Updates from 'expo-updates'
@@ -136,12 +137,13 @@ function Settings(props) {
       headerTitle: i18n.t('titleSettings'),
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(10),
-        paddingRight: scale(10),
-        backgroundColor: 'black',
+        marginTop: scale(8),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        height: scale(30),
+        backgroundColor: currentTheme.black,
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: currentTheme.white,
         borderRadius: scale(10),
         marginLeft: 0
       },
@@ -292,20 +294,18 @@ function Settings(props) {
                 <TextDefault
                   numberOfLines={1}
                   textColor={currentTheme.fontSecondColor}>
-                  Language
+                  Language Setting
                 </TextDefault>
               </View>
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => modalVisibleSetter(true)}
                 style={styles().button}>
-                <TextDefault
-                  textColor={currentTheme.tagColor}
-                  small
-                  B700
-                  bolder>
-                  Edit
-                </TextDefault>
+                <MaterialIcons
+                  name="edit"
+                  size={25}
+                  color={currentTheme.tagColor}
+                />
               </TouchableOpacity>
             </View>
             <TextDefault textColor={currentTheme.fontMainColor} bolder H5 B700>
@@ -355,7 +355,7 @@ function Settings(props) {
           </TouchableOpacity>
           <Divider
             style={{
-              backgroundColor: 'black',
+              backgroundColor: currentTheme.black,
               width: '90%',
               alignSelf: 'center'
             }}
@@ -393,7 +393,7 @@ function Settings(props) {
           </TouchableOpacity>
           <Divider
             style={{
-              backgroundColor: 'black',
+              backgroundColor: currentTheme.black,
               width: '90%',
               alignSelf: 'center'
             }}
@@ -420,7 +420,7 @@ function Settings(props) {
           </TouchableOpacity>
           <Divider
             style={{
-              backgroundColor: 'black',
+              backgroundColor: currentTheme.black,
               width: '90%',
               alignSelf: 'center'
             }}
@@ -430,14 +430,17 @@ function Settings(props) {
             onPress={() => toggleTheme()}
             style={[styles(currentTheme).notificationContainer]}>
             <View style={styles().notificationChekboxContainer}>
-              <Ionicons name="trash-outline" size={30} color={'red'} />
-              <Button
-                color={'red'}
-                title="DELETE ACCOUNT"
-                onPress={() => {
-                  modalizeRef.current.open('top')
-                }}
-              />
+              <View style={styles().buttonContainer}>
+                <TouchableOpacity
+                  style={styles().deleteButton}
+                  onPress={() => {
+                    modalizeRef.current.open('top')
+                  }}>
+                  <Ionicons name="trash-outline" size={30} color={'white'} />
+                  <Text style={styles().deleteButtonText}>DELETE ACCOUNT</Text>
+                </TouchableOpacity>
+              </View>
+              {/* <Button color={'red'} /> */}
             </View>
           </TouchableOpacity>
         </View>

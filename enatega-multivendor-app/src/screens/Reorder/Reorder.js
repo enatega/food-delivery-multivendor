@@ -31,9 +31,9 @@ function Reorder(props) {
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
         marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        backgroundColor: currentTheme.black,
         borderRadius: 30,
         marginLeft: 0
       },

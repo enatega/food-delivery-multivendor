@@ -34,6 +34,8 @@ import { useFocusEffect } from '@react-navigation/native'
 import Analytics from '../../utils/analytics'
 import { Feather } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
 const UPDATEUSER = gql`
   ${updateUser}
 `
@@ -74,18 +76,17 @@ function Profile(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        height: scale(30),
+        marginTop: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        height: scale(28),
         backgroundColor: currentTheme.black,
-        borderRadius: scale(10),
-        borderColor: currentTheme.white,
         borderWidth: 1,
+        borderColor: currentTheme.white,
+        borderRadius: scale(10),
         marginLeft: 0
       },
       headerStyle: {
-        fontColor: currentTheme.headerText,
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
         shadowRadius: 0
@@ -94,7 +95,26 @@ function Profile(props) {
       closeIcon: toggleView,
       closeModal: setToggleView,
       modalSetter: setModalVisible,
-      passwordButton: setShowPass
+      passwordButton: setShowPass,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation, showPass, toggleView])
 

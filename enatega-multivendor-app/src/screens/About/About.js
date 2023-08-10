@@ -180,7 +180,7 @@ function About(props) {
               marginHorizontal: 5,
               zIndex: 1,
               elevation: 1,
-              backgroundColor: 'black',
+              backgroundColor: currentTheme.black,
               padding: 10,
               borderRadius: 10
             }}>

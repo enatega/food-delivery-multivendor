@@ -80,8 +80,8 @@ function ItemDetail(props) {
       title: 'Customize',
       headerTitleContainerStyle: {
         marginTop: scale(10),
-        paddingLeft: scale(10),
-        paddingRight: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
         borderRadius: scale(10),
         height: scale(35),
         backgroundColor: currentTheme.customizeOpacityBtn,
@@ -314,7 +314,8 @@ function ItemDetail(props) {
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={100}>
+          // keyboardVerticalOffset={100}
+        >
           {!!food.image && <ImageHeader image={food.image} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -369,9 +370,6 @@ function ItemDetail(props) {
                 textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}
-                // labelFontSize={scale(6)}
-                // fontSize={scale(12)}
-                // labelHeight={50}
                 maxLength={144}
                 textColor={currentTheme.fontMainColor}
                 baseColor={currentTheme.lightHorizontalLine}
@@ -381,8 +379,8 @@ function ItemDetail(props) {
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-        <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
       </View>
+      <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
       <View
         style={{
           paddingBottom: inset.bottom,

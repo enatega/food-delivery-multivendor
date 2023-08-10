@@ -48,7 +48,8 @@ export const theme = {
     starRating: '#E2C077',
     inputPlaceHolder: '#F3F4F8',
     transparent: '#00000000',
-    customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)'
+    customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
+    deleteButton: '#fe0000'
   },
   Dark: {
     black: '#000',

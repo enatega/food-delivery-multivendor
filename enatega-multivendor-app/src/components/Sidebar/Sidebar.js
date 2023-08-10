@@ -9,19 +9,8 @@ import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import styles from './styles'
 import Analytics from '../../utils/analytics'
+
 const datas = [
-  {
-    title: 'titleFavourite',
-    icon: 'heart',
-    navigateTo: 'Favourite',
-    isAuth: true
-  },
-  {
-    title: 'titleOrders',
-    icon: 'layers',
-    navigateTo: 'MyOrders',
-    isAuth: true
-  },
   {
     title: 'titleProfile',
     icon: 'user',
@@ -35,9 +24,15 @@ const datas = [
     isAuth: true
   },
   {
-    title: 'titleHelp',
-    icon: 'question',
-    navigateTo: 'Help',
+    title: 'titleFavourite',
+    icon: 'heart',
+    navigateTo: 'Favourite',
+    isAuth: true
+  },
+  {
+    title: 'titleOrders',
+    icon: 'layers',
+    navigateTo: 'MyOrders',
     isAuth: true
   },
   {
@@ -50,6 +45,12 @@ const datas = [
     title: 'titleSettings',
     icon: 'settings',
     navigateTo: 'Settings',
+    isAuth: true
+  },
+  {
+    title: 'titleHelp',
+    icon: 'question',
+    navigateTo: 'Help',
     isAuth: true
   }
 ]
@@ -78,6 +79,7 @@ function SidebBar(props) {
           {datas.map((dataItem, ind) => (
             <View key={ind} style={styles().item}>
               <SideDrawerItems
+              style={styles().iconContainer}
                 onPress={async () => {
                   if (dataItem.isAuth && !isLoggedIn) {
                     props.navigation.navigate('CreateAccount')

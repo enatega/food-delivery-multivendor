@@ -99,14 +99,15 @@ function NewAddress(props) {
         borderBottomRightRadius: 20
       },
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
-        backgroundColor: 'black',
-        borderWidth: 1,
-        borderColor: 'white',
+        marginTop: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        marginLeft: scale(20),
+        height: scale(28),
+        backgroundColor: currentTheme.black,
         borderRadius: scale(10),
-        marginLeft: 0
+        borderColor: currentTheme.white,
+        borderWidth: 1
       },
       headerTitleAlign: 'center',
       headerRight: null,

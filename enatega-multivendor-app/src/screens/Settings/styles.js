@@ -26,6 +26,7 @@ const styles = (props = null) =>
     languageContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      borderRadius: scale(12),
       ...alignment.PRmedium,
       ...alignment.PTlarge,
       ...alignment.PBlarge,
@@ -55,6 +56,25 @@ const styles = (props = null) =>
       flexDirection: 'row',
       flex: 1,
       alignItems: 'center'
+    },
+    buttonContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    deleteButton: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: scale(10),
+      borderRadius: scale(6),
+      backgroundColor: '#fe0000'
+    },
+    deleteButtonText: {
+      color: 'white',
+      fontSize: scale(18),
+      fontWeight: '600'
     },
     versionContainer: {
       width: '100%',

@@ -576,7 +576,7 @@ function Restaurant(props) {
               <TouchableOpacity
                 style={styles(currentTheme).dealSection}
                 activeOpacity={0.7}
-                // Link here screen iwth itemDetail screen by passing food as parameter.
+                // Link here screen with itemDetail screen by passing food as parameter.
                 onPress={() =>
                   onPressItem({
                     ...item,
@@ -644,8 +644,7 @@ function Restaurant(props) {
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles(currentTheme).button}
-                onPress={() => navigation.navigate('Cart')}
-              >
+                onPress={() => navigation.navigate('Cart')}>
                 <View style={styles().buttontLeft}>
                   <Animated.View
                     style={[
