@@ -100,7 +100,7 @@ function About(props) {
                 <View key={index} style={styles().timingRow}>
                   <TextDefault
                     style={{ width: scale(140) }}
-                    textColor="black"
+                    textColor={currentTheme.black}
                     large>
                     {v.day}{' '}
                   </TextDefault>
@@ -137,20 +137,7 @@ function About(props) {
                 themeContext.ThemeValue === 'Dark' ? mapStyle : null
               }
               provider={PROVIDER_GOOGLE}></MapView>
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                zIndex: 1,
-                translateX: -25,
-                translateY: -25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                transform: [{ translateX: -25 }, { translateY: -25 }]
-              }}>
+            <View style={styles().marker}>
               <CustomMarker
                 width={40}
                 height={40}
@@ -175,19 +162,11 @@ function About(props) {
         ItemSeparatorComponent={line}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <View
-            style={{
-              marginHorizontal: 5,
-              zIndex: 1,
-              elevation: 1,
-              backgroundColor: currentTheme.black,
-              padding: 10,
-              borderRadius: 10
-            }}>
+          <View style={styles().review}>
             <View style={styles().reviewerContainer}>
               <TextDefault
                 style={styles().reviewerName}
-                textColor={'white'}
+                textColor={currentTheme.white}
                 bolder>
                 {item.order.user.name}
               </TextDefault>
@@ -210,7 +189,7 @@ function About(props) {
                           key={index}
                           name="star"
                           size={scale(13)}
-                          color={'white'}
+                          color={currentTheme.white}
                         />
                       )
                     }

@@ -20,7 +20,8 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.8,
       shadowRadius: verticalScale(2),
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      elevation: 10,
+      backgroundColor: props !== null ? props.themeBackground : '#a92d2d',
       justifyContent: 'center',
       alignItems: 'center'
     },

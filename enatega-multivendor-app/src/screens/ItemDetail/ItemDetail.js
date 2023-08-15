@@ -314,8 +314,7 @@ function ItemDetail(props) {
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          // keyboardVerticalOffset={100}
-        >
+          keyboardVerticalOffset={Platform.OS === 'ios' ? `${0}` : `${100}`}>
           {!!food.image && <ImageHeader image={food.image} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -380,7 +379,10 @@ function ItemDetail(props) {
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
-      <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
+
+      <View style={{ backgroundColor: currentTheme.themeBackground }}>
+        <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
+      </View>
       <View
         style={{
           paddingBottom: inset.bottom,

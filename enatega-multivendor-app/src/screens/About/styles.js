@@ -119,6 +119,27 @@ const styles = (props = null) =>
       padding: 10,
       marginBottom: 10,
       width: '90%'
+    },
+    marker: {
+      width: 50,
+      height: 50,
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      zIndex: 1,
+      translateX: -25,
+      translateY: -25,
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: -25 }, { translateY: -25 }]
+    },
+    review: {
+      marginHorizontal: 5,
+      zIndex: 1,
+      elevation: 1,
+      backgroundColor: 'black',
+      padding: 10,
+      borderRadius: 10
     }
   })
 export default styles
