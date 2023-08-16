@@ -29,7 +29,7 @@ function ImageTextCenterHeader(props, ref) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
+ 
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
@@ -82,19 +82,20 @@ function ImageTextCenterHeader(props, ref) {
         styles(currentTheme).mainContainer,
         {
           height: props.height,
-          backgroundColor: props.loading ? 'transparent' : null
+          backgroundColor: props.loading ? 'transparent' : 'null',
         }
       ]}>
       <Animated.View
-        style={{ height: Animated.sub(props.height, TOP_BAR_HEIGHT) }}>
+      
+        style={{ height: Animated.sub(props.height, TOP_BAR_HEIGHT)}}>
         <Animated.Image
           resizeMode="cover"
           source={{ uri: aboutObject.restaurantImage }}
           style={[
             styles().flex,
             {
-              opacity: props.opacity
-            }
+              opacity: props.opacity,
+            },
           ]}
         />
         <Animated.View style={styles().overlayContainer}>
@@ -155,13 +156,13 @@ function ImageTextCenterHeader(props, ref) {
                         tab: true
                       })
                     }}>
-                    <AnimatedIon
+                    {<AnimatedIon
                       name="ios-information-circle-outline"
                       style={{
                         color: props.black,
                         fontSize: props.iconSize
                       }}
-                    />
+                    />}
                   </AnimatedBorderless>
                 </>
               )}

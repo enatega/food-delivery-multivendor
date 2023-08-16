@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
+//import ImageHeader from '../../components/Restaurant/ImageHeader'
 import styles from './styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -217,13 +218,16 @@ function About(props) {
         styles().flex,
         { backgroundColor: currentTheme.headerMenuBackground }
       ]}>
-      <ImageHeader
+      {<ImageHeader
         iconColor={currentTheme.iconColorPink}
         svgNameL="leftArrow"
         restaurantImage={restaurantObject.restaurantImage}
         iconBackColor={currentTheme.white}
-      />
-
+        restaurantName={restaurantObject.restaurantName}
+        deliveryTime={restaurantObject.deliveryTime}
+        total={restaurantObject.total}
+        rating={restaurantObject.reviews[0].rating}
+      />}
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         {/* <View style={styles(currentTheme).restaurantContainer}>
           <TextDefault

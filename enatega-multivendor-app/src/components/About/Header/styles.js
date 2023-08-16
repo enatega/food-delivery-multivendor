@@ -21,7 +21,9 @@ const styles = (props = null) =>
     overlayContainer: {
       position: 'absolute',
       width: '100%',
-      height: '100%'
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
       //backgroundColor: 'rgba(0,0,0,0.3)'
     },
     touchArea: {
@@ -34,6 +36,12 @@ const styles = (props = null) =>
       alignItems: 'center',
       backgroundColor: props != null ? props : '#FFF',
       borderRadius: scale(15)
+    },
+    deliveryBox: {
+      color: 'white',
+      backgroundColor: 'black',
+      borderRadius: scale(5),
+      padding: scale(5)
     }
   })
 export default styles
