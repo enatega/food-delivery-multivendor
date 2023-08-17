@@ -95,6 +95,8 @@ function ImageTextCenterHeader(props, ref) {
             styles().flex,
             {
               opacity: props.opacity,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20
             },
           ]}
         />
