@@ -11,9 +11,10 @@ const styles = (props = null) =>
       width: '100%',
       flex: 1,
       alignItems: 'center',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      position: 'relative'
-      // padding: scale(10)
+      backgroundColor: 'white',
+      marginTop: scale(20),
+      paddingBottom: scale(20),
+      borderRadius: scale(20)
     },
     subContainerImage: {
       width: '100%',
@@ -101,12 +102,12 @@ const styles = (props = null) =>
       fontWeight: '300',
       textAlign: 'justify'
     },
-    // line: {
-    //   width: '80%',
-    //   alignSelf: 'flex-end',
-    //   borderBottomColor: props !== null ? 'transparent' : 'transparent',
-    //   borderBottomWidth: StyleSheet.hairlineWidth
-    // },
+    line: {
+      width: '80%',
+      alignSelf: 'flex-end',
+      borderBottomColor: props !== null ? 'transparent' : 'transparent',
+      borderBottomWidth: StyleSheet.hairlineWidth
+    },
     buttonsAddress: {
       width: '20%',
       display: 'flex',

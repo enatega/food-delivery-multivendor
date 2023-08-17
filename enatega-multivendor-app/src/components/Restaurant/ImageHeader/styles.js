@@ -83,15 +83,15 @@ const styles = (props = null) =>
       width: '100%',
       height: '100%',
       // justifyContent: 'center',
-      zIndex: 1,
-      backgroundColor: 'rgba(0,0,0,0.15)',
+      //zIndex: 1,
+      backgroundColor: 'rgba(0,0,0,0.01)',
       ...alignment.PRsmall,
       ...alignment.PLsmall
     },
     headerTitle: {
       ...textStyles.H5,
       ...textStyles.Bolder,
-      color: props != null ? props.fontWhite : 'white',
+      color: props != null ? props.black : 'black',
       flex: 1,
       textAlign: 'center'
     },

@@ -29,7 +29,7 @@ function ImageTextCenterHeader(props, ref) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
- 
+
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
@@ -82,12 +82,14 @@ function ImageTextCenterHeader(props, ref) {
         styles(currentTheme).mainContainer,
         {
           height: props.height,
-          backgroundColor: props.loading ? 'transparent' : 'null',
+          backgroundColor: props.loading ? 'transparent' : 'null'
         }
       ]}>
       <Animated.View
-      
-        style={{ height: Animated.sub(props.height, TOP_BAR_HEIGHT)}}>
+        style={{
+          height: Animated.sub(props.height, TOP_BAR_HEIGHT),
+          backgroundColor: 'white'
+        }}>
         <Animated.Image
           resizeMode="cover"
           source={{ uri: aboutObject.restaurantImage }}
@@ -96,9 +98,14 @@ function ImageTextCenterHeader(props, ref) {
             {
               opacity: props.opacity,
               borderBottomLeftRadius: 20,
+<<<<<<< HEAD
               borderBottomRightRadius: 20,
               
             },
+=======
+              borderBottomRightRadius: 20
+            }
+>>>>>>> 47cf434150fba55499b79d939bec93b69951b0e8
           ]}
         />
         <Animated.View style={styles().overlayContainer}>
@@ -159,13 +166,15 @@ function ImageTextCenterHeader(props, ref) {
                         tab: true
                       })
                     }}>
-                    {<AnimatedIon
-                      name="ios-information-circle-outline"
-                      style={{
-                        color: props.black,
-                        fontSize: props.iconSize
-                      }}
-                    />}
+                    {
+                      <AnimatedIon
+                        name="ios-information-circle-outline"
+                        style={{
+                          color: props.black,
+                          fontSize: props.iconSize
+                        }}
+                      />
+                    }
                   </AnimatedBorderless>
                 </>
               )}
