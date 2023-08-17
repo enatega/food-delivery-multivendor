@@ -21,7 +21,6 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import Animated from 'react-native-reanimated'
 
-
 // constants
 const REVIEWORDER = gql`
   ${reviewOrder}
@@ -42,9 +41,9 @@ function RateAndReview(props) {
   })
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      headerTitle: "",
+      headerTitle: '',
       headerRight: null,
-      
+
       headerTransparent: true,
       headerTitleAlign: 'center',
       headerRight: null,
@@ -111,33 +110,48 @@ function RateAndReview(props) {
           styles().flex,
           { backgroundColor: currentTheme.themeBackground }
         ]}>
-        <View style={{display: 'flex'}}>
+        <View style={{ display: 'flex' }}>
           <ImageHeader image={props.route.params.restaurant.image} />
-          <View style={{backgroundColor: 'rgba(0, 0, 0, 0.74)', padding: 10, borderRadius: 10, borderColor: 'white', borderWidth: 1, width: '45%',
-            alignItems: 'center', alignSelf: 'center', marginBottom: 80, marginTop: -140}}>
-              <TextDefault
-                H4
-                bolder
-                Center
-                textColor={currentTheme.fontWhite}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                >
-                Rate Your Order
-              </TextDefault>
-              {!props.loading && (
-                <View style={{padding: scale(5)}}>
-                  <TextDefault 
-                 style={{paddingRight: scale(5), paddingLeft: scale(5), marginTop: scale(10)}}
-                 textColor="white"
-                 bold>
-                 {props.route.params.restaurant.name.length > 12
-                  ? `${props.route.params.restaurant.name.slice(0, 15)}...`
-                  : props.route.params.restaurant.name}
+          <View
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.74)',
+              padding: scale(10),
+              borderRadius: scale(10),
+              borderColor: 'white',
+              borderWidth: 1,
+              width: '45%',
+              alignItems: 'center',
+              alignSelf: 'center',
+              marginBottom: scale(80),
+              marginTop: scale(-140)
+            }}>
+            <TextDefault
+              H4
+              bolder
+              Center
+              textColor={currentTheme.fontWhite}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              Rate Your Order
             </TextDefault>
-              </View>)} 
-          </View>   
-        </View>   
+            {!props.loading && (
+              <View style={{ padding: scale(5) }}>
+                <TextDefault
+                  style={{
+                    paddingRight: scale(5),
+                    paddingLeft: scale(5),
+                    marginTop: scale(10)
+                  }}
+                  textColor="white"
+                  bold>
+                  {props.route.params.restaurant.name.length > 12
+                    ? `${props.route.params.restaurant.name.slice(0, 15)}...`
+                    : props.route.params.restaurant.name}
+                </TextDefault>
+              </View>
+            )}
+          </View>
+        </View>
         <View style={styles().reviewTextContainer}>
           <View style={styles().reviewTextSubContainer}>
             <View style={[styles().reviewTextContainerText]}>

@@ -98,14 +98,8 @@ function ImageTextCenterHeader(props, ref) {
             {
               opacity: props.opacity,
               borderBottomLeftRadius: 20,
-<<<<<<< HEAD
-              borderBottomRightRadius: 20,
-              
-            },
-=======
               borderBottomRightRadius: 20
             }
->>>>>>> 47cf434150fba55499b79d939bec93b69951b0e8
           ]}
         />
         <Animated.View style={styles().overlayContainer}>
