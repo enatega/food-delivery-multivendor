@@ -172,7 +172,6 @@ function Item(props) {
                   {'Min'}
                 </TextDefault>
               </TextDefault>
-              <View style={styles(currentTheme).verticalLine} />
             </View>
           </View>
         </View>

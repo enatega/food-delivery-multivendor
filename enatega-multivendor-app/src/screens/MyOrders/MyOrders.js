@@ -51,7 +51,7 @@ function MyOrders(props) {
   }, [])
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+      StatusBar.setBackgroundColor(currentTheme.themeBackground)
     }
     StatusBar.setBarStyle('light-content')
   })

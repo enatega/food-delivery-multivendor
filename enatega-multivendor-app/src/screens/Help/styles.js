@@ -25,7 +25,7 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderColor: '#d8d8d874',
       borderRadius: scale(16),
-      backgroundColor: '#f5f5f5',
+      backgroundColor: 'white',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',

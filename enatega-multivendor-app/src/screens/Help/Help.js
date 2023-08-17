@@ -85,7 +85,7 @@ function Help(props) {
       style={styles(currentTheme).flex}>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={currentTheme.headerBackground}
+        backgroundColor={currentTheme.themeBackground}
       />
       <View style={styles(currentTheme).flex}>
         <View style={styles().mainContainer}>

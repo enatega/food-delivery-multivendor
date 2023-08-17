@@ -30,7 +30,7 @@ const ActiveOrders = ({
   return (
     <React.Fragment>
       {showActiveHeader && (
-        <Heading headerName="Active Order" textWidth="40%" />
+        <Heading headerName="Active Order" textWidth="90%" />
       )}
       {activeOrders.map((item, index) => (
         <Item
@@ -40,7 +40,7 @@ const ActiveOrders = ({
           currentTheme={currentTheme}
         />
       ))}
-      {showPastHeader && <Heading headerName="Past Order" textWidth="34%" />}
+      {showPastHeader && <Heading headerName="Past Order" textWidth="90%" />}
     </React.Fragment>
   )
 }
