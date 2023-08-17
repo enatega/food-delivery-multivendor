@@ -89,14 +89,14 @@ function MyOrders(props) {
           </View>
           <View style={styles().descriptionEmpty}>
             <TextDefault
-              style={{ ...alignment.MBsmall }}
+              style={{ ...alignment.MBlarge }}
               textColor={currentTheme.fontMainColor}
               bolder
               center
-              H4>
+              H2>
               No orders yet
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontSecondColor} center>
+            <TextDefault textColor={currentTheme.fontMainColor} bold center H5  style={{ ...alignment.MBxLarge }}>
               You don&#39;t have any past order yet. Try one of our awesome
               restaurants and place your first order!
             </TextDefault>
@@ -111,7 +111,8 @@ function MyOrders(props) {
               })
             }>
             <TextDefault
-              textColor={currentTheme.buttonText}
+              style={{ ...alignment.Psmall }}
+              textColor={currentTheme.fontMainColor}
               bolder
               B700
               center

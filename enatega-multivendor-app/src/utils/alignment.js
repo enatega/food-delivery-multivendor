@@ -4,6 +4,7 @@ const XSMALL = 5
 const SMALL = 10
 const MEDIUM = 15
 const LARGE = 20
+const XLARGE = 50
 export const alignment = {
   MxSmall: {
     margin: scale(XSMALL)
@@ -67,7 +68,9 @@ export const alignment = {
   MLlarge: {
     marginLeft: scale(LARGE)
   },
-
+  MBxLarge:{
+    marginBottom: scale(XLARGE)
+  },
   // Padding
   PxSmall: {
     padding: scale(XSMALL)

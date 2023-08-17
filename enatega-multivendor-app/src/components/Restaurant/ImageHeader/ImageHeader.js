@@ -96,7 +96,8 @@ function ImageTextCenterHeader(props, ref) {
             {
               opacity: props.opacity,
               borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20
+              borderBottomRightRadius: 20,
+              
             },
           ]}
         />

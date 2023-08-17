@@ -40,11 +40,13 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
+      width: '85%',
       padding: scale(10),
       backgroundColor: props !== null ? props.buttonBackground : 'grey',
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'center'
+      alignSelf: 'center',
+      borderRadius: scale(10)
     },
     subContainer: {
       flex: 1,
