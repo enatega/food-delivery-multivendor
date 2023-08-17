@@ -374,7 +374,7 @@ function NewAddress(props) {
                           <TextDefault
                             textColor={
                               selectedLabel === label.value
-                                ? currentTheme.white
+                                ? currentTheme.iconColorPink
                                 : currentTheme.fontMainColor
                             }
                             bold
