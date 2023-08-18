@@ -14,7 +14,7 @@ export default {
     paddingLeft: scale(5)
   },
   textContainer: {
-    maxWidth: '95%',
+    maxWidth: '100%',
     paddingTop: scale(2),
     paddingBottom: scale(2)
   }
