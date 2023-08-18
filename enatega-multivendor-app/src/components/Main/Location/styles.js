@@ -1,4 +1,3 @@
-import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 
 export default {
@@ -9,7 +8,7 @@ export default {
   },
   headerContainer: {
     height: '100%',
-    width: '100%',
+    width: '95%',
     flexDirection: 'column-reverse',
     paddingLeft: scale(5)
   },
