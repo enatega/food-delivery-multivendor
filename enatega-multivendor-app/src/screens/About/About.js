@@ -226,7 +226,8 @@ function About(props) {
         restaurantName={restaurantObject.restaurantName}
         deliveryTime={restaurantObject.deliveryTime}
         total={restaurantObject.total}
-        rating={restaurantObject.reviews[0].rating}
+        rating={restaurantObject.reviews.length == 0 ? 0 : restaurantObject.reviews[0].rating}
+
       />}
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         {/* <View style={styles(currentTheme).restaurantContainer}>
