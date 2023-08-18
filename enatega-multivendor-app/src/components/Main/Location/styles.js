@@ -4,11 +4,11 @@ export default {
   headerTitleContainer: {
     flex: 1,
     height: '100%',
-    width: '100%'
+    width: '95%'
   },
   headerContainer: {
     height: '100%',
-    width: '95%',
+    width: '100%',
     flexDirection: 'column-reverse',
     paddingLeft: scale(5)
   },
