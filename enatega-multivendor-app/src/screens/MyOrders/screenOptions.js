@@ -13,11 +13,11 @@ const navigationOptions = headerText => ({
   headerTitleAlign: 'center',
   headerRight: null,
   headerTitleContainerStyle: {
-    marginTop: scale(10),
-    paddingLeft: scale(10),
-    paddingRight: scale(10),
+    marginTop: '1%',
+    paddingLeft: scale(25),
+    paddingRight: scale(25),
+    height: '75%',
     borderRadius: scale(10),
-    height: scale(28),
     backgroundColor: 'black',
     borderWidth: 1,
     borderColor: 'white'

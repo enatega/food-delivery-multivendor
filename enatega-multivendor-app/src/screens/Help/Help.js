@@ -44,11 +44,11 @@ function Help(props) {
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleContainerStyle: {
-        marginTop: scale(10),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
         borderRadius: scale(10),
-        height: scale(28),
         backgroundColor: currentTheme.black,
         borderWidth: 1,
         borderColor: 'white'

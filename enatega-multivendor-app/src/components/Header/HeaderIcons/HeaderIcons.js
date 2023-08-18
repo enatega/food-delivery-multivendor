@@ -218,8 +218,7 @@ function RightButton(props) {
     )
   } else if (props.icon === 'cart') {
     return (
-      <View
-        style={[cartCount < 1 && alignment.PRxSmall, { flexDirection: 'row' }]}>
+      <View style={{ flexDirection: 'row' }}>
         <HeaderBackButton
           pressColorAndroid={route.name === 'Main' && rippleColor}
           labelVisible={false}
@@ -228,7 +227,6 @@ function RightButton(props) {
               {BackButton({ iconColor: props.iconColor, icon: 'fav' })}
             </View>
           )}
-          center
           bolder
           onPress={() =>
             isLoggedIn && profile
@@ -236,7 +234,7 @@ function RightButton(props) {
               : navigation.navigate('CreateAccount')
           }
         />
-        {cartCount > 0 && (
+        {cartCount >= 0 && (
           <HeaderBackButton
             pressColorAndroid={route.name === 'Main' && rippleColor}
             labelVisible={false}
@@ -252,7 +250,7 @@ function RightButton(props) {
         pressColorAndroid={rippleColor}
         labelVisible={false}
         backImage={() => (
-          <View style={[styles().rightContainer, { ...alignment.PRsmall }]}>
+          <View style={[styles().rightContainer]}>
             {BackButton({ iconColor: props.iconColor, icon: 'target' })}
           </View>
         )}

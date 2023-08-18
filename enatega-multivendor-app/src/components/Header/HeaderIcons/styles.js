@@ -15,13 +15,11 @@ const styles = backColor =>
       height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      marginRight: scale(15)
+      ...alignment.PRsmall
     },
     favContainer: {
       height: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      margin: scale(0)
+      justifyContent: 'center'
     },
     imgContainer: {
       width: verticalScale(20),

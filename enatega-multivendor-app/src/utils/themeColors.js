@@ -19,6 +19,7 @@ export const theme = {
     orderUncomplete: '#fe0000',
     horizontalLine: '#949393',
     lightHorizontalLine: '#f0f0f0',
+    firstHeaderBackground: '#F5F5F5',
     buttonBackground: '#6FCF97',
     buttonText: '#FFF',
     buttonBackgroundPink: '#6FCF97',

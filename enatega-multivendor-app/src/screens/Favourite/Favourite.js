@@ -66,11 +66,11 @@ function Favourite() {
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleContainerStyle: {
-        marginTop: scale(10),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
         borderRadius: scale(10),
-        height: scale(28),
         backgroundColor: currentTheme.black,
         borderColor: currentTheme.white,
         borderWidth: 1
@@ -127,7 +127,7 @@ function Favourite() {
             <TextDefault textColor={currentTheme.fontSecondColor} center>
               {i18n.t('emptyFavDesc')}
             </TextDefault>
-        </View>
+          </View>
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}

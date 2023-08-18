@@ -11,11 +11,11 @@ export default {
     height: '100%',
     width: '100%',
     flexDirection: 'column-reverse',
-    paddingLeft: scale(10)
+    paddingLeft: scale(5)
   },
   textContainer: {
-    maxWidth: '100%',
-    ...alignment.PTxSmall,
-    ...alignment.PBxSmall
+    maxWidth: '95%',
+    paddingTop: scale(2),
+    paddingBottom: scale(2)
   }
 }

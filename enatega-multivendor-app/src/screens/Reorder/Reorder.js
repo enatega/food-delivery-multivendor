@@ -3,10 +3,11 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { theme } from '../../utils/themeColors'
 import screenOptions from './screenOptions'
-import { View, TouchableOpacity, ScrollView } from 'react-native'
+import { View, TouchableOpacity, ScrollView, StatusBar } from 'react-native'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { useFocusEffect } from '@react-navigation/native'
 import styles from './styles'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
@@ -22,6 +23,12 @@ function Reorder(props) {
   const currentTheme = theme[themeContext.ThemeValue]
 
   const inset = useSafeAreaInsets()
+  useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+    }
+    StatusBar.setBarStyle('light-content')
+  })
   const [selectedItems, setItems] = useState([])
 
   useLayoutEffect(() => {
@@ -30,11 +37,12 @@ function Reorder(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
         backgroundColor: currentTheme.black,
-        borderRadius: 30,
         marginLeft: 0
       },
       headerStyle: {

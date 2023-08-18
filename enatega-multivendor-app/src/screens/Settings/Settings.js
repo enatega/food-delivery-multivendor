@@ -107,7 +107,7 @@ function Settings(props) {
   }, [])
   useEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+      StatusBar.setBackgroundColor(currentTheme.firstHeaderBackground)
     }
     StatusBar.setBarStyle('light-content')
   }, [])
@@ -137,18 +137,18 @@ function Settings(props) {
       headerTitle: i18n.t('titleSettings'),
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginTop: scale(8),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
-        height: scale(30),
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
         backgroundColor: currentTheme.black,
         borderWidth: 1,
         borderColor: currentTheme.white,
-        borderRadius: scale(10),
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: '#F5F5F5'
+        backgroundColor: currentTheme.firstHeaderBackground
       }
     })
     selectLanguage()

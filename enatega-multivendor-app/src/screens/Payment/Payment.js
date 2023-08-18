@@ -51,11 +51,12 @@ function Payment(props) {
         shadowRadius: 0
       },
       headerTitleContainerStyle: {
-        marginBottom: scale(10),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
         backgroundColor: currentTheme.black,
-        borderRadius: 30,
         marginLeft: 0
       },
 

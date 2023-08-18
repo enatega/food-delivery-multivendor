@@ -39,13 +39,12 @@ function CartAddresses(props) {
       title: i18n.t('myAddresses'),
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        marginTop: scale(10),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
-        marginLeft: scale(20),
-        height: scale(28),
-        backgroundColor: currentTheme.black,
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
         borderRadius: scale(10),
+        backgroundColor: currentTheme.black,
         borderColor: currentTheme.white,
         borderWidth: 1
       },
@@ -108,10 +107,10 @@ function CartAddresses(props) {
             backgroundColor: currentTheme.themeBackground,
             ...alignment.PTlarge
           }}>
-          <View style={styles().width100}>
+          <View style={styles().addressContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles().width100}
+              style={styles().addressContainer}
               onPress={() => {
                 props.navigation.navigate('NewAddress', { location })
               }}>
@@ -120,6 +119,7 @@ function CartAddresses(props) {
                   <View style={[styles().homeIcon]}>
                     <RadioButton
                       size={13}
+                      right
                       outerColor={currentTheme.radioOuterColor}
                       innerColor={currentTheme.radioColor}
                       animation={'bounceIn'}
@@ -159,7 +159,6 @@ function CartAddresses(props) {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles().line} />
         </View>
       )}
       <FlatList
@@ -172,15 +171,7 @@ function CartAddresses(props) {
         )}
         ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
         renderItem={({ item: address }) => (
-          <View
-            style={{
-              width: '90%',
-              alignSelf: 'center',
-              borderRadius: scale(10),
-              backgroundColor: 'white',
-              ...alignment.PTsmall,
-              ...alignment.PBsmall
-            }}>
+          <View style={styles().addressContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles().width100}
