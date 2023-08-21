@@ -15,8 +15,7 @@ import i18n from '../../../i18n'
 const links = [
   {
     title: 'Product Page',
-    url:
-      'https://market.nativebase.io/view/enatega-multivendor-food-backend-app'
+    url: 'https://enatega.com/'
   },
   {
     title: 'Docs',
@@ -24,8 +23,7 @@ const links = [
   },
   {
     title: 'Blog',
-    url:
-      'https://blog.geekyants.com/enatega-multivendor-foodpanda-clone-v1-0-0-e4b4f21ba1c1'
+    url: 'https://ninjascode.com/ninjas-code-blogs/'
   },
   { title: 'About Us', url: 'https://ninjascode.com/pages/ourteam.html' }
 ]
