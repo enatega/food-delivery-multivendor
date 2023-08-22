@@ -119,7 +119,7 @@ function CartAddresses(props) {
                   <View style={[styles().homeIcon]}>
                     <RadioButton
                       size={13}
-                      right
+
                       outerColor={currentTheme.radioOuterColor}
                       innerColor={currentTheme.radioColor}
                       animation={'bounceIn'}

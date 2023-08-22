@@ -34,7 +34,6 @@ const REVIEWORDER = gql`
 `
 
 function RateAndReview(props) {
-  console.log(props.route.params.restaurant)
   const [id] = useState(props.route.params._id ?? null)
   const [rating, setRating] = useState(0)
   const [description, setDescription] = useState('')

@@ -100,8 +100,9 @@ function NewAddress(props) {
       },
       headerTitleContainerStyle: {
         marginTop: '1%',
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
+        marginLeft: '10%',
+        paddingLeft: scale(20),
+        paddingRight: scale(20),
         height: '75%',
         borderRadius: scale(10),
         backgroundColor: currentTheme.black,
