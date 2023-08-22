@@ -149,6 +149,33 @@ function Main(props) {
   const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
+
+    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`;
+    fetch(apiUrl)
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      console.log('Reverse geocoding request failed:', data.error);
+    } else {
+      const address = data.display_name;
+      if (error) navigation.navigate('SelectLocation')
+      else {
+        modalRef.current.close()
+        setLocation({
+          label: 'Current Location',
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          deliveryAddress: address.toString()
+        })
+        setBusy(false)
+      }
+      console.log(data.display_name)
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching reverse geocoding data:', error);
+  });
+  /*
     if (error) navigation.navigate('SelectLocation')
     else {
       modalRef.current.close()
@@ -158,8 +185,8 @@ function Main(props) {
         longitude: coords.longitude,
         deliveryAddress: 'Current Location'
       })
-    }
-    setBusy(false)
+    }*/
+    //setBusy(false)
   }
 
   const modalHeader = () => (
