@@ -1,5 +1,12 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
-import { View, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  ScrollView
+} from 'react-native'
 import gql from 'graphql-tag'
 import Spinner from '../../components/Spinner/Spinner'
 import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
@@ -152,82 +159,84 @@ function RateAndReview(props) {
             )}
           </View>
         </View>
-        <View style={styles().reviewTextContainer}>
-          <View style={styles().reviewTextSubContainer}>
-            <View style={[styles().reviewTextContainerText]}>
-              <TextDefault
-                textColor={currentTheme.fontMainColor}
-                H3
-                bolder
-                style={styles().reviewText}>
-                How was your meal?
-              </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} H5>
-                Was it nice or bad,Lets talk about it
-              </TextDefault>
+        <ScrollView>
+          <View style={styles().reviewTextContainer}>
+            <View style={styles().reviewTextSubContainer}>
+              <View style={[styles().reviewTextContainerText]}>
+                <TextDefault
+                  textColor={currentTheme.fontMainColor}
+                  H3
+                  bolder
+                  style={styles().reviewText}>
+                  How was your meal?
+                </TextDefault>
+                <TextDefault textColor={currentTheme.fontMainColor} H5>
+                  Was it nice or bad,Lets talk about it
+                </TextDefault>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={styles().ratingContainer}>
-          <View style={styles().ratingSubContainer}>
-            <StarRating
-              emptyStarColor={currentTheme.startColor}
-              fullStarColor={currentTheme.startOutlineColor}
-              disabled={false}
-              maxStars={5}
-              rating={rating}
-              selectedStar={onFinishRating}
-            />
+          <View style={styles().ratingContainer}>
+            <View style={styles().ratingSubContainer}>
+              <StarRating
+                emptyStarColor={currentTheme.startColor}
+                fullStarColor={currentTheme.startOutlineColor}
+                disabled={false}
+                maxStars={5}
+                rating={rating}
+                selectedStar={onFinishRating}
+              />
+            </View>
           </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: currentTheme.black,
-            height: 0.5,
-            width: '90%',
-            alignSelf: 'center'
-          }}></View>
+          <View
+            style={{
+              backgroundColor: currentTheme.black,
+              height: 0.5,
+              width: '90%',
+              alignSelf: 'center'
+            }}></View>
 
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          H3
-          bolder
-          style={{ padding: 20, marginTop: 20 }}>
-          Tell about your Experience
-        </TextDefault>
-        <View style={styles().inputContainer}>
-          <View style={styles(currentTheme).inputSubContainer}>
-            <TextInput
-              style={[
-                styles().textinput,
-                { color: currentTheme.fontMainColor }
-              ]}
-              placeholderTextColor={currentTheme.fontSecondColor}
-              onChangeText={onChangeText}
-              labelFontSize={scale(6)}
-              multiline={true}
-              fontSize={scale(12)}
-              labelHeight={10}
-              maxLength={144}
-              placeholder={i18n.t('reviewPlaceholder')}
-            />
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            H3
+            bolder
+            style={{ padding: 20, marginTop: 20 }}>
+            Tell about your Experience
+          </TextDefault>
+          <KeyboardAvoidingView style={styles().inputContainer}>
+            <View style={styles(currentTheme).inputSubContainer}>
+              <TextInput
+                style={[
+                  styles().textinput,
+                  { color: currentTheme.fontMainColor }
+                ]}
+                placeholderTextColor={currentTheme.fontSecondColor}
+                onChangeText={onChangeText}
+                labelFontSize={scale(6)}
+                multiline={true}
+                fontSize={scale(12)}
+                labelHeight={10}
+                maxLength={144}
+                placeholder={i18n.t('reviewPlaceholder')}
+              />
+            </View>
+          </KeyboardAvoidingView>
+          <View style={styles().btnContainer}>
+            <View style={styles().btnSubContainer}>
+              {loadingMutation && <Spinner />}
+              {!loadingMutation && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={onSubmit}
+                  style={styles(currentTheme).btnTouch}>
+                  <TextDefault textColor={currentTheme.black} H3 bold>
+                    {i18n.t('submit')}
+                  </TextDefault>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        </View>
-        <View style={styles().btnContainer}>
-          <View style={styles().btnSubContainer}>
-            {loadingMutation && <Spinner />}
-            {!loadingMutation && (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={onSubmit}
-                style={styles(currentTheme).btnTouch}>
-                <TextDefault textColor={currentTheme.buttonText} H3 bold>
-                  {i18n.t('submit')}
-                </TextDefault>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
+        </ScrollView>
       </View>
       <View
         style={{

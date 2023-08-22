@@ -182,11 +182,11 @@ function Reorder(props) {
                 ? styles(currentTheme).buttonStyles
                 : {
                     ...styles(currentTheme).buttonStyles,
-                    backgroundColor: currentTheme.horizontalLine
+                    backgroundColor: currentTheme.lightHorizontalLine
                   }
             }
             onPress={onAddToCart}>
-            <TextDefault bolder textColor={currentTheme.white}>
+            <TextDefault bolder textColor={currentTheme.black}>
               ADD TO CART
             </TextDefault>
           </TouchableOpacity>

@@ -96,7 +96,12 @@ function MyOrders(props) {
               H2>
               No orders yet
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} bold center H5  style={{ ...alignment.MBxLarge }}>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              bold
+              center
+              H5
+              style={{ ...alignment.MBxLarge }}>
               You don&#39;t have any past order yet. Try one of our awesome
               restaurants and place your first order!
             </TextDefault>
@@ -242,7 +247,7 @@ function MyOrders(props) {
                         props.navigation.navigate('Reorder', { item })
                       }>
                       <TextDefault
-                        textColor={currentTheme.white}
+                        textColor={currentTheme.black}
                         smaller
                         bolder
                         B700

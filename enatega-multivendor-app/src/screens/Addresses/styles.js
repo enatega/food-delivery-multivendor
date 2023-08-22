@@ -54,12 +54,10 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     containerSpace: {
-      backgroundColor: props !== null ? props.cartContainer : 'transparent',
-      ...alignment.PBmedium,
-      ...alignment.PTmedium,
-      // ...alignment.MBsmall,
-      // borderRadius: scale(16),
-      // minHeight: 140,
+      backgroundColor: props !== null ? props.white : 'transparent',
+      margin: scale(10),
+      padding: scale(5),
+      borderRadius: scale(10),
       borderBottomWidth: 1,
       borderBottomColor: '#DAD6D6'
     },
@@ -78,7 +76,7 @@ const styles = (props = null) =>
       width: '70%',
       textAlignVertical: 'bottom',
       fontSize: scale(14),
-      fontWeight: '400'
+      fontWeight: '700'
     },
     midContainer: {
       display: 'flex',

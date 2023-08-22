@@ -2,9 +2,9 @@ import React from 'react'
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 import { mapStyle } from '../../utils/mapStyle'
 import styles from './styles'
-import { Image } from 'react-native'
-import { MapCallout } from './map.callout'
+import { Image, View, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { scale } from '../../utils/scaling'
 
 export default function MapSection({ location, restaurants }) {
   const navigation = useNavigation()
@@ -33,17 +33,29 @@ export default function MapSection({ location, restaurants }) {
             longitude: parseFloat(rest.location.coordinates[0])
           }
           return (
-            <Marker coordinate={coord} key={index}>
+            <Marker
+              coordinate={coord}
+              key={index}
+              onPress={() => {
+                navigation.navigate('Restaurant', { ...rest })
+              }}
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}>
               <Image
                 source={require('../../assets/images/res.png')}
                 width={20}
               />
-              <Callout
-                onPress={() => {
-                  navigation.navigate('Restaurant', { ...rest })
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: 10,
+                  borderRadius: scale(8)
                 }}>
-                <MapCallout rest={rest} />
-              </Callout>
+                <Text>{rest.name}</Text>
+              </View>
             </Marker>
           )
         })}

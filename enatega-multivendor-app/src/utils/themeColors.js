@@ -21,7 +21,7 @@ export const theme = {
     lightHorizontalLine: '#f0f0f0',
     firstHeaderBackground: '#F5F5F5',
     buttonBackground: '#6FCF97',
-    buttonText: '#FFF',
+    buttonText: '#000',
     buttonBackgroundPink: '#6FCF97',
     buttonTextPink: '#FFF',
     fontWhite: '#FFF',
