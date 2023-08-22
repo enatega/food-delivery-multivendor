@@ -1465,7 +1465,7 @@ function Cart(props) {
         <Modalize
           ref={modalRef}
           modalStyle={styles(currentTheme).modal}
-          modalHeight={350}
+          modalHeight={380}
           overlayStyle={styles().overlay}
           handleStyle={styles().handle}
           handlePosition="inside"
