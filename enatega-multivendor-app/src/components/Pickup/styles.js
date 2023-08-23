@@ -50,8 +50,11 @@ const styles = (props = null) => {
       fontSize: 16
     },
     androidDateFormat: {
+      marginTop: 20,
+      marginBottom: 30,
       paddingTop: 5,
-      fontSize: 18
+      fontSize: 25,
+      fontWeight: '500'
     }
   })
 }

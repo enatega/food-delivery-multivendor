@@ -6,18 +6,14 @@ import DatePicker from '@react-native-community/datetimepicker'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
-import { useNavigation } from '@react-navigation/native'
-import { scale } from '../../utils/scaling'
-import { BorderlessButton } from 'react-native-gesture-handler'
 
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const navigation = useNavigation()
   const [showPicker, setShowPicker] = useState(false)
   const currentDate = props.minimumTime
   return (
-    <View style={{ paddingTop: 50 }}>
+    <View style={{ paddingTop: 30 }}>
       {props.isPickedUp ? (
         <Text style={styles().tabHeading}>Select Pickup date and time</Text>
       ) : (
@@ -70,7 +66,7 @@ function PickUp(props) {
             {Platform.OS === 'android' && (
               <FontAwesome
                 name="edit"
-                size={20}
+                size={25}
                 color={theme.Pink.iconColorPink}
               />
             )}
@@ -97,19 +93,6 @@ function PickUp(props) {
           />
         )}
       </View>
-      {/* <TouchableOpacity
-        style={[
-          {
-            margin: scale(20),
-            backgroundColor: currentTheme.buttonBackground,
-            alignItems: 'center',
-            height: scale(35),
-            justifyContent: 'center',
-            borderRadius: scale(10)
-          }
-        ]}>
-        <Text style={{ fontSize: 20, fontWeight: '500' }}>Apply</Text>
-      </TouchableOpacity> */}
     </View>
   )
 }

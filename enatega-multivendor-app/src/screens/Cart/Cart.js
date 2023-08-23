@@ -16,7 +16,8 @@ import {
   StatusBar,
   Platform,
   Alert,
-  Animated
+  Animated,
+  Text
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -32,7 +33,7 @@ import { scale } from '../../utils/scaling'
 import i18n from '../../../i18n'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
-import Triangle from '../../ui/Triangle/Triangle'
+
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
@@ -1465,7 +1466,7 @@ function Cart(props) {
         <Modalize
           ref={modalRef}
           modalStyle={styles(currentTheme).modal}
-          modalHeight={380}
+          modalHeight={Platform.OS === 'android' ? 280 : 420}
           overlayStyle={styles().overlay}
           handleStyle={styles().handle}
           handlePosition="inside"
@@ -1490,6 +1491,23 @@ function Cart(props) {
             setIsPickedUp={setIsPickedUp}
             orderDate={orderDate}
           />
+          <TouchableOpacity
+            onPress={() => {
+              modalRef.current.close()
+            }}
+            style={[
+              {
+                backgroundColor: currentTheme.buttonBackground,
+                alignItems: 'center',
+                height: scale(35),
+                justifyContent: 'center',
+                borderRadius: scale(10),
+                width: '90%',
+                alignSelf: 'center'
+              }
+            ]}>
+            <Text style={{ fontSize: 20, fontWeight: '500' }}>Apply</Text>
+          </TouchableOpacity>
         </Modalize>
       </View>
       <View
