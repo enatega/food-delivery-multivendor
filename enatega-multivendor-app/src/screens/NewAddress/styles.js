@@ -127,6 +127,26 @@ const styles = (props = null) =>
     },
     geoLocation: {
       flexDirection: 'row'
+    },
+    headerBackBtnContainer: {
+      backgroundColor: 'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
+    },
+    imageContainer: {
+      width: scale(50),
+      height: scale(50),
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      zIndex: 1,
+      translateX: scale(-25),
+      translateY: scale(-25),
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: scale(-25) }, { translateY: scale(-25) }]
     }
   })
 export default styles

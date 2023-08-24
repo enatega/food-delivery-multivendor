@@ -7,6 +7,6 @@ const styles = (props = null) =>
       width: width,
       height: height * 0.3,
       marginTop: -30
-    }
+    },
   })
 export default styles

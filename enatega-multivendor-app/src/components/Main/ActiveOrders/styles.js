@@ -120,6 +120,16 @@ const styles = (props = null) =>
       color: 'black',
       fontSize: 16,
       fontWeight: 'bold'
+    },
+    textInnerContainer: {
+      flexDirection: 'row'
+    },
+    activeOrdersContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      marginTop: scale(2),
+      marginBottom: scale(2),
+      paddingLeft: 40
     }
   })
 

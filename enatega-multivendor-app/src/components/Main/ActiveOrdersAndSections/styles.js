@@ -96,6 +96,19 @@ const styles = (props = null) =>
       borderTopRightRadius: scale(20),
       borderTopColor: '#ebebeb',
       borderTopWidth: 3
+    },
+    restaurantImage: {
+      width: scale(220),
+      height: '100%',
+      borderRadius: scale(25),
+      marginTop: 5
+    },
+    restaurantRatingContainer: {
+      marginLeft: scale(2)
+    },
+    restaurantPriceContainer: {
+      marginTop: scale(3), 
+      fontSize: 15
     }
   })
 

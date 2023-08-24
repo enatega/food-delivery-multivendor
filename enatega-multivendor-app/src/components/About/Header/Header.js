@@ -15,7 +15,7 @@ function ImageHeader(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
-  console.log(props.rating)
+
   return (
     <View style={styles().mainContainer}>
       <Image
@@ -24,7 +24,7 @@ function ImageHeader(props) {
         source={{ uri: props.restaurantImage }}
       />
       {/* Fixed Position on image */}
-      <Animated.View style={styles().overlayContainer}>
+      <Animated.View style={styles(currentTheme).overlayContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles(props.iconBackColor).touchArea}
@@ -33,21 +33,18 @@ function ImageHeader(props) {
             name="ios-arrow-back"
             style={{
               color: props.black,
-              fontSize: scale(20)
+              fontSize: scale(20),
+              backgroundColor: 'white',
+              paddingLeft: scale(15),
+              paddingRight: scale(15),
+              paddingBottom: scale(5),
+              paddingTop: scale(5),
+              borderRadius: scale(22)
             }}
           />
         </TouchableOpacity>
         <View
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.74)',
-            padding: 10,
-            borderRadius: 10,
-            borderColor: 'white',
-            borderWidth: 1,
-            width: '45%',
-            alignItems: 'center',
-            alignSelf: 'center'
-          }}>
+          style={styles(currentTheme).deliveryBoxContainer}>
           <TextDefault
             H4
             bolder
@@ -62,7 +59,7 @@ function ImageHeader(props) {
           {!props.loading && (
             <View style={{ padding: scale(5) }}>
               <TextDefault
-                style={{ paddingRight: scale(5), paddingLeft: scale(5) }}
+                style={styles().deliveryBoxText}
                 textColor="white"
                 bold>
                 Delivery {props.deliveryTime} Minute
@@ -71,20 +68,14 @@ function ImageHeader(props) {
           )}
           <TouchableOpacity
             activeOpacity={0.7}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingTop: scale(10),
-              paddingBottom: scale(10)
-            }}>
+            style={styles().ratingContainer}>
             <MaterialIcons
               name="star"
               size={scale(15)}
               color={currentTheme.white}
             />
             <TextDefault
-              style={{ paddingRight: scale(5), paddingLeft: scale(5) }}
+              style={styles().deliveryBoxText}
               textColor="white"
               bold>
               {props.rating} ({props.total})
@@ -92,12 +83,6 @@ function ImageHeader(props) {
           </TouchableOpacity>
         </View>
       </Animated.View>
-      {/*<Animated.View>
-        <Animated.Text
-          numberOfLines={1} style={{color: 'black'}}>
-          Delivery {props.deliveryTime} Minute{' '}
-      </Animated.Text>
-                </Animated.View>*/}
     </View>
   )
 }

@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { StatusBar } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
+import styles from './style'
 
 const navigationOptions = headerText => ({
   headerTitle: i18n.t('titleOrders'),
@@ -30,13 +31,7 @@ const navigationOptions = headerText => ({
     <HeaderBackButton
       backImage={() => (
         <View
-          style={{
-            backgroundColor: 'white',
-            borderRadius: 50,
-            marginLeft: 10,
-            width: 55,
-            alignItems: 'center'
-          }}>
+          style={styles().backBtnContainer}>
           <MaterialIcons name="arrow-back" size={30} color="black" />
         </View>
       )}

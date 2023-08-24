@@ -52,7 +52,6 @@ const Item = ({ item, navigation, currentTheme }) => {
     `,
     { variables: { id: item._id } }
   )
-  console.log('item', item)
   return (
     <TouchableOpacity
       activeOpacity={0.7}

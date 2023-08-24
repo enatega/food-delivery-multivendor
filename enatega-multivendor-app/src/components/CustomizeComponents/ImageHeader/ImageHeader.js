@@ -6,8 +6,8 @@ function ImageHeader(props) {
   return (
     <ImageBackground
       style={styles.backgroundImage}
-      borderBottomLeftRadius={25}
-      borderBottomRightRadius={25}
+      borderBottomLeftRadius={scale(25)}
+      borderBottomRightRadius={scale(25)}
       resizeMode="cover"
       source={{ uri: props.image }}
       

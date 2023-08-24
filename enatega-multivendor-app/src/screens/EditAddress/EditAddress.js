@@ -249,19 +249,7 @@ function EditAddress(props) {
                 })
               }}></MapView>
             <View
-              style={{
-                width: 50,
-                height: 50,
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                zIndex: 1,
-                translateX: -25,
-                translateY: -25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                transform: [{ translateX: -25 }, { translateY: -25 }]
-              }}>
+              style={styles().editAddressImageContainer}>
               <Image
                 source={require('../../assets/images/user.png')}
                 width={20}

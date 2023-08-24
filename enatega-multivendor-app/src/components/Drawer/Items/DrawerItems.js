@@ -25,7 +25,7 @@ function DrawerItems(props) {
         </View>
         <View style={styles.rightContainer}>
           <TextDefault
-            style={{ alignSelf: 'flex-start' }}
+            style={styles.drawerContainer}
             textColor={currentTheme.fontMainColor}
             small
             bold>

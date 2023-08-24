@@ -300,7 +300,7 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <Text style={{ padding: 25, fontSize: 20, fontWeight: '600' }}>
+      <Text style={styles().titleContainer}>
         Personal details
       </Text>
       <View style={styles(currentTheme).formContainer}>
@@ -466,7 +466,7 @@ function Profile(props) {
                     <View>
                       <TextDefault>{profile.phone}</TextDefault>
                     </View>
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <View style={styles().phoneDetailsContainer}>
                       {(profile.phone === '' || !profile.phoneIsVerified) && (
                         <TouchableOpacity
                           onPress={() =>

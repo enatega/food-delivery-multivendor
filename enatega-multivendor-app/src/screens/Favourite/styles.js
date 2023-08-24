@@ -44,6 +44,13 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
+    },
+    backImageContainer: {
+      backgroundColor: 'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
     }
   })
 

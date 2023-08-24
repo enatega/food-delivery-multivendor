@@ -81,6 +81,13 @@ const styles = (props = null) =>
       borderRadius: scale(10),
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    backImageContainer: {
+      backgroundColor: 'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
     }
   })
 export default styles

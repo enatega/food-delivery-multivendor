@@ -93,6 +93,6 @@ const styles = (props = null) =>
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
-    }
+    },
   })
 export default styles

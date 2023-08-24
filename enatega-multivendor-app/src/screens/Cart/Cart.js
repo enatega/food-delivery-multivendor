@@ -718,13 +718,7 @@ function Cart(props) {
               showsVerticalScrollIndicator={false}
               style={[styles().flex]}>
               <View
-                style={{
-                  backgroundColor: '#6FCF97',
-                  borderBottomRightRadius: 20,
-                  borderBottomLeftRadius: 20,
-                  padding: 10,
-                  paddingBottom: 0
-                }}>
+                style={[styles().headerContainer]}>
                 <View
                   style={[
                     styles(currentTheme).priceContainer,
@@ -733,13 +727,7 @@ function Cart(props) {
                     styles().pB10
                   ]}>
                   <View
-                    style={{
-                      display: 'flex',
-                      width: '100%',
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start',
-                      alignItems: 'center'
-                    }}>
+                    style={styles().imageContainer}>
                     <View style={{ marginLeft: scale(10) }}>
                       <Image
                         resizeMode="cover"
@@ -761,13 +749,7 @@ function Cart(props) {
                       </TextDefault>
                       <TouchableOpacity
                         onPress={onOpen}
-                        style={{
-                          marginTop: 4,
-                          padding: 6,
-                          backgroundColor: currentTheme.black,
-                          width: '50%',
-                          borderRadius: 6
-                        }}>
+                        style={styles(currentTheme).cartInnerContainer}>
                         <TextDefault bold textColor={'white'} center>
                           change
                         </TextDefault>
@@ -938,7 +920,7 @@ function Cart(props) {
                         style={[
                           styles().floatText,
                           styles(currentTheme).floatRight,
-                          { flexDirection: 'row', justifyContent: 'flex-end' }
+                          styles().couponContainer
                         ]}>
                         <TouchableOpacity
                           activeOpacity={0.7}
@@ -991,11 +973,7 @@ function Cart(props) {
                       style={[
                         styles().floatText,
                         styles(currentTheme).floatRight,
-                        {
-                          flexDirection: 'row',
-                          justifyContent: 'flex-end',
-                          alignItems: 'center'
-                        }
+                        styles().tipContainer
                       ]}>
                       <TouchableOpacity
                         activeOpacity={0.7}
@@ -1251,21 +1229,10 @@ function Cart(props) {
                             </View>
                           </TouchableOpacity>
                           <View
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center'
-                            }}>
+                            style={styles().changeAddressContainer}>
                             <TouchableOpacity
                               activeOpacity={0.7}
-                              style={{
-                                borderRadius: scale(10),
-                                backgroundColor: currentTheme.main,
-                                width: '40%',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                height: scale(30)
-                              }}
+                              style={styles(currentTheme).changeAddressBtn}
                               onPress={event => {
                                 if (!profile.addresses.length) {
                                   props.navigation.navigate('NewAddress', {

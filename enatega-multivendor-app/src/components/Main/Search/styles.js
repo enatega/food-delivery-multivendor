@@ -15,8 +15,8 @@ const styles = (props = null) =>
       zIndex: 333,
       width: '100%',
       alignItems: 'center',
-      borderBottomLeftRadius: 25,
-      borderBottomRightRadius: 25,
+      borderBottomLeftRadius: scale(25),
+      borderBottomRightRadius: scale(25),
       backgroundColor: props != null ? theme.Pink.headerColor : '#fafafa',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
@@ -33,7 +33,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
-      borderRadius: 40,
+      borderRadius: scale(40),
       backgroundColor: props != null ? props.cartContainer : 'white',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {

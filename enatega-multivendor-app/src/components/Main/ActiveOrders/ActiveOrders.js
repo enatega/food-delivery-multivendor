@@ -138,7 +138,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
             <RandomShape width={scale(300)} height={scale(300)} />
           </View>
           <View style={styles().textContainer}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles().textInnerContainer}>
               <MaterialIcons
                 name="radio-button-checked"
                 size={30}
@@ -149,13 +149,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
               </Text>
             </View>
             <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginTop: scale(2),
-                marginBottom: scale(2),
-                paddingLeft: 40
-              }}>
+              style={styles().activeOrdersContainer}>
               {Array(checkStatus(item.orderStatus).status)
                 .fill(0)
                 .map((item, index) => (

@@ -98,6 +98,12 @@ const styles = (props = null) =>
       ...alignment.MTlarge,
       ...alignment.PTxSmall,
       ...alignment.PBxSmall
+    },
+    titleContainer: {
+      padding: scale(25), fontSize: scale(20), fontWeight: '600'
+    },
+    phoneDetailsContainer: {
+      display: 'flex', flexDirection: 'row'
     }
   })
 export default styles

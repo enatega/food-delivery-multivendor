@@ -11,8 +11,8 @@ const styles = (props = null) =>
       width: '100%',
       height: height * 0.09,
       elevation: 1,
-      borderTopRightRadius: 25,
-      borderTopLeftRadius: 25,
+      borderTopRightRadius: scale(25),
+      borderTopLeftRadius: scale(25),
       shadowColor: props !== null ? props.shadowColor : '#fefefe',
       shadowOffset: {
         width: 0,
@@ -42,11 +42,11 @@ const styles = (props = null) =>
     },
     quantity: {
       borderWidth: 1,
-      paddingLeft: 18,
-      paddingRight: 18,
-      paddingTop: 10,
-      paddingBottom: 10,
-      borderRadius: 10,
+      paddingLeft: scale(18),
+      paddingRight: scale(18),
+      paddingTop: scale(10),
+      paddingBottom: scale(10),
+      borderRadius: scale(10),
       borderColor: 'black'
     },
     btnContainer: {
@@ -55,7 +55,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.main : 'black',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 10
+      borderRadius: scale(10)
     }
   })
 export default styles

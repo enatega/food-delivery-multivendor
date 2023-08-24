@@ -152,12 +152,30 @@ function Main(props) {
 
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`;
     fetch(apiUrl)
-  .then(response => response.json())
-  .then(data => {
-    if (data.error) {
-      console.log('Reverse geocoding request failed:', data.error);
-    } else {
-      const address = data.display_name;
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          console.log('Reverse geocoding request failed:', data.error);
+        } else {
+          const address = data.display_name;
+          if (error) navigation.navigate('SelectLocation')
+          else {
+            modalRef.current.close()
+            setLocation({
+              label: 'Current Location',
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              deliveryAddress: address.toString()
+            })
+            setBusy(false)
+          }
+          console.log(data.display_name)
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching reverse geocoding data:', error);
+      });
+    /*
       if (error) navigation.navigate('SelectLocation')
       else {
         modalRef.current.close()
@@ -165,27 +183,9 @@ function Main(props) {
           label: 'Current Location',
           latitude: coords.latitude,
           longitude: coords.longitude,
-          deliveryAddress: address.toString()
+          deliveryAddress: 'Current Location'
         })
-        setBusy(false)
-      }
-      console.log(data.display_name)
-    }
-  })
-  .catch(error => {
-    console.error('Error fetching reverse geocoding data:', error);
-  });
-  /*
-    if (error) navigation.navigate('SelectLocation')
-    else {
-      modalRef.current.close()
-      setLocation({
-        label: 'Current Location',
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        deliveryAddress: 'Current Location'
-      })
-    }*/
+      }*/
     //setBusy(false)
   }
 
@@ -274,7 +274,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
+        <Search search={''} setSearch={() => { }} />
         <Placeholder
           Animation={props => (
             <Fade

@@ -127,6 +127,32 @@ const styles = (props = null) =>
     },
     geoLocation: {
       flexDirection: 'row'
+    },
+    editAddressImageContainer: {
+      width: scale(50),
+      height: scale(50),
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      zIndex: 1,
+      translateX: scale(-25),
+      translateY: scale(-25),
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: -25 }, { translateY: -25 }]
+    },
+    editOldAddressImageContainer: {
+      width: scale(50),
+      height: scale(50),
+      position: 'absolute',
+      top: '46%',
+      left: '50%',
+      zIndex: 1,
+      translateX: scale(-25),
+      translateY: scale(-25),
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: -25 }, { translateY: -25 }]
     }
   })
 export default styles

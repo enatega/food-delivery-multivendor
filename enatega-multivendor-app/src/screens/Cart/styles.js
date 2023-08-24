@@ -224,6 +224,49 @@ const styles = (props = null) =>
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',
       height: scale(30)
+    },
+    headerContainer: {
+      backgroundColor: '#6FCF97',
+      borderBottomRightRadius: 20,
+      borderBottomLeftRadius: 20,
+      padding: 10,
+      paddingBottom: 0
+    },
+    imageContainer: {
+      display: 'flex',
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
+    },
+    cartInnerContainer: {
+      marginTop: 4,
+      padding: 6,
+      backgroundColor: props != null ? props.black : '#B8B8B8',
+      width: '50%',
+      borderRadius: 6
+    },
+    couponContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end'
+    },
+    tipContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
+    changeAddressContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    changeAddressBtn: {
+      borderRadius: scale(10),
+      backgroundColor: props != null ? props.main : '#B8B8B8',
+      width: '40%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: scale(30)
     }
   })
 export default styles

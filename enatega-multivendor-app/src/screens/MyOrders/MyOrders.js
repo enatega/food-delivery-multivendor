@@ -208,14 +208,7 @@ function MyOrders(props) {
                     {getItems(item.items)}
                   </TextDefault>
                   <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      marginTop: 10,
-                      marginBottom: 10,
-                      justifyContent: 'space-around',
-                      alignItems: 'flex-end'
-                    }}>
+                    style={styles().rateOrderContainer}>
                     {!item.review && (
                       <TouchableOpacity
                         activeOpacity={0.7}

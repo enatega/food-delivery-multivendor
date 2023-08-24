@@ -106,6 +106,21 @@ const styles = (props = null) =>
       height: verticalScale(25),
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    rateOrderContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: scale(10),
+      marginBottom: scale(10),
+      justifyContent: 'space-around',
+      alignItems: 'flex-end'
+    },
+    backBtnContainer: {
+      backgroundColor: 'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
     }
   })
 

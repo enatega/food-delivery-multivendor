@@ -121,19 +121,7 @@ export default function SelectLocation(props) {
           onPanDrag={onPanDrag}
         />
         <View
-          style={{
-            width: 50,
-            height: 50,
-            position: 'absolute',
-            top: '46%',
-            left: '50%',
-            zIndex: 1,
-            translateX: -25,
-            translateY: -25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            transform: [{ translateX: -25 }, { translateY: -25 }]
-          }}>
+          style={styles().mainContainer}>
           <CustomMarker
             width={40}
             height={40}

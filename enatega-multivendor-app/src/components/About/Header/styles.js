@@ -34,14 +34,38 @@ const styles = (props = null) =>
       height: scale(30),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props != null ? props : '#FFF',
+      backgroundColor: props != null ? props.black : '#FFF',
       borderRadius: scale(15)
+    },
+    deliveryBoxContainer:{    
+        backgroundColor: props != null ? props.customizeOpacityBtn : 'transparent',
+      padding: scale(10),
+      borderRadius: scale(10),
+      borderColor: 'white',
+      borderWidth: 1,
+      width: '45%',
+      alignItems: 'center',
+      alignSelf: 'center'
     },
     deliveryBox: {
       color: 'white',
       backgroundColor: 'black',
       borderRadius: scale(5),
       padding: scale(5)
+    },
+    animatedIconStyle: {
+      fontSize: scale(20)
+    },
+    deliveryBoxText: {
+      paddingRight: scale(5), 
+      paddingLeft: scale(5)
+    },
+    ratingContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: scale(10),
+      paddingBottom: scale(10)
     }
   })
 export default styles

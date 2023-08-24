@@ -16,6 +16,7 @@ function RestaurantCard(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
+
   return (
     <View style={{ ...alignment.PRsmall }}>
       <TouchableOpacity
@@ -26,12 +27,7 @@ function RestaurantCard(props) {
           <Image
             resizeMode="cover"
             source={{ uri: props.image }}
-            style={{
-              width: scale(220),
-              height: '100%',
-              borderRadius: 25,
-              marginTop: 5
-            }}
+            style={styles().restaurantImage}
           />
           <View style={styles().overlayContainer}>
             <View style={styles(currentTheme).deliveryOverlay}>
@@ -59,14 +55,14 @@ function RestaurantCard(props) {
               <Ionicons name="md-star" size={scale(12)} color="#448B7B" />
               <TextDefault
                 textColor={currentTheme.fontMainColor}
-                style={{ marginLeft: 2 }}
+                style={styles().restaurantRatingContainer}
                 bold
                 smaller>
                 {props.reviewData.ratings}
               </TextDefault>
               <TextDefault
                 textColor={currentTheme.fontSecondColor}
-                style={{ marginLeft: 2 }}
+                style={styles().restaurantRatingContainer}
                 bold
                 smaller>
                 ({props.reviewData.reviews.length})
@@ -84,7 +80,7 @@ function RestaurantCard(props) {
           <TextDefault
             textColor={currentTheme.fontMainColor}
             numberOfLines={1}
-            style={{ marginTop: 3, fontSize: 15 }}
+            style={styles().restaurantPriceContainer}
             bold
             small>
             {configuration.currencySymbol} {props.minimumOrder}
