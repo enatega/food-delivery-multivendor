@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex:  scale(1)
+      flex: 1
     },
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#ffff'
