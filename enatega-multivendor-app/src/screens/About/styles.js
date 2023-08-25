@@ -45,6 +45,19 @@ const styles = (props = null) =>
       height: 200,
       backgroundColor: props != null ? props.white : 'white'
     },
+    marker: {
+      width: 50,
+      height: 50,
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      zIndex: 1,
+      translateX: -25,
+      translateY: -25,
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: -25 }, { translateY: -25 }]
+    },
     mainContainer: {
       backgroundColor: props != null ? '#F5F5F5' : 'white'
     },
@@ -55,6 +68,7 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.Psmall
     },
+
     restaurantTitle: {
       width: '75%',
       ...alignment.PLxSmall
@@ -68,6 +82,14 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       width: '100%'
+    },
+    review: {
+      marginHorizontal: 5,
+      zIndex: 1,
+      elevation: 1,
+      backgroundColor: 'black',
+      padding: 10,
+      borderRadius: 10
     },
     ratingContainer: {
       flexDirection: 'row',

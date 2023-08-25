@@ -163,6 +163,8 @@ function About(props) {
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <View style={styles(currentTheme).review}>
+
+
             <View style={styles().reviewerContainer}>
               <TextDefault
                 style={styles().reviewerName}

@@ -49,7 +49,7 @@ The required credentials and keys have been set already. You can setup your own 
 
 The version of nodejs should be between 14.0 to 16.0
 
--[Link to Video tutorial/demonstration of Setup](https://enatega-1.gitbook.io/enatega-multivendor/configurations/google-maps-api-keys)
+-[Link to Video tutorial/demonstration of Setup](https://enatega.com/multivendor-documentation/)
 
 ## Prerequisites:
 
@@ -138,7 +138,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## Documentation and Demo Videos:
 
-Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
+Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega.com/multivendor-documentation/).
 
 To check out video demo of admin dashboard please click [here](https://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode)
 
@@ -152,8 +152,8 @@ To check out video demo of mobile applications please click [here](https://www.y
 - [Rider App iOS](https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511)
 - [Restaurant App Android](https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant)
 - [Restaurant App iOS](https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537)
-- [Customer Web App](https://pensive-liskov-5320d4.netlify.app)
-- [Admin Dashboard](https://practical-minsky-95a652.netlify.app/)
+- [Customer Web App](https://multivendor.enatega.com)
+- [Admin Dashboard](https://multivendor-admin.enatega.com)
 
 ## Contributing:
 
@@ -172,4 +172,4 @@ The frontend source code for our solution is completely open source. However, th
 
 ## Contact Us:
 
-sales@ninjascode.com
+sales@enatega.com
