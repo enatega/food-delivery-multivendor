@@ -40,15 +40,13 @@ export default function Detail({
           <View style={styles.line(theme)}></View>
         </>
       )}
-      <View
-        style={{
-          paddingVertical: 47
-        }}>
+      <View style={styles.orderDetailsContainer}>
         <TextDefault textColor={theme.main} bold H3>
           Order Detail
         </TextDefault>
       </View>
-      <View style={[styles.addressContainer, styles.shadowBox(theme)]}>
+
+      <View style={styles.addressContainer}>
         <View style={styles.row}>
           <TextDefault
             left
@@ -87,7 +85,8 @@ export default function Detail({
           </TextDefault>
         </View>
       </View>
-      <View style={[styles.itemsContainer, styles.shadowBox(theme)]}>
+
+      <View style={styles.itemsContainer}>
         {items.map(item => (
           <ItemRow
             key={item._id}

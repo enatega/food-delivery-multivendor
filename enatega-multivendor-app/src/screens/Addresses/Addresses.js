@@ -4,11 +4,19 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
-  Platform
+  Platform,
+  Text,
+  ScrollView
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'
-import { AntDesign, EvilIcons, SimpleLineIcons } from '@expo/vector-icons'
+import {
+  AntDesign,
+  EvilIcons,
+  SimpleLineIcons,
+  MaterialIcons
+} from '@expo/vector-icons'
+
 import gql from 'graphql-tag'
 import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
@@ -22,6 +30,12 @@ import { alignment } from '../../utils/alignment'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import EmptyAddress from '../../assets/SVG/imageComponents/EmptyAddress'
 import Analytics from '../../utils/analytics'
+import navigationService from '../../routes/navigationService'
+import { HeaderBackButton } from '@react-navigation/elements'
+import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
+
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
 `
@@ -48,19 +62,53 @@ function Addresses() {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: i18n.t('myAddresses'),
-      headerTitleAlign: 'left',
       headerRight: null,
+      headerTitleAlign: 'center',
       headerTitleContainerStyle: {
-        alignItems: 'flex-start'
-      }
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        backgroundColor: currentTheme.black,
+        borderRadius: scale(10),
+        borderColor: currentTheme.white,
+        borderWidth: 1
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [])
 
   const addressIcons = {
-    Home: 'home',
-    Work: 'briefcase',
-    Other: 'location-pin'
+    Home: CustomHomeIcon,
+    Work: CustomWorkIcon,
+    Other: CustomOtherIcon
   }
+
   function emptyView() {
     return (
       <View style={styles().subContainerImage}>
@@ -86,7 +134,7 @@ function Addresses() {
   }
   return (
     <>
-      <View style={styles(currentTheme).containerInfo}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <FlatList
           data={profile.addresses}
           ListEmptyComponent={emptyView}
@@ -98,67 +146,78 @@ function Addresses() {
           renderItem={({ item: address }) => (
             <TouchableOpacity
               activeOpacity={0.7}
-              style={[styles().width100, styles(currentTheme).containerSpace]}
-              onPress={() => {
-                navigation.navigate('EditAddress', { ...address })
-              }}>
-              <View style={styles().width100}>
+              style={[styles(currentTheme).containerSpace]}>
+              <View style={[styles().width100]}>
                 <View style={[styles().titleAddress, styles().width100]}>
-                  <View style={[styles().homeIcon]}>
-                    <SimpleLineIcons
-                      name={addressIcons[address.label]}
-                      size={scale(14)}
-                      color={currentTheme.iconColorPink}
-                    />
-                  </View>
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
-                    style={{ width: '60%', textAlignVertical: 'bottom' }}>
+                    style={styles().labelStyle}>
                     {address.label}
                   </TextDefault>
-                  <View style={[styles().width10, { alignItems: 'center' }]}>
-                    <SimpleLineIcons
-                      name="pencil"
-                      size={scale(13)}
-                      color={currentTheme.iconColorPink}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    disabled={loadingMutation}
-                    style={styles().width10}
-                    onPress={() => {
-                      mutate({ variables: { id: address._id } })
-                    }}>
-                    <EvilIcons
-                      name="trash"
-                      size={scale(20)}
-                      color={currentTheme.iconColorPink}
-                      style={styles().width100}
-                    />
-                  </TouchableOpacity>
                 </View>
                 <View style={{ ...alignment.MTxSmall }}></View>
-                <View style={styles().addressDetail}>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small>
-                    {address.deliveryAddress}
-                  </TextDefault>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small>
-                    {address.details}
-                  </TextDefault>
+
+                <View style={styles().midContainer}>
+                  <View style={[styles().homeIcon]}>
+                    {addressIcons[address.label] ? (
+                      React.createElement(addressIcons[address.label], {
+                        fill: currentTheme.iconColorPink
+                      })
+                    ) : (
+                      <AntDesign name="question" size={20} color="black" />
+                    )}
+                  </View>
+
+                  <View style={styles().addressDetail}>
+                    <TextDefault textColor={currentTheme.fontSecondColor}>
+                      {address.deliveryAddress}
+                    </TextDefault>
+                    <TextDefault textColor={currentTheme.fontSecondColor}>
+                      {address.details}
+                    </TextDefault>
+                  </View>
+                  <View style={styles().buttonsAddress}>
+                    <TouchableOpacity
+                      disabled={loadingMutation}
+                      activeOpacity={0.7}
+                      
+                      onPress={() => {
+                        navigation.navigate('EditAddress', { ...address })
+                      }}>
+                      <SimpleLineIcons
+                        name="pencil"
+                        size={scale(20)}
+                        color={currentTheme.tagColor}
+                      />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      disabled={loadingMutation}
+                     
+                      onPress={() => {
+                        mutate({ variables: { id: address._id } })
+                      }}>
+                      <EvilIcons
+                        name="trash"
+                        size={scale(33)}
+                        color={currentTheme.tagColor}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </TouchableOpacity>
           )}
         />
-        <View style={styles(currentTheme).containerButton}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles().addButton}
-            onPress={() => navigation.navigate('NewAddress')}>
-            <AntDesign name="plus" size={scale(30)} color={'#FFF'} />
-          </TouchableOpacity>
-        </View>
+      </ScrollView>
+      <View style={styles(currentTheme).containerButton}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles().addButton}
+          onPress={() => navigation.navigate('NewAddress')}>
+          <AntDesign name="plus" size={scale(30)} color={currentTheme.black} />
+        </TouchableOpacity>
       </View>
       <View
         style={{

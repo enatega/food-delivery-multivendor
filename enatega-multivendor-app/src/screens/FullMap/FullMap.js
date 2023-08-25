@@ -72,26 +72,14 @@ export default function FullMap(props) {
           onRegionChangeComplete={setRegion}
           showsUserLocation={true}
           provider={PROVIDER_GOOGLE}
-          customMapStyle={themeContext.ThemeValue === 'Dark' ? mapStyle : null}
+          customMapStyle={mapStyle}
           showsMyLocationButton
           onMapReady={setMargin}
           showsTraffic={false}
           region={region}
         />
         <View
-          style={{
-            width: 50,
-            height: 50,
-            position: 'absolute',
-            top: '46%',
-            left: '50%',
-            zIndex: 1,
-            translateX: -25,
-            translateY: -25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            transform: [{ translateX: -25 }, { translateY: -25 }]
-          }}>
+          style={styles().customMarkerContainer}>
           <CustomMarker
             width={40}
             height={40}

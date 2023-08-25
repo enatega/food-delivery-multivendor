@@ -11,10 +11,10 @@ const styles = (props = null) =>
     },
     fakeMarkerContainer: {
       position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
+      top: scale(0),
+      bottom: scale(0),
+      left:scale(0),
+      right: scale(0),
       marginTop: -scale(40),
       alignItems: 'center',
       justifyContent: 'center',
@@ -30,10 +30,23 @@ const styles = (props = null) =>
       alignSelf: 'center',
       justifyContent: 'center',
       alignItems: 'center',
-      bottom: 0,
+      bottom: scale(0),
       height: '8%',
       width: '100%',
       backgroundColor: props !== null ? props.buttonBackground : 'transparent'
+    },
+    customMarkerContainer: {
+      width: scale(50),
+      height:scale(50),
+      position: 'absolute',
+      top: '46%',
+      left: '50%',
+      zIndex: 1,
+      translateX: scale(-25),
+      translateY: scale(-25),
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: scale(-25) }, { translateY: scale(-25) }]
     }
   })
 export default styles

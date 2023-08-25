@@ -11,8 +11,10 @@ const styles = (props = null) =>
       width: '100%',
       flex: 1,
       alignItems: 'center',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      position: 'relative'
+      backgroundColor: 'white',
+      marginTop: scale(20),
+      paddingBottom: scale(20),
+      borderRadius: scale(20)
     },
     subContainerImage: {
       width: '100%',
@@ -52,9 +54,12 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     containerSpace: {
-      backgroundColor: props !== null ? props.cartContainer : 'transparent',
-      ...alignment.PBmedium,
-      ...alignment.PTmedium
+      backgroundColor: props !== null ? props.white : 'transparent',
+      margin: scale(10),
+      padding: scale(5),
+      borderRadius: scale(10),
+      borderBottomWidth: 1,
+      borderBottomColor: props !== null ? props.borderBottomColor : '#DAD6D6'
     },
     width100: {
       width: '100%'
@@ -64,27 +69,45 @@ const styles = (props = null) =>
     },
     titleAddress: {
       flexDirection: 'row',
-      alignItems: 'center'
-    },
-    homeIcon: {
-      width: '20%',
       alignItems: 'center',
       justifyContent: 'center'
     },
-    homeIconImg: {
-      width: scale(15),
-      height: scale(15)
+    labelStyle: {
+      width: '70%',
+      textAlignVertical: 'bottom',
+      fontSize: scale(14),
+      fontWeight: '700'
+    },
+    midContainer: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    homeIcon: {
+      width: '15%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     addressDetail: {
-      width: '80%',
+      width: '65%',
       alignSelf: 'flex-end',
-      ...alignment.PRsmall
+      fontSize: scale(4),
+      fontWeight: '300',
+      textAlign: 'justify'
     },
     line: {
       width: '80%',
       alignSelf: 'flex-end',
-      borderBottomColor: props !== null ? props.horizontalLine : 'transparent',
+      borderBottomColor: props !== null ? 'transparent' : 'transparent',
       borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    buttonsAddress: {
+      width: '20%',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingBottom: scale(3)
     }
   })
 export default styles

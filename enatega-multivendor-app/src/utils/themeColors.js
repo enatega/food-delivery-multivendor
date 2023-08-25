@@ -2,11 +2,17 @@ export const theme = {
   Pink: {
     black: '#000',
     white: '#FFF',
+    mustard: '#d8d8d874',
+    borderColor: '#efefef',
+    backgroundColor: 'transparent',
+    borderBottomColor: '#DAD6D6',
+    primery: '#3C8F7C',
     themeBackground: '#FAFAFA',
     menuBar: '#FFF',
     iconColor: '#333333',
     iconColorPink: '#6FCF97',
     itemCardColor: '#FFF',
+    headerColor: '#6FCF97',
     tagColor: '#6FCF97',
     radioColor: '#6FCF97',
     radioOuterColor: '#949393',
@@ -17,8 +23,9 @@ export const theme = {
     orderUncomplete: '#fe0000',
     horizontalLine: '#949393',
     lightHorizontalLine: '#f0f0f0',
+    firstHeaderBackground: '#F5F5F5',
     buttonBackground: '#6FCF97',
-    buttonText: '#FFF',
+    buttonText: '#000',
     buttonBackgroundPink: '#6FCF97',
     buttonTextPink: '#FFF',
     fontWhite: '#FFF',
@@ -44,7 +51,16 @@ export const theme = {
     shadow: '#707070',
     starRating: '#E2C077',
     errorInputBack: '#F7E7E5',
-    errorInputBorder: '#DB4A39'
+    errorInputBorder: '#DB4A39',
+    starRating: '#E2C077',
+    inputPlaceHolder: '#F3F4F8',
+    transparent: '#00000000',
+    customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
+    deleteButton: '#fe0000',
+    backgroundColor2: 'rgba(0, 0, 0, 0.5)',
+    hex: '#b0afbc',
+    gray: 'grey',
+    
   },
   Dark: {
     black: '#000',
@@ -90,6 +106,9 @@ export const theme = {
     secondaryBackground: '#ECECEC',
     shadow: '#707070',
     errorInputBack: '#F7E7E5',
-    errorInputBorder: '#DB4A39'
+    errorInputBorder: '#DB4A39',
+    inputPlaceHolder: '#F3F4F8',
+    transparent: '#ff000080',
+    customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)'
   }
 }

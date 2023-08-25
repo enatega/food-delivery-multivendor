@@ -9,6 +9,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
+import { Entypo } from '@expo/vector-icons'
+import { scale } from '../../utils/scaling'
 function Payment(props) {
   const { paymentMethod, coupon } = props.route.params
   const inset = useSafeAreaInsets()
@@ -39,7 +43,37 @@ function Payment(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('titlePayment')
+      title: i18n.t('titlePayment'),
+      headerTitleAlign: 'center',
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
+      },
+      headerTitleContainerStyle: {
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
+        backgroundColor: currentTheme.black,
+        marginLeft: 0
+      },
+
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View style={styles().backButton}>
+              <Entypo name="cross" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
   useEffect(() => {
@@ -53,54 +87,52 @@ function Payment(props) {
   }
   return (
     <>
-      <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        {CASH.map((item, index) => (
-          <TouchableOpacity
-            style={[styles().radioGroup, styles().pT20]}
-            key={index.toString()}
-            onPress={() => {
-              onSelectPayment(item)
-            }}>
-            <View style={styles().radioContainer}>
-              <RadioButton
-                animation={'bounceIn'}
-                outerColor={currentTheme.radioOuterColor}
-                innerColor={currentTheme.radioColor}
-                isSelected={paymentMethod.index === item.index}
-                onPress={() => {
-                  onSelectPayment(item)
-                }}
-              />
-            </View>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontMainColor}
-              style={{ width: '60%' }}>
-              {item.label}
-            </TextDefault>
-            <View style={styles().iconContainer}>
-              {item.icon1 && (
-                <Image
-                  resizeMode="cover"
-                  style={[styles().iconStyle, { ...alignment.MRxSmall }]}
-                  source={item.icon1}
+      <View style={[styles(currentTheme).mainContainer]}>
+        <View style={{ backgroundColor: 'white', borderRadius: 20 }}>
+          {CASH.map((item, index) => (
+            <TouchableOpacity
+              style={[styles().radioGroup, styles().pT20]}
+              key={index.toString()}
+              onPress={() => {
+                onSelectPayment(item)
+              }}>
+              <View style={styles().radioContainer}>
+                <RadioButton
+                  animation={'bounceIn'}
+                  outerColor={currentTheme.radioOuterColor}
+                  innerColor={currentTheme.radioColor}
+                  isSelected={paymentMethod.index === item.index}
+                  onPress={() => {
+                    onSelectPayment(item)
+                  }}
                 />
-              )}
-              <Image
-                resizeMode="cover"
-                style={styles().iconStyle}
-                source={item.icon}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
+              </View>
+              <View style={styles().paymentMethod}>
+                <TextDefault
+                  numberOfLines={1}
+                  textColor={currentTheme.fontMainColor}
+                  style={{ width: '60%' }}>
+                  {item.label}
+                </TextDefault>
+                <View style={styles().iconContainer}>
+                  {item.icon1 && (
+                    <Image
+                      resizeMode="cover"
+                      style={[styles().iconStyle, { ...alignment.MRsmall }]}
+                      source={item.icon1}
+                    />
+                  )}
+                  <Image
+                    resizeMode="cover"
+                    style={styles().iconStyle}
+                    source={item.icon}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-      <View
-        style={{
-          paddingBottom: inset.bottom,
-          backgroundColor: currentTheme.themeBackground
-        }}
-      />
     </>
   )
 }

@@ -22,6 +22,9 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons'
+import navigationService from '../../routes/navigationService'
 
 function ItemDetail(props) {
   const { food, addons, options, restaurant } = props.route.params
@@ -56,9 +59,9 @@ function ItemDetail(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+      StatusBar.setBackgroundColor(currentTheme.white)
     }
-    StatusBar.setBarStyle('light-content')
+    StatusBar.setBackgroundColor(currentTheme.white)
   })
   useEffect(() => {
     async function Track() {
@@ -74,7 +77,33 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: 'Customize'
+      title: 'Customize',
+      headerTitleContainerStyle: {
+        marginTop: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        borderRadius: scale(10),
+        height: scale(35),
+        backgroundColor: currentTheme.customizeOpacityBtn,
+        borderWidth: 1,
+        borderColor: currentTheme.white
+      },
+      headerTransparent: true,
+      headerTitleAlign: 'center',
+
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={styles(currentTheme).backBtnContainer}>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [navigation])
 
@@ -117,7 +146,7 @@ function ItemDetail(props) {
             },
             {
               text: 'OK',
-              onPress: async() => {
+              onPress: async () => {
                 await addToCart(quantity, true)
               }
             }
@@ -128,7 +157,7 @@ function ItemDetail(props) {
     }
   }
 
-  const addToCart = async(quantity, clearFlag) => {
+  const addToCart = async (quantity, clearFlag) => {
     const addons = selectedAddons.map(addon => ({
       ...addon,
       options: addon.options.map(({ _id }) => ({
@@ -139,35 +168,35 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find(cartItem => {
-        if (
-          cartItem._id === food._id &&
+          if (
+            cartItem._id === food._id &&
             cartItem.variation._id === selectedVariation._id
-        ) {
-          if (cartItem.addons.length === addons.length) {
-            if (addons.length === 0) return true
-            const addonsResult = addons.every(newAddon => {
-              const cartAddon = cartItem.addons.find(
-                ad => ad._id === newAddon._id
-              )
-
-              if (!cartAddon) return false
-              const optionsResult = newAddon.options.every(newOption => {
-                const cartOption = cartAddon.options.find(
-                  op => op._id === newOption._id
+          ) {
+            if (cartItem.addons.length === addons.length) {
+              if (addons.length === 0) return true
+              const addonsResult = addons.every(newAddon => {
+                const cartAddon = cartItem.addons.find(
+                  ad => ad._id === newAddon._id
                 )
 
-                if (!cartOption) return false
-                return true
+                if (!cartAddon) return false
+                const optionsResult = newAddon.options.every(newOption => {
+                  const cartOption = cartAddon.options.find(
+                    op => op._id === newOption._id
+                  )
+
+                  if (!cartOption) return false
+                  return true
+                })
+
+                return optionsResult
               })
 
-              return optionsResult
-            })
-
-            return addonsResult
+              return addonsResult
+            }
           }
-        }
-        return false
-      })
+          return false
+        })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -280,19 +309,18 @@ function ItemDetail(props) {
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={100}
-          style={styles().flex}>
+          keyboardVerticalOffset={Platform.OS === 'ios' ? `${0}` : `${100}`}>
+          {!!food.image && <ImageHeader image={food.image} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>
-            {!!food.image && <ImageHeader image={food.image} />}
             <View style={styles().subContainer}>
               <HeadingComponent
                 title={food.title}
                 price={calculatePrice()}
-                desc={food.description}
+               
               />
-              <View style={styles(currentTheme).line}></View>
+
               {food.variations.length > 1 && (
                 <View>
                   <TitleComponent
@@ -324,29 +352,30 @@ function ItemDetail(props) {
               ))}
             </View>
             <View style={styles(currentTheme).line}></View>
-            <View style={{ width: '90%', alignSelf: 'center' }}>
+            <View style={styles().inputContainer}>
               <TitleComponent
                 title="Special instructions"
                 subTitle="Any specific preferences?"
                 status="Optional"
               />
               <TextField
+                style={styles(currentTheme).input}
                 placeholder={'E.g No mayo'}
+                textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}
-                labelFontSize={scale(12)}
-                fontSize={scale(12)}
-                labelHeight={10}
                 maxLength={144}
-                multiline
                 textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
+                baseColor={currentTheme.lightHorizontalLine}
                 errorColor={currentTheme.textErrorColor}
-                tintColor={currentTheme.iconColorPink}
+                tintColor={currentTheme.themeBackground}
               />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
+      </View>
+
+      <View style={{ backgroundColor: currentTheme.themeBackground }}>
         <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
       </View>
       <View

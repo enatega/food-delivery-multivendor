@@ -1,6 +1,6 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
 import { View, TouchableOpacity } from 'react-native'
-import { TextField } from 'react-native-material-textfield'
+import { OutlinedTextField } from 'react-native-material-textfield'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -14,7 +14,10 @@ import { alignment } from '../../utils/alignment'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import styles from './styles'
 import analytics from '../../utils/analytics'
-// Constants
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
+import { MaterialIcons, Entypo } from '@expo/vector-icons'
+
 const GET_COUPON = gql`
   ${getCoupon}
 `
@@ -59,57 +62,71 @@ function SelectVoucher(props) {
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
+      title: 'My Vouchers',
       headerRight: null,
-      title: 'My Vouchers'
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
+        borderWidth: 1,
+        borderColor: currentTheme.white,
+        backgroundColor: currentTheme.black
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <Entypo name="cross" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
     })
   }, [props.navigation])
 
   function onSelectCoupon(text) {
     mutate({ variables: { coupon: text } })
-    // props.navigation.navigate('Cart', { CoupanObject: text })
   }
 
   const HeaderLine = props => {
-    return (
-      <View style={styles().headerlineContainer}>
-        <View
-          style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
-        />
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          style={[
-            alignment.PTsmall,
-            alignment.PBsmall,
-            { width: props.textWidth }
-          ]}
-          small
-          bold
-          center
-          uppercase>
-          {props.headerName}
-        </TextDefault>
-        <View
-          style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
-        />
-      </View>
-    )
+ 
   }
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <HeaderLine
-          headerName="TYPe voucher code"
-          textWidth="50%"
+          // headerName="TYPe voucher code"
+          textWidth="45%"
           lineWidth="25%"
         />
         <View style={styles().upperContainer}>
-          <View style={{ width: '70%' }}>
-            <TextField
+          <View style={styles().innerContainer}>
+            <OutlinedTextField
               label="Enter your voucher code"
               labelFontSize={scale(12)}
               fontSize={scale(12)}
-              labelHeight={10}
               maxLength={15}
+              textAlignVertical="top"
               textColor={currentTheme.fontMainColor}
               baseColor={currentTheme.fontSecondColor}
               errorColor={currentTheme.textErrorColor}

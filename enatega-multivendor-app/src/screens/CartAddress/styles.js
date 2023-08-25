@@ -25,6 +25,14 @@ const styles = (props = null) =>
       width: scale(15),
       height: scale(15)
     },
+    addressContainer: {
+      width: '90%',
+      alignSelf: 'center',
+      borderRadius: scale(10),
+      backgroundColor: 'white',
+      ...alignment.PTsmall,
+      ...alignment.PBsmall
+    },
     addressDetail: {
       width: '80%',
       alignSelf: 'flex-end'

@@ -183,7 +183,7 @@ function Restaurant(props) {
           },
           {
             text: 'OK',
-            onPress: async() => {
+            onPress: async () => {
               await addToCart(food, true)
             }
           }
@@ -193,7 +193,18 @@ function Restaurant(props) {
     }
   }
 
-  const addToCart = async(food, clearFlag) => {
+  function wrapContentAfterWords(content, numWords) {
+    const words = content.split(' ')
+    const wrappedContent = []
+
+    for (let i = 0; i < words.length; i += numWords) {
+      wrappedContent.push(words.slice(i, i + numWords).join(' '))
+    }
+
+    return wrappedContent.join('\n')
+  }
+
+  const addToCart = async (food, clearFlag) => {
     if (
       food.variations.length === 1 &&
       food.variations[0].addons.length === 0
@@ -244,10 +255,8 @@ function Restaurant(props) {
       duration: 500,
       easing: EasingNode.inOut(EasingNode.ease)
     }).start()
-    circle.setValue(0) // important for animation next time.
+    circle.setValue(0)
   }
-
-  // Section and Flatlist fucntion  => related to topbar styling and scrolling
 
   const scrollToSection = index => {
     if (scrollRef.current != null) {
@@ -337,60 +346,17 @@ function Restaurant(props) {
   })
 
   const iconColor = currentTheme.iconColorPink
-  // const iconColor = color(
-  //   interpolate(animation, {
-  //     inputRange: [0, SCROLL_RANGE],
-  //     outputRange: [111, 255],
-  //     extrapolate: Extrapolate.CLAMP
-  //   }),
-  //   interpolate(animation, {
-  //     inputRange: [0, SCROLL_RANGE],
-  //     outputRange: [207, 255],
-  //     extrapolate: Extrapolate.CLAMP
-  //   }),
-  //   interpolate(animation, {
-  //     inputRange: [0, SCROLL_RANGE],
-  //     outputRange: [151, 255],
-  //     extrapolate: Extrapolate.CLAMP
-  //   }),
-  //   1
-  // )
 
   const iconBackColor = currentTheme.white
-  // const iconBackColor = color(
-  //   255,
-  //   255,
-  //   255,
-  //   interpolate(animation, {
-  //     inputRange: [0, 70, SCROLL_RANGE - TOP_BAR_HEIGHT],
-  //     outputRange: [1, 0.7, 0],
-  //     extrapolate: Extrapolate.CLAMP
-  //   })
-  // )
+
   const iconRadius = scale(15)
-  // const iconRadius = interpolate(animation, {
-  //   inputRange: [0, 70, SCROLL_RANGE],
-  //   outputRange: [scale(15), scale(7), scale(0)],
-  //   extrapolate: Extrapolate.CLAMP
-  // })
+
   const iconSize = scale(20)
-  // const iconSize = interpolate(animation, {
-  //   inputRange: [0, 70, SCROLL_RANGE],
-  //   outputRange: [scale(20), scale(25), scale(30)],
-  //   extrapolate: Extrapolate.CLAMP
-  // })
+
   const iconTouchHeight = scale(30)
-  // const iconTouchHeight = interpolate(animation, {
-  //   inputRange: [0, 70, SCROLL_RANGE],
-  //   outputRange: [scale(30), scale(40), scale(50)],
-  //   extrapolate: Extrapolate.CLAMP
-  // })
+
   const iconTouchWidth = scale(30)
-  // const iconTouchWidth = interpolate(animation, {
-  //   inputRange: [0, 70, SCROLL_RANGE],
-  //   outputRange: [scale(30), scale(35), scale(40)],
-  //   extrapolate: Extrapolate.CLAMP
-  // })
+
   const headerTextFlex = concat(
     interpolateNode(animation, {
       inputRange: [0, 80, SCROLL_RANGE],
@@ -459,7 +425,7 @@ function Restaurant(props) {
               Animation={props => (
                 <Fade
                   {...props}
-                  style={{ backgroundColor: '#B8B8B8' }}
+                  style={{ backgroundColor: currentTheme.fontSecondColor }}
                   duration={600}
                 />
               )}
@@ -485,186 +451,186 @@ function Restaurant(props) {
   }))
 
   return (
-    <SafeAreaView style={styles().flex}>
-      <Animated.View style={styles().flex}>
-        <ImageHeader
-          ref={flatListRef}
-          iconColor={iconColor}
-          iconSize={iconSize}
-          height={headerHeight}
-          opacity={opacity}
-          iconBackColor={iconBackColor}
-          iconRadius={iconRadius}
-          iconTouchWidth={iconTouchWidth}
-          iconTouchHeight={iconTouchHeight}
-          headerTextFlex={headerTextFlex}
-          restaurantName={propsData.name}
-          restaurantImage={propsData.image}
-          restaurant={data.restaurant}
-          topaBarData={deals}
-          changeIndex={changeIndex}
-          selectedLabel={selectedLabel}
-        />
-        <AnimatedSectionList
-          ref={scrollRef}
-          sections={deals}
-          style={{
-            flexGrow: 1,
-            zIndex: -1,
-            paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-            marginTop: HEADER_MIN_HEIGHT
-          }}
-          // Important
-          contentContainerStyle={{
-            paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-          }}
-          scrollEventThrottle={1}
-          stickySectionHeadersEnabled={false}
-          showsVerticalScrollIndicator={false}
-          refreshing={networkStatus === 4}
-          onRefresh={() => networkStatus === 7 && refetch()}
-          onViewableItemsChanged={onViewableItemsChanged}
-          // onScrollEndDrag={event => {
-          //   onScrollEndSnapToEdge(event)
-          // }}
-          onMomentumScrollEnd={event => {
-            onScrollEndSnapToEdge(event)
-          }}
-          // Important
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: {
-                  y: animation
+    <>
+      <SafeAreaView style={styles().flex}>
+        <Animated.View style={styles().flex}>
+          <ImageHeader
+            ref={flatListRef}
+            iconColor={iconColor}
+            iconSize={iconSize}
+            height={headerHeight}
+            opacity={opacity}
+            iconBackColor={iconBackColor}
+            iconRadius={iconRadius}
+            iconTouchWidth={iconTouchWidth}
+            iconTouchHeight={iconTouchHeight}
+            headerTextFlex={headerTextFlex}
+            restaurantName={propsData.name}
+            restaurantImage={propsData.image}
+            restaurant={data.restaurant}
+            topaBarData={deals}
+            changeIndex={changeIndex}
+            selectedLabel={selectedLabel}
+          />
+          <AnimatedSectionList
+            ref={scrollRef}
+            sections={deals}
+            style={{
+              flexGrow: 1,
+              zIndex: -1,
+              paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
+              marginTop: HEADER_MIN_HEIGHT
+            }}
+            // Important
+            contentContainerStyle={{
+              paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
+            }}
+            scrollEventThrottle={1}
+            stickySectionHeadersEnabled={false}
+            showsVerticalScrollIndicator={false}
+            refreshing={networkStatus === 4}
+            onRefresh={() => networkStatus === 7 && refetch()}
+            onViewableItemsChanged={onViewableItemsChanged}
+            onMomentumScrollEnd={event => {
+              onScrollEndSnapToEdge(event)
+            }}
+            // Important
+            onScroll={Animated.event([
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    y: animation
+                  }
                 }
               }
-            }
-          ])}
-          keyExtractor={(item, index) => item + index}
-          ItemSeparatorComponent={() => (
-            <View style={styles(currentTheme).listSeperator} />
-          )}
-          SectionSeparatorComponent={props => {
-            if (!props.leadingItem) return null
-            return <View style={styles(currentTheme).sectionSeparator} />
-          }}
-          renderSectionHeader={({ section: { title } }) => {
-            return (
-              <TextDefault
-                style={styles(currentTheme).sectionHeaderText}
-                textColor={currentTheme.fontMainColor}
-                bolder
-                B700
-                H4>
-                {title}
-              </TextDefault>
-            )
-          }}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              style={styles(currentTheme).dealSection}
-              activeOpacity={0.7}
-              // Link here screen iwth itemDetail screen by passing food as parameter.
-              onPress={() =>
-                onPressItem({
-                  ...item,
-                  restaurant: restaurant._id,
-                  restaurantName: restaurant.name
-                })
-              }>
-              <View style={styles().deal}>
-                <View style={styles().flex}>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={{ ...alignment.MBxSmall }}
-                    numberOfLines={1}
-                    bolder>
-                    {item.title}
-                  </TextDefault>
-                  <View style={styles().dealDescription}>
+            ])}
+            keyExtractor={(item, index) => item + index}
+            ItemSeparatorComponent={() => (
+              <View style={styles(currentTheme).listSeperator} />
+            )}
+            SectionSeparatorComponent={props => {
+              if (!props.leadingItem) return null
+              return <View style={styles(currentTheme).sectionSeparator} />
+            }}
+            renderSectionHeader={({ section: { title } }) => {
+              return (
+                <TextDefault
+                  style={styles(currentTheme).sectionHeaderText}
+                  textColor={currentTheme.fontMainColor}
+                  bolder
+                  B700
+                  H4>
+                  {title}
+                </TextDefault>
+              )
+            }}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                style={styles(currentTheme).dealSection}
+                activeOpacity={0.7}
+                onPress={() =>
+                  onPressItem({
+                    ...item,
+                    restaurant: restaurant._id,
+                    restaurantName: restaurant.name
+                  })
+                }>
+                <View style={styles().deal}>
+                  <View style={styles().flex}>
                     <TextDefault
-                      style={{ width: '100%' }}
-                      textColor={currentTheme.fontSecondColor}
-                      small>
-                      {item.description}
+                      textColor={currentTheme.fontMainColor}
+                      style={styles().headerText}
+                      numberOfLines={1}
+                      bolder>
+                      {item.title}
                     </TextDefault>
-                    <View style={styles().dealPrice}>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontMainColor}
-                        style={styles().priceText}
-                        small>
-                        {configuration.currencySymbol}{' '}
-                        {parseFloat(item.variations[0].price).toFixed(2)}
+                    <View style={styles().dealDescription}>
+                      <TextDefault style={styles().priceText} small>
+                        {wrapContentAfterWords(item.description, 5)}
                       </TextDefault>
-                      {item.variations[0].discounted > 0 && (
+                      <View style={styles().dealPrice}>
                         <TextDefault
                           numberOfLines={1}
-                          textColor={currentTheme.fontSecondColor}
+                          textColor={currentTheme.fontMainColor}
                           style={styles().priceText}
-                          small
-                          lineOver>
+                          bolder
+                          small>
                           {configuration.currencySymbol}{' '}
-                          {(
-                            item.variations[0].price +
-                            item.variations[0].discounted
-                          ).toFixed(2)}
+                          {parseFloat(item.variations[0].price).toFixed(2)}
                         </TextDefault>
-                      )}
+                        {item.variations[0].discounted > 0 && (
+                          <TextDefault
+                            numberOfLines={1}
+                            textColor={currentTheme.fontSecondColor}
+                            style={styles().priceText}
+                            small
+                            lineOver>
+                            {configuration.currencySymbol}{' '}
+                            {(
+                              item.variations[0].price +
+                              item.variations[0].discounted
+                            ).toFixed(2)}
+                          </TextDefault>
+                        )}
+                      </View>
                     </View>
                   </View>
+                  {item.image ? (
+                    <Image
+                      style={{
+                        height: scale(60),
+                        width: scale(60),
+                        borderRadius: 30
+                      }}
+                      source={{ uri: item.image }}
+                    />
+                  ) : null}
                 </View>
-                {item.image ? (
-                  <Image
-                    style={{ height: scale(70), width: scale(70) }}
-                    source={{ uri: item.image }}
-                  />
-                ) : null}
-              </View>
-              {tagCart(item._id)}
-            </TouchableOpacity>
-          )}
-        />
-        {cartCount > 0 && (
-          <View style={styles(currentTheme).buttonContainer}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).button}
-              onPress={() => navigation.navigate('Cart')}>
-              <View style={styles().buttontLeft}>
-                <Animated.View
-                  style={[
-                    styles(currentTheme).buttonLeftCircle,
-                    {
-                      width: circleSize,
-                      height: circleSize,
-                      borderRadius: radiusSize
-                    }
-                  ]}>
-                  <Animated.Text
+                {tagCart(item._id)}
+              </TouchableOpacity>
+            )}
+          />
+          {cartCount > 0 && (
+            <View style={styles(currentTheme).buttonContainer}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles(currentTheme).button}
+                onPress={() => navigation.navigate('Cart')}>
+                <View style={styles().buttontLeft}>
+                  <Animated.View
                     style={[
-                      styles(currentTheme).buttonTextLeft,
-                      { fontSize: fontChange }
+                      styles(currentTheme).buttonLeftCircle,
+                      {
+                        width: circleSize,
+                        height: circleSize,
+                        borderRadius: radiusSize
+                      }
                     ]}>
-                    {cartCount}
-                  </Animated.Text>
-                </Animated.View>
-              </View>
-              <TextDefault
-                style={styles().buttonText}
-                textColor={currentTheme.buttonTextPink}
-                uppercase
-                center
-                bolder
-                small>
-                {i18n.t('viewCart')}
-              </TextDefault>
-              <View style={styles().buttonTextRight} />
-            </TouchableOpacity>
-          </View>
-        )}
-      </Animated.View>
-    </SafeAreaView>
+                    <Animated.Text
+                      style={[
+                        styles(currentTheme).buttonTextLeft,
+                        { fontSize: fontChange }
+                      ]}>
+                      {cartCount}
+                    </Animated.Text>
+                  </Animated.View>
+                </View>
+                <TextDefault
+                  style={styles().buttonText}
+                  textColor={currentTheme.buttonTextPink}
+                  uppercase
+                  center
+                  bolder
+                  small>
+                  {i18n.t('viewCart')}
+                </TextDefault>
+                <View style={styles().buttonTextRight} />
+              </TouchableOpacity>
+            </View>
+          )}
+        </Animated.View>
+      </SafeAreaView>
+    </>
   )
 }
 

@@ -24,6 +24,10 @@ import { theme } from '../../utils/themeColors'
 import screenOptions from './screenOptions'
 import styles from './styles'
 import analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons'
+import navigationService from '../../routes/navigationService'
+
 const RESTAURANTS = gql`
   ${FavouriteRestaurant}
 `
@@ -57,8 +61,51 @@ function Favourite() {
   })
 
   useLayoutEffect(() => {
-    navigation.setOptions(screenOptions(currentTheme.headerText))
+    navigation.setOptions({
+      title: i18n.t('titleFavourite'),
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerTitleContainerStyle: {
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
+        backgroundColor: currentTheme.black,
+        borderColor: currentTheme.white,
+        borderWidth: 1
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0,
+        marginBottom: 10
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 50,
+                marginLeft: 10,
+                width: 55,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons name="arrow-back" size={25} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
+    })
   }, [navigation])
+
+
   function emptyView() {
     return (
       <View style={[styles().flex, styles(currentTheme).mainContainerEmpty]}>
@@ -67,7 +114,11 @@ function Favourite() {
             <EmptyCart width={scale(200)} height={scale(200)} />
           </View>
           <View style={styles().descriptionEmpty}>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder center>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              bolder
+              center
+              B700>
               {i18n.t('titleEmptyFav')}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontSecondColor} center>
@@ -84,7 +135,7 @@ function Favourite() {
               })
             }>
             <TextDefault
-              textColor={currentTheme.buttonText}
+              textColor={currentTheme.black}
               bolder
               B700
               center

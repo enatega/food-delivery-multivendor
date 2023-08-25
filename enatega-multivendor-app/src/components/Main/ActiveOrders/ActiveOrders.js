@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { MaterialIcons } from '@expo/vector-icons'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
@@ -56,28 +57,51 @@ const ActiveOrders = () => {
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
+  const activeOrders = orders.filter(o =>
+    orderStatusActive.includes(o.orderStatus)
+  )
+
   const currentTheme = theme[themeContext.ThemeValue]
+  const [showAll, setShowAll] = useState(false)
+
+  const displayOrders = showAll ? activeOrders : activeOrders.slice(0, 2)
 
   if (loadingOrders) return <Spinner />
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   return (
-    <FlatList
-      contentContainerStyle={{ paddingRight: scale(10) }}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      horizontal={true}
-      data={orders.filter(o => orderStatusActive.includes(o.orderStatus))}
-      keyExtractor={item => item._id}
-      renderItem={({ item, index }) => (
-        <Item
-          key={index}
-          navigation={navigation}
-          configuration={configuration}
-          currentTheme={currentTheme}
-          item={item}
-        />
-      )}
-    />
+    <>
+      <FlatList
+        contentContainerStyle={{ paddingRight: scale(10) }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        data={displayOrders}
+        keyExtractor={item => item._id}
+        renderItem={({ item, index }) => (
+          <Item
+            key={index}
+            navigation={navigation}
+            configuration={configuration}
+            currentTheme={currentTheme}
+            item={item}
+          />
+        )}
+      />
+      <View style={styles().viewAllButton}>
+        {activeOrders.length > 2 && (
+          <>
+            <View style={styles().btncontainer}>
+              <TouchableOpacity
+                onPress={() => setShowAll(!showAll)}
+                style={styles().button}>
+                <Text style={styles().buttonText}>
+                  {showAll ? 'View Less' : 'View All'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+    </>
   )
 }
 const Item = ({ navigation, configuration, currentTheme, item }) => {
@@ -94,7 +118,6 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
     })
     return obj[0]
   }
-
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -107,50 +130,50 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
           currencySymbol: configuration.currencySymbol
         })
       }}>
-      <View style={styles(currentTheme).statusContainer}>
-        <View style={styles().randomShapeContainer}>
-          <RandomShape width={scale(300)} height={scale(300)} />
-        </View>
-        <View style={styles().textContainer}>
-          <Text style={styles(currentTheme).title}>Your order from:</Text>
-          <Text style={styles(currentTheme).description}>
-            {item.restaurant.name}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              marginTop: scale(10),
-              marginBottom: scale(8)
-            }}>
-            {Array(checkStatus(item.orderStatus).status)
-              .fill(0)
-              .map((item, index) => (
-                <FontAwesome
-                  key={index}
-                  name="circle"
-                  size={15}
-                  color={currentTheme.iconColorPink}
-                  style={styles().statusCircle}
-                />
-              ))}
-            {Array(4 - checkStatus(item.orderStatus).status)
-              .fill(0)
-              .map((item, index) => (
-                <FontAwesome
-                  key={index}
-                  name="circle"
-                  size={15}
-                  color={currentTheme.radioOuterColor}
-                  style={styles().statusCircle}
-                />
-              ))}
+      <View>
+        <View style={styles(currentTheme).statusContainer}>
+          <View style={styles().randomShapeContainer}>
+            <RandomShape width={scale(300)} height={scale(300)} />
           </View>
-          <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-            {checkStatus(item.orderStatus).status}.{' '}
-            {checkStatus(item.orderStatus).statusText}
-          </Text>
-          <Text style={styles(currentTheme).timeText}> {item.orderStatus}</Text>
+          <View style={styles().textContainer}>
+            <View style={styles().textInnerContainer}>
+              <MaterialIcons
+                name="radio-button-checked"
+                size={30}
+                color="black"
+              />
+              <Text style={styles(currentTheme).description}>
+                {item.restaurant.name}
+              </Text>
+            </View>
+            <View style={styles().activeOrdersContainer}>
+              {Array(checkStatus(item.orderStatus).status)
+                .fill(0)
+                .map((item, index) => (
+                  <FontAwesome
+                    key={index}
+                    name="circle"
+                    size={15}
+                    color={currentTheme.iconColorPink}
+                    style={styles().statusCircle}
+                  />
+                ))}
+              {Array(4 - checkStatus(item.orderStatus).status)
+                .fill(0)
+                .map((item, index) => (
+                  <FontAwesome
+                    key={index}
+                    name="circle"
+                    size={15}
+                    color={currentTheme.radioOuterColor}
+                    style={styles().statusCircle}
+                  />
+                ))}
+            </View>
+            <Text numberOfLines={1} style={styles(currentTheme).statusText}>
+              {checkStatus(item.orderStatus).statusText}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, Dimensions } from 'react-native'
+import { View, Dimensions, Text } from 'react-native'
 import { MaterialIcons, Ionicons } from '@expo/vector-icons'
 import { scale, verticalScale } from '../../../utils/scaling'
 import styles from './styles'
@@ -76,24 +76,31 @@ function ImageTextCenterHeader(props, ref) {
       </View>
     )
   }
-
   return (
     <Animated.View
       style={[
         styles(currentTheme).mainContainer,
         {
           height: props.height,
-          backgroundColor: props.loading
-            ? 'transparent'
-            : currentTheme.headerBackground
+          backgroundColor: props.loading ? 'transparent' : 'null'
         }
       ]}>
       <Animated.View
-        style={{ height: Animated.sub(props.height, TOP_BAR_HEIGHT) }}>
+        style={{
+          height: Animated.sub(props.height, TOP_BAR_HEIGHT),
+          backgroundColor: 'white'
+        }}>
         <Animated.Image
           resizeMode="cover"
           source={{ uri: aboutObject.restaurantImage }}
-          style={[styles().flex, { opacity: props.opacity }]}
+          style={[
+            styles().flex,
+            {
+              opacity: props.opacity,
+              borderBottomLeftRadius: scale(20),
+              borderBottomRightRadius: scale(20)
+            }
+          ]}
         />
         <Animated.View style={styles().overlayContainer}>
           <View style={styles().fixedViewNavigation}>
@@ -107,14 +114,14 @@ function ImageTextCenterHeader(props, ref) {
                     backgroundColor: props.iconBackColor,
                     borderRadius: props.iconRadius,
                     height: props.iconTouchHeight,
-                    width: props.iconTouchWidth
+                    width: scale(60)
                   }
                 ]}
                 onPress={() => navigation.goBack()}>
                 <AnimatedIon
                   name="ios-arrow-back"
                   style={{
-                    color: props.iconColor,
+                    color: props.black,
                     fontSize: props.iconSize
                   }}
                 />
@@ -131,44 +138,57 @@ function ImageTextCenterHeader(props, ref) {
                 Delivery {aboutObject.deliveryTime} Minute{' '}
               </Animated.Text>
               {!props.loading && (
-                <AnimatedBorderless
-                  activeOpacity={0.7}
-                  rippleColor={currentTheme.rippleColor}
-                  style={[
-                    styles().touchArea,
+                <>
+                  <AnimatedBorderless
+                    activeOpacity={0.7}
+                    rippleColor={currentTheme.rippleColor}
+                    style={[
+                      styles().touchArea,
+                      {
+                        backgroundColor: props.iconBackColor,
+                        borderRadius: props.iconRadius,
+                        height: props.iconTouchHeight,
+                        width: props.iconTouchWidth
+                      }
+                    ]}
+                    onPress={() => {
+                      navigation.navigate('About', {
+                        restaurantObject: {
+                          ...aboutObject,
+                          isOpen: null
+                        },
+                        tab: true
+                      })
+                    }}>
                     {
-                      backgroundColor: props.iconBackColor,
-                      borderRadius: props.iconRadius,
-                      height: props.iconTouchHeight,
-                      width: props.iconTouchWidth
+                      <AnimatedIon
+                        name="ios-information-circle-outline"
+                        style={{
+                          color: props.black,
+                          fontSize: props.iconSize
+                        }}
+                      />
                     }
-                  ]}
-                  onPress={() => {
-                    navigation.navigate('About', {
-                      restaurantObject: {
-                        ...aboutObject,
-                        isOpen: null
-                      },
-                      tab: true
-                    })
-                  }}>
-                  <AnimatedIon
-                    name="ios-information-circle-outline"
-                    style={{
-                      color: props.iconColor,
-                      fontSize: props.iconSize
-                    }}
-                  />
-                </AnimatedBorderless>
+                  </AnimatedBorderless>
+                </>
               )}
             </View>
           </View>
           <Animated.View
             style={[styles().fixedView, { opacity: props.opacity }]}>
             <View style={styles().fixedText}>
-              <TextDefault H4 bolder Center textColor={currentTheme.fontWhite}>
-                {aboutObject.restaurantName}
+              <TextDefault
+                H4
+                bolder
+                Center
+                textColor={currentTheme.fontWhite}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {aboutObject.restaurantName.length > 12
+                  ? `${aboutObject.restaurantName.slice(0, 15)}...`
+                  : aboutObject.restaurantName}
               </TextDefault>
+
               {!props.loading && (
                 <View style={styles(currentTheme).deliveryBox}>
                   <TextDefault

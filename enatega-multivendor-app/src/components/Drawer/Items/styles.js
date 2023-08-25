@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
     height: '80%',
     width: '75%',
     justifyContent: 'center'
+  },
+  drawerContainer: {
+    alignSelf: 'flex-start'
   }
 })
 export default styles

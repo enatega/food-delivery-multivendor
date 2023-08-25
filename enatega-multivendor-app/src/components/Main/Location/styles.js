@@ -1,19 +1,20 @@
-import { alignment } from '../../../utils/alignment'
+import { scale } from '../../../utils/scaling'
 
 export default {
   headerTitleContainer: {
     flex: 1,
-    height: '100%'
+    height: '100%',
+    width: '95%'
   },
   headerContainer: {
     height: '100%',
     width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'column-reverse',
+    paddingLeft: scale(5)
   },
   textContainer: {
-    maxWidth: '75%',
-    ...alignment.PTxSmall,
-    ...alignment.PBxSmall
+    maxWidth: '100%',
+    paddingTop: scale(2),
+    paddingBottom: scale(2)
   }
 }

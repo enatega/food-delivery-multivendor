@@ -3,13 +3,19 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { theme } from '../../utils/themeColors'
 import screenOptions from './screenOptions'
-import { View, TouchableOpacity, ScrollView } from 'react-native'
+import { View, TouchableOpacity, ScrollView, StatusBar } from 'react-native'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { useFocusEffect } from '@react-navigation/native'
 import styles from './styles'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
+import i18n from '../../../i18n'
+import { scale } from '../../utils/scaling'
+import { HeaderBackButton } from '@react-navigation/elements'
+import navigationService from '../../routes/navigationService'
+import { MaterialIcons, Entypo } from '@expo/vector-icons'
 function Reorder(props) {
   const order = props.route.params.item
   const themeContext = useContext(ThemeContext)
@@ -17,11 +23,50 @@ function Reorder(props) {
   const currentTheme = theme[themeContext.ThemeValue]
 
   const inset = useSafeAreaInsets()
+  useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+    }
+    StatusBar.setBarStyle('light-content')
+  })
   const [selectedItems, setItems] = useState([])
 
   useLayoutEffect(() => {
-    props.navigation.setOptions(screenOptions(currentTheme.headerText))
+    props.navigation.setOptions({
+      title: i18n.t('previous'),
+      headerRight: null,
+      headerTitleAlign: 'center',
+      headerTitleContainerStyle: {
+        marginTop: '1%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
+        height: '75%',
+        borderRadius: scale(10),
+        backgroundColor: currentTheme.black,
+        marginLeft: 0
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.headerColor,
+        shadowColor: 'transparent',
+        shadowRadius: 0
+      },
+      headerTitleAlign: 'center',
+      headerRight: null,
+      headerLeft: () => (
+        <HeaderBackButton
+          backImage={() => (
+            <View style={styles().backButton}>
+              <Entypo name="cross" size={30} color="black" />
+            </View>
+          )}
+          onPress={() => {
+            navigationService.goBack()
+          }}
+        />
+      )
+    })
   }, [props.navigation])
+
   useEffect(() => {
     async function Track() {
       await analytics.track(analytics.events.NAVIGATE_TO_REORDER)
@@ -37,7 +82,7 @@ function Reorder(props) {
     }
   }
 
-  const onAddToCart = async() => {
+  const onAddToCart = async () => {
     await setCartRestaurant(order.restaurant._id)
     selectedItems.forEach(async index => {
       const item = order.items[index]
@@ -66,11 +111,11 @@ function Reorder(props) {
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}
         contentContainerStyle={styles(currentTheme).scrollViewStyle}>
-        <View>
+        <View style={styles().mainContainer}>
           <TextDefault
             style={[alignment.MLmedium, alignment.MTmedium]}
             bolder
-            H5
+            H4
             textColor={currentTheme.fontMainColor}>
             Select Items
           </TextDefault>
@@ -93,7 +138,7 @@ function Reorder(props) {
                 <View style={{ width: '50%' }}>
                   <TextDefault
                     numberOfLines={1}
-                    textColor={currentTheme.fontSecondColor}>
+                    textColor={currentTheme.fontMainColor}>
                     {item.title}
                   </TextDefault>
                   {item.addons.map((addon, index) => {
@@ -129,12 +174,12 @@ function Reorder(props) {
               selectedItems.length > 0
                 ? styles(currentTheme).buttonStyles
                 : {
-                  ...styles(currentTheme).buttonStyles,
-                  backgroundColor: currentTheme.horizontalLine
-                }
+                    ...styles(currentTheme).buttonStyles,
+                    backgroundColor: currentTheme.lightHorizontalLine
+                  }
             }
             onPress={onAddToCart}>
-            <TextDefault bolder textColor={currentTheme.white}>
+            <TextDefault bolder textColor={currentTheme.black}>
               ADD TO CART
             </TextDefault>
           </TouchableOpacity>

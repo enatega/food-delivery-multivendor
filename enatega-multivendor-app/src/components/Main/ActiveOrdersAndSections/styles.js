@@ -1,6 +1,7 @@
 import { verticalScale, scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
+import { theme } from '../../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -14,15 +15,11 @@ const styles = (props = null) =>
     offerContainer: {
       backgroundColor: props != null ? props.cartContainer : 'white',
       elevation: 3,
-      shadowColor: props != null ? props.shadowColor : 'grey',
-      shadowOffset: {
-        width: 0,
-        height: verticalScale(0)
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: verticalScale(3),
+      shadowColor: theme.Pink.white,
+
       height: scale(200),
-      width: scale(230),
+      borderRadius: 25,
+      width: scale(228),
       ...alignment.MBmedium,
       ...alignment.MTxSmall
     },
@@ -41,13 +38,14 @@ const styles = (props = null) =>
     },
     deliveryOverlay: {
       position: 'absolute',
-      top: 0,
-      right: 0,
-      width: scale(25),
-      height: scale(25),
+      top: 12,
+      right: 18,
+      width: scale(44),
+      height: scale(19),
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 1,
+      borderRadius: scale(10),
       backgroundColor: props != null ? props.menuBar : 'white'
     },
     featureOverlay: {
@@ -70,7 +68,7 @@ const styles = (props = null) =>
     },
     descriptionContainer: {
       paddingTop: verticalScale(10),
-      paddingBottom: verticalScale(10),
+      paddingBottom: verticalScale(5),
       paddingLeft: scale(10),
       paddingRight: scale(10),
       height: '40%',
@@ -85,6 +83,27 @@ const styles = (props = null) =>
       width: '100%',
       ...alignment.MTxSmall,
       ...alignment.MBxSmall
+    },
+    mainContainer: {
+      paddingTop: scale(15),
+      marginBottom: scale(15),
+      borderTopLeftRadius: scale(20),
+      borderTopRightRadius: scale(20),
+      borderTopColor: '#ebebeb',
+      borderTopWidth: scale(3)
+    },
+    restaurantImage: {
+      width: scale(220),
+      height: '100%',
+      borderRadius: scale(25),
+      marginTop: scale(5)
+    },
+    restaurantRatingContainer: {
+      marginLeft: scale(2)
+    },
+    restaurantPriceContainer: {
+      marginTop: scale(3),
+      fontSize: 15
     }
   })
 

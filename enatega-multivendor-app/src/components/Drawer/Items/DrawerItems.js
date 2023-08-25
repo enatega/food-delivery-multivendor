@@ -20,12 +20,12 @@ function DrawerItems(props) {
           <SimpleLineIcons
             name={props.icon}
             size={verticalScale(16)}
-            color={currentTheme.iconColorPink}
+            color={currentTheme.black}
           />
         </View>
         <View style={styles.rightContainer}>
           <TextDefault
-            style={{ alignSelf: 'flex-start' }}
+            style={styles.drawerContainer}
             textColor={currentTheme.fontMainColor}
             small
             bold>

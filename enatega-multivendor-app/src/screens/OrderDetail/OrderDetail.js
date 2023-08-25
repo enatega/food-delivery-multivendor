@@ -21,7 +21,7 @@ import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import CustomerMarker from '../../assets/SVG/customer-marker'
 import TrackingRider from '../../components/OrderDetail/TrackingRider/TrackingRider'
 import OrdersContext from '../../context/Orders'
-import { mapStyles } from './mapStyles'
+import { mapStyle } from '../../utils/mapStyle'
 const { height: HEIGHT } = Dimensions.get('screen')
 
 function OrderDetail(props) {
@@ -75,7 +75,7 @@ function OrderDetail(props) {
           zoomEnabled={true}
           zoomControlEnabled={true}
           rotateEnabled={false}
-          customMapStyle={mapStyles}
+          customMapStyle={mapStyle}
           provider={PROVIDER_GOOGLE}>
           <Marker
             coordinate={{

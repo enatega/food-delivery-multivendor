@@ -1,11 +1,9 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { fontStyles } from '../../../utils/fontStyles'
-import { verticalScale } from '../../../utils/scaling'
+import { scale, verticalScale } from '../../../utils/scaling'
 const { width: WIDTH } = Dimensions.get('window')
 export default StyleSheet.create({
   container: theme => ({
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
     alignItems: 'center',
     backgroundColor: theme.white
   }),
@@ -15,48 +13,38 @@ export default StyleSheet.create({
     backgroundColor: theme.secondaryText
   }),
   chatButton: theme => ({
-    paddingVertical: 25,
-    paddingHorizontal: 100,
+    paddingVertical: scale(25),
+    paddingHorizontal: scale(100),
     backgroundColor: theme.black,
-    borderRadius: 20
+    borderRadius: scale(20)
   }),
   chatButtonText: theme => ({
     color: theme.white,
     fontFamily: fontStyles.MuseoSans500
   }),
-  shadowBox: theme => ({
-    elevation: 1,
-    shadowColor: theme.shadow,
-    shadowOffset: {
-      width: 0,
-      height: -verticalScale(2)
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: verticalScale(2),
-    borderRadius: 20,
-    backgroundColor: theme.white
-  }),
+
+  orderDetailsContainer: {
+    paddingVertical: 20
+  },
   addressContainer: {
-    margin: 20,
-    paddingVertical: 25,
     width: WIDTH - 20,
-    paddingLeft: 15
+    paddingLeft: scale(15)
   },
   row: {
-    paddingTop: 25,
+    paddingTop: scale(25),
     flexDirection: 'row'
   },
   addressText: { width: '50%' },
   itemsContainer: {
     width: WIDTH - 20,
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-    margin: 20
+    paddingHorizontal: scale(15),
+    paddingVertical: scale(20),
+    margin: scale(20)
   },
   line2: theme => ({
-    marginVertical: 10,
+    marginVertical: scale(10),
     backgroundColor: theme.secondaryText,
-    height: 1,
+    height: scale(1),
     width: '100%'
   }),
   itemRow: {
@@ -67,6 +55,6 @@ export default StyleSheet.create({
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10
+    marginBottom: scale(10)
   }
 })

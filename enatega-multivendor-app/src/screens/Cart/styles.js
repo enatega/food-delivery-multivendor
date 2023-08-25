@@ -30,31 +30,31 @@ const styles = (props = null) =>
     },
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.PTsmall
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      //...alignment.PTsmall
     },
     dealContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
-      borderRadius: scale(5),
+      borderRadius: scale(10),
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },
     termsContainer: {
       width: '100%',
-      backgroundColor: 'transparent',
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent',
       borderRadius: scale(5),
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },
     itemContainer: {
       width: '100%',
-      backgroundColor: 'transparent'
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
     },
     priceContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
-      borderRadius: scale(5),
+      borderRadius: scale(20),
       borderBottomColor:
         props !== null ? props.lightHorizontalLine : 'transparent',
       ...alignment.PLsmall,
@@ -67,11 +67,11 @@ const styles = (props = null) =>
       shadowOpacity: 0
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: props !== null ? props.backgroundColor2 : 'transparent'
     },
     handle: {
       width: 150,
-      backgroundColor: '#b0afbc'
+      backgroundColor: props !== null ? props.hex : '#b0afbc'
     },
     floatView: {
       width: '100%',
@@ -87,7 +87,7 @@ const styles = (props = null) =>
       textAlign: 'right'
     },
     horizontalLine: {
-      borderBottomColor: props !== null ? props.horizontalLine : 'black',
+      borderBottomColor: props !== null ? props.black : 'black',
       borderBottomWidth: StyleSheet.hairlineWidth
     },
     arrowRight: {
@@ -113,6 +113,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
+      borderRadius: scale(16),
       backgroundColor: props !== null ? props.buttonBackground : 'black',
       height: '75%',
       width: '95%',
@@ -125,7 +126,7 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     buttonLeftCircle: {
-      backgroundColor: props != null ? props.menuBar : '#FFF',
+      backgroundColor: props != null ? props.black : 'black',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(18),
@@ -133,8 +134,8 @@ const styles = (props = null) =>
       borderRadius: scale(9)
     },
     iconStyle: {
-      height: verticalScale(15),
-      width: verticalScale(20)
+      height: verticalScale(18),
+      width: verticalScale(18)
     },
     subContainerImage: {
       flex: 1,
@@ -156,6 +157,7 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
+      borderRadius: scale(10),
       width: '60%',
       height: '8%',
       backgroundColor: props !== null ? props.buttonBackground : 'transparent',
@@ -203,19 +205,68 @@ const styles = (props = null) =>
       flexDirection: 'row'
     },
     labelButton: {
-      width: '25%',
+      marginRight: 10,
+
+      borderRadius: scale(10),
+      width: '22%',
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: props !== null ? props.horizontalLine : 'transparent',
       justifyContent: 'center',
-      height: scale(35)
+      height: scale(30)
     },
     activeLabel: {
-      width: '25%',
-      borderWidth: 2,
+      marginRight: 10,
+      borderRadius: scale(10),
+      backgroundColor: props !== null ? props.main : 'transparent',
+      width: '22%',
+      //borderWidth: 2,
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',
-      height: scale(35)
+      height: scale(30)
+    },
+    headerContainer: {
+      backgroundColor: props !== null ? props.rippleColor : '#6FCF97',
+      borderBottomRightRadius: 20,
+      borderBottomLeftRadius: 20,
+      padding: 10,
+      paddingBottom: 0
+    },
+    imageContainer: {
+      display: 'flex',
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
+    },
+    cartInnerContainer: {
+      marginTop: 4,
+      padding: 6,
+      backgroundColor: props != null ? props.black : '#B8B8B8',
+      width: '50%',
+      borderRadius: 6
+    },
+    couponContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end'
+    },
+    tipContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
+    changeAddressContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    changeAddressBtn: {
+      borderRadius: scale(10),
+      backgroundColor: props != null ? props.main : '#B8B8B8',
+      width: '40%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: scale(30)
     }
   })
 export default styles
