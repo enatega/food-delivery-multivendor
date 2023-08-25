@@ -33,7 +33,7 @@ const styles = (props = null) =>
       height: scale(30),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props != null ? props.black : '#FFF',
+      backgroundColor: 'white',
       borderRadius: scale(15)
     },
     deliveryBoxContainer: {

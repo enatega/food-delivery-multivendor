@@ -31,7 +31,7 @@ function ImageHeader(props) {
           onPress={() => navigation.goBack()}>
           <AnimatedIon
             name="ios-arrow-back"
-            style={styles(currentTheme).backArrow}
+            size={25}
           />
         </TouchableOpacity>
         <View style={styles(currentTheme).deliveryBoxContainer}>
