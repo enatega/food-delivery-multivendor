@@ -66,6 +66,16 @@ const styles = (props = null) =>
       alignItems: 'center',
       paddingTop: scale(10),
       paddingBottom: scale(10)
+    },
+    backArrow: {
+      color: props != null ? props.black : '#FFF',
+      fontSize: scale(20),
+      backgroundColor: 'white',
+      paddingLeft: scale(15),
+      paddingRight: scale(15),
+      paddingBottom: scale(5),
+      paddingTop: scale(5),
+      borderRadius: scale(22)
     }
   })
 export default styles
