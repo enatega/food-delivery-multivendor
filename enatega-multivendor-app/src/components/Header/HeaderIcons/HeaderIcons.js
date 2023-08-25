@@ -84,7 +84,7 @@ function LeftButton(props) {
     return (
       <HeaderBackButton
         backImage={() =>
-          BackButton({ iconColor: currentTheme.iconColor, icon: 'leftArrow' })
+          BackButton({ iconColor: '#333333', icon: 'leftArrow' })
         }
         onPress={() => {
           navigationService.goBack()
@@ -96,9 +96,7 @@ function LeftButton(props) {
       <HeaderBackButton
         pressColorAndroid={rippleColor}
         labelVisible={false}
-        backImage={() =>
-          BackButton({ iconColor: currentTheme.iconColor, icon: 'close' })
-        }
+        backImage={() => BackButton({ iconColor: '#333333', icon: 'close' })}
         onPress={() => {
           navigation.dispatch(state => {
             const routes = state.routes.filter(r => r.name === 'Main')
@@ -117,7 +115,7 @@ function LeftButton(props) {
         labelVisible={false}
         backImage={() =>
           BackButton({
-            iconColor: currentTheme.iconColor,
+            iconColor: '#333333',
             icon: props.toggleValue ? 'leftArrow' : 'close'
           })
         }
@@ -229,7 +227,7 @@ function RightButton(props) {
           labelVisible={false}
           backImage={() => (
             <View style={styles().favContainer}>
-              {BackButton({ iconColor: currentTheme.iconColor, icon: 'fav' })}
+              {BackButton({ iconColor: '#333333', icon: 'fav' })}
             </View>
           )}
           bolder
@@ -256,7 +254,7 @@ function RightButton(props) {
         labelVisible={false}
         backImage={() => (
           <View style={[styles().rightContainer]}>
-            {BackButton({ iconColor: currentTheme.iconColor, icon: 'target' })}
+            {BackButton({ iconColor: '#333333', icon: 'target' })}
           </View>
         )}
         onPress={props.onPressRight}
