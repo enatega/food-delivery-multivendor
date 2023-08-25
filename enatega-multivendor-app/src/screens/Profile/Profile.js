@@ -9,7 +9,6 @@ import {
   View,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ScrollView,
   Platform,
   StatusBar,
   Text
@@ -28,8 +27,6 @@ import styles from './styles'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { textStyles } from '../../utils/textStyles'
-import screenOptions from './screenOptions'
 import { useFocusEffect } from '@react-navigation/native'
 import Analytics from '../../utils/analytics'
 import { Feather } from '@expo/vector-icons'
@@ -99,14 +96,7 @@ function Profile(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
+            <View style={styles().bacKButton}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -300,17 +290,11 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <Text style={styles().titleContainer}>
-        Personal details
-      </Text>
+      <Text style={styles().titleContainer}>Personal details</Text>
       <View style={styles(currentTheme).formContainer}>
-        {/* <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={[styles(currentTheme).formContainer]}> */}
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles().flex}>
-          {/* name */}
           <View style={styles(currentTheme).formSubContainer}>
             <View style={styles().containerHeading}>
               {toggleNameView && (
@@ -416,7 +400,6 @@ function Profile(props) {
                 <>
                   <View style={styles().headingTitle}>
                     <TextDefault
-                      // style={{ fontSize: scale(13)}}
                       textColor={currentTheme.fontMainColor}
                       H5
                       B700
@@ -442,12 +425,10 @@ function Profile(props) {
             {toggleView ? (
               changePhoneTab()
             ) : (
-              // <View style={styles().containerInfo}>
               <View>
                 <View style={styles().containerHeading}>
                   <View style={styles().headingTitle}>
                     <TextDefault
-                      // style={{ fontSize: scale(13)}}
                       textColor={currentTheme.fontMainColor}
                       H5
                       B700
@@ -458,8 +439,6 @@ function Profile(props) {
                 </View>
 
                 <View>
-                  {/* <View style={{ margin: scale(0) }}></View> */}
-
                   <View style={{ ...alignment.MTxSmall }}></View>
 
                   <View style={styles().flexRow}>
@@ -513,7 +492,6 @@ function Profile(props) {
             )}
           </View>
         </KeyboardAvoidingView>
-        {/* </ScrollView> */}
       </View>
     </>
   )

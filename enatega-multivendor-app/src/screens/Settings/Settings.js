@@ -22,7 +22,7 @@ import {
   updateNotificationStatus,
   Deactivate
 } from '../../apollo/mutations'
-import { User } from '../../apollo/queries'
+
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import styles from './styles'
@@ -118,14 +118,7 @@ function Settings(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
+            <View style={styles().backButton}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -313,15 +306,7 @@ function Settings(props) {
             </TextDefault>
           </View>
         )}
-        <View
-          style={{
-            backgroundColor: 'white',
-            borderRadius: 30,
-            shadowOffset: { width: 0 },
-            shadowColor: 'black',
-            shadowOpacity: 0.1,
-            marginTop: 20
-          }}>
+        <View style={styles().mainContainerArea}>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
@@ -440,7 +425,6 @@ function Settings(props) {
                   <Text style={styles().deleteButtonText}>DELETE ACCOUNT</Text>
                 </TouchableOpacity>
               </View>
-              {/* <Button color={'red'} /> */}
             </View>
           </TouchableOpacity>
         </View>
