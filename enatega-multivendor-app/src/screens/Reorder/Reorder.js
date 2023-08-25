@@ -55,14 +55,7 @@ function Reorder(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
+            <View style={styles().backButton}>
               <Entypo name="cross" size={30} color="black" />
             </View>
           )}

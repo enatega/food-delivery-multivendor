@@ -16,13 +16,6 @@ const styles = (props = null) =>
       top: 0,
       left: 0,
       right: 0,
-      //shadowColor: props != null ? props.shadowColor : 'black',
-      //shadowOpacity: 0.7,
-      // shadowOffset: {
-      //   height: scale(1),
-      //   width: 0
-      // },
-      //shadowRadius: scale(3),
       elevation: 5
     },
     touchArea: {
@@ -62,10 +55,6 @@ const styles = (props = null) =>
     },
     deliveryBox: {
       color: props != null ? props.fontWhite : 'white',
-      // fontSize: scale(12),
-      // borderWidth: StyleSheet.hairlineWidth * 2,
-      // borderColor: props != null ? props.white : 'white',
-      // backgroundColor: 'rgba(0,0,0,0.6)',
       borderRadius: scale(5),
       ...alignment.PxSmall
     },
@@ -76,14 +65,12 @@ const styles = (props = null) =>
       ...alignment.PTsmall,
       ...alignment.PBsmall
     },
-    // New Styling
+
     overlayContainer: {
       position: 'absolute',
       top: 0,
       width: '100%',
       height: '100%',
-      // justifyContent: 'center',
-      //zIndex: 1,
       backgroundColor: 'rgba(0,0,0,0.01)',
       ...alignment.PRsmall,
       ...alignment.PLsmall
@@ -101,7 +88,7 @@ const styles = (props = null) =>
       backgroundColor: 'white',
       borderBottomLeftRadius: 25,
       borderBottomRightRadius: 25,
-      zIndex: 2 // important
+      zIndex: 2
     },
     headerContainer: {
       height: '100%',

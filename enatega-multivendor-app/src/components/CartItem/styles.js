@@ -31,9 +31,9 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 0.2,
-      borderRadius: 5,
-      padding: 5,
-      margin: 8
+      borderRadius: scale(5),
+      padding: scale(5),
+      margin: scale(8)
     }
   })
 export default styles

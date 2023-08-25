@@ -22,10 +22,10 @@ const styles = (props = null) =>
       width: '100%',
       height: '100%',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     reviewText: {
-      padding: 10,
+      padding: scale(10),
       marginTop: scale(20)
     },
     reviewTextContainerImage: {
@@ -40,7 +40,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     ratingSubContainer: {
-      paddingTop: 10,
+      paddingTop: scale(10),
       width: '55%',
       height: '60%'
     },
@@ -49,16 +49,34 @@ const styles = (props = null) =>
       height: height * 0.15,
       backgroundColor: '#f0f0f0',
       alignSelf: 'center',
-      borderRadius: 20
+      borderRadius: scale(20)
     },
     inputSubContainer: {
       width: '100%',
       borderBottomColor: props !== null ? 'transparent' : 'grey',
       borderBottomWidth: verticalScale(1)
     },
+    mainView: {
+      backgroundColor: 'rgba(0, 0, 0, 0.74)',
+      padding: scale(10),
+      borderRadius: scale(10),
+      borderColor: currentTheme.white,
+      borderWidth: 1,
+      width: '45%',
+      alignItems: 'center',
+      alignSelf: 'center',
+      marginBottom: scale(80),
+      marginTop: scale(-140)
+    },
+    line: {
+      backgroundColor: currentTheme.black,
+      height: 0.5,
+      width: '90%',
+      alignSelf: 'center'
+    },
     textinput: {
-      marginTop: 10,
-      padding: 20,
+      marginTop: scale(10),
+      padding: scale(20),
       height: '100%',
       width: '90%',
       ...textStyles.Bold,

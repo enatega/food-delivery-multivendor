@@ -23,7 +23,7 @@ function ImageHeader(props) {
         resizeMode="cover"
         source={{ uri: props.restaurantImage }}
       />
-      {/* Fixed Position on image */}
+
       <Animated.View style={styles(currentTheme).overlayContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
@@ -31,20 +31,10 @@ function ImageHeader(props) {
           onPress={() => navigation.goBack()}>
           <AnimatedIon
             name="ios-arrow-back"
-            style={{
-              color: props.black,
-              fontSize: scale(20),
-              backgroundColor: 'white',
-              paddingLeft: scale(15),
-              paddingRight: scale(15),
-              paddingBottom: scale(5),
-              paddingTop: scale(5),
-              borderRadius: scale(22)
-            }}
+            style={styles(currentTheme).backArrow}
           />
         </TouchableOpacity>
-        <View
-          style={styles(currentTheme).deliveryBoxContainer}>
+        <View style={styles(currentTheme).deliveryBoxContainer}>
           <TextDefault
             H4
             bolder

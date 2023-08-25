@@ -1,6 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -12,12 +13,27 @@ const styles = (props = null) =>
     },
     shadow: {
       shadowOffset: { width: 0, height: scale(2) },
-      shadowColor: 'black',
+      shadowColor: theme.Pink.black,
       shadowOpacity: 0.3,
       shadowRadius: scale(1),
       elevation: 5,
       borderWidth: 0.4,
       borderColor: '#e1e1e1'
+    },
+    backButton: {
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
+    },
+    mainContainerArea: {
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(30),
+      shadowOffset: { width: 0 },
+      shadowColor: theme.Pink.black,
+      shadowOpacity: 0.1,
+      marginTop: scale(20)
     },
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
@@ -69,7 +85,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       padding: scale(10),
       borderRadius: scale(6),
-      backgroundColor: '#fe0000'
+      backgroundColor: theme.Pink.deleteButton
     },
     deleteButtonText: {
       color: 'white',

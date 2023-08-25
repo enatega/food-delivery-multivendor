@@ -23,8 +23,7 @@ const styles = (props = null) =>
       width: '100%',
       height: '100%',
       alignItems: 'center',
-      justifyContent: 'center',
-      //backgroundColor: 'rgba(0,0,0,0.3)'
+      justifyContent: 'center'
     },
     touchArea: {
       position: 'absolute',
@@ -37,8 +36,9 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.black : '#FFF',
       borderRadius: scale(15)
     },
-    deliveryBoxContainer:{    
-        backgroundColor: props != null ? props.customizeOpacityBtn : 'transparent',
+    deliveryBoxContainer: {
+      backgroundColor:
+        props != null ? props.customizeOpacityBtn : 'transparent',
       padding: scale(10),
       borderRadius: scale(10),
       borderColor: 'white',
@@ -57,7 +57,7 @@ const styles = (props = null) =>
       fontSize: scale(20)
     },
     deliveryBoxText: {
-      paddingRight: scale(5), 
+      paddingRight: scale(5),
       paddingLeft: scale(5)
     },
     ratingContainer: {
@@ -66,6 +66,16 @@ const styles = (props = null) =>
       alignItems: 'center',
       paddingTop: scale(10),
       paddingBottom: scale(10)
+    },
+    backArrow: {
+      color: props != null ? props.black : '#FFF',
+      fontSize: scale(20),
+      backgroundColor: 'white',
+      paddingLeft: scale(15),
+      paddingRight: scale(15),
+      paddingBottom: scale(5),
+      paddingTop: scale(5),
+      borderRadius: scale(22)
     }
   })
 export default styles

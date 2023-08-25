@@ -16,12 +16,7 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.cartContainer : 'white',
       elevation: 3,
       shadowColor: theme.Pink.white,
-      // shadowOffset: {
-      //   width: 0,
-      //   height: verticalScale(0)
-      // },
-      // shadowOpacity: 0.3,
-      // shadowRadius: verticalScale(3),
+
       height: scale(200),
       borderRadius: 25,
       width: scale(228),
@@ -50,7 +45,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 1,
-      borderRadius: 10,
+      borderRadius: scale(10),
       backgroundColor: props != null ? props.menuBar : 'white'
     },
     featureOverlay: {
@@ -95,19 +90,19 @@ const styles = (props = null) =>
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20),
       borderTopColor: '#ebebeb',
-      borderTopWidth: 3
+      borderTopWidth: scale(3)
     },
     restaurantImage: {
       width: scale(220),
       height: '100%',
       borderRadius: scale(25),
-      marginTop: 5
+      marginTop: scale(5)
     },
     restaurantRatingContainer: {
       marginLeft: scale(2)
     },
     restaurantPriceContainer: {
-      marginTop: scale(3), 
+      marginTop: scale(3),
       fontSize: 15
     }
   })

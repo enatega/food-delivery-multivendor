@@ -3,7 +3,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   KeyboardAvoidingView,
   ScrollView
 } from 'react-native'
@@ -26,7 +25,6 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-import Animated from 'react-native-reanimated'
 
 // constants
 const REVIEWORDER = gql`
@@ -56,9 +54,12 @@ function RateAndReview(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View
-              style={styles().backImageContainer}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+            <View style={styles().backImageContainer}>
+              <MaterialIcons
+                name="arrow-back"
+                size={30}
+                color={currentTheme.black}
+              />
             </View>
           )}
           onPress={() => {
@@ -112,19 +113,7 @@ function RateAndReview(props) {
         ]}>
         <View style={{ display: 'flex' }}>
           <ImageHeader image={props.route.params.restaurant.image} />
-          <View
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.74)',
-              padding: scale(10),
-              borderRadius: scale(10),
-              borderColor: 'white',
-              borderWidth: 1,
-              width: '45%',
-              alignItems: 'center',
-              alignSelf: 'center',
-              marginBottom: scale(80),
-              marginTop: scale(-140)
-            }}>
+          <View style={styles().mainView}>
             <TextDefault
               H4
               bolder
@@ -137,12 +126,10 @@ function RateAndReview(props) {
             {!props.loading && (
               <View style={{ padding: scale(5) }}>
                 <TextDefault
-                  style={{
-                    paddingRight: scale(5),
-                    paddingLeft: scale(5),
-                    marginTop: scale(10)
-                  }}
                   textColor="white"
+                  paddingRight={scale(5)}
+                  paddingLeft={scale(5)}
+                  marginTop={scale(5)}
                   bold>
                   {props.route.params.restaurant.name.length > 12
                     ? `${props.route.params.restaurant.name.slice(0, 15)}...`
@@ -181,13 +168,7 @@ function RateAndReview(props) {
               />
             </View>
           </View>
-          <View
-            style={{
-              backgroundColor: currentTheme.black,
-              height: 0.5,
-              width: '90%',
-              alignSelf: 'center'
-            }}></View>
+          <View style={styles().line}></View>
 
           <TextDefault
             textColor={currentTheme.fontMainColor}
@@ -209,7 +190,7 @@ function RateAndReview(props) {
                 multiline={true}
                 fontSize={scale(12)}
                 labelHeight={10}
-                maxLength={144}
+                maxLength={scale(144)}
                 placeholder={i18n.t('reviewPlaceholder')}
               />
             </View>

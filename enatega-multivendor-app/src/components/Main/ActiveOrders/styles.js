@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { verticalScale, scale } from '../../../utils/scaling'
 import { fontStyles } from '../../../utils/fontStyles'
+import { theme } from '../../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -27,10 +28,9 @@ const styles = (props = null) =>
       overflow: 'hidden',
       width: '95%',
       alignSelf: 'center',
-      backgroundColor: '#90EA93',
+      backgroundColor: theme.Pink.main,
       borderRadius: scale(12),
       marginTop: verticalScale(10),
-      // marginBottom: verticalScale(10),
       elevation: 7,
       shadowColor: props != null ? props.shadowColor : 'grey',
       shadowOffset: {
@@ -40,25 +40,9 @@ const styles = (props = null) =>
       shadowOpacity: 0.3,
       shadowRadius: verticalScale(3),
       borderWidth: 1,
-      borderColor: '#FFF'
+      borderColor: theme.Pink.white
     },
-    // cardViewContainer: {
-    //   width: '98%',
-    //   alignSelf: 'center',
-    //   height: verticalScale(180),
-    //   marginTop: verticalScale(2),
-    //   marginBottom: verticalScale(10),
-    //   elevation: 7,
-    //   shadowColor: props !== null ? props.shadowColor : 'transparent',
-    //   shadowOffset: {
-    //     width: 0,
-    //     height: verticalScale(3)
-    //   },
-    //   shadowOpacity: 1,
-    //   shadowRadius: verticalScale(4),
-    //   borderWidth: 1,
-    //   borderColor: props !== null ? props.white : '#FFF'
-    // },
+
     imgCard: {
       position: 'relative',
       flex: 1,
@@ -104,8 +88,8 @@ const styles = (props = null) =>
       marginTop: scale(5)
     },
     viewAllButton: {
-      paddingTop: 0,
-      paddingBottom: 10
+      paddingTop: scale(0),
+      paddingBottom: scale(10)
     },
     btncontainer: {
       flex: 1,
@@ -113,8 +97,8 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     button: {
-      padding: 10,
-      borderRadius: 5
+      padding: scale(10),
+      borderRadius: scale(5)
     },
     buttonText: {
       color: 'black',
@@ -129,7 +113,7 @@ const styles = (props = null) =>
       justifyContent: 'flex-start',
       marginTop: scale(2),
       marginBottom: scale(2),
-      paddingLeft: 40
+      paddingLeft: scale(40)
     }
   })
 
