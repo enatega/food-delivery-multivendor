@@ -6,6 +6,7 @@ import DatePicker from '@react-native-community/datetimepicker'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
+import { scale } from '../../utils/scaling'
 
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
@@ -30,7 +31,7 @@ function PickUp(props) {
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text style={{ fontSize: 20, fontWeight: '500' }}>PickUp</Text>
+          <Text style={styles().tabSubHeading}>PickUp</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -41,7 +42,7 @@ function PickUp(props) {
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text style={{ fontSize: 20, fontWeight: '500' }}>Delivery</Text>
+          <Text style={styles().tabSubHeading}>Delivery</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -49,7 +50,7 @@ function PickUp(props) {
           flexDirection: 'row',
           justifyContent: 'center',
           alignContent: 'center',
-          paddingTop: 4
+          paddingTop: scale(4)
         }}>
         <TouchableOpacity
           disabled={Platform.OS === 'ios'}

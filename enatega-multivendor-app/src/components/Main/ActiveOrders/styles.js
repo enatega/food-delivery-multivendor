@@ -97,8 +97,8 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     button: {
-      padding: 10,
-      borderRadius: 5
+      padding: scale(10),
+      borderRadius: scale(5)
     },
     buttonText: {
       color: 'black',

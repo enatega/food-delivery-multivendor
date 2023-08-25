@@ -45,7 +45,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 1,
-      borderRadius: 10,
+      borderRadius: scale(10),
       backgroundColor: props != null ? props.menuBar : 'white'
     },
     featureOverlay: {
@@ -90,13 +90,13 @@ const styles = (props = null) =>
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20),
       borderTopColor: '#ebebeb',
-      borderTopWidth: 3
+      borderTopWidth: scale(3)
     },
     restaurantImage: {
       width: scale(220),
       height: '100%',
       borderRadius: scale(25),
-      marginTop: 5
+      marginTop: scale(5)
     },
     restaurantRatingContainer: {
       marginLeft: scale(2)

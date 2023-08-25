@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) => {
   return StyleSheet.create({
@@ -19,7 +20,7 @@ const styles = (props = null) => {
       ...alignment.MBxsmall
     },
     iconContainer: {
-      backgroundColor: 'red'
+      backgroundColor: theme.Pink.deleteButton
     }
   })
 }

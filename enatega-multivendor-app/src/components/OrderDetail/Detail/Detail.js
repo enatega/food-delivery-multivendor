@@ -45,7 +45,7 @@ export default function Detail({
           Order Detail
         </TextDefault>
       </View>
-      {/* <View style={[styles.addressContainer, styles.shadowBox(theme)]}> */}
+
       <View style={styles.addressContainer}>
         <View style={styles.row}>
           <TextDefault
@@ -85,7 +85,7 @@ export default function Detail({
           </TextDefault>
         </View>
       </View>
-      {/* <View style={[styles.itemsContainer, styles.shadowBox(theme)]}> */}
+
       <View style={styles.itemsContainer}>
         {items.map(item => (
           <ItemRow
