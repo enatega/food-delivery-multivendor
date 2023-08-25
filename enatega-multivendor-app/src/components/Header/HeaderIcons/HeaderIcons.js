@@ -8,6 +8,7 @@ import {
   Feather
 } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
+
 import styles from './styles'
 import { TouchableOpacity, View } from 'react-native'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -27,6 +28,8 @@ import CartIcon from '../../../assets/SVG/imageComponents/CartIcon'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
   if (props.icon === 'leftArrow') {
     return (
       <Ionicons
@@ -42,7 +45,7 @@ function BackButton(props) {
         name="ios-menu"
         size={30}
         style={styles().leftIconPadding}
-        color={props.iconColor}
+        color={currentTheme.iconColor}
       />
     )
   } else if (props.icon === 'dots') {
@@ -50,22 +53,26 @@ function BackButton(props) {
       <MaterialCommunityIcons
         name="dots-vertical"
         size={25}
-        color={props.iconColor}
+        color={currentTheme.iconColor}
       />
     )
   } else if (props.icon === 'target') {
     return (
-      <MaterialIcons name="my-location" size={16} color={props.iconColor} />
+      <MaterialIcons
+        name="my-location"
+        size={16}
+        color={currentTheme.iconColor}
+      />
     )
   } else if (props.icon === 'fav') {
-    return <AntDesign name="hearto" size={20} color={props.iconColor} />
+    return <AntDesign name="hearto" size={20} color={currentTheme.iconColor} />
   } else {
     return (
       <EvilIcons
         name="close"
         size={16}
         style={styles().leftIconPadding}
-        color={props.iconColor}
+        color={currentTheme.iconColor}
       />
     )
   }
@@ -77,7 +84,7 @@ function LeftButton(props) {
     return (
       <HeaderBackButton
         backImage={() =>
-          BackButton({ iconColor: props.iconColor, icon: 'leftArrow' })
+          BackButton({ iconColor: currentTheme.iconColor, icon: 'leftArrow' })
         }
         onPress={() => {
           navigationService.goBack()
@@ -90,7 +97,7 @@ function LeftButton(props) {
         pressColorAndroid={rippleColor}
         labelVisible={false}
         backImage={() =>
-          BackButton({ iconColor: props.iconColor, icon: 'close' })
+          BackButton({ iconColor: currentTheme.iconColor, icon: 'close' })
         }
         onPress={() => {
           navigation.dispatch(state => {
@@ -110,7 +117,7 @@ function LeftButton(props) {
         labelVisible={false}
         backImage={() =>
           BackButton({
-            iconColor: props.iconColor,
+            iconColor: currentTheme.iconColor,
             icon: props.toggleValue ? 'leftArrow' : 'close'
           })
         }
@@ -126,9 +133,7 @@ function LeftButton(props) {
       <HeaderBackButton
         pressColorAndroid={rippleColor}
         labelVisible={false}
-        backImage={() =>
-          BackButton({ iconColor: props.iconColor, icon: 'menu' })
-        }
+        backImage={() => BackButton({ iconColor: '#333333', icon: 'menu' })}
         onPress={() => navigation.toggleDrawer()}
       />
     )
@@ -155,7 +160,7 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={[styles().rightContainer, { ...alignment.PLsmall }]}>
-        <Feather name="shopping-bag" size={25} color={'#333333'} />
+        <Feather name="shopping-bag" size={25} color={currentTheme.iconColor} />
         <View
           style={
             styles(route.name === 'Main' ? 'black' : currentTheme.white)
@@ -224,7 +229,7 @@ function RightButton(props) {
           labelVisible={false}
           backImage={() => (
             <View style={styles().favContainer}>
-              {BackButton({ iconColor: props.iconColor, icon: 'fav' })}
+              {BackButton({ iconColor: currentTheme.iconColor, icon: 'fav' })}
             </View>
           )}
           bolder
@@ -251,7 +256,7 @@ function RightButton(props) {
         labelVisible={false}
         backImage={() => (
           <View style={[styles().rightContainer]}>
-            {BackButton({ iconColor: props.iconColor, icon: 'target' })}
+            {BackButton({ iconColor: currentTheme.iconColor, icon: 'target' })}
           </View>
         )}
         onPress={props.onPressRight}
@@ -273,7 +278,7 @@ function DarkBackButton(props) {
         name="chevron-back-outline"
         size={20}
         style={styles().darkBackArrow}
-        color={props.iconColor}
+        color={currentTheme.iconColor}
       />
     </View>
   )
