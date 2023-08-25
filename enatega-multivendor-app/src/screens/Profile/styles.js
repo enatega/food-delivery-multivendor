@@ -1,6 +1,6 @@
 import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../utils/themeColors'
+import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
