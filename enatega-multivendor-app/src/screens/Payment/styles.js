@@ -26,7 +26,7 @@ const styles = (props = null) =>
       flexDirection: 'row'
     },
     mainContainer: {
-      backgroundColor: theme.Pink.main,
+      backgroundColor: theme.Pink.startColor,
       borderBottomRightRadius: scale(35),
       borderBottomLeftRadius: scale(35),
       ...alignment.PTlarge,

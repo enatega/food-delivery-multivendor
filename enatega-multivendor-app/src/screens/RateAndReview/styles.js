@@ -2,7 +2,7 @@ import { scale, verticalScale } from '../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { textStyles } from '../../utils/textStyles'
 const { height } = Dimensions.get('window')
-
+import { theme } from '../../utils/themeColors'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -60,7 +60,7 @@ const styles = (props = null) =>
       backgroundColor: 'rgba(0, 0, 0, 0.74)',
       padding: scale(10),
       borderRadius: scale(10),
-      borderColor: currentTheme.white,
+      borderColor: theme.Pink.white,
       borderWidth: 1,
       width: '45%',
       alignItems: 'center',
@@ -69,7 +69,7 @@ const styles = (props = null) =>
       marginTop: scale(-140)
     },
     line: {
-      backgroundColor: currentTheme.black,
+      backgroundColor: theme.Pink.black,
       height: 0.5,
       width: '90%',
       alignSelf: 'center'
