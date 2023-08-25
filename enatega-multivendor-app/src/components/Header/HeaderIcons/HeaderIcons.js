@@ -155,7 +155,7 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={[styles().rightContainer, { ...alignment.PLsmall }]}>
-        <Feather name="shopping-bag" size={25} color={props.iconColor} />
+        <Feather name="shopping-bag" size={25} color={'#333333'} />
         <View
           style={
             styles(route.name === 'Main' ? 'black' : currentTheme.white)
