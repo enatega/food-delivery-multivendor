@@ -16,12 +16,7 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.cartContainer : 'white',
       elevation: 3,
       shadowColor: theme.Pink.white,
-      // shadowOffset: {
-      //   width: 0,
-      //   height: verticalScale(0)
-      // },
-      // shadowOpacity: 0.3,
-      // shadowRadius: verticalScale(3),
+
       height: scale(200),
       borderRadius: 25,
       width: scale(228),
@@ -107,7 +102,7 @@ const styles = (props = null) =>
       marginLeft: scale(2)
     },
     restaurantPriceContainer: {
-      marginTop: scale(3), 
+      marginTop: scale(3),
       fontSize: 15
     }
   })

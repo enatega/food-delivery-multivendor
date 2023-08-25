@@ -6,7 +6,6 @@ const styles = backColor =>
   StyleSheet.create({
     leftIconPadding: {
       ...alignment.PLsmall,
-      // ...alignment.PRsmall,
       ...alignment.PTxSmall,
       ...alignment.PBxSmall
     },
