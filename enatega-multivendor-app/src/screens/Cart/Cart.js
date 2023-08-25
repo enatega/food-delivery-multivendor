@@ -718,7 +718,7 @@ function Cart(props) {
               showsVerticalScrollIndicator={false}
               style={[styles().flex]}>
               <View
-                style={[styles().headerContainer]}>
+                style={[styles(currentTheme).headerContainer]}>
                 <View
                   style={[
                     styles(currentTheme).priceContainer,
@@ -776,7 +776,7 @@ function Cart(props) {
                       renderRightActions={(progress, dragX) =>
                         renderRightSwipe(progress, food.key)
                       }>
-                      <View style={[styles().itemContainer, styles().pB5]}>
+                      <View style={[styles(currentTheme).itemContainer, styles().pB5]}>
                         <CartItem
                           quantity={food.quantity}
                           dealName={food.title}
@@ -1336,7 +1336,7 @@ function Cart(props) {
                 )}
                 <View
                   style={[
-                    styles().termsContainer,
+                    styles(currentTheme).termsContainer,
                     styles().pT10,
                     styles().mB10
                   ]}>
@@ -1434,8 +1434,8 @@ function Cart(props) {
           ref={modalRef}
           modalStyle={styles(currentTheme).modal}
           modalHeight={Platform.OS === 'android' ? 280 : 420}
-          overlayStyle={styles().overlay}
-          handleStyle={styles().handle}
+          overlayStyle={styles(currentTheme).overlay}
+          handleStyle={styles(currentTheme).handle}
           handlePosition="inside"
           onClosed={() => {
             setIsModalOpen(false)

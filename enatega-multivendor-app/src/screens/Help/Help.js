@@ -59,13 +59,7 @@ function Help(props) {
         <HeaderBackButton
           backImage={() => (
             <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
+              style={styles(currentTheme).backImageContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}

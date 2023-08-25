@@ -216,7 +216,7 @@ function EditAddress(props) {
         keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
         style={styles().flex}
         enabled={!modalVisible}>
-        <View style={styles().flex}>
+        <View style={styles(currentTheme).flex}>
           <View style={styles().mapContainer}>
             <MapView
               style={{ flex: 1 }}
@@ -237,9 +237,7 @@ function EditAddress(props) {
               loadingIndicatorColor={currentTheme.iconColorPink}
               region={region}
               customMapStyle={mapStyle}
-              // customMapStyle={
-              //   themeContext.ThemeValue === 'Dark' ? mapStyle : null
-              // }
+      
               provider={PROVIDER_GOOGLE}
               onPress={() => {
                 props.navigation.navigate('FullMap', {

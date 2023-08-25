@@ -169,7 +169,7 @@ function EditAddress(props) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={20}
-        style={styles().flex}
+        style={styles(currentTheme).flex}
         enabled={!modalVisible}>
         <View style={styles().flex}>
           <View style={styles().mapContainer}>

@@ -59,7 +59,7 @@ const styles = (props = null) =>
       padding: scale(5),
       borderRadius: scale(10),
       borderBottomWidth: 1,
-      borderBottomColor: '#DAD6D6'
+      borderBottomColor: props !== null ? props.borderBottomColor : '#DAD6D6'
     },
     width100: {
       width: '100%'
@@ -88,14 +88,9 @@ const styles = (props = null) =>
       alignItems: 'center',
       justifyContent: 'center'
     },
-    // homeIconImg: {
-    //   width: scale(15),
-    //   height: scale(15)
-    // },
     addressDetail: {
       width: '65%',
       alignSelf: 'flex-end',
-      // ...alignment.PRsmall,
       fontSize: scale(4),
       fontWeight: '300',
       textAlign: 'justify'
@@ -113,42 +108,6 @@ const styles = (props = null) =>
       alignItems: 'center',
       justifyContent: 'center',
       paddingBottom: scale(3)
-      // marginRight: 20,
-      // padding: scale(10)
     }
-    // editButton: {
-    //   backgroundColor: '#90EA93',
-    //   display: 'flex',
-    //   flexDirection: 'row',
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    //   borderRadius: scale(6),
-    //   padding: 5,
-    //   paddingLeft: 8,
-    //   paddingRight: 8,
-    //   marginHorizontal: 4,
-    //   fontSize: scale(8),
-    //   fontWeight: '300'
-    // },
-    // deleteButton: {
-    //   backgroundColor: '#fe0000',
-    //   display: 'flex',
-    //   flexDirection: 'row',
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    //   borderRadius: scale(6),
-    //   padding: 5,
-    //   paddingLeft: 8,
-    //   paddingRight: 8,
-    //   marginHorizontal: 4,
-    //   fontSize: scale(8),
-    //   fontWeight: '300'
-    // },
-    // editIcon: {
-    //   paddingRight: 4
-    // },
-    // btnTextWhite: {
-    //   color: 'white'
-    // }
   })
 export default styles

@@ -106,33 +106,10 @@ function SelectVoucher(props) {
 
   function onSelectCoupon(text) {
     mutate({ variables: { coupon: text } })
-    // props.navigation.navigate('Cart', { CoupanObject: text })
   }
 
   const HeaderLine = props => {
-    // return (
-    //   <View style={styles().headerlineContainer}>
-    //     <View
-    //       style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
-    //     />
-    //     <TextDefault
-    //       textColor={currentTheme.fontMainColor}
-    //       style={[
-    //         alignment.PTsmall,
-    //         alignment.PBsmall,
-    //         { width: props.textWidth }
-    //       ]}
-    //       large
-    //       bolder
-    //       center
-    //       uppercase>
-    //       {props.headerName}
-    //     </TextDefault>
-    //     <View
-    //       style={[styles(currentTheme).headerLine, { width: props.lineWidth }]}
-    //     />
-    //   </View>
-    // )
+ 
   }
   return (
     <>

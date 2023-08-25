@@ -6,8 +6,6 @@ import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
 
 const navigationOptions = props => ({
-  //   const { location } = useContext(LocationContext)
-  // const currentTheme = theme[themeContext.ThemeValue]
 
   headerStyle: {
     backgroundColor: theme.Pink.headerColor,

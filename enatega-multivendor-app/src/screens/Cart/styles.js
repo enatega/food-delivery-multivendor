@@ -42,14 +42,14 @@ const styles = (props = null) =>
     },
     termsContainer: {
       width: '100%',
-      backgroundColor: 'transparent',
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent',
       borderRadius: scale(5),
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },
     itemContainer: {
       width: '100%',
-      backgroundColor: 'transparent'
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
     },
     priceContainer: {
       width: '100%',
@@ -67,11 +67,11 @@ const styles = (props = null) =>
       shadowOpacity: 0
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: props !== null ? props.backgroundColor2 : 'transparent'
     },
     handle: {
       width: 150,
-      backgroundColor: '#b0afbc'
+      backgroundColor: props !== null ? props.hex : '#b0afbc'
     },
     floatView: {
       width: '100%',
@@ -226,7 +226,7 @@ const styles = (props = null) =>
       height: scale(30)
     },
     headerContainer: {
-      backgroundColor: '#6FCF97',
+      backgroundColor: props !== null ? props.rippleColor : '#6FCF97',
       borderBottomRightRadius: 20,
       borderBottomLeftRadius: 20,
       padding: 10,

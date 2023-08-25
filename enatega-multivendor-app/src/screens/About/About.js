@@ -74,7 +74,7 @@ function About(props) {
     return (
       <ScrollView style={{ ...alignment.MTmedium }}>
         <View style={styles().mapMainContainer}>
-          <View style={[styles().inlineFloat, styles().MB15]}>
+          <View style={[styles(currentTheme).inlineFloat, styles(currentTheme).MB15]}>
             <MaterialIcons
               name="location-on"
               size={30}
@@ -125,7 +125,7 @@ function About(props) {
               ))}
             </View>
           </View>
-          <View style={styles().mapContainer}>
+          <View style={styles(currentTheme).mapContainer}>
             <MapView
               style={styles().flex}
               scrollEnabled={false}
@@ -163,7 +163,7 @@ function About(props) {
         ItemSeparatorComponent={line}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <View style={styles().review}>
+          <View style={styles(currentTheme).review}>
             <View style={styles().reviewerContainer}>
               <TextDefault
                 style={styles().reviewerName}
@@ -230,27 +230,6 @@ function About(props) {
 
       />}
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        {/* <View style={styles(currentTheme).restaurantContainer}>
-          <TextDefault
-            numberOfLines={1}
-            style={styles().restaurantTitle}
-            textColor={currentTheme.fontMainColor}
-            B700
-            bolder>
-            {restaurantObject.restaurantName}
-          </TextDefault>
-          <View style={styles().ratingContainer}>
-            <MaterialIcons name="star" size={scale(10)} color="#4165b9" />
-            <TextDefault textColor={'#4165b9'} small right>
-              {restaurantObject.average}{' '}
-              <TextDefault textColor={currentTheme.fontSecondColor} small right>
-                ({restaurantObject.total})
-              </TextDefault>
-            </TextDefault>
-          </View>
-        </View> */}
-        {/* <View style={[styles(currentTheme).line]} /> */}
-
         <View style={styles().navigationContainer}>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -264,7 +243,7 @@ function About(props) {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => pagerSetter(false)}
-            style={[styles().tab, !pager && styles(currentTheme).selectedTab]}>
+            style={[styles(currentTheme).tab, !pager && styles(currentTheme).selectedTab]}>
             <TextDefault textColor={currentTheme.black} bolder uppercase large>
               Reviews
             </TextDefault>

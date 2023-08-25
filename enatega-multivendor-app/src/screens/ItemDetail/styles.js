@@ -5,7 +5,7 @@ import { theme } from '../../utils/themeColors'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex:  scale(1)
     },
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#ffff'
@@ -19,7 +19,7 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     line: {
-      marginLeft: 10,
+      marginLeft:  scale(10),
       width: '95%',
       height: StyleSheet.hairlineWidth,
       ...alignment.MBsmall,
@@ -27,16 +27,22 @@ const styles = (props = null) =>
     },
     input: {
       backgroundColor: theme.Pink.lightHorizontalLine,
-      borderRadius: 10,
-      height: 50,
-      paddingLeft: 10,
+      borderRadius:  scale(10),
+      height:  scale(50),
+      paddingLeft:  scale(10),
       textAlignVertical: 'center'
     },
     inputContainer: {
       width: '90%',
       alignSelf: 'center',
-      zIndex: 1,
-      height: 200
+      zIndex:  scale(1),
+      height: scale(200)
+    },
+    backBtnContainer: {
+      backgroundColor:props !== null ? props.white : 'white',
+      borderRadius:  scale(50),
+      width:  scale(55),
+      alignItems: 'center'
     }
   })
 export default styles

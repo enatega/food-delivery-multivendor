@@ -4,15 +4,15 @@ import { alignment } from '../../utils/alignment'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: scale(1)
     },
     safeAreaViewStyles: {
-      flex: 1,
+      flex: scale(1),
       backgroundColor:
         props !== null ? props.headerBackgroundTwo : 'transparent'
     },
     mainContainer: {
-      flex: 1,
+      flex:scale(1),
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
       ...alignment.PTlarge
@@ -44,8 +44,8 @@ const styles = (props = null) =>
       width: '100%'
     },
     logoContainer: {
-      width: 120,
-      height: 130,
+      width: scale(120),
+      height: scale(130),
       alignSelf: 'center'
     },
     form: {
@@ -53,15 +53,15 @@ const styles = (props = null) =>
       ...alignment.MTlarge
     },
     textField: {
-      borderColor: '#efefef',
-      borderWidth: 1,
-      borderRadius: 10,
-      backgroundColor: '#fff',
-      padding: 14,
+      borderColor: props !== null ? props.borderColor :'#efefef',
+      borderWidth:scale(1),
+      borderRadius: scale(10),
+      backgroundColor: props !== null ? props.white :'#fff',
+      padding: scale(14),
       shadowColor: props !== null ? props.fontSecondColor : '#545454',
       shadowOffset: {
-        width: 0,
-        height: 2
+        width: scale(0),
+        height: scale(2)
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
@@ -83,9 +83,9 @@ const styles = (props = null) =>
       width: '100%'
     },
     eyeBtn: {
-      marginTop: 32,
-      marginLeft: -40,
-      elevation: 999
+      marginTop: scale(32),
+      marginLeft: scale(-40),
+      elevation: scale(999)
     },
     btn: {
       position: 'relative',
@@ -94,8 +94,8 @@ const styles = (props = null) =>
       alignItems: 'center',
       backgroundColor: props !== null ? props.black : '#000',
       alignSelf: 'center',
-      padding: 15,
-      borderRadius: 10
+      padding: scale(15),
+      borderRadius: scale(10)
     },
     headerLeftIcon: {
       ...alignment.PLsmall

@@ -1,11 +1,12 @@
-import { scale } from '../../utils/scaling'
+import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
+
 import { alignment } from '../../utils/alignment'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: scale(1)
     },
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF'
@@ -34,7 +35,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 5,
+      padding: scale(5),
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
@@ -69,30 +70,36 @@ const styles = (props = null) =>
       width: '10%',
       justifyContent: 'center',
       alignItems: 'flex-start',
-      marginRight: 5
+      marginRight: scale(5)
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: props != null ? props.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
-      width: 150,
-      backgroundColor: 'transparent'
+      width: scale(150),
+      backgroundColor: props != null ? props.backgroundColor: 'transparent'
     },
     relative: {
       position: 'relative'
     },
     placeHolderContainer: {
       backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
-      borderRadius: 3,
-      elevation: 3,
-      marginBottom: 12,
-      padding: 12
+      borderRadius: scale(3),
+      elevation: scale(3),
+      marginBottom: scale(12),
+      padding: scale(12)
     },
     height200: {
-      height: 200
+      height: scale(200)
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
     },
+    emptyViewContainer: {
+      width: '100%',
+      height: verticalScale(40),
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
   })
 export default styles

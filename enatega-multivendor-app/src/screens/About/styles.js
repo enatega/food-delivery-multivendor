@@ -10,10 +10,10 @@ const styles = (props = null) =>
     MB15: {
       padding: 10,
       ...alignment.MBmedium,
-      backgroundColor: 'white',
+      backgroundColor: props != null ? props.white : 'white',
       borderRadius: 10,
       shadowOffset: { width: 2, height: 4 },
-      shadowColor: 'black',
+      shadowColor: props != null ? props.black : 'black',
       shadowOpacity: 0.1,
       shadowRadius: 10
     },
@@ -32,7 +32,7 @@ const styles = (props = null) =>
     },
     inlineFloat: {
       width: '100%',
-      backgroundColor: 'white',
+      backgroundColor: props != null ? props.white : 'white',
       flexDirection: 'row',
       alignItems: 'center'
     },
@@ -40,10 +40,10 @@ const styles = (props = null) =>
       marginTop: 10,
       marginBottom: 20,
       borderRadius: scale(10),
-      borderColor: 'white',
+      borderColor: props != null ? props.white : 'white',
       borderWidth: 2,
       height: 200,
-      backgroundColor: 'white'
+      backgroundColor: props != null ? props.white : 'white'
     },
     mainContainer: {
       backgroundColor: props != null ? '#F5F5F5' : 'white'
@@ -96,7 +96,7 @@ const styles = (props = null) =>
       zIndex: 999
     },
     tab: {
-      backgroundColor: 'white',
+      backgroundColor: props != null ? props.white : 'white',
       marginTop: scale(-15),
       width: '48%',
       height: verticalScale(35),
@@ -137,7 +137,7 @@ const styles = (props = null) =>
       marginHorizontal: 5,
       zIndex: 1,
       elevation: 1,
-      backgroundColor: 'black',
+      backgroundColor: props != null ? props.black : 'black',
       padding: 10,
       borderRadius: 10
     }

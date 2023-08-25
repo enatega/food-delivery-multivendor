@@ -6,21 +6,21 @@ import { theme } from '../../utils/themeColors'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1,
-      backgroundColor: '#FFF'
+      flex:scale(1),
+      backgroundColor: props !== null ? props.white : '#FFF'
     },
     subContainer: {
-      flex: 1,
-      flexGrow: 1,
+      flex:scale(1),
+      flexGrow: scale(1),
       alignItems: 'center',
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 30,
-      borderColor: 'grey',
+      borderTopLeftRadius: scale(30),
+      borderTopRightRadius: scale(30),
+      borderColor: props !== null ? props.gray :'grey',
       justifyContent: 'space-between',
       backgroundColor: props !== null ? props.white : 'transparent',
       shadowColor: '#00000026',
-      shadowRadius: 11,
-      // shadowOpacity: 1,
+      shadowRadius: scale(11),
+     
       ...alignment.PTlarge
     },
     upperContainer: {
@@ -29,14 +29,14 @@ const styles = (props = null) =>
     },
     horizontalLine: {
       borderBottomColor: theme.Pink.tagColor,
-      borderBottomWidth: 1,
-      marginVertical: 10, // Adjust this value to control the spacing above and below the line
+      borderBottomWidth: scale(1),
+      marginVertical: scale(10), // Adjust this value to control the spacing above and below the line
       width: '90%',
       alignSelf: 'center',
-      marginBottom: 30
+      marginBottom: scale(30)
     },
     addressContainer: {
-      paddingTop: 0,
+      paddingTop: scale(0),
       width: '100%',
       ...alignment.Psmall
     },
@@ -57,23 +57,22 @@ const styles = (props = null) =>
     },
     textbuttonInline: {
       width: '100%',
-      // alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
       color: 'black'
     },
     titlebuttonInline: {
-      paddingLeft: 10,
-      paddingRight: 12,
+      paddingLeft: scale(10),
+      paddingRight: scale(12),
       justifyContent: 'space-between',
       ...alignment.PxSmall
     },
     labelButton: {
-      width: 60,
-      height: 60,
-      borderWidth: 1,
+      width: scale(60),
+      height: scale(60),
+      borderWidth: scale(1),
       borderColor: props !== null ? props.tagColor : 'transparent',
-      borderRadius: 8,
+      borderRadius: scale(8),
       justifyContent: 'center',
       ...alignment.PxSmall,
       backgroundColor: theme.Pink.tagColor
@@ -84,10 +83,10 @@ const styles = (props = null) =>
       backgroundColor: theme.Pink.tagColor
     },
     activeLabel: {
-      width: 60,
-      height: 60,
-      borderWidth: 1,
-      borderRadius: 8,
+      width: scale(60),
+      height: scale(60),
+      borderWidth: scale(1),
+      borderRadius: scale(8),
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.black : 'transparent',
@@ -97,39 +96,39 @@ const styles = (props = null) =>
     saveBtnContainer: {
       width: '80%',
       height: verticalScale(40),
-      borderRadius: 20,
+      borderRadius: scale(20),
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: props !== null ? props.buttonBackground : 'transparent',
       alignSelf: 'center',
-      marginTop: 20,
-      marginBottom: 20
+      marginTop: scale(20),
+      marginBottom: scale(20)
     },
     fakeMarkerContainer: {
       position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      marginLeft: -24,
-      marginTop: -58,
+      top: scale(0),
+      bottom: scale(0),
+      left: scale(0),
+      right: scale(0),
+      marginLeft: scale(-24),
+      marginTop: scale(-58),
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'transparent'
+      backgroundColor:  props !== null ? props.backgroundColor : 'transparent'
     },
     marker: {
-      height: 48,
-      width: 48
+      height: scale(48),
+      width: scale(48)
     },
     mapContainer: {
       height: '40%',
-      backgroundColor: 'transparent'
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
     },
     geoLocation: {
       flexDirection: 'row'
     },
     headerBackBtnContainer: {
-      backgroundColor: 'white',
+      backgroundColor: props !== null ? props.white :'white',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),

@@ -115,7 +115,7 @@ function NewAddress(props) {
         <HeaderBackButton
           backImage={() => (
             <View
-              style={styles().headerBackBtnContainer}>
+              style={styles(currentTheme).headerBackBtnContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -204,10 +204,10 @@ function NewAddress(props) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
-        style={styles().flex}
+        style={styles(currentTheme).flex}
         enabled={!modalVisible}>
         <View style={styles().flex}>
-          <View style={styles().mapContainer}>
+          <View style={styles(currentTheme).mapContainer}>
             <MapView
               style={styles().flex}
               scrollEnabled={false}
@@ -217,9 +217,7 @@ function NewAddress(props) {
               cacheEnabled={true}
               showsUserLocation={false}
               customMapStyle={mapStyle}
-              // customMapStyle={
-              //   themeContext.ThemeValue === 'Dark' ? mapStyle : null
-              // }
+             
               initialRegion={{
                 latitude: LATITUDE,
                 latitudeDelta: LATITUDE_DELTA,

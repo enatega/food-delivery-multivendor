@@ -95,12 +95,7 @@ function ItemDetail(props) {
         <HeaderBackButton
           backImage={() => (
             <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                width: 55,
-                alignItems: 'center'
-              }}>
+              style={styles(currentTheme).backBtnContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -323,7 +318,7 @@ function ItemDetail(props) {
               <HeadingComponent
                 title={food.title}
                 price={calculatePrice()}
-                // desc={food.description}
+               
               />
 
               {food.variations.length > 1 && (

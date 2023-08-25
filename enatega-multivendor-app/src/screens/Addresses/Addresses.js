@@ -180,7 +180,7 @@ function Addresses() {
                     <TouchableOpacity
                       disabled={loadingMutation}
                       activeOpacity={0.7}
-                      // style={styles(currentTheme).editButton}
+                      
                       onPress={() => {
                         navigation.navigate('EditAddress', { ...address })
                       }}>
@@ -194,7 +194,7 @@ function Addresses() {
                     <TouchableOpacity
                       activeOpacity={0.7}
                       disabled={loadingMutation}
-                      // style={[styles().width10, styles().deleteButton]}
+                     
                       onPress={() => {
                         mutate({ variables: { id: address._id } })
                       }}>

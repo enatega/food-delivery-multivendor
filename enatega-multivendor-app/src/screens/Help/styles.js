@@ -15,17 +15,17 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     mainContainer: {
-      // paddingBottom: scale(20),
+
       margin: scale(15),
       backgroundColor: '#FAFAFA'
     },
     itemContainer: {
-      // borderBottomWidth: StyleSheet.hairlineWidth,
+
       margin: scale(4),
       borderWidth: 1,
-      borderColor: '#d8d8d874',
+      borderColor: props !== null ? props.mustard : '#d8d8d874',
       borderRadius: scale(16),
-      backgroundColor: 'white',
+      backgroundColor: props !== null ? props.white : 'white',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -33,6 +33,13 @@ const styles = (props = null) =>
       ...alignment.PBlarge,
       ...alignment.PLlarge,
       ...alignment.PRlarge
+    },
+    backImageContainer: {
+      backgroundColor: props !== null ? props.white :'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
     }
   })
 export default styles

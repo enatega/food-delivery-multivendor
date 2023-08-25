@@ -7,7 +7,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: '#FFF'
+      backgroundColor: props !== null ? props.white : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -20,7 +20,6 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.white : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: 11,
-      // shadowOpacity: 1,
       ...alignment.PTlarge
     },
     upperContainer: {
@@ -57,7 +56,6 @@ const styles = (props = null) =>
     },
     textbuttonInline: {
       width: '100%',
-      // alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
       color: 'black'

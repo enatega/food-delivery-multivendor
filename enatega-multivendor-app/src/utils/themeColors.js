@@ -2,6 +2,10 @@ export const theme = {
   Pink: {
     black: '#000',
     white: '#FFF',
+    mustard: '#d8d8d874',
+    borderColor: '#efefef',
+    backgroundColor: 'transparent',
+    borderBottomColor: '#DAD6D6',
     primery: '#3C8F7C',
     themeBackground: '#FAFAFA',
     menuBar: '#FFF',
@@ -50,7 +54,11 @@ export const theme = {
     inputPlaceHolder: '#F3F4F8',
     transparent: '#00000000',
     customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
-    deleteButton: '#fe0000'
+    deleteButton: '#fe0000',
+    backgroundColor2: 'rgba(0, 0, 0, 0.5)',
+    hex: '#b0afbc',
+    gray: 'grey',
+    
   },
   Dark: {
     black: '#000',

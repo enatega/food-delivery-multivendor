@@ -8,7 +8,7 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainerEmpty: {
-      backgroundColor: 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     container: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent'

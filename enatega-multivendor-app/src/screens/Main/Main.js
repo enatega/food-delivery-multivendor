@@ -175,18 +175,7 @@ function Main(props) {
       .catch(error => {
         console.error('Error fetching reverse geocoding data:', error);
       });
-    /*
-      if (error) navigation.navigate('SelectLocation')
-      else {
-        modalRef.current.close()
-        setLocation({
-          label: 'Current Location',
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          deliveryAddress: 'Current Location'
-        })
-      }*/
-    //setBusy(false)
+    
   }
 
   const modalHeader = () => (
@@ -228,12 +217,7 @@ function Main(props) {
     else {
       return (
         <View
-          style={{
-            width: '100%',
-            height: verticalScale(40),
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
+          style={styles().emptyViewContainer}>
           <TextDefault textColor={currentTheme.fontMainColor}>
             No Restaurants
           </TextDefault>
@@ -416,8 +400,8 @@ function Main(props) {
             ref={modalRef}
             modalStyle={styles(currentTheme).modal}
             modalHeight={350}
-            overlayStyle={styles().overlay}
-            handleStyle={styles().handle}
+            overlayStyle={styles(currentTheme).overlay}
+            handleStyle={styles(currentTheme).handle}
             handlePosition="inside"
             openAnimationConfig={{
               timing: { duration: 400 },

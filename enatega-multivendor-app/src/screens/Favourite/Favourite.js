@@ -105,9 +105,6 @@ function Favourite() {
     })
   }, [navigation])
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions(screenOptions(currentTheme.headerText))
-  // }, [navigation])
 
   function emptyView() {
     return (

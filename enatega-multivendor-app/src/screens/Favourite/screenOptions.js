@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import styles from './styles'
 
+
 const navigationOptions = headerText => ({
   title: i18n.t('titleFavourite'),
   headerTitleAlign: 'center',
