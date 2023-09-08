@@ -1,28 +1,73 @@
-# Enatega Multi-vendor
+<div style="text-align: center;">
+  <img src="https://enatega.com/wp-content/uploads/2023/09/enategs-transparent.png" alt="Enatega Logo" width="350">
+  <h2>Enatega Multi-vendor</h2>
+</div>
 
-Our open source solution gives you the freedom to customize it  according to your needs as business owners, regardless of the size of your business.
+<div style="text-align: center;">
+<i>Enatega is an open-source delivery management platform for the future.</i>
+</div>
+
+
+<div style="text-align: center;">
 
 [![Static Badge](https://img.shields.io/badge/License-MIT-red)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution.svg)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/stargazers)
 [![Forks](https://img.shields.io/github/forks/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution.svg)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/network/members)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution)
+[![GitHub contributors](https://img.shields.io/github/contributors/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/graphs/contributors)
 [![Open Pull Requests](https://img.shields.io/github/issues-pr-raw/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution.svg)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/pulls)
 [![Activity](https://img.shields.io/github/last-commit/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution.svg)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/commits/main)
 [![YouTube Channel](https://img.shields.io/badge/Watch_us-Youtube-red)](https://www.youtube.com/@ninjascode509)
-[![Company Website](https://img.shields.io/badge/Visit_us-Website-blue)](https://ninjascode.com)
+[![Company Website](https://img.shields.io/badge/Visit_us-Website-blue)](https://enatega.com)
+
+</div>
+
+<div style="text-align: center;">
+
+[![Static Badge](https://img.shields.io/badge/facebook-blue?logo=facebook&logoColor=Blue&color=%23fbfbfb)](https://www.facebook.com/enatega)
+[![Static Badge](https://img.shields.io/badge/Instagram-blue?logo=instagram&logoColor=D815BE&color=%23fcfcfc)](https://www.instagram.com/enatega.nb/)
+[![Static Badge](https://img.shields.io/badge/Twitter-blue?logo=Twitter&logoColor=blue&color=%23fcfcfc)](https://twitter.com/EnategaA)
+[![Static Badge](https://img.shields.io/badge/LinkedIn-blue?logo=LinkedIn&logoColor=darkblue&color=%23fcfcfc)](https://www.linkedin.com/company/14583783/)
+
+</div>
+
+<div style="text-align: center;">
+<a href="https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode">
+  <img src="https://i.imgur.com/araSrCj.png" alt="Demo video" style="border-radius: 6px; width: auto;">
+</a>
 
 
+</div>
 
 
-
-[![Demo video](https://i.imgur.com/araSrCj.png)](https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode)
-
-<br/>
 
 Our Enatega Multi-vendor food delivery solution is perfect for customers looking to deploy a readymade and easy to use platform for their food delivery and logistics business. Just like foodpanda and ubereats, our solution can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own foodpanda clone instantaneously.
 
 <b>Our solution is open source but the backend and API are proprietary, and can be obtained via paid license.</b>
 
-## What is included:
+<hr/>
+<br/>
+
+## Quick Links
+ - [What is included](#heading-1)
+ - [Features](#heading-2)
+ - [Setup](#heading-3)
+ - [Prerequisites](#heading-4)
+ - [Technologies](#heading-5)
+ - [Screenshots](#heading-6)
+ - [High Level Architecture](#heading-7)
+ - [Documentation and Demo Videos](#heading-8)
+ - [Demos](#heading-9)
+ - [Contributing](#heading-10)
+ - [Star graph](#heading-11)
+ - [Disclaimer](#heading-12)
+ - [Contact Us](#heading-13)
+
+<br/>
+<hr/>
+<br/>
+
+## What is included: <a id="heading-1"></a>
 
 Our solution also comes with the following:
 
@@ -35,7 +80,7 @@ Our solution also comes with the following:
 - Analytics Dashboard with Expo Amplitude
 - Error crash reporting with Sentry
 
-## Features:
+## Features: <a id="heading-2"></a>
 
 - Authentication using Google, Apple, and Facebook
 - Different sections feature for promoting restaurants
@@ -53,7 +98,7 @@ Our solution also comes with the following:
 - Options to add different variations of food items and adding notes to restaurant
   Pick up and delivery option with different timings
 
-## Setup:
+## Setup: <a id="heading-3"></a>
 
 As we’ve mentioned above, the solution includes five separate modules. To setup these modules, follow the steps below:
 
@@ -63,9 +108,9 @@ The required credentials and keys have been set already. You can setup your own 
 
 The version of nodejs should be between 14.0 to 16.0
 
--[Link to Video tutorial/demonstration of Setup](https://enatega-1.gitbook.io/enatega-multivendor/configurations/google-maps-api-keys)
+[![Static Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue)](https://enatega-1.gitbook.io/enatega-multivendor/configurations/google-maps-api-keys)
 
-## Prerequisites:
+## Prerequisites: <a id="heading-4"></a>
 
 App Ids for Mobile App in app.json
 
@@ -102,7 +147,7 @@ Set credentials in Admin Dashboard in file src/index.js
 
 NOTE: Email provider has been only been tested for gmail accounts
 
-## Technologies:
+## Technologies: <a id="heading-5"></a>
 
 - [Expo](https://expo.dev/)
 - [React Navigation](https://reactnavigation.org/)
@@ -118,7 +163,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 - [ExpressJS](https://expressjs.com/)
 - [React Strap](https://reactstrap.github.io/)
 
-## Screenshots:
+## Screenshots: <a id="heading-6"></a>
 
 |  Admin Vendor Overview   |   Admin Rider Overview   | Admin Restaurant Overview |
 | :----------------------: | :----------------------: | :-----------------------: |
@@ -140,7 +185,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 | :---------------------------: | :----------------------------: | :----------------------------: |
 | ![](./assets/restaurant1.png) | ![](./assets/restaurant2.jpeg) | ![](./assets/restaurant3.jpeg) |
 
-## High Level Architecture:
+## High Level Architecture: <a id="heading-7"></a>
 
 ![](./assets/architecture.png)
 
@@ -150,7 +195,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 - Restaurant App communicates API Server
 - Errors are reported to Sentry by Customer App, Restaurant App, Rider App, Web Customer App and API Server
 
-## Documentation and Demo Videos:
+## Documentation and Demo Videos: <a id="heading-8"></a>
 
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
 
@@ -158,7 +203,7 @@ To check out video demo of admin dashboard please click [here](https://www.youtu
 
 To check out video demo of mobile applications please click [here](https://www.youtube.com/watch?v=2HdHS2I-p6g&ab_channel=NinjasCode)
 
-## Demos:
+## Demos: <a id="heading-9"></a>
 
 - [Customer App Android](https://play.google.com/store/apps/details?id=com.enatega.multivendor)
 - [Customer App iOS](https://apps.apple.com/pk/app/enatega-multivendor/id1526488093)
@@ -169,21 +214,18 @@ To check out video demo of mobile applications please click [here](https://www.y
 - [Customer Web App](https://multivendor-enatega.ninjascode.com/)
 - [Admin Dashboard](https://multivendor-admin.ninjascode.com/)
 
-## Contributing:
+## Contributing: <a id="heading-10"></a>
 
 Enatega Multi-Vendor Solution is an open source project. We welcome contributions of all kinds including documentation, bug fixes, feature requests, and code. Please read our [contributing guide](./contributing/contributing.md) for more information on how you can contribute.
 
-## Get the Latest News
+## Star History: <a id="heading-11"></a>
 
-- [Facebook](https://www.facebook.com/enatega)
-- [Twitter](https://twitter.com/EnategaA)
-- [Instagram](https://www.instagram.com/enatega.nb/)
-- [LinkedIn](https://www.linkedin.com/company/14583783/)
+[![Star History Chart](https://api.star-history.com/svg?repos=Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&type=Date)](https://star-history.com/#Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&Date)
 
-## Disclaimer:
+## Disclaimer: <a id="heading-12"></a>
 
 The frontend source code for our solution is completely open source. However, the API and backend is proprietary and can be accessed via a paid license. For further information, contact us on the channels provided below.
 
-## Contact Us:
+## Contact Us: <a id="heading-13"></a>
 
 sales@ninjascode.com
