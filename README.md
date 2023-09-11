@@ -2,6 +2,7 @@
   <img src="https://enatega.com/wp-content/uploads/2023/09/enategs-transparent.png" alt="Enatega Logo" width="350">
   <h2>Enatega Multi-vendor</h2>
   <i>Enatega is an open-source delivery management platform for the future.</i>
+  <br/>
 </div>
 
 
