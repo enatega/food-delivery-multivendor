@@ -1,11 +1,9 @@
 <div align="center">
   <img src="https://enatega.com/wp-content/uploads/2023/09/enategs-transparent.png" alt="Enatega Logo" width="350">
   <h2>Enatega Multi-vendor</h2>
-</div>
-
-<div align="center">
   <i>Enatega is an open-source delivery management platform for the future.</i>
 </div>
+
 
 <div align="center">
 
