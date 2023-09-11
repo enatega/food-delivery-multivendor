@@ -33,7 +33,7 @@
 <div align="center">
 
   <a href="https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode">
-    <img src="https://i.imgur.com/araSrCj.png" alt="Demo video" style="border-radius: 6px; width: '90%';">
+    <img src="https://i.imgur.com/araSrCj.png" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
 </div>
