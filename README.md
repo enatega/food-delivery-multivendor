@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="https://enatega.com/wp-content/uploads/2023/09/enategs-transparent.png" alt="Enatega Logo" width="350">
+  <img src="https://enatega.com/wp-content/uploads/2023/09/enatega-logoz.png" alt="Enatega Logo" width="200">
   <h2>Enatega Multi-vendor</h2>
   <i>Enatega is an open-source delivery management platform for the future.</i>
  <br/>
 <br />
 </div>
-
+	
 
 <div align="center">
 
@@ -33,7 +33,7 @@
 <div align="center">
 
   <a href="https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode">
-    <img src="https://i.imgur.com/araSrCj.png" alt="Demo video" style="border-radius: 6px; width: auto;">
+    <img src="https://enatega.com/wp-content/uploads/2023/09/final.green_.final_.1-scaled.jpg" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
 </div>
@@ -59,6 +59,7 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
  - [Demos](#heading-9)
  - [Contributing](#heading-10)
  - [Star graph](#heading-11)
+- [Contributors](#heading-14)
  - [Disclaimer](#heading-12)
  - [Contact Us](#heading-13)
 
@@ -220,6 +221,17 @@ Enatega Multi-Vendor Solution is an open source project. We welcome contribution
 ## Star History: <a id="heading-11"></a>
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&type=Date)](https://star-history.com/#Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&Date)
+
+## Contributors: <a id="heading-14"></a>
+<div align="center">
+<br>
+<a href="https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution" style="max-width: 50%; height: auto;" />
+</a>
+
+
+
+</div>
 
 ## Disclaimer: <a id="heading-12"></a>
 
