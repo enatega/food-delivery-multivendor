@@ -171,7 +171,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 |     Customer Web Homepage      |    Customer Web Restaurants    |      Customer Web Profile      |
 | :----------------------------: | :----------------------------: | :----------------------------: |
-| ![](./assets/customerWeb1.png) | ![](./assets/customerWeb2.png) | ![](./assets/customerWeb3.png) |
+| ![](https://enatega.com/wp-content/uploads/2023/09/customer-location.png) | ![](https://enatega.com/wp-content/uploads/2023/09/web-resturant.png) | ![](https://enatega.com/wp-content/uploads/2023/09/customer-web-profie.png) |
 
 |        Rider Menu         |    Rider Order Details    |    Rider Items Details    |
 | :-----------------------: | :-----------------------: | :-----------------------: |
@@ -184,6 +184,19 @@ NOTE: Email provider has been only been tested for gmail accounts
 |       Restaurant Orders       |        Restaurant Menu         |      Restaurant Delivered      |
 | :---------------------------: | :----------------------------: | :----------------------------: |
 | ![](./assets/restaurant1.png) | ![](./assets/restaurant2.jpeg) | ![](./assets/restaurant3.jpeg) |
+
+|       Web Orders              |        Web Checkout            |      Web Cart                  |
+| :---------------------------: | :----------------------------: | :----------------------------: |
+| ![](https://enatega.com/wp-content/uploads/2023/09/web-my-orderds.png) | ![](https://enatega.com/wp-content/uploads/2023/09/web-checkout.png) | ![](https://enatega.com/wp-content/uploads/2023/09/web-cart.png) |
+
+|      Mobile Restaurant        |        Mobile Location         |      Mobile Cart      |
+| :---------------------------: | :----------------------------: | :----------------------------: |
+| ![](https://enatega.com/wp-content/uploads/2023/09/mobile-resutrants.png) | ![](https://enatega.com/wp-content/uploads/2023/09/mobile-location.png) | ![](https://enatega.com/wp-content/uploads/2023/09/mobile-cart.png) |
+
+
+|      Customer Restaurant        |        Mobile Location         |
+| :---------------------------: | :----------------------------: | 
+| ![](https://enatega.com/wp-content/uploads/2023/09/customerResturant.png) | ![](https://enatega.com/wp-content/uploads/2023/09/customer-web-profie.png) |
 
 ## High Level Architecture: <a id="heading-7"></a>
 
