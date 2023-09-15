@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://enatega.com/wp-content/uploads/2023/09/enatega-logoz.png" alt="Enatega Logo" width="200">
   <h2>Enatega Multi-vendor</h2>
   <i>Enatega is an open-source delivery management platform for the future.</i>
  <br/>
@@ -108,7 +107,7 @@ The required credentials and keys have been set already. You can setup your own 
 
 The version of nodejs should be between 14.0 to 16.0
 
-[![Static Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue)](https://enatega-1.gitbook.io/enatega-multivendor/configurations/google-maps-api-keys)
+[![Static Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue)](https://enatega.com/multivendor-documentation/)
 
 ## Prerequisites: <a id="heading-4"></a>
 
