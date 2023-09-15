@@ -1,3 +1,12 @@
+<div align="right">
+
+<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution" style="text-decoration:none">![Static Badge](https://img.shields.io/badge/-0d1117?logo=facebook)</a>
+<a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution" style="text-decoration:none">![Static Badge](https://img.shields.io/badge/-0d1117?logo=linkedin)</a>
+<a target="_blank" href="https://twitter.com/intent/tweet?&url=https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&via=TWITTER-HANDLE" style="text-decoration:none">![Static Badge](https://img.shields.io/badge/-0d1117?logo=twitter)</a>
+
+</div>
+
+
 <div align="center">
   <h2>Enatega Multi-vendor</h2>
   <i>Enatega is an open-source delivery management platform for the future.</i>
