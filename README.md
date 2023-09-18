@@ -64,6 +64,7 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
  - [Screenshots](#heading-6)
  - [High Level Architecture](#heading-7)
  - [Documentation and Demo Videos](#heading-8)
+ - [Demo Videos](#headingD)
  - [Demos](#heading-9)
  - [Contributing](#heading-10)
  - [Star graph](#heading-11)
@@ -216,17 +217,15 @@ NOTE: Email provider has been only been tested for gmail accounts
 - Restaurant App communicates API Server
 - Errors are reported to Sentry by Customer App, Restaurant App, Rider App, Web Customer App and API Server
 
-## Documentation and Demo Videos: <a id="heading-8"></a>
+## Documentation <a id="heading-8"></a>
 
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
 
-To check out video demo of admin dashboard please click [here](https://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode)
 
+## Demo Videos: <a id="headingD"></a>
 |      Admin Dashboard Demo        |        Mobile App Demo         |
 | :---------------------------: | :----------------------------: | 
-| <a href="http://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode"><img src="http://img.youtube.com/vi/abcdefg/0.jpg" alt="Video Thumbnail" width="250" height=""></a> | <a href="http://www.youtube.com/watch?v=2HdHS2I-p6g&ab_channel=NinjasCode"><img src="http://img.youtube.com/vi/abcdefg/0.jpg" alt="Video Thumbnail" width="250" height="">
-</a> 
-
+| <a href="https://www.youtube.com/watch?v=18d_POMa8B4"><img src="https://img.youtube.com/vi/18d_POMa8B4/0.jpg" width="200" alt="Video"></a>| <a href="https://www.youtube.com/watch?v=2HdHS2I-p6g"><img src="https://img.youtube.com/vi/2HdHS2I-p6g/0.jpg" width="200" alt="Video"></a>
 
 ## Demos: <a id="heading-9"></a>
 
