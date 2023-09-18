@@ -64,7 +64,7 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
  - [Screenshots](#heading-6)
  - [High Level Architecture](#heading-7)
  - [Documentation and Demo Videos](#heading-8)
- - [Demo Videos](#headingD)
+ - [Demo Videos](#heading-14)
  - [Demos](#heading-9)
  - [Contributing](#heading-10)
  - [Star graph](#heading-11)
@@ -222,7 +222,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
 
 
-## Demo Videos: <a id="headingD"></a>
+## Demo Videos: <a id="heading-14"></a>
 |      Admin Dashboard Demo        |        Mobile App Demo         |
 | :---------------------------: | :----------------------------: | 
 | <a href="https://www.youtube.com/watch?v=18d_POMa8B4"><img src="https://img.youtube.com/vi/18d_POMa8B4/0.jpg" width="200" alt="Video"></a>| <a href="https://www.youtube.com/watch?v=2HdHS2I-p6g"><img src="https://img.youtube.com/vi/2HdHS2I-p6g/0.jpg" width="200" alt="Video"></a>
