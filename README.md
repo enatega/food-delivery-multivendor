@@ -67,7 +67,6 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
  - [Demo Videos](#heading-14)
  - [Demos](#heading-9)
  - [Contributing](#heading-10)
- - [Star graph](#heading-11)
 - [Contributors](#heading-14)
  - [Disclaimer](#heading-12)
  - [Contact Us](#heading-13)
@@ -241,10 +240,6 @@ Find the link for the complete documentation of the Enatega Multi Vendor Solutio
 ## Contributing: <a id="heading-10"></a>
 
 Enatega Multi-Vendor Solution is an open source project. We welcome contributions of all kinds including documentation, bug fixes, feature requests, and code. Please read our [contributing guide](./contributing/contributing.md) for more information on how you can contribute.
-
-## Star History: <a id="heading-11"></a>
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&type=Date)](https://star-history.com/#Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution&Date)
 
 ## Contributors: <a id="heading-14"></a>
 <div align="center">
