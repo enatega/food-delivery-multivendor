@@ -222,7 +222,11 @@ Find the link for the complete documentation of the Enatega Multi Vendor Solutio
 
 To check out video demo of admin dashboard please click [here](https://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode)
 
-To check out video demo of mobile applications please click [here](https://www.youtube.com/watch?v=2HdHS2I-p6g&ab_channel=NinjasCode)
+|      Admin Dashboard Demo        |        Mobile App Demo         |
+| :---------------------------: | :----------------------------: | 
+| <a href="http://www.youtube.com/watch?v=18d_POMa8B4&ab_channel=NinjasCode"><img src="http://img.youtube.com/vi/abcdefg/0.jpg" alt="Video Thumbnail" width="250" height=""></a> | <a href="http://www.youtube.com/watch?v=2HdHS2I-p6g&ab_channel=NinjasCode"><img src="http://img.youtube.com/vi/abcdefg/0.jpg" alt="Video Thumbnail" width="250" height="">
+</a> 
+
 
 ## Demos: <a id="heading-9"></a>
 
@@ -259,5 +263,5 @@ Enatega Multi-Vendor Solution is an open source project. We welcome contribution
 The frontend source code for our solution is completely open source. However, the API and backend is proprietary and can be accessed via a paid license. For further information, contact us on the channels provided below.
 
 ## Contact Us: <a id="heading-13"></a>
-
+	
 sales@ninjascode.com
