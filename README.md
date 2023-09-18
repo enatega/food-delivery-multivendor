@@ -247,9 +247,6 @@ Enatega Multi-Vendor Solution is an open source project. We welcome contribution
 <a href="https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution" style="max-width: 50%; height: auto;" />
 </a>
-
-
-
 </div>
 
 ## Disclaimer: <a id="heading-12"></a>
