@@ -228,18 +228,9 @@ Find the link for the complete documentation of the Enatega Multi Vendor Solutio
 
 ## Demos: <a id="heading-9"></a>
 
-- [Customer App Android](https://play.google.com/store/apps/details?id=com.enatega.multivendor)
-- [Customer App iOS](https://apps.apple.com/pk/app/enatega-multivendor/id1526488093)
-- [Rider App Android](https://play.google.com/store/apps/details?id=com.enatega.multirider)
-- [Rider App iOS](https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511)
-- [Restaurant App Android](https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant)
-- [Restaurant App iOS](https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537)
-- [Customer Web App](https://multivendor-enatega.ninjascode.com/)
-- [Admin Dashboard](https://multivendor-admin.ninjascode.com/)
-
 |      Customer App             |        Rider App               |      Restaurant App           |          Customer Web        |       Admin Dashboard        |
 | :---------------------------: | :----------------------------: | :----------------------------:|:----------------------------:|:----------------------------:|
-| <a href=""><img src="https://enatega.com/wp-content/uploads/2023/09/logooo.png" alt="Enatega Logos" width="150"></a>| <a href=""><img src="https://enatega.com/wp-content/uploads/2023/09/Untitled-1-1.png" alt="Enatega Logos" width="150"></a>| <a href=""><img src="https://enatega.com/wp-content/uploads/2023/09/LOGOS-FOR-ENATGEA-res.png" alt="Enatega Logos" width="150"></a>| <a href="https://multivendor-enatega.ninjascode.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/worldwide.png" alt="Enatega Logos" width="180"></a> | <a href="https://multivendor-admin.ninjascode.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/dashboard.png" alt="Enatega Logos" width="150"></a> |
+| <a href=""><img src="https://enatega.com/wp-content/uploads/2023/09/logooo.png" alt="Enatega Logos" width="150"></a>| <a href=""><img src="https://enatega.com/wp-content/uploads/2023/09/Untitled-1-1.png" alt="Enatega Logos" width="150"></a>| <a href=""><img src="https://enatega.com/wp-content/uploads/2023/09/LOGOS-FOR-ENATGEA-res.png" alt="Enatega Logos" width="150"></a>| <a href="http://multivendor.enatega.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/worldwide.png" alt="Enatega Logos" width="180"></a> | <a href="http://multivendor-admin-staging.enatega.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/dashboard.png" alt="Enatega Logos" width="150"></a> |
 | <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"><img src="https://enatega.com/wp-content/uploads/2023/09/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"><img src="https://enatega.com/wp-content/uploads/2023/09/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=com.enatega.multirider"><img src="https://enatega.com/wp-content/uploads/2023/09/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"><img src="https://enatega.com/wp-content/uploads/2023/09/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"><img src="https://enatega.com/wp-content/uploads/2023/09/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"><img src="https://enatega.com/wp-content/uploads/2023/09/social_10096939.png" alt="iOS Logo" width="25"></a> |
 
 ## Contributing: <a id="heading-10"></a>
