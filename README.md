@@ -166,21 +166,6 @@ Set credentials in Admin Dashboard in file src/index.js
 NOTE: Email provider has been only been tested for gmail accounts
 
 ## Technologies: <a id="heading-5"></a>
-
-- [Expo](https://expo.dev/)
-- [React Navigation](https://reactnavigation.org/)
-- [Apollo GraphQL](https://www.apollographql.com/)
-- [ReactJS](https://reactjs.org/)
-- [NodeJS](https://nodejs.org/en/)
-- [MongoDB](https://www.mongodb.com/)
-- [Firebase](https://firebase.google.com/)
-- [Amplitude](https://amplitude.com/)
-- [React Native](https://reactnative.dev/)
-- [React Router](https://reactrouter.com/)
-- [GraphQL](https://graphql.org/)
-- [ExpressJS](https://expressjs.com/)
-- [React Strap](https://reactstrap.github.io/)
-
 |  Expo   | React-Navigation | Apollo GraphQL | ReactJS | NodeJS | MongoDB | Firebase | 
 |:-------:|:------------:|:--------------:|:-------:|:------:|:-------:|:--------:|
 | <a href="https://expo.dev/"><img src="https://enatega.com/wp-content/uploads/2023/09/expoicon.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactnavigation.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-navigation.png" alt="Enatega Logos" width="100"></a>| <a href="https://www.apollographql.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/apollo.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactjs.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-native.png" alt="Enatega Logos" width="100"></a> | <a href="https://nodejs.org/en/"><img src="https://enatega.com/wp-content/uploads/2023/09/node.png" alt="Enatega Logos" width="100"></a> | <a href="https://www.mongodb.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/mongoDB.png" alt="Enatega Logos" width="100"></a> | <a href="https://firebase.google.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/firebase.png" alt="Enatega Logos" width="100"></a> | 
