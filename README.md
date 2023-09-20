@@ -176,38 +176,17 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## :framed_picture: Screenshots: <a id="heading-6"></a>
 
-|  Admin Vendor Overview   |   Admin Rider Overview   | Admin Restaurant Overview |
-| :----------------------: | :----------------------: | :-----------------------: |
-| ![](./assets/admin1.png) | ![](./assets/admin2.png) | ![](./assets/admin3.png)  |
+|          Rider App       |   
+| :----------------------: |
+| ![](https://enatega.com/wp-content/uploads/2023/09/rider-app.png) | 
 
-|     Customer Web Homepage      |    Customer Web Restaurants    |      Customer Web Profile      |
-| :----------------------------: | :----------------------------: | :----------------------------: |
-| ![](https://enatega.com/wp-content/uploads/2023/09/customer-location.png) | ![](https://enatega.com/wp-content/uploads/2023/09/web-resturant.png) | ![](https://enatega.com/wp-content/uploads/2023/09/customer-web-profie.png) |
+|          Restaurant APP        |   
+| :----------------------------: | 
+| ![](https://enatega.com/wp-content/uploads/2023/09/restuarant-app.png) |
 
-|        Rider Menu         |    Rider Order Details    |    Rider Items Details    |
-| :-----------------------: | :-----------------------: | :-----------------------: |
-| ![](./assets/rider1.jpeg) | ![](./assets/rider2.jpeg) | ![](./assets/rider3.jpeg) |
-
-|    Customer Order Detail     |    Customer Menu Details     |      Customer Location       |
-| :--------------------------: | :--------------------------: | :--------------------------: |
-| ![](./assets/customer1.jpeg) | ![](./assets/customer2.jpeg) | ![](./assets/customer3.jpeg) |
-
-|       Restaurant Orders       |        Restaurant Menu         |      Restaurant Delivered      |
-| :---------------------------: | :----------------------------: | :----------------------------: |
-| ![](./assets/restaurant1.png) | ![](./assets/restaurant2.jpeg) | ![](./assets/restaurant3.jpeg) |
-
-|       Web Orders              |        Web Checkout            |      Web Cart                  |
-| :---------------------------: | :----------------------------: | :----------------------------: |
-| ![](https://enatega.com/wp-content/uploads/2023/09/web-my-orderds.png) | ![](https://enatega.com/wp-content/uploads/2023/09/web-checkout.png) | ![](https://enatega.com/wp-content/uploads/2023/09/web-cart.png) |
-
-|      Mobile Restaurant        |        Mobile Location         |      Mobile Cart      |
-| :---------------------------: | :----------------------------: | :----------------------------: |
-| ![](https://enatega.com/wp-content/uploads/2023/09/mobile-resutrants.png) | ![](https://enatega.com/wp-content/uploads/2023/09/mobile-location.png) | ![](https://enatega.com/wp-content/uploads/2023/09/mobile-cart.png) |
-
-
-|      Customer Restaurant        |        Mobile Location         |
-| :---------------------------: | :----------------------------: | 
-| ![](https://enatega.com/wp-content/uploads/2023/09/customerResturant.png) | ![](https://enatega.com/wp-content/uploads/2023/09/customer-web-profie.png) |
+|       Customer  App       |   
+| :-----------------------: | 
+| ![](https://enatega.com/wp-content/uploads/2023/09/Customer-app.png) | 
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
