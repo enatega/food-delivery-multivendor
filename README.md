@@ -190,13 +190,8 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
-![](./assets/architecture.png)
+![](https://enatega.com/wp-content/uploads/2023/09/7029879-scaled.jpg)
 
-- User Mobile App communicates with both API Server and Amplitudes analytics dashboard
-- Web dashboard communicates with only API Server
-- Rider App communicates with API Server
-- Restaurant App communicates API Server
-- Errors are reported to Sentry by Customer App, Restaurant App, Rider App, Web Customer App and API Server
 
 ## :book: Documentation <a id="heading-8"></a>
 
