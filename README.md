@@ -74,7 +74,7 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
 - [:computer: Technologies](#heading-5)
 - [:camera: Screenshots](#heading-6)
 - [:triangular_ruler: High Level Architecture](#heading-7)
-- [:page_with_curl: Documentation and Demo Videos](#heading-8)
+- [:page_with_curl: Documentation](#heading-8)
 - [:movie_camera: Demo Videos](#heading-14)
 - [:video_game: Demos](#heading-9)
 - [:rocket: Contributing](#heading-10)
