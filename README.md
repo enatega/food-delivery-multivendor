@@ -65,7 +65,7 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
 <hr/>
 <br/>
 
-## Quick Links
+## :fast_forward: Quick Links
  - [What is included](#heading-1)
  - [Features](#heading-2)
  - [Setup](#heading-3)
@@ -85,7 +85,7 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
 <hr/>
 <br/>
 
-## What is included: <a id="heading-1"></a>
+## :question: What is included: <a id="heading-1"></a>
 
 Our solution also comes with the following:
 
@@ -98,7 +98,7 @@ Our solution also comes with the following:
 - Analytics Dashboard with Expo Amplitude
 - Error crash reporting with Sentry
 
-## Features: <a id="heading-2"></a>
+## :fire: Features: <a id="heading-2"></a>
 
 - Authentication using Google, Apple, and Facebook
 - Different sections feature for promoting restaurants
@@ -116,7 +116,7 @@ Our solution also comes with the following:
 - Options to add different variations of food items and adding notes to restaurant
   Pick up and delivery option with different timings
 
-## Setup: <a id="heading-3"></a>
+## :repeat_one: Setup: <a id="heading-3"></a>
 
 As we’ve mentioned above, the solution includes five separate modules. To setup these modules, follow the steps below:
 
@@ -128,7 +128,7 @@ The version of nodejs should be between 14.0 to 16.0
 
 [![Static Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue)](https://enatega.com/multivendor-documentation/)
 
-## Prerequisites: <a id="heading-4"></a>
+## :information_source: Prerequisites: <a id="heading-4"></a>
 
 App Ids for Mobile App in app.json
 
@@ -165,7 +165,7 @@ Set credentials in Admin Dashboard in file src/index.js
 
 NOTE: Email provider has been only been tested for gmail accounts
 
-## Technologies: <a id="heading-5"></a>
+## :hammer_and_wrench: Technologies: <a id="heading-5"></a>
 |  Expo   | React-Navigation | Apollo GraphQL | ReactJS | NodeJS | MongoDB | Firebase | 
 |:-------:|:------------:|:--------------:|:-------:|:------:|:-------:|:--------:|
 | <a href="https://expo.dev/"><img src="https://enatega.com/wp-content/uploads/2023/09/expoicon.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactnavigation.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-navigation.png" alt="Enatega Logos" width="100"></a>| <a href="https://www.apollographql.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/apollo.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactjs.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-native.png" alt="Enatega Logos" width="100"></a> | <a href="https://nodejs.org/en/"><img src="https://enatega.com/wp-content/uploads/2023/09/node.png" alt="Enatega Logos" width="100"></a> | <a href="https://www.mongodb.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/mongoDB.png" alt="Enatega Logos" width="100"></a> | <a href="https://firebase.google.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/firebase.png" alt="Enatega Logos" width="100"></a> | 
@@ -174,7 +174,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 |:------------:|:------------:|:-------:|:---------:|:-----------:|:---------:|
 |<a href="https://reactnative.dev/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-native.png" alt="Enatega Logos" width="100"></a> | <a href="https://reactrouter.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-router-svgrepo-com.png" alt="Enatega Logos" width="100"></a> |<a href="https://graphql.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/graphQl.png" alt="Enatega Logos" width="100"></a> | <a href="https://expressjs.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/expo.png" alt="Enatega Logos" width="100"></a> |<a href="https://reactstrap.github.io/"><img src="https://enatega.com/wp-content/uploads/2023/09/React-strap.png" alt="Enatega Logos" width="100"></a> | <a href="https://amplitude.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/Amplitude.png" alt="Enatega Logos" width="100"></a> | 
 
-## Screenshots: <a id="heading-6"></a>
+## :framed_picture: Screenshots: <a id="heading-6"></a>
 
 |  Admin Vendor Overview   |   Admin Rider Overview   | Admin Restaurant Overview |
 | :----------------------: | :----------------------: | :-----------------------: |
@@ -209,7 +209,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 | :---------------------------: | :----------------------------: | 
 | ![](https://enatega.com/wp-content/uploads/2023/09/customerResturant.png) | ![](https://enatega.com/wp-content/uploads/2023/09/customer-web-profie.png) |
 
-## High Level Architecture: <a id="heading-7"></a>
+## :wrench: High Level Architecture: <a id="heading-7"></a>
 
 ![](./assets/architecture.png)
 
@@ -219,28 +219,28 @@ NOTE: Email provider has been only been tested for gmail accounts
 - Restaurant App communicates API Server
 - Errors are reported to Sentry by Customer App, Restaurant App, Rider App, Web Customer App and API Server
 
-## Documentation <a id="heading-8"></a>
+## :book: Documentation <a id="heading-8"></a>
 
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega-1.gitbook.io/).
 
 
-## Demo Videos: <a id="heading-14"></a>
+## :tv: Demo Videos: <a id="heading-14"></a>
 |      Admin Dashboard Demo        |        Mobile App Demo         |
 | :---------------------------: | :----------------------------: | 
 | <a href="https://www.youtube.com/watch?v=18d_POMa8B4"><img src="https://img.youtube.com/vi/18d_POMa8B4/0.jpg" width="200" alt="Video"></a>| <a href="https://www.youtube.com/watch?v=2HdHS2I-p6g"><img src="https://img.youtube.com/vi/2HdHS2I-p6g/0.jpg" width="200" alt="Video"></a>
 
-## Demos: <a id="heading-9"></a>
+## :iphone: Demos: <a id="heading-9"></a>
 
 |      Customer App             |        Rider App               |      Restaurant App           |          Customer Web        |       Admin Dashboard        |
 | :---------------------------: | :----------------------------: | :----------------------------:|:----------------------------:|:----------------------------:|
 | <a href="#heading-9" style="pointer-events: none;"><img src="https://enatega.com/wp-content/uploads/2023/09/logooo.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="https://enatega.com/wp-content/uploads/2023/09/Untitled-1-1.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="https://enatega.com/wp-content/uploads/2023/09/LOGOS-FOR-ENATGEA-res.png" alt="Enatega Logos" width="150"></a>| <a href="http://multivendor.enatega.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/worldwide.png" alt="Enatega Logos" width="180"></a> | <a href="http://multivendor-admin-staging.enatega.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/dashboard.png" alt="Enatega Logos" width="150"></a> |
 | <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"><img src="https://enatega.com/wp-content/uploads/2023/09/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"><img src="https://enatega.com/wp-content/uploads/2023/09/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=com.enatega.multirider"><img src="https://enatega.com/wp-content/uploads/2023/09/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"><img src="https://enatega.com/wp-content/uploads/2023/09/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"><img src="https://enatega.com/wp-content/uploads/2023/09/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"><img src="https://enatega.com/wp-content/uploads/2023/09/social_10096939.png" alt="iOS Logo" width="25"></a> |
 
-## Contributing: <a id="heading-10"></a>
+## :computer: Contributing: <a id="heading-10"></a>
 
 Enatega Multi-Vendor Solution is an open source project. We welcome contributions of all kinds including documentation, bug fixes, feature requests, and code. Please read our [contributing guide](./contributing/contributing.md) for more information on how you can contribute.
 
-## Contributors: <a id="heading-14"></a>
+## :people_holding_hands: Contributors: <a id="heading-14"></a>
 <div align="center">
 <br>
 <a href="https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/graphs/contributors">
@@ -248,10 +248,11 @@ Enatega Multi-Vendor Solution is an open source project. We welcome contribution
 </a>
 </div>
 
-## Disclaimer: <a id="heading-12"></a>
+## :warning: Disclaimer: <a id="heading-12"></a>
 
 The frontend source code for our solution is completely open source. However, the API and backend is proprietary and can be accessed via a paid license. For further information, contact us on the channels provided below.
 
-## Contact Us: <a id="heading-13"></a>
+## :mailbox_with_mail: Contact Us: <a id="heading-13"></a>
 	
 sales@ninjascode.com
+
