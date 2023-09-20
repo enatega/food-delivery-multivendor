@@ -62,28 +62,28 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
 
 <b>Our solution is open source but the backend and API are proprietary, and can be obtained via paid license.</b>
 
+<!-- Add a horizontal rule for separation -->
 <hr/>
-<br/>
 
 ## :fast_forward: Quick Links
- - [What is included](#heading-1)
- - [Features](#heading-2)
- - [Setup](#heading-3)
- - [Prerequisites](#heading-4)
- - [Technologies](#heading-5)
- - [Screenshots](#heading-6)
- - [High Level Architecture](#heading-7)
- - [Documentation and Demo Videos](#heading-8)
- - [Demo Videos](#heading-14)
- - [Demos](#heading-9)
- - [Contributing](#heading-10)
-- [Contributors](#heading-14)
- - [Disclaimer](#heading-12)
- - [Contact Us](#heading-13)
 
-<br/>
+- [:book: What is included](#heading-1)
+- [:rocket: Features](#heading-2)
+- [:wrench: Setup](#heading-3)
+- [:gear: Prerequisites](#heading-4)
+- [:computer: Technologies](#heading-5)
+- [:camera: Screenshots](#heading-6)
+- [:triangular_ruler: High Level Architecture](#heading-7)
+- [:page_with_curl: Documentation and Demo Videos](#heading-8)
+- [:movie_camera: Demo Videos](#heading-14)
+- [:video_game: Demos](#heading-9)
+- [:rocket: Contributing](#heading-10)
+- [:busts_in_silhouette: Contributors](#heading-14)
+- [:warning: Disclaimer](#heading-12)
+- [:email: Contact Us](#heading-13)
+
+<!-- Add a horizontal rule for separation -->
 <hr/>
-<br/>
 
 ## :question: What is included: <a id="heading-1"></a>
 
