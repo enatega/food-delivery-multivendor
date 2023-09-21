@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
 import { View, FlatList } from 'react-native'
+import ActiveOrders from '../ActiveOrders'
+import UserContext from '../../../context/User'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -11,11 +13,13 @@ import { scale } from '../../../utils/scaling'
 
 function ActiveOrdersAndSections(props) {
   const { sections } = props
+  const { isLoggedIn, profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
   return (
-    <View style={[styles().PB10, { ...alignment.PTmedium }]}>
+    <View>
+      <View>{isLoggedIn && profile && <ActiveOrders />}</View>
       {sections.map(resSection => (
         <View key={resSection._id}>
           <TextDefault
@@ -23,17 +27,14 @@ function ActiveOrdersAndSections(props) {
             textColor={currentTheme.fontMainColor}
             style={{
               ...alignment.MLlarge,
-              ...alignment.PBsmall
+              ...alignment.PBsmall,
+              ...alignment.PTmedium
             }}
             bolder
-            H4>
+            H3>
             {resSection.name}
           </TextDefault>
-          <View
-            style={{
-              width: '100%',
-              ...alignment.PBmedium
-            }}>
+          <View style={{ width: '100%' }}>
             <FlatList
               style={styles().offerScroll}
               contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
@@ -42,8 +43,8 @@ function ActiveOrdersAndSections(props) {
               horizontal={true}
               data={resSection ? resSection.restaurants : []}
               keyExtractor={(item, index) => item._id}
-              renderItem={({ item, index }) => {
-                return <RestaurantCard {...item} index={index} />
+              renderItem={({ item }) => {
+                return <RestaurantCard {...item} />
               }}
             />
           </View>

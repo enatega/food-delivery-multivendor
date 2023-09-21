@@ -1,7 +1,6 @@
-import { scale } from '../../utils/scaling'
-import { StyleSheet, Dimensions, Platform } from 'react-native'
+import { verticalScale, scale } from '../../utils/scaling'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -13,13 +12,12 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.headerBackground : 'transparent'
     },
     container: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      marginBottom: 90
+      flex: 1,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     contentContainer: {
-      ...alignment.PBsmall,
-      backgroundColor: props !== null ? props.menuBar : 'white',
-      marginBottom: 60
+      flexGrow: 1,
+      ...alignment.PBsmall
     },
     subContainerImage: {
       flex: 1,
@@ -42,71 +40,86 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
+      width: '85%',
       padding: scale(10),
       backgroundColor: props !== null ? props.buttonBackground : 'grey',
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'center'
-    },
-
-    topContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
-      height: height * 0.25,
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.PTmedium
-    },
-    lowerContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
-      shadowColor: props !== null ? props.fontSecondColor : 'grey',
-      shadowOffset: {
-        width: 0,
-        height: 12
-      },
-      shadowOpacity: 0.58,
-      shadowRadius: 16.0,
-      elevation: 24,
-      borderTopRightRadius: 30,
-      borderTopLeftRadius: 30,
-      flex: 1
-    },
-    scrollView: {
-      backgroundColor: 'transparent',
-      marginBottom: Platform === 'ios' ? height * 0.1 : height * 0.1
-    },
-    barContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      width: '75%',
       alignSelf: 'center',
-      justifyContent: 'space-around',
-      padding: 10,
-      backgroundColor: props !== null ? props.tagColor : 'grey',
-      borderRadius: 10,
-      shadowColor: '#000',
+      borderRadius: scale(10)
+    },
+    subContainer: {
+      flex: 1,
+      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      borderRadius: scale(10),
+      elevation: 3,
+      shadowColor: 'black',
       shadowOffset: {
         width: 0,
-        height: 2
+        height: verticalScale(1)
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-
-      elevation: 5,
-      marginTop: -30
+      shadowOpacity: 0.5,
+      shadowRadius: verticalScale(1),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      ...alignment.MRsmall,
+      ...alignment.MLsmall,
+      ...alignment.MTsmall,
+      ...alignment.PTxSmall,
+      ...alignment.PBxSmall,
+      ...alignment.PRsmall,
+      ...alignment.PLxSmall
     },
-    barContent: {
-      padding: 15,
+    restaurantImage: {
+      height: '100%',
+      width: '28%',
       borderRadius: 10
     },
-    badge: {
-      position: 'absolute',
-      backgroundColor: props !== null ? props.fontMainColor : 'white',
-      width: 25,
-      height: 25,
-      borderRadius: 25,
-      top: -8,
-      right: -8,
-      justifyContent: 'center',
+    textContainer: {
+      width: '58%',
+      ...alignment.PTsmall,
+      //...alignment.PBlarge,
+      ...alignment.PLsmall
+    },
+    subContainerLeft: {
+      width: '100%'
+    },
+    subContainerRight: {
+      ...alignment.PTsmall,
+      width: '15%',
+      justifyContent: 'space-between'
+    },
+    subContainerButton: {
+      backgroundColor: props !== null ? props.buttonBackground : 'grey',
+      ...alignment.MTxSmall,
+      borderRadius: 10,
+      width: scale(80),
+      height: verticalScale(25),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    subContainerReviewButton: {
+      backgroundColor: props !== null ? props.secondaryBackground : 'grey',
+      ...alignment.MTxSmall,
+      borderRadius: 10,
+      width: scale(80),
+      height: verticalScale(25),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    rateOrderContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: scale(10),
+      marginBottom: scale(10),
+      justifyContent: 'space-around',
+      alignItems: 'flex-end'
+    },
+    backBtnContainer: {
+      backgroundColor: 'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
       alignItems: 'center'
     }
   })

@@ -3,19 +3,18 @@ import { alignment } from '../../../utils/alignment'
 const styles = StyleSheet.create({
   topContainer: {
     width: '100%',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    ...alignment.MTsmall
   },
   titleContainer: {
-    width: '70%',
-    ...alignment.PRxSmall,
+    width: '80%',
     ...alignment.MTsmall,
     ...alignment.MBsmall
   },
   priceContainer: {
-    width: '30%',
+    width: '20%',
     justifyContent: 'center',
-    alignItems: 'center',
-
     ...alignment.MTsmall,
     ...alignment.MBsmall
   },

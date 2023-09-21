@@ -7,34 +7,33 @@ const styles = (props = null) =>
     itemContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      borderBottomWidth: 0.5,
-      paddingVertical: 15
+      width: '100%'
     },
     actionContainer: {
-      width: '25%',
+      width: '27%',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: props !== null ? props.cartContainer : 'transparent'
     },
     actionContainerBtns: {
-      width: 20,
-      height: 20,
-      backgroundColor: props !== null ? props.tagColor : 'transparent',
+      width: '24%',
+      backgroundColor: props !== null ? props.main : 'transparent',
       justifyContent: 'center',
+      borderRadius: scale(20),
       alignItems: 'center',
-      borderRadius: 50
+      ...alignment.PTxSmall,
+      ...alignment.PBxSmall
     },
     actionContainerView: {
+      width: '33%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
-      borderWidth: 1,
-      ...alignment.PxSmall,
+      borderWidth: 0.2,
       borderRadius: scale(5),
-      marginHorizontal: 10,
-      width: 30
+      padding: scale(5),
+      margin: scale(8)
     }
   })
 export default styles

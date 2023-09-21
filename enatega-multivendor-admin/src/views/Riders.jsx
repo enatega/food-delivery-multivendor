@@ -10,7 +10,7 @@ import RiderComponent from '../components/Rider/Rider'
 import SearchBar from '../components/TableHeader/SearchBar'
 import {
   getRiders,
-  deleteRider,
+  //deleteRider,
   toggleAvailablity,
   getAvailableRiders
 } from '../apollo'
@@ -33,13 +33,14 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ReactComponent as RiderIcon } from '../assets/svg/svg/Rider.svg'
 import TableHeader from '../components/TableHeader'
+import Alert from '../components/Alert'
 
 const GET_RIDERS = gql`
   ${getRiders}
 `
-const DELETE_RIDER = gql`
-  ${deleteRider}
-`
+// const DELETE_RIDER = gql`
+//   ${deleteRider}
+// `
 const TOGGLE_RIDER = gql`
   ${toggleAvailablity}
 `
@@ -51,13 +52,14 @@ function Riders(props) {
   const [editModal, setEditModal] = useState(false)
   const [rider, setRider] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const [mutateToggle] = useMutation(TOGGLE_RIDER, {
     refetchQueries: [{ query: GET_RIDERS }, { query: GET_AVAILABLE_RIDERS }]
   })
-  const [mutateDelete] = useMutation(DELETE_RIDER, {
-    refetchQueries: [{ query: GET_RIDERS }]
-  })
+  // const [mutateDelete] = useMutation(DELETE_RIDER, {
+  //   refetchQueries: [{ query: GET_RIDERS }]
+  // })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
     GET_RIDERS
   )
@@ -166,7 +168,12 @@ function Riders(props) {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  toggleModal(row)
+                  setIsOpen(true)
+                  setTimeout(() => {
+                    setIsOpen(false)
+                  }, 5000)
+                  //uncomment this for paid version
+                  //toggleModal(row)
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -177,7 +184,12 @@ function Riders(props) {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  mutateDelete({ variables: { id: row._id } })
+                  setIsOpen(true)
+                  setTimeout(() => {
+                    setIsOpen(false)
+                  }, 5000)
+                  //uncomment this for paid version
+                  //mutateDelete({ variables: { id: row._id } })
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -223,7 +235,12 @@ function Riders(props) {
             <RiderIcon />
           </Grid>
         </Grid>
-
+        {isOpen && (
+            <Alert
+              message="This feature will available after purchasing product"
+              severity="warning"
+              />
+          )}
         {/* Table */}
         {errorQuery ? (
           <tr>

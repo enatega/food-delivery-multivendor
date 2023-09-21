@@ -25,6 +25,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
+import Alert from '../components/Alert'
 
 const GET_ZONES = gql`
   ${getZones}
@@ -37,9 +38,10 @@ const Zones = props => {
   const [editModal, setEditModal] = useState(false)
   const [zones, setZone] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
   const onChangeSearch = e => setSearchQuery(e.target.value)
 
-  const [mutate, { error, loading }] = useMutation(DELETE_ZONE, {
+  const [ /*mutate*/ { error, loading }] = useMutation(DELETE_ZONE, {
     refetchQueries: [{ query: GET_ZONES }]
   })
   const { data, loading: loadingQuery, refetch } = useQuery(GET_ZONES)
@@ -111,7 +113,12 @@ const Zones = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  toggleModal(row)
+                  //uncomment this for paid version
+                  //toggleModal(row)
+                  setIsOpen(true)
+                  setTimeout(() => {
+                    setIsOpen(false)
+                  }, 5000)
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -122,7 +129,12 @@ const Zones = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  mutate({ variables: { id: row._id } })
+                  //uncomment this for paid version
+                  //mutate({ variables: { id: row._id } })
+                  setIsOpen(true)
+                  setTimeout(() => {
+                    setIsOpen(false)
+                  }, 2000)
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -160,6 +172,12 @@ const Zones = props => {
       <Container className={globalClasses.flex} fluid>
         <ZoneComponent />
         {/* Table */}
+        {isOpen && (
+            <Alert
+              message="This feature will available after purchasing product"
+              severity="warning"
+              />
+          )}
         {error ? <span>{`Error! ${error.message}`}</span> : null}
         {loading ? <CustomLoader /> : null}
         <DataTable

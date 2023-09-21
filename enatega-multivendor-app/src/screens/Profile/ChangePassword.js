@@ -12,6 +12,7 @@ import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { alignment } from '../../utils/alignment'
+import { OutlinedTextField } from 'react-native-material-textfield'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 
 const CHANGE_PASSWORD = gql`
@@ -69,59 +70,64 @@ function ChangePassword(props) {
       <View style={styles(currentTheme).modalContainer}>
         <View style={styles().modalContent}>
           <View style={styles().titleContainer}>
-            <TextDefault textColor={currentTheme.fontMainColor} B700 bolder H5>
+            <TextDefault textColor={currentTheme.fontMainColor} B700 bolder H4>
               Change password
             </TextDefault>
           </View>
 
           <View style={{ ...alignment.MTsmall }}>
-            <TextField
-              secureTextEntry
-              autoFocus={true}
-              error={oldPasswordError}
-              label="Current Password"
-              labelFontSize={scale(10)}
-              fontSize={scale(12)}
-              labelHeight={10}
-              textColor={currentTheme.fontMainColor}
-              baseColor={currentTheme.fontSecondColor}
-              errorColor={currentTheme.textErrorColor}
-              tintColor={currentTheme.tagColor}
-              labelTextStyle={{
-                fontSize: scale(12)
-              }}
-              inputContainerStyle={{
-                ...alignment.PLsmall
-              }}
-              onChangeText={setOldPassword}
-              onBlur={() => {
-                setOldPasswordError(!oldPassword ? 'Password is required' : '')
-              }}
-            />
+            <View style={{ ...alignment.MTsmall }}>
+              <OutlinedTextField
+                autoFocus={true}
+                label="Current Password"
+                labelFontSize={scale(10)}
+                fontSize={scale(12)}
+                labelHeight={10}
+                maxLength={20}
+                secureTextEntry
+                textColor={currentTheme.fontMainColor}
+                baseColor={currentTheme.fontSecondColor}
+                errorColor={currentTheme.textErrorColor}
+                tintColor={currentTheme.tagColor}
+                error={oldPasswordError}
+                onChangeText={setOldPassword}
+                onBlur={() => {
+                  setOldPasswordError(
+                    !oldPassword ? 'Password is required' : ''
+                  )
+                }}
+              />
+            </View>
           </View>
           <View style={{ ...alignment.MTmedium }}>
-            <TextField
-              secureTextEntry
-              error={newPasswordError}
-              label="New Password"
-              labelFontSize={scale(10)}
-              fontSize={scale(12)}
-              labelHeight={10}
-              textColor={currentTheme.fontMainColor}
-              baseColor={currentTheme.fontSecondColor}
-              errorColor={currentTheme.textErrorColor}
-              tintColor={currentTheme.tagColor}
-              labelTextStyle={{
-                fontSize: scale(12)
-              }}
-              inputContainerStyle={{
-                ...alignment.PLsmall
-              }}
-              onChangeText={setNewPassword}
-              onBlur={() => {
-                setNewPasswordError(!newPassword ? 'Password is required' : '')
-              }}
-            />
+            <View style={{ ...alignment.MTsmall }}>
+              <OutlinedTextField
+                autoFocus={true}
+                label="New Password"
+                labelFontSize={scale(10)}
+                fontSize={scale(12)}
+                labelHeight={10}
+                maxLength={20}
+                secureTextEntry
+                labelTextStyle={{
+                  fontSize: scale(12)
+                }}
+                inputContainerStyle={{
+                  ...alignment.PLsmall
+                }}
+                textColor={currentTheme.fontMainColor}
+                baseColor={currentTheme.fontSecondColor}
+                errorColor={currentTheme.textErrorColor}
+                tintColor={currentTheme.tagColor}
+                error={newPasswordError}
+                onChangeText={setNewPassword}
+                onBlur={() => {
+                  setNewPasswordError(
+                    !newPassword ? 'Password is required' : ''
+                  )
+                }}
+              />
+            </View>
           </View>
 
           <TouchableOpacity
@@ -148,7 +154,7 @@ function ChangePassword(props) {
             <TextDefault
               textColor={currentTheme.tagColor}
               bolder
-              B700
+              B800
               uppercase
               small>
               {newPassword !== '' && oldPassword !== ''

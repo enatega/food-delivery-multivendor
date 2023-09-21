@@ -1,7 +1,8 @@
-import { verticalScale } from '../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
+import { scale, verticalScale } from '../../utils/scaling'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-const { height } = Dimensions.get('window')
+import { theme } from '../../utils/themeColors'
+
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -9,61 +10,56 @@ const styles = (props = null) =>
     },
     pT20: {
       ...alignment.PTmedium,
-      ...alignment.PBxSmall
+      ...alignment.PBmedium,
+      ...alignment.PRmedium,
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(20)
+    },
+    paymentMethod: {
+      backgroundColor: theme.Pink.lightHorizontalLine,
+      borderRadius: scale(20),
+      padding: scale(10),
+      display: 'flex',
+      alignItems: 'center',
+      width: '80%',
+      justifyContent: 'space-between',
+      flexDirection: 'row'
     },
     mainContainer: {
-      backgroundColor:
-        props !== null ? props.secondaryBackground : 'transparent'
+      backgroundColor: theme.Pink.startColor,
+      borderBottomRightRadius: scale(35),
+      borderBottomLeftRadius: scale(35),
+      ...alignment.PTlarge,
+      ...alignment.PLsmall,
+      ...alignment.PRsmall,
+      paddingBottom: scale(25)
     },
     radioContainer: {
-      width: '12%'
+      width: '15%',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    backButton: {
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
     },
     radioGroup: {
       flexDirection: 'row',
       width: '100%',
       alignItems: 'center'
     },
-    infoGroup: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor:
-        props !== null ? props.secondaryBackground : 'transparent',
-      ...alignment.Pmedium,
-      borderRadius: 20
-    },
-    backgroundImage: {
-      width: 220,
-      height: 220,
-      position: 'relative',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
     iconContainer: {
       width: '25%',
       justifyContent: 'flex-end',
       flexDirection: 'row',
-      alignItems: 'center',
-      ...alignment.MRxSmall
+      alignItems: 'center'
     },
     iconStyle: {
       height: verticalScale(20),
-      width: verticalScale(35)
-    },
-    upperContainer: {
-      height: height * 0.3,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor:
-        props !== null ? props.secondaryBackground : 'transparent'
-    },
-    lowerContainer: {
-      ...alignment.Msmall,
-      ...alignment.Psmall,
-      flex: 1,
-      borderRadius: 20,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      alignSelf: 'center'
+      width: verticalScale(25)
     }
   })
 export default styles

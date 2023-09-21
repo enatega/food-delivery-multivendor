@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+
 const AuthContext = React.createContext()
 
 export const AuthProvider = ({ children }) => {
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ token, setToken, setTokenAsync }}>
+    <AuthContext.Provider value={{ token, setToken, setTokenAsync}}>
       {children}
     </AuthContext.Provider>
   )

@@ -8,7 +8,7 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainerEmpty: {
-      backgroundColor: 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     container: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
@@ -40,9 +40,17 @@ const styles = (props = null) =>
       width: '60%',
       height: scale(40),
       backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      borderRadius: scale(10),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
+    },
+    backImageContainer: {
+      backgroundColor: 'white',
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
     }
   })
 

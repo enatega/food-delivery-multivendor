@@ -25,16 +25,16 @@ function HeadingComponent(props) {
         </View>
         <View style={styles.priceContainer}>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
-            H5
-            bold>{`${configuration.currencySymbol} ${props.price}`}</TextDefault>
+            textColor={currentTheme.fontMainColor}
+            H4
+            bolder>{`${configuration.currencySymbol} ${props.price}`}</TextDefault>
         </View>
       </View>
       <View style={styles.descContainer}>
         <TextDefault
           numberOfLines={1}
           textColor={currentTheme.fontSecondColor}
-          H5
+          H4
           bold>
           {props.desc}
         </TextDefault>

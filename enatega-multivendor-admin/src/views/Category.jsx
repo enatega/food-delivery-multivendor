@@ -27,6 +27,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
+import Alert from '../components/Alert'
 
 const GET_CATEGORIES = gql`
   ${getRestaurantDetail}
@@ -38,6 +39,7 @@ const Category = props => {
   const [editModal, setEditModal] = useState(false)
   const [category, setCategory] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
   const onChangeSearch = e => setSearchQuery(e.target.value)
 
   const toggleModal = category => {
@@ -46,7 +48,7 @@ const Category = props => {
   }
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [mutate, { loading }] = useMutation(DELETE_CATEGORY)
+  const [/*mutate*/ { loading }] = useMutation(DELETE_CATEGORY)
 
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
     GET_CATEGORIES,
@@ -107,7 +109,12 @@ const Category = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  toggleModal(row)
+                  setIsOpen(true)
+                  setTimeout(() => {
+                    setIsOpen(false)
+                  }, 5000)
+                  //uncomment this for paid version
+                  //toggleModal(row)
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -118,9 +125,14 @@ const Category = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  mutate({
-                    variables: { id: row._id, restaurant: restaurantId }
-                  })
+                  setIsOpen(true)
+                  setTimeout(() => {
+                    setIsOpen(false)
+                  }, 5000)
+                  //uncomment this for paid version
+                  // mutate({
+                  //   variables: { id: row._id, restaurant: restaurantId }
+                  // })
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -149,6 +161,12 @@ const Category = props => {
   return (
     <>
       <Header />
+      {isOpen && (
+            <Alert
+              message="This feature will available after purchasing product"
+              severity="warning"
+              />
+          )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
         <Grid container mb={3}>

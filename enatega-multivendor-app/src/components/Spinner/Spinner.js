@@ -14,7 +14,7 @@ function Spinner(props) {
         flex: 1,
         backgroundColor: props.backColor
           ? props.backColor
-          : currentTheme.themeBackground
+          : currentTheme.transparent
       }}
       size={props.size || 'large'}
       color={

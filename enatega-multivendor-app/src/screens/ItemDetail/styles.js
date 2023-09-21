@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
@@ -8,32 +9,41 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.secondaryBackground : '#fefefe'
+      backgroundColor: props !== null ? props.themeBackground : '#ffff'
     },
     scrollViewContainer: {
       width: '100%',
       height: '100%'
     },
-    lowerContainer: {
-      width: '100%',
-      backgroundColor: props !== null ? props.secondaryBackground : '#fefefe',
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20,
-      marginTop: -30,
-      ...alignment.Pmedium
-    },
     subContainer: {
-      width: '100%',
-      alignSelf: 'center',
-      borderRadius: scale(20),
-      backgroundColor: props !== null ? props.themeBackground : '#fefefe',
-      ...alignment.Pmedium
+      width: '90%',
+      alignSelf: 'center'
     },
     line: {
-      width: '100%',
+      marginLeft:  scale(10),
+      width: '95%',
       height: StyleSheet.hairlineWidth,
       ...alignment.MBsmall,
-      backgroundColor: props !== null ? props.horizontalLine : 'black'
+      backgroundColor: props !== null ? props.black : 'black'
+    },
+    input: {
+      backgroundColor: theme.Pink.lightHorizontalLine,
+      borderRadius:  scale(10),
+      height:  scale(50),
+      paddingLeft:  scale(10),
+      textAlignVertical: 'center'
+    },
+    inputContainer: {
+      width: '90%',
+      alignSelf: 'center',
+      zIndex:  scale(1),
+      height: scale(200)
+    },
+    backBtnContainer: {
+      backgroundColor:props !== null ? props.white : 'white',
+      borderRadius:  scale(50),
+      width:  scale(55),
+      alignItems: 'center'
     }
   })
 export default styles

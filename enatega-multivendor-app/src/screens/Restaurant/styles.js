@@ -2,18 +2,19 @@ import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { textStyles } from '../../utils/textStyles'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props != null ? props.secondaryBackground : 'white'
+      backgroundColor: theme.Pink.white
     },
     navbarContainer: {
       paddingBottom: 0,
       height: '5%',
       elevation: 4,
-      shadowColor: '#000',
+      shadowColor: theme.Pink.black,
       shadowOffset: {
         width: 0,
         height: verticalScale(2)
@@ -24,27 +25,24 @@ const styles = (props = null) =>
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
-      backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
-      ...alignment.PTsmall,
-      ...alignment.PBsmall
+      ...alignment.PTlarge,
+      ...alignment.PBlarge
     },
     deal: {
       width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      ...alignment.PTsmall,
-      ...alignment.PBsmall
+      flexDirection: 'row'
     },
     dealSection: {
       position: 'relative',
       backgroundColor: props != null ? props.cartContainer : 'white',
       ...alignment.PLlarge,
-      ...alignment.PRxSmall
+      ...alignment.PRxSmall,
+      borderRadius: scale(25),
+      paddingVertical: scale(10)
     },
     dealDescription: {
       flex: 1,
-      justifyContent: 'space-between',
       backgroundColor: 'transparent',
       ...alignment.PRxSmall
     },
@@ -54,76 +52,80 @@ const styles = (props = null) =>
       overflow: 'hidden'
     },
     priceText: {
+      fontSize: 15,
+      paddingTop: scale(10),
+      maxWidth: '100%',
+      ...alignment.MRxSmall
+    },
+    headerText: {
+      fontSize: 18,
+      paddingTop: scale(5),
       maxWidth: '100%',
       ...alignment.MRxSmall
     },
     listSeperator: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: props != null ? props.lightHorizontalLine : 'grey'
+      borderColor: theme.Pink.black,
+      paddingTop: scale(15),
+      marginBottom: scale(15),
+      width: '90%',
+      alignSelf: 'center'
     },
     sectionSeparator: {
       width: '100%',
       height: scale(15),
-      backgroundColor: props != null ? props.secondaryBackground : 'white'
+      backgroundColor: props != null ? props.themeBackground : 'white'
     },
+
     buttonContainer: {
-      position: 'absolute',
-      bottom: 0,
       width: '100%',
+      height: '10%',
+      backgroundColor: props !== null ? props.themeBackground : 'black',
       justifyContent: 'center',
       alignItems: 'center',
-      overflow: 'hidden',
-      backgroundColor: 'transparent'
+      elevation: 12,
+      shadowColor: props !== null ? props.shadowColor : 'black',
+      shadowOffset: {
+        width: 0,
+        height: -verticalScale(3)
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: verticalScale(2)
     },
     button: {
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props != null ? props.themeBackground : 'red',
-      height: '100%',
-      width: '100%',
-      ...alignment.PTmedium,
+      borderRadius: scale(16),
+      backgroundColor: props !== null ? props.buttonBackground : 'black',
+      height: '75%',
+      width: '95%',
       ...alignment.PLsmall,
-      ...alignment.PRsmall,
-      elevation: 4,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 2,
-        height: verticalScale(2)
-      },
-      borderTopLeftRadius: scale(10),
-      borderTopRightRadius: scale(10),
-      shadowOpacity: 0.6,
-      shadowRadius: verticalScale(2),
-      zIndex: 1
+      ...alignment.PRsmall
     },
     buttonText: {
-      width: '50%',
-      ...alignment.MBmedium,
-      ...alignment.PTmedium,
-      ...alignment.PBmedium,
-      borderRadius: scale(10)
+      width: '30%',
+      color: 'black'
+    },
+    buttonTextRight: {
+      width: '35%'
     },
     buttontLeft: {
-      width: '50%',
-      justifyContent: 'center',
-      ...alignment.MBmedium,
-      alignItems: 'center'
+      width: '35%',
+      height: '50%',
+      justifyContent: 'center'
     },
     buttonLeftCircle: {
-      backgroundColor: props != null ? props.buttonTextPink : 'white',
+      backgroundColor: props != null ? props.black : 'black',
       justifyContent: 'center',
       alignItems: 'center'
     },
     buttonTextLeft: {
-      ...textStyles.Bold,
+      ...textStyles.Bolder,
       ...textStyles.Center,
       ...textStyles.Smaller,
-      fontSize: 20,
-      ...alignment.MLxSmall,
-      ...alignment.MRxSmall,
       backgroundColor: 'transparent',
-      color: props != null ? props.backIconBackground : 'black'
+      color: props != null ? props.white : 'white'
     },
     triangleCorner: {
       position: 'absolute',
@@ -145,14 +147,6 @@ const styles = (props = null) =>
       top: 1,
       right: 0,
       textAlign: 'center'
-    },
-    two: {
-      borderWidth: 1,
-      borderColor: props != null ? props.backIconBackground : 'black',
-      ...alignment.PxSmall,
-      ...alignment.PLsmall,
-      ...alignment.PRsmall,
-      borderRadius: scale(5)
     }
   })
 export default styles

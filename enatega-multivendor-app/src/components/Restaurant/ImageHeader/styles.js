@@ -12,10 +12,11 @@ const styles = (props = null) =>
     mainContainer: {
       width: '100%',
       position: 'absolute',
-      // height: height * 0.3,
+      height: height * 0.3,
       top: 0,
       left: 0,
-      right: 0
+      right: 0,
+      elevation: 5
     },
     touchArea: {
       justifyContent: 'center',
@@ -43,17 +44,17 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     fixedText: {
-      alignSelf: 'center',
+      padding: 10,
+      borderRadius: 10,
+      borderColor: 'white',
+      borderWidth: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.74)',
+      width: '50%',
       alignItems: 'center',
-      borderWidth: 2,
-      borderColor: props != null ? props.buttonBackground : 'green',
-      borderRadius: scale(10),
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      ...alignment.Psmall
+      alignSelf: 'center'
     },
     deliveryBox: {
       color: props != null ? props.fontWhite : 'white',
-      fontSize: scale(12),
       borderRadius: scale(5),
       ...alignment.PxSmall
     },
@@ -61,59 +62,57 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      ...alignment.PTxSmall
+      ...alignment.PTsmall,
+      ...alignment.PBsmall
     },
-    // New Styling
+
     overlayContainer: {
       position: 'absolute',
       top: 0,
       width: '100%',
       height: '100%',
-      // justifyContent: 'center',
-      zIndex: 1,
-      backgroundColor: 'rgba(0,0,0,0.15)',
-      // backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: 'rgba(0,0,0,0.01)',
       ...alignment.PRsmall,
       ...alignment.PLsmall
     },
     headerTitle: {
-      ...textStyles.H4,
+      ...textStyles.H5,
       ...textStyles.Bolder,
-      color: props != null ? props.fontMainColor : 'white',
+      color: props != null ? props.black : 'black',
       flex: 1,
       textAlign: 'center'
     },
     flatListStyle: {
-      width: '90%',
-      backgroundColor: props != null ? props.menuBar : 'white',
-      alignSelf: 'center',
-      borderRadius: scale(10),
-      ...alignment.MTsmall,
-      ...alignment.MBsmall,
-      ...alignment.PLsmall,
-      ...alignment.PRsmall,
-      zIndex: 2 // important
+      height: '50%',
+      width: '100%',
+      backgroundColor: 'white',
+      borderBottomLeftRadius: 25,
+      borderBottomRightRadius: 25,
+      zIndex: 2
     },
     headerContainer: {
       height: '100%',
+      width: '100%',
+      display: 'flex',
       backgroundColor: props != null ? props.menuBar : 'white',
       alignItems: 'center',
       justifyContent: 'center',
-      ...alignment.PxSmall,
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
+      ...alignment.PLlarge,
+      ...alignment.PRlarge,
+      borderRadius: 100
     },
     activeHeader: {
       borderBottomWidth: scale(4),
       borderColor: props != null ? props.tagColor : 'red',
-      height: '90%'
+      height: '100%'
     },
-    inActiveHeader: {
-      borderBottomWidth: scale(1),
-      borderColor: props != null ? props.tagColor : 'red',
-      height: '85%'
+    heading: {
+      fontWeight: 'bold'
     },
     navbarTextContainer: {
+      display: 'flex',
+      flex: 1,
+      flexDirection: 'row',
       height: '100%',
       justifyContent: 'center',
       alignItems: 'center'

@@ -8,6 +8,7 @@ import { LocationContext } from './Location'
 import AuthContext from './Auth'
 import Analytics from '../utils/analytics'
 
+
 const PROFILE = gql`
   ${profile}
 `
@@ -33,7 +34,6 @@ export const UserProvider = props => {
     onCompleted,
     skip: !token
   })
-
   useEffect(() => {
     let isSubscribed = true
     ;(async() => {
@@ -57,7 +57,7 @@ export const UserProvider = props => {
         userId,
         name,
         email,
-        phone
+        phone,
       },
       userId
     )
@@ -144,11 +144,24 @@ export const UserProvider = props => {
       }, 0)
   }
 
-  const addCartItem = async(food, clearFlag) => {
+  const addCartItem = async(
+    _id,
+    variation,
+    quantity = 1,
+    addons = [],
+    clearFlag,
+    specialInstructions = ''
+  ) => {
     const cartItems = clearFlag ? [] : cart
     cartItems.push({
       key: uuid.v4(),
-      ...food
+      _id,
+      quantity: quantity,
+      variation: {
+        _id: variation
+      },
+      addons,
+      specialInstructions
     })
 
     await AsyncStorage.setItem('cartItems', JSON.stringify([...cartItems]))

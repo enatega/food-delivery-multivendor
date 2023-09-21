@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -20,8 +21,8 @@ const styles = (props = null) =>
       height: '100%'
     },
     logoContainer: {
-      width: 120,
-      height: 130,
+      width: scale(120),
+      height: scale(130),
       alignSelf: 'center'
     },
     marginTop3: {
@@ -43,19 +44,19 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     textField: {
-      borderColor: '#efefef',
-      borderWidth: 1,
-      borderRadius: 10,
-      backgroundColor: '#fff',
-      padding: 14,
+      borderColor: props !== null ? props.borderColor :'#efefef',
+      borderWidth: scale(1),
+      borderRadius: scale(10),
+      backgroundColor: props !== null ? props.white : 'white',
+      padding: scale(14),
       shadowColor: props !== null ? props.fontSecondColor : '#545454',
       shadowOffset: {
-        width: 0,
-        height: 2
+        width: scale(0),
+        height: scale(2)
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
+      shadowOpacity: scale(0.25),
+      shadowRadius: scale(3.84),
+      elevation: scale(5),
       ...alignment.MTlarge
     },
     errorInput: {
@@ -70,8 +71,8 @@ const styles = (props = null) =>
       alignItems: 'center',
       backgroundColor: props !== null ? props.black : '#000',
       alignSelf: 'center',
-      padding: 15,
-      borderRadius: 10,
+      padding: scale(15),
+      borderRadius: scale(10),
       ...alignment.MTlarge
     },
     passwordField: {
@@ -82,8 +83,8 @@ const styles = (props = null) =>
       width: '100%'
     },
     eyeBtn: {
-      marginTop: 32,
-      marginLeft: -40
+      marginTop: scale(32),
+      marginLeft: scale(-40)
     },
     headerLeftIcon: {
       ...alignment.PLsmall

@@ -6,7 +6,6 @@ import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { AntDesign } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
-import Animated from 'react-native-reanimated'
 
 function CartComponent(props) {
   const [quantity, setQuantity] = useState(1)
@@ -22,58 +21,41 @@ function CartComponent(props) {
 
   return (
     <View style={styles(currentTheme).mainContainer}>
-      <View style={[styles(currentTheme).buttonContainer]}>
+      <View style={styles().subContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
-          style={styles(currentTheme).button}>
-          <View style={styles().buttontLeft}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={onAdd}
-                style={[styles().buttonTextLeft, styles(currentTheme).round]}>
-                <AntDesign
-                  name="plus"
-                  size={scale(15)}
-                  color={currentTheme.menuBar}
-                />
-              </TouchableOpacity>
-
-              <Animated.Text
-                style={[
-                  styles(currentTheme).buttonTextLeft,
-                  styles(currentTheme).two
-                ]}>
-                {quantity}
-              </Animated.Text>
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={onRemove}
-                style={[styles().buttonTextLeft, styles(currentTheme).round]}>
-                <AntDesign
-                  name="minus"
-                  size={scale(15)}
-                  color={currentTheme.menuBar}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <TouchableOpacity
-            onPress={props.onPress.bind(this, quantity)}
-            style={[
-              styles().buttonText,
-              { backgroundColor: currentTheme?.startColor }
-            ]}>
-            <TextDefault
-              textColor={currentTheme.backIconBackground}
-              uppercase
-              center
-              bolder
-              small>
-              {'Add to Cart'}
-            </TextDefault>
-          </TouchableOpacity>
+          onPress={onRemove}
+          style={styles().icon}>
+          <AntDesign name="minus" size={scale(16)} color={currentTheme.white} />
+        </TouchableOpacity>
+        <TextDefault
+          textColor={currentTheme.fontMainColor}
+          style={styles().quantity}
+          H4
+          bold
+          center>
+          {quantity}
+        </TextDefault>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={onAdd}
+          style={styles().icon}>
+          <AntDesign name="plus" size={scale(16)} color={currentTheme.white} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={props.onPress.bind(this, quantity)}
+          style={
+            !props.disabled
+              ? styles(currentTheme).btnContainer
+              : {
+                  ...styles().btnContainer,
+                  backgroundColor: currentTheme.main
+                }
+          }>
+          <TextDefault textColor={currentTheme.black} H5 bolder center>
+            Add To Cart
+          </TextDefault>
         </TouchableOpacity>
       </View>
     </View>

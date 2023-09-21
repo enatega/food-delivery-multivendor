@@ -27,8 +27,11 @@ function ForgotPassword(props) {
     loading
   } = useForgotPassword()
 
-  useEffect(async() => {
-    await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
+    }
+    Track()
   }, [])
 
   useLayoutEffect(() => {

@@ -1,6 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -11,25 +12,41 @@ const styles = (props = null) =>
       width: '85%'
     },
     shadow: {
-      shadowOffset: { width: 0, height: scale(0.5) },
-      shadowColor: 'black',
+      shadowOffset: { width: 0, height: scale(2) },
+      shadowColor: theme.Pink.black,
       shadowOpacity: 0.3,
       shadowRadius: scale(1),
-      elevation: 3,
+      elevation: 5,
       borderWidth: 0.4,
-      borderColor: props !== null ? props.secondaryBackground : '#FFF'
+      borderColor: '#e1e1e1'
+    },
+    backButton: {
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
+    },
+    mainContainerArea: {
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(30),
+      shadowOffset: { width: 0 },
+      shadowColor: theme.Pink.black,
+      shadowOpacity: 0.1,
+      marginTop: scale(20)
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      ...alignment.PxSmall
     },
     languageContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      borderRadius: scale(12),
       ...alignment.PRmedium,
       ...alignment.PTlarge,
       ...alignment.PBlarge,
-      ...alignment.PLmedium,
-      borderRadius: 10
+      ...alignment.PLmedium
     },
     changeLanguage: {
       flexDirection: 'row',
@@ -39,28 +56,41 @@ const styles = (props = null) =>
     },
     button: {
       width: '15%',
-      alignItems: 'flex-end',
-      backgroundColor: props !== null ? props.secondaryBackground : '#FFF',
-      justifyContent: 'center',
-      borderRadius: 5,
-      ...alignment.PxSmall
+      alignItems: 'flex-end'
     },
     notificationContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.secondaryBackground : '#FFF',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      borderRadius: scale(20),
       ...alignment.PTmedium,
       ...alignment.PBmedium,
       ...alignment.PRsmall,
       ...alignment.PLsmall,
-      ...alignment.MTsmall
+      ...alignment.MTxSmall
     },
     notificationChekboxContainer: {
       flexDirection: 'row',
       flex: 1,
       alignItems: 'center'
+    },
+    buttonContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    deleteButton: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: scale(10),
+      borderRadius: scale(6),
+      backgroundColor: theme.Pink.deleteButton
+    },
+    deleteButtonText: {
+      color: 'white',
+      fontSize: scale(18),
+      fontWeight: '600'
     },
     versionContainer: {
       width: '100%',
@@ -92,29 +122,6 @@ const styles = (props = null) =>
       marginBottom: 0,
       ...alignment.PTxSmall,
       ...alignment.PBxSmall
-    },
-    topContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
-      flex: 0.3,
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.PTmedium,
-      ...alignment.PBmedium
-    },
-    lowerContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
-      shadowColor: props !== null ? props.fontSecondColor : 'grey',
-      shadowOffset: {
-        width: 0,
-        height: 12
-      },
-      shadowOpacity: 0.58,
-      shadowRadius: 16.0,
-      elevation: 24,
-      flex: 0.7,
-      borderTopRightRadius: 30,
-      borderTopLeftRadius: 30,
-      ...alignment.Psmall
     }
   })
 

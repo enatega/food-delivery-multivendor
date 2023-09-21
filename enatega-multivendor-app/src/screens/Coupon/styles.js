@@ -1,43 +1,57 @@
+import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
-import { scale } from '../../utils/scaling'
-import { textStyles } from '../../utils/textStyles'
+import { alignment } from '../../utils/alignment'
 
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  imageContainer: {
-    paddingTop: scale(65),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  header: {
-    borderRadius: 15,
-    marginLeft: scale(10),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  voucherInput: {
-    borderRadius: 10,
-    padding: 10,
-    paddingVertical: 20,
-    marginHorizontal: '10%',
-    alignSelf: 'stretch',
-    ...textStyles.Regular,
-    ...textStyles.H4,
-    shadowOffset: {
-      width: 0,
-      height: 2
+const styles = (props = null) =>
+  StyleSheet.create({
+    flex: {
+      flex: 1
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84
-  },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: '20%',
-    margin: '5%',
-    marginVertical: '10%',
-    borderRadius: 10
-  }
-})
+    mB10: {
+      ...alignment.MBsmall
+    },
+    mainContainer: {
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      ...alignment.PRsmall,
+      ...alignment.PLsmall
+    },
+    headerlineContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      ...alignment.PTsmall,
+      ...alignment.PBsmall
+    },
+    headerLine: {
+      borderBottomWidth: 1,
+      borderColor: props !== null ? props.horizontalLine : 'grey'
+    },
+    upperContainer: {
+      width: '95%',
+      height: verticalScale(80),
+      alignSelf: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props.white : 'white',
+      justifyContent: 'space-between',
+      paddingLeft: scale(10),
+      paddingRight: scale(10),
+      borderRadius: scale(6),
+      marginTop: scale(30)
+    },
+    innerContainer: {
+      width: '70%',
+      paddingTop: scale(10)
+    },
+    buttonContainer: {
+      width: '25%',
+      height: '55%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: scale(6),
+      backgroundColor: props !== null ? props.buttonBackground : 'pink'
+      // ...alignment.MTsmall
+    }
+  })
 export default styles

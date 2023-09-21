@@ -8,14 +8,13 @@ const styles = StyleSheet.create({
     ...alignment.MBsmall
   },
   leftContainer: {
-    width: '70%',
+    width: '80%',
     flexDirection: 'row',
     alignItems: 'center'
   },
   rightContainer: {
-    width: '30%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: '20%',
+    justifyContent: 'center'
   }
 })
 export default styles

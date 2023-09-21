@@ -1,17 +1,12 @@
-import { StyleSheet, Dimensions } from 'react-native'
-import { scale } from '../../utils/scaling'
-import { alignment } from '../../utils/alignment'
+import { verticalScale, scale } from '../../utils/scaling'
+import { StyleSheet } from 'react-native'
 
-const { height, width } = Dimensions.get('window')
+import { alignment } from '../../utils/alignment'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
-    },
-    map: {
-      width: width,
-      height: height * 0.6
+      flex: scale(1)
     },
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF'
@@ -21,13 +16,7 @@ const styles = (props = null) =>
       height: '100%',
       alignSelf: 'center'
     },
-    restaurantsContainer: {
-      backgroundColor: '#F3F4F8',
-      width: '100%',
-      height: '100%',
-      borderTopRightRadius: scale(25),
-      borderTopLeftRadius: scale(25)
-    },
+
     ML20: {
       ...alignment.MLlarge
     },
@@ -38,18 +27,22 @@ const styles = (props = null) =>
       ...alignment.MLsmall
     },
     addressbtn: {
+      backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
+      marginLeft: scale(10),
+      marginRight: scale(10),
+      marginBottom: scale(10),
+      borderRadius: scale(10),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      padding: scale(5),
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
     addressContainer: {
       width: '100%',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: props != null ? props.horizontalLine : 'grey',
-      ...alignment.PTmedium,
-      ...alignment.PBmedium
+      ...alignment.PTsmall,
+      ...alignment.PBsmall
     },
     addressSubContainer: {
       width: '90%',
@@ -62,8 +55,10 @@ const styles = (props = null) =>
     },
     modal: {
       backgroundColor: props != null ? props.cartContainer : '#FFF',
+      paddingTop: scale(10),
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
+
       shadowOpacity: 0
     },
     addressTextContainer: {
@@ -74,49 +69,37 @@ const styles = (props = null) =>
     addressTick: {
       width: '10%',
       justifyContent: 'center',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
+      marginRight: scale(5)
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: props != null ? props.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
-      width: 150,
-      backgroundColor: '#b0afbc'
+      width: scale(150),
+      backgroundColor: props != null ? props.backgroundColor: 'transparent'
     },
     relative: {
       position: 'relative'
     },
     placeHolderContainer: {
       backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
-      borderRadius: 3,
-      elevation: 3,
-      marginBottom: 12,
-      padding: 12
+      borderRadius: scale(3),
+      elevation: scale(3),
+      marginBottom: scale(12),
+      padding: scale(12)
     },
     height200: {
-      height: 200
+      height: scale(200)
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
     },
-    filterContainer: {
-      width: '95%',
-      backgroundColor: '#2c2c2c',
-      ...alignment.Pmedium,
-      alignSelf: 'center',
-      position: 'absolute',
-      bottom: 0,
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20
-    },
-    aboveFilterContainer: {
-      width: '95%',
-      backgroundColor: '#2c2c2c',
-      ...alignment.Pmedium,
-      alignSelf: 'center',
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20,
-      marginTop: 80
+    emptyViewContainer: {
+      width: '100%',
+      height: verticalScale(40),
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   })
 export default styles

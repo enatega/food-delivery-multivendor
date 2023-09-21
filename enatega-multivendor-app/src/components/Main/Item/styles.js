@@ -17,23 +17,22 @@ const styles = (props = null) =>
         width: 0,
         height: verticalScale(0)
       },
-      shadowOpacity: 0.3,
-      shadowRadius: verticalScale(3),
+      borderRadius: scale(25),
       height: scale(220),
-      padding: 3,
-      ...alignment.MBmedium,
-      marginHorizontal: 10,
-      borderRadius: 20
+      width: '99%',
+      padding: scale(15),
+
+      ...alignment.MBsmall
     },
     imageContainer: {
-      alignItems: 'center',
       position: 'relative',
+      alignItems: 'center',
       height: '70%'
     },
     img: {
       width: '100%',
       height: '100%',
-      borderRadius: 20
+      borderRadius: scale(18)
     },
     overlayRestaurantContainer: {
       position: 'absolute',
@@ -45,8 +44,8 @@ const styles = (props = null) =>
     },
     favOverlay: {
       position: 'absolute',
-      top: 5,
-      right: 5,
+      top: 10,
+      right: 12,
       width: scale(30),
       height: scale(30),
       borderRadius: scale(15),
@@ -57,21 +56,9 @@ const styles = (props = null) =>
     },
     deliveryRestaurantOverlay: {
       position: 'absolute',
-      top: 5,
-      left: 5,
-      width: scale(50),
-      height: scale(20),
-      borderRadius: scale(10),
-      backgroundColor: props != null ? props.menuBar : 'white',
-      zIndex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    dealsRestaurantOverlay: {
-      position: 'absolute',
-      bottom: 5,
-      left: 5,
-      width: scale(50),
+      bottom: 15,
+      left: 10,
+      width: scale(45),
       height: scale(20),
       borderRadius: scale(10),
       backgroundColor: props != null ? props.menuBar : 'white',
@@ -80,16 +67,14 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     aboutRestaurant: {
+      alignItems: 'center',
       flexDirection: 'row',
-      width: '100%',
-      justifyContent: 'space-between',
-      ...alignment.MTxSmall
+      justifyContent: 'flex-end'
     },
     descriptionContainer: {
       height: '30%',
-      width: '90%',
-      alignSelf: 'center',
-      ...alignment.PTsmall
+      width: '100%',
+      padding: scale(10)
     },
     offerCategoty: {
       ...alignment.MTxSmall,
@@ -118,10 +103,6 @@ const styles = (props = null) =>
       alignSelf: 'flex-start',
       maxWidth: '100%',
       backgroundColor: props != null ? props.tagColor : 'black'
-    },
-    rating: {
-      flexDirection: 'row',
-      alignItems: 'center'
     }
   })
 export default styles

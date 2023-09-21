@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   container: theme => ({
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     marginHorizontal: 5,
     zIndex: 1,
-    elevation: 1,
-    backgroundColor: theme.secondaryBackground,
+    // elevation: 1,
+    backgroundColor: theme.white,
     marginTop: -100
   }),
   statusBox: theme => ({
@@ -19,7 +19,11 @@ export default StyleSheet.create({
   }),
   statusList: theme => ({
     padding: 15,
-    backgroundColor: theme.secondaryBackground
+    width: '100%',
+    backgroundColor: theme.white,
+    // elevation: 1
+    borderBottomWidth: 1,
+    borderBottomColor: '#fff'
   }),
   icon: {
     justifyContent: 'center',
@@ -43,5 +47,11 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
-  }
+  },
+  line2: theme => ({
+    marginVertical: 10,
+    backgroundColor: theme.secondaryText,
+    height: 1,
+    width: '100%'
+  })
 })

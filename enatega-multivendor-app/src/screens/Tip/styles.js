@@ -1,6 +1,7 @@
-import { verticalScale } from '../../utils/scaling'
+import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -28,18 +29,35 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.horizontalLine : 'grey'
     },
     upperContainer: {
-      width: '100%',
-      height: verticalScale(60),
+      width: '95%',
+      height: verticalScale(80),
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      backgroundColor: props !== null ? props.white : 'white',
+      justifyContent: 'space-between',
+      paddingLeft: scale(10),
+      paddingRight: scale(10),
+      borderRadius: scale(6),
+      marginTop: scale(30)
+    },
+    bacKButton: {
+      backgroundColor: theme.Pink.white,
+      borderRadius: scale(50),
+      marginLeft: scale(10),
+      width: scale(55),
+      alignItems: 'center'
+    },
+    innerContainer: {
+      width: '70%',
+      paddingTop: scale(10)
     },
     buttonContainer: {
       width: '25%',
-      height: '70%',
+      height: '55%',
       justifyContent: 'center',
       alignItems: 'center',
+      borderRadius: scale(6),
       backgroundColor: props !== null ? props.buttonBackground : 'pink'
     }
   })

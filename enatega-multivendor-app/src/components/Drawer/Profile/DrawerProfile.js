@@ -23,7 +23,7 @@ function DrawerProfile(props) {
             onPress={() => {
               props.navigation.navigate({ name: 'CreateAccount' })
             }}>
-            <TextDefault textColor={currentTheme.fontWhite} bold H5>
+            <TextDefault textColor={currentTheme.fontMainColor} bold H5>
               Login/Create Account
             </TextDefault>
           </TouchableOpacity>
@@ -37,7 +37,7 @@ function DrawerProfile(props) {
                 {profile.name.substr(0, 1).toUpperCase()}
               </TextDefault>
             </View>
-            <TextDefault textColor={currentTheme.fontWhite} bold H3>
+            <TextDefault textColor={currentTheme.fontMainColor} bolder H2>
               {profile.name}
             </TextDefault>
           </View>

@@ -19,7 +19,6 @@ const Heading = props => {
         H5
         bolder
         B700
-        center
         uppercase>
         {props.headerName}
       </TextDefault>

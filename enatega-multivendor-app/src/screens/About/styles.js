@@ -8,13 +8,21 @@ const styles = (props = null) =>
       flex: 1
     },
     MB15: {
-      ...alignment.MBmedium
+      padding: 10,
+      ...alignment.MBmedium,
+      backgroundColor: props != null ? props.white : 'white',
+      borderRadius: 10,
+      shadowOffset: { width: 2, height: 4 },
+      shadowColor: props != null ? props.black : 'black',
+      shadowOpacity: 0.1,
+      shadowRadius: 10
     },
     width10: {
       width: '10%'
     },
     width90: {
-      width: '90%'
+      width: '90%',
+      paddingLeft: 10
     },
     mapMainContainer: {
       flexGrow: 1,
@@ -23,16 +31,35 @@ const styles = (props = null) =>
       ...alignment.PRmedium
     },
     inlineFloat: {
+      width: '100%',
+      backgroundColor: props != null ? props.white : 'white',
       flexDirection: 'row',
-      alignItems: 'center',
-      width: '100%'
+      alignItems: 'center'
     },
     mapContainer: {
-      height: '40%',
-      backgroundColor: 'transparent'
+      marginTop: 10,
+      marginBottom: 20,
+      borderRadius: scale(10),
+      borderColor: props != null ? props.white : 'white',
+      borderWidth: 2,
+      height: 200,
+      backgroundColor: props != null ? props.white : 'white'
+    },
+    marker: {
+      width: 50,
+      height: 50,
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      zIndex: 1,
+      translateX: -25,
+      translateY: -25,
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: -25 }, { translateY: -25 }]
     },
     mainContainer: {
-      backgroundColor: props != null ? props.cartContainer : 'white'
+      backgroundColor: props != null ? '#F5F5F5' : 'white'
     },
     restaurantContainer: {
       width: '100%',
@@ -41,6 +68,7 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.Psmall
     },
+
     restaurantTitle: {
       width: '75%',
       ...alignment.PLxSmall
@@ -55,6 +83,14 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       width: '100%'
     },
+    review: {
+      marginHorizontal: 5,
+      zIndex: 1,
+      elevation: 1,
+      backgroundColor: 'black',
+      padding: 10,
+      borderRadius: 10
+    },
     ratingContainer: {
       flexDirection: 'row',
       width: '25%',
@@ -62,35 +98,70 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     timingContainer: {
-      marginLeft: scale(30),
+      alignSelf: 'center',
+      width: '90%',
       marginBottom: scale(20)
     },
     dateReview: {
+      marginTop: -8,
       width: '100%',
       textAlign: 'left',
+      fontSize: 10,
       ...alignment.PTsmall,
       ...alignment.PBxSmall
     },
     navigationContainer: {
       flexDirection: 'row',
       alignItems: 'flex-start',
+      justifyContent: 'center',
       width: '100%',
-      ...alignment.MTlarge
+      zIndex: 999
     },
     tab: {
-      width: scale(60),
+      backgroundColor: props != null ? props.white : 'white',
+      marginTop: scale(-15),
+      width: '48%',
       height: verticalScale(35),
       justifyContent: 'center',
       alignItems: 'center',
-      ...alignment.MRsmall
+      borderRadius: scale(10),
+      margin: scale(-10)
     },
     selectedTab: {
-      borderBottomColor: props != null ? props.tagColor : 'red',
-      borderBottomWidth: StyleSheet.hairlineWidth * 4
+      backgroundColor: props != null ? props.main : '#90EA93',
+      borderRadius: scale(10),
+      margin: scale(-10)
     },
     timingRow: {
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'flex-end',
+      alignSelf: 'center',
+      backgroundColor: props != null ? props.main : '#90EA93',
+      borderRadius: 30,
+      padding: 10,
+      marginBottom: 10,
+      width: '90%'
+    },
+    marker: {
+      width: 50,
+      height: 50,
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      zIndex: 1,
+      translateX: -25,
+      translateY: -25,
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: [{ translateX: -25 }, { translateY: -25 }]
+    },
+    review: {
+      marginHorizontal: 5,
+      zIndex: 1,
+      elevation: 1,
+      backgroundColor: props != null ? props.black : 'black',
+      padding: 10,
+      borderRadius: 10
     }
   })
 export default styles

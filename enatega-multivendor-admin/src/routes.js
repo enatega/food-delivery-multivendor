@@ -3,7 +3,8 @@ import Category from './views/Category'
 import Food from './views/Food'
 import Profile from './views/VendorProfile'
 import Orders from './views/Orders'
-import Configuration from './views/Configuration'
+//import Configuration from './views/Configuration' //uncomment this for paid version
+import Configuration from './views/Configuration1' //comment this for paid version
 import Users from './views/Users'
 import Vendors from './views/Vendors'
 import RestaurantList from './views/RestaurantList'

@@ -13,8 +13,8 @@ const RIDER_LOGIN = gql`
 `
 
 const useLogin = () => {
-  const [username, setUsername] = useState('rider1')
-  const [password, setPassword] = useState('123123')
+  const [username, setUsername] = useState('rider2')
+  const [password, setPassword] = useState('12345')
   const [showPassword, setShowPassword] = useState(true)
   const [usernameError, setUsernameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)

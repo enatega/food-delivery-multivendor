@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { TouchableOpacity, View, Image } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -8,18 +8,8 @@ import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import FoodPlaceHolder from '../../assets/SVG/food-placeholder'
 
-const CartItem = ({
-  quantity,
-  title,
-  variation,
-  addons,
-  price,
-  image,
-  addQuantity,
-  removeQuantity
-}) => {
+const cartItem = props => {
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -29,72 +19,49 @@ const CartItem = ({
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles(currentTheme).actionContainerBtns}
-          onPress={removeQuantity}>
-          <AntDesign
-            name="minus"
-            size={scale(10)}
-            color={currentTheme.fontMainColor}
-          />
+          onPress={props.removeQuantity}>
+          <AntDesign name="minus" size={scale(10)} color={currentTheme.black} />
         </TouchableOpacity>
         <View style={styles(currentTheme).actionContainerView}>
           <TextDefault textColor={currentTheme.fontMainColor}>
-            {quantity}
+            {props.quantity}
           </TextDefault>
         </View>
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles(currentTheme).actionContainerBtns}
-          onPress={addQuantity}>
-          <AntDesign
-            name="plus"
-            size={scale(12)}
-            color={currentTheme.fontMainColor}
-          />
+          onPress={props.addQuantity}>
+          <AntDesign name="plus" size={scale(10)} color={currentTheme.black} />
         </TouchableOpacity>
       </View>
-      <View
-        style={[
-          alignment.PLsmall,
-          { alignSelf: 'flex-start', flexDirection: 'row', flex: 1 }
-        ]}>
-        {image ? (
-          <Image
-            style={{ width: 50, height: 50, borderRadius: 10 }}
-            source={{ uri: image }}
-          />
-        ) : (
-          <FoodPlaceHolder />
-        )}
-        <View style={{ marginLeft: 5 }}>
+      <View style={[alignment.PLsmall, { width: '42%' }]}>
+        <TextDefault
+          numberOfLines={1}
+          textColor={currentTheme.primery}
+          bolder
+          medium>
+          {props.dealName}
+        </TextDefault>
+        {props.optionsTitle.map((option, index) => (
           <TextDefault
+            key={`options${props.dealName + option + index}`}
             numberOfLines={1}
-            textColor={currentTheme.secondary}
-            bold
-            H5>
-            {title}
+            textColor={currentTheme.fontSecondColor}
+            small>
+            +{option}
           </TextDefault>
-          <TextDefault numberOfLines={1} bold small>
-            {variation.title}
-          </TextDefault>
-          <TextDefault style={{ marginTop: 5 }} numberOfLines={1} smaller>
-            {addons
-              .map(({ title }, index) => title)
-              .flat()
-              .join(',')}
-          </TextDefault>
-        </View>
+        ))}
       </View>
       <TextDefault
         numberOfLines={1}
         textColor={currentTheme.fontMainColor}
-        style={{ width: '30%', alignSelf: 'flex-end' }}
-        small
-        right
-        bold>
-        {configuration.currencySymbol} {parseFloat(price).toFixed(2)}
+        style={{ width: '30%', marginRight: 10 }}
+        bolder
+        right>
+        {configuration.currencySymbol} {parseFloat(props.dealPrice).toFixed(2)}
       </TextDefault>
     </View>
   )
 }
 
-export default CartItem
+export default cartItem
