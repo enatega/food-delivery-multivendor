@@ -188,6 +188,14 @@ NOTE: Email provider has been only been tested for gmail accounts
 | :-----------------------: | 
 | ![](https://enatega.com/wp-content/uploads/2023/09/Customer-app.png) | 
 
+|       Customer  Web       |   
+| :-----------------------: | 
+| ![](https://enatega.com/wp-content/uploads/2023/09/Web-app.png) | 
+
+|        Dashboard          |   
+| :-----------------------: | 
+| ![](https://enatega.com/wp-content/uploads/2023/09/dasboard.png) | 
+
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
 ![](https://enatega.com/wp-content/uploads/2023/09/7029879-scaled.jpg)
