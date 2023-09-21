@@ -208,17 +208,6 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 Find the link for the complete documentation of the Enatega Multi Vendor Solution [here](https://enatega.com/multivendor-documentation/).
 
-
-- [Customer App Android](https://play.google.com/store/apps/details?id=com.enatega.multivendor)
-- [Customer App iOS](https://apps.apple.com/pk/app/enatega-multivendor/id1526488093)
-- [Rider App Android](https://play.google.com/store/apps/details?id=com.enatega.multirider)
-- [Rider App iOS](https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511)
-- [Restaurant App Android](https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant)
-- [Restaurant App iOS](https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537)
-- [Customer Web App](https://multivendor.enatega.com)
-- [Admin Dashboard](https://multivendor-admin.enatega.com)
-
-
 ## :tv: Demo Videos: <a id="heading-14"></a>
 |      Admin Dashboard Demo        |        Mobile App Demo         |
 | :---------------------------: | :----------------------------: | 
