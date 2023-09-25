@@ -69,7 +69,7 @@ function Restaurant(props) {
   const circle = useValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
+  console.log(currentTheme)
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
@@ -452,8 +452,8 @@ function Restaurant(props) {
 
   return (
     <>
-      <SafeAreaView style={styles().flex}>
-        <Animated.View style={styles().flex}>
+      <SafeAreaView style={styles(currentTheme).flex}>
+        <Animated.View style={styles(currentTheme).flex}>
           <ImageHeader
             ref={flatListRef}
             iconColor={iconColor}
@@ -535,24 +535,25 @@ function Restaurant(props) {
                     restaurantName: restaurant.name
                   })
                 }>
-                <View style={styles().deal}>
-                  <View style={styles().flex}>
+                <View style={styles(currentTheme).deal}>
+                  <View style={styles(currentTheme).flex}>
+                 
+                    <View style={styles(currentTheme).dealDescription}>
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
-                      style={styles().headerText}
+                      style={styles(currentTheme).headerText}
                       numberOfLines={1}
                       bolder>
                       {item.title}
                     </TextDefault>
-                    <View style={styles().dealDescription}>
-                      <TextDefault style={styles().priceText} small>
+                      <TextDefault style={styles(currentTheme).priceText} small>
                         {wrapContentAfterWords(item.description, 5)}
                       </TextDefault>
-                      <View style={styles().dealPrice}>
+                      <View style={styles(currentTheme).dealPrice}>
                         <TextDefault
                           numberOfLines={1}
                           textColor={currentTheme.fontMainColor}
-                          style={styles().priceText}
+                          style={styles(currentTheme).priceText}
                           bolder
                           small>
                           {configuration.currencySymbol}{' '}

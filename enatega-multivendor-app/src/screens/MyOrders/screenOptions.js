@@ -8,6 +8,10 @@ import navigationService from '../../routes/navigationService'
 import { StatusBar } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import styles from './style'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../utils/themeColors'
+import { useContext } from 'react'
+
 
 const navigationOptions = headerText => ({
   headerTitle: i18n.t('titleOrders'),
@@ -26,6 +30,7 @@ const navigationOptions = headerText => ({
   headerStyle: {
     backgroundColor: '#F5F5F5'
   },
+  
 
   headerLeft: () => (
     <HeaderBackButton

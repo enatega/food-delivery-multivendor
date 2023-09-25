@@ -17,7 +17,7 @@ const styles = (props = null) =>
     mainContainer: {
 
       margin: scale(15),
-      backgroundColor: '#FAFAFA'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
     },
     itemContainer: {
 
@@ -25,7 +25,7 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderColor: props !== null ? props.mustard : '#d8d8d874',
       borderRadius: scale(16),
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props.radioOuterColor : 'white',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',

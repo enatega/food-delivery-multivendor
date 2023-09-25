@@ -49,7 +49,8 @@ const styles = (props = null) =>
     },
     itemContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent',
+   
     },
     priceContainer: {
       width: '100%',
@@ -206,7 +207,6 @@ const styles = (props = null) =>
     },
     labelButton: {
       marginRight: 10,
-
       borderRadius: scale(10),
       width: '22%',
       borderWidth: StyleSheet.hairlineWidth,
@@ -226,7 +226,7 @@ const styles = (props = null) =>
       height: scale(30)
     },
     headerContainer: {
-      backgroundColor: props !== null ? props.rippleColor : '#6FCF97',
+      backgroundColor: props !== null ? props.headerBackground : '#6FCF97',
       borderBottomRightRadius: 20,
       borderBottomLeftRadius: 20,
       padding: 10,

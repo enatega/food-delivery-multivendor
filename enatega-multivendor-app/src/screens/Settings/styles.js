@@ -28,12 +28,12 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     mainContainerArea: {
-      backgroundColor: theme.Pink.white,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: scale(30),
       shadowOffset: { width: 0 },
       shadowColor: theme.Pink.black,
       shadowOpacity: 0.1,
-      marginTop: scale(20)
+      marginTop: scale(20),
     },
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',

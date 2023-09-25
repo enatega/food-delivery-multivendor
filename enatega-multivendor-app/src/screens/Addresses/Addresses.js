@@ -75,7 +75,7 @@ function Addresses() {
         borderWidth: 1
       },
       headerStyle: {
-        backgroundColor: currentTheme.headerColor,
+        backgroundColor: currentTheme.headerBackground,
         shadowColor: 'transparent',
         shadowRadius: 0
       },
@@ -133,7 +133,7 @@ function Addresses() {
     )
   }
   return (
-    <>
+    <View style={styles(currentTheme).flex}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <FlatList
           data={profile.addresses}
@@ -150,8 +150,8 @@ function Addresses() {
               <View style={[styles().width100]}>
                 <View style={[styles().titleAddress, styles().width100]}>
                   <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={styles().labelStyle}>
+                    textColor={currentTheme.darkBgFont}
+                    style={styles(currentTheme).labelStyle}>
                     {address.label}
                   </TextDefault>
                 </View>
@@ -168,11 +168,11 @@ function Addresses() {
                     )}
                   </View>
 
-                  <View style={styles().addressDetail}>
-                    <TextDefault textColor={currentTheme.fontSecondColor}>
+                  <View style={styles(currentTheme).addressDetail}>
+                    <TextDefault textColor={currentTheme.darkBgFont}>
                       {address.deliveryAddress}
                     </TextDefault>
-                    <TextDefault textColor={currentTheme.fontSecondColor}>
+                    <TextDefault textColor={currentTheme.darkBgFont}>
                       {address.details}
                     </TextDefault>
                   </View>
@@ -225,7 +225,7 @@ function Addresses() {
           backgroundColor: currentTheme.themeBackground
         }}
       />
-    </>
+    </View>
   )
 }
 

@@ -27,6 +27,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 
 function ItemDetail(props) {
+  
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
 
@@ -71,6 +72,7 @@ function ItemDetail(props) {
         foodName: food.title,
         foodRestaurantName: food.restaurantName
       })
+      
     }
     Track()
   })

@@ -94,7 +94,7 @@ function NewAddress(props) {
       headerRight: null,
       title: i18n.t('addAddress'),
       headerStyle: {
-        backgroundColor: currentTheme.headerColor,
+        backgroundColor: currentTheme.headerBackground,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20
       },
@@ -243,14 +243,14 @@ function NewAddress(props) {
           </View>
 
           <ScrollView
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}>
             <View style={styles(currentTheme).subContainer}>
-              <View style={styles().upperContainer}>
-                <View style={styles().addressContainer}>
-                  <View style={styles().geoLocation}>
-                    <View style={{ width: '100%' }}>
+              <View style={styles(currentTheme).upperContainer}>
+                <View style={styles(currentTheme).addressContainer}>
+                  <View style={styles(currentTheme).geoLocation}>
+                    <View style={{ width: '100%'}}>
                       <OutlinedTextField
                         placeholder="Delivery Address"
                         error={deliveryAddressError}
@@ -264,13 +264,13 @@ function NewAddress(props) {
                             <MaterialIcons
                               name="edit"
                               size={18}
-                              color={currentTheme.fontSecondColor}
+                              color={currentTheme.darkBgFont}
                             />
                           </TouchableOpacity>
                         )}
                         maxLength={100}
-                        textColor={currentTheme.fontMainColor}
-                        baseColor={currentTheme.fontSecondColor}
+                        textColor={currentTheme.darkBgFont}
+                        baseColor={currentTheme.darkBgFont}
                         errorColor={currentTheme.textErrorColor}
                         tintColor={
                           !deliveryAddressError ? currentTheme.tagColor : 'red'
@@ -302,8 +302,8 @@ function NewAddress(props) {
                     textAlignVertical="top"
                     multiline={false}
                     maxLength={30}
-                    textColor={currentTheme.fontMainColor}
-                    baseColor={currentTheme.fontSecondColor}
+                    textColor={currentTheme.darkBgFont}
+                    baseColor={currentTheme.darkBgFont}
                     errorColor={currentTheme.textErrorColor}
                     tintColor={
                       !deliveryDetailsError ? currentTheme.tagColor : 'red'

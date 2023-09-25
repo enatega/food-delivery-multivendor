@@ -85,7 +85,7 @@ const styles = (props = null) =>
     flatListStyle: {
       height: '50%',
       width: '100%',
-      backgroundColor: 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       borderBottomLeftRadius: 25,
       borderBottomRightRadius: 25,
       zIndex: 2

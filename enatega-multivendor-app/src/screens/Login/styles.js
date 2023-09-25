@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-
+import { scale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {

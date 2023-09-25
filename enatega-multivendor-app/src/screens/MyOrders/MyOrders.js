@@ -140,7 +140,7 @@ function MyOrders(props) {
         }
         showsVerticalScrollIndicator={false}
         style={styles(currentTheme).container}
-        contentContainerStyle={styles().contentContainer}
+        contentContainerStyle={styles(currentTheme).contentContainer}
         ListEmptyComponent={emptyView()}
         ListHeaderComponent={
           <ActiveOrders

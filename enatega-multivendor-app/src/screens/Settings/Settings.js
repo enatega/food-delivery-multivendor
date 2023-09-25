@@ -80,6 +80,7 @@ function Settings(props) {
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  console.log(themeContext.ThemeValue)
 
   const [languageName, languageNameSetter] = useState('English')
   const [orderNotification, orderNotificationSetter] = useState()
@@ -141,7 +142,7 @@ function Settings(props) {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.firstHeaderBackground
+        backgroundColor: currentTheme.themeBackground
       }
     })
     selectLanguage()
@@ -234,7 +235,7 @@ function Settings(props) {
       FlashMessage({
         message: error.networkError.result.errors[0].message
       })
-    } catch (err) {}
+    } catch (err) { }
   }
 
   async function updateNotificationStatus(notificationCheck) {
@@ -306,7 +307,7 @@ function Settings(props) {
             </TextDefault>
           </View>
         )}
-        <View style={styles().mainContainerArea}>
+        <View style={styles(currentTheme).mainContainerArea}>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
@@ -314,10 +315,10 @@ function Settings(props) {
               setBtnText('offer')
             }}
             style={[styles(currentTheme).notificationContainer]}>
-            <View style={styles().notificationChekboxContainer}>
+            <View style={styles(currentTheme).notificationChekboxContainer}>
               <TextDefault
                 numberOfLines={1}
-                textColor="black"
+                textColor={currentTheme.darkBgFont}
                 style={alignment.MLsmall}>
                 {' '}
                 Receive Special Offers{' '}
@@ -340,7 +341,7 @@ function Settings(props) {
           </TouchableOpacity>
           <Divider
             style={{
-              backgroundColor: currentTheme.black,
+              backgroundColor: currentTheme.darkBgFont,
               width: '90%',
               alignSelf: 'center'
             }}
@@ -355,7 +356,7 @@ function Settings(props) {
             <View style={styles().notificationChekboxContainer}>
               <TextDefault
                 numberOfLines={1}
-                textColor="black"
+                textColor={currentTheme.darkBgFont}
                 style={alignment.MLsmall}>
                 {' '}
                 Get updates on your order status!{' '}
@@ -378,7 +379,7 @@ function Settings(props) {
           </TouchableOpacity>
           <Divider
             style={{
-              backgroundColor: currentTheme.black,
+              backgroundColor: currentTheme.darkBgFont,
               width: '90%',
               alignSelf: 'center'
             }}
@@ -390,7 +391,7 @@ function Settings(props) {
             <View style={styles().notificationChekboxContainer}>
               <TextDefault
                 numberOfLines={1}
-                textColor="black"
+                textColor={currentTheme.darkBgFont}
                 style={alignment.MLsmall}>
                 {' '}
                 Turn on Dark Theme
@@ -405,7 +406,7 @@ function Settings(props) {
           </TouchableOpacity>
           <Divider
             style={{
-              backgroundColor: currentTheme.black,
+              backgroundColor: currentTheme.darkBgFont,
               width: '90%',
               alignSelf: 'center'
             }}
@@ -422,7 +423,7 @@ function Settings(props) {
                     modalizeRef.current.open('top')
                   }}>
                   <Ionicons name="trash-outline" size={30} color={'white'} />
-                  <Text style={styles().deleteButtonText}>DELETE ACCOUNT</Text>
+                  <Text style={styles(currentTheme).deleteButtonText}>DELETE ACCOUNT</Text>
                 </TouchableOpacity>
               </View>
             </View>

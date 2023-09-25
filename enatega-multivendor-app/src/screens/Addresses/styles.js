@@ -5,7 +5,8 @@ import { alignment } from '../../utils/alignment'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: 1,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     containerInfo: {
       width: '100%',
@@ -54,7 +55,7 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     containerSpace: {
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
       margin: scale(10),
       padding: scale(5),
       borderRadius: scale(10),

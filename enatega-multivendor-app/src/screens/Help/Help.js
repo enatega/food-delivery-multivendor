@@ -80,7 +80,7 @@ function Help(props) {
         backgroundColor={currentTheme.themeBackground}
       />
       <View style={styles(currentTheme).flex}>
-        <View style={styles().mainContainer}>
+        <View style={styles(currentTheme).mainContainer}>
           {links.map(({ title, url }, index) => (
             <TouchableOpacity
               style={styles(currentTheme).itemContainer}
@@ -93,7 +93,7 @@ function Help(props) {
                   {title}{' '}
                 </TextDefault>
               </View>
-              <MaterialIcons name="arrow-forward" size={20} color="black" />
+              <MaterialIcons name="arrow-forward" size={20} color={currentTheme.darkBgFont} />
             </TouchableOpacity>
           ))}
         </View>

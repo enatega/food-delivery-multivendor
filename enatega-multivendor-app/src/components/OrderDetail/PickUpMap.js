@@ -41,7 +41,7 @@ const PickUpMap = ({ deliveryAddress, pickupAddress }) => {
         width: '90%',
         alignSelf: 'center',
         height: scale(200),
-        marginTop: scale(20)
+        marginTop: scale(20),
       }}>
       <MapView
         ref={ref => {

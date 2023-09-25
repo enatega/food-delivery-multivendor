@@ -49,7 +49,7 @@ const styles = (props = null) =>
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'center',
-      backgroundColor: 'white',
+      backgroundColor: props !== null ? props.themeBackground : 'grey',
       alignItems: 'center',
       ...alignment.PTlarge,
       ...alignment.PBlarge,

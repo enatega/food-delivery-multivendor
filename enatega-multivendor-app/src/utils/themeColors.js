@@ -2,6 +2,7 @@ export const theme = {
   Pink: {
     black: '#000',
     white: '#FFF',
+    radioOuterColor: '#FFF',
     mustard: '#d8d8d874',
     borderColor: '#efefef',
     backgroundColor: 'transparent',
@@ -15,7 +16,7 @@ export const theme = {
     headerColor: '#6FCF97',
     tagColor: '#6FCF97',
     radioColor: '#6FCF97',
-    radioOuterColor: '#949393',
+    //radioOuterColor: '#949393',
     startColor: '#6FCF97',
     startOutlineColor: '#6FCF97',
     spinnerColor: '#6FCF97',
@@ -60,6 +61,7 @@ export const theme = {
     backgroundColor2: 'rgba(0, 0, 0, 0.5)',
     hex: '#b0afbc',
     gray: 'grey',
+    darkBgFont: '#000'
     
   },
   Dark: {
@@ -72,7 +74,7 @@ export const theme = {
     tagColor: '#6FCF97',
     iconColorPink: '#6FCF97',
     radioColor: '#6FCF97',
-    radioOuterColor: '#898989',
+    radioOuterColor: '#383737',
     startColor: '#6FCF97',
     startOutlineColor: '#6FCF97',
     spinnerColor: '#6FCF97',
@@ -109,6 +111,8 @@ export const theme = {
     errorInputBorder: '#DB4A39',
     inputPlaceHolder: '#F3F4F8',
     transparent: '#ff000080',
-    customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)'
+    customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
+    darkBgFont: '#FFF',
+    headerColor: '#000'
   }
 }

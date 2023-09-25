@@ -90,24 +90,24 @@ export const useCreateAccount = () => {
   const googleSignUp = () => {
     if (googleResponse?.type === 'success') {
       const { authentication } = googleResponse
-      ;(async() => {
-        const userInfoResponse = await fetch(
-          'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-          {
-            headers: { Authorization: `Bearer ${authentication.accessToken}` }
+        ; (async () => {
+          const userInfoResponse = await fetch(
+            'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+            {
+              headers: { Authorization: `Bearer ${authentication.accessToken}` }
+            }
+          )
+          const googleUser = await userInfoResponse.json()
+          const user = {
+            phone: '',
+            email: googleUser.email,
+            password: '',
+            name: googleUser.name,
+            picture: googleUser.picture,
+            type: 'google',
           }
-        )
-        const googleUser = await userInfoResponse.json()
-        const user = {
-          phone: '',
-          email: googleUser.email,
-          password: '',
-          name: googleUser.name,
-          picture: googleUser.picture,
-          type: 'google',
-        }
-        mutateLogin(user)
-      })()
+          mutateLogin(user)
+        })()
     }
   }
 
@@ -124,13 +124,11 @@ export const useCreateAccount = () => {
   }
 
   async function onCompleted(data) {
-    if(data.login.isActive == false)
-    {
-      FlashMessage({message: "Account Deactivated"})
+    if (data.login.isActive == false) {
+      FlashMessage({ message: "Account Deactivated" })
       setLoading(false)
     }
-    else 
-    {
+    else {
       try {
         if (data.login.inNewUser) {
           await Analytics.identify(
