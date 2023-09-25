@@ -234,5 +234,5 @@ The frontend source code for our solution is completely open source. However, th
 
 ## :mailbox_with_mail: Contact Us: <a id="heading-13"></a>
 	
-support@enatega.com
+sales@enatega.com
 
