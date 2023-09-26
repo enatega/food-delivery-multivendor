@@ -82,7 +82,7 @@ const styles = (props = null) =>
     },
     // Model for password changing
     modalContainer: {
-      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      backgroundColor: props !== null ? props.themeBackground : '#FFF',
       borderRadius: scale(14),
       justifyContent: 'center',
       alignItems: 'center',

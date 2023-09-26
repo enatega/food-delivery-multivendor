@@ -109,7 +109,7 @@ function Main(props) {
       navigationOptions({
         headerMenuBackground: currentTheme.headerColor,
         horizontalLine: currentTheme.headerColor,
-        fontMainColor: currentTheme.fontMainColor,
+        fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen
       })

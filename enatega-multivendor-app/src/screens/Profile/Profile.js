@@ -300,7 +300,7 @@ function Profile(props) {
               {toggleNameView && (
                 <>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder>
+                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
                       Name
                     </TextDefault>
                   </View>
@@ -310,7 +310,7 @@ function Profile(props) {
                       activeOpacity={0.3}
                       style={styles().headingButton}
                       onPress={handleNamePress}>
-                      <MaterialIcons name="edit" size={25} color="black" />
+                      <MaterialIcons name="edit" size={25} color={currentTheme.darkBgFont} />
                     </TouchableOpacity>
                   </View>
                 </>
@@ -322,7 +322,7 @@ function Profile(props) {
               <View>
                 <View style={styles(currentTheme).containerHeading}>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder>
+                    <TextDefault H5 B700 bolder >
                       Name
                     </TextDefault>
                   </View>
@@ -357,7 +357,7 @@ function Profile(props) {
             <View style={styles().containerHeading}>
               <>
                 <View style={styles().headingTitle}>
-                  <TextDefault H5 B700 bolder>
+                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
                     Email
                   </TextDefault>
                 </View>
@@ -371,7 +371,7 @@ function Profile(props) {
             <View style={styles().containerHeading}>
               <>
                 <View style={styles().headingTitle}>
-                  <TextDefault H5 B700 bolder>
+                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
                     Password
                   </TextDefault>
                 </View>
@@ -381,7 +381,7 @@ function Profile(props) {
                     activeOpacity={0.3}
                     style={styles().headingButton}
                     onPress={showModal}>
-                    <MaterialIcons name="edit" size={25} color="black" />
+                    <MaterialIcons name="edit" size={25} color={currentTheme.darkBgFont} />
                   </TouchableOpacity>
                 </View>
               </>
@@ -395,7 +395,7 @@ function Profile(props) {
               {toggleView && (
                 <>
                   <View style={styles().headingTitle}>
-                    <TextDefault H5 B700 bolder>
+                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
                       Mobile
                     </TextDefault>
                   </View>
@@ -408,7 +408,7 @@ function Profile(props) {
                           prevScreen: 'Profile'
                         })
                       }>
-                      <MaterialIcons name="edit" size={25} color="black" />
+                      <MaterialIcons name="edit" size={25} color={currentTheme.darkBgFont} />
                     </TouchableOpacity>
                   </View>
                 </>

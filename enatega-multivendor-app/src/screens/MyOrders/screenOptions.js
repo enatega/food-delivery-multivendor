@@ -28,7 +28,7 @@ const navigationOptions = headerText => ({
     borderColor: 'white'
   },
   headerStyle: {
-    backgroundColor: '#F5F5F5'
+    backgroundColor: headerText
   },
   
 

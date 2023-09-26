@@ -57,7 +57,7 @@ function MyOrders(props) {
   })
 
   useLayoutEffect(() => {
-    props.navigation.setOptions(screenOptions(currentTheme.headerText))
+    props.navigation.setOptions(screenOptions([currentTheme.headerText, currentTheme.darkBgFont]))
   }, [props.navigation])
 
   const getItems = items => {

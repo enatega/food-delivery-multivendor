@@ -354,7 +354,7 @@ function ItemDetail(props) {
               ))}
             </View>
             <View style={styles(currentTheme).line}></View>
-            <View style={styles().inputContainer}>
+            <View style={styles(currentTheme).inputContainer}>
               <TitleComponent
                 title="Special instructions"
                 subTitle="Any specific preferences?"

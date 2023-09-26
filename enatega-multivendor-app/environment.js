@@ -6,9 +6,9 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
-    GRAPHQL_URL: 'http://10.97.1.223:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://10.97.1.223:8001/graphql',
-    SERVER_URL: 'http://10.97.1.223:8001/', // put / at the end of server url
+    GRAPHQL_URL: 'http://10.97.1.248:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://10.97.1.248:8001/graphql',
+    SERVER_URL: 'http://10.97.1.248:8001/', // put / at the end of server url
 
     IOS_CLIENT_ID_GOOGLE:
       '967541328677-uq7f7odvmeea2pb2sq0l7q320ds86536.apps.googleusercontent.com',

@@ -33,7 +33,7 @@ const styles = (props = null) =>
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props.radioOuterColor : 'white',
       justifyContent: 'space-between',
       paddingLeft: scale(10),
       paddingRight: scale(10),

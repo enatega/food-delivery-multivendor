@@ -18,7 +18,7 @@ function PickUp(props) {
       {props.isPickedUp ? (
         <Text style={styles().tabHeading}>Select Pickup date and time</Text>
       ) : (
-        <Text style={styles().tabHeading}>Select Delivery date and time</Text>
+        <Text style={styles().tabHeading} >Select Delivery date and time</Text>
       )}
 
       <View style={styles().tabContainer}>

@@ -20,7 +20,8 @@ const styles = (props = null) => {
     tabHeading: {
       textAlign: 'center',
       fontSize: 20,
-      fontWeight: '700'
+      fontWeight: '700',
+    
     },
     tabSubHeading: {
       fontSize: 20,
