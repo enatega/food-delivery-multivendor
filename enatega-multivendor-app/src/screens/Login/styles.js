@@ -1,18 +1,19 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: scale(1)
+      flex: 1
     },
     safeAreaViewStyles: {
-      flex: scale(1),
+      flex: 1,
       backgroundColor:
         props !== null ? props.headerBackgroundTwo : 'transparent'
     },
     mainContainer: {
-      flex:scale(1),
+      flex: 1,
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
       ...alignment.PTlarge
@@ -53,10 +54,10 @@ const styles = (props = null) =>
       ...alignment.MTlarge
     },
     textField: {
-      borderColor: props !== null ? props.borderColor :'#efefef',
-      borderWidth:scale(1),
+      borderColor: props !== null ? props.borderColor : '#efefef',
+      borderWidth: scale(1),
       borderRadius: scale(10),
-      backgroundColor: props !== null ? props.white :'#fff',
+      backgroundColor: props !== null ? props.white : '#fff',
       padding: scale(14),
       shadowColor: props !== null ? props.fontSecondColor : '#545454',
       shadowOffset: {

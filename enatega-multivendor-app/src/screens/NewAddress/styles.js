@@ -6,21 +6,21 @@ import { theme } from '../../utils/themeColors'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex:scale(1),
+      flex: 1,
       backgroundColor: props !== null ? props.white : '#FFF'
     },
     subContainer: {
-      flex:scale(1),
-      flexGrow: scale(1),
+      flex: 1,
+      flexGrow: 1,
       alignItems: 'center',
       borderTopLeftRadius: scale(30),
       borderTopRightRadius: scale(30),
-      borderColor: props !== null ? props.gray :'grey',
+      borderColor: props !== null ? props.gray : 'grey',
       justifyContent: 'space-between',
       backgroundColor: props !== null ? props.white : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: scale(11),
-     
+
       ...alignment.PTlarge
     },
     upperContainer: {
@@ -114,7 +114,7 @@ const styles = (props = null) =>
       marginTop: scale(-58),
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor:  props !== null ? props.backgroundColor : 'transparent'
+      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
     },
     marker: {
       height: scale(48),
@@ -128,7 +128,7 @@ const styles = (props = null) =>
       flexDirection: 'row'
     },
     headerBackBtnContainer: {
-      backgroundColor: props !== null ? props.white :'white',
+      backgroundColor: props !== null ? props.white : 'white',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),

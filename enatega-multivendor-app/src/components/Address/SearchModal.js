@@ -117,8 +117,7 @@ export default function SearchModal({
             query={{
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: Constants.GOOGLE_MAPS_KEY,
-              language: 'en', // language of the results
-              components: 'country:us'
+              language: 'en' // language of the results
             }}
             styles={{
               description: {
