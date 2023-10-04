@@ -34,7 +34,7 @@ const styles = (props = null) =>
       alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props.radioOuterColor : 'white',
       justifyContent: 'space-between',
       paddingLeft: scale(10),
       paddingRight: scale(10),
@@ -50,7 +50,7 @@ const styles = (props = null) =>
     },
     innerContainer: {
       width: '70%',
-      paddingTop: scale(10)
+      paddingTop: scale(10),
     },
     buttonContainer: {
       width: '25%',

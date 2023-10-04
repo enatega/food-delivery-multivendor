@@ -119,7 +119,7 @@ function SelectVoucher(props) {
           textWidth="45%"
           lineWidth="25%"
         />
-        <View style={styles().upperContainer}>
+        <View style={styles(currentTheme).upperContainer}>
           <View style={styles().innerContainer}>
             <OutlinedTextField
               label="Enter your voucher code"
@@ -128,7 +128,7 @@ function SelectVoucher(props) {
               maxLength={15}
               textAlignVertical="top"
               textColor={currentTheme.fontMainColor}
-              baseColor={currentTheme.fontSecondColor}
+              baseColor={currentTheme.darkBgFont}
               errorColor={currentTheme.textErrorColor}
               tintColor={currentTheme.iconColorPink}
               labelOffset={{ y1: -5 }}

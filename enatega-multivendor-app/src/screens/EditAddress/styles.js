@@ -7,7 +7,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.white : '#FFF'
+      backgroundColor: props !== null ? props.themeBackground : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -17,7 +17,7 @@ const styles = (props = null) =>
       borderTopRightRadius: 30,
       borderColor: 'grey',
       justifyContent: 'space-between',
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: 11,
       ...alignment.PTlarge
@@ -89,7 +89,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.black : 'transparent',
-      backgroundColor: theme.Pink.black,
+      backgroundColor: props !== null ? props.darkBgFont : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {

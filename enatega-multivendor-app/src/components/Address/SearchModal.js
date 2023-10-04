@@ -27,8 +27,8 @@ const { height } = Dimensions.get('screen')
 
 export default function SearchModal({
   visible = false,
-  onClose = () => {},
-  onSubmit = () => {}
+  onClose = () => { },
+  onSubmit = () => { }
 }) {
   const animation = useValue(0)
   const themeContext = useContext(ThemeContext)
@@ -99,7 +99,7 @@ export default function SearchModal({
         <TextDefault bold H4>
           {'Search Address'}
         </TextDefault>
-        <View style={[styles().flex, alignment.MTsmall]}>
+        <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <GooglePlacesAutocomplete
             placeholder="Search"
             minLength={2} // minimum length of text to search

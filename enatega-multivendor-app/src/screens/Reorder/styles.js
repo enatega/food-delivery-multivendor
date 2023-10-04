@@ -10,7 +10,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     mainContainer: {
-      backgroundColor: 'white',
+      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
       margin: scale(8),
       paddingBottom: scale(8),
       borderRadius: scale(15)

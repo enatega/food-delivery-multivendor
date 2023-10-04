@@ -68,9 +68,9 @@ function ChangePassword(props) {
       onBackdropPress={props.hideModal}
       isVisible={props.modalVisible}>
       <View style={styles(currentTheme).modalContainer}>
-        <View style={styles().modalContent}>
-          <View style={styles().titleContainer}>
-            <TextDefault textColor={currentTheme.fontMainColor} B700 bolder H4>
+        <View style={styles(currentTheme).modalContent}>
+          <View style={styles(currentTheme).titleContainer}>
+            <TextDefault textColor={currentTheme.darkBgFont} B700 bolder H4>
               Change password
             </TextDefault>
           </View>
@@ -86,7 +86,7 @@ function ChangePassword(props) {
                 maxLength={20}
                 secureTextEntry
                 textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
+                baseColor={currentTheme.darkBgFont}
                 errorColor={currentTheme.textErrorColor}
                 tintColor={currentTheme.tagColor}
                 error={oldPasswordError}
@@ -116,7 +116,7 @@ function ChangePassword(props) {
                   ...alignment.PLsmall
                 }}
                 textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.fontSecondColor}
+                baseColor={currentTheme.darkBgFont}
                 errorColor={currentTheme.textErrorColor}
                 tintColor={currentTheme.tagColor}
                 error={newPasswordError}

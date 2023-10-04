@@ -9,7 +9,7 @@ const Heading = props => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
-    <View style={styles().headingContainer}>
+    <View style={styles(currentTheme).headingContainer}>
       <View
         style={[styles(currentTheme).headingLine, { width: props.lineWidth }]}
       />

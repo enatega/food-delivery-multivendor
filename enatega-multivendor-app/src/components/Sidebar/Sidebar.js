@@ -75,7 +75,7 @@ function SidebBar(props) {
         <View style={styles(currentTheme).topContainer}>
           <SideDrawerProfile navigation={props.navigation} />
         </View>
-        <View style={styles().botContainer}>
+        <View style={styles(currentTheme).botContainer}>
           {datas.map((dataItem, ind) => (
             <View key={ind} style={styles().item}>
               <SideDrawerItems

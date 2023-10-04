@@ -10,7 +10,7 @@ const styles = (props = null) =>
     MB15: {
       padding: 10,
       ...alignment.MBmedium,
-      backgroundColor: props != null ? props.white : 'white',
+      backgroundColor: props != null ? props.radioOuterColor : 'white',
       borderRadius: 10,
       shadowOffset: { width: 2, height: 4 },
       shadowColor: props != null ? props.black : 'black',
@@ -25,6 +25,7 @@ const styles = (props = null) =>
       paddingLeft: 10
     },
     mapMainContainer: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
       flexGrow: 1,
       ...alignment.PTlarge,
       ...alignment.PLmedium,
@@ -32,7 +33,7 @@ const styles = (props = null) =>
     },
     inlineFloat: {
       width: '100%',
-      backgroundColor: props != null ? props.white : 'white',
+      backgroundColor: props != null ? props.radioOuterColor : 'white',
       flexDirection: 'row',
       alignItems: 'center'
     },
@@ -59,7 +60,7 @@ const styles = (props = null) =>
       transform: [{ translateX: -25 }, { translateY: -25 }]
     },
     mainContainer: {
-      backgroundColor: props != null ? '#F5F5F5' : 'white'
+      backgroundColor: props != null ? props.themeBackground : 'white'
     },
     restaurantContainer: {
       width: '100%',
@@ -118,7 +119,7 @@ const styles = (props = null) =>
       zIndex: 999
     },
     tab: {
-      backgroundColor: props != null ? props.white : 'white',
+      backgroundColor: props != null ? props.radioOuterColor : 'white',
       marginTop: scale(-15),
       width: '48%',
       height: verticalScale(35),

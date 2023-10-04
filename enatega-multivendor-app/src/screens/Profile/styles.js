@@ -15,12 +15,12 @@ const styles = (props = null) =>
     },
     containerInfo: {
       width: '100%',
-      ...alignment.MTmedium
+      ...alignment.MTmedium,
     },
     formSubContainer: {
       borderRadius: scale(18),
       width: '95%',
-      backgroundColor: theme.Pink.white,
+      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
       alignSelf: 'center',
       shadowOffset: { width: 2, height: 4 },
       shadowColor: props !== null ? props.shadowColor : 'transparent',
@@ -40,10 +40,10 @@ const styles = (props = null) =>
     },
     containerHeading: {
       flexDirection: 'row',
-      alignContent: 'space-between'
+      alignContent: 'space-between',
     },
     headingTitle: {
-      width: '50%'
+      width: '50%',
     },
     headingLink: {
       width: '50%',
@@ -82,7 +82,7 @@ const styles = (props = null) =>
     },
     // Model for password changing
     modalContainer: {
-      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      backgroundColor: props !== null ? props.themeBackground : '#FFF',
       borderRadius: scale(14),
       justifyContent: 'center',
       alignItems: 'center',
@@ -95,7 +95,8 @@ const styles = (props = null) =>
     titleContainer: {
       width: '100%',
       justifyContent: 'flex-start',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
+      backgroundColor: props !== null ? props.radioOuterColor : 'white'
     },
     btnContainer: {
       width: '30%',
@@ -107,6 +108,8 @@ const styles = (props = null) =>
       ...alignment.PBxSmall
     },
     titleContainer: {
+      backgroundColor: props !== null ? props.themeBackground : 'white',
+      color: props !== null ? props.darkBgFont : 'white',
       padding: scale(25),
       fontSize: scale(20),
       fontWeight: '600'

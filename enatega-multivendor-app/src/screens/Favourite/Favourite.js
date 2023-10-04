@@ -151,7 +151,7 @@ function Favourite() {
   if (loading) return <Spinner />
   if (error) return <TextError text={error.message} />
   return (
-    <SafeAreaView edges={['bottom']} style={styles().flex}>
+    <SafeAreaView edges={['bottom']} style={styles(currentTheme).flex}>
       <FlatList
         data={data ? data.userFavourite : []}
         keyExtractor={(item, index) => item._id}
@@ -159,7 +159,7 @@ function Favourite() {
         refreshing={networkStatus === 4}
         onRefresh={() => networkStatus === 7 && refetch()}
         style={[styles().flex, styles(currentTheme).container]}
-        contentContainerStyle={styles().contentContainer}
+        contentContainerStyle={styles(currentTheme).contentContainer}
         ListEmptyComponent={emptyView()}
         ListHeaderComponent={null}
         renderItem={({ item }) => <Item item={item} />}

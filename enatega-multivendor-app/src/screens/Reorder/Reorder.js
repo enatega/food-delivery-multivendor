@@ -111,7 +111,7 @@ function Reorder(props) {
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}
         contentContainerStyle={styles(currentTheme).scrollViewStyle}>
-        <View style={styles().mainContainer}>
+        <View style={styles(currentTheme).mainContainer}>
           <TextDefault
             style={[alignment.MLmedium, alignment.MTmedium]}
             bolder

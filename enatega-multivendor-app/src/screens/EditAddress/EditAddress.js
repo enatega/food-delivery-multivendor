@@ -214,7 +214,7 @@ function EditAddress(props) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
-        style={styles().flex}
+        style={styles(currentTheme).flex}
         enabled={!modalVisible}>
         <View style={styles(currentTheme).flex}>
           <View style={styles().mapContainer}>
@@ -262,7 +262,7 @@ function EditAddress(props) {
             <View style={styles(currentTheme).subContainer}>
               <View style={styles().upperContainer}>
                 <View style={styles().addressContainer}>
-                  <View style={styles().geoLocation}>
+                  <View style={styles(currentTheme).geoLocation}>
                     <View style={{ width: '100%' }}>
                       <OutlinedTextField
                         placeholder="Delivery Address"
@@ -277,14 +277,14 @@ function EditAddress(props) {
                             <MaterialIcons
                               name="edit"
                               size={18}
-                              color={currentTheme.fontSecondColor}
+                              color={currentTheme.darkBgFont}
                             />
                           </TouchableOpacity>
                         )}
                         maxLength={100}
                         backgroundColor={currentTheme.black}
                         textColor={currentTheme.fontMainColor}
-                        baseColor={currentTheme.fontSecondColor}
+                        baseColor={currentTheme.darkBgFont}
                         errorColor={currentTheme.textErrorColor}
                         tintColor={
                           !deliveryAddressError ? currentTheme.tagColor : 'red'
@@ -318,7 +318,7 @@ function EditAddress(props) {
                     multiline={false}
                     maxLength={30}
                     textColor={currentTheme.fontMainColor}
-                    baseColor={currentTheme.fontSecondColor}
+                    baseColor={currentTheme.darkBgFont}
                     errorColor={currentTheme.textErrorColor}
                     tintColor={
                       !deliveryDetailsError ? currentTheme.tagColor : 'red'

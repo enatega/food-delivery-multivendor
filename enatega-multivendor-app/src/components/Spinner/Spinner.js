@@ -14,11 +14,11 @@ function Spinner(props) {
         flex: 1,
         backgroundColor: props.backColor
           ? props.backColor
-          : currentTheme.transparent
+          : currentTheme.headerColor
       }}
       size={props.size || 'large'}
       color={
-        props.spinnerColor ? props.spinnerColor : currentTheme.spinnerColor
+        props.spinnerColor ? props.spinnerColor : currentTheme.white
       }
     />
   )

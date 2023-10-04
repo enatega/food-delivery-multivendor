@@ -17,7 +17,7 @@ function Search(props) {
             <View style={styles().searchContainer}>
               <Ionicons
                 name="ios-search"
-                color={currentTheme.black}
+                color={currentTheme.fontSecondColor}
                 size={scale(20)}
               />
             </View>

@@ -727,7 +727,7 @@ function Cart(props) {
                     styles().pB10
                   ]}>
                   <View
-                    style={styles().imageContainer}>
+                    style={styles(currentTheme).imageContainer}>
                     <View style={{ marginLeft: scale(10) }}>
                       <Image
                         resizeMode="cover"
@@ -738,11 +738,11 @@ function Cart(props) {
                       style={{
                         marginLeft: scale(20)
                       }}>
-                      <TextDefault style={{ padding: 5 }} bolder>
+                      <TextDefault  textColor={currentTheme.darkBgFont} style={{ padding: 5 }} bolder>
                         {isPickedUp ? 'Pick Up' : 'Delivery'}{' '}
                       </TextDefault>
                       <TextDefault
-                        textColor={'#484747'}
+                        textColor={currentTheme.darkBgFont}
                         style={{ padding: 5 }}
                         bold>
                         {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
@@ -817,7 +817,7 @@ function Cart(props) {
                       numberOfLines={1}
                       large
                       bold
-                      textColor={currentTheme.black}
+                      textColor={currentTheme.darkBgFont}
                       style={{ width: '30%' }}>
                       {i18n.t('subTotal')}
                     </TextDefault>
@@ -843,7 +843,7 @@ function Cart(props) {
                     <View style={[styles().floatView, styles().pB10]}>
                       <TextDefault
                         numberOfLines={1}
-                        textColor={currentTheme.black}
+                        textColor={currentTheme.darkBgFont}
                         large
                         bold
                         style={{ width: '30%' }}>
@@ -872,7 +872,7 @@ function Cart(props) {
                   <View style={[styles().floatView, styles().pB10]}>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.black}
+                      textColor={currentTheme.darkBgFont}
                       large
                       bold
                       style={{ width: '30%' }}>
@@ -902,7 +902,7 @@ function Cart(props) {
                         numberOfLines={1}
                         large
                         bolder
-                        textColor={currentTheme.primery}>
+                        textColor={currentTheme.darkBgFont}>
                         {i18n.t('haveVoucher')}
                       </TextDefault>
                     </TouchableOpacity>
@@ -964,7 +964,7 @@ function Cart(props) {
                       numberOfLines={1}
                       large
                       bold
-                      textColor={currentTheme.black}
+                      textColor={currentTheme.darkBgFont}
                       style={{ width: '30%' }}>
                       {'Tip'}
                     </TextDefault>
@@ -985,7 +985,7 @@ function Cart(props) {
                         <TextDefault
                           small
                           bold
-                          textColor={currentTheme.primery}>
+                          textColor={currentTheme.darkBgFont}>
                           {tip || selectedTip ? i18n.t('remove') : null}
                         </TextDefault>
                       </TouchableOpacity>
@@ -1022,7 +1022,7 @@ function Cart(props) {
                             textColor={
                               selectedTip === label
                                 ? currentTheme.black
-                                : currentTheme.black
+                                : currentTheme.darkBgFont
                             }
                             small
                             bold
@@ -1048,7 +1048,7 @@ function Cart(props) {
                             }
                           }
                           textColor={
-                            tip ? currentTheme.black : currentTheme.black
+                            tip ? currentTheme.black : currentTheme.darkBgFont
                           }
                           small
                           bold
@@ -1114,7 +1114,7 @@ function Cart(props) {
                           numberOfLines={1}
                           small
                           bold
-                          textColor={currentTheme.fontSecondColor}
+                          textColor={currentTheme.darkBgFont}
                           style={{ width: '30%' }}>
                           {i18n.t('email')}
                           {' :'}
@@ -1123,7 +1123,7 @@ function Cart(props) {
                           numberOfLines={1}
                           small
                           bold
-                          textColor={currentTheme.black}
+                          textColor={currentTheme.darkBgFont}
                           style={{ width: '70%' }}
                           right>
                           {profile.email}
@@ -1132,7 +1132,7 @@ function Cart(props) {
                       <View style={[styles().floatView, styles().pB10]}>
                         <TextDefault
                           numberOfLines={1}
-                          textColor={currentTheme.fontSecondColor}
+                          textColor={currentTheme.darkBgFont}
                           small
                           bold
                           style={{ width: '30%' }}>
@@ -1141,7 +1141,7 @@ function Cart(props) {
                         </TextDefault>
                         <TextDefault
                           numberOfLines={1}
-                          textColor={currentTheme.black}
+                          textColor={currentTheme.darkBgFont}
                           small
                           bold
                           style={{ width: '70%' }}
@@ -1200,7 +1200,7 @@ function Cart(props) {
                                 numberOfLines={1}
                                 small
                                 bold
-                                textColor={currentTheme.fontSecondColor}
+                                textColor={currentTheme.darkBgFont}
                                 style={{ width: '30%' }}>
                                 {i18n.t('titleDeliveryDetails')} {' :'}
                               </TextDefault>
@@ -1212,9 +1212,9 @@ function Cart(props) {
                                     right
                                     style={{ width: '65%' }}
                                     textColor={
-                                      currentTheme.black
+                                      currentTheme.darkBgFont
                                     }>{`${location.deliveryAddress}`}</TextDefault>
-                                  <TextDefault textColor={currentTheme.black}>
+                                  <TextDefault textColor={currentTheme.darkBgFont}>
                                     {' '}
                                     {location.details}
                                   </TextDefault>
@@ -1286,7 +1286,7 @@ function Cart(props) {
                           <TextDefault
                             small
                             bolder
-                            textColor={currentTheme.primery}
+                            textColor={currentTheme.darkBgFont}
                             right>
                             {i18n.t('change')}
                           </TextDefault>
@@ -1316,7 +1316,7 @@ function Cart(props) {
                           />
                         </View>
                         <TextDefault
-                          textColor={currentTheme.primery}
+                          textColor={currentTheme.darkBgFont}
                           medium
                           bolder
                           style={{ width: '45%' }}>

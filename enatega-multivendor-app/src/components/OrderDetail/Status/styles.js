@@ -7,7 +7,7 @@ export default StyleSheet.create({
     marginHorizontal: 5,
     zIndex: 1,
     // elevation: 1,
-    backgroundColor: theme.white,
+    backgroundColor: theme.themeBackground,
     marginTop: -100
   }),
   statusBox: theme => ({
@@ -20,7 +20,7 @@ export default StyleSheet.create({
   statusList: theme => ({
     padding: 15,
     width: '100%',
-    backgroundColor: theme.white,
+    backgroundColor: theme.themeBackground,
     // elevation: 1
     borderBottomWidth: 1,
     borderBottomColor: '#fff'

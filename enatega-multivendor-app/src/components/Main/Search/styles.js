@@ -17,7 +17,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       borderBottomLeftRadius: scale(25),
       borderBottomRightRadius: scale(25),
-      backgroundColor: props != null ? theme.Pink.headerColor : '#fafafa',
+      backgroundColor: props != null ? props.headerColor : '#fafafa',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,

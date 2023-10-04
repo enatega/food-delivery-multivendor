@@ -6,8 +6,8 @@ import { theme } from '../../utils/themeColors'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1,
-      backgroundColor: props !== null ? props.white : '#FFF'
+      flex:1,
+      backgroundColor: props !== null ? props.radioOuterColor : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -17,7 +17,7 @@ const styles = (props = null) =>
       borderTopRightRadius: scale(30),
       borderColor: props !== null ? props.gray : 'grey',
       justifyContent: 'space-between',
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: scale(11),
 
@@ -75,7 +75,7 @@ const styles = (props = null) =>
       borderRadius: scale(8),
       justifyContent: 'center',
       ...alignment.PxSmall,
-      backgroundColor: theme.Pink.tagColor
+      backgroundColor: props !== null ? props.tagColor : 'transparent',
     },
     textlabelButton: {
       justifyContent: 'center',
@@ -90,7 +90,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.black : 'transparent',
-      backgroundColor: theme.Pink.black,
+      backgroundColor: props !== null ? props.darkBgFont : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {

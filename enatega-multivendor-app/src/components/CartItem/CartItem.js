@@ -37,7 +37,7 @@ const cartItem = props => {
       <View style={[alignment.PLsmall, { width: '42%' }]}>
         <TextDefault
           numberOfLines={1}
-          textColor={currentTheme.primery}
+          textColor={currentTheme.darkBgFont}
           bolder
           medium>
           {props.dealName}
