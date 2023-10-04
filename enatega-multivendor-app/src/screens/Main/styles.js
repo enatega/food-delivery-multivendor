@@ -6,7 +6,7 @@ import { alignment } from '../../utils/alignment'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: scale(1)
+      flex: 1
     },
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF'
@@ -73,11 +73,12 @@ const styles = (props = null) =>
       marginRight: scale(5)
     },
     overlay: {
-      backgroundColor: props != null ? props.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
+      backgroundColor:
+        props != null ? props.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
       width: scale(150),
-      backgroundColor: props != null ? props.backgroundColor: 'transparent'
+      backgroundColor: props != null ? props.backgroundColor : 'transparent'
     },
     relative: {
       position: 'relative'
