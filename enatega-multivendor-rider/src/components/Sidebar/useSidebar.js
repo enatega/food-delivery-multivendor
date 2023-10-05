@@ -12,8 +12,11 @@ const PROFILE = gql`
   ${profile}
 `
 
-const PRODUCT_URL = 'http://www.beta.enatega.com/'
-const PRIVACY_URL = 'https://pensive-liskov-5320d4.netlify.app/#/privacy'
+const PRODUCT_URL =
+  'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
+const PRIVACY_URL =
+  'https://multivendor.enatega.com/?_gl=1*gjjx59*_ga*NTczMDY0NDU1LjE2ODUzMzgzODg.*_ga_DTSL4MVB5L*MTY5NjQ4MDQ3Ni41NC4xLjE2OTY0ODA0ODMuNTMuMC4w&_ga=2.17598781.520939582.1696480479-573064455.1685338388#/privacy'
+
 const ABOUT_URL = 'https://ninjascode.com/'
 
 // constants

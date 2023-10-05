@@ -202,10 +202,10 @@ export default function SideBar() {
             activeOpacity={0.8}
             onPress={() =>
               Linking.canOpenURL(
-                'https://pensive-liskov-5320d4.netlify.app/#/privacy'
+                'https://multivendor.enatega.com/?_gl=1*gjjx59*_ga*NTczMDY0NDU1LjE2ODUzMzgzODg.*_ga_DTSL4MVB5L*MTY5NjQ4MDQ3Ni41NC4xLjE2OTY0ODA0ODMuNTMuMC4w&_ga=2.17598781.520939582.1696480479-573064455.1685338388#/privacy'
               ).then(() => {
                 Linking.openURL(
-                  'https://pensive-liskov-5320d4.netlify.app/#/privacy'
+                  'https://multivendor.enatega.com/?_gl=1*gjjx59*_ga*NTczMDY0NDU1LjE2ODUzMzgzODg.*_ga_DTSL4MVB5L*MTY5NjQ4MDQ3Ni41NC4xLjE2OTY0ODA0ODMuNTMuMC4w&_ga=2.17598781.520939582.1696480479-573064455.1685338388#/privacy'
                 )
               })
             }>
