@@ -11,8 +11,7 @@
       "distribution": "internal"
     },
     "production": {
-      "developmentClient": false,
-      "releaseChannel": "production"
+      "channel": "production"
     }
   },
   "submit": {

@@ -46,8 +46,8 @@ const Orders = props => {
                   active === 0
                     ? colors.green
                     : active === 1
-                      ? colors.white
-                      : colors.white
+                    ? colors.white
+                    : colors.white
               }
             ]}>
             <TabBars
@@ -86,25 +86,25 @@ const Orders = props => {
                           )
                         })
                     : active === 0 && (
-                      <View
-                        style={{
-                          minHeight: height - height * 0.45,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}>
-                        <TextDefault H2 bold>
-                            No Orders Yet
-                        </TextDefault>
-                        <LottieView
+                        <View
                           style={{
-                            width: width - 100
-                          }}
-                          source={require('../../assets/loader.json')}
-                          autoPlay
-                          loop
-                        />
-                      </View>
-                    )}
+                            minHeight: height - height * 0.45,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}>
+                          <TextDefault H2 bold>
+                            No Orders Yet
+                          </TextDefault>
+                          <LottieView
+                            style={{
+                              width: width - 100
+                            }}
+                            source={require('../../assets/loader.json')}
+                            autoPlay
+                            loop
+                          />
+                        </View>
+                      )}
                   {active === 1 && processingOrders > 0
                     ? data &&
                       data.restaurantOrders
@@ -125,25 +125,25 @@ const Orders = props => {
                           )
                         })
                     : active === 1 && (
-                      <View
-                        style={{
-                          minHeight: height - height * 0.45,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}>
-                        <TextDefault H2 bold>
-                            No Orders Yet
-                        </TextDefault>
-                        <LottieView
+                        <View
                           style={{
-                            width: width - 100
-                          }}
-                          source={require('../../assets/loader.json')}
-                          autoPlay
-                          loop
-                        />
-                      </View>
-                    )}
+                            minHeight: height - height * 0.45,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}>
+                          <TextDefault H2 bold>
+                            No Orders Yet
+                          </TextDefault>
+                          <LottieView
+                            style={{
+                              width: width - 100
+                            }}
+                            source={require('../../assets/loader.json')}
+                            autoPlay
+                            loop
+                          />
+                        </View>
+                      )}
                   {active === 2 && deliveredOrders > 0
                     ? data &&
                       data.restaurantOrders
@@ -160,25 +160,25 @@ const Orders = props => {
                           )
                         })
                     : active === 2 && (
-                      <View
-                        style={{
-                          minHeight: height - height * 0.45,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}>
-                        <TextDefault H2 bold>
-                            No Orders Yet
-                        </TextDefault>
-                        <LottieView
+                        <View
                           style={{
-                            width: width - 100
-                          }}
-                          source={require('../../assets/loader.json')}
-                          autoPlay
-                          loop
-                        />
-                      </View>
-                    )}
+                            minHeight: height - height * 0.45,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}>
+                          <TextDefault H2 bold>
+                            No Orders Yet
+                          </TextDefault>
+                          <LottieView
+                            style={{
+                              width: width - 100
+                            }}
+                            source={require('../../assets/loader.json')}
+                            autoPlay
+                            loop
+                          />
+                        </View>
+                      )}
                 </View>
               </ScrollView>
             )}
