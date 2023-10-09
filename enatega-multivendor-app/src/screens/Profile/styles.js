@@ -72,12 +72,12 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     verifiedButton: {
-      padding: scale(5),
-      paddingLeft: scale(20),
-      paddingRight: scale(20),
+      padding: scale(8),
+      paddingLeft: scale(10),
+      paddingRight: scale(10),
       borderRadius: scale(6),
       width: '28%',
-      height: scale(30),
+      // height: scale(30),
       marginTop: scale(10)
     },
     // Model for password changing

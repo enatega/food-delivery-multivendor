@@ -61,7 +61,8 @@ export const theme = {
     backgroundColor2: 'rgba(0, 0, 0, 0.5)',
     hex: '#b0afbc',
     gray: 'grey',
-    darkBgFont: '#000'
+    darkBgFont: '#000',
+    btnText: '#000'
     
   },
   Dark: {
@@ -113,6 +114,7 @@ export const theme = {
     transparent: '#ff000080',
     customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
     darkBgFont: '#FFF',
-    headerColor: '#000'
+    headerColor: '#000',
+    btnText: '#FFF'
   }
 }
