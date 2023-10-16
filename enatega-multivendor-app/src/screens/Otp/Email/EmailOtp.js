@@ -55,6 +55,7 @@ function EmailOtp(props) {
             <TextDefault
               H3
               bolder
+              textColor={currentTheme.fontSecondColor}
               style={{
                 textAlign: 'center',
                 ...alignment.MTlarge,
