@@ -14,13 +14,14 @@ const PROFILE = gql`
 
 function Profile() {
   const { data, loading, error } = useQuery(PROFILE)
-  if (loading) return <Spinner />
+
+  if (loading && !data) return <Spinner />
   if (error) return <TextError text="Something went wrong. Try again later!" />
   return (
     <View style={styles.container}>
       <View style={styles.img}>
         <TextDefault textColor={colors.black} bold H2 center>
-          {data.rider?.name}
+          {data.rider.name}
         </TextDefault>
       </View>
       <TextDefault center H3 textColor={colors.white}>

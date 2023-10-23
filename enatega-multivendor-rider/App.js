@@ -47,9 +47,10 @@ export default function App() {
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const [active, setActive] = useState('NewOrder')
+  // const client = useApolloClient()
 
   useEffect(() => {
-    ;(async() => {
+    ;(async () => {
       await SplashScreen.preventAutoHideAsync()
       await i18n.initAsync()
       await Font.loadAsync({
@@ -67,7 +68,7 @@ export default function App() {
   useEffect(() => {
     // eslint-disable-next-line no-undef
     if (__DEV__) return
-    ;(async() => {
+    ;(async () => {
       const { isAvailable } = await Updates.checkForUpdateAsync()
       if (isAvailable) {
         try {
@@ -91,9 +92,11 @@ export default function App() {
     setToken(token)
   }
 
-  const logout = async() => {
+  const logout = async () => {
     try {
+      client.clearStore()
       await AsyncStorage.removeItem('rider-token')
+
       setToken(null)
       if (await Location.hasStartedLocationUpdatesAsync('RIDER_LOCATION')) {
         await Location.stopLocationUpdatesAsync('RIDER_LOCATION')
