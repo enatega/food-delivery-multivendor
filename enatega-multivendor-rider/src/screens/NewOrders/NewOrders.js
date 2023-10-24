@@ -15,6 +15,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { NetworkStatus } from '@apollo/client'
 const { height, width } = Dimensions.get('window')
+
 const NewOrders = ({ navigation }) => {
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
@@ -30,6 +31,7 @@ const NewOrders = ({ navigation }) => {
   useFocusEffect(() => {
     setActive('NewOrders')
   })
+
   useEffect(() => {
     if (assignedOrders) {
       setOrders(
@@ -39,6 +41,14 @@ const NewOrders = ({ navigation }) => {
       )
     }
   }, [assignedOrders])
+
+  const noNewOrders = orders.length === 0
+  useEffect(() => {
+    // Trigger refetch when orders length changes
+    if (noNewOrders) {
+      refetchAssigned()
+    }
+  }, [noNewOrders])
 
   return (
     <ScreenBackground>
@@ -77,9 +87,23 @@ const NewOrders = ({ navigation }) => {
                   loop
                 />
 
-                <TextDefault bold center H3 textColor={colors.fontSecondColor}>
-                  No new orders yet!
-                </TextDefault>
+                {noNewOrders ? (
+                  <TextDefault
+                    bold
+                    center
+                    H3
+                    textColor={colors.fontSecondColor}>
+                    No new orders yet!
+                  </TextDefault>
+                ) : (
+                  <TextDefault
+                    bold
+                    center
+                    H3
+                    textColor={colors.fontSecondColor}>
+                    Pull down to refresh
+                  </TextDefault>
+                )}
               </View>
             )
           }}
