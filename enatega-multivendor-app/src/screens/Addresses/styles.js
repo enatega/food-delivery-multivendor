@@ -29,6 +29,10 @@ const styles = (props = null) =>
     viewTitle: {
       ...alignment.Msmall
     },
+    mainView: {
+      paddingBottom: scale(100),
+      marginBottom: scale(25)
+    },
     containerButton: {
       backgroundColor: props !== null ? props.iconColorPink : 'transparent',
       width: scale(40),

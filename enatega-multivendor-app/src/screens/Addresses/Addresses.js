@@ -134,7 +134,9 @@ function Addresses() {
   }
   return (
     <View style={styles(currentTheme).flex}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles().mainView}>
         <FlatList
           data={profile.addresses}
           ListEmptyComponent={emptyView}
@@ -180,7 +182,6 @@ function Addresses() {
                     <TouchableOpacity
                       disabled={loadingMutation}
                       activeOpacity={0.7}
-                      
                       onPress={() => {
                         navigation.navigate('EditAddress', { ...address })
                       }}>
@@ -194,7 +195,6 @@ function Addresses() {
                     <TouchableOpacity
                       activeOpacity={0.7}
                       disabled={loadingMutation}
-                     
                       onPress={() => {
                         mutate({ variables: { id: address._id } })
                       }}>
