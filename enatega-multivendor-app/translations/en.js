@@ -17,7 +17,7 @@ export const en = {
     'Age does not diminish the extreme disappointment of having a scoop of ice cream fall from the cone',
   getStarted: 'Get Started!',
   welcome:
-    "Welcome to Enatega, sometimes all you need is love. But a little food now and then doesn't hurt.",
+    "Welcome to rami, sometimes all you need is love. But a little food now and then doesn't hurt.",
   loginBtn: 'Login',
   registerBtn: 'Register',
   name: 'Name',
@@ -173,7 +173,7 @@ export const en = {
   passErr2:
     'Invalid Password. Password must contain 1 capital letter, 1 small letter, 1 number.',
   letsGetStarted: "Let's get started!",
-  createAccount: 'Create your Enatega Account',
+  createAccount: 'Create your rami Account',
   firstnameErr1: 'Firstname is required!',
   firstnameErr2: 'Invalid First Name!',
   lastnameErr1: 'Lastname is required!',

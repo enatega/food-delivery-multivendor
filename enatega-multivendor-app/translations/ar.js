@@ -17,7 +17,7 @@ export const ar = {
     'Age does not diminish the extreme disappointment of having a scoop of ice cream fall from the cone',
   getStarted: '!البدء',
   welcome:
-    'مرحبًا بك في Enatega ، أحيانًا كل ما تحتاجه هو الحب. لكن القليل من الطعام بين الحين والآخر لا يضر.',
+    'مرحبًا بك في rami ، أحيانًا كل ما تحتاجه هو الحب. لكن القليل من الطعام بين الحين والآخر لا يضر.',
   loginBtn: 'تسجيل الدخول',
   registerBtn: 'يسجل',
   name: 'اسم',

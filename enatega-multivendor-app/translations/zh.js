@@ -15,7 +15,7 @@ export const zh = {
   description3: '年龄不会减少从冰锥中舀出一勺冰淇淋的极度失望',
   getStarted: '开始吧！',
   welcome:
-    '欢迎来到Enatega，有时您需要的只是爱。但是偶尔会有点食物不会受到伤害。',
+    '欢迎来到rami，有时您需要的只是爱。但是偶尔会有点食物不会受到伤害。',
   loginBtn: '登录',
   registerBtn: '寄存器',
   name: '名称',

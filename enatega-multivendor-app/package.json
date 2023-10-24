@@ -1,5 +1,5 @@
 {
-  "name": "enatega-full-app",
+  "name": "rami-full-app",
   "version": "5.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -117,6 +117,10 @@
     "prettier": "2.0.5",
     "prettier-config-standard": "^1.0.1",
     "react-test-renderer": "^16.8.6"
+  },
+  "overrides": {
+    "@expo/config-plugins": "~6.0.0",
+    "@expo/prebuild-config": "~6.0.0"
   },
   "private": true
 }

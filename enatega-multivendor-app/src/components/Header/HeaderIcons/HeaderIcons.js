@@ -25,7 +25,7 @@ import UserContext from '../../../context/User'
 import { alignment } from '../../../utils/alignment'
 import CartIcon from '../../../assets/SVG/imageComponents/CartIcon'
 
-const rippleColor = '#6FCF97'
+const rippleColor = '#D0BFFF'
 function BackButton(props) {
   if (props.icon === 'leftArrow') {
     return (

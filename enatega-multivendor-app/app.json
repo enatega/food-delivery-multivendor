@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Enatega Multivendor",
-    "scheme": "enategamultivendor",
+    "name": "Rami Multivendor",
+    "scheme": "ramimultivendor",
     "version": "1.0.32",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "slug": "enategamultivendor",
-    "owner": "ninjas_code",
-    "currentFullName": "@ninjas_code/enategamultivendor",
-    "originalFullName": "@ninjas_code/enategamultivendor",
+    "description": "Rami is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "slug": "ramimultivendor",
+    "owner": "rami_multivendor",
+    "currentFullName": "@rami_multivendor/ramimultivendor",
+    "originalFullName": "@rami_multivendor/ramimultivendor",
     "privacy": "public",
     "androidStatusBar": {
       "backgroundColor": "#000"
@@ -21,14 +21,14 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#6FCF97"
+      "backgroundColor": "#D0BFFF"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.enatega.multivendor",
+      "bundleIdentifier": "com.rami.multivendor",
       "config": {
         "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
       },
@@ -43,14 +43,14 @@
     },
     "notification": {
       "iosDisplayInForeground": true,
-      "color": "#6FCF97",
+      "color": "#D0BFFF",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
-      "androidCollapsedTitle": "Enatega Multivendor"
+      "androidCollapsedTitle": "Rami Multivendor"
     },
     "android": {
       "versionCode": 32,
-      "package": "com.enatega.multivendor",
+      "package": "com.rami.multivendor",
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
@@ -70,7 +70,7 @@
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
             "organization": "ninjas-code",
-            "project": "enatega-multivendor-app",
+            "project": "rami-multivendor-app",
             "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
           }
         }
@@ -84,12 +84,6 @@
         }
       ],
       [
-        "expo-updates",
-        {
-          "username": "ninjas_code"
-        }
-      ],
-      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
@@ -98,14 +92,13 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $Rami Multivendor to use your location."
         }
-      ],
-      "sentry-expo"
+      ]
     ],
     "extra": {
       "eas": {
-        "projectId": "331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+        "projectId": "0a13dddb-7539-476a-90d6-9ac5ac19d76f"
       }
     },
     "runtimeVersion": {

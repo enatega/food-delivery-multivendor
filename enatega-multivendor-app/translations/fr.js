@@ -17,7 +17,7 @@ export const fr = {
     "L'âge ne diminue en rien l'extrême déception d'avoir une boule de glace tombée du cône.",
   getStarted: 'Commencer!',
   welcome:
-    "Bienvenue dans Enatega, parfois tout ce dont vous avez besoin est de l'amour. Mais un peu de nourriture maintenant et ensuite ne fait pas mal.",
+    "Bienvenue dans rami, parfois tout ce dont vous avez besoin est de l'amour. Mais un peu de nourriture maintenant et ensuite ne fait pas mal.",
   loginBtn: "S'identifier",
   registerBtn: 'registre',
   name: 'prénom',

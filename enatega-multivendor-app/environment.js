@@ -11,13 +11,13 @@ const ENV = {
     SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
 
     IOS_CLIENT_ID_GOOGLE:
-      '967541328677-30n1b9dljqadrr4badeku41980rf2dt1.apps.googleusercontent.com',
+      '535955950814-8likp70pru424d6qbu4a9pu4rtef9t4p.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
-      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+      '535955950814-6dedoaoj1quc1cll9tqrv71ian3agt2a.apps.googleusercontent.com',
     AMPLITUDE_API_KEY: '2114f5db4c014dc7ad4ed2ad747341b5',
     GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
+      '535955950814-odsv8tecme9iae8n5ai482fnc1lhfvd1.apps.googleusercontent.com',
     SENTRY_DSN:
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS:
@@ -37,13 +37,13 @@ const ENV = {
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
-      '967541328677-30n1b9dljqadrr4badeku41980rf2dt1.apps.googleusercontent.com',
+      '535955950814-8likp70pru424d6qbu4a9pu4rtef9t4p.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
-      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+      '535955950814-6dedoaoj1quc1cll9tqrv71ian3agt2a.apps.googleusercontent.com',
     AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f',
     GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
+      '535955950814-odsv8tecme9iae8n5ai482fnc1lhfvd1.apps.googleusercontent.com',
     SENTRY_DSN:
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS:
@@ -62,13 +62,13 @@ const ENV = {
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
-      '967541328677-30n1b9dljqadrr4badeku41980rf2dt1.apps.googleusercontent.com',
+      '535955950814-8likp70pru424d6qbu4a9pu4rtef9t4p.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
-      '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+      '535955950814-6dedoaoj1quc1cll9tqrv71ian3agt2a.apps.googleusercontent.com',
     AMPLITUDE_API_KEY: '42b182f3d18a21e8ab0ae881c6ef475f',
     GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA',
     EXPO_CLIENT_ID:
-      '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
+      '535955950814-odsv8tecme9iae8n5ai482fnc1lhfvd1.apps.googleusercontent.com',
     SENTRY_DSN:
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS:
