@@ -1,35 +1,37 @@
 {
-    "build": {
-      "development":{
-        "developmentClient": false,
-        "releaseChannel": "development",
-        "distribution": "internal"
-      },
-      "staging": {
-        "developmentClient": false,
-        "releaseChannel": "staging",
-        "distribution": "internal"
-      },
-      "production-restaurant": {
-        "developmentClient": false,
-        "releaseChannel": "production"
-      }
+  "build": {
+    "development": {
+      "developmentClient": false,
+      "releaseChannel": "development",
+      "distribution": "internal"
     },
-    "submit": {
-      "production": {
+    "staging": {
+      "developmentClient": false,
+      "releaseChannel": "staging",
+      "distribution": "internal"
+    },
+    "production": {
+      "developmentClient": false,
+      "channel": "production",
         "android": {
-          "serviceAccountKeyPath": "./google-service-account.json",
-          "track": "production"
-        },
-        "ios": {
-          "appleId": "sharan.gohar@icloud.com",
-          "ascAppId": "1526672537",
-          "appleTeamId": "GDFK7MVY6P"
+          "buildType": "apk"
         }
-      }
-    },
-    "cli": {
-      "version": ">= 0.43.0"
     }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "production"
+      },
+      "ios": {
+        "appleId": "sharan.gohar@icloud.com",
+        "ascAppId": "1526672537",
+        "appleTeamId": "GDFK7MVY6P"
+      }
+    }
+  },
+  "cli": {
+    "version": ">= 0.43.0"
   }
-  
+}

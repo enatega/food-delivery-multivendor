@@ -1,15 +1,18 @@
 {
   "expo": {
-    "name": "Enatega Multivendor Rider",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "name": "Rami Multivendor Rider",
+    "description": "Rami is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     "version": "1.1.20",
     "slug": "food-delivery-rider-multivendor",
+    "owner": "rami_multivendor",
+    "currentFullName": "@rami_multivendor/food-delivery-rider-multivendor",
+    "originalFullName": "@rami_multivendor/food-delivery-rider-multivendor",
     "privacy": "public",
     "plugins": [
       [
         "expo-updates",
         {
-          "username": "ninjas_code"
+          "username": "rami_multivendor"
         }
       ]
     ],
@@ -25,14 +28,14 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#6FCF97"
+      "backgroundColor": "#D0BFFF"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.enatega.multirider",
+      "bundleIdentifier": "com.rami.multirider",
       "config": {
         "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
       },
@@ -58,11 +61,11 @@
           "apiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
         }
       },
-      "package": "com.enatega.multirider"
+      "package": "com.rami.multirider"
     },
     "extra": {
       "eas": {
-        "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743"
+        "projectId": "66230a76-e846-44ba-b333-f8509d276e30"
       }
     },
     "runtimeVersion": {
@@ -78,7 +81,7 @@
         "file": "sentry-expo/upload-sourcemaps",
         "config": {
           "organization": "ninjas-code",
-          "project": "enatega-multivendor-app",
+          "project": "rami-multivendor-app",
           "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
         }
       }

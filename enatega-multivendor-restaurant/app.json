@@ -1,21 +1,34 @@
 {
   "expo": {
-    "name": "Enatega Multivendor Restaurant",
-    "slug": "enatega-multivendor-restaurant",
+    "name": "Rami Multivendor Restaurant",
+    "scheme": "rami-multivendor-restaurant",
     "version": "1.0.21",
+    "slug": "rami-multivendor-restaurant",
+    "owner": "rami_multivendor",
+    "currentFullName": "@rami_multivendor/rami-multivendor-restaurant",
+    "originalFullName": "@rami_multivendor/rami-multivendor-restaurant",
+    "privacy": "public",
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "rami_multivendor"
+        }
+      ]
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#6FCF97"
+      "backgroundColor": "#D0BFFF"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "multivendor.enatega.restaurant",
+      "bundleIdentifier": "multivendor.rami.restaurant",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio",
@@ -26,7 +39,7 @@
     "android": {
       "versionCode": 27,
       "useNextNotificationsApi": true,
-      "package": "multivendor.enatega.restaurant",
+      "package": "multivendor.rami.restaurant",
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -39,7 +52,7 @@
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
             "organization": "ninjas-code",
-            "project": "enatega-multivendor-app",
+            "project": "rami-multivendor-app",
             "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
           }
         }
@@ -50,7 +63,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "66acd9b0-dad4-4793-803e-2de7c3283808"
+        "projectId": "13995e78-f31a-4cba-ab91-854c85fbe804"
       }
     }
   }
