@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react'
+import _ from 'lodash' // Import lodash
 import * as Device from 'expo-device'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -38,8 +39,13 @@ export const useLogin = () => {
 
   const [LoginMutation, { loading: loginLoading }] = useMutation(LOGIN, {
     onCompleted: onLoginCompleted,
-    onError: onLoginError,
+    onError: onLoginError
   })
+
+  // Debounce the setEmail function
+  const debouncedSetEmail = _.debounce(text => {
+    setEmail(text.toLowerCase().trim())
+  }, 1) // Adjust the delay as needed (in milliseconds)
 
   function validateCredentials() {
     let result = true
@@ -63,7 +69,7 @@ export const useLogin = () => {
     return result
   }
 
-  function onCompleted({ emailExist}) {
+  function onCompleted({ emailExist }) {
     if (validateCredentials()) {
       if (emailExist._id !== null) {
         if (
@@ -83,6 +89,7 @@ export const useLogin = () => {
       }
     }
   }
+
   function onError(error) {
     try {
       FlashMessage({
@@ -94,13 +101,11 @@ export const useLogin = () => {
       })
     }
   }
+
   async function onLoginCompleted(data) {
-    if(data.login.isActive == false)
-    {
-      FlashMessage({message: "Account Deactivated"})
-    }
-    else
-    {
+    if (data.login.isActive == false) {
+      FlashMessage({ message: 'Account Deactivated' })
+    } else {
       try {
         await Analytics.identify(
           {
@@ -123,6 +128,7 @@ export const useLogin = () => {
       }
     }
   }
+
   function onLoginError(error) {
     try {
       FlashMessage({
@@ -177,7 +183,7 @@ export const useLogin = () => {
 
   return {
     email,
-    setEmail,
+    setEmail: debouncedSetEmail, // Use the debounced setEmail
     password,
     setPassword,
     showPassword,
