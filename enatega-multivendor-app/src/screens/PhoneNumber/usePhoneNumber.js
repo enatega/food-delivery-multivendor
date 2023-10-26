@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { updateUser } from '../../apollo/mutations'
@@ -8,7 +8,9 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import UserContext from '../../context/User'
+import countryCallingCodes from './countryCodes'
 import i18n from '../../../i18n'
+import axios from 'axios'
 
 const UPDATEUSER = gql`
   ${updateUser}
@@ -20,18 +22,92 @@ const useRegister = () => {
   const [phone, setPhone] = useState('')
   const [phoneError, setPhoneError] = useState(null)
 
-  const [countryCode, setCountryCode] = useState('PK')
+  const [countryCode, setCountryCode] = useState('')
+  const [currentCountry, setCurrentCountry] = useState(null)
+  const [ipAddress, setIpAddress] = useState(null);
+  const [countryCallingCode, setCountryCallingCode] = useState(null);
+  const [count, setCount] = useState(0)
+  
+  const retryCount = 3; // Number of retries
+  let currentRetry = 0;
+
   const [country, setCountry] = useState({
-    callingCode: ['92'],
-    cca2: 'PK',
+    callingCode: [],
+    cca2: '',
     currency: ['PKR'],
-    flag: 'flag-pk',
+    flag: '',
     name: 'Pakistan',
     region: 'Asia',
     subregion: 'Southern Asia'
   })
 
+  const fetchIpAddress = async () => {
+    try {
+      const response = await fetch('https://api.ipify.org/?format=json');
+      const data = await response.json();
+    
+      setIpAddress(data.ip)
+
+      const response2  = await fetch(`https://ipinfo.io/${data.ip}/json`)
+      const data2 = await response2.json()
+      console.log(data2)
+      setCurrentCountry(data2.country)
+      setCountryCode(data2.country)
+
+     
+      return currentCountry;
+    } catch (error) {
+      console.error('Error getting IP address:', error);
+
+      if (currentRetry < retryCount) {
+        // Retry the request
+        currentRetry++;
+        console.log('Retrying...');
+        return fetchIpAddress();
+      }
+    }
+
+    // If all retries fail, you can return a default value or handle the error as needed.
+    return null;
+  };
+
+
+ useEffect(() => {
+  const initializeCountry = async () => {
+    try {
+      const res = await fetchIpAddress();
+     console.log(res)
+     console.log(currentCountry)
+      if (res) {
+        const callingCode = countryCallingCodes[currentCountry];
+        if (callingCode) {
+          setCountry({
+            ...country,
+            callingCode: [callingCode.toString()],
+            cca2: currentCountry,
+            flag: 'flag-'+currentCountry
+          });
+        } else {
+          console.log('Unknown');
+        }
+      } else {
+        setCount(count+1)
+        console.log('Failed to fetch IP address.');
+      }
+    } catch (error) {
+      console.error('Error initializing country:', error);
+    }
+  };
+  
+  initializeCountry(); 
+ }, [count])
+    
+
+  
+ 
+
   const onCountrySelect = country => {
+    console.log(country)
     setCountryCode(country.cca2)
     setCountry(country)
   }
