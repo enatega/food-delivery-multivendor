@@ -7,13 +7,14 @@ const styles = (props = null) => {
       flex: 1,
       height: '100%',
       width: '95%',
-      
+
     },
     headerContainer: {
       height: '100%',
-      width: '100%',
+      width: '110%',
       flexDirection: 'column-reverse',
       paddingLeft: scale(5),
+      paddingTop: scale(10)
     },
     textContainer: {
       maxWidth: '100%',
