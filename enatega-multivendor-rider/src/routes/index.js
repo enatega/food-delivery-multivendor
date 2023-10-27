@@ -218,7 +218,7 @@ function AppContainer() {
         })
 
         return {
-          shouldShowAlert: false,
+          shouldShowAlert: true,
           shouldPlaySound: false,
           shouldSetBadge: false
         }
