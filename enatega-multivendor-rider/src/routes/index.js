@@ -30,6 +30,7 @@ import { AuthContext } from '../context/auth'
 import { SoundContextProvider } from '../context/sound'
 import { gql, useApolloClient } from '@apollo/client'
 import { riderOrders } from '../apollo/queries'
+
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
 const Tab = createBottomTabNavigator()
@@ -128,7 +129,7 @@ function Main() {
 
   useEffect(() => {
     Notifications.setNotificationHandler({
-      handleNotification: async() => ({
+      handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: false,
         shouldSetBadge: false
@@ -152,6 +153,7 @@ function Main() {
     <LocationStack />
   )
 }
+
 function NoDrawer() {
   return (
     <Stack.Navigator initialRouteName="Orders" screenOptions={screenOptions()}>
@@ -176,6 +178,70 @@ function NoDrawer() {
 
 function AppContainer() {
   const { token } = useContext(AuthContext)
+
+  // Register a notification handler that will be called when a notification is received.
+  const registerForPushNotificationsAsync = async () => {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
+    }
+
+    if (finalStatus !== 'granted') {
+      return
+    }
+
+    // Handle the notification when the app is in the foreground.
+    Notifications.setNotificationHandler({
+      handleNotification: async notification => {
+        // Handle the notification data as needed, e.g., navigate to the relevant screen.
+        const { _id } = notification.request.content.data
+        const { data } = await client.query({
+          query: gql`
+            ${riderOrders}
+          `,
+          fetchPolicy: 'network-only'
+        })
+        const order = data.riderOrders.find(o => o._id === _id)
+        const lastNotificationHandledId = await AsyncStorage.getItem(
+          '@lastNotificationHandledId'
+        )
+
+        if (lastNotificationHandledId === _id) return
+
+        await AsyncStorage.setItem('@lastNotificationHandledId', _id)
+        navigationService.navigate('OrderDetail', {
+          itemId: _id,
+          order
+        })
+
+        return {
+          shouldShowAlert: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false
+        }
+      }
+    })
+
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      response => {
+        // Handle the notification when the app is in the background or closed.
+        if (response.notification.request.content.data.type === 'order') {
+          // Handle the notification data as needed, e.g., navigate to the relevant screen.
+          handleNotification(response)
+        }
+      }
+    )
+
+    return () => subscription.remove()
+  }
+
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+  }, [])
+
   return (
     <SafeAreaProvider>
       <NavigationContainer
@@ -187,4 +253,5 @@ function AppContainer() {
     </SafeAreaProvider>
   )
 }
+
 export default AppContainer
