@@ -8,7 +8,7 @@ const styles = (props = null) => {
       height: '100%',
       width: '95%',
       justifyContent: 'center',
-      paddingBottom: scale(10),
+      paddingBottom: scale(8),
     },
     headerContainer: {
       height: '100%',

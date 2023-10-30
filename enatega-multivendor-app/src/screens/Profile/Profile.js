@@ -47,6 +47,8 @@ function Profile(props) {
   const [showPass, setShowPass] = useState(false)
 
   const { profile } = useContext(UserContext)
+
+  console.log(profile)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const backScreen = props.route.params ? props.route.params.backScreen : null
