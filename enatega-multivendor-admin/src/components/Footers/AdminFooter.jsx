@@ -26,7 +26,7 @@ export default function AdminFooter(props) {
 
         <Link
           className={classes.link}
-          href="https://multivendor.ninjascode.com/"
+          href="https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/"
           target="_blank"
           underline="none">
           Enatega Multivendor
