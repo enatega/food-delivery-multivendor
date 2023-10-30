@@ -93,8 +93,15 @@ function Main() {
   const { locationPermission } = useLocationContext()
   const client = useApolloClient()
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
-  const handleNotification = useCallback(
-    async response => {
+
+  const handleNotification = useCallback(async response => {
+    if (
+      response &&
+      response.notification &&
+      response.notification.request &&
+      response.notification.request.content &&
+      response.notification.request.content.data
+    ) {
       const { _id } = response.notification.request.content.data
       const { data } = await client.query({
         query: gql`
@@ -112,32 +119,30 @@ function Main() {
         itemId: _id,
         order
       })
-    },
-    [lastNotificationResponse]
-  )
-  React.useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      lastNotificationResponse.notification.request.content.data.type ===
-        'order' &&
-      lastNotificationResponse.actionIdentifier ===
-        Notifications.DEFAULT_ACTION_IDENTIFIER
-    ) {
-      handleNotification(lastNotificationResponse)
     }
-  }, [lastNotificationResponse])
+  }, [])
 
   useEffect(() => {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false
-      })
-    })
-    const subscription = Notifications.addNotificationResponseReceivedListener()
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      handleNotification
+    )
+
     return () => subscription.remove()
+  }, [handleNotification])
+
+  useEffect(() => {
+    // Register a notification handler that will be called when a notification is received.
+    Notifications.setNotificationHandler({
+      handleNotification: async notification => {
+        return {
+          shouldShowAlert: false, // Prevent the app from closing
+          shouldPlaySound: false,
+          shouldSetBadge: false
+        }
+      }
+    })
   }, [])
+
   return locationPermission ? (
     <UserProvider>
       <SoundContextProvider>
@@ -179,66 +184,32 @@ function NoDrawer() {
 function AppContainer() {
   const { token } = useContext(AuthContext)
 
-  // Register a notification handler that will be called when a notification is received.
-  const registerForPushNotificationsAsync = async () => {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync()
-    let finalStatus = existingStatus
-
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync()
-      finalStatus = status
-    }
-
-    if (finalStatus !== 'granted') {
-      return
-    }
-
-    // Handle the notification when the app is in the foreground.
-    Notifications.setNotificationHandler({
-      handleNotification: async notification => {
-        // Handle the notification data as needed, e.g., navigate to the relevant screen.
-        const { _id } = notification.request.content.data
-        const { data } = await client.query({
-          query: gql`
-            ${riderOrders}
-          `,
-          fetchPolicy: 'network-only'
-        })
-        const order = data.riderOrders.find(o => o._id === _id)
-        const lastNotificationHandledId = await AsyncStorage.getItem(
-          '@lastNotificationHandledId'
-        )
-
-        if (lastNotificationHandledId === _id) return
-
-        await AsyncStorage.setItem('@lastNotificationHandledId', _id)
-        navigationService.navigate('OrderDetail', {
-          itemId: _id,
-          order
-        })
-
-        return {
-          shouldShowAlert: false,
-          shouldPlaySound: false,
-          shouldSetBadge: false
-        }
-      }
-    })
-
-    const subscription = Notifications.addNotificationResponseReceivedListener(
-      response => {
-        // Handle the notification when the app is in the background or closed.
-        if (response.notification.request.content.data.type === 'order') {
-          // Handle the notification data as needed, e.g., navigate to the relevant screen.
-          handleNotification(response)
-        }
-      }
-    )
-
-    return () => subscription.remove()
-  }
-
+  // Register for push notifications.
   useEffect(() => {
+    async function registerForPushNotificationsAsync() {
+      const {
+        status: existingStatus
+      } = await Notifications.getPermissionsAsync()
+      let finalStatus = existingStatus
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync()
+        finalStatus = status
+      }
+
+      if (finalStatus === 'granted') {
+        Notifications.setNotificationHandler({
+          handleNotification: async notification => {
+            return {
+              shouldShowAlert: false, // Prevent the app from closing
+              shouldPlaySound: false,
+              shouldSetBadge: false
+            }
+          }
+        })
+      }
+    }
+
     registerForPushNotificationsAsync()
   }, [])
 
