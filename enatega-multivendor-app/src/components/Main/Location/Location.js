@@ -25,7 +25,7 @@ function Location(props) {
             style={styles.textContainer}>
             <TextDefault
               textColor={props.linkColor}
-              numberOfLines={2}
+              numberOfLines={1}
               H5
               bolder>
               {''}
