@@ -234,5 +234,5 @@ The frontend source code for our solution is completely open source. However, th
 
 ## :mailbox_with_mail: Contact Us: <a id="heading-13"></a>
 	
-sales@enatega.com
+[Book a meeting with our Sales Representative](https://calendly.com/enatega/30min).
 
