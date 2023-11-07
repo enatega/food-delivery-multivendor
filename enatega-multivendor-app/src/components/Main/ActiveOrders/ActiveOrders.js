@@ -16,37 +16,38 @@ import RandomShape from '../../../assets/SVG/RandomShape'
 import Analytics from '../../../utils/analytics'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
+import i18n from '../../../../i18n'
 
 const orderStatuses = [
   {
     key: 'PENDING',
     status: 1,
-    statusText: 'Your order is still pending.'
+    statusText: 'pendingOrder'
   },
   {
     key: 'ACCEPTED',
     status: 2,
-    statusText: 'Restaurant is preparing Food.'
+    statusText: 'acceptedOrder'
   },
   {
     key: 'ASSIGNED',
     status: 3,
-    statusText: 'Assigned a rider.'
+    statusText: 'assignedOrder'
   },
   {
     key: 'PICKED',
     status: 4,
-    statusText: 'Rider is on the way.'
+    statusText: 'pickedOrder'
   },
   {
     key: 'DELIVERED',
     status: 5,
-    statusText: 'Order is delivered.'
+    statusText: 'deliveredOrder'
   },
   {
     key: 'COMPLETED',
     status: 6,
-    statusText: 'Order is completed.'
+    statusText: 'completedOrder'
   }
 ]
 
@@ -171,7 +172,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
                 ))}
             </View>
             <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-              {checkStatus(item.orderStatus).statusText}
+              {i18n.t(checkStatus(item.orderStatus).statusText)}
             </Text>
           </View>
         </View>

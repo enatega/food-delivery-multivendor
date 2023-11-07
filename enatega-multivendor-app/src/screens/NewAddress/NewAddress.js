@@ -334,7 +334,7 @@ function NewAddress(props) {
                       textColor={currentTheme.fontMainColor}
                       h5
                       bolder>
-                      Add Label
+                      {i18n.t('addLabel')}
                     </TextDefault>
                   </View>
                   <View style={styles().buttonInline}>
@@ -374,7 +374,7 @@ function NewAddress(props) {
                           textColor={currentTheme.black}
                           bold
                           center>
-                          {label.title}
+                          {i18n.t(label.title)}
                         </TextDefault>
                       </>
                     ))}

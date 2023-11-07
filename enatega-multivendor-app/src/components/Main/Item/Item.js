@@ -17,6 +17,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import Spinner from '../../Spinner/Spinner'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
+import i18n from '../../../../i18n'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}

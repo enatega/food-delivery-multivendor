@@ -6,14 +6,15 @@ import Rider from '../../../assets/SVG/rider'
 import ArrowsLoading from '../../../assets/SVG/arrows-loading'
 import RestaurantPreparing from '../../../assets/SVG/restaurant-preparing'
 import OrderDelivered from '../../../assets/SVG/order-delivered'
+import i18n from '../../../../i18n'
 
 const STATUS_MESSAGES = {
-  PENDING: 'Waiting for restaurant to accept',
-  ACCEPTED: 'Food is being prepared',
-  ASSIGNED: 'Assigned a rider',
-  PICKED: 'Rider on his way',
-  DELIVERED: 'Thank you!',
-  CANCELLED: "We're sorry, Your order was cancelled."
+  PENDING: 'PENDINGStatusMessage',
+  ACCEPTED: 'ACCEPTEDStatusMessage',
+  ASSIGNED: 'ASSIGNEDStatusMessage',
+  PICKED: 'PICKEDStatusMessage',
+  DELIVERED: 'DELIVEREDStatusMessage',
+  CANCELLED: "CANCELLEDStatusMessage"
 }
 const STATUS_ORDER = [
   'PENDING',
@@ -60,7 +61,7 @@ export default function Status({
             style={styles.text}
             small
             textColor={theme.secondaryText}>
-            {STATUS_MESSAGES[orderStatus]}
+            {i18n.t(STATUS_MESSAGES[orderStatus])}
           </TextDefault>
         </View>
       </View>

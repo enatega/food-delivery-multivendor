@@ -24,6 +24,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import UserContext from '../../../context/User'
 import { alignment } from '../../../utils/alignment'
 import CartIcon from '../../../assets/SVG/imageComponents/CartIcon'
+import i18n from '../../../../i18n'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
@@ -199,7 +200,7 @@ function RightButton(props) {
                 style={{ fontSize: scale(11) }}
                 textColor={currentTheme.fontMainColor}
                 bold>
-                Change password
+                {i18n.t('changePassword')}
               </TextDefault>
             </View>
           </TouchableOpacity>

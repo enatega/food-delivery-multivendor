@@ -266,7 +266,7 @@ function Profile(props) {
               <TextDefault
                 textColor={currentTheme.white}
               >
-                {profile.phoneIsVerified ? "Verified" : 'Unverified'}</TextDefault>
+                {profile.phoneIsVerified ? i18n.t('verified') : i18n.t('unverified')}</TextDefault>
             </View>
           )}
         </View>
@@ -286,7 +286,7 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <Text style={styles(currentTheme).titleContainer}>Personal details</Text>
+      <Text style={styles(currentTheme).titleContainer}>{i18n.t('profileDetail')}</Text>
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -296,8 +296,8 @@ function Profile(props) {
               {toggleNameView && (
                 <>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
-                      Name
+                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
+                      {i18n.t('name')}
                     </TextDefault>
                   </View>
 
@@ -318,8 +318,8 @@ function Profile(props) {
               <View>
                 <View style={styles(currentTheme).containerHeading}>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder >
-                      Name
+                      <TextDefault H5 B700 bolder style={styles(currentTheme).textAlignLeft}>
+                        {i18n.t('name')}
                     </TextDefault>
                   </View>
                 </View>
@@ -342,7 +342,7 @@ function Profile(props) {
                   activeOpacity={0.7}
                   style={styles(currentTheme).saveContainer}
                   onPress={handleNamePressUpdate}>
-                  <TextDefault>Update</TextDefault>
+                    <TextDefault style={styles(currentTheme).textAlignLeft}>{i18n.t('update')}</TextDefault>
                 </TouchableOpacity>
               </View>
             )}
@@ -353,8 +353,8 @@ function Profile(props) {
             <View style={styles().containerHeading}>
               <>
                 <View style={styles().headingTitle}>
-                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
-                    Email
+                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
+                    {i18n.t('email')}
                   </TextDefault>
                 </View>
               </>
@@ -367,8 +367,8 @@ function Profile(props) {
             <View style={styles().containerHeading}>
               <>
                 <View style={styles().headingTitle}>
-                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
-                    Password
+                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
+                    {i18n.t('password')}
                   </TextDefault>
                 </View>
 
@@ -391,8 +391,8 @@ function Profile(props) {
               {toggleView && (
                 <>
                   <View style={styles().headingTitle}>
-                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
-                      Mobile
+                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
+                      {i18n.t('mobile')}
                     </TextDefault>
                   </View>
                   <View style={styles().headingLink}>
@@ -420,8 +420,9 @@ function Profile(props) {
                       textColor={currentTheme.fontMainColor}
                       H5
                       B700
-                      bolder>
-                      Mobile
+                      bolder
+                        style={styles(currentTheme).textAlignLeft}>
+                        {i18n.t('mobile')}
                     </TextDefault>
                   </View>
                 </View>
@@ -453,10 +454,10 @@ function Profile(props) {
                                 : currentTheme.textErrorColor
                             }>
                             {profile.phone === ''
-                              ? 'Add Phone'
+                              ? i18n.t('addPhone')
                               : profile.phoneIsVerified
-                                ? 'Verified'
-                                : 'Verify?'}
+                                ? i18n.t('verified')
+                                : i18n('verify')}
                           </TextDefault>
                         </TouchableOpacity>
                       )}

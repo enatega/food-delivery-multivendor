@@ -22,6 +22,7 @@ import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import styles from './styles'
+import i18n from '../../../i18n'
 const Constants = getEnvVars()
 const { height } = Dimensions.get('screen')
 
@@ -97,7 +98,7 @@ export default function SearchModal({
           <CloseIcon />
         </TouchableOpacity>
         <TextDefault bold H4>
-          {'Search Address'}
+          {i18n.t('searchAddress')}
         </TextDefault>
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <GooglePlacesAutocomplete

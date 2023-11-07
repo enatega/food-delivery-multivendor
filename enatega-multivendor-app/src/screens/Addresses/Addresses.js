@@ -154,7 +154,7 @@ function Addresses() {
                   <TextDefault
                     textColor={currentTheme.darkBgFont}
                     style={styles(currentTheme).labelStyle}>
-                    {address.label}
+                    {i18n.t(address.label)}
                   </TextDefault>
                 </View>
                 <View style={{ ...alignment.MTxSmall }}></View>

@@ -15,6 +15,9 @@ const styles = (props = null) =>
       ...alignment.PLsmall,
       ...alignment.PBlarge
     },
+    alignLeft:{
+      textAlign: 'left'
+    },
     loggedInContainer: {
       flex: 1,
       justifyContent: 'flex-end',

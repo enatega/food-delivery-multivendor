@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, I18nManager } from 'react-native'
 import styles from './styles'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
@@ -54,7 +54,7 @@ function CartComponent(props) {
                 }
           }>
           <TextDefault textColor={currentTheme.black} H5 bolder center>
-            Add To Cart
+            {i18n.t('addTodCart')}
           </TextDefault>
         </TouchableOpacity>
       </View>

@@ -49,6 +49,7 @@ import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import Analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
+import i18n from '../../../i18n'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -433,7 +434,7 @@ function Main(props) {
                         color={currentTheme.black}
                       />
                       <View style={styles().mL5p} />
-                      <TextDefault bold>{address.label}</TextDefault>
+                      <TextDefault bold>{i18n.t(address.label)}</TextDefault>
                     </View>
                     <View style={styles().addressTextContainer}>
                       <TextDefault
