@@ -37,7 +37,7 @@
       }
     },
     "android": {
-      "versionCode": 28,
+      "versionCode": 29,
       "useNextNotificationsApi": true,
       "package": "multivendor.rami.restaurant",
       "googleServicesFile": "./google-services.json",
