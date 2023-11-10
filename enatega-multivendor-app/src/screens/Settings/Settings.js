@@ -47,6 +47,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
+
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
   { value: 'français', code: 'fr', index: 1 },
@@ -235,7 +236,7 @@ function Settings(props) {
       FlashMessage({
         message: error.networkError.result.errors[0].message
       })
-    } catch (err) { }
+    } catch (err) {}
   }
 
   async function updateNotificationStatus(notificationCheck) {
@@ -423,7 +424,9 @@ function Settings(props) {
                     modalizeRef.current.open('top')
                   }}>
                   <Ionicons name="trash-outline" size={30} color={'white'} />
-                  <Text style={styles(currentTheme).deleteButtonText}>DELETE ACCOUNT</Text>
+                  <Text style={styles(currentTheme).deleteButtonText}>
+                    DELETE ACCOUNT
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -485,7 +488,7 @@ function Settings(props) {
                 small
                 bolder
                 uppercase>
-                Cancel
+                {i18n.t('Cancel')}
               </TextDefault>
             </TouchableOpacity>
             <TouchableOpacity
@@ -515,7 +518,7 @@ function Settings(props) {
         keyboardAvoidingBehavior="height">
         <View style={{ flex: 1, alignItems: 'center' }}>
           <TextDefault bolder H5 style={{ marginTop: 20 }}>
-            Are you Sure you want to delete Account?
+            {i18n.t('DeleteConfirmation')}
           </TextDefault>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -536,14 +539,14 @@ function Settings(props) {
               })
             }}>
             <TextDefault center bold>
-              Delete Account
+              {i18n.t('DeleteAccount')}
             </TextDefault>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.7}
             style={{ width: '100%', paddingTop: 30, paddingBottom: 40 }}
             onPress={() => onClose()}>
-            <TextDefault center>Cancel</TextDefault>
+            <TextDefault center> {i18n.t('Cancel')}</TextDefault>
           </TouchableOpacity>
         </View>
       </Modalize>

@@ -231,4 +231,21 @@ export const en = {
   DELIVEREDStatusMessage: 'Thank you!',
   CANCELLEDStatusMessage: "We're sorry, Your order was cancelled.",
   yourOrderAt: 'Your order at',
+  /////////////
+  delivery: 'Delivery',
+  Min: 'Minute',
+  min: 'Min',
+  Closed: 'Closed',
+  PenddingText:
+    "We're asking the restaurant how long it will take to deliver your food.",
+  PenddingText1: 'The restaurant rider will be at your place around.',
+  OrderFrom: 'Your order from:',
+  OrderNo: 'Your order no:',
+  ActiveOrder: 'Active Orders',
+  PastOrder: 'Past Orders',
+  ContinueWithGoogle: 'Continue with Google',
+  ContinueWithEmail: 'Continue with Email',
+  Cancel: 'Cancel',
+  DeleteAccount: 'Delete Account',
+  DeleteConfirmation: 'Are you Sure you want to delete Account?'
 }

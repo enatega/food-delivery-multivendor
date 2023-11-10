@@ -8,6 +8,7 @@ import { theme } from '../../../utils/themeColors'
 import ThemeContext from '../../ThemeContext/ThemeContext'
 import { alignment } from '../../../utils/alignment'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import i18n from '../../../../i18n'
 
 const FdEmailBtn = props => {
   const themeContext = useContext(ThemeContext)
@@ -32,7 +33,7 @@ const FdEmailBtn = props => {
             textColor={currentTheme.buttonTextPink}
             style={alignment.MLsmall}
             bold>
-            Continue with Email
+            {i18n.t('ContinueWithEmail')}
           </TextDefault>
         </>
       )}

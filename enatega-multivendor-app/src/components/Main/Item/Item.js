@@ -109,7 +109,7 @@ function Item(props) {
                     small
                     bold
                     uppercase>
-                    Closed
+                    {i18n.t('Closed')}
                   </TextDefault>
                 </View>
               )}
@@ -120,8 +120,8 @@ function Item(props) {
                   small
                   bolder
                   center>
-                  {item.deliveryTime}
-                  {' min'}
+                  {item.deliveryTime + ' '}
+                  {i18n.t('min')}
                 </TextDefault>
               </View>
             </View>
@@ -174,7 +174,7 @@ function Item(props) {
                 {configuration.currencySymbol + ' ' + item.minimumOrder}{' '}
                 <TextDefault textColor={currentTheme.fontSecondColor} small>
                   {' '}
-                  {'Min'}
+                  {i18n.t('min')}
                 </TextDefault>
               </TextDefault>
             </View>
