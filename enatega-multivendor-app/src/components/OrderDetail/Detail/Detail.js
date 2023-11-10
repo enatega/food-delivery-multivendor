@@ -35,7 +35,7 @@ export default function Detail({
               }}
               buttonStyles={styles.chatButton(theme)}
               textStyles={styles.chatButtonText(theme)}
-              text={'Chat with rider'}
+              text={i18n.t('chatWithRider')}
             />
           </View>
           <View style={styles.line(theme)}></View>

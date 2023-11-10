@@ -247,5 +247,8 @@ export const en = {
   ContinueWithEmail: 'Continue with Email',
   Cancel: 'Cancel',
   DeleteAccount: 'Delete Account',
-  DeleteConfirmation: 'Are you Sure you want to delete Account?'
+  DeleteConfirmation: 'Are you Sure you want to delete Account?',
+  ////////////
+  chatWithRider: 'Chat with rider',
+  yourOrderIs: 'Your order is',
 }

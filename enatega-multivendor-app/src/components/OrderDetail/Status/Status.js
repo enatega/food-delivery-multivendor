@@ -55,7 +55,7 @@ export default function Status({
             H4
             textColor={theme.fontWhite}
             bolder>
-            Your order is {orderStatus.toLowerCase()}
+            {i18n.t('yourOrderIs')} {i18n.t(orderStatus).toLowerCase()}
           </TextDefault>
           <TextDefault
             style={styles.text}

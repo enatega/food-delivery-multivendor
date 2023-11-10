@@ -227,4 +227,5 @@ export const ar = {
   PICKEDStatusMessage: 'المندوب في الطريق',
   DELIVEREDStatusMessage: 'شكرًا لك!',
   CANCELLEDStatusMessage: 'نأسف، تم إلغاء طلبك.',
+  yourOrderIs: 'طلبك',
 }
