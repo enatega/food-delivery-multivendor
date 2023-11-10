@@ -2,7 +2,7 @@
   "expo": {
     "name": "Rami Multivendor Restaurant",
     "scheme": "rami-multivendor-restaurant",
-    "version": "1.0.21",
+    "version": "1.0.22",
     "slug": "rami-multivendor-restaurant",
     "owner": "rami_multivendor",
     "currentFullName": "@rami_multivendor/rami-multivendor-restaurant",
@@ -37,7 +37,7 @@
       }
     },
     "android": {
-      "versionCode": 27,
+      "versionCode": 28,
       "useNextNotificationsApi": true,
       "package": "multivendor.rami.restaurant",
       "googleServicesFile": "./google-services.json",
