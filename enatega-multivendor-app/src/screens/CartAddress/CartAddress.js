@@ -143,7 +143,7 @@ function CartAddresses(props) {
                       textColor={currentTheme.iconColorPink}
                       small
                       bolder>
-                      SAVE
+                      {i18n.t('save')}
                     </TextDefault>
                   </TouchableOpacity>
                 </View>

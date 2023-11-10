@@ -7,6 +7,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
 import { scale } from '../../utils/scaling'
+import i18n from '../../../i18n'
 
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
@@ -16,9 +17,9 @@ function PickUp(props) {
   return (
     <View style={{ paddingTop: 30 }}>
       {props.isPickedUp ? (
-        <Text style={styles().tabHeading}>Select Pickup date and time</Text>
+        <Text style={styles().tabHeading}>{i18n.t('SelectPickupDT')}</Text>
       ) : (
-        <Text style={styles().tabHeading} >Select Delivery date and time</Text>
+          <Text style={styles().tabHeading} >{i18n.t('SelectDeliveryDT')}</Text>
       )}
 
       <View style={styles().tabContainer}>
@@ -31,7 +32,7 @@ function PickUp(props) {
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text style={styles().tabSubHeading}>PickUp</Text>
+          <Text style={styles().tabSubHeading}>{i18n.t('pickUp')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -42,7 +43,7 @@ function PickUp(props) {
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text style={styles().tabSubHeading}>Delivery</Text>
+          <Text style={styles().tabSubHeading}>{i18n.t('delivery')}</Text>
         </TouchableOpacity>
       </View>
       <View

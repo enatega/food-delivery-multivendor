@@ -117,14 +117,14 @@ function Addresses() {
           <View style={styles().descriptionEmpty}>
             <View style={styles().viewTitle}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder>
-                It&#39;s empty here.
+                {i18n.t('emptyHere')}
               </TextDefault>
             </View>
             <View>
               <TextDefault textColor={currentTheme.fontMainColor} bold>
-                You haven&#39;t saved any address yet.
+                {i18n.t('emptyHereDecs1')}
                 {'\n'}
-                Click Add New Address to get started
+                {i18n.t('emptyHereDecs2')}
               </TextDefault>
             </View>
           </View>

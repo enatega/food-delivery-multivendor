@@ -15,6 +15,7 @@ import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import Analytics from '../../utils/analytics'
 import { ScrollView } from 'react-native-gesture-handler'
+import i18n from '../../../i18n'
 
 function About(props) {
   const { restaurantObject, tab } = props.route.params
@@ -42,7 +43,7 @@ function About(props) {
   function emptyView() {
     return (
       <TextError
-        text="There are no reviews yet."
+        text={i18n.t('noReviewYet')}
         backColor={currentTheme.cartContainer}
       />
     )
@@ -91,7 +92,7 @@ function About(props) {
                 color={currentTheme.darkBgFont}
               />
               <TextDefault style={{ paddingLeft: 10 }} bold textColor={currentTheme.darkBgFont}>
-                {'Opening times'}
+                {i18n.t('Openingtimes')}
               </TextDefault>
             </View>
 
@@ -106,7 +107,7 @@ function About(props) {
                   </TextDefault>
                   {v.times.length < 1 ? (
                     <TextDefault key={index + 8} small bold center>
-                      {'Closed all day'}
+                      {i18n.t('ClosedAllDay')}
                     </TextDefault>
                   ) : (
                     v.times.map(t => (
@@ -242,7 +243,7 @@ function About(props) {
             onPress={() => pagerSetter(true)}
             style={[styles(currentTheme).tab, pager && styles(currentTheme).selectedTab]}>
             <TextDefault textColor={pager ? currentTheme.black : currentTheme.darkBgFont} bolder uppercase large>
-              About
+              {i18n.t('About')}
             </TextDefault>
           </TouchableOpacity>
 
@@ -251,7 +252,7 @@ function About(props) {
             onPress={() => pagerSetter(false)}
             style={[styles(currentTheme).tab, !pager && styles(currentTheme).selectedTab]}>
             <TextDefault textColor={pager ? currentTheme.darkBgFont : currentTheme.black} bolder uppercase large>
-              Reviews
+              {i18n.t('Reviews')}
             </TextDefault>
           </TouchableOpacity>
         </View>

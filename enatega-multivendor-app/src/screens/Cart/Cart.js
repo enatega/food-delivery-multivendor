@@ -739,7 +739,7 @@ function Cart(props) {
                         marginLeft: scale(20)
                       }}>
                       <TextDefault  textColor={currentTheme.darkBgFont} style={{ padding: 5 }} bolder>
-                        {isPickedUp ? 'Pick Up' : 'Delivery'}{' '}
+                        {isPickedUp ? i18n.t('pickUp') : i18n.t('delivery')}{' '}
                       </TextDefault>
                       <TextDefault
                         textColor={currentTheme.darkBgFont}
@@ -751,7 +751,7 @@ function Cart(props) {
                         onPress={onOpen}
                         style={styles(currentTheme).cartInnerContainer}>
                         <TextDefault bold textColor={'white'} center>
-                          change
+                          {i18n.t('change')}
                         </TextDefault>
                       </TouchableOpacity>
                     </View>
@@ -1053,7 +1053,7 @@ function Cart(props) {
                           small
                           bold
                           center>
-                          {'Custom'}
+                          {i18n.t('Custom')}
                         </TextDefault>
                       </TouchableOpacity>
                     </View>
@@ -1246,7 +1246,7 @@ function Cart(props) {
                               }}>
                               <TextDefault bolder small>
                                 {' '}
-                                change Address
+                                  {i18n.t('changeAddress')}
                               </TextDefault>
                             </TouchableOpacity>
                           </View>
@@ -1473,7 +1473,7 @@ function Cart(props) {
                 alignSelf: 'center'
               }
             ]}>
-            <Text style={{ fontSize: 20, fontWeight: '500' }}>Apply</Text>
+            <Text style={{ fontSize: 20, fontWeight: '500' }}>{i18n.t('apply')}</Text>
           </TouchableOpacity>
         </Modalize>
       </View>

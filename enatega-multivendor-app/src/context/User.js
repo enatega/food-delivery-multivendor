@@ -7,6 +7,7 @@ import { profile } from '../apollo/queries'
 import { LocationContext } from './Location'
 import AuthContext from './Auth'
 import Analytics from '../utils/analytics'
+import i18n from '../../i18n'
 
 
 const PROFILE = gql`
@@ -72,7 +73,7 @@ export const UserProvider = props => {
       setToken(null)
       if (location._id) {
         setLocation({
-          label: 'Selected Location',
+          label: i18n.t('selectedLocation'),
           latitude: location.latitude,
           longitude: location.longitude,
           deliveryAddress: location.deliveryAddress
