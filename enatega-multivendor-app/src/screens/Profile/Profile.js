@@ -125,7 +125,7 @@ function Profile(props) {
   function onCompleted({ updateUser }) {
     if (updateUser) {
       FlashMessage({
-        message: "User's Info Updated"
+        message: i18n.t('userInfoUpdated')
       })
       if (backScreen) {
         props.navigation.goBack()
@@ -141,7 +141,7 @@ function Profile(props) {
     if (name !== profile.name) {
       if (!name.trim()) {
         refName.current.focus()
-        setNameError('Name is required')
+        setNameError(i18n.t('nameError'))
         return false
       }
 

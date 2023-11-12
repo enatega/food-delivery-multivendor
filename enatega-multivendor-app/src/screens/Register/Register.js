@@ -102,7 +102,7 @@ function Register(props) {
               <View style={styles().form}>
                 <View>
                   <TextInput
-                    placeholder="Email"
+                    placeholder={i18n.t('email')}
                     style={[
                       styles(currentTheme).textField,
                       emailError && styles(currentTheme).errorInput
@@ -122,7 +122,7 @@ function Register(props) {
                 </View>
                 <View>
                   <TextInput
-                    placeholder="First name"
+                    placeholder={i18n.t('firstNamePH')}
                     style={[
                       styles(currentTheme).textField,
                       firstnameError && styles(currentTheme).errorInput
@@ -142,7 +142,8 @@ function Register(props) {
                 </View>
                 <View>
                   <TextInput
-                    placeholder="Last name"
+                    placeholder={i18n.t('lastNamePH')}
+
                     style={[
                       styles(currentTheme).textField,
                       lastnameError && styles(currentTheme).errorInput
@@ -163,7 +164,7 @@ function Register(props) {
                 <View style={styles().passwordField}>
                   <TextInput
                     secureTextEntry={showPassword}
-                    placeholder="Password"
+                    placeholder={i18n.t('password')}
                     style={[
                       styles(currentTheme).textField,
                       styles().passwordInput,
@@ -209,7 +210,7 @@ function Register(props) {
                     </TextDefault>
                   </View>
                   <TextInput
-                    placeholder="Mobile Number"
+                    placeholder={i18n.t('mobileNumber')}
                     style={[
                       styles(currentTheme).textField,
                       styles().phoneNumber,

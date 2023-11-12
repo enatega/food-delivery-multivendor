@@ -179,7 +179,7 @@ function EditAddress(props) {
       })
     }
     FlashMessage({
-      message: 'Address updated'
+      message: i18n.t('addressUpdated')
     })
     // show message here
     props.navigation.goBack()
@@ -187,7 +187,7 @@ function EditAddress(props) {
 
   function onError(error) {
     FlashMessage({
-      message: `An error occured. Please try again ${error}`
+      message: `${i18n.t('errorOccured')} ${error}`
     })
   }
 
@@ -265,7 +265,7 @@ function EditAddress(props) {
                   <View style={styles(currentTheme).geoLocation}>
                     <View style={{ width: '100%' }}>
                       <OutlinedTextField
-                        placeholder="Delivery Address"
+                        placeholder={i18n.t('deliveryAddress')}
                         error={deliveryAddressError}
                         ref={addressRef}
                         value={deliveryAddress}
@@ -309,7 +309,7 @@ function EditAddress(props) {
                   </View>
                   <View style={{ ...alignment.MTlarge }}></View>
                   <OutlinedTextField
-                    placeholder="Apt / Floor"
+                    placeholder={i18n.t('aptFloor')}
                     error={deliveryDetailsError}
                     label={i18n.t('deliveryDetails')}
                     labelFontSize={scale(12)}

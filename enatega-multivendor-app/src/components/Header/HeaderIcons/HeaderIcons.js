@@ -183,7 +183,7 @@ function RightButton(props) {
       navigation.navigate('Cart')
     } else {
       FlashMessage({
-        message: 'Cart is empty.'
+        message: i18n.t('cartIsEmpty')
       })
     }
   }

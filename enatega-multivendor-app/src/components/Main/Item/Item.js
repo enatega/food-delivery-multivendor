@@ -58,7 +58,7 @@ function Item(props) {
   }
 
   function onCompleted() {
-    FlashMessage({ message: 'Favourite list updated.' })
+    FlashMessage({ message: i18n.t('favouritelistUpdated') })
   }
   return (
     <TouchableOpacity

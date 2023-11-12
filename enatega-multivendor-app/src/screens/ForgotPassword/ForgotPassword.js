@@ -82,7 +82,7 @@ function ForgotPassword(props) {
           </View>
           <View style={{ ...alignment.MTmedium }}>
             <TextInput
-              placeholder="Email"
+              placeholder={i18n.t('email')}
               style={[
                 styles(currentTheme).textField,
                 emailError !== null && styles(currentTheme).errorInput

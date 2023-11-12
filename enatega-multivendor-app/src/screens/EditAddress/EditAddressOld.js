@@ -134,7 +134,7 @@ function EditAddress(props) {
       })
     }
     FlashMessage({
-      message: 'Address updated'
+      message: i18n.t('addressUpdated')
     })
     // show message here
     props.navigation.goBack()
@@ -142,7 +142,7 @@ function EditAddress(props) {
 
   function onError(error) {
     FlashMessage({
-      message: `An error occured. Please try again ${error}`
+      message: `${i18n.t('errorOccured')} ${error}`
     })
   }
 

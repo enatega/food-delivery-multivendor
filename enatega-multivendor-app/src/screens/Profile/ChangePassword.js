@@ -58,7 +58,7 @@ function ChangePassword(props) {
       })
       props.hideModal()
     } else {
-      Alert.alert('Error', 'Invalid password')
+      Alert.alert('Error', i18n.t('invalidPassword'))
     }
   }
 

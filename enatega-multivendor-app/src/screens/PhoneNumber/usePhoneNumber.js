@@ -129,7 +129,7 @@ const useRegister = () => {
 
   async function onCompleted(data) {
     FlashMessage({
-      message: 'Phone number has been added successfully!.'
+      message: i18n.t('numberAddedAlert')
     })
     await refetchProfile()
     navigation.navigate({ name: 'PhoneOtp', merge: true, params: route.params })

@@ -119,7 +119,7 @@ function PhoneNumber(props) {
                   <View style={{flexDirection:'row', paddingTop: 10}}>
                   <Text>+{country.callingCode[0]} </Text>
                   <TextInput                
-                    placeholder="Mobile Number"
+                        placeholder={i18n.t('mobileNumber')}
                     style ={{marginTop: Platform.OS === 'android' ? -4 : 0 }}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={phone}

@@ -66,9 +66,9 @@ function Tip(props) {
   }, [])
   function onTipping() {
     const tipAmount = tipRef.current.value()
-    if (isNaN(tipAmount)) FlashMessage({ message: 'Invalid Amount' })
+    if (isNaN(tipAmount)) FlashMessage({ message: i18n.t('invalidAmount') })
     else if (Number(tipAmount) <= 0) {
-      FlashMessage({ message: 'Amount must be greater than 0' })
+      FlashMessage({ message: i18n.t('amountMustBe') })
     } else navigation.navigate('Cart', { tipAmount: Number(tipAmount) })
   }
 
@@ -81,8 +81,8 @@ function Tip(props) {
           <View style={styles(currentTheme).innerContainer}>
             <OutlinedTextField
               ref={tipRef}
-              label={'Other amount'}
-              placeholder="Add other amount"
+              label={i18n.t('otherAmount')}
+              placeholder={i18n.t('addOtherAmount')}
               labelFontSize={scale(12)}
               fontSize={scale(12)}
               textAlignVertical="top"

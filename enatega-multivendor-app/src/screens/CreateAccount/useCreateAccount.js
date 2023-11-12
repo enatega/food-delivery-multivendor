@@ -16,6 +16,7 @@ import * as Linking from 'expo-linking'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import Analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
+import i18n from '../../../i18n'
 
 const config = getEnvVars()
 const {
@@ -125,7 +126,7 @@ export const useCreateAccount = () => {
 
   async function onCompleted(data) {
     if (data.login.isActive == false) {
-      FlashMessage({ message: "Account Deactivated" })
+      FlashMessage({ message: i18n.t('accountDeactivated') })
       setLoading(false)
     }
     else {

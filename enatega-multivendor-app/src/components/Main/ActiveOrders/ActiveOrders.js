@@ -95,7 +95,7 @@ const ActiveOrders = () => {
                 onPress={() => setShowAll(!showAll)}
                 style={styles().button}>
                 <Text style={styles().buttonText}>
-                  {showAll ? 'View Less' : 'View All'}
+                  {showAll ? i18n.t('viewLess') : i18n.t('viewAll')}
                 </Text>
               </TouchableOpacity>
             </View>

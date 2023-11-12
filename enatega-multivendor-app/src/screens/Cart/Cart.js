@@ -407,7 +407,8 @@ function Cart(props) {
     }
     if (calculatePrice(deliveryCharges, true) < minimumOrder) {
       FlashMessage({
-        message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
+        // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
+        message: `(${i18n.t(minAmount)}) (${configuration.currencySymbol} ${minimumOrder}) (${i18n.t(forYourOrder)})`
       })
       return false
     }
@@ -417,7 +418,7 @@ function Cart(props) {
     }
     if (!paymentMethod) {
       FlashMessage({
-        message: 'Set payment method before checkout'
+        message: i18n.t('setPaymentMethod')
       })
       return false
     }
@@ -427,7 +428,7 @@ function Cart(props) {
     }
     if (profile.phone.length > 0 && !profile.phoneIsVerified) {
       FlashMessage({
-        message: 'Phone number is not verified. Kindly verify phone number.'
+        message: i18n.t('numberVerificationAlert')
       })
       props.navigation.navigate('Profile')
       return false
@@ -558,7 +559,7 @@ function Cart(props) {
           setLoadingData(false)
           if (transformCart.length !== updatedItems.length) {
             FlashMessage({
-              message: 'One or more item is not available'
+              message: i18n.t('itemNotAvailable')
             })
           }
         }

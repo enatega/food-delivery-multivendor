@@ -102,7 +102,7 @@ export default function SearchModal({
         </TextDefault>
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <GooglePlacesAutocomplete
-            placeholder="Search"
+            placeholder={i18n.t('search')}
             minLength={2} // minimum length of text to search
             autoFocus={true}
             returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype

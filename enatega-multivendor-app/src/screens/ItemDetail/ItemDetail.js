@@ -25,6 +25,7 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
+import i18n from '../../../i18n'
 
 function ItemDetail(props) {
   
@@ -356,13 +357,13 @@ function ItemDetail(props) {
             <View style={styles(currentTheme).line}></View>
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent
-                title="Special instructions"
-                subTitle="Any specific preferences?"
-                status="Optional"
+                title={i18n.t('specialInstructions')}
+                subTitle={i18n.t('anySpecificPreferences')}
+                status={i18n.t('optional')}
               />
               <TextField
                 style={styles(currentTheme).input}
-                placeholder={'E.g No mayo'}
+                placeholder={i18n.t('noMayo')}
                 textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}

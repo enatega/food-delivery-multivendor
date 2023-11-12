@@ -227,7 +227,7 @@ function Settings(props) {
 
   function onCompleted() {
     FlashMessage({
-      message: 'Notification Status Updated'
+      message: i18n.t('notificationStatusUpdated')
     })
   }
 
@@ -243,7 +243,7 @@ function Settings(props) {
     let orderNotify, offerNotify
     if (!Device.isDevice) {
       FlashMessage({
-        message: 'Notification do not work on simulator'
+        message: i18n.t('notificationNotWork')
       })
       return
     }
@@ -272,7 +272,7 @@ function Settings(props) {
   }
   if (errorProfile) {
     FlashMessage({
-      message: 'Error in profile'
+      message: i18n.t('errorInProfile')
     })
   }
   if (loadingProfile) return <Spinner />

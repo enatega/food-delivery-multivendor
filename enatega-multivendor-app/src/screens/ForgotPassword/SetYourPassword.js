@@ -80,7 +80,7 @@ function ForgotPassword(props) {
           <View style={styles().passwordField}>
             <TextInput
               secureTextEntry
-              placeholder="Password"
+              placeholder={i18n.t('password')}
               style={[
                 styles(currentTheme).textField,
                 styles().passwordInput,
@@ -104,7 +104,7 @@ function ForgotPassword(props) {
           <View style={styles().passwordField}>
             <TextInput
               secureTextEntry
-              placeholder="Confirm Password"
+              placeholder={i18n.t('confirmPassword')}
               style={[
                 styles(currentTheme).textField,
                 styles().passwordInput,

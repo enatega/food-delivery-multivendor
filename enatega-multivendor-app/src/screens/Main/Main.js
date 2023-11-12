@@ -167,7 +167,7 @@ function Main(props) {
           else {
             modalRef.current.close()
             setLocation({
-              label: 'Current Location',
+              label: i18n.t('currentLocation'),
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address
@@ -195,11 +195,11 @@ function Main(props) {
             color={currentTheme.black}
           />
           <View style={styles().mL5p} />
-          <TextDefault bold>Current Location</TextDefault>
+          <TextDefault bold>{i18n.t('currentLocation')}</TextDefault>
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === 'Current Location' && (
+        {location.label === i18n.t('currentLocation') && (
           <MaterialIcons
             name="check"
             size={scale(15)}
@@ -447,7 +447,7 @@ function Main(props) {
                   </TouchableOpacity>
                   <View style={styles().addressTick}>
                     {address.selected &&
-                      !['Current Location', 'Selected Location'].includes(
+                      ![i18n.t('currentLocation'), i18n.t('selectedLocation')].includes(
                         location.label
                       ) && (
                         <MaterialIcons

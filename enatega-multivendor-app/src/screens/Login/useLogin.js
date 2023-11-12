@@ -80,7 +80,7 @@ export const useLogin = () => {
           setRegisteredEmail(true)
         } else {
           FlashMessage({
-            message: `Your email is associated with ${emailExist.userType}. Kindly continue with ${emailExist.userType}`
+            message: `${i18n.t('emailAssociatedWith')} ${emailExist.userType} ${i18n.t('continueWith')} ${emailExist.userType}`
           })
           navigation.navigate({ name: 'Main', merge: true })
         }
@@ -97,14 +97,14 @@ export const useLogin = () => {
       })
     } catch (e) {
       FlashMessage({
-        message: 'Error while checking email. Try again later!'
+        message: i18n.t('mailCheckingError')
       })
     }
   }
 
   async function onLoginCompleted(data) {
     if (data.login.isActive == false) {
-      FlashMessage({ message: 'Account Deactivated' })
+      FlashMessage({ message: i18n.t('accountDeactivated') })
     } else {
       try {
         await Analytics.identify(
@@ -135,7 +135,7 @@ export const useLogin = () => {
         message: error.graphQLErrors[0].message
       })
     } catch (e) {
-      FlashMessage({ message: 'Error in login Error' })
+      FlashMessage({ message: i18n.t('errorInLoginError') })
     }
   }
 
@@ -163,7 +163,7 @@ export const useLogin = () => {
       }
     } catch (e) {
       FlashMessage({
-        message: 'Error while logging in. Please try again later'
+        message: i18n.t('errorWhileLogging')
       })
     } finally {
     }

@@ -8,6 +8,7 @@ import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import getEnvVars from '../../../../environment'
+import i18n from '../../../../i18n'
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -41,7 +42,7 @@ const usePhoneOtp = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: 'OTP sent to your phone.'
+      message: i18n.t('otpSentToPhone')
     })
   }
 
@@ -59,7 +60,7 @@ const usePhoneOtp = () => {
 
   function onUpdateUserCompleted(data) {
     FlashMessage({
-      message: 'Phone number has been verified successfully!.'
+      message: i18n.t('numberVerified')
     })
     route.params?.prevScreen
       ? navigation.navigate(route.params.prevScreen)
