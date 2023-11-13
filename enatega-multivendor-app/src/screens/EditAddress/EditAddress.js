@@ -44,17 +44,17 @@ const EDIT_ADDRESS = gql`
 
 const labelValues = [
   {
-    title: 'Home',
+    title: i18n.t('Home'),
     value: 'Home',
     icon: <Entypo name="home" size={24} />
   },
   {
-    title: 'Work',
+    title: i18n.t('Work'),
     value: 'Work',
     icon: <MaterialIcons name="work" size={24} />
   },
   {
-    title: 'Other',
+    title: i18n.t('Other'),
     value: 'Other',
     icon: <Foundation name="heart" size={24} />
   }

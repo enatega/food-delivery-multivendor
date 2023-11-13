@@ -104,6 +104,7 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
+  // }, [i18n.language])
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -250,7 +251,7 @@ function Main(props) {
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold>Add New Address</TextDefault>
+            <TextDefault bold>{i18n.t('addAddress')}</TextDefault>
           </View>
         </TouchableOpacity>
       </View>

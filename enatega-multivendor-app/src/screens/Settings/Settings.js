@@ -289,7 +289,7 @@ function Settings(props) {
                 <TextDefault
                   numberOfLines={1}
                   textColor={currentTheme.fontSecondColor}>
-                  Language Setting
+                  {i18n.t('languageSetting')}
                 </TextDefault>
               </View>
               <TouchableOpacity
@@ -322,7 +322,8 @@ function Settings(props) {
                 textColor={currentTheme.darkBgFont}
                 style={alignment.MLsmall}>
                 {' '}
-                Receive Special Offers{' '}
+                {i18n.t('receiveSpecialOffers')}
+                {' '}
               </TextDefault>
               <View style={{ paddingLeft: '44%' }}>
                 <CheckboxBtn
@@ -360,7 +361,8 @@ function Settings(props) {
                 textColor={currentTheme.darkBgFont}
                 style={alignment.MLsmall}>
                 {' '}
-                Get updates on your order status!{' '}
+                {i18n.t('getUpdates')}
+                {' '}
               </TextDefault>
               <View style={{ paddingLeft: '24%' }}>
                 <CheckboxBtn
@@ -395,7 +397,8 @@ function Settings(props) {
                 textColor={currentTheme.darkBgFont}
                 style={alignment.MLsmall}>
                 {' '}
-                Turn on Dark Theme
+                {i18n.t('turnOnDarkTheme')}
+                {' '}
               </TextDefault>
               <View style={{ paddingLeft: '48%' }}>
                 <CheckboxBtn
@@ -425,7 +428,7 @@ function Settings(props) {
                   }}>
                   <Ionicons name="trash-outline" size={30} color={'white'} />
                   <Text style={styles(currentTheme).deleteButtonText}>
-                    DELETE ACCOUNT
+                    {i18n.t('DELETEACCOUNT')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -451,7 +454,7 @@ function Settings(props) {
             bolder
             H5
             style={alignment.MBsmall}>
-            Select Language
+            {i18n.t('selectLanguage')}
           </TextDefault>
 
           {languageTypes.map((item, index) => (
@@ -500,7 +503,7 @@ function Settings(props) {
                 bolder
                 uppercase
                 small>
-                Select
+                {i18n.t('Select')}
               </TextDefault>
             </TouchableOpacity>
           </View>

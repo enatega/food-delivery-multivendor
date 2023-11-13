@@ -58,7 +58,7 @@ function About(props) {
           style={{ ...alignment.PBxSmall }}
           textColor={currentTheme.fontMainColor}
           bolder>
-          {restaurantObject.total} Reviews
+          {restaurantObject.total} {i18n.t('Reviews')}
         </TextDefault>
         {line()}
       </>

@@ -80,7 +80,7 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: 'Customize',
+      title: i18n.t('titleCustomize'),
       headerTitleContainerStyle: {
         marginTop: scale(10),
         paddingLeft: scale(15),

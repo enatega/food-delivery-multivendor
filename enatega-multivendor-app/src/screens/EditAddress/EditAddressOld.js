@@ -40,16 +40,19 @@ const EDIT_ADDRESS = gql`
 
 const labelValues = [
   {
-    title: '',
-    value: 'Home'
+    title: i18n.t('Home'),
+    value: 'Home',
+    icon: <Entypo name="home" size={24} />
   },
   {
-    title: 'Work',
-    value: 'Work'
+    title: i18n.t('Work'),
+    value: 'Work',
+    icon: <MaterialIcons name="work" size={24} />
   },
   {
-    title: 'Other',
-    value: 'Other'
+    title: i18n.t('Other'),
+    value: 'Other',
+    icon: <Foundation name="heart" size={24} />
   }
 ]
 const LATITUDE_DELTA = 0.0022

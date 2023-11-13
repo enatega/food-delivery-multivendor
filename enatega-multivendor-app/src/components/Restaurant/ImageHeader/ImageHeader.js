@@ -136,7 +136,7 @@ function ImageTextCenterHeader(props, ref) {
                     marginBottom: props.headerTextFlex
                   }
                 ]}>
-                Delivery {aboutObject.deliveryTime} Minute{' '}
+                {i18n.t('delivery')} {aboutObject.deliveryTime} {i18n.t('Min')}
               </Animated.Text>
               {!props.loading && (
                 <>
@@ -196,7 +196,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={[alignment.PRxSmall, alignment.PLxSmall]}
                     textColor="white"
                     bold>
-                    Delivery {aboutObject.deliveryTime} Minute
+                    {i18n.t('delivery')} {aboutObject.deliveryTime} {i18n.t('Min')}
                   </TextDefault>
                 </View>
               )}

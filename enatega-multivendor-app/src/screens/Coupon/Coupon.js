@@ -62,7 +62,7 @@ function SelectVoucher(props) {
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: 'My Vouchers',
+      title: i18n.t('titleMyVouchers'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {

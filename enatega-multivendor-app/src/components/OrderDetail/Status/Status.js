@@ -82,7 +82,7 @@ export default function Status({
               theme={theme}
               isEta={false}
               number={1}
-              status={'Order palced'}
+              status={i18n.t('statusOrderPalced')}
               time={formatTime(createdAt)}
               showLine={true}
             />
@@ -90,7 +90,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 1}
               number={2}
-              status={'Accepted'}
+              status={i18n.t('statusAccepted')}
               time={acceptedAt ? formatTime(acceptedAt) : '--:--'}
               showLine={true}
             />
@@ -98,7 +98,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 2}
               number={3}
-              status={'Assigned'}
+              status={i18n.t('statusAssigned')}
               time={assignedAt ? formatTime(assignedAt) : '--:--'}
               showLine={true}
             />
@@ -106,7 +106,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 3}
               number={4}
-              status={'Picked'}
+              status={i18n.t('statusPicked')}
               time={pickedAt ? formatTime(pickedAt) : '--:--'}
               showLine={true}
             />
@@ -114,7 +114,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 4}
               number={5}
-              status={'Delivered'}
+              status={i18n.t('statusDelivered')}
               time={deliveredAt ? formatTime(deliveredAt) : '--:--'}
               showLine={false}
             />

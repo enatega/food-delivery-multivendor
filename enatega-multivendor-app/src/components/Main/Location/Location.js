@@ -5,6 +5,7 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { LocationContext } from '../../../context/Location'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
+import i18n from '../../../../i18n'
 
 function Location(props) {
   const themeContext = useContext(ThemeContext)
@@ -17,7 +18,7 @@ function Location(props) {
         <View style={styles(currentTheme).headerContainer}>
           <TextDefault textColor={props.style.color} left>
             {''}
-            {location.label}
+            {i18n.t(location.label)}
           </TextDefault>
           <TouchableOpacity
             activeOpacity={1}

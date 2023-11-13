@@ -7,6 +7,7 @@ import getEnvVars from '../../../environment'
 import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import Analytics from '../../utils/analytics'
+import i18n from '../../../i18n'
 const { SERVER_URL } = getEnvVars()
 const MYORDERS = gql`
   ${myOrders}
@@ -21,7 +22,7 @@ function StripeCheckout(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: 'Stripe Checkout'
+      title: i18n.t('stripeCheckout')
     })
   }, [props.navigation])
 

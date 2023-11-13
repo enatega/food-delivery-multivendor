@@ -51,7 +51,6 @@ export default function SelectLocation(props) {
   useLayoutEffect(() => {
     navigation.setOptions(
       screenOptions({
-        // title: 'Set Location',
         title: i18n.t('setLocation'),
         fontColor: currentTheme.fontMainColor,
         backColor: currentTheme.white,
@@ -89,8 +88,8 @@ export default function SelectLocation(props) {
         longitude: coords.longitude
       }
     ])
-    // setLabel('Current Location')
-    setLabel(i18n.t('currentLocation'))
+    setLabel('Current Location')
+    // setLabel(i18n.t('currentLocation'))
   }
   const onSelectLocation = () => {
     setLocation({
@@ -141,7 +140,7 @@ export default function SelectLocation(props) {
           style={styles(currentTheme).button}
           onPress={onSelectLocation}>
           <TextDefault textColor={currentTheme.buttonText} H4 bold>
-            {'Select Location'}
+            {i18n.t('selectLocation')}
           </TextDefault>
         </TouchableOpacity>
       </View>
