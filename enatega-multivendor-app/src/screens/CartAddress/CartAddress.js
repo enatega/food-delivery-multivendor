@@ -194,10 +194,10 @@ function CartAddresses(props) {
                   </View>
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
-                    style={{ width: '70%' }}
+                    style={{ width: '70%', textAlign: 'left' }}
                     H5
                     bold>
-                    {address.label}
+                    {i18n.t(address.label)}
                   </TextDefault>
                   <TouchableOpacity
                     activeOpacity={0.7}

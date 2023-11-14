@@ -168,7 +168,7 @@ function Main(props) {
           else {
             modalRef.current.close()
             setLocation({
-              label: i18n.t('currentLocation'),
+              label: ('currentLocation'),
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address

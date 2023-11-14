@@ -10,6 +10,7 @@ import { sendChatMessage } from '../../apollo/mutations'
 import { useMutation, useQuery } from '@apollo/client'
 import { Alert } from 'react-native'
 import { useUserContext } from '../../context/User'
+import i18n from '../../../i18n'
 export const useChatScreen = ({ navigation, route }) => {
   const { id: orderId } = route.params
   console.log(orderId)
@@ -103,7 +104,7 @@ export const useChatScreen = ({ navigation, route }) => {
           onPress={() => callNumber('+923159499378')}
         />
       ),
-      headerTitle: 'Contact your Rider'
+      headerTitle: i18n.t('contactYourRider')
     })
   }, [navigation])
   useEffect(() => {

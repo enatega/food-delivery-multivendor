@@ -117,7 +117,7 @@ function Reorder(props) {
             bolder
             H4
             textColor={currentTheme.fontMainColor}>
-            Select Items
+            {i18n.t('selectItems')}
           </TextDefault>
           {order.items.map((item, index) => {
             return (
@@ -180,7 +180,7 @@ function Reorder(props) {
             }
             onPress={onAddToCart}>
             <TextDefault bolder textColor={currentTheme.black}>
-              ADD TO CART
+              {i18n.t('addToCart')}
             </TextDefault>
           </TouchableOpacity>
         </View>

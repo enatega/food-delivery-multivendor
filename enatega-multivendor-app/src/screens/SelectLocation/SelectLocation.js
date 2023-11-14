@@ -88,7 +88,7 @@ export default function SelectLocation(props) {
         longitude: coords.longitude
       }
     ])
-    setLabel('Current Location')
+    setLabel('currentLocation')
     // setLabel(i18n.t('currentLocation'))
   }
   const onSelectLocation = () => {

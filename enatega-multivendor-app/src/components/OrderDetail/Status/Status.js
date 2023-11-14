@@ -161,7 +161,7 @@ const StatusRow = ({ theme, number, status, time, isEta, showLine }) => {
             {status}
           </TextDefault>
           <TextDefault textColor={theme.secondaryText} bold>
-            {isEta ? 'ETA ' : ''}
+            {isEta ? i18n.t('ETA') : ''}
             {time}
           </TextDefault>
         </View>
