@@ -129,7 +129,7 @@ const styles = (props = null) =>
       margin: scale(-10)
     },
     selectedTab: {
-      backgroundColor: props != null ? props.main : '#DFCCFB',
+      backgroundColor: props != null ? props.main : '#94e469',
       borderRadius: scale(10),
       margin: scale(-10)
     },
@@ -137,7 +137,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'flex-end',
       alignSelf: 'center',
-      backgroundColor: props != null ? props.main : '#DFCCFB',
+      backgroundColor: props != null ? props.main : '#94e469',
       borderRadius: 30,
       padding: 10,
       marginBottom: 10,

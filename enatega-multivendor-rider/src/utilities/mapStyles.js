@@ -12,7 +12,7 @@ export const MapStyles = [
     elementType: 'geometry',
     stylers: [
       {
-        color: '#a594e0'
+        color: '#61d921'
       }
     ]
   },

@@ -21,7 +21,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#D0BFFF"
+      "backgroundColor": "#94e469"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -43,7 +43,7 @@
     },
     "notification": {
       "iosDisplayInForeground": true,
-      "color": "#D0BFFF",
+      "color": "#94e469",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
       "androidCollapsedTitle": "Rami Multivendor"

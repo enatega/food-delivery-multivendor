@@ -13,14 +13,14 @@ const CustomWorkIcon = () => {
         fill="none">
         <Path
           d="M2 9C2 7.89543 2.89543 7 4 7H20C21.1046 7 22 7.89543 22 9V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V9Z"
-          stroke="#D0BFFF"
+          stroke="#94e469"
           strokeWidth={2}
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <Path
           d="M16 7V4C16 2.89543 15.1046 2 14 2H10C8.89543 2 8 2.89543 8 4V7"
-          stroke="#D0BFFF"
+          stroke="#94e469"
           strokeWidth={2}
           // stroke-width="2.09127"
           stroke-linecap="round"
@@ -28,7 +28,7 @@ const CustomWorkIcon = () => {
         />
         <Path
           d="M22 12H2"
-          stroke="#D0BFFF"
+          stroke="#94e469"
           strokeWidth={2}
           // stroke-width="2.09127"
           stroke-linecap="round"
@@ -36,7 +36,7 @@ const CustomWorkIcon = () => {
         />
         <Path
           d="M7 12V14"
-          stroke="#D0BFFF"
+          stroke="#94e469"
           strokeWidth={2}
           // stroke-width="2.09127"
           stroke-linecap="round"
@@ -44,7 +44,7 @@ const CustomWorkIcon = () => {
         />
         <Path
           d="M17 12V14"
-          stroke="#D0BFFF"
+          stroke="#94e469"
           strokeWidth={2}
           // stroke-width="2.09127"
           stroke-linecap="round"

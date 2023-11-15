@@ -226,7 +226,7 @@ const styles = (props = null) =>
       height: scale(30)
     },
     headerContainer: {
-      backgroundColor: props !== null ? props.headerBackground : '#D0BFFF',
+      backgroundColor: props !== null ? props.headerBackground : '#94e469',
       borderBottomRightRadius: 20,
       borderBottomLeftRadius: 20,
       padding: 10,

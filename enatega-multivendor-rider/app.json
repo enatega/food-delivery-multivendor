@@ -28,7 +28,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#D0BFFF"
+      "backgroundColor": "#94e469"
     },
     "assetBundlePatterns": [
       "**/*"
