@@ -27,7 +27,7 @@
     "icon": "./assets/icon.png",
     "splash": {
             "image": "./assets/icon.png",
-            "backgroundColor": "#141414"
+            "backgroundColor": "#171717"
     },
     "assetBundlePatterns": [
       "**/*"
