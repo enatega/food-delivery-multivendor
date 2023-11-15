@@ -19,9 +19,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#94e469"
+      "image": "./assets/icon.png",
+      "backgroundColor": "#141414"
     },
     "assetBundlePatterns": [
       "**/*"

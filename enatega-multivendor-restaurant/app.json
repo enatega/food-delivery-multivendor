@@ -4,7 +4,7 @@
     "scheme": "rami-multivendor-restaurant",
     "version": "1.0.22",
     "description": "Rami is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "slug": "https://expo.dev/@rami_multivendor/rami-multivendor-restaurant",
+    "slug": "rami-multivendor-restaurant",
     "owner": "rami_multivendor",
     "currentFullName": "@rami_multivendor/rami-multivendor-restaurant",
     "originalFullName": "@rami_multivendor/rami-multivendor-restaurant",
@@ -20,9 +20,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#94e469"
+            "image": "./assets/icon.png",
+            "backgroundColor": "#141414"
     },
     "assetBundlePatterns": [
       "**/*"
