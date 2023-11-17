@@ -26,7 +26,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/icon.png",
+      "image": "./assets/splash-icon.png",
       "backgroundColor": "#171717"
     },
     "assetBundlePatterns": [
