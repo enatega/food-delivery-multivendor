@@ -26,8 +26,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-            "image": "./assets/icon.png",
-            "backgroundColor": "#171717"
+      "image": "./assets/icon.png",
+      "backgroundColor": "#171717"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -71,7 +71,7 @@
       "policy": "sdkVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/9144a7fc-b205-464a-8fb6-64eb66fc8743"
+      "url": "https://u.expo.dev/66230a76-e846-44ba-b333-f8509d276e30"
     }
   },
   "hooks": {
