@@ -5,4 +5,5 @@ export const PRODUCT_URL =
 export const PRIVACY_URL =
   'https://multivendor.enatega.com/?_gl=1*gjjx59*_ga*NTczMDY0NDU1LjE2ODUzMzgzODg.*_ga_DTSL4MVB5L*MTY5NjQ4MDQ3Ni41NC4xLjE2OTY0ODA0ODMuNTMuMC4w&_ga=2.17598781.520939582.1696480479-573064455.1685338388#/privacy'
 export const ABOUT_URL = 'https://ninjascode.com/'
+export const ADMIN_URL = 'https://yalla-multivendor-admin.netlify.app'
 export const MAX_TIME = 120
