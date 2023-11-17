@@ -17,7 +17,7 @@ import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { useAccount } from '../../ui/hooks'
 import { Image } from 'react-native-elements'
 import useNotification from '../../ui/hooks/useNotification'
-import { PRODUCT_URL, PRIVACY_URL, ABOUT_URL } from '../../utilities'
+import { PRODUCT_URL, PRIVACY_URL, ABOUT_URL, ADMIN_URL } from '../../utilities'
 
 export default function SideBar() {
   const notificationRef = useRef(true)
@@ -177,6 +177,26 @@ export default function SideBar() {
               />
             </View>
           </View>
+          <TouchableOpacity
+            style={styles.logout}
+            activeOpacity={0.8}
+            onPress={() =>
+              Linking.canOpenURL(ADMIN_URL).then(() => {
+                Linking.openURL(ADMIN_URL)
+              })
+            }>
+            <View style={styles.icon}>
+              <Icon
+                type="font-awesome"
+                color="white"
+                name="dashboard"
+                size={26}
+              />
+            </View>
+            <TextDefault H4 bolder style={styles.text}>
+              Dashboard
+            </TextDefault>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.logout}
             activeOpacity={0.8}
