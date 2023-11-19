@@ -325,7 +325,7 @@ function Settings(props) {
                 {i18n.t('receiveSpecialOffers')}
                 {' '}
               </TextDefault>
-              <View style={{ paddingLeft: '44%' }}>
+              <View>
                 <CheckboxBtn
                   checked={offerNotification}
                   onPress={() => {
@@ -364,7 +364,7 @@ function Settings(props) {
                 {i18n.t('getUpdates')}
                 {' '}
               </TextDefault>
-              <View style={{ paddingLeft: '24%' }}>
+              <View>
                 <CheckboxBtn
                   checked={orderNotification}
                   onPress={() => {
@@ -400,7 +400,7 @@ function Settings(props) {
                 {i18n.t('turnOnDarkTheme')}
                 {' '}
               </TextDefault>
-              <View style={{ paddingLeft: '48%' }}>
+              <View>
                 <CheckboxBtn
                   checked={darkTheme}
                   onPress={() => toggleTheme()}

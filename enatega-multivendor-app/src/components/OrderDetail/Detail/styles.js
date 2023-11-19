@@ -33,9 +33,9 @@ export default StyleSheet.create({
   },
   row: {
     paddingTop: scale(25),
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  addressText: { width: '50%' },
+  addressText: { width: '50%', textAlign: 'left' },
   itemsContainer: {
     width: WIDTH - 20,
     paddingHorizontal: scale(15),
