@@ -358,4 +358,7 @@ export const fr = {
   RateYourOrder: "Évaluez votre commande",
   yourExperience: "Parlez de votre expérience",
   selectItems: "Sélectionnez des articles",
+  dontHaveAnyOrderYet: "Vous n'avez encore aucune commande passée. Essayez l'un de nos restaurants formidables et passez votre première commande !",
+  BrowseRESTAURANTS: "Parcourez LES RESTAURANTS DE VOTRE RÉGION",
+  RateOrder: "Noter la commande"
 }

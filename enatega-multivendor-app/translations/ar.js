@@ -355,5 +355,8 @@ export const ar = {
   howWasMealP: 'هل كانت جيدة أم سيئة؟ دعونا نتحدث عنها',
   RateYourOrder: 'قيم طلبك',
   yourExperience: 'حدثنا عن تجربتك',
-  selectItems: 'اختر العناصر'
+  selectItems: 'اختر العناصر',
+  dontHaveAnyOrderYet: "ليس لديك أي طلب سابق حتى الآن. جرب أحد مطاعمنا الرائعة وقدم طلبك الأول!",
+  BrowseRESTAURANTS: 'تصفح المطاعم في منطقتك',
+  RateOrder: 'تقييم الطلب'
 }

@@ -354,5 +354,7 @@ export const de = {
   RateYourOrder: 'Bewerte deine Bestellung',
   yourExperience: 'Erzähle von deiner Erfahrung',
   selectItems: 'Wähle Artikel aus',
-
+  dontHaveAnyOrderYet: 'Sie haben noch keine vergangenen Bestellungen. Probieren Sie eines unserer tollen Restaurants aus und geben Sie Ihre erste Bestellung auf!',
+  BrowseRESTAURANTS: 'Durchsuchen Sie RESTAURANTS IN IHRER REGION',
+  RateOrder: 'Bestellung bewerten'
 }

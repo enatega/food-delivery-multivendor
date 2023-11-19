@@ -345,4 +345,7 @@ export const zh = {
   RateYourOrder: '给您的订单评分',
   yourExperience: '分享您的体验',
   selectItems: '选择商品',
+  dontHaveAnyOrderYet: '您还没有任何过去的订单。尝试我们一家令人敬畏的餐厅，下第一份订单吧！',
+  BrowseRESTAURANTS: '浏览您区域内的餐厅',
+  RateOrder: '评价订单'
 }

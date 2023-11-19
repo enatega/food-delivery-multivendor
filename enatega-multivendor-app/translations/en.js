@@ -360,4 +360,7 @@ export const en = {
   RateYourOrder: 'Rate Your Order',
   yourExperience: 'Tell about your Experience',
   selectItems: 'Select Items',
+  dontHaveAnyOrderYet: "You don't have any past order yet. Try one of our awesome restaurants and place your first order!",
+  BrowseRESTAURANTS: 'Browse RESTAURANTS IN YOUR AREA',
+  RateOrder: 'Rate Order'
 }

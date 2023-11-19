@@ -94,7 +94,7 @@ function MyOrders(props) {
               bolder
               center
               H2>
-              No orders yet
+              {i18n.t('unReadOrders')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontMainColor}
@@ -102,8 +102,7 @@ function MyOrders(props) {
               center
               H5
               style={{ ...alignment.MBxLarge }}>
-              You don&#39;t have any past order yet. Try one of our awesome
-              restaurants and place your first order!
+              {i18n.t('dontHaveAnyOrderYet')}
             </TextDefault>
           </View>
           <TouchableOpacity
@@ -122,7 +121,7 @@ function MyOrders(props) {
               B700
               center
               uppercase>
-              Browse RESTAURANTS IN YOUR AREA
+              {i18n.t('BrowseRESTAURANTS')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -229,7 +228,7 @@ function MyOrders(props) {
                           center
                           uppercase>
                           {' '}
-                          Rate Order
+                          {i18n.t('RateOrder')}
                         </TextDefault>
                       </TouchableOpacity>
                     )}
@@ -247,7 +246,7 @@ function MyOrders(props) {
                         center
                         uppercase>
                         {' '}
-                        Reorder
+                        {i18n.t('reOrder')}
                       </TextDefault>
                     </TouchableOpacity>
                   </View>
