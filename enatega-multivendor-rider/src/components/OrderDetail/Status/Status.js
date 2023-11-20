@@ -7,20 +7,27 @@ import Tick from '../../../assets/svg/tick.png'
 import Restaurant from '../../../assets/svg/restaurant.png'
 import DeliveryBoy from '../../../assets/svg/DeliveryBoy.png'
 import UserContext from '../../../context/user'
+import i18n from '../../../../i18n'
 
 const STATUS_MESSAGES = {
-  PICKED: { text: 'You picked the parcel.', subText: 'You picked the parcel.' },
+  PICKED: {
+    text: i18n.t('youPickedParcel'),
+    subText: i18n.t('youPickedParcel')
+  },
   // PROCESS: 'Your parcel is in process.',
-  DELIVERED: { text: 'Parcel is delivered.', subText: 'Order is delivered.' },
-  ACCEPTED: { text: 'You have a new order.', subText: 'Hurry Up!' },
+  DELIVERED: {
+    text: i18n.t('parcelDelivered'),
+    subText: i18n.t('orderDelivered')
+  },
+  ACCEPTED: { text: i18n.t('newOrder'), subText: i18n.t('hurryUp') },
   // READY: 'Your parcel is ready.',
   ASSIGNED: {
-    text: 'Order assigned.',
-    subText: 'This order was assigned to you.'
+    text: i18n.t('orderAssigned'),
+    subText: i18n.t('orderAssignedSubText')
   },
   CANCELLED: {
-    text: 'Order not available.',
-    subText: 'This order is no longer available.'
+    text: i18n.t('orderNotAvailable'),
+    subText: i18n.t('orderNotAvailableSubText')
   }
 }
 
@@ -57,8 +64,8 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
             order.orderStatus === 'ACCEPTED'
               ? Restaurant
               : ['PICKED', 'ASSIGNED'].includes(order.orderStatus)
-                ? DeliveryBoy
-                : Tick
+              ? DeliveryBoy
+              : Tick
           }
         />
         <StatusMessage

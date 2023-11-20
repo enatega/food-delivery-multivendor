@@ -62,7 +62,11 @@ function SidebBar() {
           ))}
         </View>
         <View style={[styles.opacity, { flex: 2 }]}>
-          <NavItem onPress={() => logout()} icon="sign-out" title="Logout" />
+          <NavItem
+            onPress={() => logout()}
+            icon="sign-out"
+            title={i18n.t('titleLogout')}
+          />
         </View>
       </View>
     </ImageBackground>

@@ -5,6 +5,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { TabsContext } from '../../context/tabs'
 import UserContext from '../../context/user'
+import i18n from '../../../i18n'
 
 const Tabs = props => {
   const { active } = useContext(TabsContext)
@@ -50,24 +51,32 @@ const Tabs = props => {
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => props.navigation.navigate('Home')}
-        style={[styles.row, active === 'NewOrders' && styles.btn]}>
+        style={[
+          styles.row,
+          active === 'NewOrders' && styles.btn,
+          { width: '40%' }
+        ]}>
         <TextDefault
           bolder
           H5
           textColor={active === 'NewOrders' ? colors.black : colors.white}>
-          New Orders
+          {i18n.t('NewOrders')}
         </TextDefault>
       </TouchableOpacity>
 
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => props.navigation.navigate('MyOrders')}
-        style={[styles.row, active === 'MyOrders' && styles.btn]}>
+        style={[
+          styles.row,
+          active === 'MyOrders' && styles.btn,
+          { width: '45%' }
+        ]}>
         <TextDefault
           bolder
           H5
           textColor={active === 'MyOrders' ? colors.black : colors.white}>
-          My Orders
+          {i18n.t('myorders')}
         </TextDefault>
         {active === 'NewOrders' && (
           <View style={styles.rightBadge}>

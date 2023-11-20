@@ -115,7 +115,7 @@ export default function App() {
           { backgroundColor: colors.startColor }
         ]}>
         <TextDefault textColor={colors.white} bold>
-          Please wait while app is updating
+          {i18n.t('updating')}
         </TextDefault>
         <ActivityIndicator size="large" color={colors.white} />
       </View>
