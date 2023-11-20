@@ -66,7 +66,7 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            {i18n.t('orderNo')}
+            {i18n.t('OrderNo')}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText}>
             {' '}

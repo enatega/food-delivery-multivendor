@@ -121,7 +121,7 @@ function RateAndReview(props) {
               textColor={currentTheme.fontWhite}
               numberOfLines={1}
               ellipsizeMode="tail">
-              Rate Your Order
+              {i18n.t('RateYourOrder')}
             </TextDefault>
             {!props.loading && (
               <View style={{ padding: scale(5) }}>
@@ -148,10 +148,10 @@ function RateAndReview(props) {
                   H3
                   bolder
                   style={styles().reviewText}>
-                  How was your meal?
+                  {i18n.t('howWasMeal')}
                 </TextDefault>
                 <TextDefault textColor={currentTheme.fontMainColor} H5>
-                  Was it nice or bad,Lets talk about it
+                  {i18n.t('howWasMealP')}
                 </TextDefault>
               </View>
             </View>
@@ -175,7 +175,7 @@ function RateAndReview(props) {
             H3
             bolder
             style={{ padding: 20, marginTop: 20 }}>
-            Tell about your Experience
+            {i18n.t('yourExperience')}
           </TextDefault>
           <KeyboardAvoidingView style={styles().inputContainer}>
             <View style={styles(currentTheme).inputSubContainer}>

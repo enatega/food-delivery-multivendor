@@ -967,7 +967,7 @@ function Cart(props) {
                       bold
                       textColor={currentTheme.darkBgFont}
                       style={{ width: '30%' }}>
-                      {'Tip'}
+                      {i18n.t('tip')}
                     </TextDefault>
                     <View
                       numberOfLines={1}
@@ -1073,7 +1073,7 @@ function Cart(props) {
                       textColor={currentTheme.fontMainColor}
                       style={{ width: '30%' }}
                       bolder>
-                      Total
+                      {i18n.t('total')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
