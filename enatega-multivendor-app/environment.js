@@ -6,9 +6,9 @@
 import * as Updates from 'expo-updates'
 const ENV = {
   development: {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
+    GRAPHQL_URL: 'https://rami-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://rami-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://rami-multivendor.up.railway.app/', // put / at the end of server url
 
     IOS_CLIENT_ID_GOOGLE:
       '535955950814-8likp70pru424d6qbu4a9pu4rtef9t4p.apps.googleusercontent.com',
@@ -33,9 +33,9 @@ const ENV = {
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   },
   staging: {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
+    GRAPHQL_URL: 'https://rami-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://rami-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://rami-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '535955950814-8likp70pru424d6qbu4a9pu4rtef9t4p.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
@@ -58,9 +58,9 @@ const ENV = {
     GOOGLE_PACES_API_BASE_URL: 'https://maps.googleapis.com/maps/api/place'
   },
   production: {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/', // put / at the end of server url
+    GRAPHQL_URL: 'https://rami-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://rami-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://rami-multivendor.up.railway.app/', // put / at the end of server url
     IOS_CLIENT_ID_GOOGLE:
       '535955950814-8likp70pru424d6qbu4a9pu4rtef9t4p.apps.googleusercontent.com',
     ANDROID_CLIENT_ID_GOOGLE:
