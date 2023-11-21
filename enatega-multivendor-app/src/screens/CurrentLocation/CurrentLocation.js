@@ -71,7 +71,7 @@ export default function CurrentLocation() {
             </View>
             <View style={styles().descriptionEmpty}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-                {'Enatega uses your location to show the restaurants near you!'}
+                {'Yalla uses your location to show the restaurants near you!'}
               </TextDefault>
             </View>
             <TouchableOpacity
