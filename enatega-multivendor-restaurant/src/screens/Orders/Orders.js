@@ -8,7 +8,7 @@ import { Image } from 'react-native-elements/dist/image/Image'
 import { TabBars } from '../../components/TabBars'
 import { HomeOrderDetails } from '../../components/HomeOrderDetails'
 import LottieView from 'lottie-react-native'
-
+import {useTranslation} from 'react-i18next'
 const { width, height } = Dimensions.get('window')
 const Orders = props => {
   const {
@@ -24,6 +24,7 @@ const Orders = props => {
   } = useOrders()
 
   const { loading: mutateLoading } = useAcceptOrder()
+  const {t} = useTranslation()
   if (error) return <TextError text={error.message} />
   return (
     <>
@@ -93,7 +94,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                            No Orders Yet
+                            {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{
@@ -132,7 +133,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                            No Orders Yet
+                          {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{
@@ -167,7 +168,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                            No Orders Yet
+                          {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{
