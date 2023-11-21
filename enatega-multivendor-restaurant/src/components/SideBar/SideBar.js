@@ -255,7 +255,7 @@ export default function SideBar() {
               <Icon
                 type="font-awesome"
                 color="white"
-                name="info-circle"
+                name="gear"
                 size={26}
               />
             </View>
@@ -273,7 +273,6 @@ export default function SideBar() {
             {t('titleLogout')}
             </TextDefault>
           </TouchableOpacity>
-          
         </View>
       </ImageBackground>
     </View>

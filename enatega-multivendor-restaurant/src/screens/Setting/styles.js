@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 8,
     alignItems: 'center',
+    width: '80%'
   },
   languageText: {
     fontSize: 16,
@@ -99,5 +100,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: -50
   },
+  innerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 })
 export default styles

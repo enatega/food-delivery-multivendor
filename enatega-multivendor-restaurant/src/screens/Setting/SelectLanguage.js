@@ -83,7 +83,7 @@ export default function SelectLanguage() {
             </View>
           </View>
           <View style={styles.lowerContainer}>
-            <View>
+            <View style={styles.innerContainer}>
             <Text style={styles.headingText}>{t('selectLanguage')}</Text>
             {languageTypes.map((item, index) => (
               <TouchableOpacity

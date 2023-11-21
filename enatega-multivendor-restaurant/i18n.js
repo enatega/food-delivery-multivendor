@@ -26,13 +26,13 @@ export default i18n;
 */
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import sv from './translations/sv.json'
-import en from './translations/en.json'
-import de from './translations/de.json'
-import ar from './translations/ar.json'
-import fr from './translations/fr.json'
-import km from './translations/km.json'
-import zh from './translations/zh.json'
+import {sv} from './translations/sv'
+import {en} from './translations/en'
+import {de} from './translations/de'
+import {fr} from './translations/fr'
+import {km} from './translations/km'
+import {zh} from './translations/zh'
+import {ar} from './translations/ar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 export const languageResources = {
   sv: {translation: sv},
@@ -42,6 +42,7 @@ export const languageResources = {
   fr: {translation: fr},
   km: {translation: km},
   ar: {translation: ar},
+  ar: {translation: ar}
 }
 
 const getStoredLanguage = async () => {
