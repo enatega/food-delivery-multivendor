@@ -10,7 +10,6 @@ import {
   View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import i18n from '../../../i18n'
 import { FavouriteRestaurant } from '../../apollo/queries'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Item from '../../components/Main/Item/Item'
@@ -26,6 +25,7 @@ import styles from './styles'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
+import {useTranslation} from 'react-i18next'
 import navigationService from '../../routes/navigationService'
 
 const RESTAURANTS = gql`
@@ -33,6 +33,7 @@ const RESTAURANTS = gql`
 `
 
 function Favourite() {
+  const {t} = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -62,7 +63,7 @@ function Favourite() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: i18n.t('titleFavourite'),
+      title: t('titleFavourite'),
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleContainerStyle: {
@@ -119,10 +120,10 @@ function Favourite() {
               bolder
               center
               B700>
-              {i18n.t('titleEmptyFav')}
+              {t('titleEmptyFav')}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontSecondColor} center>
-              {i18n.t('emptyFavDesc')}
+              {t('emptyFavDesc')}
             </TextDefault>
           </View>
           <TouchableOpacity
@@ -140,7 +141,7 @@ function Favourite() {
               B700
               center
               uppercase>
-              {i18n.t('emptyFavBtn')}
+              {t('emptyFavBtn')}
             </TextDefault>
           </TouchableOpacity>
         </View>

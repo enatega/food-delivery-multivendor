@@ -3,7 +3,7 @@ import React from 'react'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
 import Button from '../../Button/Button'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 export default function Detail({
   theme,
@@ -21,6 +21,8 @@ export default function Detail({
   id,
   rider
 }) {
+
+  const {t} = useTranslation()
   return (
     <View style={styles.container(theme)}>
       {rider && (
@@ -35,7 +37,7 @@ export default function Detail({
               }}
               buttonStyles={styles.chatButton(theme)}
               textStyles={styles.chatButtonText(theme)}
-              text={i18n.t('chatWithRider')}
+              text={t('chatWithRider')}
             />
           </View>
           <View style={styles.line(theme)}></View>
@@ -43,7 +45,7 @@ export default function Detail({
       )}
       <View style={styles.orderDetailsContainer}>
         <TextDefault textColor={theme.main} bold H3>
-          {i18n.t('orderDetail')}
+          {t('orderDetail')}
         </TextDefault>
       </View>
 
@@ -54,7 +56,7 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            {i18n.t('OrderFrom')}
+            {t('OrderFrom')}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText}>
             {from}
@@ -66,7 +68,7 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            {i18n.t('OrderNo')}
+            {t('OrderNo')}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText}>
             {' '}
@@ -79,7 +81,7 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            {i18n.t('deliveryAddress')}
+            {t('deliveryAddress')}
             {':'}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText} numberOfLines={4}>
@@ -105,32 +107,32 @@ export default function Detail({
         <View>
           <PriceRow
             theme={theme}
-            title={i18n.t('subTotal')}
+            title={t('subTotal')}
             currency={currencySymbol}
             price={subTotal.toFixed(2)}
           />
           <PriceRow
             theme={theme}
-            title={i18n.t('tip')}
+            title={t('tip')}
             currency={currencySymbol}
             price={tip.toFixed(2)}
           />
           <PriceRow
             theme={theme}
-            title={i18n.t('taxFee')}
+            title={t('taxFee')}
             currency={currencySymbol}
             price={tax.toFixed(2)}
           />
           <PriceRow
             theme={theme}
-            title={i18n.t('delvieryCharges')}
+            title={t('delvieryCharges')}
             currency={currencySymbol}
             price={deliveryCharges.toFixed(2)}
           />
           <View style={{ marginVertical: 20 }} />
           <PriceRow
             theme={theme}
-            title={i18n.t('total')}
+            title={t('total')}
             currency={currencySymbol}
             price={total.toFixed(2)}
           />

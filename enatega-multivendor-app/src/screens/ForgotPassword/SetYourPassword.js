@@ -13,7 +13,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import { useResetYourPassword } from './useResetYourPassword'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function ForgotPassword(props) {
   const {
@@ -28,7 +28,7 @@ function ForgotPassword(props) {
     resetYourPassword,
     loading
   } = useResetYourPassword()
-
+  const {t} = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -65,7 +65,7 @@ function ForgotPassword(props) {
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
               }}>
-              {i18n.t('setYourPassword')}
+              {t('setYourPassword')}
             </TextDefault>
             <TextDefault
               H5
@@ -74,13 +74,13 @@ function ForgotPassword(props) {
               style={{
                 textAlign: 'center'
               }}>
-              {i18n.t('enterPass')}
+              {t('enterPass')}
             </TextDefault>
           </View>
           <View style={styles().passwordField}>
             <TextInput
               secureTextEntry
-              placeholder={i18n.t('password')}
+              placeholder={t('password')}
               style={[
                 styles(currentTheme).textField,
                 styles().passwordInput,
@@ -104,7 +104,7 @@ function ForgotPassword(props) {
           <View style={styles().passwordField}>
             <TextInput
               secureTextEntry
-              placeholder={i18n.t('confirmPassword')}
+              placeholder={t('confirmPassword')}
               style={[
                 styles(currentTheme).textField,
                 styles().passwordInput,
@@ -138,7 +138,7 @@ function ForgotPassword(props) {
                 {loading ? (
                   <Spinner size="small" backColor="transparent" />
                 ) : (
-                  i18n.t('saveBtn')
+                  t('saveBtn')
                 )}
               </TextDefault>
             </TouchableOpacity>

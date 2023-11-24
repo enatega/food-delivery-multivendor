@@ -17,8 +17,8 @@ import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import CountryPicker from 'react-native-country-picker-modal'
 import usePhoneNumber from './usePhoneNumber'
-import i18n from '../../../i18n'
 import PhoneInput from "react-native-phone-number-input"
+import {useTranslation} from 'react-i18next'
 
 function PhoneNumber(props) {
   const {
@@ -32,7 +32,8 @@ function PhoneNumber(props) {
     currentTheme,
     loading
   } = usePhoneNumber()
- 
+
+    const {t} = useTranslation()
  console.log(country)
 
   useLayoutEffect(() => {
@@ -80,7 +81,7 @@ function PhoneNumber(props) {
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
-                  {i18n.t('yourPhoneNumber')}
+                  {t('yourPhoneNumber')}
                 </TextDefault>
                 <TextDefault
                   H5
@@ -89,7 +90,7 @@ function PhoneNumber(props) {
                   style={{
                     textAlign: 'center'
                   }}>
-                  {i18n.t('secureAccountWithPhone')}
+                  {t('secureAccountWithPhone')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
@@ -119,7 +120,7 @@ function PhoneNumber(props) {
                   <View style={{flexDirection:'row', paddingTop: 10}}>
                   <Text>+{country.callingCode[0]} </Text>
                   <TextInput                
-                        placeholder={i18n.t('mobileNumber')}
+                        placeholder={t('mobileNumber')}
                     style ={{marginTop: Platform.OS === 'android' ? -4 : 0 }}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={phone}
@@ -152,7 +153,7 @@ function PhoneNumber(props) {
                       {loading ? (
                         <Spinner size="small" backColor="transparent" />
                       ) : (
-                        i18n.t('continueBtn')
+                        t('continueBtn')
                       )}
                     </TextDefault>
                   </TouchableOpacity>

@@ -2,13 +2,14 @@ import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-import i18n from '../../../i18n'
 import styles from './styles'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
+import {useTranslation} from 'react-i18next'
+
 import Analytics from '../../utils/analytics'
 const LATITUDE = 33.7001019
 const LONGITUDE = 72.9735978
@@ -18,7 +19,7 @@ const LONGITUDE_DELTA = 0.0021
 export default function FullMap(props) {
   const latitude = props.route.params.latitude ?? LATITUDE
   const longitude = props.route.params.longitude ?? LONGITUDE
-
+    const {t} = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const inset = useSafeAreaInsets()
@@ -40,7 +41,7 @@ export default function FullMap(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('addAddress')
+      title: t('addAddress')
     })
   }, [props.navigation])
 

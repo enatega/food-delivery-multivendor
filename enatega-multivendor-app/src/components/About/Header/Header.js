@@ -9,11 +9,12 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import Animated from 'react-native-reanimated'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 
 function ImageHeader(props) {
+  const {t} = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
@@ -51,7 +52,7 @@ function ImageHeader(props) {
                 style={styles().deliveryBoxText}
                 textColor="white"
                 bold>
-                {i18n.t('delivery')} {props.deliveryTime} {i18n.t('Min')}
+                {t('delivery')} {props.deliveryTime} {t('Min')}
               </TextDefault>
             </View>
           )}

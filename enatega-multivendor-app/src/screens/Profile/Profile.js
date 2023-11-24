@@ -18,7 +18,6 @@ import gql from 'graphql-tag'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import { updateUser, login } from '../../apollo/mutations'
-import i18n from '../../../i18n'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
@@ -33,11 +32,14 @@ import { Feather } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
+import {useTranslation} from 'react-i18next'
+
 const UPDATEUSER = gql`
   ${updateUser}
 `
 
 function Profile(props) {
+  const {t} = useTranslation()
   const refName = useRef()
   const [nameError, setNameError] = useState('')
   const [toggleEmailView, setToggleEmailView] = useState(true)
@@ -69,7 +71,7 @@ function Profile(props) {
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: i18n.t('titleProfile'),
+      title: t('titleProfile'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
@@ -125,7 +127,7 @@ function Profile(props) {
   function onCompleted({ updateUser }) {
     if (updateUser) {
       FlashMessage({
-        message: i18n.t('userInfoUpdated')
+        message: t('userInfoUpdated')
       })
       if (backScreen) {
         props.navigation.goBack()
@@ -141,7 +143,7 @@ function Profile(props) {
     if (name !== profile.name) {
       if (!name.trim()) {
         refName.current.focus()
-        setNameError(i18n.t('nameError'))
+        setNameError(t('nameError'))
         return false
       }
 
@@ -266,7 +268,7 @@ function Profile(props) {
               <TextDefault
                 textColor={currentTheme.white}
               >
-                {profile.phoneIsVerified ? i18n.t('verified') : i18n.t('unverified')}</TextDefault>
+                {profile.phoneIsVerified ? t('verified') : t('unverified')}</TextDefault>
             </View>
           )}
         </View>
@@ -286,7 +288,7 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <Text style={styles(currentTheme).titleContainer}>{i18n.t('profileDetail')}</Text>
+      <Text style={styles(currentTheme).titleContainer}>{t('profileDetail')}</Text>
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -297,7 +299,7 @@ function Profile(props) {
                 <>
                   <View style={styles(currentTheme).headingTitle}>
                     <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
-                      {i18n.t('name')}
+                      {t('name')}
                     </TextDefault>
                   </View>
 
@@ -319,7 +321,7 @@ function Profile(props) {
                 <View style={styles(currentTheme).containerHeading}>
                   <View style={styles(currentTheme).headingTitle}>
                       <TextDefault H5 B700 bolder style={styles(currentTheme).textAlignLeft}>
-                        {i18n.t('name')}
+                        {t('name')}
                     </TextDefault>
                   </View>
                 </View>
@@ -342,7 +344,7 @@ function Profile(props) {
                   activeOpacity={0.7}
                   style={styles(currentTheme).saveContainer}
                   onPress={handleNamePressUpdate}>
-                    <TextDefault style={styles(currentTheme).textAlignLeft}>{i18n.t('update')}</TextDefault>
+                    <TextDefault style={styles(currentTheme).textAlignLeft}>{t('update')}</TextDefault>
                 </TouchableOpacity>
               </View>
             )}
@@ -354,7 +356,7 @@ function Profile(props) {
               <>
                 <View style={styles().headingTitle}>
                   <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
-                    {i18n.t('email')}
+                    {t('email')}
                   </TextDefault>
                 </View>
               </>
@@ -368,7 +370,7 @@ function Profile(props) {
               <>
                 <View style={styles().headingTitle}>
                   <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
-                    {i18n.t('password')}
+                    {t('password')}
                   </TextDefault>
                 </View>
 
@@ -392,7 +394,7 @@ function Profile(props) {
                 <>
                   <View style={styles().headingTitle}>
                     <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont} style={styles(currentTheme).textAlignLeft}>
-                      {i18n.t('mobile')}
+                      {t('mobile')}
                     </TextDefault>
                   </View>
                   <View style={styles().headingLink}>
@@ -422,7 +424,7 @@ function Profile(props) {
                       B700
                       bolder
                         style={styles(currentTheme).textAlignLeft}>
-                        {i18n.t('mobile')}
+                        {t('mobile')}
                     </TextDefault>
                   </View>
                 </View>
@@ -454,10 +456,10 @@ function Profile(props) {
                                 : currentTheme.textErrorColor
                             }>
                             {profile.phone === ''
-                              ? i18n.t('addPhone')
+                              ? t('addPhone')
                               : profile.phoneIsVerified
-                                ? i18n.t('verified')
-                                : i18n('verify')}
+                                ? t('verified')
+                                : t('verify')}
                           </TextDefault>
                         </TouchableOpacity>
                       )}

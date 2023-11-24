@@ -25,12 +25,13 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function ItemDetail(props) {
   
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
+  const {t} = useTranslation()
 
   const [selectedVariation, setSelectedVariation] = useState({
     ...food.variations[0],
@@ -80,7 +81,7 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: i18n.t('titleCustomize'),
+      title: t('titleCustomize'),
       headerTitleContainerStyle: {
         marginTop: scale(10),
         paddingLeft: scale(15),
@@ -328,9 +329,9 @@ function ItemDetail(props) {
                <>
                   <View>
                     <TitleComponent
-                      title={i18n.t('SelectVariation')}
-                      subTitle={i18n.t('SelectOne')}
-                      status={i18n.t('Required')}
+                      title={t('SelectVariation')}
+                      subTitle={t('SelectOne')}
+                      status={t('Required')}
                     />
                     <RadioComponent
                       options={food.variations}
@@ -359,13 +360,13 @@ function ItemDetail(props) {
             <View style={styles(currentTheme).line}></View>
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent
-                title={i18n.t('specialInstructions')}
-                subTitle={i18n.t('anySpecificPreferences')}
-                status={i18n.t('optional')}
+                title={t('specialInstructions')}
+                subTitle={t('anySpecificPreferences')}
+                status={t('optional')}
               />
               <TextField
                 style={styles(currentTheme).input}
-                placeholder={i18n.t('noMayo')}
+                placeholder={t('noMayo')}
                 textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}

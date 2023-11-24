@@ -25,13 +25,15 @@ import { scale } from '../../utils/scaling'
 import analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
 import { HeaderBackButton } from '@react-navigation/elements'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
+
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED']
 
 function MyOrders(props) {
   const configuration = useContext(ConfigurationContext)
+  const {t} = useTranslation()
   const {
     orders,
     loadingOrders,
@@ -94,7 +96,7 @@ function MyOrders(props) {
               bolder
               center
               H2>
-              {i18n.t('unReadOrders')}
+              {t('unReadOrders')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontMainColor}
@@ -102,7 +104,7 @@ function MyOrders(props) {
               center
               H5
               style={{ ...alignment.MBxLarge }}>
-              {i18n.t('dontHaveAnyOrderYet')}
+              {t('dontHaveAnyOrderYet')}
             </TextDefault>
           </View>
           <TouchableOpacity
@@ -121,7 +123,7 @@ function MyOrders(props) {
               B700
               center
               uppercase>
-              {i18n.t('BrowseRESTAURANTS')}
+              {t('BrowseRESTAURANTS')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -228,7 +230,7 @@ function MyOrders(props) {
                           center
                           uppercase>
                           {' '}
-                          {i18n.t('RateOrder')}
+                          {t('RateOrder')}
                         </TextDefault>
                       </TouchableOpacity>
                     )}
@@ -246,7 +248,7 @@ function MyOrders(props) {
                         center
                         uppercase>
                         {' '}
-                        {i18n.t('reOrder')}
+                        {t('reOrder')}
                       </TextDefault>
                     </TouchableOpacity>
                   </View>

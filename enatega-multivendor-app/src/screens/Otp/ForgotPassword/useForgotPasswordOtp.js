@@ -6,11 +6,14 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import { useRoute, useNavigation } from '@react-navigation/native'
+import {useTranslation} from 'react-i18next'
+
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
 `
 
 export const useForgotPasswordOtp = () => {
+  const {t} = useTranslation()
   const route = useRoute()
   const navigation = useNavigation()
   const [otp, setOtp] = useState('')
@@ -23,7 +26,7 @@ export const useForgotPasswordOtp = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: i18n.t('otpResentToEmail')
+      message: t('otpResentToEmail')
     })
   }
 

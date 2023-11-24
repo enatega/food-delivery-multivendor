@@ -6,7 +6,7 @@ import Rider from '../../../assets/SVG/rider'
 import ArrowsLoading from '../../../assets/SVG/arrows-loading'
 import RestaurantPreparing from '../../../assets/SVG/restaurant-preparing'
 import OrderDelivered from '../../../assets/SVG/order-delivered'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const STATUS_MESSAGES = {
   PENDING: 'PENDINGStatusMessage',
@@ -38,6 +38,7 @@ export default function Status({
   cancelledAt,
   assignedAt
 }) {
+  const {t} = useTranslation()
   return (
     <View style={styles.container(theme)}>
       <View style={styles.statusBox(theme)}>
@@ -55,13 +56,13 @@ export default function Status({
             H4
             textColor={theme.fontWhite}
             bolder>
-            {i18n.t('yourOrderIs')} {i18n.t(orderStatus).toLowerCase()}
+            {t('yourOrderIs')} {t(orderStatus).toLowerCase()}
           </TextDefault>
           <TextDefault
             style={styles.text}
             small
             textColor={theme.secondaryText}>
-            {i18n.t(STATUS_MESSAGES[orderStatus])}
+            {t(STATUS_MESSAGES[orderStatus])}
           </TextDefault>
         </View>
       </View>
@@ -82,7 +83,7 @@ export default function Status({
               theme={theme}
               isEta={false}
               number={1}
-              status={i18n.t('statusOrderPalced')}
+              status={t('statusOrderPalced')}
               time={formatTime(createdAt)}
               showLine={true}
             />
@@ -90,7 +91,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 1}
               number={2}
-              status={i18n.t('statusAccepted')}
+              status={t('statusAccepted')}
               time={acceptedAt ? formatTime(acceptedAt) : '--:--'}
               showLine={true}
             />
@@ -98,7 +99,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 2}
               number={3}
-              status={i18n.t('statusAssigned')}
+              status={t('statusAssigned')}
               time={assignedAt ? formatTime(assignedAt) : '--:--'}
               showLine={true}
             />
@@ -106,7 +107,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 3}
               number={4}
-              status={i18n.t('statusPicked')}
+              status={t('statusPicked')}
               time={pickedAt ? formatTime(pickedAt) : '--:--'}
               showLine={true}
             />
@@ -114,7 +115,7 @@ export default function Status({
               theme={theme}
               isEta={STATUS_ORDER.indexOf(orderStatus) < 4}
               number={5}
-              status={i18n.t('statusDelivered')}
+              status={t('statusDelivered')}
               time={deliveredAt ? formatTime(deliveredAt) : '--:--'}
               showLine={false}
             />
@@ -161,7 +162,7 @@ const StatusRow = ({ theme, number, status, time, isEta, showLine }) => {
             {status}
           </TextDefault>
           <TextDefault textColor={theme.secondaryText} bold>
-            {isEta ? i18n.t('ETA') : ''}
+            {isEta ? t('ETA') : ''}
             {time}
           </TextDefault>
         </View>

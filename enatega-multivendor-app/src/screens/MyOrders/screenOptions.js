@@ -14,7 +14,7 @@ import { useContext } from 'react'
 
 
 const navigationOptions = headerText => ({
-  headerTitle: i18n.t('titleOrders'),
+  headerTitle: 'My Orders',
   headerTitleAlign: 'center',
   headerRight: null,
   headerTitleContainerStyle: {

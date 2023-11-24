@@ -7,19 +7,20 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
 import { scale } from '../../utils/scaling'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [showPicker, setShowPicker] = useState(false)
   const currentDate = props.minimumTime
+  const {t} = useTranslation()
   return (
     <View style={{ paddingTop: 30 }}>
       {props.isPickedUp ? (
-        <Text style={styles().tabHeading}>{i18n.t('SelectPickupDT')}</Text>
+        <Text style={styles().tabHeading}>{t('SelectPickupDT')}</Text>
       ) : (
-          <Text style={styles().tabHeading} >{i18n.t('SelectDeliveryDT')}</Text>
+          <Text style={styles().tabHeading} >{t('SelectDeliveryDT')}</Text>
       )}
 
       <View style={styles().tabContainer}>
@@ -32,7 +33,7 @@ function PickUp(props) {
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text style={styles().tabSubHeading}>{i18n.t('pickUp')}</Text>
+          <Text style={styles().tabSubHeading}>{t('pickUp')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -43,7 +44,7 @@ function PickUp(props) {
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
           }>
-          <Text style={styles().tabSubHeading}>{i18n.t('delivery')}</Text>
+          <Text style={styles().tabSubHeading}>{t('delivery')}</Text>
         </TouchableOpacity>
       </View>
       <View

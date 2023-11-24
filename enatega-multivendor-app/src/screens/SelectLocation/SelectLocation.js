@@ -14,7 +14,8 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import Analytics from '../../utils/analytics'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
+
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -22,6 +23,7 @@ const LATITUDE_DELTA = 40
 const LONGITUDE_DELTA = 40
 
 export default function SelectLocation(props) {
+  const {t} = useTranslation()
   const { longitude, latitude } = props.route.params || {}
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -31,8 +33,8 @@ export default function SelectLocation(props) {
   const { setLocation } = useContext(LocationContext)
   const [label, setLabel] = useState(
     longitude && latitude
-      ? i18n.t('currentLocation')
-      : i18n.t('selectedLocation')
+      ? t('currentLocation')
+      : t('selectedLocation')
   );
   // eslint-disable-next-line no-unused-vars
   const [coordinates, setCorrdinates] = useState({
@@ -51,7 +53,7 @@ export default function SelectLocation(props) {
   useLayoutEffect(() => {
     navigation.setOptions(
       screenOptions({
-        title: i18n.t('setLocation'),
+        title: t('setLocation'),
         fontColor: currentTheme.fontMainColor,
         backColor: currentTheme.white,
         iconColor: currentTheme.iconColorPink,
@@ -67,7 +69,7 @@ export default function SelectLocation(props) {
     const { status, canAskAgain } = await getLocationPermission()
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
-        message: i18n.t('locationPermissionMessage'),
+        message: t('locationPermissionMessage'),
           // 'Tap on this message to open Settings then allow app to use location from permissions.',
         onPress: async () => {
           await Linking.openSettings()
@@ -89,7 +91,7 @@ export default function SelectLocation(props) {
       }
     ])
     setLabel('currentLocation')
-    // setLabel(i18n.t('currentLocation'))
+    // setLabel(t('currentLocation'))
   }
   const onSelectLocation = () => {
     setLocation({
@@ -107,7 +109,7 @@ export default function SelectLocation(props) {
 
   const onPanDrag = event => {
     // setLabel('Selected Location')
-    setLabel(i18n.t('selectedLocation'))
+    setLabel(t('selectedLocation'))
   }
   return (
     <>
@@ -140,7 +142,7 @@ export default function SelectLocation(props) {
           style={styles(currentTheme).button}
           onPress={onSelectLocation}>
           <TextDefault textColor={currentTheme.buttonText} H4 bold>
-            {i18n.t('selectLocation')}
+            {t('selectLocation')}
           </TextDefault>
         </TouchableOpacity>
       </View>

@@ -8,10 +8,12 @@ import { alignment } from '../../../utils/alignment'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import RestaurantCard from './RestaurantCard'
-import i18n from '../../../../i18n'
 import { scale } from '../../../utils/scaling'
+import {useTranslation} from 'react-i18next'
+
 
 function ActiveOrdersAndSections(props) {
+  const {t} = useTranslation()
   const { sections } = props
   const { isLoggedIn, profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -60,7 +62,7 @@ function ActiveOrdersAndSections(props) {
         }}
         bolder
         H3>
-        {i18n.t('allRestaurant')}
+        {t('allRestaurant')}
       </TextDefault>
     </View>
   )

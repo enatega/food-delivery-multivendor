@@ -14,7 +14,7 @@ import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import Analytics from '../../utils/analytics'
 import { useForgotPassword } from './useForgotPassword'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function ForgotPassword(props) {
   const {
@@ -26,7 +26,7 @@ function ForgotPassword(props) {
     themeContext,
     loading
   } = useForgotPassword()
-
+  const {t} = useTranslation()
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
@@ -68,7 +68,7 @@ function ForgotPassword(props) {
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
               }}>
-              {i18n.t('forgotPassword')}
+              {t('forgotPassword')}
             </TextDefault>
             <TextDefault
               H5
@@ -77,12 +77,12 @@ function ForgotPassword(props) {
               style={{
                 textAlign: 'center'
               }}>
-              {i18n.t('enterYourEmail')}
+              {t('enterYourEmail')}
             </TextDefault>
           </View>
           <View style={{ ...alignment.MTmedium }}>
             <TextInput
-              placeholder={i18n.t('email')}
+              placeholder={t('email')}
               style={[
                 styles(currentTheme).textField,
                 emailError !== null && styles(currentTheme).errorInput
@@ -113,7 +113,7 @@ function ForgotPassword(props) {
                   textColor={currentTheme.buttonTextPink}
                   style={alignment.MLsmall}
                   bold>
-                  {i18n.t('continueBtn')}
+                  {t('continueBtn')}
                 </TextDefault>
               </TouchableOpacity>
             )}
@@ -128,7 +128,7 @@ function ForgotPassword(props) {
               bold
               textColor={currentTheme.buttonBackgroundPink}
               style={alignment.MTsmall}>
-              {i18n.t('backToLogin')}
+              {t('backToLogin')}
             </TextDefault>
           </TouchableOpacity>
         </View>

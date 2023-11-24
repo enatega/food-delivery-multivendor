@@ -10,27 +10,28 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import navigationService from '../../routes/navigationService';
 import { scale } from '../../utils/scaling';
-import i18n from '../../../i18n';
+import {useTranslation} from 'react-i18next'
 
 const Help = (props) => {
+  const {t} = useTranslation()
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
 
   const [links, setLinks] = useState([
     {
-      title: i18n.t('titleProductPage'),
+      title: t('titleProductPage'),
       url: 'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/',
     },
     {
-      title: i18n.t('titleDocs'),
+      title: t('titleDocs'),
       url: 'https://enatega.com/multivendor-documentation/',
     },
     {
-      title: i18n.t('titleBlog'),
+      title: t('titleBlog'),
       url: 'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/',
     },
     {
-      title: i18n.t('titleAboutUs'),
+      title: t('titleAboutUs'),
       url: 'https://ninjascode.com/pages/ourteam.html',
     },
   ]);
@@ -46,19 +47,19 @@ const Help = (props) => {
     // Update translations when the language changes
     setLinks([
       {
-        title: i18n.t('titleProductPage'),
+        title: t('titleProductPage'),
         url: 'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/',
       },
       {
-        title: i18n.t('titleDocs'),
+        title: t('titleDocs'),
         url: 'https://enatega.com/multivendor-documentation/',
       },
       {
-        title: i18n.t('titleBlog'),
+        title: t('titleBlog'),
         url: 'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/',
       },
       {
-        title: i18n.t('titleAboutUs'),
+        title: t('titleAboutUs'),
         url: 'https://ninjascode.com/pages/ourteam.html',
       },
     ]);
@@ -66,7 +67,7 @@ const Help = (props) => {
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerTitle: i18n.t('titleHelp'),
+      headerTitle: t('titleHelp'),
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleContainerStyle: {

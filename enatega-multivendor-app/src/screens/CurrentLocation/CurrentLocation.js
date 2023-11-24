@@ -12,9 +12,9 @@ import LocationPermission from '../../assets/SVG/imageComponents/LocationPermiss
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
 import Spinner from '../../components/Spinner/Spinner'
-import i18n from '../../../i18n'
-
+import {useTranslation} from 'react-i18next'
 export default function CurrentLocation() {
+  const {t} = useTranslation()
   const [loading, setLoading] = useState(false)
   const inset = useSafeAreaInsets()
   const navigation = useNavigation()
@@ -35,7 +35,7 @@ export default function CurrentLocation() {
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
         message:
-          i18n.t('locationPermissionMessage'),
+          t('locationPermissionMessage'),
         onPress: async() => {
           await Linking.openSettings()
         }
@@ -72,7 +72,7 @@ export default function CurrentLocation() {
             </View>
             <View style={styles().descriptionEmpty}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-                {i18n.t('enategaUseYourLocationMessage')}
+                {t('enategaUseYourLocationMessage')}
               </TextDefault>
             </View>
             <TouchableOpacity
@@ -85,7 +85,7 @@ export default function CurrentLocation() {
                 bolder
                 center
                 uppercase>
-                {i18n.t('useCurrentLocation')}
+                {t('useCurrentLocation')}
               </TextDefault>
               {loading && (
                 <Spinner
@@ -107,7 +107,7 @@ export default function CurrentLocation() {
               H5
               bold
               center>
-              {i18n.t('selectAnotherLocation')}
+              {t('selectAnotherLocation')}
             </TextDefault>
           </TouchableOpacity>
         </View>

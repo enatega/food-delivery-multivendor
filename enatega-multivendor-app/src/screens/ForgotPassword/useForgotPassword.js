@@ -6,12 +6,13 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
 `
 export const useForgotPassword = () => {
+  const {t} = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [email, setEmail] = useState(route.params?.email || '')
@@ -30,12 +31,12 @@ export const useForgotPassword = () => {
     let result = true
     setEmailError(null)
     if (!email) {
-      setEmailError(i18n.t('emailErr1'))
+      setEmailError(t('emailErr1'))
       result = false
     } else {
       const emailRegex = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/
       if (emailRegex.test(email) !== true) {
-        setEmailError(i18n.t('emailErr2'))
+        setEmailError(t('emailErr2'))
         result = false
       }
     }
@@ -50,7 +51,7 @@ export const useForgotPassword = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: i18n.t('otpForResetPassword')
+      message: t('otpForResetPassword')
     })
     navigation.navigate('ForgotPasswordOtp', { otp, email })
   }

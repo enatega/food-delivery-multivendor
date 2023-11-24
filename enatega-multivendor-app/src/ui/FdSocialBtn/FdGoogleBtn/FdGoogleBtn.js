@@ -6,9 +6,10 @@ import { scale } from '../../../utils/scaling'
 import Spinner from '../../../components/Spinner/Spinner'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const FdGoogleBtn = props => {
+  const {t} = useTranslation()
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -26,7 +27,7 @@ const FdGoogleBtn = props => {
             color="#FFF"
           />
           <TextDefault H4 textColor="#FFF" style={alignment.MLsmall} bold>
-            {i18n.t('ContinueWithGoogle')}
+            {t('ContinueWithGoogle')}
           </TextDefault>
         </>
       )}

@@ -16,7 +16,7 @@ import RandomShape from '../../../assets/SVG/RandomShape'
 import Analytics from '../../../utils/analytics'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const orderStatuses = [
   {
@@ -54,6 +54,8 @@ const orderStatuses = [
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 
 const ActiveOrders = () => {
+
+  const {t} = useTranslation()
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
@@ -95,7 +97,7 @@ const ActiveOrders = () => {
                 onPress={() => setShowAll(!showAll)}
                 style={styles().button}>
                 <Text style={styles().buttonText}>
-                  {showAll ? i18n.t('viewLess') : i18n.t('viewAll')}
+                  {showAll ? t('viewLess') : t('viewAll')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -172,7 +174,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
                 ))}
             </View>
             <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-              {i18n.t(checkStatus(item.orderStatus).statusText)}
+              {t(checkStatus(item.orderStatus).statusText)}
             </Text>
           </View>
         </View>

@@ -19,11 +19,12 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
 import { alignment } from '../../utils/alignment'
-import i18n from '../../../i18n'
 import screenOptions from './screenOptions'
 import styles from './styles'
 import { useFocusEffect } from '@react-navigation/native'
 import Analytics from '../../utils/analytics'
+import {useTranslation} from 'react-i18next'
+
 function calculatePrice(food) {
   var foodPrice = food.variation.price
   food.addons.forEach(addons => {
@@ -35,6 +36,8 @@ function calculatePrice(food) {
 }
 
 function OrderDetail(props) {
+
+  const {t} = useTranslation()
   const id = props.route.params ? props.route.params._id : null
   const restaurant = props.route.params ? props.route.params.restaurant : null
   const user = props.route.params ? props.route.params.user : null
@@ -128,7 +131,7 @@ function OrderDetail(props) {
     )
   }
   if (loadingOrders || !order) return <Spinner />
-  if (errorOrders) return <TextError text={i18n.t('error')} />
+  if (errorOrders) return <TextError text={t('error')} />
   // const remainingTime = Math.floor((order.completionTime - Date.now()) / 1000 / 60)
   return (
     <>
@@ -151,7 +154,7 @@ function OrderDetail(props) {
             bolder
             H3
             style={(alignment.MBsmall, { alignSelf: 'center' })}>
-            {i18n.t('thankYou')}!
+            {t('thankYou')}!
           </TextDefault>
           <TextDefault
             textColor={currentTheme.fontSecondColor}
@@ -289,7 +292,7 @@ function OrderDetail(props) {
               bold
               small
               style={{ width: '40%' }}>
-              {i18n.t('subTotal')}
+              {t('subTotal')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontSecondColor}
@@ -312,7 +315,7 @@ function OrderDetail(props) {
               bold
               small
               style={{ width: '40%' }}>
-              {i18n.t('tip')}
+              {t('tip')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontSecondColor}
@@ -330,7 +333,7 @@ function OrderDetail(props) {
               bold
               small
               style={{ width: '40%' }}>
-              {i18n.t('taxFee')}
+              {t('taxFee')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontSecondColor}
@@ -349,7 +352,7 @@ function OrderDetail(props) {
                 bold
                 small
                 style={{ width: '40%' }}>
-                {i18n.t('delvieryCharges')}
+                {t('delvieryCharges')}
               </TextDefault>
               <TextDefault
                 textColor={currentTheme.fontSecondColor}
@@ -368,7 +371,7 @@ function OrderDetail(props) {
               bold
               small
               style={{ width: '40%' }}>
-              {i18n.t('total')}
+              {t('total')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontSecondColor}
@@ -388,14 +391,14 @@ function OrderDetail(props) {
               H4
               bolder
               style={alignment.MBsmall}>
-              {i18n.t('anySuggestion')}
+              {t('anySuggestion')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontSecondColor}
               bold
               small
               style={[alignment.MBsmall, alignment.MTsmall]}>
-              {i18n.t('reviewRegardingOrder')}
+              {t('reviewRegardingOrder')}
             </TextDefault>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -417,7 +420,7 @@ function OrderDetail(props) {
                 style={[alignment.MBsmall, alignment.MTsmall, alignment.ML10]}
                 bold
                 center>
-                {i18n.t('writeAReview')}
+                {t('writeAReview')}
               </TextDefault>
             </TouchableOpacity>
           </View>

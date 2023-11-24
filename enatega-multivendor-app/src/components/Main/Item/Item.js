@@ -17,7 +17,8 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import Spinner from '../../Spinner/Spinner'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
+
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -27,6 +28,7 @@ const PROFILE = gql`
 `
 
 function Item(props) {
+  const {t} = useTranslation()
   const navigation = useNavigation()
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props.item._id) : false
@@ -58,7 +60,7 @@ function Item(props) {
   }
 
   function onCompleted() {
-    FlashMessage({ message: i18n.t('favouritelistUpdated') })
+    FlashMessage({ message: t('favouritelistUpdated') })
   }
   return (
     <TouchableOpacity
@@ -109,7 +111,7 @@ function Item(props) {
                     small
                     bold
                     uppercase>
-                    {i18n.t('Closed')}
+                    {t('Closed')}
                   </TextDefault>
                 </View>
               )}
@@ -121,7 +123,7 @@ function Item(props) {
                   bolder
                   center>
                   {item.deliveryTime + ' '}
-                  {i18n.t('min')}
+                  {t('min')}
                 </TextDefault>
               </View>
             </View>
@@ -174,7 +176,7 @@ function Item(props) {
                 {configuration.currencySymbol + ' ' + item.minimumOrder}{' '}
                 <TextDefault textColor={currentTheme.fontSecondColor} small>
                   {' '}
-                  {i18n.t('min')}
+                  {t('min')}
                 </TextDefault>
               </TextDefault>
             </View>

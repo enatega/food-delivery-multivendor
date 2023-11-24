@@ -49,7 +49,7 @@ import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import Analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -59,6 +59,7 @@ const SELECT_ADDRESS = gql`
 `
 
 function Main(props) {
+  const {t} = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
@@ -196,11 +197,11 @@ function Main(props) {
             color={currentTheme.black}
           />
           <View style={styles().mL5p} />
-          <TextDefault bold>{i18n.t('currentLocation')}</TextDefault>
+          <TextDefault bold>{t('currentLocation')}</TextDefault>
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === i18n.t('currentLocation') && (
+        {location.label === t('currentLocation') && (
           <MaterialIcons
             name="check"
             size={scale(15)}
@@ -251,7 +252,7 @@ function Main(props) {
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold>{i18n.t('addAddress')}</TextDefault>
+            <TextDefault bold>{t('addAddress')}</TextDefault>
           </View>
         </TouchableOpacity>
       </View>
@@ -435,7 +436,7 @@ function Main(props) {
                         color={currentTheme.black}
                       />
                       <View style={styles().mL5p} />
-                      <TextDefault bold>{i18n.t(address.label)}</TextDefault>
+                      <TextDefault bold>{t(address.label)}</TextDefault>
                     </View>
                     <View style={styles().addressTextContainer}>
                       <TextDefault
@@ -448,7 +449,7 @@ function Main(props) {
                   </TouchableOpacity>
                   <View style={styles().addressTick}>
                     {address.selected &&
-                      ![i18n.t('currentLocation'), i18n.t('selectedLocation')].includes(
+                      ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (
                         <MaterialIcons

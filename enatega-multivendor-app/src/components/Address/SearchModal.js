@@ -22,7 +22,8 @@ import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import styles from './styles'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
+
 const Constants = getEnvVars()
 const { height } = Dimensions.get('screen')
 
@@ -31,6 +32,7 @@ export default function SearchModal({
   onClose = () => { },
   onSubmit = () => { }
 }) {
+  const {t} = useTranslation()
   const animation = useValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -98,11 +100,11 @@ export default function SearchModal({
           <CloseIcon />
         </TouchableOpacity>
         <TextDefault bold H4>
-          {i18n.t('searchAddress')}
+          {t('searchAddress')}
         </TextDefault>
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <GooglePlacesAutocomplete
-            placeholder={i18n.t('search')}
+            placeholder={t('search')}
             minLength={2} // minimum length of text to search
             autoFocus={true}
             returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype

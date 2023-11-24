@@ -18,7 +18,7 @@ import {
 } from '@expo/vector-icons'
 
 import gql from 'graphql-tag'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { deleteAddress } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -41,6 +41,7 @@ const DELETE_ADDRESS = gql`
 `
 
 function Addresses() {
+  const {t} = useTranslation()
   const navigation = useNavigation()
   const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS)
   const { profile } = useContext(UserContext)
@@ -61,7 +62,7 @@ function Addresses() {
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: i18n.t('myAddresses'),
+      title: t('myAddresses'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
@@ -117,14 +118,14 @@ function Addresses() {
           <View style={styles().descriptionEmpty}>
             <View style={styles().viewTitle}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder>
-                {i18n.t('emptyHere')}
+                {t('emptyHere')}
               </TextDefault>
             </View>
             <View>
               <TextDefault textColor={currentTheme.fontMainColor} bold>
-                {i18n.t('emptyHereDecs1')}
+                {t('emptyHereDecs1')}
                 {'\n'}
-                {i18n.t('emptyHereDecs2')}
+                {t('emptyHereDecs2')}
               </TextDefault>
             </View>
           </View>
@@ -154,7 +155,7 @@ function Addresses() {
                   <TextDefault
                     textColor={currentTheme.darkBgFont}
                     style={styles(currentTheme).labelStyle}>
-                    {i18n.t(address.label)}
+                    {t(address.label)}
                   </TextDefault> 
                 </View>
                 <View style={{ ...alignment.MTxSmall }}></View>

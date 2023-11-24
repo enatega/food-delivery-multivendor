@@ -5,22 +5,23 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { LocationContext } from '../../../context/Location'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function Location(props) {
+  const {t} = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { location } = useContext(LocationContext)
 
   let translatedLabel;
   if (location.label === 'Current Location') {
-    translatedLabel = i18n.t('currentLocation');
+    translatedLabel = t('currentLocation');
   } else {
-    translatedLabel = i18n.t(location.label);
+    translatedLabel = t(location.label);
   }
   const translatedAddress =
     location.deliveryAddress === 'Current Location'
-      ? i18n.t('currentLocation')
+      ? t('currentLocation')
       : (location.deliveryAddress);
 
   return (
