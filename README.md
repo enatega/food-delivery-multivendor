@@ -127,7 +127,7 @@ The required credentials and keys have been set already. You can setup your own 
 The version of nodejs should be between 14.0 to 16.0
 
 
-[![Guide Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue?style=for-the-badge&logo=book-reader)](https://enatega.com/multivendor-documentation/)
+[![Guide Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue?style=for-the-badge&logo=book-reader)](https://enatega.com/multi-vendor-doc/)
 
 
 ## :information_source: Prerequisites: <a id="heading-4"></a>
