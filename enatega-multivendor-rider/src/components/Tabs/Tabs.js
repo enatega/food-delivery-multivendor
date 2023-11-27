@@ -5,9 +5,10 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { TabsContext } from '../../context/tabs'
 import UserContext from '../../context/user'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const Tabs = props => {
+  const {t} = useTranslation()
   const { active } = useContext(TabsContext)
   const { assignedOrders } = useContext(UserContext)
   const [ordersLength, setOrderslength] = useState(
@@ -60,7 +61,7 @@ const Tabs = props => {
           bolder
           H5
           textColor={active === 'NewOrders' ? colors.black : colors.white}>
-          {i18n.t('NewOrders')}
+          {t('NewOrders')}
         </TextDefault>
       </TouchableOpacity>
 
@@ -76,7 +77,7 @@ const Tabs = props => {
           bolder
           H5
           textColor={active === 'MyOrders' ? colors.black : colors.white}>
-          {i18n.t('myorders')}
+          {t('myorders')}
         </TextDefault>
         {active === 'NewOrders' && (
           <View style={styles.rightBadge}>

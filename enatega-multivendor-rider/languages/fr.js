@@ -185,5 +185,16 @@ export const fr = {
   withdrawlRequestSent: `Votre demande de retrait d'argent a été envoyée. Consultez votre e-mail pour plus de détails.`,
   availableAmount: 'Montant disponible',
   enteramount: 'Entrez le montant',
-  confirmWithdraw: 'Confirmer le retrait'
+  confirmWithdraw: 'Confirmer le retrait',
+  selectLanguage: 'Sélectionner la langue',
+edit: 'Modifier',
+language: 'Langue',
+cancel: 'Annuler',
+select: 'Sélectionner',
+home: "Accueil",
+orders: "Mes commandes",
+wallet: "Portefeuille",
+profile: "Profil",
+privacyPolicy: "Politique de confidentialité",
+orderAssingnedFlash: "Commande attribuée avec succès"
 }

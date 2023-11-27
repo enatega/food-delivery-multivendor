@@ -16,7 +16,7 @@ import styles from './style'
 import DoneIcon from '../../assets/svg/doneIcon.png'
 import Spinner from '../../components/Spinner/Spinner'
 import { useWithdrawRequest } from './useWithdrawRequest'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const { height } = Dimensions.get('window')
 
@@ -30,12 +30,14 @@ const Withdraw = () => {
     amount,
     setAmount
   } = useWithdrawRequest()
+
+  const {t} = useTranslation()
   return (
     <WalletScreenBg backBtn>
       {requestSent ? (
         <View style={styles.sentView}>
           <TextDefault bolder H2 center>
-            {i18n.t('requestSent')}
+            {t('requestSent')}
           </TextDefault>
           <View style={styles.imageView}>
             <Image
@@ -46,7 +48,7 @@ const Withdraw = () => {
             />
           </View>
           <TextDefault H4 center bold textColor={colors.fontSecondColor}>
-            {i18n.t('withdrawlRequestSent')}
+            {t('withdrawlRequestSent')}
           </TextDefault>
         </View>
       ) : (
@@ -55,7 +57,7 @@ const Withdraw = () => {
           contentContainerStyle={{ height: height * 0.7 }}>
           <KeyboardAvoidingView behavior="position" style={{ flex: 1 }}>
             <Amount
-              text={i18n.t('availableAmount')}
+              text={t('availableAmount')}
               center
               amount={dataProfile.rider.currentWalletAmount.toFixed(2)}
             />
@@ -72,7 +74,7 @@ const Withdraw = () => {
                 textColor={
                   error ? colors.textErrorColor : colors.fontSecondColor
                 }>
-                {error || i18n.t('enteramount')}
+                {error || t('enteramount')}
               </TextDefault>
             </View>
             <View style={styles.btnView}>
@@ -84,7 +86,7 @@ const Withdraw = () => {
                   style={styles.btn}
                   activeOpacity={0.7}>
                   <TextDefault textColor={colors.white} center H5 bolder>
-                    {i18n.t('confirmWithdraw')}
+                    {t('confirmWithdraw')}
                   </TextDefault>
                 </TouchableOpacity>
               )}

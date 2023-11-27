@@ -176,5 +176,16 @@ export const zh = {
   withdrawlRequestSent: '您的提现请求已发送。请查看电子邮件获取详细信息。',
   availableAmount: '可用金额',
   enteramount: '输入金额',
-  confirmWithdraw: '确认提现'
+  confirmWithdraw: '确认提现',
+  selectLanguage: '选择语言',
+edit: '编辑',
+language: '语言',
+cancel: '取消',
+select: '选择',
+home: "首页",
+orders: "我的订单",
+wallet: "钱包",
+profile: "个人资料",
+privacyPolicy: "隐私政策",
+orderAssingnedFlash: "成功分配订单"
 }

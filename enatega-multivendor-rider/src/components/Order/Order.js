@@ -5,7 +5,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import useOrder from './useOrder'
 import Spinner from '../Spinner/Spinner'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const Order = ({ order, orderAmount }) => {
   const {
@@ -16,6 +16,7 @@ const Order = ({ order, orderAmount }) => {
     loadingAssignOrder
   } = useOrder(order)
 
+    const {t} = useTranslation()
   return (
     <>
       <View style={{ marginTop: 20 }}>
@@ -43,7 +44,7 @@ const Order = ({ order, orderAmount }) => {
           }>
           <View style={styles.row}>
             <TextDefault style={styles.rowItem1} bolder H4>
-              {i18n.t('orderID')}
+              {t('orderID')}
             </TextDefault>
             <TextDefault style={styles.rowItem2} bolder H4>
               {order?.orderId}
@@ -55,7 +56,7 @@ const Order = ({ order, orderAmount }) => {
               bolder
               H5
               textColor={colors.fontSecondColor}>
-              {i18n.t(' orderAmount')}
+              {t(' orderAmount')}
             </TextDefault>
             <TextDefault style={styles.rowItem2} bolder H5>
               {orderAmount}
@@ -67,7 +68,7 @@ const Order = ({ order, orderAmount }) => {
               bolder
               H5
               textColor={colors.fontSecondColor}>
-              {i18n.t('paymentMethod')}
+              {t('paymentMethod')}
             </TextDefault>
             <TextDefault style={styles.rowItem2} bolder H5>
               {order?.paymentMethod}
@@ -80,7 +81,7 @@ const Order = ({ order, orderAmount }) => {
                 bolder
                 H5
                 textColor={colors.fontSecondColor}>
-                {i18n.t('deliveryTime')}
+                {t('deliveryTime')}
               </TextDefault>
               <TextDefault style={styles.rowItem2} bolder H5>
                 {new Date(order?.createdAt).toLocaleDateString()}{' '}
@@ -93,7 +94,7 @@ const Order = ({ order, orderAmount }) => {
             {active === 'NewOrders' && (
               <View style={[styles.row, styles.rowItem1, styles.timeLeft]}>
                 <TextDefault bold H6 textColor={colors.fontSecondColor}>
-                  {i18n.t('timeLeft')}
+                  {t('timeLeft')}
                 </TextDefault>
                 <TextDefault bolder H2 style={styles.time}>
                   {time}
@@ -111,8 +112,8 @@ const Order = ({ order, orderAmount }) => {
                 disabled>
                 <TextDefault bolder center textColor={colors.primary}>
                   {order?.orderStatus === 'DELIVERED'
-                    ? i18n.t('delivered')
-                    : i18n.t(' inProgress')}
+                    ? t('delivered')
+                    : t(' inProgress')}
                 </TextDefault>
               </TouchableOpacity>
             ) : (
@@ -132,7 +133,7 @@ const Order = ({ order, orderAmount }) => {
                   {loadingAssignOrder ? (
                     <Spinner size="small" color="transparent" />
                   ) : (
-                    i18n.t('assignMe')
+                    t('assignMe')
                   )}
                 </TextDefault>
               </TouchableOpacity>

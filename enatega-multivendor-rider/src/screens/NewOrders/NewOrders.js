@@ -14,10 +14,11 @@ import LottieView from 'lottie-react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { NetworkStatus } from '@apollo/client'
-import i18n from '../../../i18n'
 const { height, width } = Dimensions.get('window')
+import {useTranslation} from 'react-i18next'
 
 const NewOrders = ({ navigation }) => {
+  const {t} = useTranslation()
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
   const {
@@ -64,7 +65,7 @@ const NewOrders = ({ navigation }) => {
         )}
         {errorAssigned && (
           <View style={styles.margin500}>
-            <TextError text={i18n.t('errorText')} />
+            <TextError text={t('errorText')} />
           </View>
         )}
         <FlatList
@@ -94,7 +95,7 @@ const NewOrders = ({ navigation }) => {
                     center
                     H3
                     textColor={colors.fontSecondColor}>
-                    {i18n.t('noNewOrders')}
+                    {t('noNewOrders')}
                   </TextDefault>
                 ) : (
                   <TextDefault
@@ -102,7 +103,7 @@ const NewOrders = ({ navigation }) => {
                     center
                     H3
                     textColor={colors.fontSecondColor}>
-                    {i18n.t('pullToRefresh')}
+                    {t('pullToRefresh')}
                   </TextDefault>
                 )}
               </View>

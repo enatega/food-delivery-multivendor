@@ -185,5 +185,16 @@ export const de = {
     'Ihre Anfrage zur Geldauszahlung wurde gesendet. Überprüfen Sie Ihre E-Mail für weitere Details.',
   availableAmount: 'Verfügbarer Betrag',
   enteramount: 'Betrag eingeben',
-  confirmWithdraw: 'Auszahlung bestätigen'
+  confirmWithdraw: 'Auszahlung bestätigen',
+  selectLanguage: 'Sprache auswählen',
+edit: 'Bearbeiten',
+language: 'Sprache',
+cancel: 'Abbrechen',
+select: 'Auswählen',
+home: "Startseite",
+orders: "Meine Bestellungen",
+wallet: "Brieftasche",
+profile: "Profil",
+privacyPolicy: "Datenschutzrichtlinie",
+orderAssingnedFlash: "Bestellung erfolgreich zugewiesen"
 }

@@ -10,12 +10,14 @@ import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import UserContext from '../../context/user'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
+
 const AVAILABLE_CASH = gql`
   ${riderEarnings}
 `
 
 const AvailableCash = () => {
+  const {t} = useTranslation()
   const { loadingProfile, errorProfile, dataProfile } = useContext(UserContext)
   const { loading, error, data, refetch, networkStatus, fetchMore } = useQuery(
     AVAILABLE_CASH,
@@ -35,7 +37,7 @@ const AvailableCash = () => {
   if (errorProfile) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <TextDefault>{i18n.t('errorFetchingRider')}</TextDefault>
+        <TextDefault>{t('errorFetchingRider')}</TextDefault>
       </View>
     )
   }
@@ -45,7 +47,7 @@ const AvailableCash = () => {
         <Spinner />
       ) : error ? (
         <TextDefault center H5 textColor={colors.fontSecondColor}>
-          {i18n.t('errorOccured')}
+          {t('errorOccured')}
         </TextDefault>
       ) : (
         <FlatList
@@ -54,7 +56,7 @@ const AvailableCash = () => {
           style={styles.transactionHistory}
           ListHeaderComponent={
             <Amount
-              text={i18n.t('totalAmount')}
+              text={t('totalAmount')}
               amount={dataProfile.rider.totalWalletAmount}
             />
           }

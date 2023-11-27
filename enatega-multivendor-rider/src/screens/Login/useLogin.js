@@ -44,6 +44,7 @@ const useLogin = () => {
   }
 
   async function onCompleted(data) {
+
     FlashMessage({ message: 'Logged in' })
     await AsyncStorage.setItem('rider-id', data.riderLogin.userId)
     await setTokenAsync(data.riderLogin.token)
@@ -86,6 +87,7 @@ const useLogin = () => {
       ) {
         notificationToken = (await Notifications.getExpoPushTokenAsync()).data
       }
+     
       mutate({
         variables: {
           username: username.toLowerCase(),

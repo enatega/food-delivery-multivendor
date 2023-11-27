@@ -1,13 +1,13 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import i18n from '../../../i18n'
-
+import {useTranslation} from 'react-i18next'
 const ComingSoon = () => {
+  const {t} = useTranslation()
   return (
     <View style={styles.container}>
       <TextDefault center bold H5>
-        {i18n.t('walletFeature')}
+        {t('walletFeature')}
       </TextDefault>
     </View>
   )

@@ -28,6 +28,9 @@ const tabIcon = route => ({
       iconName = 'wallet'
     } else if (route.name === 'Profile') {
       iconName = 'person'
+    } 
+    else if (route.name === 'Language') {
+      iconName = 'language'
     }
     return (
       <View style={{ paddingTop: scale(10), paddingHorizontal: scale(12) }}>

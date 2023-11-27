@@ -5,31 +5,34 @@ import * as Updates from 'expo-updates'
 import * as Localization from 'expo-localization'
 import styles from './styles'
 import { useSafeArea } from 'react-native-safe-area-context'
-import i18n from '../../../i18n'
 import colors from '../../utilities/colors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utilities/alignment'
 import Modal from 'react-native-modal'
 import RadioButton from '../../components/FdRadioBtn/RadioBtn'
 import { useNavigation } from '@react-navigation/native'
+import i18next from '../../../i18next'
+import {useTranslation} from 'react-i18next'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
   { value: 'français', code: 'fr', index: 1 },
   { value: 'ភាសាខ្មែរ', code: 'km', index: 2 },
   { value: '中文', code: 'zh', index: 3 },
-  { value: 'Deutsche', code: 'de', index: 4 }
+  { value: 'Deutsche', code: 'de', index: 4 },
+  { value: 'Arabic', code: 'ar', index: 5 }
 ]
 
 function Language() {
   const navigation = useNavigation()
+  const {t} = useTranslation()
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, setActiveRadio] = useState(languageTypes[0].index)
   const [languageName, languageNameSetter] = useState('English')
   const inset = useSafeArea()
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: i18n.t('titleLanguage')
+      title: t('titleLanguage')
     })
   }, [navigation])
 
@@ -49,7 +52,9 @@ function Language() {
 
   async function onSelectedLanguage() {
     const languageInd = activeRadio
-
+    const lang = languageTypes[languageInd].code
+    i18next.changeLanguage(lang)
+    console.log(lang)
     if (Platform.OS === 'android') {
       const localization = await Localization.getLocalizationAsync()
       localization.locale = languageTypes[languageInd].code
@@ -75,7 +80,7 @@ function Language() {
               textColor={colors.fontSecondColor}
               bold
               H5>
-              Language
+             {t('language')}
             </TextDefault>
           </View>
           <TouchableOpacity
@@ -83,7 +88,7 @@ function Language() {
             onPress={() => modalVisibleSetter(true)}
             style={styles.button}>
             <TextDefault textColor={colors.tagColor} bolder>
-              Edit
+             {t('edit')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -103,7 +108,7 @@ function Language() {
             bolder
             H5
             style={alignment.MBsmall}>
-            Select Language
+           {t('selectLanguage')}
           </TextDefault>
 
           {languageTypes.map((item, index) => (
@@ -139,7 +144,7 @@ function Language() {
                 textColor={colors.tagColor}
                 bolder
                 uppercase>
-                Cancel
+                {t('cancel')}
               </TextDefault>
             </TouchableOpacity>
             <TouchableOpacity
@@ -147,7 +152,7 @@ function Language() {
               style={styles.modalButtons}
               onPress={() => onSelectedLanguage()}>
               <TextDefault textColor={colors.tagColor} bolder uppercase>
-                Select
+                {t('select')}
               </TextDefault>
             </TouchableOpacity>
           </View>

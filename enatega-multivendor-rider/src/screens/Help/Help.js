@@ -7,6 +7,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { useNavigation } from '@react-navigation/native'
 
+
 const links = [
   {
     title: i18n.t('productPage'),

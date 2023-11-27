@@ -5,6 +5,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import ConfigurationContext from '../../context/configuration'
 import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const STATUS_COLORS = {
   CANCELLED: colors.orderUncomplete,
@@ -13,45 +14,46 @@ const STATUS_COLORS = {
 }
 
 const RequestCard = ({ item }) => {
+  const {t} = useTranslation()
   const configuration = useContext(ConfigurationContext)
   return (
     <View style={[styles.container, styles.bgBlack]}>
       <TextDefault bold H4 textColor={colors.white}>
-        {i18n.t('requestID')}{' '}
+        {t('requestID')}{' '}
         <TextDefault bolder H4 textColor={colors.primary}>
           {item?.requestId}
         </TextDefault>{' '}
       </TextDefault>
       <View style={styles.horizontalLine} />
       <RequestRow
-        label={i18n.t('name')}
+        label={t('name')}
         value={item?.rider.name}
         color={colors.white}
       />
       <RequestRow
-        label={i18n.t('email')}
+        label={t('email')}
         value={item?.rider.email}
         color={colors.white}
       />
       <RequestRow
-        label={i18n.t('accountNumber')}
+        label={t('accountNumber')}
         value={item?.rider.accountNumber}
         color={colors.white}
       />
       <RequestRow
-        label={i18n.t('requestAmount')}
+        label={t('requestAmount')}
         value={`${configuration.currencySymbol} ${item?.requestAmount.toFixed(
           2
         )}`}
         color={colors.white}
       />
       <RequestRow
-        label={i18n.t('requestTime')}
+        label={t('requestTime')}
         value={new Date(item?.requestTime).toDateString()}
         color={colors.white}
       />
       <RequestRow
-        label={i18n.t('status')}
+        label={t('status')}
         value={item?.status}
         color={STATUS_COLORS[item?.status]}
       />

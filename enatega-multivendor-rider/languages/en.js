@@ -183,5 +183,16 @@ export const en = {
     'Your request for money withdrawl has been sent. Check your email for further details.',
   availableAmount: 'Available Amount',
   enteramount: 'Enter amount',
-  confirmWithdraw: 'Confirm Withdraw'
+  confirmWithdraw: 'Confirm Withdraw',
+  selectLanguage: 'Select Language',
+  edit: 'Edit',
+  language: 'Language',
+  cancel: 'Cancel',
+  select: 'Select',
+  home: "Home",
+  orders: "MyOrders",
+  wallet: "Wallet",
+  profile: "Profile",
+  privacyPolicy: "Privacy Policy",
+  orderAssingnedFlash: "Order assigned successfully"
 }

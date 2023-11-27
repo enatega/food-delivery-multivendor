@@ -6,6 +6,7 @@ import { assignOrder, updateOrderStatusRider } from '../../../apollo/mutations'
 import { TabsContext } from '../../../context/tabs'
 import { FlashMessage } from '../../FlashMessage/FlashMessage'
 import { subscriptionOrder } from '../../../apollo/subscriptions'
+import {useTranslation} from 'react-i18next'
 
 const CONFIGURATION = gql`
   ${configuration}
@@ -24,7 +25,7 @@ const useDetails = orderData => {
   const { active, setActive } = useContext(TabsContext)
   const { assignedOrders, loadingAssigned } = useContext(UserContext)
   const [order, setOrder] = useState(orderData)
-
+  const {t} = useTranslation()
   useEffect(() => {
     if (!loadingAssigned && order) {
       setOrder(assignedOrders.find(o => o._id === order?._id))
@@ -85,14 +86,14 @@ const useDetails = orderData => {
     }
     if (result.assignOrder) {
       FlashMessage({
-        message: 'Order assigned successfully'
+        message: t('orderAssingnedFlash')
       })
       setActive('MyOrders')
     }
   }
 
   function onError({ graphQLErrors, networkError }) {
-    let message = 'Unknown error occured'
+    let message = t('errorOccured')
     if (networkError) message = 'Internal Server Error'
     if (graphQLErrors) message = graphQLErrors.map(o => o.message).join(', ')
 

@@ -13,9 +13,10 @@ import TextError from '../../components/Text/TextError/TextError'
 import LottieView from 'lottie-react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const Orders = ({ navigation }) => {
+  const {t} = useTranslation()
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
   const {
@@ -63,7 +64,7 @@ const Orders = ({ navigation }) => {
           </View>
         ) : errorProfile || errorAssigned ? (
           <View style={styles.margin500}>
-            <TextError text={i18n.t('errorText')} />
+            <TextError text={t('errorText')} />
           </View>
         ) : orders.length > 0 ? (
           <FlatList
@@ -110,7 +111,7 @@ const Orders = ({ navigation }) => {
               loop
             />
             <TextDefault bolder center H3 textColor={colors.fontSecondColor}>
-              {i18n.t('notAnyOrdersYet')}
+              {t('notAnyOrdersYet')}
             </TextDefault>
           </View>
         )}
