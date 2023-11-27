@@ -22,7 +22,8 @@ export default function TabBars(props) {
         style={[
           styles.barContent,
           {
-            backgroundColor: props.activeBar === 0 ? 'black' : colors.white
+            backgroundColor: props.activeBar === 0 ? 'black' : colors.white,
+            zIndex: props.activeBar === 0 ? 1 : -1
           }
         ]}>
         {props.activeBar !== 0 ? (
@@ -46,7 +47,8 @@ export default function TabBars(props) {
         style={[
           styles.barContent,
           {
-            backgroundColor: props.activeBar === 1 ? 'black' : colors.white
+            backgroundColor: props.activeBar === 1 ? 'black' : colors.white,
+            zIndex: props.activeBar === 1 ? 1 : -1
           }
         ]}>
         {props.activeBar !== 1 ? (

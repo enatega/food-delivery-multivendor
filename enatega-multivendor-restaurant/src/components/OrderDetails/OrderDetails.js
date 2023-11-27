@@ -4,33 +4,34 @@ import { TextDefault } from '..'
 import styles from './styles'
 import { colors } from '../../utilities'
 import { Configuration } from '../../ui/context'
+import {useTranslation} from 'react-i18next'
 
 export default function OrderDetails({ orderData }) {
   const { orderId, user, deliveryAddress } = orderData
-
+  const {t} = useTranslation()
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.cardContainer}>
         <View style={styles.row}>
-          <Text style={styles.heading}>Order No.</Text>
+          <Text style={styles.heading}>{t('orderNo')}.</Text>
           <Text style={styles.text} selectable>
             {orderId}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.heading}>Email</Text>
+          <Text style={styles.heading}>{t('email')}</Text>
           <Text style={styles.text} selectable>
             {user.email}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.heading}>Contact</Text>
+          <Text style={styles.heading}>{t('contact')}</Text>
           <Text style={styles.text} selectable>
             {user.phone}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.heading}>Address</Text>
+          <Text style={styles.heading}>{t('address')}</Text>
           <Text style={styles.text} selectable>
             {deliveryAddress.deliveryAddress}
           </Text>
@@ -77,7 +78,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-          Subtotal
+          {t('subTotal')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${subTotal.toFixed(2)}`}
@@ -89,7 +90,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-          Tip
+          {t('tip')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${tipping}`}
@@ -101,7 +102,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-          Tax Charges
+         {t('taxCharges')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${taxationAmount}`}
@@ -113,7 +114,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-          Delivery Charges
+          {t('deliveryCharges')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${deliveryCharges}`}
@@ -126,7 +127,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-          Total
+          {t('total')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${orderAmount}`}

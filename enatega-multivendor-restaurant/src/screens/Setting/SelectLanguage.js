@@ -49,7 +49,6 @@ export default function SelectLanguage() {
     console.log(language)
     setSelectedLanguage(language);
     i18next.changeLanguage(language)
-    // Save the selected language to AsyncStorage for Android
     if (Platform.OS === 'android') {
       await AsyncStorage.setItem('enatega-language', language);
     }
