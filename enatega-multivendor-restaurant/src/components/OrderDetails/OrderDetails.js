@@ -4,11 +4,11 @@ import { TextDefault } from '..'
 import styles from './styles'
 import { colors } from '../../utilities'
 import { Configuration } from '../../ui/context'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export default function OrderDetails({ orderData }) {
   const { orderId, user, deliveryAddress } = orderData
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.cardContainer}>
@@ -42,6 +42,7 @@ export default function OrderDetails({ orderData }) {
   )
 }
 function OrderItems({ orderData }) {
+  const { t } = useTranslation()
   const {
     items,
     orderAmount,
@@ -78,7 +79,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-          {t('subTotal')}
+          {t('subT')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${subTotal.toFixed(2)}`}
@@ -102,7 +103,7 @@ function OrderItems({ orderData }) {
           textColor={colors.fontSecondColor}
           bold
           style={styles.itemHeading}>
-         {t('taxCharges')}
+          {t('taxCharges')}
         </TextDefault>
         <TextDefault bold style={styles.itemText}>
           {`${configuration.currencySymbol}${taxationAmount}`}
