@@ -14,8 +14,8 @@
 
 
 <div align="center">
-  <h2>Enatega Multi-vendor</h2>
-  <i>Enatega is an open-source delivery management platform for the future.</i>
+  <h2>Enatega Multi Vendor Food Delivery System</h2>
+  <i>The food delivery and order management system for the future.</i>
  <br/>
 <br />
 </div>
@@ -58,9 +58,9 @@
 
 
 
-Our Enatega Multi-vendor food delivery solution is perfect for customers looking to deploy a readymade and easy to use platform for their food delivery and logistics business. Just like foodpanda and ubereats, our solution can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own foodpanda clone instantaneously.
+The Enatega Multi vendor food delivery system is perfect for customers looking to deploy a readymade and easy to use food ordering platform for their own food delivery and logistics business. Just like foodpanda and ubereats, our food delivery system can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own online food ordering and order/delivery management system instantaneously.
 
-<b>Our solution is open source but the backend and API are proprietary, and can be obtained via paid license.</b>
+Our solution is open source but the backend and API are proprietary, and can be obtained via paid license.
 
 <!-- Add a horizontal rule for separation -->
 <hr/>
@@ -89,12 +89,12 @@ Our Enatega Multi-vendor food delivery solution is perfect for customers looking
 
 Our solution also comes with the following:
 
-- Enatega Multivendor Customer App
-- Enatega Multivendor Rider App
-- Enatega Multivendor Restaurant App
-- Customer Website
+- Enatega Multi vendor Customer App
+- Enatega Multi vendor Rider App
+- Enatega Multi vendor Restaurant App
+- Customer Food Ordering Website
 - Admin Web Dashboard
-- Application Program interface Server
+- Application ProgramInterface Server
 - Analytics Dashboard with Expo Amplitude
 - Error crash reporting with Sentry
 
