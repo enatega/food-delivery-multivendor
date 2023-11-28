@@ -87,7 +87,7 @@ Our solution is open source but the backend and API are proprietary, and can be 
 
 ## :question: What is included: <a id="heading-1"></a>
 
-Our solution also comes with the following:
+Our food delivery system also comes with the following:
 
 - Enatega Multi vendor Customer App
 - Enatega Multi vendor Rider App
