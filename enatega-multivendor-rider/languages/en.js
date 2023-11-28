@@ -194,5 +194,12 @@ export const en = {
   wallet: "Wallet",
   profile: "Profile",
   privacyPolicy: "Privacy Policy",
-  orderAssingnedFlash: "Order assigned successfully"
+  orderAssingnedFlash: "Order assigned successfully",
+  locationAccess: 'Location access',
+  locationAccessText: 'Location permissions are required to use this app. Kindly open settings to allow location access.',
+  allowLocation: 'Allow Location',
+  enategaLocationText: 'Enatega uses your location for features like finding orders nearby and tracking customer orders!',
+  emptyUsernameError: 'Username is required!',
+  emptyPasswordError: 'Password is required!',
+  loginFlashMsg: 'Logged in',
 }

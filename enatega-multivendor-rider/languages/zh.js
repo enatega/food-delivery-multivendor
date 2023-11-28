@@ -187,5 +187,12 @@ orders: "我的订单",
 wallet: "钱包",
 profile: "个人资料",
 privacyPolicy: "隐私政策",
-orderAssingnedFlash: "成功分配订单"
+orderAssingnedFlash: "成功分配订单",
+locationAccess: '位置访问',
+    locationAccessText: '需要位置权限才能使用此应用程序。请打开设置以允许位置访问。',
+    allowLocation: '允许位置',
+    enategaLocationText: 'Enatega 使用您的位置来进行诸如查找附近订单和跟踪客户订单等功能！',
+    emptyUsernameError: '需要用户名!',
+emptyPasswordError: '需要密码!',
+loginFlashMsg: '已登录',
 }

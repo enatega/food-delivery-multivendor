@@ -191,5 +191,12 @@ orders: "طلباتي",
 wallet: "المحفظة",
 profile: "الملف الشخصي",
 privacyPolicy: "سياسة الخصوصية",
-orderAssingnedFlash: "تم تعيين الطلب بنجاح"
+orderAssingnedFlash: "تم تعيين الطلب بنجاح",
+locationAccess: 'وصول الموقع',
+    locationAccessText: 'الإذن بالموقع مطلوب لاستخدام هذا التطبيق. يُرجى فتح الإعدادات للسماح بوصول الموقع.',
+    allowLocation: 'السماح بالموقع',
+    enategaLocationText: 'تستخدم إناتيجا موقعك لميزات مثل البحث عن الطلبات القريبة وتتبع طلبات العملاء!',
+    emptyUsernameError: 'اسم المستخدم مطلوب!',
+emptyPasswordError: 'كلمة المرور مطلوبة!',
+loginFlashMsg: 'تم تسجيل الدخول',
 }

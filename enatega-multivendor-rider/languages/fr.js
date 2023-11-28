@@ -196,5 +196,12 @@ orders: "Mes commandes",
 wallet: "Portefeuille",
 profile: "Profil",
 privacyPolicy: "Politique de confidentialité",
-orderAssingnedFlash: "Commande attribuée avec succès"
+orderAssingnedFlash: "Commande attribuée avec succès",
+locationAccess: 'Accès à la localisation',
+    locationAccessText: 'Des autorisations de localisation sont nécessaires pour utiliser cette application. Veuillez ouvrir les paramètres pour autoriser l’accès à la localisation.',
+    allowLocation: 'Autoriser la localisation',
+    enategaLocationText: 'Enatega utilise votre emplacement pour des fonctionnalités telles que la recherche de commandes à proximité et le suivi des commandes des clients !',
+    emptyUsernameError: 'Le nom dutilisateur est requis!',
+emptyPasswordError: 'Le mot de passe est requis!',
+loginFlashMsg: 'Connecté',
 }

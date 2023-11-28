@@ -196,5 +196,12 @@ orders: "Meine Bestellungen",
 wallet: "Brieftasche",
 profile: "Profil",
 privacyPolicy: "Datenschutzrichtlinie",
-orderAssingnedFlash: "Bestellung erfolgreich zugewiesen"
+orderAssingnedFlash: "Bestellung erfolgreich zugewiesen",
+locationAccess: 'Standortzugriff',
+    locationAccessText: 'Standortberechtigungen sind erforderlich, um diese App zu verwenden. Bitte öffnen Sie die Einstellungen, um den Standortzugriff zu erlauben.',
+    allowLocation: 'Standort erlauben',
+    enategaLocationText: 'Enatega verwendet Ihren Standort für Funktionen wie das Finden von Bestellungen in der Nähe und das Verfolgen von Kundenbestellungen!',
+    emptyUsernameError: 'Benutzername ist erforderlich!',
+emptyPasswordError: 'Passwort ist erforderlich!',
+loginFlashMsg: 'Angemeldet',
 }

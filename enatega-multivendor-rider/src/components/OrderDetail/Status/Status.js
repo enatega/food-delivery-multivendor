@@ -7,9 +7,9 @@ import Tick from '../../../assets/svg/tick.png'
 import Restaurant from '../../../assets/svg/restaurant.png'
 import DeliveryBoy from '../../../assets/svg/DeliveryBoy.png'
 import UserContext from '../../../context/user'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
-const STATUS_MESSAGES = {
+/*const STATUS_MESSAGES = {
   PICKED: {
     text: i18n.t('youPickedParcel'),
     subText: i18n.t('youPickedParcel')
@@ -31,11 +31,35 @@ const STATUS_MESSAGES = {
   }
 }
 
-const STATUS_ORDER = ['ASSIGNED', 'PICKED', 'DELIVERED']
+const STATUS_ORDER = ['ASSIGNED', 'PICKED', 'DELIVERED']*/
 const formatTime = date =>
   new Date(date).toLocaleTimeString('en-US', { timeStyle: 'short' })
 
 const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
+  const {t} = useTranslation()
+  const STATUS_MESSAGES = {
+    PICKED: {
+      text: t('youPickedParcel'),
+      subText: t('youPickedParcel')
+    },
+    // PROCESS: 'Your parcel is in process.',
+    DELIVERED: {
+      text: t('parcelDelivered'),
+      subText: t('orderDelivered')
+    },
+    ACCEPTED: { text: t('newOrder'), subText: t('hurryUp') },
+    // READY: 'Your parcel is ready.',
+    ASSIGNED: {
+      text: t('orderAssigned'),
+      subText: t('orderAssignedSubText')
+    },
+    CANCELLED: {
+      text: t('orderNotAvailable'),
+      subText: t('orderNotAvailableSubText')
+    }
+  }
+  
+  const STATUS_ORDER = ['ASSIGNED', 'PICKED', 'DELIVERED']
   const { assignedOrders, loadingAssigned } = useContext(UserContext)
   const [order, setOrder] = useState(orderData)
 
