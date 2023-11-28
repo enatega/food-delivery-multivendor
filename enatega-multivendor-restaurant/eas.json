@@ -11,7 +11,7 @@
         "distribution": "internal"
       },
       "production-restaurant": {
-        "releaseChannel": "production"
+        "channel": "production"
       }
     },
     "submit": {
