@@ -4,7 +4,6 @@ import styles from './styles'
 import Modal from 'react-native-modal'
 import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
-import i18n from '../../../i18n'
 import { changePassword } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
@@ -14,12 +13,16 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { alignment } from '../../utils/alignment'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import {useTranslation} from 'react-i18next'
+
 
 const CHANGE_PASSWORD = gql`
   ${changePassword}
 `
 
 function ChangePassword(props) {
+
+  const {t} = useTranslation()
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [oldPasswordError, setOldPasswordError] = useState('')
@@ -54,11 +57,11 @@ function ChangePassword(props) {
     if (data.changePassword) {
       clearFields()
       FlashMessage({
-        message: 'Password Updated'
+        message: t('updatePassword')
       })
       props.hideModal()
     } else {
-      Alert.alert('Error', 'Invalid password')
+      Alert.alert('Error', t('invalidPassword'))
     }
   }
 
@@ -71,7 +74,7 @@ function ChangePassword(props) {
         <View style={styles(currentTheme).modalContent}>
           <View style={styles(currentTheme).titleContainer}>
             <TextDefault textColor={currentTheme.darkBgFont} B700 bolder H4>
-              Change password
+              {t('changePassword')}
             </TextDefault>
           </View>
 
@@ -79,7 +82,7 @@ function ChangePassword(props) {
             <View style={{ ...alignment.MTsmall }}>
               <OutlinedTextField
                 autoFocus={true}
-                label="Current Password"
+                label={t('changePassword')}
                 labelFontSize={scale(10)}
                 fontSize={scale(12)}
                 labelHeight={10}
@@ -93,7 +96,7 @@ function ChangePassword(props) {
                 onChangeText={setOldPassword}
                 onBlur={() => {
                   setOldPasswordError(
-                    !oldPassword ? 'Password is required' : ''
+                    !oldPassword ? t('passErr1') : ''
                   )
                 }}
               />
@@ -103,7 +106,7 @@ function ChangePassword(props) {
             <View style={{ ...alignment.MTsmall }}>
               <OutlinedTextField
                 autoFocus={true}
-                label="New Password"
+                label={t('newPassword')}
                 labelFontSize={scale(10)}
                 fontSize={scale(12)}
                 labelHeight={10}
@@ -123,7 +126,7 @@ function ChangePassword(props) {
                 onChangeText={setNewPassword}
                 onBlur={() => {
                   setNewPasswordError(
-                    !newPassword ? 'Password is required' : ''
+                    !newPassword ? t('passErr1') : ''
                   )
                 }}
               />
@@ -137,9 +140,9 @@ function ChangePassword(props) {
                 props.hideModal()
               }
               const newPasswordError =
-                newPassword === '' ? 'Password is required' : ''
+                newPassword === '' ? t('passErr1') : ''
               const oldPasswordError =
-                oldPassword === '' ? 'Password is required' : ''
+                oldPassword === '' ? t('passErr1') : ''
               setNewPasswordError(newPasswordError)
               setOldPasswordError(oldPasswordError)
 
@@ -158,8 +161,8 @@ function ChangePassword(props) {
               uppercase
               small>
               {newPassword !== '' && oldPassword !== ''
-                ? i18n.t('apply')
-                : 'Cancel'}
+                ? t('apply')
+                : t('Cancel')}
             </TextDefault>
           </TouchableOpacity>
         </View>

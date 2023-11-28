@@ -7,7 +7,7 @@ import { profile } from '../apollo/queries'
 import { LocationContext } from './Location'
 import AuthContext from './Auth'
 import Analytics from '../utils/analytics'
-
+import {useTranslation} from 'react-i18next'
 
 const PROFILE = gql`
   ${profile}
@@ -16,6 +16,7 @@ const PROFILE = gql`
 const UserContext = React.createContext({})
 
 export const UserProvider = props => {
+  const {t} = useTranslation()
   const { token, setToken } = useContext(AuthContext)
   const client = useApolloClient()
   const { location, setLocation } = useContext(LocationContext)
@@ -72,7 +73,7 @@ export const UserProvider = props => {
       setToken(null)
       if (location._id) {
         setLocation({
-          label: 'Selected Location',
+          label: t('selectedLocation'),
           latitude: location.latitude,
           longitude: location.longitude,
           deliveryAddress: location.deliveryAddress

@@ -49,6 +49,7 @@ import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import Analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
+import {useTranslation} from 'react-i18next'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -58,6 +59,7 @@ const SELECT_ADDRESS = gql`
 `
 
 function Main(props) {
+  const {t} = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
@@ -103,6 +105,7 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
+  // }, [i18n.language])
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -147,38 +150,38 @@ function Main(props) {
   }
 
   const setCurrentLocation = async () => {
-    setBusy(true);
-    const { error, coords } = await getCurrentLocation();
+    setBusy(true)
+    const { error, coords } = await getCurrentLocation()
 
-    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`;
+    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
         if (data.error) {
-          console.log('Reverse geocoding request failed:', data.error);
+          console.log('Reverse geocoding request failed:', data.error)
         } else {
-          let address = data.display_name;
+          let address = data.display_name
           if (address.length > 21) {
-            address = address.substring(0, 21) + "...";
+            address = address.substring(0, 21) + '...'
           }
 
-          if (error) navigation.navigate('SelectLocation');
+          if (error) navigation.navigate('SelectLocation')
           else {
-            modalRef.current.close();
+            modalRef.current.close()
             setLocation({
-              label: 'Current Location',
+              label: ('currentLocation'),
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address
-            });
-            setBusy(false);
+            })
+            setBusy(false)
           }
-          console.log(address);
+          console.log(address)
         }
       })
       .catch(error => {
-        console.error('Error fetching reverse geocoding data:', error);
-      });
+        console.error('Error fetching reverse geocoding data:', error)
+      })
   }
 
   const modalHeader = () => (
@@ -194,11 +197,11 @@ function Main(props) {
             color={currentTheme.black}
           />
           <View style={styles().mL5p} />
-          <TextDefault bold>Current Location</TextDefault>
+          <TextDefault bold>{t('currentLocation')}</TextDefault>
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === 'Current Location' && (
+        {location.label === t('currentLocation') && (
           <MaterialIcons
             name="check"
             size={scale(15)}
@@ -219,8 +222,7 @@ function Main(props) {
     if (loading || mutationLoading || loadingOrders) return loadingScreen()
     else {
       return (
-        <View
-          style={styles().emptyViewContainer}>
+        <View style={styles().emptyViewContainer}>
           <TextDefault textColor={currentTheme.fontMainColor}>
             No Restaurants
           </TextDefault>
@@ -250,7 +252,7 @@ function Main(props) {
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold>Add New Address</TextDefault>
+            <TextDefault bold>{t('addAddress')}</TextDefault>
           </View>
         </TouchableOpacity>
       </View>
@@ -261,7 +263,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => { }} />
+        <Search search={''} setSearch={() => {}} />
         <Placeholder
           Animation={props => (
             <Fade
@@ -351,6 +353,7 @@ function Main(props) {
       .map(id => restaurants.filter(res => res._id === id))
       .flat()
   }))
+
   return (
     <>
       <SafeAreaView
@@ -433,7 +436,7 @@ function Main(props) {
                         color={currentTheme.black}
                       />
                       <View style={styles().mL5p} />
-                      <TextDefault bold>{address.label}</TextDefault>
+                      <TextDefault bold>{t(address.label)}</TextDefault>
                     </View>
                     <View style={styles().addressTextContainer}>
                       <TextDefault
@@ -446,7 +449,7 @@ function Main(props) {
                   </TouchableOpacity>
                   <View style={styles().addressTick}>
                     {address.selected &&
-                      !['Current Location', 'Selected Location'].includes(
+                      ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (
                         <MaterialIcons

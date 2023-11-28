@@ -15,8 +15,10 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { NetworkStatus } from '@apollo/client'
 const { height, width } = Dimensions.get('window')
+import {useTranslation} from 'react-i18next'
 
 const NewOrders = ({ navigation }) => {
+  const {t} = useTranslation()
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
   const {
@@ -63,7 +65,7 @@ const NewOrders = ({ navigation }) => {
         )}
         {errorAssigned && (
           <View style={styles.margin500}>
-            <TextError text="Something went wrong. Please try again later!" />
+            <TextError text={t('errorText')} />
           </View>
         )}
         <FlatList
@@ -93,7 +95,7 @@ const NewOrders = ({ navigation }) => {
                     center
                     H3
                     textColor={colors.fontSecondColor}>
-                    No new orders yet!
+                    {t('noNewOrders')}
                   </TextDefault>
                 ) : (
                   <TextDefault
@@ -101,7 +103,7 @@ const NewOrders = ({ navigation }) => {
                     center
                     H3
                     textColor={colors.fontSecondColor}>
-                    Pull down to refresh
+                    {t('pullToRefresh')}
                   </TextDefault>
                 )}
               </View>

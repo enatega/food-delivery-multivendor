@@ -10,12 +10,15 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import RequestCard from '../../components/WalletCard/WithDrawRequestCard'
 import UserContext from '../../context/user'
+import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const WALLET_HISTORY = gql`
   ${riderWithdrawRequest}
 `
 
 const WalletHistory = () => {
+  const {t} = useTranslation()
   const { loading, error, data, refetch, fetchMore, networkStatus } = useQuery(
     WALLET_HISTORY,
     {
@@ -34,9 +37,7 @@ const WalletHistory = () => {
   if (errorProfile) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <TextDefault>
-          an error occured while fetching rider information
-        </TextDefault>
+        <TextDefault>{t('errorFetchingRider')}</TextDefault>
       </View>
     )
   }
@@ -46,14 +47,14 @@ const WalletHistory = () => {
         <Spinner />
       ) : error ? (
         <TextDefault center H5 textColor={colors.fontSecondColor}>
-          An Error occured!
+          {t('errorOccured')}
         </TextDefault>
       ) : (
         <FlatList
           style={styles.transactionHistory}
           ListHeaderComponent={
             <Amount
-              text="Total Earned"
+              text={t('totalEarned')}
               amount={dataProfile.rider.totalWalletAmount}
             />
           }

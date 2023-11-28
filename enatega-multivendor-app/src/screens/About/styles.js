@@ -163,6 +163,10 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.black : 'black',
       padding: 10,
       borderRadius: 10
+    },
+    timingText: {
+      width: scale(140),
+      textAlign: 'left'
     }
   })
 export default styles

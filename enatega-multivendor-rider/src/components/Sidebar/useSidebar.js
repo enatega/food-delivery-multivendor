@@ -4,6 +4,7 @@ import { gql, useMutation } from '@apollo/client'
 import { toggleAvailablity } from '../../apollo/mutations'
 import UserContext from '../../context/user'
 import { profile } from '../../apollo/queries'
+import {useTranslation} from 'react-i18next'
 
 const TOGGLE_RIDER = gql`
   ${toggleAvailablity}
@@ -20,7 +21,7 @@ const PRIVACY_URL =
 const ABOUT_URL = 'https://ninjascode.com/'
 
 // constants
-const datas = [
+/*const datas = [
   {
     title: 'Product Page',
     icon: 'product-hunt',
@@ -36,9 +37,27 @@ const datas = [
     icon: 'info-circle',
     navigateTo: ABOUT_URL
   }
-]
+]*/
 
 const useSidebar = () => {
+  const {t} = useTranslation()
+  const datas = [
+    {
+      title: t('productPage'),
+      icon: 'product-hunt',
+      navigateTo: PRODUCT_URL
+    },
+    {
+      title: t('privacyPolicy'),
+      icon: 'lock',
+      navigateTo: PRIVACY_URL
+    },
+    {
+      title: t('aboutUs'),
+      icon: 'info-circle',
+      navigateTo: ABOUT_URL
+    }
+  ]
   const { logout } = useContext(AuthContext)
   const { dataProfile } = useContext(UserContext)
   const [isEnabled, setIsEnabled] = useState(dataProfile?.rider.available)

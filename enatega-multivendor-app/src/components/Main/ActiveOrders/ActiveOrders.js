@@ -16,43 +16,46 @@ import RandomShape from '../../../assets/SVG/RandomShape'
 import Analytics from '../../../utils/analytics'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
+import {useTranslation} from 'react-i18next'
 
 const orderStatuses = [
   {
     key: 'PENDING',
     status: 1,
-    statusText: 'Your order is still pending.'
+    statusText: 'pendingOrder'
   },
   {
     key: 'ACCEPTED',
     status: 2,
-    statusText: 'Restaurant is preparing Food.'
+    statusText: 'acceptedOrder'
   },
   {
     key: 'ASSIGNED',
     status: 3,
-    statusText: 'Assigned a rider.'
+    statusText: 'assignedOrder'
   },
   {
     key: 'PICKED',
     status: 4,
-    statusText: 'Rider is on the way.'
+    statusText: 'pickedOrder'
   },
   {
     key: 'DELIVERED',
     status: 5,
-    statusText: 'Order is delivered.'
+    statusText: 'deliveredOrder'
   },
   {
     key: 'COMPLETED',
     status: 6,
-    statusText: 'Order is completed.'
+    statusText: 'completedOrder'
   }
 ]
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 
 const ActiveOrders = () => {
+
+  const {t} = useTranslation()
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
@@ -94,7 +97,7 @@ const ActiveOrders = () => {
                 onPress={() => setShowAll(!showAll)}
                 style={styles().button}>
                 <Text style={styles().buttonText}>
-                  {showAll ? 'View Less' : 'View All'}
+                  {showAll ? t('viewLess') : t('viewAll')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -171,7 +174,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
                 ))}
             </View>
             <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-              {checkStatus(item.orderStatus).statusText}
+              {t(checkStatus(item.orderStatus).statusText)}
             </Text>
           </View>
         </View>

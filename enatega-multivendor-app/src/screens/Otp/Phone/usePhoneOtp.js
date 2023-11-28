@@ -8,6 +8,8 @@ import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import getEnvVars from '../../../../environment'
+import {useTranslation} from 'react-i18next'
+
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -17,6 +19,8 @@ const UPDATEUSER = gql`
 `
 const { TEST_OTP } = getEnvVars()
 const usePhoneOtp = () => {
+
+  const {t} = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [otp, setOtp] = useState('')
@@ -41,7 +45,7 @@ const usePhoneOtp = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: 'OTP sent to your phone.'
+      message: t('otpSentToPhone')
     })
   }
 
@@ -59,7 +63,7 @@ const usePhoneOtp = () => {
 
   function onUpdateUserCompleted(data) {
     FlashMessage({
-      message: 'Phone number has been verified successfully!.'
+      message: t('numberVerified')
     })
     route.params?.prevScreen
       ? navigation.navigate(route.params.prevScreen)

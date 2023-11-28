@@ -16,7 +16,7 @@ import screenOptions from './screenOptions'
 import { FontAwesome } from '@expo/vector-icons'
 import CountryPicker from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function Register(props) {
   const {
@@ -44,6 +44,7 @@ function Register(props) {
     currentTheme
   } = useRegister()
 
+    const {t} = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -87,7 +88,7 @@ function Register(props) {
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
-                  {i18n.t('letsGetStarted')}
+                  {t('letsGetStarted')}
                 </TextDefault>
                 <TextDefault
                   H5
@@ -96,13 +97,13 @@ function Register(props) {
                   style={{
                     textAlign: 'center'
                   }}>
-                  {i18n.t('createAccount')}
+                  {t('createAccount')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
                 <View>
                   <TextInput
-                    placeholder="Email"
+                    placeholder={t('email')}
                     style={[
                       styles(currentTheme).textField,
                       emailError && styles(currentTheme).errorInput
@@ -122,7 +123,7 @@ function Register(props) {
                 </View>
                 <View>
                   <TextInput
-                    placeholder="First name"
+                    placeholder={t('firstNamePH')}
                     style={[
                       styles(currentTheme).textField,
                       firstnameError && styles(currentTheme).errorInput
@@ -142,7 +143,8 @@ function Register(props) {
                 </View>
                 <View>
                   <TextInput
-                    placeholder="Last name"
+                    placeholder={t('lastNamePH')}
+
                     style={[
                       styles(currentTheme).textField,
                       lastnameError && styles(currentTheme).errorInput
@@ -163,7 +165,7 @@ function Register(props) {
                 <View style={styles().passwordField}>
                   <TextInput
                     secureTextEntry={showPassword}
-                    placeholder="Password"
+                    placeholder={t('password')}
                     style={[
                       styles(currentTheme).textField,
                       styles().passwordInput,
@@ -209,7 +211,7 @@ function Register(props) {
                     </TextDefault>
                   </View>
                   <TextInput
-                    placeholder="Mobile Number"
+                    placeholder={t('mobileNumber')}
                     style={[
                       styles(currentTheme).textField,
                       styles().phoneNumber,
@@ -241,7 +243,7 @@ function Register(props) {
                       textColor={currentTheme.buttonTextPink}
                       style={alignment.MLsmall}
                       bold>
-                      {i18n.t('continueBtn')}
+                      {t('continueBtn')}
                     </TextDefault>
                   </TouchableOpacity>
                 </View>

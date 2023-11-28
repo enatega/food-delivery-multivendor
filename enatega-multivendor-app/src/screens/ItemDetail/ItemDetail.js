@@ -25,11 +25,13 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
+import {useTranslation} from 'react-i18next'
 
 function ItemDetail(props) {
   
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
+  const {t} = useTranslation()
 
   const [selectedVariation, setSelectedVariation] = useState({
     ...food.variations[0],
@@ -79,7 +81,7 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: 'Customize',
+      title: t('titleCustomize'),
       headerTitleContainerStyle: {
         marginTop: scale(10),
         paddingLeft: scale(15),
@@ -324,18 +326,20 @@ function ItemDetail(props) {
               />
 
               {food.variations.length > 1 && (
-                <View>
-                  <TitleComponent
-                    title="Select Variation"
-                    subTitle="Select one"
-                    status="Required"
-                  />
-                  <RadioComponent
-                    options={food.variations}
-                    selected={selectedVariation}
-                    onPress={onSelectVariation}
-                  />
-                </View>
+               <>
+                  <View>
+                    <TitleComponent
+                      title={t('SelectVariation')}
+                      subTitle={t('SelectOne')}
+                      status={t('Required')}
+                    />
+                    <RadioComponent
+                      options={food.variations}
+                      selected={selectedVariation}
+                      onPress={onSelectVariation}
+                    />
+                  </View>
+               </>
               )}
               {selectedVariation.addons.map(addon => (
                 <View key={addon._id}>
@@ -356,13 +360,13 @@ function ItemDetail(props) {
             <View style={styles(currentTheme).line}></View>
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent
-                title="Special instructions"
-                subTitle="Any specific preferences?"
-                status="Optional"
+                title={t('specialInstructions')}
+                subTitle={t('anySpecificPreferences')}
+                status={t('optional')}
               />
               <TextField
                 style={styles(currentTheme).input}
-                placeholder={'E.g No mayo'}
+                placeholder={t('noMayo')}
                 textAlignVertical="center"
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}

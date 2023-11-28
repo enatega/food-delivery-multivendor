@@ -7,12 +7,16 @@ import getEnvVars from '../../../environment'
 import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import Analytics from '../../utils/analytics'
+import {useTranslation} from 'react-i18next'
+
+
 const { SERVER_URL } = getEnvVars()
 const MYORDERS = gql`
   ${myOrders}
 `
 
 function StripeCheckout(props) {
+  const {t} = useTranslation()
   const [loading, loadingSetter] = useState(true)
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
@@ -21,7 +25,7 @@ function StripeCheckout(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: 'Stripe Checkout'
+      title: t('stripeCheckout')
     })
   }, [props.navigation])
 

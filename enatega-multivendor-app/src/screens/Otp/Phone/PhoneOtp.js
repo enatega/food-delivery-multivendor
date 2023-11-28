@@ -8,7 +8,7 @@ import { alignment } from '../../../utils/alignment'
 import screenOptions from '../screenOptions'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import usePhoneOtp from './usePhoneOtp'
-import i18n from '../../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 function PhoneOtp(props) {
   const {
@@ -24,6 +24,7 @@ function PhoneOtp(props) {
     themeContext
   } = usePhoneOtp()
 
+    const {t} = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -61,7 +62,7 @@ function PhoneOtp(props) {
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
               }}>
-              {i18n.t('verifyPhone')}
+              {t('verifyPhone')}
             </TextDefault>
             <TextDefault
               H5
@@ -70,7 +71,7 @@ function PhoneOtp(props) {
               style={{
                 textAlign: 'center'
               }}>
-              {i18n.t('otpSentToPhone')}
+              {t('otpSentToPhone')}
             </TextDefault>
           </View>
           <View>
@@ -97,7 +98,7 @@ function PhoneOtp(props) {
                 style={styles().error}
                 bold
                 textColor={currentTheme.textErrorColor}>
-                {i18n.t('wrongOtp')}
+                {t('wrongOtp')}
               </TextDefault>
             )}
           </View>
@@ -118,7 +119,7 @@ function PhoneOtp(props) {
                   textColor={currentTheme.buttonTextPink}
                   style={alignment.MLsmall}
                   bold>
-                  {i18n.t('resendBtn')}
+                  {t('resendBtn')}
                 </TextDefault>
               </TouchableOpacity>
             )}

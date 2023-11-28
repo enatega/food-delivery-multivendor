@@ -7,12 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { gql, useMutation } from '@apollo/client'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
+import {useTranslation} from 'react-i18next'
 
 const RIDER_LOGIN = gql`
   ${riderLogin}
 `
 
 const useLogin = () => {
+  const {t} = useTranslation()
   const [username, setUsername] = useState('rider2')
   const [password, setPassword] = useState('12345')
   const [showPassword, setShowPassword] = useState(true)
@@ -33,18 +35,19 @@ const useLogin = () => {
     setPasswordError('')
 
     if (!username) {
-      setUsernameError('Username is required!')
+      setUsernameError(t('emptyUsernameError'))
       result = false
     }
     if (!password) {
-      setPasswordError('Password is required!')
+      setPasswordError(t('emptyPasswordError'))
       result = false
     }
     return result
   }
 
   async function onCompleted(data) {
-    FlashMessage({ message: 'Logged in' })
+
+    FlashMessage({ message: t('loginFlashMsg') })
     await AsyncStorage.setItem('rider-id', data.riderLogin.userId)
     await setTokenAsync(data.riderLogin.token)
   }
@@ -86,6 +89,7 @@ const useLogin = () => {
       ) {
         notificationToken = (await Notifications.getExpoPushTokenAsync()).data
       }
+     
       mutate({
         variables: {
           username: username.toLowerCase(),

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 })
 

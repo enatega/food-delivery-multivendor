@@ -81,7 +81,8 @@ const styles = (props = null) =>
       width: '70%',
       textAlignVertical: 'bottom',
       fontSize: scale(14),
-      fontWeight: '700'
+      fontWeight: '700',
+      textAlign: 'left'
     },
     midContainer: {
       display: 'flex',
