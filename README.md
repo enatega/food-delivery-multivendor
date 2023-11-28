@@ -234,5 +234,5 @@ The frontend source code for our solution is completely open source. However, th
 
 ## :mailbox_with_mail: Contact Us: <a id="heading-13"></a>
 	
-[Book a meeting with our Sales Representative](https://calendly.com/enatega/30min).
+[Check out the Product Page and Pricing and more for Enatega Multivendor Food Delivery Solution](https://enatega.com/enatega-multi-vendor/?utm_source=github&utm_medium=referral&utm_campaign=github_guide&utm_id=12345678)
 
