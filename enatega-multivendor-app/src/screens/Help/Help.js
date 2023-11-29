@@ -11,6 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import navigationService from '../../routes/navigationService';
 import { scale } from '../../utils/scaling';
 import {useTranslation} from 'react-i18next'
+import i18n from '../../../i18n'
 
 const Help = (props) => {
   const {t} = useTranslation()
