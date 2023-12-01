@@ -10,7 +10,6 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import RequestCard from '../../components/WalletCard/WithDrawRequestCard'
 import UserContext from '../../context/user'
-import i18n from '../../../i18n'
 import {useTranslation} from 'react-i18next'
 
 const WALLET_HISTORY = gql`
