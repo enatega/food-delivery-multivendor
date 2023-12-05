@@ -16,7 +16,7 @@ import styles from './style'
 import DoneIcon from '../../assets/svg/doneIcon.png'
 import Spinner from '../../components/Spinner/Spinner'
 import { useWithdrawRequest } from './useWithdrawRequest'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('window')
 
@@ -31,7 +31,7 @@ const Withdraw = () => {
     setAmount
   } = useWithdrawRequest()
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <WalletScreenBg backBtn>
       {requestSent ? (
@@ -62,10 +62,16 @@ const Withdraw = () => {
               amount={dataProfile.rider.currentWalletAmount.toFixed(2)}
             />
             <View style={styles.inputView}>
-              <TextInput
+              {/* <TextInput
                 placeholder="$0.00"
                 value={amount}
                 onChangeText={text => setAmount(parseFloat(text))}
+                style={[styles.textInput, error && styles.errorInput]}
+              /> */}
+              <TextInput
+                placeholder="$0.00"
+                value={amount !== undefined ? amount : ''}
+                onChangeText={(text) => setAmount(parseFloat(text))}
                 style={[styles.textInput, error && styles.errorInput]}
               />
               <TextDefault

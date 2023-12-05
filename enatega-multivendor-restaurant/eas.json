@@ -10,9 +10,8 @@
         "releaseChannel": "staging",
         "distribution": "internal"
       },
-      "production-restaurant": {
-        "developmentClient": false,
-        "releaseChannel": "production"
+      "production": {
+        "channel": "production"
       }
     },
     "submit": {
