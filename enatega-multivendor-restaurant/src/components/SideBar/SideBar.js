@@ -21,7 +21,7 @@ import { PRODUCT_URL, PRIVACY_URL, ABOUT_URL } from '../../utilities'
 import { useNavigation } from '@react-navigation/native';
 import i18next from '../../../i18n'
 import {useTranslation} from 'react-i18next'
-
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 export default function SideBar() {
   const {t} = useTranslation()
@@ -113,7 +113,7 @@ export default function SideBar() {
     }
   }
   const handleSettingsClick = () => {
-    navigation.navigate('SelectLanguage');
+  navigation.navigate('Language');
   };
 
   return (
@@ -246,23 +246,7 @@ export default function SideBar() {
               {t('aboutUs')}
             </TextDefault>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.logout}
-            activeOpacity={0.8}
-            onPress={handleSettingsClick}
-           >
-            <View style={styles.icon}>
-              <Icon
-                type="font-awesome"
-                color="white"
-                name="gear"
-                size={26}
-              />
-            </View>
-            <TextDefault H4 bolder style={styles.text}>
-            {t('settings')}
-            </TextDefault>
-          </TouchableOpacity>
+
         </View>
         <View style={styles.lowerContainer}>
           <TouchableOpacity style={styles.logout} onPress={logout}>

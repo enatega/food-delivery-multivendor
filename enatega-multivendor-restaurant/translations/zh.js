@@ -49,5 +49,6 @@ export const zh = {
   timeLeft: '剩余时间',
   orderDetail: '订单详情',
   acceptAndPrint: '接受并打印',
-  accept: '接受'
+  accept: '接受',
+  language: '语言'
 }
