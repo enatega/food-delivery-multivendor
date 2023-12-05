@@ -49,5 +49,6 @@ export const fr = {
   timeLeft: 'Temps restant',
   orderDetail: 'Détails de la commande',
   acceptAndPrint: 'Accepter et Imprimer',
-  accept: 'Accepter'
+  accept: 'Accepter',
+  language: 'Langue'
 }

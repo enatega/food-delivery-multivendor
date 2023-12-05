@@ -126,6 +126,7 @@ function TabNavigator() {
         })}
       />
       <Tabs.Screen name={t('titleHome')} component={StackNavigator} />
+      {Platform.OS === 'ios' ? null : <Tabs.Screen name={t('language')} component={SelectLanguage} />}
     </Tabs.Navigator>
   )
 }
@@ -134,7 +135,6 @@ function StackNavigator() {
     <Stack.Navigator initialRouteName="Orders" screenOptions={screenOptions()}>
       <Stack.Screen name="Orders" component={OrdersScreen} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} />
-      <Stack.Screen name="SelectLanguage" component={SelectLanguage} />
     </Stack.Navigator>
   )
 }

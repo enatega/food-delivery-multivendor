@@ -52,14 +52,9 @@ export default function SelectLanguage() {
     if (Platform.OS === 'android') {
       await AsyncStorage.setItem('enatega-language', language);
     }
-    else {
-        await AsyncStorage.setItem('enatega-language', language);
-    }
     var lang = await AsyncStorage.getItem('enatega-language');
     console.log(lang)
   };
-
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
@@ -102,11 +97,6 @@ export default function SelectLanguage() {
               }}>
              
               <View style={styles.goBackContainer}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={{height: 30, marginTop: 8.5}}>
-              <TextDefault H4 bolder textColor="black">
-              {t('backBtn')}
-            </TextDefault>
-            </TouchableOpacity>
           </View>
             </View>
           </View>
