@@ -56,6 +56,7 @@ const Item = ({ item, navigation, currentTheme }) => {
     `,
     { variables: { id: item._id } }
   )
+  const {t} = useTranslation()
   return (
     <TouchableOpacity
       activeOpacity={0.7}
