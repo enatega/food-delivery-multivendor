@@ -15,13 +15,6 @@ const GETCONFIGURATION = gql`
 let ENV = {}
 
 const getEnvVars = (configuration, env = Updates.releaseChannel) => {
-  // ENV = data.reduce((acc, curr) => {
-  //   return {
-  //     ...acc,
-  //     [curr]: curr.value,
-  //   };
-  // }, {});
-
   if (env === 'production' || env === 'staging') {
     const {
       graphqlUrlApp,
