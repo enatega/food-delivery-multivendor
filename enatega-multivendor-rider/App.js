@@ -25,6 +25,8 @@ import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { LocationProvider } from './src/context/location'
 import getEnvVars from './environment'
 import moment from 'moment-timezone'
+// import { useTranslation } from 'react-i18next'
+
 moment.tz.setDefault('Asia/Karachi')
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -43,6 +45,7 @@ Sentry.init({
 })
 
 export default function App() {
+  // const { t } = useTranslation();
   const [appIsReady, setAppIsReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -116,6 +119,7 @@ export default function App() {
         ]}>
         <TextDefault textColor={colors.white} bold>
           {i18n.t('updating')}
+          {/* {.t('updating')} */}
         </TextDefault>
         <ActivityIndicator size="large" color={colors.white} />
       </View>

@@ -213,6 +213,7 @@ function Restaurant(props) {
     ) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
+      console.log(result)
       if (result.exist) await addQuantity(result.key)
       else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
       animate()
