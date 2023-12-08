@@ -15,6 +15,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { NetworkStatus } from '@apollo/client'
 const { height, width } = Dimensions.get('window')
+import i18next from '../../../i18next'
 import {useTranslation} from 'react-i18next'
 
 const NewOrders = ({ navigation }) => {

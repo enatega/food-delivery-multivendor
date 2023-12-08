@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-//import {sv} from './translations/sv'
 import { en } from './languages/en'
 import { fr } from './languages/fr'
 import { km } from './languages/km'
@@ -20,25 +19,27 @@ export const languageResources = {
 const getStoredLanguage = async () => {
   const lng = await AsyncStorage.getItem('enatega-language');
   console.log(lng)
-  
-i18next.use(initReactI18next).init({
-  compatibilityJSON: 'v3',
-  lng: lng,
-  fallbackLng: 'en',
-  resources: languageResources,
-});
+  i18next.use(initReactI18next).init({
+    compatibilityJSON: 'v3',
+    lng: lng,
+    fallbackLng: 'en',
+    resources: languageResources,
+  });
+}
+if (Platform.OS === 'android') {
+  getStoredLanguage()
+}
+if (Platform.OS === 'ios') {
+  i18next.locale = Localization.locale
+  i18next.use(initReactI18next).init({
+    compatibilityJSON: 'v3',
+    lng: i18next.locale,
+    fallbackLng: 'en',
+    resources: languageResources,
+  });
+  console.log("language:", Localization.locale)
+  i18next.changeLanguage(i18next.locale)
 }
 
-getStoredLanguage()
-
-
-i18next.use(initReactI18next).init({
-  compatibilityJSON: 'v3',
-  lng: 'en',
-  fallbackLng: 'en',
-  resources: languageResources,
-});
-
-//i18next.changeLanguage('en')
-
 export default i18next;
+
