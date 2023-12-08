@@ -49,6 +49,7 @@ import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import Analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
+import i18next from '../../../i18next';
 import {useTranslation} from 'react-i18next'
 
 const RESTAURANTS = gql`

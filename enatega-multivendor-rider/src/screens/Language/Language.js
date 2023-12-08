@@ -34,7 +34,7 @@ function Language() {
     navigation.setOptions({
       title: t('titleLanguage')
     })
-  }, [navigation])
+  }, [navigation, languageName])
 
   useEffect(() => {
     selectedLanguageFunc()
@@ -64,6 +64,13 @@ function Language() {
       )
       Updates.reloadAsync()
     }
+    if (lang) {
+      const defLang = languageTypes.findIndex(el => el.code === lang)
+      const langName = languageTypes[defLang].value
+      setActiveRadio(defLang)
+      languageNameSetter(langName)
+    }
+    modalVisibleSetter(false)
   }
 
   return (
