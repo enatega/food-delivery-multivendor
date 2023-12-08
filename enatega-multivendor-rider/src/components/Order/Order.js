@@ -6,6 +6,8 @@ import colors from '../../utilities/colors'
 import useOrder from './useOrder'
 import Spinner from '../Spinner/Spinner'
 import {useTranslation} from 'react-i18next'
+import i18next from '../../../i18next'
+
 
 const Order = ({ order, orderAmount }) => {
   const {
