@@ -23,7 +23,7 @@ import i18n from '../../../i18n'
 import screenOptions from './screenOptions'
 import styles from './styles'
 import { useFocusEffect } from '@react-navigation/native'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 function calculatePrice(food) {
   var foodPrice = food.variation.price
   food.addons.forEach(addons => {
@@ -35,6 +35,8 @@ function calculatePrice(food) {
 }
 
 function OrderDetail(props) {
+  const Analytics = analytics()
+
   const id = props.route.params ? props.route.params._id : null
   const restaurant = props.route.params ? props.route.params.restaurant : null
   const user = props.route.params ? props.route.params.user : null

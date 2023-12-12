@@ -29,7 +29,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import EmptyAddress from '../../assets/SVG/imageComponents/EmptyAddress'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import navigationService from '../../routes/navigationService'
 import { HeaderBackButton } from '@react-navigation/elements'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
@@ -41,6 +41,7 @@ const DELETE_ADDRESS = gql`
 `
 
 function Addresses() {
+  const Analytics = analytics()
   const navigation = useNavigation()
   const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS)
   const { profile } = useContext(UserContext)

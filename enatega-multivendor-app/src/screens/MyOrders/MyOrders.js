@@ -22,7 +22,7 @@ import screenOptions from './screenOptions'
 import { useFocusEffect } from '@react-navigation/native'
 import SearchFood from '../../assets/SVG/imageComponents/SearchFood'
 import { scale } from '../../utils/scaling'
-import analytics from '../../utils/analytics'
+import Analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
 import { HeaderBackButton } from '@react-navigation/elements'
 import i18n from '../../../i18n'
@@ -31,6 +31,8 @@ const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED']
 
 function MyOrders(props) {
+  const analytics = Analytics()
+
   const configuration = useContext(ConfigurationContext)
   const {
     orders,
@@ -57,7 +59,9 @@ function MyOrders(props) {
   })
 
   useLayoutEffect(() => {
-    props.navigation.setOptions(screenOptions([currentTheme.headerText, currentTheme.darkBgFont]))
+    props.navigation.setOptions(
+      screenOptions([currentTheme.headerText, currentTheme.darkBgFont])
+    )
   }, [props.navigation])
 
   const getItems = items => {
@@ -207,8 +211,7 @@ function MyOrders(props) {
                     {' '}
                     {getItems(item.items)}
                   </TextDefault>
-                  <View
-                    style={styles().rateOrderContainer}>
+                  <View style={styles().rateOrderContainer}>
                     {!item.review && (
                       <TouchableOpacity
                         activeOpacity={0.7}

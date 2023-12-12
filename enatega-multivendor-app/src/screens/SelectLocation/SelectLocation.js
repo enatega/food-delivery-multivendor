@@ -13,13 +13,15 @@ import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
 const LATITUDE_DELTA = 40
 const LONGITUDE_DELTA = 40
 
 export default function SelectLocation(props) {
+  const Analytics = analytics()
+
   const { longitude, latitude } = props.route.params || {}
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -120,8 +122,7 @@ export default function SelectLocation(props) {
           onRegionChangeComplete={onRegionChangeComplete}
           onPanDrag={onPanDrag}
         />
-        <View
-          style={styles().mainContainer}>
+        <View style={styles().mainContainer}>
           <CustomMarker
             width={40}
             height={40}

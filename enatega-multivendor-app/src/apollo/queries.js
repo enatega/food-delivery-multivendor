@@ -172,15 +172,15 @@ export const getConfiguration = `query Configuration{
     graphqlUrlApp
     wsGraphqlUrlApp
     serverUrlApp
-    androidClientID
-    iOSClientID
-    appAmplitudeApiKey
-    googleApiKey
-    expoClientID
-    customerAppSentryUrl
-    termsAndConditions
-    privacyPolicy
-    testOtp
+    androidClientID 
+    iOSClientID 
+    appAmplitudeApiKey 
+    googleApiKey 
+    expoClientID 
+    customerAppSentryUrl 
+    termsAndConditions 
+    privacyPolicy 
+    testOtp 
   }
 }`
 

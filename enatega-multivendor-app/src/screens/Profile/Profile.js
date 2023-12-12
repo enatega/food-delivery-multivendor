@@ -28,7 +28,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useFocusEffect } from '@react-navigation/native'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { Feather } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -38,6 +38,8 @@ const UPDATEUSER = gql`
 `
 
 function Profile(props) {
+  const Analytics = analytics()
+
   const refName = useRef()
   const [nameError, setNameError] = useState('')
   const [toggleEmailView, setToggleEmailView] = useState(true)
@@ -191,7 +193,7 @@ function Profile(props) {
           message: error.networkError.result.errors[0].message
         })
       }
-    } catch (err) { }
+    } catch (err) {}
   }
 
   function changeNameTab() {
@@ -260,13 +262,12 @@ function Profile(props) {
                 {
                   backgroundColor: profile.phoneIsVerified
                     ? currentTheme.main
-                    : currentTheme.buttonText,
+                    : currentTheme.buttonText
                 }
               ]}>
-              <TextDefault
-                textColor={currentTheme.white}
-              >
-                {profile.phoneIsVerified ? "Verified" : 'Unverified'}</TextDefault>
+              <TextDefault textColor={currentTheme.white}>
+                {profile.phoneIsVerified ? 'Verified' : 'Unverified'}
+              </TextDefault>
             </View>
           )}
         </View>
@@ -296,7 +297,11 @@ function Profile(props) {
               {toggleNameView && (
                 <>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
+                    <TextDefault
+                      H5
+                      B700
+                      bolder
+                      textColor={currentTheme.darkBgFont}>
                       Name
                     </TextDefault>
                   </View>
@@ -306,7 +311,11 @@ function Profile(props) {
                       activeOpacity={0.3}
                       style={styles().headingButton}
                       onPress={handleNamePress}>
-                      <MaterialIcons name="edit" size={25} color={currentTheme.darkBgFont} />
+                      <MaterialIcons
+                        name="edit"
+                        size={25}
+                        color={currentTheme.darkBgFont}
+                      />
                     </TouchableOpacity>
                   </View>
                 </>
@@ -318,7 +327,7 @@ function Profile(props) {
               <View>
                 <View style={styles(currentTheme).containerHeading}>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder >
+                    <TextDefault H5 B700 bolder>
                       Name
                     </TextDefault>
                   </View>
@@ -353,7 +362,11 @@ function Profile(props) {
             <View style={styles().containerHeading}>
               <>
                 <View style={styles().headingTitle}>
-                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
+                  <TextDefault
+                    H5
+                    B700
+                    bolder
+                    textColor={currentTheme.darkBgFont}>
                     Email
                   </TextDefault>
                 </View>
@@ -367,7 +380,11 @@ function Profile(props) {
             <View style={styles().containerHeading}>
               <>
                 <View style={styles().headingTitle}>
-                  <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
+                  <TextDefault
+                    H5
+                    B700
+                    bolder
+                    textColor={currentTheme.darkBgFont}>
                     Password
                   </TextDefault>
                 </View>
@@ -377,7 +394,11 @@ function Profile(props) {
                     activeOpacity={0.3}
                     style={styles().headingButton}
                     onPress={showModal}>
-                    <MaterialIcons name="edit" size={25} color={currentTheme.darkBgFont} />
+                    <MaterialIcons
+                      name="edit"
+                      size={25}
+                      color={currentTheme.darkBgFont}
+                    />
                   </TouchableOpacity>
                 </View>
               </>
@@ -391,7 +412,11 @@ function Profile(props) {
               {toggleView && (
                 <>
                   <View style={styles().headingTitle}>
-                    <TextDefault H5 B700 bolder textColor={currentTheme.darkBgFont}>
+                    <TextDefault
+                      H5
+                      B700
+                      bolder
+                      textColor={currentTheme.darkBgFont}>
                       Mobile
                     </TextDefault>
                   </View>
@@ -404,7 +429,11 @@ function Profile(props) {
                           prevScreen: 'Profile'
                         })
                       }>
-                      <MaterialIcons name="edit" size={25} color={currentTheme.darkBgFont} />
+                      <MaterialIcons
+                        name="edit"
+                        size={25}
+                        color={currentTheme.darkBgFont}
+                      />
                     </TouchableOpacity>
                   </View>
                 </>
@@ -455,8 +484,8 @@ function Profile(props) {
                             {profile.phone === ''
                               ? 'Add Phone'
                               : profile.phoneIsVerified
-                                ? 'Verified'
-                                : 'Verify?'}
+                              ? 'Verified'
+                              : 'Verify?'}
                           </TextDefault>
                         </TouchableOpacity>
                       )}

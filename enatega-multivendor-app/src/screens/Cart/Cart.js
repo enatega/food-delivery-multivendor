@@ -51,7 +51,7 @@ import { RectButton } from 'react-native-gesture-handler'
 import { textStyles } from '../../utils/textStyles'
 import Pickup from '../../components/Pickup'
 import { calculateDistance } from '../../utils/customFunctions'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 
@@ -64,6 +64,8 @@ const TIPPING = gql`
 `
 
 function Cart(props) {
+  const Analytics = analytics()
+
   const configuration = useContext(ConfigurationContext)
   const {
     isLoggedIn,
@@ -717,8 +719,7 @@ function Cart(props) {
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={[styles().flex]}>
-              <View
-                style={[styles(currentTheme).headerContainer]}>
+              <View style={[styles(currentTheme).headerContainer]}>
                 <View
                   style={[
                     styles(currentTheme).priceContainer,
@@ -726,8 +727,7 @@ function Cart(props) {
                     styles().mB10,
                     styles().pB10
                   ]}>
-                  <View
-                    style={styles(currentTheme).imageContainer}>
+                  <View style={styles(currentTheme).imageContainer}>
                     <View style={{ marginLeft: scale(10) }}>
                       <Image
                         resizeMode="cover"
@@ -738,7 +738,10 @@ function Cart(props) {
                       style={{
                         marginLeft: scale(20)
                       }}>
-                      <TextDefault  textColor={currentTheme.darkBgFont} style={{ padding: 5 }} bolder>
+                      <TextDefault
+                        textColor={currentTheme.darkBgFont}
+                        style={{ padding: 5 }}
+                        bolder>
                         {isPickedUp ? 'Pick Up' : 'Delivery'}{' '}
                       </TextDefault>
                       <TextDefault
@@ -776,7 +779,11 @@ function Cart(props) {
                       renderRightActions={(progress, dragX) =>
                         renderRightSwipe(progress, food.key)
                       }>
-                      <View style={[styles(currentTheme).itemContainer, styles().pB5]}>
+                      <View
+                        style={[
+                          styles(currentTheme).itemContainer,
+                          styles().pB5
+                        ]}>
                         <CartItem
                           quantity={food.quantity}
                           dealName={food.title}
@@ -1214,7 +1221,8 @@ function Cart(props) {
                                     textColor={
                                       currentTheme.darkBgFont
                                     }>{`${location.deliveryAddress}`}</TextDefault>
-                                  <TextDefault textColor={currentTheme.darkBgFont}>
+                                  <TextDefault
+                                    textColor={currentTheme.darkBgFont}>
                                     {' '}
                                     {location.details}
                                   </TextDefault>
@@ -1228,8 +1236,7 @@ function Cart(props) {
                               )}
                             </View>
                           </TouchableOpacity>
-                          <View
-                            style={styles().changeAddressContainer}>
+                          <View style={styles().changeAddressContainer}>
                             <TouchableOpacity
                               activeOpacity={0.7}
                               style={styles(currentTheme).changeAddressBtn}

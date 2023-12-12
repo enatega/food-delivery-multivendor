@@ -41,7 +41,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import * as Device from 'expo-device'
 import AuthContext from '../../context/Auth'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { Divider } from 'react-native-paper'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
@@ -70,6 +70,8 @@ const DEACTIVATE = gql`
 `
 
 function Settings(props) {
+  const Analytics = analytics()
+
   const { token, setToken } = useContext(AuthContext)
   const {
     profile,
@@ -235,7 +237,7 @@ function Settings(props) {
       FlashMessage({
         message: error.networkError.result.errors[0].message
       })
-    } catch (err) { }
+    } catch (err) {}
   }
 
   async function updateNotificationStatus(notificationCheck) {
@@ -423,7 +425,9 @@ function Settings(props) {
                     modalizeRef.current.open('top')
                   }}>
                   <Ionicons name="trash-outline" size={30} color={'white'} />
-                  <Text style={styles(currentTheme).deleteButtonText}>DELETE ACCOUNT</Text>
+                  <Text style={styles(currentTheme).deleteButtonText}>
+                    DELETE ACCOUNT
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

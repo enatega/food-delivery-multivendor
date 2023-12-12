@@ -5,7 +5,7 @@ import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
@@ -30,6 +30,8 @@ const links = [
   { title: 'About Us', url: 'https://ninjascode.com/pages/ourteam.html' }
 ]
 function Help(props) {
+  const Analytics = analytics()
+
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   useEffect(() => {
@@ -94,7 +96,11 @@ function Help(props) {
                   {title}{' '}
                 </TextDefault>
               </View>
-              <MaterialIcons name="arrow-forward" size={20} color={currentTheme.darkBgFont} />
+              <MaterialIcons
+                name="arrow-forward"
+                size={20}
+                color={currentTheme.darkBgFont}
+              />
             </TouchableOpacity>
           ))}
         </View>

@@ -14,7 +14,7 @@ import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import Status from '../../components/OrderDetail/Status/Status'
 import Detail from '../../components/OrderDetail/Detail/Detail'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
@@ -25,6 +25,8 @@ import { mapStyle } from '../../utils/mapStyle'
 const { height: HEIGHT } = Dimensions.get('screen')
 
 function OrderDetail(props) {
+  const Analytics = analytics()
+
   const id = props.route.params ? props.route.params._id : null
   const user = props.route.params ? props.route.params.user : null
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)

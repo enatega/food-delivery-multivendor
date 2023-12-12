@@ -16,7 +16,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { LocationContext } from '../../context/Location'
 import { HeaderBackButton } from '@react-navigation/elements'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import navigationService from '../../routes/navigationService'
 import { Entypo } from '@expo/vector-icons'
 
@@ -25,6 +25,8 @@ const SELECT_ADDRESS = gql`
 `
 
 function CartAddresses(props) {
+  const Analytics = analytics()
+
   const inset = useSafeAreaInsets()
   const { location, setLocation } = useContext(LocationContext)
   const { profile } = useContext(UserContext)
@@ -119,7 +121,6 @@ function CartAddresses(props) {
                   <View style={[styles().homeIcon]}>
                     <RadioButton
                       size={13}
-
                       outerColor={currentTheme.radioOuterColor}
                       innerColor={currentTheme.radioColor}
                       animation={'bounceIn'}

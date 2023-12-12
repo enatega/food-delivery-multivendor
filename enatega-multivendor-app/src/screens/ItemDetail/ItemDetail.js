@@ -21,13 +21,14 @@ import UserContext from '../../context/User'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 
 function ItemDetail(props) {
-  
+  const Analytics = analytics()
+
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
 
@@ -72,7 +73,6 @@ function ItemDetail(props) {
         foodName: food.title,
         foodRestaurantName: food.restaurantName
       })
-      
     }
     Track()
   })
@@ -96,8 +96,7 @@ function ItemDetail(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View
-              style={styles(currentTheme).backBtnContainer}>
+            <View style={styles(currentTheme).backBtnContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -317,11 +316,7 @@ function ItemDetail(props) {
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>
             <View style={styles().subContainer}>
-              <HeadingComponent
-                title={food.title}
-                price={calculatePrice()}
-               
-              />
+              <HeadingComponent title={food.title} price={calculatePrice()} />
 
               {food.variations.length > 1 && (
                 <View>

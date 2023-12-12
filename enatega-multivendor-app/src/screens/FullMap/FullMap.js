@@ -9,13 +9,15 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 const LATITUDE = 33.7001019
 const LONGITUDE = 72.9735978
 const LATITUDE_DELTA = 0.0022
 const LONGITUDE_DELTA = 0.0021
 
 export default function FullMap(props) {
+  const Analytics = analytics()
+
   const latitude = props.route.params.latitude ?? LATITUDE
   const longitude = props.route.params.longitude ?? LONGITUDE
 
@@ -78,8 +80,7 @@ export default function FullMap(props) {
           showsTraffic={false}
           region={region}
         />
-        <View
-          style={styles().customMarkerContainer}>
+        <View style={styles().customMarkerContainer}>
           <CustomMarker
             width={40}
             height={40}

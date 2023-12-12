@@ -47,7 +47,7 @@ import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
 
 const RESTAURANTS = gql`
@@ -58,6 +58,8 @@ const SELECT_ADDRESS = gql`
 `
 
 function Main(props) {
+  const Analytics = analytics()
+
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
@@ -147,38 +149,38 @@ function Main(props) {
   }
 
   const setCurrentLocation = async () => {
-    setBusy(true);
-    const { error, coords } = await getCurrentLocation();
+    setBusy(true)
+    const { error, coords } = await getCurrentLocation()
 
-    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`;
+    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
         if (data.error) {
-          console.log('Reverse geocoding request failed:', data.error);
+          console.log('Reverse geocoding request failed:', data.error)
         } else {
-          let address = data.display_name;
+          let address = data.display_name
           if (address.length > 21) {
-            address = address.substring(0, 21) + "...";
+            address = address.substring(0, 21) + '...'
           }
 
-          if (error) navigation.navigate('SelectLocation');
+          if (error) navigation.navigate('SelectLocation')
           else {
-            modalRef.current.close();
+            modalRef.current.close()
             setLocation({
               label: 'Current Location',
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address
-            });
-            setBusy(false);
+            })
+            setBusy(false)
           }
-          console.log(address);
+          console.log(address)
         }
       })
       .catch(error => {
-        console.error('Error fetching reverse geocoding data:', error);
-      });
+        console.error('Error fetching reverse geocoding data:', error)
+      })
   }
 
   const modalHeader = () => (
@@ -219,8 +221,7 @@ function Main(props) {
     if (loading || mutationLoading || loadingOrders) return loadingScreen()
     else {
       return (
-        <View
-          style={styles().emptyViewContainer}>
+        <View style={styles().emptyViewContainer}>
           <TextDefault textColor={currentTheme.fontMainColor}>
             No Restaurants
           </TextDefault>
@@ -261,7 +262,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => { }} />
+        <Search search={''} setSearch={() => {}} />
         <Placeholder
           Animation={props => (
             <Fade

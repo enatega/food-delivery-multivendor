@@ -42,7 +42,7 @@ import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
 import TextError from '../../components/Text/TextError/TextError'
 import i18n from '../../../i18n'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
@@ -59,6 +59,8 @@ const config = to => ({
 })
 
 function Restaurant(props) {
+  const Analytics = analytics()
+
   const scrollRef = useRef(null)
   const flatListRef = useRef(null)
   const navigation = useNavigation()
@@ -537,15 +539,14 @@ function Restaurant(props) {
                 }>
                 <View style={styles(currentTheme).deal}>
                   <View style={styles(currentTheme).flex}>
-                 
                     <View style={styles(currentTheme).dealDescription}>
-                    <TextDefault
-                      textColor={currentTheme.fontMainColor}
-                      style={styles(currentTheme).headerText}
-                      numberOfLines={1}
-                      bolder>
-                      {item.title}
-                    </TextDefault>
+                      <TextDefault
+                        textColor={currentTheme.fontMainColor}
+                        style={styles(currentTheme).headerText}
+                        numberOfLines={1}
+                        bolder>
+                        {item.title}
+                      </TextDefault>
                       <TextDefault style={styles(currentTheme).priceText} small>
                         {wrapContentAfterWords(item.description, 5)}
                       </TextDefault>

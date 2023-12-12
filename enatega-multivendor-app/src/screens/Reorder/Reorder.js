@@ -10,13 +10,15 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useFocusEffect } from '@react-navigation/native'
 import styles from './styles'
 import UserContext from '../../context/User'
-import analytics from '../../utils/analytics'
+import Analytics from '../../utils/analytics'
 import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { MaterialIcons, Entypo } from '@expo/vector-icons'
 function Reorder(props) {
+  const analytics = Analytics()
+
   const order = props.route.params.item
   const themeContext = useContext(ThemeContext)
   const { setCartRestaurant, addCartItem } = useContext(UserContext)
