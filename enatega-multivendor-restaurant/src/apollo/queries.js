@@ -82,6 +82,7 @@ export const configuration = `query Configuration{
     _id
     currency
     currencySymbol
+    restaurantAppSentryUrl
   }
 }`
 
