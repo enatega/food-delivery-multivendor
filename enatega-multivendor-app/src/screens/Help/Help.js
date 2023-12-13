@@ -1,48 +1,78 @@
-import React, { useContext, useLayoutEffect, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { View, TouchableOpacity, StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import analytics from '../../utils/analytics'
+import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { scale } from '../../utils/scaling'
+import { useTranslation } from 'react-i18next'
 import i18n from '../../../i18n'
 
-const links = [
-  {
-    title: 'Product Page',
-    url:
-      'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
-  },
-  {
-    title: 'Docs',
-    url: 'https://enatega.com/multivendor-documentation/'
-  },
-  {
-    title: 'Blog',
-    url:
-      'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
-  },
-  { title: 'About Us', url: 'https://ninjascode.com/pages/ourteam.html' }
-]
-function Help(props) {
-  const Analytics = analytics()
-
+const Help = props => {
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+
+  const [links, setLinks] = useState([
+    {
+      title: t('titleProductPage'),
+      url:
+        'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
+    },
+    {
+      title: t('titleDocs'),
+      url: 'https://enatega.com/multivendor-documentation/'
+    },
+    {
+      title: t('titleBlog'),
+      url:
+        'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
+    },
+    {
+      title: t('titleAboutUs'),
+      url: 'https://ninjascode.com/pages/ourteam.html'
+    }
+  ])
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_HELP)
     }
     Track()
   }, [])
-  useLayoutEffect(() => {
+
+  useEffect(() => {
+    // Update translations when the language changes
+    setLinks([
+      {
+        title: t('titleProductPage'),
+        url:
+          'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
+      },
+      {
+        title: t('titleDocs'),
+        url: 'https://enatega.com/multivendor-documentation/'
+      },
+      {
+        title: t('titleBlog'),
+        url:
+          'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
+      },
+      {
+        title: t('titleAboutUs'),
+        url: 'https://ninjascode.com/pages/ourteam.html'
+      }
+    ])
+  }, [i18n.language])
+
+  useEffect(() => {
     props.navigation.setOptions({
-      headerTitle: i18n.t('titleHelp'),
+      headerTitle: t('titleHelp'),
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleContainerStyle: {
@@ -58,7 +88,6 @@ function Help(props) {
       headerStyle: {
         backgroundColor: currentTheme.themeBackground
       },
-
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (

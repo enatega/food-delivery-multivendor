@@ -49,6 +49,7 @@ import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
+import { useTranslation } from 'react-i18next'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -60,6 +61,7 @@ const SELECT_ADDRESS = gql`
 function Main(props) {
   const Analytics = analytics()
 
+  const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
@@ -105,6 +107,7 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
+    // }, [i18n.language])
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -168,7 +171,7 @@ function Main(props) {
           else {
             modalRef.current.close()
             setLocation({
-              label: 'Current Location',
+              label: 'currentLocation',
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address
@@ -196,11 +199,11 @@ function Main(props) {
             color={currentTheme.black}
           />
           <View style={styles().mL5p} />
-          <TextDefault bold>Current Location</TextDefault>
+          <TextDefault bold>{t('currentLocation')}</TextDefault>
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === 'Current Location' && (
+        {location.label === t('currentLocation') && (
           <MaterialIcons
             name="check"
             size={scale(15)}
@@ -251,7 +254,7 @@ function Main(props) {
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold>Add New Address</TextDefault>
+            <TextDefault bold>{t('addAddress')}</TextDefault>
           </View>
         </TouchableOpacity>
       </View>
@@ -352,6 +355,7 @@ function Main(props) {
       .map(id => restaurants.filter(res => res._id === id))
       .flat()
   }))
+
   return (
     <>
       <SafeAreaView
@@ -434,7 +438,7 @@ function Main(props) {
                         color={currentTheme.black}
                       />
                       <View style={styles().mL5p} />
-                      <TextDefault bold>{address.label}</TextDefault>
+                      <TextDefault bold>{t(address.label)}</TextDefault>
                     </View>
                     <View style={styles().addressTextContainer}>
                       <TextDefault
@@ -447,7 +451,7 @@ function Main(props) {
                   </TouchableOpacity>
                   <View style={styles().addressTick}>
                     {address.selected &&
-                      !['Current Location', 'Selected Location'].includes(
+                      ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (
                         <MaterialIcons

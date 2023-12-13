@@ -23,6 +23,7 @@ export default {
   },
   btn: {
     backgroundColor: colors.primary,
+
     borderRadius: 10,
     ...alignment.MRmedium,
     ...alignment.PLsmall,

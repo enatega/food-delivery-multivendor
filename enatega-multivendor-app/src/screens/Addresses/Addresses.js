@@ -42,6 +42,7 @@ const DELETE_ADDRESS = gql`
 
 function Addresses() {
   const Analytics = analytics()
+
   const navigation = useNavigation()
   const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS)
   const { profile } = useContext(UserContext)

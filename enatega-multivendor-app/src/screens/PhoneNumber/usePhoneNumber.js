@@ -9,14 +9,16 @@ import { phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import UserContext from '../../context/User'
 import countryCallingCodes from './countryCodes'
-import i18n from '../../../i18n'
+
 import ConfigurationContext from '../../context/Configuration'
+import { useTranslation } from 'react-i18next'
 
 const UPDATEUSER = gql`
   ${updateUser}
 `
 
 const useRegister = () => {
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [phone, setPhone] = useState('')
@@ -121,10 +123,10 @@ const useRegister = () => {
     let result = true
 
     if (!phone) {
-      setPhoneError(i18n.t('mobileErr1'))
+      setPhoneError(t('mobileErr1'))
       result = false
     } else if (!phoneRegex.test(phone)) {
-      setPhoneError(i18n.t('mobileErr2'))
+      setPhoneError(t('mobileErr2'))
       result = false
     }
     return result

@@ -12,8 +12,10 @@ import moment from 'moment'
 import { useCancelOrder, useOrderPickedUp, useOrderRing } from '../../ui/hooks'
 import CountDown from 'react-native-countdown-component'
 import { useRestaurantContext } from '../../ui/context/restaurant'
+import { useTranslation } from 'react-i18next'
 
 export default function OrderDetail({ navigation, route }) {
+  const { t } = useTranslation()
   const { activeBar, orderData, preparationTime, createdAt } = route.params
   const { _id, orderDate } = orderData
   const { cancelOrder, loading: cancelLoading } = useCancelOrder()
@@ -46,8 +48,8 @@ export default function OrderDetail({ navigation, route }) {
   const decision = !isAcceptButtonVisible
     ? acceptTime
     : remainingTime > 0
-      ? remainingTime
-      : 0
+    ? remainingTime
+    : 0
 
   // image path
   const order = data.restaurantOrders.find(o => o._id === _id)
@@ -108,10 +110,10 @@ export default function OrderDetail({ navigation, route }) {
               </View>
               <View style={styles.textContainer}>
                 <TextDefault bolder H4>
-                  {activeBar === 2 ? 'Prepared' : 'Preparing'}
+                  {activeBar === 2 ? t('prepared') : t('preparing')}
                 </TextDefault>
                 <TextDefault>
-                  {activeBar === 2 ? 'Delivered' : 'Accepted'}
+                  {activeBar === 2 ? t('delivered') : t('accepted')}
                 </TextDefault>
               </View>
             </View>
@@ -120,9 +122,7 @@ export default function OrderDetail({ navigation, route }) {
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <View style={{ marginBottom: 20 }}>
                 {!isAcceptButtonVisible && (
-                  <TextDefault>
-                    You can accept order after the given time{' '}
-                  </TextDefault>
+                  <TextDefault>{t('acceptOrderText')} </TextDefault>
                 )}
                 {activeBar === 0 && (
                   <CountDown
@@ -144,7 +144,7 @@ export default function OrderDetail({ navigation, route }) {
                 {activeBar === 1 && (
                   <>
                     <TextDefault textColor="gray" bolder center>
-                      Time Left
+                      {t('timeLeft')}
                     </TextDefault>
                     <CountDown
                       until={totalPrep}
@@ -167,7 +167,7 @@ export default function OrderDetail({ navigation, route }) {
               {activeBar === 0 && isAcceptButtonVisible && (
                 <>
                   <Button
-                    title="Accept & Print"
+                    title={t('acceptAndPrint')}
                     buttonStyle={{
                       backgroundColor: colors.green,
                       borderRadius: 10,
@@ -181,7 +181,7 @@ export default function OrderDetail({ navigation, route }) {
                   />
 
                   <Button
-                    title="Accept"
+                    title={t('accept')}
                     buttonStyle={{
                       backgroundColor: 'black',
                       borderRadius: 10,
@@ -206,7 +206,7 @@ export default function OrderDetail({ navigation, route }) {
               {activeBar === 1 && (
                 <>
                   <Button
-                    title="Delivered"
+                    title={t('delivered')}
                     buttonStyle={{
                       backgroundColor: colors.green,
                       borderColor: colors.darkgreen,
@@ -229,7 +229,7 @@ export default function OrderDetail({ navigation, route }) {
               {activeBar !== 2 && (
                 <>
                   <Button
-                    title="Reject"
+                    title={t('reject')}
                     buttonStyle={{
                       borderColor: colors.orderUncomplete,
                       borderWidth: 1.5,
@@ -251,14 +251,14 @@ export default function OrderDetail({ navigation, route }) {
               {activeBar === 2 && (
                 <>
                   <TextDefault H3 textColor={colors.darkgreen} bold>
-                    Delivered
+                    {t('delivered')}
                   </TextDefault>
                 </>
               )}
             </View>
             <View style={styles.borderContainer}>
               <TextDefault bold H2 center>
-                Order Detail
+                {t('orderDetail')}
               </TextDefault>
             </View>
 

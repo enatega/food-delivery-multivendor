@@ -11,6 +11,7 @@ import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import analytics from '../../../utils/analytics'
 import AuthContext from '../../../context/Auth'
+import { useTranslation } from 'react-i18next'
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -21,6 +22,7 @@ const CREATEUSER = gql`
 const useEmailOtp = () => {
   const Analytics = analytics()
 
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [otp, setOtp] = useState('')
@@ -47,7 +49,7 @@ const useEmailOtp = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: 'OTP sent to your email.'
+      message: t('otpSentToEmail')
     })
   }
 
@@ -66,7 +68,7 @@ const useEmailOtp = () => {
   async function onCreateUserCompleted(data) {
     try {
       FlashMessage({
-        message: 'Your account has been created.'
+        message: t('accountCreated')
       })
       await Analytics.identify(
         {

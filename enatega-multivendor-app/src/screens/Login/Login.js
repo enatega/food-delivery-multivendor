@@ -11,12 +11,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import Spinner from '../../components/Spinner/Spinner'
-import i18n from '../../../i18n'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { FontAwesome } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
+import {useTranslation} from 'react-i18next'
 
 function Login(props) {
   const {
@@ -35,7 +35,7 @@ function Login(props) {
     setShowPassword,
     checkEmailExist
   } = useLogin()
-
+    const {t} = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -75,7 +75,7 @@ function Login(props) {
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
-                  {i18n.t('whatsYourEmail')}
+                  {t('whatsYourEmail')}
                 </TextDefault>
                 {registeredEmail === false && (
                   <TextDefault
@@ -86,15 +86,15 @@ function Login(props) {
                       textAlign: 'center'
                     }}>
                     {registeredEmail
-                      ? i18n.t('signInWithEmail')
-                      : i18n.t('checkAccount')}
+                      ? t('signInWithEmail')
+                      : t('checkAccount')}
                   </TextDefault>
                 )}
               </View>
               <View style={styles().form}>
                 <View>
                   <TextInput
-                    placeholder="Email"
+                    placeholder={t('email')}
                     style={[
                       styles(currentTheme).textField,
                       emailError !== null ? styles(currentTheme).errorInput : {}
@@ -117,7 +117,7 @@ function Login(props) {
                     <View style={styles().passwordField}>
                       <TextInput
                         secureTextEntry={showPassword}
-                        placeholder="Password"
+                        placeholder={t('password')}
                         style={[
                           styles(currentTheme).textField,
                           styles().passwordInput,
@@ -164,7 +164,7 @@ function Login(props) {
                         textColor={currentTheme.buttonBackgroundPink}
                         style={alignment.MTsmall}
                         bold>
-                        {i18n.t('forgotPassword')}
+                        {t('forgotPassword')}
                       </TextDefault>
                     </TouchableOpacity>
                   </>
@@ -186,7 +186,7 @@ function Login(props) {
                       {loading || loginLoading ? (
                         <Spinner backColor="transparent" size="small" />
                       ) : (
-                        i18n.t('continueBtn')
+                        t('continueBtn')
                       )}
                     </TextDefault>
                   </TouchableOpacity>

@@ -45,6 +45,9 @@ const styles = (props = null) =>
     headingTitle: {
       width: '50%',
     },
+    textAlignLeft: {
+      textAlign: 'left',
+    },
     headingLink: {
       width: '50%',
       flexDirection: 'row',

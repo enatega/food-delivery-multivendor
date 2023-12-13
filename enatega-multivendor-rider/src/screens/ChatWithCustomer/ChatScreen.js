@@ -8,6 +8,8 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import colors from '../../utilities/colors'
 
+import {useTranslation} from 'react-i18next'
+
 const ChatScreen = ({ navigation, route }) => {
   const {
     messages,
@@ -19,6 +21,7 @@ const ChatScreen = ({ navigation, route }) => {
     profile
   } = useChatScreen({ navigation, route })
 
+  const {t} = useTranslation()
   const filterImages = src => {
     setImage(image.filter(item => item !== src))
   }
@@ -64,7 +67,7 @@ const ChatScreen = ({ navigation, route }) => {
           style={styles.emptyChat}
           textColor={colors.fontSecondColor}
           H3>
-          Lets chat with your rider
+          {t('chatWithRide')}
         </TextDefault>
       </View>
     )
@@ -115,7 +118,7 @@ const ChatScreen = ({ navigation, route }) => {
         left: { color: colors.fontMainColor },
         right: { color: colors.horizontalLine }
       }}
-      placeholder="Message"
+      placeholder={t('message')}
       textInputStyle={{ paddingTop: 10 }}
       renderAccessory={image.length > 0 ? renderAccessory : null}
       text={inputMessage}

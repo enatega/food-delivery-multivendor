@@ -10,6 +10,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import TextError from '../Text/TextError/TextError'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
+import {useTranslation} from 'react-i18next'
 
 const ActiveOrders = ({
   navigation,
@@ -19,6 +20,7 @@ const ActiveOrders = ({
   showActiveHeader,
   showPastHeader
 }) => {
+  const {t} = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -30,7 +32,7 @@ const ActiveOrders = ({
   return (
     <React.Fragment>
       {showActiveHeader && (
-        <Heading headerName="Active Order" textWidth="90%" />
+        <Heading headerName={t('ActiveOrder')} textWidth="90%" />
       )}
       {activeOrders.map((item, index) => (
         <Item
@@ -40,7 +42,9 @@ const ActiveOrders = ({
           currentTheme={currentTheme}
         />
       ))}
-      {showPastHeader && <Heading headerName="Past Order" textWidth="90%" />}
+      {showPastHeader && (
+        <Heading headerName={t('PastOrder')} textWidth="90%" />
+      )}
     </React.Fragment>
   )
 }
@@ -52,6 +56,7 @@ const Item = ({ item, navigation, currentTheme }) => {
     `,
     { variables: { id: item._id } }
   )
+  const {t} = useTranslation()
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -77,8 +82,8 @@ const Item = ({ item, navigation, currentTheme }) => {
               small
               bold>
               {item.orderStatus === 'PENDING'
-                ? "We're asking the restaurant how long it will take to deliver your food."
-                : 'The restaurant rider will be at your place around.'}
+                ? t('PenddingText')
+                : t('PenddingText1')}
             </TextDefault>
           </View>
         </View>
@@ -86,7 +91,7 @@ const Item = ({ item, navigation, currentTheme }) => {
         <View style={styles().rightContainer}>
           <TextDefault textColor={currentTheme.iconColorPink} bold center>
             {' '}
-            {item.orderStatus}
+            {t(item.orderStatus)}
           </TextDefault>
         </View>
       </View>

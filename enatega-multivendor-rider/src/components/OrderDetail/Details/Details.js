@@ -7,6 +7,7 @@ import Spinner from '../../Spinner/Spinner'
 import TextError from '../../Text/TextError/TextError'
 import CountDown from 'react-native-countdown-component'
 import useDetails from './useDetails'
+import {useTranslation} from 'react-i18next'
 
 const Details = ({ orderData, navigation, itemId, distance, duration }) => {
   const {
@@ -22,7 +23,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
     loadingAssignOrder,
     loadingOrderStatus
   } = useDetails(orderData)
-
+    const {t} = useTranslation()
   if (!order) return null
 
   return (
@@ -31,13 +32,13 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
         <>
           <View>
             <TextDefault H3 bolder center textColor={colors.black}>
-              Preparing
+              {t('preparing')}
             </TextDefault>
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.timeContainer}>
             <TextDefault center bold H5 textColor={colors.fontSecondColor}>
-              Time Left To Prepare Meal
+              {t('timeLeftForMeal')}
             </TextDefault>
             <CountDown
               until={preparationSeconds - currentSeconds}
@@ -52,7 +53,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
           {distance !== null ? (
             <View style={styles.timeContainer}>
               <TextDefault center bold H5 textColor={colors.fontSecondColor}>
-                Distance to destination
+                {t('distanceToDestination')}
               </TextDefault>
               <TextDefault center bolder H2>
                 {`${distance.toFixed(2)} km`}
@@ -62,7 +63,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
           {duration !== null ? (
             <View style={styles.timeContainer}>
               <TextDefault center bold H5 textColor={colors.fontSecondColor}>
-                Duration to reach destination
+                {t('durationToDestination')}
               </TextDefault>
               <TextDefault center bolder H2>
                 {`${duration.toFixed(0)} mins`}
@@ -78,7 +79,11 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                 }}
                 style={[styles.btn, { backgroundColor: colors.black }]}>
                 <TextDefault center H5 bold textColor={colors.white}>
-                  {loadingAssignOrder ? <Spinner size="small" /> : 'Assign me'}
+                  {loadingAssignOrder ? (
+                    <Spinner size="small" />
+                  ) : (
+                    t('assignMe')
+                  )}
                 </TextDefault>
               </TouchableOpacity>
             </View>
@@ -94,7 +99,11 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                 activeOpacity={0.8}
                 style={[styles.btn, { backgroundColor: colors.black }]}>
                 <TextDefault center bold H5 textColor={colors.white}>
-                  {loadingOrderStatus ? <Spinner size="small" /> : 'Pick'}
+                  {loadingOrderStatus ? (
+                    <Spinner size="small" />
+                  ) : (
+                    t('pick')
+                  )}
                 </TextDefault>
               </TouchableOpacity>
             </View>
@@ -117,7 +126,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                   {loadingOrderStatus ? (
                     <Spinner size="small" color="transparent" />
                   ) : (
-                    'Mark as Delivered'
+                    t('markAsDelivered')
                   )}
                 </TextDefault>
               </TouchableOpacity>
@@ -128,7 +137,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
 
       <View style={styles.heading}>
         <TextDefault bolder H1 center textColor={colors.primary}>
-          Order Details
+          {t('OrderDetail')}
         </TextDefault>
       </View>
       <OrderDetails order={order} />
@@ -143,6 +152,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
 }
 
 const OrderDetails = ({ order }) => {
+  const {t} = useTranslation()
   return (
     <View style={styles.orderDetails}>
       <View style={styles.rowDisplay}>
@@ -151,7 +161,7 @@ const OrderDetails = ({ order }) => {
           bold
           H5
           style={styles.col1}>
-          Your Order From
+          {t('yourOrderFrom')}
         </TextDefault>
         <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
           {order.restaurant.name}
@@ -163,7 +173,7 @@ const OrderDetails = ({ order }) => {
           bold
           H5
           style={styles.col1}>
-          Order No.
+          {t('orderNo')}
         </TextDefault>
         <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
           {order.orderId}
@@ -175,7 +185,7 @@ const OrderDetails = ({ order }) => {
           bold
           H5
           style={styles.col1}>
-          Delivery Address
+          {t('deliveryAddress')}
         </TextDefault>
         <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
           {order.deliveryAddress.deliveryAddress}
@@ -187,8 +197,9 @@ const OrderDetails = ({ order }) => {
 
 const ItemDetails = ({ order, dataConfig, loading, error }) => {
   let subTotal = 0
+  const {t} = useTranslation()
   if (loading) return <Spinner />
-  if (error) return <TextError text="Something went wrong. Try again later!" />
+  if (error) return <TextError text={t('errorText')} />
   return (
     <View style={styles.orderDetails}>
       {order.items.map(item => {
@@ -204,13 +215,13 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
               </TextDefault>
               {item.addons
                 ? item.addons.map(addon => (
-                  <TextDefault
-                    key={addon._id}
-                    textColor={colors.fontSecondColor}
-                    bold>
-                    {addon.title}
-                  </TextDefault>
-                ))
+                    <TextDefault
+                      key={addon._id}
+                      textColor={colors.fontSecondColor}
+                      bold>
+                      {addon.title}
+                    </TextDefault>
+                  ))
                 : null}
             </View>
             <TextDefault
@@ -231,7 +242,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           bold
           H5
           style={[styles.coll2, { flex: 9 }]}>
-          Sub Total
+          {t('subTotal')}
         </TextDefault>
         <TextDefault
           bolder
@@ -248,7 +259,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           bold
           H5
           style={[styles.coll2, { flex: 9 }]}>
-          Tip
+          {t('tip')}
         </TextDefault>
         <TextDefault
           bolder
@@ -265,7 +276,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           bold
           H5
           style={[styles.coll2, { flex: 9 }]}>
-          Tax Charges
+          {t('taxCharges')}
         </TextDefault>
         <TextDefault
           bolder
@@ -282,7 +293,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           bold
           H5
           style={[styles.coll2, { flex: 9 }]}>
-          Delivery Charges
+          {t('delvieryCharges')}
         </TextDefault>
         <TextDefault
           bolder
@@ -300,7 +311,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           bold
           H5
           style={[styles.coll2, { flex: 9 }]}>
-          TOTAL
+          {t('total')}
         </TextDefault>
         <TextDefault
           bolder
@@ -316,6 +327,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
 }
 
 const ChatWithCustomerButton = ({ navigation, order }) => (
+  
   <TouchableOpacity
     onPress={() =>
       navigation.navigate('ChatWithCustomer', {
@@ -326,7 +338,7 @@ const ChatWithCustomerButton = ({ navigation, order }) => (
     activeOpacity={0.8}
     style={[styles.btn, { backgroundColor: colors.black }]}>
     <TextDefault center H5 bold textColor={colors.white}>
-      Chat with Customer
+      {t('chatWithCustomer')}
     </TextDefault>
   </TouchableOpacity>
 )

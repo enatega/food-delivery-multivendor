@@ -3,10 +3,11 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { emailRegex, passRegex, nameRegex, phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import i18n from '../../../i18n'
+import {useTranslation} from 'react-i18next'
 
 const useRegister = () => {
   const navigation = useNavigation()
+  const {t} = useTranslation()
   const route = useRoute()
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
@@ -48,42 +49,42 @@ const useRegister = () => {
     setLastnameError(null)
 
     if (!email) {
-      setEmailError(i18n.t('emailErr1'))
+      setEmailError(t('emailErr1'))
       result = false
     } else if (!emailRegex.test(email.trim())) {
-      setEmailError(i18n.t('emailErr2'))
+      setEmailError(t('emailErr2'))
       result = false
     }
 
     if (!password) {
-      setPasswordError(i18n.t('passErr1'))
+      setPasswordError(t('passErr1'))
       result = false
     } else if (passRegex.test(password) !== true) {
-      setPasswordError(i18n.t('passErr2'))
+      setPasswordError(t('passErr2'))
       result = false
     }
 
     if (!phone) {
-      setPhoneError(i18n.t('mobileErr1'))
+      setPhoneError(t('mobileErr1'))
       result = false
     } else if (!phoneRegex.test(phone)) {
-      setPhoneError(i18n.t('mobileErr2'))
+      setPhoneError(t('mobileErr2'))
       result = false
     }
 
     if (!firstname) {
-      setFirstnameError(i18n.t('firstnameErr1'))
+      setFirstnameError(t('firstnameErr1'))
       result = false
     } else if (!nameRegex.test(firstname)) {
-      setFirstnameError(i18n.t('firstnameErr2'))
+      setFirstnameError(t('firstnameErr2'))
       result = false
     }
 
     if (!lastname) {
-      setLastnameError(i18n.t('lastnameErr1'))
+      setLastnameError(t('lastnameErr1'))
       result = false
     } else if (!nameRegex.test(lastname)) {
-      setLastnameError(i18n.t('lastnameErr2'))
+      setLastnameError(t('lastnameErr2'))
       result = false
     }
     return result

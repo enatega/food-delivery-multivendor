@@ -71,8 +71,10 @@ const styles = (props = null) =>
     notificationChekboxContainer: {
       flexDirection: 'row',
       flex: 1,
-      alignItems: 'center'
+      alignItems: 'center',
+      justifyContent: 'space-between'
     },
+
     buttonContainer: {
       flex: 1,
       justifyContent: 'center',

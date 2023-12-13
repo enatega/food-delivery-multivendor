@@ -16,6 +16,7 @@ import * as Linking from 'expo-linking'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
+import { useTranslation } from 'react-i18next'
 
 const LOGIN = gql`
   ${login}
@@ -39,6 +40,7 @@ export const useCreateAccount = () => {
   } = useEnvVars()
   console.log('EXPO_CLIENT_ID', EXPO_CLIENT_ID)
 
+  const { t } = useTranslation()
   const [
     googleRequest,
     googleResponse,
@@ -126,7 +128,7 @@ export const useCreateAccount = () => {
 
   async function onCompleted(data) {
     if (data.login.isActive == false) {
-      FlashMessage({ message: 'Account Deactivated' })
+      FlashMessage({ message: t('accountDeactivated') })
       setLoading(false)
     } else {
       try {

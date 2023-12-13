@@ -18,14 +18,19 @@ import { useAccount } from '../../ui/hooks'
 import { Image } from 'react-native-elements'
 import useNotification from '../../ui/hooks/useNotification'
 import { PRODUCT_URL, PRIVACY_URL, ABOUT_URL } from '../../utilities'
+import { useNavigation } from '@react-navigation/native';
+import i18next from '../../../i18n'
+import {useTranslation} from 'react-i18next'
+
 
 export default function SideBar() {
+  const {t} = useTranslation()
   const notificationRef = useRef(true)
   const openSettingsRef = useRef(false)
   const { logout, data, toggleSwitch, isAvailable } = useAccount()
   const [notificationStatus, setNotificationStatus] = useState(false)
   const appState = useRef(AppState.currentState)
-
+  const navigation = useNavigation();
   const {
     restaurantData,
     getPermission,
@@ -107,6 +112,10 @@ export default function SideBar() {
       sendTokenToBackend({ variables: { token: null, isEnabled: false } })
     }
   }
+  const handleSettingsClick = () => {
+    navigation.navigate('SelectLanguage');
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground source={bg} resizeMode="cover" style={styles.image}>
@@ -135,11 +144,11 @@ export default function SideBar() {
         <View style={styles.middleContainer}>
           <View style={styles.status}>
             <TextDefault H4 bolder textColor="white">
-              Status
+              {t('status')}
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextDefault textColor="white" style={{ marginRight: 5 }}>
-                {isAvailable ? 'Online' : 'Closed'}
+                {isAvailable ? t('online') : t('closed')}
               </TextDefault>
               <Switch
                 trackColor={{
@@ -156,11 +165,11 @@ export default function SideBar() {
           </View>
           <View style={styles.status}>
             <TextDefault H4 bolder textColor="white">
-              Notifications
+              {t('notifications')}
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextDefault textColor="white" style={{ marginRight: 5 }}>
-                {notificationStatus ? 'On' : 'Off'}
+                {notificationStatus ? t('onn') : t('off')}
               </TextDefault>
               <Switch
                 trackColor={{
@@ -194,7 +203,7 @@ export default function SideBar() {
               />
             </View>
             <TextDefault H4 bolder style={styles.text}>
-              Product page
+              {t('productPage')}
             </TextDefault>
           </TouchableOpacity>
           <TouchableOpacity
@@ -214,7 +223,7 @@ export default function SideBar() {
             </View>
 
             <TextDefault H4 bolder style={styles.text}>
-              Privacy policy
+              {t('privacyPolicy')}
             </TextDefault>
           </TouchableOpacity>
           <TouchableOpacity
@@ -234,7 +243,24 @@ export default function SideBar() {
               />
             </View>
             <TextDefault H4 bolder style={styles.text}>
-              About us
+              {t('aboutUs')}
+            </TextDefault>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.logout}
+            activeOpacity={0.8}
+            onPress={handleSettingsClick}
+           >
+            <View style={styles.icon}>
+              <Icon
+                type="font-awesome"
+                color="white"
+                name="gear"
+                size={26}
+              />
+            </View>
+            <TextDefault H4 bolder style={styles.text}>
+            {t('settings')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -244,7 +270,7 @@ export default function SideBar() {
               <Icon type="entypo" color="white" name="log-out" size={26} />
             </View>
             <TextDefault H4 bolder style={styles.text}>
-              Logout
+            {t('titleLogout')}
             </TextDefault>
           </TouchableOpacity>
         </View>

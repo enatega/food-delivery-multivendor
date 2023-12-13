@@ -9,8 +9,11 @@ import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
 import { Ionicons } from '@expo/vector-icons'
+import {useTranslation} from 'react-i18next'
 
 function RestaurantCard(props) {
+
+  const {t} = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -36,7 +39,8 @@ function RestaurantCard(props) {
                 smaller
                 bold
                 center>
-                {props.deliveryTime + ' min'}
+                {props.deliveryTime + ' '}
+                {t('min')}
               </TextDefault>
             </View>
           </View>
@@ -89,7 +93,7 @@ function RestaurantCard(props) {
             {configuration.currencySymbol} {props.minimumOrder}
             <TextDefault textColor={currentTheme.fontSecondColor} small>
               {' '}
-              Min
+              {t('min')}
             </TextDefault>
           </TextDefault>
         </View>

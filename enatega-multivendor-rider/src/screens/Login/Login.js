@@ -9,12 +9,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import colors from '../../utilities/colors'
-import i18n from '../../../i18n'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import RiderLogin from '../../assets/svg/RiderLogin.png'
 import { FontAwesome } from '@expo/vector-icons'
 import Spinner from '../../components/Spinner/Spinner'
 import useLogin from './useLogin'
+import {useTranslation} from 'react-i18next'
 
 export default function Login() {
   const {
@@ -31,6 +31,7 @@ export default function Login() {
     height
   } = useLogin()
 
+    const {t} = useTranslation()
   return (
     <SafeAreaView style={[styles.flex, styles.bgColor]}>
       <ScrollView
@@ -45,11 +46,11 @@ export default function Login() {
         />
         <View style={styles.innerContainer}>
           <TextDefault bolder H2 center style={styles.signInText}>
-            {i18n.t('signInText')}
+            {t('signInText')}
           </TextDefault>
           <TextInput
             style={[styles.textInput, usernameError && styles.errorInput]}
-            placeholder="Username"
+            placeholder={t('username')}
             value={username}
             onChangeText={e => setUsername(e)}
           />
@@ -64,7 +65,7 @@ export default function Login() {
           <View style={styles.passwordField}>
             <TextInput
               secureTextEntry={showPassword}
-              placeholder="Password"
+              placeholder={t('password')}
               style={[
                 styles.textInput,
                 styles.passwordInput,
@@ -79,6 +80,7 @@ export default function Login() {
               size={24}
               style={styles.eyeBtn}
             />
+            {console.log(username)}
           </View>
           {passwordError ? (
             <View>
@@ -95,7 +97,7 @@ export default function Login() {
             style={[styles.btn, loading ? styles.pt5 : styles.pt15]}
             onPress={() => onSubmit()}>
             <TextDefault H4 bold textColor={colors.white}>
-              {loading ? <Spinner size="small" /> : i18n.t('signInBtn')}
+              {loading ? <Spinner size="small" /> : t('signInBtn')}
             </TextDefault>
           </TouchableOpacity>
         </View>

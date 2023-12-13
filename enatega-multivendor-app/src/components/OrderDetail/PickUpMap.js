@@ -5,6 +5,8 @@ import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { linkToMapsApp } from '../../utils/links'
 import { mapStyle } from '../../utils/mapStyle'
+import {useTranslation} from 'react-i18next'
+
 
 const { width, height } = Dimensions.get('window')
 
@@ -16,6 +18,7 @@ const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 }
 const PickUpMap = ({ deliveryAddress, pickupAddress }) => {
   const themeContext = useContext(ThemeContext)
   let map = null
+  const {t} = useTranslation()
 
   useEffect(() => {
     const destination = {
@@ -66,7 +69,7 @@ const PickUpMap = ({ deliveryAddress, pickupAddress }) => {
         }}
         provider={PROVIDER_GOOGLE}>
         <Marker
-          title="PickUp Address"
+          title={t('pickUpAddress')}
           coordinate={{
             latitude: parseFloat(pickupAddress.location.coordinates[1]),
             longitude: parseFloat(pickupAddress.location.coordinates[0])

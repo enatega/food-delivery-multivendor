@@ -8,7 +8,6 @@ import { getCoupon } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import i18n from '../../../i18n'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
@@ -17,6 +16,7 @@ import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { MaterialIcons, Entypo } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
 
 const GET_COUPON = gql`
   ${getCoupon}
@@ -25,6 +25,7 @@ const GET_COUPON = gql`
 function SelectVoucher(props) {
   const analytics = Analytics()
 
+  const { t } = useTranslation()
   const { paymentMethod } = props.route.params
   const [voucherCode, voucherCodeSetter] = useState('')
   const themeContext = useContext(ThemeContext)
@@ -40,11 +41,11 @@ function SelectVoucher(props) {
       if (coupon.enabled) {
         props.navigation.navigate('Cart', { paymentMethod, coupon })
         FlashMessage({
-          message: i18n.t('coupanApply')
+          message: t('coupanApply')
         })
       } else {
         FlashMessage({
-          message: i18n.t('coupanFailed')
+          message: t('coupanFailed')
         })
       }
     }
@@ -58,13 +59,13 @@ function SelectVoucher(props) {
   // eslint-disable-next-line handle-callback-err
   function onError(error) {
     FlashMessage({
-      message: i18n.t('invalidCoupan')
+      message: t('invalidCoupan')
     })
   }
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: 'My Vouchers',
+      title: t('titleMyVouchers'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
@@ -142,7 +143,7 @@ function SelectVoucher(props) {
             onPress={() => onSelectCoupon(voucherCode)}
             style={styles(currentTheme).buttonContainer}>
             <TextDefault textColor={currentTheme.buttonText} H5 bold uppercase>
-              {i18n.t('apply')}
+              {t('apply')}
             </TextDefault>
           </TouchableOpacity>
         </View>

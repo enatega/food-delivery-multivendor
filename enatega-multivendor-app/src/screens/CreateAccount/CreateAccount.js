@@ -8,8 +8,8 @@ import * as AppleAuthentication from 'expo-apple-authentication'
 import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useCreateAccount } from './useCreateAccount'
-import i18n from '../../../i18n'
 import navigationOptions from './screenOptions'
+import {useTranslation} from 'react-i18next'
 
 const CreateAccount = props => {
   const {
@@ -27,7 +27,7 @@ const CreateAccount = props => {
     openPrivacyPolicy,
     navigation
   } = useCreateAccount()
-
+  const {t} = useTranslation()
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
@@ -132,7 +132,7 @@ const CreateAccount = props => {
           ...alignment.MTlarge,
           ...alignment.MBlarge
         }}>
-        {i18n.t('signUporSignIn')}
+        {t('signUporSignIn')}
       </TextDefault>
       <View>
         <View style={styles().marginTop10}>{renderGoogleAction()}</View>
@@ -147,7 +147,7 @@ const CreateAccount = props => {
           <View style={styles().line} />
           <View>
             <TextDefault H4 bolder style={{ width: 50, textAlign: 'center' }}>
-              {i18n.t('or')}
+              {t('or')}
             </TextDefault>
           </View>
           <View style={styles().line} />
@@ -161,17 +161,17 @@ const CreateAccount = props => {
           ...alignment.MTlarge,
           ...alignment.MBlarge
         }}>
-        <TextDefault>{i18n.t('termCondition1')} </TextDefault>
+        <TextDefault>{t('termCondition1')} </TextDefault>
         <TouchableOpacity onPress={openTerms}>
           <TextDefault bolder textColor={currentTheme.buttonBackgroundPink}>
-            {i18n.t('temrConditions')}
+            {t('temrConditions')}
           </TextDefault>
         </TouchableOpacity>
-        <TextDefault>{i18n.t('and')}</TextDefault>
+        <TextDefault>{t('and')}</TextDefault>
         <TouchableOpacity onPress={openPrivacyPolicy}>
           <TextDefault bolder textColor={currentTheme.buttonBackgroundPink}>
             {' '}
-            {i18n.t('privacyPolicy')}
+            {t('privacyPolicy')}
           </TextDefault>
         </TouchableOpacity>
       </View>

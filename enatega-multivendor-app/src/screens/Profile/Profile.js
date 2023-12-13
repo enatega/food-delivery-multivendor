@@ -18,7 +18,6 @@ import gql from 'graphql-tag'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import { updateUser, login } from '../../apollo/mutations'
-import i18n from '../../../i18n'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
@@ -33,6 +32,8 @@ import { Feather } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
+import { useTranslation } from 'react-i18next'
+
 const UPDATEUSER = gql`
   ${updateUser}
 `
@@ -40,6 +41,7 @@ const UPDATEUSER = gql`
 function Profile(props) {
   const Analytics = analytics()
 
+  const { t } = useTranslation()
   const refName = useRef()
   const [nameError, setNameError] = useState('')
   const [toggleEmailView, setToggleEmailView] = useState(true)
@@ -71,7 +73,7 @@ function Profile(props) {
   }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: i18n.t('titleProfile'),
+      title: t('titleProfile'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
@@ -127,7 +129,7 @@ function Profile(props) {
   function onCompleted({ updateUser }) {
     if (updateUser) {
       FlashMessage({
-        message: "User's Info Updated"
+        message: t('userInfoUpdated')
       })
       if (backScreen) {
         props.navigation.goBack()
@@ -143,7 +145,7 @@ function Profile(props) {
     if (name !== profile.name) {
       if (!name.trim()) {
         refName.current.focus()
-        setNameError('Name is required')
+        setNameError(t('nameError'))
         return false
       }
 
@@ -266,7 +268,7 @@ function Profile(props) {
                 }
               ]}>
               <TextDefault textColor={currentTheme.white}>
-                {profile.phoneIsVerified ? 'Verified' : 'Unverified'}
+                {profile.phoneIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
           )}
@@ -287,7 +289,9 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <Text style={styles(currentTheme).titleContainer}>Personal details</Text>
+      <Text style={styles(currentTheme).titleContainer}>
+        {t('profileDetail')}
+      </Text>
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -301,8 +305,9 @@ function Profile(props) {
                       H5
                       B700
                       bolder
-                      textColor={currentTheme.darkBgFont}>
-                      Name
+                      textColor={currentTheme.darkBgFont}
+                      style={styles(currentTheme).textAlignLeft}>
+                      {t('name')}
                     </TextDefault>
                   </View>
 
@@ -327,8 +332,12 @@ function Profile(props) {
               <View>
                 <View style={styles(currentTheme).containerHeading}>
                   <View style={styles(currentTheme).headingTitle}>
-                    <TextDefault H5 B700 bolder>
-                      Name
+                    <TextDefault
+                      H5
+                      B700
+                      bolder
+                      style={styles(currentTheme).textAlignLeft}>
+                      {t('name')}
                     </TextDefault>
                   </View>
                 </View>
@@ -351,7 +360,9 @@ function Profile(props) {
                   activeOpacity={0.7}
                   style={styles(currentTheme).saveContainer}
                   onPress={handleNamePressUpdate}>
-                  <TextDefault>Update</TextDefault>
+                  <TextDefault style={styles(currentTheme).textAlignLeft}>
+                    {t('update')}
+                  </TextDefault>
                 </TouchableOpacity>
               </View>
             )}
@@ -366,8 +377,9 @@ function Profile(props) {
                     H5
                     B700
                     bolder
-                    textColor={currentTheme.darkBgFont}>
-                    Email
+                    textColor={currentTheme.darkBgFont}
+                    style={styles(currentTheme).textAlignLeft}>
+                    {t('email')}
                   </TextDefault>
                 </View>
               </>
@@ -384,8 +396,9 @@ function Profile(props) {
                     H5
                     B700
                     bolder
-                    textColor={currentTheme.darkBgFont}>
-                    Password
+                    textColor={currentTheme.darkBgFont}
+                    style={styles(currentTheme).textAlignLeft}>
+                    {t('password')}
                   </TextDefault>
                 </View>
 
@@ -416,8 +429,9 @@ function Profile(props) {
                       H5
                       B700
                       bolder
-                      textColor={currentTheme.darkBgFont}>
-                      Mobile
+                      textColor={currentTheme.darkBgFont}
+                      style={styles(currentTheme).textAlignLeft}>
+                      {t('mobile')}
                     </TextDefault>
                   </View>
                   <View style={styles().headingLink}>
@@ -449,8 +463,9 @@ function Profile(props) {
                       textColor={currentTheme.fontMainColor}
                       H5
                       B700
-                      bolder>
-                      Mobile
+                      bolder
+                      style={styles(currentTheme).textAlignLeft}>
+                      {t('mobile')}
                     </TextDefault>
                   </View>
                 </View>
@@ -482,10 +497,10 @@ function Profile(props) {
                                 : currentTheme.textErrorColor
                             }>
                             {profile.phone === ''
-                              ? 'Add Phone'
+                              ? t('addPhone')
                               : profile.phoneIsVerified
-                              ? 'Verified'
-                              : 'Verify?'}
+                              ? t('verified')
+                              : t('verify')}
                           </TextDefault>
                         </TouchableOpacity>
                       )}

@@ -15,9 +15,11 @@ import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import analytics from '../../utils/analytics'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
 
 function About(props) {
   const Analytics = analytics()
+  const { t } = useTranslation()
   const { restaurantObject, tab } = props.route.params
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -43,7 +45,7 @@ function About(props) {
   function emptyView() {
     return (
       <TextError
-        text="There are no reviews yet."
+        text={t('noReviewYet')}
         backColor={currentTheme.cartContainer}
       />
     )
@@ -58,7 +60,7 @@ function About(props) {
           style={{ ...alignment.PBxSmall }}
           textColor={currentTheme.fontMainColor}
           bolder>
-          {restaurantObject.total} Reviews
+          {restaurantObject.total} {t('Reviews')}
         </TextDefault>
         {line()}
       </>
@@ -104,7 +106,7 @@ function About(props) {
                 style={{ paddingLeft: 10 }}
                 bold
                 textColor={currentTheme.darkBgFont}>
-                {'Opening times'}
+                {t('Openingtimes')}
               </TextDefault>
             </View>
 
@@ -112,14 +114,14 @@ function About(props) {
               {restaurantObject.openingTimes.map((v, index) => (
                 <View key={index} style={styles().timingRow}>
                   <TextDefault
-                    style={{ width: scale(140) }}
+                    style={styles().timingText}
                     textColor={currentTheme.black}
                     large>
-                    {v.day}{' '}
+                    {t(v.day)}{' '}
                   </TextDefault>
                   {v.times.length < 1 ? (
                     <TextDefault key={index + 8} small bold center>
-                      {'Closed all day'}
+                      {t('ClosedAllDay')}
                     </TextDefault>
                   ) : (
                     v.times.map(t => (
@@ -260,7 +262,7 @@ function About(props) {
               bolder
               uppercase
               large>
-              About
+              {t('About')}
             </TextDefault>
           </TouchableOpacity>
 
@@ -276,7 +278,7 @@ function About(props) {
               bolder
               uppercase
               large>
-              Reviews
+              {t('Reviews')}
             </TextDefault>
           </TouchableOpacity>
         </View>

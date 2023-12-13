@@ -13,7 +13,6 @@ import {
   ScrollView
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import i18n from '../../../i18n'
 import styles from './styles'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
@@ -34,30 +33,37 @@ import AddressText from '../../components/Address/AddressText'
 import SearchModal from '../../components/Address/SearchModal'
 import Analytics from '../../utils/analytics'
 
+import { useTranslation } from 'react-i18next'
+
 const EDIT_ADDRESS = gql`
   ${editAddress}
 `
 
 const labelValues = [
   {
-    title: '',
-    value: 'Home'
+    title: 'Home',
+    value: 'Home',
+    icon: <Entypo name="home" size={24} />
   },
   {
     title: 'Work',
-    value: 'Work'
+    value: 'Work',
+    icon: <MaterialIcons name="work" size={24} />
   },
   {
     title: 'Other',
-    value: 'Other'
+    value: 'Other',
+    icon: <Foundation name="heart" size={24} />
   }
 ]
+
 const LATITUDE_DELTA = 0.0022
 const LONGITUDE_DELTA = 0.0021
 
 function EditAddress(props) {
   const analytics = Analytics()
 
+  const { t } = useTranslation()
   const addressRef = useRef(null)
   const { location, setLocation } = useContext(LocationContext)
   const [_id] = useState(props.route.params._id ?? null)
@@ -97,7 +103,7 @@ function EditAddress(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: i18n.t('editAddress')
+      title: t('editAddress')
     })
   }, [props.navigation])
   useEffect(() => {
@@ -136,7 +142,7 @@ function EditAddress(props) {
       })
     }
     FlashMessage({
-      message: 'Address updated'
+      message: t('addressUpdated')
     })
     // show message here
     props.navigation.goBack()
@@ -144,7 +150,7 @@ function EditAddress(props) {
 
   function onError(error) {
     FlashMessage({
-      message: `An error occured. Please try again ${error}`
+      message: `${t('errorOccured')} ${error}`
     })
   }
 
@@ -225,7 +231,7 @@ function EditAddress(props) {
                       error={deliveryAddressError}
                       ref={addressRef}
                       value={deliveryAddress}
-                      label={i18n.t('fullDeliveryAddress')}
+                      label={t('fullDeliveryAddress')}
                       labelFontSize={scale(12)}
                       fontSize={scale(12)}
                       maxLength={100}
@@ -246,7 +252,7 @@ function EditAddress(props) {
                       onBlur={() => {
                         setDeliveryAddressError(
                           !deliveryAddress.trim().length
-                            ? 'Delivery address is required'
+                            ? t('DeliveryAddressIsRequired')
                             : null
                         )
                       }}
@@ -260,7 +266,7 @@ function EditAddress(props) {
                 <View style={{ ...alignment.MTlarge }}></View>
                 <OutlinedTextField
                   error={deliveryDetailsError}
-                  label={i18n.t('deliveryDetails')}
+                  label={t('deliveryDetails')}
                   labelFontSize={scale(12)}
                   fontSize={scale(12)}
                   textAlignVertical="top"
@@ -329,7 +335,7 @@ function EditAddress(props) {
               disabled={loading}
               onPress={() => {
                 const deliveryAddressError = !deliveryAddress.trim().length
-                  ? 'Delivery address is required'
+                  ? t('DeliveryAddressIsRequired')
                   : null
                 const deliveryDetailsError = !deliveryDetails.trim().length
                   ? 'Delivery details is required'
@@ -359,7 +365,7 @@ function EditAddress(props) {
               activeOpacity={0.5}
               style={styles(currentTheme).saveBtnContainer}>
               <TextDefault textColor={currentTheme.buttonText} H4 bold>
-                {i18n.t('saveContBtn')}
+                {t('saveContBtn')}
               </TextDefault>
             </TouchableOpacity>
           </ScrollView>

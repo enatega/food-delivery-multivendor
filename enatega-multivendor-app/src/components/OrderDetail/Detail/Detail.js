@@ -3,6 +3,7 @@ import React from 'react'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
 import Button from '../../Button/Button'
+import {useTranslation} from 'react-i18next'
 
 export default function Detail({
   theme,
@@ -20,6 +21,8 @@ export default function Detail({
   id,
   rider
 }) {
+
+  const {t} = useTranslation()
   return (
     <View style={styles.container(theme)}>
       {rider && (
@@ -34,7 +37,7 @@ export default function Detail({
               }}
               buttonStyles={styles.chatButton(theme)}
               textStyles={styles.chatButtonText(theme)}
-              text={'Chat with rider'}
+              text={t('chatWithRider')}
             />
           </View>
           <View style={styles.line(theme)}></View>
@@ -42,7 +45,7 @@ export default function Detail({
       )}
       <View style={styles.orderDetailsContainer}>
         <TextDefault textColor={theme.main} bold H3>
-          Order Detail
+          {t('orderDetail')}
         </TextDefault>
       </View>
 
@@ -53,7 +56,7 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            Your order from:
+            {t('OrderFrom')}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText}>
             {from}
@@ -65,7 +68,7 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            Your order no:
+            {t('OrderNo')}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText}>
             {' '}
@@ -78,7 +81,8 @@ export default function Detail({
             textColor={theme.secondaryText}
             bold
             style={styles.addressText}>
-            Delivery address:
+            {t('deliveryAddress')}
+            {':'}
           </TextDefault>
           <TextDefault left bolder style={styles.addressText} numberOfLines={4}>
             {deliveryAddress}
@@ -103,32 +107,32 @@ export default function Detail({
         <View>
           <PriceRow
             theme={theme}
-            title={'Subtotal'}
+            title={t('subTotal')}
             currency={currencySymbol}
             price={subTotal.toFixed(2)}
           />
           <PriceRow
             theme={theme}
-            title={'Tip'}
+            title={t('tip')}
             currency={currencySymbol}
             price={tip.toFixed(2)}
           />
           <PriceRow
             theme={theme}
-            title={'Tax charges'}
+            title={t('taxFee')}
             currency={currencySymbol}
             price={tax.toFixed(2)}
           />
           <PriceRow
             theme={theme}
-            title={'Delivery charges'}
+            title={t('delvieryCharges')}
             currency={currencySymbol}
             price={deliveryCharges.toFixed(2)}
           />
           <View style={{ marginVertical: 20 }} />
           <PriceRow
             theme={theme}
-            title={'Total'}
+            title={t('total')}
             currency={currencySymbol}
             price={total.toFixed(2)}
           />

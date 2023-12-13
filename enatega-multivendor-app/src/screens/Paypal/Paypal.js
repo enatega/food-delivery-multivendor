@@ -9,6 +9,8 @@ import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
 
+import { useTranslation } from 'react-i18next'
+
 const MYORDERS = gql`
   ${myOrders}
 `
@@ -17,7 +19,8 @@ function Paypal(props) {
   const Analytics = analytics()
 
   const { SERVER_URL } = useEnvVars()
-  console.log('SERVER_URL', SERVER_URL)
+
+  const { t } = useTranslation()
   const [loading, loadingSetter] = useState(true)
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
@@ -31,7 +34,7 @@ function Paypal(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: 'Paypal Checkout'
+      title: t('paypalCheckout')
     })
   }, [props.navigation])
 

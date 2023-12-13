@@ -31,9 +31,9 @@ const useEnvVars = env => {
     }
   }
   return {
-    GRAPHQL_URL: 'http://10.97.34.198:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://10.97.34.198:8001/graphql',
-    SERVER_URL: 'http://10.97.34.198:8001/',
+    GRAPHQL_URL: 'http://10.97.37.191:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://10.97.37.191:8001/graphql',
+    SERVER_URL: 'http://10.97.37.191:8001/',
     IOS_CLIENT_ID_GOOGLE: configuration.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration.androidClientID,
     AMPLITUDE_API_KEY: configuration.appAmplitudeApiKey,

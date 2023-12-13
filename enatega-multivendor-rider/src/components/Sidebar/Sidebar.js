@@ -2,15 +2,16 @@ import React from 'react'
 import { View, Platform, Switch, ImageBackground, Linking } from 'react-native'
 import NavItem from './NavItem/NavItem'
 import Profile from './Profile/Profile'
-import i18n from '../../../i18n'
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import rider from '../../assets/rider.png'
 import useSidebar from './useSidebar'
+import {useTranslation} from 'react-i18next'
 
 function SidebBar() {
   const { logout, isEnabled, toggleSwitch, datas } = useSidebar()
+  const {t} = useTranslation()
   return (
     <ImageBackground
       source={rider}
@@ -24,7 +25,7 @@ function SidebBar() {
         <View style={[styles.opacity, { flex: 4 }]}>
           <View style={styles.rowDisplay}>
             <TextDefault textColor={colors.white} H4 bolder>
-              {i18n.t('status')}
+              {t('status')}
             </TextDefault>
             <View style={styles.row}>
               <TextDefault
@@ -32,7 +33,7 @@ function SidebBar() {
                 bold
                 textColor={colors.primary}
                 style={styles.online}>
-                {isEnabled ? i18n.t('available') : i18n.t('notAvailable')}
+                {isEnabled ? t('available') : t('notAvailable')}
               </TextDefault>
               <Switch
                 trackColor={{
@@ -62,7 +63,11 @@ function SidebBar() {
           ))}
         </View>
         <View style={[styles.opacity, { flex: 2 }]}>
-          <NavItem onPress={() => logout()} icon="sign-out" title="Logout" />
+          <NavItem
+            onPress={() => logout()}
+            icon="sign-out"
+            title={t('titleLogout')}
+          />
         </View>
       </View>
     </ImageBackground>

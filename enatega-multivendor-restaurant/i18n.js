@@ -1,23 +1,72 @@
-import * as Localization from 'expo-localization'
-import { Platform } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import i18n from 'i18n-js'
-import { en } from './languages/en'
-import { fr } from './languages/fr'
-import { km } from './languages/km'
-import { zh } from './languages/zh'
-import { de } from './languages/de'
+/*import * as Localization from 'expo-localization';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { I18n } from "i18n-js";
+import { en } from './translations/en';
+import { fr } from './translations/fr';
+import { km } from './translations/km';
+import { zh } from './translations/zh';
+import { de } from './translations/de';
+import { ar } from './translations/ar';
 
-i18n.initAsync = async () => {
-  i18n.fallbacks = true
-  i18n.translations = { fr, en, km, zh, de }
-  // i18n.locale = 'km'
-  if (Platform.OS === 'android') {
-    const lang = await AsyncStorage.getItem('enatega-language')
-    i18n.locale = lang || 'en'
-  } else {
-    i18n.locale = Localization.locale
-  }
+const translations = {
+  en,
+  fr,
+  km,
+  zh,
+  de,
+  ar,
+};
+
+const i18n = new I18n({
+  translations
+});
+
+export default i18n;
+*/
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+import {sv} from './translations/sv'
+import {en} from './translations/en'
+import {de} from './translations/de'
+import {fr} from './translations/fr'
+import {km} from './translations/km'
+import {zh} from './translations/zh'
+import {ar} from './translations/ar'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+export const languageResources = {
+  sv: {translation: sv},
+  en: {translation: en},
+  zh: {translation: zh},
+  de: {translation: de},
+  fr: {translation: fr},
+  km: {translation: km},
+  ar: {translation: ar},
+  ar: {translation: ar}
 }
 
-export default i18n
+const getStoredLanguage = async () => {
+  const lng = await AsyncStorage.getItem('enatega-language');
+  console.log(lng)
+  
+i18next.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
+  lng: lng,
+  fallbackLng: 'en',
+  resources: languageResources,
+});
+}
+
+getStoredLanguage()
+
+
+i18next.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
+  lng: 'en',
+  fallbackLng: 'en',
+  resources: languageResources,
+});
+
+//i18next.changeLanguage('en')
+
+export default i18next;
