@@ -200,4 +200,7 @@ locationAccess: 'ចូលដំណើរការទីតាំង',
     emptyUsernameError: 'ត្រូវការឈ្មោះអ្នកប្រើប្រាស់!',
 emptyPasswordError: 'ត្រូវការពាក្យសម្ងាត់!',
 loginFlashMsg: 'ចូលប្រើរួចហើយ',
+enategaCash: 'លុយអេណាត់ហ្គា',
+assigned: "បានគោរព",
+  picked: "បានជ្រើសរើស"
 }

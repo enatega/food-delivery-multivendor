@@ -326,20 +326,23 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
   )
 }
 
-const ChatWithCustomerButton = ({ navigation, order }) => (
+const ChatWithCustomerButton = ({ navigation, order }) => {
+  const { t } = useTranslation(); 
   
-  <TouchableOpacity
-    onPress={() =>
-      navigation.navigate('ChatWithCustomer', {
-        phoneNumber: order?.user.phone,
-        id: order?._id
-      })
-    }
-    activeOpacity={0.8}
-    style={[styles.btn, { backgroundColor: colors.black }]}>
-    <TextDefault center H5 bold textColor={colors.white}>
-      {t('chatWithCustomer')}
-    </TextDefault>
-  </TouchableOpacity>
-)
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ChatWithCustomer', {
+          phoneNumber: order?.user.phone,
+          id: order?._id
+        })
+      }
+      activeOpacity={0.8}
+      style={[styles.btn, { backgroundColor: colors.black }]}>
+      <TextDefault center H5 bold textColor={colors.white}>
+        {t('chatWithCustomer')}
+      </TextDefault>
+    </TouchableOpacity>
+  );
+}
 export default Details

@@ -202,4 +202,7 @@ export const en = {
   emptyUsernameError: 'Username is required!',
   emptyPasswordError: 'Password is required!',
   loginFlashMsg: 'Logged in',
+  enategaCash: 'Enatega Cash',
+  assigned: "ASSIGNED",
+  picked: "PICKED"
 }
