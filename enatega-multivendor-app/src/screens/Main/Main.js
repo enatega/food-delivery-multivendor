@@ -106,7 +106,6 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
-  // }, [i18n.language])
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
