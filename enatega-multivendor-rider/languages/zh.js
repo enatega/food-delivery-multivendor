@@ -195,4 +195,7 @@ locationAccess: '位置访问',
     emptyUsernameError: '需要用户名!',
 emptyPasswordError: '需要密码!',
 loginFlashMsg: '已登录',
+enategaCash: '恩特加现金',
+assigned: "已分配",
+  picked: "已挑选"
 }

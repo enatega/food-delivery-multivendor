@@ -7,6 +7,7 @@ import useOrder from './useOrder'
 import Spinner from '../Spinner/Spinner'
 import {useTranslation} from 'react-i18next'
 
+
 const Order = ({ order, orderAmount }) => {
   const {
     active,
@@ -56,7 +57,7 @@ const Order = ({ order, orderAmount }) => {
               bolder
               H5
               textColor={colors.fontSecondColor}>
-              {t(' orderAmount')}
+              {t('orderAmount')}
             </TextDefault>
             <TextDefault style={styles.rowItem2} bolder H5>
               {orderAmount}
@@ -113,7 +114,7 @@ const Order = ({ order, orderAmount }) => {
                 <TextDefault bolder center textColor={colors.primary}>
                   {order?.orderStatus === 'DELIVERED'
                     ? t('delivered')
-                    : t(' inProgress')}
+                    : t('inProgress')}
                 </TextDefault>
               </TouchableOpacity>
             ) : (

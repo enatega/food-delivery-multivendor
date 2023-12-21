@@ -199,4 +199,7 @@ locationAccess: 'وصول الموقع',
     emptyUsernameError: 'اسم المستخدم مطلوب!',
 emptyPasswordError: 'كلمة المرور مطلوبة!',
 loginFlashMsg: 'تم تسجيل الدخول',
+enategaCash: 'كاش إناتيغا',
+assigned: "تم التعيين",
+  picked: "تم الاختيار"
 }

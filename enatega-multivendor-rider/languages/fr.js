@@ -204,4 +204,7 @@ locationAccess: 'Accès à la localisation',
     emptyUsernameError: 'Le nom dutilisateur est requis!',
 emptyPasswordError: 'Le mot de passe est requis!',
 loginFlashMsg: 'Connecté',
+enategaCash: 'Enatega Argent Liquide',
+assigned: "ASSIGNÉ",
+  picked: "CHOISI"
 }

@@ -360,5 +360,6 @@ export const fr = {
   selectItems: "Sélectionnez des articles",
   dontHaveAnyOrderYet: "Vous n'avez encore aucune commande passée. Essayez l'un de nos restaurants formidables et passez votre première commande !",
   BrowseRESTAURANTS: "Parcourez LES RESTAURANTS DE VOTRE RÉGION",
-  RateOrder: "Noter la commande"
+  RateOrder: "Noter la commande",
+  voucherCode: "Entrez votre code de réduction"
 }
