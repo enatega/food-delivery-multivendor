@@ -9,59 +9,67 @@ import { Box, Typography, Input, Alert, Button } from '@mui/material'
 const RESET_PASSWORD = gql`
   ${resetPassword}
 `
-const ResetPassword = props => {
-  const formRef = useRef()
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [confirmPasswordError, setConfirmPasswordError] = useState(null)
-  const [passwordError, setPasswordError] = useState(null)
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(null)
+const ResetPassword = (props) => {
+  const formRef = useRef();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
   const onBlur = (event, field) => {
     if (field === 'password') {
-      setPasswordError(!validateFunc({ password: password }, 'password'))
+      setPasswordError(!validateFunc({ password: password }, 'password'));
     } else if (field === 'confirmPassword') {
       setConfirmPasswordError(
         !validateFunc(
           { confirmPassword: confirmPassword, password: password },
           'confirmPassword'
         )
-      )
+      );
     }
-  }
+  };
+
   const hideAlert = () => {
-    passwordError('')
-    confirmPasswordError('')
-  }
+    // Updated to clear error state properly
+    setPasswordError(null);
+    setConfirmPasswordError(null);
+  };
+
   const validate = () => {
+    // Updated to check for empty password and confirmPassword
     const confirmPasswordErrorDisplay = !validateFunc(
       { password: password, confirmPassword: confirmPassword },
       'confirmPassword'
-    )
+    );
     const passwordErrorDisplay = !validateFunc(
       { password: password },
       'password'
-    )
-    setConfirmPasswordError(confirmPasswordErrorDisplay)
-    setPasswordError(passwordErrorDisplay)
-    return confirmPasswordErrorDisplay && passwordErrorDisplay
-  }
-  const onCompleted = data => {
-    setConfirmPasswordError(null)
-    setPasswordError(null)
-    setSuccess('Password has been updated')
-    setTimeout(hideAlert, 5000)
-  }
-  const onError = error => {
-    setConfirmPasswordError(null)
-    setPasswordError(null)
-    setError(error.networkError.result.errors[0].message)
-    setTimeout(hideAlert, 5000)
-  }
-  const [mutate] = useMutation(RESET_PASSWORD, { onError, onCompleted })
+    );
+    setConfirmPasswordError(confirmPasswordErrorDisplay);
+    setPasswordError(passwordErrorDisplay);
+    return confirmPasswordErrorDisplay && passwordErrorDisplay;
+  };
 
-  const classes = useStyles()
-  const globalClasses = useGlobalStyles()
+  const onCompleted = (data) => {
+    setSuccess('Password has been updated');
+    setTimeout(hideAlert, 5000);
+  };
+
+  const onError = (error) => {
+    setError(
+      // Updated to handle networkError and result.errors safely
+      (error.networkError && error.networkError.result.errors[0]?.message) ||
+        'An error occurred.'
+    );
+    setTimeout(hideAlert, 5000);
+  };
+
+  const [mutate] = useMutation(RESET_PASSWORD, { onError, onCompleted });
+
+  const classes = useStyles();
+  const globalClasses = useGlobalStyles();
 
   return (
     <Box
@@ -72,11 +80,13 @@ const ResetPassword = props => {
         justifyContent: 'center',
         pt: 20,
         pb: 20
-      }}>
+      }}
+    >
       <Box
         container
         sx={{ width: { xs: '80%', md: '50%' } }}
-        className={classes.container}>
+        className={classes.container}
+      >
         <Box className={classes.flexRow}>
           <Box item className={classes.heading}>
             <Typography variant="h6" className={classes.text}>
@@ -92,11 +102,11 @@ const ResetPassword = props => {
                 id="input-password"
                 name="input-password"
                 value={password}
-                onChange={event => {
-                  setPassword(event.target.value)
+                onChange={(event) => {
+                  setPassword(event.target.value);
                 }}
-                onBlur={event => {
-                  onBlur(event, 'password')
+                onBlur={(event) => {
+                  onBlur(event, 'password');
                 }}
                 placeholder="Password"
                 type="password"
@@ -106,8 +116,8 @@ const ResetPassword = props => {
                   passwordError === false
                     ? globalClasses.inputError
                     : passwordError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                    ? globalClasses.inputSuccess
+                    : ''
                 ]}
               />
             </Box>
@@ -116,11 +126,11 @@ const ResetPassword = props => {
                 id="input-password"
                 name="input-password"
                 value={confirmPassword}
-                onChange={event => {
-                  setConfirmPassword(event.target.value)
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value);
                 }}
-                onBlur={event => {
-                  onBlur(event, 'confirmPassword')
+                onBlur={(event) => {
+                  onBlur(event, 'confirmPassword');
                 }}
                 placeholder="Confirm Password"
                 disableUnderline
@@ -129,8 +139,8 @@ const ResetPassword = props => {
                   confirmPasswordError === false
                     ? globalClasses.inputError
                     : confirmPasswordError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                    ? globalClasses.inputSuccess
+                    : ''
                 ]}
               />
             </Box>
@@ -138,20 +148,18 @@ const ResetPassword = props => {
               <Button
                 className={globalClasses.button}
                 onClick={() => {
-                  setConfirmPasswordError(null)
-                  setPasswordError(null)
-                  setError(null)
-                  setSuccess(null)
-                  const params = new URLSearchParams(props.location.search)
+                  hideAlert(); // Clear errors before validation
+                  const params = new URLSearchParams(props.location.search);
                   if (validate() && params.get('reset')) {
                     mutate({
                       variables: {
                         password: password,
                         token: params.get('reset')
                       }
-                    })
+                    });
                   }
-                }}>
+                }}
+              >
                 Reset
               </Button>
             </Box>
@@ -161,7 +169,8 @@ const ResetPassword = props => {
               <Alert
                 className={globalClasses.alertSuccess}
                 variant="filled"
-                severity="success">
+                severity="success"
+              >
                 {success}
               </Alert>
             )}
@@ -169,7 +178,8 @@ const ResetPassword = props => {
               <Alert
                 className={globalClasses.alertError}
                 variant="filled"
-                severity="error">
+                severity="error"
+              >
                 {error}
               </Alert>
             )}
@@ -177,7 +187,7 @@ const ResetPassword = props => {
         </Box>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default ResetPassword
+export default ResetPassword;
