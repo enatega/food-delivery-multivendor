@@ -31,8 +31,9 @@ import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import AddressText from '../../components/Address/AddressText'
 import SearchModal from '../../components/Address/SearchModal'
-import analytics from '../../utils/analytics'
-import {useTranslation} from 'react-i18next'
+import Analytics from '../../utils/analytics'
+
+import { useTranslation } from 'react-i18next'
 
 const EDIT_ADDRESS = gql`
   ${editAddress}
@@ -60,7 +61,9 @@ const LATITUDE_DELTA = 0.0022
 const LONGITUDE_DELTA = 0.0021
 
 function EditAddress(props) {
-  const {t} = useTranslation()
+  const analytics = Analytics()
+
+  const { t } = useTranslation()
   const addressRef = useRef(null)
   const { location, setLocation } = useContext(LocationContext)
   const [_id] = useState(props.route.params._id ?? null)
@@ -207,8 +210,7 @@ function EditAddress(props) {
                   currentScreen: 'EditAddress'
                 })
               }}></MapView>
-            <View
-              style={styles().editOldAddressImageContainer}>
+            <View style={styles().editOldAddressImageContainer}>
               <CustomMarker
                 width={40}
                 height={40}

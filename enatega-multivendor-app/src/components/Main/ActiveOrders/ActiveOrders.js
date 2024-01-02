@@ -13,7 +13,7 @@ import { useSubscription } from '@apollo/client'
 import { subscriptionOrder } from '../../../apollo/subscriptions'
 import gql from 'graphql-tag'
 import RandomShape from '../../../assets/SVG/RandomShape'
-import Analytics from '../../../utils/analytics'
+import analytics from '../../../utils/analytics'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
 import {useTranslation} from 'react-i18next'
@@ -108,6 +108,7 @@ const ActiveOrders = () => {
   )
 }
 const Item = ({ navigation, configuration, currentTheme, item }) => {
+  const Analytics = analytics()
   useSubscription(
     gql`
       ${subscriptionOrder}

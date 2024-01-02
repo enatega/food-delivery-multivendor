@@ -24,19 +24,24 @@ LogBox.ignoreLogs([
 ]) // Ignore log notification by message
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
-const client = setupApolloClient()
-const { SENTRY_DSN } = getEnvVars()
-Sentry.init({
-  dsn: SENTRY_DSN,
-  enableInExpoDevelopment: true,
-  debug: true,
-  tracesSampleRate: 1.0 // to be changed to 0.2 in production
-})
-
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
+
+  const { SENTRY_DSN } = getEnvVars()
+  const client = setupApolloClient()
+
+  useEffect(() => {
+    if (SENTRY_DSN) {
+      Sentry.init({
+        dsn: SENTRY_DSN,
+        enableInExpoDevelopment: true,
+        debug: true,
+        tracesSampleRate: 1.0 // to be changed to 0.2 in production
+      })
+    }
+  }, [SENTRY_DSN])
 
   useEffect(() => {
     ;(async () => {

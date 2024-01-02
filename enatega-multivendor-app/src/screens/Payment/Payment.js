@@ -7,15 +7,17 @@ import { theme } from '../../utils/themeColors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { Entypo } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function Payment(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const { paymentMethod, coupon } = props.route.params
   const inset = useSafeAreaInsets()
   const themeContext = useContext(ThemeContext)
@@ -90,10 +92,17 @@ function Payment(props) {
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
-        <View style={{ backgroundColor: currentTheme.themeBackground, borderRadius: 20 }}>
+        <View
+          style={{
+            backgroundColor: currentTheme.themeBackground,
+            borderRadius: 20
+          }}>
           {CASH.map((item, index) => (
             <TouchableOpacity
-              style={[styles(currentTheme).radioGroup, styles(currentTheme).pT20]}
+              style={[
+                styles(currentTheme).radioGroup,
+                styles(currentTheme).pT20
+              ]}
               key={index.toString()}
               onPress={() => {
                 onSelectPayment(item)

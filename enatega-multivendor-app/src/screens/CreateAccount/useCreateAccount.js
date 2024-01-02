@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import { StatusBar, Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
-import getEnvVars from '../../../environment'
+import useEnvVars from '../../../environment'
 import gql from 'graphql-tag'
 import { login } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -14,23 +14,17 @@ import * as AppleAuthentication from 'expo-apple-authentication'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
-import {useTranslation} from 'react-i18next'
-
-const config = getEnvVars()
-const {
-  IOS_CLIENT_ID_GOOGLE,
-  ANDROID_CLIENT_ID_GOOGLE,
-  EXPO_CLIENT_ID
-} = getEnvVars()
+import { useTranslation } from 'react-i18next'
 
 const LOGIN = gql`
   ${login}
 `
 
-
 export const useCreateAccount = () => {
+  const Analytics = analytics()
+
   const navigation = useNavigation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
@@ -39,7 +33,14 @@ export const useCreateAccount = () => {
   const { setTokenAsync } = useContext(AuthContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const {
+    EXPO_CLIENT_ID,
+    IOS_CLIENT_ID_GOOGLE,
+    ANDROID_CLIENT_ID_GOOGLE
+  } = useEnvVars()
+  console.log('EXPO_CLIENT_ID', EXPO_CLIENT_ID)
+
+  const { t } = useTranslation()
   const [
     googleRequest,
     googleResponse,
@@ -92,24 +93,24 @@ export const useCreateAccount = () => {
   const googleSignUp = () => {
     if (googleResponse?.type === 'success') {
       const { authentication } = googleResponse
-        ; (async () => {
-          const userInfoResponse = await fetch(
-            'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-            {
-              headers: { Authorization: `Bearer ${authentication.accessToken}` }
-            }
-          )
-          const googleUser = await userInfoResponse.json()
-          const user = {
-            phone: '',
-            email: googleUser.email,
-            password: '',
-            name: googleUser.name,
-            picture: googleUser.picture,
-            type: 'google',
+      ;(async () => {
+        const userInfoResponse = await fetch(
+          'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+          {
+            headers: { Authorization: `Bearer ${authentication.accessToken}` }
           }
-          mutateLogin(user)
-        })()
+        )
+        const googleUser = await userInfoResponse.json()
+        const user = {
+          phone: '',
+          email: googleUser.email,
+          password: '',
+          name: googleUser.name,
+          picture: googleUser.picture,
+          type: 'google'
+        }
+        mutateLogin(user)
+      })()
     }
   }
 
@@ -129,8 +130,7 @@ export const useCreateAccount = () => {
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
       setLoading(false)
-    }
-    else {
+    } else {
       try {
         if (data.login.inNewUser) {
           await Analytics.identify(

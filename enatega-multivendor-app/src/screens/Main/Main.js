@@ -47,10 +47,13 @@ import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
+import { useTranslation } from 'react-i18next'
+
 import i18next from '../../../i18next';
-import {useTranslation} from 'react-i18next'
+
+
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -60,7 +63,9 @@ const SELECT_ADDRESS = gql`
 `
 
 function Main(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
@@ -106,6 +111,7 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
+
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -169,7 +175,7 @@ function Main(props) {
           else {
             modalRef.current.close()
             setLocation({
-              label: ('currentLocation'),
+              label: 'currentLocation',
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address

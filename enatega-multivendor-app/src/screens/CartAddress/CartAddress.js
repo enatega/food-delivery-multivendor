@@ -15,23 +15,26 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { LocationContext } from '../../context/Location'
 import { HeaderBackButton } from '@react-navigation/elements'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import navigationService from '../../routes/navigationService'
 import { Entypo } from '@expo/vector-icons'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
 function CartAddresses(props) {
+  const Analytics = analytics()
+
   const inset = useSafeAreaInsets()
   const { location, setLocation } = useContext(LocationContext)
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [mutate] = useMutation(SELECT_ADDRESS, { onError })
+  console.log('profile', profile)
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -119,7 +122,6 @@ function CartAddresses(props) {
                   <View style={[styles().homeIcon]}>
                     <RadioButton
                       size={13}
-
                       outerColor={currentTheme.radioOuterColor}
                       innerColor={currentTheme.radioColor}
                       animation={'bounceIn'}
@@ -163,7 +165,7 @@ function CartAddresses(props) {
       )}
       <FlatList
         style={{ backgroundColor: currentTheme.themeBackground }}
-        data={profile.addresses}
+        data={profile?.addresses}
         keyExtractor={item => item._id}
         contentContainerStyle={{ flexGrow: 1 }}
         ItemSeparatorComponent={() => (

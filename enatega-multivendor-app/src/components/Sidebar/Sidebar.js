@@ -7,8 +7,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import styles from './styles'
-import Analytics from '../../utils/analytics'
-import {useTranslation} from 'react-i18next'
+
+import analytics from '../../utils/analytics'
+
+import { useTranslation } from 'react-i18next'
 
 const datas = [
   {
@@ -56,7 +58,10 @@ const datas = [
 ]
 
 function SidebBar(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
+
   const inset = useSafeAreaInsets()
   const { isLoggedIn, logout } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -80,7 +85,7 @@ function SidebBar(props) {
           {datas.map((dataItem, ind) => (
             <View key={ind} style={styles().item}>
               <SideDrawerItems
-              style={styles().iconContainer}
+                style={styles().iconContainer}
                 onPress={async () => {
                   if (dataItem.isAuth && !isLoggedIn) {
                     props.navigation.navigate('CreateAccount')

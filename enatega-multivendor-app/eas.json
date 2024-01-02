@@ -12,6 +12,7 @@
     },
     "production": {
       "channel": "production"
+    
     }
   },
   "submit": {

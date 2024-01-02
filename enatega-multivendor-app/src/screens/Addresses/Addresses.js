@@ -18,7 +18,7 @@ import {
 } from '@expo/vector-icons'
 
 import gql from 'graphql-tag'
-import {useTranslation} from 'react-i18next'
+import i18n from '../../../i18n'
 import { scale } from '../../utils/scaling'
 import { deleteAddress } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -29,7 +29,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import EmptyAddress from '../../assets/SVG/imageComponents/EmptyAddress'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import navigationService from '../../routes/navigationService'
 import { HeaderBackButton } from '@react-navigation/elements'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
@@ -41,7 +41,8 @@ const DELETE_ADDRESS = gql`
 `
 
 function Addresses() {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
   const navigation = useNavigation()
   const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS)
   const { profile } = useContext(UserContext)
@@ -62,7 +63,7 @@ function Addresses() {
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: t('myAddresses'),
+      title: i18n.t('myAddresses'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {
@@ -118,14 +119,14 @@ function Addresses() {
           <View style={styles().descriptionEmpty}>
             <View style={styles().viewTitle}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder>
-                {t('emptyHere')}
+                It&#39;s empty here.
               </TextDefault>
             </View>
             <View>
               <TextDefault textColor={currentTheme.fontMainColor} bold>
-                {t('emptyHereDecs1')}
+                You haven&#39;t saved any address yet.
                 {'\n'}
-                {t('emptyHereDecs2')}
+                Click Add New Address to get started
               </TextDefault>
             </View>
           </View>
@@ -155,8 +156,8 @@ function Addresses() {
                   <TextDefault
                     textColor={currentTheme.darkBgFont}
                     style={styles(currentTheme).labelStyle}>
-                    {t(address.label)}
-                  </TextDefault> 
+                    {address.label}
+                  </TextDefault>
                 </View>
                 <View style={{ ...alignment.MTxSmall }}></View>
 
