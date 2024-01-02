@@ -1,4 +1,4 @@
-import i18n from '../../../i18n'
+import i18next from '../../../i18next'
 import { BackButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -14,7 +14,7 @@ import { useContext } from 'react'
 
 
 const navigationOptions = headerText => ({
-  headerTitle: 'My Orders',
+  headerTitle: i18next.t('titleOrders'),
   headerTitleAlign: 'center',
   headerRight: null,
   headerTitleContainerStyle: {

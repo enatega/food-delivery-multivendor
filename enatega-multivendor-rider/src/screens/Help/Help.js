@@ -2,10 +2,10 @@ import React, { useLayoutEffect } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import styles from './styles'
-import i18n from '../../../i18n'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { useNavigation } from '@react-navigation/native'
+import {useTranslation} from 'react-i18next'
 
 
 const links = [
@@ -26,13 +26,14 @@ const links = [
   { title: ('aboutUs'), url: 'https://ninjascode.com/pages/ourteam.html' }
 ]
 function Help() {
+  const {t} = useTranslation()
   const navigation = useNavigation()
   const inset = useSafeArea()
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      headerTitle: i18n.t('titleHelp')
+      headerTitle: t('titleHelp')
     })
   }, [navigation])
 
@@ -45,7 +46,7 @@ function Help() {
             style={styles.itemContainer}
             key={index}>
             <TextDefault textColor={colors.fontMainColor} H4>
-              {i18n.t(title)}
+              {t('title')}
             </TextDefault>
           </TouchableOpacity>
         ))}

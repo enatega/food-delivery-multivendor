@@ -362,5 +362,6 @@ export const en = {
   selectItems: 'Select Items',
   dontHaveAnyOrderYet: "You don't have any past order yet. Try one of our awesome restaurants and place your first order!",
   BrowseRESTAURANTS: 'Browse RESTAURANTS IN YOUR AREA',
-  RateOrder: 'Rate Order'
+  RateOrder: 'Rate Order',
+  voucherCode: 'Enter your voucher code'
 }

@@ -123,7 +123,7 @@ function SelectVoucher(props) {
         <View style={styles(currentTheme).upperContainer}>
           <View style={styles().innerContainer}>
             <OutlinedTextField
-              label="Enter your voucher code"
+              label={t('voucherCode')}
               labelFontSize={scale(12)}
               fontSize={scale(12)}
               maxLength={15}

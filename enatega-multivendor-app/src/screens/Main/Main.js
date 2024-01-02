@@ -51,6 +51,10 @@ import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
 
+import i18next from '../../../i18next';
+
+
+
 const RESTAURANTS = gql`
   ${restaurantList}
 `
@@ -107,7 +111,7 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
-    // }, [i18n.language])
+
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(

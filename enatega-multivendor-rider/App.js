@@ -15,7 +15,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as Updates from 'expo-updates'
 import * as Sentry from 'sentry-expo'
 import AppContainer from './src/routes/index'
-import i18n from './i18n'
 import colors from './src/utilities/colors'
 import setupApolloClient from './src/apollo/index'
 import { ConfigurationProvider } from './src/context/configuration'
@@ -25,7 +24,7 @@ import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { LocationProvider } from './src/context/location'
 import getEnvVars from './environment'
 import moment from 'moment-timezone'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 moment.tz.setDefault('Asia/Karachi')
 LogBox.ignoreLogs([
@@ -36,7 +35,7 @@ LogBox.ignoreLogs([
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
 export default function App() {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const [appIsReady, setAppIsReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -58,7 +57,7 @@ export default function App() {
   useEffect(() => {
     ;(async () => {
       await SplashScreen.preventAutoHideAsync()
-      await i18n.initAsync()
+     
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans//MuseoSans500.ttf'),
@@ -121,7 +120,7 @@ export default function App() {
           { backgroundColor: colors.startColor }
         ]}>
         <TextDefault textColor={colors.white} bold>
-          {i18n.t('updating')}
+          {t('updating')}
           {/* {.t('updating')} */}
         </TextDefault>
         <ActivityIndicator size="large" color={colors.white} />

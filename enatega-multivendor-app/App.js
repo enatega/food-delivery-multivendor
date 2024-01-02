@@ -7,7 +7,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as Sentry from 'sentry-expo'
 import { BackHandler, Platform, StatusBar, LogBox } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
-import i18n from './i18n'
 import { exitAlert } from './src/utils/androidBackButton'
 import FlashMessage from 'react-native-flash-message'
 import setupApolloClient from './src/apollo/index'
@@ -102,6 +101,7 @@ export default function App() {
   useEffect(() => {
     requestTrackingPermissions()
   }, [])
+
 
   const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()

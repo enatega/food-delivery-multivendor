@@ -39,6 +39,9 @@ const tabIcon = route => ({
     } else if (route.name === t('titleProfile')) {
       iconName = 'user'
     }
+    else if (route.name === t('language')) {
+      iconName = 'language'
+    }
     return (
       <View style={{ paddingTop: scale(10), paddingHorizontal: scale(12) }}>
         <Icon type="font-awesome" color={color} name={iconName} size={30} />

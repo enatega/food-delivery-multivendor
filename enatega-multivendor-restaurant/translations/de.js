@@ -50,5 +50,6 @@ export const de = {
   timeLeft: 'Verbleibende Zeit',
   orderDetail: 'Bestelldetails',
   acceptAndPrint: 'Akzeptieren und Drucken',
-  accept: 'Akzeptieren'
+  accept: 'Akzeptieren',
+  language: 'Sprache'
 }

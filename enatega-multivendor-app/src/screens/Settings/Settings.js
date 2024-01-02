@@ -85,8 +85,9 @@ function Settings(props) {
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  console.log(themeContext.ThemeValue)
-  const { t } = useTranslation()
+
+  const {t} = useTranslation()
+
   const [languageName, languageNameSetter] = useState('English')
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
@@ -95,7 +96,6 @@ function Settings(props) {
   const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
   const [btnText, setBtnText] = useState(null)
   const navigation = useNavigation()
-  // eslint-disable-next-line no-unused-vars
   const [appState, setAppState] = useState(AppState.currentState)
   const [uploadToken] = useMutation(PUSH_TOKEN)
   const [mutate, { loading }] = useMutation(UPDATE_NOTIFICATION_TOKEN, {
@@ -152,7 +152,7 @@ function Settings(props) {
     })
     selectLanguage()
     checkPermission()
-  }, [props.navigation])
+  }, [props.navigation, languageName])
 
   async function deactivatewithemail() {
     deactivated({ variables: { isActive: false, email: profile.email } })
@@ -226,10 +226,18 @@ function Settings(props) {
         'enatega-language',
         languageTypes[languageInd].code
       )
-      i18next.changeLanguage(language)
-      var lang = await AsyncStorage.getItem('enatega-language')
-      console.log(lang)
-      Updates.reloadAsync()
+
+      var lang = await AsyncStorage.getItem('enatega-language');
+      if (lang) {
+        const defLang = languageTypes.findIndex(el => el.code === lang)
+        const langName = languageTypes[defLang].value
+       // activeRadioSetter(defLang)
+        languageNameSetter(langName)
+      }
+    i18next.changeLanguage(lang)
+    modalVisibleSetter(false)
+    Updates.reloadAsync()
+
     }
   }
 

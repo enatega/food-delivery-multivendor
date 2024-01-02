@@ -115,7 +115,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
     `,
     { variables: { id: item._id } }
   )
-  const { t } = useTranslation()
+  const {t} = useTranslation()
   const checkStatus = status => {
     const obj = orderStatuses.filter(x => {
       return x.key === status
