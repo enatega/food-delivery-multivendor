@@ -5,9 +5,11 @@
 
 import { useContext } from 'react'
 import ConfigurationContext from './src/context/Configuration'
+import * as Updates from 'expo-updates'
 
-const useEnvVars = env => {
+const useEnvVars = (env = Updates.releaseChannel) => {
   const configuration = useContext(ConfigurationContext)
+  console.log('configuration', configuration, env)
 
   if (env === 'production' || env === 'staging') {
     return {
@@ -26,10 +28,14 @@ const useEnvVars = env => {
       GOOGLE_PACES_API_BASE_URL: configuration.googlePlacesApiBaseUrl
     }
   }
+
   return {
-    GRAPHQL_URL: 'http://10.97.38.21:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://10.97.38.21:8001/graphql',
-    SERVER_URL: 'http://10.97.38.21:8001/',
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+    // GRAPHQL_URL: 'http://10.97.37.250:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://10.97.37.250:8001/graphql',
+    // SERVER_URL: 'http://10.97.37.250:8001/',
     IOS_CLIENT_ID_GOOGLE: configuration.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration.androidClientID,
     AMPLITUDE_API_KEY: configuration.appAmplitudeApiKey,

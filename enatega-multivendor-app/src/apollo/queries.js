@@ -169,9 +169,6 @@ export const getConfiguration = `query Configuration{
     currencySymbol
     deliveryRate
     twilioEnabled
-    graphqlUrlApp
-    wsGraphqlUrlApp
-    serverUrlApp
     androidClientID 
     iOSClientID 
     appAmplitudeApiKey 
