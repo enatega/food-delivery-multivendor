@@ -18,7 +18,7 @@ import {
 } from '@expo/vector-icons'
 
 import gql from 'graphql-tag'
-import i18n from '../../../i18n'
+
 import { scale } from '../../utils/scaling'
 import { deleteAddress } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -35,6 +35,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
+import { useTranslation } from 'react-i18next'
 
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
@@ -49,6 +50,7 @@ function Addresses() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const inset = useSafeAreaInsets()
+  const { t } = useTranslation()
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.headerBackground)
@@ -63,7 +65,7 @@ function Addresses() {
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: i18n.t('myAddresses'),
+      title: t('myAddresses'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleContainerStyle: {

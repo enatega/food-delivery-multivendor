@@ -35,7 +35,7 @@ import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
-import { verticalScale, scale } from '../../utils/scaling'
+import { scale } from '../../utils/scaling'
 import styles from './styles'
 import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
@@ -50,10 +50,6 @@ import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
-
-import i18next from '../../../i18next';
-
-
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -111,7 +107,6 @@ function Main(props) {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
     }
     Track()
-
   }, [])
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -207,7 +202,7 @@ function Main(props) {
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === t('currentLocation') && (
+        {location.label === 'currentLocation' && (
           <MaterialIcons
             name="check"
             size={scale(15)}
