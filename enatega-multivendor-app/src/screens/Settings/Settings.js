@@ -6,7 +6,7 @@ import {
   Platform,
   Linking,
   StatusBar,
-  Button,
+  ActivityIndicator,
   Text
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -86,12 +86,13 @@ function Settings(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [languageName, languageNameSetter] = useState('English')
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
   const [modalVisible, modalVisibleSetter] = useState(false)
+  const [loadinglang, setLoadingLang] = useState(false)
   const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
   const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
   const [btnText, setBtnText] = useState(null)
@@ -218,26 +219,30 @@ function Settings(props) {
   }
 
   async function onSelectedLanguage() {
-    const languageInd = activeRadio
-    if (Platform.OS === 'android') {
-      //const localization = await Localization.getLocalizationAsync()
-      //localization.locale = languageTypes[languageInd].code
-      await AsyncStorage.setItem(
-        'enatega-language',
-        languageTypes[languageInd].code
-      )
+    try {
+      // Display loading indicator
+      setLoadingLang(true)
+      const languageInd = activeRadio
+      if (Platform.OS === 'android') {
+        await AsyncStorage.setItem(
+          'enatega-language',
+          languageTypes[languageInd].code
+        )
 
-      var lang = await AsyncStorage.getItem('enatega-language');
-      if (lang) {
-        const defLang = languageTypes.findIndex(el => el.code === lang)
-        const langName = languageTypes[defLang].value
-       // activeRadioSetter(defLang)
-        languageNameSetter(langName)
+        var lang = await AsyncStorage.getItem('enatega-language')
+        if (lang) {
+          const defLang = languageTypes.findIndex(el => el.code === lang)
+          const langName = languageTypes[defLang].value
+          languageNameSetter(langName)
+        }
+        i18next.changeLanguage(lang)
+        modalVisibleSetter(false)
+        //Updates.reloadAsync()
       }
-    i18next.changeLanguage(lang)
-    modalVisibleSetter(false)
-    Updates.reloadAsync()
-
+    } catch (error) {
+      console.error('Error during language selection:', error)
+    } finally {
+      setLoadingLang(false) // Hide loading indicator
     }
   }
 
@@ -520,6 +525,11 @@ function Settings(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
+          {loadinglang && (
+            <View style={styles().loadingContainer}>
+              <ActivityIndicator size="large" color={currentTheme.tagColor} />
+            </View>
+          )}
         </View>
       </Modal>
       <Modalize

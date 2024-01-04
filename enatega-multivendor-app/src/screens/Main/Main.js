@@ -138,12 +138,16 @@ function Main(props) {
   }
 
   const setAddressLocation = async address => {
+    let formattedAddress = address.deliveryAddress
+    if (formattedAddress.length > 25) {
+      formattedAddress = formattedAddress.substring(0, 25) + '...'
+    }
     setLocation({
       _id: address._id,
       label: address.label,
       latitude: Number(address.location.coordinates[1]),
       longitude: Number(address.location.coordinates[0]),
-      deliveryAddress: address.deliveryAddress,
+      deliveryAddress: formattedAddress,
       details: address.details
     })
     mutate({ variables: { id: address._id } })
