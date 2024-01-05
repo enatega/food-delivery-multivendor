@@ -85,7 +85,7 @@ function Main(props) {
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
-
+  
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
@@ -304,7 +304,7 @@ function Main(props) {
     )
   }
 
-  if (error) return <TextError text={'Error menu ' + JSON.stringify(error)} />
+  if (!error) return <TextError text={'Something went wrong. Check your network and try again.'} />
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 

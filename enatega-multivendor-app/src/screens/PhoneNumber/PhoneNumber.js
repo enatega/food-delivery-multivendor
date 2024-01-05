@@ -124,7 +124,8 @@ function PhoneNumber(props) {
                     style ={{marginTop: Platform.OS === 'android' ? -4 : 0 }}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={phone}
-                    onChangeText={e => setPhone(e)}                    
+                    onChangeText={e => setPhone(e)}   
+                    keyboardType="phone-pad"                 
                   />
                   </View>
                   </View>
