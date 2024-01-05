@@ -99,7 +99,7 @@ export const en = {
   orderReceived: 'Order Received',
   cancelled: 'Cancelled',
   foodPreparing: 'Food is being prepared',
-  delivered: 'Delivered',
+  DELIVERED: 'DELIVERED',
   rateAndReview: 'Rate and Review',
   reviewPlaceholder: 'More detailed reviews get more visibility...',
   submit: 'Submit',
@@ -203,6 +203,8 @@ export const en = {
   emptyPasswordError: 'Password is required!',
   loginFlashMsg: 'Logged in',
   enategaCash: 'Enatega Cash',
-  assigned: "ASSIGNED",
-  picked: "PICKED"
+  ASSIGNED: "ASSIGNED",
+  PICKED: "PICKED",
+  contactCustomer: 'Contact Customer',
+  orderMarkedAs: 'Order marked as '
 }

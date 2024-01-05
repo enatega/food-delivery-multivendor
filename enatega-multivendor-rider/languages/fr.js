@@ -100,7 +100,7 @@ export const fr = {
   orderReceived: 'Ordre reçu',
   cancelled: 'Annulé',
   foodPreparing: 'La nourriture est en cours de préparation',
-  delivered: 'Livré',
+  DELIVERED: 'Livré',
   rateAndReview: 'Notez et évaluez',
   reviewPlaceholder: 'Des revues plus détaillées ont plus de visibilité ...',
   submit: 'Soumettre',
@@ -205,6 +205,8 @@ locationAccess: 'Accès à la localisation',
 emptyPasswordError: 'Le mot de passe est requis!',
 loginFlashMsg: 'Connecté',
 enategaCash: 'Enatega Argent Liquide',
-assigned: "ASSIGNÉ",
-  picked: "CHOISI"
+ASSIGNED: "ASSIGNÉ",
+PICKED: "CHOISI",
+contactCustomer: 'Contacter le client',
+orderMarkedAs: 'Commande marquée comme '
 }

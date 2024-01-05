@@ -94,7 +94,7 @@ export const zh = {
   orderReceived: '订单已经收到',
   cancelled: '取消',
   foodPreparing: '食物正在准备中',
-  delivered: '交付',
+  DELIVERED: '交付',
   rateAndReview: '打分和评论',
   reviewPlaceholder: '更详细的评论获得更多可见性......',
   submit: '提交',
@@ -196,6 +196,8 @@ locationAccess: '位置访问',
 emptyPasswordError: '需要密码!',
 loginFlashMsg: '已登录',
 enategaCash: '恩特加现金',
-assigned: "已分配",
-  picked: "已挑选"
+ASSIGNED: "已分配",
+PICKED: "已挑选",
+contactCustomer: '联系客户',
+orderMarkedAs: '订单标记为 '
 }
