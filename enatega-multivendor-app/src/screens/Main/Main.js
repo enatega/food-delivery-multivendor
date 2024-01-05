@@ -304,7 +304,7 @@ function Main(props) {
     )
   }
 
-  if (!error) return <TextError text={'Something went wrong. Check your network and try again.'} />
+  if (error) return <TextError text={'Something went wrong. Check your network and try again.'} />
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
