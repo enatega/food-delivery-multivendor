@@ -348,5 +348,7 @@ export const zh = {
   dontHaveAnyOrderYet: '您还没有任何过去的订单。尝试我们一家令人敬畏的餐厅，下第一份订单吧！',
   BrowseRESTAURANTS: '浏览您区域内的餐厅',
   RateOrder: '评价订单',
-  voucherCode: "输入您的优惠码"
+  voucherCode: "输入您的优惠码",
+  networkError: "出了点问题。请检查您的网络，然后重试。",
+  noRestaurants:"没有餐馆"
 }

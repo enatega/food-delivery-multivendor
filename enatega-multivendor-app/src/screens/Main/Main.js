@@ -224,7 +224,7 @@ function Main(props) {
       return (
         <View style={styles().emptyViewContainer}>
           <TextDefault textColor={currentTheme.fontMainColor}>
-            No Restaurants
+           {t('noRestaurants')}
           </TextDefault>
         </View>
       )
@@ -304,7 +304,7 @@ function Main(props) {
     )
   }
 
-  if (error) return <TextError text={'Something went wrong. Check your network and try again.'} />
+  if (error) return <TextError text={t('networkError')} />
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
