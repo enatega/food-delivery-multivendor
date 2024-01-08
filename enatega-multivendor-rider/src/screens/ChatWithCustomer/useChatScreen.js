@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useContext, useTransition } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useContext} from 'react'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import { callNumber } from '../../utilities/callNumber'
 import colors from '../../utilities/colors'
