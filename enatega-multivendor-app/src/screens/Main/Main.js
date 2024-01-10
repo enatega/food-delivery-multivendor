@@ -35,7 +35,7 @@ import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
-import { verticalScale, scale } from '../../utils/scaling'
+import { scale } from '../../utils/scaling'
 import styles from './styles'
 import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
@@ -47,10 +47,9 @@ import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
-import i18next from '../../../i18next';
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -60,7 +59,9 @@ const SELECT_ADDRESS = gql`
 `
 
 function Main(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
@@ -137,12 +138,16 @@ function Main(props) {
   }
 
   const setAddressLocation = async address => {
+    let formattedAddress = address.deliveryAddress
+    if (formattedAddress.length > 25) {
+      formattedAddress = formattedAddress.substring(0, 25) + '...'
+    }
     setLocation({
       _id: address._id,
       label: address.label,
       latitude: Number(address.location.coordinates[1]),
       longitude: Number(address.location.coordinates[0]),
-      deliveryAddress: address.deliveryAddress,
+      deliveryAddress: formattedAddress,
       details: address.details
     })
     mutate({ variables: { id: address._id } })
@@ -169,7 +174,7 @@ function Main(props) {
           else {
             modalRef.current.close()
             setLocation({
-              label: ('currentLocation'),
+              label: 'currentLocation',
               latitude: coords.latitude,
               longitude: coords.longitude,
               deliveryAddress: address
@@ -201,7 +206,7 @@ function Main(props) {
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === t('currentLocation') && (
+        {location.label === 'currentLocation' && (
           <MaterialIcons
             name="check"
             size={scale(15)}

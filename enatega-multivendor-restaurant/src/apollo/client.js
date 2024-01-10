@@ -12,10 +12,9 @@ import {
   createHttpLink
 } from '@apollo/client'
 
-const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars()
-
 export let clientRef = null
 function setupApolloClient() {
+  const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars()
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {

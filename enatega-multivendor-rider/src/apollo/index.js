@@ -15,11 +15,11 @@ import {
 } from '@apollo/client/utilities'
 
 import getEnvVars from '../../environment'
-const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars()
 
 export let clientRef = null
 
 function setupApolloClient() {
+  const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars()
   const cache = new InMemoryCache({
     typePolicies: {
       Query: {

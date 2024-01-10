@@ -13,9 +13,9 @@ import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
-import Analytics from '../../utils/analytics'
-import {useTranslation} from 'react-i18next'
+import analytics from '../../utils/analytics'
 
+import { useTranslation } from 'react-i18next'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -23,7 +23,9 @@ const LATITUDE_DELTA = 40
 const LONGITUDE_DELTA = 40
 
 export default function SelectLocation(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const { longitude, latitude } = props.route.params || {}
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -32,10 +34,8 @@ export default function SelectLocation(props) {
   const { getCurrentLocation, getLocationPermission } = useLocation()
   const { setLocation } = useContext(LocationContext)
   const [label, setLabel] = useState(
-    longitude && latitude
-      ? t('currentLocation')
-      : t('selectedLocation')
-  );
+    longitude && latitude ? t('currentLocation') : t('selectedLocation')
+  )
   // eslint-disable-next-line no-unused-vars
   const [coordinates, setCorrdinates] = useState({
     latitude: latitude || LATITUDE,
@@ -70,7 +70,7 @@ export default function SelectLocation(props) {
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
         message: t('locationPermissionMessage'),
-          // 'Tap on this message to open Settings then allow app to use location from permissions.',
+        // 'Tap on this message to open Settings then allow app to use location from permissions.',
         onPress: async () => {
           await Linking.openSettings()
         }
@@ -128,8 +128,7 @@ export default function SelectLocation(props) {
           onRegionChangeComplete={onRegionChangeComplete}
           onPanDrag={onPanDrag}
         />
-        <View
-          style={styles().mainContainer}>
+        <View style={styles().mainContainer}>
           <CustomMarker
             width={40}
             height={40}

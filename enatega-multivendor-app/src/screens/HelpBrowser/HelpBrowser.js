@@ -4,12 +4,14 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { WebView } from 'react-native-webview'
 import { theme } from '../../utils/themeColors'
 import { HeaderBackButton } from '@react-navigation/elements'
-import analytics from '../../utils/analytics'
+import Analytics from '../../utils/analytics'
 import { scale } from '../../utils/scaling'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 
 function HelpBrowser(props) {
+  const analytics = Analytics()
+
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { title, url } = props.route.params

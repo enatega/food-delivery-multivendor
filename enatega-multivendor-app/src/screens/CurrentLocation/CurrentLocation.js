@@ -10,11 +10,12 @@ import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import LocationPermission from '../../assets/SVG/imageComponents/LocationPermission'
 import { scale } from '../../utils/scaling'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import Spinner from '../../components/Spinner/Spinner'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 export default function CurrentLocation() {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const inset = useSafeAreaInsets()
   const navigation = useNavigation()
@@ -29,14 +30,13 @@ export default function CurrentLocation() {
     Track()
   }, [])
 
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     setLoading(true)
     const { status, canAskAgain } = await getLocationPermission()
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
-        message:
-          t('locationPermissionMessage'),
-        onPress: async() => {
+        message: t('locationPermissionMessage'),
+        onPress: async () => {
           await Linking.openSettings()
         }
       })

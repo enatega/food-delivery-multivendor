@@ -22,8 +22,9 @@ import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import styles from './styles'
 import { useFocusEffect } from '@react-navigation/native'
-import Analytics from '../../utils/analytics'
-import {useTranslation} from 'react-i18next'
+import analytics from '../../utils/analytics'
+
+import { useTranslation } from 'react-i18next'
 
 function calculatePrice(food) {
   var foodPrice = food.variation.price
@@ -36,8 +37,9 @@ function calculatePrice(food) {
 }
 
 function OrderDetail(props) {
+  const Analytics = analytics()
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const id = props.route.params ? props.route.params._id : null
   const restaurant = props.route.params ? props.route.params.restaurant : null
   const user = props.route.params ? props.route.params.user : null

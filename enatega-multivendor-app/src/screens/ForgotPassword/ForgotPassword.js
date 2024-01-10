@@ -12,11 +12,13 @@ import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { useForgotPassword } from './useForgotPassword'
 import {useTranslation} from 'react-i18next'
 
 function ForgotPassword(props) {
+  const Analytics = analytics()
+
   const {
     email,
     setEmail,

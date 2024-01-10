@@ -51,7 +51,7 @@
 <div align="center">
 
   <a href="https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode">
-    <img src="https://enatega.com/wp-content/uploads/2023/09/final.green_.final_.1-scaled.jpg" alt="Demo video" style="border-radius: 6px; width: auto;">
+    <img src="./assets/final.green.final.1.jpg" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
 </div>
@@ -170,37 +170,37 @@ NOTE: Email provider has been only been tested for gmail accounts
 ## :hammer_and_wrench: Technologies: <a id="heading-5"></a>
 |  Expo   | React-Navigation | Apollo GraphQL | ReactJS | NodeJS | MongoDB | Firebase | 
 |:-------:|:------------:|:--------------:|:-------:|:------:|:-------:|:--------:|
-| <a href="https://expo.dev/"><img src="https://enatega.com/wp-content/uploads/2023/11/expoicon.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactnavigation.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-navigation.png" alt="Enatega Logos" width="100"></a>| <a href="https://www.apollographql.com/"><img src="https://enatega.com/wp-content/uploads/2023/11/apollo.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactjs.org/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-native.png" alt="Enatega Logos" width="100"></a> | <a href="https://nodejs.org/en/"><img src="https://enatega.com/wp-content/uploads/2023/09/node.png" alt="Enatega Logos" width="100"></a> | <a href="https://www.mongodb.com/"><img src="https://enatega.com/wp-content/uploads/2023/11/mongoDB.png" alt="Enatega Logos" width="100"></a> | <a href="https://firebase.google.com/"><img src="https://enatega.com/wp-content/uploads/2023/11/firebase.png" alt="Enatega Logos" width="100"></a> | 
+| <a href="https://expo.dev/"><img src="./assets/expoicon.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactnavigation.org/"><img src="./assets/react-navigation.png" alt="Enatega Logos" width="100"></a>| <a href="https://www.apollographql.com/"><img src="./assets/apollo.png" alt="Enatega Logos" width="100"></a>| <a href="https://reactjs.org/"><img src="./assets/react-js.png" alt="Enatega Logos" width="100"></a> | <a href="https://nodejs.org/en/"><img src="./assets/node-js.png" alt="Enatega Logos" width="100"></a> | <a href="https://www.mongodb.com/"><img src="./assets/mongoDB.png" alt="Enatega Logos" width="100"></a> | <a href="https://firebase.google.com/"><img src="./assets/firebase.png" alt="Enatega Logos" width="100"></a> | 
 
 |React Native | React Router | GraphQL | ExpressJS | React Strap | Amplitude | 
 |:------------:|:------------:|:-------:|:---------:|:-----------:|:---------:|
-|<a href="https://reactnative.dev/"><img src="https://enatega.com/wp-content/uploads/2023/09/react-native.png" alt="Enatega Logos" width="100"></a> | <a href="https://reactrouter.com/"><img src="https://enatega.com/wp-content/uploads/2023/11/react-router-svgrepo-com.png" alt="Enatega Logos" width="100"></a> |<a href="https://graphql.org/"><img src="https://enatega.com/wp-content/uploads/2023/11/graphQl-1.png" alt="Enatega Logos" width="100"></a> | <a href="https://expressjs.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/expo.png" alt="Enatega Logos" width="100"></a> |<a href="https://reactstrap.github.io/"><img src="https://enatega.com/wp-content/uploads/2023/11/React-strap.png" alt="Enatega Logos" width="100"></a> | <a href="https://amplitude.com/"><img src="https://enatega.com/wp-content/uploads/2023/11/Amplitude.png" alt="Enatega Logos" width="100"></a> | 
+|<a href="https://reactnative.dev/"><img src="./assets/react-native.png" alt="Enatega Logos" width="100"></a> | <a href="https://reactrouter.com/"><img src="./assets/react-router-svgrepo-com.png" alt="Enatega Logos" width="100"></a> |<a href="https://graphql.org/"><img src="./assets/graphQl-1.png" alt="Enatega Logos" width="100"></a> | <a href="https://expressjs.com/"><img src="./assets/express-js.png" alt="Enatega Logos" width="100"></a> |<a href="https://reactstrap.github.io/"><img src="./assets/React-strap.png" alt="Enatega Logos" width="100"></a> | <a href="https://amplitude.com/"><img src="./assets/amplitude.png" alt="Enatega Logos" width="100"></a> | 
 
 ## :framed_picture: Screenshots: <a id="heading-6"></a>
 
 |          Rider App       |   
 | :----------------------: |
-| ![](https://enatega.com/wp-content/uploads/2023/11/rider-app.webp) | 
+| ![](./assets/rider-app.png) | 
 
 |          Restaurant APP        |   
 | :----------------------------: | 
-| ![](https://enatega.com/wp-content/uploads/2023/11/restuarant-app-1-scaled.webp) |
+| ![](./assets/restuarant-app-1-scaled.webp) |
 
 |       Customer  App       |   
 | :-----------------------: | 
-| ![](https://enatega.com/wp-content/uploads/2023/11/Customer-app.webp) | 
+| ![](./assets/Customer-app.png) | 
 
 |       Customer  Web       |   
 | :-----------------------: | 
-| ![](https://enatega.com/wp-content/uploads/2023/11/Web-app.webp) | 
+| ![](./assets/Web-app-scaled.webp) | 
 
 |        Dashboard          |   
 | :-----------------------: | 
-| ![](https://enatega.com/wp-content/uploads/2023/11/dasboard.webp) | 
+| ![](./assets/dasboard-scaled.webp) | 
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
-![](https://enatega.com/wp-content/uploads/2023/11/archh.png)
+![](./assets/high-level.png)
 
 
 
@@ -217,8 +217,8 @@ Find the link for the complete documentation of the Enatega Multi Vendor Solutio
 
 |      Customer App             |        Rider App               |      Restaurant App           |          Customer Web        |       Admin Dashboard        |
 | :---------------------------: | :----------------------------: | :----------------------------:|:----------------------------:|:----------------------------:|
-| <a href="#heading-9" style="pointer-events: none;"><img src="https://enatega.com/wp-content/uploads/2023/11/logooo.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="https://enatega.com/wp-content/uploads/2023/11/Untitled-1-1.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="https://enatega.com/wp-content/uploads/2023/11/LOGOS-FOR-ENATGEA-res.png" alt="Enatega Logos" width="150"></a>| <a href="http://multivendor.enatega.com/"><img src="https://enatega.com/wp-content/uploads/2023/11/worldwide.png" alt="Enatega Logos" width="180"></a> | <a href="http://multivendor-admin-staging.enatega.com/"><img src="https://enatega.com/wp-content/uploads/2023/09/dashboard.png" alt="Enatega Logos" width="150"></a> |
-| <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"><img src="https://enatega.com/wp-content/uploads/2023/11/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"><img src="https://enatega.com/wp-content/uploads/2023/11/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=com.enatega.multirider"><img src="https://enatega.com/wp-content/uploads/2023/11/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"><img src="https://enatega.com/wp-content/uploads/2023/11/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"><img src="https://enatega.com/wp-content/uploads/2023/11/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"><img src="https://enatega.com/wp-content/uploads/2023/11/social_10096939.png" alt="iOS Logo" width="25"></a> |
+| <a href="#heading-9" style="pointer-events: none;"><img src="./assets/logooo.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="./assets/Untitled-1-1.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="./assets/LOGOS-FOR-ENATGEA-res.png" alt="Enatega Logos" width="150"></a>| <a href="http://multivendor.enatega.com/"><img src="./assets/worldwide.png" alt="Enatega Logos" width="180"></a> | <a href="http://multivendor-admin.enatega.com/"><img src="./assets/worldwide.png" alt="Enatega Logos" width="180"></a> |
+| <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"><img src="./assets/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"><img src="./assets/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=com.enatega.multirider"><img src="./assets/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"><img src="./assets/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"><img src="./assets/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"><img src="./assets/social_10096939.png" alt="iOS Logo" width="25"></a> |
 
 ## :people_holding_hands: Contributors: <a id="heading-14"></a>
 <div align="center">
@@ -235,4 +235,3 @@ The frontend source code for our solution is completely open source. However, th
 ## :mailbox_with_mail: Contact Us: <a id="heading-13"></a>
 	
 [Check out the Product Page and Pricing and more for Enatega Multivendor Food Delivery Solution](https://enatega.com/enatega-multi-vendor/?utm_source=github&utm_medium=referral&utm_campaign=github_guide&utm_id=12345678)
-

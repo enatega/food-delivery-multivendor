@@ -22,10 +22,10 @@ import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
 import screenOptions from './screenOptions'
 import styles from './styles'
-import analytics from '../../utils/analytics'
+import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import navigationService from '../../routes/navigationService'
 
 const RESTAURANTS = gql`
@@ -33,7 +33,9 @@ const RESTAURANTS = gql`
 `
 
 function Favourite() {
-  const {t} = useTranslation()
+  const analytics = Analytics()
+
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -105,7 +107,6 @@ function Favourite() {
       )
     })
   }, [navigation])
-
 
   function emptyView() {
     return (
