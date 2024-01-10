@@ -424,11 +424,11 @@ function NewAddress(props) {
           </ScrollView>
         </View>
       </KeyboardAvoidingView>
-      <SearchModal
+      {modalVisible ?  <SearchModal
         visible={modalVisible}
         onClose={onClose}
         onSubmit={onSubmit}
-      />
+      /> : null}
       <View
         style={{
           paddingBottom: inset.bottom,
