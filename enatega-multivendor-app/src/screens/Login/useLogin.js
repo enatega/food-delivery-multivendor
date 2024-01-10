@@ -8,7 +8,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import * as Notifications from 'expo-notifications'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
 import {useTranslation} from 'react-i18next'
@@ -22,6 +22,8 @@ const EMAIL = gql`
 `
 
 export const useLogin = () => {
+  const Analytics = analytics()
+
   const navigation = useNavigation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

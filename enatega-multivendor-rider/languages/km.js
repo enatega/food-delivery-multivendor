@@ -98,7 +98,7 @@ export const km = {
   orderReceived: 'បញ្ជាទិញដែលទទួលបាន',
   cancelled: 'បានបោះបង់',
   foodPreparing: 'ម្ហូបកំពុងត្រូវបានរៀបចំ',
-  delivered: 'បានបញ្ជូន',
+  DELIVERED: 'បានបញ្ជូន',
   rateAndReview: 'វាយតម្លៃនិងពិនិត្យ',
   reviewPlaceholder: 'ការពិនិត្យលម្អិតបន្ថែមទៀតទទួលបានភាពមើលឃើញកាន់តែច្រើន ...',
   submit: 'ដាក់ស្នើ',
@@ -201,6 +201,8 @@ locationAccess: 'ចូលដំណើរការទីតាំង',
 emptyPasswordError: 'ត្រូវការពាក្យសម្ងាត់!',
 loginFlashMsg: 'ចូលប្រើរួចហើយ',
 enategaCash: 'លុយអេណាត់ហ្គា',
-assigned: "បានគោរព",
-  picked: "បានជ្រើសរើស"
+ASSIGNED: "បានគោរព",
+PICKED: "បានជ្រើសរើស",
+contactCustomer: 'ទំនាក់ទំនង​អតិថិជន',
+orderMarkedAs: 'ការបញ្ជាទិញត្រូវបានសម្គាល់ថាជាចាប់ពី '
 }

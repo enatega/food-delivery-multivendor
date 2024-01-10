@@ -7,9 +7,10 @@ import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import getEnvVars from '../../../../environment'
-import {useTranslation} from 'react-i18next'
 
+import useEnvVars from '../../../../environment'
+
+import { useTranslation } from 'react-i18next'
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -17,10 +18,10 @@ const SEND_OTP_TO_PHONE = gql`
 const UPDATEUSER = gql`
   ${updateUser}
 `
-const { TEST_OTP } = getEnvVars()
-const usePhoneOtp = () => {
 
-  const {t} = useTranslation()
+const usePhoneOtp = () => {
+  const { TEST_OTP } = useEnvVars()
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [otp, setOtp] = useState('')
@@ -68,9 +69,9 @@ const usePhoneOtp = () => {
     route.params?.prevScreen
       ? navigation.navigate(route.params.prevScreen)
       : navigation.navigate({
-        name: 'Main',
-        merge: true
-      })
+          name: 'Main',
+          merge: true
+        })
   }
 
   const [mutate, { loading }] = useMutation(SEND_OTP_TO_PHONE, {

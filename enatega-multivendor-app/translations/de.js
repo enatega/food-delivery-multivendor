@@ -357,5 +357,7 @@ export const de = {
   dontHaveAnyOrderYet: 'Sie haben noch keine vergangenen Bestellungen. Probieren Sie eines unserer tollen Restaurants aus und geben Sie Ihre erste Bestellung auf!',
   BrowseRESTAURANTS: 'Durchsuchen Sie RESTAURANTS IN IHRER REGION',
   RateOrder: 'Bestellung bewerten',
-  voucherCode: "Geben Sie Ihren Gutscheincode ein"
+  voucherCode: "Geben Sie Ihren Gutscheincode ein",
+  networkError: "Etwas ist schiefgelaufen. Überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
+  noRestaurants:"Keine Restaurants"
 }

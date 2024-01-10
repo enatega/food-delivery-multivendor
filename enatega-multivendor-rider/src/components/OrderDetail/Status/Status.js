@@ -59,7 +59,7 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
     }
   }
   
-  const STATUS_ORDER = ['ASSIGNED', 'PICKED', 'DELIVERED']
+  const STATUS_ORDER = [t('ASSIGNED'), t('PICKED'), t('DELIVERED')]
   const { assignedOrders, loadingAssigned } = useContext(UserContext)
   const [order, setOrder] = useState(orderData)
 
@@ -99,7 +99,7 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
       </View>
       <View style={styles.status}>
         <StatusRow
-          fillColor={STATUS_ORDER.indexOf(order.orderStatus) >= 0}
+          fillColor={STATUS_ORDER.indexOf(t(order.orderStatus)) >= 0}
           status={STATUS_ORDER[0]}
           order={order}
           time={order.assignedAt ? formatTime(order.assignedAt) : null}
@@ -109,12 +109,12 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
             styles.verticalLine,
             {
               backgroundColor:
-                order.orderStatus === 'ASSIGNED' ? colors.primary : colors.white
+                t(order.orderStatus) === t('ASSIGNED') ? colors.primary : colors.white
             }
           ]}
         />
         <StatusRow
-          fillColor={STATUS_ORDER.indexOf(order.orderStatus) >= 1}
+          fillColor={STATUS_ORDER.indexOf(t(order.orderStatus)) >= 1}
           status={STATUS_ORDER[1]}
           order={order}
           time={order.pickedAt ? formatTime(order.pickedAt) : null}
@@ -124,14 +124,14 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
             styles.verticalLine,
             {
               backgroundColor:
-                order.orderStatus === 'DELIVERED'
+                t(order.orderStatus) === t('DELIVERED')
                   ? colors.primary
                   : colors.white
             }
           ]}
         />
         <StatusRow
-          fillColor={STATUS_ORDER.indexOf(order.orderStatus) >= 2}
+          fillColor={STATUS_ORDER.indexOf(t(order.orderStatus)) >= 2}
           status={STATUS_ORDER[2]}
           time={order.deliveredAt ? formatTime(order.deliveredAt) : null}
           address={order.deliveryAddress.deliveryAddress}

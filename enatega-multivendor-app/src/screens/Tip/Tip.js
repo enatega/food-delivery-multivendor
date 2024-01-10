@@ -10,14 +10,16 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import styles from './styles'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { Entypo } from '@expo/vector-icons'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function Tip(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const inset = useSafeAreaInsets()
   const tipRef = useRef(null)

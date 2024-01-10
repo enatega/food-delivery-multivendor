@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from 'react';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,58 +13,66 @@ import navigationService from '../../routes/navigationService';
 import { scale } from '../../utils/scaling';
 import {useTranslation} from 'react-i18next'
 
-const Help = (props) => {
-  const {t} = useTranslation()
-  const themeContext = useContext(ThemeContext);
-  const currentTheme = theme[themeContext.ThemeValue];
+
+const Help = props => {
+  const { t } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
 
   const [links, setLinks] = useState([
     {
       title: t('titleProductPage'),
-      url: 'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/',
+      url:
+        'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
     },
     {
       title: t('titleDocs'),
-      url: 'https://enatega.com/multivendor-documentation/',
+      url: 'https://enatega.com/multivendor-documentation/'
     },
     {
       title: t('titleBlog'),
-      url: 'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/',
+      url:
+        'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
     },
     {
       title: t('titleAboutUs'),
-      url: 'https://ninjascode.com/pages/ourteam.html',
-    },
-  ]);
+      url: 'https://ninjascode.com/pages/ourteam.html'
+    }
+  ])
 
   useEffect(() => {
     async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_HELP);
+      await Analytics.track(Analytics.events.NAVIGATE_TO_HELP)
     }
-    Track();
-  }, []);
+    Track()
+  }, [])
 
   useEffect(() => {
     // Update translations when the language changes
     setLinks([
       {
         title: t('titleProductPage'),
-        url: 'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/',
+        url:
+          'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
       },
       {
         title: t('titleDocs'),
-        url: 'https://enatega.com/multivendor-documentation/',
+        url: 'https://enatega.com/multivendor-documentation/'
       },
       {
         title: t('titleBlog'),
-        url: 'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/',
+        url:
+          'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
       },
       {
         title: t('titleAboutUs'),
+
+
         url: 'https://ninjascode.com/pages/ourteam.html',
       },
     ]);
   }, []);
+
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -78,10 +87,10 @@ const Help = (props) => {
         borderRadius: scale(10),
         backgroundColor: currentTheme.black,
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: 'white'
       },
       headerStyle: {
-        backgroundColor: currentTheme.themeBackground,
+        backgroundColor: currentTheme.themeBackground
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -91,36 +100,46 @@ const Help = (props) => {
             </View>
           )}
           onPress={() => {
-            navigationService.goBack();
+            navigationService.goBack()
           }}
         />
-      ),
-    });
-  }, [props.navigation]);
+      )
+    })
+  }, [props.navigation])
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
-      <StatusBar barStyle="light-content" backgroundColor={currentTheme.themeBackground} />
+    <SafeAreaView
+      edges={['bottom', 'right', 'left']}
+      style={styles(currentTheme).flex}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={currentTheme.themeBackground}
+      />
       <View style={styles(currentTheme).flex}>
         <View style={styles(currentTheme).mainContainer}>
           {links.map(({ title, url }, index) => (
             <TouchableOpacity
               style={styles(currentTheme).itemContainer}
-              onPress={() => props.navigation.navigate('HelpBrowser', { title, url })}
-              key={index}
-            >
+              onPress={() =>
+                props.navigation.navigate('HelpBrowser', { title, url })
+              }
+              key={index}>
               <View>
                 <TextDefault textColor={currentTheme.fontMainColor} bolder>
                   {title}{' '}
                 </TextDefault>
               </View>
-              <MaterialIcons name="arrow-forward" size={20} color={currentTheme.darkBgFont} />
+              <MaterialIcons
+                name="arrow-forward"
+                size={20}
+                color={currentTheme.darkBgFont}
+              />
             </TouchableOpacity>
           ))}
         </View>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Help;
+export default Help

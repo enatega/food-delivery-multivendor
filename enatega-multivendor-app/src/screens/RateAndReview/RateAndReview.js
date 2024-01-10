@@ -20,11 +20,11 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 
 import { scale } from '../../utils/scaling'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 // constants
 const REVIEWORDER = gql`
@@ -32,7 +32,9 @@ const REVIEWORDER = gql`
 `
 
 function RateAndReview(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const [id] = useState(props.route.params._id ?? null)
   const [rating, setRating] = useState(0)
   const [description, setDescription] = useState('')

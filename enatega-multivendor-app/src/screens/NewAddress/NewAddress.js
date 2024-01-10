@@ -30,11 +30,11 @@ import { alignment } from '../../utils/alignment'
 import { LocationContext } from '../../context/Location'
 import { mapStyle } from '../../utils/mapStyle'
 import SearchModal from '../../components/Address/SearchModal'
-import Analytics from '../../utils/analytics'
+import analytics from '../../utils/analytics'
 import { MaterialIcons, Entypo, Foundation } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const CREATE_ADDRESS = gql`
   ${createAddress}
@@ -64,7 +64,9 @@ const LATITUDE_DELTA = 0.0022
 const LONGITUDE_DELTA = 0.0021
 
 function NewAddress(props) {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
   const addressRef = useRef()
   const inset = useSafeAreaInsets()
   const [modalVisible, setModalVisible] = useState(false)
@@ -116,8 +118,7 @@ function NewAddress(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View
-              style={styles(currentTheme).headerBackBtnContainer}>
+            <View style={styles(currentTheme).headerBackBtnContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -219,7 +220,6 @@ function NewAddress(props) {
               cacheEnabled={true}
               showsUserLocation={false}
               customMapStyle={mapStyle}
-
               initialRegion={{
                 latitude: LATITUDE,
                 latitudeDelta: LATITUDE_DELTA,
@@ -235,8 +235,7 @@ function NewAddress(props) {
                   currentScreen: 'NewAddress'
                 })
               }}></MapView>
-            <View
-              style={styles().imageContainer}>
+            <View style={styles().imageContainer}>
               <Image
                 source={require('../../assets/images/user.png')}
                 width={20}

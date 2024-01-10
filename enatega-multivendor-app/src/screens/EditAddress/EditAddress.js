@@ -32,11 +32,11 @@ import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import AddressText from '../../components/Address/AddressText'
 import SearchModal from '../../components/Address/SearchModal'
-import analytics from '../../utils/analytics'
+import Analytics from '../../utils/analytics'
 import { MaterialIcons, Entypo, Foundation } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const EDIT_ADDRESS = gql`
   ${editAddress}
@@ -64,7 +64,9 @@ const LATITUDE_DELTA = 0.0022
 const LONGITUDE_DELTA = 0.0021
 
 function EditAddress(props) {
-  const {t} = useTranslation()
+  const analytics = Analytics()
+
+  const { t } = useTranslation()
   const addressRef = useRef(null)
   const { location, setLocation } = useContext(LocationContext)
   const [_id] = useState(props.route.params._id ?? null)
@@ -239,7 +241,6 @@ function EditAddress(props) {
               loadingIndicatorColor={currentTheme.iconColorPink}
               region={region}
               customMapStyle={mapStyle}
-      
               provider={PROVIDER_GOOGLE}
               onPress={() => {
                 props.navigation.navigate('FullMap', {
@@ -248,8 +249,7 @@ function EditAddress(props) {
                   currentScreen: 'EditAddress'
                 })
               }}></MapView>
-            <View
-              style={styles().editAddressImageContainer}>
+            <View style={styles().editAddressImageContainer}>
               <Image
                 source={require('../../assets/images/user.png')}
                 width={20}

@@ -7,7 +7,7 @@ export default {
     flex: 1
   },
   headingLanguage: {
-    width: '85%',
+    width: '70%',
     justifyContent: 'center'
   },
   languageContainer: {
@@ -34,7 +34,7 @@ export default {
     height: verticalScale(40)
   },
   button: {
-    width: '15%',
+    width: '25%',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center'

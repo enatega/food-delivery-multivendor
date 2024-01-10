@@ -113,7 +113,7 @@ const Order = ({ order, orderAmount }) => {
                 disabled>
                 <TextDefault bolder center textColor={colors.primary}>
                   {order?.orderStatus === 'DELIVERED'
-                    ? t('delivered')
+                    ? t('DELIVERED')
                     : t('inProgress')}
                 </TextDefault>
               </TouchableOpacity>

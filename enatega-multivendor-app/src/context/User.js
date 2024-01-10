@@ -2,17 +2,36 @@ import React, { useState, useEffect, useContext } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useApolloClient, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { v5 as uuidv5 } from 'uuid';
-import { v1 as uuidv1 } from 'uuid';
+import { v5 as uuidv5 } from 'uuid'
+import { v1 as uuidv1 } from 'uuid'
 import { profile } from '../apollo/queries'
 import { LocationContext } from './Location'
 import AuthContext from './Auth'
-import Analytics from '../utils/analytics'
-import {useTranslation} from 'react-i18next'
 
-const v1options = { random: [
-  0x10, 0x91, 0x56, 0xbe, 0xc4, 0xfb, 0xc1, 0xea, 0x71, 0xb4, 0xef, 0xe1, 0x67, 0x1c, 0x58, 0x36,
-],}
+import analytics from '../utils/analytics'
+
+import { useTranslation } from 'react-i18next'
+
+const v1options = {
+  random: [
+    0x10,
+    0x91,
+    0x56,
+    0xbe,
+    0xc4,
+    0xfb,
+    0xc1,
+    0xea,
+    0x71,
+    0xb4,
+    0xef,
+    0xe1,
+    0x67,
+    0x1c,
+    0x58,
+    0x36
+  ]
+}
 
 const PROFILE = gql`
   ${profile}
@@ -21,7 +40,10 @@ const PROFILE = gql`
 const UserContext = React.createContext({})
 
 export const UserProvider = props => {
-  const {t} = useTranslation()
+  const Analytics = analytics()
+
+  const { t } = useTranslation()
+
   const { token, setToken } = useContext(AuthContext)
   const client = useApolloClient()
   const { location, setLocation } = useContext(LocationContext)
@@ -42,7 +64,7 @@ export const UserProvider = props => {
   })
   useEffect(() => {
     let isSubscribed = true
-    ;(async() => {
+    ;(async () => {
       const restaurant = await AsyncStorage.getItem('restaurant')
       const cart = await AsyncStorage.getItem('cartItems')
       isSubscribed && setRestaurant(restaurant || null)
@@ -63,7 +85,7 @@ export const UserProvider = props => {
         userId,
         name,
         email,
-        phone,
+        phone
       },
       userId
     )
@@ -72,7 +94,7 @@ export const UserProvider = props => {
     })
   }
 
-  const logout = async() => {
+  const logout = async () => {
     try {
       await AsyncStorage.removeItem('token')
       setToken(null)
@@ -93,14 +115,14 @@ export const UserProvider = props => {
     }
   }
 
-  const clearCart = async() => {
+  const clearCart = async () => {
     setCart([])
     setRestaurant(null)
     await AsyncStorage.removeItem('cartItems')
     await AsyncStorage.removeItem('restaurant')
   }
 
-  const addQuantity = async(key, quantity = 1) => {
+  const addQuantity = async (key, quantity = 1) => {
     const cartIndex = cart.findIndex(c => c.key === key)
     cart[cartIndex].quantity += quantity
     setCart([...cart])
@@ -145,12 +167,12 @@ export const UserProvider = props => {
   const numberOfCartItems = () => {
     return cart
       .map(c => c.quantity)
-      .reduce(function(a, b) {
+      .reduce(function (a, b) {
         return a + b
       }, 0)
   }
 
-  const addCartItem = async(
+  const addCartItem = async (
     _id,
     variation,
     quantity = 1,

@@ -359,5 +359,7 @@ export const ar = {
   dontHaveAnyOrderYet: "ليس لديك أي طلب سابق حتى الآن. جرب أحد مطاعمنا الرائعة وقدم طلبك الأول!",
   BrowseRESTAURANTS: 'تصفح المطاعم في منطقتك',
   RateOrder: 'تقييم الطلب',
-  voucherCode: "أدخل رمز القسيمة الخاص بك"
+  voucherCode: "أدخل رمز القسيمة الخاص بك",
+  networkError: "حدث خطأ ما. تحقق من شبكتك وحاول مرة أخرى.",
+  noRestaurants: "لا مطاعم"
 }

@@ -363,5 +363,7 @@ export const en = {
   dontHaveAnyOrderYet: "You don't have any past order yet. Try one of our awesome restaurants and place your first order!",
   BrowseRESTAURANTS: 'Browse RESTAURANTS IN YOUR AREA',
   RateOrder: 'Rate Order',
-  voucherCode: 'Enter your voucher code'
+  voucherCode: 'Enter your voucher code',
+  networkError: 'Something went wrong. Check your network and try again.',
+  noRestaurants: 'No Restaurants',
 }
