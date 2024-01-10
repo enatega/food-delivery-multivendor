@@ -50,7 +50,7 @@
 
 <div align="center">
 
-  <a href="https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode">
+  <a href="https://www.youtube.com/watch?v=00voqzkFpHU">
     <img src="./assets/final.green.final.1.jpg" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
