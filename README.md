@@ -200,7 +200,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
-![](https://enatega.com/wp-content/uploads/2023/11/archh.png)
+![](./assets/high-level.png)
 
 
 
