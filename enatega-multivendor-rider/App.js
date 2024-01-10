@@ -35,7 +35,7 @@ LogBox.ignoreLogs([
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
 export default function App() {
-  const { t } = useTranslation();
+ // const { t } = useTranslation();
   const [appIsReady, setAppIsReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -120,7 +120,8 @@ export default function App() {
           { backgroundColor: colors.startColor }
         ]}>
         <TextDefault textColor={colors.white} bold>
-          {t('updating')}
+          {/* {t('updating')} */}
+          updating
           {/* {.t('updating')} */}
         </TextDefault>
         <ActivityIndicator size="large" color={colors.white} />

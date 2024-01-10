@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useContext } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useContext} from 'react'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import { callNumber } from '../../utilities/callNumber'
 import colors from '../../utilities/colors'
@@ -8,8 +8,10 @@ import { sendChatMessage } from '../../apollo/mutations'
 import { subscriptionNewMessage } from '../../apollo/subscriptions'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import UserContext from '../../context/user'
+import { useTranslation } from 'react-i18next'
 
 export const useChatScreen = ({ navigation, route }) => {
+  const {t} = useTranslation()
   const { dataProfile } = useContext(UserContext)
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState(null)
@@ -110,7 +112,7 @@ export const useChatScreen = ({ navigation, route }) => {
           onPress={() => callNumber(phone)}
         />
       ),
-      headerTitle: 'Contact Customer'
+      headerTitle: t('contactCustomer')
     })
   }, [navigation])
 

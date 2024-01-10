@@ -361,5 +361,7 @@ export const fr = {
   dontHaveAnyOrderYet: "Vous n'avez encore aucune commande passée. Essayez l'un de nos restaurants formidables et passez votre première commande !",
   BrowseRESTAURANTS: "Parcourez LES RESTAURANTS DE VOTRE RÉGION",
   RateOrder: "Noter la commande",
-  voucherCode: "Entrez votre code de réduction"
+  voucherCode: "Entrez votre code de réduction",
+  networkError: "Quelque chose s'est mal passé. Vérifiez votre réseau et réessayez.",
+  noRestaurants: "Pas de restaurants"
 }
