@@ -50,7 +50,7 @@
 
 <div align="center">
 
-  <a href="https://www.youtube.com/watch?v=8sE7ivnFyo0&feature=youtu.be&ab_channel=NinjasCode">
+  <a href="https://www.youtube.com/watch?v=00voqzkFpHU">
     <img src="./assets/final.green.final.1.jpg" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
@@ -77,8 +77,7 @@ Our solution is open source but the backend and API are proprietary, and can be 
 - [:page_with_curl: Documentation](#heading-8)
 - [:movie_camera: Demo Videos](#heading-14)
 - [:video_game: Demos](#heading-9)
-- [:rocket: Contributing](#heading-10)
-- [:busts_in_silhouette: Contributors](#heading-14)
+- [:busts_in_silhouette: Contributors](#heading-10)
 - [:warning: Disclaimer](#heading-12)
 - [:email: Contact Us](#heading-13)
 
@@ -220,7 +219,7 @@ Find the link for the complete documentation of the Enatega Multi Vendor Solutio
 | <a href="#heading-9" style="pointer-events: none;"><img src="./assets/logooo.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="./assets/Untitled-1-1.png" alt="Enatega Logos" width="150"></a>| <a href="#heading-9" style="pointer-events: none;"><img src="./assets/LOGOS-FOR-ENATGEA-res.png" alt="Enatega Logos" width="150"></a>| <a href="http://multivendor.enatega.com/"><img src="./assets/worldwide.png" alt="Enatega Logos" width="180"></a> | <a href="http://multivendor-admin.enatega.com/"><img src="./assets/worldwide.png" alt="Enatega Logos" width="180"></a> |
 | <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"><img src="./assets/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"><img src="./assets/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=com.enatega.multirider"><img src="./assets/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"><img src="./assets/social_10096939.png" alt="iOS Logo" width="25"></a> |<a href="https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"><img src="./assets/android_518705.png" alt="Android Logo" width="25"></a> <a href="https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"><img src="./assets/social_10096939.png" alt="iOS Logo" width="25"></a> |
 
-## :people_holding_hands: Contributors: <a id="heading-14"></a>
+## :people_holding_hands: Contributors: <a id="heading-10"></a>
 <div align="center">
 <br>
 <a href="https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/graphs/contributors">
