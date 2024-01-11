@@ -267,6 +267,18 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       height: scale(30)
+    },
+    addressAllignment: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      width: '100%',
+      marginLeft: scale(15)
+    },
+    addressDetailAllign: {
+      width: '65%',
+      display: 'flex',
+      alignItems: 'flex-end'
     }
   })
 export default styles

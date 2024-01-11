@@ -1215,7 +1215,7 @@ function Cart(props) {
                                 {t('titleDeliveryDetails')} {' :'}
                               </TextDefault>
                               {location ? (
-                                <>
+                                <View style={[styles().addressAllignment]}>
                                   <TextDefault
                                     small
                                     bold
@@ -1224,12 +1224,15 @@ function Cart(props) {
                                     textColor={
                                       currentTheme.darkBgFont
                                     }>{`${location.deliveryAddress}`}</TextDefault>
+                                    <View style={[styles().addressDetailAllign]}>
                                   <TextDefault
                                     textColor={currentTheme.darkBgFont}>
                                     {' '}
                                     {location.details}
                                   </TextDefault>
-                                </>
+                                  </View>
+                                  </View>
+                             
                               ) : (
                                 <TextDefault
                                   small

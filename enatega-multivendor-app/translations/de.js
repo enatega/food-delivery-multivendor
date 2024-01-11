@@ -359,5 +359,7 @@ export const de = {
   RateOrder: 'Bestellung bewerten',
   voucherCode: "Geben Sie Ihren Gutscheincode ein",
   networkError: "Etwas ist schiefgelaufen. Überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
-  noRestaurants:"Keine Restaurants"
+  noRestaurants:"Keine Restaurants",
+  clearCartText: 'Beim Verlassen dieser Restaurantseite werden die Artikel, die Sie zum Warenkorb hinzugefügt haben, gelöscht',
+okText: 'OK'
 }
