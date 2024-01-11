@@ -9,9 +9,10 @@ import Svg, {
   Ellipse
 } from 'react-native-svg'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 
 function EmptyCart(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (

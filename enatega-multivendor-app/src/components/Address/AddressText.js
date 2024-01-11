@@ -3,10 +3,11 @@ import React, { useContext } from 'react'
 import { TouchableOpacity } from 'react-native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import styles from './styles'
 
 export default function AddressText({ onPress = () => {} }) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (

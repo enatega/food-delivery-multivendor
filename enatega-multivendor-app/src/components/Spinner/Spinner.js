@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
 import { ActivityIndicator } from 'react-native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 
 function Spinner(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -17,9 +18,7 @@ function Spinner(props) {
           : currentTheme.headerColor
       }}
       size={props.size || 'large'}
-      color={
-        props.spinnerColor ? props.spinnerColor : currentTheme.white
-      }
+      color={props.spinnerColor ? props.spinnerColor : currentTheme.white}
     />
   )
 }

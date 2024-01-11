@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { View } from 'react-native'
 import SideDrawerItems from '../Drawer/Items/DrawerItems'
 import SideDrawerProfile from '../Drawer/Profile/DrawerProfile'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -59,7 +59,7 @@ const datas = [
 
 function SidebBar(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
 
   const inset = useSafeAreaInsets()
@@ -85,7 +85,7 @@ function SidebBar(props) {
           {datas.map((dataItem, ind) => (
             <View key={ind} style={styles().item}>
               <SideDrawerItems
-                style={styles().iconContainer}
+                style={styles(currentTheme).iconContainer}
                 onPress={async () => {
                   if (dataItem.isAuth && !isLoggedIn) {
                     props.navigation.navigate('CreateAccount')

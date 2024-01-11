@@ -178,6 +178,9 @@ export const getConfiguration = `query Configuration{
     termsAndConditions 
     privacyPolicy 
     testOtp 
+    primaryColor
+    secondaryColor
+    tertiaryColor
   }
 }`
 

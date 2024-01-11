@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { updateUser } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -18,6 +18,7 @@ const UPDATEUSER = gql`
 `
 
 const useRegister = () => {
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()

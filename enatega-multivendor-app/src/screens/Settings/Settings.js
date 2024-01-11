@@ -31,7 +31,7 @@ import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import Spinner from '../../components/Spinner/Spinner'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import UserContext from '../../context/User'
 import { Modalize } from 'react-native-modalize'
 import { useNavigation } from '@react-navigation/native'
@@ -74,7 +74,7 @@ const DEACTIVATE = gql`
 
 function Settings(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { token, setToken } = useContext(AuthContext)
   const {
     profile,
@@ -125,7 +125,7 @@ function Settings(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View style={styles().backButton}>
+            <View style={styles(currentTheme).backButton}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -304,7 +304,10 @@ function Settings(props) {
       <View style={styles().flex}>
         {Platform.OS === 'android' && (
           <View
-            style={[styles(currentTheme).languageContainer, styles().shadow]}>
+            style={[
+              styles(currentTheme).languageContainer,
+              styles(currentTheme).shadow
+            ]}>
             <View style={styles().changeLanguage}>
               <View style={styles().width85}>
                 <TextDefault
@@ -437,10 +440,10 @@ function Settings(props) {
             activeOpacity={0.7}
             onPress={() => toggleTheme()}
             style={[styles(currentTheme).notificationContainer]}>
-            <View style={styles().notificationChekboxContainer}>
-              <View style={styles().buttonContainer}>
+            <View style={styles(currentTheme).notificationChekboxContainer}>
+              <View style={styles(currentTheme).buttonContainer}>
                 <TouchableOpacity
-                  style={styles().deleteButton}
+                  style={styles(currentTheme).deleteButton}
                   onPress={() => {
                     modalizeRef.current.open('top')
                   }}>
@@ -453,7 +456,7 @@ function Settings(props) {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={styles().versionContainer}>
+        <View style={styles(currentTheme).versionContainer}>
           <TextDefault textColor={currentTheme.statusSecondColor}>
             Version: {Constants.expoConfig.version}
           </TextDefault>
@@ -480,7 +483,7 @@ function Settings(props) {
               activeOpacity={0.7}
               key={index}
               onPress={() => activeRadioSetter(item.index)}
-              style={[styles().radioContainer]}>
+              style={[styles(currentTheme).radioContainer]}>
               <RadioButton
                 animation={'bounceIn'}
                 size={13}

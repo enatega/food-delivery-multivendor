@@ -40,7 +40,7 @@ import styles from './styles'
 import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
@@ -60,7 +60,7 @@ const SELECT_ADDRESS = gql`
 
 function Main(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)

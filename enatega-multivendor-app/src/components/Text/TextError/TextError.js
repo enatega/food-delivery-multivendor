@@ -2,8 +2,9 @@ import React, { useContext } from 'react'
 import { View } from 'react-native'
 import TextDefault from '../TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 function TextError(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 

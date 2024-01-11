@@ -3,11 +3,12 @@ import { TouchableOpacity, View } from 'react-native'
 import PropTypes from 'prop-types'
 import styles from './styles'
 import ThemeContext from '../ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 
 const DEFAULT_SIZE_MULTIPLIER = 0.7
 
 function RadioButton(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 

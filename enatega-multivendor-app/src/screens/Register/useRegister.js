@@ -1,13 +1,14 @@
 import { useState, useContext } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { emailRegex, passRegex, nameRegex, phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const useRegister = () => {
+  const { theme } = CustomTheme()
   const navigation = useNavigation()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const route = useRoute()
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')

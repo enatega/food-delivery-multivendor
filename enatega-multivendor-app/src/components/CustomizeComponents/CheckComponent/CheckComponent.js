@@ -3,12 +3,13 @@ import { View, TouchableOpacity } from 'react-native'
 import CheckboxBtn from '../../../ui/FdCheckbox/CheckboxBtn'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../../context/Configuration'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 
 function CheckComponent(props) {
+  const { theme } = CustomTheme()
   const [options, setOptions] = useState(
     props.options.map(option => ({ ...option, checked: false }))
   )

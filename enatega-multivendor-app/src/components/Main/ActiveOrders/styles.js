@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { verticalScale, scale } from '../../../utils/scaling'
 import { fontStyles } from '../../../utils/fontStyles'
-import { theme } from '../../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -28,7 +27,8 @@ const styles = (props = null) =>
       overflow: 'hidden',
       width: '95%',
       alignSelf: 'center',
-      backgroundColor: theme.Pink.main,
+
+      backgroundColor: props !== null ? props.main : 'transparent',
       borderRadius: scale(12),
       marginTop: verticalScale(10),
       elevation: 7,
@@ -40,7 +40,7 @@ const styles = (props = null) =>
       shadowOpacity: 0.3,
       shadowRadius: verticalScale(3),
       borderWidth: 1,
-      borderColor: theme.Pink.white
+      borderColor: props != null ? props.white : 'white'
     },
 
     imgCard: {

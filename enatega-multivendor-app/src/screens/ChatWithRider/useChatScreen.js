@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import { callNumber } from '../../utils/callNumber'
 import gql from 'graphql-tag'
@@ -10,12 +10,12 @@ import { sendChatMessage } from '../../apollo/mutations'
 import { useMutation, useQuery } from '@apollo/client'
 import { Alert } from 'react-native'
 import { useUserContext } from '../../context/User'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export const useChatScreen = ({ navigation, route }) => {
   const { id: orderId } = route.params
   console.log(orderId)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { profile } = useUserContext()
   const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
     gql`
@@ -60,6 +60,7 @@ export const useChatScreen = ({ navigation, route }) => {
   function onError(error) {
     Alert.alert('Error', error.message)
   }
+  const { theme } = CustomTheme()
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState(null)
   const [image, setImage] = useState([])

@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import { View } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 
 function HeadingComponent(props) {
+  const { theme } = CustomTheme()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]

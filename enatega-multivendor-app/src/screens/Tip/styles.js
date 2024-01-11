@@ -1,7 +1,6 @@
 import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -42,7 +41,7 @@ const styles = (props = null) =>
       marginTop: scale(30)
     },
     bacKButton: {
-      backgroundColor: theme.Pink.white,
+      backgroundColor: props !== null ? props.white : 'white',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),
@@ -50,7 +49,7 @@ const styles = (props = null) =>
     },
     innerContainer: {
       width: '70%',
-      paddingTop: scale(10),
+      paddingTop: scale(10)
     },
     buttonContainer: {
       width: '25%',

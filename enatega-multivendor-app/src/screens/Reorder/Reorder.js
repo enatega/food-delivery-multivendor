@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useContext, useState, useEffect } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import screenOptions from './screenOptions'
 import { View, TouchableOpacity, ScrollView, StatusBar } from 'react-native'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 
 function Reorder(props) {
   const analytics = Analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const order = props.route.params.item
   const themeContext = useContext(ThemeContext)
@@ -60,7 +60,7 @@ function Reorder(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View style={styles().backButton}>
+            <View style={styles(currentTheme).backButton}>
               <Entypo name="cross" size={30} color="black" />
             </View>
           )}

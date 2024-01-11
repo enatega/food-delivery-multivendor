@@ -36,7 +36,7 @@ import UserContext from '../../context/User'
 import { useRestaurant } from '../../ui/hooks'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import styles from './styles'
 import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
@@ -63,7 +63,7 @@ const config = to => ({
 
 function Restaurant(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const scrollRef = useRef(null)
   const flatListRef = useRef(null)

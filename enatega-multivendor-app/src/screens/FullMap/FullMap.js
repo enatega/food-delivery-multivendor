@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import styles from './styles'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { mapStyle } from '../../utils/mapStyle'
@@ -18,7 +18,7 @@ const LONGITUDE_DELTA = 0.0021
 
 export default function FullMap(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const latitude = props.route.params.latitude ?? LATITUDE
   const longitude = props.route.params.longitude ?? LONGITUDE
   const { t } = useTranslation()

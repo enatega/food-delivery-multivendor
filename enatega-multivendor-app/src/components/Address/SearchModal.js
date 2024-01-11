@@ -19,7 +19,7 @@ import CloseIcon from '../../assets/SVG/imageComponents/CloseIcon'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import styles from './styles'
 
@@ -33,6 +33,8 @@ export default function SearchModal({
   onSubmit = () => {}
 }) {
   const { t } = useTranslation()
+
+  const { theme } = CustomTheme()
   const animation = useValue(0)
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   console.log('GOOGLE_MAPS_KEY', GOOGLE_MAPS_KEY)

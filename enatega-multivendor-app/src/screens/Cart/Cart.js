@@ -31,7 +31,7 @@ import { getTipping, orderFragment } from '../../apollo/queries'
 import { placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
@@ -65,7 +65,7 @@ const TIPPING = gql`
 
 function Cart(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const configuration = useContext(ConfigurationContext)
   const {
     isLoggedIn,

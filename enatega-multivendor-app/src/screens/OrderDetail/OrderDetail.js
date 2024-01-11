@@ -12,7 +12,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import analytics from '../../utils/analytics'
 import Status from '../../components/OrderDetail/Status/Status'
 import Detail from '../../components/OrderDetail/Detail/Detail'
@@ -22,18 +22,18 @@ import TrackingRider from '../../components/OrderDetail/TrackingRider/TrackingRi
 import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 const { height: HEIGHT } = Dimensions.get('screen')
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function OrderDetail(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const id = props.route.params ? props.route.params._id : null
   const user = props.route.params ? props.route.params.user : null
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {

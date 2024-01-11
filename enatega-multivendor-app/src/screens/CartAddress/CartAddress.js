@@ -8,7 +8,7 @@ import { scale } from '../../utils/scaling'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { selectAddress } from '../../apollo/mutations'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -26,7 +26,7 @@ const SELECT_ADDRESS = gql`
 
 function CartAddresses(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const inset = useSafeAreaInsets()
   const { location, setLocation } = useContext(LocationContext)
   const { profile } = useContext(UserContext)

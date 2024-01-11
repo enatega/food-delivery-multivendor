@@ -6,7 +6,7 @@ import useEnvVars from '../../../environment'
 import gql from 'graphql-tag'
 import { login } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import * as Google from 'expo-auth-session/providers/google'
 import * as AuthSession from 'expo-auth-session'
 import { useMutation } from '@apollo/client'
@@ -24,7 +24,7 @@ const LOGIN = gql`
 
 export const useCreateAccount = () => {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const navigation = useNavigation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)

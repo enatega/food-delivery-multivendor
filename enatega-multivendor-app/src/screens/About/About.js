@@ -8,7 +8,7 @@ import styles from './styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import TextError from '../../components/Text/TextError/TextError'
 import { alignment } from '../../utils/alignment'
 import { mapStyle } from '../../utils/mapStyle'
@@ -18,6 +18,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
 
 function About(props) {
+  const { theme } = CustomTheme()
   const Analytics = analytics()
   const { t } = useTranslation()
   const { restaurantObject, tab } = props.route.params

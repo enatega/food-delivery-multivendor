@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import StarRating from 'react-native-star-rating'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 
@@ -33,7 +33,7 @@ const REVIEWORDER = gql`
 
 function RateAndReview(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const [id] = useState(props.route.params._id ?? null)
   const [rating, setRating] = useState(0)
@@ -116,7 +116,7 @@ function RateAndReview(props) {
         ]}>
         <View style={{ display: 'flex' }}>
           <ImageHeader image={props.route.params.restaurant.image} />
-          <View style={styles().mainView}>
+          <View style={styles(currentTheme).mainView}>
             <TextDefault
               H4
               bolder
@@ -171,7 +171,7 @@ function RateAndReview(props) {
               />
             </View>
           </View>
-          <View style={styles().line}></View>
+          <View style={styles(currentTheme).line}></View>
 
           <TextDefault
             textColor={currentTheme.fontMainColor}

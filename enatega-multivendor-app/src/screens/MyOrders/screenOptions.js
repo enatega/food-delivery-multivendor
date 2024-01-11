@@ -9,9 +9,8 @@ import { StatusBar } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import styles from './style'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
-import { useContext } from 'react'
 
+import { useContext } from 'react'
 
 const navigationOptions = headerText => ({
   headerTitle: i18next.t('titleOrders'),
@@ -30,13 +29,11 @@ const navigationOptions = headerText => ({
   headerStyle: {
     backgroundColor: headerText
   },
-  
 
   headerLeft: () => (
     <HeaderBackButton
       backImage={() => (
-        <View
-          style={styles().backBtnContainer}>
+        <View style={styles().backBtnContainer}>
           <MaterialIcons name="arrow-back" size={30} color="black" />
         </View>
       )}

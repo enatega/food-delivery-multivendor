@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StatusBar, Linking } from 'react-native'
 import { LocationContext } from '../../context/Location'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -24,7 +24,7 @@ const LONGITUDE_DELTA = 40
 
 export default function SelectLocation(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const { longitude, latitude } = props.route.params || {}
   const themeContext = useContext(ThemeContext)

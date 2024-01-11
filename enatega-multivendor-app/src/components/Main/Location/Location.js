@@ -4,25 +4,26 @@ import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { LocationContext } from '../../../context/Location'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
-import {useTranslation} from 'react-i18next'
+import CustomTheme from '../../../utils/themeColors1'
+import { useTranslation } from 'react-i18next'
 
 function Location(props) {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { location } = useContext(LocationContext)
 
-  let translatedLabel;
+  let translatedLabel
   if (location.label === 'Current Location') {
-    translatedLabel = t('currentLocation');
+    translatedLabel = t('currentLocation')
   } else {
-    translatedLabel = t(location.label);
+    translatedLabel = t(location.label)
   }
   const translatedAddress =
     location.deliveryAddress === 'Current Location'
       ? t('currentLocation')
-      : (location.deliveryAddress);
+      : location.deliveryAddress
 
   return (
     <View>

@@ -1,7 +1,6 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -13,7 +12,7 @@ const styles = (props = null) =>
     },
     shadow: {
       shadowOffset: { width: 0, height: scale(2) },
-      shadowColor: theme.Pink.black,
+      shadowColor: props !== null ? props.black : 'black',
       shadowOpacity: 0.3,
       shadowRadius: scale(1),
       elevation: 5,
@@ -21,7 +20,7 @@ const styles = (props = null) =>
       borderColor: '#e1e1e1'
     },
     backButton: {
-      backgroundColor: theme.Pink.white,
+      backgroundColor: props !== null ? props.white : 'white',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),
@@ -31,9 +30,9 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: scale(30),
       shadowOffset: { width: 0 },
-      shadowColor: theme.Pink.black,
+      shadowColor: props !== null ? props.black : 'black',
       shadowOpacity: 0.1,
-      marginTop: scale(20),
+      marginTop: scale(20)
     },
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
@@ -87,7 +86,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       padding: scale(10),
       borderRadius: scale(6),
-      backgroundColor: theme.Pink.deleteButton
+      backgroundColor: props !== null ? props.deleteButton : 'transparent'
     },
     deleteButtonText: {
       color: 'white',
@@ -109,7 +108,7 @@ const styles = (props = null) =>
     },
     radioContainer: {
       width: '100%',
-      backgroundColor: '#FFF',
+      backgroundColor: props !== null ? props.black : 'black',
       flexDirection: 'row',
       alignItems: 'center',
       ...alignment.PTxSmall,

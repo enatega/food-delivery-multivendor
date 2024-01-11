@@ -1,12 +1,11 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex:1,
+      flex: 1,
       backgroundColor: props !== null ? props.radioOuterColor : '#FFF'
     },
     subContainer: {
@@ -28,7 +27,8 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     horizontalLine: {
-      borderBottomColor: theme.Pink.tagColor,
+      borderBottomColor: props !== null ? props.tagColor : 'transparent',
+
       borderBottomWidth: scale(1),
       marginVertical: scale(10), // Adjust this value to control the spacing above and below the line
       width: '90%',
@@ -75,12 +75,12 @@ const styles = (props = null) =>
       borderRadius: scale(8),
       justifyContent: 'center',
       ...alignment.PxSmall,
-      backgroundColor: props !== null ? props.tagColor : 'transparent',
+      backgroundColor: props !== null ? props.tagColor : 'transparent'
     },
     textlabelButton: {
       justifyContent: 'center',
       ...alignment.PxSmall,
-      backgroundColor: theme.Pink.tagColor
+      backgroundColor: props !== null ? props.tagColor : 'transparent'
     },
     activeLabel: {
       width: scale(60),

@@ -19,7 +19,7 @@ import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import { updateUser, login } from '../../apollo/mutations'
 import ChangePassword from './ChangePassword'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import styles from './styles'
@@ -40,7 +40,7 @@ const UPDATEUSER = gql`
 
 function Profile(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const refName = useRef()
   const [nameError, setNameError] = useState('')

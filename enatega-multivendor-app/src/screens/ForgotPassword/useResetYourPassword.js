@@ -3,17 +3,18 @@ import { resetPassword } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useRoute, useNavigation } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const RESET_PASSWORD = gql`
   ${resetPassword}
 `
 
 export const useResetYourPassword = () => {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const route = useRoute()
   const navigation = useNavigation()
   const [password, setPassword] = useState('')

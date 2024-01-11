@@ -7,22 +7,21 @@ import { scale } from '../../utils/scaling'
 import { changePassword } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { alignment } from '../../utils/alignment'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const CHANGE_PASSWORD = gql`
   ${changePassword}
 `
 
 function ChangePassword(props) {
-
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [oldPasswordError, setOldPasswordError] = useState('')
@@ -95,9 +94,7 @@ function ChangePassword(props) {
                 error={oldPasswordError}
                 onChangeText={setOldPassword}
                 onBlur={() => {
-                  setOldPasswordError(
-                    !oldPassword ? t('passErr1') : ''
-                  )
+                  setOldPasswordError(!oldPassword ? t('passErr1') : '')
                 }}
               />
             </View>
@@ -125,9 +122,7 @@ function ChangePassword(props) {
                 error={newPasswordError}
                 onChangeText={setNewPassword}
                 onBlur={() => {
-                  setNewPasswordError(
-                    !newPassword ? t('passErr1') : ''
-                  )
+                  setNewPasswordError(!newPassword ? t('passErr1') : '')
                 }}
               />
             </View>
@@ -139,10 +134,8 @@ function ChangePassword(props) {
               if (newPassword === '' || oldPassword === '') {
                 props.hideModal()
               }
-              const newPasswordError =
-                newPassword === '' ? t('passErr1') : ''
-              const oldPasswordError =
-                oldPassword === '' ? t('passErr1') : ''
+              const newPasswordError = newPassword === '' ? t('passErr1') : ''
+              const oldPasswordError = oldPassword === '' ? t('passErr1') : ''
               setNewPasswordError(newPasswordError)
               setOldPasswordError(oldPasswordError)
 

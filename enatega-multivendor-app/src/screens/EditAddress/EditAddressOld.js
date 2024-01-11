@@ -22,7 +22,7 @@ import { editAddress } from '../../apollo/mutations'
 import * as Location from 'expo-location'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
@@ -62,7 +62,7 @@ const LONGITUDE_DELTA = 0.0021
 
 function EditAddress(props) {
   const analytics = Analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const addressRef = useRef(null)
   const { location, setLocation } = useContext(LocationContext)

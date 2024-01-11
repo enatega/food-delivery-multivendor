@@ -5,7 +5,7 @@ import * as Font from 'expo-font'
 import 'react-native-gesture-handler'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Sentry from 'sentry-expo'
-import { BackHandler, Platform, StatusBar, LogBox } from 'react-native'
+import { BackHandler, Platform, StatusBar, LogBox, Text } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import { exitAlert } from './src/utils/androidBackButton'
 import FlashMessage from 'react-native-flash-message'
@@ -15,7 +15,7 @@ import ThemeContext from './src/ui/ThemeContext/ThemeContext'
 import { ConfigurationProvider } from './src/context/Configuration'
 import { UserProvider } from './src/context/User'
 import { AuthProvider } from './src/context/Auth'
-import { theme as Theme } from './src/utils/themeColors'
+import CustomTheme from './src/utils/themeColors1'
 import { LocationContext } from './src/context/Location'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'expo-dev-client'
@@ -35,11 +35,14 @@ LogBox.ignoreAllLogs() // Ignore all log notifications
 const themeValue = 'Pink'
 
 export default function App() {
+  const { SENTRY_DSN } = useEnvVars()
   const [appIsReady, setAppIsReady] = useState(false)
   const [location, setLocation] = useState(null)
   // Theme Reducer
   const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
 
+  const { theme: customTheme } = CustomTheme()
+  console.log('customTheme', customTheme)
   useEffect(() => {
     const loadAppData = async () => {
       try {
@@ -102,7 +105,6 @@ export default function App() {
     requestTrackingPermissions()
   }, [])
 
-  const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()
 
   useEffect(() => {
@@ -153,14 +155,14 @@ export default function App() {
       })
     }
   }
-
+  if (!customTheme) return <Text>Loading...</Text>
   if (appIsReady) {
     return (
       <ApolloProvider client={client}>
         <ThemeContext.Provider
           value={{ ThemeValue: theme, dispatch: themeSetter }}>
           <StatusBar
-            backgroundColor={Theme[theme].menuBar}
+            backgroundColor={customTheme[theme].menuBar}
             barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
           />
           <LocationContext.Provider value={{ location, setLocation }}>

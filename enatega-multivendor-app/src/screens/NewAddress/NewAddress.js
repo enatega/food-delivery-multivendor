@@ -23,7 +23,7 @@ import { scale } from '../../utils/scaling'
 import { createAddress } from '../../apollo/mutations'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
@@ -65,7 +65,7 @@ const LONGITUDE_DELTA = 0.0021
 
 function NewAddress(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const addressRef = useRef()
   const inset = useSafeAreaInsets()
@@ -330,7 +330,7 @@ function NewAddress(props) {
 
                 <View style={styles().labelButtonContainer}>
                   <View style={styles().labelTitleContainer}>
-                    <View style={styles().horizontalLine} />
+                    <View style={styles(currentTheme).horizontalLine} />
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
                       h5

@@ -5,7 +5,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import LocationPermission from '../../assets/SVG/imageComponents/LocationPermission'
@@ -14,6 +14,7 @@ import analytics from '../../utils/analytics'
 import Spinner from '../../components/Spinner/Spinner'
 import { useTranslation } from 'react-i18next'
 export default function CurrentLocation() {
+  const { theme } = CustomTheme()
   const Analytics = analytics()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)

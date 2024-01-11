@@ -23,7 +23,7 @@ import { scale } from '../../utils/scaling'
 import { deleteAddress } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import UserContext from '../../context/User'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
@@ -42,6 +42,7 @@ const DELETE_ADDRESS = gql`
 `
 
 function Addresses() {
+  const { theme } = CustomTheme()
   const Analytics = analytics()
 
   const navigation = useNavigation()
@@ -142,7 +143,7 @@ function Addresses() {
         showsVerticalScrollIndicator={false}
         style={styles().mainView}>
         <FlatList
-          data={profile.addresses}
+          data={profile?.addresses}
           ListEmptyComponent={emptyView}
           keyExtractor={item => item._id}
           ItemSeparatorComponent={() => (

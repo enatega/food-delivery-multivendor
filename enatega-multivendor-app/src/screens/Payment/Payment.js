@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 function Payment(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const { paymentMethod, coupon } = props.route.params
   const inset = useSafeAreaInsets()

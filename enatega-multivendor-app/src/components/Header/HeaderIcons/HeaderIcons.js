@@ -19,12 +19,13 @@ import {
 } from '@react-navigation/native'
 import navigationService from '../../../routes/navigationService'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+
 import { HeaderBackButton } from '@react-navigation/elements'
 import UserContext from '../../../context/User'
 import { alignment } from '../../../utils/alignment'
 import CartIcon from '../../../assets/SVG/imageComponents/CartIcon'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import CustomTheme from '../../../utils/themeColors1'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
@@ -137,8 +138,9 @@ function LeftButton(props) {
 }
 
 function RightButton(props) {
+  const { theme } = CustomTheme()
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [password, setPassword] = useState(false)
   const navigation = useNavigation()
   const route = useRoute()
@@ -158,7 +160,11 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={[styles().rightContainer, { ...alignment.PLsmall }]}>
-        <Feather name="shopping-bag" size={25} color={currentTheme.darkBgFont} />
+        <Feather
+          name="shopping-bag"
+          size={25}
+          color={currentTheme.darkBgFont}
+        />
         <View
           style={
             styles(route.name === 'Main' ? 'black' : currentTheme.white)

@@ -4,7 +4,7 @@ import styles from './styles'
 import ConfigurationContext from '../../../context/Configuration'
 import { useNavigation } from '@react-navigation/native'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
@@ -17,8 +17,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import Spinner from '../../Spinner/Spinner'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -28,7 +27,8 @@ const PROFILE = gql`
 `
 
 function Item(props) {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props.item._id) : false

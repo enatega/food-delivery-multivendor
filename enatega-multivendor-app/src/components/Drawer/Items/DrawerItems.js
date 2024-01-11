@@ -2,12 +2,13 @@ import React, { useContext } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import styles from './styles.js'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext.js'
-import { theme } from '../../../utils/themeColors.js'
+import CustomTheme from '../../../utils/themeColors1.js'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { SimpleLineIcons } from '@expo/vector-icons'
 import { verticalScale } from '../../../utils/scaling.js'
 
 function DrawerItems(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (

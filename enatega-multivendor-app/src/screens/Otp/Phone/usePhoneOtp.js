@@ -3,7 +3,7 @@ import { sendOtpToPhoneNumber, updateUser } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -20,6 +20,7 @@ const UPDATEUSER = gql`
 `
 
 const usePhoneOtp = () => {
+  const { theme } = CustomTheme()
   const { TEST_OTP } = useEnvVars()
   const { t } = useTranslation()
   const navigation = useNavigation()

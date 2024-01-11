@@ -8,13 +8,16 @@ import { useNavigation } from '@react-navigation/native'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import Animated from 'react-native-reanimated'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
-import {useTranslation} from 'react-i18next'
+
+import { useTranslation } from 'react-i18next'
+import CustomTheme from '../../../utils/themeColors1'
 
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 
 function ImageHeader(props) {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  console.log('theme inside header', theme)
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()

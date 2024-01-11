@@ -7,7 +7,7 @@ import gql from 'graphql-tag'
 import { getCoupon } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
@@ -24,7 +24,7 @@ const GET_COUPON = gql`
 
 function SelectVoucher(props) {
   const analytics = Analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const { paymentMethod } = props.route.params
   const [voucherCode, voucherCodeSetter] = useState('')

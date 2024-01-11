@@ -3,14 +3,16 @@ import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import UserContext from '../../../context/User'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import CustomTheme from '../../../utils/themeColors1'
 
 function DrawerProfile(props) {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { isLoggedIn, loadingProfile, profile } = useContext(UserContext)
@@ -25,7 +27,11 @@ function DrawerProfile(props) {
             onPress={() => {
               props.navigation.navigate({ name: 'CreateAccount' })
             }}>
-            <TextDefault style={styles(currentTheme).alignLeft} textColor={currentTheme.fontMainColor} bold H5>
+            <TextDefault
+              style={styles(currentTheme).alignLeft}
+              textColor={currentTheme.fontMainColor}
+              bold
+              H5>
               {t('loginOrCreateAccount')}
             </TextDefault>
           </TouchableOpacity>

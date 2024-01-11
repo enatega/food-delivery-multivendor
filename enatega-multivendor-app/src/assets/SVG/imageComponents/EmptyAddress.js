@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
 import Svg, { Path, G } from 'react-native-svg'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 
 function EmptyAddress(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (

@@ -3,12 +3,13 @@ import { View, TouchableOpacity } from 'react-native'
 import RadioButton from '../../../ui/FdRadioBtn/RadioBtn'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 
 function RadioComponent(props) {
+  const { theme } = CustomTheme()
   const [selected, setSelected] = useState(props.selected || null)
   const [options] = useState(props.options)
   const configuration = useContext(ConfigurationContext)

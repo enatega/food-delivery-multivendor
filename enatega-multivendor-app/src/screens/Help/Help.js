@@ -1,24 +1,22 @@
-
-import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import styles from './styles';
-import ThemeContext from '../../ui/ThemeContext/ThemeContext';
-import { theme } from '../../utils/themeColors';
-import TextDefault from '../../components/Text/TextDefault/TextDefault';
-import Analytics from '../../utils/analytics';
-import { HeaderBackButton } from '@react-navigation/elements';
-import { MaterialIcons } from '@expo/vector-icons';
-import navigationService from '../../routes/navigationService';
-import { scale } from '../../utils/scaling';
-import {useTranslation} from 'react-i18next'
-
+import React, { useContext, useEffect, useState } from 'react'
+import { View, TouchableOpacity, StatusBar } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import styles from './styles'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import CustomTheme from '../../utils/themeColors1'
+import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons'
+import navigationService from '../../routes/navigationService'
+import { scale } from '../../utils/scaling'
+import { useTranslation } from 'react-i18next'
 
 const Help = props => {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
+  const { theme } = CustomTheme()
   const [links, setLinks] = useState([
     {
       title: t('titleProductPage'),
@@ -67,12 +65,10 @@ const Help = props => {
       {
         title: t('titleAboutUs'),
 
-
-        url: 'https://ninjascode.com/pages/ourteam.html',
-      },
-    ]);
-  }, []);
-
+        url: 'https://ninjascode.com/pages/ourteam.html'
+      }
+    ])
+  }, [])
 
   useEffect(() => {
     props.navigation.setOptions({

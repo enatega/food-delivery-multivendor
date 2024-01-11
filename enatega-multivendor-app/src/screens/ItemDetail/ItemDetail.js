@@ -16,7 +16,7 @@ import CartComponent from '../../components/CustomizeComponents/CartComponent/Ca
 import HeadingComponent from '../../components/CustomizeComponents/HeadingComponent/HeadingComponent'
 import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import UserContext from '../../context/User'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { TextField } from 'react-native-material-textfield'
@@ -25,14 +25,14 @@ import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function ItemDetail(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [selectedVariation, setSelectedVariation] = useState({
     ...food.variations[0],
@@ -321,7 +321,7 @@ function ItemDetail(props) {
               <HeadingComponent title={food.title} price={calculatePrice()} />
 
               {food.variations.length > 1 && (
-               <>
+                <>
                   <View>
                     <TitleComponent
                       title={t('SelectVariation')}
@@ -334,7 +334,7 @@ function ItemDetail(props) {
                       onPress={onSelectVariation}
                     />
                   </View>
-               </>
+                </>
               )}
               {selectedVariation.addons.map(addon => (
                 <View key={addon._id}>

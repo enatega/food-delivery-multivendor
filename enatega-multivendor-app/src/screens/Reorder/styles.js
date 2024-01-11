@@ -1,6 +1,5 @@
 import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -37,7 +36,7 @@ const styles = (props = null) =>
       borderRadius: scale(10)
     },
     backButton: {
-      backgroundColor: theme.Pink.white,
+      backgroundColor: props !== null ? props.white : 'white',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),

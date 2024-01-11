@@ -5,12 +5,12 @@ import gql from 'graphql-tag'
 import { subscriptionOrder } from '../../apollo/subscriptions'
 import Heading from '../../components/MyOrders/Heading'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import TextError from '../Text/TextError/TextError'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const ActiveOrders = ({
   navigation,
@@ -20,7 +20,8 @@ const ActiveOrders = ({
   showActiveHeader,
   showPastHeader
 }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -56,7 +57,7 @@ const Item = ({ item, navigation, currentTheme }) => {
     `,
     { variables: { id: item._id } }
   )
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <TouchableOpacity
       activeOpacity={0.7}

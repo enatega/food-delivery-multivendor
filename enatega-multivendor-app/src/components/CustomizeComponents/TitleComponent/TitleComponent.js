@@ -2,10 +2,11 @@ import React, { useContext } from 'react'
 import { View } from 'react-native'
 import styles from './styles'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 
 function TitleComponent(props) {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -27,7 +28,7 @@ function TitleComponent(props) {
           {props.subTitle}
         </TextDefault>
       </View>
-      <View style={styles.rightContainer}>
+      <View style={styles(currentTheme).rightContainer}>
         <TextDefault
           textColor={
             props.error === true

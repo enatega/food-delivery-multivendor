@@ -4,14 +4,15 @@ import { MaterialIcons } from '@expo/vector-icons'
 import styles from './styles'
 import { scale } from '../../../utils/scaling'
 import Spinner from '../../../components/Spinner/Spinner'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import ThemeContext from '../../ThemeContext/ThemeContext'
 import { alignment } from '../../../utils/alignment'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const FdEmailBtn = props => {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (

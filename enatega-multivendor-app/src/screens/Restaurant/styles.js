@@ -2,7 +2,6 @@ import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { textStyles } from '../../utils/textStyles'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -14,7 +13,7 @@ const styles = (props = null) =>
       paddingBottom: 0,
       height: '5%',
       elevation: 4,
-      shadowColor: theme.Pink.black,
+      shadowColor: props != null ? props.black : 'black',
       shadowOffset: {
         width: 0,
         height: verticalScale(2)
@@ -32,7 +31,7 @@ const styles = (props = null) =>
     deal: {
       width: '100%',
       flexDirection: 'row',
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.radioOuterColor : 'white'
     },
     dealSection: {
       position: 'relative',
@@ -45,7 +44,7 @@ const styles = (props = null) =>
     dealDescription: {
       flex: 1,
       backgroundColor: props != null ? props.radioOuterColor : 'white',
-      
+
       ...alignment.PRxSmall
     },
     dealPrice: {
@@ -65,11 +64,11 @@ const styles = (props = null) =>
       paddingTop: scale(5),
       maxWidth: '100%',
       ...alignment.MRxSmall,
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.radioOuterColor : 'white'
     },
     listSeperator: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.Pink.black,
+      borderColor: props != null ? props.black : 'black',
       paddingTop: scale(15),
       marginBottom: scale(15),
       width: '90%',

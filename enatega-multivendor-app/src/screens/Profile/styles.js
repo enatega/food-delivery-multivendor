@@ -1,7 +1,6 @@
 import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -15,7 +14,7 @@ const styles = (props = null) =>
     },
     containerInfo: {
       width: '100%',
-      ...alignment.MTmedium,
+      ...alignment.MTmedium
     },
     formSubContainer: {
       borderRadius: scale(18),
@@ -40,13 +39,13 @@ const styles = (props = null) =>
     },
     containerHeading: {
       flexDirection: 'row',
-      alignContent: 'space-between',
+      alignContent: 'space-between'
     },
     headingTitle: {
-      width: '50%',
+      width: '50%'
     },
     textAlignLeft: {
-      textAlign: 'left',
+      textAlign: 'left'
     },
     headingLink: {
       width: '50%',
@@ -58,7 +57,7 @@ const styles = (props = null) =>
       ...alignment.PLmedium
     },
     saveContainer: {
-      backgroundColor: theme.Pink.main,
+      backgroundColor: props !== null ? props.main : 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: scale(6),

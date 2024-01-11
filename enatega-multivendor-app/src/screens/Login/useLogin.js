@@ -5,14 +5,13 @@ import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { login, emailExist } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import * as Notifications from 'expo-notifications'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const LOGIN = gql`
   ${login}
@@ -23,7 +22,7 @@ const EMAIL = gql`
 
 export const useLogin = () => {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const navigation = useNavigation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -34,7 +33,7 @@ export const useLogin = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { setTokenAsync } = useContext(AuthContext)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [EmailEixst, { loading }] = useMutation(EMAIL, {
     onCompleted,
@@ -84,7 +83,9 @@ export const useLogin = () => {
           setRegisteredEmail(true)
         } else {
           FlashMessage({
-            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t('continueWith')} ${emailExist.userType}`
+            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t(
+              'continueWith'
+            )} ${emailExist.userType}`
           })
           navigation.navigate({ name: 'Main', merge: true })
         }

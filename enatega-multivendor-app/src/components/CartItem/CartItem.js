@@ -4,12 +4,13 @@ import { AntDesign } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 
 const cartItem = props => {
+  const { theme } = CustomTheme()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]

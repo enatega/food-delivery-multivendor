@@ -3,7 +3,7 @@ import { sendOtpToEmail, createUser } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -21,7 +21,7 @@ const CREATEUSER = gql`
 `
 const useEmailOtp = () => {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()

@@ -19,7 +19,7 @@ import TextError from '../../components/Text/TextError/TextError'
 import { LocationContext } from '../../context/Location'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import screenOptions from './screenOptions'
 import styles from './styles'
 import Analytics from '../../utils/analytics'
@@ -34,7 +34,7 @@ const RESTAURANTS = gql`
 
 function Favourite() {
   const analytics = Analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)

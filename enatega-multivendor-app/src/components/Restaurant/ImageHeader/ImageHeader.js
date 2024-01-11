@@ -5,7 +5,7 @@ import { scale, verticalScale } from '../../../utils/scaling'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
 import Animated from 'react-native-reanimated'
@@ -18,7 +18,7 @@ import {
 import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
@@ -26,11 +26,12 @@ const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
 
 function ImageTextCenterHeader(props, ref) {
+  const { theme } = CustomTheme()
   const flatListRef = ref
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',

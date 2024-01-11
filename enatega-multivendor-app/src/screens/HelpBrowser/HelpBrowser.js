@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useEffect, useContext } from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { WebView } from 'react-native-webview'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { HeaderBackButton } from '@react-navigation/elements'
 import Analytics from '../../utils/analytics'
 import { scale } from '../../utils/scaling'
@@ -11,7 +11,7 @@ import navigationService from '../../routes/navigationService'
 
 function HelpBrowser(props) {
   const analytics = Analytics()
-
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { title, url } = props.route.params

@@ -17,7 +17,7 @@ import UserContext from '../../context/User'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import styles from './styles'
@@ -38,7 +38,7 @@ function calculatePrice(food) {
 
 function OrderDetail(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const id = props.route.params ? props.route.params._id : null
   const restaurant = props.route.params ? props.route.params.restaurant : null

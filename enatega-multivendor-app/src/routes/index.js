@@ -36,7 +36,7 @@ import About from '../screens/About'
 import SelectLocation from '../screens/SelectLocation'
 import CurrentLocation from '../screens/CurrentLocation'
 import ThemeContext from '../ui/ThemeContext/ThemeContext'
-import { theme } from '../utils/themeColors'
+import CustomTheme from '../utils/themeColors1'
 import screenOptions from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
@@ -69,6 +69,7 @@ function Drawer() {
   )
 }
 function NoDrawer() {
+  const { theme } = CustomTheme()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
@@ -212,7 +213,7 @@ function AppContainer() {
 
   useEffect(() => {
     Notifications.setNotificationHandler({
-      handleNotification: async() => ({
+      handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: false,
         shouldSetBadge: false

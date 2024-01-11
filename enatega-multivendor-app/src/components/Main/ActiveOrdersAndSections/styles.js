@@ -1,7 +1,6 @@
 import { verticalScale, scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -15,7 +14,7 @@ const styles = (props = null) =>
     offerContainer: {
       backgroundColor: props != null ? props.cartContainer : 'white',
       elevation: 3,
-      shadowColor: theme.Pink.white,
+      shadowColor: props != null ? props.white : 'white',
 
       height: scale(200),
       borderRadius: 25,

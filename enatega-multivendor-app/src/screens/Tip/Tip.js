@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Keyboard } from 'react-native'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 
 function Tip(props) {
   const Analytics = analytics()
-
+  const { theme } = CustomTheme()
   const { t } = useTranslation()
   const navigation = useNavigation()
   const inset = useSafeAreaInsets()
@@ -50,7 +50,7 @@ function Tip(props) {
       headerLeft: () => (
         <HeaderBackButton
           backImage={() => (
-            <View style={styles().bacKButton}>
+            <View style={styles(currentTheme).bacKButton}>
               <Entypo name="cross" size={30} color="black" />
             </View>
           )}

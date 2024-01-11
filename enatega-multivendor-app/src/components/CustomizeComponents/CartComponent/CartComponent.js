@@ -2,14 +2,15 @@ import React, { useState, useContext } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import CustomTheme from '../../../utils/themeColors1'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { AntDesign } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function CartComponent(props) {
-  const {t} = useTranslation()
+  const { theme } = CustomTheme()
+  const { t } = useTranslation()
   const [quantity, setQuantity] = useState(1)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]

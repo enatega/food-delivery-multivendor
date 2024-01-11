@@ -13,7 +13,7 @@ import ActiveOrders from '../../components/MyOrders/ActiveOrders'
 import Spinner from '../../components/Spinner/Spinner'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import CustomTheme from '../../utils/themeColors1'
 import styles from './style'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import TextError from '../../components/Text/TextError/TextError'
@@ -25,17 +25,16 @@ import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
 import { HeaderBackButton } from '@react-navigation/elements'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED']
 
 function MyOrders(props) {
   const analytics = Analytics()
-
+  const { theme } = CustomTheme()
   const configuration = useContext(ConfigurationContext)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const {
     orders,
     loadingOrders,
