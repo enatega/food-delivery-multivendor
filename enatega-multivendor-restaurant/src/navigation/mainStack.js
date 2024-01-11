@@ -9,13 +9,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { OrdersScreen } from '../screens/Orders'
 import SideBar from '../components/SideBar/SideBar'
 import { screenOptions, tabIcon } from './screenOptions'
-import { colors } from '../utilities/colors'
+import CustomColors from '../utilities/colors'
 import { gql, useApolloClient } from '@apollo/client'
 import { orders } from '../apollo'
 import { useNavigation } from '@react-navigation/native'
 import { SelectLanguage } from '../screens/Setting'
 import moment from 'moment'
-import {useTranslation} from 'react-i18next'
+
+import { useTranslation } from 'react-i18next'
 import { MAX_TIME } from '../utilities'
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -29,7 +30,7 @@ const Tabs = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function MainStack() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const client = useApolloClient()
   const navigation = useNavigation()
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
@@ -106,11 +107,12 @@ function DrawerNavigator() {
   )
 }
 function TabNavigator() {
-  const {t} = useTranslation()
+  const { colors } = CustomColors()
+  const { t } = useTranslation()
   return (
     <Tabs.Navigator
       initialRouteName={t('titleHome')}
-      screenOptions={({ route }) => tabIcon(route)}
+      screenOptions={({ route }) => tabIcon(route, colors)}
       tabBarLabelStyle={{
         color: colors.green
       }}>
@@ -126,7 +128,9 @@ function TabNavigator() {
         })}
       />
       <Tabs.Screen name={t('titleHome')} component={StackNavigator} />
-      {Platform.OS === 'ios' ? null : <Tabs.Screen name={t('language')} component={SelectLanguage} />}
+      {Platform.OS === 'ios' ? null : (
+        <Tabs.Screen name={t('language')} component={SelectLanguage} />
+      )}
     </Tabs.Navigator>
   )
 }

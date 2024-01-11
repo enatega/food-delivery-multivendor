@@ -2,36 +2,37 @@ import React, { useContext } from 'react'
 import { View, Text } from 'react-native'
 import { TextDefault } from '..'
 import styles from './styles'
-import { colors } from '../../utilities'
+import CustomColors from '../../utilities/colors'
 import { Configuration } from '../../ui/context'
 import { useTranslation } from 'react-i18next'
 
 export default function OrderDetails({ orderData }) {
   const { orderId, user, deliveryAddress } = orderData
+  const { colors } = CustomColors()
   const { t } = useTranslation()
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.cardContainer}>
         <View style={styles.row}>
-          <Text style={styles.heading}>{t('orderNo')}.</Text>
+          <Text style={styles(colors).heading}>{t('orderNo')}.</Text>
           <Text style={styles.text} selectable>
             {orderId}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.heading}>{t('email')}</Text>
+          <Text style={styles(colors).heading}>{t('email')}</Text>
           <Text style={styles.text} selectable>
             {user.email}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.heading}>{t('contact')}</Text>
+          <Text style={styles(colors).heading}>{t('contact')}</Text>
           <Text style={styles.text} selectable>
             {user.phone}
           </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.heading}>{t('address')}</Text>
+          <Text style={styles(colors).heading}>{t('address')}</Text>
           <Text style={styles.text} selectable>
             {deliveryAddress.deliveryAddress}
           </Text>
@@ -42,6 +43,7 @@ export default function OrderDetails({ orderData }) {
   )
 }
 function OrderItems({ orderData }) {
+  const { colors } = CustomColors()
   const { t } = useTranslation()
   const {
     items,
@@ -58,7 +60,7 @@ function OrderItems({ orderData }) {
         items.map((item, index) => {
           subTotal = subTotal + item.variation.price
           return (
-            <View style={styles.itemRowBar} key={index}>
+            <View style={styles(colors).itemRowBar} key={index}>
               <TextDefault
                 H5
                 textColor={colors.fontSecondColor}

@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import { View, Pressable, TouchableOpacity } from 'react-native'
 import { Spinner, TextDefault } from '..'
 import styles from './styles'
-import { colors, TIMES } from '../../utilities'
+import { TIMES } from '../../utilities'
+import CustomColors from '../../utilities/colors'
 import { Overlay } from 'react-native-elements'
 import { useAcceptOrder, usePrintOrder, useOrderRing } from '../../ui/hooks'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export default function OverlayComponent(props) {
-  const {t} = useTranslation()
+  const { colors } = CustomColors()
+  const { t } = useTranslation()
   const { visible, toggle, order, print, navigation } = props
   const [selectedTime, setSelectedTime] = useState(TIMES[0])
   const { acceptOrder, loading } = useAcceptOrder()
@@ -33,7 +35,7 @@ export default function OverlayComponent(props) {
       onBackdropPress={toggle}
       overlayStyle={styles.container}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <View style={styles(colors).header}>
           <TextDefault H1 bolder>
             {t('setTime')}
           </TextDefault>

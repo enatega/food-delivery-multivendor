@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { View, ActivityIndicator, ImageBackground } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Spinner, TextDefault } from '../../components'
-import { colors, MAX_TIME } from '../../utilities'
+import { MAX_TIME } from '../../utilities'
+import CustomColors from '../../utilities/colors'
 import styles from './styles'
 import { Image, Button } from 'react-native-elements'
 import OrderDetails from '../../components/OrderDetails/OrderDetails'
@@ -15,6 +16,7 @@ import { useRestaurantContext } from '../../ui/context/restaurant'
 import { useTranslation } from 'react-i18next'
 
 export default function OrderDetail({ navigation, route }) {
+  const { colors } = CustomColors()
   const { t } = useTranslation()
   const { activeBar, orderData, preparationTime, createdAt } = route.params
   const { _id, orderDate } = orderData
@@ -256,7 +258,7 @@ export default function OrderDetail({ navigation, route }) {
                 </>
               )}
             </View>
-            <View style={styles.borderContainer}>
+            <View style={styles(colors).borderContainer}>
               <TextDefault bold H2 center>
                 {t('orderDetail')}
               </TextDefault>

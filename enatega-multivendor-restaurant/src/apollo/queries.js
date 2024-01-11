@@ -83,6 +83,9 @@ export const configuration = `query Configuration{
     currency
     currencySymbol
     restaurantAppSentryUrl
+    primaryColor
+    secondaryColor
+    tertiaryColor
   }
 }`
 

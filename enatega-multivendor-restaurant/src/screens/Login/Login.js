@@ -10,13 +10,14 @@ import {
 } from 'react-native'
 import { TextDefault, Spinner } from '../../components'
 import { useLogin } from '../../ui/hooks'
-import { colors } from '../../utilities'
+import CustomColors from '../../utilities/colors'
 import styles from './styles'
 import { Image, Button, Input, Icon } from 'react-native-elements'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('window')
 export default function Login() {
+  const { colors } = CustomColors()
   const {
     onLogin,
     isValid,
@@ -28,7 +29,7 @@ export default function Login() {
     password
   } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
@@ -41,7 +42,7 @@ export default function Login() {
           height: Platform.OS === 'ios' ? height * 1.0 : height * 1.05
         }}>
         <View style={{ flex: 1, backgroundColor: colors.white }}>
-          <View style={styles.topContainer}>
+          <View style={styles(colors).topContainer}>
             <View>
               <Image
                 source={require('../../assets/Header.png')}
@@ -50,7 +51,7 @@ export default function Login() {
               />
             </View>
           </View>
-          <View style={styles.lowerContainer}>
+          <View style={styles(colors).lowerContainer}>
             <View style={styles.headingText}>
               <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                 {t('signInWithEmail')}
@@ -60,7 +61,7 @@ export default function Login() {
               <Input
                 placeholder={t('email')}
                 onChangeText={text => setUserName(text)}
-                inputContainerStyle={styles.inputStyle}
+                inputContainerStyle={styles(colors).inputStyle}
                 errorMessage={
                   errors && errors.username ? errors.username.join(',') : null
                 }
@@ -75,7 +76,7 @@ export default function Login() {
               <Input
                 placeholder={t('password')}
                 onChangeText={text => setPassword(text)}
-                inputContainerStyle={styles.inputStyle}
+                inputContainerStyle={styles(colors).inputStyle}
                 returnKeyType="go"
                 style={{ paddingLeft: 8 }}
                 containerStyle={{ marginTop: 15 }}

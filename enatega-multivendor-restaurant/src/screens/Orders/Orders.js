@@ -3,16 +3,17 @@ import React from 'react'
 import styles from './styles'
 import { TextError, Spinner, TextDefault } from '../../components'
 import { useOrders, useAcceptOrder } from '../../ui/hooks'
-import { colors } from '../../utilities'
+import CustomColors from '../../utilities/colors'
 import { Image } from 'react-native-elements/dist/image/Image'
 import { TabBars } from '../../components/TabBars'
 import { HomeOrderDetails } from '../../components/HomeOrderDetails'
 import LottieView from 'lottie-react-native'
-import {useTranslation} from 'react-i18next'
-import i18next from '../../../i18n'
+import { useTranslation } from 'react-i18next'
+
 const { width, height } = Dimensions.get('window')
 import i18next from '../../../i18n'
 const Orders = props => {
+  const { colors } = CustomColors()
   const {
     loading,
     error,
@@ -26,7 +27,7 @@ const Orders = props => {
   } = useOrders()
 
   const { loading: mutateLoading } = useAcceptOrder()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   if (error) return <TextError text={error.message} />
   return (
     <>
@@ -34,7 +35,7 @@ const Orders = props => {
         <Spinner />
       ) : (
         <>
-          <View style={styles.topContainer}>
+          <View style={styles(colors).topContainer}>
             <Image
               source={require('../../assets/orders.png')}
               PlaceholderContent={<ActivityIndicator />}
@@ -43,7 +44,7 @@ const Orders = props => {
           </View>
           <View
             style={[
-              styles.lowerContainer,
+              styles(colors).lowerContainer,
               {
                 backgroundColor:
                   active === 0
@@ -135,7 +136,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                          {t('unReadOrders')}
+                            {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{
@@ -170,7 +171,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                          {t('unReadOrders')}
+                            {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{

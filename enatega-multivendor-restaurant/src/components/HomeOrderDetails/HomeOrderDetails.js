@@ -2,16 +2,18 @@ import { View, Pressable } from 'react-native'
 import React, { useContext, useState, useRef, useEffect } from 'react'
 import styles from './styles'
 import { TextDefault } from '../../components'
-import { colors, MAX_TIME } from '../../utilities'
+import { MAX_TIME } from '../../utilities'
+import CustomColors from '../../utilities/colors'
 import { Badge } from 'react-native-elements'
 import { Configuration } from '../../ui/context'
 import { useSubscription, gql } from '@apollo/client'
 import moment from 'moment'
 import { subscriptionOrder } from '../../apollo'
 import CountDown from 'react-native-countdown-component'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function HomeOrderDetails(props) {
+  const { colors } = CustomColors()
   const { activeBar, navigation } = props
   const {
     orderId,
@@ -24,7 +26,7 @@ function HomeOrderDetails(props) {
     isRinged
   } = props?.order
   const timeNow = new Date()
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   const date = new Date(orderDate)
   const acceptanceTime = moment(date).diff(timeNow, 'seconds')
   // current
@@ -47,8 +49,8 @@ function HomeOrderDetails(props) {
   const decision = !isAcceptButtonVisible
     ? acceptanceTime
     : remainingTime > 0
-      ? remainingTime
-      : 0
+    ? remainingTime
+    : 0
   if (decision === acceptanceTime) {
     remainingTime = 0
   }
@@ -85,8 +87,8 @@ function HomeOrderDetails(props) {
             activeBar === 0
               ? colors.white
               : activeBar === 1
-                ? colors.white
-                : colors.darkgreen
+              ? colors.white
+              : colors.darkgreen
         }
       ]}
       onPress={() => {
@@ -123,10 +125,9 @@ function HomeOrderDetails(props) {
       </View>
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading}>{t('orderAmount')}:</TextDefault>
-        <TextDefault
-          style={
-            styles.text
-          }>{`${configuration.currencySymbol}${orderAmount}`}:</TextDefault>
+        <TextDefault style={styles.text}>
+          {`${configuration.currencySymbol}${orderAmount}`}:
+        </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading}>{t('paymentMethod')}</TextDefault>
@@ -204,8 +205,8 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? 'black'
                     : activeBar === 1
-                      ? colors.green
-                      : colors.white
+                    ? colors.green
+                    : colors.white
               }
             ]}
             onPress={() =>
@@ -227,14 +228,14 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? colors.green
                     : activeBar === 1
-                      ? colors.orderUncomplete
-                      : 'black'
+                    ? colors.orderUncomplete
+                    : 'black'
               }}>
               {activeBar === 0
                 ? t('pending')
                 : activeBar === 1
-                  ? t('reject')
-                  : t('delivered')}
+                ? t('reject')
+                : t('delivered')}
             </TextDefault>
           </Pressable>
         </View>

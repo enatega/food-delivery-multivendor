@@ -1,14 +1,16 @@
 import React from 'react'
 import { Dimensions, View, Platform } from 'react-native'
-import { textStyles, scale, colors } from '../utilities'
+import { textStyles, scale } from '../utilities'
+
 import { Icon } from 'react-native-elements'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('window')
 const screenOptions = props => ({
   headerShown: false
 })
-const tabIcon = route => ({
+
+const tabIcon = (route, colors) => ({
   headerShown: false,
   keyboardHidesTabBar: true,
   tabBarActiveTintColor: colors.green,
@@ -33,13 +35,12 @@ const tabIcon = route => ({
   },
   tabBarIcon: ({ color, size }) => {
     let iconName
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     if (route.name === t('titleHome')) {
       iconName = 'home'
     } else if (route.name === t('titleProfile')) {
       iconName = 'user'
-    }
-    else if (route.name === t('language')) {
+    } else if (route.name === t('language')) {
       iconName = 'language'
     }
     return (
@@ -49,27 +50,5 @@ const tabIcon = route => ({
     )
   }
 })
-const tabOptions = () => ({
-  keyboardHidesTabBar: true,
-  activeTintColor: colors.iconPink,
-  inactiveTintColor: colors.white,
-  tabStyle: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  labelStyle: {
-    paddingBottom: Platform.OS === 'android' ? 10 : 10,
-    ...textStyles.Bold,
-    ...textStyles.Center,
-    ...textStyles.Small
-  },
-  style: {
-    position: 'absolute',
-    height: Platform.OS === 'android' ? 70 : height * 0.12,
-    backgroundColor: '#2c2c2c',
-    borderColor: 'black',
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15
-  }
-})
-export { screenOptions, tabOptions, tabIcon }
+
+export { screenOptions, tabIcon }

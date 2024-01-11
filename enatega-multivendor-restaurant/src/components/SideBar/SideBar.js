@@ -10,7 +10,7 @@ import {
   AppState
 } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import { colors } from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import bg from '../../assets/restBackground.png'
 import styles from './styles'
 import { Icon } from 'react-native-elements/dist/icons/Icon'
@@ -18,19 +18,20 @@ import { useAccount } from '../../ui/hooks'
 import { Image } from 'react-native-elements'
 import useNotification from '../../ui/hooks/useNotification'
 import { PRODUCT_URL, PRIVACY_URL, ABOUT_URL } from '../../utilities'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'
 import i18next from '../../../i18n'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 export default function SideBar() {
-  const {t} = useTranslation()
+  const { colors } = CustomColors()
+  const { t } = useTranslation()
   const notificationRef = useRef(true)
   const openSettingsRef = useRef(false)
   const { logout, data, toggleSwitch, isAvailable } = useAccount()
   const [notificationStatus, setNotificationStatus] = useState(false)
   const appState = useRef(AppState.currentState)
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const {
     restaurantData,
     getPermission,
@@ -113,15 +114,15 @@ export default function SideBar() {
     }
   }
   const handleSettingsClick = () => {
-  navigation.navigate('Language');
-  };
+    navigation.navigate('Language')
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground source={bg} resizeMode="cover" style={styles.image}>
         <View style={styles.topContainer}>
           <View style={styles.profileContainer}>
-            <View style={styles.avatar}>
+            <View style={styles(colors).avatar}>
               <Image
                 source={{ uri: data && data.restaurant.image }}
                 containerStyle={styles.item}
@@ -202,7 +203,7 @@ export default function SideBar() {
                 size={26}
               />
             </View>
-            <TextDefault H4 bolder style={styles.text}>
+            <TextDefault H4 bolder style={styles(colors).text}>
               {t('productPage')}
             </TextDefault>
           </TouchableOpacity>
@@ -222,7 +223,7 @@ export default function SideBar() {
               <Icon type="font-awesome" color="white" name="lock" size={26} />
             </View>
 
-            <TextDefault H4 bolder style={styles.text}>
+            <TextDefault H4 bolder style={styles(colors).text}>
               {t('privacyPolicy')}
             </TextDefault>
           </TouchableOpacity>
@@ -242,19 +243,18 @@ export default function SideBar() {
                 size={26}
               />
             </View>
-            <TextDefault H4 bolder style={styles.text}>
+            <TextDefault H4 bolder style={styles(colors).text}>
               {t('aboutUs')}
             </TextDefault>
           </TouchableOpacity>
-
         </View>
         <View style={styles.lowerContainer}>
           <TouchableOpacity style={styles.logout} onPress={logout}>
             <View style={styles.icon}>
               <Icon type="entypo" color="white" name="log-out" size={26} />
             </View>
-            <TextDefault H4 bolder style={styles.text}>
-            {t('titleLogout')}
+            <TextDefault H4 bolder style={styles(colors).text}>
+              {t('titleLogout')}
             </TextDefault>
           </TouchableOpacity>
         </View>

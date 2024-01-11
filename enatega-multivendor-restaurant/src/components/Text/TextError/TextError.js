@@ -1,10 +1,11 @@
 import React from 'react'
 import { View } from 'react-native'
 import TextDefault from '../TextDefault/TextDefault'
-import { colors } from '../../../utilities'
+import CustomColors from '../../../utilities/colors'
 import PropTypes from 'prop-types'
 
 function TextError(props) {
+  const { colors } = CustomColors()
   return (
     <View
       style={{

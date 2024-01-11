@@ -10,12 +10,13 @@ import { AuthContext, Configuration } from './src/ui/context'
 import AppContainer from './src/navigation'
 import setupApolloClient from './src/apollo/client'
 import { Spinner, TextDefault } from './src/components'
-import { colors } from './src/utilities'
+
 import { ActivityIndicator, StyleSheet, View, LogBox } from 'react-native'
 import * as Sentry from 'sentry-expo'
 import getEnvVars from './environment'
 import 'react-native-gesture-handler'
 import * as SecureStore from 'expo-secure-store'
+import CustomColors from './src/utilities/colors'
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -25,6 +26,7 @@ LogBox.ignoreLogs([
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
 export default function App() {
+  const { colors } = CustomColors()
   const [isAppReady, setIsAppReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -105,7 +107,7 @@ export default function App() {
       </View>
     )
   }
-
+  if (!colors) return <Text>Loading...</Text>
   if (fontLoaded && isAppReady) {
     return (
       <ApolloProvider client={client}>
