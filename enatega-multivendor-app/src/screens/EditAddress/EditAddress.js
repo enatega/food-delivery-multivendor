@@ -440,11 +440,16 @@ function EditAddress(props) {
           </ScrollView>
         </View>
       </KeyboardAvoidingView>
-      <SearchModal
+      {/* <SearchModal
         visible={modalVisible}
         onClose={onClose}
         onSubmit={onSubmit}
-      />
+      /> */}
+      {modalVisible ?  <SearchModal
+        visible={modalVisible}
+        onClose={onClose}
+        onSubmit={onSubmit}
+      /> : null}
       <View
         style={{
           paddingBottom: inset.bottom,

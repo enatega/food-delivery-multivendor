@@ -142,7 +142,7 @@ function Addresses() {
         showsVerticalScrollIndicator={false}
         style={styles().mainView}>
         <FlatList
-          data={profile.addresses}
+          data={profile?.addresses}
           ListEmptyComponent={emptyView}
           keyExtractor={item => item._id}
           ItemSeparatorComponent={() => (
