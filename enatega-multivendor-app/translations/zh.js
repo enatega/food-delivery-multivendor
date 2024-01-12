@@ -350,5 +350,7 @@ export const zh = {
   RateOrder: '评价订单',
   voucherCode: "输入您的优惠码",
   networkError: "出了点问题。请检查您的网络，然后重试。",
-  noRestaurants:"没有餐馆"
+  noRestaurants:"没有餐馆",
+  clearCartText: '离开此餐厅页面，您添加到购物车的物品将被清除',
+  okText: '确定'
 }

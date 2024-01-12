@@ -50,5 +50,6 @@ export const km = {
   orderDetail: 'ព័ត៌មាន​លម្អិត​អំពីការបញ្ជាទិញ',
   acceptAndPrint: 'ទទួលយក និង បោះពុម្ព',
   accept: 'ទទួលយក',
-  language: 'ភាសា'
+  language: 'ភាសា',
+  notificationText: 'ត្រូវតែប្រើឧបករណ៍សំបុត្រសម្រាប់ការជូនដំណឹងរហ័ស'
 }

@@ -50,5 +50,6 @@ export const fr = {
   orderDetail: 'Détails de la commande',
   acceptAndPrint: 'Accepter et Imprimer',
   accept: 'Accepter',
-  language: 'Langue'
+  language: 'Langue',
+  notificationText: 'Doit utiliser un appareil physique pour les notifications push'
 }

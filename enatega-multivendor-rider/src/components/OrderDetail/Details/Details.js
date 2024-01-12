@@ -120,7 +120,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                 style={[
                   styles.btn,
                   { backgroundColor: colors.primary },
-                  loadingOrderStatus ? styles.pt5 : styles.pt15
+                  
                 ]}>
                 <TextDefault center H5 bold textColor={colors.black}>
                   {loadingOrderStatus ? (

@@ -51,5 +51,7 @@ export const de = {
   orderDetail: 'Bestelldetails',
   acceptAndPrint: 'Akzeptieren und Drucken',
   accept: 'Akzeptieren',
-  language: 'Sprache'
+  language: 'Sprache',
+  notificationText: 'Muss ein physisches Gerät für Push-Benachrichtigungen verwenden'
+
 }

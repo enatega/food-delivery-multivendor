@@ -203,5 +203,8 @@ enategaCash: 'كاش إناتيغا',
 ASSIGNED: "تم التعيين",
 PICKED: "تم الاختيار",
 contactCustomer: 'اتصل بالعميل',
-orderMarkedAs: 'تم وضع علامة على الطلب '
+orderMarkedAs: 'تم وضع علامة على الطلب ',
+withdrawAmountError: 'يجب أن يكون مبلغ السحب أقل من أو يساوي مبلغ المحفظة!',
+amountGreater: 'يجب أن يكون المبلغ أكبر من',
+amountReq: 'المبلغ مطلوب!'
 }

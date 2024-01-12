@@ -366,4 +366,6 @@ export const en = {
   voucherCode: 'Enter your voucher code',
   networkError: 'Something went wrong. Check your network and try again.',
   noRestaurants: 'No Restaurants',
+  clearCartText:  'By leaving this restaurant page, the items you`ve added to cart will be cleared',
+  okText: 'OK'
 }
