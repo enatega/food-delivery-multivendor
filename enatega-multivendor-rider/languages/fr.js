@@ -208,5 +208,8 @@ enategaCash: 'Enatega Argent Liquide',
 ASSIGNED: "ASSIGNÉ",
 PICKED: "CHOISI",
 contactCustomer: 'Contacter le client',
-orderMarkedAs: 'Commande marquée comme '
+orderMarkedAs: 'Commande marquée comme ',
+withdrawAmountError: 'Le montant du retrait doit être inférieur ou égal au montant du portefeuille !',
+amountGreater: 'Le montant doit être supérieur à',
+amountReq: 'Le montant est requis !'
 }

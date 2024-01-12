@@ -172,7 +172,7 @@ export const en = {
   aboutUs: 'About Us',
   noNewOrders: 'No new orders yet!',
   pullToRefresh: 'Pull down to refresh',
-  notAnyOrdersYet: 'You don&apos;t have any orders yet!',
+  notAnyOrdersYet: 'You dont have any orders yet!',
   errorFetchingRiderProfile: 'Error occured while fetching rider Profile',
   minAmountWithdrawl: 'Min amount for withdrawl is',
   withdrawMoney: 'Withdraw Money',
@@ -206,5 +206,8 @@ export const en = {
   ASSIGNED: "ASSIGNED",
   PICKED: "PICKED",
   contactCustomer: 'Contact Customer',
-  orderMarkedAs: 'Order marked as '
+  orderMarkedAs: 'Order marked as ',
+  withdrawAmountError: 'Withdraw amount must be less than or equal to wallet amount!',
+  amountGreater: 'Amount must be grater than',
+  amountReq: 'Amount is required!'
 }

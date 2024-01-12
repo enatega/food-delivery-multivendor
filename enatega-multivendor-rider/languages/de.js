@@ -208,5 +208,8 @@ enategaCash: 'Enatega Bargeld',
 ASSIGNED: "ZUGEWIESEN",
 PICKED: "GEWÄHLT",
 contactCustomer: 'Kundenkontakt',
-orderMarkedAs: 'Bestellung markiert als '
+orderMarkedAs: 'Bestellung markiert als ',
+withdrawAmountError: 'Abhebungsbetrag muss kleiner oder gleich dem Brieftaschenbetrag sein!',
+amountGreater: 'Betrag muss größer sein als',
+amountReq: 'Betrag ist erforderlich!'
 }
