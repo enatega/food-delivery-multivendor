@@ -5,14 +5,14 @@ import * as Updates from 'expo-updates'
 import * as Localization from 'expo-localization'
 import styles from './styles'
 import { useSafeArea } from 'react-native-safe-area-context'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utilities/alignment'
 import Modal from 'react-native-modal'
 import RadioButton from '../../components/FdRadioBtn/RadioBtn'
 import { useNavigation } from '@react-navigation/native'
 import i18next from '../../../i18next'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -25,7 +25,8 @@ const languageTypes = [
 
 function Language() {
   const navigation = useNavigation()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, setActiveRadio] = useState(languageTypes[0].index)
   const [languageName, languageNameSetter] = useState('English')
@@ -76,26 +77,26 @@ function Language() {
   return (
     <View
       style={[
-        styles.flex,
+        styles().flex,
         { paddingBottom: inset.bottom, ...alignment.Pmedium }
       ]}>
-      <View style={[styles.languageContainer, styles.shadow]}>
-        <View style={styles.changeLanguage}>
-          <View style={styles.headingLanguage}>
+      <View style={[styles(colors).languageContainer, styles().shadow]}>
+        <View style={styles().changeLanguage}>
+          <View style={styles().headingLanguage}>
             <TextDefault
               numberOfLines={1}
               textColor={colors.fontSecondColor}
               bold
               H5>
-             {t('language')}
+              {t('language')}
             </TextDefault>
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => modalVisibleSetter(true)}
-            style={styles.button}>
+            style={styles().button}>
             <TextDefault textColor={colors.tagColor} bolder>
-             {t('edit')}
+              {t('edit')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -109,13 +110,13 @@ function Language() {
         isVisible={modalVisible}
         onBackdropPress={() => modalVisibleSetter(false)}
         onBackButtonPress={() => modalVisibleSetter(false)}>
-        <View style={styles.modalContainer}>
+        <View style={styles().modalContainer}>
           <TextDefault
             textColor={colors.fontMainColor}
             bolder
             H5
             style={alignment.MBsmall}>
-           {t('selectLanguage')}
+            {t('selectLanguage')}
           </TextDefault>
 
           {languageTypes.map((item, index) => (
@@ -123,7 +124,7 @@ function Language() {
               activeOpacity={0.7}
               key={index}
               onPress={() => setActiveRadio(item.index)}
-              style={[styles.radioContainer]}>
+              style={[styles(colors).radioContainer]}>
               <RadioButton
                 animation={'bounceIn'}
                 size={13}
@@ -141,10 +142,10 @@ function Language() {
               </TextDefault>
             </TouchableOpacity>
           ))}
-          <View style={styles.modalButtonsContainer}>
+          <View style={styles().modalButtonsContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles.modalButtons}
+              style={styles().modalButtons}
               onPress={() => modalVisibleSetter(false)}>
               <TextDefault
                 numberOfLines={1}
@@ -156,7 +157,7 @@ function Language() {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles.modalButtons}
+              style={styles().modalButtons}
               onPress={() => onSelectedLanguage()}>
               <TextDefault textColor={colors.tagColor} bolder uppercase>
                 {t('select')}

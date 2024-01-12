@@ -11,7 +11,7 @@ function BackButton(props) {
       <Ionicons
         name="ios-arrow-back"
         size={20}
-        style={styles.leftIconPadding}
+        style={styles().leftIconPadding}
         color="#000"
       />
     )
@@ -20,7 +20,7 @@ function BackButton(props) {
       <MaterialIcons
         name="menu"
         size={20}
-        style={styles.leftIconPadding}
+        style={styles().leftIconPadding}
         color="#000"
       />
     )

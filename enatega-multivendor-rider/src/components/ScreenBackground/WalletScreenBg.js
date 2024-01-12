@@ -4,21 +4,27 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './style'
 import WalletBg from '../../assets/svg/WalletBg.png'
 import { Ionicons } from '@expo/vector-icons'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import { useNavigation } from '@react-navigation/native'
 const { height } = Dimensions.get('window')
 const WalletScreenBg = ({ children, backBtn = false }) => {
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
+  const { colors } = CustomColors()
   return (
-    <View style={[styles.flex, styles.bgColor, { paddingTop: insets.top }]}>
+    <View
+      style={[
+        styles().flex,
+        styles(colors).bgColor,
+        { paddingTop: insets.top }
+      ]}>
       <StatusBar
-        backgroundColor={styles.bgColor.backgroundColor}
+        backgroundColor={colors.backgroundColor}
         barStyle="dark-content"
       />
-      <View style={styles.container}>
+      <View style={styles().container}>
         {backBtn && (
-          <View style={styles.icon}>
+          <View style={styles(colors).icon}>
             <Ionicons
               onPress={() => navigation.goBack()}
               name="chevron-back"
@@ -29,11 +35,11 @@ const WalletScreenBg = ({ children, backBtn = false }) => {
         )}
         <Image
           source={WalletBg}
-          style={styles.walletImage}
+          style={styles().walletImage}
           height={height / 3}
           width={250}
         />
-        <View style={styles.innerContainer}>{children}</View>
+        <View style={styles(colors).innerContainer}>{children}</View>
       </View>
     </View>
   )

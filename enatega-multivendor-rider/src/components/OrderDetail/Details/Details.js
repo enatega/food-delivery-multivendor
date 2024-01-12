@@ -2,12 +2,12 @@ import { View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import styles from './style'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import colors from '../../../utilities/colors'
+import CustomColors from '../../../utilities/colors'
 import Spinner from '../../Spinner/Spinner'
 import TextError from '../../Text/TextError/TextError'
 import CountDown from 'react-native-countdown-component'
 import useDetails from './useDetails'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const Details = ({ orderData, navigation, itemId, distance, duration }) => {
   const {
@@ -23,11 +23,12 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
     loadingAssignOrder,
     loadingOrderStatus
   } = useDetails(orderData)
-    const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   if (!order) return null
 
   return (
-    <View style={styles.container}>
+    <View style={styles(colors).container}>
       {order.orderStatus !== 'DELIVERED' ? (
         <>
           <View>
@@ -35,8 +36,8 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
               {t('preparing')}
             </TextDefault>
           </View>
-          <View style={styles.horizontalLine} />
-          <View style={styles.timeContainer}>
+          <View style={styles(colors).horizontalLine} />
+          <View style={styles().timeContainer}>
             <TextDefault center bold H5 textColor={colors.fontSecondColor}>
               {t('timeLeftForMeal')}
             </TextDefault>
@@ -51,7 +52,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
             />
           </View>
           {distance !== null ? (
-            <View style={styles.timeContainer}>
+            <View style={styles().timeContainer}>
               <TextDefault center bold H5 textColor={colors.fontSecondColor}>
                 {t('distanceToDestination')}
               </TextDefault>
@@ -61,7 +62,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
             </View>
           ) : null}
           {duration !== null ? (
-            <View style={styles.timeContainer}>
+            <View style={styles().timeContainer}>
               <TextDefault center bold H5 textColor={colors.fontSecondColor}>
                 {t('durationToDestination')}
               </TextDefault>
@@ -71,13 +72,13 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
             </View>
           ) : null}
           {active === 'NewOrders' ? (
-            <View style={styles.btnContainer}>
+            <View style={styles().btnContainer}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
                   mutateAssignOrder({ variables: { id: itemId } })
                 }}
-                style={[styles.btn, { backgroundColor: colors.black }]}>
+                style={[styles().btn, { backgroundColor: colors.black }]}>
                 <TextDefault center H5 bold textColor={colors.white}>
                   {loadingAssignOrder ? (
                     <Spinner size="small" />
@@ -88,7 +89,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
               </TouchableOpacity>
             </View>
           ) : order.orderStatus === 'ASSIGNED' ? (
-            <View style={styles.btnContainer}>
+            <View style={styles().btnContainer}>
               <ChatWithCustomerButton navigation={navigation} order={order} />
               <TouchableOpacity
                 onPress={() => {
@@ -97,18 +98,14 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                   })
                 }}
                 activeOpacity={0.8}
-                style={[styles.btn, { backgroundColor: colors.black }]}>
+                style={[styles().btn, { backgroundColor: colors.black }]}>
                 <TextDefault center bold H5 textColor={colors.white}>
-                  {loadingOrderStatus ? (
-                    <Spinner size="small" />
-                  ) : (
-                    t('pick')
-                  )}
+                  {loadingOrderStatus ? <Spinner size="small" /> : t('pick')}
                 </TextDefault>
               </TouchableOpacity>
             </View>
           ) : order.orderStatus === 'PICKED' ? (
-            <View style={styles.btnContainer}>
+            <View style={styles().btnContainer}>
               <ChatWithCustomerButton navigation={navigation} order={order} />
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -118,9 +115,9 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                   })
                 }}
                 style={[
-                  styles.btn,
+                  styles().btn,
                   { backgroundColor: colors.primary },
-                  loadingOrderStatus ? styles.pt5 : styles.pt15
+                  loadingOrderStatus ? styles().pt5 : styles().pt15
                 ]}>
                 <TextDefault center H5 bold textColor={colors.black}>
                   {loadingOrderStatus ? (
@@ -135,7 +132,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
         </>
       ) : null}
 
-      <View style={styles.heading}>
+      <View style={styles().heading}>
         <TextDefault bolder H1 center textColor={colors.primary}>
           {t('OrderDetail')}
         </TextDefault>
@@ -152,42 +149,43 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
 }
 
 const OrderDetails = ({ order }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   return (
-    <View style={styles.orderDetails}>
-      <View style={styles.rowDisplay}>
+    <View style={styles(colors).orderDetails}>
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={styles.col1}>
+          style={styles().col1}>
           {t('yourOrderFrom')}
         </TextDefault>
-        <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
+        <TextDefault bolder H5 textColor={colors.black} style={styles().col2}>
           {order.restaurant.name}
         </TextDefault>
       </View>
-      <View style={styles.rowDisplay}>
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={styles.col1}>
+          style={styles().col1}>
           {t('orderNo')}
         </TextDefault>
-        <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
+        <TextDefault bolder H5 textColor={colors.black} style={styles().col2}>
           {order.orderId}
         </TextDefault>
       </View>
-      <View style={styles.rowDisplay}>
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={styles.col1}>
+          style={styles().col1}>
           {t('deliveryAddress')}
         </TextDefault>
-        <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
+        <TextDefault bolder H5 textColor={colors.black} style={styles().col2}>
           {order.deliveryAddress.deliveryAddress}
         </TextDefault>
       </View>
@@ -197,19 +195,20 @@ const OrderDetails = ({ order }) => {
 
 const ItemDetails = ({ order, dataConfig, loading, error }) => {
   let subTotal = 0
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   if (loading) return <Spinner />
   if (error) return <TextError text={t('errorText')} />
   return (
-    <View style={styles.orderDetails}>
+    <View style={styles(colors).orderDetails}>
       {order.items.map(item => {
         subTotal = subTotal + item.variation.price
         return (
-          <View key={item._id} style={styles.rowDisplay}>
-            <TextDefault bolder H4 style={styles.coll1}>
+          <View key={item._id} style={styles().rowDisplay}>
+            <TextDefault bolder H4 style={styles().coll1}>
               {item.quantity}X
             </TextDefault>
-            <View style={styles.coll2}>
+            <View style={styles().coll2}>
               <TextDefault textColor={colors.fontSecondColor} bold H5>
                 {item.title}
               </TextDefault>
@@ -228,96 +227,96 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
               bolder
               H5
               textColor={colors.black}
-              style={styles.coll3}>
+              style={styles().coll3}>
               {dataConfig.configuration.currencySymbol}
               {item.variation.price}
             </TextDefault>
           </View>
         )
       })}
-      <View style={styles.horizontalLine2} />
-      <View style={styles.rowDisplay}>
+      <View style={styles(colors).horizontalLine2} />
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={[styles().coll2, { flex: 9 }]}>
           {t('subTotal')}
         </TextDefault>
         <TextDefault
           bolder
           H5
           textColor={colors.black}
-          style={[styles.coll3, { flex: 3 }]}>
+          style={[styles().coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
           {subTotal}
         </TextDefault>
       </View>
-      <View style={styles.rowDisplay}>
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={[styles().coll2, { flex: 9 }]}>
           {t('tip')}
         </TextDefault>
         <TextDefault
           bolder
           H5
           textColor={colors.black}
-          style={[styles.coll3, { flex: 3 }]}>
+          style={[styles().coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
           {order.tipping}
         </TextDefault>
       </View>
-      <View style={styles.rowDisplay}>
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={[styles().coll2, { flex: 9 }]}>
           {t('taxCharges')}
         </TextDefault>
         <TextDefault
           bolder
           H5
           textColor={colors.black}
-          style={[styles.coll3, { flex: 3 }]}>
+          style={[styles().coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
           {order.taxationAmount}
         </TextDefault>
       </View>
-      <View style={styles.rowDisplay}>
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={[styles().coll2, { flex: 9 }]}>
           {t('delvieryCharges')}
         </TextDefault>
         <TextDefault
           bolder
           H5
           textColor={colors.black}
-          style={[styles.coll3, { flex: 3 }]}>
+          style={[styles().coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
           {order.deliveryCharges}
         </TextDefault>
       </View>
-      <View style={styles.horizontalLine2} />
-      <View style={styles.rowDisplay}>
+      <View style={styles().horizontalLine2} />
+      <View style={styles().rowDisplay}>
         <TextDefault
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={[styles().coll2, { flex: 9 }]}>
           {t('total')}
         </TextDefault>
         <TextDefault
           bolder
           H5
           textColor={colors.black}
-          style={[styles.coll3, { flex: 3 }]}>
+          style={[styles().coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
           {order.orderAmount}
         </TextDefault>
@@ -327,8 +326,9 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
 }
 
 const ChatWithCustomerButton = ({ navigation, order }) => {
-  const { t } = useTranslation(); 
-  
+  const { colors } = CustomColors()
+  const { t } = useTranslation()
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -338,11 +338,11 @@ const ChatWithCustomerButton = ({ navigation, order }) => {
         })
       }
       activeOpacity={0.8}
-      style={[styles.btn, { backgroundColor: colors.black }]}>
+      style={[styles().btn, { backgroundColor: colors.black }]}>
       <TextDefault center H5 bold textColor={colors.white}>
         {t('chatWithCustomer')}
       </TextDefault>
     </TouchableOpacity>
-  );
+  )
 }
 export default Details

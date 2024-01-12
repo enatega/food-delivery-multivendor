@@ -2,15 +2,16 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { View } from 'react-native-animatable'
 import PropTypes from 'prop-types'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import styles from './styles'
 
 const DEFAULT_SIZE_MULTIPLIER = 0.7
 
 export default function RadioButton(props) {
-  const { size, innerColor, outerColor, isSelected, onPress } = props
+  const { colors } = CustomColors()
+  const { size, isSelected, onPress } = props
   const outerStyle = {
-    borderColor: outerColor,
+    borderColor: colors.radioOuterColor,
     width: size + size * DEFAULT_SIZE_MULTIPLIER,
     height: size + size * DEFAULT_SIZE_MULTIPLIER,
     borderRadius: (size + size * DEFAULT_SIZE_MULTIPLIER) / 2,
@@ -21,7 +22,7 @@ export default function RadioButton(props) {
     width: size / 2,
     height: size / 2,
     borderRadius: size / 2,
-    backgroundColor: innerColor
+    backgroundColor: colors.radioColor
   }
 
   return (
@@ -43,8 +44,6 @@ RadioButton.propTypes = {
 
 RadioButton.defaultProps = {
   size: 16,
-  innerColor: colors.radioColor,
-  outerColor: colors.radioOuterColor,
   isSelected: false,
   onPress: () => null
 }

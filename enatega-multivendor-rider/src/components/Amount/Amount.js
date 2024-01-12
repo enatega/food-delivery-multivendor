@@ -2,7 +2,7 @@ import { View, TouchableOpacity } from 'react-native'
 import React, { useContext } from 'react'
 import styles from './style'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import ConfigurationContext from '../../context/configuration'
@@ -15,6 +15,7 @@ const Amount = ({
   disabled = true,
   bg = false
 }) => {
+  const { colors } = CustomColors()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
   return (
@@ -24,13 +25,17 @@ const Amount = ({
       }
       disabled={disabled}
       activeOpacity={0.7}
-      style={[styles.container, shadow && styles.shadow, bg && styles.bg]}>
+      style={[
+        styles().container,
+        shadow && styles(colors).shadow,
+        bg && styles(colors).bg
+      ]}>
       <TextDefault H4 bold textColor={bg ? colors.white : colors.black}>
         {text}
       </TextDefault>
-      <View style={styles.amount}>
+      <View style={styles().amount}>
         <TextDefault
-          style={styles.sign}
+          style={styles().sign}
           H2
           bold
           textColor={bg ? colors.white : colors.black}>
@@ -41,7 +46,7 @@ const Amount = ({
         </TextDefault>
         {icon && (
           <FontAwesome5
-            style={styles.icon}
+            style={styles().icon}
             name="chevron-right"
             size={24}
             color={bg ? colors.white : colors.black}

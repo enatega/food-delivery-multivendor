@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
   ActivityIndicator,
   View,
+  Text,
   StatusBar,
   StyleSheet,
   LogBox
@@ -15,7 +16,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as Updates from 'expo-updates'
 import * as Sentry from 'sentry-expo'
 import AppContainer from './src/routes/index'
-import colors from './src/utilities/colors'
 import setupApolloClient from './src/apollo/index'
 import { ConfigurationProvider } from './src/context/configuration'
 import { AuthContext } from './src/context/auth'
@@ -25,6 +25,7 @@ import { LocationProvider } from './src/context/location'
 import getEnvVars from './environment'
 import moment from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
+import CustomColors from './src/utilities/colors'
 
 moment.tz.setDefault('Asia/Karachi')
 LogBox.ignoreLogs([
@@ -35,7 +36,8 @@ LogBox.ignoreLogs([
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
 export default function App() {
-  const { t } = useTranslation();
+  const { colors } = CustomColors()
+  const { t } = useTranslation()
   const [appIsReady, setAppIsReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -57,7 +59,7 @@ export default function App() {
   useEffect(() => {
     ;(async () => {
       await SplashScreen.preventAutoHideAsync()
-     
+
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans//MuseoSans500.ttf'),
@@ -110,13 +112,13 @@ export default function App() {
       console.log('Logout Error: ', e)
     }
   }
-
+  if (!colors) return <Text>Loading...</Text>
   if (isUpdating) {
     return (
       <View
         style={[
-          styles.flex,
-          styles.mainContainer,
+          styles().flex,
+          styles().mainContainer,
           { backgroundColor: colors.startColor }
         ]}>
         <TextDefault textColor={colors.white} bold>

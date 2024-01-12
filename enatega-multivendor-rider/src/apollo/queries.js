@@ -23,6 +23,9 @@ export const configuration = `query Configuration{
       currencySymbol
       riderAppSentryUrl
       googleApiKey
+      primaryColor
+      secondaryColor
+      tertiaryColor
     }
   }`
 

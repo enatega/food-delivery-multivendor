@@ -7,17 +7,18 @@ import { riderWithdrawRequest } from '../../apollo/queries'
 import { gql, NetworkStatus, useQuery } from '@apollo/client'
 import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import RequestCard from '../../components/WalletCard/WithDrawRequestCard'
 import UserContext from '../../context/user'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const WALLET_HISTORY = gql`
   ${riderWithdrawRequest}
 `
 
 const WalletHistory = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const { loading, error, data, refetch, fetchMore, networkStatus } = useQuery(
     WALLET_HISTORY,
     {

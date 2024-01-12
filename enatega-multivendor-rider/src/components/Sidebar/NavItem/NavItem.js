@@ -4,10 +4,9 @@ import styles from './styles.js'
 import TextDefault from '../../Text/TextDefault/TextDefault.js'
 import { FontAwesome } from '@expo/vector-icons'
 import { scale } from '../../../utilities/scaling.js'
-import colors from '../../../utilities/colors.js'
 import PropTypes from 'prop-types'
 
-const NavItem = props => (
+const NavItem = (props, colors) => (
   <View style={styles.Flex}>
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.leftContainer}>

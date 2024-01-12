@@ -6,9 +6,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Ionicons, Entypo } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const ChatScreen = ({ navigation, route }) => {
   const {
@@ -21,22 +21,23 @@ const ChatScreen = ({ navigation, route }) => {
     profile
   } = useChatScreen({ navigation, route })
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const filterImages = src => {
     setImage(image.filter(item => item !== src))
   }
 
   const renderAccessory = props => {
     return (
-      <View style={styles.rowDisplay}>
+      <View style={styles().rowDisplay}>
         {image.map(item => (
-          <View key={item.uri} style={styles.accessoryContainer}>
-            <Image source={{ uri: item }} style={styles.accessoryImg} />
+          <View key={item.uri} style={styles().accessoryContainer}>
+            <Image source={{ uri: item }} style={styles().accessoryImg} />
             <Entypo
               onPress={() => filterImages(item)}
               name="circle-with-cross"
               size={18}
-              style={styles.accessoryIcon}
+              style={styles().accessoryIcon}
               color="black"
             />
           </View>
@@ -53,7 +54,7 @@ const ChatScreen = ({ navigation, route }) => {
             name="send"
             size={30}
             color={colors.black}
-            style={styles.sendIcon}
+            style={styles().sendIcon}
           />
         </View>
       </Send>
@@ -64,7 +65,7 @@ const ChatScreen = ({ navigation, route }) => {
     return (
       <View>
         <TextDefault
-          style={styles.emptyChat}
+          style={styles().emptyChat}
           textColor={colors.fontSecondColor}
           H3>
           {t('chatWithRide')}
@@ -86,8 +87,8 @@ const ChatScreen = ({ navigation, route }) => {
           }
         }}
         wrapperStyle={{
-          right: styles.bubbleRight,
-          left: styles.bubbleLeft
+          right: styles(colors).bubbleRight,
+          left: styles(colors).bubbleLeft
         }}
         usernameStyle={{ color: colors.fontSecondColor }}
       />

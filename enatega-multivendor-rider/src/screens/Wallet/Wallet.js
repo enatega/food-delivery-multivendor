@@ -9,10 +9,12 @@ import UserContext from '../../context/user'
 import Spinner from '../../components/Spinner/Spinner'
 import { MIN_WITHDRAW_AMOUNT } from '../../utilities/constants'
 import ConfigurationContext from '../../context/configuration'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import CustomColors from '../../utilities/colors'
 
 const Wallet = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const navigation = useNavigation()
   const { loadingProfile, errorProfile, dataProfile } = useContext(UserContext)
   const configuration = useContext(ConfigurationContext)
@@ -51,7 +53,7 @@ const Wallet = () => {
           disabled={false}
           bg
         />
-        <View style={styles.textView}>
+        <View style={styles().textView}>
           <TextDefault bold H5>
             {t('minAmountWithdrawl')}{' '}
           </TextDefault>
@@ -59,11 +61,11 @@ const Wallet = () => {
             {configuration.currencySymbol} {MIN_WITHDRAW_AMOUNT.toFixed(2)}
           </TextDefault>
         </View>
-        <View style={styles.btnView}>
+        <View style={styles().btnView}>
           <TouchableOpacity
             onPress={() => navigation.navigate('Withdraw')}
             activeOpacity={0.8}
-            style={[styles.btn, styles.withdrawBtn]}>
+            style={[styles().btn, styles(colors).withdrawBtn]}>
             <TextDefault bolder H5 center>
               {t('withdrawMoney')}
             </TextDefault>
@@ -73,7 +75,7 @@ const Wallet = () => {
               navigation.navigate('WalletHistory', { prevBtn: 'walletHistory' })
             }
             activeOpacity={0.8}
-            style={[styles.btn, styles.historyBtn]}>
+            style={[styles().btn, styles().historyBtn]}>
             <TextDefault bolder H5 center>
               {t('walletHistory')}
             </TextDefault>

@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import styles from './styles'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import Status from '../../components/OrderDetail/Status/Status'
 import Details from '../../components/OrderDetail/Details/Details'
 import RestIcon from '../../assets/rest_icon.png'
@@ -30,14 +30,16 @@ const OrderDetail = () => {
     navigation,
     orderID
   } = useOrderDetail()
-
+  const { colors } = CustomColors()
   return (
     <SafeAreaView>
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        <View style={styles.mapView}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles(colors).container}>
+        <View style={styles().mapView}>
           {locationPin && (
             <MapView
-              style={styles.map}
+              style={styles().map}
               showsUserLocation
               zoomEnabled={true}
               zoomControlEnabled={true}
@@ -126,16 +128,16 @@ const OrderDetail = () => {
             </MapView>
           )}
         </View>
-        <View style={styles.iconView}>
+        <View style={styles().iconView}>
           <Ionicons
             onPress={() => navigation.goBack()}
             name="chevron-back"
             size={26}
             color={colors.white}
-            style={styles.icon}
+            style={styles(colors).icon}
           />
         </View>
-        <View style={styles.status}>
+        <View style={styles().status}>
           <Status
             orderData={route.params?.order}
             itemId={orderID}

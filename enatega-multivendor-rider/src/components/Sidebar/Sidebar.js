@@ -4,35 +4,41 @@ import NavItem from './NavItem/NavItem'
 import Profile from './Profile/Profile'
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import rider from '../../assets/rider.png'
 import useSidebar from './useSidebar'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function SidebBar() {
   const { logout, isEnabled, toggleSwitch, datas } = useSidebar()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   return (
     <ImageBackground
       source={rider}
       height={200}
       width={200}
-      style={styles.image}>
-      <View style={styles.flex}>
-        <View style={[styles.topContainer, styles.opacity, { flex: 4 }]}>
+      style={styles().image}>
+      <View style={styles(colors).flex}>
+        <View
+          style={[
+            styles(colors).topContainer,
+            styles(colors).opacity,
+            { flex: 4 }
+          ]}>
           <Profile />
         </View>
-        <View style={[styles.opacity, { flex: 4 }]}>
-          <View style={styles.rowDisplay}>
+        <View style={[styles(colors).opacity, { flex: 4 }]}>
+          <View style={styles().rowDisplay}>
             <TextDefault textColor={colors.white} H4 bolder>
               {t('status')}
             </TextDefault>
-            <View style={styles.row}>
+            <View style={styles().row}>
               <TextDefault
                 H5
                 bold
                 textColor={colors.primary}
-                style={styles.online}>
+                style={styles().online}>
                 {isEnabled ? t('available') : t('notAvailable')}
               </TextDefault>
               <Switch
@@ -49,8 +55,9 @@ function SidebBar() {
             </View>
           </View>
           {datas.map((data, ind) => (
-            <View key={ind} style={styles.item}>
+            <View key={ind} style={styles().item}>
               <NavItem
+                colors={colors}
                 onPress={() =>
                   Linking.canOpenURL(data.navigateTo).then(() => {
                     Linking.openURL(data.navigateTo)
@@ -62,11 +69,12 @@ function SidebBar() {
             </View>
           ))}
         </View>
-        <View style={[styles.opacity, { flex: 2 }]}>
+        <View style={[styles(colors).opacity, { flex: 2 }]}>
           <NavItem
             onPress={() => logout()}
             icon="sign-out"
             title={t('titleLogout')}
+            colors={colors}
           />
         </View>
       </View>

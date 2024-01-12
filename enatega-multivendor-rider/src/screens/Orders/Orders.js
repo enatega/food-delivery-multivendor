@@ -12,11 +12,12 @@ import Spinner from '../../components/Spinner/Spinner'
 import TextError from '../../components/Text/TextError/TextError'
 import LottieView from 'lottie-react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
-import {useTranslation} from 'react-i18next'
+import CustomColors from '../../utilities/colors'
+import { useTranslation } from 'react-i18next'
 
 const Orders = ({ navigation }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
   const {
@@ -54,21 +55,21 @@ const Orders = ({ navigation }) => {
 
   return (
     <ScreenBackground>
-      <View style={styles.innerContainer}>
+      <View style={styles(colors).innerContainer}>
         <View>
           <Tabs navigation={navigation} />
         </View>
         {loadingProfile || loadingAssigned ? (
-          <View style={styles.margin500}>
+          <View style={styles().margin500}>
             <Spinner />
           </View>
         ) : errorProfile || errorAssigned ? (
-          <View style={styles.margin500}>
+          <View style={styles().margin500}>
             <TextError text={t('errorText')} />
           </View>
         ) : orders.length > 0 ? (
           <FlatList
-            style={styles.ordersContainer}
+            style={styles(colors).ordersContainer}
             contentContainerStyle={{
               justifyContent: 'center',
               alignItems: 'center'

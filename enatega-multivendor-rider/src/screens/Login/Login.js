@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import RiderLogin from '../../assets/svg/RiderLogin.png'
 import { FontAwesome } from '@expo/vector-icons'
 import Spinner from '../../components/Spinner/Spinner'
 import useLogin from './useLogin'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export default function Login() {
   const {
@@ -31,45 +31,49 @@ export default function Login() {
     height
   } = useLogin()
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   return (
-    <SafeAreaView style={[styles.flex, styles.bgColor]}>
+    <SafeAreaView style={[styles().flex, styles(colors).bgColor]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ height: height * 1 }}
-        style={styles.container}>
+        style={styles().container}>
         <Image
           source={RiderLogin}
-          style={[styles.image]}
+          style={[styles().image]}
           height={150}
           width={250}
         />
-        <View style={styles.innerContainer}>
-          <TextDefault bolder H2 center style={styles.signInText}>
+        <View style={styles(colors).innerContainer}>
+          <TextDefault bolder H2 center style={styles().signInText}>
             {t('signInText')}
           </TextDefault>
           <TextInput
-            style={[styles.textInput, usernameError && styles.errorInput]}
+            style={[
+              styles(colors).textInput,
+              usernameError && styles(colors).errorInput
+            ]}
             placeholder={t('username')}
             value={username}
             onChangeText={e => setUsername(e)}
           />
           {usernameError ? (
             <TextDefault
-              style={styles.error}
+              style={styles().error}
               bold
               textColor={colors.textErrorColor}>
               {usernameError}
             </TextDefault>
           ) : null}
-          <View style={styles.passwordField}>
+          <View style={styles().passwordField}>
             <TextInput
               secureTextEntry={showPassword}
               placeholder={t('password')}
               style={[
-                styles.textInput,
-                styles.passwordInput,
-                passwordError && styles.errorInput
+                styles(colors).textInput,
+                styles().passwordInput,
+                passwordError && styles(colors).errorInput
               ]}
               value={password}
               onChangeText={e => setPassword(e)}
@@ -78,14 +82,14 @@ export default function Login() {
               onPress={() => setShowPassword(!showPassword)}
               name={showPassword ? 'eye' : 'eye-slash'}
               size={24}
-              style={styles.eyeBtn}
+              style={styles().eyeBtn}
             />
             {console.log(username)}
           </View>
           {passwordError ? (
             <View>
               <TextDefault
-                style={styles.error}
+                style={styles().error}
                 bold
                 textColor={colors.textErrorColor}>
                 {passwordError}
@@ -94,7 +98,7 @@ export default function Login() {
           ) : null}
           <TouchableOpacity
             activeOpacity={0.7}
-            style={[styles.btn, loading ? styles.pt5 : styles.pt15]}
+            style={[styles(colors).btn, loading ? styles().pt5 : styles().pt15]}
             onPress={() => onSubmit()}>
             <TextDefault H4 bold textColor={colors.white}>
               {loading ? <Spinner size="small" /> : t('signInBtn')}

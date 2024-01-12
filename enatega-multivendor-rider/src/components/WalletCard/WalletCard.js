@@ -2,24 +2,25 @@ import { View } from 'react-native'
 import React, { useContext } from 'react'
 import styles from './style'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
-import {useTranslation} from 'react-i18next'
+import CustomColors from '../../utilities/colors'
+import { useTranslation } from 'react-i18next'
 
 import { RequestRow } from './WithDrawRequestCard'
 import ConfigurationContext from '../../context/configuration'
 
 const WalletCard = ({ item }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const configuration = useContext(ConfigurationContext)
   return (
-    <View style={[styles.container, styles.bgWhite]}>
+    <View style={[styles(colors).container, styles(colors).bgWhite]}>
       <TextDefault bold H4 textColor={colors.black}>
         {t('orderID')}{' '}
         <TextDefault bolder H4 textColor={colors.primary}>
           {item?.orderId}
         </TextDefault>{' '}
       </TextDefault>
-      <View style={styles.horizontalLine} />
+      <View style={styles(colors).horizontalLine} />
       <RequestRow
         label={t('deliveryFee')}
         value={`${configuration.currencySymbol} ${item?.deliveryFee.toFixed(

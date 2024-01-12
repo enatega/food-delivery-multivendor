@@ -4,25 +4,26 @@ import * as Location from 'expo-location'
 import styles from './styles'
 import { useLocationContext } from '../../context/location'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import CustomColors from '../../utilities/colors'
 
 const LocationPermissions = ({ navigation }) => {
   const { setLocationPermission } = useLocationContext()
-
-  const getLocationPermission = async() => {
+  const { colors } = CustomColors()
+  const getLocationPermission = async () => {
     const { status } = await Location.getForegroundPermissionsAsync()
     if (status === 'granted') {
       setLocationPermission(true)
     }
   }
 
-  const LocationAlert = async() => {
+  const LocationAlert = async () => {
     Alert.alert(
       'Location access',
       'Location permissions are required to use this app. Kindly open settings to allow location access.',
       [
         {
           text: 'Open settings',
-          onPress: async() => {
+          onPress: async () => {
             await Linking.openSettings()
           }
         }
@@ -34,7 +35,7 @@ const LocationPermissions = ({ navigation }) => {
     }
   }
 
-  const askLocationPermission = async() => {
+  const askLocationPermission = async () => {
     const {
       status,
       canAskAgain
@@ -70,7 +71,7 @@ const LocationPermissions = ({ navigation }) => {
         </View>
         <TouchableOpacity
           activeOpacity={0.8}
-          style={styles().linkButton}
+          style={styles(colors).linkButton}
           onPress={() => {
             askLocationPermission()
           }}>

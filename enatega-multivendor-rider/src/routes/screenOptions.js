@@ -3,7 +3,6 @@ import React from 'react'
 import { View } from 'react-native'
 import { textStyles } from '../utilities/textStyles'
 import { scale } from '../utilities/scaling'
-import colors from '../utilities/colors'
 import { Ionicons } from '@expo/vector-icons'
 import {
   getFocusedRouteNameFromRoute,
@@ -28,8 +27,7 @@ const tabIcon = route => ({
       iconName = 'wallet'
     } else if (route.name === 'Profile') {
       iconName = 'person'
-    } 
-    else if (route.name === 'Language') {
+    } else if (route.name === 'Language') {
       iconName = 'language'
     }
     return (
@@ -40,7 +38,7 @@ const tabIcon = route => ({
   }
 })
 
-const tabOptions = () => ({
+const tabOptions = colors => ({
   keyboardHidesTabBar: true,
   activeTintColor: colors.iconPink,
   inactiveTintColor: colors.white,

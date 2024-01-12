@@ -2,11 +2,10 @@ import { View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import styles from './style'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import useOrder from './useOrder'
 import Spinner from '../Spinner/Spinner'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const Order = ({ order, orderAmount }) => {
   const {
@@ -17,7 +16,8 @@ const Order = ({ order, orderAmount }) => {
     loadingAssignOrder
   } = useOrder(order)
 
-    const {t} = useTranslation()
+  const { colors } = CustomColors()
+  const { t } = useTranslation()
   return (
     <>
       <View style={{ marginTop: 20 }}>
@@ -25,8 +25,10 @@ const Order = ({ order, orderAmount }) => {
         order?.orderStatus === 'PICKED' ? (
           <View
             style={[
-              styles.badge,
-              active === 'MyOrders' ? styles.bgRed : styles.bgBlack
+              styles().badge,
+              active === 'MyOrders'
+                ? styles(colors).bgRed
+                : styles(colors).bgBlack
             ]}
           />
         ) : null}
@@ -34,8 +36,10 @@ const Order = ({ order, orderAmount }) => {
         <TouchableOpacity
           activeOpacity={0.8}
           style={[
-            styles.container,
-            active === 'NewOrders' ? styles.bgPrimary : styles.bgWhite
+            styles(colors).container,
+            active === 'NewOrders'
+              ? styles(colors).bgPrimary
+              : styles(colors).bgWhite
           ]}
           onPress={() =>
             navigation.navigate('OrderDetail', {
@@ -43,61 +47,62 @@ const Order = ({ order, orderAmount }) => {
               order
             })
           }>
-          <View style={styles.row}>
-            <TextDefault style={styles.rowItem1} bolder H4>
+          <View style={styles().row}>
+            <TextDefault style={styles().rowItem1} bolder H4>
               {t('orderID')}
             </TextDefault>
-            <TextDefault style={styles.rowItem2} bolder H4>
+            <TextDefault style={styles().rowItem2} bolder H4>
               {order?.orderId}
             </TextDefault>
           </View>
-          <View style={styles.row}>
+          <View style={styles().row}>
             <TextDefault
-              style={styles.rowItem1}
+              style={styles().rowItem1}
               bolder
               H5
               textColor={colors.fontSecondColor}>
               {t('orderAmount')}
             </TextDefault>
-            <TextDefault style={styles.rowItem2} bolder H5>
+            <TextDefault style={styles().rowItem2} bolder H5>
               {orderAmount}
             </TextDefault>
           </View>
-          <View style={styles.row}>
+          <View style={styles().row}>
             <TextDefault
-              style={styles.rowItem1}
+              style={styles().rowItem1}
               bolder
               H5
               textColor={colors.fontSecondColor}>
               {t('paymentMethod')}
             </TextDefault>
-            <TextDefault style={styles.rowItem2} bolder H5>
+            <TextDefault style={styles().rowItem2} bolder H5>
               {order?.paymentMethod}
             </TextDefault>
           </View>
           {active === 'MyOrders' && (
-            <View style={styles.row}>
+            <View style={styles().row}>
               <TextDefault
-                style={styles.rowItem1}
+                style={styles().rowItem1}
                 bolder
                 H5
                 textColor={colors.fontSecondColor}>
                 {t('deliveryTime')}
               </TextDefault>
-              <TextDefault style={styles.rowItem2} bolder H5>
+              <TextDefault style={styles().rowItem2} bolder H5>
                 {new Date(order?.createdAt).toLocaleDateString()}{' '}
                 {new Date(order?.createdAt).toLocaleTimeString()}
               </TextDefault>
             </View>
           )}
-          <View style={styles.horizontalLine} />
-          <View style={styles.row}>
+          <View style={styles(colors).horizontalLine} />
+          <View style={styles().row}>
             {active === 'NewOrders' && (
-              <View style={[styles.row, styles.rowItem1, styles.timeLeft]}>
+              <View
+                style={[styles().row, styles().rowItem1, styles().timeLeft]}>
                 <TextDefault bold H6 textColor={colors.fontSecondColor}>
                   {t('timeLeft')}
                 </TextDefault>
-                <TextDefault bolder H2 style={styles.time}>
+                <TextDefault bolder H2 style={styles().time}>
                   {time}
                 </TextDefault>
               </View>
@@ -106,9 +111,9 @@ const Order = ({ order, orderAmount }) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={[
-                  styles.rowItem2,
-                  styles.btn,
-                  active === 'MyOrders' && styles.paddingBottom
+                  styles().rowItem2,
+                  styles(colors).btn,
+                  active === 'MyOrders' && styles().paddingBottom
                 ]}
                 disabled>
                 <TextDefault bolder center textColor={colors.primary}>
@@ -121,9 +126,9 @@ const Order = ({ order, orderAmount }) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={[
-                  styles.rowItem2,
-                  styles.btn,
-                  active === 'MyOrders' && styles.paddingBottom
+                  styles().rowItem2,
+                  styles().btn,
+                  active === 'MyOrders' && styles().paddingBottom
                 ]}
                 onPress={() => {
                   mutateAssignOrder({

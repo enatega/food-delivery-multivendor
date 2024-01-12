@@ -2,10 +2,11 @@ import React from 'react'
 import { Text, StyleSheet } from 'react-native'
 import color from './styles'
 import { textStyles } from '../../../utilities/textStyles'
-import colors from '../../../utilities/colors'
+import CustomColors from '../../../utilities/colors'
 import PropTypes from 'prop-types'
 
 function TextDefault(props) {
+  const { colors } = CustomColors()
   const textColor = props.textColor ? props.textColor : colors.fontMainColor
   const defaultStyle = StyleSheet.flatten([
     color(textColor).color,

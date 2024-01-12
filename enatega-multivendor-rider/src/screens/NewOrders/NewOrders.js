@@ -12,14 +12,15 @@ import Spinner from '../../components/Spinner/Spinner'
 import TextError from '../../components/Text/TextError/TextError'
 import LottieView from 'lottie-react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import { NetworkStatus } from '@apollo/client'
 const { height, width } = Dimensions.get('window')
 import i18next from '../../../i18next'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const NewOrders = ({ navigation }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
   const {
@@ -55,17 +56,17 @@ const NewOrders = ({ navigation }) => {
 
   return (
     <ScreenBackground>
-      <View style={styles.innerContainer}>
+      <View style={styles(colors).innerContainer}>
         <View>
           <Tabs navigation={navigation} />
         </View>
         {loadingAssigned && (
-          <View style={styles.margin500}>
+          <View style={styles().margin500}>
             <Spinner />
           </View>
         )}
         {errorAssigned && (
-          <View style={styles.margin500}>
+          <View style={styles().margin500}>
             <TextError text={t('errorText')} />
           </View>
         )}
@@ -110,7 +111,7 @@ const NewOrders = ({ navigation }) => {
               </View>
             )
           }}
-          style={styles.ordersContainer}
+          style={styles().ordersContainer}
           keyExtractor={item => item._id}
           data={orders}
           showsVerticalScrollIndicator={false}

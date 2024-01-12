@@ -8,16 +8,17 @@ import { riderEarnings } from '../../apollo/queries'
 import { gql, useQuery } from '@apollo/client'
 import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import UserContext from '../../context/user'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const AVAILABLE_CASH = gql`
   ${riderEarnings}
 `
 
 const AvailableCash = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const { colors } = CustomColors()
   const { loadingProfile, errorProfile, dataProfile } = useContext(UserContext)
   const { loading, error, data, refetch, networkStatus, fetchMore } = useQuery(
     AVAILABLE_CASH,

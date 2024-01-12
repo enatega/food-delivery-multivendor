@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useContext } from 'react'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import { callNumber } from '../../utilities/callNumber'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 import { Alert } from 'react-native'
 import { chat } from '../../apollo/queries'
 import { sendChatMessage } from '../../apollo/mutations'
@@ -16,6 +16,7 @@ export const useChatScreen = ({ navigation, route }) => {
   const [image, setImage] = useState([])
   const [phone] = useState(route.params?.phoneNumber)
   const { id: orderId } = route.params
+  const { colors } = CustomColors()
   const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
     gql`
       ${chat}

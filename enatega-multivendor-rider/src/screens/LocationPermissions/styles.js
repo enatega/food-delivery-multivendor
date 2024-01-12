@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utilities/alignment'
-import colors from '../../utilities/colors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -21,8 +20,10 @@ const styles = (props = null) =>
       ...alignment.Pmedium,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: colors.buttonBackground,
-      color: colors.buttonText,
+      backgroundColor: props != null ? props.buttonBackground : '#6FCF97',
+
+      color: props != null ? props.buttonText : 'white',
+
       borderRadius: 10
     }
   })

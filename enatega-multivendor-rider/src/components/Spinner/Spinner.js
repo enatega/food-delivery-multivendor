@@ -1,7 +1,8 @@
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
-import colors from '../../utilities/colors'
+import CustomColors from '../../utilities/colors'
 function Spinner(props) {
+  const { colors } = CustomColors()
   return (
     <ActivityIndicator
       size="large"
