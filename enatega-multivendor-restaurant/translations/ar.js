@@ -18,7 +18,7 @@ export const ar = {
   titleHome: 'الصفحة الرئيسية',
   selectLanguage: 'اختر اللغة',
   backBtn: 'العودة',
-  signInWithEmail: 'تسجيل الدخول باستخدام البريد الإلكتروني الخاص بك',
+  signInWithEmail: 'قم بتسجيل الدخول باستخدام البريد الإلكتروني',
   email: 'البريد الإلكتروني',
   password: 'كلمة المرور',
   login: 'تسجيل الدخول',
@@ -50,5 +50,6 @@ export const ar = {
   orderDetail: 'تفاصيل الطلب',
   acceptAndPrint: 'قبول وطباعة',
   accept: 'قبول',
-  language: 'لغة'
+  language: 'لغة',
+  notificationText: 'يجب استخدام جهاز فيزيائي للإشعارات الفورية'
 }

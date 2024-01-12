@@ -50,5 +50,6 @@ export const zh = {
   orderDetail: '订单详情',
   acceptAndPrint: '接受并打印',
   accept: '接受',
-  language: '语言'
+  language: '语言',
+  notificationText: '必须使用物理设备进行推送通知'
 }
