@@ -119,13 +119,13 @@ export default function SideBar() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ImageBackground source={bg} resizeMode="cover" style={styles.image}>
-        <View style={styles.topContainer}>
-          <View style={styles.profileContainer}>
+      <ImageBackground source={bg} resizeMode="cover" style={styles().image}>
+        <View style={styles().topContainer}>
+          <View style={styles().profileContainer}>
             <View style={styles(colors).avatar}>
               <Image
                 source={{ uri: data && data.restaurant.image }}
-                containerStyle={styles.item}
+                containerStyle={styles().item}
                 style={{ borderRadius: 5 }}
                 PlaceholderContent={<ActivityIndicator />}
               />
@@ -142,8 +142,8 @@ export default function SideBar() {
             </View>
           </View>
         </View>
-        <View style={styles.middleContainer}>
-          <View style={styles.status}>
+        <View style={styles().middleContainer}>
+          <View style={styles().status}>
             <TextDefault H4 bolder textColor="white">
               {t('status')}
             </TextDefault>
@@ -164,7 +164,7 @@ export default function SideBar() {
               />
             </View>
           </View>
-          <View style={styles.status}>
+          <View style={styles().status}>
             <TextDefault H4 bolder textColor="white">
               {t('notifications')}
             </TextDefault>
@@ -188,14 +188,14 @@ export default function SideBar() {
             </View>
           </View>
           <TouchableOpacity
-            style={styles.logout}
+            style={styles().logout}
             activeOpacity={0.8}
             onPress={() =>
               Linking.canOpenURL(PRODUCT_URL).then(() => {
                 Linking.openURL(PRODUCT_URL)
               })
             }>
-            <View style={styles.icon}>
+            <View style={styles().icon}>
               <Icon
                 type="font-awesome"
                 color="white"
@@ -208,7 +208,7 @@ export default function SideBar() {
             </TextDefault>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.logout}
+            style={styles().logout}
             activeOpacity={0.8}
             onPress={() =>
               Linking.canOpenURL(
@@ -219,7 +219,7 @@ export default function SideBar() {
                 )
               })
             }>
-            <View style={styles.icon}>
+            <View style={styles().icon}>
               <Icon type="font-awesome" color="white" name="lock" size={26} />
             </View>
 
@@ -228,14 +228,14 @@ export default function SideBar() {
             </TextDefault>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.logout}
+            style={styles().logout}
             activeOpacity={0.8}
             onPress={() =>
               Linking.canOpenURL(ABOUT_URL).then(() => {
                 Linking.openURL(ABOUT_URL)
               })
             }>
-            <View style={styles.icon}>
+            <View style={styles().icon}>
               <Icon
                 type="font-awesome"
                 color="white"
@@ -248,9 +248,9 @@ export default function SideBar() {
             </TextDefault>
           </TouchableOpacity>
         </View>
-        <View style={styles.lowerContainer}>
-          <TouchableOpacity style={styles.logout} onPress={logout}>
-            <View style={styles.icon}>
+        <View style={styles().lowerContainer}>
+          <TouchableOpacity style={styles().logout} onPress={logout}>
+            <View style={styles().icon}>
               <Icon type="entypo" color="white" name="log-out" size={26} />
             </View>
             <TextDefault H4 bolder style={styles(colors).text}>

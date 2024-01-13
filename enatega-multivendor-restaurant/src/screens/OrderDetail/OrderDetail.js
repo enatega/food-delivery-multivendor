@@ -92,25 +92,25 @@ export default function OrderDetail({ navigation, route }) {
       <ImageBackground
         source={require('../../assets/bg.png')}
         resizeMode="cover"
-        style={styles.image}>
-        <View style={styles.topContainer}>
+        style={styles().image}>
+        <View style={styles().topContainer}>
           <Image
             source={require('../../assets/HeaderLight.png')}
             PlaceholderContent={<ActivityIndicator />}
             style={{ width: 150, height: 140 }}
           />
         </View>
-        <View style={styles.lowerContainer}>
-          <View style={styles.barContainer}>
-            <View style={styles.roundedBar}>
-              <View style={styles.iconContainer}>
+        <View style={styles().lowerContainer}>
+          <View style={styles().barContainer}>
+            <View style={styles().roundedBar}>
+              <View style={styles().iconContainer}>
                 <Image
                   source={imagePath}
                   PlaceholderContent={<ActivityIndicator />}
                   style={{ width: 25, height: 25 }}
                 />
               </View>
-              <View style={styles.textContainer}>
+              <View style={styles().textContainer}>
                 <TextDefault bolder H4>
                   {activeBar === 2 ? t('prepared') : t('preparing')}
                 </TextDefault>
@@ -120,7 +120,7 @@ export default function OrderDetail({ navigation, route }) {
               </View>
             </View>
           </View>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView style={styles().scrollView}>
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <View style={{ marginBottom: 20 }}>
                 {!isAcceptButtonVisible && (

@@ -71,7 +71,7 @@ const Tabs = props => {
         onPress={() => props.navigation.navigate('MyOrders')}
         style={[
           styles().row,
-          active === 'MyOrders' && styles().btn,
+          active === 'MyOrders' && styles(colors).btn,
           { width: '45%' }
         ]}>
         <TextDefault

@@ -12,28 +12,28 @@ export default function OrderDetails({ orderData }) {
   const { t } = useTranslation()
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.cardContainer}>
-        <View style={styles.row}>
+      <View style={styles().cardContainer}>
+        <View style={styles().row}>
           <Text style={styles(colors).heading}>{t('orderNo')}.</Text>
-          <Text style={styles.text} selectable>
+          <Text style={styles().text} selectable>
             {orderId}
           </Text>
         </View>
-        <View style={styles.row}>
+        <View style={styles().row}>
           <Text style={styles(colors).heading}>{t('email')}</Text>
-          <Text style={styles.text} selectable>
+          <Text style={styles().text} selectable>
             {user.email}
           </Text>
         </View>
-        <View style={styles.row}>
+        <View style={styles().row}>
           <Text style={styles(colors).heading}>{t('contact')}</Text>
-          <Text style={styles.text} selectable>
+          <Text style={styles().text} selectable>
             {user.phone}
           </Text>
         </View>
-        <View style={styles.row}>
+        <View style={styles().row}>
           <Text style={styles(colors).heading}>{t('address')}</Text>
-          <Text style={styles.text} selectable>
+          <Text style={styles().text} selectable>
             {deliveryAddress.deliveryAddress}
           </Text>
         </View>
@@ -55,7 +55,7 @@ function OrderItems({ orderData }) {
   const configuration = useContext(Configuration.Context)
   let subTotal = 0
   return (
-    <View style={[styles.cardContainer, { marginTop: 30, marginBottom: 45 }]}>
+    <View style={[styles().cardContainer, { marginTop: 30, marginBottom: 45 }]}>
       {items &&
         items.map((item, index) => {
           subTotal = subTotal + item.variation.price
@@ -75,64 +75,64 @@ function OrderItems({ orderData }) {
             </View>
           )
         })}
-      <View style={styles.itemRow}>
+      <View style={styles().itemRow}>
         <TextDefault
           H6
           textColor={colors.fontSecondColor}
           bold
-          style={styles.itemHeading}>
+          style={styles().itemHeading}>
           {t('subT')}
         </TextDefault>
-        <TextDefault bold style={styles.itemText}>
+        <TextDefault bold style={styles().itemText}>
           {`${configuration.currencySymbol}${subTotal.toFixed(2)}`}
         </TextDefault>
       </View>
-      <View style={styles.itemRow}>
+      <View style={styles().itemRow}>
         <TextDefault
           H6
           textColor={colors.fontSecondColor}
           bold
-          style={styles.itemHeading}>
+          style={styles().itemHeading}>
           {t('tip')}
         </TextDefault>
-        <TextDefault bold style={styles.itemText}>
+        <TextDefault bold style={styles().itemText}>
           {`${configuration.currencySymbol}${tipping}`}
         </TextDefault>
       </View>
-      <View style={styles.itemRow}>
+      <View style={styles().itemRow}>
         <TextDefault
           H6
           textColor={colors.fontSecondColor}
           bold
-          style={styles.itemHeading}>
+          style={styles().itemHeading}>
           {t('taxCharges')}
         </TextDefault>
-        <TextDefault bold style={styles.itemText}>
+        <TextDefault bold style={styles().itemText}>
           {`${configuration.currencySymbol}${taxationAmount}`}
         </TextDefault>
       </View>
-      <View style={styles.itemRow}>
+      <View style={styles().itemRow}>
         <TextDefault
           H6
           textColor={colors.fontSecondColor}
           bold
-          style={styles.itemHeading}>
+          style={styles().itemHeading}>
           {t('deliveryCharges')}
         </TextDefault>
-        <TextDefault bold style={styles.itemText}>
+        <TextDefault bold style={styles().itemText}>
           {`${configuration.currencySymbol}${deliveryCharges}`}
         </TextDefault>
       </View>
 
-      <View style={[styles.itemRow, { marginTop: 30 }]}>
+      <View style={[styles().itemRow, { marginTop: 30 }]}>
         <TextDefault
           H6
           textColor={colors.fontSecondColor}
           bold
-          style={styles.itemHeading}>
+          style={styles().itemHeading}>
           {t('total')}
         </TextDefault>
-        <TextDefault bold style={styles.itemText}>
+        <TextDefault bold style={styles().itemText}>
           {`${configuration.currencySymbol}${orderAmount}`}
         </TextDefault>
       </View>

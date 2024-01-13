@@ -78,7 +78,7 @@ export default function SelectLanguage() {
             </View>
           </View>
           <View style={styles(colors).lowerContainer}>
-            <View style={styles.innerContainer}>
+            <View style={styles().innerContainer}>
               <Text style={styles(colors).headingText}>
                 {t('selectLanguage')}
               </Text>

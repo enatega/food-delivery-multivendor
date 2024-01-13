@@ -72,7 +72,7 @@ const Orders = props => {
                 <Spinner spinnerColor={colors.fontSecondColor} />
               </View>
             ) : (
-              <ScrollView style={styles.scrollView}>
+              <ScrollView style={styles().scrollView}>
                 <View style={{ marginBottom: 30 }}>
                   {active === 0 && activeOrders > 0
                     ? data &&

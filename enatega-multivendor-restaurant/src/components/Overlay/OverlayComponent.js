@@ -33,15 +33,15 @@ export default function OverlayComponent(props) {
     <Overlay
       isVisible={visible}
       onBackdropPress={toggle}
-      overlayStyle={styles.container}>
-      <View style={styles.container}>
+      overlayStyle={styles().container}>
+      <View style={styles().container}>
         <View style={styles(colors).header}>
           <TextDefault H1 bolder>
             {t('setTime')}
           </TextDefault>
           <TextDefault bold>{t('forPreparation')}</TextDefault>
         </View>
-        <View style={styles.time}>
+        <View style={styles().time}>
           <View
             style={{
               flexDirection: 'row',
@@ -52,7 +52,7 @@ export default function OverlayComponent(props) {
                 key={index}
                 onPress={() => setSelectedTime(time)}
                 style={[
-                  styles.timeBtn,
+                  styles().timeBtn,
                   {
                     backgroundColor:
                       selectedTime === time ? 'black' : colors.white
@@ -71,7 +71,7 @@ export default function OverlayComponent(props) {
         </View>
         <TouchableOpacity
           activeOpacity={0.8}
-          style={styles.btn}
+          style={styles().btn}
           onPress={btnPress}>
           <TextDefault bold style={{ color: colors.darkgreen }}>
             {t('setAndAccept')}

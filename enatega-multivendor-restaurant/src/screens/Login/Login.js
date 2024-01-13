@@ -52,7 +52,7 @@ export default function Login() {
             </View>
           </View>
           <View style={styles(colors).lowerContainer}>
-            <View style={styles.headingText}>
+            <View style={styles().headingText}>
               <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                 {t('signInWithEmail')}
               </Text>

@@ -23,8 +23,8 @@ const getEnvVars = (env = Updates.releaseChannel) => {
     }
   }
   return {
-    GRAPHQL_URL: 'http://10.97.37.78:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://10.97.37.78:8001/graphql',
+    GRAPHQL_URL: 'http://10.97.39.244:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://10.97.39.244:8001/graphql',
     SENTRY_DSN: configuration.restaurantAppSentryUrl,
     PRIMERY_COLOR: configuration.primaryColor,
     SECONDARY_COLOR: configuration.secondaryColor,

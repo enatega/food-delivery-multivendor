@@ -21,7 +21,7 @@ export default function TabBars(props) {
       <Pressable
         onPress={() => setActiveBar(0)}
         style={[
-          styles.barContent,
+          styles().barContent,
           {
             backgroundColor: props.activeBar === 0 ? 'black' : colors.white,
             zIndex: props.activeBar === 0 ? 1 : -1
@@ -46,7 +46,7 @@ export default function TabBars(props) {
       <Pressable
         onPress={handleProcess}
         style={[
-          styles.barContent,
+          styles().barContent,
           {
             backgroundColor: props.activeBar === 1 ? 'black' : colors.white,
             zIndex: props.activeBar === 1 ? 1 : -1
@@ -69,7 +69,7 @@ export default function TabBars(props) {
       <Pressable
         onPress={handleDelivered}
         style={[
-          styles.barContent,
+          styles().barContent,
           {
             backgroundColor: props.activeBar === 2 ? 'black' : colors.white
           }
