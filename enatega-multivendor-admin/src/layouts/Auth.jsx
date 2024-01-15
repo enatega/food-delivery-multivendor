@@ -28,10 +28,8 @@ function Auth() {
     })
   }
   return (
-    <Box>
-      <Box>
-        <Switch>{getRoutes(routes)}</Switch>
-      </Box>
+    <Box height={'100%'}>
+      <Switch>{getRoutes(routes)}</Switch>
     </Box>
   )
 }
