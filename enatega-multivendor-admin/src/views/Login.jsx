@@ -169,7 +169,7 @@ const Login = props => {
             justifyContent: 'center'
           }}>
           <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>
-            {t('enterYourDetailsBelow')}
+            {t('EnterYourDetailsBelow')}
           </Typography>
           <Box container sx={{ width: 600 }} className={classes.container}>
             <Box className={classes.flexRow}>
