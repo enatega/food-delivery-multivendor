@@ -15,7 +15,7 @@ import { orders } from '../apollo'
 import { useNavigation } from '@react-navigation/native'
 import { SelectLanguage } from '../screens/Setting'
 import moment from 'moment'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { MAX_TIME } from '../utilities'
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -29,7 +29,7 @@ const Tabs = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function MainStack() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const client = useApolloClient()
   const navigation = useNavigation()
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
@@ -106,7 +106,7 @@ function DrawerNavigator() {
   )
 }
 function TabNavigator() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <Tabs.Navigator
       initialRouteName={t('titleHome')}
@@ -126,7 +126,8 @@ function TabNavigator() {
         })}
       />
       <Tabs.Screen name={t('titleHome')} component={StackNavigator} />
-      {Platform.OS === 'ios' ? null : <Tabs.Screen name={t('language')} component={SelectLanguage} />}
+      {/* {Platform.OS === 'ios' ? null : <Tabs.Screen name={t('language')} component={SelectLanguage} />} */}
+      <Tabs.Screen name={t('language')} component={SelectLanguage} />
     </Tabs.Navigator>
   )
 }
