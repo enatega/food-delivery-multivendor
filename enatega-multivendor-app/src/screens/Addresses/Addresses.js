@@ -138,9 +138,9 @@ function Addresses() {
   }
   return (
     <View style={styles(currentTheme).flex}>
-      <ScrollView
+      {/* <ScrollView
         showsVerticalScrollIndicator={false}
-        style={styles().mainView}>
+        style={styles().mainView}> */}
         <FlatList
           data={profile?.addresses}
           ListEmptyComponent={emptyView}
@@ -214,7 +214,7 @@ function Addresses() {
             </TouchableOpacity>
           )}
         />
-      </ScrollView>
+      {/* </ScrollView> */}
       <View style={styles(currentTheme).containerButton}>
         <TouchableOpacity
           activeOpacity={0.5}

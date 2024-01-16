@@ -16,7 +16,7 @@ const navigationOptions = headerText => {
     headerTitleAlign: 'center',
     headerRight: null,
     headerTitleContainerStyle: {
-      marginBottom: 10,
+      // marginBottom: 10,
       paddingLeft: 20,
       paddingRight: 20,
       backgroundColor: 'black',
