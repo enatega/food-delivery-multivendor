@@ -224,20 +224,20 @@ function Settings(props) {
       setLoadingLang(true)
       const languageInd = activeRadio
       // if (Platform.OS === 'android') {
-      await AsyncStorage.setItem(
-        'enatega-language',
-        languageTypes[languageInd].code
-      )
+        await AsyncStorage.setItem(
+          'enatega-language',
+          languageTypes[languageInd].code
+        )
 
-      var lang = await AsyncStorage.getItem('enatega-language')
-      if (lang) {
-        const defLang = languageTypes.findIndex(el => el.code === lang)
-        const langName = languageTypes[defLang].value
-        languageNameSetter(langName)
-      }
-      i18next.changeLanguage(lang)
-      modalVisibleSetter(false)
-      //Updates.reloadAsync()
+        var lang = await AsyncStorage.getItem('enatega-language')
+        if (lang) {
+          const defLang = languageTypes.findIndex(el => el.code === lang)
+          const langName = languageTypes[defLang].value
+          languageNameSetter(langName)
+        }
+        i18next.changeLanguage(lang)
+        modalVisibleSetter(false)
+        //Updates.reloadAsync()
       // }
     } catch (error) {
       console.error('Error during language selection:', error)
@@ -303,31 +303,33 @@ function Settings(props) {
       style={[styles().flex, styles(currentTheme).mainContainer]}>
       <View style={styles().flex}>
         {/* {Platform.OS === 'android' && ( */}
-        <View style={[styles(currentTheme).languageContainer, styles().shadow]}>
-          <View style={styles().changeLanguage}>
-            <View style={styles().width85}>
-              <TextDefault
-                numberOfLines={1}
-                textColor={currentTheme.fontSecondColor}>
-                {t('languageSetting')}
-              </TextDefault>
+          <View
+            style={[styles(currentTheme).languageContainer, styles().shadow]}>
+            <View style={styles().changeLanguage}>
+              <View style={styles().width85}>
+                <TextDefault
+                  numberOfLines={1}
+                  textColor={currentTheme.fontSecondColor}>
+                  {t('languageSetting')}
+                </TextDefault>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => modalVisibleSetter(true)}
+                style={styles().button}>
+                <MaterialIcons
+                  name="edit"
+                  size={25}
+                  color={currentTheme.tagColor}
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => modalVisibleSetter(true)}
-              style={styles().button}>
-              <MaterialIcons
-                name="edit"
-                size={25}
-                color={currentTheme.tagColor}
-              />
-            </TouchableOpacity>
+            <TextDefault textColor={currentTheme.fontMainColor} bolder H5 B700>
+              {languageName}
+            </TextDefault>
           </View>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder H5 B700>
-            {languageName}
-          </TextDefault>
-        </View>
-        {/* )} */}
+        {/* )
+        } */}
         <View style={styles(currentTheme).mainContainerArea}>
           <TouchableOpacity
             activeOpacity={0.7}

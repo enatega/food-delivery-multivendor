@@ -4,8 +4,10 @@ import { Platform } from 'react-native'
 import { saveToken, restaurantInfo } from '../../apollo'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
+import { useTranslation } from 'react-i18next'
 
 export default function useNotification() {
+  const {t} = useTranslation()
   // get permission
   // request permission
   // send token to backend
@@ -28,7 +30,7 @@ export default function useNotification() {
   }, [])
   async function registerForPushNotificationsAsync() {
     if (!Device.isDevice) {
-      alert('Must use physical device for Push Notifications')
+      alert(t('notificationText'))
     }
     if (Platform.OS === 'android') {
       Notifications.setNotificationChannelAsync('default', {

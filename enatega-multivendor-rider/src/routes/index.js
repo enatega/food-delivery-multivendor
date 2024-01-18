@@ -31,13 +31,13 @@ import { AuthContext } from '../context/auth'
 import { SoundContextProvider } from '../context/sound'
 import { gql, useApolloClient } from '@apollo/client'
 import { riderOrders } from '../apollo/queries'
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
 const Tab = createBottomTabNavigator()
 
 function MyTabs() {
-  const { t } = useTranslation()
+  const {t} = useTranslation()
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -58,18 +58,13 @@ function MyTabs() {
         component={Wallet}
         options={{ title: t('wallet') }}
       />
-      {/* {
+      {
         Platform.OS === 'ios'? null : <Tab.Screen
         name="Language"
         component={Language}
         options={{ title: t('language') }}
       />
-      } */}
-      <Tab.Screen
-        name="Language"
-        component={Language}
-        options={{ title: t('language') }}
-      />
+      }
       <Tab.Screen
         name="Profile"
         component={NoDrawer}
