@@ -112,7 +112,7 @@ function TabNavigator() {
       initialRouteName={t('titleHome')}
       screenOptions={({ route }) => tabIcon(route)}
       tabBarLabelStyle={{
-        color: colors.green
+        color: colors.green 
       }}>
       <Tabs.Screen
         name={t('titleProfile')}
@@ -126,7 +126,11 @@ function TabNavigator() {
         })}
       />
       <Tabs.Screen name={t('titleHome')} component={StackNavigator} />
-      {Platform.OS === 'ios' ? null : <Tabs.Screen name={t('language')} component={SelectLanguage} />}
+      {/* {Platform.OS === 'ios' ? null :  */}
+      <Tabs.Screen name='Language' options={{
+          tabBarLabel: t('language')
+        }} component={SelectLanguage} />
+        {/* } */}
     </Tabs.Navigator>
   )
 }

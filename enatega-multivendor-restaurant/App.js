@@ -60,9 +60,9 @@ export default function App() {
         try {
           setIsUpdating(true)
           const { isNew } = await Updates.fetchUpdateAsync()
-          if (isNew) {
-            await Updates.reloadAsync()
-          }
+          // if (isNew) {
+          //   await Updates.reloadAsync()
+          // }
         } catch (error) {
           console.log('error while updating app', JSON.stringify(error))
         } finally {

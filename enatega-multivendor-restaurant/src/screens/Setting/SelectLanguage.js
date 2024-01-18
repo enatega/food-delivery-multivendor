@@ -33,6 +33,7 @@ export default function SelectLanguage() {
   } = useLogin()
   const {t} = useTranslation()
   const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [loader, setLoader] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
    const navigation = useNavigation();
    const languageTypes = [
@@ -46,14 +47,18 @@ export default function SelectLanguage() {
   ]
 
   const changeLanguage = async(language) => {
+    setLoader(true)
     console.log(language)
     setSelectedLanguage(language);
+    await i18next.reloadResources(language, null);
     i18next.changeLanguage(language)
     if (Platform.OS === 'android') {
       await AsyncStorage.setItem('enatega-language', language);
     }
+
     var lang = await AsyncStorage.getItem('enatega-language');
     console.log(lang)
+    setLoader(false)
   };
   return (
     <KeyboardAvoidingView
@@ -66,6 +71,7 @@ export default function SelectLanguage() {
         contentContainerStyle={{
           height: Platform.OS === 'ios' ? height * 1.0 : height * 1.05
         }}>
+         
         <View style={{ flex: 1, backgroundColor: colors.white }}>
           <View style={styles.topContainer}>
             <View>
@@ -78,14 +84,15 @@ export default function SelectLanguage() {
           </View>
           <View style={styles.lowerContainer}>
             <View style={styles.innerContainer}>
-            <Text style={styles.headingText}>{t('selectLanguage')}</Text>
+            { loader ? <Spinner style={{ marginTop: 60}}/> : null}
+            <Text style={{ ...styles.headingText, marginTop: loader ? 15 : 0 }}>{t('selectLanguage')}</Text>
             {languageTypes.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => changeLanguage(item.code)}
                 style={styles.languageButton}
               >
-                <Text style={styles.languageText}>{item.value}</Text>
+                <Text style={styles.languageText}>{item.value}</Text>  
               </TouchableOpacity>
             ))}
     </View>
