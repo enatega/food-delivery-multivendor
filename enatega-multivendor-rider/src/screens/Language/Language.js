@@ -63,7 +63,6 @@ function Language() {
         'enatega-language',
         languageTypes[languageInd].code
       )
-      Updates.reloadAsync()
     }
     if (lang) {
       const defLang = languageTypes.findIndex(el => el.code === lang)
@@ -78,7 +77,13 @@ function Language() {
     <SafeAreaView
       style={[
         styles.flex,
-        { paddingBottom: inset.bottom, ...alignment.Pmedium }
+        {
+          paddingBottom: inset.bottom,
+          ...alignment.Pmedium,
+          ...alignment.MTlarge,
+          width: '95%',
+          alignSelf: 'center'
+        }
       ]}>
       <View style={[styles.languageContainer, styles.shadow]}>
         <View style={styles.changeLanguage}>

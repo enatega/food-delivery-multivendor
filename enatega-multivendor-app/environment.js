@@ -9,7 +9,6 @@ import * as Updates from 'expo-updates'
 
 const useEnvVars = (env = Updates.releaseChannel) => {
   const configuration = useContext(ConfigurationContext)
-  console.log('configuration', configuration, env)
 
   if (env === 'production' || env === 'staging') {
     return {
