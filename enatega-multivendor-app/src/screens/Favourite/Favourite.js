@@ -82,7 +82,7 @@ function Favourite() {
         backgroundColor: currentTheme.headerColor,
         shadowColor: 'transparent',
         shadowRadius: 0,
-        marginBottom: 10
+        // marginBottom: 10
       },
       headerTitleAlign: 'center',
       headerRight: null,
