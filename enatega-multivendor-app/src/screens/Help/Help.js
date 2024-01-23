@@ -1,18 +1,16 @@
-
-import React, { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import styles from './styles';
-import ThemeContext from '../../ui/ThemeContext/ThemeContext';
-import { theme } from '../../utils/themeColors';
-import TextDefault from '../../components/Text/TextDefault/TextDefault';
-import Analytics from '../../utils/analytics';
-import { HeaderBackButton } from '@react-navigation/elements';
-import { MaterialIcons } from '@expo/vector-icons';
-import navigationService from '../../routes/navigationService';
-import { scale } from '../../utils/scaling';
-import {useTranslation} from 'react-i18next'
-
+import React, { useContext, useEffect, useState } from 'react'
+import { View, TouchableOpacity, StatusBar } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import styles from './styles'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../utils/themeColors'
+import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import Analytics from '../../utils/analytics'
+import { HeaderBackButton } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons'
+import navigationService from '../../routes/navigationService'
+import { scale } from '../../utils/scaling'
+import { useTranslation } from 'react-i18next'
 
 const Help = props => {
   const { t } = useTranslation()
@@ -67,12 +65,10 @@ const Help = props => {
       {
         title: t('titleAboutUs'),
 
-
-        url: 'https://ninjascode.com/pages/ourteam.html',
-      },
-    ]);
-  }, []);
-
+        url: 'https://ninjascode.com/pages/ourteam.html'
+      }
+    ])
+  }, [])
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -94,6 +90,7 @@ const Help = props => {
       },
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View style={styles(currentTheme).backImageContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />

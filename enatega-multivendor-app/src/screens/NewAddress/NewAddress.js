@@ -117,6 +117,7 @@ function NewAddress(props) {
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View style={styles(currentTheme).headerBackBtnContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
@@ -423,11 +424,13 @@ function NewAddress(props) {
           </ScrollView>
         </View>
       </KeyboardAvoidingView>
-      {modalVisible ?  <SearchModal
-        visible={modalVisible}
-        onClose={onClose}
-        onSubmit={onSubmit}
-      /> : null}
+      {modalVisible ? (
+        <SearchModal
+          visible={modalVisible}
+          onClose={onClose}
+          onSubmit={onSubmit}
+        />
+      ) : null}
       <View
         style={{
           paddingBottom: inset.bottom,

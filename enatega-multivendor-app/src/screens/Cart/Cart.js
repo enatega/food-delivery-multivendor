@@ -201,6 +201,7 @@ function Cart(props) {
       },
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View
               style={{
@@ -1224,15 +1225,14 @@ function Cart(props) {
                                     textColor={
                                       currentTheme.darkBgFont
                                     }>{`${location.deliveryAddress}`}</TextDefault>
-                                    <View style={[styles().addressDetailAllign]}>
-                                  <TextDefault
-                                    textColor={currentTheme.darkBgFont}>
-                                    {' '}
-                                    {location.details}
-                                  </TextDefault>
+                                  <View style={[styles().addressDetailAllign]}>
+                                    <TextDefault
+                                      textColor={currentTheme.darkBgFont}>
+                                      {' '}
+                                      {location.details}
+                                    </TextDefault>
                                   </View>
-                                  </View>
-                             
+                                </View>
                               ) : (
                                 <TextDefault
                                   small

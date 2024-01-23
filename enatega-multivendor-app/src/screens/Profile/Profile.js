@@ -99,6 +99,7 @@ function Profile(props) {
       passwordButton: setShowPass,
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View style={styles().bacKButton}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
