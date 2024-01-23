@@ -12,7 +12,6 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { useContext } from 'react'
 
-
 const navigationOptions = headerText => ({
   headerTitle: i18next.t('titleOrders'),
   headerTitleAlign: 'center',
@@ -30,13 +29,12 @@ const navigationOptions = headerText => ({
   headerStyle: {
     backgroundColor: headerText
   },
-  
 
   headerLeft: () => (
     <HeaderBackButton
+      truncatedLabel=""
       backImage={() => (
-        <View
-          style={styles().backBtnContainer}>
+        <View style={styles().backBtnContainer}>
           <MaterialIcons name="arrow-back" size={30} color="black" />
         </View>
       )}

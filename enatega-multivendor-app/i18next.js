@@ -1,5 +1,5 @@
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
+import i18next from 'i18next'
+import { initReactI18next } from 'react-i18next'
 import * as Localization from 'expo-localization'
 import { Platform } from 'react-native'
 import { en } from './translations/en'
@@ -18,14 +18,14 @@ export const languageResources = {
   ar: { translation: ar }
 }
 const getStoredLanguage = async () => {
-  const lng = await AsyncStorage.getItem('enatega-language');
+  const lng = await AsyncStorage.getItem('enatega-language')
   console.log(lng)
   i18next.use(initReactI18next).init({
     compatibilityJSON: 'v3',
     lng: lng,
     fallbackLng: 'en',
-    resources: languageResources,
-  });
+    resources: languageResources
+  })
 }
 if (Platform.OS === 'android') {
   getStoredLanguage()
@@ -36,17 +36,10 @@ if (Platform.OS === 'ios') {
     compatibilityJSON: 'v3',
     lng: i18next.locale,
     fallbackLng: 'en',
-    resources: languageResources,
-  });
-  console.log("language:", Localization.locale)
+    resources: languageResources
+  })
+
   i18next.changeLanguage(i18next.locale)
 }
 
-export default i18next;
-
-
-
-
-
-
-
+export default i18next

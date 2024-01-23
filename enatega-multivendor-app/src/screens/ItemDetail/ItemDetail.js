@@ -25,14 +25,14 @@ import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function ItemDetail(props) {
   const Analytics = analytics()
 
   const { food, addons, options, restaurant } = props.route.params
   const navigation = useNavigation()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [selectedVariation, setSelectedVariation] = useState({
     ...food.variations[0],
@@ -97,6 +97,7 @@ function ItemDetail(props) {
 
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View style={styles(currentTheme).backBtnContainer}>
               <MaterialIcons name="arrow-back" size={30} color="black" />
@@ -321,7 +322,7 @@ function ItemDetail(props) {
               <HeadingComponent title={food.title} price={calculatePrice()} />
 
               {food.variations.length > 1 && (
-               <>
+                <>
                   <View>
                     <TitleComponent
                       title={t('SelectVariation')}
@@ -334,7 +335,7 @@ function ItemDetail(props) {
                       onPress={onSelectVariation}
                     />
                   </View>
-               </>
+                </>
               )}
               {selectedVariation.addons.map(addon => (
                 <View key={addon._id}>

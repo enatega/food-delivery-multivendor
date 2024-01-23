@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 import { BackButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -7,9 +7,8 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import styles from './styles'
 
-
 const navigationOptions = headerText => {
-  const { t } = useTranslation(); // Initializing the useTranslation hook
+  const { t } = useTranslation() // Initializing the useTranslation hook
 
   return {
     title: t('titleFavourite'), // Using translation function to get the title
@@ -33,17 +32,18 @@ const navigationOptions = headerText => {
     },
     headerLeft: () => (
       <HeaderBackButton
+        truncatedLabel=""
         backImage={() => (
           <View style={styles().backImageContainer}>
             <MaterialIcons name="arrow-back" size={30} color="black" />
           </View>
         )}
         onPress={() => {
-          navigationService.goBack();
+          navigationService.goBack()
         }}
       />
     )
-  };
-};
+  }
+}
 
-export default navigationOptions;
+export default navigationOptions

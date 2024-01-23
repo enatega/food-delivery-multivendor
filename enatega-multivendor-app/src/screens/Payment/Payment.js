@@ -68,6 +68,7 @@ function Payment(props) {
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View style={styles().backButton}>
               <Entypo name="cross" size={30} color="black" />

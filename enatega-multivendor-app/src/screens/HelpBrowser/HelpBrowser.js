@@ -43,6 +43,7 @@ function HelpBrowser(props) {
 
       headerLeft: () => (
         <HeaderBackButton
+          truncatedLabel=""
           backImage={() => (
             <View
               style={{
