@@ -20,8 +20,7 @@ const Help = props => {
   const [links, setLinks] = useState([
     {
       title: t('titleProductPage'),
-      url:
-        'https://enatega.com/enatega-multi-vendor/'
+      url: 'https://enatega.com/enatega-multi-vendor/'
     },
     {
       title: t('titleDocs'),
@@ -29,8 +28,7 @@ const Help = props => {
     },
     {
       title: t('titleBlog'),
-      url:
-        'https://enatega.com/blog/'
+      url: 'https://enatega.com/blog/'
     },
     {
       title: t('titleAboutUs'),
@@ -65,11 +63,11 @@ const Help = props => {
       {
         title: t('titleAboutUs'),
 
-        url: 'https://ninjascode.com/pages/ourteam.html'
+        url: 'https://ninjascode.com/'
       }
     ])
   }, [])
-
+  567
   useEffect(() => {
     props.navigation.setOptions({
       headerTitle: t('titleHelp'),
