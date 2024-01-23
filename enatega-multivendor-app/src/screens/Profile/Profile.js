@@ -178,7 +178,6 @@ function Profile(props) {
 
   const handleNamePress = () => {
     viewHideAndShowName()
-    validateName()
   }
   const handleNamePressUpdate = async () => {
     await updateName()

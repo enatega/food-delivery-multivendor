@@ -157,7 +157,19 @@ function Settings(props) {
   }, [props.navigation, languageName])
 
   async function deactivatewithemail() {
-    deactivated({ variables: { isActive: false, email: profile.email } })
+    console.log('Calling deactivatewithemail');
+    try {
+      await deactivated({ variables: { isActive: false, email: profile.email } });
+      logout();
+      navigation.reset({
+        routes: [{ name: 'Main' }]
+      });
+      FlashMessage({ message: t('accountDeactivated') })
+
+    } catch (error) {
+      console.error('Error during deactivation mutation:', error);
+    }
+
   }
 
   const _handleAppStateChange = async nextAppState => {
@@ -558,13 +570,7 @@ function Settings(props) {
               padding: 15,
               ...alignment.MTlarge
             }}
-            onPress={async () => {
-              await deactivatewithemail()
-              logout()
-              navigation.reset({
-                routes: [{ name: 'Menu' }]
-              })
-            }}>
+            onPress={deactivatewithemail}>
             <TextDefault center bold>
               {t('DeleteAccount')}
             </TextDefault>
