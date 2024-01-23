@@ -138,16 +138,12 @@ function Main(props) {
   }
 
   const setAddressLocation = async address => {
-    let formattedAddress = address.deliveryAddress
-    if (formattedAddress.length > 25) {
-      formattedAddress = formattedAddress.substring(0, 25) + '...'
-    }
     setLocation({
       _id: address._id,
       label: address.label,
       latitude: Number(address.location.coordinates[1]),
       longitude: Number(address.location.coordinates[0]),
-      deliveryAddress: formattedAddress,
+      deliveryAddress: address.deliveryAddress,
       details: address.details
     })
     mutate({ variables: { id: address._id } })
@@ -453,7 +449,7 @@ function Main(props) {
                     </View>
                   </TouchableOpacity>
                   <View style={styles().addressTick}>
-                    {address.selected &&
+                    {address._id === location?._id &&
                       ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (

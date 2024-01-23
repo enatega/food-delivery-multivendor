@@ -341,10 +341,9 @@ function NewAddress(props) {
                   </View>
                   <View style={styles().buttonInline}>
                     {labelValues.map((label, index) => (
-                      <>
+                      <React.Fragment key={index}>
                         <TouchableOpacity
                           activeOpacity={0.5}
-                          key={index}
                           style={
                             selectedLabel === label.value
                               ? styles(currentTheme).activeLabel
@@ -364,13 +363,13 @@ function NewAddress(props) {
                             {label.icon}
                           </TextDefault>
                         </TouchableOpacity>
-                      </>
+                      </React.Fragment>
                     ))}
                   </View>
 
                   <View style={styles().textbuttonInline}>
                     {labelValues.map((label, index) => (
-                      <>
+                      <React.Fragment key={index}>
                         <TextDefault
                           style={styles().titlebuttonInline}
                           textColor={currentTheme.black}
@@ -378,7 +377,7 @@ function NewAddress(props) {
                           center>
                           {t(label.title)}
                         </TextDefault>
-                      </>
+                        </React.Fragment>
                     ))}
                   </View>
                 </View>
@@ -424,6 +423,7 @@ function NewAddress(props) {
           </ScrollView>
         </View>
       </KeyboardAvoidingView>
+
       {modalVisible ? (
         <SearchModal
           visible={modalVisible}
@@ -431,6 +431,7 @@ function NewAddress(props) {
           onSubmit={onSubmit}
         />
       ) : null}
+      
       <View
         style={{
           paddingBottom: inset.bottom,

@@ -65,7 +65,7 @@ function ItemDetail(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.white)
     }
-    StatusBar.setBackgroundColor(currentTheme.white)
+    StatusBar.setBarStyle(currentTheme.white)
   })
   useEffect(() => {
     async function Track() {
