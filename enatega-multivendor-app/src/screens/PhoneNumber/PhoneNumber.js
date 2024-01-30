@@ -121,18 +121,19 @@ function PhoneNumber(props) {
                       <Text>+{country.callingCode[0]} </Text>
                       <TextInput
                         placeholder={t('mobileNumber')}
-                    style ={{marginTop: Platform.OS === 'android' ? -4 : 0 }}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={phone}
-                    onChangeText={e =>  {
-                      if (e >= 0 || e<= 9) {
-                        setPhone(e);
-                      }
-                  }}   
-                    keyboardType="numeric"                 
-                  />
-                  </View>
-
+                        style={{
+                          marginTop: Platform.OS === 'android' ? -4 : 0
+                        }}
+                        placeholderTextColor={currentTheme.fontSecondColor}
+                        value={phone}
+                        onChangeText={e => {
+                          if (e >= 0 || e <= 9) {
+                            setPhone(e)
+                          }
+                        }}
+                        keyboardType="numeric"
+                      />
+                    </View>
                   </View>
                 </View>
                 {phoneError && (
