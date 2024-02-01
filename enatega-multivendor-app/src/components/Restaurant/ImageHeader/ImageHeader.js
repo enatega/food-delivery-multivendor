@@ -18,7 +18,7 @@ import {
 import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
@@ -30,7 +30,7 @@ function ImageTextCenterHeader(props, ref) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
@@ -64,6 +64,8 @@ function ImageTextCenterHeader(props, ref) {
     }
   }
 
+  console.log("🚀 ~ props:", props)
+
   const emptyView = () => {
     return (
       <View
@@ -88,7 +90,7 @@ function ImageTextCenterHeader(props, ref) {
       ]}>
       <Animated.View
         style={{
-          height: Animated.sub(props.height, TOP_BAR_HEIGHT),
+          height: props.height - TOP_BAR_HEIGHT,
           backgroundColor: 'white'
         }}>
         <Animated.Image
@@ -96,8 +98,9 @@ function ImageTextCenterHeader(props, ref) {
           source={{ uri: aboutObject.restaurantImage }}
           style={[
             styles().flex,
+            props.opacity,
             {
-              opacity: props.opacity,
+              // opacity: props.opacity,
               borderBottomLeftRadius: scale(20),
               borderBottomRightRadius: scale(20)
             }
@@ -120,7 +123,7 @@ function ImageTextCenterHeader(props, ref) {
                 ]}
                 onPress={() => navigation.goBack()}>
                 <AnimatedIon
-                  name="ios-arrow-back"
+                  name="arrow-back"
                   style={{
                     color: props.black,
                     fontSize: props.iconSize
@@ -132,9 +135,10 @@ function ImageTextCenterHeader(props, ref) {
                 style={[
                   styles(currentTheme).headerTitle,
                   {
-                    opacity: Animated.sub(1, props.opacity),
+                    // opacity: props.opacity,
                     marginBottom: props.headerTextFlex
-                  }
+                  },
+                  props.opacity
                 ]}>
                 {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
               </Animated.Text>
@@ -163,7 +167,7 @@ function ImageTextCenterHeader(props, ref) {
                     }}>
                     {
                       <AnimatedIon
-                        name="ios-information-circle-outline"
+                        name="information-circle-outline"
                         style={{
                           color: props.black,
                           fontSize: props.iconSize
@@ -176,7 +180,9 @@ function ImageTextCenterHeader(props, ref) {
             </View>
           </View>
           <Animated.View
-            style={[styles().fixedView, { opacity: props.opacity }]}>
+            style={[styles().fixedView, props.opacity
+              // { opacity: props.opacity }
+            ]}>
             <View style={styles().fixedText}>
               <TextDefault
                 H4

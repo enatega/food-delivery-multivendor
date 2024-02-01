@@ -1,12 +1,11 @@
 diff --git a/node_modules/react-native/Libraries/Renderer/implementations/.ReactNativeRenderer-dev.js.swp b/node_modules/react-native/Libraries/Renderer/implementations/.ReactNativeRenderer-dev.js.swp
 new file mode 100644
-index 0000000..8d0f8c0
-Binary files /dev/null and b/node_modules/react-native/Libraries/Renderer/implementations/.ReactNativeRenderer-dev.js.swp differ
+index 0000000..e69de29
 diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
-index f556fa3..ccca027 100644
+index 7149c64..6939b48 100644
 --- a/node_modules/react-native/index.js
 +++ b/node_modules/react-native/index.js
-@@ -411,43 +411,18 @@ module.exports = {
+@@ -380,43 +380,15 @@ module.exports = {
    },
    // Deprecated Prop Types
    get ColorPropType(): $FlowFixMe {
@@ -19,7 +18,6 @@ index f556fa3..ccca027 100644
 -    );
      return require('deprecated-react-native-prop-types').ColorPropType;
    },
-+  
    get EdgeInsetsPropType(): $FlowFixMe {
 -    console.error(
 -      'EdgeInsetsPropType will be removed from React Native, along with all ' +
@@ -30,7 +28,6 @@ index f556fa3..ccca027 100644
 -    );
      return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
    },
-+  
    get PointPropType(): $FlowFixMe {
 -    console.error(
 -      'PointPropType will be removed from React Native, along with all ' +
@@ -41,7 +38,6 @@ index f556fa3..ccca027 100644
 -    );
      return require('deprecated-react-native-prop-types').PointPropType;
    },
-+  
    get ViewPropTypes(): $FlowFixMe {
 -    console.error(
 -      'ViewPropTypes will be removed from React Native, along with all ' +

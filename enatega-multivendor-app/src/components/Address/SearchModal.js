@@ -10,9 +10,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import Animated, {
   EasingNode,
   Extrapolate,
-  interpolateNode,
+  interpolate,
   timing,
-  useValue
+  useSharedValue
 } from 'react-native-reanimated'
 import useEnvVars from '../../../environment'
 import CloseIcon from '../../assets/SVG/imageComponents/CloseIcon'
@@ -29,23 +29,23 @@ const { height } = Dimensions.get('screen')
 
 export default function SearchModal({
   visible = false,
-  onClose = () => {},
-  onSubmit = () => {}
+  onClose = () => { },
+  onSubmit = () => { }
 }) {
   const { t } = useTranslation()
-  const animation = useValue(0)
+  const animation = useSharedValue(0)
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   console.log('GOOGLE_MAPS_KEY', GOOGLE_MAPS_KEY)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  const marginTop = interpolateNode(animation, {
+  const marginTop = interpolate(animation, {
     inputRange: [0, 1],
     outputRange: [height * 0.4, height * 0.06],
     extrapolate: Extrapolate.CLAMP
   })
 
-  const radius = interpolateNode(animation, {
+  const radius = interpolate(animation, {
     inputRange: [0, 1],
     outputRange: [scale(30), 0],
     extrapolate: Extrapolate.CLAMP

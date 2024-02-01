@@ -47,7 +47,7 @@ export default function App() {
       } catch (e) {
         console.warn(e)
       }
-      //await i18n.initAsync()
+      // await i18n.initAsync()
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),

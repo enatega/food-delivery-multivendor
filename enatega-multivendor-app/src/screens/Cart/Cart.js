@@ -702,7 +702,7 @@ function Cart(props) {
       <Animated.View
         style={[
           styles().trashContainer,
-          { transform: [{ translateX: scaleX }] }
+          // { transform: [{ translateX: scaleX }] }
         ]}>
         <RectButton
           rippleColor="black"
