@@ -15,9 +15,10 @@ export const de = {
   subtitle3: 'Eiscreme',
   description3:
     'Das Alter mindert nicht die extreme Enttäuschung, wenn ein Kugel Eis vom Hörnchen fällt.',
-  getStarted: 'Los geht\'s!',
+  getStarted: "Los geht's!",
   welcome:
     'Willkommen bei Enatega, manchmal braucht man nur Liebe. Aber ab und zu schadet etwas Essen nicht.',
+  welcomeScreen: 'Willkommen bei Enatega',
   loginBtn: 'Anmelden',
   registerBtn: 'Registrieren',
   name: 'Name',
@@ -37,8 +38,10 @@ export const de = {
   deliveryLocation:
     'Aktivieren Sie den Standort, damit wir Ihnen endlose Geschmackserlebnisse von köstlichem Essen schicken können.',
   locationBtn: 'Standort aktivieren',
-  locationPermissionDenied: 'Die Berechtigung zum Zugriff auf den Standort wurde verweigert',
-  cameraRollPermissionDenied: 'Die Berechtigung zum Zugriff auf die Kamerarolle wurde verweigert',
+  locationPermissionDenied:
+    'Die Berechtigung zum Zugriff auf den Standort wurde verweigert',
+  cameraRollPermissionDenied:
+    'Die Berechtigung zum Zugriff auf die Kamerarolle wurde verweigert',
   locationOff: 'Aktivieren Sie den Standort und versuchen Sie es erneut',
   titleLanguage: 'Sprache ändern',
   titleMenu: 'Menü',
@@ -67,7 +70,8 @@ export const de = {
   question4: 'Ist der Service in meiner Stadt verfügbar?',
   answer1:
     'Sie können das Essen in Ihrem nächsten Geschäft finden, ohne etwas an den Kundenservice zu zahlen. Unsere Gebühren sind im Vergleich zu anderen extrem niedrig.',
-  answer2: 'Sie können uns per E-Mail, Telefon oder über unsere Website kontaktieren.',
+  answer2:
+    'Sie können uns per E-Mail, Telefon oder über unsere Website kontaktieren.',
   answer3:
     'Sie können den Lieferanten persönlich bezahlen oder auch online mit Kreditkarte oder Debitkarte bezahlen.',
   answer4:
@@ -115,7 +119,8 @@ export const de = {
   yourEmail: 'Ihre E-Mail',
   send: 'Senden',
   apply: 'Anwenden',
-  checkEmail: 'Überprüfen Sie Ihre E-Mail auf den Link zum Zurücksetzen des Passworts',
+  checkEmail:
+    'Überprüfen Sie Ihre E-Mail auf den Link zum Zurücksetzen des Passworts',
   languageText: 'Bitte wählen Sie Ihre gewünschte Sprache',
   countryCodePickerTranslation: 'deu',
   countryCodeSelect: 'Ländercode auswählen',
@@ -133,17 +138,21 @@ export const de = {
   haveVoucher: 'Haben Sie einen Gutschein?',
   remove: 'Entfernen',
   change: 'Ändern',
-  condition1: 'Durch Abschluss dieser Bestellung stimme ich allen Geschäftsbedingungen zu.',
-  condition2: 'Ich stimme zu und fordere, dass Sie die bestellte Leistung vor Ablauf der Widerrufsfrist ausführen. Mir ist bewusst, dass ich nach vollständiger Erfüllung der Leistung mein Widerrufsrecht verliere.',
+  condition1:
+    'Durch Abschluss dieser Bestellung stimme ich allen Geschäftsbedingungen zu.',
+  condition2:
+    'Ich stimme zu und fordere, dass Sie die bestellte Leistung vor Ablauf der Widerrufsfrist ausführen. Mir ist bewusst, dass ich nach vollständiger Erfüllung der Leistung mein Widerrufsrecht verliere.',
   orderBtn: 'Bestellen',
   coupanApply: 'Gutscheinrabatt angewendet',
   coupanFailed: 'Gutschein nicht verfügbar',
   invalidCoupan: 'Ungültiger Gutschein',
-  validateItems: 'Fügen Sie Artikel zum Warenkorb hinzu, bevor Sie zur Kasse gehen',
+  validateItems:
+    'Fügen Sie Artikel zum Warenkorb hinzu, bevor Sie zur Kasse gehen',
   validateDelivery: 'Legen Sie die Lieferadresse vor dem Auschecken fest',
   titleFavourite: 'Favoriten',
   titleEmptyFav: 'Keine Favoriten gespeichert',
-  emptyFavDesc: 'Sie werden hier alle Ihre Favoriten sehen, um die Bestellung noch schneller zu gestalten.',
+  emptyFavDesc:
+    'Sie werden hier alle Ihre Favoriten sehen, um die Bestellung noch schneller zu gestalten.',
   justLook: 'Suchen Sie einfach nach dem',
   taxFee: 'Steuergebühren',
   viewCart: 'IHR WARENKORB ANSEHEN',
@@ -168,7 +177,8 @@ export const de = {
   emailErr1: 'E-Mail ist erforderlich',
   emailErr2: 'Ungültige E-Mail!',
   passErr1: 'Passwort ist erforderlich',
-  passErr2: 'Ungültiges Passwort. Das Passwort muss 1 Großbuchstaben, 1 Kleinbuchstaben und 1 Zahl enthalten.',
+  passErr2:
+    'Ungültiges Passwort. Das Passwort muss 1 Großbuchstaben, 1 Kleinbuchstaben und 1 Zahl enthalten.',
   letsGetStarted: 'Lass uns anfangen!',
   createAccount: 'Erstellen Sie Ihr Enatega-Konto',
   firstnameErr1: 'Vorname ist erforderlich!',
@@ -178,12 +188,15 @@ export const de = {
   mobileErr1: 'Telefonnummer ist erforderlich!',
   mobileErr2: 'Ungültige Telefonnummer',
   verifyEmail: 'Ihre E-Mail bestätigen?',
-  otpSentToEmail: 'Bitte geben Sie den OTP ein, den wir an Ihre E-Mail gesendet haben.',
+  otpSentToEmail:
+    'Bitte geben Sie den OTP ein, den wir an Ihre E-Mail gesendet haben.',
   verifyPhone: 'Ihre Telefonnummer bestätigen?',
-  otpSentToPhone: 'Bitte geben Sie den OTP ein, den wir an Ihre Telefonnummer gesendet haben.',
+  otpSentToPhone:
+    'Bitte geben Sie den OTP ein, den wir an Ihre Telefonnummer gesendet haben.',
   wrongOtp: 'Falscher OTP. Bitte versuchen Sie es erneut!',
   resendBtn: 'Erneut senden',
-  enterYourEmail: 'Geben Sie Ihre E-Mail ein, und wir senden Ihnen einen OTP zum Zurücksetzen Ihres Passworts.',
+  enterYourEmail:
+    'Geben Sie Ihre E-Mail ein, und wir senden Ihnen einen OTP zum Zurücksetzen Ihres Passworts.',
   backToLogin: 'Zurück zur Anmeldung',
   setYourPassword: 'Legen Sie Ihr Passwort fest',
   enterPass: 'Geben Sie bitte Ihr Passwort ein',
@@ -231,7 +244,8 @@ export const de = {
   Min: 'Minute',
   min: 'Min',
   Closed: 'Geschlossen',
-  PenddingText: 'Wir fragen das Restaurant, wie lange es dauern wird, Ihr Essen zu liefern.',
+  PenddingText:
+    'Wir fragen das Restaurant, wie lange es dauern wird, Ihr Essen zu liefern.',
   PenddingText1: 'Der Fahrer des Restaurants wird in Ihrer Nähe sein.',
   OrderFrom: 'Ihre Bestellung von:',
   OrderNo: 'Ihre Bestellnummer:',
@@ -265,8 +279,10 @@ export const de = {
   viewAll: 'Alle anzeigen',
   currentLocation: 'Aktueller Standort',
   useCurrentLocation: 'aktuellen Standort verwenden',
-  locationPermissionMessage: 'Tippen Sie auf diese Nachricht, um die Einstellungen zu öffnen und der App die Verwendung des Standorts zu erlauben.',
-  enategaUseYourLocationMessage: 'Enatega verwendet Ihren Standort, um die Restaurants in Ihrer Nähe anzuzeigen!',
+  locationPermissionMessage:
+    'Tippen Sie auf diese Nachricht, um die Einstellungen zu öffnen und der App die Verwendung des Standorts zu erlauben.',
+  enategaUseYourLocationMessage:
+    'Enatega verwendet Ihren Standort, um die Restaurants in Ihrer Nähe anzuzeigen!',
   selectAnotherLocation: 'Wählen Sie einen anderen Ort aus',
   setLocation: 'Standort festlegen',
   cartIsEmpty: 'Der Warenkorb ist leer',
@@ -274,27 +290,33 @@ export const de = {
   minAmount: 'Der Mindestbetrag von ',
   forYourOrder: ' für Ihre Bestellung wurde nicht erreicht.',
   setPaymentMethod: 'Setzen Sie die Zahlungsmethode vor dem Auschecken',
-  numberVerificationAlert: 'Die Telefonnummer ist nicht verifiziert. Bitte überprüfen Sie die Telefonnummer.',
+  numberVerificationAlert:
+    'Die Telefonnummer ist nicht verifiziert. Bitte überprüfen Sie die Telefonnummer.',
   numberVerified: 'Die Telefonnummer wurde erfolgreich verifiziert!',
   numberAddedAlert: 'Die Telefonnummer wurde erfolgreich hinzugefügt!',
   itemNotAvailable: 'Ein oder mehrere Artikel sind nicht verfügbar',
   accountDeactivated: 'Konto deaktiviert',
   addressUpdated: 'Adresse aktualisiert',
   errorOccured: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut ',
-  otpForResetPassword: 'OTP für das Zurücksetzen des Passworts wurde an Ihre E-Mail gesendet.',
+  otpForResetPassword:
+    'OTP für das Zurücksetzen des Passworts wurde an Ihre E-Mail gesendet.',
   passwordResetSuccessfully: 'Passwort erfolgreich zurückgesetzt!',
-  passwordMustMatch: 'Das Passwort muss mit dem Bestätigungspasswort übereinstimmen',
+  passwordMustMatch:
+    'Das Passwort muss mit dem Bestätigungspasswort übereinstimmen',
   emailAssociatedWith: 'Ihre E-Mail ist mit ',
   continueWith: ' verbunden. Bitte fahren Sie fort mit ',
-  mailCheckingError: 'Fehler beim Überprüfen der E-Mail. Versuchen Sie es später erneut!',
+  mailCheckingError:
+    'Fehler beim Überprüfen der E-Mail. Versuchen Sie es später erneut!',
   errorInLoginError: 'Fehler beim Anmelden',
-  errorWhileLogging: 'Fehler beim Einloggen. Bitte versuchen Sie es später erneut',
+  errorWhileLogging:
+    'Fehler beim Einloggen. Bitte versuchen Sie es später erneut',
   accountCreated: 'Ihr Konto wurde erstellt.',
   invalidPassword: 'Ungültiges Passwort',
   userInfoUpdated: 'Benutzerinformationen aktualisiert',
   nameError: 'Name ist erforderlich',
   notificationStatusUpdated: 'Benachrichtigungsstatus aktualisiert',
-  notificationNotWork: 'Benachrichtigungen funktionieren nicht auf dem Simulator',
+  notificationNotWork:
+    'Benachrichtigungen funktionieren nicht auf dem Simulator',
   errorInProfile: 'Fehler im Profil',
   invalidAmount: 'Ungültiger Betrag',
   amountMustBe: 'Betrag muss größer als 0 sein',
@@ -327,7 +349,7 @@ export const de = {
   statusAssigned: 'Zugewiesen',
   statusPicked: 'Abgeholt',
   statusDelivered: 'Geliefert',
-  selectLocation: 'Ort auswählen',
+  selectLocation: 'auswählen',
   languageSetting: 'Spracheinstellung',
   receiveSpecialOffers: 'Spezielle Angebote erhalten',
   getUpdates: 'Aktualisierungen zum Bestellstatus erhalten',
@@ -354,12 +376,15 @@ export const de = {
   RateYourOrder: 'Bewerte deine Bestellung',
   yourExperience: 'Erzähle von deiner Erfahrung',
   selectItems: 'Wähle Artikel aus',
-  dontHaveAnyOrderYet: 'Sie haben noch keine vergangenen Bestellungen. Probieren Sie eines unserer tollen Restaurants aus und geben Sie Ihre erste Bestellung auf!',
+  dontHaveAnyOrderYet:
+    'Sie haben noch keine vergangenen Bestellungen. Probieren Sie eines unserer tollen Restaurants aus und geben Sie Ihre erste Bestellung auf!',
   BrowseRESTAURANTS: 'Durchsuchen Sie RESTAURANTS IN IHRER REGION',
   RateOrder: 'Bestellung bewerten',
-  voucherCode: "Geben Sie Ihren Gutscheincode ein",
-  networkError: "Etwas ist schiefgelaufen. Überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
-  noRestaurants:"Keine Restaurants",
-  clearCartText: 'Beim Verlassen dieser Restaurantseite werden die Artikel, die Sie zum Warenkorb hinzugefügt haben, gelöscht',
-okText: 'OK'
+  voucherCode: 'Geben Sie Ihren Gutscheincode ein',
+  networkError:
+    'Etwas ist schiefgelaufen. Überprüfen Sie Ihr Netzwerk und versuchen Sie es erneut.',
+  noRestaurants: 'Keine Restaurants',
+  clearCartText:
+    'Beim Verlassen dieser Restaurantseite werden die Artikel, die Sie zum Warenkorb hinzugefügt haben, gelöscht',
+  okText: 'OK'
 }

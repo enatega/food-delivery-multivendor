@@ -14,8 +14,11 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { mapStyle } from '../../utils/mapStyle'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import analytics from '../../utils/analytics'
-
+import { Feather, EvilIcons } from '@expo/vector-icons'
+import { customMapStyle } from '../../utils/customMapStyles'
 import { useTranslation } from 'react-i18next'
+import ModalDropdown from '../../components/Picker/ModalDropdown'
+import Spinner from '../../components/Spinner/Spinner'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -31,32 +34,36 @@ export default function SelectLocation(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
   const inset = useSafeAreaInsets()
+  const [loading, setLoading] = useState(false)
   const { getCurrentLocation, getLocationPermission } = useLocation()
   const { setLocation } = useContext(LocationContext)
   const [label, setLabel] = useState(
     longitude && latitude ? t('currentLocation') : t('selectedLocation')
   )
-  // eslint-disable-next-line no-unused-vars
-  const [coordinates, setCorrdinates] = useState({
+  const [coordinates, setCoordinates] = useState({
     latitude: latitude || LATITUDE,
     longitude: longitude || LONGITUDE,
     latitudeDelta: latitude ? 0.003 : LATITUDE_DELTA,
     longitudeDelta: longitude ? 0.003 : LONGITUDE_DELTA
   })
+  const [modalVisible, setModalVisible] = useState(false)
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_SELECTLOCATION)
     }
     Track()
   }, [])
+
   let mapRef = null
+
   useLayoutEffect(() => {
     navigation.setOptions(
       screenOptions({
         title: t('setLocation'),
         fontColor: currentTheme.fontMainColor,
         backColor: currentTheme.white,
-        iconColor: currentTheme.iconColorPink,
+        iconColor: currentTheme.black,
         lineColor: currentTheme.lightHorizontalLine,
         setCurrentLocation
       })
@@ -66,15 +73,16 @@ export default function SelectLocation(props) {
   StatusBar.setBarStyle('dark-content')
 
   const setCurrentLocation = async () => {
+    setLoading(true)
     const { status, canAskAgain } = await getLocationPermission()
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
         message: t('locationPermissionMessage'),
-        // 'Tap on this message to open Settings then allow app to use location from permissions.',
         onPress: async () => {
           await Linking.openSettings()
         }
       })
+      setLoading(false)
       return
     }
     const { error, coords, message } = await getCurrentLocation()
@@ -82,17 +90,47 @@ export default function SelectLocation(props) {
       FlashMessage({
         message
       })
+      setLoading(false)
       return
     }
-    mapRef.fitToCoordinates([
-      {
+    setLoading(false)
+    navigation.navigate('AddNewAddress', {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      location: {
         latitude: coords.latitude,
         longitude: coords.longitude
       }
-    ])
-    setLabel('currentLocation')
-    // setLabel(t('currentLocation'))
+    })
   }
+
+  // const setCurrentLocation = async () => {
+  //   const { status, canAskAgain } = await getLocationPermission()
+  //   if (status !== 'granted' && !canAskAgain) {
+  //     FlashMessage({
+  //       message: t('locationPermissionMessage'),
+  //       onPress: async () => {
+  //         await Linking.openSettings()
+  //       }
+  //     })
+  //     return
+  //   }
+  //   const { error, coords, message } = await getCurrentLocation()
+  //   if (error) {
+  //     FlashMessage({
+  //       message
+  //     })
+  //     return
+  //   }
+  //   mapRef.fitToCoordinates([
+  //     {
+  //       latitude: coords.latitude,
+  //       longitude: coords.longitude
+  //     }
+  //   ])
+  //   setLabel('currentLocation')
+  // }
+
   const onSelectLocation = () => {
     setLocation({
       label,
@@ -101,51 +139,105 @@ export default function SelectLocation(props) {
       longitude: coordinates.longitude
     })
   }
-  const onRegionChangeComplete = coordinates => {
-    setCorrdinates({
-      ...coordinates
+
+  const onRegionChangeComplete = coords => {
+    setCoordinates({
+      ...coords
     })
   }
 
-  const onPanDrag = event => {
-    // setLabel('Selected Location')
+  const onPanDrag = () => {
     setLabel(t('selectedLocation'))
   }
+
+  const onItemPress = city => {
+    setModalVisible(false)
+    // Navigate to AddNewAddress screen with the selected city
+    navigation.navigate('AddNewAddress', { city, location: { ...city } })
+    console.log('City info', { city, location: { ...city } })
+  }
+
   return (
     <>
       <View style={styles().flex}>
-        <MapView
-          ref={ref => {
-            mapRef = ref
-          }}
-          initialRegion={coordinates}
-          region={coordinates}
-          style={{ height: '92%' }}
-          provider={PROVIDER_GOOGLE}
-          showsTraffic={false}
-          maxZoomLevel={15}
-          customMapStyle={themeContext.ThemeValue === 'Dark' ? mapStyle : null}
-          onRegionChangeComplete={onRegionChangeComplete}
-          onPanDrag={onPanDrag}
-        />
-        <View style={styles().mainContainer}>
-          <CustomMarker
-            width={40}
-            height={40}
-            transform={[{ translateY: -20 }]}
-            translateY={-20}
+        <View style={styles().mapView}>
+          <MapView
+            ref={ref => {
+              mapRef = ref
+            }}
+            initialRegion={coordinates}
+            region={coordinates}
+            style={{ flex: 1 }}
+            provider={PROVIDER_GOOGLE}
+            showsTraffic={false}
+            maxZoomLevel={15}
+            customMapStyle={
+              themeContext.ThemeValue === 'Dark' ? mapStyle : customMapStyle
+            }
+            onRegionChangeComplete={onRegionChangeComplete}
+            onPanDrag={onPanDrag}
           />
+          <View style={styles().mainContainer}>
+            <CustomMarker
+              width={40}
+              height={40}
+              transform={[{ translateY: -20 }]}
+              translateY={-20}
+            />
+          </View>
         </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).button}
-          onPress={onSelectLocation}>
-          <TextDefault textColor={currentTheme.buttonText} H4 bold>
+        <View style={styles(currentTheme).container}>
+          <TextDefault
+            textColor={currentTheme.buttonText}
+            H3
+            bolder
+            Left
+            style={styles().heading}>
             {t('selectLocation')}
           </TextDefault>
-        </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles(currentTheme).button}
+            onPress={setCurrentLocation}>
+            <View style={styles(currentTheme).icon}>
+              <EvilIcons name="location" size={18} color="black" />
+            </View>
+            <TextDefault textColor={currentTheme.buttonText} H5 bold>
+              Use my current Location
+            </TextDefault>
+            {loading && (
+              <Spinner
+                size={'small'}
+                backColor={'transparent'}
+                spinnerColor={'#fff'}
+              />
+            )}
+          </TouchableOpacity>
+          <View style={styles(currentTheme).line} />
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles(currentTheme).button}
+            onPress={() => setModalVisible(true)}>
+            <View style={styles(currentTheme).icon}>
+              <Feather name="list" size={18} color="black" />
+            </View>
+
+            <TextDefault textColor={currentTheme.buttonText} H5 bold>
+              Browse All Cities
+            </TextDefault>
+          </TouchableOpacity>
+          <View style={styles(currentTheme).line} />
+        </View>
+        <View style={{ paddingBottom: inset.bottom }} />
       </View>
-      <View style={{ paddingBottom: inset.bottom }} />
+
+      <ModalDropdown
+        visible={modalVisible}
+        onItemPress={onItemPress}
+        onClose={() => setModalVisible(false)}
+      />
     </>
   )
 }

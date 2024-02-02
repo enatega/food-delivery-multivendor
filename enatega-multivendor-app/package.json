@@ -43,6 +43,7 @@
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "6.7.3",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.6",

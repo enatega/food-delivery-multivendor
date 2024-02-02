@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { View, StatusBar, TouchableOpacity, Linking } from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
@@ -8,11 +8,12 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import LocationPermission from '../../assets/SVG/imageComponents/LocationPermission'
-import { scale } from '../../utils/scaling'
+import { useFocusEffect } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
 import Spinner from '../../components/Spinner/Spinner'
 import { useTranslation } from 'react-i18next'
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import { customMapStyle } from '../../utils/customMapStyles'
 export default function CurrentLocation() {
   const Analytics = analytics()
   const { t } = useTranslation()
@@ -28,7 +29,20 @@ export default function CurrentLocation() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
     }
     Track()
+    // StatusBar.setHidden(true)
+
+    // return () => {
+    //   StatusBar.setHidden(false)
+    // }
   }, [])
+
+  const initialRegion = {
+    latitude: 31.0461,
+    longitude: 34.8516, // Longitude for Israel
+    latitudeDelta: 1,
+    longitudeDelta: 1
+  }
+  const markerCoordinate = { latitude: 31.0461, longitude: 34.8516 }
 
   const setCurrentLocation = async () => {
     setLoading(true)
@@ -52,9 +66,16 @@ export default function CurrentLocation() {
       return
     }
     setLoading(false)
-    navigation.navigate('SelectLocation', { ...coords })
+    navigation.navigate('AddNewAddress', {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      location: {
+        latitude: coords.latitude,
+        longitude: coords.longitude
+      }
+    })
   }
-  StatusBar.setBarStyle('light-content')
+
   return (
     <>
       <View
@@ -66,15 +87,32 @@ export default function CurrentLocation() {
           }
         ]}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
+          <View style={styles().mapView}>
+            <MapView
+              style={styles().flex}
+              provider={PROVIDER_GOOGLE}
+              customMapStyle={customMapStyle}
+              region={initialRegion}>
+              <Marker coordinate={markerCoordinate} />
+            </MapView>
+          </View>
           <View style={styles().subContainerImage}>
-            <View style={styles().imageContainer}>
-              <LocationPermission width={scale(300)} height={scale(300)} />
-            </View>
-            <View style={styles().descriptionEmpty}>
-              <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-                {t('enategaUseYourLocationMessage')}
-              </TextDefault>
-            </View>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              center
+              bolder
+              H2
+              style={styles(currentTheme).welcomeHeading}>
+              {t('welcomeScreen')}
+            </TextDefault>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              bold
+              center
+              style={styles(currentTheme).descriptionEmpty}>
+              {t('enategaUseYourLocationMessage')}
+            </TextDefault>
+            <View style={styles(currentTheme).line} />
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles(currentTheme).emptyButton}
@@ -82,9 +120,8 @@ export default function CurrentLocation() {
               <TextDefault
                 style={{ paddingLeft: loading ? 40 : 0 }}
                 textColor={currentTheme.buttonText}
-                bolder
                 center
-                uppercase>
+                H5>
                 {t('useCurrentLocation')}
               </TextDefault>
               {loading && (
@@ -95,21 +132,18 @@ export default function CurrentLocation() {
                 />
               )}
             </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles().linkButton}
+              onPress={() => {
+                navigation.navigate('SelectLocation')
+              }}>
+              <TextDefault textColor={currentTheme.black} H5 center>
+                {t('selectAnotherLocation')}
+              </TextDefault>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles().linkButton}
-            onPress={() => {
-              navigation.navigate('SelectLocation')
-            }}>
-            <TextDefault
-              textColor={currentTheme.buttonBackgroundPink}
-              H5
-              bold
-              center>
-              {t('selectAnotherLocation')}
-            </TextDefault>
-          </TouchableOpacity>
         </View>
       </View>
       <View style={{ paddingBottom: inset.bottom }} />

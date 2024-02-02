@@ -41,6 +41,9 @@ export const textStyles = {
   Right: {
     textAlign: 'right'
   },
+  Left: {
+    textAlign: 'left'
+  },
   UpperCase: {
     textTransform: 'uppercase'
   },

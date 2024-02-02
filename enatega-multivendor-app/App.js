@@ -16,7 +16,7 @@ import { ConfigurationProvider } from './src/context/Configuration'
 import { UserProvider } from './src/context/User'
 import { AuthProvider } from './src/context/Auth'
 import { theme as Theme } from './src/utils/themeColors'
-import { LocationContext } from './src/context/Location'
+import { LocationProvider } from './src/context/Location'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'expo-dev-client'
 import useEnvVars, { isProduction } from './environment'
@@ -163,7 +163,7 @@ export default function App() {
             backgroundColor={Theme[theme].menuBar}
             barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
           />
-          <LocationContext.Provider value={{ location, setLocation }}>
+          <LocationProvider>
             <ConfigurationProvider>
               <AuthProvider>
                 <UserProvider>
@@ -173,7 +173,7 @@ export default function App() {
                 </UserProvider>
               </AuthProvider>
             </ConfigurationProvider>
-          </LocationContext.Provider>
+          </LocationProvider>
           <FlashMessage MessageComponent={MessageComponent} />
         </ThemeContext.Provider>
       </ApolloProvider>

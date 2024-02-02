@@ -1,8 +1,7 @@
 export const ar = {
   title0: 'اللغة المختارة',
   subtitle0: 'الإنجليزية',
-  description0:
-    'اختر أي لغة تفضلها لتغيير محتوى التطبيق إلى اللغة المطلوبة.',
+  description0: 'اختر أي لغة تفضلها لتغيير محتوى التطبيق إلى اللغة المطلوبة.',
   title1: 'لذيذ',
   subtitle1: 'وجبة الإفطار',
   description1:
@@ -18,6 +17,7 @@ export const ar = {
   getStarted: 'ابدأ الآن!',
   welcome:
     'مرحبًا بك في Enatega، في بعض الأحيان كل ما تحتاجه هو الحب. ولكن القليل من الطعام بين الحين والآخر لا يضر.',
+  welcomeScreen: 'مرحبًا بك في Enatega',
   loginBtn: 'تسجيل الدخول',
   registerBtn: 'التسجيل',
   name: 'الاسم',
@@ -67,7 +67,8 @@ export const ar = {
   question4: 'هل الخدمة متوفرة في مدينتي؟',
   answer1:
     'يمكنك العثور على الطعام في أقرب متجر لديك دون دفع أي شيء لخدمة العملاء. تكاليفنا منخفضة للغاية مقارنة بالآخرين.',
-  answer2: 'يمكنك التواصل معنا من خلال البريد الإلكتروني، رقم الهاتف أو موقع الويب الخاص بنا.',
+  answer2:
+    'يمكنك التواصل معنا من خلال البريد الإلكتروني، رقم الهاتف أو موقع الويب الخاص بنا.',
   answer3:
     'يمكنك دفع مبلغ التوصيل للشخص المسؤول عن التوصيل شخصياً أو الدفع عبر الإنترنت أيضًا باستخدام بطاقة الائتمان أو الخصم.',
   answer4:
@@ -185,7 +186,8 @@ export const ar = {
   otpSentToPhone: 'الرجاء إدخال رمز OTP الذي أرسلناه إلى رقم هاتفك.',
   wrongOtp: 'OTP خاطئ. يُرجى المحاولة مرة أخرى!',
   resendBtn: 'إعادة الإرسال',
-  enterYourEmail: 'أدخل بريدك الإلكتروني وسنرسل لك رمز OTP لإعادة تعيين كلمة المرور.',
+  enterYourEmail:
+    'أدخل بريدك الإلكتروني وسنرسل لك رمز OTP لإعادة تعيين كلمة المرور.',
   backToLogin: 'العودة إلى تسجيل الدخول',
   setYourPassword: 'تعيين كلمة المرور الخاصة بك',
   enterPass: 'الرجاء إدخال كلمة المرور',
@@ -254,9 +256,9 @@ export const ar = {
   ClosedAllDay: 'مغلق طوال اليوم',
   About: 'حول',
   Reviews: 'التقييمات',
-  emptyHere: "هنا فارغ.",
-  emptyHereDecs1: "لم تقم بحفظ أي عنوان حتى الآن.",
-  emptyHereDecs2: "انقر على إضافة عنوان جديد للبدء.",
+  emptyHere: 'هنا فارغ.',
+  emptyHereDecs1: 'لم تقم بحفظ أي عنوان حتى الآن.',
+  emptyHereDecs2: 'انقر على إضافة عنوان جديد للبدء.',
   changeAddress: 'تغيير العنوان',
   pickUp: 'الاستلام',
   Custom: 'مخصص',
@@ -267,8 +269,10 @@ export const ar = {
   viewAll: 'عرض الكل',
   currentLocation: 'الموقع الحالي',
   useCurrentLocation: 'استخدم الموقع الحالي',
-  locationPermissionMessage: 'اضغط على هذه الرسالة لفتح الإعدادات ثم اسمح للتطبيق باستخدام الموقع من الصلاحيات.',
-  enategaUseYourLocationMessage: 'تستخدم إناتيغا موقعك لعرض المطاعم القريبة منك!',
+  locationPermissionMessage:
+    'اضغط على هذه الرسالة لفتح الإعدادات ثم اسمح للتطبيق باستخدام الموقع من الصلاحيات.',
+  enategaUseYourLocationMessage:
+    'تستخدم إناتيغا موقعك لعرض المطاعم القريبة منك!',
   selectAnotherLocation: 'حدد موقعًا آخر',
   setLocation: 'تعيين الموقع',
   cartIsEmpty: 'السلة فارغة',
@@ -283,12 +287,14 @@ export const ar = {
   accountDeactivated: 'تم تعطيل الحساب',
   addressUpdated: 'تم تحديث العنوان',
   errorOccured: 'حدث خطأ. يرجى المحاولة مرة أخرى ',
-  otpForResetPassword: 'تم إرسال رمز OTP لإعادة تعيين كلمة المرور إلى بريدك الإلكتروني.',
+  otpForResetPassword:
+    'تم إرسال رمز OTP لإعادة تعيين كلمة المرور إلى بريدك الإلكتروني.',
   passwordResetSuccessfully: 'تمت إعادة تعيين كلمة المرور بنجاح!',
   passwordMustMatch: 'يجب أن تتطابق كلمة المرور مع تأكيد كلمة المرور',
   emailAssociatedWith: 'بريدك الإلكتروني مرتبط بـ ',
   continueWith: '. يرجى الاستمرار مع ',
-  mailCheckingError: 'خطأ أثناء فحص البريد الإلكتروني. حاول مرة أخرى في وقت لاحق!',
+  mailCheckingError:
+    'خطأ أثناء فحص البريد الإلكتروني. حاول مرة أخرى في وقت لاحق!',
   errorInLoginError: 'خطأ في تسجيل الدخول',
   errorWhileLogging: 'خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى لاحقًا',
   accountCreated: 'تم إنشاء حسابك.',
@@ -329,7 +335,7 @@ export const ar = {
   statusAssigned: 'تم تعيينه',
   statusPicked: 'تم اختياره',
   statusDelivered: 'تم التوصيل',
-  selectLocation: 'اختر الموقع',
+  selectLocation: 'الموقع',
   languageSetting: 'إعدادات اللغة',
   receiveSpecialOffers: 'استلام عروض خاصة',
   getUpdates: 'الحصول على تحديثات حالة طلبك',
@@ -356,12 +362,14 @@ export const ar = {
   RateYourOrder: 'قيم طلبك',
   yourExperience: 'حدثنا عن تجربتك',
   selectItems: 'اختر العناصر',
-  dontHaveAnyOrderYet: "ليس لديك أي طلب سابق حتى الآن. جرب أحد مطاعمنا الرائعة وقدم طلبك الأول!",
+  dontHaveAnyOrderYet:
+    'ليس لديك أي طلب سابق حتى الآن. جرب أحد مطاعمنا الرائعة وقدم طلبك الأول!',
   BrowseRESTAURANTS: 'تصفح المطاعم في منطقتك',
   RateOrder: 'تقييم الطلب',
-  voucherCode: "أدخل رمز القسيمة الخاص بك",
-  networkError: "حدث خطأ ما. تحقق من شبكتك وحاول مرة أخرى.",
-  noRestaurants: "لا مطاعم",
-  clearCartText: 'عند مغادرة صفحة المطعم هذه، سيتم محو العناصر التي أضفتها إلى السلة',
-okText: 'موافق'
+  voucherCode: 'أدخل رمز القسيمة الخاص بك',
+  networkError: 'حدث خطأ ما. تحقق من شبكتك وحاول مرة أخرى.',
+  noRestaurants: 'لا مطاعم',
+  clearCartText:
+    'عند مغادرة صفحة المطعم هذه، سيتم محو العناصر التي أضفتها إلى السلة',
+  okText: 'موافق'
 }
