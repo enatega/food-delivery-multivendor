@@ -16,7 +16,8 @@ const styles = (props = null) =>
       top: 0,
       left: 0,
       right: 0,
-      elevation: 5
+      elevation: 5,
+      zIndex: 1
     },
     touchArea: {
       justifyContent: 'center',

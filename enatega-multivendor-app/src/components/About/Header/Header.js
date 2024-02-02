@@ -27,7 +27,7 @@ function ImageHeader(props) {
         source={{ uri: props.restaurantImage }}
       />
 
-      {/* <Animated.View style={styles(currentTheme).overlayContainer}> */}
+      <Animated.View style={styles(currentTheme).overlayContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles(props.iconBackColor).touchArea}
@@ -72,7 +72,7 @@ function ImageHeader(props) {
             </TextDefault>
           </TouchableOpacity>
         </View>
-      {/* </Animated.View> */}
+      </Animated.View>
     </View>
   )
 }

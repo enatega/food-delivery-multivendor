@@ -20,8 +20,9 @@ import Animated, {
   useSharedValue,
   Easing as EasingNode,
   withTiming,
+  withRepeat,
   useAnimatedStyle,
-  // useAnimatedScrollHandler
+  useAnimatedScrollHandler,
 } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
@@ -74,6 +75,7 @@ function Restaurant(props) {
   const inset = useSafeAreaInsets()
   const propsData = route.params
   const animation = useSharedValue(0)
+  const translationY = useSharedValue(0);
   const circle = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -137,21 +139,18 @@ function Restaurant(props) {
   }, [data])
 
 
-  // const animatedAnimation = new Animated.Value(0);
 
-  // const handleScroll = (event) => {
-  //   'worklet';
-  //   const scrollY = event.nativeEvent.contentOffset.y;
-  //   animatedAnimation.setValue(scrollY);
-  // };
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    translationY.value = event.contentOffset.y;
+  });
 
-  // const scrollHandler = useEvent(handleScroll, ['nativeEvent']);
-
-  // const translationY = useSharedValue(0);
-
-  // const scrollHandler = useAnimatedScrollHandler((event) => {
-  //   translationY.value = event.contentOffset.y;
-  // });
+  const stylez = useAnimatedStyle(() => {
+    return {
+      height: interpolate(translationY.value, [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+        [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],),
+      opacity: interpolate(translationY.value, [0, height * 0.05, SCROLL_RANGE / 2], [1, 0.8, 0], Extrapolation.CLAMP)
+    };
+  });
 
   const isOpen = () => {
     if (data) {
@@ -279,14 +278,20 @@ function Restaurant(props) {
     return null
   }
 
+  const scaleValue = useSharedValue(1);
+
+  const scaleStyles = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleValue.value }],
+  }));
+
+
   // button animation
   function animate() {
-    withTiming(circle.value, {
-      easing: EasingNode.inOut(EasingNode.ease),
-      toValue: 1,
-      duration: 500
-    }).start()
-    circle.setValue(0)
+    scaleValue.value = withRepeat(
+      withTiming(1.5, { duration: 250 }),
+      2,
+      true
+    );
   }
 
   const scrollToSection = index => {
@@ -501,23 +506,24 @@ function Restaurant(props) {
       <SafeAreaView style={styles(currentTheme).flex}>
         <Animated.View style={styles(currentTheme).flex}>
           <ImageHeader
-            ref={flatListRef}
-            iconColor={iconColor}
-            iconSize={iconSize}
-            height={headerHeight}
-            opacity={opacityStyles}
-            iconBackColor={iconBackColor}
-            iconRadius={iconRadius}
-            iconTouchWidth={iconTouchWidth}
-            iconTouchHeight={iconTouchHeight}
-            headerTextFlex={headerTextFlex}
-            restaurantName={propsData.name}
-            restaurantImage={propsData.image}
-            restaurant={data.restaurant}
-            topaBarData={deals}
-            changeIndex={changeIndex}
-            selectedLabel={selectedLabel}
-          />
+              ref={flatListRef}
+              iconColor={iconColor}
+              iconSize={iconSize}
+              height={headerHeight}
+              opacity={opacityStyles}
+              iconBackColor={iconBackColor}
+              iconRadius={iconRadius}
+              iconTouchWidth={iconTouchWidth}
+              iconTouchHeight={iconTouchHeight}
+              headerTextFlex={headerTextFlex}
+              restaurantName={propsData.name}
+              restaurantImage={propsData.image}
+              restaurant={data.restaurant}
+              topaBarData={deals}
+              changeIndex={changeIndex}
+              selectedLabel={selectedLabel}
+              stylez={stylez}
+            />
           <AnimatedSectionList
             ref={scrollRef}
             sections={deals}
@@ -537,20 +543,12 @@ function Restaurant(props) {
             refreshing={networkStatus === 4}
             onRefresh={() => networkStatus === 7 && refetch()}
             onViewableItemsChanged={onViewableItemsChanged}
-            onMomentumScrollEnd={event => {
-              onScrollEndSnapToEdge(event)
-            }}
-            // Important
-            // onScroll={Animated.event([
-            //   {
-            //     nativeEvent: {
-            //       contentOffset: {
-            //         y: animation.value
-            //       }
-            //     }
-            //   }
-            // ])}
-            // onScroll={scrollHandler}
+            // onMomentumScrollEnd={event => {
+            //   onScrollEndSnapToEdge(event)
+            // }}
+            onScroll={
+              scrollHandler
+            }
             keyExtractor={(item, index) => item + index}
             ItemSeparatorComponent={() => (
               <View style={styles(currentTheme).listSeperator} />
@@ -651,15 +649,14 @@ function Restaurant(props) {
                         width: circleSize,
                         height: circleSize,
                         borderRadius: radiusSize
-                      }
+                      },
+                      scaleStyles
                     ]}
                   >
-                    {/* <Animated.View style={[fontStyles]}> */}
-                    <Animated.Text style={[styles(currentTheme).buttonTextLeft, fontStyles]}>
+                    <Animated.Text style={[styles(currentTheme).buttonTextLeft, { fontSize: fontChange}]}>
                       {cartCount}
 
                     </Animated.Text>
-                    {/* </Animated.View> */}
                   </Animated.View>
                 </View>
                 <TextDefault

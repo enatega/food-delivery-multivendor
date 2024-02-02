@@ -100,7 +100,6 @@ function ImageTextCenterHeader(props, ref) {
             styles().flex,
             props.opacity,
             {
-              // opacity: props.opacity,
               borderBottomLeftRadius: scale(20),
               borderBottomRightRadius: scale(20)
             }
@@ -130,18 +129,6 @@ function ImageTextCenterHeader(props, ref) {
                   }}
                 />
               </AnimatedBorderless>
-              <Animated.Text
-                numberOfLines={1}
-                style={[
-                  styles(currentTheme).headerTitle,
-                  {
-                    // opacity: props.opacity,
-                    marginBottom: props.headerTextFlex
-                  },
-                  props.opacity
-                ]}>
-                {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
-              </Animated.Text>
               {!props.loading && (
                 <>
                   <AnimatedBorderless
@@ -180,9 +167,7 @@ function ImageTextCenterHeader(props, ref) {
             </View>
           </View>
           <Animated.View
-            style={[styles().fixedView, props.opacity
-              // { opacity: props.opacity }
-            ]}>
+            style={[styles().fixedView]}>
             <View style={styles().fixedText}>
               <TextDefault
                 H4
