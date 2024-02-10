@@ -4,15 +4,16 @@ import {
   View,
   TouchableOpacity,
   Keyboard,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import Animated, {
-  EasingNode,
-  Extrapolate,
+  Easing as EasingNode,
+  Extrapolation,
   interpolate,
-  timing,
-  useSharedValue
+  useSharedValue,
+  withTiming
 } from 'react-native-reanimated'
 import useEnvVars from '../../../environment'
 import CloseIcon from '../../assets/SVG/imageComponents/CloseIcon'
@@ -39,17 +40,17 @@ export default function SearchModal({
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  const marginTop = interpolate(animation, {
-    inputRange: [0, 1],
-    outputRange: [height * 0.4, height * 0.06],
-    extrapolate: Extrapolate.CLAMP
-  })
+  const marginTop = interpolate(animation.value, 
+    [0, 1],
+    [height * 0.4, height * 0.06],
+    Extrapolation.CLAMP
+  )
 
-  const radius = interpolate(animation, {
-    inputRange: [0, 1],
-    outputRange: [scale(30), 0],
-    extrapolate: Extrapolate.CLAMP
-  })
+  const radius = interpolate(animation.value, 
+    [0, 1],
+    [scale(30), 0],
+    Extrapolation.CLAMP
+  )
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', _keyboardDidShow)
@@ -57,8 +58,8 @@ export default function SearchModal({
 
     // cleanup function
     return () => {
-      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow)
-      Keyboard.removeListener('keyboardDidHide', _keyboardDidHide)
+      Keyboard.removeAllListeners('keyboardDidShow', _keyboardDidShow)
+      Keyboard.removeAllListeners('keyboardDidHide', _keyboardDidHide)
     }
   }, [])
 
@@ -71,15 +72,23 @@ export default function SearchModal({
     animate(true)
   }
 
-  function animate(hide = false) {
-    timing(animation, {
-      toValue: hide ? 0 : 1,
-      duration: 300,
-      easing: EasingNode.inOut(EasingNode.ease)
-    }).start()
-  }
+  // function animate(hide = false) {
+  //   timing(animation, {
+  //     toValue: hide ? 0 : 1,
+  //     duration: 300,
+  //     easing: EasingNode.inOut(EasingNode.ease)
+  //   }).start()
+  // }
+  
+  const animate = (hide = false) => {
+    withTiming(
+      animation.value = hide ? 0 : 1
+    )
+  };
+
+
   function close() {
-    animation.setValue(0)
+    animation.value = 0
     onClose()
   }
 
@@ -93,7 +102,7 @@ export default function SearchModal({
         style={[
           styles(currentTheme).modalContainer,
           {
-            marginTop: marginTop,
+            // marginTop: marginTop,
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius
           }
@@ -104,6 +113,9 @@ export default function SearchModal({
         <TextDefault bold H4>
           {t('searchAddress')}
         </TextDefault>
+        <Image 
+        src='../'
+        />
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <GooglePlacesAutocomplete
             placeholder={t('search')}

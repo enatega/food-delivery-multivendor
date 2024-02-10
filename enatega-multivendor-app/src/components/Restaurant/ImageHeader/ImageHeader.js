@@ -8,7 +8,8 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
-import Animated from 'react-native-reanimated'
+import Animated, { useDerivedValue, useAnimatedStyle, interpolate } from 'react-native-reanimated'
+import { Animated as AnimatedV1 } from 'react-native'
 import {
   BorderlessButton,
   FlatList,
@@ -64,7 +65,24 @@ function ImageTextCenterHeader(props, ref) {
     }
   }
 
-  console.log("🚀 ~ props:", props)
+  console.log("🚀 ~ props:", props.headerHeight)
+
+  // const derivedHeight = useDerivedValue(() => {
+  //   return props.headerHeight - TOP_BAR_HEIGHT;
+  // });
+
+  // const derivedHeightStyle = useAnimatedStyle(() => {
+  //   return {
+  //     height: derivedHeight.value
+  //   }
+  // });
+
+  // const animatedStyle = useAnimatedStyle(() => ({
+  //   height: interpolate(props.headerHeight.value,
+  //     [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+  //     [props.headerHeight.value - TOP_BAR_HEIGHT, HEADER_MIN_HEIGHT]
+  //   ),
+  // }));
 
   const emptyView = () => {
     return (
@@ -79,20 +97,42 @@ function ImageTextCenterHeader(props, ref) {
       </View>
     )
   }
+
+  // const animatedStyle = useAnimatedStyle(() => {
+  //   return {
+  //     // height: props.headerHeight.value - TOP_BAR_HEIGHT,
+  //     height: props.headerHeight,
+  //   };
+  // });
+
   return (
     <Animated.View
       style={[
         styles(currentTheme).mainContainer,
+        props.headerHeight,
         {
-          height: props.height,
-          backgroundColor: props.loading ? 'transparent' : 'null'
+          // height: props.headerheight,
+          // backgroundColor: props.loading ? 'transparent' : 'null'
+          backgroundColor: 'blue'
         }
       ]}>
       <Animated.View
-        style={{
-          height: props.height - TOP_BAR_HEIGHT,
-          backgroundColor: 'white'
-        }}>
+        // style={{ height: props.barHeight - TOP_BAR_HEIGHT, backgroundColor: 'red'}}
+        style={[
+          // animatedStyle,
+          // headerHeightStyle,
+          // derivedHeightStyle,
+          // derivedHeight.value,
+          // derivedHeightStyle,
+          // props.headerHeight,
+          AnimatedV1.subtract(props.headerHeight.value, TOP_BAR_HEIGHT),
+          {
+            // height: headHeight,
+            // height: AnimatedV1.subtract(props.headerHeight, TOP_BAR_HEIGHT),
+            backgroundColor: 'red',
+          }
+        ]}
+        >
         <Animated.Image
           resizeMode="cover"
           source={{ uri: aboutObject.restaurantImage }}
@@ -100,6 +140,7 @@ function ImageTextCenterHeader(props, ref) {
             styles().flex,
             props.opacity,
             {
+              // opacity: props.opacity,
               borderBottomLeftRadius: scale(20),
               borderBottomRightRadius: scale(20)
             }
@@ -129,6 +170,19 @@ function ImageTextCenterHeader(props, ref) {
                   }}
                 />
               </AnimatedBorderless>
+              <Animated.Text
+                numberOfLines={1}
+                style={[
+                  styles(currentTheme).headerTitle,
+                  props.opacity,
+                  props.headerTextFlex
+                  // {
+                  //   // opacity: props.opacity,
+                  //   marginBottom: props.headerTextFlex
+                  // }
+                ]}>
+                {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
+              </Animated.Text>
               {!props.loading && (
                 <>
                   <AnimatedBorderless
@@ -167,7 +221,7 @@ function ImageTextCenterHeader(props, ref) {
             </View>
           </View>
           <Animated.View
-            style={[styles().fixedView]}>
+            style={[styles().fixedView, props.opacity]}>
             <View style={styles().fixedText}>
               <TextDefault
                 H4
