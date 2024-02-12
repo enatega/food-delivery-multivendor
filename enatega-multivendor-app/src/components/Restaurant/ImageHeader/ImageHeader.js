@@ -8,8 +8,11 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
-import Animated, { useDerivedValue, useAnimatedStyle, interpolate } from 'react-native-reanimated'
-import { Animated as AnimatedV1 } from 'react-native'
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle
+} from 'react-native-reanimated'
 import {
   BorderlessButton,
   FlatList,
@@ -25,8 +28,14 @@ const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
+const AnimatedText = Animated.createAnimatedComponent(Text)
+
+const HEADER_MAX_HEIGHT = height * 0.3
+const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
 function ImageTextCenterHeader(props, ref) {
+  const { translationY } = props
   const flatListRef = ref
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -51,10 +60,10 @@ function ImageTextCenterHeader(props, ref) {
       const hours = date.getHours()
       const minutes = date.getMinutes()
       const todaysTimings = props.restaurant.openingTimes.find(
-        o => o.day === DAYS[day]
+        (o) => o.day === DAYS[day]
       )
       const times = todaysTimings.times.filter(
-        t =>
+        (t) =>
           hours >= Number(t.startTime[0]) &&
           minutes >= Number(t.startTime[1]) &&
           hours <= Number(t.endTime[0]) &&
@@ -65,24 +74,77 @@ function ImageTextCenterHeader(props, ref) {
     }
   }
 
-  console.log("🚀 ~ props:", props.headerHeight)
+  const minutesOpacity = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translationY.value,
+        [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2],
+        [0, 0.8, 1],
+        Extrapolation.CLAMP
+      )
+    }
+  })
 
-  // const derivedHeight = useDerivedValue(() => {
-  //   return props.headerHeight - TOP_BAR_HEIGHT;
-  // });
+  const headerHeight = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        translationY.value,
+        [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+        [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+        Extrapolation.CLAMP
+      )
+    }
+  })
 
-  // const derivedHeightStyle = useAnimatedStyle(() => {
-  //   return {
-  //     height: derivedHeight.value
-  //   }
-  // });
+  const headerHeightWithoutTopbar = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        translationY.value,
+        [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+        [
+          HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT,
+          HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
+        ],
+        Extrapolation.CLAMP
+      )
+    }
+  })
 
-  // const animatedStyle = useAnimatedStyle(() => ({
-  //   height: interpolate(props.headerHeight.value,
-  //     [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-  //     [props.headerHeight.value - TOP_BAR_HEIGHT, HEADER_MIN_HEIGHT]
-  //   ),
-  // }));
+  const opacity = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translationY.value,
+        [0, height * 0.05, SCROLL_RANGE / 2],
+        [1, 0.8, 0],
+        Extrapolation.CLAMP
+      )
+    }
+  })
+
+  const headerTextFlex = useAnimatedStyle(() => {
+    const concat = (...args) => args.join('')
+    return {
+      marginBottom: concat(
+        interpolate(
+          translationY.value,
+          [0, 80, SCROLL_RANGE],
+          [-10, -10, 0],
+          Extrapolation.CLAMP
+        ),
+        '%'
+      )
+    }
+  })
+
+  const iconBackColor = currentTheme.white
+
+  const iconRadius = scale(15)
+
+  const iconSize = scale(20)
+
+  const iconTouchHeight = scale(30)
+
+  const iconTouchWidth = scale(30)
 
   const emptyView = () => {
     return (
@@ -92,55 +154,38 @@ function ImageTextCenterHeader(props, ref) {
           height: verticalScale(40),
           justifyContent: 'center',
           alignItems: 'center'
-        }}>
+        }}
+      >
         <TextError text={t('noItemsExists')} />
       </View>
     )
   }
 
-  // const animatedStyle = useAnimatedStyle(() => {
-  //   return {
-  //     // height: props.headerHeight.value - TOP_BAR_HEIGHT,
-  //     height: props.headerHeight,
-  //   };
-  // });
-
   return (
     <Animated.View
       style={[
         styles(currentTheme).mainContainer,
-        props.headerHeight,
+        headerHeight,
         {
-          // height: props.headerheight,
-          // backgroundColor: props.loading ? 'transparent' : 'null'
-          backgroundColor: 'blue'
+          backgroundColor: props.loading ? 'transparent' : 'null'
         }
-      ]}>
+      ]}
+    >
       <Animated.View
-        // style={{ height: props.barHeight - TOP_BAR_HEIGHT, backgroundColor: 'red'}}
         style={[
-          // animatedStyle,
-          // headerHeightStyle,
-          // derivedHeightStyle,
-          // derivedHeight.value,
-          // derivedHeightStyle,
-          // props.headerHeight,
-          AnimatedV1.subtract(props.headerHeight.value, TOP_BAR_HEIGHT),
+          headerHeightWithoutTopbar,
           {
-            // height: headHeight,
-            // height: AnimatedV1.subtract(props.headerHeight, TOP_BAR_HEIGHT),
-            backgroundColor: 'red',
+            backgroundColor: 'white'
           }
         ]}
-        >
+      >
         <Animated.Image
-          resizeMode="cover"
+          resizeMode='cover'
           source={{ uri: aboutObject.restaurantImage }}
           style={[
             styles().flex,
-            props.opacity,
+            opacity,
             {
-              // opacity: props.opacity,
               borderBottomLeftRadius: scale(20),
               borderBottomRightRadius: scale(20)
             }
@@ -155,34 +200,32 @@ function ImageTextCenterHeader(props, ref) {
                 style={[
                   styles().touchArea,
                   {
-                    backgroundColor: props.iconBackColor,
-                    borderRadius: props.iconRadius,
-                    height: props.iconTouchHeight,
+                    backgroundColor: iconBackColor,
+                    borderRadius: iconRadius,
+                    height: iconTouchHeight,
                     width: scale(60)
                   }
                 ]}
-                onPress={() => navigation.goBack()}>
+                onPress={() => navigation.goBack()}
+              >
                 <AnimatedIon
-                  name="arrow-back"
+                  name='arrow-back'
                   style={{
                     color: props.black,
-                    fontSize: props.iconSize
+                    fontSize: iconSize
                   }}
                 />
               </AnimatedBorderless>
-              <Animated.Text
+              <AnimatedText
                 numberOfLines={1}
                 style={[
                   styles(currentTheme).headerTitle,
-                  props.opacity,
-                  props.headerTextFlex
-                  // {
-                  //   // opacity: props.opacity,
-                  //   marginBottom: props.headerTextFlex
-                  // }
-                ]}>
+                  minutesOpacity,
+                  headerTextFlex
+                ]}
+              >
                 {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
-              </Animated.Text>
+              </AnimatedText>
               {!props.loading && (
                 <>
                   <AnimatedBorderless
@@ -191,10 +234,10 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles().touchArea,
                       {
-                        backgroundColor: props.iconBackColor,
-                        borderRadius: props.iconRadius,
-                        height: props.iconTouchHeight,
-                        width: props.iconTouchWidth
+                        backgroundColor: iconBackColor,
+                        borderRadius: iconRadius,
+                        height: iconTouchHeight,
+                        width: iconTouchWidth
                       }
                     ]}
                     onPress={() => {
@@ -205,13 +248,14 @@ function ImageTextCenterHeader(props, ref) {
                         },
                         tab: true
                       })
-                    }}>
+                    }}
+                  >
                     {
                       <AnimatedIon
-                        name="information-circle-outline"
+                        name='information-circle-outline'
                         style={{
                           color: props.black,
-                          fontSize: props.iconSize
+                          fontSize: iconSize
                         }}
                       />
                     }
@@ -220,8 +264,7 @@ function ImageTextCenterHeader(props, ref) {
               )}
             </View>
           </View>
-          <Animated.View
-            style={[styles().fixedView, props.opacity]}>
+          <Animated.View style={[styles().fixedView, opacity]}>
             <View style={styles().fixedText}>
               <TextDefault
                 H4
@@ -229,7 +272,8 @@ function ImageTextCenterHeader(props, ref) {
                 Center
                 textColor={currentTheme.fontWhite}
                 numberOfLines={1}
-                ellipsizeMode="tail">
+                ellipsizeMode='tail'
+              >
                 {aboutObject.restaurantName.length > 12
                   ? `${aboutObject.restaurantName.slice(0, 15)}...`
                   : aboutObject.restaurantName}
@@ -239,8 +283,9 @@ function ImageTextCenterHeader(props, ref) {
                 <View style={styles(currentTheme).deliveryBox}>
                   <TextDefault
                     style={[alignment.PRxSmall, alignment.PLxSmall]}
-                    textColor="white"
-                    bold>
+                    textColor='white'
+                    bold
+                  >
                     {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
                   </TextDefault>
                 </View>
@@ -254,16 +299,18 @@ function ImageTextCenterHeader(props, ref) {
                       restaurantObject: { ...aboutObject, isOpen: null },
                       tab: false
                     })
-                  }}>
+                  }}
+                >
                   <MaterialIcons
-                    name="star"
+                    name='star'
                     size={scale(15)}
                     color={currentTheme.white}
                   />
                   <TextDefault
                     style={[alignment.PRxSmall, alignment.PLxSmall]}
-                    textColor="white"
-                    bold>
+                    textColor='white'
+                    bold
+                  >
                     {aboutObject.average} ({aboutObject.total})
                   </TextDefault>
                 </TouchableOpacity>
@@ -272,10 +319,11 @@ function ImageTextCenterHeader(props, ref) {
           </Animated.View>
         </Animated.View>
       </Animated.View>
+
       {!props.loading && (
         <FlatList
           ref={flatListRef}
-          style={styles(currentTheme).flatListStyle}
+          style={[styles(currentTheme).flatListStyle]}
           contentContainerStyle={{ flexGrow: 1 }}
           data={props.loading ? [] : props.topaBarData}
           horizontal={true}
@@ -289,12 +337,14 @@ function ImageTextCenterHeader(props, ref) {
                 props.selectedLabel === index
                   ? styles(currentTheme).activeHeader
                   : null
-              }>
+              }
+            >
               <RectButton
                 activeOpacity={0.05}
                 rippleColor={currentTheme.rippleColor}
                 onPress={() => props.changeIndex(index)}
-                style={styles(currentTheme).headerContainer}>
+                style={styles(currentTheme).headerContainer}
+              >
                 <View style={styles().navbarTextContainer}>
                   <TextDefault
                     style={
@@ -309,7 +359,8 @@ function ImageTextCenterHeader(props, ref) {
                     }
                     center
                     uppercase
-                    small>
+                    small
+                  >
                     {item.title}
                   </TextDefault>
                 </View>

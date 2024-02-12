@@ -22,7 +22,7 @@ import Animated, {
   withTiming,
   withRepeat,
   useAnimatedStyle,
-  useAnimatedScrollHandler,
+  useAnimatedScrollHandler
 } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
@@ -57,7 +57,7 @@ const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
 
-const config = to => ({
+const config = (to) => ({
   duration: 250,
   toValue: to,
   easing: EasingNode.inOut(EasingNode.ease)
@@ -75,7 +75,7 @@ function Restaurant(props) {
   const inset = useSafeAreaInsets()
   const propsData = route.params
   const animation = useSharedValue(0)
-  const translationY = useSharedValue(0);
+  const translationY = useSharedValue(0)
   const circle = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -95,7 +95,6 @@ function Restaurant(props) {
   const { data, refetch, networkStatus, loading, error } = useRestaurant(
     propsData._id
   )
-
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -138,12 +137,9 @@ function Restaurant(props) {
     }
   }, [data])
 
-
-
   const scrollHandler = useAnimatedScrollHandler((event) => {
-    translationY.value = event.contentOffset.y;
-  });
-
+    translationY.value = event.contentOffset.y
+  })
 
   const isOpen = () => {
     if (data) {
@@ -153,11 +149,11 @@ function Restaurant(props) {
       const hours = date.getHours()
       const minutes = date.getMinutes()
       const todaysTimings = data?.restaurant?.openingTimes?.find(
-        o => o.day === DAYS[day]
+        (o) => o.day === DAYS[day]
       )
       if (todaysTimings === undefined) return false
       const times = todaysTimings.times.filter(
-        t =>
+        (t) =>
           hours >= Number(t.startTime[0]) &&
           minutes >= Number(t.startTime[1]) &&
           hours <= Number(t.endTime[0]) &&
@@ -169,7 +165,7 @@ function Restaurant(props) {
       return false
     }
   }
-  const onPressItem = async food => {
+  const onPressItem = async (food) => {
     if (!data?.restaurant.isAvailable || !isOpen()) {
       Alert.alert(
         '',
@@ -261,7 +257,8 @@ function Restaurant(props) {
               textColor={currentTheme.fontWhite}
               bold
               small
-              center>
+              center
+            >
               {cartValue.quantity}
             </TextDefault>
           </>
@@ -271,23 +268,18 @@ function Restaurant(props) {
     return null
   }
 
-  const scaleValue = useSharedValue(1);
+  const scaleValue = useSharedValue(1)
 
   const scaleStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: scaleValue.value }],
-  }));
-
+    transform: [{ scale: scaleValue.value }]
+  }))
 
   // button animation
   function animate() {
-    scaleValue.value = withRepeat(
-      withTiming(1.5, { duration: 250 }),
-      2,
-      true
-    );
+    scaleValue.value = withRepeat(withTiming(1.5, { duration: 250 }), 2, true)
   }
 
-  const scrollToSection = index => {
+  const scrollToSection = (index) => {
     if (scrollRef.current != null) {
       scrollRef.current.scrollToLocation({
         animated: true,
@@ -327,12 +319,13 @@ function Restaurant(props) {
       scrollToNavbar(viewableItems[0].section.index)
     }
   }
-  const onScrollEndSnapToEdge = event => {
-    event.persist();
+  const onScrollEndSnapToEdge = (event) => {
+    event.persist()
     const y = event.nativeEvent.contentOffset.y
+
     if (y > 0 && y < HALF_HEADER_SCROLL / 2) {
       if (scrollRef.current) {
-        withTiming(animation, config(0)).start(({ finished }) => {
+        withTiming(translationY.value, config(0), (finished) => {
           if (finished) {
             scrollRef.current.scrollToLocation({
               animated: false,
@@ -346,7 +339,7 @@ function Restaurant(props) {
       }
     } else if (HALF_HEADER_SCROLL / 2 <= y && y < HALF_HEADER_SCROLL) {
       if (scrollRef.current) {
-        withTiming(animation, config(SCROLL_RANGE)).start(({ finished }) => {
+        withTiming(translationY.value, config(SCROLL_RANGE), (finished) => {
           if (finished) {
             scrollRef.current.scrollToLocation({
               animated: false,
@@ -362,113 +355,29 @@ function Restaurant(props) {
     buttonClickedSetter(false)
   }
 
-  // Important
-
-  const circleSize = interpolate(circle.value,
-    [0, 0.5, 1], [scale(18), scale(24), scale(18)],
+  const circleSize = interpolate(
+    circle.value,
+    [0, 0.5, 1],
+    [scale(18), scale(24), scale(18)],
     Extrapolation.CLAMP
   )
-  const radiusSize = interpolate(circle.value,
-    [0, 0.5, 1], [scale(9), scale(12), scale(9)],
+  const radiusSize = interpolate(
+    circle.value,
+    [0, 0.5, 1],
+    [scale(9), scale(12), scale(9)],
     Extrapolation.CLAMP
   )
-  const fontChange = interpolate(circle.value,
-    [0, 0.5, 1], [scale(8), scale(12), scale(8)],
-    // [0, 0.5, 1], [8, 12, 8],
-    Extrapolation.CLAMP
-  )
-
-  // const headerHeight = interpolate(translationY.value,
-  //   [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-  //   [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],)
-
-  // const opacity = interpolate(animation.value,
-  //   [0, height * 0.05, SCROLL_RANGE / 2],
-  //   [1, 0.8, 0],
-  //   Extrapolation.CLAMP
-  // )
-
-  const headerHeight = useAnimatedStyle(() => {
-    return {
-      height:
-        interpolate(translationY.value,
-          [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-          [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],),
-    };
-  });
-
-  // const headerHeight = useAnimatedStyle(() => ({
-  //   height: animation.value({
-  //     inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-  //     outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-  //     extrapolate: 'clamp',
-  //   }),
-  // }));
-
-  // const barHeight = useAnimatedStyle(() => {
-  //   return {
-  //     height:
-  //       interpolate(translationY.value,
-  //         [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-  //         [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],),
-  //   };
-  // });
-
-  const opacityStyles = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(translationY.value, [0, height * 0.05, SCROLL_RANGE / 2], [1, 0.8, 0], Extrapolation.CLAMP)
-    };
-  });
-
-  // const opacityStyles = useAnimatedStyle(() => {
-  //   return {
-  //     opacity: opacity
-  //   }
-  // })
 
   const fontStyles = useAnimatedStyle(() => {
     return {
-      fontSize: fontChange
-    }
-  });
-
-  const headerTextFlex = useAnimatedStyle(() => {
-    const concat = (...args) => args.join('')
-    return {
-      marginBottom: concat(
-        interpolate(translationY.value,
-          [0, 80, SCROLL_RANGE],
-          [-10, -10, 0],
-          Extrapolation.CLAMP
-        ),
-        '%'
+      fontSize: interpolate(
+        circle.value,
+        [0, 0.5, 1],
+        [8, 12, 8],
+        Extrapolation.CLAMP
       )
     }
-  });
-
-
-
-  const iconColor = currentTheme.iconColorPink
-
-  const iconBackColor = currentTheme.white
-
-  const iconRadius = scale(15)
-
-  const iconSize = scale(20)
-
-  const iconTouchHeight = scale(30)
-
-  const iconTouchWidth = scale(30)
-
-  // const headerTextFlex = concat(
-  //   interpolate(animation.value,
-  //     [0, 80, SCROLL_RANGE],
-  //     [-10, -10, 0],
-  //     Extrapolation.CLAMP
-  //   ),
-  //   '%'
-  // )
-
+  })
 
   if (loading) {
     return (
@@ -481,23 +390,15 @@ function Restaurant(props) {
             paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
             backgroundColor: currentTheme.headerMenuBackground
           }
-        ]}>
+        ]}
+      >
         <ImageHeader
-          iconColor={iconColor}
-          iconSize={iconSize}
-          headerHeight={headerHeight}
-          // barHeight={barHeight}
-          opacity={opacityStyles}
-          iconBackColor={iconBackColor}
-          iconRadius={iconRadius}
-          iconTouchWidth={iconTouchWidth}
-          iconTouchHeight={iconTouchHeight}
-          headerTextFlex={headerTextFlex}
           restaurantName={propsData.name}
           restaurantImage={propsData.image}
           restaurant={null}
           topaBarData={[]}
           loading={loading}
+          translationY={translationY}
         />
 
         <View
@@ -507,11 +408,12 @@ function Restaurant(props) {
             {
               paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
             }
-          ]}>
+          ]}
+        >
           {Array.from(Array(10), (_, i) => (
             <Placeholder
               key={i}
-              Animation={props => (
+              Animation={(props) => (
                 <Fade
                   {...props}
                   style={{ backgroundColor: currentTheme.fontSecondColor }}
@@ -521,7 +423,8 @@ function Restaurant(props) {
               Left={PlaceholderMedia}
               style={{
                 padding: 12
-              }}>
+              }}
+            >
               <PlaceholderLine width={80} />
               <PlaceholderLine width={80} />
             </Placeholder>
@@ -532,7 +435,7 @@ function Restaurant(props) {
   }
   if (error) return <TextError text={JSON.stringify(error)} />
   const restaurant = data && data.restaurant
-  const allDeals = restaurant.categories.filter(cat => cat.foods.length)
+  const allDeals = restaurant.categories.filter((cat) => cat.foods.length)
   const deals = allDeals.map((c, index) => ({
     ...c,
     data: c.foods,
@@ -545,23 +448,15 @@ function Restaurant(props) {
         <Animated.View style={styles(currentTheme).flex}>
           <ImageHeader
             ref={flatListRef}
-            iconColor={iconColor}
-            iconSize={iconSize}
-            headerHeight={headerHeight}
-            // barHeight={barHeight}
-            opacity={opacityStyles}
-            iconBackColor={iconBackColor}
-            iconRadius={iconRadius}
-            iconTouchWidth={iconTouchWidth}
-            iconTouchHeight={iconTouchHeight}
-            headerTextFlex={headerTextFlex}
             restaurantName={propsData.name}
             restaurantImage={propsData.image}
             restaurant={data.restaurant}
             topaBarData={deals}
             changeIndex={changeIndex}
             selectedLabel={selectedLabel}
+            translationY={translationY}
           />
+
           <AnimatedSectionList
             ref={scrollRef}
             sections={deals}
@@ -581,28 +476,15 @@ function Restaurant(props) {
             refreshing={networkStatus === 4}
             onRefresh={() => networkStatus === 7 && refetch()}
             onViewableItemsChanged={onViewableItemsChanged}
-            // onMomentumScrollEnd={event => {
-            //   onScrollEndSnapToEdge(event)
-            // }}
-            onScroll={
-              scrollHandler
-            }
-            // Important
-            // onScroll={Animated.event([
-            //   {
-            //     nativeEvent: {
-            //       contentOffset: {
-            //         y: animation.value
-            //       }
-            //     }
-            //   }
-            // ])}
-            // onScroll={scrollHandler}
+            onMomentumScrollEnd={(event) => {
+              onScrollEndSnapToEdge(event)
+            }}
+            onScroll={scrollHandler}
             keyExtractor={(item, index) => item + index}
             ItemSeparatorComponent={() => (
               <View style={styles(currentTheme).listSeperator} />
             )}
-            SectionSeparatorComponent={props => {
+            SectionSeparatorComponent={(props) => {
               if (!props.leadingItem) return null
               return <View style={styles(currentTheme).sectionSeparator} />
             }}
@@ -613,7 +495,8 @@ function Restaurant(props) {
                   textColor={currentTheme.fontMainColor}
                   bolder
                   B700
-                  H4>
+                  H4
+                >
                   {title}
                 </TextDefault>
               )
@@ -628,7 +511,8 @@ function Restaurant(props) {
                     restaurant: restaurant._id,
                     restaurantName: restaurant.name
                   })
-                }>
+                }
+              >
                 <View style={styles(currentTheme).deal}>
                   <View style={styles(currentTheme).flex}>
                     <View style={styles(currentTheme).dealDescription}>
@@ -636,7 +520,8 @@ function Restaurant(props) {
                         textColor={currentTheme.fontMainColor}
                         style={styles(currentTheme).headerText}
                         numberOfLines={1}
-                        bolder>
+                        bolder
+                      >
                         {item.title}
                       </TextDefault>
                       <TextDefault style={styles(currentTheme).priceText} small>
@@ -648,7 +533,8 @@ function Restaurant(props) {
                           textColor={currentTheme.fontMainColor}
                           style={styles(currentTheme).priceText}
                           bolder
-                          small>
+                          small
+                        >
                           {configuration.currencySymbol}{' '}
                           {parseFloat(item.variations[0].price).toFixed(2)}
                         </TextDefault>
@@ -658,7 +544,8 @@ function Restaurant(props) {
                             textColor={currentTheme.fontSecondColor}
                             style={styles().priceText}
                             small
-                            lineOver>
+                            lineOver
+                          >
                             {configuration.currencySymbol}{' '}
                             {(
                               item.variations[0].price +
@@ -689,7 +576,8 @@ function Restaurant(props) {
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles(currentTheme).button}
-                onPress={() => navigation.navigate('Cart')}>
+                onPress={() => navigation.navigate('Cart')}
+              >
                 <View style={styles().buttontLeft}>
                   <Animated.View
                     style={[
@@ -702,9 +590,10 @@ function Restaurant(props) {
                       scaleStyles
                     ]}
                   >
-                    <Animated.Text style={[styles(currentTheme).buttonTextLeft, fontStyles]}>
+                    <Animated.Text
+                      style={[styles(currentTheme).buttonTextLeft, fontStyles]}
+                    >
                       {cartCount}
-
                     </Animated.Text>
                   </Animated.View>
                 </View>
@@ -714,7 +603,8 @@ function Restaurant(props) {
                   uppercase
                   center
                   bolder
-                  small>
+                  small
+                >
                   {t('viewCart')}
                 </TextDefault>
                 <View style={styles().buttonTextRight} />
