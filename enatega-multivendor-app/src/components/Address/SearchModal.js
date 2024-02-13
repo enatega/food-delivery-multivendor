@@ -4,8 +4,7 @@ import {
   View,
   TouchableOpacity,
   Keyboard,
-  Dimensions,
-  Image
+  Dimensions
 } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import Animated, {
@@ -13,7 +12,8 @@ import Animated, {
   Extrapolation,
   interpolate,
   useSharedValue,
-  withTiming
+  withTiming,
+  useAnimatedStyle
 } from 'react-native-reanimated'
 import useEnvVars from '../../../environment'
 import CloseIcon from '../../assets/SVG/imageComponents/CloseIcon'
@@ -40,17 +40,36 @@ export default function SearchModal({
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  const marginTop = interpolate(animation.value, 
-    [0, 1],
-    [height * 0.4, height * 0.06],
-    Extrapolation.CLAMP
-  )
+  const marginTop = useAnimatedStyle(() => {
+    return {
+      marginTop: interpolate(
+        animation.value,
+        [0, 1],
+        [height * 0.4, height * 0.06],
+        Extrapolation.CLAMP
+      )
+    }
+  })
 
-  const radius = interpolate(animation.value, 
-    [0, 1],
-    [scale(30), 0],
-    Extrapolation.CLAMP
-  )
+  const borderTopLeftRadius = useAnimatedStyle(() => {
+    return {
+      borderTopLeftRadius: interpolate(animation.value,
+        [0, 1],
+        [30, 0],
+        Extrapolation.CLAMP
+      )
+    }
+  })
+
+  const borderTopRightRadius = useAnimatedStyle(() => {
+    return {
+      borderTopRightRadius: interpolate(animation.value,
+        [0, 1],
+        [30, 0],
+        Extrapolation.CLAMP
+      )
+    }
+  })
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', _keyboardDidShow)
@@ -72,17 +91,11 @@ export default function SearchModal({
     animate(true)
   }
 
-  // function animate(hide = false) {
-  //   timing(animation, {
-  //     toValue: hide ? 0 : 1,
-  //     duration: 300,
-  //     easing: EasingNode.inOut(EasingNode.ease)
-  //   }).start()
-  // }
-  
   const animate = (hide = false) => {
     withTiming(
-      animation.value = hide ? 0 : 1
+      animation.value = hide ? 0 : 1,
+      { duration: 300 },
+      { easing: EasingNode.inOut(EasingNode.ease) }
     )
   };
 
@@ -100,12 +113,7 @@ export default function SearchModal({
       onRequestClose={onClose}>
       <Animated.View
         style={[
-          styles(currentTheme).modalContainer,
-          {
-            // marginTop: marginTop,
-            borderTopLeftRadius: radius,
-            borderTopRightRadius: radius
-          }
+          styles(currentTheme).modalContainer, marginTop, borderTopLeftRadius, borderTopRightRadius,
         ]}>
         <TouchableOpacity style={styles().modalTextBtn} onPress={close}>
           <CloseIcon />
@@ -113,9 +121,6 @@ export default function SearchModal({
         <TextDefault bold H4>
           {t('searchAddress')}
         </TextDefault>
-        <Image 
-        src='../'
-        />
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <GooglePlacesAutocomplete
             placeholder={t('search')}
@@ -146,7 +151,6 @@ export default function SearchModal({
               textInputContainer: {
                 borderWidth: 1,
                 borderColor: currentTheme.tagColor,
-                // backgroundColor:"blue",
                 ...alignment.PRxSmall,
                 padding: 5
               },

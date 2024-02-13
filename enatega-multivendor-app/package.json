@@ -43,7 +43,6 @@
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "7.6.1",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/drawer": "^6.3.0",
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.6",
