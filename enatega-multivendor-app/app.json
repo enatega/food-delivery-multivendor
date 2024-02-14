@@ -101,9 +101,6 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
         }
       ],
-      [
-        "@react-native-google-signin/google-signin"
-      ],
       "sentry-expo"
     ],
     "extra": {

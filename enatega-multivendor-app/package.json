@@ -55,7 +55,7 @@
     "expo-apple-authentication": "~6.3.0",
     "expo-application": "~5.8.3",
     "expo-auth-session": "^4.0.3",
-    "expo-constants": "~15.4.5",
+    "expo-constants": "~14.2.1",
     "expo-crypto": "^12.2.1",
     "expo-dev-client": "~3.3.8",
     "expo-device": "~5.9.3",
