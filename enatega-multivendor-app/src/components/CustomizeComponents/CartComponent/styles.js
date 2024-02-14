@@ -10,7 +10,6 @@ const styles = (props = null) =>
     mainContainer: {
       width: '100%',
       height: height * 0.09,
-      elevation: 1,
       borderTopRightRadius: scale(25),
       borderTopLeftRadius: scale(25),
       shadowColor: props !== null ? props.shadowColor : '#fefefe',

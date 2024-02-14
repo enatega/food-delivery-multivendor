@@ -18,7 +18,7 @@ import {
 import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
@@ -30,7 +30,7 @@ function ImageTextCenterHeader(props, ref) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',

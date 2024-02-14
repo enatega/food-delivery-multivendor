@@ -20,6 +20,7 @@ import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { TextField } from 'react-native-material-textfield'
+import { scale } from '../../utils/scaling'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -80,21 +81,26 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: food.restaurantName,
+      title: t('titleCustomize'),
+      headerTitleContainerStyle: {
+        marginTop: scale(10),
+        paddingLeft: scale(15),
+        paddingRight: scale(15),
+        borderRadius: scale(10),
+        height: scale(35),
+        backgroundColor: currentTheme.customizeOpacityBtn,
+        borderWidth: 1,
+        borderColor: currentTheme.white
+      },
+      headerTransparent: true,
       headerTitleAlign: 'center',
-      headerStyle: {
-        backgroundColor: currentTheme.white
-      },
-      headerTitleStyle: {
-        color: currentTheme.black
-      },
-      headerShadowVisible: false,
+
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
             <View style={styles(currentTheme).backBtnContainer}>
-              <MaterialIcons name="arrow-back" size={25} color="black" />
+              <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
           onPress={() => {
@@ -144,7 +150,7 @@ function ItemDetail(props) {
             },
             {
               text: 'OK',
-              onPress: async() => {
+              onPress: async () => {
                 await addToCart(quantity, true)
               }
             }
@@ -155,7 +161,7 @@ function ItemDetail(props) {
     }
   }
 
-  const addToCart = async(quantity, clearFlag) => {
+  const addToCart = async (quantity, clearFlag) => {
     const addons = selectedAddons.map(addon => ({
       ...addon,
       options: addon.options.map(({ _id }) => ({
@@ -166,35 +172,35 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find(cartItem => {
-        if (
-          cartItem._id === food._id &&
+          if (
+            cartItem._id === food._id &&
             cartItem.variation._id === selectedVariation._id
-        ) {
-          if (cartItem.addons.length === addons.length) {
-            if (addons.length === 0) return true
-            const addonsResult = addons.every(newAddon => {
-              const cartAddon = cartItem.addons.find(
-                ad => ad._id === newAddon._id
-              )
-
-              if (!cartAddon) return false
-              const optionsResult = newAddon.options.every(newOption => {
-                const cartOption = cartAddon.options.find(
-                  op => op._id === newOption._id
+          ) {
+            if (cartItem.addons.length === addons.length) {
+              if (addons.length === 0) return true
+              const addonsResult = addons.every(newAddon => {
+                const cartAddon = cartItem.addons.find(
+                  ad => ad._id === newAddon._id
                 )
 
-                if (!cartOption) return false
-                return true
+                if (!cartAddon) return false
+                const optionsResult = newAddon.options.every(newOption => {
+                  const cartOption = cartAddon.options.find(
+                    op => op._id === newOption._id
+                  )
+
+                  if (!cartOption) return false
+                  return true
+                })
+
+                return optionsResult
               })
 
-              return optionsResult
-            })
-
-            return addonsResult
+              return addonsResult
+            }
           }
-        }
-        return false
-      })
+          return false
+        })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -316,19 +322,20 @@ function ItemDetail(props) {
               <HeadingComponent title={food.title} price={calculatePrice()} />
 
               {food.variations.length > 1 && (
-                <View>
-                  <TitleComponent
-                    title={t('SelectVariation')}
-                    subTitle={t('SelectOne')}
-                    status={t('Required')}
-                  />
-                  <RadioComponent
-                    options={food.variations}
-                    selected={selectedVariation}
-                    onPress={onSelectVariation}
-                  />
-                </View>
-
+                <>
+                  <View>
+                    <TitleComponent
+                      title={t('SelectVariation')}
+                      subTitle={t('SelectOne')}
+                      status={t('Required')}
+                    />
+                    <RadioComponent
+                      options={food.variations}
+                      selected={selectedVariation}
+                      onPress={onSelectVariation}
+                    />
+                  </View>
+                </>
               )}
               {selectedVariation.addons.map(addon => (
                 <View key={addon._id}>
@@ -338,7 +345,7 @@ function ItemDetail(props) {
                     error={addon.error}
                     status={
                       addon.quantityMinimum === 0
-                        ? 'Optional'
+                        ? 'OPTIONAL'
                         : `${addon.quantityMinimum} REQUIRED`
                     }
                   />

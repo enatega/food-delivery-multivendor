@@ -27,7 +27,7 @@ function HeadingComponent(props) {
           <TextDefault
             textColor={currentTheme.fontMainColor}
             H4
-            bolder>{`${configuration.currencySymbol} ${props.price}`}</TextDefault>
+            bolder>{`${configuration.currencySymbol}${props.price}`}</TextDefault>
         </View>
       </View>
       <View style={styles.descContainer}>
