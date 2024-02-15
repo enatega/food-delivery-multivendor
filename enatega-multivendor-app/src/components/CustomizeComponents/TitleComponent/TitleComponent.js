@@ -20,7 +20,6 @@ function TitleComponent(props) {
           {props.title}
         </TextDefault>
         <TextDefault
-          style={{ marginVertical: 5 }}
           numberOfLines={1}
           textColor={currentTheme.fontSecondColor}
           small
