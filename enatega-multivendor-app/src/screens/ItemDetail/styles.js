@@ -35,8 +35,7 @@ const styles = (props = null) =>
     inputContainer: {
       width: '90%',
       alignSelf: 'center',
-      zIndex: scale(1),
-      height: scale(200)
+      zIndex: scale(1)
 
     },
     backBtnContainer: {

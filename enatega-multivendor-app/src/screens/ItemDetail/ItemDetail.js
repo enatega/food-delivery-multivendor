@@ -25,6 +25,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
+import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
 
 function ItemDetail(props) {
   const Analytics = analytics()
@@ -366,6 +367,8 @@ function ItemDetail(props) {
                 tintColor={currentTheme.themeBackground}
               />
             </View>
+            {/** frequently bought together */}
+            <FrequentlyBoughtTogether/>
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
