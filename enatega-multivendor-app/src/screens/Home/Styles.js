@@ -12,8 +12,7 @@ const styles = (props = null) =>
       flexDirection:'row',
       justifyContent:'center',
       gap:scale(20),
-      marginTop:scale(16),
-      marginBottom:scale(27)   
+      marginTop:scale(16),   
     },
     mainItem:{
       padding:12,
@@ -21,13 +20,17 @@ const styles = (props = null) =>
       borderColor: '#E5E7EB',
       width: windowWidth / 2 - 30,
       borderRadius:8,
-      justifyContent:'space-between'
+      justifyContent:'flex-start'
     },
     popularMenuImg:{
       width: '100%', 
-      aspectRatio: 18/8,
+      aspectRatio: 18/10,
     },
-    
+    ItemDescription:{
+      fontWeight:'400',
+      marginTop:scale(5),
+      marginBottom:scale(5)
+    },
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF',
     },
@@ -121,9 +124,6 @@ const styles = (props = null) =>
       height: verticalScale(40),
       justifyContent: 'center',
       alignItems: 'center'
-    },
-    topPicksSection:{
-      marginTop:scale(15)
-    },
+    }
   })
 export default styles

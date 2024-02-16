@@ -47,17 +47,16 @@ import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
+import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
-import { OrderAgain } from '../../components/Main/OrderAgain'
-import { TopPicks } from '../../components/Main/TopPicks'
 
-// const RESTAURANTS = gql`
-//   ${restaurantList}
-// `
+const RESTAURANTS = gql`
+  ${restaurantList}
+`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
@@ -76,17 +75,17 @@ function Main(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
 
-  // const { data, refetch, networkStatus, loading, error } = useQuery(
-  //   RESTAURANTS,
-  //   {
-  //     variables: {
-  //       longitude: location.longitude || null,
-  //       latitude: location.latitude || null,
-  //       ip: null
-  //     },
-  //     fetchPolicy: 'network-only'
-  //   }
-  // )
+  const { data, refetch, networkStatus, loading, error } = useQuery(
+    RESTAURANTS,
+    {
+      variables: {
+        longitude: location.longitude || null,
+        latitude: location.latitude || null,
+        ip: null
+      },
+      fetchPolicy: 'network-only'
+    }
+  )
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -309,11 +308,11 @@ function Main(props) {
     )
   }
 
-  // if (error) return <TextError text={t('networkError')} />
+  if (error) return <TextError text={t('networkError')} />
 
-  // if (loading || mutationLoading || loadingOrders) return loadingScreen()
+  if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  // const { restaurants, sections } = data.nearByRestaurants
+  const { restaurants, sections } = data.nearByRestaurants
 
   const searchRestaurants = searchText => {
     const data = []
@@ -352,12 +351,12 @@ function Main(props) {
   }
 
   // Flatten the array. That is important for data sequence
-  // const restaurantSections = sections.map(sec => ({
-  //   ...sec,
-  //   restaurants: sec.restaurants
-  //     .map(id => restaurants.filter(res => res._id === id))
-  //     .flat()
-  // }))
+  const restaurantSections = sections.map(sec => ({
+    ...sec,
+    restaurants: sec.restaurants
+      .map(id => restaurants.filter(res => res._id === id))
+      .flat()
+  }))
 
   return (
     <>
@@ -424,10 +423,32 @@ function Main(props) {
                     </View>
                   </View>
                   <View>
-                    <OrderAgain />
-                  </View>
-                  <View style={styles().topPicksSection}>
-                    <TopPicks />
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      style={{
+                        ...alignment.MLlarge,
+
+                        ...alignment.PTmedium
+                      }}
+                      bolder
+                      H4>
+                      Order it again
+                    </TextDefault>
+                    <TextDefault
+                      Normal
+                      textColor={currentTheme.secondaryText}
+                      style={[
+                        styles().ItemDescription,
+                        {
+                          ...alignment.MLlarge
+                        }
+                      ]}>
+                      Most ordered right now.
+                    </TextDefault>
+                    {search ? null : (
+                      <ActiveOrdersAndSections sections={restaurantSections} />
+                    )}
                   </View>
                 </ScrollView>
 

@@ -6,16 +6,17 @@ export const theme = {
     mustard: '#d8d8d874',
     borderColor: '#efefef',
     iconBackground: '#E5E7EB',
-
     backgroundColor: 'transparent',
     borderBottomColor: '#DAD6D6',
     primery: '#3C8F7C',
-    themeBackground: '#FAFAFA',
+    themeBackground: '#fff',
     menuBar: '#FFF',
     iconColor: '#333333',
+    iconColorDark:'#0F172A',
     iconColorPink: '#6FCF97',
     itemCardColor: '#FFF',
     headerColor: '#6FCF97',
+    newheaderColor: '#90E36D',
     tagColor: '#6FCF97',
     radioColor: '#6FCF97',
     //radioOuterColor: '#949393',
@@ -40,6 +41,9 @@ export const theme = {
     headerText: '#FFF',
     fontMainColor: '#212121',
     fontSecondColor: '#949393',
+    fontThirdColor: '#374151',
+    fontFourthColor: '#111827',
+    fontNewColor: '#6B7280',
     titleComponentBackground: 'rgba(39,111,191,0.1)',
     titleComponentText: 'rgba(39,111,191,0.8)',
     titleTextError: '#FFF',
@@ -64,7 +68,9 @@ export const theme = {
     hex: '#b0afbc',
     gray: 'grey',
     darkBgFont: '#000',
-    btnText: '#000'
+    btnText: '#000',
+    orange: '#FFA921',
+    newBorderColor: '#F3F4F6'
   },
   Dark: {
     black: '#000',
@@ -72,6 +78,7 @@ export const theme = {
     themeBackground: '#000',
     menuBar: '#000',
     iconColor: '#FCFCFC',
+    iconColorDark: '#FCFCFC',
     itemCardColor: '#000',
     tagColor: '#6FCF97',
     iconColorPink: '#6FCF97',
@@ -94,6 +101,10 @@ export const theme = {
     buttonTextPink: '#FFF',
     fontWhite: '#FFF',
     fontMainColor: '#F9F9F9',
+    fontSecondColor: '#F9F9F9',
+    fontThirdColor: '#F9F9F9',
+    fontFourthColor: '#F9F9F9',
+    fontNewColor: '#F9F9F9',
     fontSecondColor: '#7F7F7F',
     headerBackground: '#000',
     headerMenuBackground: '#000',
@@ -117,6 +128,8 @@ export const theme = {
     customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
     darkBgFont: '#FFF',
     headerColor: '#000',
-    btnText: '#FFF'
+    btnText: '#FFF',
+    orange: '#FFA921',
+    newBorderColor: '#F3F4F6'
   }
 }

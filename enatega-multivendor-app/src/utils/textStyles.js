@@ -52,5 +52,7 @@ export const textStyles = {
   },
   B700: {
     fontWeight: '700'
-  }
+  },
+
+
 }
