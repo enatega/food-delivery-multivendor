@@ -368,7 +368,7 @@ function ItemDetail(props) {
               />
             </View>
             {/** frequently bought together */}
-            <FrequentlyBoughtTogether/>
+            <FrequentlyBoughtTogether itemId={food._id} restaurantId={restaurant}/>
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
