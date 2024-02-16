@@ -23,7 +23,10 @@ export default function Row({ id, restaurant }) {
   const food = client.readFragment({ id: `Food:${id}`, fragment: FOOD })
   const onAdd = () => {
     navigation.push('ItemDetail', {
-      food,
+      food: {
+        ...food,
+        restaurantName: restaurant.name
+      },
       addons: restaurant.addons,
       options: restaurant.options,
       restaurant: restaurant._id
