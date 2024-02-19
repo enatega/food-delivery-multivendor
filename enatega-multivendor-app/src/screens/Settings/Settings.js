@@ -238,7 +238,6 @@ function Settings(props) {
       // Display loading indicator
       setLoadingLang(true)
       const languageInd = activeRadio
-      // if (Platform.OS === 'android') {
       await AsyncStorage.setItem(
         'enatega-language',
         languageTypes[languageInd].code
@@ -252,12 +251,10 @@ function Settings(props) {
       }
       i18next.changeLanguage(lang)
       modalVisibleSetter(false)
-      //Updates.reloadAsync()
-      // }
     } catch (error) {
       console.error('Error during language selection:', error)
     } finally {
-      setLoadingLang(false) // Hide loading indicator
+      setLoadingLang(false)
     }
   }
 
