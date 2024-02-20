@@ -9,12 +9,12 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import Animated from 'react-native-reanimated'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 
 function ImageHeader(props) {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
@@ -32,7 +32,7 @@ function ImageHeader(props) {
           activeOpacity={0.7}
           style={styles(props.iconBackColor).touchArea}
           onPress={() => navigation.goBack()}>
-          <AnimatedIon name="ios-arrow-back" size={25} />
+          <AnimatedIon name="arrow-back" size={25} />
         </TouchableOpacity>
         <View style={styles(currentTheme).deliveryBoxContainer}>
           <TextDefault

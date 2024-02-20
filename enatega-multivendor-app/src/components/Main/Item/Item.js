@@ -139,7 +139,7 @@ function Item(props) {
               </TextDefault>
               <View style={[styles().aboutRestaurant, { width: '23%' }]}>
                 <Ionicons
-                  name="md-star"
+                  name="star"
                   size={scale(15)}
                   color={currentTheme.primery}
                 />

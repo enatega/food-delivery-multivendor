@@ -11,8 +11,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const LOGIN = gql`
   ${login}
@@ -34,7 +33,7 @@ export const useLogin = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { setTokenAsync } = useContext(AuthContext)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [EmailEixst, { loading }] = useMutation(EMAIL, {
     onCompleted,
@@ -49,13 +48,12 @@ export const useLogin = () => {
   // Debounce the setEmail function
   const debouncedSetEmail = _.debounce(text => {
     setEmail(text.toLowerCase().trim())
-  }, 1) // Adjust the delay as needed (in milliseconds)
+  }, 300) // Adjust the delay as needed (in milliseconds)
 
   function validateCredentials() {
     let result = true
     setEmailError(null)
     setPasswordError(null)
-
     if (!email) {
       setEmailError(t('emailErr1'))
       result = false
@@ -84,7 +82,9 @@ export const useLogin = () => {
           setRegisteredEmail(true)
         } else {
           FlashMessage({
-            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t('continueWith')} ${emailExist.userType}`
+            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t(
+              'continueWith'
+            )} ${emailExist.userType}`
           })
           navigation.navigate({ name: 'Main', merge: true })
         }
