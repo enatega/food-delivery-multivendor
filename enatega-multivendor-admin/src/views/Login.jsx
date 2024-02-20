@@ -119,7 +119,7 @@ const Login = props => {
   }
   const [mutate] = useMutation(LOGIN, { onError, onCompleted })
 
-  const loginFunc = async () => {
+  const loginFunc = async() => {
     if (validate()) {
       mutate({ variables: { ...stateData } })
     }

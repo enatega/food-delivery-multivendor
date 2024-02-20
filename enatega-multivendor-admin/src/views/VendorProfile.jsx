@@ -112,7 +112,7 @@ const VendorProfile = () => {
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async () => {
+  const uploadImageToCloudinary = async() => {
     if (imgUrl === '') return imgUrl
 
     const apiUrl = CLOUDINARY_UPLOAD_URL

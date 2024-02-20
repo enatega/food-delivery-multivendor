@@ -185,7 +185,7 @@ function Section(props) {
             <Button
               className={globalClasses.button}
               disabled={loading}
-              onClick={async (e) => {
+              onClick={async(e) => {
                 e.preventDefault();
                 if (onSubmitValidation() && !loading) {
                   mutate({
