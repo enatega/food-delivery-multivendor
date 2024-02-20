@@ -1172,7 +1172,7 @@ function Cart(props) {
                           <View style={[styles().floatView, styles().pB10]}>
                             <TextDefault
                               numberOfLines={1}
-                              textColor={currentTheme.fontSecondColor}
+                              textColor={currentTheme.darkBgFont}
                               small
                               bold
                               style={{ width: '30%' }}>
@@ -1183,7 +1183,7 @@ function Cart(props) {
                               small
                               right
                               bold
-                              textColor={currentTheme.black}
+                              textColor={currentTheme.darkBgFont}
                               style={{ width: '70%' }}>
                               {`${selectedRestaurant.address}`}
                             </TextDefault>
