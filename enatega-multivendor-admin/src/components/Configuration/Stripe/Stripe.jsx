@@ -12,7 +12,7 @@ const SAVE_STRIPE_CONFIGURATION = gql`
 `
 
 function Stripe(props) {
-  const { t } = props;
+  const { t } = props
   const formRef = useRef()
   const publishableKey = props.publishableKey || ''
   const secretKey = props.secretKey || ''
@@ -36,29 +36,29 @@ function Stripe(props) {
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
-  const [successMessage, setSuccessMessage] = useState('');
-  const handleSuccess = (message) => {
-    setSuccessMessage(message);
-  };
+  const [successMessage, setSuccessMessage] = useState('')
+  const handleSuccess = message => {
+    setSuccessMessage(message)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
+      setSuccessMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [successMessage, setSuccessMessage]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const handleError = (error) => {
-    setErrorMessage('An error occurred while saving configuration.');
-    console.error('Mutation error:', error);
-  };
+    return () => clearTimeout(timeoutId)
+  }, [successMessage, setSuccessMessage])
+  const [errorMessage, setErrorMessage] = useState('')
+  const handleError = error => {
+    setErrorMessage('An error occurred while saving configuration.')
+    console.error('Mutation error:', error)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setErrorMessage('');
-    }, 3000);
+      setErrorMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [errorMessage, setErrorMessage]);
+    return () => clearTimeout(timeoutId)
+  }, [errorMessage, setErrorMessage])
 
   return (
     <Box container className={classes.container}>
@@ -73,7 +73,9 @@ function Stripe(props) {
       <Box className={classes.form}>
         <form ref={formRef}>
           <Box>
-            <Typography className={classes.labelText}>{t('PublishKey')}</Typography>
+            <Typography className={classes.labelText}>
+              {t('PublishKey')}
+            </Typography>
             <Input
               style={{ marginTop: -1 }}
               id="input-publishablekey"
@@ -94,13 +96,15 @@ function Stripe(props) {
                 publishError === false
                   ? globalClasses.inputError
                   : publishError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
           <Box>
-            <Typography className={classes.labelText}>{t('Secret Key')}</Typography>
+            <Typography className={classes.labelText}>
+              {t('Secret Key')}
+            </Typography>
             <Input
               style={{ marginTop: -1 }}
               id="input-secretkey"
@@ -120,8 +124,8 @@ function Stripe(props) {
                 secretError === false
                   ? globalClasses.inputError
                   : secretError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
@@ -140,12 +144,12 @@ function Stripe(props) {
                         secretKey: formRef.current['input-secretkey'].value
                       }
                     },
-                    onCompleted: (data) => {
-                      handleSuccess('Configuration saved successfully!');
+                    onCompleted: data => {
+                      handleSuccess('Configuration saved successfully!')
                     },
-                    onError: (error) => {
-                      handleError(error);
-                    },
+                    onError: error => {
+                      handleError(error)
+                    }
                   })
                 }
               }}>
@@ -155,19 +159,17 @@ function Stripe(props) {
           <Box mt={2}>
             {successMessage && (
               <Alert
-                  className={globalClasses.alertSuccess}
-                  variant="filled"
-                  severity="success"
-                >
-                  {successMessage}
-                </Alert>
+                className={globalClasses.alertSuccess}
+                variant="filled"
+                severity="success">
+                {successMessage}
+              </Alert>
             )}
             {errorMessage && (
               <Alert
                 className={globalClasses.alertError}
                 variant="filled"
-                severity="error"
-              >
+                severity="error">
                 {errorMessage}
               </Alert>
             )}

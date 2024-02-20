@@ -5,16 +5,25 @@ import { validateFunc } from '../../../constraints/constraints'
 import { saveEmailConfiguration } from '../../../apollo'
 import useStyles from '../styles'
 import useGlobalStyles from '../../../utils/globalStyles'
-import { Box, Switch, Typography, Input, Button, Grid, Alert, Checkbox } from '@mui/material'
-import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import {
+  Box,
+  Switch,
+  Typography,
+  Input,
+  Button,
+  Grid,
+  Alert,
+  Checkbox
+} from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 const SAVE_EMAIL_CONFIGURATION = gql`
   ${saveEmailConfiguration}
 `
 
 function Email(props) {
-  const { t } = props;
+  const { t } = props
   const formRef = useRef()
   const email = props.email || ''
   const password = props.password || ''
@@ -23,7 +32,7 @@ function Email(props) {
   const [passwordError, passwordErrorSetter] = useState(null)
   const [emailNameError, emailNameErrorSetter] = useState(null)
   const [enableEmail, setEnabaleEmail] = useState(!!props.enabled)
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   //const [isEndAdornmentEnabled, setIsEndAdornmentEnabled] = useState(false);
   const [mutate, { loading }] = useMutation(SAVE_EMAIL_CONFIGURATION)
 
@@ -53,38 +62,36 @@ function Email(props) {
   }
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
-  const [successMessage, setSuccessMessage] = useState('');
-  const handleSuccess = (message) => {
-    setSuccessMessage(message);
-  };
+  const [successMessage, setSuccessMessage] = useState('')
+  const handleSuccess = message => {
+    setSuccessMessage(message)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
+      setSuccessMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [successMessage, setSuccessMessage]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const handleError = (error) => {
-    setErrorMessage('An error occurred while saving configuration.');
-    console.error('Mutation error:', error);
-  };
+    return () => clearTimeout(timeoutId)
+  }, [successMessage, setSuccessMessage])
+  const [errorMessage, setErrorMessage] = useState('')
+  const handleError = error => {
+    setErrorMessage('An error occurred while saving configuration.')
+    console.error('Mutation error:', error)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setErrorMessage('');
-    }, 3000);
+      setErrorMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [errorMessage, setErrorMessage]);
+    return () => clearTimeout(timeoutId)
+  }, [errorMessage, setErrorMessage])
 
   return (
     <Box container className={classes.container}>
       <Box className={classes.flexRow}>
         <Box item className={classes.heading}>
           <Typography variant="h6" className={classes.text}>
-
             NodeMailer Email
-
           </Typography>
         </Box>
         <Box ml={20} mt={1}>
@@ -106,7 +113,9 @@ function Email(props) {
             {/* First Row */}
             <Grid item xs={12} sm={6}>
               <Box>
-                <Typography className={classes.labelText}>{t('Email')}</Typography>
+                <Typography className={classes.labelText}>
+                  {t('Email')}
+                </Typography>
                 <Input
                   style={{ marginTop: -1 }}
                   id="input-email"
@@ -123,15 +132,17 @@ function Email(props) {
                     emailError === false
                       ? globalClasses.inputError
                       : emailError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                      ? globalClasses.inputSuccess
+                      : ''
                   ]}
                 />
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Box>
-                <Typography className={classes.labelText}>{t('EmailName')}</Typography>
+                <Typography className={classes.labelText}>
+                  {t('EmailName')}
+                </Typography>
                 <Input
                   style={{ marginTop: -1 }}
                   id="input-emailName"
@@ -140,7 +151,11 @@ function Email(props) {
                   type="text"
                   defaultValue={emailName}
                   onBlur={event =>
-                    onBlur(emailNameErrorSetter, 'emailName', event.target.value)
+                    onBlur(
+                      emailNameErrorSetter,
+                      'emailName',
+                      event.target.value
+                    )
                   }
                   disableUnderline
                   className={[
@@ -148,15 +163,17 @@ function Email(props) {
                     emailNameError === false
                       ? globalClasses.inputError
                       : emailNameError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                      ? globalClasses.inputSuccess
+                      : ''
                   ]}
                 />
               </Box>
             </Grid>
             <Grid item xs={12}>
               <Box>
-                <Typography className={classes.labelText}>{t('Password')}</Typography>
+                <Typography className={classes.labelText}>
+                  {t('Password')}
+                </Typography>
                 <Input
                   style={{ marginTop: -1 }}
                   id="input-password"
@@ -173,8 +190,8 @@ function Email(props) {
                     passwordError === false
                       ? globalClasses.inputError
                       : passwordError === true
-                        ? globalClasses.inputSuccess
-                        : ''
+                      ? globalClasses.inputSuccess
+                      : ''
                   ]}
                   endAdornment={
                     <InputAdornment position="end">
@@ -209,12 +226,12 @@ function Email(props) {
                         enableEmail: enableEmail
                       }
                     },
-                    onCompleted: (data) => {
-                      handleSuccess('Configuration saved successfully!');
+                    onCompleted: data => {
+                      handleSuccess('Configuration saved successfully!')
                     },
-                    onError: (error) => {
-                      handleError(error);
-                    },
+                    onError: error => {
+                      handleError(error)
+                    }
                   })
                 }
               }}>
@@ -224,19 +241,17 @@ function Email(props) {
           <Box mt={2}>
             {successMessage && (
               <Alert
-                  className={globalClasses.alertSuccess}
-                  variant="filled"
-                  severity="success"
-                >
-                  {successMessage}
-                </Alert>
+                className={globalClasses.alertSuccess}
+                variant="filled"
+                severity="success">
+                {successMessage}
+              </Alert>
             )}
             {errorMessage && (
               <Alert
                 className={globalClasses.alertError}
                 variant="filled"
-                severity="error"
-              >
+                severity="error">
                 {errorMessage}
               </Alert>
             )}

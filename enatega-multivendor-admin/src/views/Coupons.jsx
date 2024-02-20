@@ -39,7 +39,7 @@ const DELETE_COUPON = gql`
 `
 
 const Coupon = props => {
-  const { t } = props;
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [coupon, setCoupon] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -94,9 +94,9 @@ const Coupon = props => {
     searchQuery.length < 3
       ? data && data.coupons
       : data &&
-      data.coupons.filter(coupon => {
-        return coupon.title.toLowerCase().search(regex) > -1
-      })
+        data.coupons.filter(coupon => {
+          return coupon.title.toLowerCase().search(regex) > -1
+        })
 
   const statusChanged = row => {
     return (

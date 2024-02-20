@@ -12,18 +12,16 @@ import CurrencyConfiguration from '../components/Configuration/Currency/Currency
 import { Grid } from '@mui/material'
 import { ReactComponent as ConfigIcon } from '../assets/svg/svg/Configuration.svg'
 import TwilioConfiguration from '../components/Configuration/Twilio/Twilio'
-import SendGridConfiguration from '../components/Configuration/SendGrid/SendGrid';
+import SendGridConfiguration from '../components/Configuration/SendGrid/SendGrid'
 
-
-import SentryConfiguration from '../components/Configuration/Sentry/Sentry';  
-import GoogleApiKeyConfiguration from '../components/Configuration/GoogleApi/GoogleApi'; 
+import SentryConfiguration from '../components/Configuration/Sentry/Sentry'
+import GoogleApiKeyConfiguration from '../components/Configuration/GoogleApi/GoogleApi'
 import CloudinaryConfiguration from '../components/Configuration/ Cloudinary/ Cloudinary'
-import AmplitudeApiKeyConfiguration from '../components/Configuration/Amplitude/Amplitude';
-import GoogleClientIDConfiguration from '../components/Configuration/GoogleClient/GoogleClient';
-import WebConfiguration from '../components/Configuration/Web/Web';
-import AppConfigurations from '../components/Configuration/App/App';
+import AmplitudeApiKeyConfiguration from '../components/Configuration/Amplitude/Amplitude'
+import GoogleClientIDConfiguration from '../components/Configuration/GoogleClient/GoogleClient'
+import WebConfiguration from '../components/Configuration/Web/Web'
+import AppConfigurations from '../components/Configuration/App/App'
 import FirebaseConfiguration from '../components/Configuration/FireBase/FireBase'
-
 
 const GET_CONFIGURATION = gql`
   ${getConfiguration}
@@ -32,7 +30,7 @@ const Configuration = props => {
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_CONFIGURATION
   )
-const { t } = props;
+  const { t } = props
 
   return (
     <>
@@ -82,7 +80,6 @@ const { t } = props;
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
-            
             <TwilioConfiguration
               twilioAccountSid={data && data.configuration.twilioAccountSid}
               twilioAuthToken={data && data.configuration.twilioAuthToken}
@@ -91,9 +88,7 @@ const { t } = props;
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
-            <Email
-              formEmail={data && data.configuration.formEmail}
-            />
+            <Email formEmail={data && data.configuration.formEmail} />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <SendGridConfiguration
@@ -104,11 +99,9 @@ const { t } = props;
               sendGridPassword={data && data.configuration.sendGridPassword}
             />
           </Grid>
-        
-       
+
           <Grid item sx={12} md={12} lg={5}>
             <WebConfiguration
-      
               googleMapLibraries={data && data.configuration.googleMapLibraries}
               googleColor={data && data.configuration.googleColor}
             />
@@ -118,8 +111,12 @@ const { t } = props;
               dashboardSentryUrl={data && data.configuration.dashboardSentryUrl}
               webSentryUrl={data && data.configuration.webSentryUrl}
               apiSentryUrl={data && data.configuration.apiSentryUrl}
-              customerAppSentryUrl={data && data.configuration.customerAppSentryUrl}
-              restaurantAppSentryUrl={data && data.configuration.restaurantAppSentryUrl}
+              customerAppSentryUrl={
+                data && data.configuration.customerAppSentryUrl
+              }
+              restaurantAppSentryUrl={
+                data && data.configuration.restaurantAppSentryUrl
+              }
               riderAppSentryUrl={data && data.configuration.riderAppSentryUrl}
             />
           </Grid>
@@ -130,7 +127,9 @@ const { t } = props;
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
             <CloudinaryConfiguration
-              cloudinaryUploadUrl={data && data.configuration.cloudinaryUploadUrl}
+              cloudinaryUploadUrl={
+                data && data.configuration.cloudinaryUploadUrl
+              }
               cloudinaryApiKey={data && data.configuration.cloudinaryApiKey}
             />
           </Grid>
@@ -149,7 +148,6 @@ const { t } = props;
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
-            
             <FirebaseConfiguration
               firebaseKey={data && data.configuration.firebaseKey}
               authDomain={data && data.configuration.authDomain}
@@ -161,13 +159,12 @@ const { t } = props;
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>
-          <AppConfigurations
-       
-        termsAndConditions={data && data.configuration.termsAndConditions}
-        privacyPolicy={data && data.configuration.privacyPolicy}
-        testOtp={data && data.configuration.testOtp}
-      />
-       </Grid>
+            <AppConfigurations
+              termsAndConditions={data && data.configuration.termsAndConditions}
+              privacyPolicy={data && data.configuration.privacyPolicy}
+              testOtp={data && data.configuration.testOtp}
+            />
+          </Grid>
         </Grid>
       )}
     </>

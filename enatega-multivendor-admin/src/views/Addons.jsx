@@ -34,7 +34,7 @@ const DELETE_ADDON = gql`
   ${deleteAddon}
 `
 const Addon = props => {
-  const { t } = props;
+  const { t } = props
   const [addon, setAddon] = useState(null)
   const [editModal, setEditModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -46,8 +46,8 @@ const Addon = props => {
     setAddon(addon)
   }
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
   const restaurantId = localStorage.getItem('restaurantId')
 
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
@@ -149,7 +149,7 @@ const Addon = props => {
                     setIsOpen(false)
                   }, 5000)
                   //uncomment this for paid version
-                  // mutate({  
+                  // mutate({
                   //   variables: { id: row._id, restaurant: restaurantId }
                   // })
                 }}
@@ -172,22 +172,19 @@ const Addon = props => {
     searchQuery.length < 3
       ? data && data.restaurant.addons
       : data &&
-      data.restaurant.addons.filter(addon => {
-        return (
-          addon.title.toLowerCase().search(regex) > -1 ||
-          addon.description.toLowerCase().search(regex) > -1
-        )
-      })
+        data.restaurant.addons.filter(addon => {
+          return (
+            addon.title.toLowerCase().search(regex) > -1 ||
+            addon.description.toLowerCase().search(regex) > -1
+          )
+        })
   const globalClasses = useGlobalStyles()
 
   return (
     <>
       <Header />
       {isOpen && (
-        <Alert
-          message={t('AvailableAfterPurchasing')}
-          severity="warning"
-        />
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
       )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
@@ -209,7 +206,7 @@ const Addon = props => {
                 onClick={() => refetch()}
               />
             }
-              title={<TableHeader title={t('Addons')} />}
+            title={<TableHeader title={t('Addons')} />}
             columns={columns}
             data={data && data.restaurant ? filtered : {}}
             pagination

@@ -1,4 +1,4 @@
 export const SHOP_TYPE = {
-    GROCERY: 'grocery',
-    RESTAURANT: 'restaurant'
-  }
+  GROCERY: 'grocery',
+  RESTAURANT: 'restaurant'
+}

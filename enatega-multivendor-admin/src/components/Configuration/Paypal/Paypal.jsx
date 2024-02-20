@@ -12,7 +12,7 @@ const SAVE_PAYPAL_CONFIGURATION = gql`
 `
 
 function Paypal(props) {
-  const { t } = props;
+  const { t } = props
   const formRef = useRef()
   const clientId = props.clientId || ''
   const clientSecret = props.clientSecret || ''
@@ -35,29 +35,29 @@ function Paypal(props) {
   }
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
-  const [successMessage, setSuccessMessage] = useState('');
-  const handleSuccess = (message) => {
-    setSuccessMessage(message);
-  };
+  const [successMessage, setSuccessMessage] = useState('')
+  const handleSuccess = message => {
+    setSuccessMessage(message)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
+      setSuccessMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [successMessage, setSuccessMessage]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const handleError = (error) => {
-    setErrorMessage('An error occurred while saving configuration.');
-    console.error('Mutation error:', error);
-  };
+    return () => clearTimeout(timeoutId)
+  }, [successMessage, setSuccessMessage])
+  const [errorMessage, setErrorMessage] = useState('')
+  const handleError = error => {
+    setErrorMessage('An error occurred while saving configuration.')
+    console.error('Mutation error:', error)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setErrorMessage('');
-    }, 3000);
+      setErrorMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [errorMessage, setErrorMessage]);
+    return () => clearTimeout(timeoutId)
+  }, [errorMessage, setErrorMessage])
 
   return (
     <Box container className={classes.container}>
@@ -83,7 +83,9 @@ function Paypal(props) {
       <Box className={classes.form}>
         <form ref={formRef}>
           <Box>
-            <Typography className={classes.labelText}>{t('Client ID')}</Typography>
+            <Typography className={classes.labelText}>
+              {t('Client ID')}
+            </Typography>
             <Input
               style={{ marginTop: -1 }}
               id="input-clientid"
@@ -100,13 +102,15 @@ function Paypal(props) {
                 clientIdError === false
                   ? globalClasses.inputError
                   : clientIdError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
           <Box>
-            <Typography className={classes.labelText}>{t('ClientSecretKey')}</Typography>
+            <Typography className={classes.labelText}>
+              {t('ClientSecretKey')}
+            </Typography>
             <Input
               style={{ marginTop: -1 }}
               id="input-clientsecret"
@@ -127,8 +131,8 @@ function Paypal(props) {
                 clientSecretError === false
                   ? globalClasses.inputError
                   : clientSecretError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
@@ -146,15 +150,15 @@ function Paypal(props) {
                         clientSecret:
                           formRef.current['input-clientsecret'].value,
                         //sandbox: formRef.current['input-sandbox'].checked
-                        sandbox: sandbox,
+                        sandbox: sandbox
                       }
                     },
-                    onCompleted: (data) => {
-                      handleSuccess('Configuration saved successfully!');
+                    onCompleted: data => {
+                      handleSuccess('Configuration saved successfully!')
                     },
-                    onError: (error) => {
-                      handleError(error);
-                    },
+                    onError: error => {
+                      handleError(error)
+                    }
                   })
                 }
               }}>
@@ -164,19 +168,17 @@ function Paypal(props) {
           <Box mt={2}>
             {successMessage && (
               <Alert
-                  className={globalClasses.alertSuccess}
-                  variant="filled"
-                  severity="success"
-                >
-                  {successMessage}
-                </Alert>
+                className={globalClasses.alertSuccess}
+                variant="filled"
+                severity="success">
+                {successMessage}
+              </Alert>
             )}
             {errorMessage && (
               <Alert
                 className={globalClasses.alertError}
                 variant="filled"
-                severity="error"
-              >
+                severity="error">
                 {errorMessage}
               </Alert>
             )}

@@ -19,7 +19,7 @@ const CREATE_TIPPING = gql`
 `
 
 function Tipping(props) {
-  const { t } = props;
+  const { t } = props
   const formRef = useRef()
   // const mutation = props.coupon ? EDIT_COUPON : CREATE_COUPON
   const [tip1Error, setTip1Error] = useState(null)
@@ -71,7 +71,7 @@ function Tipping(props) {
   const { data } = useQuery(GET_TIPPING, onError, onCompleted)
   const mutation = data && data.tips._id ? EDIT_TIPPING : CREATE_TIPPING
 
-  const [mutate, { loading }] = useMutation(mutation, {onError, onCompleted})
+  const [mutate, { loading }] = useMutation(mutation, { onError, onCompleted })
 
   const clearFields = () => {
     formRef.current.reset()
@@ -100,7 +100,9 @@ function Tipping(props) {
           <Grid container spacing={0}>
             <Grid item xs={12} sm={6}>
               <Box>
-                <Typography className={classes.labelText}>{t('Tip1')}</Typography>
+                <Typography className={classes.labelText}>
+                  {t('Tip1')}
+                </Typography>
                 <Input
                   style={{ marginTop: -1 }}
                   name="tip1"
@@ -118,15 +120,17 @@ function Tipping(props) {
                     tip1Error === false
                       ? globalClasses.inputError
                       : tip1Error === true
-                        ? globalClasses.inputSuccess
-                        : '',
+                      ? globalClasses.inputSuccess
+                      : ''
                   ]}
                 />
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Box>
-                <Typography className={classes.labelText}>{t('Tip2')}</Typography>
+                <Typography className={classes.labelText}>
+                  {t('Tip2')}
+                </Typography>
                 <Input
                   style={{ marginTop: -1 }}
                   name="tip2"
@@ -144,8 +148,8 @@ function Tipping(props) {
                     tip2Error === false
                       ? globalClasses.inputError
                       : tip2Error === true
-                        ? globalClasses.inputSuccess
-                        : '',
+                      ? globalClasses.inputSuccess
+                      : ''
                   ]}
                 />
               </Box>
@@ -155,7 +159,9 @@ function Tipping(props) {
           <Grid container spacing={0}>
             <Grid item xs={12} sm={6}>
               <Box>
-                <Typography className={classes.labelText}>{t('Tip3')}</Typography>
+                <Typography className={classes.labelText}>
+                  {t('Tip3')}
+                </Typography>
                 <Input
                   style={{ marginTop: -1 }}
                   name="tip3"
@@ -173,8 +179,8 @@ function Tipping(props) {
                     tip3Error === false
                       ? globalClasses.inputError
                       : tip3Error === true
-                        ? globalClasses.inputSuccess
-                        : '',
+                      ? globalClasses.inputSuccess
+                      : ''
                   ]}
                 />
               </Box>

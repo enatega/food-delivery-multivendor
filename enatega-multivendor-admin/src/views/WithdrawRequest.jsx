@@ -13,7 +13,7 @@ import TableHeader from '../components/TableHeader'
 import { withTranslation, useTranslation } from 'react-i18next'
 
 function WithdrawRequest() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const { loading, error, data } = useQuery(
@@ -70,12 +70,12 @@ function WithdrawRequest() {
     searchQuery.length < 3
       ? data && data.getAllWithdrawRequests.data
       : data &&
-      data.getAllWithdrawRequests.data.filter(request => {
-        return (
-          request.requestId.toLowerCase().search(regex) > -1 ||
-          request.rider.name.toLowerCase().search(regex) > -1
-        )
-      })
+        data.getAllWithdrawRequests.data.filter(request => {
+          return (
+            request.requestId.toLowerCase().search(regex) > -1 ||
+            request.rider.name.toLowerCase().search(regex) > -1
+          )
+        })
 
   const updateRequestStatus = row => {
     return (

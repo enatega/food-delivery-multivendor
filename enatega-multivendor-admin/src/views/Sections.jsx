@@ -6,7 +6,7 @@ import SectionComponent from '../components/Section/Section'
 import CustomLoader from '../components/Loader/CustomLoader'
 
 // core components
-import {/*deleteSection*/editSection, getSections } from '../apollo'
+import { /*deleteSection*/ editSection, getSections } from '../apollo'
 import Header from '../components/Headers/Header'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
@@ -54,8 +54,8 @@ function Sections(props) {
 
   // Callback function to close the modal
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
 
   const restaurantId = localStorage.getItem('restaurantId')
 
@@ -231,11 +231,8 @@ function Sections(props) {
           </Grid>
         </Grid>
         {isOpen && (
-            <Alert
-            message={t('AvailableAfterPurchasing')}
-              severity="warning"
-              />
-          )}
+          <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+        )}
 
         {/* Table */}
         {errorQuery && `${t('Error')}! ${errorQuery.message}`}

@@ -117,7 +117,7 @@ const Users = props => {
                 onClick={() => refetch()}
               />
             }
-              title={<TableHeader title={t('Users')} />}
+            title={<TableHeader title={t('Users')} />}
             columns={columns}
             data={filtered}
             pagination

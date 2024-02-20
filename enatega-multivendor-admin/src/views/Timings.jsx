@@ -21,8 +21,8 @@ const Timings = props => {
   const [value, onChange] = useState({})
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const { t } = props
   const onChangeTime = (day, values) => {
@@ -72,10 +72,10 @@ const Timings = props => {
           <Box className={globalClasses.timing}>
             <Grid container className={globalClasses.timingHeader}>
               <Grid item md={2} lg={2}>
-                  {t('Days')}
+                {t('Days')}
               </Grid>
               <Grid item md={7} lg={7}>
-                  {t('OpenTimes')}
+                {t('OpenTimes')}
               </Grid>
             </Grid>
             <DayComponent
@@ -113,50 +113,46 @@ const Timings = props => {
               value={transformedTimes.SUN || [['00:00', '23:59']]}
               onChangeTime={onChangeTime}
             />
-              <Button
-                onClick={e => {
-                  e.preventDefault();
-                  const openingTimes = getTransformedTimings();
-                  mutate({
-                    variables: {
-                      id: restaurantId,
-                      openingTimes
-                    },
-                    onCompleted: () => {
-                      setSuccessMessage(t('TimeSavedSuccessfully'));
-                      setTimeout(() => setSuccessMessage(''), 5000);
-                      setErrorMessage('');
-                    },
-                    onError: (error) => {
-                      setErrorMessage(t('ErrorWhileSavingTime'));
-                      setTimeout(() => setErrorMessage(''), 5000);
-                      setSuccessMessage('');
-                    }
-                  });
-                }}
-                className={[globalClasses.button, globalClasses.mb]}
-              >
-                {loading ? t('SavingDots') : t('Save')}
-              </Button>
-              {successMessage && (
-                <Alert
-                  className={globalClasses.alertSuccess}
-                  variant="filled"
-                  severity="success"
-                >
-                  {successMessage}
-                </Alert>
-              )}
-              {errorMessage && (
-                <Alert
-                  className={globalClasses.alertError}
-                  variant="filled"
-                  severity="error"
-                >
-                  {errorMessage}
-                </Alert>
-              )}
-
+            <Button
+              onClick={e => {
+                e.preventDefault()
+                const openingTimes = getTransformedTimings()
+                mutate({
+                  variables: {
+                    id: restaurantId,
+                    openingTimes
+                  },
+                  onCompleted: () => {
+                    setSuccessMessage(t('TimeSavedSuccessfully'))
+                    setTimeout(() => setSuccessMessage(''), 5000)
+                    setErrorMessage('')
+                  },
+                  onError: error => {
+                    setErrorMessage(t('ErrorWhileSavingTime'))
+                    setTimeout(() => setErrorMessage(''), 5000)
+                    setSuccessMessage('')
+                  }
+                })
+              }}
+              className={[globalClasses.button, globalClasses.mb]}>
+              {loading ? t('SavingDots') : t('Save')}
+            </Button>
+            {successMessage && (
+              <Alert
+                className={globalClasses.alertSuccess}
+                variant="filled"
+                severity="success">
+                {successMessage}
+              </Alert>
+            )}
+            {errorMessage && (
+              <Alert
+                className={globalClasses.alertError}
+                variant="filled"
+                severity="error">
+                {errorMessage}
+              </Alert>
+            )}
           </Box>
         )}
       </Container>
@@ -166,8 +162,8 @@ const Timings = props => {
 
 export default withTranslation()(Timings)
 const DayComponent = ({ day, value, onChangeTime }) => {
-  const { t } = useTranslation();
-  const theme = useTheme();
+  const { t } = useTranslation()
+  const theme = useTheme()
   useEffect(() => {
     onChangeTime(day, values)
   })

@@ -19,11 +19,8 @@ import { customStyles } from '../utils/tableCustomStyles'
 import { Container, MenuItem, Select, Box, useTheme } from '@mui/material'
 import { ReactComponent as DispatchIcon } from '../assets/svg/svg/Dispatch.svg'
 import TableHeader from '../components/TableHeader'
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
-import "react-notifications/lib/notifications.css";
+import { NotificationContainer, NotificationManager } from 'react-notifications'
+import 'react-notifications/lib/notifications.css'
 
 const SUBSCRIPTION_ORDER = gql`
   ${subscriptionOrder}
@@ -42,8 +39,8 @@ const GET_ACTIVE_ORDERS = gql`
 `
 
 const Orders = props => {
-  const theme = useTheme();
-  const { t } = props;
+  const theme = useTheme()
+  const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const [mutateUpdate] = useMutation(UPDATE_STATUS)
@@ -58,7 +55,7 @@ const Orders = props => {
       <Select
         id="input-rider"
         name="input-rider"
-        value=''
+        value=""
         displayEmpty
         inputProps={{ 'aria-label': 'Without label' }}
         style={{ width: '50px' }}
@@ -73,14 +70,22 @@ const Orders = props => {
                     id: row._id,
                     riderId: rider._id
                   },
-                  onCompleted: (data) => {
-                    console.error('Mutation success data:', data);
-                    NotificationManager.success('Successful', 'Rider updated!', 3000);
+                  onCompleted: data => {
+                    console.error('Mutation success data:', data)
+                    NotificationManager.success(
+                      'Successful',
+                      'Rider updated!',
+                      3000
+                    )
                   },
-                   onError: (error) => {
-                    console.error('Mutation error:', error);
-                    NotificationManager.error('Error', 'Failed to update rider!', 3000);
-                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update rider!',
+                      3000
+                    )
+                  }
                 })
               }}
               key={rider._id}>
@@ -98,10 +103,10 @@ const Orders = props => {
   } = useQuery(GET_ACTIVE_ORDERS, { pollInterval: 3000 })
 
   const statusFunc = row => {
-    const handleStatusSuccessNotification = (status) => {
-      NotificationManager.success(status, 'Status Updated!', 3000);
-    };
-    
+    const handleStatusSuccessNotification = status => {
+      NotificationManager.success(status, 'Status Updated!', 3000)
+    }
+
     return (
       <>
         <Select
@@ -120,14 +125,18 @@ const Orders = props => {
                     id: row._id,
                     orderStatus: 'ACCEPTED'
                   },
-                  onCompleted: (data) => {
-                    handleStatusSuccessNotification('ACCEPTED');
-                    refetchOrders();
+                  onCompleted: data => {
+                    handleStatusSuccessNotification('ACCEPTED')
+                    refetchOrders()
                   },
-                  onError: (error) => {
-                    console.error('Mutation error:', error);
-                    NotificationManager.error('Error', 'Failed to update status!', 3000);
-                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update status!',
+                      3000
+                    )
+                  }
                 })
               }}>
               {t('Accept')}
@@ -136,51 +145,59 @@ const Orders = props => {
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
             row.orderStatus
           ) && (
-              <MenuItem
-                style={{ color: 'black' }}
-                onClick={() => {
-                  mutateUpdate({
-                    variables: {
-                      id: row._id,
-                      orderStatus: 'CANCELLED'
-                    },
-                    onCompleted: (data)=>{
-                      handleStatusSuccessNotification('REJECTED');
-                      refetchOrders();
-                    },
-                    onError: (error) => {
-                      console.error('Mutation error:', error);
-                      NotificationManager.error('Error', 'Failed to update status!', 3000);
-                    },
-                  })
-                }}>
-                {t('Reject')}
-              </MenuItem>
-            )}
+            <MenuItem
+              style={{ color: 'black' }}
+              onClick={() => {
+                mutateUpdate({
+                  variables: {
+                    id: row._id,
+                    orderStatus: 'CANCELLED'
+                  },
+                  onCompleted: data => {
+                    handleStatusSuccessNotification('REJECTED')
+                    refetchOrders()
+                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update status!',
+                      3000
+                    )
+                  }
+                })
+              }}>
+              {t('Reject')}
+            </MenuItem>
+          )}
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
             row.orderStatus
           ) && (
-              <MenuItem
-                style={{ color: 'black' }}
-                onClick={() => {
-                  mutateUpdate({
-                    variables: {
-                      id: row._id,
-                      orderStatus: 'DELIVERED'
-                    },
-                    onCompleted: (data)=>{
-                      handleStatusSuccessNotification('DELIVERED');
-                      refetchOrders();
-                    },
-                    onError: (error) => {
-                      console.error('Mutation error:', error);
-                      NotificationManager.error('Error', 'Failed to update status!', 3000);
-                    },
-                  })
-                }}>
-                {t('Delivered')}
-              </MenuItem>
-            )}
+            <MenuItem
+              style={{ color: 'black' }}
+              onClick={() => {
+                mutateUpdate({
+                  variables: {
+                    id: row._id,
+                    orderStatus: 'DELIVERED'
+                  },
+                  onCompleted: data => {
+                    handleStatusSuccessNotification('DELIVERED')
+                    refetchOrders()
+                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update status!',
+                      3000
+                    )
+                  }
+                })
+              }}>
+              {t('Delivered')}
+            </MenuItem>
+          )}
         </Select>
       </>
     )
@@ -261,20 +278,20 @@ const Orders = props => {
     searchQuery.length < 3
       ? dataOrders && dataOrders.getActiveOrders
       : dataOrders &&
-      dataOrders.getActiveOrders.filter(order => {
-        return (
-          order.restaurant.name.toLowerCase().search(regex) > -1 ||
-          order.orderId.toLowerCase().search(regex) > -1 ||
-          order.deliveryAddress.deliveryAddress.toLowerCase().search(regex) >
-          -1 ||
-          order.orderId.toLowerCase().search(regex) > -1 ||
-          order.paymentMethod.toLowerCase().search(regex) > -1 ||
-          order.orderStatus.toLowerCase().search(regex) > -1 ||
-          (order.rider !== null
-            ? order.rider.name.toLowerCase().search(regex) > -1
-            : false)
-        )
-      })
+        dataOrders.getActiveOrders.filter(order => {
+          return (
+            order.restaurant.name.toLowerCase().search(regex) > -1 ||
+            order.orderId.toLowerCase().search(regex) > -1 ||
+            order.deliveryAddress.deliveryAddress.toLowerCase().search(regex) >
+              -1 ||
+            order.orderId.toLowerCase().search(regex) > -1 ||
+            order.paymentMethod.toLowerCase().search(regex) > -1 ||
+            order.orderStatus.toLowerCase().search(regex) > -1 ||
+            (order.rider !== null
+              ? order.rider.name.toLowerCase().search(regex) > -1
+              : false)
+          )
+        })
 
   return (
     <>

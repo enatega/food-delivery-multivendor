@@ -22,15 +22,15 @@ import { useLocation } from 'react-router-dom'
 
 const drawerWidth = 240
 function Sidebar(props) {
-  const theme = useTheme();
+  const theme = useTheme()
   const location = useLocation()
   const classes = useStyles()
   const restaurantId = localStorage.getItem('restaurantId')
   const restaurantImage = localStorage.getItem('restaurantImage')
   const restaurantName = localStorage.getItem('restaurantName')
   const [mobileOpen, setMobileOpen] = React.useState(false)
-  const { window, t } = props;
-  console.log("SideBar props are here: ", props);
+  const { window, t } = props
+  console.log('SideBar props are here: ', props)
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }

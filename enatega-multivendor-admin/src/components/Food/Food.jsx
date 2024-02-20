@@ -37,8 +37,7 @@ const GET_ADDONS = gql`
 `
 
 function Food(props) {
-
-  const theme = useTheme();
+  const theme = useTheme()
 
   const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
   const formRef = useRef()
@@ -71,8 +70,8 @@ function Food(props) {
       : t('FoodAddedSuccessfully')
     mainErrorSetter('')
     successSetter(message)
-    setTitle('');
-    setDescription('');
+    setTitle('')
+    setDescription('')
     setTimeout(onDismiss, 3000)
   }
   const [mutate, { loading: mutateLoading }] = useMutation(mutation, {
@@ -101,25 +100,25 @@ function Food(props) {
   const [variation, variationSetter] = useState(
     props.food
       ? props.food.variations.map(({ title, price, discounted, addons }) => {
-        return {
-          title,
-          price,
-          discounted,
-          addons,
-          titleError: null,
-          priceError: null
-        }
-      })
+          return {
+            title,
+            price,
+            discounted,
+            addons,
+            titleError: null,
+            priceError: null
+          }
+        })
       : [
-        {
-          title: '',
-          price: '',
-          discounted: '',
-          addons: [],
-          titleError: null,
-          priceError: null
-        }
-      ]
+          {
+            title: '',
+            price: '',
+            discounted: '',
+            addons: [],
+            titleError: null,
+            priceError: null
+          }
+        ]
   )
   const onBlur = (setter, field, state) => {
     setter(!validateFunc({ [field]: state }, field))
@@ -203,8 +202,8 @@ function Food(props) {
       variationItem.titleError = error
         ? !error
         : variations.length > 1
-          ? !validateFunc({ title: variationItem.title }, 'title')
-          : true
+        ? !validateFunc({ title: variationItem.title }, 'title')
+        : true
 
       return variationItem
     })
@@ -326,9 +325,7 @@ function Food(props) {
       <Box className={classes.form}>
         <form ref={formRef}>
           <Box>
-            <Typography className={classes.labelText}>
-              {t('Title')}
-            </Typography>
+            <Typography className={classes.labelText}>{t('Title')}</Typography>
             <Input
               style={{ marginTop: -1 }}
               id="input-title"
@@ -346,8 +343,8 @@ function Food(props) {
                 titleError === false
                   ? globalClasses.inputError
                   : titleError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
             <Typography className={classes.labelText}>
@@ -384,8 +381,8 @@ function Food(props) {
                   categoryError === false
                     ? globalClasses.inputError
                     : categoryError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                    ? globalClasses.inputSuccess
+                    : ''
                 ]}>
                 {!category && (
                   <MenuItem value="" style={{ color: 'black' }}>
@@ -410,7 +407,10 @@ function Food(props) {
               <img
                 className={classes.image}
                 alt="..."
-                src={imgMenu || 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'}
+                src={
+                  imgMenu ||
+                  'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                }
               />
               <label htmlFor="file-upload" className={classes.fileUpload}>
                 {t('UploadAnImage')}
@@ -451,10 +451,15 @@ function Food(props) {
                               type="text"
                               value={variationItem.title}
                               onChange={event => {
-                                handleVariationChange(event, index, 'title', 'variations');
+                                handleVariationChange(
+                                  event,
+                                  index,
+                                  'title',
+                                  'variations'
+                                )
                               }}
                               onBlur={event => {
-                                onBlurVariation(index, 'title');
+                                onBlurVariation(index, 'title')
                               }}
                               disableUnderline
                               className={[
@@ -462,15 +467,17 @@ function Food(props) {
                                 variationItem.titleError === false
                                   ? globalClasses.inputError
                                   : variationItem.titleError === true
-                                    ? globalClasses.inputSuccess
-                                    : '',
+                                  ? globalClasses.inputSuccess
+                                  : ''
                               ]}
                             />
                           </Box>
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <Box mt={2}>
-                            <Typography className={classes.labelText}>{t('Price')}</Typography>
+                            <Typography className={classes.labelText}>
+                              {t('Price')}
+                            </Typography>
                             <Input
                               style={{ marginTop: -1 }}
                               value={variationItem.price}
@@ -478,10 +485,15 @@ function Food(props) {
                               placeholder={t('Price')}
                               type="number"
                               onChange={event => {
-                                handleVariationChange(event, index, 'price', 'variations');
+                                handleVariationChange(
+                                  event,
+                                  index,
+                                  'price',
+                                  'variations'
+                                )
                               }}
                               onBlur={event => {
-                                onBlurVariation(index, 'price');
+                                onBlurVariation(index, 'price')
                               }}
                               disableUnderline
                               className={[
@@ -489,15 +501,17 @@ function Food(props) {
                                 variationItem.priceError === false
                                   ? globalClasses.inputError
                                   : variationItem.priceError === true
-                                    ? globalClasses.inputSuccess
-                                    : '',
+                                  ? globalClasses.inputSuccess
+                                  : ''
                               ]}
                             />
                           </Box>
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <Box mt={2}>
-                            <Typography className={classes.labelText}>{t('Discounted')}</Typography>
+                            <Typography className={classes.labelText}>
+                              {t('Discounted')}
+                            </Typography>
                             <Input
                               style={{ marginTop: -1 }}
                               value={variationItem.discounted}
@@ -505,10 +519,15 @@ function Food(props) {
                               placeholder={t('Discounted')}
                               type="number"
                               onChange={event => {
-                                handleVariationChange(event, index, 'discounted', 'variations');
+                                handleVariationChange(
+                                  event,
+                                  index,
+                                  'discounted',
+                                  'variations'
+                                )
                               }}
                               onBlur={event => {
-                                onBlurVariation(index, 'discounted');
+                                onBlurVariation(index, 'discounted')
                               }}
                               disableUnderline
                               className={[globalClasses.input]}
@@ -517,7 +536,6 @@ function Food(props) {
                         </Grid>
                       </Grid>
                     </Box>
-
 
                     <Box>
                       <RemoveIcon
@@ -610,11 +628,11 @@ function Food(props) {
                         )
                       }
                     }
-                  });
+                  })
                   // Close the modal after 3 seconds by calling the parent's onClose callback
                   setTimeout(() => {
-                    props.onClose(); // Close the modal
-                  }, 4000);
+                    props.onClose() // Close the modal
+                  }, 4000)
                 }
               }}>
               {t('Save')}

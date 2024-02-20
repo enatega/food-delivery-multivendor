@@ -19,12 +19,12 @@ import { useTranslation, withTranslation } from 'react-i18next'
 
 const drawerWidth = 240
 function AdminSidebar(props) {
-  const theme = useTheme();
-  const { t } = useTranslation();
+  const theme = useTheme()
+  const { t } = useTranslation()
   const location = useLocation()
   const classes = useStyles()
   const { window } = props
-  console.log("Admin Sidebarprops are here: ", props);
+  console.log('Admin Sidebarprops are here: ', props)
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
   const handleDrawerToggle = () => {
@@ -144,8 +144,7 @@ function AdminSidebar(props) {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              background:
-                `linear-gradient(180deg, ${theme.palette.warning.dark} 50%, transparent 50%)`,
+              background: `linear-gradient(180deg, ${theme.palette.warning.dark} 50%, transparent 50%)`,
               borderRight: 'none'
             }
           }}

@@ -70,8 +70,8 @@ function Riders(props) {
   }
 
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
 
   const customSort = (rows, field, direction) => {
     const handleField = row => {
@@ -240,11 +240,8 @@ function Riders(props) {
           </Grid>
         </Grid>
         {isOpen && (
-            <Alert
-            message={t('AvailableAfterPurchasing')}
-              severity="warning"
-              />
-          )}
+          <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+        )}
         {/* Table */}
         {errorQuery ? (
           <tr>
@@ -263,7 +260,7 @@ function Riders(props) {
                 onClick={() => refetch()}
               />
             }
-              title={<TableHeader title={t('Riders')} />}
+            title={<TableHeader title={t('Riders')} />}
             columns={columns}
             data={filtered}
             pagination
@@ -285,7 +282,7 @@ function Riders(props) {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          <RiderComponent rider={rider} onClose={closeEditModal}/>
+          <RiderComponent rider={rider} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

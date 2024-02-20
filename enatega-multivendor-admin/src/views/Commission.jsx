@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import Header from '../components/Headers/Header'
 import { restaurants, updateCommission } from '../apollo'
@@ -6,11 +6,8 @@ import CustomLoader from '../components/Loader/CustomLoader'
 import useGlobalStyles from '../utils/globalStyles'
 import { Container, Box, Typography, Grid, Input, Button } from '@mui/material'
 import useStyles from '../components/Rider/styles'
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
-import "react-notifications/lib/notifications.css";
+import { NotificationContainer, NotificationManager } from 'react-notifications'
+import 'react-notifications/lib/notifications.css'
 import { ReactComponent as CommissionIcon } from '../assets/svg/svg/CommisionRate.svg'
 import { useTranslation, withTranslation } from 'react-i18next'
 
@@ -33,17 +30,17 @@ const Commission = () => {
   console.log(data)
   const globalClasses = useGlobalStyles()
   const classes = useStyles()
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const handleSuccessButtonClick = () => {
-  NotificationManager.success('Update Successful', 'Commission Rates', 3000, {
-    className: 'customNotification',
-  });
-  };
+    NotificationManager.success('Update Successful', 'Commission Rates', 3000, {
+      className: 'customNotification'
+    })
+  }
   const handleErrorButtonClick = () => {
-  NotificationManager.error('Update Error', 'Commission Rates', 3000, {
-    className: 'customNotification',
-  });
-  };
+    NotificationManager.error('Update Error', 'Commission Rates', 3000, {
+      className: 'customNotification'
+    })
+  }
 
   return (
     <>
@@ -65,7 +62,7 @@ const Commission = () => {
                 ) : (
                   data && (
                     <>
-                      {data.restaurants.map((restaurant) => (
+                      {data.restaurants.map(restaurant => (
                         <Grid key={restaurant._id} container spacing={1}>
                           <Grid item sm={5} mt={3}>
                             {restaurant.name}
@@ -86,26 +83,21 @@ const Commission = () => {
                             <Button
                               className={globalClasses.button}
                               onClick={() => {
-                                const result = getValues(restaurant._id);
+                                const result = getValues(restaurant._id)
                                 mutate({
                                   variables: result,
-                                  onCompleted: (data) => {
-                                    handleSuccessButtonClick();
-                                  },
-                                });
-                              }}
-                            >
+                                  onCompleted: data => {
+                                    handleSuccessButtonClick()
+                                  }
+                                })
+                              }}>
                               {t('Save')}
                             </Button>
                             {error && <span>{error.message}</span>}
                           </Grid>
                         </Grid>
                       ))}
-                      <Box mt={2}>
-                        {error && (
-                          handleErrorButtonClick()
-                        )}
-                      </Box>
+                      <Box mt={2}>{error && handleErrorButtonClick()}</Box>
                     </>
                   )
                 )}

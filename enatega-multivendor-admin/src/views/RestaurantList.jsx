@@ -24,7 +24,7 @@ const DELETE_RESTAURANT = gql`
 `
 
 const Restaurants = props => {
-  const { t } = props;
+  const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const globalClasses = useGlobalStyles()
@@ -59,7 +59,12 @@ const Restaurants = props => {
               className="img-responsive"
               src={row.image}
               alt={t('ImageMenu')}
-              style={{ width: 30, height: 30, borderRadius: 15, cursor: 'pointer' }}
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 15,
+                cursor: 'pointer'
+              }}
               onClick={() => {
                 localStorage.setItem('restaurant_id', row._id)
                 props.history.push('/admin/dashboard')
@@ -76,28 +81,28 @@ const Restaurants = props => {
       // sortable: true,
       selector: 'name',
       style: {
-        cursor: 'pointer',
-      },
+        cursor: 'pointer'
+      }
     },
     {
       name: t('Address'),
       selector: 'address',
       style: {
-        cursor: 'pointer',
-      },
+        cursor: 'pointer'
+      }
     },
     {
       name: t('OrderPrefix'),
       selector: 'orderPrefix',
       style: {
-        cursor: 'pointer',
-      },
+        cursor: 'pointer'
+      }
     },
     {
       name: t('Vendor'),
       selector: 'owner',
       style: {
-        cursor: 'pointer',
+        cursor: 'pointer'
       },
       cell: row => <>{row.owner ? row.owner.email : null}</>
     },
@@ -106,7 +111,7 @@ const Restaurants = props => {
       cell: row => <>{actionButtons(row)}</>
     }
   ]
-  const theme = useTheme();
+  const theme = useTheme()
   const actionButtons = row => {
     return (
       <>
@@ -178,7 +183,7 @@ const Restaurants = props => {
                 onClick={() => onClickRefetch(refetch)}
               />
             }
-              title={<TableHeader title={t('Restaurants')} />}
+            title={<TableHeader title={t('Restaurants')} />}
             columns={columns}
             data={filtered}
             pagination

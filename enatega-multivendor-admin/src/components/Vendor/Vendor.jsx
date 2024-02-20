@@ -6,10 +6,9 @@ import { createVendor, editVendor, getVendors } from '../../apollo'
 import { Input, Button, Alert, Box, Typography, Checkbox } from '@mui/material'
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
-import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
+import InputAdornment from '@mui/material/InputAdornment'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const CREATE_VENDOR = gql`
   ${createVendor}
@@ -23,7 +22,7 @@ const GET_VENDORS = gql`
 
 function Vendor(props) {
   const formRef = useRef()
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const mutation = props.vendor ? EDIT_VENDOR : CREATE_VENDOR
   const email = props.vendor ? props.vendor.email : ''
   const [error, errorSetter] = useState('')
@@ -67,9 +66,9 @@ function Vendor(props) {
     const passwordError = props.vendor
       ? true
       : !validateFunc(
-        { password: formRef.current['input-password'].value },
-        'password'
-      )
+          { password: formRef.current['input-password'].value },
+          'password'
+        )
 
     emailErrorSetter(emailError)
     passErrorSetter(passwordError)
@@ -96,12 +95,10 @@ function Vendor(props) {
         </Typography>
       </Box>
       {/* <Box item lg={12} className={[globalClasses.flex, classes.form]}> */}
-        <Box className={classes.form}>
+      <Box className={classes.form}>
         <form ref={formRef}>
           {/* <Box > */}
-          <Typography className={classes.labelText}>
-            {t('Email')}
-          </Typography>
+          <Typography className={classes.labelText}>{t('Email')}</Typography>
           <Input
             style={{ marginTop: -1 }}
             id="input-email"
@@ -115,8 +112,8 @@ function Vendor(props) {
               emailError === false
                 ? globalClasses.inputError
                 : emailError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                ? globalClasses.inputSuccess
+                : ''
             ]}
             defaultValue={email}
             onBlur={event =>
@@ -138,8 +135,8 @@ function Vendor(props) {
                   passError === false
                     ? globalClasses.inputError
                     : passError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                    ? globalClasses.inputSuccess
+                    : ''
                 ]}
                 id="input-password"
                 name="input-password"
@@ -177,14 +174,14 @@ function Vendor(props) {
                         : ''
                     }
                   }
-                });
+                })
                 // Close the modal after 3 seconds by calling the parent's onClose callback
                 setTimeout(() => {
                   if (typeof props.onClose === 'function') {
-                    props.onClose(); // Close the modal
+                    props.onClose() // Close the modal
                   }
-                }, 4000);
-              }   
+                }, 4000)
+              }
             }}>
             {props.vendor ? t('Update') : t('Save')}
           </Button>

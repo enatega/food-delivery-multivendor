@@ -20,16 +20,15 @@ import useStyles from '../components/Configuration/styles'
 import useGlobalStyles from '../utils/globalStyles'
 import LoginBg from '../assets/img/loginBg.png'
 import LoginPageIcon from '../assets/img/LoginPageIcon.png'
-import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
+import InputAdornment from '@mui/material/InputAdornment'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const LOGIN = gql`
   ${ownerLogin}
 `
 const Login = props => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const [stateData, setStateData] = useState({
     email: 'admin@gmail.com',
     password: '123123',
@@ -40,7 +39,7 @@ const Login = props => {
     redirectToReferrer: !!localStorage.getItem('user-enatega')
   })
   const formRef = useRef()
-  const { t } = props;
+  const { t } = props
 
   const [isLogged, setIsLogged] = useState(false)
   const onBlur = (event, field) => {

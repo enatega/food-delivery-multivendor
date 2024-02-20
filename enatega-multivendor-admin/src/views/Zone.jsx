@@ -35,14 +35,14 @@ const DELETE_ZONE = gql`
 `
 
 const Zones = props => {
-  const { t } = props;
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [zones, setZone] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const onChangeSearch = e => setSearchQuery(e.target.value)
 
-  const [ /*mutate*/ { error, loading }] = useMutation(DELETE_ZONE, {
+  const [/*mutate*/ { error, loading }] = useMutation(DELETE_ZONE, {
     refetchQueries: [{ query: GET_ZONES }]
   })
   const { data, loading: loadingQuery, refetch } = useQuery(GET_ZONES)
@@ -51,8 +51,8 @@ const Zones = props => {
     setZone(zone)
   }
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
 
   useEffect(() => {
     localStorage.removeItem('restaurant_id')
@@ -177,11 +177,8 @@ const Zones = props => {
         <ZoneComponent />
         {/* Table */}
         {isOpen && (
-            <Alert
-            message={t('AvailableAfterPurchasing')}
-              severity="warning"
-              />
-          )}
+          <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+        )}
         {error ? <span>{`Error! ${error.message}`}</span> : null}
         {loading ? <CustomLoader /> : null}
         <DataTable
