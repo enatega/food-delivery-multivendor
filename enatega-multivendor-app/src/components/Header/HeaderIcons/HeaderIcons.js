@@ -23,7 +23,6 @@ import { theme } from '../../../utils/themeColors'
 import { HeaderBackButton } from '@react-navigation/elements'
 import UserContext from '../../../context/User'
 import { alignment } from '../../../utils/alignment'
-import CartIcon from '../../../assets/SVG/imageComponents/CartIcon'
 import { useTranslation } from 'react-i18next'
 
 const rippleColor = '#6FCF97'
