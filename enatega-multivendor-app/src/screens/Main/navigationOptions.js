@@ -5,7 +5,6 @@ import SelectedLocation from '../../components/Main/Location/Location'
 import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
 
-
 const navigationOptions = props => ({
   headerStyle: {
     backgroundColor: props != null ? props.headerMenuBackground : 'white',
@@ -13,7 +12,8 @@ const navigationOptions = props => ({
     shadowRadius: 0
   },
   headerTitleStyle: {
-    color: props.fontMainColor
+    color: props.fontMainColor,
+    ...alignment.PTlarge
   },
   headerTitleContainerStyle: {
     alignItems: 'flex-start',
