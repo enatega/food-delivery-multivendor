@@ -240,6 +240,7 @@ function RestaurantDetail() {
         style={{
           backgroundColor: theme.palette.grey[200],
           scrollBehavior: "smooth",
+          marginTop:'20px',
         }}
       >
         <Grid container>
@@ -280,6 +281,7 @@ function RestaurantDetail() {
                       color: theme.palette.common.white,
                       borderRadius: 20,
                       padding: 2,
+                      marginTop:5,
                     }}
                   />
                 </Button>
