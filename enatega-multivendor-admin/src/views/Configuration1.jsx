@@ -4,7 +4,7 @@ import { useQuery, gql } from '@apollo/client'
 import Header from '../components/Headers/Header'
 import { getConfiguration } from '../apollo'
 
-import { Grid } from '@mui/material'
+import { Grid , useTheme } from '@mui/material'
 import { ReactComponent as ConfigIcon } from '../assets/svg/svg/Configuration.svg'
 import { Box } from '@mui/material'
 
@@ -15,24 +15,26 @@ const Configuration1 = props => {
   const {  error: errorQuery, loading: loadingQuery } = useQuery(
     GET_CONFIGURATION
   )
+  const { t } = props;
+  const theme = useTheme();
   return (
     <>
       <Header />
-      {errorQuery && 'Error'}
+      {errorQuery && t('Error')}
       {loadingQuery ? (
-        'Loading'
+        t('LoadingDots')
       ) : (
         <Grid container ml={2} spacing={2}>
           <Grid item sx={12} md={7} lg={7}>
           <Box container style={{backgroundColor: 'white',
                 margin: '60px 0',
                 borderRadius: 20,
-                boxShadow: '0px 0px 38px rgba(0, 0, 0, 0.06)',
+                boxShadow: `0px 0px 38px ${theme.palette.common.blackShade}`,
                 textAlign: 'center',
                 alignItems:"center",
                 justifyContent:"center",
                 padding: 1}}>
-               <h4>This feature will available after purchasing product</h4>
+                <h4>{t('AvailableAfterPurchasing')}</h4>
             </Box >
           </Grid>
           <Grid

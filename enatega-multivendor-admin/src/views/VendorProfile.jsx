@@ -1,15 +1,20 @@
 import React, { useState, useRef } from 'react'
 import { validateFunc } from '../constraints/constraints'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
 import Header from '../components/Headers/Header'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { getRestaurantProfile, editRestaurant } from '../apollo'
-import { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } from '../config/constants'
+import ConfigurableValues from '../config/constants'
 import useStyles from '../components/Restaurant/styles'
 import useGlobalStyles from '../utils/globalStyles'
-import { Box, Alert, Typography, Button, Input } from '@mui/material'
+import { Box, Alert, Typography, Button, Input, Grid, Checkbox } from '@mui/material'
 import { Container } from '@mui/system'
 import CustomLoader from '../components/Loader/CustomLoader'
+import InputAdornment from '@mui/material/InputAdornment';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { SHOP_TYPE } from '../utils/enums'
+import Dropdown from '../components/Dropdown';
 
 const GET_PROFILE = gql`
   ${getRestaurantProfile}
@@ -19,8 +24,13 @@ const EDIT_RESTAURANT = gql`
 `
 
 const VendorProfile = () => {
-  const restaurantId = localStorage.getItem('restaurantId')
 
+ const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
+
+  const { t } = useTranslation();
+
+  const restaurantId = localStorage.getItem('restaurantId')
+  const [showPassword, setShowPassword] = useState(false);
   const [imgUrl, setImgUrl] = useState('')
   const [nameError, setNameError] = useState(null)
   const [usernameError, setUsernameError] = useState(null)
@@ -42,7 +52,7 @@ const VendorProfile = () => {
     setMinimumOrderError(null)
     setSalesTaxError(null)
     setErrors('')
-    setSuccess('Restaurant updated successfully')
+    setSuccess(t('RestaurantUpdatedSuccessfully'))
     setTimeout(hideAlert, 5000)
   }
 
@@ -102,7 +112,7 @@ const VendorProfile = () => {
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async() => {
+  const uploadImageToCloudinary = async () => {
     if (imgUrl === '') return imgUrl
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
@@ -171,7 +181,7 @@ const VendorProfile = () => {
         salesTaxError
       )
     ) {
-      setErrors('Fields Required')
+      setErrors(t('FieldsRequired'))
     }
     return (
       nameErrors &&
@@ -195,7 +205,7 @@ const VendorProfile = () => {
           <Box style={{ alignItems: 'start' }} className={classes.flexRow}>
             <Box item className={classes.heading2}>
               <Typography variant="h6" className={classes.textWhite}>
-                Update Profile
+                {t('UpdateProfile')}
               </Typography>
             </Box>
           </Box>
@@ -205,142 +215,222 @@ const VendorProfile = () => {
           ) : (
             <Box className={classes.form}>
               <form ref={formRef}>
-                <Box className={globalClasses.flexRow}>
-                  <Input
-                    name="username"
-                    id="input-type-username"
-                    placeholder="Restaurant's username"
-                    type="text"
-                    defaultValue={(data && data.restaurant.username) || ''}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      usernameError === false
-                        ? globalClasses.inputError
-                        : usernameError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                  <Input
-                    name="password"
-                    id="input-type-password"
-                    placeholder="Restaurant's password"
-                    type="text"
-                    defaultValue={(data && data.restaurant.password) || ''}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      passwordError === false
-                        ? globalClasses.inputError
-                        : passwordError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                </Box>
-                <Box className={globalClasses.flexRow}>
-                  <Input
-                    name="name"
-                    id="input-type-name"
-                    placeholder="Restaurant's name"
-                    type="text"
-                    defaultValue={(data && data.restaurant.name) || ''}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      nameError === false
-                        ? globalClasses.inputError
-                        : nameError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                  <Input
-                    name="address"
-                    id="input-type-address"
-                    placeholder="Restaurant's address"
-                    type="text"
-                    defaultValue={(data && data.restaurant.address) || ''}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      addressError === false
-                        ? globalClasses.inputError
-                        : addressError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                </Box>
-                <Box className={globalClasses.flexRow}>
-                  <Input
-                    name="deliveryTime"
-                    id="input-type-delivery-time"
-                    placeholder="Delivery Time"
-                    type="number"
-                    defaultValue={data && data.restaurant.deliveryTime}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      deliveryTimeError === false
-                        ? globalClasses.inputError
-                        : deliveryTimeError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                  <Input
-                    name="minimumOrder"
-                    id="input-type-minimum-order"
-                    placeholder="Minimum order"
-                    type="number"
-                    disableUnderline
-                    defaultValue={data && data.restaurant.minimumOrder}
-                    className={[
-                      globalClasses.input,
-                      minimumOrderError === false
-                        ? globalClasses.inputError
-                        : minimumOrderError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                </Box>
-                <Box className={globalClasses.flexRow}>
-                  <Input
-                    name="salesTax"
-                    id="input-type-sales-tax"
-                    placeholder="Sales tax"
-                    type="number"
-                    defaultValue={data && data.restaurant.tax}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      salesTaxError === false
-                        ? globalClasses.inputError
-                        : salesTaxError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                  <Input
-                    name="prefix"
-                    id="input-type-order_id_prefix"
-                    placeholder="Order Prefix"
-                    type="text"
-                    defaultValue={data && data.restaurant.orderPrefix}
-                    disableUnderline
-                    className={[
-                      globalClasses.input,
-                      prefixError === false
-                        ? globalClasses.inputError
-                        : prefixError === true
-                          ? globalClasses.inputSuccess
-                          : ''
-                    ]}
-                  />
-                </Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('RestaurantUsername')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="username"
+                        id="input-type-username"
+                        placeholder={t('RestaurantUsername')}
+                        type="text"
+                        defaultValue={(data && data.restaurant.username) || ''}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          usernameError === false
+                            ? globalClasses.inputError
+                            : usernameError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                        onChange={(event) => {
+                          if (event.target.value.includes(' ')) {
+                            const usernameWithoutSpaces = event.target.value.replace(/ /g, '');
+                            event.target.value = usernameWithoutSpaces;
+                          }
+                        }}
+                      />
+
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('Password')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="password"
+                        id="input-type-password"
+                        placeholder={t('PHRestaurantPassword')}
+                        type={showPassword ? 'text' : 'password'}
+                        defaultValue={(data && data.restaurant.password) || ''}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          passwordError === false
+                            ? globalClasses.inputError
+                            : passwordError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                          ]}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <Checkbox
+                                checked={showPassword}
+                                onChange={() => setShowPassword(!showPassword)}
+                                color="primary"
+                                icon={<VisibilityOffIcon />}
+                                checkedIcon={<VisibilityIcon />}
+                              />
+                            </InputAdornment>
+                          }
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('Name')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="name"
+                        id="input-type-name"
+                        placeholder={t('PHRestaurantName')}
+                        type="text"
+                        defaultValue={(data && data.restaurant.name) || ''}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          nameError === false
+                            ? globalClasses.inputError
+                            : nameError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('Address')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="address"
+                        id="input-type-address"
+                        placeholder={t('PHRestaurantAddress')}
+                        type="text"
+                        defaultValue={(data && data.restaurant.address) || ''}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          addressError === false
+                            ? globalClasses.inputError
+                            : addressError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('DeliveryTime')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="deliveryTime"
+                        id="input-type-delivery-time"
+                        placeholder={t('DeliveryTime')}
+                        type="number"
+                        defaultValue={data && data.restaurant.deliveryTime}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          deliveryTimeError === false
+                            ? globalClasses.inputError
+                            : deliveryTimeError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('MinOrder')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="minimumOrder"
+                        id="input-type-minimum-order"
+                        placeholder={t('MinOrder')}
+                        type="number"
+                        disableUnderline
+                        defaultValue={data && data.restaurant.minimumOrder}
+                        className={[
+                          globalClasses.input,
+                          minimumOrderError === false
+                            ? globalClasses.inputError
+                            : minimumOrderError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('SalesTax')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="salesTax"
+                        id="input-type-sales-tax"
+                        placeholder={t('SalesTax')}
+                        type="number"
+                        defaultValue={data && data.restaurant.tax}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          salesTaxError === false
+                            ? globalClasses.inputError
+                            : salesTaxError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>{t('OrderPrefix')}</Typography>
+                      <Input
+                        style={{ marginTop: -1 }}
+                        name="prefix"
+                        id="input-type-order_id_prefix"
+                        placeholder={t('OrderPrefix')}
+                        type="text"
+                        defaultValue={data && data.restaurant.orderPrefix}
+                        disableUnderline
+                        className={[
+                          globalClasses.input,
+                          prefixError === false
+                            ? globalClasses.inputError
+                            : prefixError === true
+                              ? globalClasses.inputSuccess
+                              : ''
+                        ]}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Dropdown
+                      title={t('Shop Category')}
+                      values={Object.values(SHOP_TYPE)}
+                      defaultValue={
+                        data.restaurant.shopType || SHOP_TYPE.RESTAURANT
+                      }
+                      id={'shop-type'}
+                      name={'shopType'}
+                      displayEmpty={true}
+                    />
+                  </Grid>
+                </Grid>
                 <Box
                   mt={3}
                   style={{ alignItems: 'center' }}
@@ -351,16 +441,17 @@ const VendorProfile = () => {
                     src={
                       imgUrl ||
                       (data && data.restaurant.image) ||
-                      'https://www.lifcobooks.com/wp-content/themes/shopchild/images/placeholder_book.png'
+                      'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
                     }
                   />
                   <label htmlFor="file-upload" className={classes.fileUpload}>
-                    Upload an image
+                    {t('UploadAnImage')}
                   </label>
                   <input
                     className={classes.file}
                     id="file-upload"
                     type="file"
+                    accept="image/*"
                     onChange={event => {
                       selectImage(event, 'image_url')
                     }}
@@ -383,6 +474,7 @@ const VendorProfile = () => {
                         const username = form.username.value
                         const password = form.password.value
                         const salesTax = form.salesTax.value
+                        const shopType = form.shopType.value
                         mutate({
                           variables: {
                             restaurantInput: {
@@ -392,19 +484,20 @@ const VendorProfile = () => {
                               image:
                                 imgUpload ||
                                 data.restaurant.image ||
-                                'https://www.lifcobooks.com/wp-content/themes/shopchild/images/placeholder_book.png',
+                                'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
                               orderPrefix: prefix,
                               deliveryTime: Number(deliveryTime),
                               minimumOrder: Number(minimumOrder),
                               username: username,
                               password: password,
-                              salesTax: +salesTax
+                              salesTax: +salesTax,
+                              shopType
                             }
                           }
                         })
                       }
                     }}>
-                    SAVE
+                    {t('Save')}
                   </Button>
                 </Box>
               </form>

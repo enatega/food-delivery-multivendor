@@ -35,6 +35,7 @@ const DELETE_ZONE = gql`
 `
 
 const Zones = props => {
+  const { t } = props;
   const [editModal, setEditModal] = useState(false)
   const [zones, setZone] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -49,6 +50,9 @@ const Zones = props => {
     setEditModal(!editModal)
     setZone(zone)
   }
+  const closeEditModal = () => {
+    setEditModal(false);
+  };
 
   useEffect(() => {
     localStorage.removeItem('restaurant_id')
@@ -68,17 +72,17 @@ const Zones = props => {
 
   const columns = [
     {
-      name: 'Title',
+      name: t('Title'),
       sortable: true,
       selector: 'title'
     },
     {
-      name: 'Description',
+      name: t('Description'),
       sortable: true,
       selector: 'description'
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -124,7 +128,7 @@ const Zones = props => {
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
@@ -140,7 +144,7 @@ const Zones = props => {
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -174,7 +178,7 @@ const Zones = props => {
         {/* Table */}
         {isOpen && (
             <Alert
-              message="This feature will available after purchasing product"
+            message={t('AvailableAfterPurchasing')}
               severity="warning"
               />
           )}
@@ -189,7 +193,7 @@ const Zones = props => {
               onClick={() => refetch()}
             />
           }
-          title={<TableHeader title="Zones" />}
+          title={<TableHeader title={t('Zones')} />}
           columns={columns}
           data={filtered}
           pagination
@@ -210,7 +214,7 @@ const Zones = props => {
           onClose={() => {
             toggleModal()
           }}>
-          <ZoneComponent zone={zones} closeModal={setEditModal} />
+          <ZoneComponent zone={zones} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

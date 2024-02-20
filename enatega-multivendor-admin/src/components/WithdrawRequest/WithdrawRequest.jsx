@@ -64,8 +64,8 @@ function WithdrawRequest(props) {
   const onCompleted = data => {
     if (!props.rider) clearFields()
     const message = props.rider
-      ? 'Rider updated successfully'
-      : 'Rider added successfully'
+      ? t('RiderUpdatedSuccessfully')
+      : t('RiderAddedSuccessfully')
     mainErrorSetter('')
     successSetter(message)
     setTimeout(hideAlert, 5000)
@@ -143,11 +143,11 @@ function WithdrawRequest(props) {
       <Box className={classes.flexRow}>
         <Box item className={classes.heading}>
           <Typography variant="h6" className={classes.text}>
-            {props.rider ? t('Edit Rider') : t('Add Rider')}
+            {props.rider ? t('EditRider') : t('AddRider')}
           </Typography>
         </Box>
         <Box ml={10} mt={1}>
-          <label>Available</label>
+          <label>{t('Available')}</label>
           <Switch
             defaultChecked={riderAvailable}
             value={riderAvailable}
@@ -165,7 +165,7 @@ function WithdrawRequest(props) {
             <Input
               id="input-name"
               name="input-name"
-              placeholder="Rider name"
+              placeholder={t('PHRiderName')}
               type="text"
               defaultValue={name}
               onBlur={event => {
@@ -177,14 +177,14 @@ function WithdrawRequest(props) {
                 nameError === false
                   ? globalClasses.inputError
                   : nameError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
             <Input
               id="input-username"
               name="input-userName"
-              placeholder="Username"
+              placeholder={t('Username')}
               type="text"
               defaultValue={userName}
               onBlur={event =>
@@ -196,8 +196,8 @@ function WithdrawRequest(props) {
                 usernameError === false
                   ? globalClasses.inputError
                   : usernameError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
@@ -206,7 +206,7 @@ function WithdrawRequest(props) {
               ref={formRef}
               id="input-phone"
               name="input-phone"
-              placeholder="Phone Number"
+              placeholder={t('PhoneNumber')}
               type="number"
               defaultValue={phone}
               onBlur={event =>
@@ -218,14 +218,14 @@ function WithdrawRequest(props) {
                 phoneError === false
                   ? globalClasses.inputError
                   : phoneError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
             <Input
               id="input-password"
               name="input-password"
-              placeholder="e.g 132"
+              placeholder={t('PHNumber')}
               type="text"
               defaultValue={password}
               onBlur={event =>
@@ -237,8 +237,8 @@ function WithdrawRequest(props) {
                 passwordError === false
                   ? globalClasses.inputError
                   : passwordError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
@@ -256,12 +256,12 @@ function WithdrawRequest(props) {
                 zoneError === false
                   ? globalClasses.inputError
                   : zoneError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}>
               {!zone && (
                 <MenuItem style={{ color: 'black' }} value={''}>
-                  Select
+                  {t('Select')}
                 </MenuItem>
               )}
               {data &&
@@ -297,7 +297,7 @@ function WithdrawRequest(props) {
                   })
                 }
               }}>
-              SAVE
+              {t('Save')}
             </Button>
           </Box>
         </form>

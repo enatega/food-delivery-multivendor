@@ -1,17 +1,18 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { withTranslation } from 'react-i18next'
 import { useMutation, gql } from '@apollo/client'
 import { validateFunc } from '../../../constraints/constraints'
 import { savePaypalConfiguration } from '../../../apollo'
 import useStyles from '../styles'
 import useGlobalStyles from '../../../utils/globalStyles'
-import { Box, Switch, Typography, Input, Button } from '@mui/material'
+import { Box, Switch, Typography, Input, Button, Alert } from '@mui/material'
 
 const SAVE_PAYPAL_CONFIGURATION = gql`
   ${savePaypalConfiguration}
 `
 
 function Paypal(props) {
+  const { t } = props;
   const formRef = useRef()
   const clientId = props.clientId || ''
   const clientSecret = props.clientSecret || ''
@@ -34,17 +35,40 @@ function Paypal(props) {
   }
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
+  const [successMessage, setSuccessMessage] = useState('');
+  const handleSuccess = (message) => {
+    setSuccessMessage(message);
+  };
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [successMessage, setSuccessMessage]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const handleError = (error) => {
+    setErrorMessage('An error occurred while saving configuration.');
+    console.error('Mutation error:', error);
+  };
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setErrorMessage('');
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [errorMessage, setErrorMessage]);
 
   return (
     <Box container className={classes.container}>
       <Box className={classes.flexRow}>
         <Box item className={classes.heading}>
           <Typography variant="h6" className={classes.text}>
-            Paypal
+            {t('Paypal')}
           </Typography>
         </Box>
         <Box ml={5} mt={1}>
-          <label>Sandbox</label>
+          <label>{t('Sandbox')}</label>
           <Switch
             defaultChecked={sandbox}
             value={sandbox}
@@ -58,8 +82,10 @@ function Paypal(props) {
 
       <Box className={classes.form}>
         <form ref={formRef}>
-          <Box className={globalClasses.flexRow}>
+          <Box>
+            <Typography className={classes.labelText}>{t('Client ID')}</Typography>
             <Input
+              style={{ marginTop: -1 }}
               id="input-clientid"
               name="input-clientid"
               placeholder="ClientId e.g AeGIgSX--JEVwoQgLjGOb8gh1DUJG0MFVgLc2mBIe6_V5NefV0LM3L78m01fLLI6U2FFB-qJr4ErrtL1"
@@ -79,8 +105,10 @@ function Paypal(props) {
               ]}
             />
           </Box>
-          <Box className={globalClasses.flexRow}>
+          <Box>
+            <Typography className={classes.labelText}>{t('ClientSecretKey')}</Typography>
             <Input
+              style={{ marginTop: -1 }}
               id="input-clientsecret"
               name="input-clientsecret"
               placeholder="e.g EHAP6CSZt3kwzcpdxrpw16PqHEspw5wtJCVVux_95e2Qcwbeh6mQp9GncEbxnVFkEbJu4z1i-GuDDthf"
@@ -117,14 +145,41 @@ function Paypal(props) {
                         clientId: formRef.current['input-clientid'].value,
                         clientSecret:
                           formRef.current['input-clientsecret'].value,
-                        sandbox: formRef.current['input-sandbox'].checked
+                        //sandbox: formRef.current['input-sandbox'].checked
+                        sandbox: sandbox,
                       }
-                    }
+                    },
+                    onCompleted: (data) => {
+                      handleSuccess('Configuration saved successfully!');
+                    },
+                    onError: (error) => {
+                      handleError(error);
+                    },
                   })
                 }
               }}>
-              SAVE
+              {t('Save')}
             </Button>
+          </Box>
+          <Box mt={2}>
+            {successMessage && (
+              <Alert
+                  className={globalClasses.alertSuccess}
+                  variant="filled"
+                  severity="success"
+                >
+                  {successMessage}
+                </Alert>
+            )}
+            {errorMessage && (
+              <Alert
+                className={globalClasses.alertError}
+                variant="filled"
+                severity="error"
+              >
+                {errorMessage}
+              </Alert>
+            )}
           </Box>
         </form>
       </Box>

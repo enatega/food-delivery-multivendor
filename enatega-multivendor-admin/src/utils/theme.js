@@ -139,6 +139,7 @@ const theme = createTheme({
     mode: 'light',
     common: {
       black: '#000',
+      blackShade: 'rgba(0, 0, 0, 0.06)',
       white: '#fff'
     },
     primary: {
@@ -152,24 +153,39 @@ const theme = createTheme({
     secondary: {
       main: '#FAFAFA',
       light: '#333333',
+      lightest: '#3C8F7C',
       dark: '#949393',
+      darkest: '#3EC6DD',
       contrastText: '#fff'
     },
     success: {
       main: '#1DB20D',
+      light: '#CDCDCD',
+      lightest: '#EEF4FA',
+      dark: '#FDEFDD',
+      darkest: '#DEE6ED',
       contrastText: '#fff'
     },
     info: {
       main: 'rgba(39,111,191,0.8)',
+      light: 'rgba(63, 64, 65, 0.66)',
+      lightest: 'rgba(238, 244, 250, 0.66)',
+      dark: 'rgba(0, 0, 0, 0.08)',
+      darkest: 'rgba(0, 0, 0, 0.1)',
       contrastText: '#fff'
     },
     error: {
       main: '#fe0000',
+      light: '#BB2124',
+      lightest: '#fb6340',
       contrastText: '#fff'
     },
     warning: {
       main: '#FA7751',
       light: '#FCC54C',
+      lightest: 'rgba(240, 173, 78,0.2)',
+      dark: '#90EA93',
+      darkest: 'rgba(111, 207, 151, 0.34)',
       contrastText: '#fff'
     },
     grey: {

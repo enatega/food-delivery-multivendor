@@ -10,8 +10,10 @@ import useGlobalStyles from '../utils/globalStyles'
 import SearchBar from '../components/TableHeader/SearchBar'
 import { ReactComponent as WithdrawIcon } from '../assets/svg/svg/Request.svg'
 import TableHeader from '../components/TableHeader'
+import { withTranslation, useTranslation } from 'react-i18next'
 
-export default function WithdrawRequest() {
+function WithdrawRequest() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const { loading, error, data } = useQuery(
@@ -30,27 +32,27 @@ export default function WithdrawRequest() {
 
   const columns = [
     {
-      name: 'Request ID',
+      name: t('RequestID'),
       selector: 'requestId'
     },
     {
-      name: 'Rider',
+      name: t('Rider'),
       sortable: true,
       selector: 'rider',
       cell: row => <>{row.rider ? row.rider.name : null}</>
     },
 
     {
-      name: 'Amount',
+      name: t('Amount'),
       selector: 'requestAmount'
     },
     {
-      name: 'Date',
+      name: t('Date'),
       selector: 'requestTime',
       cell: row => <>{new Date(row.requestTime).toDateString()}</>
     },
     {
-      name: 'Status',
+      name: t('Status'),
       selector: 'status',
       cell: row => (
         <div>
@@ -68,12 +70,12 @@ export default function WithdrawRequest() {
     searchQuery.length < 3
       ? data && data.getAllWithdrawRequests.data
       : data &&
-        data.getAllWithdrawRequests.data.filter(request => {
-          return (
-            request.requestId.toLowerCase().search(regex) > -1 ||
-            request.rider.name.toLowerCase().search(regex) > -1
-          )
-        })
+      data.getAllWithdrawRequests.data.filter(request => {
+        return (
+          request.requestId.toLowerCase().search(regex) > -1 ||
+          request.rider.name.toLowerCase().search(regex) > -1
+        )
+      })
 
   const updateRequestStatus = row => {
     return (
@@ -87,7 +89,7 @@ export default function WithdrawRequest() {
           value={row.status}
           className={globalClasses.selectInput}>
           <MenuItem style={{ color: 'black' }} value={''}>
-            Status
+            {t('Status')}
           </MenuItem>
           <MenuItem
             style={{ color: 'black' }}
@@ -102,7 +104,7 @@ export default function WithdrawRequest() {
                 })
               }
             }}>
-            REQUESTED
+            {t('REQUESTED')}
           </MenuItem>
           <MenuItem
             style={{ color: 'black' }}
@@ -117,7 +119,7 @@ export default function WithdrawRequest() {
                 })
               }
             }}>
-            TRANSFERRED
+            {t('TRANSFERRED')}
           </MenuItem>
           <MenuItem
             style={{ color: 'black' }}
@@ -132,7 +134,7 @@ export default function WithdrawRequest() {
                 })
               }
             }}>
-            CANCELLED
+            {t('CANCELLEDStatus')}
           </MenuItem>
         </Select>
       </>
@@ -157,10 +159,11 @@ export default function WithdrawRequest() {
               <SearchBar
                 value={searchQuery}
                 onChange={onChangeSearch}
+                placeh
                 // onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Withdraw Requests" />}
+            title={<TableHeader title={t('WithdrawRequests')} />}
             columns={columns}
             data={filtered}
             pagination
@@ -175,3 +178,4 @@ export default function WithdrawRequest() {
     </>
   )
 }
+export default withTranslation()(WithdrawRequest)

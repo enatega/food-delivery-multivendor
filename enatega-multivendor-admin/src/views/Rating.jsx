@@ -18,6 +18,7 @@ const REVIEWS = gql`
 `
 
 const Ratings = props => {
+  const { t } = props;
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const restaurantId = localStorage.getItem('restaurantId')
@@ -28,19 +29,19 @@ const Ratings = props => {
 
   const columns = [
     {
-      name: 'Name',
+      name: t('Name'),
       sortable: true,
       selector: 'user.name',
       cell: row => <>{row.order.user.name}</>
     },
     {
-      name: 'Email',
+      name: t('Email'),
       sortable: true,
       selector: 'user.email',
       cell: row => <>{row.order.user.email}</>
     },
     {
-      name: 'Items',
+      name: t('Items'),
       cell: row => (
         <>
           {row.order.items.map(({ title }) => {
@@ -50,13 +51,13 @@ const Ratings = props => {
       )
     },
     {
-      name: 'Review',
+      name: t('Review'),
       sortable: true,
       selector: 'description',
       cell: row => <>{row.description}</>
     },
     {
-      name: 'Ratings',
+      name: t('Ratings'),
       sortable: true,
       selector: 'rating',
       cell: row => <>{row.rating}</>
@@ -103,14 +104,14 @@ const Ratings = props => {
       <Container className={globalClasses.flex} fluid>
         {errorQuery && (
           <tr>
-            <td>{`Error! ${errorQuery.message}`}</td>
+            <td>{`${t('Error')} ${errorQuery.message}`}</td>
           </tr>
         )}
         {loadingQuery ? (
           <CustomLoader />
         ) : (
           <DataTable
-            title={<TableHeader title="Ratings" />}
+              title={<TableHeader title={t('Ratings')} />}
             subHeader={true}
             subHeaderComponent={
               <SearchBar value={searchQuery} onChange={onChangeSearch} />

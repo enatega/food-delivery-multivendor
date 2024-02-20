@@ -1,21 +1,25 @@
 import * as React from 'react'
-import { Box, Link, BottomNavigation, Typography } from '@mui/material'
+import { Box, Link, BottomNavigation, Typography, useTheme } from '@mui/material'
 import useStyles from './styles'
+import { withTranslation } from 'react-i18next'
 
-export default function AdminFooter(props) {
+
+function AdminFooter(props) {
+  const theme = useTheme();
+  const { t } = props;
   const [value, setValue] = React.useState(0)
   const classes = useStyles()
 
   return (
     <Box
       sx={{
-        background: 'linear-gradient(237.49deg, #EEF4FA 0.63%, #DEE6ED 85.49%)'
+        background: `linear-gradient(237.49deg, ${theme.palette.success.lightest} 0.63%, ${theme.palette.success.darkest} 85.49%)`
       }}
       className={classes.footer}>
       <BottomNavigation
         sx={{
           background:
-            'linear-gradient(237.49deg, #EEF4FA 0.63%, #DEE6ED 85.49%)'
+            `linear-gradient(237.49deg, ${theme.palette.success.lightest} 0.63%, ${theme.palette.success.darkest} 85.49%)`
         }}
         showLabels
         value={value}
@@ -26,26 +30,31 @@ export default function AdminFooter(props) {
 
         <Link
           className={classes.link}
-          href="https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/"
+          href="https://multivendor.enatega.com/"
           target="_blank"
-          underline="none">
-          Enatega Multivendor
+          underline="none"
+        >
+          {t('EnategaMultivendor')}
         </Link>
         <Link
           className={classes.link}
-          href="https://ninjascode.com/pages/ourteam.html"
+          href="https://ninjascode.com/about-us/"
           target="_blank"
-          underline="none">
-          About Us
+          underline="none"
+        >
+          {t('About Us')}
         </Link>
         <Link
           className={classes.link}
-          href="https://medium.com/@sharangohar"
+          href="https://enatega.com/blog/"
           target="_blank"
-          underline="none">
-          Blog
+          underline="none"
+        >
+          {t('Blog')}
         </Link>
       </BottomNavigation>
     </Box>
   )
 }
+
+export default withTranslation()(AdminFooter)

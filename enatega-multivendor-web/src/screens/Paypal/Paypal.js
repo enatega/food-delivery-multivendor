@@ -10,7 +10,7 @@ import FlashMessage from "../../components/FlashMessage";
 import Footer from "../../components/Footer/Footer";
 import { Header } from "../../components/Header";
 import { PaymentOrderCard } from "../../components/Orders";
-import { SERVER_URL, PAYPAL_KEY } from "../../config/constants";
+import ConfigurableValues from "../../config/constants";
 import UserContext from "../../context/User";
 import useStyles from "./styles";
 import Analytics from "../../utils/analytics";
@@ -23,6 +23,7 @@ const ORDERS = gql`
 `;
 
 function Paypal() {
+  const { SERVER_URL, PAYPAL_KEY } = ConfigurableValues();
   const classes = useStyles();
   const navigate = useNavigate();
   const client = useApolloClient();
@@ -125,9 +126,10 @@ function Paypal() {
             >
               <Box
                 style={{
-                  width: "100%",
+                  width: "50%",
                   height: "auto",
                   textAlign: "center",
+                  alignSelf: "center",
                 }}
               >
                 <PayPalButton

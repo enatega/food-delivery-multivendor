@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
   btnBase: {
     height: "50px",
     backgroundColor: theme.palette.common.black,
+    opacity: 1,
+    transition: 'opacity 0.3s',
     "&:hover": {
+      backgroundColor: theme.palette.common.black,
       opacity: 0.8,
     },
     width: "70%",

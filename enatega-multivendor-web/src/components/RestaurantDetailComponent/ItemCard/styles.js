@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyle = makeStyles((theme) => ({
   cardContainer: {
@@ -11,6 +11,7 @@ const useStyle = makeStyles((theme) => ({
     padding: "25px",
     cursor: "pointer",
     backgroundColor: theme.palette.common.white,
+    borderRadius: 10
   },
   titleText: {
     paddingTop: "20px",

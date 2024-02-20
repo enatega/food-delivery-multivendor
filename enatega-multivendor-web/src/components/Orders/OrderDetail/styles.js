@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
     width: 450,
     backgroundColor: theme.palette.common.white,
-    border: "2px solid #FFFF",
+    border: "2px solid theme.palette.common.white",
     outline: 0,
     borderRadius: 10,
     padding: `${theme.spacing(6)} ${theme.spacing(4)} ${theme.spacing(

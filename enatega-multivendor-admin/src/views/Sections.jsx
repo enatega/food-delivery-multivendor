@@ -43,6 +43,7 @@ const EDIT_SECTION = gql`
 // `
 
 function Sections(props) {
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [sections, setSections] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -50,6 +51,11 @@ function Sections(props) {
     setEditModal(!editModal)
     setSections(section)
   }
+
+  // Callback function to close the modal
+  const closeEditModal = () => {
+    setEditModal(false);
+  };
 
   const restaurantId = localStorage.getItem('restaurantId')
 
@@ -79,22 +85,22 @@ function Sections(props) {
 
   const columns = [
     {
-      name: 'Name',
+      name: t('Name'),
       sortable: true,
       selector: 'name'
     },
     {
-      name: 'Status',
+      name: t('Status'),
       sortable: false,
       cell: row => <>{statusChanged(row)}</>
     },
     {
-      name: 'Restaurants',
+      name: t('Restaurants'),
       sortable: true,
       cell: row => <>{row.restaurants.map(item => `${item.name}`).join(', ')}</>
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -167,7 +173,7 @@ function Sections(props) {
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
@@ -183,7 +189,7 @@ function Sections(props) {
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -203,7 +209,7 @@ function Sections(props) {
         data.sections.filter(section => {
           return section.name.toLowerCase().search(regex) > -1
         })
-  const { t } = props
+
   const globalClasses = useGlobalStyles()
 
   return (
@@ -226,7 +232,7 @@ function Sections(props) {
         </Grid>
         {isOpen && (
             <Alert
-              message="This feature will available after purchasing product"
+            message={t('AvailableAfterPurchasing')}
               severity="warning"
               />
           )}
@@ -237,7 +243,7 @@ function Sections(props) {
           <CustomLoader />
         ) : (
           <DataTable
-            title={<TableHeader title="Restaurant Sections" />}
+            title={<TableHeader title={t('RestaurantSections')} />}
             subHeader={true}
             subHeaderComponent={
               <SearchBar
@@ -267,7 +273,7 @@ function Sections(props) {
             marginLeft: '18%',
             overflowY: 'auto'
           }}>
-          <SectionComponent section={sections} />
+          <SectionComponent section={sections} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

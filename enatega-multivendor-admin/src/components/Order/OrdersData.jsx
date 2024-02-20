@@ -10,6 +10,7 @@ import { useQuery, gql } from '@apollo/client'
 import SearchBar from '../TableHeader/SearchBar'
 import { customStyles } from '../../utils/tableCustomStyles'
 import TableHeader from '../TableHeader'
+import { useTheme } from '@mui/material'
 
 const ORDERCOUNT = gql`
   ${orderCount}
@@ -19,6 +20,8 @@ const ORDER_PLACED = gql`
 `
 
 const OrdersData = props => {
+  const theme = useTheme();
+  const { t } = props;
   const { selected, updateSelected } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
@@ -67,32 +70,32 @@ const OrdersData = props => {
 
   const columns = [
     {
-      name: 'OrderID',
+      name: t('OrderID'),
       sortable: true,
       selector: 'orderId'
     },
     {
-      name: 'Items',
+      name: t('Items'),
       cell: row => <>{getItems(row.items)}</>
     },
     {
-      name: 'Payment',
+      name: t('Payment'),
       selector: 'paymentMethod',
       sortable: true
     },
     {
-      name: 'Status',
+      name: t('Status'),
       selector: 'orderStatus',
       sortable: true
     },
     {
-      name: 'Datetime',
+      name: t('Datetime'),
       cell: row => (
         <>{new Date(row.createdAt).toLocaleString().replace(/ /g, '\n')}</>
       )
     },
     {
-      name: 'Address',
+      name: t('Address'),
       cell: row => (
         <>{transformToNewline(row.deliveryAddress.deliveryAddress, 3)}</>
       )
@@ -104,7 +107,7 @@ const OrdersData = props => {
       when: row =>
         row.orderStatus !== 'DELIVERED' && row.orderStatus !== 'CANCELLED',
       style: {
-        backgroundColor: 'rgba(240, 173, 78,0.2)'
+        backgroundColor: theme.palette.warning.lightest
       }
     }
   ]
@@ -156,7 +159,7 @@ const OrdersData = props => {
   return (
     <>
       <DataTable
-        title={<TableHeader title="Orders" />}
+        title={<TableHeader title={t("Orders")} />}
         columns={columns}
         data={filtered}
         onRowClicked={props.toggleModal}

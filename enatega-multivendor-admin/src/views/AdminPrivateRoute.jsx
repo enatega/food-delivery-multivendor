@@ -7,15 +7,15 @@ export const AdminPrivateRoute = ({ component: Component, ...rest }) => (
       localStorage.getItem('user-enatega') ? (
         JSON.parse(localStorage.getItem('user-enatega')).userType ===
         'ADMIN' ? (
-            <Component {...props} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: '/',
-                state: { from: props.location }
-              }}
-            />
-          )
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/',
+              state: { from: props.location }
+            }}
+          />
+        )
       ) : (
         <Redirect
           to={{

@@ -1,6 +1,9 @@
 {
   "name": "enatega-multivendor",
   "version": "2.0.0",
+  "engines": {
+    "node": ">=18.17.1"
+  },
   "description": "Enatega MultiVendor dashboard",
   "main": "index.js",
   "homepage": "https://multivendor-admin.ninjascode.com/",
@@ -51,6 +54,7 @@
     "@react-google-maps/api": "^1.9.7",
     "@sentry/react": "^6.16.1",
     "@sentry/tracing": "^6.16.1",
+    "@tawk.to/tawk-messenger-react": "^2.0.1",
     "@wojtekmaj/react-timerange-picker": "^3.0.0",
     "apollo-boost": "^0.4.9",
     "chart.js": "^3.6.0",
@@ -70,6 +74,7 @@
     "react-dom": "^18.1.0",
     "react-i18next": "^10.10.0",
     "react-loader-spinner": "^3.1.14",
+    "react-notifications": "^1.7.4",
     "react-router-dom": "5.1.2",
     "react-scripts": "2.1.8",
     "reactstrap": "^7.1.0",

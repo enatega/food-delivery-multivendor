@@ -20,11 +20,16 @@ import useStyles from '../components/Configuration/styles'
 import useGlobalStyles from '../utils/globalStyles'
 import LoginBg from '../assets/img/loginBg.png'
 import LoginPageIcon from '../assets/img/LoginPageIcon.png'
+import InputAdornment from '@mui/material/InputAdornment';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 
 const LOGIN = gql`
   ${ownerLogin}
 `
 const Login = props => {
+  const [showPassword, setShowPassword] = useState(false);
   const [stateData, setStateData] = useState({
     email: 'admin@gmail.com',
     password: '123123',
@@ -35,6 +40,7 @@ const Login = props => {
     redirectToReferrer: !!localStorage.getItem('user-enatega')
   })
   const formRef = useRef()
+  const { t } = props;
 
   const [isLogged, setIsLogged] = useState(false)
   const onBlur = (event, field) => {
@@ -113,7 +119,7 @@ const Login = props => {
   }
   const [mutate] = useMutation(LOGIN, { onError, onCompleted })
 
-  const loginFunc = async() => {
+  const loginFunc = async () => {
     if (validate()) {
       mutate({ variables: { ...stateData } })
     }
@@ -165,21 +171,25 @@ const Login = props => {
             justifyContent: 'center'
           }}>
           <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>
-            Enter your details below
+            {t('enterYourDetailsBelow')}
           </Typography>
           <Box container sx={{ width: 600 }} className={classes.container}>
             <Box className={classes.flexRow}>
               <Box item className={classes.heading}>
                 <Typography variant="h6" className={classes.text}>
-                  Login to Enatega
+                  {t('LogintoEnatega')}
                 </Typography>
               </Box>
             </Box>
 
             <Box className={classes.form}>
               <form ref={formRef}>
-                <Box className={globalClasses.flexRow}>
+                <Box>
+                  <Typography className={classes.labelText}>
+                    {t('Email')}
+                  </Typography>
                   <Input
+                    style={{ marginTop: -1 }}
                     id="input-email"
                     name="input-email"
                     value={stateData.email}
@@ -189,7 +199,7 @@ const Login = props => {
                     onBlur={event => {
                       onBlur(event, 'email')
                     }}
-                    placeholder="Email"
+                    placeholder={t('Email')}
                     type="email"
                     disableUnderline
                     className={[
@@ -197,18 +207,22 @@ const Login = props => {
                       stateData.emailError === false
                         ? globalClasses.inputError
                         : stateData.emailError === true
-                          ? globalClasses.inputSuccess
-                          : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                     ]}
                   />
                 </Box>
-                <Box className={globalClasses.flexRow}>
+                <Box>
+                  <Typography className={classes.labelText}>
+                    {t('Password')}
+                  </Typography>
                   <Input
-                    disabled
+                    style={{ marginTop: -1 }}
                     id="input-password"
                     name="input-password"
-                    placeholder="Password"
+                    placeholder={t('Password')}
                     value={stateData.password}
+                    type={showPassword ? 'text' : 'password'}
                     onChange={event => {
                       setStateData({
                         ...stateData,
@@ -224,9 +238,20 @@ const Login = props => {
                       stateData.passwordError === false
                         ? globalClasses.inputError
                         : stateData.passwordError === true
-                          ? globalClasses.inputSuccess
-                          : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                     ]}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <Checkbox
+                          checked={showPassword}
+                          onChange={() => setShowPassword(!showPassword)}
+                          color="primary"
+                          icon={<VisibilityOffIcon />}
+                          checkedIcon={<VisibilityIcon />}
+                        />
+                      </InputAdornment>
+                    }
                   />
                 </Box>
                 <Box
@@ -242,7 +267,7 @@ const Login = props => {
                   <FormGroup>
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
-                      label="Remember me"
+                      label={t('RememberMe')}
                     />
                   </FormGroup>
                   <Link
@@ -252,14 +277,14 @@ const Login = props => {
                       color: 'primary.main',
                       fontWeight: 'bold'
                     }}>
-                    Forgot your password?
+                    {t('ForgotYourPassword')}
                   </Link>
                 </Box>
                 <Box>
                   <Button
                     className={globalClasses.button100}
                     onClick={loginFunc}>
-                    Login
+                    {t('Login')}
                   </Button>
                 </Box>
               </form>
