@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-native-modalize/lib/index.js b/node_modules/react-native-modalize/lib/index.js
-index 28bf739..51a3f9a 100644
+index 5d5edac..07a93c0 100644
 --- a/node_modules/react-native-modalize/lib/index.js
 +++ b/node_modules/react-native-modalize/lib/index.js
-@@ -553,7 +553,7 @@ onOpen, onOpened, onClose, onClosed, onBackButtonPress, onPositionChange, onOver
+@@ -556,7 +556,7 @@ onOpen, onOpened, onClose, onClosed, onBackButtonPress, onPositionChange, onOver
      const renderChildren = () => {
          const style = adjustToContentHeight ? styles_1.default.content__adjustHeight : styles_1.default.content__container;
          const minDist = libraries_1.isRNGH2() ? undefined : ACTIVATED;
