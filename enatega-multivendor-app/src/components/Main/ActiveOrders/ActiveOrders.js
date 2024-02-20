@@ -1,9 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons'
+import { View, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { MaterialIcons } from '@expo/vector-icons'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
@@ -16,7 +15,12 @@ import RandomShape from '../../../assets/SVG/RandomShape'
 import analytics from '../../../utils/analytics'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import TextDefault from '../../Text/TextDefault/TextDefault'
+import { Modalize } from 'react-native-modalize'
+
+const SCREEN_HEIGHT = Dimensions.get('screen').height
+const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
 
 const orderStatuses = [
   {
@@ -54,57 +58,49 @@ const orderStatuses = [
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 
 const ActiveOrders = () => {
-
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
   const activeOrders = orders.filter(o =>
     orderStatusActive.includes(o.orderStatus)
   )
 
-  const currentTheme = theme[themeContext.ThemeValue]
   const [showAll, setShowAll] = useState(false)
 
   const displayOrders = showAll ? activeOrders : activeOrders.slice(0, 2)
 
   if (loadingOrders) return <Spinner />
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
+  if (!displayOrders.length) return null
+  const order = displayOrders[0]
+  const remainingTime = Math.floor((order.completionTime - Date.now()) / 1000 / 60)
+  console.log(order, remainingTime)
   return (
-    <>
-      <FlatList
-        contentContainerStyle={{ paddingRight: scale(10) }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        data={displayOrders}
-        keyExtractor={item => item._id}
-        renderItem={({ item, index }) => (
+    <Modalize alwaysOpen={MODAL_HEIGHT} withHandle={false} modalHeight={MODAL_HEIGHT} modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}>
+      <View style={{ marginTop: scale(20), marginHorizontal: scale(10) }}>
+        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+          <TextDefault Regular textColor={currentTheme.gray600}>Estimated delivery time</TextDefault>
+          <TouchableOpacity>
+            <TextDefault textColor={currentTheme.gray700} bolder>Details</TextDefault>
+          </TouchableOpacity>
+        </View>
+        <View style={{ marginTop: scale(10) }}>
+          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>15-25 mins</TextDefault>
+        </View>
+        <View>
           <Item
-            key={index}
-            navigation={navigation}
             configuration={configuration}
             currentTheme={currentTheme}
-            item={item}
+            item={order}
+            navigation={navigation}
           />
-        )}
-      />
-      <View style={styles().viewAllButton}>
-        {activeOrders.length > 2 && (
-          <>
-            <View style={styles().btncontainer}>
-              <TouchableOpacity
-                onPress={() => setShowAll(!showAll)}
-                style={styles().button}>
-                <Text style={styles().buttonText}>
-                  {showAll ? t('viewLess') : t('viewAll')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
+        </View>
+        <View></View>
       </View>
-    </>
+    </Modalize>
   )
 }
 const Item = ({ navigation, configuration, currentTheme, item }) => {
@@ -115,7 +111,7 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
     `,
     { variables: { id: item._id } }
   )
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const checkStatus = status => {
     const obj = orderStatuses.filter(x => {
       return x.key === status
@@ -123,64 +119,25 @@ const Item = ({ navigation, configuration, currentTheme, item }) => {
     return obj[0]
   }
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => {
-        Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
-          orderId: item._id
-        })
-        navigation.navigate('OrderDetail', {
-          _id: item._id,
-          currencySymbol: configuration.currencySymbol
-        })
-      }}>
-      <View>
-        <View style={styles(currentTheme).statusContainer}>
-          <View style={styles().randomShapeContainer}>
-            <RandomShape width={scale(300)} height={scale(300)} />
-          </View>
-          <View style={styles().textContainer}>
-            <View style={styles().textInnerContainer}>
-              <MaterialIcons
-                name="radio-button-checked"
-                size={30}
-                color="black"
-              />
-              <Text style={styles(currentTheme).description}>
-                {item.restaurant.name}
-              </Text>
-            </View>
-            <View style={styles().activeOrdersContainer}>
-              {Array(checkStatus(item.orderStatus).status)
-                .fill(0)
-                .map((item, index) => (
-                  <FontAwesome
-                    key={index}
-                    name="circle"
-                    size={15}
-                    color={currentTheme.iconColorPink}
-                    style={styles().statusCircle}
-                  />
-                ))}
-              {Array(4 - checkStatus(item.orderStatus).status)
-                .fill(0)
-                .map((item, index) => (
-                  <FontAwesome
-                    key={index}
-                    name="circle"
-                    size={15}
-                    color={currentTheme.radioOuterColor}
-                    style={styles().statusCircle}
-                  />
-                ))}
-            </View>
-            <Text numberOfLines={1} style={styles(currentTheme).statusText}>
-              {t(checkStatus(item.orderStatus).statusText)}
-            </Text>
-          </View>
-        </View>
+    <View style={{ marginTop: scale(20) }}>
+      <View style={{ flexDirection: 'row' }}>
+        {Array(checkStatus(item.orderStatus).status)
+          .fill(0)
+          .map((item, index) => (
+            <View key={index} style={{ height: scale(4), backgroundColor: currentTheme.primary, width: scale(50), marginRight: scale(10) }}/>
+          ))}
+        {Array(4 - checkStatus(item.orderStatus).status)
+          .fill(0)
+          .map((item, index) => (
+            <View key={index} style={{ height: scale(4), backgroundColor: currentTheme.gray200, width: scale(50), marginRight: scale(10) }}/>
+          ))}
       </View>
-    </TouchableOpacity>
+      <View style={{ marginTop: scale(10) }}>
+        <Text numberOfLines={1} style={styles(currentTheme).statusText}>
+          {t(checkStatus(item.orderStatus).statusText)}
+        </Text>
+      </View>
+    </View>
   )
 }
 export default ActiveOrders
