@@ -1,9 +1,6 @@
 {
   "name": "enatega-multivendor",
   "version": "2.0.0",
-  "engines": {
-    "node": ">=18.17.1"
-  },
   "description": "Enatega MultiVendor dashboard",
   "main": "index.js",
   "homepage": "https://multivendor-admin.ninjascode.com/",
