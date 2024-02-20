@@ -24,7 +24,6 @@
     "firebase": "^9.4.0",
     "flatlist-react": "^1.5.0",
     "graphql": "^15.4.0",
-
     "i18next": "^23.7.6",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -41,7 +40,7 @@
     "react-phone-input-2": "^2.15.0",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "4.0.0",
+    "react-scripts": "^5.0.1",
     "react-scroll": "^1.8.2",
     "react-scrollspy": "^3.4.3",
     "react-spinners": "^0.11.0",
