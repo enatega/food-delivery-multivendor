@@ -9,7 +9,7 @@ const styles = (props = null) =>
     //   ...alignment.MLlarge
     // },
     offerScroll: {
-      height: scale(270),
+      height: scale(250),
       width: '100%',
       ...alignment.MLlarge,
     },
@@ -18,7 +18,11 @@ const styles = (props = null) =>
       marginTop:scale(5),
       marginBottom:scale(7)
     },
-    
+    topPicksSec:{
+      marginTop:scale(18),
+      width:'100%',
+      marginBottom:scale(18),
+    }
   })
 
 export default styles

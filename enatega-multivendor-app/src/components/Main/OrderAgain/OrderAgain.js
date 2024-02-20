@@ -19,19 +19,21 @@ const RECENT_ORDER_RESTAURANTS = gql`
 
 function OrderAgain(props) {
   const { location } = useContext(LocationContext)
+  const { t } = useTranslation()
+  const { isLoggedIn, profile } = useContext(UserContext)
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
 
   const { loading, error, data } = useQuery(RECENT_ORDER_RESTAURANTS, {
     variables: {
       latitude: location.latitude,
       longitude: location.longitude
     },
+    skip:!isLoggedIn
   })
 
-  const { t } = useTranslation()
-  const { isLoggedIn, profile } = useContext(UserContext)
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-
+  
+  if (!isLoggedIn) return null
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error: {error.message}</Text>
 

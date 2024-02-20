@@ -5,7 +5,8 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
   AntDesign,
-  Feather
+  Feather,
+  SimpleLineIcons
 } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
@@ -39,12 +40,9 @@ function BackButton(props) {
     )
   } else if (props.icon === 'menu') {
     return (
-      <Ionicons
-        name="ios-menu"
-        size={30}
-        style={styles().leftIconPadding}
-        color={props.iconColor}
-      />
+        
+        <SimpleLineIcons name="menu"  size={20} color={props.fontFourthColor} style={styles().leftIconPadding}/>
+     
     )
   } else if (props.icon === 'dots') {
     return (
@@ -56,10 +54,10 @@ function BackButton(props) {
     )
   } else if (props.icon === 'target') {
     return (
-      <MaterialIcons name="my-location" size={16} color={props.iconColor} />
+      <MaterialIcons name="my-location" size={16} color={props.iconColorDark} />
     )
   } else if (props.icon === 'fav') {
-    return <AntDesign name="hearto" size={20} color={props.iconColor} />
+    return <AntDesign name="hearto" size={20} color={props.iconColorDark} />
   } else {
     return (
       <EvilIcons
@@ -160,12 +158,9 @@ function RightButton(props) {
 
   function cartIcon() {
     return (
-      <View style={[styles().rightContainer, { ...alignment.PLsmall }]}>
-        <Feather
-          name="shopping-bag"
-          size={25}
-          color={currentTheme.darkBgFont}
-        />
+      <View style={styles().rightContainer}>
+        <SimpleLineIcons name="handbag" size={24} color={currentTheme.fontFourthColor} />
+        
         <View
           style={
             styles(route.name === 'Main' ? 'black' : currentTheme.white)

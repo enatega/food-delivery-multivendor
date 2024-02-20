@@ -13,7 +13,7 @@ const styles = (props = null) =>
       justifyContent:'center',
       gap:scale(20),
       marginTop:scale(16),
-      marginBottom:scale(27)   
+      marginBottom:scale(30)   
     },
     mainItem:{
       padding:12,

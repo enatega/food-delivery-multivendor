@@ -478,7 +478,7 @@ function Restaurant(props) {
 
           <AnimatedSectionList
             ref={scrollRef}
-            sections={deals.reverse()}
+            sections={deals}
             
             // Important
             // contentContainerStyle={{
@@ -503,7 +503,7 @@ function Restaurant(props) {
             //     }
             //   }
             // ])}
-            // keyExtractor={(item, index) => item + index}
+            keyExtractor={(item, index) => item + index}
             // ItemSeparatorComponent={() => (
             //   <View style={styles(currentTheme).listSeperator} />
             // )}
