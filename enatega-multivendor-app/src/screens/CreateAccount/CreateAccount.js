@@ -9,7 +9,7 @@ import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useCreateAccount } from './useCreateAccount'
 import navigationOptions from './screenOptions'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const CreateAccount = props => {
   const {
@@ -27,12 +27,13 @@ const CreateAccount = props => {
     openPrivacyPolicy,
     navigation
   } = useCreateAccount()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
         fontColor: currentTheme.fontMainColor,
-        backColor: 'transparent',
+        backColor: currentTheme.themeBackground,
+        iconColor: currentTheme.iconColor,
         navigation: props.navigation
       })
     )
@@ -42,7 +43,10 @@ const CreateAccount = props => {
     if (loading && loginButton === 'Apple') {
       return (
         <View style={styles().buttonBackground}>
-          <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={'#FFF'} />
+          <Spinner
+            backColor="rgba(0,0,0,0.1)"
+            spinnerColor={currentTheme.white}
+          />
         </View>
       )
     }
@@ -56,7 +60,7 @@ const CreateAccount = props => {
         }
         cornerRadius={10}
         style={styles().appleBtn}
-        onPress={async() => {
+        onPress={async () => {
           try {
             const credential = await AppleAuthentication.signInAsync({
               requestedScopes: [
@@ -122,7 +126,7 @@ const CreateAccount = props => {
   }
 
   return (
-    <View style={[styles().subContainer]}>
+    <View style={[styles(currentTheme).subContainer]}>
       <TextDefault
         H2
         bolder
@@ -146,7 +150,11 @@ const CreateAccount = props => {
           ]}>
           <View style={styles().line} />
           <View>
-            <TextDefault H4 bolder style={{ width: 50, textAlign: 'center' }}>
+            <TextDefault
+              H4
+              bolder
+              textColor={currentTheme.horizontalLine}
+              style={{ width: 50, textAlign: 'center' }}>
               {t('or')}
             </TextDefault>
           </View>
@@ -156,18 +164,24 @@ const CreateAccount = props => {
       </View>
       <View
         style={{
+          width: '80%',
+          justifyContent: 'center',
           flexDirection: 'row',
           flexWrap: 'wrap',
           ...alignment.MTlarge,
           ...alignment.MBlarge
         }}>
-        <TextDefault>{t('termCondition1')} </TextDefault>
+        <TextDefault textColor={currentTheme.horizontalLine}>
+          {t('termCondition1')}{' '}
+        </TextDefault>
         <TouchableOpacity onPress={openTerms}>
           <TextDefault bolder textColor={currentTheme.buttonBackgroundPink}>
-            {t('temrConditions')}
+            {t('temrConditions')}{' '}
           </TextDefault>
         </TouchableOpacity>
-        <TextDefault>{t('and')}</TextDefault>
+        <TextDefault textColor={currentTheme.secondaryText}>
+          {t('and')}
+        </TextDefault>
         <TouchableOpacity onPress={openPrivacyPolicy}>
           <TextDefault bolder textColor={currentTheme.buttonBackgroundPink}>
             {' '}
