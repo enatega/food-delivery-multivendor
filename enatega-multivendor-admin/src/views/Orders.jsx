@@ -47,7 +47,7 @@ const Orders = () => {
       <Container className={globalClasses.flex} fluid>
         {errorQuery && (
           <tr>
-            <td>{`Error! ${errorQuery.message}`}</td>
+            <td>{`${'Error'} ${errorQuery.message}`}</td>
           </tr>
         )}
         <OrdersData

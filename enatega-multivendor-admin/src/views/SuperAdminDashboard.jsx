@@ -1,7 +1,14 @@
 import React from 'react'
 import Header from '../components/Headers/Header'
 import useGlobalStyles from '../utils/globalStyles'
-import { Box, Typography, Container, Grid, ButtonBase } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Container,
+  Grid,
+  ButtonBase,
+  useTheme
+} from '@mui/material'
 import RiderStat from '../assets/img/RiderStat.png'
 import RestStat from '../assets/img/RestStat.png'
 import VendorStat from '../assets/img/VendorStat.png'
@@ -20,6 +27,9 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+import { withTranslation } from 'react-i18next'
+
+// const { t } = useTranslation();
 
 ChartJS.register(
   CategoryScale,
@@ -45,38 +55,10 @@ const GET_VENDORS = gql`
   ${getVendors}
 `
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Restaurants',
-      data: [1, 2, 3, 4, 5, 6, 7],
-      borderColor: '#90EA93',
-      backgroundColor: '#90EA93'
-    },
-    {
-      label: 'Vendors',
-      data: [8, 7, 6, 5, 4, 3, 2],
-      borderColor: '#3C8F7C',
-      backgroundColor: '#3C8F7C'
-    },
-    {
-      label: 'Riders',
-      data: [2, 4, 6, 8, 7, 4, 1],
-      borderColor: 'black',
-      backgroundColor: 'black'
-    },
-    {
-      label: 'Users',
-      data: [9, 6, 4, 2, 3, 5, 7],
-      borderColor: 'orange',
-      backgroundColor: 'orange'
-    }
-  ]
-}
-const SuperAdminDashboard = () => {
+const SuperAdminDashboard = props => {
+  const { t } = props
+  const theme = useTheme()
+  console.log('superadmin props: ', props)
   const globalClasses = useGlobalStyles()
   const { loading: loadingVendors, data: vendors } = useQuery(GET_VENDORS)
   const { data: restaurants, loading: loadingRest } = useQuery(
@@ -87,6 +69,53 @@ const SuperAdminDashboard = () => {
   const { data: users, loading: loadingUsers } = useQuery(GET_USERS, {
     variables: { page: 0 }
   })
+
+  // Move the initialization of data inside the component
+  const labels = [
+    t('January'),
+    t('February'),
+    t('March'),
+    t('April'),
+    t('May'),
+    t('June'),
+    t('July')
+  ]
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: t('Restaurants'),
+        data: [1, 2, 3, 4, 5, 6, 7],
+        borderColor: theme.palette.warning.dark,
+        backgroundColor: theme.palette.warning.dark
+      },
+      {
+        label: t('Vendors'),
+        data: [8, 7, 6, 5, 4, 3, 2],
+        borderColor: theme.palette.secondary.lightest,
+        backgroundColor: theme.palette.secondary.lightest
+      },
+      {
+        label: t('Riders'),
+        data: [2, 4, 6, 8, 7, 4, 1],
+        borderColor: 'black',
+        backgroundColor: 'black'
+      },
+      {
+        label: t('Users'),
+        data: [9, 6, 4, 2, 3, 5, 7],
+        borderColor: 'orange',
+        backgroundColor: 'orange'
+      }
+    ]
+  }
+  const sty = {
+    fontSize: 35,
+    fontWeight: 'bold',
+    color: theme.palette.secondary.lightest,
+    textAlign: 'center'
+  }
   return (
     <>
       <Header />
@@ -97,12 +126,16 @@ const SuperAdminDashboard = () => {
               <Grid container p={3}>
                 <Grid item md={9}>
                   <Typography
-                    sx={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }}>
-                    A cross-plalform software
+                    sx={{
+                      fontSize: 24,
+                      fontWeight: 'bold',
+                      color: theme.palette.common.white
+                    }}>
+                    {t('MainPageText')}
                   </Typography>
-                  <Typography sx={{ fontSize: 15, color: '#CDCDCD' }}>
-                    A full fledged solution highly suitable to build any
-                    restaurant.
+                  <Typography
+                    sx={{ fontSize: 15, color: theme.palette.success.light }}>
+                    {t('MainPageText1')}
                   </Typography>
                   <ButtonBase
                     onClick={() =>
@@ -111,7 +144,7 @@ const SuperAdminDashboard = () => {
                     variant="contained"
                     sx={{ width: '30%' }}
                     className={globalClasses.button}>
-                    View Site
+                    {t('ViewSite')}
                   </ButtonBase>
                 </Grid>
                 <Grid item md={3}>
@@ -130,14 +163,14 @@ const SuperAdminDashboard = () => {
               }}></Box>
             <Box
               sx={{
-                bgcolor: 'rgba(238, 244, 250, 0.66)',
-                boxShadow: '0px 0px 11px rgba(0, 0, 0, 0.08)',
+                bgcolor: theme.palette.info.lightest,
+                boxShadow: `0px 0px 11px ${theme.palette.info.dark}`,
                 borderRadius: 3,
                 mt: -10,
                 p: 2,
                 position: 'relative',
                 zIndex: 999,
-                color: '#000'
+                color: theme.palette.common.black
               }}>
               <Line data={data} />
             </Box>
@@ -153,7 +186,7 @@ const SuperAdminDashboard = () => {
           </Grid>
           <Grid item md={3} ml={3} xs={12}>
             <BoxCard>
-              <Typography sx={headSty}>Total Users</Typography>
+              <Typography sx={headSty}>{t('TotalUsers')}</Typography>
               <Typography sx={sty}>
                 {loadingUsers ? '...' : users.users.length}
               </Typography>
@@ -166,7 +199,7 @@ const SuperAdminDashboard = () => {
               />
             </BoxCard>
             <BoxCard>
-              <Typography sx={headSty}>Total Vendors</Typography>
+              <Typography sx={headSty}>{t('TotalVendors')}</Typography>
               <Typography sx={sty}>
                 {loadingVendors ? '...' : vendors.vendors.length}
               </Typography>
@@ -179,7 +212,7 @@ const SuperAdminDashboard = () => {
               />
             </BoxCard>
             <BoxCard>
-              <Typography sx={headSty}>Total Restaurants</Typography>
+              <Typography sx={headSty}>{t('TotalRestaurants')}</Typography>
               <Typography sx={sty}>
                 {loadingRest ? '...' : restaurants.restaurants.length}
               </Typography>
@@ -192,7 +225,7 @@ const SuperAdminDashboard = () => {
               />
             </BoxCard>
             <BoxCard>
-              <Typography sx={headSty}>Total Riders</Typography>
+              <Typography sx={headSty}>{t('TotalRiders')}</Typography>
               <Typography sx={sty}>
                 {loadingRiders ? '...' : riders.riders.length}
               </Typography>
@@ -225,12 +258,7 @@ const BoxCard = ({ children }) => (
 )
 
 const imgStyle = { marginLeft: '40%' }
-const sty = {
-  fontSize: 35,
-  fontWeight: 'bold',
-  color: '#3C8F7C',
-  textAlign: 'center'
-}
+
 const headSty = { fontSize: 15, fontWeight: 'bold' }
 
-export default SuperAdminDashboard
+export default withTranslation()(SuperAdminDashboard)

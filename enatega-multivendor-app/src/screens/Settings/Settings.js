@@ -159,19 +159,19 @@ function Settings(props) {
   }, [props.navigation, languageName])
 
   async function deactivatewithemail() {
-    console.log('Calling deactivatewithemail');
+    console.log('Calling deactivatewithemail')
     try {
-      await deactivated({ variables: { isActive: false, email: profile.email } });
-      logout();
+      await deactivated({
+        variables: { isActive: false, email: profile.email }
+      })
+      logout()
       navigation.reset({
         routes: [{ name: 'Main' }]
-      });
+      })
       FlashMessage({ message: t('accountDeactivated') })
-
     } catch (error) {
-      console.error('Error during deactivation mutation:', error);
+      console.error('Error during deactivation mutation:', error)
     }
-
   }
 
   const _handleAppStateChange = async nextAppState => {
@@ -478,7 +478,7 @@ function Settings(props) {
         isVisible={modalVisible}
         onBackdropPress={() => modalVisibleSetter(false)}
         onBackButtonPress={() => modalVisibleSetter(false)}>
-        <View style={styles().modalContainer}>
+        <View style={styles(currentTheme).modalContainer}>
           <TextDefault
             textColor={currentTheme.fontMainColor}
             bolder
@@ -492,7 +492,7 @@ function Settings(props) {
               activeOpacity={0.7}
               key={index}
               onPress={() => activeRadioSetter(item.index)}
-              style={[styles().radioContainer]}>
+              style={[styles(currentTheme).radioContainer]}>
               <RadioButton
                 animation={'bounceIn'}
                 size={13}
@@ -554,8 +554,17 @@ function Settings(props) {
         })}
         keyboardAvoidingOffset={2}
         keyboardAvoidingBehavior="height">
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <TextDefault bolder H5 style={{ marginTop: 20 }}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            backgroundColor: currentTheme.backgroundColor3
+          }}>
+          <TextDefault
+            bolder
+            H5
+            textColor={currentTheme.darkBgFont}
+            style={{ marginTop: 20 }}>
             {t('DeleteConfirmation')}
           </TextDefault>
           <TouchableOpacity
@@ -578,7 +587,10 @@ function Settings(props) {
             activeOpacity={0.7}
             style={{ width: '100%', paddingTop: 30, paddingBottom: 40 }}
             onPress={() => onClose()}>
-            <TextDefault center> {t('Cancel')}</TextDefault>
+            <TextDefault textColor={currentTheme.darkBgFont} center>
+              {' '}
+              {t('Cancel')}
+            </TextDefault>
           </TouchableOpacity>
         </View>
       </Modalize>

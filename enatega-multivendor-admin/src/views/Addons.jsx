@@ -34,6 +34,7 @@ const DELETE_ADDON = gql`
   ${deleteAddon}
 `
 const Addon = props => {
+  const { t } = props
   const [addon, setAddon] = useState(null)
   const [editModal, setEditModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -43,6 +44,9 @@ const Addon = props => {
   const toggleModal = addon => {
     setEditModal(!editModal)
     setAddon(addon)
+  }
+  const closeEditModal = () => {
+    setEditModal(false)
   }
   const restaurantId = localStorage.getItem('restaurantId')
 
@@ -68,27 +72,27 @@ const Addon = props => {
 
   const columns = [
     {
-      name: 'Title',
+      name: t('Title'),
       sortable: true,
       selector: 'title'
     },
     {
-      name: 'Description',
+      name: t('Description'),
       sortable: true,
       selector: 'description'
     },
     {
-      name: 'Minimum',
+      name: t('Minimum'),
       sortable: true,
       selector: 'quantityMinimum'
     },
     {
-      name: 'Maximum',
+      name: t('Maximum'),
       sortable: true,
       selector: 'quantityMaximum'
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -135,7 +139,7 @@ const Addon = props => {
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
@@ -145,7 +149,7 @@ const Addon = props => {
                     setIsOpen(false)
                   }, 5000)
                   //uncomment this for paid version
-                  // mutate({  
+                  // mutate({
                   //   variables: { id: row._id, restaurant: restaurantId }
                   // })
                 }}
@@ -153,7 +157,7 @@ const Addon = props => {
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -180,11 +184,8 @@ const Addon = props => {
     <>
       <Header />
       {isOpen && (
-            <Alert
-              message="This feature will available after purchasing product"
-              severity="warning"
-              />
-          )}
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+      )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
         <AddonComponent />
@@ -205,7 +206,7 @@ const Addon = props => {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Addons" />}
+            title={<TableHeader title={t('Addons')} />}
             columns={columns}
             data={data && data.restaurant ? filtered : {}}
             pagination
@@ -226,7 +227,7 @@ const Addon = props => {
           onClose={() => {
             toggleModal()
           }}>
-          <AddonComponent addon={addon} />
+          <AddonComponent addon={addon} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

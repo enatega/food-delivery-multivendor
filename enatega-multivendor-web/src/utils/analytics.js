@@ -1,8 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import amplitude from "amplitude-js";
-//import * as amplitude from '@amplitude/analytics-react-native';
-import { AMPLITUDE_API_KEY } from "../config/constants";
+//import ConfigurableValues from "../config/constants";
 let isInitialized = false;
+// const { AMPLITUDE_API_KEY } = ConfigurableValues();
+const { AMPLITUDE_API_KEY } = "2114f5db4c014dc7ad4ed2ad747341b5";
 const apiKey = AMPLITUDE_API_KEY;
 
 export const events = {
@@ -56,7 +57,6 @@ export async function track(event, options) {
 
   if (properties) {
     await amplitude.getInstance().logEvent(event, properties);
-    console.log(properties);
   } else {
     await amplitude.getInstance().logEvent(event);
   }

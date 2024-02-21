@@ -1,8 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
-// reactstrap components
 import { Container } from '@mui/material'
-// core components
 import AdminNavbar from '../components/Navbars/AdminNavbar'
 import AdminFooter from '../components/Footers/AdminFooter'
 

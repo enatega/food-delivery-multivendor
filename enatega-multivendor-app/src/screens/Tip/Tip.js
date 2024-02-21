@@ -87,6 +87,7 @@ function Tip(props) {
               ref={tipRef}
               label={t('otherAmount')}
               placeholder={t('addOtherAmount')}
+              placeholderTextColor={currentTheme.secondaryText}
               labelFontSize={scale(12)}
               fontSize={scale(12)}
               textAlignVertical="top"

@@ -3,11 +3,19 @@ import { useQuery } from "@apollo/client";
 import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import clsx from "clsx";
 import gql from "graphql-tag";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { FavouriteRestaurant } from "../../apollo/server";
 import FavouriteIcon from "../../assets/icons/FavouriteIcon";
 import HeartFilled from "../../assets/icons/HeartFilledIcon";
+import Favourite from "../../assets/images/favs.png";
+import FavouritesBg from "../../assets/images/fav-bg.png";
 import FlashMessage from "../../components/FlashMessage";
 import { Header } from "../../components/Header";
 import { ClearCart } from "../../components/Modals";
@@ -16,12 +24,15 @@ import { LocationContext } from "../../context/Location";
 import UserContext from "../../context/User";
 import analytics from "../../utils/analytics";
 import useStyles from "./styles";
+import Footer from "../../components/Footer/Footer";
+import { useTranslation } from 'react-i18next';
 
 const RESTAURANTS = gql`
   ${FavouriteRestaurant}
 `;
 
 function EmptyView() {
+  const { t } = useTranslation()
   const classes = useStyles();
   return (
     <Grid item xs={12} className={classes.mt2}>
@@ -30,12 +41,15 @@ function EmptyView() {
       </Box>
       <Box className={classes.mt2} display="flex" justifyContent="center">
         <Typography variant="h6" className={classes.textBold}>
-          No Favourites Saved
+          {t('titleEmptyFav')}
         </Typography>
       </Box>
       <Box className={classes.mt2} display="flex" justifyContent="center">
-        <Typography variant="caption" className={clsx(classes.disableText, classes.smallText)}>
-          You’ll see all your favorites here, to make ordering even faster. Just look for the
+        <Typography
+          variant="caption"
+          className={clsx(classes.disableText, classes.smallText)}
+        >
+          {t('emptyFavDesc')}
         </Typography>
       </Box>
       <Box className={classes.mt2} display="flex" justifyContent="center">
@@ -55,8 +69,12 @@ function EmptyView() {
             disableTouchRipple
             className={classes.btnBase}
           >
-            <Typography variant="caption" color="primary" className={clsx(classes.textBold, classes.smallText)}>
-              Let's find some favourites
+            <Typography
+              variant="caption"
+              color="primary"
+              className={clsx(classes.textBold, classes.smallText)}
+            >
+              {t('emptyFavBtn')}
             </Typography>
           </Button>
         </RouterLink>
@@ -65,6 +83,7 @@ function EmptyView() {
   );
 }
 function Favourites() {
+  const { t } = useTranslation()
   const navigate = useNavigate();
   const firstTime = useRef(true);
   const classes = useStyles();
@@ -80,18 +99,17 @@ function Favourites() {
     },
     fetchPolicy: "network-only",
   });
+
   const navigateClearCart = useCallback(async () => {
     await clearCart();
-    navigate(`/restaurant/${navigateData.slug}`,
-      {state: navigateData},
-    );
+    navigate(`/restaurant/${navigateData.slug}`, { state: navigateData });
   }, [navigateData]);
   const toggleClearCart = useCallback(() => {
     setClearModal((prev) => !prev);
   }, []);
-  useEffect(async()=>{
-    await analytics.track(analytics.events.NAVIGATE_TO_FAVOURITES)
-  },[])
+  useEffect(async () => {
+    await analytics.track(analytics.events.NAVIGATE_TO_FAVOURITES);
+  }, []);
   useEffect(() => {
     if (!firstTime.current && error) {
       setMainError({
@@ -159,19 +177,32 @@ function Favourites() {
       />
       <Header />
       <Subheader />
+      <Box className={classes.topContainer}>
+        <Box style={{ zIndex: 100 }}>
+          <Typography variant="h5" align="center">
+            {t('titleFavourite')}
+          </Typography>
+          <img src={Favourite} alt="fav" />
+        </Box>
+        <img src={FavouritesBg} alt="fav-bg" className={classes.bg} />
+      </Box>
       <Grid container item className={classes.mainContainer}>
         <Grid item sm={1} />
         <Grid item xs={12} sm={10} className={classes.contentContainer}>
-          <Typography variant="h4" className={classes.title}>
-            My Favourites
-          </Typography>
           <Grid container spacing={2} className={classes.PV3}>
             {favouriteData.length < 1 ? (
               <EmptyView />
             ) : (
               favouriteData.map((item) => (
-                <Grid key={item._id} item xs={12} sm={6} md={4} lg={3} xl={3}>
-                  <ProductCard data={item} grid={true} cardImageHeight="200px" showMessage={showMessage} checkCart={checkCart}/>
+                <Grid key={item._id} item xs={12} sm={6} md={4}>
+                  <ProductCard
+                    data={item}
+                    grid={true}
+                    showMessage={showMessage}
+                    checkCart={checkCart}
+                    cardImageHeight="144px"
+                    isSmall={false}
+                  />
                 </Grid>
               ))
             )}
@@ -179,6 +210,11 @@ function Favourites() {
         </Grid>
         <Grid item sm={1} />
       </Grid>
+      <Box className={classes.footerContainer}>
+        <Box className={classes.footerWrapper}>
+          <Footer />
+        </Box>
+      </Box>
       <ClearCart
         isVisible={clearModal}
         toggleModal={toggleClearCart}

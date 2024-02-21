@@ -36,7 +36,9 @@ export const useCreateAccount = () => {
   const {
     EXPO_CLIENT_ID,
     IOS_CLIENT_ID_GOOGLE,
-    ANDROID_CLIENT_ID_GOOGLE
+    ANDROID_CLIENT_ID_GOOGLE,
+    TERMS_AND_CONDITIONS,
+    PRIVACY_POLICY
   } = useEnvVars()
   console.log('EXPO_CLIENT_ID', EXPO_CLIENT_ID)
 
@@ -190,10 +192,10 @@ export const useCreateAccount = () => {
     )
   })
   const openTerms = () => {
-    Linking.openURL(config.TERMS_AND_CONDITIONS)
+    Linking.openURL(TERMS_AND_CONDITIONS)
   }
   const openPrivacyPolicy = () => {
-    Linking.openURL(config.PRIVACY_POLICY)
+    Linking.openURL(PRIVACY_POLICY)
   }
   return {
     enableApple,
