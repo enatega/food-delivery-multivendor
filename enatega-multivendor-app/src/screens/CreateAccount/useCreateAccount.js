@@ -17,6 +17,11 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes
+} from '@react-native-google-signin/google-signin'
 
 const LOGIN = gql`
   ${login}
@@ -32,6 +37,7 @@ export const useCreateAccount = () => {
   const [loading, setLoading] = useState(false)
   const { setTokenAsync } = useContext(AuthContext)
   const themeContext = useContext(ThemeContext)
+  const [user, setUser] = useState('')
   const currentTheme = theme[themeContext.ThemeValue]
   const {
     EXPO_CLIENT_ID,
@@ -42,20 +48,40 @@ export const useCreateAccount = () => {
   } = useEnvVars()
   console.log('EXPO_CLIENT_ID', EXPO_CLIENT_ID)
 
-  const { t } = useTranslation()
-  const [
-    googleRequest,
-    googleResponse,
-    googlePromptAsync
-  ] = Google.useAuthRequest({
-    expoClientId: EXPO_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID_GOOGLE,
-    iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
-    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-    androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
-    redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
-    scopes: ['profile', 'email']
+  const configureGoogleSignin = () => {
+    GoogleSignin.configure({
+      iosClientId: IOS_CLIENT_ID_GOOGLE,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE
+    })
+  }
+
+  useEffect(() => {
+    configureGoogleSignin()
   })
+
+  const signIn = async () => {
+    console.log('pressed')
+    try {
+      await GoogleSignin.hasPlayServices()
+      const user = await GoogleSignin.signIn()
+      console.log('🚀 ~ signIn ~ user:', user)
+      setUser(user)
+    } catch (error) {
+      console.log('🚀 ~ signIn ~ error:', error)
+    }
+  }
+
+  const { t } = useTranslation()
+  const [googleRequest, googleResponse, googlePromptAsync] =
+    Google.useAuthRequest({
+      expoClientId: EXPO_CLIENT_ID,
+      iosClientId: IOS_CLIENT_ID_GOOGLE,
+      iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+      androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
+      redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
+      scopes: ['profile', 'email']
+    })
 
   const navigateToLogin = () => {
     navigation.navigate('Login')
@@ -77,9 +103,8 @@ export const useCreateAccount = () => {
     setLoading(true)
     let notificationToken = null
     if (Device.isDevice) {
-      const {
-        status: existingStatus
-      } = await Notifications.getPermissionsAsync()
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync()
       if (existingStatus === 'granted') {
         notificationToken = (await Notifications.getExpoPushTokenAsync()).data
       }
@@ -213,6 +238,8 @@ export const useCreateAccount = () => {
     openTerms,
     openPrivacyPolicy,
     navigateToMain,
-    navigation
+    navigation,
+    signIn,
+    user
   }
 }

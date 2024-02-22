@@ -12,10 +12,7 @@
     "androidStatusBar": {
       "backgroundColor": "#000"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -23,9 +20,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#6FCF97"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.enatega.multivendor",
@@ -35,9 +30,7 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
-        "UIBackgroundModes": [
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["remote-notification"],
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device."
       }
     },
@@ -76,6 +69,7 @@
       ]
     },
     "plugins": [
+      "@react-native-google-signin/google-signin",
       [
         "expo-tracking-transparency",
         {
