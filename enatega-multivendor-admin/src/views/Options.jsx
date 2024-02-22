@@ -36,7 +36,7 @@ const DELETE_OPTION = gql`
 `
 
 const Option = props => {
-  const { t } = props;
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [option, setOption] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -48,8 +48,8 @@ const Option = props => {
     setOption(option)
   }
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
 
   const restaurantId = localStorage.getItem('restaurantId')
 
@@ -187,11 +187,8 @@ const Option = props => {
     <>
       <Header />
       {isOpen && (
-            <Alert
-          message={t('AvailableAfterPurchasing')}
-              severity="warning"
-              />
-          )}
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+      )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
         <OptionComponent />
@@ -212,7 +209,7 @@ const Option = props => {
                 onClick={() => refetch()}
               />
             }
-              title={<TableHeader title={t('Options')} />}
+            title={<TableHeader title={t('Options')} />}
             columns={columns}
             data={data && data.restaurant ? filtered : {}}
             pagination

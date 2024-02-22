@@ -125,4 +125,5 @@ function Main() {
   )
 }
 
+// eslint-disable-next-line react/no-deprecated
 ReactDOM.render(<Main />, document.getElementById('root'))

@@ -33,6 +33,6 @@ export const initialize = (
   return messaging
 }
 
-export const isFirebaseSupported = async () => {
+export const isFirebaseSupported = async() => {
   return await isSupported()
 }

@@ -18,7 +18,7 @@ const REVIEWS = gql`
 `
 
 const Ratings = props => {
-  const { t } = props;
+  const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const restaurantId = localStorage.getItem('restaurantId')
@@ -111,7 +111,7 @@ const Ratings = props => {
           <CustomLoader />
         ) : (
           <DataTable
-              title={<TableHeader title={t('Ratings')} />}
+            title={<TableHeader title={t('Ratings')} />}
             subHeader={true}
             subHeaderComponent={
               <SearchBar value={searchQuery} onChange={onChangeSearch} />

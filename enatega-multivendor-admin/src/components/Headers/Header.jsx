@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, useMediaQuery, useTheme } from '@mui/material'
 import HeaderIcon from '../../assets/svg/header.svg'
 function Header() {
-  const theme = useTheme();
+  const theme = useTheme()
   const matches = useMediaQuery('(min-width:1350px)')
   return (
     <>

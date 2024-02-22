@@ -35,7 +35,7 @@ const DELETE_FOOD = gql`
   ${deleteFood}
 `
 const Food = props => {
-  const { t } = props;
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [food, setFood] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -43,7 +43,7 @@ const Food = props => {
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [/*mutate*/, { loading }] = useMutation(DELETE_FOOD, {
+  const [, /*mutate*/ { loading }] = useMutation(DELETE_FOOD, {
     refetchQueries: [{ query: GET_FOODS, variables: { id: restaurantId } }]
   })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
@@ -59,8 +59,8 @@ const Food = props => {
     setFood(food)
   }
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
 
   const propExists = (obj, path) => {
     return path.split('.').reduce((obj, prop) => {
@@ -104,7 +104,10 @@ const Food = props => {
           <img
             className="img-responsive"
             style={{ width: 30, height: 30, borderRadius: 15 }}
-            src={row.image || 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'}
+            src={
+              row.image ||
+              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+            }
             alt={row.image ? 'img menu' : 'Default Image'}
           />
         </>
@@ -223,12 +226,12 @@ const Food = props => {
     searchQuery.length < 3
       ? foodsList(data && data.restaurant.categories)
       : foodsList(data && data.restaurant.categories).filter(food => {
-        return (
-          food.title.toLowerCase().search(regex) > -1 ||
-          food.description.toLowerCase().search(regex) > -1 ||
-          food.category.toLowerCase().search(regex) > -1
-        )
-      })
+          return (
+            food.title.toLowerCase().search(regex) > -1 ||
+            food.description.toLowerCase().search(regex) > -1 ||
+            food.category.toLowerCase().search(regex) > -1
+          )
+        })
   const globalClasses = useGlobalStyles()
 
   return (
@@ -236,10 +239,7 @@ const Food = props => {
       <Header />
       {/* Page content */}
       {isOpen && (
-        <Alert
-          message={t('AvailableAfterPurchasing')}
-          severity="warning"
-        />
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
       )}
       <Container className={globalClasses.flex} fluid>
         <FoodComponent />
@@ -256,7 +256,7 @@ const Food = props => {
                 onClick={() => refetch()}
               />
             }
-              title={<TableHeader title={t('Food')} />}
+            title={<TableHeader title={t('Food')} />}
             columns={columns}
             data={data && data.restaurant ? filtered : {}}
             pagination

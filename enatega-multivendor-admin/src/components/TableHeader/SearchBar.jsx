@@ -1,13 +1,13 @@
 import React from 'react'
-import { Input, InputAdornment, IconButton, Box , useTheme} from '@mui/material'
+import { Input, InputAdornment, IconButton, Box, useTheme } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import useStyles from './styles'
 import { withTranslation, useTranslation } from 'react-i18next'
 
 function SearchBar(props) {
-  const theme = useTheme();
-  const { t } = useTranslation();
+  const theme = useTheme()
+  const { t } = useTranslation()
   const classes = useStyles()
 
   return (

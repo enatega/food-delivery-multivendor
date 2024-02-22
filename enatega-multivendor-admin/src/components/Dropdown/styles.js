@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: '15px',
     fontWeight: '500',
     marginTop: '10px'
-  },
+  }
 }))
 
 export default useStyles

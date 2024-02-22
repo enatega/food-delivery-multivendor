@@ -25,8 +25,8 @@ const GET_ACTIVE_ORDERS = gql`
 `
 
 const DispatchRestaurant = props => {
-  const theme = useTheme();
-  const { t } = props;
+  const theme = useTheme()
+  const { t } = props
   const params = useParams()
 
   const [restaurantId, seteRestaurantId] = useState(
@@ -81,35 +81,35 @@ const DispatchRestaurant = props => {
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
             row.orderStatus
           ) && (
-              <MenuItem
-                style={{ color: 'black' }}
-                onClick={() => {
-                  mutateUpdate({
-                    variables: {
-                      id: row._id,
-                      orderStatus: 'CANCELLED'
-                    }
-                  })
-                }}>
-                {t('Reject')}
-              </MenuItem>
-            )}
+            <MenuItem
+              style={{ color: 'black' }}
+              onClick={() => {
+                mutateUpdate({
+                  variables: {
+                    id: row._id,
+                    orderStatus: 'CANCELLED'
+                  }
+                })
+              }}>
+              {t('Reject')}
+            </MenuItem>
+          )}
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
             row.orderStatus
           ) && (
-              <MenuItem
-                style={{ color: 'black' }}
-                onClick={() => {
-                  mutateUpdate({
-                    variables: {
-                      id: row._id,
-                      orderStatus: 'DELIVERED'
-                    }
-                  })
-                }}>
-                {t('Delivered')}
-              </MenuItem>
-            )}
+            <MenuItem
+              style={{ color: 'black' }}
+              onClick={() => {
+                mutateUpdate({
+                  variables: {
+                    id: row._id,
+                    orderStatus: 'DELIVERED'
+                  }
+                })
+              }}>
+              {t('Delivered')}
+            </MenuItem>
+          )}
         </Select>
       </>
     )
@@ -178,20 +178,20 @@ const DispatchRestaurant = props => {
     searchQuery.length < 3
       ? dataOrders && dataOrders.getActiveOrders
       : dataOrders &&
-      dataOrders.getActiveOrders.filter(order => {
-        return (
-          order.restaurant.name.toLowerCase().search(regex) > -1 ||
-          order.orderId.toLowerCase().search(regex) > -1 ||
-          order.deliveryAddress.deliveryAddress.toLowerCase().search(regex) >
-          -1 ||
-          order.orderId.toLowerCase().search(regex) > -1 ||
-          order.paymentMethod.toLowerCase().search(regex) > -1 ||
-          order.orderStatus.toLowerCase().search(regex) > -1 ||
-          (order.rider !== null
-            ? order.rider.name.toLowerCase().search(regex) > -1
-            : false)
-        )
-      })
+        dataOrders.getActiveOrders.filter(order => {
+          return (
+            order.restaurant.name.toLowerCase().search(regex) > -1 ||
+            order.orderId.toLowerCase().search(regex) > -1 ||
+            order.deliveryAddress.deliveryAddress.toLowerCase().search(regex) >
+              -1 ||
+            order.orderId.toLowerCase().search(regex) > -1 ||
+            order.paymentMethod.toLowerCase().search(regex) > -1 ||
+            order.orderStatus.toLowerCase().search(regex) > -1 ||
+            (order.rider !== null
+              ? order.rider.name.toLowerCase().search(regex) > -1
+              : false)
+          )
+        })
 
   return (
     <>

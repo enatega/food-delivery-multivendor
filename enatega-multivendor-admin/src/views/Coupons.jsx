@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { withTranslation } from 'react-i18next'
 import CouponComponent from '../components/Coupon/Coupon'
-// import { Badge, Card, Container, Row, Modal } from 'reactstrap'
 import Header from '../components/Headers/Header'
 import CustomLoader from '../components/Loader/CustomLoader'
 import DataTable from 'react-data-table-component'
@@ -40,7 +39,7 @@ const DELETE_COUPON = gql`
 `
 
 const Coupon = props => {
-  const { t } = props;
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [coupon, setCoupon] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -95,9 +94,9 @@ const Coupon = props => {
     searchQuery.length < 3
       ? data && data.coupons
       : data &&
-      data.coupons.filter(coupon => {
-        return coupon.title.toLowerCase().search(regex) > -1
-      })
+        data.coupons.filter(coupon => {
+          return coupon.title.toLowerCase().search(regex) > -1
+        })
 
   const statusChanged = row => {
     return (

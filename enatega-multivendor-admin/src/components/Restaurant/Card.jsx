@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import { CardActionArea, useTheme } from '@mui/material'
 
 export default function RestaurantCard(props) {
-  const theme = useTheme();
+  const theme = useTheme()
   return (
     <Card
       style={{

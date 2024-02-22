@@ -1,15 +1,22 @@
-import React from 'react';
-import Header from '../components/Headers/Header';
-import useGlobalStyles from '../utils/globalStyles';
-import { Box, Typography, Container, Grid, ButtonBase, useTheme } from '@mui/material';
-import RiderStat from '../assets/img/RiderStat.png';
-import RestStat from '../assets/img/RestStat.png';
-import VendorStat from '../assets/img/VendorStat.png';
-import UserStat from '../assets/img/UserStat.png';
-import { ReactComponent as DashboardIcon } from '../assets/svg/svg/dashboard.svg';
-import { Line } from 'react-chartjs-2';
-import { getUsers, getRiders, restaurants, getVendors } from '../apollo';
-import { gql, useQuery } from '@apollo/client';
+import React from 'react'
+import Header from '../components/Headers/Header'
+import useGlobalStyles from '../utils/globalStyles'
+import {
+  Box,
+  Typography,
+  Container,
+  Grid,
+  ButtonBase,
+  useTheme
+} from '@mui/material'
+import RiderStat from '../assets/img/RiderStat.png'
+import RestStat from '../assets/img/RestStat.png'
+import VendorStat from '../assets/img/VendorStat.png'
+import UserStat from '../assets/img/UserStat.png'
+import { ReactComponent as DashboardIcon } from '../assets/svg/svg/dashboard.svg'
+import { Line } from 'react-chartjs-2'
+import { getUsers, getRiders, restaurants, getVendors } from '../apollo'
+import { gql, useQuery } from '@apollo/client'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,9 +25,9 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
-} from 'chart.js';
-import { withTranslation } from 'react-i18next';
+  Legend
+} from 'chart.js'
+import { withTranslation } from 'react-i18next'
 
 // const { t } = useTranslation();
 
@@ -32,36 +39,36 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-);
-ChartJS.defaults.color = '#000';
+)
+ChartJS.defaults.color = '#000'
 
 const GET_USERS = gql`
   ${getUsers}
-`;
+`
 const GET_RIDERS = gql`
   ${getRiders}
-`;
+`
 const GET_RESTAURANTS = gql`
   ${restaurants}
-`;
+`
 const GET_VENDORS = gql`
   ${getVendors}
-`;
+`
 
-const SuperAdminDashboard = (props) => {
-  const { t } = props;
-  const theme = useTheme();
-  console.log('superadmin props: ', props);
-  const globalClasses = useGlobalStyles();
-  const { loading: loadingVendors, data: vendors } = useQuery(GET_VENDORS);
+const SuperAdminDashboard = props => {
+  const { t } = props
+  const theme = useTheme()
+  console.log('superadmin props: ', props)
+  const globalClasses = useGlobalStyles()
+  const { loading: loadingVendors, data: vendors } = useQuery(GET_VENDORS)
   const { data: restaurants, loading: loadingRest } = useQuery(
     GET_RESTAURANTS,
     { fetchPolicy: 'network-only' }
-  );
-  const { data: riders, loading: loadingRiders } = useQuery(GET_RIDERS);
+  )
+  const { data: riders, loading: loadingRiders } = useQuery(GET_RIDERS)
   const { data: users, loading: loadingUsers } = useQuery(GET_USERS, {
-    variables: { page: 0 },
-  });
+    variables: { page: 0 }
+  })
 
   // Move the initialization of data inside the component
   const labels = [
@@ -71,8 +78,8 @@ const SuperAdminDashboard = (props) => {
     t('April'),
     t('May'),
     t('June'),
-    t('July'),
-  ];
+    t('July')
+  ]
 
   const data = {
     labels,
@@ -81,34 +88,34 @@ const SuperAdminDashboard = (props) => {
         label: t('Restaurants'),
         data: [1, 2, 3, 4, 5, 6, 7],
         borderColor: theme.palette.warning.dark,
-        backgroundColor: theme.palette.warning.dark,
+        backgroundColor: theme.palette.warning.dark
       },
       {
         label: t('Vendors'),
         data: [8, 7, 6, 5, 4, 3, 2],
         borderColor: theme.palette.secondary.lightest,
-        backgroundColor: theme.palette.secondary.lightest,
+        backgroundColor: theme.palette.secondary.lightest
       },
       {
         label: t('Riders'),
         data: [2, 4, 6, 8, 7, 4, 1],
         borderColor: 'black',
-        backgroundColor: 'black',
+        backgroundColor: 'black'
       },
       {
         label: t('Users'),
         data: [9, 6, 4, 2, 3, 5, 7],
         borderColor: 'orange',
-        backgroundColor: 'orange',
-      },
-    ],
-  };
+        backgroundColor: 'orange'
+      }
+    ]
+  }
   const sty = {
     fontSize: 35,
     fontWeight: 'bold',
     color: theme.palette.secondary.lightest,
     textAlign: 'center'
-  };
+  }
   return (
     <>
       <Header />
@@ -119,10 +126,15 @@ const SuperAdminDashboard = (props) => {
               <Grid container p={3}>
                 <Grid item md={9}>
                   <Typography
-                    sx={{ fontSize: 24, fontWeight: 'bold', color: theme.palette.common.white }}>
+                    sx={{
+                      fontSize: 24,
+                      fontWeight: 'bold',
+                      color: theme.palette.common.white
+                    }}>
                     {t('MainPageText')}
                   </Typography>
-                  <Typography sx={{ fontSize: 15, color: theme.palette.success.light }}>
+                  <Typography
+                    sx={{ fontSize: 15, color: theme.palette.success.light }}>
                     {t('MainPageText1')}
                   </Typography>
                   <ButtonBase

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Box, MenuItem, Select, Typography } from '@mui/material';
-import useStyles from './styles';
-import useGlobalStyles from '../../utils/globalStyles';
+import React from 'react'
+import { Box, MenuItem, Select, Typography } from '@mui/material'
+import useStyles from './styles'
+import useGlobalStyles from '../../utils/globalStyles'
 
 function Dropdown({
   defaultValue = '',
@@ -9,10 +9,10 @@ function Dropdown({
   title,
   name,
   id,
-  displayEmpty = true,
+  displayEmpty = true
 }) {
-  const classes = useStyles();
-  const globalClasses = useGlobalStyles();
+  const classes = useStyles()
+  const globalClasses = useGlobalStyles()
   return (
     <Box>
       <Typography className={classes.labelText}>{title}</Typography>
@@ -22,16 +22,15 @@ function Dropdown({
         name={name}
         defaultValue={defaultValue}
         displayEmpty={displayEmpty}
-        className={[globalClasses.input]}
-      >
-        {values.map((value) => (
+        className={[globalClasses.input]}>
+        {values.map(value => (
           <MenuItem value={value} key={value} style={{ color: 'black' }}>
             {value.toUpperCase()}
           </MenuItem>
         ))}
       </Select>
     </Box>
-  );
+  )
 }
 
-export default Dropdown;
+export default Dropdown

@@ -27,7 +27,7 @@ const GET_CONFIGURATION = gql`
 `
 
 function Order(props) {
-  const theme = useTheme();
+  const theme = useTheme()
   const { order, t } = props
   const [reason, reasonSetter] = useState('')
   const [reasonError, reasonErrorSetter] = useState(null)

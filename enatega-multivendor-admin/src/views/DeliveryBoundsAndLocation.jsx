@@ -10,9 +10,15 @@ import {
 import useGlobalStyles from '../utils/globalStyles'
 import useStyles from '../components/styles'
 import CustomLoader from '../components/Loader/CustomLoader'
-import { Container, Box, Button, Typography, Alert, useTheme } from '@mui/material'
+import {
+  Container,
+  Box,
+  Button,
+  Typography,
+  Alert,
+  useTheme
+} from '@mui/material'
 import { useTranslation, withTranslation } from 'react-i18next'
-
 
 const UPDATE_DELIVERY_BOUNDS_AND_LOCATION = gql`
   ${updateDeliveryBoundsAndLocation}
@@ -22,14 +28,13 @@ const GET_RESTAURANT_PROFILE = gql`
 `
 
 function DeliveryBoundsAndLocation() {
-  const { t } = useTranslation();
-  const theme = useTheme();
+  const { t } = useTranslation()
+  const theme = useTheme()
   const restaurantId = localStorage.getItem('restaurantId')
 
   const [drawBoundsOrMarker, setDrawBoundsOrMarker] = useState('marker') // polygon
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const [center, setCenter] = useState({ lat: 33.684422, lng: 73.047882 })
   const [marker, setMarker] = useState({ lat: 33.684422, lng: 73.047882 })
@@ -140,45 +145,41 @@ function DeliveryBoundsAndLocation() {
     if (restaurant) {
       setCenter({
         lat: +restaurant.location.coordinates[1],
-        lng: +restaurant.location.coordinates[0],
-      });
+        lng: +restaurant.location.coordinates[0]
+      })
       setMarker({
         lat: +restaurant.location.coordinates[1],
-        lng: +restaurant.location.coordinates[0],
-      });
+        lng: +restaurant.location.coordinates[0]
+      })
       setPath(
         restaurant.deliveryBounds
           ? transformPolygon(restaurant.deliveryBounds.coordinates[0])
           : path
-      );
-      }
+      )
+    }
   }
 
   function onError({ networkError, graphqlErrors }) {
-    setErrorMessage(t('UpdatingLocationError'));
-    setTimeout(() => setErrorMessage(''), 5000); // Clear error message after 5 seconds
+    setErrorMessage(t('UpdatingLocationError'))
+    setTimeout(() => setErrorMessage(''), 5000) // Clear error message after 5 seconds
   }
-
-
 
   const validate = () => {
     if (!marker) {
-      setErrorMessage(t('LocationMarkerRequired'));
-      setTimeout(() => setErrorMessage(''), 5000); // Clear success message after 5 seconds
-      return false;
+      setErrorMessage(t('LocationMarkerRequired'))
+      setTimeout(() => setErrorMessage(''), 5000) // Clear success message after 5 seconds
+      return false
     }
     if (path.length < 3) {
-      setErrorMessage(t('DeliveryAreaRequired'));
-      setTimeout(() => setErrorMessage(''), 5000); // Clear success message after 5 seconds
-      return false;
+      setErrorMessage(t('DeliveryAreaRequired'))
+      setTimeout(() => setErrorMessage(''), 5000) // Clear success message after 5 seconds
+      return false
     }
-    setSuccessMessage(t('LocationUpdatedSuccessfully'));
-    setTimeout(() => setSuccessMessage(''), 5000); // Clear success message after 5 seconds
-    setErrorMessage('');
-    return true;
-  };
-
-
+    setSuccessMessage(t('LocationUpdatedSuccessfully'))
+    setTimeout(() => setSuccessMessage(''), 5000) // Clear success message after 5 seconds
+    setErrorMessage('')
+    return true
+  }
 
   const onDragEnd = mapMouseEvent => {
     setMarker({
@@ -243,13 +244,19 @@ function DeliveryBoundsAndLocation() {
               padding: '0 30px'
             }}>
             <Button
-              style={{ color: theme.palette.warning.dark, backgroundColor: theme.palette.common.black }}
+              style={{
+                color: theme.palette.warning.dark,
+                backgroundColor: theme.palette.common.black
+              }}
               className={globalClasses.button}
               onClick={() => toggleDrawingMode('polygon')}>
               {t('DrawDeliveryBounds')}
             </Button>
             <Button
-              style={{ color: theme.palette.warning.dark, backgroundColor: theme.palette.common.black }}
+              style={{
+                color: theme.palette.warning.dark,
+                backgroundColor: theme.palette.common.black
+              }}
               className={globalClasses.button}
               onClick={() => toggleDrawingMode('marker')}>
               {t('SetRestaurantLocation')}
@@ -272,7 +279,10 @@ function DeliveryBoundsAndLocation() {
               {t('RemoveDeliveryBounds')}
             </Button>
             <Button
-              style={{ color: theme.palette.common.black, backgroundColor: theme.palette.grey[300] }}
+              style={{
+                color: theme.palette.common.black,
+                backgroundColor: theme.palette.grey[300]
+              }}
               className={globalClasses.button}
               onClick={removeMarker}>
               {t('RemoveRestaurantLocation')}
@@ -300,8 +310,7 @@ function DeliveryBoundsAndLocation() {
             <Alert
               className={globalClasses.alertSuccess}
               variant="filled"
-              severity="success"
-            >
+              severity="success">
               {successMessage}
             </Alert>
           )}
@@ -310,16 +319,14 @@ function DeliveryBoundsAndLocation() {
             <Alert
               className={globalClasses.alertError}
               variant="filled"
-              severity="error"
-            >
+              severity="error">
               {errorMessage}
             </Alert>
           )}
-
         </Box>
       </Container>
     </>
   )
 }
 
-export default  withTranslation()(DeliveryBoundsAndLocation)
+export default withTranslation()(DeliveryBoundsAndLocation)

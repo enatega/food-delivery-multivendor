@@ -11,7 +11,7 @@ const CHANGE_PASSWORD = gql`
 `
 
 function ResetPassword(props) {
-  const { t } = props;
+  const { t } = props
   const formRef = useRef()
   const [passError, passErrorSetter] = useState(null)
   const [confirmPassError, confirmPassErrorSetter] = useState(null)

@@ -13,7 +13,7 @@ const SAVE_CURRENCY_CONFIGURATION = gql`
 `
 
 function Currency(props) {
-  const { t } = props;
+  const { t } = props
   const [currencyCode, currencyCodeSetter] = useState(props.currencyCode || '')
   const [currencySymbol, currencySymbolSetter] = useState(
     props.currencySymbol || ''
@@ -47,29 +47,29 @@ function Currency(props) {
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
-  const [successMessage, setSuccessMessage] = useState('');
-  const handleSuccess = (message) => {
-    setSuccessMessage(message);
-  };
+  const [successMessage, setSuccessMessage] = useState('')
+  const handleSuccess = message => {
+    setSuccessMessage(message)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
+      setSuccessMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [successMessage, setSuccessMessage]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const handleError = (error) => {
-    setErrorMessage('An error occurred while saving configuration.');
-    console.error('Mutation error:', error);
-  };
+    return () => clearTimeout(timeoutId)
+  }, [successMessage, setSuccessMessage])
+  const [errorMessage, setErrorMessage] = useState('')
+  const handleError = error => {
+    setErrorMessage('An error occurred while saving configuration.')
+    console.error('Mutation error:', error)
+  }
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setErrorMessage('');
-    }, 3000);
+      setErrorMessage('')
+    }, 3000)
 
-    return () => clearTimeout(timeoutId);
-  }, [errorMessage, setErrorMessage]);
+    return () => clearTimeout(timeoutId)
+  }, [errorMessage, setErrorMessage])
 
   return (
     <Box container className={classes.container}>
@@ -84,7 +84,9 @@ function Currency(props) {
       <Box className={classes.form}>
         <form>
           <Box>
-            <Typography className={classes.labelText}>{t('ChooseCurrency')}</Typography>
+            <Typography className={classes.labelText}>
+              {t('ChooseCurrency')}
+            </Typography>
             <Select
               style={{ marginTop: -1 }}
               id="input-currency"
@@ -99,8 +101,8 @@ function Currency(props) {
                 currencyCodeError === false
                   ? globalClasses.inputError
                   : currencyCodeError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}>
               {stripeCurrencies.map(val => (
                 <MenuItem
@@ -113,7 +115,9 @@ function Currency(props) {
             </Select>
           </Box>
           <Box>
-            <Typography className={classes.labelText}>{t('ChooseSymbol')}</Typography>
+            <Typography className={classes.labelText}>
+              {t('ChooseSymbol')}
+            </Typography>
             <Select
               style={{ marginTop: -1 }}
               id="input-symbol"
@@ -128,8 +132,8 @@ function Currency(props) {
                 currencySymbolError === false
                   ? globalClasses.inputError
                   : currencySymbolError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}>
               {stripeCurrencies.map(val => (
                 <MenuItem
@@ -152,16 +156,16 @@ function Currency(props) {
                     variables: {
                       configurationInput: {
                         currency: currencyCode,
-                        currencySymbol: currencySymbol,
-                      },
+                        currencySymbol: currencySymbol
+                      }
                     },
-                    onCompleted: (data) => {
-                      handleSuccess('Configuration saved successfully!');
+                    onCompleted: data => {
+                      handleSuccess('Configuration saved successfully!')
                     },
-                    onError: (error) => {
-                      handleError(error);
-                    },
-                  });
+                    onError: error => {
+                      handleError(error)
+                    }
+                  })
                 }
               }}>
               {t('Save')}
@@ -170,19 +174,17 @@ function Currency(props) {
           <Box mt={2}>
             {successMessage && (
               <Alert
-                  className={globalClasses.alertSuccess}
-                  variant="filled"
-                  severity="success"
-                >
-                  {successMessage}
-                </Alert>
+                className={globalClasses.alertSuccess}
+                variant="filled"
+                severity="success">
+                {successMessage}
+              </Alert>
             )}
             {errorMessage && (
               <Alert
                 className={globalClasses.alertError}
                 variant="filled"
-                severity="error"
-              >
+                severity="error">
                 {errorMessage}
               </Alert>
             )}

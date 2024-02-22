@@ -36,7 +36,7 @@ const DELETE_CATEGORY = gql`
   ${deleteCategory}
 `
 const Category = props => {
-  const { t } = props;
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [category, setCategory] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -48,8 +48,8 @@ const Category = props => {
     setCategory(category)
   }
   const closeEditModal = () => {
-    setEditModal(false);
-  };
+    setEditModal(false)
+  }
   const restaurantId = localStorage.getItem('restaurantId')
 
   const [/*mutate*/ { loading }] = useMutation(DELETE_CATEGORY)
@@ -158,18 +158,15 @@ const Category = props => {
     searchQuery.length < 3
       ? data && data.restaurant.categories
       : data &&
-      data.restaurant.categories.filter(category => {
-        return category.title.toLowerCase().search(regex) > -1
-      })
+        data.restaurant.categories.filter(category => {
+          return category.title.toLowerCase().search(regex) > -1
+        })
   const globalClasses = useGlobalStyles()
   return (
     <>
       <Header />
       {isOpen && (
-        <Alert
-          message={t('AvailableAfterPurchasing')}
-          severity="warning"
-        />
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
       )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
@@ -191,7 +188,7 @@ const Category = props => {
                 onClick={() => refetch()}
               />
             }
-              title={<TableHeader title={t('Categories')} />}
+            title={<TableHeader title={t('Categories')} />}
             columns={columns}
             data={filtered}
             pagination

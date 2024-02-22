@@ -20,8 +20,8 @@ const ORDER_PLACED = gql`
 `
 
 const OrdersData = props => {
-  const theme = useTheme();
-  const { t } = props;
+  const theme = useTheme()
+  const { t } = props
   const { selected, updateSelected } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
@@ -159,7 +159,7 @@ const OrdersData = props => {
   return (
     <>
       <DataTable
-        title={<TableHeader title={t("Orders")} />}
+        title={<TableHeader title={t('Orders')} />}
         columns={columns}
         data={filtered}
         onRowClicked={props.toggleModal}

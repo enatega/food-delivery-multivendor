@@ -6,15 +6,15 @@ import useStyles from '../components/Configuration/styles'
 import useGlobalStyles from '../utils/globalStyles'
 import { Box, Typography, Input, Alert, Button, Checkbox } from '@mui/material'
 import { withTranslation } from 'react-i18next'
-import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const RESET_PASSWORD = gql`
   ${resetPassword}
 `
 const ResetPassword = props => {
-  const { t } = props;
+  const { t } = props
   const formRef = useRef()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -22,8 +22,8 @@ const ResetPassword = props => {
   const [passwordError, setPasswordError] = useState(null)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const onBlur = (event, field) => {
     if (field === 'password') {
@@ -156,7 +156,9 @@ const ResetPassword = props => {
                   <InputAdornment position="end">
                     <Checkbox
                       checked={showConfirmPassword}
-                      onChange={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onChange={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       color="primary"
                       icon={<VisibilityOffIcon />}
                       checkedIcon={<VisibilityIcon />}
@@ -181,12 +183,12 @@ const ResetPassword = props => {
                         token: params.get('reset')
                       }
                     })
-                    .then(response => {
-                      console.log('Mutation successful:', response);
-                    })
-                    .catch(error => {
-                      console.error('Mutation error:', error.message);
-                    });
+                      .then(response => {
+                        console.log('Mutation successful:', response)
+                      })
+                      .catch(error => {
+                        console.error('Mutation error:', error.message)
+                      })
                   }
                 }}>
                 {t('Reset')}

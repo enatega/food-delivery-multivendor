@@ -2,7 +2,7 @@
   "name": "enatega-rider-app",
   "version": "5.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --offline",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
@@ -48,7 +48,6 @@
     "expo-application": "~5.1.1",
     "expo-av": "~13.2.1",
     "expo-camera": "~13.2.1",
-    
     "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.2.1",
     "expo-device": "~5.2.1",

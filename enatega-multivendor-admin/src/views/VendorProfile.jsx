@@ -7,14 +7,22 @@ import { getRestaurantProfile, editRestaurant } from '../apollo'
 import ConfigurableValues from '../config/constants'
 import useStyles from '../components/Restaurant/styles'
 import useGlobalStyles from '../utils/globalStyles'
-import { Box, Alert, Typography, Button, Input, Grid, Checkbox } from '@mui/material'
+import {
+  Box,
+  Alert,
+  Typography,
+  Button,
+  Input,
+  Grid,
+  Checkbox
+} from '@mui/material'
 import { Container } from '@mui/system'
 import CustomLoader from '../components/Loader/CustomLoader'
-import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { SHOP_TYPE } from '../utils/enums'
-import Dropdown from '../components/Dropdown';
+import Dropdown from '../components/Dropdown'
 
 const GET_PROFILE = gql`
   ${getRestaurantProfile}
@@ -24,13 +32,12 @@ const EDIT_RESTAURANT = gql`
 `
 
 const VendorProfile = () => {
+  const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
 
- const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
-
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const restaurantId = localStorage.getItem('restaurantId')
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const [imgUrl, setImgUrl] = useState('')
   const [nameError, setNameError] = useState(null)
   const [usernameError, setUsernameError] = useState(null)
@@ -112,7 +119,7 @@ const VendorProfile = () => {
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async () => {
+  const uploadImageToCloudinary = async() => {
     if (imgUrl === '') return imgUrl
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
@@ -218,7 +225,9 @@ const VendorProfile = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('RestaurantUsername')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('RestaurantUsername')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="username"
@@ -232,22 +241,26 @@ const VendorProfile = () => {
                           usernameError === false
                             ? globalClasses.inputError
                             : usernameError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
-                        onChange={(event) => {
+                        onChange={event => {
                           if (event.target.value.includes(' ')) {
-                            const usernameWithoutSpaces = event.target.value.replace(/ /g, '');
-                            event.target.value = usernameWithoutSpaces;
+                            const usernameWithoutSpaces = event.target.value.replace(
+                              / /g,
+                              ''
+                            )
+                            event.target.value = usernameWithoutSpaces
                           }
                         }}
                       />
-
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('Password')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('Password')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="password"
@@ -261,20 +274,20 @@ const VendorProfile = () => {
                           passwordError === false
                             ? globalClasses.inputError
                             : passwordError === true
-                              ? globalClasses.inputSuccess
-                              : ''
-                          ]}
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <Checkbox
-                                checked={showPassword}
-                                onChange={() => setShowPassword(!showPassword)}
-                                color="primary"
-                                icon={<VisibilityOffIcon />}
-                                checkedIcon={<VisibilityIcon />}
-                              />
-                            </InputAdornment>
-                          }
+                            ? globalClasses.inputSuccess
+                            : ''
+                        ]}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <Checkbox
+                              checked={showPassword}
+                              onChange={() => setShowPassword(!showPassword)}
+                              color="primary"
+                              icon={<VisibilityOffIcon />}
+                              checkedIcon={<VisibilityIcon />}
+                            />
+                          </InputAdornment>
+                        }
                       />
                     </Box>
                   </Grid>
@@ -283,7 +296,9 @@ const VendorProfile = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('Name')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('Name')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="name"
@@ -297,15 +312,17 @@ const VendorProfile = () => {
                           nameError === false
                             ? globalClasses.inputError
                             : nameError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('Address')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('Address')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="address"
@@ -319,8 +336,8 @@ const VendorProfile = () => {
                           addressError === false
                             ? globalClasses.inputError
                             : addressError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -330,7 +347,9 @@ const VendorProfile = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('DeliveryTime')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('DeliveryTime')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="deliveryTime"
@@ -344,15 +363,17 @@ const VendorProfile = () => {
                           deliveryTimeError === false
                             ? globalClasses.inputError
                             : deliveryTimeError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('MinOrder')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('MinOrder')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="minimumOrder"
@@ -366,8 +387,8 @@ const VendorProfile = () => {
                           minimumOrderError === false
                             ? globalClasses.inputError
                             : minimumOrderError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -376,7 +397,9 @@ const VendorProfile = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('SalesTax')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('SalesTax')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="salesTax"
@@ -390,15 +413,17 @@ const VendorProfile = () => {
                           salesTaxError === false
                             ? globalClasses.inputError
                             : salesTaxError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Box>
-                      <Typography className={classes.labelText}>{t('OrderPrefix')}</Typography>
+                      <Typography className={classes.labelText}>
+                        {t('OrderPrefix')}
+                      </Typography>
                       <Input
                         style={{ marginTop: -1 }}
                         name="prefix"
@@ -412,8 +437,8 @@ const VendorProfile = () => {
                           prefixError === false
                             ? globalClasses.inputError
                             : prefixError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>

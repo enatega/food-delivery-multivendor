@@ -13,8 +13,8 @@ const RESTAURANT_BY_OWNER = gql`
   ${restaurantByOwner}
 `
 const Restaurant = props => {
-  const theme = useTheme();
-  const { t } = props;
+  const theme = useTheme()
+  const { t } = props
   const [owner, setOwner] = useState()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const vendorId = localStorage.getItem('vendorId')
@@ -56,8 +56,7 @@ const Restaurant = props => {
         sx={{
           height: '160px',
           width: '100%',
-          background:
-            `linear-gradient(91.18deg, ${theme.palette.warning.dark} 1.49%, ${theme.palette.primary.main} 99.86%)`,
+          background: `linear-gradient(91.18deg, ${theme.palette.warning.dark} 1.49%, ${theme.palette.primary.main} 99.86%)`,
           borderRadius: '0 0 40px 40px',
           marginBottom: 1,
           mt: -10
