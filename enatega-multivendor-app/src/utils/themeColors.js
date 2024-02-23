@@ -77,7 +77,8 @@ export const theme = {
     gray900: '#111827',
     gray600: '#4B5563',
     gray700: '#374151',
-    primary: '#90E36D'
+    primary: '#90E36D',
+    borderLight: '#D9D9D9'
   },
   Dark: {
     black: '#000',
@@ -146,6 +147,7 @@ export const theme = {
     gray900: '#111827',
     gray600: '#4B5563',
     gray700: '#374151',
-    primary: '#90E36D'
+    primary: '#90E36D',
+    borderLight: '#D9D9D9'
   }
 }

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { verticalScale } from '../../utils/scaling'
+import { scale, verticalScale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -49,6 +49,18 @@ const styles = (props = null) =>
       borderRadius: 20,
       backgroundColor: 'black',
       margin: 15
-    }
+    },
+    bottomContainer: (theme) => ({
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      height: scale(80),
+      backgroundColor: theme.white,
+      justifyContent: 'center',
+      ...alignment.Pmedium,
+      borderColor: theme.borderLight,
+      borderTopWidth: StyleSheet.hairlineWidth
+    })
   })
 export default styles

@@ -1,11 +1,10 @@
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View, ScrollView, Dimensions, StatusBar, Platform } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
-import React, { useContext, useEffect } from 'react'
-import { View, ScrollView, Dimensions } from 'react-native'
+import React, { useContext, useEffect, useLayoutEffect } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
@@ -21,19 +20,27 @@ import CustomerMarker from '../../assets/SVG/customer-marker'
 import TrackingRider from '../../components/OrderDetail/TrackingRider/TrackingRider'
 import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
+import { useTranslation } from 'react-i18next'
+import { LocationContext } from '../../context/Location'
+import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
+import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
+import { ProgressBar } from '../../components/Main/ActiveOrders/ProgressBar'
+import { useNavigation } from '@react-navigation/native'
+import { PriceRow } from '../../components/OrderDetail/PriceRow'
 const { height: HEIGHT } = Dimensions.get('screen')
-import {useTranslation} from 'react-i18next'
+const IMAGE_HEIGHT = Math.floor(HEIGHT / 2)
 
 function OrderDetail(props) {
   const Analytics = analytics()
-
+  const { location } = useContext(LocationContext)
   const id = props.route.params ? props.route.params._id : null
   const user = props.route.params ? props.route.params.user : null
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+  const navigation = useNavigation()
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
@@ -42,6 +49,15 @@ function OrderDetail(props) {
     }
     Track()
   }, [])
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
+      headerTitle: `${location.deliveryAddress.substr(0, 10)}...`,
+      title: null,
+      headerTitleStyle: { color: currentTheme.black },
+      headerStyle: { backgroundColor: currentTheme.white }
+    })
+  }, [props.navigation, location])
 
   const order = orders.find(o => o._id === id)
 
@@ -59,14 +75,26 @@ function OrderDetail(props) {
     deliveryCharges
   } = order
   const subTotal = total - tip - tax - deliveryCharges
-
+  console.log('order details', order)
   return (
-    <SafeAreaView style={styles().flex}>
+    <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, backgroundColor: currentTheme.white, paddingBottom: scale(100) }}
         showsVerticalScrollIndicator={false}
         overScrollMode="never">
-        <MapView
+        <View style={{ justifyContent: 'center', alignItems: 'center', ...alignment.Pmedium }}>
+          <OrderPreparing/>
+          <View style={{ ...alignment.MTxSmall, alignItems: 'center', justifyContent: 'space-between' }}>
+            <TextDefault style={{ ...alignment.MTxSmall }} textColor={currentTheme.gray500} H5>Estimated delivery time</TextDefault>
+            <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>15-25 mins</TextDefault>
+            <ProgressBar configuration={configuration}
+              currentTheme={currentTheme}
+              item={order}
+              navigation={navigation}/>
+            <TextDefault H5 style={{ ...alignment.Mmedium, textAlign: 'center' }} textColor={currentTheme.gray600} bold>Preparing your food. Rider will pick it up once ready</TextDefault>
+          </View>
+        </View>
+        {/* <MapView
           style={{ height: HEIGHT * 0.75 }}
           showsUserLocation={false}
           initialRegion={{
@@ -95,9 +123,8 @@ function OrderDetail(props) {
             <CustomerMarker />
           </Marker>
           {order.rider && <TrackingRider id={order.rider._id} />}
-        </MapView>
-
-        <Status
+        </MapView> */}
+        {/* <Status
           orderStatus={order.orderStatus}
           createdAt={order.createdAt}
           acceptedAt={order.acceptedAt}
@@ -106,8 +133,7 @@ function OrderDetail(props) {
           cancelledAt={order.cancelledAt}
           assignedAt={order.assignedAt}
           theme={currentTheme}
-        />
-
+        /> */}
         {order.orderStatus === 'DELIVERED' && !order.review && (
           <View style={styles().review}>
             <TouchableOpacity
@@ -152,7 +178,14 @@ function OrderDetail(props) {
           rider={order.rider}
         />
       </ScrollView>
-    </SafeAreaView>
+      <View style={styles().bottomContainer(currentTheme)}>
+        <PriceRow
+          theme={currentTheme}
+          title={t('total')}
+          currency={configuration.currencySymbol}
+          price={total.toFixed(2)}/>
+      </View>
+    </View>
   )
 }
 
