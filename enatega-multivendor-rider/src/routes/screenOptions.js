@@ -21,15 +21,14 @@ const tabIcon = route => ({
   tabBarIcon: ({ color, size }) => {
     let iconName
     if (route.name === 'Home') {
-      iconName = 'md-home'
+      iconName = 'home'
     } else if (route.name === 'MyOrders') {
-      iconName = 'md-time'
+      iconName = 'time'
     } else if (route.name === 'Wallet') {
       iconName = 'wallet'
     } else if (route.name === 'Profile') {
       iconName = 'person'
-    } 
-    else if (route.name === 'Language') {
+    } else if (route.name === 'Language') {
       iconName = 'language'
     }
     return (
@@ -41,19 +40,20 @@ const tabIcon = route => ({
 })
 
 const tabOptions = () => ({
-  keyboardHidesTabBar: true,
-  activeTintColor: colors.iconPink,
-  inactiveTintColor: colors.white,
-  tabStyle: {
+  headerShown: false,
+  tabBarHideOnKeyboard: true,
+  tabBarActiveTintColor: colors.iconPink,
+  tabBarInactiveTintColor: colors.white,
+  tabBarItemStyle: {
     justifyContent: 'center',
     alignItems: 'center'
   },
-  labelStyle: {
+  tabBarLabelStyle: {
     ...textStyles.Bold,
     ...textStyles.Center,
     ...textStyles.Small
   },
-  style: {
+  tabBarStyle: {
     backgroundColor: '#2c2c2c',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15

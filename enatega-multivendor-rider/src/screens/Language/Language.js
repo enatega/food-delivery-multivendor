@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Updates from 'expo-updates'
 import * as Localization from 'expo-localization'
 import styles from './styles'
-import { useSafeArea } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import colors from '../../utilities/colors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utilities/alignment'
@@ -29,7 +29,7 @@ function Language() {
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, setActiveRadio] = useState(languageTypes[0].index)
   const [languageName, languageNameSetter] = useState('English')
-  const inset = useSafeArea()
+  const inset = useSafeAreaInsets()
   useLayoutEffect(() => {
     navigation.setOptions({
       title: t('titleLanguage')
