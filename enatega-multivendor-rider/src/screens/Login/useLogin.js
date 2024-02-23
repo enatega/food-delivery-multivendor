@@ -7,14 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { gql, useMutation } from '@apollo/client'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const RIDER_LOGIN = gql`
   ${riderLogin}
 `
 
 const useLogin = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [username, setUsername] = useState('rider2')
   const [password, setPassword] = useState('12345')
   const [showPassword, setShowPassword] = useState(true)
@@ -56,19 +56,20 @@ const useLogin = () => {
     let message = 'Check internet connection'
     try {
       message = error.message
-    } catch (error) {}
+    } catch (error) { }
     FlashMessage({ message: message })
   }
 
   async function onSubmit() {
     if (validateForm()) {
-      const settings = await Notifications.getPermissionsAsync()
-      let notificationPermissions = { ...settings }
+      // Get notification permissions
+      const settings = await Notifications.getPermissionsAsync();
+      let notificationPermissions = { ...settings };
 
+      // Request notification permissions if not granted or not provisional on iOS
       if (
         settings?.status !== 'granted' ||
-        settings.ios?.status !==
-          Notifications.IosAuthorizationStatus.PROVISIONAL
+        settings.ios?.status !== Notifications.IosAuthorizationStatus.PROVISIONAL
       ) {
         notificationPermissions = await Notifications.requestPermissionsAsync({
           ios: {
@@ -76,27 +77,30 @@ const useLogin = () => {
             allowAlert: true,
             allowBadge: true,
             allowSound: true,
-            allowAnnouncements: true
-          }
-        })
+            allowAnnouncements: true,
+          },
+        });
       }
-      let notificationToken = null
+
+      let notificationToken = null;
+      // Get notification token if permissions are granted and it's a device
       if (
         (notificationPermissions?.status === 'granted' ||
           notificationPermissions.ios?.status ===
-            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
+          Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
-        notificationToken = (await Notifications.getExpoPushTokenAsync()).data
+        notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
       }
-     
+
+      // Perform mutation with the obtained data
       mutate({
         variables: {
           username: username.toLowerCase(),
           password: password,
-          notificationToken: notificationToken
-        }
-      })
+          notificationToken: notificationToken,
+        },
+      });
     }
   }
   return {
