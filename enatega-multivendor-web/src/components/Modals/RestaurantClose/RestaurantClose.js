@@ -4,10 +4,10 @@ import clsx from "clsx";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useStyles from "./styles";
-
+import { useTranslation } from 'react-i18next';
 function RestaurantClose({ isVisible, toggleModal, restaurant, closeMenu = true }) {
   const classes = useStyles();
-
+  const { t  } = useTranslation();
   return (
     <Dialog
       onClose={toggleModal}
@@ -28,8 +28,7 @@ function RestaurantClose({ isVisible, toggleModal, restaurant, closeMenu = true 
             {`${restaurant} is closed Now.`}
           </Typography>
           <Typography variant="subtitle2" className={`${classes.disabledText} ${classes.lightText}`}>
-            The restaurant is closed right now. Check out others that are open or take a look at the menu to plan for
-            your next meal.
+            {t('restaurantCloseText')}
           </Typography>
         </Box>
       </DialogTitle>
@@ -37,7 +36,7 @@ function RestaurantClose({ isVisible, toggleModal, restaurant, closeMenu = true 
         <RouterLink to="/" className={classes.linkBtn}>
           <Button variant="contained" color="primary" fullWidth className={classes.btnBase}>
             <Typography variant="subtitle2" className={classes.boldText}>
-              SEE OTHER RESTAURANTS
+              {t('seeOtherRestaurants')}
             </Typography>
           </Button>
         </RouterLink>
@@ -53,7 +52,7 @@ function RestaurantClose({ isVisible, toggleModal, restaurant, closeMenu = true 
             }}
           >
             <Typography variant="subtitle2" color="primary" className={classes.boldText}>
-              Go To Menu
+              {t('goToMenu')}
             </Typography>
           </Button>
         )}

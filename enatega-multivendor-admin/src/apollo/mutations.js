@@ -179,7 +179,116 @@ export const saveEmailConfiguration = `mutation SaveEmailConfiguration($configur
     enableEmail
   }
 }`
+export const saveFormEmailConfiguration = `mutation  SaveFormEmailConfiguration($configurationInput:FormEmailConfigurationInput!){
+  saveFormEmailConfiguration(configurationInput: $configurationInput) {
+    _id
+    formEmail
 
+  }
+}`
+export const saveSendGridApiKey = `mutation SaveSendGridApiKey($configurationInput: SendGridConfigurationInput!) {
+  saveSendGridConfiguration(configurationInput: $configurationInput) {
+    _id
+    sendGridApiKey
+    sendGridEnabled
+    sendGridEmail
+    sendGridEmailName
+    sendGridPassword
+  }
+}`
+
+export const saveFirebaseConfiguration = `
+  mutation SaveFirebaseConfiguration(
+    $configurationInput:FirebaseConfigurationInput!
+  ) {
+    saveFirebaseConfiguration(configurationInput: $configurationInput) {
+      _id
+      firebaseKey
+      authDomain
+      projectId
+      storageBucket
+      msgSenderId
+      appId
+      measurementId
+    }
+  }
+`
+
+export const saveSentryConfiguration = `
+  mutation SaveSentryConfiguration($configurationInput: SentryConfigurationInput!) {
+    saveSentryConfiguration(configurationInput: $configurationInput) {
+      _id
+      dashboardSentryUrl
+      webSentryUrl
+      apiSentryUrl
+      customerAppSentryUrl
+      restaurantAppSentryUrl
+      riderAppSentryUrl
+    }
+  }
+`
+export const saveGoogleApiKeyConfiguration = `
+  mutation SaveGoogleApiKeyConfiguration(
+    $configurationInput: GoogleApiKeyConfigurationInput!
+  ) {
+    saveGoogleApiKeyConfiguration(configurationInput: $configurationInput) {
+      _id
+      googleApiKey
+    }
+  }
+`
+export const saveCloudinaryConfiguration = `mutation SaveCloudinaryConfiguration($configurationInput: CloudinaryConfigurationInput!) {
+  saveCloudinaryConfiguration(configurationInput: $configurationInput) {
+    _id
+    cloudinaryUploadUrl
+    cloudinaryApiKey
+ 
+  }
+}
+`
+export const saveAmplitudeApiKeyConfiguration = `
+  mutation SaveAmplitudeApiKeyConfiguration(
+    $configurationInput: AmplitudeApiKeyConfigurationInput!
+  ) {
+    saveAmplitudeApiKeyConfiguration(configurationInput: $configurationInput) {
+      _id
+      webAmplitudeApiKey
+      appAmplitudeApiKey
+    }
+  }
+`
+export const saveGoogleClientIDConfiguration = `mutation SaveGoogleClientIDConfiguration($configurationInput: GoogleClientIDConfigurationInput!) {
+  saveGoogleClientIDConfiguration(configurationInput: $configurationInput) {
+    _id
+    webClientID
+    androidClientID
+    iOSClientID
+    expoClientID
+  }
+}
+`
+export const saveWebConfiguration = `
+  mutation SaveWebConfiguration($configurationInput: WebConfigurationInput!) {
+    saveWebConfiguration(configurationInput: $configurationInput) {
+      _id
+    
+      googleMapLibraries
+      googleColor
+    }
+  }
+`
+
+export const saveAppConfiguration = `
+  mutation SaveAppConfiguration($configurationInput: AppConfigurationsInput!) {
+    saveAppConfigurations(configurationInput: $configurationInput) {
+      _id
+    
+      termsAndConditions
+      privacyPolicy
+      testOtp
+    }
+  }
+`
 export const saveDeliveryRateConfiguration = `mutation SaveDeliveryRateConfiguration($deliveryRate: Float!){
   saveDeliveryRateConfiguration(deliveryRate:$deliveryRate){
     _id
@@ -201,6 +310,17 @@ export const saveStripeConfiguration = `mutation SaveStripeConfiguration($config
     _id
     publishableKey
     secretKey
+  
+  }
+}`
+
+export const saveTwilioConfiguration = `mutation saveTwilioConfiguration($configurationInput:TwilioConfigurationInput!){
+  saveTwilioConfiguration(configurationInput:$configurationInput){
+    _id
+    twilioAccountSid
+    twilioAuthToken
+    twilioPhoneNumber
+    twilioEnabled
   }
 }`
 
@@ -550,6 +670,7 @@ export const editRestaurant = `mutation EditRestaurant($restaurantInput:Restaura
           endTime
         }
       }
+      shopType
     }
 }`
 
@@ -632,6 +753,7 @@ export const createRestaurant = `mutation CreateRestaurant($restaurant:Restauran
     minimumOrder
     tax
     location{coordinates}
+    shopType
   }
 }`
 

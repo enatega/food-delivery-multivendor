@@ -18,12 +18,25 @@ const useStyles = makeStyles((theme) => ({
   },
   btnBase: {
     height: "50px",
-    backgroundColor: theme.palette.common.black,
+    opacity: 1,
+    backgroundColor: theme.palette.primary.main,
+    transition: 'opacity 0.3s',
     "&:hover": {
       opacity: 0.8,
+      backgroundColor: theme.palette.primary.main
     },
     width: "70%",
     borderRadius: 10,
+  },
+  customBtn: {
+    background: theme.palette.common.main,
+    width: "70%",
+    transition: "opacity 0.3s",
+    opacity: 1,
+    "&:hover": {
+      backgroundColor: theme.palette.common.main,
+      opacity: 0.8,
+    },
   },
   form: {
     display: "flex",

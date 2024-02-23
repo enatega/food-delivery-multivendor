@@ -16,9 +16,11 @@ import { transformToNewline } from '../utils/stringManipulations'
 import SearchBar from '../components/TableHeader/SearchBar'
 import useGlobalStyles from '../utils/globalStyles'
 import { customStyles } from '../utils/tableCustomStyles'
-import { Container, MenuItem, Select, Box } from '@mui/material'
+import { Container, MenuItem, Select, Box, useTheme } from '@mui/material'
 import { ReactComponent as DispatchIcon } from '../assets/svg/svg/Dispatch.svg'
 import TableHeader from '../components/TableHeader'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
+import 'react-notifications/lib/notifications.css'
 
 const SUBSCRIPTION_ORDER = gql`
   ${subscriptionOrder}
@@ -37,6 +39,8 @@ const GET_ACTIVE_ORDERS = gql`
 `
 
 const Orders = props => {
+  const theme = useTheme()
+  const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const [mutateUpdate] = useMutation(UPDATE_STATUS)
@@ -51,6 +55,7 @@ const Orders = props => {
       <Select
         id="input-rider"
         name="input-rider"
+        value=""
         displayEmpty
         inputProps={{ 'aria-label': 'Without label' }}
         style={{ width: '50px' }}
@@ -64,6 +69,22 @@ const Orders = props => {
                   variables: {
                     id: row._id,
                     riderId: rider._id
+                  },
+                  onCompleted: data => {
+                    console.error('Mutation success data:', data)
+                    NotificationManager.success(
+                      'Successful',
+                      'Rider updated!',
+                      3000
+                    )
+                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update rider!',
+                      3000
+                    )
                   }
                 })
               }}
@@ -82,6 +103,10 @@ const Orders = props => {
   } = useQuery(GET_ACTIVE_ORDERS, { pollInterval: 3000 })
 
   const statusFunc = row => {
+    const handleStatusSuccessNotification = status => {
+      NotificationManager.success(status, 'Status Updated!', 3000)
+    }
+
     return (
       <>
         <Select
@@ -99,10 +124,22 @@ const Orders = props => {
                   variables: {
                     id: row._id,
                     orderStatus: 'ACCEPTED'
+                  },
+                  onCompleted: data => {
+                    handleStatusSuccessNotification('ACCEPTED')
+                    refetchOrders()
+                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update status!',
+                      3000
+                    )
                   }
                 })
               }}>
-              Accept
+              {t('Accept')}
             </MenuItem>
           )}
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
@@ -115,10 +152,22 @@ const Orders = props => {
                   variables: {
                     id: row._id,
                     orderStatus: 'CANCELLED'
+                  },
+                  onCompleted: data => {
+                    handleStatusSuccessNotification('REJECTED')
+                    refetchOrders()
+                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update status!',
+                      3000
+                    )
                   }
                 })
               }}>
-              Reject
+              {t('Reject')}
             </MenuItem>
           )}
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
@@ -131,10 +180,22 @@ const Orders = props => {
                   variables: {
                     id: row._id,
                     orderStatus: 'DELIVERED'
+                  },
+                  onCompleted: data => {
+                    handleStatusSuccessNotification('DELIVERED')
+                    refetchOrders()
+                  },
+                  onError: error => {
+                    console.error('Mutation error:', error)
+                    NotificationManager.error(
+                      'Error',
+                      'Failed to update status!',
+                      3000
+                    )
                   }
                 })
               }}>
-              Delivered
+              {t('Delivered')}
             </MenuItem>
           )}
         </Select>
@@ -156,25 +217,25 @@ const Orders = props => {
   }
   const columns = [
     {
-      name: 'Order Information',
+      name: t('OrderInformation'),
       sortable: true,
       selector: 'orderId',
       cell: row => subscribeFunc(row)
     },
     {
-      name: 'Restaurant',
+      name: t('RestaurantCol'),
       selector: 'restaurant.name'
     },
     {
-      name: 'Payment',
+      name: t('Payment'),
       selector: 'paymentMethod'
     },
     {
-      name: 'Status',
+      name: t('Status'),
       selector: 'orderStatus',
       cell: row => (
         <div style={{ overflow: 'visible' }}>
-          {row.orderStatus}
+          {t(row.orderStatus)}
           <br />
           {!['CANCELLED', 'DELIVERED'].includes(row.orderStatus) &&
             statusFunc(row)}
@@ -182,7 +243,7 @@ const Orders = props => {
       )
     },
     {
-      name: 'Rider',
+      name: t('Rider'),
       selector: 'rider',
       cell: row => (
         <div style={{ overflow: 'visible' }}>
@@ -195,7 +256,7 @@ const Orders = props => {
       )
     },
     {
-      name: 'Order time',
+      name: t('OrderTime'),
       cell: row => (
         <>{new Date(row.createdAt).toLocaleString().replace(/ /g, '\n')}</>
       )
@@ -206,7 +267,7 @@ const Orders = props => {
     {
       when: row => ['DELIVERED', 'CANCELLED'].includes(row.orderStatus),
       style: {
-        backgroundColor: '#FDEFDD'
+        backgroundColor: theme.palette.success.dark
       }
     }
   ]
@@ -234,6 +295,7 @@ const Orders = props => {
 
   return (
     <>
+      <NotificationContainer />
       <Header />
       <Box className={globalClasses.flexRow} mb={3}>
         <DispatchIcon />
@@ -258,7 +320,7 @@ const Orders = props => {
                 onClick={() => refetchOrders()}
               />
             }
-            title={<TableHeader title="Dispatch" />}
+            title={<TableHeader title={t('Dispatch')} />}
             columns={columns}
             data={filtered}
             progressPending={loadingOrders}

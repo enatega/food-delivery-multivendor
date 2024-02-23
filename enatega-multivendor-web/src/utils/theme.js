@@ -1,7 +1,11 @@
-import { blue } from "@mui/material/colors"
+import { blue } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  breakpoints: {
+    keys: ["xs", "sm", "md", "lg", "xl"],
+    values: { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1400 },
+  },
   overrides: {
     MuiPickersToolbar: {
       toolbar: {
@@ -35,13 +39,14 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ["Open Sans", "sans-serif"].join(),
+    fontFamily: ["Poppins", "Open Sans", "sans-serif"].join(),
     htmlFontSize: 16,
     fontSize: 14,
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 700,
+    fontWeightBolder: 800,
     h1: {
       fontWeight: 300,
       fontSize: "6rem",
@@ -139,36 +144,91 @@ const theme = createTheme({
     mode: "light",
     common: {
       black: "#000",
+      blackShade: "#0000008c",
+      lightBlack: "#00000040",
+      darkBlack: "#0000005e",
       white: "#fff",
+      whiteShade: "#E5EDEF",
     },
     primary: {
-      main: "#6FCF97",
+      main: "#90EA93",
       light: "#fff",
-      dark: "#000",
+      lightest: "#cfcfcf",
+      dark: "#F4F4F4",
+      darkest: "#C4C4C4",
       contrastText: "#fff",
     },
     secondary: {
       main: "#FAFAFA",
       light: "#333333",
+      lightest: "#2d6734",
       dark: "#949393",
+      darkest: "#959191",
       contrastText: "#fff",
     },
     success: {
       main: "#1DB20D",
+      light: "#6FCF97",
+      lightest: "#f1f1f1",
+      dark: "#F0F0F0",
+      darkest: "#E6EBEE",
       contrastText: "#fff",
     },
     info: {
       main: "rgba(39,111,191,0.8)",
+      light: "#E1E5E8",
+      lightest: "#CED8DA",
+      dark: "#CDD7D8",
+      darkest: " #FCFCFD",
       contrastText: "#fff",
     },
     error: {
       main: "#fe0000",
+      light: "#F1F3F3",
+      lightest: "#EBEBEB",
+      dark: "#131313",
+      darkest: "#C2C2C2",
       contrastText: "#fff",
     },
     warning: {
       main: "#FA7751",
       light: "#FCC54C",
+      lightest: "#F7F7F7",
+      dark: "#DCDCDC",
+      darkest: "#888",
       contrastText: "#fff",
+    },
+    button: {
+      main: "#3C8F7C",
+      light: "#0070ba",
+      lightest: "#8EE590",
+      dark: "#EFF4F7",
+      darkest: "#FBE7EF",
+      contrastText: "#fff",
+    },
+    shades: {
+      main: "#EDF1F2",
+      light: "#f0f0fd",
+      lightest: "#DFEAF6",
+      dark: "#BED3EB",
+      darkest: "#93B7DF",
+      contrastText: "#5D93CF",
+    },
+    shadows: {
+      main: "#FDE5EF",
+      light: "#1D3655",
+      lightest: "#1E3656",
+      dark: "#9D9D9D",
+      darkest: "#276FBF",
+      contrastText: "#178",
+    },
+    borders: {
+      main: "#FF5F00",
+      light: "#F79E1B",
+      lightest: "#222D65",
+      dark: "#EB001B",
+      darkest: "#253B80",
+      contrastText: "#179BD7",
     },
     grey: {
       50: "#fafafa",
@@ -191,11 +251,15 @@ const theme = createTheme({
     text: {
       primary: "#fff",
       secondary: "#212121",
+      success: "#D5146D",
       disabled: "#5A5858",
       hint: "#FFF",
     },
     divider: "rgba(0, 0, 0, 0.12)",
     background: {
+      primary: "#153759",
+      secondary: "#5C92CE",
+      success: "#90B4DC",
       paper: "#FAFAFA",
       default: "#fff",
     },

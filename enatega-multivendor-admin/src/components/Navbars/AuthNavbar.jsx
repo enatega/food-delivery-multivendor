@@ -12,7 +12,7 @@ function AdminNavbar(props) {
       <AppBar position="static" sx={{ bgcolor: 'primary.main2', boxShadow: 0 }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Enatega Dashboard
+            {t('EnategaDashboard')}
           </Typography>
         </Toolbar>
       </AppBar>

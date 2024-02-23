@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useState, useEffect } from 'react'
 import { withTranslation } from 'react-i18next'
-import { Container, MenuItem, Select } from '@mui/material'
+import { Container, MenuItem, Select, useTheme } from '@mui/material'
 import { useQuery, useMutation, useSubscription, gql } from '@apollo/client'
 import DataTable from 'react-data-table-component'
 import { getActiveOrders, subscriptionOrder, updateStatus } from '../apollo'
@@ -25,6 +25,8 @@ const GET_ACTIVE_ORDERS = gql`
 `
 
 const DispatchRestaurant = props => {
+  const theme = useTheme()
+  const { t } = props
   const params = useParams()
 
   const [restaurantId, seteRestaurantId] = useState(
@@ -60,7 +62,7 @@ const DispatchRestaurant = props => {
           style={{ width: '50px' }}
           className={globalClasses.selectInput}>
           <MenuItem style={{ color: 'black' }} value={''}>
-            Rider
+            {t('Rider')}
           </MenuItem>
           {row.orderStatus === 'PENDING' && (
             <MenuItem
@@ -73,7 +75,7 @@ const DispatchRestaurant = props => {
                   }
                 })
               }}>
-              Accept
+              {t('Accept')}
             </MenuItem>
           )}
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
@@ -89,7 +91,7 @@ const DispatchRestaurant = props => {
                   }
                 })
               }}>
-              Reject
+              {t('Reject')}
             </MenuItem>
           )}
           {['PENDING', 'ACCEPTED', 'PICKED', 'ASSIGNED'].includes(
@@ -105,7 +107,7 @@ const DispatchRestaurant = props => {
                   }
                 })
               }}>
-              Delivered
+              {t('Delivered')}
             </MenuItem>
           )}
         </Select>
@@ -128,21 +130,21 @@ const DispatchRestaurant = props => {
   }
   const columns = [
     {
-      name: 'Order Information',
+      name: t('OrderInformation'),
       sortable: true,
       selector: 'orderId',
       cell: row => subscribeFunc(row)
     },
     {
-      name: 'Restaurant',
+      name: t('RestaurantCol'),
       selector: 'restaurant.name'
     },
     {
-      name: 'Payment',
+      name: t('Payment'),
       selector: 'paymentMethod'
     },
     {
-      name: 'Status',
+      name: t('Status'),
       selector: 'orderStatus',
       cell: row => (
         <div style={{ overflow: 'visible' }}>
@@ -154,7 +156,7 @@ const DispatchRestaurant = props => {
       )
     },
     {
-      name: 'Order time',
+      name: t('OrderTime'),
       cell: row => (
         <>{new Date(row.createdAt).toLocaleString().replace(/ /g, '\n')}</>
       )
@@ -165,7 +167,7 @@ const DispatchRestaurant = props => {
     {
       when: row => ['DELIVERED', 'CANCELLED'].includes(row.orderStatus),
       style: {
-        backgroundColor: '#FDEFDD'
+        backgroundColor: theme.palette.success.dark
       }
     }
   ]
@@ -198,7 +200,7 @@ const DispatchRestaurant = props => {
       <Container className={globalClasses.flex} fluid>
         {errorOrders ? (
           <tr>
-            <td>{`Error! ${errorOrders.message}`}</td>
+            <td>{`${t('Error')} ${errorOrders.message}`}</td>
           </tr>
         ) : null}
         {loadingOrders ? (
@@ -213,7 +215,7 @@ const DispatchRestaurant = props => {
                 onClick={() => refetchOrders()}
               />
             }
-            title={<TableHeader title="Dispatch" />}
+            title={<TableHeader title={t('Dispatch')} />}
             columns={columns}
             data={filtered}
             progressPending={loadingOrders}

@@ -2,11 +2,10 @@ import { useMutation } from "@apollo/client";
 import {
   Button,
   CircularProgress,
-  Divider,
   Grid,
-  TextField,
   Tooltip,
   Typography,
+  Box,
   useTheme,
 } from "@mui/material";
 import gql from "graphql-tag";
@@ -15,22 +14,26 @@ import { updateUser } from "../../../apollo/server";
 import UserContext from "../../../context/User";
 import FlashMessage from "../../FlashMessage";
 import useStyle from "./styles";
-import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { Link as RouterLink } from "react-router-dom";
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { useTranslation } from 'react-i18next';
 
 const UPDATEUSER = gql`
   ${updateUser}
 `;
 
 function ProfileCard() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const formRef = useRef(null);
   const classes = useStyle();
   const [nameError, setNameError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  // const [phoneError, setPhoneError] = useState("");
   const { profile } = useContext(UserContext);
   const [error, setError] = useState({});
   const [mutate, { loading }] = useMutation(UPDATEUSER, {
@@ -49,7 +52,7 @@ function ProfileCard() {
 
   const clearErrors = useCallback(() => {
     setNameError("");
-    setPhoneError("");
+    // setPhoneError("");
     setError({});
   }, []);
 
@@ -79,23 +82,18 @@ function ProfileCard() {
   }, []);
 
   return (
-    <Grid container item xs={12} className={classes.mainContainer}>
+    <Grid
+      container
+      item
+      xs={12}
+      className={`${classes.mainContainer} ${classes.root}`}
+    >
       <FlashMessage
         open={Boolean(error.type)}
         severity={error.type}
         alertMessage={error.message}
         handleClose={toggleSnackbar}
       />
-      <Grid item xs={12}>
-        <Typography
-          variant="body2"
-          align="center"
-          color="textSecondary"
-          className={classes.textBold}
-        >
-          MY PROFILE
-        </Typography>
-      </Grid>
       <Grid
         item
         xs={12}
@@ -104,96 +102,87 @@ function ProfileCard() {
         lg={6}
         className={classes.profileContainer}
       >
-        <Divider light orientation="horizontal" className={classes.MH3} />
-        <form ref={formRef}>
-          <TextField
-            name={"email"}
-            variant="outlined"
-            label="Email"
-            value={profile?.email ?? ""}
-            disabled
-            fullWidth
-            InputLabelProps={{
-              style: {
-                color: theme.palette.grey[600],
-              },
-            }}
-          />
-          <TextField
-            name={"name"}
-            variant="outlined"
-            label="Name"
-            defaultValue={profile?.name ?? ""}
-            error={Boolean(nameError)}
-            helperText={nameError}
-            fullWidth
-            InputLabelProps={{
-              style: {
-                color: theme.palette.grey[600],
-              },
-            }}
-          />
-          <TextField
-            name={"phone"}
-            variant="outlined"
-            label="Mobile Number"
-            defaultValue={profile?.phone ?? ""}
-            error={Boolean(phoneError)}
-            helperText={phoneError}
-            fullWidth
-            disabled
-            InputLabelProps={{
-              style: {
-                color: theme.palette.grey[600],
-              },
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton edge="end" size="large">
-                    <RouterLink
-                      to="/phone-number"
-                      style={{ textDecoration: "none" }}
-                      state={{ prevPhone: profile?.phone }}
-                    >
-                      <Typography component="h2" color="primary" mr={2}>
-                        Edit
-                      </Typography>
-                    </RouterLink>
+        {/* <Divider light orientation="horizontal" className={classes.MH3} /> */}
+        <Box className={classes.headerBar}>
+          <Typography className={classes.titleText}>{t('contactInfo')}</Typography>
+        </Box>
+        <form ref={formRef} className={classes.formMargin}>
+          <Box className={classes.fieldWrapper}>
+            <EmailIcon style={{ marginRight: 10 }} />
+            <input
+              name="email"
+              defaultValue={profile?.email ?? ""}
+              className={classes.textField}
+              disabled
+            />
+          </Box>
+          <Box className={classes.fieldWrapper}>
+            <PersonIcon style={{ marginRight: 10 }} />
+            <input
+              name="name"
+              defaultValue={profile?.name ?? ""}
+              className={classes.textField}
+              error={Boolean(nameError)}
+              helperText={nameError}
+            />
+          </Box>
+          <Box className={classes.fieldWrapper}>
+            <PhoneIcon style={{ marginRight: 10 }} />
+            <input
+              name="phone"
+              placeholder="Mobile Number"
+              defaultValue={profile?.phone ?? ""}
+              className={classes.textField}
+              style={{ width: "90%" }}
+              disabled
+            />
+            <Box>
+              <IconButton edge="end" size="large">
+                <RouterLink
+                  to="/phone-number"
+                  style={{ textDecoration: "none" }}
+                  state={{ prevPhone: profile?.phone }}
+                >
+                  <Typography component="h2" color="primary" mr={2}>
+                    {t('edit')}
+                  </Typography>
+                </RouterLink>
 
-                    {profile?.phoneIsVerified ? (
-                      <>
-                        <Tooltip title="Verified">
-                          <VerifiedIcon color="primary" />
-                        </Tooltip>
-                      </>
-                    ) : (
-                      profile?.phone && <>
-                        <RouterLink
-                          to="/verify-phone"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Typography component="h2" color="primary" mr={2}>
-                            Verify?
-                          </Typography>
-                        </RouterLink>
+                {profile?.phoneIsVerified ? (
+                  <>
+                    <Tooltip title="Verified">
+                      <VerifiedIcon color="primary" />
+                    </Tooltip>
+                  </>
+                ) : (
+                  profile?.phone && (
+                    <>
+                      <RouterLink
+                        to="/verify-phone"
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Typography component="h2" color="primary" mr={2}>
+                          Verify?
+                        </Typography>
+                      </RouterLink>
 
-                        <Tooltip title="not verified">
-                          <UnpublishedIcon color="primary" />
-                        </Tooltip>
-                      </>
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+                      <Tooltip title="not verified">
+                        <UnpublishedIcon color="primary" />
+                      </Tooltip>
+                    </>
+                  )
+                )}
+              </IconButton>
+            </Box>
+          </Box>
+
           <Grid item xs={12} className={classes.btnContainer}>
             <Button
               disableElevation
               disabled={loading}
               variant="contained"
               color="primary"
+              className={classes.btn}
               onClick={(e) => {
                 e.preventDefault();
                 handleAction();
@@ -203,11 +192,11 @@ function ProfileCard() {
                 <CircularProgress size={25} color="secondary" />
               ) : (
                 <Typography
-                  variant="body2"
-                  color="secondary"
+                  variant="caption"
+                  style={{ color: theme.palette.common.black }}
                   className={classes.textBold}
                 >
-                  SAVE
+                  {t('saveButton')}
                 </Typography>
               )}
             </Button>

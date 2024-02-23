@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlashMessage from "../../components/FlashMessage";
 import { LoginWrapper } from "../Wrapper";
@@ -12,14 +12,24 @@ import RegistrationIcon from "../../assets/images/emailLock.png";
 import { Avatar } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { phoneExist } from "../../apollo/server";
+import { phoneExist, updateUser } from "../../apollo/server";
 import { gql, useMutation } from "@apollo/client";
+
+import UserContext from "../../context/User";
+import ConfigurationContext from "../../context/Configuration";
+
+import { useTranslation } from "react-i18next";
 
 const PHONE = gql`
   ${phoneExist}
 `;
 
+const UPDATEUSER = gql`
+  ${updateUser}
+`;
+
 function PhoneNumber() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const [error, setError] = useState("");
@@ -28,24 +38,48 @@ function PhoneNumber() {
   const { state } = useLocation();
   const [loading, setLoading] = useState(false);
   const [phone, setPhone] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  const [setPhoneError] = useState("");
+
+  const [mutate] = useMutation(UPDATEUSER);
+  const { profile } = useContext(UserContext);
+  const configuration = useContext(ConfigurationContext);
 
   const [PhoneEixst] = useMutation(PHONE, {
     onCompleted,
     onError,
   });
 
-  function onCompleted({ phoneExist }) {
+  async function onCompleted({ phoneExist }) {
     if (phoneExist?._id !== null) {
       setError("Phone number already assocaited with some other user");
       setLoading(false);
     } else {
-      navigate("/verify-phone", {
-        replace: true,
-        state: {
-          phone: `+${phone}`,
-        },
-      });
+      try {
+        if (configuration?.twilioEnabled) {
+          // Fetch twilioEnabled from state
+          navigate("/verify-phone", {
+            replace: true,
+            state: {
+              phone: `+${phone}`,
+            },
+          });
+        } else {
+          // If twilioEnabled is not true, mutate and navigate to "/"
+          await mutate({
+            variables: {
+              name: profile.name,
+              phone: `+${phone}`,
+              phoneIsVerified: true,
+            },
+          });
+
+          navigate("/", {
+            replace: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   }
   function onError({ error }) {
@@ -92,14 +126,14 @@ function PhoneNumber() {
         </Box>
       </Box>
       <Typography variant="h5" className={classes.font700}>
-        Update your phone <br /> number?
+        {t("updatePhone")} <br /> {t("number")}
       </Typography>
       <Box mt={theme.spacing(1)} />
       <Typography
         variant="caption"
         className={`${classes.caption} ${classes.fontGrey}`}
       >
-        We need this to secure your account
+        {t("secureAcc")}
       </Typography>
       <Box mt={theme.spacing(4)} />
       <form ref={formRef}>
@@ -122,7 +156,7 @@ function PhoneNumber() {
           />
         </Box>
         <Typography variant="caption" style={{ color: "red" }}>
-          {phoneError}
+          {t("mobileErr1")}
         </Typography>
         <Box mt={theme.spacing(8)} />
         <Button
@@ -144,7 +178,7 @@ function PhoneNumber() {
               variant="caption"
               className={`${classes.caption} ${classes.font700}`}
             >
-              CONTINUE
+              {t("continue")}
             </Typography>
           )}
         </Button>

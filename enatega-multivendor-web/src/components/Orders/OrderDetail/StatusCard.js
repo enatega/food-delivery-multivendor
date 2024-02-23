@@ -7,8 +7,10 @@ import Scooter from "../../../assets/images/scooter.png";
 import Arrow from "../../../assets/images/arrow.png";
 import Preparing from "../../../assets/images/preparing.png";
 import Delivered from "../../../assets/images/delivered.png";
+import { useTranslation } from 'react-i18next';
 
 export default function StatusCard(props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
@@ -22,12 +24,12 @@ export default function StatusCard(props) {
   } = props;
 
   const STATUS_ORDER = [
-    "PENDING",
-    "ACCEPTED",
-    "ASSIGNED",
-    "PICKED",
-    "DELIVERED",
-    "CANCELLED",
+    t('pending'),
+    t('accepted'),
+    t('assigned'),
+    t('picked'),
+    t('delivered'),
+    t('completed'),
   ];
 
   const formatTime = (date) =>
@@ -42,50 +44,50 @@ export default function StatusCard(props) {
     const calculateTime = Math.floor(
       (new Date(preparationTime) - Date.now()) / 1000 / 60
     );
-    console.log("prep", preparationTime, "calc", calculateTime);
+   
     let description = "";
     let estimated_time = "";
     let feedback = "";
     let status_image = "";
     switch (orderStatus) {
       case "PENDING":
-        description = "Waiting response from";
+        description = t('pendingText');
         estimated_time = restaurant?.name ?? "...";
         feedback = "";
         status_image = Arrow;
         break;
       case "ACCEPTED":
-        description = `Estimated preparation time`;
+        description = `${t('acceptedText')}`;
         estimated_time =
           calculateTime > 0
             ? `${calculateTime} Min`
-            : "Sorry! Your order is bit late.";
+            : t('orderLateText');
         feedback = `Preparing your food.${
-          isPickedUp ? "" : " Your rider will pick it up once its ready"
+          isPickedUp ? "" : t('riderPickText')
         }`;
         status_image = Preparing;
         break;
       case "ASSIGNED":
-        description = `Your order is `;
-        estimated_time = "assigned to the rider";
-        feedback = `Your order is assigned to our rider, order will be picked once its ready.`;
+        description = `${t('orderIs')}`;
+        estimated_time = t('orderAssigned');
+        feedback = `${t('orderAssignedToRider')}`;
         status_image = Scooter;
         break;
       case "PICKED":
-        description = " Your order is ";
-        estimated_time = "Picked";
-        feedback = "Your rider is on the way.";
+        description = t('orderIs');
+        estimated_time = t('picked');
+        feedback = t('riderOnWay');
         status_image = Scooter;
         break;
       case "DELIVERED":
-        description = "Your order has been";
-        estimated_time = "Delivered";
-        feedback = "Enjoy your meal!";
+        description = t('orderHasBeen');
+        estimated_time = t('delivered');
+        feedback = t('enjoyYourMeal');
         status_image = Delivered;
         break;
       case "CANCELLED":
-        description = "Your order has been";
-        estimated_time = "Cancelled";
+        description = t('orderHasBeen');
+        estimated_time = t('cancelled');
         feedback = "";
         status_image = null;
         break;
@@ -100,9 +102,9 @@ export default function StatusCard(props) {
     };
   }
 
-  const { description, estimated_time, feedback, status_image } =
+  const { description, estimated_time,  status_image } =
     getOrderStatusValues(props);
-  console.log(feedback);
+
   return (
     <>
       <Box className={classes.topOrder} mb={!small && theme.spacing(2)}>
@@ -146,7 +148,7 @@ export default function StatusCard(props) {
       <Box className={classes.bottomOrder} mt={!small && theme.spacing(2)}>
         <StatusRow
           isEta={false}
-          status={"Order placed"}
+          status={t('orderPlaced')}
           time={formatTime(createdAt)}
           first={true}
           number={1}
@@ -155,7 +157,7 @@ export default function StatusCard(props) {
 
         <StatusRow
           isEta={STATUS_ORDER.indexOf(orderStatus) < 1}
-          status={"Accepted"}
+          status={t('ACCEPTED')}
           time={acceptedAt ? formatTime(acceptedAt) : "--:--"}
           first={false}
           last={false}
@@ -163,7 +165,7 @@ export default function StatusCard(props) {
         />
         <StatusRow
           isEta={STATUS_ORDER.indexOf(orderStatus) < 2}
-          status={"Assigned"}
+          status={t('ASSIGNED')}
           time={assignedAt ? formatTime(assignedAt) : "--:--"}
           first={false}
           number={3}
@@ -171,7 +173,7 @@ export default function StatusCard(props) {
         />
         <StatusRow
           isEta={STATUS_ORDER.indexOf(orderStatus) < 3}
-          status={"Picked"}
+          status={t('PICKED')}
           time={pickedAt ? formatTime(pickedAt) : "--:--"}
           first={false}
           number={4}
@@ -179,7 +181,7 @@ export default function StatusCard(props) {
         />
         <StatusRow
           isEta={STATUS_ORDER.indexOf(orderStatus) < 4}
-          status={"Delivered"}
+          status={t('DELIVERED')}
           time={deliveredAt ? formatTime(deliveredAt) : "--:--"}
           first={false}
           number={5}
@@ -190,7 +192,7 @@ export default function StatusCard(props) {
   );
 }
 
-function StatusRow({ first, isEta, status, time, number, last }) {
+export function StatusRow({ first, isEta, status, time, number, last }) {
   const theme = useTheme();
   const classes = useStyles();
   const small = useMediaQuery(theme.breakpoints.down("sm"));

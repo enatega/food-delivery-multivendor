@@ -32,12 +32,12 @@ const useStyles = makeStyles(theme => ({
 
     '&:hover': {
       backgroundColor: theme.palette.primary.main2,
-      boxShadow: '0px 0px 5px rgba(111, 207, 151, 0.34)'
+      boxShadow: `0px 0px 5px ${theme.palette.warning.darkest}`
     }
   },
   active: {
     backgroundColor: theme.palette.primary.main2,
-    boxShadow: '0px 0px 5px rgba(111, 207, 151, 0.34)'
+    boxShadow: `0px 0px 5px ${theme.palette.warning.darkest}`
   },
   blackText: {
     color: 'black',

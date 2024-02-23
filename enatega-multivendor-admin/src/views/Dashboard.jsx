@@ -15,16 +15,27 @@ import {
   Legend
 } from 'chart.js'
 
-import { Box, Typography, Input, Button, Container, Grid } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Input,
+  Button,
+  Container,
+  Grid,
+  useTheme
+} from '@mui/material'
 import Header from '../components/Headers/Header'
 import { useQuery, gql } from '@apollo/client'
 import {
   getDashboardTotal,
   getDashboardSales,
-  getDashboardOrders
+  getDashboardOrders,
+  getOrdersByDateRange
 } from '../apollo'
+
 import useStyles from '../components/Option/styles'
 import useGlobalStyles from '../utils/globalStyles'
+import { withTranslation } from 'react-i18next'
 
 ChartJS.register(
   CategoryScale,
@@ -45,24 +56,31 @@ const GET_DASHBOARD_SALES = gql`
 const GET_DASHBOARD_ORDERS = gql`
   ${getDashboardOrders}
 `
-
-const dataLine = {
-  datasets: {
-    label: 'Sales Amount',
-    backgroundColor: '#3EC6DD',
-    borderColor: '#3EC6DD'
-  }
-}
-const dataBar = {
-  datasets: {
-    label: 'Order count',
-    backgroundColor: '#90EA93',
-    borderColor: '#90EA93'
-  }
-}
+const GET_ORDERS = gql`
+  ${getOrdersByDateRange}
+`
 
 const Dashboard = props => {
+  const { t } = props
+  const theme = useTheme()
   const restaurantId = localStorage.getItem('restaurantId')
+
+  const dataLine = {
+    datasets: {
+      label: t('SalesAmount'),
+      // label: 'Sales Amount',
+      backgroundColor: theme.palette.secondary.darkest,
+      borderColor: theme.palette.secondary.darkest
+    }
+  }
+  const dataBar = {
+    datasets: {
+      label: t('OrderCount'),
+      // label: 'Order count',
+      backgroundColor: theme.palette.warning.dark,
+      borderColor: theme.palette.warning.dark
+    }
+  }
 
   const intializeStartDate = () => {
     var d = new Date()
@@ -106,18 +124,28 @@ const Dashboard = props => {
       }
     }
   )
+
+  const { data, loading: loadingQuery } = useQuery(GET_ORDERS, {
+    variables: {
+      startingDate: stateData.startingDate.toString(),
+      endingDate: stateData.endingDate.toString(),
+      restaurant: restaurantId
+    }
+  })
+  console.log('getOrdersByDateRange', data)
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
+
   return (
     <>
       <Header />
       <Container className={globalClasses.flex} fluid>
-        {errorTotal ? <span>{`Error! + ${errorTotal.message}`}</span> : null}
+        {errorTotal ? <span>{`${Error} + ${errorTotal.message}`}</span> : null}
         <Box container className={classes.container}>
           <Box className={classes.flexRow}>
             <Box item className={classes.heading}>
               <Typography variant="h6" className={classes.textWhite}>
-                Graph Filter
+                {t('GraphFilter')}
               </Typography>
             </Box>
           </Box>
@@ -127,7 +155,7 @@ const Dashboard = props => {
               <Grid container sx={{ textAlign: 'left' }}>
                 <Grid item md={6} xs={12}>
                   <Typography sx={{ fontWeight: 'bold' }}>
-                    Start Date
+                    {t('StartDate')}
                   </Typography>
                   <Input
                     style={{ marginTop: -1 }}
@@ -145,7 +173,9 @@ const Dashboard = props => {
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <Typography sx={{ fontWeight: 'bold' }}>End Date</Typography>
+                  <Typography sx={{ fontWeight: 'bold' }}>
+                    {t('EndDate')}
+                  </Typography>
                   <Input
                     style={{ marginTop: -1 }}
                     type="date"
@@ -162,7 +192,7 @@ const Dashboard = props => {
                   />
                 </Grid>
               </Grid>
-              <Button className={globalClasses.button}>Apply</Button>
+              <Button className={globalClasses.button}>{t('Apply')}</Button>
             </form>
           </Box>
         </Box>
@@ -180,8 +210,8 @@ const Dashboard = props => {
           />
           <Box
             sx={{
-              bgcolor: 'rgba(63, 64, 65, 0.66)',
-              boxShadow: '0px 0px 11px rgba(0, 0, 0, 0.08)',
+              bgcolor: theme.palette.info.light,
+              boxShadow: `0px 0px 11px ${theme.palette.info.dark}`,
               borderRadius: 3,
               p: 2,
               position: 'relative',
@@ -219,26 +249,26 @@ const Dashboard = props => {
                 legend: {
                   labels: {
                     display: false,
-                    fontColor: '#fff',
+                    fontColor: theme.palette.common.white,
                     fontSize: 10
                   }
                 },
                 scales: {
                   yAxes: {
                     grid: {
-                      color: '#FFFFFF'
+                      color: theme.palette.common.white
                     },
                     ticks: {
-                      color: '#fafafa',
+                      color: theme.palette.secondary.main,
                       fontSize: 12
                     }
                   },
                   xAxes: {
                     grid: {
-                      color: '#FFFFFF'
+                      color: theme.palette.common.white
                     },
                     ticks: {
-                      color: '#fafafa',
+                      color: theme.palette.secondary.main,
                       fontSize: 12
                     }
                   }
@@ -267,8 +297,40 @@ const Dashboard = props => {
               mb: 3
             }}>
             <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>
-              Total Orders
+              {t('TotalOrders')}
             </Typography>
+            <Typography
+              sx={{
+                fontSize: 35,
+                fontWeight: 'bold',
+                color: theme.palette.secondary.lightest,
+                textAlign: 'center'
+              }}>
+              {loadingTotal
+                ? '...'
+                : dataTotal && dataTotal.getDashboardTotal.totalOrders}
+            </Typography>
+
+            <img
+              src={stats}
+              style={{ marginLeft: '40%' }}
+              width={30}
+              height={40}
+              alt="stat"
+            />
+          </Box>
+          <Box
+            sx={{
+              p: 2,
+              borderRadius: 5,
+              bgcolor: 'common.white',
+              width: '70%',
+              mb: 3
+            }}>
+            <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>
+              COD Orders
+            </Typography>
+
             <Typography
               sx={{
                 fontSize: 35,
@@ -276,9 +338,9 @@ const Dashboard = props => {
                 color: '#3C8F7C',
                 textAlign: 'center'
               }}>
-              {loadingTotal
+              {loadingQuery
                 ? '...'
-                : dataTotal && dataTotal.getDashboardTotal.totalOrders}
+                : data && data.getOrdersByDateRange.countCashOnDeliveryOrders}
             </Typography>
             <img
               src={stats}
@@ -293,16 +355,17 @@ const Dashboard = props => {
               p: 2,
               borderRadius: 5,
               bgcolor: 'common.white',
-              width: '70%'
+              width: '70%',
+              mb: 3
             }}>
             <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>
-              Total Sales
+              {t('TotalSales')}
             </Typography>
             <Typography
               sx={{
                 fontSize: 35,
                 fontWeight: 'bold',
-                color: '#3C8F7C',
+                color: theme.palette.secondary.lightest,
                 textAlign: 'center'
               }}>
               {loadingTotal
@@ -317,10 +380,40 @@ const Dashboard = props => {
               alt="stat"
             />
           </Box>
+          <Box
+            sx={{
+              p: 2,
+              borderRadius: 5,
+              bgcolor: 'common.white',
+              width: '70%',
+              mb: 3
+            }}>
+            <Typography sx={{ fontSize: 15, fontWeight: 'bold' }}>
+              COD Sales
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: 35,
+                fontWeight: 'bold',
+                color: '#3C8F7C',
+                textAlign: 'center'
+              }}>
+              {loadingQuery
+                ? '...'
+                : data && data.getOrdersByDateRange.totalAmountCashOnDelivery}
+            </Typography>
+            <img
+              src={stats}
+              style={{ marginLeft: '40%' }}
+              width={30}
+              height={40}
+              alt="stat"
+            />
+          </Box>
         </Grid>
       </Grid>
     </>
   )
 }
 
-export default Dashboard
+export default withTranslation()(Dashboard)

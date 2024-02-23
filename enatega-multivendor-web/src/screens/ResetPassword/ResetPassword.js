@@ -172,7 +172,7 @@ function ResetPassword() {
           type="email"
           disableElevation
           disabled={loading}
-          className={classes.btnBase}
+          className={`${classes.btnBase} ${classes.customBtn}`}
           onClick={(e) => {
             e.preventDefault();
             handleAction();

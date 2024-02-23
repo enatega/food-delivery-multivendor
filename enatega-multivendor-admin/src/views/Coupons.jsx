@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { withTranslation } from 'react-i18next'
 import CouponComponent from '../components/Coupon/Coupon'
-// import { Badge, Card, Container, Row, Modal } from 'reactstrap'
 import Header from '../components/Headers/Header'
 import CustomLoader from '../components/Loader/CustomLoader'
 import DataTable from 'react-data-table-component'
@@ -40,6 +39,7 @@ const DELETE_COUPON = gql`
 `
 
 const Coupon = props => {
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [coupon, setCoupon] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -70,21 +70,21 @@ const Coupon = props => {
 
   const columns = [
     {
-      name: 'Title',
+      name: t('Title'),
       sortable: true,
       selector: 'title'
     },
     {
-      name: 'Discount %',
+      name: t('Discount'),
       sortable: true,
       selector: 'discount'
     },
     {
-      name: 'Status',
+      name: t('Status'),
       cell: row => <>{statusChanged(row)}</>
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -159,7 +159,7 @@ const Coupon = props => {
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
@@ -170,7 +170,7 @@ const Coupon = props => {
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -178,8 +178,6 @@ const Coupon = props => {
       </>
     )
   }
-
-  const { t } = props
   const globalClasses = useGlobalStyles()
   return (
     <>
@@ -212,7 +210,7 @@ const Coupon = props => {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Coupons" />}
+            title={<TableHeader title={t('Coupons')} />}
             columns={columns}
             data={filtered}
             pagination

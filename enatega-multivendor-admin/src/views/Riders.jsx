@@ -69,6 +69,10 @@ function Riders(props) {
     setRider(rider)
   }
 
+  const closeEditModal = () => {
+    setEditModal(false)
+  }
+
   const customSort = (rows, field, direction) => {
     const handleField = row => {
       if (row[field]) {
@@ -116,7 +120,7 @@ function Riders(props) {
       cell: row => <>{availableStatus(row)}</>
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -179,7 +183,7 @@ function Riders(props) {
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
@@ -195,7 +199,7 @@ function Riders(props) {
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -236,11 +240,8 @@ function Riders(props) {
           </Grid>
         </Grid>
         {isOpen && (
-            <Alert
-              message="This feature will available after purchasing product"
-              severity="warning"
-              />
-          )}
+          <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+        )}
         {/* Table */}
         {errorQuery ? (
           <tr>
@@ -259,7 +260,7 @@ function Riders(props) {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Riders" />}
+            title={<TableHeader title={t('Riders')} />}
             columns={columns}
             data={filtered}
             pagination
@@ -281,7 +282,7 @@ function Riders(props) {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          <RiderComponent rider={rider} />
+          <RiderComponent rider={rider} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

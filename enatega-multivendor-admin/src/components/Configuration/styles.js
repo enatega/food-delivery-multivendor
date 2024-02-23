@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.primary,
     margin: '30px 0',
     borderRadius: 20,
-    boxShadow: '0px 0px 38px rgba(0, 0, 0, 0.06)',
+    boxShadow: `0px 0px 38px ${theme.palette.common.blackShade}`,
     textAlign: 'center',
     paddingBottom: 5
   },
@@ -27,6 +27,13 @@ const useStyles = makeStyles(theme => ({
   text: {
     color: theme.palette.common.black,
     fontWeight: 'bold'
+  },
+  labelText: {
+    textAlign: 'left',
+    marginLeft: '4%',
+    fontSize: '15px',
+    fontWeight: '500',
+    marginTop: '10px'
   }
 }))
 

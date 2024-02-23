@@ -1,25 +1,37 @@
 /* eslint-disable no-unused-vars */
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const WS_SERVER_URL = process.env.REACT_APP_WS_SERVER_URL;
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
-const PAYPAL_KEY = process.env.REACT_APP_PAYPAL_KEY;
-const GOOGLE_MAPS_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
-const AMPLITUDE_API_KEY = process.env.REACT_APP_AMPLITUDE_API_KEY;
-const LIBRARIES = process.env.REACT_APP_GOOGLE_MAP_LIBRARIES.split(",");
-const COLORS = {
-  GOOGLE: process.env.REACT_APP_GOOGLE_COLOR,
+import React, { useContext } from "react";
+import ConfigurationContext from "../../src/context/Configuration";
+
+const ConfigurableValues = () => {
+  const configuration = useContext(ConfigurationContext);
+  console.log("configuration", configuration);
+  const SERVER_URL = "https://enatega-multivendor.up.railway.app/";
+  const WS_SERVER_URL = "wss://enatega-multivendor.up.railway.app/";
+  const GOOGLE_CLIENT_ID = configuration.webClientID;
+  const STRIPE_PUBLIC_KEY = configuration.publishableKey;
+  const PAYPAL_KEY = configuration.clientId;
+  const GOOGLE_MAPS_KEY = configuration.googleApiKey;
+  const AMPLITUDE_API_KEY = configuration.webAmplitudeApiKey;
+  const LIBRARIES = "places,drawing,geometry,localContext,visualization".split(
+    ","
+  );
+  const COLORS = {
+    GOOGLE: configuration.googleColor,
+  };
+  const SENTRY_DSN = configuration.webSentryUrl;
+
+  return {
+    SERVER_URL,
+    WS_SERVER_URL,
+    GOOGLE_CLIENT_ID,
+    COLORS,
+    PAYPAL_KEY,
+    STRIPE_PUBLIC_KEY,
+    GOOGLE_MAPS_KEY,
+    AMPLITUDE_API_KEY,
+    LIBRARIES,
+    SENTRY_DSN,
+  };
 };
-const SENTRY_DSN = process.env.SENTRY_DSN;
-export {
-  SERVER_URL,
-  WS_SERVER_URL,
-  GOOGLE_CLIENT_ID,
-  COLORS,
-  PAYPAL_KEY,
-  STRIPE_PUBLIC_KEY,
-  GOOGLE_MAPS_KEY,
-  AMPLITUDE_API_KEY,
-  LIBRARIES,
-  SENTRY_DSN,
-};
+
+export default ConfigurableValues;

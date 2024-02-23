@@ -18,6 +18,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Paper,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -27,17 +28,19 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import ConfigurationContext from "../../../context/Configuration";
 import UserContext from "../../../context/User";
 import HeadingView from "./HeadingView";
+import { useTranslation } from 'react-i18next';
 import useStyles from "./styles";
 
 function VariationModal({ isVisible, toggleModal, data }) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const configuration = useContext(ConfigurationContext);
-  const extraSmall = useMediaQuery(theme.breakpoints.down('lg'));
+  const extraSmall = useMediaQuery(theme.breakpoints.down("lg"));
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [selectedVariation, setSelectedVariation] = useState(null);
-  const [specialInstructions, setSpecialInstructions] = useState('')
+  const [specialInstructions, setSpecialInstructions] = useState("");
   const {
     restaurant: restaurantCart,
     setCartRestaurant,
@@ -189,35 +192,35 @@ function VariationModal({ isVisible, toggleModal, data }) {
     const cartItem = clearFlag
       ? null
       : cart.find((cartItem) => {
-        if (
-          cartItem._id === data?.food._id &&
-          cartItem.variation._id === selectedVariation?._id
-        ) {
-          if (cartItem.addons.length === addons.length) {
-            if (addons.length === 0) return true;
-            const addonsResult = addons.every((newAddon) => {
-              const cartAddon = cartItem.addons.find(
-                (ad) => ad._id === newAddon._id
-              );
-
-              if (!cartAddon) return false;
-              const optionsResult = newAddon.options.every((newOption) => {
-                const cartOption = cartAddon.options.find(
-                  (op) => op._id === newOption._id
+          if (
+            cartItem._id === data?.food._id &&
+            cartItem.variation._id === selectedVariation?._id
+          ) {
+            if (cartItem.addons.length === addons.length) {
+              if (addons.length === 0) return true;
+              const addonsResult = addons.every((newAddon) => {
+                const cartAddon = cartItem.addons.find(
+                  (ad) => ad._id === newAddon._id
                 );
 
-                if (!cartOption) return false;
-                return true;
+                if (!cartAddon) return false;
+                const optionsResult = newAddon.options.every((newOption) => {
+                  const cartOption = cartAddon.options.find(
+                    (op) => op._id === newOption._id
+                  );
+
+                  if (!cartOption) return false;
+                  return true;
+                });
+
+                return optionsResult;
               });
 
-              return optionsResult;
-            });
-
-            return addonsResult;
+              return addonsResult;
+            }
           }
-        }
-        return false;
-      });
+          return false;
+        });
 
     if (!cartItem) {
       await setCartRestaurant(data?.restaurant);
@@ -307,152 +310,194 @@ function VariationModal({ isVisible, toggleModal, data }) {
         pt={theme.spacing(0.5)}
         className={classes.root}
       >
-        <Box display="flex" justifyContent="flex-end">
-          <Button onClick={toggleModal} className={classes.closeContainer}>
-            <CloseIcon color="primary" />
-          </Button>
-        </Box>
-        <DialogTitle>
-          <Box display="flex" justifyContent="space-between">
-            <Typography className={classes.itemTitle}>
-              {data?.food?.title ?? ""}
-            </Typography>
-            <Typography className={classes.priceTitle}>{` ${configuration.currencySymbol
-              } ${calculatePrice()}`}</Typography>
-          </Box>
-          <Box mb={theme.spacing(2)}>
-            <Typography className={classes.priceTitle}>
-              {data?.food?.description ?? ""}
-            </Typography>
-          </Box>
-          <Divider light orientation="horizontal" />
-        </DialogTitle>
-        <DialogContent>
-          {data?.food.variations.length > 1 && (
-            <>
-              <HeadingView />
-              <FormControl style={{ width: "100%" }}>
-                <RadioGroup>
-                  {data?.food.variations.map((variation, index) => (
-                    <Box
-                      key={`ADDONS_${index}`}
-                      display="flex"
-                      justifyContent="space-between"
-                    >
-                      <FormControlLabel
-                        checked={variation._id === selectedVariation._id}
-                        value={variation._id}
-                        onClick={() => onSelectVariation(variation)}
-                        control={<Radio color="primary" />}
-                        label={
-                          <Typography
-                            style={{ color: theme.palette.text.secondary }}
-                            className={classes.priceTitle}
-                          >
-                            {variation.title}
-                          </Typography>
-                        }
-                      />
-                      <Typography className={classes.priceTitle}>
-                        {`${configuration.currencySymbol
-                          } ${variation.price.toFixed(2)}`}
-                      </Typography>
-                    </Box>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </>
-          )}
-          <Box />
-          <FormControl style={{ flex: 1, display: "flex" }}>
-            <FormGroup>
-              {selectedVariation?.addons?.map((addon, index) => (
-                <Box key={`VARIATION_${index}`}>
-                  <HeadingView
-                    title={addon.title}
-                    subTitle={addon.description}
-                    error={addon.error}
-                    status={
-                      addon.quantityMinimum === 0
-                        ? "OPTIONAL"
-                        : `${addon.quantityMinimum} REQUIRED`
-                    }
-                  />
-                  {radioORcheckboxes(addon)}
-                </Box>
-              ))}
-            </FormGroup>
-            <FormGroup>
-              <HeadingView title="Special Instructions" subTitle="Any specific preferances? Let the restaurant know." status="OPTIONAL" error={false} />
-              <Box mt={theme.spacing(2)} />
-              <OutlinedInput
-                id="special-instructions"
-                name="special-instructions"
-                multiline
-                minRows={2}
-                maxRows={3}
-                value={specialInstructions}
-                onChange={event => setSpecialInstructions(event.target.value)}
-                placeholder={"e.g. No mayo"}
-                variant="filled"
-                color="primary"
-                inputProps={{ style: { color: theme.palette.grey[600] }, maxLength: 144 }}
-                size="small"
-
-              />
-            </FormGroup>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
+        <Box className={classes.outerContainer}>
           <Box
-            style={{ background: "white", width: "100%", height: "75px" }}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-around"
+            className={classes.imageContainer}
+            style={{
+              backgroundImage: `url('${data?.image ?? ""}')`,
+            }}
           >
-            <IconButton
-              size="small"
-              style={{ minWidth: "auto" }}
-              onClick={(e) => {
-                e.preventDefault();
-                onRemove();
-              }}
-            >
-              <RemoveIcon fontSize="large" color="primary" />
-            </IconButton>
-            <Typography
-              style={{ fontSize: "1.25rem" }}
-              className={classes.itemTitle}
-            >
-              {quantity}
+            <Typography variant="h4" color="white" style={{ fontWeight: 600 }}>
+              {t('customize')}
             </Typography>
-            <IconButton
-              size="small"
-              style={{ minWidth: "auto" }}
-              onClick={(e) => {
-                e.preventDefault();
-                onAdd();
-              }}
-            >
-              <AddIcon fontSize="large" color="primary" />
-            </IconButton>
-            <Button
-              variant="contained"
-              color="primary"
-              className={clsx(classes.checkoutContainer, {
-                [classes.disableBtn]: !validateButton(),
-              })}
-              onClick={(e) => {
-                e.preventDefault();
-                onPressAddToCart();
-              }}
-            >
-              <Typography className={classes.checkoutText}>
-                ADD TO CART
-              </Typography>
+            <Button onClick={toggleModal} className={classes.closeContainer}>
+              <CloseIcon style={{ color: "black" }} />
             </Button>
           </Box>
-        </DialogActions>
+          <Paper className={classes.innerContainer}>
+            <Box className={classes.lowerContainer}>
+              <DialogTitle>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography className={classes.itemTitle}>
+                    {data?.food?.title ?? ""}
+                  </Typography>
+                  <Typography className={classes.priceTitle}>{` ${
+                    configuration.currencySymbol
+                  } ${calculatePrice()}`}</Typography>
+                </Box>
+                <Box mb={theme.spacing(2)}>
+                  <Typography className={classes.priceTitle}>
+                    {data?.food?.description ?? ""}
+                  </Typography>
+                </Box>
+                <Divider orientation="horizontal" />
+              </DialogTitle>
+              <DialogContent>
+                {data?.food.variations.length > 1 && (
+                  <>
+                    <HeadingView />
+                    <FormControl style={{ width: "100%" }}>
+                      <RadioGroup>
+                        {data?.food.variations.map((variation, index) => (
+                          <Box
+                            key={`ADDONS_${index}`}
+                            display="flex"
+                            justifyContent="space-between"
+                          >
+                            <FormControlLabel
+                              checked={variation._id === selectedVariation._id}
+                              value={variation._id}
+                              onClick={() => onSelectVariation(variation)}
+                              control={<Radio color="primary" />}
+                              label={
+                                <Typography
+                                  style={{
+                                    color: theme.palette.text.secondary,
+                                  }}
+                                  className={classes.priceTitle}
+                                >
+                                  {variation.title}
+                                </Typography>
+                              }
+                            />
+                            
+                            <Typography className={classes.priceTitle}>
+                              {`${
+                                configuration.currencySymbol
+                              } ${variation.price.toFixed(2)}`}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <Divider orientation="horizontal" style={{marginBottom: "10px"}}/>
+                  </>
+                )}
+                <Box />
+                <FormControl style={{ flex: 1, display: "flex" }}>
+                  <FormGroup>
+                    {selectedVariation?.addons?.map((addon, index) => (
+                      <Box key={`VARIATION_${index}`}>
+                        <HeadingView
+                          title={addon.title}
+                          subTitle={addon.description}
+                          error={addon.error}
+                          status={
+                            addon.quantityMinimum === 0
+                              ? t('optional')
+                              : `${addon.quantityMinimum} ${t('required')}`
+                          }
+                        />
+                        {radioORcheckboxes(addon)}
+                      </Box>
+                    ))}
+                  </FormGroup>
+                  <FormGroup>
+                    <HeadingView
+                      title={t('specialInstructions')}
+                      subTitle={t('anySpecific')}
+                      status={t('optional')}
+                      error={false}
+                    />
+                    <Box mt={theme.spacing(2)} />
+                    <OutlinedInput
+                      id="special-instructions"
+                      name="special-instructions"
+                      multiline
+                      minRows={2}
+                      maxRows={3}
+                      value={specialInstructions}
+                      onChange={(event) =>
+                        setSpecialInstructions(event.target.value)
+                      }
+                      placeholder={t('placeholder')}
+                      variant="filled"
+                      color="primary"
+                      inputProps={{
+                        style: { color: theme.palette.grey[600] },
+                        maxLength: 144,
+                      }}
+                      size="small"
+                    />
+                  </FormGroup>
+                </FormControl>
+              </DialogContent>
+              <DialogActions>
+                <Box
+                  style={{ background: "white", width: "100%", height: "75px" }}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <IconButton
+                    size="small"
+                    className={classes.mr}
+                    style={{
+                      minWidth: "auto",
+                      backgroundColor: theme.palette.common.black,
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onRemove();
+                    }}
+                  >
+                    <RemoveIcon fontSize="medium" style={{ color: "white" }} />
+                  </IconButton>
+                  <Typography
+                    style={{
+                      fontSize: "1.25rem",
+                      border: "1px solid",
+                      padding: "5px 15px",
+                      borderRadius: 10,
+                    }}
+                    className={`${classes.mr} ${classes.itemTitle}`}
+                  >
+                    {quantity}
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    className={classes.mr}
+                    style={{
+                      minWidth: "auto",
+                      backgroundColor: theme.palette.common.black,
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onAdd();
+                    }}
+                  >
+                    <AddIcon fontSize="medium" style={{ color: "white" }} />
+                  </IconButton>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={clsx(classes.checkoutContainer, {
+                      [classes.disableBtn]: !validateButton(),
+                    })}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onPressAddToCart();
+                    }}
+                  >
+                    <Typography className={classes.checkoutText}>
+                      {t('addToCart')}
+                    </Typography>
+                  </Button>
+                </Box>
+              </DialogActions>
+            </Box>
+          </Paper>
+        </Box>
       </Dialog>
     </>
   );

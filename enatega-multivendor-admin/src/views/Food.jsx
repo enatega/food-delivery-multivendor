@@ -35,6 +35,7 @@ const DELETE_FOOD = gql`
   ${deleteFood}
 `
 const Food = props => {
+  const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [food, setFood] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -42,7 +43,7 @@ const Food = props => {
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [/*mutate*/, { loading }] = useMutation(DELETE_FOOD, {
+  const [, /*mutate*/ { loading }] = useMutation(DELETE_FOOD, {
     refetchQueries: [{ query: GET_FOODS, variables: { id: restaurantId } }]
   })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
@@ -56,6 +57,9 @@ const Food = props => {
   const toggleModal = food => {
     setEditModal(!editModal)
     setFood(food)
+  }
+  const closeEditModal = () => {
+    setEditModal(false)
   }
 
   const propExists = (obj, path) => {
@@ -77,40 +81,40 @@ const Food = props => {
 
   const columns = [
     {
-      name: 'Title',
+      name: t('Title'),
       selector: 'title',
       sortable: true
     },
     {
-      name: 'Description',
+      name: t('Description'),
       sortable: true,
       selector: 'description',
       cell: row => <>{transformToNewline(row.description, 3)}</>
     },
     {
-      name: 'Category',
+      name: t('Category'),
       sortable: true,
       selector: 'category.category',
       cell: row => <>{row.category}</>
     },
     {
-      name: 'Image',
+      name: t('Image'),
       cell: row => (
         <>
-          {!!row.image && (
-            <img
-              className="img-responsive"
-              style={{ width: 30, height: 30, borderRadius: 15 }}
-              src={row.image}
-              alt="img menu"
-            />
-          )}
-          {!row.image && 'No Image'}
+          <img
+            className="img-responsive"
+            style={{ width: 30, height: 30, borderRadius: 15 }}
+            src={
+              row.image ||
+              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+            }
+            alt={row.image ? 'img menu' : 'Default Image'}
+          />
         </>
       )
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -156,7 +160,7 @@ const Food = props => {
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
@@ -178,7 +182,7 @@ const Food = props => {
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -222,12 +226,12 @@ const Food = props => {
     searchQuery.length < 3
       ? foodsList(data && data.restaurant.categories)
       : foodsList(data && data.restaurant.categories).filter(food => {
-        return (
-          food.title.toLowerCase().search(regex) > -1 ||
+          return (
+            food.title.toLowerCase().search(regex) > -1 ||
             food.description.toLowerCase().search(regex) > -1 ||
             food.category.toLowerCase().search(regex) > -1
-        )
-      })
+          )
+        })
   const globalClasses = useGlobalStyles()
 
   return (
@@ -235,11 +239,8 @@ const Food = props => {
       <Header />
       {/* Page content */}
       {isOpen && (
-            <Alert
-              message="This feature will available after purchasing product"
-              severity="warning"
-              />
-          )}
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+      )}
       <Container className={globalClasses.flex} fluid>
         <FoodComponent />
         {errorQuery && <span>`Error! ${errorQuery.message}`</span>}
@@ -255,7 +256,7 @@ const Food = props => {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Food" />}
+            title={<TableHeader title={t('Food')} />}
             columns={columns}
             data={data && data.restaurant ? filtered : {}}
             pagination
@@ -278,7 +279,7 @@ const Food = props => {
             marginLeft: '13%',
             overflowY: 'auto'
           }}>
-          <FoodComponent food={food} />
+          <FoodComponent food={food} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>
