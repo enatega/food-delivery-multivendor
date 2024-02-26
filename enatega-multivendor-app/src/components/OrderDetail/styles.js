@@ -7,6 +7,33 @@ export default StyleSheet.create({
     borderColor: theme.red600,
     borderWidth: 1,
     borderRadius: scale(25),
-    margin: scale(20)
+    width: scale(200)
+  }),
+  dismissButtonContainer: theme => ({
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: scale(25),
+    width: scale(200)
+  }),
+  modalContainer: theme => ({
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  }),
+  container: theme => ({
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   })
 })

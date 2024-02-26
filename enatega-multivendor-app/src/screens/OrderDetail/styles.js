@@ -61,6 +61,20 @@ const styles = (props = null) =>
       ...alignment.Pmedium,
       borderColor: theme.borderLight,
       borderTopWidth: StyleSheet.hairlineWidth
+    }),
+    cancelButtonContainer: theme => ({
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderColor: theme.red600,
+      borderWidth: 1,
+      borderRadius: scale(25)
+    }),
+    dismissButtonContainer: theme => ({
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderColor: theme.red600,
+      borderWidth: 1,
+      borderRadius: scale(25)
     })
   })
 export default styles

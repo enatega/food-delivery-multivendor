@@ -4,7 +4,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
-import React, { useContext, useEffect, useLayoutEffect } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
@@ -27,12 +27,14 @@ import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
 import { ProgressBar } from '../../components/Main/ActiveOrders/ProgressBar'
 import { useNavigation } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
-import { CancelButton } from '../../components/OrderDetail/CancelButton'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
+import { CancelModal } from '../../components/OrderDetail/CancelModal'
+import Button from '../../components/Button/Button'
 const { height: HEIGHT } = Dimensions.get('screen')
 const IMAGE_HEIGHT = Math.floor(HEIGHT / 2)
 
 function OrderDetail(props) {
+  const [cancelModalVisible, setCancelModalVisible] = useState(false)
   const Analytics = analytics()
   const { location } = useContext(LocationContext)
   const id = props.route.params ? props.route.params._id : null
@@ -43,6 +45,9 @@ function OrderDetail(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const navigation = useNavigation()
+  const cancelModalToggle = () => {
+    setCancelModalVisible(!cancelModalVisible)
+  }
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
@@ -186,8 +191,17 @@ function OrderDetail(props) {
           title={t('total')}
           currency={configuration.currencySymbol}
           price={total.toFixed(2)}/>
-        {order.orderStatus === ORDER_STATUS_ENUM.PENDING && <CancelButton onPress={() => {}} theme={currentTheme}/>}
+        {order.orderStatus === ORDER_STATUS_ENUM.PENDING &&
+        <View style={{ margin: scale(20) }}>
+          <Button
+            text={'Cancel Order'}
+            buttonProps={{ onPress: cancelModalToggle }}
+            buttonStyles={styles().cancelButtonContainer(currentTheme)}
+            textProps={{ textColor: currentTheme.red600 }}
+            textStyles={{ ...alignment.Pmedium }}/>
+        </View>}
       </View>
+      <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle}/>
     </View>
   )
 }
