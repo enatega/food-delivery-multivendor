@@ -531,3 +531,22 @@ export const chat = `query Chat($order: ID!) {
     createdAt
   }
 }`
+
+export const relatedItems = `query RelatedItems($itemId: String!, $restaurantId: String!) {
+  relatedItems(itemId: $itemId, restaurantId: $restaurantId)
+}`
+
+export const food = `fragment FoodItem on Food{
+  _id
+  title
+  image
+  description
+  variations{
+    _id
+    title
+    price
+    discounted
+    addons
+  }
+}
+`
