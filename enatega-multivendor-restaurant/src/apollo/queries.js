@@ -109,3 +109,4 @@ export const restaurantInfo = `query Restaurant($id:String){
   }
 }}
 `
+

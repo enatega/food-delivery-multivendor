@@ -14,19 +14,20 @@ const styles = (props = null) =>
     mainContainerHolder: {
       zIndex: 333,
       width: '100%',
-      alignItems: 'center',
-      backgroundColor: props != null ? props.main : '#90E36D',
+      alignItems: 'center',     
+      backgroundColor: props != null ? props.newheaderColor : '#fafafa',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,
         height: verticalScale(1)
       },
       shadowOpacity: 0.1,
-      shadowRadius: verticalScale(1)
+      shadowRadius: verticalScale(1),
+      // ...alignment.MBmedium
     },
     mainContainer: {
       width: '90%',
-      height: scale(40),
+      height: scale(46),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
@@ -39,7 +40,7 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.2,
       shadowRadius: verticalScale(1),
-      ...alignment.MTlarge,
+     marginTop:scale(3),
       ...alignment.MBmedium
     },
     subContainer: {

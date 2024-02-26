@@ -11,14 +11,14 @@ const styles = (props = null) =>
     pT10: {
       ...alignment.PTsmall
     },
-    locationContainer: {
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:'center'
-    },
+
 
     mB10: {
       ...alignment.MBsmall
+    },
+    map: {
+      width: '100%',
+      height: '100%',
     },
     width100: {
       width: '100%'
@@ -139,17 +139,17 @@ const styles = (props = null) =>
     },
     totalBillContainer:{
       width: '100%',
-      height: '20%',
-      backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
+      height: '10%',
+      // backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
       ...alignment.PLlarge,
       ...alignment.PRlarge,
       
     },
     buttonContainer: {     
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+     
+      justifyContent: 'center',
       alignItems: 'center', 
-      paddingTop:scale(28)
+    
     },
     button: {
       backgroundColor: '#111827',
@@ -275,10 +275,7 @@ const styles = (props = null) =>
       ...alignment.PRlarge,
       ...alignment.PBsmall
     },
-    location: {
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
-    },
+
     imageContainer: {
       display: 'flex',
       width: '100%',
