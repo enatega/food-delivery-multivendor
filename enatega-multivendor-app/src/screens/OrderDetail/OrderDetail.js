@@ -217,7 +217,8 @@ function OrderDetail(props) {
         modalVisible={cancelModalVisible}
         setModalVisible={cancelModalToggle}
         cancelOrder={cancelOrder}
-        loading={loadingCancel}/>
+        loading={loadingCancel}
+        orderStatus={order.orderStatus}/>
     </View>
   )
 }
