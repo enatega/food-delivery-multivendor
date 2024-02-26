@@ -27,6 +27,8 @@ import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
 import { ProgressBar } from '../../components/Main/ActiveOrders/ProgressBar'
 import { useNavigation } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
+import { CancelButton } from '../../components/OrderDetail/CancelButton'
+import { ORDER_STATUS_ENUM } from '../../utils/enums'
 const { height: HEIGHT } = Dimensions.get('screen')
 const IMAGE_HEIGHT = Math.floor(HEIGHT / 2)
 
@@ -184,6 +186,7 @@ function OrderDetail(props) {
           title={t('total')}
           currency={configuration.currencySymbol}
           price={total.toFixed(2)}/>
+        {order.orderStatus === ORDER_STATUS_ENUM.PENDING && <CancelButton onPress={() => {}} theme={currentTheme}/>}
       </View>
     </View>
   )

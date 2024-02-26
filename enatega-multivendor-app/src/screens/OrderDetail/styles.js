@@ -55,7 +55,7 @@ const styles = (props = null) =>
       bottom: 0,
       left: 0,
       width: '100%',
-      height: scale(80),
+      // height: scale(80),
       backgroundColor: theme.white,
       justifyContent: 'center',
       ...alignment.Pmedium,
