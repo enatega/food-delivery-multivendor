@@ -76,7 +76,6 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.radioOuterColor : 'white'
     },
     addToCart: {
-     
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),

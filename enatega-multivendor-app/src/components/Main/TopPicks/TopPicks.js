@@ -61,7 +61,6 @@ function TopPicks(props) {
         </TextDefault>
         <FlatList
           style={styles().offerScroll}
-          contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}

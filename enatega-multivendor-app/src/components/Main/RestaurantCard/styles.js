@@ -8,11 +8,11 @@ const styles = (props = null) =>
     // ML20: {
     //   ...alignment.MLlarge
     // },
-    offerScroll: {
-      height: scale(270),
-      width: '100%',
-      ...alignment.MLlarge,
-    },
+    // offerScroll: {
+    //   height: scale(270),
+    //   width: '100%',
+    //   ...alignment.MLlarge,
+    // },
     offerContainer: {
       elevation: 3,
       shadowColor: theme.Pink.white,
@@ -42,24 +42,24 @@ const styles = (props = null) =>
       borderWidth:1,
       borderColor: props != null ? props.newBorderColor : '#F3F4F6'
     },
-    featureOverlay: {
-      height: '90%',
-      position: 'absolute',
-      left: 0,
-      top: 10,
-      backgroundColor: 'rgba(0, 0, 0, 0)'
-    },
-    featureText: {
-      alignSelf: 'flex-start',
-      maxWidth: '100%',
-      fontSize: scale(9),
-      ...alignment.MTxSmall,
-      ...alignment.PLsmall,
-      ...alignment.PRsmall,
-      ...alignment.PTxSmall,
-      ...alignment.PBxSmall,
-      backgroundColor: props != null ? props.iconColorPink : 'red'
-    },
+    // featureOverlay: {
+    //   height: '90%',
+    //   position: 'absolute',
+    //   left: 0,
+    //   top: 10,
+    //   backgroundColor: 'rgba(0, 0, 0, 0)'
+    // },
+    // featureText: {
+    //   alignSelf: 'flex-start',
+    //   maxWidth: '100%',
+    //   fontSize: scale(9),
+    //   ...alignment.MTxSmall,
+    //   ...alignment.PLsmall,
+    //   ...alignment.PRsmall,
+    //   ...alignment.PTxSmall,
+    //   ...alignment.PBxSmall,
+    //   backgroundColor: props != null ? props.iconColorPink : 'red'
+    // },
     descriptionContainer: {
       paddingTop: verticalScale(12),
       paddingBottom: verticalScale(12),

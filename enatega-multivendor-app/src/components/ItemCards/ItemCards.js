@@ -1,15 +1,12 @@
 import { Image, Text, View } from "react-native";
 import { scale } from "../../utils/scaling";
 import styles from "./styles";
-import { LinearGradient } from "expo-linear-gradient";
+
 
 export const ItemCard=()=>(
   <View style={styles().popularItems}>
   <View style={styles().row}>
-    <LinearGradient
-      colors={['#F3F4F6', 'rgba(243, 244, 246, 0)']} // Gradient colors
-      start={[0, 0]} // Gradient start point (optional)
-      end={[0, 1]} // Gradient end point (optional)
+    <View
       style={styles().card}>
       <Text
         style={{
@@ -43,7 +40,7 @@ export const ItemCard=()=>(
           </Text>
         </View>
       </View>
-    </LinearGradient>
+      </View>
     <LinearGradient
       colors={['#F3F4F6', 'rgba(243, 244, 246, 0)']} // Gradient colors
       start={[0, 0]} // Gradient start point (optional)

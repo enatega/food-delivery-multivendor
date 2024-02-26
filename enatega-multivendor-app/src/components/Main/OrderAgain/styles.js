@@ -18,9 +18,12 @@ const styles = (props = null) =>
       marginTop:scale(5),
       marginBottom:scale(7)
     },
+    orderAgainSec:{
+      marginBottom:scale(30)   
+
+    },
     topPicksSec:{
-      marginTop:scale(18),
-      width:'100%',
+     
       marginBottom:scale(18),
     }
   })

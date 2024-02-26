@@ -15,6 +15,7 @@ import SideBar from '../components/Sidebar/Sidebar'
 import ItemDetail from '../screens/ItemDetail/ItemDetail'
 import MyOrders from '../screens/MyOrders/MyOrders'
 import Cart from '../screens/Cart/Cart'
+
 import RateAndReview from '../screens/RateAndReview/RateAndReview'
 import Payment from '../screens/Payment/Payment'
 import Help from '../screens/Help/Help'
@@ -52,6 +53,7 @@ import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
 import PhoneNumber from '../screens/PhoneNumber/PhoneNumber'
 import { useApolloClient, gql } from '@apollo/client'
 import { myOrders } from '../apollo/queries'
+import Checkout from '../screens/Checkout/Checkout'
 
 const NavigationStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -90,6 +92,7 @@ function NoDrawer() {
       />
       {<NavigationStack.Screen name="ItemDetail" component={ItemDetail} />}
       <NavigationStack.Screen name="Cart" component={Cart} />
+      <NavigationStack.Screen name="Checkout" component={Checkout} />
       <NavigationStack.Screen name="Profile" component={Profile} />
       <NavigationStack.Screen name="Addresses" component={Addresses} />
       <NavigationStack.Screen name="NewAddress" component={NewAddress} />

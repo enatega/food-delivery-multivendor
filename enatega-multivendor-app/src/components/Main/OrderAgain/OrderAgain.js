@@ -39,9 +39,9 @@ function OrderAgain(props) {
 
   console.log(isLoggedIn, loading, error, data)
   return (
-    <View>
+    <View style={styles().orderAgainSec}>
       {isLoggedIn && (
-        <View style={{ width: '100%' }}>
+        <View >
           <TextDefault
             numberOfLines={1}
             textColor={currentTheme.fontFourthColor}

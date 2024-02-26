@@ -123,7 +123,8 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     topPicksSection:{
-      marginTop:scale(15)
-    },
+      ...alignment.PRlarge,
+    }
+
   })
 export default styles

@@ -11,10 +11,10 @@ const styles = (props = null) => {
       paddingBottom: scale(8),
     },
     locationIcon:{
-      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
       width: 23,
     height: 23,
-    borderRadius: 25,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop:scale(10)

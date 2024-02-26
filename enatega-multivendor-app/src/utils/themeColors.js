@@ -70,7 +70,8 @@ export const theme = {
     darkBgFont: '#000',
     btnText: '#000',
     orange: '#FFA921',
-    newBorderColor: '#F3F4F6'
+    newBorderColor: '#F3F4F6',
+    verticalLine: '#D1D5DB'
   },
   Dark: {
     black: '#000',
@@ -130,6 +131,7 @@ export const theme = {
     headerColor: '#000',
     btnText: '#FFF',
     orange: '#FFA921',
-    newBorderColor: '#F3F4F6'
+    newBorderColor: '#F3F4F6',
+    verticalLine: '#fff'
   }
 }

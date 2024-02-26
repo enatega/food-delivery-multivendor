@@ -52,7 +52,8 @@ export const en = {
   titleHelp: 'Help',
   titleChat: 'Chat',
   titleLogout: 'Logout',
-  titleCart: 'My Cart',
+  titleCart: 'Your Cart',
+  titleCheckout: 'Checkout',
   titlePayment: 'Payment',
   totalOrderAmount: 'Total Order Amount',
   reOrder: 'Reorder',
@@ -137,7 +138,7 @@ export const en = {
   condition1: 'By completing this order, I agree to all Terms & Conditions.',
   condition2:
     'I agree and I demand that you execute the ordered service before the end of the revocation period. I am aware that after complete fulfillment of the service I lose my right of rescission.',
-  orderBtn: 'Place order',
+  checkoutBtn: 'Checkout',
   coupanApply: 'Coupon discount applied',
   coupanFailed: 'Coupon Unavailable',
   invalidCoupan: 'Invalid Coupon',
