@@ -30,8 +30,13 @@ import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
 import { CancelModal } from '../../components/OrderDetail/CancelModal'
 import Button from '../../components/Button/Button'
+import { gql, useMutation } from '@apollo/client'
+import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 const { height: HEIGHT } = Dimensions.get('screen')
 const IMAGE_HEIGHT = Math.floor(HEIGHT / 2)
+
+const CANCEL_ORDER = gql`${cancelOrderMutation}`
 
 function OrderDetail(props) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
@@ -47,6 +52,12 @@ function OrderDetail(props) {
   const navigation = useNavigation()
   const cancelModalToggle = () => {
     setCancelModalVisible(!cancelModalVisible)
+  }
+  const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, { onError })
+  function onError(error) {
+    FlashMessage({
+      message: error.message
+    })
   }
   useEffect(() => {
     async function Track() {
@@ -201,7 +212,12 @@ function OrderDetail(props) {
             textStyles={{ ...alignment.Pmedium }}/>
         </View>}
       </View>
-      <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle}/>
+      <CancelModal
+        theme={currentTheme}
+        modalVisible={cancelModalVisible}
+        setModalVisible={cancelModalToggle}
+        cancelOrder={cancelOrder}
+        loading={loadingCancel}/>
     </View>
   )
 }
