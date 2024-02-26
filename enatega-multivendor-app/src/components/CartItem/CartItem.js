@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import React, { useContext, useState } from 'react'
+import { Alert, Image, TouchableOpacity, View } from 'react-native'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
@@ -13,53 +13,142 @@ const cartItem = props => {
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownItems = ['Item 1', 'Item 2', 'Item 3']
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen)
+  }
   return (
     <View style={styles().itemContainer}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          gap: scale(7)
+        }}>
+        <View style={styles().suggestItemImgContainer}>
+          <Image
+            source={{
+              uri:
+                'https://enatega.com/wp-content/uploads/2024/02/burger-removebg-preview-1.png'
+            }}
+            style={styles().suggestItemImg}
+            resizeMode="contain"
+          />
+        </View>
+        <View>
+          <TextDefault
+            numberOfLines={1}
+            textColor={currentTheme.fontFourthColor}
+            bolder
+            H5>
+            {props.dealName.length > 20
+              ? props.dealName.substring(0, 17) + '...'
+              : props.dealName}
+          </TextDefault>
+
+          {props.optionsTitle.map((option, index) => (
+            <TextDefault
+              key={`options${props.dealName + option + index}`}
+              numberOfLines={1}
+              textColor={currentTheme.fontSecondColor}
+              bolder>
+              +{option}
+            </TextDefault>
+          ))}
+          <View style={styles().additionalItem}>
+            <View>
+              <TouchableOpacity
+                onPress={toggleDropdown}
+                activeOpacity={1}
+                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextDefault
+                  style={{ marginRight: scale(5) }}
+                  textColor={currentTheme.secondaryText}
+                  Normal>
+                  {dropdownItems.length} Additional Items
+                </TextDefault>
+                <Feather
+                  name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
+                  size={20}
+                  color={currentTheme.iconColorDark}
+                />
+              </TouchableOpacity>
+              {isDropdownOpen && (
+                <View style={styles().itemsDropdown}>
+                  {dropdownItems.map((item, index) => (
+                    <TextDefault
+                      key={index}
+                      textColor={currentTheme.secondaryText}
+                      Normal>
+                      {item}
+                    </TextDefault>
+                  ))}
+                </View>
+              )}
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: scale(8),
+              alignItems: 'center'
+            }}>
+            <TextDefault
+              numberOfLines={1}
+              textColor={currentTheme.fontFourthColor}
+              bolder
+              Normal>
+              {configuration.currencySymbol}
+              {parseFloat(props.dealPrice).toFixed(2)}
+            </TextDefault>
+            <View style={styles().divider} />
+            <TouchableOpacity
+              onPress={() => {
+                Alert.alert('Alert', 'Under development')
+              }}>
+              <TextDefault
+                textColor={currentTheme.fontFourthColor}
+                bolder
+                Normal>
+                Edit
+              </TextDefault>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
       <View style={styles(currentTheme).actionContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
-          style={styles(currentTheme).actionContainerBtns}
+          style={[
+            styles(currentTheme).actionContainerBtns,
+            styles(currentTheme).minusBtn
+          ]}
           onPress={props.removeQuantity}>
-          <AntDesign name="minus" size={scale(10)} color={currentTheme.black} />
+          <AntDesign
+            name={props.quantity < 2 ? 'delete' : 'minus'}
+            size={scale(18)}
+            color={currentTheme.fontFourthColor}
+          />
         </TouchableOpacity>
+
         <View style={styles(currentTheme).actionContainerView}>
-          <TextDefault textColor={currentTheme.fontMainColor}>
+          <TextDefault H5 bold textColor={currentTheme.black}>
             {props.quantity}
           </TextDefault>
         </View>
         <TouchableOpacity
           activeOpacity={0.7}
-          style={styles(currentTheme).actionContainerBtns}
+          style={[
+            styles(currentTheme).actionContainerBtns,
+            styles(currentTheme).plusBtn
+          ]}
           onPress={props.addQuantity}>
-          <AntDesign name="plus" size={scale(10)} color={currentTheme.black} />
+          <AntDesign name="plus" size={scale(18)} color={currentTheme.white} />
         </TouchableOpacity>
       </View>
-      <View style={[alignment.PLsmall, { width: '42%' }]}>
-        <TextDefault
-          numberOfLines={1}
-          textColor={currentTheme.darkBgFont}
-          bolder
-          medium>
-          {props.dealName}
-        </TextDefault>
-        {props.optionsTitle.map((option, index) => (
-          <TextDefault
-            key={`options${props.dealName + option + index}`}
-            numberOfLines={1}
-            textColor={currentTheme.fontSecondColor}
-            small>
-            +{option}
-          </TextDefault>
-        ))}
-      </View>
-      <TextDefault
-        numberOfLines={1}
-        textColor={currentTheme.fontMainColor}
-        style={{ width: '30%', marginRight: 10 }}
-        bolder
-        right>
-        {configuration.currencySymbol} {parseFloat(props.dealPrice).toFixed(2)}
-      </TextDefault>
     </View>
   )
 }

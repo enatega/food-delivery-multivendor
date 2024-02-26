@@ -17,8 +17,7 @@ import {
   Platform,
   Alert,
   Animated,
-  Text,
-  FlatList
+  Text
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -27,23 +26,22 @@ import { AntDesign, EvilIcons } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
-import CartItem from '../../components/CartItem/CartItem'
 import { getTipping, orderFragment } from '../../apollo/queries'
 import { placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
-import { alignment } from '../../utils/alignment'
+import MapView, { Marker } from 'react-native-maps'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
-import styles from './styles'
+
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { alignment } from '../../utils/alignment'
 import { useRestaurant } from '../../ui/hooks'
 import { LocationContext } from '../../context/Location'
-import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { RectButton } from 'react-native-gesture-handler'
@@ -54,6 +52,7 @@ import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
+import styles from './styles'
 import Location from '../../components/Main/Location/Location'
 
 // Constants
@@ -63,16 +62,10 @@ const PLACEORDER = gql`
 const TIPPING = gql`
   ${getTipping}
 `
-// suggested Items List Data
-const dataItems = [
-  { id: '1', name: 'Burger', description: 'Large', price: '$20' },
-  { id: '2', name: 'Burger', description: 'Small', price: '$5' },
-  { id: '3', name: 'Burger', description: 'Medium', price: '$10' }
-]
 
-function Cart(props) {
+function Checkout(props) {
   const Analytics = analytics()
-  const navigation = useNavigation()
+
   const configuration = useContext(ConfigurationContext)
   const {
     isLoggedIn,
@@ -99,15 +92,6 @@ function Cart(props) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
 
-  {
-    /* Check if cart is empty */
-  }
-  const isCartEmpty = cart.length === 0
-
-  {
-    /* If cart is not empty, store its length in a variable */
-  }
-  const cartLength = !isCartEmpty ? cart.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
 
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
@@ -196,7 +180,22 @@ function Cart(props) {
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: t('titleCart'),
+      headerTitle: () => (
+        <View style={{ alignItems: 'center', gap: scale(2) }}>
+          <TextDefault
+            style={{
+              color: currentTheme.btnText,
+              ...textStyles.H4,
+              ...textStyles.Bolder
+            }}>
+            {t('titleCheckout')}
+          </TextDefault>
+          <TextDefault
+            style={{ color: currentTheme.btnText, ...textStyles.H5 }}>
+            Hardee’s - Z Block
+          </TextDefault>
+        </View>
+      ),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
@@ -404,10 +403,10 @@ function Cart(props) {
 
   function calculateTotal() {
     let total = 0
-    // const delivery = isPickedUp ? 0 : deliveryCharges
-    total += +calculatePrice()
+    const delivery = isPickedUp ? 0 : deliveryCharges
+    total += +calculatePrice(delivery, true)
     total += +taxCalculation()
-    // total += +calculateTip()
+    total += +calculateTip()
     return parseFloat(total).toFixed(2)
   }
 
@@ -594,41 +593,41 @@ function Cart(props) {
     }
   }
 
-  function emptyCart() {
-    return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <EmptyCart width={scale(200)} height={scale(200)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-            {t('hungry')}?
-          </TextDefault>
-          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-            {t('emptyCart')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() =>
-            props.navigation.navigate({
-              name: 'Main',
-              merge: true
-            })
-          }>
-          <TextDefault
-            textColor={currentTheme.buttonText}
-            bolder
-            B700
-            center
-            uppercase>
-            {t('emptyCartBtn')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
-    )
-  }
+  // function emptyCart() {
+  //   return (
+  //     <View style={styles().subContainerImage}>
+  //       <View style={styles().imageContainer}>
+  //         <EmptyCart width={scale(200)} height={scale(200)} />
+  //       </View>
+  //       <View style={styles().descriptionEmpty}>
+  //         <TextDefault textColor={currentTheme.fontMainColor} bolder center>
+  //           {t('hungry')}?
+  //         </TextDefault>
+  //         <TextDefault textColor={currentTheme.fontSecondColor} bold center>
+  //           {t('emptyCart')}
+  //         </TextDefault>
+  //       </View>
+  //       <TouchableOpacity
+  //         activeOpacity={0.7}
+  //         style={styles(currentTheme).emptyButton}
+  //         onPress={() =>
+  //           props.navigation.navigate({
+  //             name: 'Main',
+  //             merge: true
+  //           })
+  //         }>
+  //         <TextDefault
+  //           textColor={currentTheme.buttonText}
+  //           bolder
+  //           B700
+  //           center
+  //           uppercase>
+  //           {t('emptyCartBtn')}
+  //         </TextDefault>
+  //       </TouchableOpacity>
+  //     </View>
+  //   )
+  // }
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -707,80 +706,28 @@ function Cart(props) {
     )
   }
 
-  function renderRightSwipe(progress, key) {
-    const scaleX = progress.interpolate({
-      inputRange: [0, 1, 3],
-      outputRange: [100, 0, 0]
-    })
-    return (
-      <Animated.View
-        style={[
-          styles().trashContainer,
-          { transform: [{ translateX: scaleX }] }
-        ]}>
-        <RectButton
-          rippleColor="black"
-          style={styles().trashIcon}
-          onPress={() => deleteItem(key)}>
-          <EvilIcons name="trash" size={scale(25)} color={currentTheme.white} />
-        </RectButton>
-      </Animated.View>
-    )
-  }
+  // function renderRightSwipe(progress, key) {
+  //   const scaleX = progress.interpolate({
+  //     inputRange: [0, 1, 3],
+  //     outputRange: [100, 0, 0]
+  //   })
+  //   return (
+  //     <Animated.View
+  //       style={[
+  //         styles().trashContainer,
+  //         { transform: [{ translateX: scaleX }] }
+  //       ]}>
+  //       <RectButton
+  //         rippleColor="black"
+  //         style={styles().trashIcon}
+  //         onPress={() => deleteItem(key)}>
+  //         <EvilIcons name="trash" size={scale(25)} color={currentTheme.white} />
+  //       </RectButton>
+  //     </Animated.View>
+  //   )
+  // }
+
   if (loading || loadingData || loadingTip) return loadginScreen()
-
-  const renderItem = ({ item }) => (
-    <View style={{ ...alignment.PRsmall }}>
-      <View style={styles().suggestItemContainer}>
-        <View style={styles().suggestItemImgContainer}>
-          <Image
-            source={{
-              uri:
-                'https://enatega.com/wp-content/uploads/2024/02/burger-removebg-preview-1.png'
-            }}
-            style={styles().suggestItemImg}
-            resizeMode="contain"
-          />
-        </View>
-        <TextDefault
-          style={styles().suggestItemName}
-          textColor={currentTheme.fontFourthColor}
-          H5
-          bolder>
-          {item.name}
-        </TextDefault>
-        <TextDefault
-          style={styles().suggestItemDesciption}
-          textColor={currentTheme.secondaryText}
-          normal>
-          {item.description}
-        </TextDefault>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between'
-          }}>
-          <TextDefault
-            style={styles().suggestItemPrice}
-            textColor={currentTheme.fontFourthColor}
-            normal
-            bolder>
-            {item.price}
-          </TextDefault>
-          <TouchableOpacity
-            onPress={() => {
-              Alert.alert('Alert', 'Under development')
-            }}>
-            <View style={styles().addToCart}>
-              <MaterialIcons name="add" size={scale(20)} color="#fff" />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  )
-
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -789,8 +736,29 @@ function Cart(props) {
           <>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={[styles().flex, styles().cartItems]}>
-              <View style={[styles(currentTheme).headerContainer]}>
+              style={[styles().flex]}>
+              <View
+                style={{
+                  ...alignment.PLsmall,
+                  ...alignment.PRsmall
+                }}>
+                {/* <View style={styles().flex}>
+                  <MapView
+                    style={styles().map}
+                    initialRegion={{
+                      latitude: 37.78825,
+                      longitude: -122.4324,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421
+                    }}>
+                    <Marker
+                      coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+                      title="Marker Title"
+                      description="Marker Description"
+                    />
+                  </MapView>
+                </View> */}
+                <View style={[styles(currentTheme).headerContainer]}>
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles().locationContainer}
@@ -816,11 +784,7 @@ function Cart(props) {
                       }}
                     />
                   </View>
-                  <Feather
-                    name="chevron-right"
-                    size={20}
-                    color={currentTheme.secondaryText}
-                  />
+                  
 
                   {/* <View style={[styles().floatView, styles().pB10]}>
                     <TextDefault
@@ -916,37 +880,7 @@ function Cart(props) {
                   </View>
                 </View> */}
               </View>
-              <View
-                style={{
-                  ...alignment.PLsmall,
-                  ...alignment.PRsmall,
-                  marginTop: 10
-                }}>
                 <View
-                  style={[styles(currentTheme).dealContainer, styles().mB10]}>
-                  <TextDefault style={styles().totalOrder} H5 bolder>
-                    Your Order ({cartLength})
-                  </TextDefault>
-                  {cart.map((food, index) => (
-                    <View style={[styles(currentTheme).itemContainer]}>
-                      <CartItem
-                        quantity={food.quantity}
-                        dealName={food.title}
-                        optionsTitle={food.optionsTitle}
-                        dealPrice={(
-                          parseFloat(food.price) * food.quantity
-                        ).toFixed(2)}
-                        addQuantity={() => {
-                          addQuantity(food.key)
-                        }}
-                        removeQuantity={() => {
-                          removeQuantity(food.key)
-                        }}
-                      />
-                    </View>
-                  ))}
-                </View>
-                {/* <View
                   style={[
                     styles(currentTheme).priceContainer,
                     styles().pT10,
@@ -1225,9 +1159,9 @@ function Cart(props) {
                       {calculateTotal()}
                     </TextDefault>
                   </View>
-                </View> */}
+                </View>
 
-                {/* {isLoggedIn && profile && (
+                {isLoggedIn && profile && (
                   <>
                     <View
                       style={[
@@ -1476,8 +1410,8 @@ function Cart(props) {
                       </TouchableOpacity>
                     </View>
                   </>
-                )} */}
-                {/* <View
+                )}
+                <View
                   style={[
                     styles(currentTheme).termsContainer,
                     styles().pT10,
@@ -1496,82 +1430,163 @@ function Cart(props) {
                     bold>
                     {t('condition2')}
                   </TextDefault>
-                </View> */}
-              </View>
-              <View style={styles().suggestedItems}>
-                <TextDefault
-                  style={styles().suggestItemDesciption}
-                  textColor={currentTheme.fontNewColor}
-                  H5
-                  bolder>
-                  Would you like to add these?
-                </TextDefault>
-                <FlatList
-                  data={dataItems}
-                  renderItem={renderItem}
-                  keyExtractor={item => item.id}
-                  contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={true}
-                />
+                </View>
               </View>
             </ScrollView>
-
             {!isModalOpen && (
               <View style={styles().totalBillContainer}>
                 <View style={styles(currentTheme).buttonContainer}>
-                  <View>
-                    <TextDefault
-                      textColor={currentTheme.black}
-                      style={styles().totalBill}
-                      bolder
-                      H2>
-                      {configuration.currencySymbol}
-                      {calculateTotal()}
-                    </TextDefault>
-                    <TextDefault
-                      textColor={currentTheme.black}
-                      style={styles().totalBill}
-                      bolder
-                      Smaller>
-                      Total is inclusive of VAT
-                    </TextDefault>
-                    {/* <View style={styles().buttontLeft}>
-                      <View style={styles(currentTheme).buttonLeftCircle}>
-                        <TextDefault
-                          bolder
-                          center
-                          textColor={currentTheme.white}
-                          smaller>
-                          {cartCount}
-                        </TextDefault>
-                      </View>
-                    </View> */}
-                  </View>
+                 
 
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => {
-                      navigation.navigate('Checkout')
-                    }}
+                        if (validateOrder()) onPayment()
+                      }}
                     style={styles(currentTheme).button}>
                     <TextDefault
-                      textColor={currentTheme.themeBackground}
+                      textColor={currentTheme.white}
                       style={styles().checkoutBtn}
                       bold
                       H5>
-                      {t('checkoutBtn')}
+                      {t('Place Order')}
                     </TextDefault>
                   </TouchableOpacity>
                 </View>
               </View>
             )}
+
+            {/* {!isModalOpen && (
+              <View style={styles(currentTheme).buttonContainer}>
+                {isLoggedIn && profile ? (
+                  <TouchableOpacity
+                    disabled={loadingOrderMutation}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      if (validateOrder()) onPayment()
+                    }}
+                    style={styles(currentTheme).button}>
+                    {loadingOrderMutation ? (
+                      <ActivityIndicator
+                        size="large"
+                        style={{ flex: 1, justifyContent: 'center' }}
+                        color={currentTheme.buttonText}
+                      />
+                    ) : (
+                      <>
+                        <View style={styles().buttontLeft}>
+                          <View style={styles(currentTheme).buttonLeftCircle}>
+                            <TextDefault
+                              bolder
+                              center
+                              textColor={currentTheme.white}
+                              smaller>
+                              {cartCount}
+                            </TextDefault>
+                          </View>
+                        </View>
+                        <TextDefault
+                          textColor={currentTheme.white}
+                          style={{ width: '30%' }}
+                          bolder
+                          B700
+                          small
+                          center
+                          uppercase>
+                          {t('orderBtn')}
+                        </TextDefault>
+                        
+                        <TextDefault
+                          textColor={currentTheme.black}
+                          style={{ width: '35%' }}
+                          bold
+                          small
+                          right>
+                          {configuration.currencySymbol}
+                          {calculateTotal()}
+                        </TextDefault>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      props.navigation.navigate({ name: 'CreateAccount' })
+                    }}
+                    style={styles(currentTheme).button}>
+                    <TextDefault
+                      textColor={currentTheme.black}
+                      style={{ width: '100%' }}
+                      H5
+                      bolder
+                      center
+                      uppercase>
+                      {t('loginOrCreateAccount')}
+                    </TextDefault>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )} */}
           </>
         )}
+        <Modalize
+          ref={modalRef}
+          modalStyle={styles(currentTheme).modal}
+          modalHeight={Platform.OS === 'android' ? 280 : 420}
+          overlayStyle={styles(currentTheme).overlay}
+          handleStyle={styles(currentTheme).handle}
+          handlePosition="inside"
+          onClosed={() => {
+            setIsModalOpen(false)
+          }}
+          onOpened={() => {
+            setIsModalOpen(true)
+          }}
+          openAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+          closeAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}>
+          <Pickup
+            minimumTime={new Date()}
+            setOrderDate={setOrderDate}
+            isPickedUp={isPickedUp}
+            setIsPickedUp={setIsPickedUp}
+            orderDate={orderDate}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              modalRef.current.close()
+            }}
+            style={[
+              {
+                backgroundColor: currentTheme.buttonBackground,
+                alignItems: 'center',
+                height: scale(35),
+                justifyContent: 'center',
+                borderRadius: scale(10),
+                width: '90%',
+                alignSelf: 'center'
+              }
+            ]}>
+            <Text style={{ fontSize: 20, fontWeight: '500' }}>
+              {t('apply')}
+            </Text>
+          </TouchableOpacity>
+        </Modalize>
       </View>
+      <View
+        style={{
+          paddingBottom: inset.bottom,
+          backgroundColor: currentTheme.themeBackground
+        }}
+      />
     </>
   )
 }
 
-export default Cart
+export default Checkout

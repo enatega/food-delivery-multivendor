@@ -48,6 +48,7 @@ export const zh = {
   titleChat: '聊天',
   titleLogout: '登出',
   titleCart: '我的购物车',
+  titleCheckout: '查看',
   titlePayment: '支付',
   totalOrderAmount: '总订单金额',
   reOrder: '重新订购',
@@ -131,7 +132,7 @@ export const zh = {
   condition1: '通过完成此订单，我同意所有条款和条件。',
   condition2:
     '我同意并要求您在撤销期结束之前执行已订购的服务。我知道在服务完全履行后，我失去了撤销权。',
-  orderBtn: '下订单',
+  checkoutBtn: '结帐订单',
   coupanApply: '优惠券折扣已应用',
   coupanFailed: '无法使用优惠券',
   invalidCoupan: '无效的优惠券',

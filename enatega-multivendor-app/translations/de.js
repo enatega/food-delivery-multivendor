@@ -54,7 +54,8 @@ export const de = {
   titleHelp: 'Hilfe',
   titleChat: 'Chat',
   titleLogout: 'Abmelden',
-  titleCart: 'Mein Warenkorb',
+  titleCart: 'Ihr Warenkorb',
+  titleCheckout: 'Kasse',
   titlePayment: 'Zahlung',
   totalOrderAmount: 'Gesamtbetrag der Bestellung',
   reOrder: 'Erneut bestellen',
@@ -142,7 +143,7 @@ export const de = {
     'Durch Abschluss dieser Bestellung stimme ich allen Geschäftsbedingungen zu.',
   condition2:
     'Ich stimme zu und fordere, dass Sie die bestellte Leistung vor Ablauf der Widerrufsfrist ausführen. Mir ist bewusst, dass ich nach vollständiger Erfüllung der Leistung mein Widerrufsrecht verliere.',
-  orderBtn: 'Bestellen',
+  checkoutBtn: 'Kasse bestellen',
   coupanApply: 'Gutscheinrabatt angewendet',
   coupanFailed: 'Gutschein nicht verfügbar',
   invalidCoupan: 'Ungültiger Gutschein',

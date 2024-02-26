@@ -1,6 +1,6 @@
 import { verticalScale, scale } from '../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
-const windowWidth = Dimensions.get('window').width
+import { StyleSheet } from 'react-native'
+
 import { alignment } from '../../utils/alignment'
 
 const styles = (props = null) =>
@@ -8,28 +8,8 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
-    mainItemsContainer:{
-      flexDirection:'row',
-      justifyContent:'center',
-      gap:scale(20),
-      marginTop:scale(16),
-      marginBottom:scale(30)   
-    },
-    mainItem:{
-      padding:12,
-      borderWidth:1,
-      borderColor: '#E5E7EB',
-      width: windowWidth / 2 - 30,
-      borderRadius:8,
-      justifyContent:'space-between'
-    },
-    popularMenuImg:{
-      width: '100%', 
-      aspectRatio: 18/8,
-    },
-    
     screenBackground: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      backgroundColor: props != null ? props.themeBackground : '#FFF'
     },
     mainContentContainer: {
       width: '100%',
@@ -121,10 +101,6 @@ const styles = (props = null) =>
       height: verticalScale(40),
       justifyContent: 'center',
       alignItems: 'center'
-    },
-    topPicksSection:{
-      ...alignment.PRlarge,
     }
-
   })
 export default styles
