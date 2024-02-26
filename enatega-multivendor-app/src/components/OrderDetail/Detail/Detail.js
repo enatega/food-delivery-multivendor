@@ -1,11 +1,11 @@
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, Image } from 'react-native'
 import React from 'react'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
-import Button from '../../Button/Button'
 import { useTranslation } from 'react-i18next'
 import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
+import { ChatButton } from './ChatButton'
 
 export default function Detail({
   theme,
@@ -27,28 +27,12 @@ export default function Detail({
   return (
     <View style={styles.container(theme)}>
       {rider && (
-        <TouchableOpacity onPress={() => navigation.navigate('ChatWithRider', { id })} style={styles.chatButton(theme)}>
-
-          <View style={{ width: '20%' }}>
-            <TextDefault
-            >icon
-            </TextDefault>
-          </View>
-          <View style={{ width: '60%' }}>
-            <TextDefault
-            >{t('chatWithRider')}
-            </TextDefault>
-            <TextDefault
-            >Ask for contactless delivery
-            </TextDefault>
-          </View>
-          <View style={{ width: '20%' }}>
-            <TextDefault
-            >chat
-            </TextDefault>
-          </View>
-
-        </TouchableOpacity>
+        <ChatButton
+          onPress={() => navigation.navigate('ChatWithRider', { id })}
+          title={t('chatWithRider')}
+          description={'Ask for contactless delivery'}
+          theme={theme}
+        />
       )}
       <TextDefault textColor={theme.gray500} bolder H5 style={{ ...alignment.MBsmall }}>
         {t('yourOrder')} ({items.length})

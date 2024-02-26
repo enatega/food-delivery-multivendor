@@ -49,5 +49,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: scale(10)
-  }
+  },
+  chatIcon: theme => ({
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  })
 })
