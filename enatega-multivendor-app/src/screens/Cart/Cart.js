@@ -1549,21 +1549,39 @@ function Cart(props) {
                       </View>
                     </View> */}
                   </View>
-
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      navigation.navigate('Checkout')
-                    }}
-                    style={styles(currentTheme).button}>
-                    <TextDefault
-                      textColor={currentTheme.themeBackground}
-                      style={styles().checkoutBtn}
-                      bold
-                      H5>
-                      {t('checkoutBtn')}
-                    </TextDefault>
-                  </TouchableOpacity>
+                  {isLoggedIn && profile ? (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        navigation.navigate('Checkout')
+                      }}
+                      style={styles(currentTheme).button}>
+                      <TextDefault
+                        textColor={currentTheme.themeBackground}
+                        style={styles().checkoutBtn}
+                        bold
+                        H5>
+                        {t('checkoutBtn')}
+                      </TextDefault>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        props.navigation.navigate({ name: 'CreateAccount' })
+                      }}
+                      style={styles(currentTheme).button}>
+                      <TextDefault
+                        textColor={currentTheme.white}
+                        style={{ width: '100%' }}
+                        H5
+                        bolder
+                        center
+                        >
+                        {t('loginOrCreateAccount')}
+                      </TextDefault>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             )}

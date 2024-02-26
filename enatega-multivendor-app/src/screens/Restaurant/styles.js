@@ -38,20 +38,20 @@ const styles = (props = null) =>
     deal: {
       width: '80%',
       flexDirection: 'row',
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       alignItems: 'center',
       gap:scale(5)
     },
     dealSection: {
       // position: 'relative',
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.PRsmall,
       ...alignment.PLsmall,
 
       paddingVertical: scale(10)
     },
     dealDescription: {
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
 
       ...alignment.PRxSmall
     },
@@ -73,7 +73,7 @@ const styles = (props = null) =>
       paddingTop: scale(5),
       maxWidth: '100%',
       ...alignment.MRxSmall,
-      backgroundColor: props != null ? props.radioOuterColor : 'white'
+      backgroundColor: props != null ? props.themeBackground : 'white'
     },
     addToCart: {
       width: scale(25),
