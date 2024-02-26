@@ -11,8 +11,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const LOGIN = gql`
   ${login}
@@ -34,7 +33,7 @@ export const useLogin = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { setTokenAsync } = useContext(AuthContext)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [EmailEixst, { loading }] = useMutation(EMAIL, {
     onCompleted,
@@ -84,7 +83,9 @@ export const useLogin = () => {
           setRegisteredEmail(true)
         } else {
           FlashMessage({
-            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t('continueWith')} ${emailExist.userType}`
+            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t(
+              'continueWith'
+            )} ${emailExist.userType}`
           })
           navigation.navigate({ name: 'Main', merge: true })
         }

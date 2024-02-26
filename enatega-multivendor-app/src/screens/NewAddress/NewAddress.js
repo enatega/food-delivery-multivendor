@@ -377,7 +377,7 @@ function NewAddress(props) {
                           center>
                           {t(label.title)}
                         </TextDefault>
-                        </React.Fragment>
+                      </React.Fragment>
                     ))}
                   </View>
                 </View>
@@ -431,7 +431,7 @@ function NewAddress(props) {
           onSubmit={onSubmit}
         />
       ) : null}
-      
+
       <View
         style={{
           paddingBottom: inset.bottom,

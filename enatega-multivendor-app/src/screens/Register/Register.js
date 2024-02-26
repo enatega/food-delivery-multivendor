@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Image,
   TextInput
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -13,10 +12,10 @@ import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import CountryPicker from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function Register(props) {
   const {
@@ -44,7 +43,7 @@ function Register(props) {
     currentTheme
   } = useRegister()
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -74,17 +73,18 @@ function Register(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
-                <Image
+                {/* <Image
                   source={require('../../../assets/login-icon.png')}
                   style={styles().logoContainer}
-                />
+                /> */}
+
+                <SimpleLineIcons name="user" size={30} color="black" />
               </View>
               <View>
                 <TextDefault
                   H3
                   bolder
                   style={{
-                    textAlign: 'center',
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
@@ -94,9 +94,7 @@ function Register(props) {
                   H5
                   bold
                   textColor={currentTheme.fontSecondColor}
-                  style={{
-                    textAlign: 'center'
-                  }}>
+                  style={{}}>
                   {t('createAccount')}
                 </TextDefault>
               </View>
@@ -144,7 +142,6 @@ function Register(props) {
                 <View>
                   <TextInput
                     placeholder={t('lastNamePH')}
-
                     style={[
                       styles(currentTheme).textField,
                       lastnameError && styles(currentTheme).errorInput

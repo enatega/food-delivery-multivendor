@@ -14,8 +14,7 @@ const styles = (props = null) =>
     mainContainerHolder: {
       zIndex: 333,
       width: '100%',
-      alignItems: 'center',
-     
+      alignItems: 'center',     
       backgroundColor: props != null ? props.newheaderColor : '#fafafa',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {

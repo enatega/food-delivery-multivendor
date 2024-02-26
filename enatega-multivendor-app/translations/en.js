@@ -159,7 +159,7 @@ export const en = {
   reviewRegardingOrder: 'Review regarding your order?',
   anySuggestion: 'Any suggestion?',
   newUser: 'New User? Create an account',
-  signUporSignIn: 'Sign Up or Sign In',
+  signUporSignIn: 'Signup or login',
   or: 'or',
   termCondition1: 'By continue, you agree to our',
   temrConditions: 'Term & Conditions',

@@ -21,7 +21,6 @@ import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
 import { useTranslation } from 'react-i18next'
-import { Directions } from 'react-native-gesture-handler'
 
 // const { height } = Dimensions.get('screen')
 // const TOP_BAR_HEIGHT = height * 0.05
