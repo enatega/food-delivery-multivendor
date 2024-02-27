@@ -37,6 +37,8 @@ function ImageTextCenterHeader(props, ref) {
     address: props.restaurant ? props.restaurant.address : '',
     restaurantName: props.restaurantName,
     restaurantImage: props.restaurantImage,
+    restaurantTax: props.tax,
+    restaurantMinOrder: props.minimumOrder,
     deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
     average: props.restaurant ? props.restaurant.reviewData.ratings : '...',
     total: props.restaurant ? props.restaurant.reviewData.total : '...',
@@ -63,6 +65,8 @@ function ImageTextCenterHeader(props, ref) {
       return times.length > 0
     }
   }
+
+  console.log("aboutObject", aboutObject)
 
   const emptyView = () => {
     return (
@@ -114,7 +118,7 @@ function ImageTextCenterHeader(props, ref) {
                       height: props.iconTouchHeight
                     }
                   ]}
-                  onPress={() => alert('Coming soon')}>
+                onPress={() => alert('heart-outline in imageHeader')}>
                   <Ionicons
                     name="heart-outline"
                     style={{
@@ -199,7 +203,7 @@ function ImageTextCenterHeader(props, ref) {
           <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
             <Text style={styles().restaurantAbout}>1.6km away</Text>
             <Text style={styles().restaurantAbout}>|</Text>
-            <Text style={styles().restaurantAbout}>$2 Delivery Charges</Text>
+          <Text style={styles().restaurantAbout}>${aboutObject.restaurantTax} Delivery Charges</Text>
           </View>
           <View
             style={{
@@ -208,7 +212,7 @@ function ImageTextCenterHeader(props, ref) {
               gap: 7,
               marginTop: scale(5)
             }}>
-            <Text style={styles().restaurantAbout}>$20 Minimum</Text>
+          <Text style={styles().restaurantAbout}>${aboutObject.restaurantMinOrder} Minimum</Text>
             <Text style={styles().restaurantAbout}>|</Text>
             <Text style={styles().restaurantAbout}>Service Fee applies</Text>
           </View>
@@ -278,7 +282,7 @@ function ImageTextCenterHeader(props, ref) {
                 fontSize: scale(14),
                 color: '#6B7280'
               }}>
-              {aboutObject.deliveryTime} mins
+            {aboutObject.deliveryTime} {t('Min')}
             </Text>
           </View>
         </View>

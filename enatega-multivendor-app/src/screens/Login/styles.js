@@ -19,8 +19,10 @@ const styles = (props = null) =>
       ...alignment.PTlarge
     },
     subContainer: {
-      width: '85%',
-      height: '100%'
+      width: '90%',
+      height: '100%',
+      flex: 1,
+      flexDirection: 'column'
     },
     alignItemsCenter: {
       alignItems: 'center'
@@ -44,14 +46,12 @@ const styles = (props = null) =>
     appleBtn: {
       width: '100%'
     },
-    logoContainer: {
-      width: scale(120),
-      height: scale(130),
-      alignSelf: 'center'
-    },
+    logoContainer: {},
     form: {
       width: '100%',
-      ...alignment.MTlarge
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     },
     textField: {
       borderColor: props !== null ? props.borderColor : '#efefef',
@@ -66,7 +66,7 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
-      elevation: 5,
+      elevation: 1,
       ...alignment.MTlarge
     },
     errorInput: {
@@ -91,12 +91,12 @@ const styles = (props = null) =>
     btn: {
       position: 'relative',
       // marginTop: '55%',
-      width: '70%',
+      width: '100%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props.main : '#',
       alignSelf: 'center',
       padding: scale(15),
-      borderRadius: scale(10)
+      borderRadius: scale(28)
     },
     headerLeftIcon: {
       ...alignment.PLsmall

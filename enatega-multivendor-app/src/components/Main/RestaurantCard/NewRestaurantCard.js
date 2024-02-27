@@ -103,7 +103,7 @@ function NewRestaurantCard(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                30
+                {props.deliveryTime}
               </TextDefault>
               <TextDefault
                 textColor={currentTheme.fontNewColor}
@@ -125,7 +125,7 @@ function NewRestaurantCard(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                $2
+                ${props.tax}
               </TextDefault>
             </View>
           </View>

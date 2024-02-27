@@ -56,7 +56,7 @@ import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
 
 // const RESTAURANTS = gql`
-//   ${restaurantList}
+  //   ${restaurantList}
 // `
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -77,15 +77,15 @@ function Main(props) {
   const { getCurrentLocation } = useLocation()
 
   // const { data, refetch, networkStatus, loading, error } = useQuery(
-  //   RESTAURANTS,
-  //   {
+    //   RESTAURANTS,
+    //   {
   //     variables: {
-  //       longitude: location.longitude || null,
-  //       latitude: location.latitude || null,
-  //       ip: null
-  //     },
-  //     fetchPolicy: 'network-only'
-  //   }
+        //       longitude: location.longitude || null,
+        //       latitude: location.latitude || null,
+        //       ip: null
+      //     },
+      //     fetchPolicy: 'network-only'
+    //   }
   // )
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
@@ -353,10 +353,10 @@ function Main(props) {
 
   // Flatten the array. That is important for data sequence
   // const restaurantSections = sections.map(sec => ({
-  //   ...sec,
-  //   restaurants: sec.restaurants
-  //     .map(id => restaurants.filter(res => res._id === id))
-  //     .flat()
+    //   ...sec,
+    //   restaurants: sec.restaurants
+      //     .map(id => restaurants.filter(res => res._id === id))
+      //     .flat()
   // }))
 
   return (
@@ -373,55 +373,54 @@ function Main(props) {
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
-                    <View style={styles().mainItem}>
-                      <View>
-                        <TextDefault
-                          H4
-                          bolder
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemName}>
-                          Food Delivery
-                        </TextDefault>
-                        <TextDefault
-                          Normal
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemDescription}>
-                          Order food you love
-                        </TextDefault>
-                      </View>
-
-                      <Image
-                        source={{
-                          uri:
-                            'https://enatega.com/wp-content/uploads/2024/02/pngimg-1.png'
-                        }}
-                        style={styles().popularMenuImg}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <View style={styles().mainItem}>
+                  <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu')}>
+                    <View>
                       <TextDefault
                         H4
                         bolder
                         textColor={currentTheme.fontThirdColor}
                         style={styles().ItemName}>
-                        Grocery
+                        Food Delivery
                       </TextDefault>
                       <TextDefault
                         Normal
                         textColor={currentTheme.fontThirdColor}
                         style={styles().ItemDescription}>
-                        Essentials delivered fast
+                        Order food you love
                       </TextDefault>
-                      <Image
-                        source={{
-                          uri:
-                            'https://enatega.com/wp-content/uploads/2024/02/pngwing-4.png'
-                        }}
-                        style={styles().popularMenuImg}
-                        resizeMode="contain"
-                      />
                     </View>
+                    <Image
+                      source={{
+                        uri:
+                          'https://enatega.com/wp-content/uploads/2024/02/pngimg-1.png'
+                      }}
+                      style={styles().popularMenuImg}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu')}>
+                    <TextDefault
+                      H4
+                      bolder
+                      textColor={currentTheme.fontThirdColor}
+                      style={styles().ItemName}>
+                      Grocery
+                    </TextDefault>
+                    <TextDefault
+                      Normal
+                      textColor={currentTheme.fontThirdColor}
+                      style={styles().ItemDescription}>
+                      Essentials delivered fast
+                    </TextDefault>
+                    <Image
+                      source={{
+                        uri:
+                          'https://enatega.com/wp-content/uploads/2024/02/pngwing-4.png'
+                      }}
+                      style={styles().popularMenuImg}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
                   </View>
                   <View>
                     <OrderAgain />

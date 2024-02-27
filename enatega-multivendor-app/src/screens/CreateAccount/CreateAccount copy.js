@@ -1,15 +1,15 @@
 import React, { useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
-import styles from './stylesV2'
-import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtnV2'
-import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtnV2'
+import { View, TouchableOpacity } from 'react-native'
+import styles from './styles'
+import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
+import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
 import Spinner from '../../components/Spinner/Spinner'
 import * as AppleAuthentication from 'expo-apple-authentication'
+import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useCreateAccount } from './useCreateAccount'
-import { useTranslation } from 'react-i18next'
-import { scale } from '../../utils/scaling'
-import { alignment } from '../../utils/alignment'
+import navigationOptions from './screenOptions'
+import {useTranslation} from 'react-i18next'
 
 const CreateAccount = props => {
   const {
@@ -23,17 +23,21 @@ const CreateAccount = props => {
     currentTheme,
     mutateLogin,
     navigateToLogin,
+    openTerms,
+    openPrivacyPolicy,
     navigation
   } = useCreateAccount()
-  const { t } = useTranslation()
+  const {t} = useTranslation()
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: null,
-      title: t(''),
-      headerTransparent: true,
-      headerTitleAlign: 'center'
-    })
-  }, [navigation])
+    navigation.setOptions(
+      navigationOptions({
+        fontColor: currentTheme.fontMainColor,
+        backColor: 'transparent',
+        navigation: props.navigation
+      })
+    )
+  }, [navigation, currentTheme])
+
   function renderAppleAction() {
     if (loading && loginButton === 'Apple') {
       return (
@@ -50,9 +54,9 @@ const CreateAccount = props => {
             ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
             : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
         }
-        cornerRadius={scale(20)}
+        cornerRadius={10}
         style={styles().appleBtn}
-        onPress={async () => {
+        onPress={async() => {
           try {
             const credential = await AppleAuthentication.signInAsync({
               requestedScopes: [
@@ -118,71 +122,58 @@ const CreateAccount = props => {
   }
 
   return (
-    <View style={styles().container}>
-      <View style={styles().image}>
-        <Image
-          source={require('../../assets/images/loginHeader.png')}
-          resizeMode="cover"
-          style={styles().image1}
-        />
-      </View>
-      <View style={[styles().subContainer]}>
-        <View style={[styles().signupContainer]}>
-          <View
-            style={{
-              width: '90%',
-              alignSelf: 'center',
-              marginBottom: scale(10)
-            }}>
-            <TextDefault
-              H4
-              bolder
-              textColor={currentTheme.black}
-              style={{ marginBottom: scale(7) }}>
-              {t('signUporSignIn')}
-            </TextDefault>
-            <TextDefault textColor={currentTheme.black}>
-              {'sign up to grt your discount'}
+    <View style={[styles().subContainer]}>
+      <TextDefault
+        H2
+        bolder
+        textColor={currentTheme.buttonBackgroundPink}
+        style={{
+          textAlign: 'center',
+          ...alignment.MTlarge,
+          ...alignment.MBlarge
+        }}>
+        {t('signUporSignIn')}
+      </TextDefault>
+      <View>
+        <View style={styles().marginTop10}>{renderGoogleAction()}</View>
+        {enableApple && (
+          <View style={styles().marginTop10}>{renderAppleAction()}</View>
+        )}
+        <View
+          style={[
+            styles().marginTop5,
+            { flexDirection: 'row', alignItems: 'center' }
+          ]}>
+          <View style={styles().line} />
+          <View>
+            <TextDefault H4 bolder style={{ width: 50, textAlign: 'center' }}>
+              {t('or')}
             </TextDefault>
           </View>
-
-          <View style={{ marginBottom: scale(5) }}>{renderGoogleAction()}</View>
-          {enableApple && (
-            <View style={{ marginBottom: scale(5) }}>
-              {renderAppleAction()}
-            </View>
-          )}
-          <View style={{ marginBottom: scale(5) }}>{renderEmailAction()}</View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={styles().line} />
-            <View style={{ marginBottom: scale(5) }}>
-              <TextDefault H4 bolder style={{ width: 50, textAlign: 'center' }}>
-                {t('or')}
-              </TextDefault>
-            </View>
-            <View style={styles().line} />
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles().guestButton}
-            onPress={() => {
-              navigation.navigate('Main')
-            }}>
-            {props.loadingIcon ? (
-              <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={'#000'} />
-            ) : (
-              <>
-                <TextDefault
-                  H4
-                  textColor={currentTheme.black}
-                  style={alignment.MLsmall}
-                  bold>
-                  {'Continue as Guest'}
-                </TextDefault>
-              </>
-            )}
-          </TouchableOpacity>
+          <View style={styles().line} />
         </View>
+        <View style={styles().marginTop5}>{renderEmailAction()}</View>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          ...alignment.MTlarge,
+          ...alignment.MBlarge
+        }}>
+        <TextDefault>{t('termCondition1')} </TextDefault>
+        <TouchableOpacity onPress={openTerms}>
+          <TextDefault bolder textColor={currentTheme.buttonBackgroundPink}>
+            {t('temrConditions')}
+          </TextDefault>
+        </TouchableOpacity>
+        <TextDefault>{t('and')}</TextDefault>
+        <TouchableOpacity onPress={openPrivacyPolicy}>
+          <TextDefault bolder textColor={currentTheme.buttonBackgroundPink}>
+            {' '}
+            {t('privacyPolicy')}
+          </TextDefault>
+        </TouchableOpacity>
       </View>
     </View>
   )

@@ -31,17 +31,17 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
-import Item from '../../components/Main/Item/ItemV2'
+import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
-import styles from './stylesV2'
+import styles from './styles'
 import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import navigationOptions from './navigationOptions'
+import navigationOptions from '../Main/navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
@@ -58,7 +58,7 @@ const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
-function Main(props) {
+function Menu(props) {
   const Analytics = analytics()
 
   const { t } = useTranslation()
@@ -470,4 +470,4 @@ function Main(props) {
   )
 }
 
-export default Main
+export default Menu

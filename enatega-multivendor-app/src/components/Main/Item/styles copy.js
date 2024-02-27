@@ -17,28 +17,22 @@ const styles = (props = null) =>
         width: 0,
         height: verticalScale(0)
       },
-      borderColor: props != null ? props.borderColor : 'grey',
-      borderWidth: scale(2),
-      borderRadius: scale(8),
-      height: scale(270),
+      borderRadius: scale(25),
+      height: scale(220),
       width: '99%',
-      //padding: scale(15),
+      padding: scale(15),
 
       ...alignment.MBsmall
     },
     imageContainer: {
       position: 'relative',
-      zIndex: 1,
       alignItems: 'center',
-      width: '100%',
       height: '70%'
     },
     img: {
       width: '100%',
       height: '100%',
-
-      borderTopLeftRadius: scale(8),
-      borderTopRightRadius: scale(8)
+      borderRadius: scale(18)
     },
     overlayRestaurantContainer: {
       position: 'absolute',
