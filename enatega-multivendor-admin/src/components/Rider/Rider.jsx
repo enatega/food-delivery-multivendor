@@ -223,6 +223,11 @@ function Rider(props) {
                     : ''
                 ]}
               />
+              {usernameError === false && (
+                  <Typography variant='p' style={{color:'red',fontSize:'12px',float:'left',marginTop:'5px',marginLeft:'10px'}} >
+                    {t('Username cannot contain spaces')}
+                  </Typography>
+              )}
               {/* </Box> */}
             </Grid>
             <Grid item xs={12} sm={6}>
