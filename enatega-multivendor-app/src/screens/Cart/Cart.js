@@ -361,34 +361,34 @@ function Cart(props) {
     }
   }
 
-  function calculateTip() {
-    if (tip) {
-      return tip
-    } else if (selectedTip) {
-      let total = 0
-      const delivery = isPickedUp ? 0 : deliveryCharges
-      total += +calculatePrice(delivery, true)
-      total += +taxCalculation()
-      const tipPercentage = (
-        (total / 100) *
-        parseFloat(selectedTip).toFixed(2)
-      ).toFixed(2)
-      return tipPercentage
-    } else {
-      return 0
-    }
-  }
+  // function calculateTip() {
+  //   if (tip) {
+  //     return tip
+  //   } else if (selectedTip) {
+  //     let total = 0
+  //     const delivery = isPickedUp ? 0 : deliveryCharges
+  //     total += +calculatePrice(delivery, true)
+  //     total += +taxCalculation()
+  //     const tipPercentage = (
+  //       (total / 100) *
+  //       parseFloat(selectedTip).toFixed(2)
+  //     ).toFixed(2)
+  //     return tipPercentage
+  //   } else {
+  //     return 0
+  //   }
+  // }
 
-  function taxCalculation() {
-    const tax = data.restaurant ? +data.restaurant.tax : 0
-    if (tax === 0) {
-      return tax.toFixed(2)
-    }
-    const delivery = isPickedUp ? 0 : deliveryCharges
-    const amount = +calculatePrice(delivery, true)
-    const taxAmount = ((amount / 100) * tax).toFixed(2)
-    return taxAmount
-  }
+  // function taxCalculation() {
+  //   const tax = data.restaurant ? +data.restaurant.tax : 0
+  //   if (tax === 0) {
+  //     return tax.toFixed(2)
+  //   }
+  //   const delivery = isPickedUp ? 0 : deliveryCharges
+  //   const amount = +calculatePrice(delivery, true)
+  //   const taxAmount = ((amount / 100) * tax).toFixed(2)
+  //   return taxAmount
+  // }
 
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0
@@ -406,7 +406,7 @@ function Cart(props) {
     let total = 0
     // const delivery = isPickedUp ? 0 : deliveryCharges
     total += +calculatePrice()
-    total += +taxCalculation()
+    // total += +taxCalculation()
     // total += +calculateTip()
     return parseFloat(total).toFixed(2)
   }
@@ -1535,7 +1535,7 @@ function Cart(props) {
                       style={styles().totalBill}
                       bolder
                       Smaller>
-                      Total is inclusive of VAT
+                      Total is exclusive of VAT
                     </TextDefault>
                     {/* <View style={styles().buttontLeft}>
                       <View style={styles(currentTheme).buttonLeftCircle}>
