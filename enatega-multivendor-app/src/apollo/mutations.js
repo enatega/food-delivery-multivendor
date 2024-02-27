@@ -80,6 +80,7 @@ export const placeOrder = `
       taxationAmount
       createdAt
       completionTime
+      preparationTime
       deliveryCharges
       acceptedAt
       pickedAt
@@ -245,6 +246,7 @@ export const reviewOrder = `mutation ReviewOrder(
       taxationAmount
       createdAt
       completionTime
+      preparationTime
       orderDate
       expectedTime
       isPickedUp

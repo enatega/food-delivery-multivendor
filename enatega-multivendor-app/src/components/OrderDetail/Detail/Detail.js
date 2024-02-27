@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 import { ChatButton } from './ChatButton'
+import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 
 export default function Detail({
   theme,
@@ -21,12 +22,13 @@ export default function Detail({
   total,
   navigation,
   id,
-  rider
+  rider,
+  orderStatus
 }) {
   const { t } = useTranslation()
   return (
     <View style={styles.container(theme)}>
-      {rider && (
+      {(rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED) && (
         <ChatButton
           onPress={() => navigation.navigate('ChatWithRider', { id })}
           title={t('chatWithRider')}
@@ -60,39 +62,6 @@ export default function Detail({
             image={item.image}
           />
         ))}
-        {/* <View>
-          <PriceRow
-            theme={theme}
-            title={t('subTotal')}
-            currency={currencySymbol}
-            price={subTotal.toFixed(2)}
-          />
-          <PriceRow
-            theme={theme}
-            title={t('tip')}
-            currency={currencySymbol}
-            price={tip.toFixed(2)}
-          />
-          <PriceRow
-            theme={theme}
-            title={t('taxFee')}
-            currency={currencySymbol}
-            price={tax.toFixed(2)}
-          />
-          <PriceRow
-            theme={theme}
-            title={t('delvieryCharges')}
-            currency={currencySymbol}
-            price={deliveryCharges.toFixed(2)}
-          />
-          <View style={{ marginVertical: 20 }} />
-          <PriceRow
-            theme={theme}
-            title={t('total')}
-            currency={currencySymbol}
-            price={total.toFixed(2)}
-          />
-        </View> */}
       </View>
     </View>
   )

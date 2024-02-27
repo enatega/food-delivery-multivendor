@@ -4,6 +4,7 @@ import { scale } from '../../../utils/scaling'
 import { useSubscription } from '@apollo/client'
 import { subscriptionOrder } from '../../../apollo/subscriptions'
 import gql from 'graphql-tag'
+import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 
 export const orderStatuses = [
   {
@@ -35,6 +36,11 @@ export const orderStatuses = [
     key: 'COMPLETED',
     status: 6,
     statusText: 'completedOrder'
+  },
+  {
+    key: 'CANCELLED',
+    status: 6,
+    statusText: 'cancelledOrder'
   }
 ]
 
@@ -45,7 +51,8 @@ export const checkStatus = status => {
   return obj[0]
 }
 
-export const ProgressBar = ({ navigation, configuration, currentTheme, item }) => {
+export const ProgressBar = ({ currentTheme, item }) => {
+  if (item.orderStatus === ORDER_STATUS_ENUM.CANCELLED) return null
   useSubscription(
     gql`
         ${subscriptionOrder}

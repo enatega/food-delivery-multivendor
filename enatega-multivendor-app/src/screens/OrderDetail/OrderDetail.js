@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, ScrollView, Dimensions, StatusBar, Platform } from 'react-native'
+import { TouchableOpacity, View, ScrollView, Dimensions } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
@@ -6,14 +6,12 @@ import { alignment } from '../../utils/alignment'
 import styles from './styles'
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import analytics from '../../utils/analytics'
-import Status from '../../components/OrderDetail/Status/Status'
 import Detail from '../../components/OrderDetail/Detail/Detail'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import CustomerMarker from '../../assets/SVG/customer-marker'
@@ -24,7 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../context/Location'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
-import { ProgressBar } from '../../components/Main/ActiveOrders/ProgressBar'
+import { ProgressBar, checkStatus } from '../../components/Main/ActiveOrders/ProgressBar'
 import { useNavigation } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
@@ -33,8 +31,10 @@ import Button from '../../components/Button/Button'
 import { gql, useMutation } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import { calulateRemainingTime } from '../../utils/customFunctions'
+import PlaceOrder from '../../assets/SVG/place-order'
+import FoodPicked from '../../assets/SVG/food-picked'
 const { height: HEIGHT } = Dimensions.get('screen')
-const IMAGE_HEIGHT = Math.floor(HEIGHT / 2)
 
 const CANCEL_ORDER = gql`${cancelOrderMutation}`
 
@@ -81,7 +81,7 @@ function OrderDetail(props) {
 
   if (loadingOrders || !order) return <Spinner />
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
-
+  const remainingTime = calulateRemainingTime(order)
   const {
     _id,
     restaurant,
@@ -100,20 +100,9 @@ function OrderDetail(props) {
         contentContainerStyle={{ flexGrow: 1, backgroundColor: currentTheme.white, paddingBottom: scale(100) }}
         showsVerticalScrollIndicator={false}
         overScrollMode="never">
-        <View style={{ justifyContent: 'center', alignItems: 'center', ...alignment.Pmedium }}>
-          <OrderPreparing/>
-          <View style={{ ...alignment.MTxSmall, alignItems: 'center', justifyContent: 'space-between' }}>
-            <TextDefault style={{ ...alignment.MTxSmall }} textColor={currentTheme.gray500} H5>Estimated delivery time</TextDefault>
-            <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>15-25 mins</TextDefault>
-            <ProgressBar configuration={configuration}
-              currentTheme={currentTheme}
-              item={order}
-              navigation={navigation}/>
-            <TextDefault H5 style={{ ...alignment.Mmedium, textAlign: 'center' }} textColor={currentTheme.gray600} bold>Preparing your food. Rider will pick it up once ready</TextDefault>
-          </View>
-        </View>
-        {/* <MapView
-          style={{ height: HEIGHT * 0.75 }}
+        {(order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED) &&
+        <MapView
+          style={{ flex: 1, height: HEIGHT * 0.6 }}
           showsUserLocation={false}
           initialRegion={{
             latitude: +deliveryAddress.location.coordinates[1],
@@ -141,17 +130,22 @@ function OrderDetail(props) {
             <CustomerMarker />
           </Marker>
           {order.rider && <TrackingRider id={order.rider._id} />}
-        </MapView> */}
-        {/* <Status
-          orderStatus={order.orderStatus}
-          createdAt={order.createdAt}
-          acceptedAt={order.acceptedAt}
-          pickedAt={order.pickedAt}
-          deliveredAt={order.deliveredAt}
-          cancelledAt={order.cancelledAt}
-          assignedAt={order.assignedAt}
-          theme={currentTheme}
-        /> */}
+        </MapView>}
+        <View style={{ justifyContent: 'center', alignItems: 'center', ...alignment.Pmedium }}>
+          <OrderStatusImage status={order.orderStatus}/>
+          {order.orderStatus !== ORDER_STATUS_ENUM.DELIVERED &&
+          <View style={{ ...alignment.MTxSmall, alignItems: 'center', justifyContent: 'space-between' }}>
+            {(![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.CANCELLED].includes(order.orderStatus) && <><TextDefault style={{ ...alignment.MTxSmall }} textColor={currentTheme.gray500} H5>Estimated delivery time</TextDefault>
+              <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>{remainingTime}-{remainingTime + 5} mins</TextDefault>
+              <ProgressBar configuration={configuration}
+                currentTheme={currentTheme}
+                item={order}
+                navigation={navigation}/>
+            </>)}
+            <TextDefault H5 style={{ ...alignment.Mmedium, textAlign: 'center' }} textColor={currentTheme.gray600} bold>  {t(checkStatus(order.orderStatus).statusText)}</TextDefault>
+          </View>}
+        </View>
+
         {order.orderStatus === 'DELIVERED' && !order.review && (
           <View style={styles().review}>
             <TouchableOpacity
@@ -194,6 +188,7 @@ function OrderDetail(props) {
           theme={currentTheme}
           id={_id}
           rider={order.rider}
+          orderStatus={order.orderStatus}
         />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
@@ -221,6 +216,18 @@ function OrderDetail(props) {
         orderStatus={order.orderStatus}/>
     </View>
   )
+}
+
+export const OrderStatusImage = ({ status }) => {
+  switch (status) {
+    case ORDER_STATUS_ENUM.PENDING: return <OrderPreparing/>
+    case ORDER_STATUS_ENUM.ACCEPTED: return <OrderPreparing/>
+    case ORDER_STATUS_ENUM.ASSIGNED: return <FoodPicked/>
+    case ORDER_STATUS_ENUM.CANCELLED: return null
+    case ORDER_STATUS_ENUM.COMPLETED: return <PlaceOrder/>
+    case ORDER_STATUS_ENUM.DELIVERED: return <PlaceOrder/>
+    default: return null
+  }
 }
 
 export default OrderDetail

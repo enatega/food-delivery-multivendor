@@ -13,6 +13,8 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { Modalize } from 'react-native-modalize'
 import { ProgressBar, checkStatus } from './ProgressBar'
 import styles from './styles'
+import { ORDER_STATUS_ENUM } from '../../../utils/enums'
+import { calulateRemainingTime } from '../../../utils/customFunctions'
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height
 const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
@@ -44,8 +46,10 @@ const ActiveOrders = () => {
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   if (!displayOrders.length) return null
   const order = displayOrders[0]
-  const remainingTime = Math.floor((order.completionTime - Date.now()) / 1000 / 60)
-  console.log('remainingTime', remainingTime, order.completionTime)
+  const expectedTime = [ORDER_STATUS_ENUM.ACCEPTED, ORDER_STATUS_ENUM.ASSIGNED].includes(order.orderStatus) ? order.preparationTime : order.completionTime
+
+  const remainingTime = calulateRemainingTime(order)
+  console.log('remainingTime', expectedTime, remainingTime, order.completionTime)
 
   return (
     <Modalize alwaysOpen={MODAL_HEIGHT} withHandle={false} modalHeight={MODAL_HEIGHT} modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}>
@@ -57,7 +61,7 @@ const ActiveOrders = () => {
           </TouchableOpacity>
         </View>
         <View style={{ marginTop: scale(10) }}>
-          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>15-25 mins</TextDefault>
+          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>{remainingTime}-{remainingTime + 5} mins</TextDefault>
         </View>
         <View>
           <ProgressBar
