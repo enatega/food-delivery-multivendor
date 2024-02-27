@@ -466,6 +466,8 @@ function Main(props) {
                   <Search setSearch={setSearch} search={search} /> 
                   <MapSection location={location} restaurants={restaurants} />
                 </CollapsibleSubHeaderAnimator> */}
+                 
+
               </View>
             </View>
           </View>

@@ -27,6 +27,7 @@ popularItems: {
     paddingBottom: scale(9),
     borderColor:'#E5E7EB',
     borderWidth:1,
+    backgroundColor:'#F3F4F6'
   },
   popularMenuPrice: {
     flexDirection: 'row',

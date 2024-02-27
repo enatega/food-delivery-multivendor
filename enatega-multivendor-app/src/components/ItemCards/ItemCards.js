@@ -41,10 +41,7 @@ export const ItemCard=()=>(
         </View>
       </View>
       </View>
-    <LinearGradient
-      colors={['#F3F4F6', 'rgba(243, 244, 246, 0)']} // Gradient colors
-      start={[0, 0]} // Gradient start point (optional)
-      end={[0, 1]} // Gradient end point (optional)
+    <View
       style={styles().card}>
       <Text
         style={{
@@ -78,13 +75,10 @@ export const ItemCard=()=>(
           </Text>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   </View>
   <View style={styles().row}>
-  <LinearGradient
-      colors={['#F3F4F6', 'rgba(243, 244, 246, 0)']} // Gradient colors
-      start={[0, 0]} // Gradient start point (optional)
-      end={[0, 1]} // Gradient end point (optional)
+  <View
       style={styles().card}>
       <Text
         style={{
@@ -96,7 +90,7 @@ export const ItemCard=()=>(
         Cheesy Burger
       </Text>
       <View style={{ alignItems: 'center' }}>
-        <Image
+      <Image
           source={{
             uri:
               'https://enatega.com/wp-content/uploads/2024/02/burger-removebg-preview-1.png'
@@ -118,11 +112,8 @@ export const ItemCard=()=>(
           </Text>
         </View>
       </View>
-    </LinearGradient>
-    <LinearGradient
-      colors={['#F3F4F6', 'rgba(243, 244, 246, 0)']} // Gradient colors
-      start={[0, 0]} // Gradient start point (optional)
-      end={[0, 1]} // Gradient end point (optional)
+      </View>
+      <View
       style={styles().card}>
       <Text
         style={{
@@ -134,7 +125,7 @@ export const ItemCard=()=>(
         Cheesy Burger
       </Text>
       <View style={{ alignItems: 'center' }}>
-        <Image
+      <Image
           source={{
             uri:
               'https://enatega.com/wp-content/uploads/2024/02/burger-removebg-preview-1.png'
@@ -156,7 +147,7 @@ export const ItemCard=()=>(
           </Text>
         </View>
       </View>
-    </LinearGradient>
+      </View>
   </View>
 </View>
 )

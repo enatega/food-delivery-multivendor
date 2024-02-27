@@ -12,13 +12,12 @@ const styles = (props = null) =>
       ...alignment.PTsmall
     },
 
-
     mB10: {
       ...alignment.MBsmall
     },
     map: {
       width: '100%',
-      height: '100%',
+      height: '100%'
     },
     width100: {
       width: '100%'
@@ -37,9 +36,6 @@ const styles = (props = null) =>
     dealContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
-      borderRadius: scale(10),
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
     },
     totalOrder: {
       color: props != null ? props.fontNewColor : '#6B7280',
@@ -52,6 +48,17 @@ const styles = (props = null) =>
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },
+    tipSec:{
+      ...alignment.MLmedium,
+      ...alignment.MRmedium,
+      marginTop:scale(22),
+    },
+    tipRow:{
+      flexDirection:'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom:scale(8)
+    },
     itemContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.backgroundColor : 'transparent'
@@ -62,8 +69,8 @@ const styles = (props = null) =>
       borderRadius: scale(20),
       borderBottomColor:
         props !== null ? props.lightHorizontalLine : 'transparent',
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
+        ...alignment.PLmedium,
+        ...alignment.PRmedium,
     },
     modal: {
       backgroundColor: props != null ? props.cartContainer : '#FFF',
@@ -92,42 +99,52 @@ const styles = (props = null) =>
       textAlign: 'right'
     },
     horizontalLine: {
-      borderBottomColor: props !== null ? props.black : 'black',
-      borderBottomWidth: StyleSheet.hairlineWidth
+      borderWidth: 0.5,
+      borderColor: props !== null ? props.iconBackground : 'white',
     },
-    suggestedItems:{
-      paddingBottom:scale(30),
-      ...alignment.PLlarge,
+    deliveryTime: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(1),
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+     marginLeft:scale(2)
     },
-    suggestItemDesciption:{
-      ...alignment.PRlarge,
+    clockIcon:{
+      paddingRight: scale(5),
     },
-    suggestItemImg:{
-      width: '100%', 
+    suggestedItems: {
+      paddingBottom: scale(30),
+      ...alignment.PLlarge
+    },
+    suggestItemDesciption: {
+      ...alignment.PRlarge
+    },
+    suggestItemImg: {
+      width: '100%',
       // aspectRatio: 18/8,
-      height:scale(70) 
+      height: scale(70)
     },
-    suggestItemContainer:{
-      borderWidth:1,
-      borderColor:'#D1D5DB',
-      borderRadius:12,
-      padding:scale(8),
+    suggestItemContainer: {
+      borderWidth: 1,
+      borderColor: '#D1D5DB',
+      borderRadius: 12,
+      padding: scale(8),
       width: scale(120),
-      marginTop:scale(14),
-      
+      marginTop: scale(14)
     },
-    suggestItemImgContainer:{
+    suggestItemImgContainer: {
       backgroundColor: '#F3F4F6',
-      borderWidth:1,
-      borderColor:'#E5E7EB',
-      borderRadius:8,
-      padding:scale(4),
+      borderWidth: 1,
+      borderColor: '#E5E7EB',
+      borderRadius: 8,
+      padding: scale(4)
     },
-    suggestItemName:{
-      marginVertical:scale(5)
+    suggestItemName: {
+      marginVertical: scale(5)
     },
-    suggestItemPrice:{
-      marginTop:scale(5)
+    suggestItemPrice: {
+      marginTop: scale(5)
     },
     addToCart: {
       width: scale(25),
@@ -137,19 +154,16 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center'
     },
-    totalBillContainer:{
+    totalBillContainer: {
       width: '100%',
       height: '10%',
       // backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
       ...alignment.PLlarge,
-      ...alignment.PRlarge,
-      
+      ...alignment.PRlarge
     },
-    buttonContainer: {     
-     
+    buttonContainer: {
       justifyContent: 'center',
-      alignItems: 'center', 
-    
+      alignItems: 'center'
     },
     button: {
       backgroundColor: '#111827',
@@ -157,7 +171,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: scale(140),
       height: scale(40),
-      borderRadius:40
+      borderRadius: 40
     },
 
     // totalBill:{
@@ -238,42 +252,42 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: '20%'
     },
-    tipRow: {
-      // justifyContent: 'space-between',
-      alignItems: 'center',
-      ...alignment.MBxSmall
-    },
+   
     buttonInline: {
       width: '100%',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      justifyContent:'space-between'
+      // gap:scale(8),
+
     },
     labelButton: {
-      marginRight: 10,
-      borderRadius: scale(10),
-      width: '22%',
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props !== null ? props.horizontalLine : 'transparent',
+      borderRadius: scale(40),
+      width: '23%',
+      borderWidth: 1,
+      borderColor: props !== null ? props.iconBackground : 'transparent',
+      backgroundColor: props !== null ? props.newBorderColor : 'transparent',
       justifyContent: 'center',
-      height: scale(30)
+      height: scale(37)
     },
     activeLabel: {
-      marginRight: 10,
-      borderRadius: scale(10),
+     
+      borderRadius: scale(40),
       backgroundColor: props !== null ? props.main : 'transparent',
-      width: '22%',
-      //borderWidth: 2,
+      width: '23%',
       justifyContent: 'center',
-      color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',
-      height: scale(30)
+      height: scale(37)
     },
     headerContainer: {
-      backgroundColor: props !== null ? props.themeBackground : '#6FCF97',
-      borderBottomRightRadius: 20,
-      borderBottomLeftRadius: 20,
-      ...alignment.PLsmall,
-      ...alignment.PRlarge,
-      ...alignment.PBsmall
+      backgroundColor: props !== null ? props.themeBackground : '#6FCF97', 
+    },
+    location: {
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+    },
+    paymentSec:{
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
     },
 
     imageContainer: {
