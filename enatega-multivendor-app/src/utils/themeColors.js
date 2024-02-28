@@ -12,7 +12,7 @@ export const theme = {
     themeBackground: '#fff',
     menuBar: '#FFF',
     iconColor: '#333333',
-    iconColorDark:'#0F172A',
+    iconColorDark: '#0F172A',
     iconColorPink: '#6FCF97',
     itemCardColor: '#FFF',
     headerColor: '#6FCF97',
@@ -71,9 +71,15 @@ export const theme = {
     orange: '#FFA921',
     newBorderColor: '#F3F4F6',
     verticalLine: '#D1D5DB',
+    gray200: '#E5E7EB',
     gray500: '#6B7280',
     gray100: '#F3F4F6',
-    gray900: '#111827'
+    gray900: '#111827',
+    gray600: '#4B5563',
+    gray700: '#374151',
+    primary: '#90E36D',
+    borderLight: '#D9D9D9',
+    red600: '#DC2626'
   },
   Dark: {
     black: '#000',
@@ -136,8 +142,14 @@ export const theme = {
     orange: '#FFA921',
     newBorderColor: '#F3F4F6',
     verticalLine: '#fff',
+    gray200: '#E5E7EB',
     gray500: '#6B7280',
     gray100: '#F3F4F6',
-    gray900: '#111827'
+    gray900: '#111827',
+    gray600: '#4B5563',
+    gray700: '#374151',
+    primary: '#90E36D',
+    borderLight: '#D9D9D9',
+    red600: '#DC2626'
   }
 }

@@ -220,12 +220,13 @@ export const en = {
   PICKED: 'PICKED',
   DELIVERED: 'DELIVERED',
   COMPLETED: 'COMPLETED',
-  pendingOrder: 'Your order is still pending.',
-  acceptedOrder: 'Restaurant is preparing Food.',
-  assignedOrder: 'Assigned a rider.',
-  pickedOrder: 'Rider is on the way.',
+  pendingOrder: 'Your order is pending confirmation from restaurant.',
+  acceptedOrder: 'Preparing your food. Rider will pick it up once its ready.',
+  assignedOrder: 'Preparing your food. Rider will pick it up once its ready.',
+  pickedOrder: 'Your rider has picked up the order. Get ready for some delicious food!',
   deliveredOrder: 'Order is delivered.',
   completedOrder: 'Order is completed.',
+  cancelledOrder: 'Your order is cancelled. If you have any questions, please reach out to our support team.',
   PENDINGStatusMessage: 'Waiting for restaurant to accept',
   ACCEPTEDStatusMessage: 'Food is being prepared',
   ASSIGNEDStatusMessage: 'Assigned a rider',
@@ -374,5 +375,8 @@ export const en = {
   noRestaurants: 'No Restaurants',
   clearCartText:
     'By leaving this restaurant page, the items you`ve added to cart will be cleared',
-  okText: 'OK'
+  okText: 'OK',
+  yourOrder: 'Your Order',
+  itemsAndQuantity: 'ITEMS AND QUANTITY',
+  price: 'PRICE'
 }
