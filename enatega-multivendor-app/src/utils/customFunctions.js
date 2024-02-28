@@ -1,4 +1,4 @@
-import { ORDER_STATUS_ENUM } from "./enums"
+import { ORDER_STATUS_ENUM } from './enums'
 
 function calculateDistance(latS, lonS, latD, lonD) {
   var R = 6371 // km
@@ -28,4 +28,3 @@ const calulateRemainingTime = (order) => {
 }
 
 export { calculateDistance, calulateRemainingTime }
-

@@ -46,10 +46,7 @@ const ActiveOrders = () => {
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   if (!displayOrders.length) return null
   const order = displayOrders[0]
-  const expectedTime = [ORDER_STATUS_ENUM.ACCEPTED, ORDER_STATUS_ENUM.ASSIGNED].includes(order.orderStatus) ? order.preparationTime : order.completionTime
-
   const remainingTime = calulateRemainingTime(order)
-  console.log('remainingTime', expectedTime, remainingTime, order.completionTime)
 
   return (
     <Modalize alwaysOpen={MODAL_HEIGHT} withHandle={false} modalHeight={MODAL_HEIGHT} modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}>
