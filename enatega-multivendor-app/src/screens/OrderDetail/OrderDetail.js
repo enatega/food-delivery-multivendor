@@ -53,7 +53,7 @@ function OrderDetail(props) {
   const cancelModalToggle = () => {
     setCancelModalVisible(!cancelModalVisible)
   }
-  const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, { onError })
+  const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, { onError, variables: { abortOrderId: id } })
   function onError(error) {
     FlashMessage({
       message: error.message
