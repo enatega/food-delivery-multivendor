@@ -30,21 +30,19 @@ function Main() {
 
   const client = setupAplloClient();
   return (
-    <ApolloProvider client={client}>
-      <ConfigurationProvider>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <UserProvider>
-              <LocationProvider>
+    <>
+    <ApolloProvider client={client} />
+      <ConfigurationProvider />
+        <StyledEngineProvider injectFirst />
+          <ThemeProvider theme={theme} />
+            <UserProvider />
+              <LocationProvider />
                 <App />
-              </LocationProvider>
-            </UserProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </ConfigurationProvider>
-    </ApolloProvider>
+    </>
+             
   );
 }
+
 ReactDOM.render(<Main />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
