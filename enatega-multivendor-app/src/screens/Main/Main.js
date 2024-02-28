@@ -390,10 +390,7 @@ function Main(props) {
                       </TextDefault>
                     </View>
                     <Image
-                      source={{
-                        uri:
-                          'https://enatega.com/wp-content/uploads/2024/02/pngimg-1.png'
-                      }}
+                      source={require('../../assets/images/ItemsList/menu.png')}
                       style={styles().popularMenuImg}
                       resizeMode="contain"
                     />
@@ -413,10 +410,7 @@ function Main(props) {
                       Essentials delivered fast
                     </TextDefault>
                     <Image
-                      source={{
-                        uri:
-                          'https://enatega.com/wp-content/uploads/2024/02/pngwing-4.png'
-                      }}
+                      source={require('../../assets/images/ItemsList/grocery.png')}
                       style={styles().popularMenuImg}
                       resizeMode="contain"
                     />
@@ -425,7 +419,7 @@ function Main(props) {
                   <View>
                     <OrderAgain />
                   </View>
-                  <View style={styles().topPicksSection}>
+                  <View >
                     <TopPicks />
                   </View>
                 </ScrollView>

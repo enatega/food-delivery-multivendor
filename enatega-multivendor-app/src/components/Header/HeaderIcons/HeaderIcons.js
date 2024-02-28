@@ -39,9 +39,12 @@ function BackButton(props) {
     )
   } else if (props.icon === 'menu') {
     return (
-        
-        <SimpleLineIcons name="menu"  size={20} color={props.fontFourthColor} style={styles().leftIconPadding}/>
-     
+      <SimpleLineIcons
+        name="menu"
+        size={20}
+        color={props.fontFourthColor}
+        style={styles().leftIconPadding}
+      />
     )
   } else if (props.icon === 'dots') {
     return (
@@ -158,19 +161,18 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={styles().rightContainer}>
-        <SimpleLineIcons name="handbag" size={24} color={currentTheme.fontFourthColor} />
-        
+        <SimpleLineIcons
+          name="handbag"
+          size={24}
+          color={currentTheme.fontFourthColor}
+        />
         <View
           style={
             styles(route.name === 'Main' ? 'black' : currentTheme.white)
               .absoluteContainer
           }>
           <TextDefault
-            textColor={
-              route.name === 'Main'
-                ? currentTheme.fontWhite
-                : currentTheme.black
-            }
+            textColor={currentTheme.white}
             style={{ fontSize: scale(12) }}
             center
             bolder>

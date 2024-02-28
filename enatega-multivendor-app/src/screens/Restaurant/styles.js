@@ -26,7 +26,7 @@ const styles = (props = null) =>
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
-      ...alignment.PLlarge,
+      ...alignment.PLmedium,
       ...alignment.PTlarge,
       fontSize: scale(18),
       fontWeight: '600'
@@ -45,10 +45,8 @@ const styles = (props = null) =>
     dealSection: {
       // position: 'relative',
       backgroundColor: props != null ? props.themeBackground : 'white',
-      ...alignment.PRsmall,
-      ...alignment.PLsmall,
-
-      paddingVertical: scale(10)
+      paddingVertical: scale(10),
+      ...alignment.PRmedium,
     },
     dealDescription: {
       backgroundColor: props != null ? props.themeBackground : 'white',

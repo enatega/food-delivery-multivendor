@@ -11,8 +11,8 @@ const styles = (props = null) =>
     },
     mainContainer: {
       backgroundColor: '#fff',
-      ...alignment.PRsmall,
-      ...alignment.PLsmall,
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
      height: height * 0.5,
     },
 

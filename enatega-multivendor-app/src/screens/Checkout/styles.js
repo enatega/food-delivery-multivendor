@@ -33,31 +33,32 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
       //...alignment.PTsmall
     },
-    dealContainer: {
+    paymentSecInner: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
+      ...alignment.MTsmall
     },
     totalOrder: {
       color: props != null ? props.fontNewColor : '#6B7280',
       marginBottom: scale(12)
     },
     termsContainer: {
-      width: '100%',
-      backgroundColor: props !== null ? props.backgroundColor : 'transparent',
-      borderRadius: scale(5),
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
+      ...alignment.PLmedium,
+      ...alignment.PRmedium
     },
-    tipSec:{
+    tipSec: {
       ...alignment.MLmedium,
       ...alignment.MRmedium,
-      marginTop:scale(22),
+      marginVertical: scale(22)
     },
-    tipRow:{
-      flexDirection:'row',
+    tipRow: {
+      flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom:scale(8)
+      marginBottom: scale(8)
     },
     itemContainer: {
       width: '100%',
@@ -69,8 +70,9 @@ const styles = (props = null) =>
       borderRadius: scale(20),
       borderBottomColor:
         props !== null ? props.lightHorizontalLine : 'transparent',
-        ...alignment.PLmedium,
-        ...alignment.PRmedium,
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+      marginVertical: scale(13)
     },
     modal: {
       backgroundColor: props != null ? props.cartContainer : '#FFF',
@@ -100,7 +102,12 @@ const styles = (props = null) =>
     },
     horizontalLine: {
       borderWidth: 0.5,
+      borderColor: props !== null ? props.iconBackground : 'white'
+    },
+    horizontalLine2: {
+      borderWidth: 0.5,
       borderColor: props !== null ? props.iconBackground : 'white',
+      marginVertical:scale(11)
     },
     deliveryTime: {
       flexDirection: 'row',
@@ -108,10 +115,10 @@ const styles = (props = null) =>
       gap: scale(1),
       ...alignment.PLmedium,
       ...alignment.PRmedium,
-     marginLeft:scale(2)
+      marginLeft: scale(2)
     },
-    clockIcon:{
-      paddingRight: scale(5),
+    clockIcon: {
+      paddingRight: scale(5)
     },
     suggestedItems: {
       paddingBottom: scale(30),
@@ -154,23 +161,28 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center'
     },
-    totalBillContainer: {
-      width: '100%',
-      height: '10%',
-      // backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
-      ...alignment.PLlarge,
-      ...alignment.PRlarge
-    },
+
     buttonContainer: {
-      justifyContent: 'center',
-      alignItems: 'center'
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+      ...alignment.PBlarge
     },
-    button: {
-      backgroundColor: '#111827',
+    changeBtn: {
+      backgroundColor: props !== null ? props.main : 'gray',
+
       justifyContent: 'center',
       alignItems: 'center',
-      width: scale(140),
-      height: scale(40),
+      width: scale(70),
+      height: scale(30),
+      borderRadius: 40
+    },
+    button: {
+      backgroundColor: props !== null ? props.main : 'gray',
+
+      justifyContent: 'center',
+      alignItems: 'center',
+
+      height: scale(50),
       borderRadius: 40
     },
 
@@ -252,13 +264,12 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: '20%'
     },
-   
+
     buttonInline: {
       width: '100%',
       flexDirection: 'row',
-      justifyContent:'space-between'
+      justifyContent: 'space-between'
       // gap:scale(8),
-
     },
     labelButton: {
       borderRadius: scale(40),
@@ -270,24 +281,33 @@ const styles = (props = null) =>
       height: scale(37)
     },
     activeLabel: {
-     
       borderRadius: scale(40),
       backgroundColor: props !== null ? props.main : 'transparent',
       width: '23%',
       justifyContent: 'center',
-      borderColor: props !== null ? props.tagColor : 'transparent',
+      borderColor: props !== null ? props.main : 'transparent',
       height: scale(37)
     },
+    currencyLogo: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: props !== null ? props.fontFourthColor : 'black',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     headerContainer: {
-      backgroundColor: props !== null ? props.themeBackground : '#6FCF97', 
+      backgroundColor: props !== null ? props.themeBackground : '#6FCF97'
     },
     location: {
       ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      ...alignment.PRmedium
     },
-    paymentSec:{
+    paymentSec: {
       ...alignment.PLmedium,
       ...alignment.PRmedium,
+      // paddingVertical:scale(6)
     },
 
     imageContainer: {
@@ -312,6 +332,12 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center'
+    },
+    feeSec:{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      
     },
     changeAddressContainer: {
       display: 'flex',

@@ -734,10 +734,7 @@ function Cart(props) {
       <View style={styles().suggestItemContainer}>
         <View style={styles().suggestItemImgContainer}>
           <Image
-            source={{
-              uri:
-                'https://enatega.com/wp-content/uploads/2024/02/burger-removebg-preview-1.png'
-            }}
+            source={require('../../assets/images/burger-menu.png')}
             style={styles().suggestItemImg}
             resizeMode="contain"
           />
@@ -1576,8 +1573,7 @@ function Cart(props) {
                         style={{ width: '100%' }}
                         H5
                         bolder
-                        center
-                        >
+                        center>
                         {t('loginOrCreateAccount')}
                       </TextDefault>
                     </TouchableOpacity>

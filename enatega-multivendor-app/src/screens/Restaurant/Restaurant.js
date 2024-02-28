@@ -527,7 +527,7 @@ function Restaurant(props) {
                   <Text
                     style={{
                       color: '#4B5563',
-                      ...alignment.PLlarge,
+                      ...alignment.PLmedium,
                       fontSize: scale(12),
                       fontWeight: '400',
                       marginTop: scale(3)

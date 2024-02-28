@@ -2,7 +2,7 @@ export const theme = {
   Pink: {
     black: '#000',
     white: '#FFF',
-    radioOuterColor: '#94A3B8',
+    radioOuterColor: '#fff',
     mustard: '#d8d8d874',
     borderColor: '#efefef',
     iconBackground: '#E5E7EB',

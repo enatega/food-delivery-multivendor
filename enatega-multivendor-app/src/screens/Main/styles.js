@@ -25,7 +25,7 @@ const styles = (props = null) =>
     },
     popularMenuImg:{
       width: '100%', 
-      aspectRatio: 18/8,
+      aspectRatio: 15/8,
     },
     
     screenBackground: {
@@ -37,15 +37,6 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
 
-    ML20: {
-      ...alignment.MLlarge
-    },
-    PB10: {
-      ...alignment.MBsmall
-    },
-    mL5p: {
-      ...alignment.MLsmall
-    },
     addressbtn: {
       backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
       marginLeft: scale(10),
@@ -122,9 +113,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center'
     },
-    topPicksSection:{
-      ...alignment.PRlarge,
-    }
+
 
   })
 export default styles

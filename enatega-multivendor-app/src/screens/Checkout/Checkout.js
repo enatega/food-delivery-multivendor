@@ -22,7 +22,7 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AntDesign, EvilIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
@@ -797,7 +797,9 @@ function Checkout(props) {
                           ]}
                           onPress={() => {
                             props.navigation.setParams({ tipAmount: null })
-                            setSelectedTip(label)
+                            setSelectedTip(prevState =>
+                              prevState === label ? null : label
+                            )
                           }}>
                           <TextDefault
                             textColor={currentTheme.fontFourthColor}
@@ -828,7 +830,8 @@ function Checkout(props) {
                       </TouchableOpacity>
                     </View>
                   )}
-                  <View
+
+                  {/* <View
                     numberOfLines={1}
                     style={[styles().floatText, styles().tipContainer]}>
                     <TouchableOpacity
@@ -852,7 +855,7 @@ function Checkout(props) {
                       {configuration.currencySymbol}{' '}
                       {parseFloat(calculateTip()).toFixed(2)}
                     </TextDefault>
-                  </View>
+                  </View> */}
                 </View>
                 {/* <View
                   style={[
@@ -895,50 +898,40 @@ function Checkout(props) {
                   </View>
                 </View> */}
 
-                <View style={styles().paymentSec}>
-                  <TextDefault
-                    numberOfLines={1}
-                    H5
-                    bolder
-                    textColor={currentTheme.fontNewColor}>
-                    Choose Payment Method
-                  </TextDefault>
-                  {isLoggedIn && profile && (
-                    <>
-                      <View
-                        style={[
-                          styles(currentTheme).dealContainer,
-                          styles().pT10,
-                          styles().mB10
-                        ]}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            props.navigation.navigate('Payment', {
-                              paymentMethod,
-                              coupon
-                            })
+                {isLoggedIn && profile && (
+                  <>
+                    <View style={styles().paymentSec}>
+                      <TextDefault
+                        numberOfLines={1}
+                        H5
+                        bolder
+                        textColor={currentTheme.fontNewColor}>
+                        Choose Payment Method
+                      </TextDefault>
+                      <View style={[styles(currentTheme).paymentSecInner]}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: scale(18)
                           }}>
-                          <View>
-                          <Ionicons name="logo-usd" size={24} color="black" />
+                          <View style={styles().currencyLogo}>
+                            <Ionicons
+                              name="logo-usd"
+                              size={15}
+                              color={currentTheme.fontFourthColor}
+                            />
                           </View>
                           <TextDefault
-                            textColor={currentTheme.darkBgFont}
+                            textColor={currentTheme.fontFourthColor}
                             medium
                             bolder>
                             {paymentMethod.label}
                           </TextDefault>
-                          <TextDefault
-                            textColor={currentTheme.fontMainColor}
-                            large
-                            bold
-                            right>
-                            {configuration.currencySymbol} {calculateTotal()}
-                          </TextDefault>
-                        </TouchableOpacity>
-                        <View style={[styles().floatView, styles().mB10]}>
+                        </View>
+                        <View style={styles(currentTheme).changeBtn}>
                           <TouchableOpacity
                             activeOpacity={0.7}
-                            style={[styles().width30]}
                             onPress={() => {
                               props.navigation.navigate('Payment', {
                                 paymentMethod,
@@ -947,98 +940,99 @@ function Checkout(props) {
                             }}>
                             <TextDefault
                               small
-                              bolder
+                              bold
                               textColor={currentTheme.darkBgFont}
-                              right>
+                              center>
                               {t('change')}
                             </TextDefault>
                           </TouchableOpacity>
                         </View>
                       </View>
-                    </>
-                  )}
-                </View>
-                <View
-                  style={[
-                    styles(currentTheme).priceContainer,
-                    styles().pT10,
-                    styles().mB10
-                  ]}>
-                  <View
-                    style={[styles().floatView, styles().pB10, styles().pT10]}>
+                    </View>
+                  </>
+                )}
+
+                <View style={[styles(currentTheme).priceContainer]}>
+                  <TextDefault
+                    numberOfLines={1}
+                    H5
+                    bolder
+                    textColor={currentTheme.fontNewColor}
+                    style={{...alignment.MBmedium}}>
+                    Payment Summary
+                  </TextDefault>
+                  <View style={styles().feeSec}>
                     <TextDefault
                       numberOfLines={1}
-                      large
+                      normal
                       bold
-                      textColor={currentTheme.darkBgFont}
-                      style={{ width: '30%' }}>
+                      textColor={currentTheme.fontFourthColor}>
                       {t('subTotal')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      large
-                      bold
-                      style={{ width: '70%' }}
-                      right>
-                      {configuration.currencySymbol} {calculatePrice(0, false)}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      {configuration.currencySymbol}
+                      {calculatePrice(0, false)}
                     </TextDefault>
                   </View>
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
+                  <View style={styles(currentTheme).horizontalLine2} />
 
                   {!isPickedUp && (
-                    <View style={[styles().floatView, styles().pB10]}>
+                    <View style={styles().feeSec}>
                       <TextDefault
                         numberOfLines={1}
-                        textColor={currentTheme.darkBgFont}
-                        large
-                        bold
-                        style={{ width: '30%' }}>
+                        textColor={currentTheme.fontFourthColor}
+                        normal
+                        bold>
                         {t('deliveryFee')}
                       </TextDefault>
                       <TextDefault
                         numberOfLines={1}
-                        textColor={currentTheme.fontMainColor}
-                        style={{ width: '70%' }}
-                        large
-                        bold
-                        right>
+                        textColor={currentTheme.fontFourthColor}
+                        normal
+                        bold>
                         {configuration.currencySymbol}{' '}
                         {deliveryCharges.toFixed(2)}
                       </TextDefault>
                     </View>
                   )}
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
+                  <View style={styles(currentTheme).horizontalLine2} />
 
-                  <View style={[styles().floatView, styles().pB10]}>
+                  <View style={styles().feeSec}>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.darkBgFont}
-                      large
-                      bold
-                      style={{ width: '30%' }}>
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
                       {t('taxFee')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{ width: '70%' }}
-                      large
-                      bold
-                      right>
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
                       {configuration.currencySymbol} {taxCalculation()}
+                    </TextDefault>
+                  </View>
+                  <View style={styles(currentTheme).horizontalLine2} />
+                  <View style={styles().feeSec}>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      Tip
+                    </TextDefault>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      {configuration.currencySymbol}{' '}
+                      {parseFloat(calculateTip()).toFixed(2)}
                     </TextDefault>
                   </View>
                   {/* {!coupon ? (
@@ -1098,37 +1092,21 @@ function Checkout(props) {
                       </View>
                     </View>
                   )} */}
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().pB5,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
 
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().pB10,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
-                  <View style={[styles().floatView, styles().pB10]}>
+                  <View style={styles(currentTheme).horizontalLine2} />
+                  <View style={styles().feeSec}>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{ width: '30%' }}
+                      textColor={currentTheme.fontFourthColor}
+                      H4
                       bolder>
                       {t('total')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{ width: '70%' }}
-                      bolder
-                      right>
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
@@ -1141,6 +1119,7 @@ function Checkout(props) {
                     styles().pT10,
                     styles().mB10
                   ]}>
+
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
                     style={alignment.MBsmall}
@@ -1158,23 +1137,21 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={styles().totalBillContainer}>
-                <View style={styles(currentTheme).buttonContainer}>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      if (validateOrder()) onPayment()
-                    }}
-                    style={styles(currentTheme).button}>
-                    <TextDefault
-                      textColor={currentTheme.white}
-                      style={styles().checkoutBtn}
-                      bold
-                      H5>
-                      {t('Place Order')}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
+              <View style={styles(currentTheme).buttonContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    if (validateOrder()) onPayment()
+                  }}
+                  style={styles(currentTheme).button}>
+                  <TextDefault
+                    textColor={currentTheme.fontFourthColor}
+                    style={styles().checkoutBtn}
+                    bold
+                    H4>
+                    {t('Place Order')}
+                  </TextDefault>
+                </TouchableOpacity>
               </View>
             )}
 
