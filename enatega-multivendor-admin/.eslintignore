@@ -2,3 +2,4 @@ src/assets/*
 public/*
 build/*
 server/*
+node_modules/*
