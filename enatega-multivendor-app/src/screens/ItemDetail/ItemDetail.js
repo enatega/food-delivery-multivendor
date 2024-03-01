@@ -115,7 +115,7 @@ function ItemDetail(props) {
         validatedAddons.push(false)
       } else if (
         selected &&
-        selected.options.length >= addon.quantityMinimum &&
+        selected?.options?.length >= addon.quantityMinimum &&
         selected.options.length <= addon.quantityMaximum
       ) {
         validatedAddons.push(false)
@@ -171,7 +171,7 @@ function ItemDetail(props) {
           cartItem._id === food._id &&
             cartItem.variation._id === selectedVariation._id
         ) {
-          if (cartItem.addons.length === addons.length) {
+          if (cartItem?.addons?.length === addons.length) {
             if (addons.length === 0) return true
             const addonsResult = addons.every(newAddon => {
               const cartAddon = cartItem.addons.find(
@@ -316,7 +316,7 @@ function ItemDetail(props) {
             <View style={styles().subContainer}>
               <HeadingComponent title={food.title} price={calculatePrice()} />
 
-              {food.variations.length > 1 && (
+              {food?.variations?.length > 1 && (
                 <View>
                   <TitleComponent
                     title={t('SelectVariation')}
