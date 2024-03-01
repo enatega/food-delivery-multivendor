@@ -58,7 +58,7 @@ function Rider(props) {
   const [usernameError, usernameErrorSetter] = useState(null)
   const [passwordError, passwordErrorSetter] = useState(null)
   const [phoneError, phoneErrorSetter] = useState(null)
-  const [userNameErrorMessage,setUserNameErrorMessage]=useState('')
+  const [userNameErrorMessage, setUserNameErrorMessage] = useState('')
   const [zoneError, zoneErrorSetter] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
   const [riderAvailable, setRiderAvailable] = useState(
@@ -95,7 +95,7 @@ function Rider(props) {
   const { data } = useQuery(GET_ZONES)
 
   const onBlur = (setter, field, state) => {
-    const validationResult=validateFuncForRider({ [field]: state }, field)
+    const validationResult = validateFuncForRider({ [field]: state }, field)
     setter(validationResult.isValid)
   }
   const onSubmitValidaiton = () => {
@@ -127,7 +127,11 @@ function Rider(props) {
     passwordErrorSetter(passwordError.isValid)
     zoneErrorSetter(zoneError.isValid)
     return (
-      nameError.isValid && usernameError.isValid && phoneError.isValid && passwordError.isValid && zoneError.isValid
+      nameError.isValid &&
+      usernameError.isValid &&
+      phoneError.isValid &&
+      passwordError.isValid &&
+      zoneError.isValid
     )
   }
   const clearFields = () => {
