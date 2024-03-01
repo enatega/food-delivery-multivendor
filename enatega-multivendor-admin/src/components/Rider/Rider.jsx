@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
-import { validateFunc } from '../../constraints/constraints'
+import { validateFuncForRider } from '../../constraints/constraints'
 import { withTranslation } from 'react-i18next'
 // core components
 import {
@@ -58,6 +58,7 @@ function Rider(props) {
   const [usernameError, usernameErrorSetter] = useState(null)
   const [passwordError, passwordErrorSetter] = useState(null)
   const [phoneError, phoneErrorSetter] = useState(null)
+  const [userNameErrorMessage,setUserNameErrorMessage]=useState('')
   const [zoneError, zoneErrorSetter] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
   const [riderAvailable, setRiderAvailable] = useState(
@@ -94,37 +95,39 @@ function Rider(props) {
   const { data } = useQuery(GET_ZONES)
 
   const onBlur = (setter, field, state) => {
-    setter(!validateFunc({ [field]: state }, field))
+    const validationResult=validateFuncForRider({ [field]: state }, field)
+    setter(validationResult.isValid)
   }
   const onSubmitValidaiton = () => {
-    const nameError = !validateFunc(
+    const nameError = validateFuncForRider(
       { name: formRef.current['input-name'].value },
       'name'
     )
-    const usernameError = !validateFunc(
+    const usernameError = validateFuncForRider(
       { username: formRef.current['input-userName'].value },
       'username'
     )
-    const passwordError = !validateFunc(
+    const passwordError = validateFuncForRider(
       { password: formRef.current['input-password'].value },
       'password'
     )
-    const phoneError = !validateFunc(
+    const phoneError = validateFuncForRider(
       { phone: formRef.current['input-phone'].value },
       'phone'
     )
-    const zoneError = !validateFunc(
+    const zoneError = validateFuncForRider(
       { zone: formRef.current['input-zone'].value },
       'zone'
     )
 
-    nameErrorSetter(nameError)
-    usernameErrorSetter(usernameError)
-    phoneErrorSetter(phoneError)
-    passwordErrorSetter(passwordError)
-    zoneErrorSetter(zoneError)
+    nameErrorSetter(nameError.isValid)
+    usernameErrorSetter(usernameError.isValid)
+    setUserNameErrorMessage(usernameError.errorMessage)
+    phoneErrorSetter(phoneError.isValid)
+    passwordErrorSetter(passwordError.isValid)
+    zoneErrorSetter(zoneError.isValid)
     return (
-      nameError && usernameError && phoneError && passwordError && zoneError
+      nameError.isValid && usernameError.isValid && phoneError.isValid && passwordError.isValid && zoneError.isValid
     )
   }
   const clearFields = () => {
@@ -233,7 +236,7 @@ function Rider(props) {
                     marginTop: '5px',
                     marginLeft: '10px'
                   }}>
-                  {t('Username cannot contain spaces')}
+                  {t(userNameErrorMessage)}
                 </Typography>
               )}
               {/* </Box> */}
