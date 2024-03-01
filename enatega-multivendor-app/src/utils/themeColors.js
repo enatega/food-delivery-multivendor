@@ -43,6 +43,7 @@ export const theme = {
     fontSecondColor: '#949393',
     fontThirdColor: '#374151',
     fontFourthColor: '#111827',
+    fontFifthColor: '#9CA3AF',
     fontNewColor: '#6B7280',
     titleComponentBackground: 'rgba(39,111,191,0.1)',
     titleComponentText: 'rgba(39,111,191,0.8)',
@@ -68,12 +69,13 @@ export const theme = {
     gray: 'grey',
     darkBgFont: '#000',
     btnText: '#000',
-    orange: '#FFA921',
+    stars: '#FFA921',
     newBorderColor: '#F3F4F6',
     verticalLine: '#D1D5DB',
     gray500: '#6B7280',
     gray100: '#F3F4F6',
-    gray900: '#111827'
+    gray900: '#111827',
+    chatColor: '#1F2937'
   },
   Dark: {
     black: '#000',
@@ -107,6 +109,7 @@ export const theme = {
     fontSecondColor: '#F9F9F9',
     fontThirdColor: '#F9F9F9',
     fontFourthColor: '#F9F9F9',
+    fontFifthColor: '#F9F9F9',
     fontNewColor: '#F9F9F9',
     fontSecondColor: '#7F7F7F',
     headerBackground: '#000',
@@ -138,6 +141,7 @@ export const theme = {
     verticalLine: '#fff',
     gray500: '#6B7280',
     gray100: '#F3F4F6',
-    gray900: '#111827'
+    gray900: '#111827',
+    chatColor: '#1F2937'
   }
 }

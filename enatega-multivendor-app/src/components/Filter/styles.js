@@ -27,9 +27,8 @@ const styles = (props = null) =>
       marginRight: scale(10)
     },
     filterButtonText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#000',
+      fontSize: 14,
+      color: props !== null ? props.fontFourthColor : '#fff',
       marginRight: scale(10)
     },
     itemContainer: {

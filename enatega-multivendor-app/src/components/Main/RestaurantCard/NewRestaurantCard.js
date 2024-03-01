@@ -95,7 +95,7 @@ function NewRestaurantCard(props) {
               {props.name}
             </TextDefault>
             <View style={styles().aboutRestaurant}>
-              <FontAwesome5 name="star" size={18} color={currentTheme.orange} />
+              <FontAwesome5 name="star" size={18} color={currentTheme.stars} />
 
               <TextDefault
                 textColor={currentTheme.fontThirdColor}
@@ -140,15 +140,10 @@ function NewRestaurantCard(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                {props.deliveryTime}
+                {props.deliveryTime + ' '}
+                {t('min')}
               </TextDefault>
-              <TextDefault
-                textColor={currentTheme.fontNewColor}
-                numberOfLines={1}
-                bold
-                Normal>
-                mins
-              </TextDefault>
+            
             </View>
             <View style={styles().deliveryTime}>
               <MaterialCommunityIcons

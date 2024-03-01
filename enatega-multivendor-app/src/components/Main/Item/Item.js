@@ -131,34 +131,39 @@ function Item(props) {
             <View style={styles().aboutRestaurant}>
               <TextDefault
                 style={{ width: '77%' }}
+                H4
                 numberOfLines={1}
-                textColor={currentTheme.fontMainColor}
+                textColor={currentTheme.fontThirdColor}
                 bolder>
                 {item.name}
               </TextDefault>
               <View style={[styles().aboutRestaurant, { width: '23%' }]}>
-                <Feather name="star" size={20} color="#FFA921" />
+                <Feather name="star" size={18} color={currentTheme.stars} />
                 <TextDefault
-                  textColor={currentTheme.fontMainColor}
-                  style={{ marginLeft: scale(2), fontSize: 12 }}
-                  bolder
-                  smaller>
+                textColor={currentTheme.fontThirdColor}
+       
+                H4
+                 bolder
+                  style={{ marginLeft: scale(2), marginRight: scale(5)}}
+                 >
                   {item.reviewData.ratings}
                 </TextDefault>
                 <TextDefault
-                  textColor={currentTheme.fontSecondColor}
-                  style={{ marginLeft: scale(2), fontSize: 12 }}
-                  bold
-                  smaller>
+                   textColor={currentTheme.fontNewColor}
+                  style={{ marginLeft: scale(2)}}
+                 
+                  H5>
                   ({item.reviewData.reviews.length})
                 </TextDefault>
               </View>
             </View>
             <TextDefault
               style={styles().offerCategoty}
-              textColor={currentTheme.fontSecondColor}
               numberOfLines={1}
-              small>
+            bold
+            Normal
+            textColor={currentTheme.fontNewColor}
+            >
               {category.toString()}
             </TextDefault>
             <View style={styles().priceRestaurant}>
@@ -168,15 +173,15 @@ function Item(props) {
                   alignItems: 'center',
                   gap: 5,
                   justifyContent: 'center',
-                  marginRight: 10
+                  marginRight: 18
                 }}>
-                <AntDesign name="clockcircleo" size={14} color="black" />
+                <AntDesign name="clockcircleo" size={16}
+                color={currentTheme.fontNewColor} />
                 <TextDefault
-                  textColor={currentTheme.fontMainColor}
+                  textColor={currentTheme.fontNewColor}
                   numberOfLines={1}
-                  small
-                  bolder
-                  center>
+                  bold
+                  Normal>
                   {item.deliveryTime + ' '}
                   {t('min')}
                 </TextDefault>
@@ -189,13 +194,14 @@ function Item(props) {
                   justifyContent: 'center',
                   marginRight: 10
                 }}>
-                <MaterialIcons name="directions-bike" size={18} color="black" />
+                <MaterialIcons name="directions-bike" size={16}
+                color={currentTheme.fontNewColor}/>
                 <TextDefault
                   style={styles().offerCategoty}
-                  textColor={currentTheme.fontMainColor}
-                  numberOfLines={1}
-                  large
-                  bold>
+                  textColor={currentTheme.fontNewColor}
+                numberOfLines={1}
+                bold
+                Normal>
                   {configuration.currencySymbol + '' + item.minimumOrder}{' '}
                 </TextDefault>
               </View>

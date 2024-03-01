@@ -30,6 +30,7 @@ const styles = (props = null) =>
     
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF',
+      ...alignment.PBlarge
     },
     mainContentContainer: {
       width: '100%',

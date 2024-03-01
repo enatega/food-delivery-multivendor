@@ -27,7 +27,6 @@ function TopPicks(props) {
   })
 
   const { t } = useTranslation()
-  const { isLoggedIn, profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 

@@ -10,22 +10,20 @@ const styles = (props = null) =>
     // },
     offerScroll: {
       height: height * 0.376,
-      width: '100%',
-     
+      width: '100%'
     },
-    ItemDescription:{
-      fontWeight:'400',
-      marginTop:scale(5),
-      marginBottom:scale(7)
+    ItemDescription: {
+      fontWeight: '400',
+      marginTop: scale(5),
+      marginBottom: scale(7)
     },
-    orderAgainSec:{
-      marginBottom:scale(30),   
+    orderAgainSec: {
+      marginBottom: scale(30),
+      ...alignment.MLmedium
+    },
+    topPicksSec: {
       ...alignment.MLmedium,
-    },
-    topPicksSec:{
-      ...alignment.MLmedium,
-      marginBottom:scale(18),
-      
+      marginBottom: scale(30)
     }
   })
 

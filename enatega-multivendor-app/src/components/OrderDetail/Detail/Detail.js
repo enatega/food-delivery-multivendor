@@ -33,7 +33,7 @@ export default function Detail({
             }}>
             <Button
               buttonProps={{
-                onPress: () => navigation.navigate('ChatWithRider', { id })
+                onPress: () => navigation.navigate('ChatWithRider', { id, orderNo, total })
               }}
               buttonStyles={styles.chatButton(theme)}
               textStyles={styles.chatButtonText(theme)}

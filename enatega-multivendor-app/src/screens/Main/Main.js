@@ -47,6 +47,7 @@ import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
+import { TopBrands } from '../../components/Main/TopBrands'
 
 const RESTAURANTS = gql`
     ${restaurantList}
@@ -414,6 +415,9 @@ function Main(props) {
                   </View>
                   <View >
                     <TopPicks />
+                  </View>
+                  <View >
+                    <TopBrands />
                   </View>
                 </ScrollView>
 

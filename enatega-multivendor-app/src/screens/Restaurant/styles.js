@@ -47,6 +47,8 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.themeBackground : 'white',
       paddingVertical: scale(10),
       ...alignment.PRmedium,
+      ...alignment.PLsmall,
+
     },
     dealDescription: {
       backgroundColor: props != null ? props.themeBackground : 'white',
