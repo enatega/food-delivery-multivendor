@@ -218,16 +218,6 @@ function AppContainer() {
     }
   }, [lastNotificationResponse])
 
-  useEffect(() => {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false
-      })
-    })
-  }, [])
-
   return (
     <SafeAreaProvider>
       <NavigationContainer

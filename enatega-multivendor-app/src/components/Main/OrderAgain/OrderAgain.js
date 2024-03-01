@@ -37,7 +37,6 @@ function OrderAgain(props) {
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error: {error.message}</Text>
 
-  console.log(isLoggedIn, loading, error, data)
   return (
     <View style={styles().orderAgainSec}>
       {isLoggedIn && (
