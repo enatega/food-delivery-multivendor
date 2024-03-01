@@ -91,6 +91,7 @@ function Checkout(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
+  const [restaurantName, setrestaurantName] = useState('...')
 
   const { loading, data } = useRestaurant(cartRestaurant)
 
@@ -178,7 +179,7 @@ function Checkout(props) {
     StatusBar.setBarStyle('dark-content')
   })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     props.navigation.setOptions({
       headerTitle: () => (
         <View style={{ alignItems: 'center', gap: scale(2) }}>
@@ -192,7 +193,7 @@ function Checkout(props) {
           </TextDefault>
           <TextDefault
             style={{ color: currentTheme.btnText, ...textStyles.H5 }}>
-            Hardee’s - Z Block
+            {data && data.restaurant.name} - {data && data.restaurant.address}
           </TextDefault>
         </View>
       ),
@@ -227,11 +228,12 @@ function Checkout(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props.navigation, data])
 
   useEffect(() => {
     if (!data) return
     didFocus()
+    setrestaurantName(`${data.restaurant.name} - ${data.restaurant.address}`)
   }, [data])
   useEffect(() => {
     async function Track() {
@@ -587,41 +589,6 @@ function Checkout(props) {
     }
   }
 
-  // function emptyCart() {
-  //   return (
-  //     <View style={styles().subContainerImage}>
-  //       <View style={styles().imageContainer}>
-  //         <EmptyCart width={scale(200)} height={scale(200)} />
-  //       </View>
-  //       <View style={styles().descriptionEmpty}>
-  //         <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-  //           {t('hungry')}?
-  //         </TextDefault>
-  //         <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-  //           {t('emptyCart')}
-  //         </TextDefault>
-  //       </View>
-  //       <TouchableOpacity
-  //         activeOpacity={0.7}
-  //         style={styles(currentTheme).emptyButton}
-  //         onPress={() =>
-  //           props.navigation.navigate({
-  //             name: 'Main',
-  //             merge: true
-  //           })
-  //         }>
-  //         <TextDefault
-  //           textColor={currentTheme.buttonText}
-  //           bolder
-  //           B700
-  //           center
-  //           uppercase>
-  //           {t('emptyCartBtn')}
-  //         </TextDefault>
-  //       </TouchableOpacity>
-  //     </View>
-  //   )
-  // }
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -700,26 +667,6 @@ function Checkout(props) {
     )
   }
 
-  // function renderRightSwipe(progress, key) {
-  //   const scaleX = progress.interpolate({
-  //     inputRange: [0, 1, 3],
-  //     outputRange: [100, 0, 0]
-  //   })
-  //   return (
-  //     <Animated.View
-  //       style={[
-  //         styles().trashContainer,
-  //         { transform: [{ translateX: scaleX }] }
-  //       ]}>
-  //       <RectButton
-  //         rippleColor="black"
-  //         style={styles().trashIcon}
-  //         onPress={() => deleteItem(key)}>
-  //         <EvilIcons name="trash" size={scale(25)} color={currentTheme.white} />
-  //       </RectButton>
-  //     </Animated.View>
-  //   )
-  // }
 
   if (loading || loadingData || loadingTip) return loadginScreen()
   return (
@@ -761,7 +708,7 @@ function Checkout(props) {
                       numberOfLines={1}
                       H5
                       bolder>
-                      Within 20-43 mins
+                      Within {data.restaurant.deliveryTime} - {data?.restaurant.deliveryTime + 10} mins
                     </TextDefault>
                   </View>
                 </View>
@@ -1154,79 +1101,6 @@ function Checkout(props) {
                 </TouchableOpacity>
               </View>
             )}
-
-            {/* {!isModalOpen && (
-              <View style={styles(currentTheme).buttonContainer}>
-                {isLoggedIn && profile ? (
-                  <TouchableOpacity
-                    disabled={loadingOrderMutation}
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      if (validateOrder()) onPayment()
-                    }}
-                    style={styles(currentTheme).button}>
-                    {loadingOrderMutation ? (
-                      <ActivityIndicator
-                        size="large"
-                        style={{ flex: 1, justifyContent: 'center' }}
-                        color={currentTheme.buttonText}
-                      />
-                    ) : (
-                      <>
-                        <View style={styles().buttontLeft}>
-                          <View style={styles(currentTheme).buttonLeftCircle}>
-                            <TextDefault
-                              bolder
-                              center
-                              textColor={currentTheme.white}
-                              smaller>
-                              {cartCount}
-                            </TextDefault>
-                          </View>
-                        </View>
-                        <TextDefault
-                          textColor={currentTheme.white}
-                          style={{ width: '30%' }}
-                          bolder
-                          B700
-                          small
-                          center
-                          uppercase>
-                          {t('orderBtn')}
-                        </TextDefault>
-                        
-                        <TextDefault
-                          textColor={currentTheme.black}
-                          style={{ width: '35%' }}
-                          bold
-                          small
-                          right>
-                          {configuration.currencySymbol}
-                          {calculateTotal()}
-                        </TextDefault>
-                      </>
-                    )}
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      props.navigation.navigate({ name: 'CreateAccount' })
-                    }}
-                    style={styles(currentTheme).button}>
-                    <TextDefault
-                      textColor={currentTheme.black}
-                      style={{ width: '100%' }}
-                      H5
-                      bolder
-                      center
-                      uppercase>
-                      {t('loginOrCreateAccount')}
-                    </TextDefault>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )} */}
           </>
         )}
         <Modalize

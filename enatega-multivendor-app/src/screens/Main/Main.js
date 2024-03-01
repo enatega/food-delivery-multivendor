@@ -69,6 +69,7 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
+  const [selectedType, setSelectedType] = useState('restaurant');
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
@@ -117,7 +118,7 @@ function Main(props) {
     Work: 'briefcase',
     Other: 'location-pin'
   }
-
+  
   const setAddressLocation = async address => {
     setLocation({
       _id: address._id,
@@ -367,7 +368,7 @@ function Main(props) {
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
-                  <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu')}>
+                    <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu', { selectedType: 'restaurant' })}>
                     <View>
                       <TextDefault
                         H4
@@ -389,7 +390,7 @@ function Main(props) {
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu')}>
+                    <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu', { selectedType: 'grocery' })}>
                     <TextDefault
                       H4
                       bolder

@@ -58,9 +58,9 @@ const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
-function Menu(props) {
+function Menu({ route, props }) {
   const Analytics = analytics()
-
+  const { selectedType } = route.params;
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
@@ -71,13 +71,14 @@ function Menu(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-
+  
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
       variables: {
         longitude: location.longitude || null,
         latitude: location.latitude || null,
+        shopType: selectedType || null,
         ip: null
       },
       fetchPolicy: 'network-only'
@@ -398,7 +399,6 @@ function Menu(props) {
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
                   <Search setSearch={setSearch} search={search} />
                   <Filters />
-                  {/* <MapSection location={location} restaurants={restaurants} /> */}
                 </CollapsibleSubHeaderAnimator>
               </View>
             </View>

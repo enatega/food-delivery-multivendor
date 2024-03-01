@@ -192,8 +192,8 @@ export const getConfiguration = `query Configuration{
   }
 }`
 
-export const restaurantList = `query Restaurants($latitude:Float,$longitude:Float){
-  nearByRestaurants(latitude:$latitude,longitude:$longitude){
+export const restaurantList = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
+  nearByRestaurants(latitude:$latitude,longitude:$longitude,shopType:$shopType){
     offers{
       _id
       name
