@@ -32,9 +32,16 @@ function Footer() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const handleHomeClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const handleHomeClick = () => {  
+    try {  
+      window.scrollTo({ top: 0, behavior: 'smooth' });  
+    } catch (error) {  
+      console.error("Smooth scroll failed", error);  
+      // Fallback to instant scroll  
+      window.scrollTo(0, 0);  
+    }  
+  };  
+
 
   return (
     <Grid container alignItems="center">
