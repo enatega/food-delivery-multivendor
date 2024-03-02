@@ -258,6 +258,9 @@ export const validateFuncForRider = (value, constraint) => {
     [constraint]: constraints[constraint]
   })
   if (validationResult !== undefined && validationResult !== null) {
+    if (!constraints[constraint]) {
+      return { isValid: false, errorMessage: 'Invalid constraint' }
+    }
     return { isValid: false, errorMessage: validationResult[constraint][0] }
   } else {
     return { isValid: true, errorMessage: null }
