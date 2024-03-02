@@ -213,6 +213,15 @@ function Rider(props) {
                 onBlur={event =>
                   onBlur(usernameErrorSetter, 'username', event.target.value)
                 }
+                onChange={event => {
+                  if (event.target.value.includes(' ')) {
+                    const usernameWithoutSpaces = event.target.value.replace(
+                      / /g,
+                      ''
+                    )
+                    event.target.value = usernameWithoutSpaces
+                  }
+                }} 
                 disableUnderline
                 className={[
                   globalClasses.input,
