@@ -32,6 +32,10 @@ function Footer() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  const handleHomeClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Grid container alignItems="center">
       <Grid
@@ -75,6 +79,7 @@ function Footer() {
           </Typography>
           <RouterLink
             to={"/"}
+            onClick={handleHomeClick}
             style={{
               textDecoration: "none",
             }}
