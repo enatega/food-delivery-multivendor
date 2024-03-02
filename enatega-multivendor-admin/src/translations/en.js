@@ -153,6 +153,8 @@ const en = {
     RiderUpdatedSuccessfully: 'Rider updated successfully',
     RiderAddedSuccessfully: 'Rider added successfully',
     EditRider: 'Edit Rider',
+    UsernameCannotBeBlank: "Username can't be blank",
+    UsernameCannotContainSpaces: "Username can't contain spaces",
     AddRider: 'Add Rider',
     Available: 'Available',
     PHRiderName: 'Rider name',

@@ -73,11 +73,12 @@ const constraints = {
   },
   username: {
     presence: {
-      allowEmpty: false
+      allowEmpty: false,
+      message: '^UsernameCannotBeBlank'
     },
     format: {
       pattern: /^[^\s]+$/,
-      message: '^Username cannot contain spaces'
+      message: '^UsernameCannotContainSpaces'
     }
   },
   title: {

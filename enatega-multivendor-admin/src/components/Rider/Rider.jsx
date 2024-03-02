@@ -238,7 +238,8 @@ function Rider(props) {
                     fontSize: '12px',
                     float: 'left',
                     marginTop: '5px',
-                    marginLeft: '10px'
+                    textAlign: 'left',
+                    marginLeft: '10px',
                   }}>
                   {t(userNameErrorMessage)}
                 </Typography>
