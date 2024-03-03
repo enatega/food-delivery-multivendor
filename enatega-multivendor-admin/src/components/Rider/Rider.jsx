@@ -143,7 +143,8 @@ function Rider(props) {
   const { t } = props
 
   const classes = useStyles()
-  const globalClasses = useGlobalStyles()
+  const globalClasses = useGlobalStyles();
+   const [username, setUsername] = useState('');
   return (
     <Box container className={classes.container}>
       <Box className={classes.flexRow}>
@@ -213,15 +214,11 @@ function Rider(props) {
                 onBlur={event =>
                   onBlur(usernameErrorSetter, 'username', event.target.value)
                 }
-                onChange={event => {
-                  if (event.target.value.includes(' ')) {
-                    const usernameWithoutSpaces = event.target.value.replace(
-                      / /g,
-                      ''
-                    )
-                    event.target.value = usernameWithoutSpaces
-                  }
-                }} 
+                  
+                onChange ={(event) => {
+                  const usernameWithoutSpaces = event.target.value.replace(/\s/g, '');
+                  setUsername(usernameWithoutSpaces);
+                }}
                 disableUnderline
                 className={[
                   globalClasses.input,
