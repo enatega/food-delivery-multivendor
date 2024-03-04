@@ -53,6 +53,7 @@ export default function App() {
   const [location, setLocation] = useState(null)
   const notificationListener = useRef()
   const responseListener = useRef()
+  const [orderId, setOrderId] = useState()
   // Theme Reducer
   const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
 
@@ -148,14 +149,16 @@ export default function App() {
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log('addNotificationReceivedListener', notification)
-      reviewModalRef.current.open()
+      if (notification.request.content.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        setOrderId(notification.request.content.data.orderId)
+        reviewModalRef.current.open()
+      }
     })
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log('addNotificationResponseReceivedListener', response)
       reviewModalRef.current.open()
     })
-    schedulePushNotification()
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current)
       Notifications.removeNotificationSubscription(responseListener.current)
@@ -182,7 +185,7 @@ export default function App() {
                   <UserProvider>
                     <OrdersProvider>
                       <AppContainer />
-                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]}/>
+                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId}/>
                     </OrdersProvider>
                   </UserProvider>
                 </AuthProvider>
@@ -223,13 +226,13 @@ async function registerForPushNotificationsAsync() {
   }
 }
 
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
-      data: { type: NOTIFICATION_TYPES.REVIEW_ORDER }
-    },
-    trigger: { seconds: 10 }
-  })
-}
+// async function schedulePushNotification() {
+//   await Notifications.scheduleNotificationAsync({
+//     content: {
+//       title: "You've got mail! 📬",
+//       body: 'Here is the notification body',
+//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, orderId: '65e068b2150aab288f2b821f' }
+//     },
+//     trigger: { seconds: 10 }
+//   })
+// }
