@@ -1042,3 +1042,10 @@ export const food = `fragment FoodItem on Food{
 }
 `
 
+export const popularItems = `query PopularItems($restaurantId: String!) {
+  popularItems(restaurantId: $restaurantId) {
+    id
+    count
+  }
+}
+`

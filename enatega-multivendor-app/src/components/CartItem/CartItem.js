@@ -40,7 +40,7 @@ const cartItem = props => {
             textColor={currentTheme.fontFourthColor}
             bolder
             H5>
-            {props.dealName.length > 20
+            {props?.dealName?.length > 20
               ? props.dealName.substring(0, 17) + '...'
               : props.dealName}
           </TextDefault>
