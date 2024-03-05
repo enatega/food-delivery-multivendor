@@ -66,11 +66,15 @@ const config = to => ({
   easing: EasingNode.inOut(EasingNode.ease)
 })
 
-const POPULAR_ITEMS = gql`${popularItems}`
-const FOOD = gql`${food}`
+const POPULAR_ITEMS = gql`
+  ${popularItems}
+`
+const FOOD = gql`
+  ${food}
+`
 
 function Restaurant(props) {
-  const { _id: restaurantId } = props.route.params;
+  const { _id: restaurantId } = props.route.params
   const Analytics = analytics()
   const { t } = useTranslation()
   const scrollRef = useRef(null)
@@ -79,7 +83,7 @@ function Restaurant(props) {
   const route = useRoute()
   const inset = useSafeAreaInsets()
   const propsData = route.params
-  console.log("propsData", propsData)
+  console.log('propsData', propsData)
   const animation = useValue(0)
   const circle = useValue(0)
   const themeContext = useContext(ThemeContext)
@@ -101,20 +105,26 @@ function Restaurant(props) {
     propsData._id
   )
   const client = useApolloClient()
-  const { loading: loadingPopularItems, error: errorPopularItems, data: popularItems } = useQuery(POPULAR_ITEMS, {
-    variables: { restaurantId },
-  });
-
-  const fetchFoodDetails = (itemId) => {
-    return client.readFragment({ id: `Food:${itemId}`, fragment: FOOD });
-  }
-
-  const dataList = popularItems && popularItems?.popularItems?.map((item) => {
-    const foodDetails = fetchFoodDetails(item.id);
-    return foodDetails
+  const {
+    loading: loadingPopularItems,
+    error: errorPopularItems,
+    data: popularItems
+  } = useQuery(POPULAR_ITEMS, {
+    variables: { restaurantId }
   })
 
-  console.log('dataList in restaurant => ', JSON.stringify(dataList, null, 4))
+  const fetchFoodDetails = itemId => {
+    return client.readFragment({ id: `Food:${itemId}`, fragment: FOOD })
+  }
+
+  const dataList =
+    popularItems &&
+    popularItems?.popularItems?.map(item => {
+      const foodDetails = fetchFoodDetails(item.id)
+      return foodDetails
+    })
+
+  console.log('dataList in restaurant => ', JSON.stringify(dataList))
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -294,7 +304,7 @@ function Restaurant(props) {
       scrollRef.current.scrollToLocation({
         animated: true,
         sectionIndex: index,
-        itemIndex: 0,
+        itemIndex: 0
         // viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
         // viewPosition: 0
       })
@@ -309,7 +319,7 @@ function Restaurant(props) {
       scrollToNavbar(index)
     }
   }
-  function scrollToNavbar(value=0) {
+  function scrollToNavbar(value = 0) {
     if (flatListRef.current != null) {
       flatListRef.current.scrollToIndex({
         animated: true,
@@ -415,11 +425,7 @@ function Restaurant(props) {
 
   if (loading) {
     return (
-      <View
-        style={[
-          styles().flex,
-          
-        ]}>
+      <View style={[styles().flex]}>
         <ImageHeader
           iconColor={iconColor}
           iconSize={iconSize}
@@ -479,14 +485,18 @@ function Restaurant(props) {
 
   const updatedDeals = [
     {
-    title: 'Popular',
-    id: new Date().getTime(),
+      title: 'Popular',
+      id: new Date().getTime(),
       // data: []
-    data: dataList
-  },
-  ...deals]
+      data: dataList
+    },
+    ...deals
+  ]
 
-  console.log("updated deals in restaurant:", JSON.stringify(updatedDeals, null, 2));
+  console.log(
+    'updated deals in restaurant:',
+    JSON.stringify(updatedDeals, null, 2)
+  )
 
   // console.log("deals in restaurant:", JSON.stringify(deals, null, 4));
   return (
@@ -516,7 +526,6 @@ function Restaurant(props) {
           <AnimatedSectionList
             ref={scrollRef}
             sections={updatedDeals}
-
             // Important
             // contentContainerStyle={{
             //   paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
@@ -551,7 +560,7 @@ function Restaurant(props) {
             // renderSectionHeader={({ section: { title } }) => {
             //   // if (title === 'Popular') {
             //   //   if (!dataList || dataList.length === 0) {
-            //   //     return null; 
+            //   //     return null;
             //   //   }
             //   return (
             //     <View style={{ backgroundColor: '#fff' }}>
@@ -574,10 +583,10 @@ function Restaurant(props) {
             //     </View>
             //   )
             // }}
-            renderSectionHeader={({ section: { title } }) => {
+            renderSectionHeader={({ section: { title, data } }) => {
               if (title === 'Popular') {
                 if (!dataList || dataList.length === 0) {
-                  return null; // Don't render the section header if dataList is empty
+                  return null // Don't render the section header if dataList is empty
                 }
                 return (
                   <View style={{ backgroundColor: '#fff' }}>
@@ -597,8 +606,13 @@ function Restaurant(props) {
                       }}>
                       Most ordered right now.
                     </Text>
+                    <View style={styles().popularItemCards}>
+                      {data.map(item => (
+                        <ItemCard item={item} />
+                      ))}
+                    </View>
                   </View>
-                );
+                )
               }
               // Render other section headers as usual
               return (
@@ -610,21 +624,15 @@ function Restaurant(props) {
                     {title}
                   </TextDefault>
                 </View>
-              );
+              )
             }}
-
             renderItem={({ item, index, section }) => {
               if (section.title === 'Popular') {
                 if (!dataList || dataList.length === 0) {
-                  return null;
+                  return null
                 }
-                return (
-                  <View style={styles().popularItemCards}>
-                    <ItemCard item={item} />
-                  </View>
-                );
+                return null
               }
-              // console.log('item;', item)
               return (
                 <TouchableOpacity
                   style={styles(currentTheme).dealSection}
