@@ -27,6 +27,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
+import ConfigurableValues from '../config/constants'
 
 const GET_OPTIONS = gql`
   ${getRestaurantDetail}
@@ -37,6 +38,7 @@ const DELETE_OPTION = gql`
 
 const Option = props => {
   const { t } = props
+  const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [option, setOption] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -131,12 +133,15 @@ const Option = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                 
+                  if(PAID_VERSION)
+                  toggleModal(row)
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
-                  //uncomment this for paid version
-                  //toggleModal(row)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -147,14 +152,17 @@ const Option = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                  //uncomment this for paid version
-                  // mutate({
-                  //   variables: { id: row._id, restaurant: restaurantId }
-                  // })
+                 
+                  if(PAID_VERSION)
+                  mutate({
+                    variables: { id: row._id, restaurant: restaurantId }
+                  })
+                  else{
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>

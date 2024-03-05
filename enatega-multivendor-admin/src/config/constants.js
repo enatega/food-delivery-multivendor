@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import ConfigurationContext from '../context/Configuration'
-
+console.log('process.env.REACT_APP_SOME_VAR', process.env.REACT_APP_PAID_VERSION, process.env.REACT_APP_PAID_VERSION==='true')
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
   console.log('configuration', configuration)
@@ -19,6 +19,7 @@ const ConfigurableValues = () => {
   const CLOUDINARY_FOOD = configuration.cloudinaryApiKey
   const VAPID_KEY =
     'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w'
+  const PAID_VERSION = process.env.REACT_APP_PAID_VERSION==='true'
 
   return {
     GOOGLE_MAPS_KEY,
@@ -34,7 +35,8 @@ const ConfigurableValues = () => {
     SENTRY_DSN,
     CLOUDINARY_UPLOAD_URL,
     CLOUDINARY_FOOD,
-    VAPID_KEY
+    VAPID_KEY,
+    PAID_VERSION
   }
 }
 

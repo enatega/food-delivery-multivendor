@@ -26,6 +26,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
+import ConfigurableValues from '../config/constants'
 
 const GET_ZONES = gql`
   ${getZones}
@@ -36,6 +37,7 @@ const DELETE_ZONE = gql`
 
 const Zones = props => {
   const { t } = props
+  const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [zones, setZone] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -117,12 +119,14 @@ const Zones = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  //uncomment this for paid version
-                  //toggleModal(row)
+                  if(PAID_VERSION)
+                  toggleModal(row)
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -133,12 +137,14 @@ const Zones = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  //uncomment this for paid version
-                  //mutate({ variables: { id: row._id } })
-                  setIsOpen(true)
+                  if(PAID_VERSION)
+                  mutate({ variables: { id: row._id } })
+                  else{
+                    setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 2000)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
