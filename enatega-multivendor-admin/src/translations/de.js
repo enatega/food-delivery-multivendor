@@ -159,6 +159,9 @@ const de = {
     SalesTax: 'Umsatzsteuer',
     RiderUpdatedSuccessfully: 'Fahrer erfolgreich aktualisiert',
     RiderAddedSuccessfully: 'Fahrer erfolgreich hinzugefügt',
+    UsernameCannotBeBlank: 'Der Benutzername darf nicht leer sein',
+    UsernameCannotContainSpaces:
+      'Der Benutzername darf keine Leerzeichen enthalten',
     EditRider: 'Fahrer bearbeiten',
     AddRider: 'Fahrer hinzufügen',
     Available: 'Verfügbar',

@@ -32,7 +32,9 @@ function Footer() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+
   const handleButtonClick = () => {  
+
     try {  
       window.scrollTo({ top: 0, behavior: 'smooth' });  
     } catch (error) {  
@@ -86,7 +88,9 @@ function Footer() {
           </Typography>
           <RouterLink
             to={"/"}
-            onClick={() => handleButtonClick()}
+
+            onClick={handleHomeClick}
+
             style={{
               textDecoration: "none",
             }}

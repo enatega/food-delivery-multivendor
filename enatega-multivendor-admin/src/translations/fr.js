@@ -158,6 +158,9 @@ const fr = {
     SalesTax: 'Taxe de vente',
     RiderUpdatedSuccessfully: 'Livreur mis à jour avec succès',
     RiderAddedSuccessfully: 'Livreur ajouté avec succès',
+    UsernameCannotBeBlank: "Le nom d'utilisateur ne peut pas être vide",
+    UsernameCannotContainSpaces:
+      "Le nom d'utilisateur ne peut pas contenir d'espaces",
     EditRider: 'Modifier le livreur',
     AddRider: 'Ajouter un livreur',
     Available: 'Disponible',
