@@ -1,9 +1,8 @@
 import { useContext } from 'react'
 import ConfigurationContext from '../context/Configuration'
-console.log('process.env.REACT_APP_SOME_VAR', process.env.REACT_APP_PAID_VERSION, process.env.REACT_APP_PAID_VERSION==='true')
+
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
-  console.log('configuration', configuration)
   const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
   const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
