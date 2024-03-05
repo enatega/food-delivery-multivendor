@@ -94,6 +94,7 @@ function Review({ onOverlayPress, theme, orderId }, ref) {
     </Modalize>
   )
 }
+
 const StarRating = ({ numberOfStars = 5, onSelect }) => {
   const stars = Array.from({ length: numberOfStars }, (_, index) => index + 1)
   const [selected, setSelected] = useState(0)

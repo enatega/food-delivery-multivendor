@@ -1,6 +1,7 @@
 import { Image, Text, View } from "react-native";
 import { scale } from "../../utils/scaling";
 import styles from "./styles";
+import { LinearGradient } from "react-native-svg";
 
 
 export const ItemCard=()=>(
