@@ -39,7 +39,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: '100%',
       backgroundColor: props !== null ? props.cartContainer : 'transparent',
-      ...alignment.MTsmall
+      ...alignment.MTxSmall
     },
     totalOrder: {
       color: props != null ? props.fontNewColor : '#6B7280',
@@ -107,7 +107,7 @@ const styles = (props = null) =>
     horizontalLine2: {
       borderWidth: 0.5,
       borderColor: props !== null ? props.iconBackground : 'white',
-      marginVertical:scale(11)
+      marginVertical: scale(11)
     },
     deliveryTime: {
       flexDirection: 'row',
@@ -304,10 +304,14 @@ const styles = (props = null) =>
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
+    voucherSec: {
+      ...alignment.PLmedium,
+      ...alignment.PRmedium
+    },
     paymentSec: {
       ...alignment.PLmedium,
       ...alignment.PRmedium,
-      // paddingVertical:scale(6)
+      marginTop: scale(13)
     },
 
     imageContainer: {
@@ -333,11 +337,10 @@ const styles = (props = null) =>
       justifyContent: 'flex-end',
       alignItems: 'center'
     },
-    feeSec:{
+    billsec: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      
+      alignItems: 'center'
     },
     changeAddressContainer: {
       display: 'flex',

@@ -13,7 +13,7 @@ const styles = (props = null) =>
       backgroundColor: '#fff',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
-     height: height * 0.5,
+      height: height * 0.5
     },
 
     touchArea: {
@@ -26,7 +26,7 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingTop: scale(15)
+      ...alignment.PTsmall
     },
 
     fixedIcons: {
@@ -42,7 +42,7 @@ const styles = (props = null) =>
     restaurantImg: {
       width: scale(80),
       height: scale(80),
-      borderRadius:12
+      borderRadius: 12
     },
     restaurantAbout: {
       fontSize: scale(14),
@@ -66,12 +66,10 @@ const styles = (props = null) =>
     },
     ratingBox: {
       flexDirection: 'row',
-      gap: 3,
+      gap: scale(3),
       alignItems: 'center'
       // marginTop: scale(15)
     },
-   
-   
 
     // headerTitle: {
     //   ...textStyles.H5,
@@ -83,7 +81,7 @@ const styles = (props = null) =>
     flatListStyle: {
       height: '10%',
       width: '100%',
-      marginTop: scale(25),
+      marginTop: scale(25)
       // backgroundColor: props != null ? props.themeBackground : 'white',
       // borderBottomLeftRadius: 25,
       // borderBottomRightRadius: 25,

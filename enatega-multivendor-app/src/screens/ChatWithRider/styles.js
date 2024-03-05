@@ -57,17 +57,18 @@ const styles = (props = null) =>
       marginTop: '160%',
       transform: [{ scaleY: -1 }]
     },
-    bubbleRight: {
+
+    textRight: {
       backgroundColor: '#E4FFD9',
-      padding: 5,
-      marginBottom: 5,
-      borderRadius: 4
+      color: '#1F2937',
+      padding: 10,
+      marginBottom: 5
     },
-    bubbleLeft: {
+    textLeft: {
       backgroundColor: '#F3F4F6',
-      padding: 5,
-      marginBottom: 5,
-      borderRadius: 4
+      color: '#1F2937',
+      padding: 10,
+      marginBottom: 5
     },
     addImg: {
       width: scale(20)

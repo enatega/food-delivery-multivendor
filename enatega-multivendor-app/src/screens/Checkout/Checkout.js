@@ -193,7 +193,9 @@ function Checkout(props) {
           </TextDefault>
           <TextDefault
             style={{ color: currentTheme.btnText, ...textStyles.H5 }}>
-            {data && data.restaurant.name} - {data && data.restaurant.address}
+            {data && data.restaurant.name}
+            {' - '}
+            {data && data.restaurant.address}
           </TextDefault>
         </View>
       ),
@@ -667,7 +669,6 @@ function Checkout(props) {
     )
   }
 
-
   if (loading || loadingData || loadingTip) return loadginScreen()
   return (
     <>
@@ -708,7 +709,8 @@ function Checkout(props) {
                       numberOfLines={1}
                       H5
                       bolder>
-                      Within {data.restaurant.deliveryTime} - {data?.restaurant.deliveryTime + 10} mins
+                      Within {data.restaurant.deliveryTime} -{' '}
+                      {data?.restaurant.deliveryTime + 10} mins
                     </TextDefault>
                   </View>
                 </View>
@@ -716,7 +718,7 @@ function Checkout(props) {
                   <View style={[styles().tipRow]}>
                     <TextDefault
                       numberOfLines={1}
-                      normal
+                      H5
                       bolder
                       textColor={currentTheme.fontNewColor}>
                       Add a Tip for Rider
@@ -845,6 +847,105 @@ function Checkout(props) {
                   </View>
                 </View> */}
 
+                <View style={styles().voucherSec}>
+                  <TextDefault
+                    numberOfLines={1}
+                    H5
+                    bolder
+                    textColor={currentTheme.fontNewColor}>
+                    Voucher
+                  </TextDefault>
+
+                  {!coupon ? (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                      <TextDefault
+                        numberOfLines={1}
+                        large
+                        bolder
+                        textColor={currentTheme.darkBgFont}>
+                        {t('haveVoucher')}
+                      </TextDefault>
+                      <View style={styles(currentTheme).changeBtn}>
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          onPress={() => {
+                            props.navigation.navigate('Coupon', {
+                              coupon
+                            })
+                          }}>
+                          <TextDefault
+                            small
+                            bold
+                            textColor={currentTheme.darkBgFont}
+                            center>
+                            Add
+                          </TextDefault>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          paddingTop: scale(8),
+                          gap: scale(5)
+                        }}>
+                        <AntDesign
+                          name="tags"
+                          size={24}
+                          color={currentTheme.main}
+                        />
+                        <View>
+                          <TextDefault
+                            numberOfLines={1}
+                            tnormal
+                            bold
+                            textColor={currentTheme.fontFourthColor}>
+                            {coupon ? coupon.title : null} applied
+                          </TextDefault>
+                          <TextDefault
+                            small
+                            bold
+                            textColor={currentTheme.fontFourthColor}>
+                            -{configuration.currencySymbol}
+                            {parseFloat(
+                              calculatePrice(0, false) - calculatePrice(0, true)
+                            ).toFixed(2)}
+                          </TextDefault>
+                        </View>
+                      </View>
+                      <View style={styles(currentTheme).changeBtn}>
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          onPress={() => {
+                            props.navigation.setParams({ coupon: null })
+                          }}>
+                          <TextDefault
+                            small
+                            bold
+                            textColor={currentTheme.darkBgFont}
+                            center>
+                            {coupon ? t('remove') : null}
+                          </TextDefault>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+                </View>
+
                 {isLoggedIn && profile && (
                   <>
                     <View style={styles().paymentSec}>
@@ -881,8 +982,7 @@ function Checkout(props) {
                             activeOpacity={0.7}
                             onPress={() => {
                               props.navigation.navigate('Payment', {
-                                paymentMethod,
-                                coupon
+                                paymentMethod
                               })
                             }}>
                             <TextDefault
@@ -905,10 +1005,10 @@ function Checkout(props) {
                     H5
                     bolder
                     textColor={currentTheme.fontNewColor}
-                    style={{...alignment.MBmedium}}>
+                    style={{ ...alignment.MBmedium }}>
                     Payment Summary
                   </TextDefault>
-                  <View style={styles().feeSec}>
+                  <View style={styles().billsec}>
                     <TextDefault
                       numberOfLines={1}
                       normal
@@ -928,7 +1028,7 @@ function Checkout(props) {
                   <View style={styles(currentTheme).horizontalLine2} />
 
                   {!isPickedUp && (
-                    <View style={styles().feeSec}>
+                    <View style={styles().billsec}>
                       <TextDefault
                         numberOfLines={1}
                         textColor={currentTheme.fontFourthColor}
@@ -941,14 +1041,14 @@ function Checkout(props) {
                         textColor={currentTheme.fontFourthColor}
                         normal
                         bold>
-                        {configuration.currencySymbol}{' '}
+                        {configuration.currencySymbol}
                         {deliveryCharges.toFixed(2)}
                       </TextDefault>
                     </View>
                   )}
                   <View style={styles(currentTheme).horizontalLine2} />
 
-                  <View style={styles().feeSec}>
+                  <View style={styles().billsec}>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
@@ -961,11 +1061,12 @@ function Checkout(props) {
                       textColor={currentTheme.fontFourthColor}
                       normal
                       bold>
-                      {configuration.currencySymbol} {taxCalculation()}
+                      {configuration.currencySymbol}
+                      {taxCalculation()}
                     </TextDefault>
                   </View>
                   <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles().feeSec}>
+                  <View style={styles().billsec}>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
@@ -978,70 +1079,36 @@ function Checkout(props) {
                       textColor={currentTheme.fontFourthColor}
                       normal
                       bold>
-                      {configuration.currencySymbol}{' '}
+                      {configuration.currencySymbol}
                       {parseFloat(calculateTip()).toFixed(2)}
                     </TextDefault>
                   </View>
-                  {/* {!coupon ? (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={[styles().pB10, styles().width100]}
-                      onPress={() => {
-                        props.navigation.navigate('Coupon', {
-                          paymentMethod,
-                          coupon
-                        })
-                      }}>
-                      <TextDefault
-                        numberOfLines={1}
-                        large
-                        bolder
-                        textColor={currentTheme.darkBgFont}>
-                        {t('haveVoucher')}
-                      </TextDefault>
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={[styles().floatView, styles().pB10]}>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontMainColor}
-                        small
-                        style={{ width: '30%' }}>
-                        {coupon ? coupon.title : null}
-                      </TextDefault>
-                      <View
-                        numberOfLines={1}
-                        style={[
-                          styles().floatText,
-                          styles(currentTheme).floatRight,
-                          styles().couponContainer
-                        ]}>
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          onPress={() => {
-                            props.navigation.setParams({ coupon: null })
-                          }}>
-                          <TextDefault
-                            small
-                            textColor={currentTheme.buttonBackgroundPink}>
-                            {coupon ? t('remove') : null}
-                          </TextDefault>
-                        </TouchableOpacity>
+                  {coupon && (
+                    <View>
+                      <View style={styles(currentTheme).horizontalLine2} />
+                      <View style={styles().billsec}>
                         <TextDefault
-                          textColor={currentTheme.fontMainColor}
-                          bold
-                          large>
-                          {configuration.currencySymbol}
+                          numberOfLines={1}
+                          textColor={currentTheme.fontFourthColor}
+                          normal
+                          bold>
+                          Voucher Discount
+                        </TextDefault>
+                        <TextDefault
+                          numberOfLines={1}
+                          textColor={currentTheme.fontFourthColor}
+                          normal
+                          bold>
+                          -{configuration.currencySymbol}
                           {parseFloat(
                             calculatePrice(0, false) - calculatePrice(0, true)
                           ).toFixed(2)}
                         </TextDefault>
                       </View>
                     </View>
-                  )} */}
-
+                  )}
                   <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles().feeSec}>
+                  <View style={styles().billsec}>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
@@ -1066,7 +1133,6 @@ function Checkout(props) {
                     styles().pT10,
                     styles().mB10
                   ]}>
-
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
                     style={alignment.MBsmall}
