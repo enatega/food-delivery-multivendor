@@ -33,7 +33,8 @@ const styles = (props = null) =>
     },
     popularItemCards:{
       // ...alignment.PLlarge,
-      // ...alignment.PTlarge,
+      ...alignment.PTlarge,
+      flexDirection: 'row',
     },
     deal: {
       width: '80%',
