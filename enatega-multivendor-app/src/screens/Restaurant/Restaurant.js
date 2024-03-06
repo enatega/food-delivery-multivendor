@@ -88,7 +88,6 @@ function Restaurant(props) {
   const circle = useValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  console.log(currentTheme)
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
@@ -124,7 +123,6 @@ function Restaurant(props) {
       return foodDetails
     })
 
-  console.log('dataList in restaurant => ', JSON.stringify(dataList))
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -251,7 +249,6 @@ function Restaurant(props) {
     ) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
-      console.log(result)
       if (result.exist) await addQuantity(result.key)
       else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
       animate()
@@ -442,6 +439,7 @@ function Restaurant(props) {
           loading={loading}
           minimumOrder={propsData.minimumOrder}
           tax={propsData.tax}
+          updatedDeals={updatedDeals}
         />
 
         <View
@@ -498,7 +496,6 @@ function Restaurant(props) {
     JSON.stringify(updatedDeals, null, 2)
   )
 
-  // console.log("deals in restaurant:", JSON.stringify(deals, null, 4));
   return (
     <>
       <SafeAreaView style={styles(currentTheme).flex}>
@@ -521,7 +518,9 @@ function Restaurant(props) {
             selectedLabel={selectedLabel}
             minimumOrder={propsData.minimumOrder}
             tax={propsData.tax}
+            updatedDeals={updatedDeals}
           />
+
 
           <AnimatedSectionList
             ref={scrollRef}
@@ -608,7 +607,7 @@ function Restaurant(props) {
                     </Text>
                     <View style={styles().popularItemCards}>
                       {data.map(item => (
-                        <ItemCard item={item} />
+                        <ItemCard item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart}/>
                       ))}
                     </View>
                   </View>
