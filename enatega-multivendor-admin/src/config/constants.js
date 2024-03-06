@@ -18,7 +18,7 @@ const ConfigurableValues = () => {
   const CLOUDINARY_FOOD = configuration.cloudinaryApiKey
   const VAPID_KEY =
     'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w'
-  const PAID_VERSION = process.env.REACT_APP_PAID_VERSION==='true'
+  const PAID_VERSION = configuration.isPaidVersion
 
   return {
     GOOGLE_MAPS_KEY,

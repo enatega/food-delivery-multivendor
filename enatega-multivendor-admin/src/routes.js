@@ -114,7 +114,7 @@ var routes = [
     path: '/configuration',
     name: 'Configuration',
     icon: ConfigurationIcon,
-    component: process.env.REACT_APP_PAID_VERSION?Configuration:DemoConfiguration,
+    component: Configuration,
     layout: '/super_admin',
     appearInSidebar: true,
     admin: true

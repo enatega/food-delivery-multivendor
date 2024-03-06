@@ -22,6 +22,7 @@ import GoogleClientIDConfiguration from '../components/Configuration/GoogleClien
 import WebConfiguration from '../components/Configuration/Web/Web'
 import AppConfigurations from '../components/Configuration/App/App'
 import FirebaseConfiguration from '../components/Configuration/FireBase/FireBase'
+import Configuration1 from './Configuration1'
 
 const GET_CONFIGURATION = gql`
   ${getConfiguration}
@@ -30,8 +31,9 @@ const Configuration = props => {
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_CONFIGURATION
   )
+  console.log('configuration', data)
   const { t } = props
-
+  
   return (
     <>
       <Header />
@@ -39,6 +41,7 @@ const Configuration = props => {
       {loadingQuery ? (
         t('LoadingDots')
       ) : (
+        data.configuration.isPaidVersion?
         <Grid container ml={2} spacing={2}>
           <Grid item sx={12} md={7} lg={7}>
             <EmailConfiguration
@@ -165,7 +168,8 @@ const Configuration = props => {
               testOtp={data && data.configuration.testOtp}
             />
           </Grid>
-        </Grid>
+        </Grid>:
+        <Configuration1 t={t}/>
       )}
     </>
   )
