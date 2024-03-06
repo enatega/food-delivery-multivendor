@@ -12,6 +12,7 @@ import CurrencyConfiguration from '../components/Configuration/Currency/Currency
 import { Grid } from '@mui/material'
 import { ReactComponent as ConfigIcon } from '../assets/svg/svg/Configuration.svg'
 import TwilioConfiguration from '../components/Configuration/Twilio/Twilio'
+import VerificationConfiguration from '../components/Configuration/Verification/Verification'
 import SendGridConfiguration from '../components/Configuration/SendGrid/SendGrid'
 
 import SentryConfiguration from '../components/Configuration/Sentry/Sentry'
@@ -166,6 +167,12 @@ const Configuration = props => {
               termsAndConditions={data && data.configuration.termsAndConditions}
               privacyPolicy={data && data.configuration.privacyPolicy}
               testOtp={data && data.configuration.testOtp}
+            />
+          </Grid>
+          <Grid item sx={12} md={12} lg={5}>
+          <VerificationConfiguration
+          skipEmailVerification={data.configuration.skipEmailVerification}
+          skipMobileVerification={data.configuration.skipMobileVerification}
             />
           </Grid>
         </Grid>:
