@@ -553,6 +553,8 @@ export const getConfiguration = `query Configuration{
     webSentryUrl
     publishableKey
     clientId
+    skipEmailVerification
+    skipMobileVerification
   }
 }`;
 
