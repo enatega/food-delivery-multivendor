@@ -58,20 +58,79 @@ const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
+export const FILTER_TYPE = {
+  CHECKBOX: 'checkbox',
+  RADIO: 'radio'
+}
+export const FILTER_VALUES = {
+  Sort: {
+    type: FILTER_TYPE.RADIO,
+    values: ['Relevance (Default)', 'Fast Delivery', 'Distance'],
+    selected: []
+  },
+  Cuisines: {
+    selected: [],
+    type: FILTER_TYPE.CHECKBOX,
+    values: [
+      'American',
+      'BBQ',
+      'Beverages',
+      'Biryani',
+      'Broast',
+      'Burgers',
+      'Cakes & Bakery',
+      'Chinese',
+      'Continental',
+      'Desserts',
+      'Fast Food',
+      'Haleem',
+      'Ice cream',
+      'Japanese',
+      'Karahi',
+      'Middle Eastern',
+      'Nhari',
+      'Pakistani',
+      'Pizza',
+      'Pulao',
+      'Qeema',
+      'Samosa',
+      'Sandwich',
+      'Steaks',
+      'Tea & Coffee',
+      'Thai',
+      'Vegetarian',
+      'Western'
+    ]
+  },
+  Offers: {
+    selected: [],
+    type: FILTER_TYPE.CHECKBOX,
+    values: ['Free Delivery', 'Accept Vouchers', 'Deal']
+  },
+  Rating: {
+    selected: [],
+    type: FILTER_TYPE.CHECKBOX,
+    values: ['3+ Rating', '4+ Rating', '5 star Rating']
+  }
+}
+
 function Menu({ route, props }) {
   const Analytics = analytics()
-  const { selectedType } = route.params;
+  const { selectedType } = route.params
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState(FILTER_VALUES)
+  const [restaurantData, setRestaurantData] = useState()
+  const [sectionData, setSectionData] = useState()
   const modalRef = useRef(null)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-  
+
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
@@ -80,6 +139,18 @@ function Menu({ route, props }) {
         latitude: location.latitude || null,
         shopType: selectedType || null,
         ip: null
+      },
+      onCompleted: data => {
+        console.log(
+          'Data onCompleted => ',
+          JSON.stringify(
+            data.nearByRestaurants.restaurants.slice(0, 1),
+            null,
+            4
+          )
+        )
+        setRestaurantData(data.nearByRestaurants.restaurants)
+        setSectionData(data.nearByRestaurants.sections)
       },
       fetchPolicy: 'network-only'
     }
@@ -310,12 +381,12 @@ function Menu({ route, props }) {
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  const { restaurants, sections } = data.nearByRestaurants
+  // const { restaurants, sections } = data.nearByRestaurants
 
   const searchRestaurants = searchText => {
     const data = []
     const regex = new RegExp(searchText, 'i')
-    restaurants.forEach(restaurant => {
+    restaurantData?.forEach(restaurant => {
       const resultName = restaurant.name.search(regex)
       if (resultName < 0) {
         const resultCatFoods = restaurant.categories.some(category => {
@@ -349,12 +420,79 @@ function Menu({ route, props }) {
   }
 
   // Flatten the array. That is important for data sequence
-  const restaurantSections = sections.map(sec => ({
+  const restaurantSections = sectionData?.map(sec => ({
     ...sec,
     restaurants: sec.restaurants
-      .map(id => restaurants.filter(res => res._id === id))
+      .map(id => restaurantData?.filter(res => res._id === id))
       .flat()
   }))
+
+  const extractRating = ratingString => parseInt(ratingString)
+
+  const applyFilters = () => {
+    let filteredData = [...data.nearByRestaurants.restaurants]
+    let appliedFilters = []
+
+    const ratings = filters['Rating']
+    const sort = filters['Sort']
+    const offers = filters['Offers']
+
+    // Apply filters incrementally
+    // Ratings filter
+    if (ratings?.selected?.length > 0) {
+      const numericRatings = ratings.selected.map(extractRating)
+      filteredData = filteredData.filter(
+        item => item?.reviewData?.ratings >= Math.min(...numericRatings)
+      )
+      appliedFilters.push('Rating')
+    }
+
+    // Sort filter
+    if (sort?.selected?.length > 0) {
+      if (sort.selected[0] === 'Fast Delivery') {
+        filteredData.sort((a, b) => a.deliveryTime - b.deliveryTime)
+      } else if (sort.selected[0] === 'Distance') {
+        filteredData.sort(
+          (a, b) =>
+            a.distanceWithCurrentLocation - b.distanceWithCurrentLocation
+        )
+      }
+      appliedFilters.push('Sort')
+    }
+
+    // Offers filter
+    if (offers?.selected?.length > 0) {
+      if (offers.selected.includes('Free Delivery')) {
+        filteredData = filteredData.filter(item => item?.freeDelivery)
+      }
+      if (offers.selected.includes('Accept Vouchers')) {
+        filteredData = filteredData.filter(item => item?.acceptVouchers)
+      }
+      appliedFilters.push('Offers')
+    }
+
+    // Set filtered data
+    setRestaurantData(filteredData)
+
+    // If no filters applied, reset to original data
+    if (
+      ratings?.selected?.length === 0 &&
+      offers?.selected?.length === 0 &&
+      sort?.selected?.length === 0
+    ) {
+      setRestaurantData(data.nearByRestaurants.restaurants)
+    }
+
+    // If any filter is removed, restore the previous state
+    // if (appliedFilters.length < 3) {
+    //     appliedFilters.forEach(filter => {
+    //         filters[filter].selected = [];
+    //     });
+    //     applyFilters();
+    // }
+  }
+
+  console.log('LENGTH => ', restaurantData?.length)
 
   return (
     <>
@@ -393,12 +531,16 @@ function Menu({ route, props }) {
                       }}
                     />
                   }
-                  data={search ? searchRestaurants(search) : restaurants}
+                  data={search ? searchRestaurants(search) : restaurantData}
                   renderItem={({ item }) => <Item item={item} />}
                 />
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
                   <Search setSearch={setSearch} search={search} />
-                  <Filters />
+                  <Filters
+                    filters={filters}
+                    setFilters={setFilters}
+                    applyFilters={applyFilters}
+                  />
                 </CollapsibleSubHeaderAnimator>
               </View>
             </View>

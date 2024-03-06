@@ -216,6 +216,9 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       deliveryTime
       minimumOrder
       tax
+      distanceWithCurrentLocation @client
+      freeDelivery @client
+      acceptVouchers @client
       reviewData{
           total
           ratings
