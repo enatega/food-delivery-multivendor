@@ -1,12 +1,21 @@
-import { FlatList, Image, Text, View } from "react-native";
+import { FlatList, Image, Text, View, TouchableOpacity } from "react-native";
 import { scale } from "../../utils/scaling";
 import styles from "./styles";
+import UserContext from '../../context/User'
 
-const ItemCard = ({ item }) => {
-  console.log("called");
+const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {  
+  const handleAddToCart = () => {
+    onPressItem({
+        ...item,
+        restaurant: restaurant._id,
+        restaurantName: restaurant.name
+    });
+  }
 
   return (
-    <View style={styles().card}>
+    <TouchableOpacity onPress={handleAddToCart}>
+      <View style={styles().card}>
+        {tagCart(item._id)}
         <Text style={{
           color: '#4B5563',
           fontSize: scale(12),
@@ -34,6 +43,7 @@ const ItemCard = ({ item }) => {
           </View>
         </View>
       </View>
+    </TouchableOpacity>
   )
   
 }
