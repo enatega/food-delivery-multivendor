@@ -324,6 +324,13 @@ export const saveTwilioConfiguration = `mutation saveTwilioConfiguration($config
   }
 }`
 
+export const saveVerificationToggles = `mutation SaveVerificationsToggle($configurationInput:VerificationConfigurationInput!){
+  saveVerificationsToggle(configurationInput: $configurationInput) {
+    skipEmailVerification
+    skipMobileVerification
+  }
+}`
+
 export const saveCurrencyConfiguration = `mutation SaveCurrencyConfiguration($configurationInput:CurrencyConfigurationInput!){
   saveCurrencyConfiguration(configurationInput:$configurationInput){
     _id

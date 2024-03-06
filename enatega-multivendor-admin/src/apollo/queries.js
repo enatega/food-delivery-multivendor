@@ -259,6 +259,8 @@ export const getConfiguration = `query GetConfiguration{
       appId
       measurementId
       isPaidVersion
+      skipEmailVerification
+      skipMobileVerification
     }
   }`
 
