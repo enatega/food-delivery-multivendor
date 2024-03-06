@@ -17,7 +17,7 @@ import SideBar from '../components/Sidebar/Sidebar'
 import ItemDetail from '../screens/ItemDetail/ItemDetail'
 import MyOrders from '../screens/MyOrders/MyOrders'
 import Cart from '../screens/Cart/Cart'
-
+import SaveAddress from '../screens/SaveAddress/SaveAddress'
 import RateAndReview from '../screens/RateAndReview/RateAndReview'
 import Payment from '../screens/Payment/Payment'
 import Help from '../screens/Help/Help'
@@ -161,6 +161,7 @@ function NoDrawer() {
         component={SelectLocation}
       />
       <NavigationStack.Screen name="AddNewAddress" component={AddNewAddress} />
+      <NavigationStack.Screen name="SaveAddress" component={SaveAddress} />
       <NavigationStack.Screen name="Favourite" component={Favourite} />
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
     </NavigationStack.Navigator>

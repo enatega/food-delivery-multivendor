@@ -5,7 +5,7 @@ import { verticalScale, scale } from '../../../utils/scaling'
 const styles = backColor =>
   StyleSheet.create({
     leftIconPadding: {
-      ...alignment.PLsmall,
+      ...alignment.PLsmall
       // ...alignment.PTxSmall,
       // ...alignment.PBxSmall
     },

@@ -1,6 +1,7 @@
 import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { theme } from '../../utils/themeColors'
+import { alignment } from '../../utils/alignment'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -10,10 +11,10 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
-      margin: scale(8),
+      backgroundColor: props !== null ? props.gray100 : 'transparent',
+      ...alignment.Mmedium,
       paddingBottom: scale(8),
-      borderRadius: scale(15)
+      borderRadius: scale(10)
     },
     buttonContainer: {
       width: '100%',
@@ -31,10 +32,10 @@ const styles = (props = null) =>
       margin: scale(10),
       paddingHorizontal: scale(50),
       paddingVertical: scale(15),
-      backgroundColor: props !== null ? props.buttonBackgroundPink : '#6FCF97',
+      backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: scale(10)
+      borderRadius: scale(50)
     },
     backButton: {
       backgroundColor: theme.Pink.white,

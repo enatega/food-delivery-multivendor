@@ -107,22 +107,20 @@ function EditAddress(props) {
     props.navigation.setOptions({
       headerRight: null,
       title: t('editAddress'),
-      headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20
+      headerTitleStyle: {
+        color: '#000',
+        fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
-        marginTop: '1%',
+        marginTop: '2%',
         paddingLeft: scale(25),
         paddingRight: scale(25),
         height: '75%',
-        borderRadius: scale(10),
-        backgroundColor: currentTheme.black,
-        borderWidth: 1,
-        borderColor: currentTheme.white,
-
         marginLeft: 0
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.white,
+        elevation: 1
       },
       headerTitleAlign: 'center',
       headerRight: null,
@@ -130,14 +128,7 @@ function EditAddress(props) {
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
+            <View>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -222,42 +213,6 @@ function EditAddress(props) {
         style={styles(currentTheme).flex}
         enabled={!modalVisible}>
         <View style={styles(currentTheme).flex}>
-          <View style={styles().mapContainer}>
-            <MapView
-              style={{ flex: 1 }}
-              scrollEnabled={false}
-              zoomEnabled={false}
-              zoomControlEnabled={false}
-              pitchEnabled={false}
-              toolbarEnabled={false}
-              showsCompass={false}
-              showsIndoors={false}
-              rotateEnabled={false}
-              showsUserLocation={false}
-              followsUserLocation={false}
-              showsMyLocationButton={false}
-              showsPointsOfInterest={false}
-              cacheEnabled={true}
-              loadingEnabled={true}
-              loadingIndicatorColor={currentTheme.iconColorPink}
-              region={region}
-              customMapStyle={mapStyle}
-              provider={PROVIDER_GOOGLE}
-              onPress={() => {
-                props.navigation.navigate('FullMap', {
-                  latitude: region.latitude,
-                  longitude: region.longitude,
-                  currentScreen: 'EditAddress'
-                })
-              }}></MapView>
-            <View style={styles().editAddressImageContainer}>
-              <Image
-                source={require('../../assets/images/user.png')}
-                width={20}
-              />
-            </View>
-          </View>
-
           <ScrollView
             style={{ flex: 1 }}
             contentContainerStyle={{ flexGrow: 1 }}
@@ -265,6 +220,11 @@ function EditAddress(props) {
             <View style={styles(currentTheme).subContainer}>
               <View style={styles().upperContainer}>
                 <View style={styles().addressContainer}>
+                  <View style={styles(currentTheme).addressTag}>
+                    <TextDefault H4 bold>
+                      {t('address')}
+                    </TextDefault>
+                  </View>
                   <View style={styles(currentTheme).geoLocation}>
                     <View style={{ width: '100%' }}>
                       <OutlinedTextField
@@ -400,44 +360,45 @@ function EditAddress(props) {
                 </View>
               </View>
             </View>
+            <View style={{ backgroundColor: '#000' }}>
+              <TouchableOpacity
+                disabled={loading}
+                onPress={() => {
+                  const deliveryAddressError = !deliveryAddress.trim().length
+                    ? t('DeliveryAddressIsRequired')
+                    : null
+                  const deliveryDetailsError = !deliveryDetails.trim().length
+                    ? t('DeliveryAddressIsRequired')
+                    : null
 
-            <TouchableOpacity
-              disabled={loading}
-              onPress={() => {
-                const deliveryAddressError = !deliveryAddress.trim().length
-                  ? t('DeliveryAddressIsRequired')
-                  : null
-                const deliveryDetailsError = !deliveryDetails.trim().length
-                  ? t('DeliveryAddressIsRequired')
-                  : null
+                  setDeliveryAddressError(deliveryAddressError)
+                  setDeliveryDetailsError(deliveryDetailsError)
 
-                setDeliveryAddressError(deliveryAddressError)
-                setDeliveryDetailsError(deliveryDetailsError)
-
-                if (
-                  deliveryAddressError === null &&
-                  deliveryDetailsError === null
-                ) {
-                  mutate({
-                    variables: {
-                      addressInput: {
-                        _id: _id,
-                        latitude: `${region.latitude}`,
-                        longitude: `${region.longitude}`,
-                        deliveryAddress: deliveryAddress.trim(),
-                        details: deliveryDetails.trim(),
-                        label: selectedLabel
+                  if (
+                    deliveryAddressError === null &&
+                    deliveryDetailsError === null
+                  ) {
+                    mutate({
+                      variables: {
+                        addressInput: {
+                          _id: _id,
+                          latitude: `${region.latitude}`,
+                          longitude: `${region.longitude}`,
+                          deliveryAddress: deliveryAddress.trim(),
+                          details: deliveryDetails.trim(),
+                          label: selectedLabel
+                        }
                       }
-                    }
-                  })
-                }
-              }}
-              activeOpacity={0.5}
-              style={styles(currentTheme).saveBtnContainer}>
-              <TextDefault textColor={currentTheme.black} H5 bold>
-                {t('saveContBtn')}
-              </TextDefault>
-            </TouchableOpacity>
+                    })
+                  }
+                }}
+                activeOpacity={0.5}
+                style={styles(currentTheme).saveBtnContainer}>
+                <TextDefault textColor={currentTheme.black} H5 bold>
+                  {t('saveContBtn')}
+                </TextDefault>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
       </KeyboardAvoidingView>

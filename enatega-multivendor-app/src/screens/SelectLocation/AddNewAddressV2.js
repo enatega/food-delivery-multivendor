@@ -34,16 +34,17 @@ export default function AddNewAddress(props) {
   const { longitude, latitude } = props.route.params?.location || {}
   console.log('AddNewAddress', latitude, longitude)
   // city, latitude, longitude
-
+  const locationData = props.route.params?.locationData || {}
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
   const [selectedValue, setSelectedValue] = useState({
-    city: '',
-    address: '',
-    latitude: '',
-    longitude: ''
+    city: locationData.city !== null ? locationData.city : '',
+    address:
+      locationData.deliveryAddress !== null ? locationData.deliveryAddress : '',
+    latitude: locationData.latitude !== null ? locationData.latitude : '',
+    longitude: locationData.longitude !== null ? locationData.longitude : ''
   })
-  const { setLocation } = useContext(LocationContext)
+  const { location, setLocation } = useContext(LocationContext)
   const mapRef = useRef()
 
   const themeContext = useContext(ThemeContext)
@@ -66,8 +67,13 @@ export default function AddNewAddress(props) {
   }, [])
 
   const onSelectCity = item => {
-    console.log(' ', item)
-    setSelectedValue(item.name)
+    console.log('Items:', item)
+    setSelectedValue({
+      city: item.name,
+      address: '',
+      latitude: item.latitude,
+      longitude: item.longitude
+    })
     setCoordinates({ longitude: item.longitude, latitude: item.latitude })
     setCityModalVisible(false)
   }
@@ -106,14 +112,31 @@ export default function AddNewAddress(props) {
   }, [])
 
   const onSelectLocation = () => {
-    setLocation({
-      label: 'Location',
-      deliveryAddress: selectedValue.address,
-      latitude: selectedValue.latitude,
-      longitude: selectedValue.longitude
-    })
-    navigation.navigate('Main')
+    if (location) {
+      const locationData = {
+        label: 'Other',
+        deliveryAddress: selectedValue.address,
+        latitude: selectedValue.latitude,
+        longitude: selectedValue.longitude,
+        city: selectedValue.city
+      }
+      navigation.navigate('SaveAddress', { locationData })
+    } else {
+      setLocation({
+        label: 'Other',
+        deliveryAddress: selectedValue.address,
+        latitude: selectedValue.latitude,
+        longitude: selectedValue.longitude,
+        city: selectedValue.city
+      })
+      navigation.navigate('Main')
+    }
   }
+
+  console.log(
+    'Selected Value:',
+    JSON.stringify(props.route.params?.locationData, null, 2)
+  )
 
   return (
     <>
@@ -150,7 +173,7 @@ export default function AddNewAddress(props) {
             bolder
             Left
             style={styles().addressHeading}>
-            {t('addAddress')}
+            {t('address')}
           </TextDefault>
           <CityModal
             setCityModalVisible={setCityModalVisible}
@@ -158,13 +181,11 @@ export default function AddNewAddress(props) {
             cityModalVisible={cityModalVisible}
             onSelect={onSelectCity}
           />
-
           <View style={[styles(currentTheme).textInput]}>
             <TouchableOpacity onPress={() => setSearchModalVisible(true)}>
               <Text
                 style={{
                   color: currentTheme.buttonText,
-
                   overflow: 'scroll'
                 }}>
                 {selectedValue.address || 'Address'}
@@ -192,9 +213,15 @@ export default function AddNewAddress(props) {
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
             onPress={onSelectLocation}>
-            <TextDefault textColor={currentTheme.buttonText} center H5>
-              Save
-            </TextDefault>
+            {location ? (
+              <TextDefault textColor={currentTheme.buttonText} center H4 bold>
+                Next
+              </TextDefault>
+            ) : (
+              <TextDefault textColor={currentTheme.buttonText} center H4 bold>
+                Save
+              </TextDefault>
+            )}
           </TouchableOpacity>
           <SearchModal
             visible={searchModalVisible}

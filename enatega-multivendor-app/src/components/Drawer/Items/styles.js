@@ -1,4 +1,7 @@
 import { StyleSheet } from 'react-native'
+import { scale } from '../../../utils/scaling'
+import { theme } from '../../../utils/themeColors'
+import { alignment } from '../../../utils/alignment'
 
 const styles = StyleSheet.create({
   flex: {
@@ -8,13 +11,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'center'
+    alignItems: 'center',
+    ...alignment.MLxSmall
   },
   leftContainer: {
-    height: '100%',
-    width: '15%',
+    height: scale(35),
+    width: scale(35),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: theme !== null ? theme.Pink.iconBackground : '#D1D5DB',
+    borderRadius: 25
   },
   img: {
     width: '100%',
