@@ -8,7 +8,7 @@ import { alignment } from '../../../utils/alignment'
 import screenOptions from '../screenOptions'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import usePhoneOtp from './usePhoneOtp'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function PhoneOtp(props) {
   const {
@@ -24,7 +24,7 @@ function PhoneOtp(props) {
     themeContext
   } = usePhoneOtp()
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
