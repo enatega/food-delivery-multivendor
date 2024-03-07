@@ -106,9 +106,9 @@ function NoDrawer() {
         name="OrderDetail"
         component={OrderDetail}
         options={{
-          headerTransparent: true,
-          headerRight: null,
-          title: '',
+          // headerTransparent: true,
+          // headerRight: null,
+          // title: '',
           headerBackImage: () =>
             DarkBackButton({
               iconColor: currentTheme.backIcon,

@@ -1,3 +1,5 @@
+import { ORDER_STATUS_ENUM } from './enums'
+
 function calculateDistance(latS, lonS, latD, lonD) {
   var R = 6371 // km
   var dLat = toRad(latD - latS)
@@ -18,4 +20,11 @@ function toRad(Value) {
   return (Value * Math.PI) / 180
 }
 
-export { calculateDistance }
+const calulateRemainingTime = (order) => {
+  const expectedTime = [ORDER_STATUS_ENUM.ACCEPTED, ORDER_STATUS_ENUM.ASSIGNED].includes(order.orderStatus)
+    ? order.preparationTime : order.completionTime
+  const remainingTime = Math.floor((new Date(expectedTime) - Date.now()) / 1000 / 60)
+  return remainingTime > 0 ? remainingTime : 0
+}
+
+export { calculateDistance, calulateRemainingTime }
