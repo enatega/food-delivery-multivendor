@@ -1,4 +1,4 @@
-import { View, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useContext } from 'react'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
@@ -15,6 +15,7 @@ const RELATED_ITEMS = gql`${relatedItemsQuery}`
 const RESTAURANT = gql`${restaurantQuery}`
 const FOOD = gql`${food}`
 const Section = ({ itemId, restaurantId }) => {
+    console.log("Section Props:", itemId, restaurantId);
     const navigation = useNavigation()
     const client = useApolloClient()
     const themeContext = useContext(ThemeContext)
@@ -29,6 +30,7 @@ const Section = ({ itemId, restaurantId }) => {
     const restaurant = result?.restaurant
     const renderItem = ({ item }) => {
         const food = client.readFragment({ id: `Food:${item}`, fragment: FOOD })
+        console.log("food in section:", JSON.stringify(food, null, 3));
         const onAdd = () => {
             navigation.push('ItemDetail', {
                 food: {
@@ -51,38 +53,40 @@ const Section = ({ itemId, restaurantId }) => {
                         />
                     </View>
                 }
-                <TextDefault
-                    style={styles().suggestItemName}
-                    textColor={currentTheme.fontFourthColor}
-                    H5
-                    bolder>
-                    {food.title}
-                </TextDefault>
-                <TextDefault
-                    style={styles().suggestItemDesciption}
-                    textColor={currentTheme.secondaryText}
-                    normal>
-                    {food.description}
-                </TextDefault>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'flex-end',
-                        justifyContent: 'space-between'
-                    }}>
+                <ScrollView>
                     <TextDefault
-                        style={styles().suggestItemPrice}
+                        style={styles().suggestItemName}
                         textColor={currentTheme.fontFourthColor}
-                        normal
+                        H5
                         bolder>
-                        ${food.variations[0].price}
+                        {food.title}
                     </TextDefault>
-                    <TouchableOpacity onPress={onAdd}>
-                        <View style={styles().addToCart}>
-                            <MaterialIcons name="add" size={scale(20)} color="#fff" />
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                    <TextDefault
+                        style={styles().suggestItemDesciption}
+                        textColor={currentTheme.secondaryText}
+                        normal>
+                        {food.description}
+                    </TextDefault>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'flex-end',
+                            justifyContent: 'space-between'
+                        }}>
+                        <TextDefault
+                            style={styles().suggestItemPrice}
+                            textColor={currentTheme.fontFourthColor}
+                            normal
+                            bolder>
+                            ${food.variations[0].price}
+                        </TextDefault>
+                        <TouchableOpacity onPress={onAdd}>
+                            <View style={styles().addToCart}>
+                                <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
             </View>
         </View>
     }
