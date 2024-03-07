@@ -541,7 +541,7 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
-        <ActiveOrders/>
+        {/* <ActiveOrders/> */}
       </SafeAreaView>
     </>
   )
