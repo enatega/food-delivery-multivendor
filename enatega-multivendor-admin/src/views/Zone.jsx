@@ -44,7 +44,7 @@ const Zones = props => {
   const [isOpen, setIsOpen] = useState(false)
   const onChangeSearch = e => setSearchQuery(e.target.value)
 
-  const [/*mutate*/ { error, loading }] = useMutation(DELETE_ZONE, {
+  const [mutate, { error, loading }] = useMutation(DELETE_ZONE, {
     refetchQueries: [{ query: GET_ZONES }]
   })
   const { data, loading: loadingQuery, refetch } = useQuery(GET_ZONES)

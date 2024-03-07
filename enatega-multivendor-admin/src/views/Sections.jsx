@@ -6,7 +6,7 @@ import SectionComponent from '../components/Section/Section'
 import CustomLoader from '../components/Loader/CustomLoader'
 
 // core components
-import { /*deleteSection*/ editSection, getSections } from '../apollo'
+import { deleteSection, editSection, getSections } from '../apollo'
 import Header from '../components/Headers/Header'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
@@ -39,9 +39,9 @@ const GET_SECTIONS = gql`
 const EDIT_SECTION = gql`
   ${editSection}
 `
-// const DELETE_SECTION = gql`
-//   ${deleteSection}
-// `
+const DELETE_SECTION = gql`
+  ${deleteSection}
+`
 
 function Sections(props) {
   const { t } = props
@@ -62,9 +62,9 @@ function Sections(props) {
   const restaurantId = localStorage.getItem('restaurantId')
 
   const [mutateEdit] = useMutation(EDIT_SECTION)
-  // const [mutateDelete] = useMutation(DELETE_SECTION, {
-  //   refetchQueries: [{ query: GET_SECTIONS }]
-  // })
+  const [mutateDelete] = useMutation(DELETE_SECTION, {
+    refetchQueries: [{ query: GET_SECTIONS }]
+  })
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_SECTIONS,
     {

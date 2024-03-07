@@ -61,7 +61,7 @@ const Option = props => {
       variables: { id: restaurantId }
     }
   )
-  const [/*mutate*/ { loading }] = useMutation(DELETE_OPTION, {
+  const [mutate, { loading }] = useMutation(DELETE_OPTION, {
     refetchQueries: [{ query: GET_OPTIONS, variables: { id: restaurantId } }]
   })
 

@@ -58,7 +58,7 @@ const Addon = props => {
       variables: { id: restaurantId }
     }
   )
-  const [/*mutate*/ { loading }] = useMutation(DELETE_ADDON, {
+  const [mutate, { loading }] = useMutation(DELETE_ADDON, {
     refetchQueries: [{ query: GET_ADDONS, variables: { id: restaurantId } }]
   })
 

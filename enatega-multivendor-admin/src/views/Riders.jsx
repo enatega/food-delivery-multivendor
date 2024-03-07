@@ -10,7 +10,7 @@ import RiderComponent from '../components/Rider/Rider'
 import SearchBar from '../components/TableHeader/SearchBar'
 import {
   getRiders,
-  //deleteRider,
+  deleteRider,
   toggleAvailablity,
   getAvailableRiders
 } from '../apollo'
@@ -39,9 +39,9 @@ import ConfigurableValues from '../config/constants'
 const GET_RIDERS = gql`
   ${getRiders}
 `
-// const DELETE_RIDER = gql`
-//   ${deleteRider}
-// `
+const DELETE_RIDER = gql`
+  ${deleteRider}
+`
 const TOGGLE_RIDER = gql`
   ${toggleAvailablity}
 `
@@ -59,9 +59,9 @@ function Riders(props) {
   const [mutateToggle] = useMutation(TOGGLE_RIDER, {
     refetchQueries: [{ query: GET_RIDERS }, { query: GET_AVAILABLE_RIDERS }]
   })
-  // const [mutateDelete] = useMutation(DELETE_RIDER, {
-  //   refetchQueries: [{ query: GET_RIDERS }]
-  // })
+  const [mutateDelete] = useMutation(DELETE_RIDER, {
+    refetchQueries: [{ query: GET_RIDERS }]
+  })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
     GET_RIDERS
   )

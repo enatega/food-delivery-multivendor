@@ -54,7 +54,7 @@ const Category = props => {
   }
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [/*mutate*/ { loading }] = useMutation(DELETE_CATEGORY)
+  const [mutate, { loading }] = useMutation(DELETE_CATEGORY)
 
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
     GET_CATEGORIES,
