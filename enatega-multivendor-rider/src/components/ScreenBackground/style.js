@@ -50,5 +50,10 @@ export default StyleSheet.create({
     backgroundColor: colors.black,
     borderRadius: 7,
     ...alignment.MLmedium
+  },
+  video: {
+    alignSelf: 'center',
+    width: 320,
+    height: 200
   }
 })

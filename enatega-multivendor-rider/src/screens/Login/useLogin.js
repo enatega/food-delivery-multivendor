@@ -21,6 +21,7 @@ const useLogin = () => {
   const [usernameError, setUsernameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
   const { height } = Dimensions.get('window')
+  const [showVideo, setShowVideo] = useState(false)
 
   const { setTokenAsync } = useContext(AuthContext)
 
@@ -114,7 +115,9 @@ const useLogin = () => {
     showPassword,
     setShowPassword,
     loading,
-    height
+    height,
+    showVideo,
+    setShowVideo
   }
 }
 

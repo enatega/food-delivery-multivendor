@@ -99,5 +99,10 @@ export default {
   },
   errorInput: {
     borderColor: colors.textErrorColor
+  },
+  video: {
+    alignSelf: 'center',
+    width: 320,
+    height: 200
   }
 }

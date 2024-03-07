@@ -4,9 +4,11 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  ScrollView
+  ScrollView,
+  Button
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Video, ResizeMode } from 'expo-av'
 import styles from './styles'
 import colors from '../../utilities/colors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -14,7 +16,7 @@ import RiderLogin from '../../assets/svg/RiderLogin.png'
 import { FontAwesome } from '@expo/vector-icons'
 import Spinner from '../../components/Spinner/Spinner'
 import useLogin from './useLogin'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export default function Login() {
   const {
@@ -28,23 +30,36 @@ export default function Login() {
     showPassword,
     setShowPassword,
     loading,
-    height
+    height,
+    showVideo,
+    setShowVideo
   } = useLogin()
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <SafeAreaView style={[styles.flex, styles.bgColor]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ height: height * 1 }}
         style={styles.container}>
-        <Image
-          source={RiderLogin}
-          style={[styles.image]}
-          height={150}
-          width={250}
+        {showVideo ? <Video
+          style={styles.video}
+          source={{
+            uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+          }}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
         />
+          : <Image
+            source={RiderLogin}
+            style={[styles.image]}
+            height={150}
+            width={250}
+          />}
         <View style={styles.innerContainer}>
+          <Button
+            title={showVideo ? 'Stop' : 'How to get credentials?'}
+            onPress={() => { setShowVideo(!showVideo) }}/>
           <TextDefault bolder H2 center style={styles.signInText}>
             {t('signInText')}
           </TextDefault>

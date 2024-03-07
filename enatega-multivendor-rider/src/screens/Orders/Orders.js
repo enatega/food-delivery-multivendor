@@ -55,7 +55,7 @@ const Orders = ({ navigation }) => {
   })
 
   return (
-    <ScreenBackground>
+    <ScreenBackground demoLink={'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'} >
       <View style={styles.innerContainer}>
         <View>
           <Tabs navigation={navigation} />
