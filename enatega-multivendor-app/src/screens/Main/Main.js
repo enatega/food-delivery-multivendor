@@ -54,7 +54,6 @@ import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
-import ActiveOrders from '../../components/Main/ActiveOrders'
 
 // const RESTAURANTS = gql`
 //   ${restaurantList}
@@ -541,7 +540,6 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
-        <ActiveOrders />
       </SafeAreaView>
     </>
   )

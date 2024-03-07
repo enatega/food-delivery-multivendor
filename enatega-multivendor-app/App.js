@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect, useReducer, useRef } from 'react'
 import AppContainer from './src/routes'
 import * as Notifications from 'expo-notifications'
+import * as Device from 'expo-device'
 import * as Font from 'expo-font'
-import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Sentry from 'sentry-expo'
 import { BackHandler, Platform, StatusBar, LogBox } from 'react-native'
@@ -23,6 +24,8 @@ import useEnvVars, { isProduction } from './environment'
 import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
 import { OrdersProvider } from './src/context/Orders'
 import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
+import ReviewModal from './src/components/Review'
+import { NOTIFICATION_TYPES } from './src/utils/enums'
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -34,26 +37,40 @@ LogBox.ignoreAllLogs() // Ignore all log notifications
 // Default Theme
 const themeValue = 'Pink'
 
+Notifications.setNotificationHandler({
+  handleNotification: async notification => {
+    return {
+      shouldShowAlert: notification.request.content.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
+      shouldPlaySound: false,
+      shouldSetBadge: false
+    }
+  }
+})
+
 export default function App() {
+  const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
   const [location, setLocation] = useState(null)
+  const notificationListener = useRef()
+  const responseListener = useRef()
+  const [orderId, setOrderId] = useState()
   // Theme Reducer
   const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
 
   useEffect(() => {
-    const loadAppData = async () => {
+    const loadAppData = async() => {
       try {
         await SplashScreen.preventAutoHideAsync()
       } catch (e) {
         console.warn(e)
       }
-      //await i18n.initAsync()
+      // await i18n.initAsync()
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
-      await permissionForPushNotificationsAsync()
+      // await permissionForPushNotificationsAsync()
       await getActiveLocation()
       BackHandler.addEventListener('hardwareBackPress', exitAlert)
 
@@ -81,7 +98,7 @@ export default function App() {
   useEffect(() => {
     if (!appIsReady) return
 
-    const hideSplashScreen = async () => {
+    const hideSplashScreen = async() => {
       await SplashScreen.hideAsync()
     }
 
@@ -91,7 +108,7 @@ export default function App() {
   useEffect(() => {
     if (!location) return
 
-    const saveLocation = async () => {
+    const saveLocation = async() => {
       await AsyncStorage.setItem('location', JSON.stringify(location))
     }
 
@@ -127,58 +144,95 @@ export default function App() {
     }
   }
 
-  async function permissionForPushNotificationsAsync() {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync()
-    let finalStatus = existingStatus
-    // only ask if permissions have not already been determined, because
-    // iOS won't necessarily prompt the user a second time.
-    if (existingStatus !== 'granted') {
-      // Android remote notification permissions are granted during the app
-      // install, so this will only ask on iOS
-      const { status } = await Notifications.requestPermissionsAsync()
-      finalStatus = status
-    }
+  useEffect(() => {
+    registerForPushNotificationsAsync()
 
-    // Stop here if the user did not grant permissions
-    if (finalStatus !== 'granted') {
-      return
-    }
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log('addNotificationReceivedListener', notification)
+      if (notification.request.content.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        setOrderId(notification.request.content.data.orderId)
+        reviewModalRef.current.open()
+      }
+    })
 
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.HIGH,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C'
-      })
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log('addNotificationResponseReceivedListener', response)
+      reviewModalRef.current.open()
+    })
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current)
+      Notifications.removeNotificationSubscription(responseListener.current)
     }
+  }, [])
+
+  const onOverlayPress = () => {
+    reviewModalRef.current.close()
   }
 
   if (appIsReady) {
     return (
-      <ApolloProvider client={client}>
-        <ThemeContext.Provider
-          value={{ ThemeValue: theme, dispatch: themeSetter }}>
-          <StatusBar
-            backgroundColor={Theme[theme].menuBar}
-            barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
-          />
-          <LocationProvider>
-            <ConfigurationProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <OrdersProvider>
-                    <AppContainer />
-                  </OrdersProvider>
-                </UserProvider>
-              </AuthProvider>
-            </ConfigurationProvider>
-          </LocationProvider>
-          <FlashMessage MessageComponent={MessageComponent} />
-        </ThemeContext.Provider>
-      </ApolloProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ApolloProvider client={client}>
+          <ThemeContext.Provider
+            value={{ ThemeValue: theme, dispatch: themeSetter }}>
+            <StatusBar
+              backgroundColor={Theme[theme].menuBar}
+              barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
+            />
+            <LocationProvider>
+              <ConfigurationProvider>
+                <AuthProvider>
+                  <UserProvider>
+                    <OrdersProvider>
+                      <AppContainer />
+                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId}/>
+                    </OrdersProvider>
+                  </UserProvider>
+                </AuthProvider>
+              </ConfigurationProvider>
+            </LocationProvider>
+            <FlashMessage MessageComponent={MessageComponent} />
+          </ThemeContext.Provider>
+        </ApolloProvider>
+      </GestureHandlerRootView>
     )
   } else {
     return null
   }
 }
+
+async function registerForPushNotificationsAsync() {
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C'
+    })
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!')
+    }
+  } else {
+    alert('Must use physical device for Push Notifications')
+  }
+}
+
+// async function schedulePushNotification() {
+//   await Notifications.scheduleNotificationAsync({
+//     content: {
+//       title: "You've got mail! 📬",
+//       body: 'Here is the notification body',
+//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, orderId: '65e068b2150aab288f2b821f' }
+//     },
+//     trigger: { seconds: 10 }
+//   })
+// }
