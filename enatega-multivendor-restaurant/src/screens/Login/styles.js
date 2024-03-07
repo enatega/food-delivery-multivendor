@@ -44,6 +44,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
 
     elevation: 3
+  },
+  video: {
+    alignSelf: 'center',
+    width: 320,
+    height: 140
   }
 })
 export default styles

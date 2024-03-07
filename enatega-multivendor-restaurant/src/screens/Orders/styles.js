@@ -26,6 +26,11 @@ const Styles = {
   scrollView: {
     backgroundColor: 'transparent',
     marginBottom: Platform === 'ios' ? height * 0.1 : height * 0.1
+  },
+  video: {
+    alignSelf: 'center',
+    width: 320,
+    height: 150
   }
 }
 

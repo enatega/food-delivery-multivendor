@@ -8,9 +8,11 @@ import { Image } from 'react-native-elements/dist/image/Image'
 import { TabBars } from '../../components/TabBars'
 import { HomeOrderDetails } from '../../components/HomeOrderDetails'
 import LottieView from 'lottie-react-native'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Video, ResizeMode } from 'expo-av'
+import { Button } from 'react-native-elements'
 const { width, height } = Dimensions.get('window')
-import i18next from '../../../i18n'
+
 const Orders = props => {
   const {
     loading,
@@ -21,11 +23,13 @@ const Orders = props => {
     deliveredOrders,
     active,
     refetch,
-    setActive
+    setActive,
+    showVideo,
+    setShowVideo
   } = useOrders()
 
   const { loading: mutateLoading } = useAcceptOrder()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   if (error) return <TextError text={error.message} />
   return (
     <>
@@ -34,11 +38,22 @@ const Orders = props => {
       ) : (
         <>
           <View style={styles.topContainer}>
-            <Image
-              source={require('../../assets/orders.png')}
-              PlaceholderContent={<ActivityIndicator />}
-              style={{ width: 250, height: 100 }}
+            {showVideo ? <Video
+              style={styles.video}
+              source={{
+                uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+              }}
+              useNativeControls
+              resizeMode={ResizeMode.CONTAIN}
             />
+              : <Image
+                source={require('../../assets/orders.png')}
+                PlaceholderContent={<ActivityIndicator />}
+                style={{ width: 250, height: 100 }}
+              />}
+            <Button
+              title={showVideo ? 'Stop' : 'Demo?'}
+              onPress={() => { setShowVideo(!showVideo) }}/>
           </View>
           <View
             style={[
@@ -48,8 +63,8 @@ const Orders = props => {
                   active === 0
                     ? colors.green
                     : active === 1
-                    ? colors.white
-                    : colors.white
+                      ? colors.white
+                      : colors.white
               }
             ]}>
             <TabBars
@@ -88,26 +103,26 @@ const Orders = props => {
                           )
                         })
                     : active === 0 && (
-                        <View
+                      <View
+                        style={{
+                          minHeight: height - height * 0.45,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}>
+                        <TextDefault H2 bold>
+                          {t('unReadOrders')}
+                        </TextDefault>
+                        <LottieView
                           style={{
-                            minHeight: height - height * 0.45,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}>
-                          <TextDefault H2 bold>
-                            {t('unReadOrders')}
-                          </TextDefault>
-                          <LottieView
-                            style={{
-                              width: width - 100,
-                              height: 250
-                            }}
-                            source={require('../../assets/loader.json')}
-                            autoPlay
-                            loop
-                          />
-                        </View>
-                      )}
+                            width: width - 100,
+                            height: 250
+                          }}
+                          source={require('../../assets/loader.json')}
+                          autoPlay
+                          loop
+                        />
+                      </View>
+                    )}
                   {active === 1 && processingOrders > 0
                     ? data &&
                       data.restaurantOrders
@@ -128,26 +143,26 @@ const Orders = props => {
                           )
                         })
                     : active === 1 && (
-                        <View
-                          style={{
-                            minHeight: height - height * 0.45,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}>
-                          <TextDefault H2 bold>
+                      <View
+                        style={{
+                          minHeight: height - height * 0.45,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}>
+                        <TextDefault H2 bold>
                           {t('unReadOrders')}
-                          </TextDefault>
-                          <LottieView
-                            style={{
-                              width: width - 100,
-                              height: 250
-                            }}
-                            source={require('../../assets/loader.json')}
-                            autoPlay
-                            loop
-                          />
-                        </View>
-                      )}
+                        </TextDefault>
+                        <LottieView
+                          style={{
+                            width: width - 100,
+                            height: 250
+                          }}
+                          source={require('../../assets/loader.json')}
+                          autoPlay
+                          loop
+                        />
+                      </View>
+                    )}
                   {active === 2 && deliveredOrders > 0
                     ? data &&
                       data.restaurantOrders
@@ -164,26 +179,26 @@ const Orders = props => {
                           )
                         })
                     : active === 2 && (
-                        <View
-                          style={{
-                            minHeight: height - height * 0.45,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}>
-                          <TextDefault H2 bold>
+                      <View
+                        style={{
+                          minHeight: height - height * 0.45,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}>
+                        <TextDefault H2 bold>
                           {t('unReadOrders')}
-                          </TextDefault>
-                          <LottieView
-                            style={{
-                              width: width - 100,
-                              height: 250
-                            }}
-                            source={require('../../assets/loader.json')}
-                            autoPlay
-                            loop
-                          />
-                        </View>
-                      )}
+                        </TextDefault>
+                        <LottieView
+                          style={{
+                            width: width - 100,
+                            height: 250
+                          }}
+                          source={require('../../assets/loader.json')}
+                          autoPlay
+                          loop
+                        />
+                      </View>
+                    )}
                 </View>
               </ScrollView>
             )}

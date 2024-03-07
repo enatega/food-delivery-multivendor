@@ -13,7 +13,8 @@ import { useLogin } from '../../ui/hooks'
 import { colors } from '../../utilities'
 import styles from './styles'
 import { Image, Button, Input, Icon } from 'react-native-elements'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { ResizeMode, Video } from 'expo-av'
 
 const { height } = Dimensions.get('window')
 export default function Login() {
@@ -25,10 +26,12 @@ export default function Login() {
     setPassword,
     setUserName,
     username,
-    password
+    password,
+    showVideo,
+    setShowVideo
   } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
@@ -43,11 +46,22 @@ export default function Login() {
         <View style={{ flex: 1, backgroundColor: colors.white }}>
           <View style={styles.topContainer}>
             <View>
-              <Image
-                source={require('../../assets/Header.png')}
-                PlaceholderContent={<ActivityIndicator />}
-                style={{ width: 150, height: 140 }}
+              {showVideo ? <Video
+                style={styles.video}
+                source={{
+                  uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+                }}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
               />
+                : <Image
+                  source={require('../../assets/Header.png')}
+                  PlaceholderContent={<ActivityIndicator />}
+                  style={{ width: 150, height: 140 }}
+                />}
+              <Button
+                title={showVideo ? 'Stop' : 'How to get credentials?'}
+                onPress={() => { setShowVideo(!showVideo) }}/>
             </View>
           </View>
           <View style={styles.lowerContainer}>

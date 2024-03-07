@@ -3,7 +3,7 @@ import { Restaurant } from '../context'
 
 export default function useOrders() {
   const [active, setActive] = useState(0)
-
+  const [showVideo, setShowVideo] = useState(false)
   const { loading, error, data, refetch, networkStatus } = useContext(
     Restaurant.Context
   )
@@ -31,6 +31,8 @@ export default function useOrders() {
     processingOrders,
     deliveredOrders,
     active,
-    setActive
+    setActive,
+    showVideo,
+    setShowVideo
   }
 }

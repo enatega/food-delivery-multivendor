@@ -12,6 +12,7 @@ export default function useLogin() {
   const [password, setPassword] = useState('12345')
   const usernameRef = useRef()
   const passwordRef = useRef()
+  const [showVideo, setShowVideo] = useState(false)
   const [mutate, { loading, error }] = useMutation(
     gql`
       ${loginQuery}
@@ -55,6 +56,8 @@ export default function useLogin() {
     setPassword,
     setUserName,
     username,
-    password
+    password,
+    showVideo,
+    setShowVideo
   }
 }
