@@ -436,9 +436,18 @@ function Main(props) {
                   scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
                   showsVerticalScrollIndicator={false}
                   ListHeaderComponent={
-                    search ? null : (
-                      <ActiveOrdersAndSections sections={restaurantSections} />
-                    )
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontMainColor}
+                      style={{
+                        ...alignment.MLlarge,
+                        ...alignment.PBsmall,
+                        marginRight: scale(20)
+                      }}
+                      bolder
+                      H3>
+                      {t('allRestaurant')}
+                    </TextDefault>
                   }
                   ListEmptyComponent={emptyView()}
                   keyExtractor={(item, index) => index.toString()}
@@ -526,6 +535,7 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
+        <ActiveOrders />
       </SafeAreaView>
     </>
   )
