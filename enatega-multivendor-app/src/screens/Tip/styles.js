@@ -11,8 +11,8 @@ const styles = (props = null) =>
 
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.PRsmall,
-      ...alignment.PLsmall,
+      ...alignment.PRmedium,
+      ...alignment.PLmedium,
       ...alignment.PTsmall
     },
 

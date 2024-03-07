@@ -8,7 +8,12 @@ import {
   FlatList,
   ScrollView
 } from 'react-native'
-import { MaterialIcons, Ionicons } from '@expo/vector-icons'
+import {
+  MaterialIcons,
+  Ionicons,
+  AntDesign,
+  SimpleLineIcons
+} from '@expo/vector-icons'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -136,12 +141,17 @@ function ImageTextCenterHeader(props, ref) {
                     height: props.iconTouchHeight
                   }
                 ]}
-                onPress={() => alert('Coming soon')}>
-                <Ionicons
-                  name="share-social"
+                onPress={() => {
+                  navigation.navigate('About', {
+                    restaurantObject: { ...aboutObject, isOpen: null },
+                    tab: false
+                  })
+                }}>
+                <SimpleLineIcons
+                  name="info"
+                  size={18}
                   style={{
-                    color: props.black,
-                    fontSize: props.iconSize
+                    color: props.black
                   }}
                 />
               </TouchableOpacity>
@@ -261,12 +271,7 @@ function ImageTextCenterHeader(props, ref) {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles().ratingBox}
-            onPress={() => {
-              navigation.navigate('About', {
-                restaurantObject: { ...aboutObject, isOpen: null },
-                tab: false
-              })
-            }}>
+            onPress={() => alert('Coming soon')}>
             <Text
               style={{
                 fontSize: scale(14),

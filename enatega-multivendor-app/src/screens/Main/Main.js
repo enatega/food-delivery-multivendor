@@ -23,9 +23,7 @@ import {
   MaterialCommunityIcons
 } from '@expo/vector-icons'
 import { useMutation } from '@apollo/client'
-import {
-  useCollapsibleSubHeader,
-} from 'react-navigation-collapsible'
+import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
@@ -50,7 +48,7 @@ import { TopPicks } from '../../components/Main/TopPicks'
 import { TopBrands } from '../../components/Main/TopBrands'
 
 const RESTAURANTS = gql`
-    ${restaurantList}
+  ${restaurantList}
 `
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -69,12 +67,11 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-  const [selectedType, setSelectedType] = useState('restaurant');
+  const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
-
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -94,7 +91,6 @@ function Main(props) {
     navigation.setOptions(
       navigationOptions({
         headerMenuBackground: currentTheme.newheaderColor,
-        horizontalLine: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen
@@ -118,7 +114,7 @@ function Main(props) {
     Work: 'briefcase',
     Other: 'location-pin'
   }
-  
+
   const setAddressLocation = async address => {
     setLocation({
       _id: address._id,
@@ -330,35 +326,33 @@ function Main(props) {
   // }
 
   const searchRestaurants = searchText => {
-    if (!searchText) return data?.nearByRestaurants?.restaurants || [];
+    if (!searchText) return data?.nearByRestaurants?.restaurants || []
 
-    const regex = new RegExp(searchText, 'i');
+    const regex = new RegExp(searchText, 'i')
     return (data?.nearByRestaurants?.restaurants || []).filter(restaurant => {
-      const resultName = restaurant.name.search(regex);
-      if (resultName >= 0) return true;
+      const resultName = restaurant.name.search(regex)
+      if (resultName >= 0) return true
 
       return restaurant.categories.some(category => {
-        const result = category.title.search(regex);
-        if (result >= 0) return true;
+        const result = category.title.search(regex)
+        if (result >= 0) return true
 
-        return category.foods.some(food => food.title.search(regex) >= 0);
-      });
-    });
-  };
+        return category.foods.some(food => food.title.search(regex) >= 0)
+      })
+    })
+  }
 
   // Flatten the array. That is important for data sequence
   // const restaurantSections = sections.map(sec => ({
-    //   ...sec,
-    //   restaurants: sec.restaurants
-      //     .map(id => restaurants.filter(res => res._id === id))
-      //     .flat()
+  //   ...sec,
+  //   restaurants: sec.restaurants
+  //     .map(id => restaurants.filter(res => res._id === id))
+  //     .flat()
   // }))
 
   return (
     <>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
@@ -368,56 +362,66 @@ function Main(props) {
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
-                    <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu', { selectedType: 'restaurant' })}>
-                    <View>
+                    <TouchableOpacity
+                      style={styles().mainItem}
+                      onPress={() =>
+                        navigation.navigate('Menu', {
+                          selectedType: 'restaurant'
+                        })
+                      }>
+                      <View>
+                        <TextDefault
+                          H4
+                          bolder
+                          textColor={currentTheme.fontThirdColor}
+                          style={styles().ItemName}>
+                          Food Delivery
+                        </TextDefault>
+                        <TextDefault
+                          Normal
+                          textColor={currentTheme.fontThirdColor}
+                          style={styles().ItemDescription}>
+                          Order food you love
+                        </TextDefault>
+                      </View>
+                      <Image
+                        source={require('../../assets/images/ItemsList/menu.png')}
+                        style={styles().popularMenuImg}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles().mainItem}
+                      onPress={() =>
+                        navigation.navigate('Menu', { selectedType: 'grocery' })
+                      }>
                       <TextDefault
                         H4
                         bolder
                         textColor={currentTheme.fontThirdColor}
                         style={styles().ItemName}>
-                        Food Delivery
+                        Grocery
                       </TextDefault>
                       <TextDefault
                         Normal
                         textColor={currentTheme.fontThirdColor}
                         style={styles().ItemDescription}>
-                        Order food you love
+                        Essentials delivered fast
                       </TextDefault>
-                    </View>
-                    <Image
-                      source={require('../../assets/images/ItemsList/menu.png')}
-                      style={styles().popularMenuImg}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                    <TouchableOpacity style={styles().mainItem} onPress={() => navigation.navigate('Menu', { selectedType: 'grocery' })}>
-                    <TextDefault
-                      H4
-                      bolder
-                      textColor={currentTheme.fontThirdColor}
-                      style={styles().ItemName}>
-                      Grocery
-                    </TextDefault>
-                    <TextDefault
-                      Normal
-                      textColor={currentTheme.fontThirdColor}
-                      style={styles().ItemDescription}>
-                      Essentials delivered fast
-                    </TextDefault>
-                    <Image
-                      source={require('../../assets/images/ItemsList/grocery.png')}
-                      style={styles().popularMenuImg}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
+                      <Image
+                        source={require('../../assets/images/ItemsList/grocery.png')}
+                        style={styles().popularMenuImg}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
                   </View>
                   <View>
                     <OrderAgain />
                   </View>
-                  <View >
+                  <View>
                     <TopPicks />
                   </View>
-                  <View >
+                  <View>
                     <TopBrands />
                   </View>
                 </ScrollView>
@@ -457,8 +461,6 @@ function Main(props) {
                   <Search setSearch={setSearch} search={search} /> 
                   <MapSection location={location} restaurants={restaurants} />
                 </CollapsibleSubHeaderAnimator> */}
-                 
-
               </View>
             </View>
           </View>

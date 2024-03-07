@@ -5,7 +5,6 @@ const { height } = Dimensions.get('window')
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      height: height * 0.36,
       width: '100%',
       backgroundColor: props != null ? props.themeBackground : 'transparent',
       ...alignment.PLmedium,

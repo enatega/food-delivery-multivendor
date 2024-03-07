@@ -700,7 +700,7 @@ function Checkout(props) {
                     <View style={styles().clockIcon}>
                       <AntDesign
                         name="clockcircleo"
-                        size={15}
+                        size={14}
                         color={currentTheme.fontFourthColor}
                       />
                     </View>

@@ -24,13 +24,13 @@ const styles = (props = null) =>
       width: '90%',
       paddingLeft: 10
     },
-    mapMainContainer: {
-      backgroundColor: props != null ? props.themeBackground : 'white',
-      flexGrow: 1,
-      ...alignment.PTlarge,
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
-    },
+    // mapMainContainer: {
+    //   backgroundColor: props != null ? props.themeBackground : 'white',
+    //   flexGrow: 1,
+    //   ...alignment.PTlarge,
+    //   ...alignment.PLmedium,
+    //   ...alignment.PRmedium
+    // },
 
     location: {
       marginLeft: scale(3)
@@ -61,7 +61,9 @@ const styles = (props = null) =>
       transform: [{ translateX: -25 }, { translateY: -25 }]
     },
     mainContainer: {
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props.themeBackground : 'white',
+
+      ...alignment.Pmedium
     },
     restaurantContainer: {
       width: '100%',
@@ -101,8 +103,7 @@ const styles = (props = null) =>
     timingContainer: {
       // alignSelf: 'center',
       width: '100%',
-      marginBottom: scale(10),
-      marginTop: scale(5)
+      ...alignment.PTmedium
     },
     dateReview: {
       marginTop: -8,
@@ -112,26 +113,26 @@ const styles = (props = null) =>
       ...alignment.PTsmall,
       ...alignment.PBxSmall
     },
-    navigationContainer: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-      width: '100%',
-      zIndex: 999
-    },
-    tab: {
-      backgroundColor: '#E4FFD9',
-      width: '48%',
-      height: verticalScale(35),
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: scale(10),
-      margin: scale(-10)
-    },
-    selectedTab: {
-      backgroundColor: props != null ? props.main : '#90EA93',
-      borderRadius: scale(10)
-    },
+    // navigationContainer: {
+    //   flexDirection: 'row',
+    //   alignItems: 'flex-start',
+    //   justifyContent: 'center',
+    //   width: '100%',
+    //   zIndex: 999
+    // },
+    // tab: {
+    //   backgroundColor: '#E4FFD9',
+    //   width: '48%',
+    //   height: verticalScale(35),
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    //   borderRadius: scale(10),
+    //   margin: scale(-10)
+    // },
+    // selectedTab: {
+    //   backgroundColor: props != null ? props.main : '#90EA93',
+    //   borderRadius: scale(10)
+    // },
     timingRow: {
       flexDirection: 'row',
       justifyContent: 'space-evenly',

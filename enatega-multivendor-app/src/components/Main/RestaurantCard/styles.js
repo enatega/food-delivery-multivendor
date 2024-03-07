@@ -15,15 +15,11 @@ const styles = (props = null) =>
     //   ...alignment.MLlarge,
     // },
     offerContainer: {
-      elevation: 3,
-      shadowColor: theme.Pink.white,
-      height: height * 0.3,
       borderRadius: 25,
       width: scale(270),
-      ...alignment.MRsmall,
-
+      ...alignment.MRsmall
     },
-   
+
     overlayContainer: {
       position: 'absolute',
       top: 0,
@@ -42,7 +38,7 @@ const styles = (props = null) =>
       zIndex: 1,
       borderRadius: scale(16),
       backgroundColor: props != null ? props.menuBar : 'white',
-      borderWidth:1,
+      borderWidth: 1,
       borderColor: props != null ? props.newBorderColor : '#F3F4F6'
     },
     // featureOverlay: {
@@ -64,27 +60,28 @@ const styles = (props = null) =>
     //   backgroundColor: props != null ? props.iconColorPink : 'red'
     // },
     descriptionContainer: {
-      paddingTop: verticalScale(12),
-      paddingBottom: verticalScale(12),
+      // paddingTop: verticalScale(12),
+      // paddingBottom: verticalScale(12),
       paddingLeft: scale(10),
       paddingRight: scale(10),
       width: '100%',
-      borderColor: props !=null ? props.iconBackground: '#E5E7EB',
-      borderWidth:1,
-      borderBottomLeftRadius:8,
-      borderBottomRightRadius:8
+      borderColor: props != null ? props.iconBackground : '#E5E7EB',
+      borderWidth: 1,
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8,
+      height: '35%',
+      justifyContent: 'center'
     },
-    aboutRestaurant: {   
+    aboutRestaurant: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems:'center',
-      gap:scale(2)
+      alignItems: 'center',
+      gap: scale(2)
     },
     offerCategoty: {
       width: '100%',
-      paddingBottom:scale(7),
-      paddingTop:scale(7),
-      
+      paddingBottom: scale(7),
+      paddingTop: scale(7)
     },
     mainContainer: {
       paddingTop: scale(15),
@@ -98,30 +95,30 @@ const styles = (props = null) =>
       width: scale(270),
       height: '100%',
       borderTopLeftRadius: scale(8),
-      borderTopRightRadius: scale(8),
+      borderTopRightRadius: scale(8)
     },
     imageContainer: {
       position: 'relative',
       alignItems: 'center',
-      height: '80%'
+      height: '65%'
     },
-    restaurantTotalRating:{
+    restaurantTotalRating: {
       paddingLeft: scale(5)
     },
     restaurantPriceContainer: {
       marginTop: scale(3),
       fontSize: 15
     },
-    deliveryInfo:{
-      flexDirection:'row',
-      alignItems:'center',
-      gap:scale(18)
+    deliveryInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(18)
     },
-    deliveryTime:{
-      flexDirection:'row',
-      alignItems:'center',
-      gap:scale(4)
-    },
+    deliveryTime: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(4)
+    }
   })
 
 export default styles
