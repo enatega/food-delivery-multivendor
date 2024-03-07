@@ -9,7 +9,6 @@ import React, {
 import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import { LocationContext } from '../../context/Location'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
@@ -31,28 +30,85 @@ const LATITUDE_DELTA = 40
 const LONGITUDE_DELTA = 40
 
 export default function AddNewAddress(props) {
-  const { longitude, latitude } = props.route.params?.location || {}
-  console.log('AddNewAddress', latitude, longitude)
-  // city, latitude, longitude
-  const locationData = props.route.params?.locationData || {}
+  let { Location } = props.route.params || {}
+  let { City } = props.route.params || {}
+  let { locationData } = props.route.params || {}
+  const [latitude, setLatitude] = useState(LATITUDE)
+  const [longitude, setLongitude] = useState(LONGITUDE)
+  const [latitudeDelta, setLatitudeDelta] = useState(LATITUDE_DELTA)
+  const [longitudeDelta, setLongitudeDelta] = useState(LONGITUDE_DELTA)
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
   const [selectedValue, setSelectedValue] = useState({
-    city: locationData.city !== null ? locationData.city : '',
-    address:
-      locationData.deliveryAddress !== null ? locationData.deliveryAddress : '',
-    latitude: locationData.latitude !== null ? locationData.latitude : '',
-    longitude: locationData.longitude !== null ? locationData.longitude : ''
+    city: '',
+    address: '',
+    latitude: '',
+    longitude: ''
   })
   const { location, setLocation } = useContext(LocationContext)
   const mapRef = useRef()
-
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const inset = useSafeAreaInsets()
   const navigation = useNavigation()
-
   const { t } = useTranslation()
+
+  useEffect(() => {
+    console.log('useEffect')
+    setCoordinates({ longitude, latitude })
+  }, [longitude, latitude])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (Location && Location.latitude && Location.longitude) {
+        setLatitude(Location.latitude)
+        setLongitude(Location.longitude)
+        setLatitudeDelta(0.001)
+        setLongitudeDelta(0.001)
+        const response = await fetchAddressFromCoordinates(
+          Location.latitude,
+          Location.longitude
+        )
+        setSelectedValue({
+          city: response.city,
+          address: response.formattedAddress,
+          latitude: Location.latitude,
+          longitude: Location.longitude
+        })
+      } else if (City && City.latitude && City.longitude) {
+        setLatitude(+City.latitude)
+        setLongitude(+City.longitude)
+        setLatitudeDelta(0.08)
+        setLongitudeDelta(0.08)
+        const response = await fetchAddressFromCoordinates(
+          City.latitude,
+          City.longitude
+        )
+        setSelectedValue({
+          city: response.city,
+          address: '',
+          latitude: +City.latitude,
+          longitude: +City.longitude
+        })
+      } else if (
+        locationData &&
+        locationData.latitude &&
+        locationData.longitude
+      ) {
+        setLatitude(+locationData.latitude)
+        setLongitude(+locationData.longitude)
+        setLatitudeDelta(0.001)
+        setLongitudeDelta(0.001)
+        setSelectedValue({
+          city: locationData.city,
+          address: locationData.deliveryAddress,
+          latitude: +locationData.latitude,
+          longitude: +locationData.longitude
+        })
+      }
+    }
+    fetchData()
+  }, [props])
 
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -90,26 +146,20 @@ export default function AddNewAddress(props) {
       latitude: coordinates.latitude,
       longitude: coordinates.longitude
     })
-    // populate city, address info based on coordinates
   })
 
-  const onSelectSearch = location => {
-    setCoordinates(location)
+  const onSelectSearch = locationn => {
+    setCoordinates(locationn)
   }
 
-  const setCoordinates = useCallback(location => {
+  const setCoordinates = useCallback(locationn => {
     mapRef.current.fitToCoordinates([
       {
-        latitude: location.latitude,
-        longitude: location.longitude
+        latitude: locationn.latitude,
+        longitude: locationn.longitude
       }
     ])
   })
-
-  useEffect(() => {
-    console.log('useEffect')
-    setCoordinates({ longitude, latitude })
-  }, [])
 
   const onSelectLocation = () => {
     if (location) {
@@ -133,11 +183,6 @@ export default function AddNewAddress(props) {
     }
   }
 
-  console.log(
-    'Selected Value:',
-    JSON.stringify(props.route.params?.locationData, null, 2)
-  )
-
   return (
     <>
       <View style={styles().flex}>
@@ -145,10 +190,10 @@ export default function AddNewAddress(props) {
           <MapView
             ref={mapRef}
             initialRegion={{
-              latitude: LATITUDE,
-              longitude: LONGITUDE,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA
+              latitude: latitude,
+              longitude: longitude,
+              latitudeDelta: latitudeDelta,
+              longitudeDelta: longitudeDelta
             }}
             customMapStyle={
               themeContext.ThemeValue === 'Dark'
@@ -181,8 +226,10 @@ export default function AddNewAddress(props) {
             cityModalVisible={cityModalVisible}
             onSelect={onSelectCity}
           />
-          <View style={[styles(currentTheme).textInput]}>
-            <TouchableOpacity onPress={() => setSearchModalVisible(true)}>
+          <View style={styles().textInput}>
+            <TouchableOpacity
+              style={{ width: '100%', flex: 1, justifyContent: 'center' }}
+              onPress={() => setSearchModalVisible(true)}>
               <Text
                 style={{
                   color: currentTheme.buttonText,
@@ -199,7 +246,19 @@ export default function AddNewAddress(props) {
               placeholderTextColor={currentTheme.placeholderText}
               value={selectedValue.address}
               onChangeText={text => {}}
-            />
+            /><TouchableOpacity
+              style={[styles(currentTheme).textInput]}
+              onPress={() => setSearchModalVisible(true)}>
+              <View>
+                <Text
+                  style={{
+                    color: currentTheme.buttonText,
+                    overflow: 'scroll'
+                  }}>
+                  {selectedValue.address || 'Address'}
+                </Text>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => setSearchModalVisible(true)}>
               <MaterialIcons
                 name="edit"

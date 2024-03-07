@@ -275,7 +275,7 @@ export const en = {
   viewLess: 'View Less',
   viewAll: 'View All',
   currentLocation: 'Current Location',
-  useCurrentLocation: 'User Current Location',
+  useCurrentLocation: 'Use Current Location',
   locationPermissionMessage:
     'Tap on this message to open Settings then allow app to use location from permissions.',
   enategaUseYourLocationMessage:
@@ -394,7 +394,7 @@ export const en = {
   saveAddress: 'Save Address',
   house: 'House',
   office: 'Office',
-  appartment: 'Appartment',
+  apartment: 'Apartment',
   tapToRate: 'Tap to Rate',
   locationType: 'Location Type',
   locationTypeDetails: 'The location type helps us to find you better'

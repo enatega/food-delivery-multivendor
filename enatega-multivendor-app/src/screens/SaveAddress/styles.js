@@ -60,14 +60,18 @@ const styles = (props = null) =>
       borderRadius: scale(10),
       ...alignment.MTmedium,
       ...alignment.MBmedium
-
-      //backgroundColor: '#335599'
     },
     locationRow: {
       flex: 1,
       flexDirection: 'row',
+      justifyContent: 'center',
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: props !== null ? props.verticalLine : '#D1D5DB'
+    },
+    lastLocationRow: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center'
     },
     locationIcon: {
       flex: 2,
@@ -77,12 +81,20 @@ const styles = (props = null) =>
       ...alignment.PTmedium,
       ...alignment.PBmedium
     },
+    locationIconStyles: {
+      width: '100%',
+      height: '100%',
+      justifyContent: 'center'
+    },
     locationTypes: {
       flex: 8,
       justifyContent: 'center',
-      ...alignment.MLxSmall,
-      ...alignment.PTmedium,
-      ...alignment.PBmedium
+      ...alignment.MLxSmall
+    },
+    locationStyles: {
+      width: '100%',
+      height: '80%',
+      justifyContent: 'center'
     },
     labelButtonContainer: {
       ...alignment.PxSmall,

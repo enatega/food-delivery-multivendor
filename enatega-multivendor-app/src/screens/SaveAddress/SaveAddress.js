@@ -1,11 +1,12 @@
-import React, { useContext, useLayoutEffect } from 'react'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import {
   View,
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
   ScrollView,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -19,6 +20,8 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
+import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 
 function SaveAddress(props) {
@@ -28,6 +31,7 @@ function SaveAddress(props) {
   const { setLocation } = useContext(LocationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const [selectedLabel, setSelectedLabel] = useState('')
 
   const inset = useSafeAreaInsets()
 
@@ -76,16 +80,22 @@ function SaveAddress(props) {
   }, [props.navigation])
 
   const onSelectLocation = () => {
-    setLocation({
-      label: locationData.label,
-      deliveryAddress: locationData.deliveryAddress,
-      latitude: locationData.latitude,
-      longitude: locationData.longitude,
-      city: locationData.city
-    })
-    navigation.navigate('Main')
+    if (selectedLabel) {
+      setLocation({
+        label: selectedLabel,
+        deliveryAddress: locationData.deliveryAddress,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        city: locationData.city
+      })
+      navigation.navigate('Main')
+    } else {
+      Alert.alert('Alert', 'Location type not selected')
+    }
   }
-  //console.log('Selected Value:', JSON.stringify(locationData, null, 2))
+  const handleLabelSelection = label => {
+    setSelectedLabel(label)
+  }
 
   return (
     <>
@@ -133,42 +143,126 @@ function SaveAddress(props) {
                   <View style={styles(currentTheme).locationContainer}>
                     <View style={styles(currentTheme).locationRow}>
                       <View style={styles().locationIcon}>
-                        <CustomOtherIcon />
+                        <TouchableOpacity
+                          style={styles().locationIconStyles}
+                          onPress={() => handleLabelSelection('Apartment')}>
+                          <CustomOtherIcon
+                            iconColor={
+                              selectedLabel === 'Apartment'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }
+                          />
+                        </TouchableOpacity>
                       </View>
                       <View style={styles().locationTypes}>
-                        <TextDefault H5 bolder>
-                          {t('appartment')}
-                        </TextDefault>
+                        <TouchableOpacity
+                          style={styles().locationStyles}
+                          onPress={() => handleLabelSelection('Apartment')}>
+                          <TextDefault
+                            H5
+                            bolder
+                            textColor={
+                              selectedLabel === 'Apartment'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }>
+                            {t('apartment')}
+                          </TextDefault>
+                        </TouchableOpacity>
                       </View>
                     </View>
                     <View style={styles(currentTheme).locationRow}>
                       <View style={styles().locationIcon}>
-                        <CustomOtherIcon />
+                        <TouchableOpacity
+                          style={styles().locationIconStyles}
+                          onPress={() => handleLabelSelection('House')}>
+                          <CustomHomeIcon
+                            iconColor={
+                              selectedLabel === 'House'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }
+                          />
+                        </TouchableOpacity>
                       </View>
                       <View style={styles().locationTypes}>
-                        <TextDefault H5 bolder>
-                          {t('house')}
-                        </TextDefault>
+                        <TouchableOpacity
+                          style={styles().locationStyles}
+                          onPress={() => handleLabelSelection('House')}>
+                          <TextDefault
+                            H5
+                            bolder
+                            textColor={
+                              selectedLabel === 'House'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }>
+                            {t('house')}
+                          </TextDefault>
+                        </TouchableOpacity>
                       </View>
                     </View>
                     <View style={styles(currentTheme).locationRow}>
                       <View style={styles().locationIcon}>
-                        <CustomOtherIcon />
+                        <TouchableOpacity
+                          style={styles().locationIconStyles}
+                          onPress={() => handleLabelSelection('Office')}>
+                          <CustomWorkIcon
+                            iconColor={
+                              selectedLabel === 'Office'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }
+                          />
+                        </TouchableOpacity>
                       </View>
                       <View style={styles().locationTypes}>
-                        <TextDefault H5 bolder>
-                          {t('office')}
-                        </TextDefault>
+                        <TouchableOpacity
+                          style={styles().locationStyles}
+                          onPress={() => handleLabelSelection('Office')}>
+                          <TextDefault
+                            H5
+                            bolder
+                            textColor={
+                              selectedLabel === 'Office'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }>
+                            {t('office')}
+                          </TextDefault>
+                        </TouchableOpacity>
                       </View>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={styles().lastLocationRow}>
                       <View style={styles().locationIcon}>
-                        <CustomOtherIcon />
+                        <TouchableOpacity
+                          style={styles().locationIconStyles}
+                          onPress={() => handleLabelSelection('Other')}>
+                          <CustomOtherIcon
+                            iconColor={
+                              selectedLabel === 'Other'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }
+                          />
+                        </TouchableOpacity>
                       </View>
                       <View style={styles().locationTypes}>
-                        <TextDefault H5 bolder>
-                          {t('Other')}
-                        </TextDefault>
+                        <TouchableOpacity
+                          style={styles().locationStyles}
+                          onPress={() => handleLabelSelection('Other')}>
+                          <TextDefault
+                            H5
+                            bolder
+                            textColor={
+                              selectedLabel === 'Other'
+                                ? currentTheme.newheaderColor
+                                : currentTheme.darkBgFont
+                            }>
+                            {t('Other')}
+                          </TextDefault>
+                        </TouchableOpacity>
                       </View>
                     </View>
                   </View>
