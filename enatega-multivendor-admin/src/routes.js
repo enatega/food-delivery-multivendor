@@ -53,7 +53,7 @@ import { ReactComponent as RatingIcon } from './assets/svg/rating.svg'
 import { ReactComponent as TimingIcon } from './assets/svg/timings.svg'
 import { ReactComponent as RestaurantSectionIcon } from './assets/svg/restSection.svg'
 import SuperAdminDashboard from './views/SuperAdminDashboard'
-// import { ReactComponent as Icon } from './assets/svg/.svg'
+import Cuisines from './views/Cuisines'
 
 var routes = [
   {
@@ -124,6 +124,15 @@ var routes = [
     name: 'Coupons',
     icon: CouponsIcon,
     component: Coupons,
+    layout: '/super_admin',
+    appearInSidebar: true,
+    admin: true
+  },
+  {
+    path: '/cuisines',
+    name: 'Cousines',
+    icon: CouponsIcon,
+    component: Cuisines,
     layout: '/super_admin',
     appearInSidebar: true,
     admin: true
