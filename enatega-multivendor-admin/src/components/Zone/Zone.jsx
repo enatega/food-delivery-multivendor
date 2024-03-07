@@ -11,6 +11,7 @@ import { Box, Typography, Input, Button, Alert, Grid } from '@mui/material'
 // core components
 import { createZone, editZone, getZones } from '../../apollo'
 import { transformPath, transformPolygon } from '../../utils/coordinates'
+import ConfigurableValues from '../../config/constants'
 
 const CREATE_ZONE = gql`
   ${createZone}
@@ -26,6 +27,7 @@ const Zone = props => {
   const [path, setPath] = useState(
     props.zone ? transformPolygon(props.zone.location.coordinates[0]) : []
   )
+  const {PAID_VERSION}=ConfigurableValues()
   const [mutation] = useState(props.zone ? EDIT_ZONE : CREATE_ZONE)
   const [title, setTitle] = useState(props.zone ? props.zone.title : '')
   const [description, setDescription] = useState(
@@ -240,8 +242,7 @@ const Zone = props => {
           <Box>
             <Button
               className={globalClasses.button}
-              //disabled={loading}
-              disabled
+              disabled={!PAID_VERSION}
               onClick={async e => {
                 e.preventDefault()
                 if (onSubmitValidation()) {
