@@ -19,6 +19,8 @@ const ConfigurableValues = () => {
     GOOGLE: configuration.googleColor,
   };
   const SENTRY_DSN = configuration.webSentryUrl;
+  const SKIP_EMAIL_VERIFICATION = configuration.skipEmailVerification;
+  const SKIP_MOBILE_VERIFICATION = configuration.skipMobileVerification;
 
   return {
     SERVER_URL,
@@ -31,6 +33,8 @@ const ConfigurableValues = () => {
     AMPLITUDE_API_KEY,
     LIBRARIES,
     SENTRY_DSN,
+    SKIP_EMAIL_VERIFICATION,
+    SKIP_MOBILE_VERIFICATION
   };
 };
 

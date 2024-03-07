@@ -27,6 +27,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
+import ConfigurableValues from '../config/constants'
 
 const GET_FOODS = gql`
   ${getRestaurantDetail}
@@ -36,6 +37,7 @@ const DELETE_FOOD = gql`
 `
 const Food = props => {
   const { t } = props
+  const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [food, setFood] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -43,7 +45,7 @@ const Food = props => {
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [, /*mutate*/ { loading }] = useMutation(DELETE_FOOD, {
+  const [mutate, { loading }] = useMutation(DELETE_FOOD, {
     refetchQueries: [{ query: GET_FOODS, variables: { id: restaurantId } }]
   })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
@@ -149,12 +151,14 @@ const Food = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  //uncomment this for paid version
-                  //toggleModal(row)
+                  if(PAID_VERSION)
+                  toggleModal(row)
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -165,18 +169,20 @@ const Food = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  //uncomment this for paid version
-                  // mutate({
-                  //   variables: {
-                  //     id: row._id,
-                  //     restaurant: restaurantId,
-                  //     categoryId: row.categoryId
-                  //   }
-                  // })
+                  if(PAID_VERSION)
+                  mutate({
+                    variables: {
+                      id: row._id,
+                      restaurant: restaurantId,
+                      categoryId: row.categoryId
+                    }
+                  })
+                  else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>

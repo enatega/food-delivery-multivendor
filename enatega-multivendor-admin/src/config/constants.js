@@ -3,7 +3,6 @@ import ConfigurationContext from '../context/Configuration'
 
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
-  console.log('configuration', configuration)
   const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
   const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
@@ -19,6 +18,7 @@ const ConfigurableValues = () => {
   const CLOUDINARY_FOOD = configuration.cloudinaryApiKey
   const VAPID_KEY =
     'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w'
+  const PAID_VERSION = configuration.isPaidVersion
 
   return {
     GOOGLE_MAPS_KEY,
@@ -34,7 +34,8 @@ const ConfigurableValues = () => {
     SENTRY_DSN,
     CLOUDINARY_UPLOAD_URL,
     CLOUDINARY_FOOD,
-    VAPID_KEY
+    VAPID_KEY,
+    PAID_VERSION
   }
 }
 

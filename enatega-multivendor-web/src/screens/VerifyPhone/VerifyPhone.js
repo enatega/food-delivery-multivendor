@@ -17,6 +17,7 @@ import OtpInput from "react-otp-input";
 import { Link as RouterLink } from "react-router-dom";
 import { sendOtpToPhoneNumber, updateUser } from "../../apollo/server";
 import { useTranslation } from 'react-i18next';
+import ConfigurableValues from "../../config/constants";
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -38,6 +39,7 @@ function VerifyPhone() {
     Math.floor(100000 + Math.random() * 900000).toString()
   );
   const { profile } = useContext(UserContext);
+  const { SKIP_MOBILE_VERIFICATION } = ConfigurableValues()
 
   const [sendOtp, { loading: loadingOtp }] = useMutation(SEND_OTP_TO_PHONE, {
     onCompleted: onOtpCompleted,
@@ -107,7 +109,7 @@ function VerifyPhone() {
   });
 
   const onCodeFilled = async (code) => {
-    if (code === otpFrom) {
+    if (SKIP_MOBILE_VERIFICATION || code === otpFrom) {
       mutate({
         variables: {
           name: profile.name,
