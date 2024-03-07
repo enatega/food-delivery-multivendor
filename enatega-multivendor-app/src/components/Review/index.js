@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import TextDefault from '../Text/TextDefault/TextDefault'
@@ -59,16 +59,23 @@ function Review({ onOverlayPress, theme, orderId }, ref) {
           <TextDefault bolder H3 textColor={theme.gray900}>
             {'How was your order?'}
           </TextDefault>
-          <CrossCirleIcon/>
+          <TouchableOpacity onPress={onCompleted}>
+            <CrossCirleIcon/>
+          </TouchableOpacity>
         </View>
         <View style={styles.itemContainer}>
           <View style={{ justifyContent: 'space-evenly' }}>
             {order?.items?.slice(0, 2).map((item, index) => (<TextDefault key={`${item.food}-${index}`} H5 bold textColor={theme.gray900}>{item.title}</TextDefault>))}
+            <View>
+              {order?.deliveredAt && <TextDefault textColor={theme.gray500} H5>{(new Date(order?.deliveredAt).toString())}</TextDefault>}
+            </View>
           </View>
           <View>
-            <Image source={require('../../assets/images/food_placeholder.png')} style={styles.image}/>
+            <Image source={order?.restaurant?.image ? require('../../assets/images/food_placeholder.png') : { uri: order?.restaurant?.image }} style={styles.image}/>
+
           </View>
         </View>
+
         <View style={{ flexDirection: 'row' }}>
           <StarRating numberOfStars={5} onSelect={onSelectRating}/>
         </View>
@@ -104,9 +111,9 @@ const StarRating = ({ numberOfStars = 5, onSelect }) => {
   }
   return (
     <View style={styles.starContainer}>
-      {stars.map(index => <TouchableWithoutFeedback key={`star-${index}`} onPress={() => onPress(index + 1)}>
+      {stars.map(index => <TouchableWithoutFeedback key={`star-${index}`} onPress={() => onPress(index)}>
         <View style={{ flex: 1 }}>
-          <StarIcon isFilled={index + 1 <= selected}/>
+          <StarIcon isFilled={index <= selected}/>
         </View>
       </TouchableWithoutFeedback>)}
     </View>
