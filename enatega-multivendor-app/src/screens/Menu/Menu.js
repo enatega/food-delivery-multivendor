@@ -33,7 +33,7 @@ import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
-import { restaurantList } from '../../apollo/queries'
+import { getCuisines, restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -58,6 +58,10 @@ const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
+const GET_CUISINES = gql`
+  ${getCuisines}
+`
+
 export const FILTER_TYPE = {
   CHECKBOX: 'checkbox',
   RADIO: 'radio'
@@ -67,40 +71,6 @@ export const FILTER_VALUES = {
     type: FILTER_TYPE.RADIO,
     values: ['Relevance (Default)', 'Fast Delivery', 'Distance'],
     selected: []
-  },
-  Cuisines: {
-    selected: [],
-    type: FILTER_TYPE.CHECKBOX,
-    values: [
-      'American',
-      'BBQ',
-      'Beverages',
-      'Biryani',
-      'Broast',
-      'Burgers',
-      'Cakes & Bakery',
-      'Chinese',
-      'Continental',
-      'Desserts',
-      'Fast Food',
-      'Haleem',
-      'Ice cream',
-      'Japanese',
-      'Karahi',
-      'Middle Eastern',
-      'Nhari',
-      'Pakistani',
-      'Pizza',
-      'Pulao',
-      'Qeema',
-      'Samosa',
-      'Sandwich',
-      'Steaks',
-      'Tea & Coffee',
-      'Thai',
-      'Vegetarian',
-      'Western'
-    ]
   },
   Offers: {
     selected: [],
@@ -141,14 +111,9 @@ function Menu({ route, props }) {
         ip: null
       },
       onCompleted: data => {
-        console.log(
-          'Data onCompleted => ',
-          JSON.stringify(
-            data.nearByRestaurants.restaurants.slice(0, 1),
-            null,
-            4
-          )
-        )
+        data.nearByRestaurants.restaurants?.map(item => {
+          console.log('cuisines => ', item?.cuisines)
+        })
         setRestaurantData(data.nearByRestaurants.restaurants)
         setSectionData(data.nearByRestaurants.sections)
       },
@@ -158,6 +123,8 @@ function Menu({ route, props }) {
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
+
+  const { data: allCuisines } = useQuery(GET_CUISINES)
 
   const {
     onScroll /* Event handler */,
@@ -191,6 +158,17 @@ function Menu({ route, props }) {
       })
     )
   }, [navigation, currentTheme])
+
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      Cuisines: {
+        selected: [],
+        type: FILTER_TYPE.CHECKBOX,
+        values: allCuisines?.cuisines?.map(item => item.name)
+      }
+    }))
+  }, [allCuisines])
 
   const onOpen = () => {
     const modal = modalRef.current
@@ -431,11 +409,11 @@ function Menu({ route, props }) {
 
   const applyFilters = () => {
     let filteredData = [...data.nearByRestaurants.restaurants]
-    let appliedFilters = []
 
     const ratings = filters['Rating']
     const sort = filters['Sort']
     const offers = filters['Offers']
+    const cuisines = filters['Cuisines']
 
     // Apply filters incrementally
     // Ratings filter
@@ -444,7 +422,6 @@ function Menu({ route, props }) {
       filteredData = filteredData.filter(
         item => item?.reviewData?.ratings >= Math.min(...numericRatings)
       )
-      appliedFilters.push('Rating')
     }
 
     // Sort filter
@@ -457,7 +434,6 @@ function Menu({ route, props }) {
             a.distanceWithCurrentLocation - b.distanceWithCurrentLocation
         )
       }
-      appliedFilters.push('Sort')
     }
 
     // Offers filter
@@ -468,7 +444,13 @@ function Menu({ route, props }) {
       if (offers.selected.includes('Accept Vouchers')) {
         filteredData = filteredData.filter(item => item?.acceptVouchers)
       }
-      appliedFilters.push('Offers')
+    }
+
+    // Cuisine filter
+    if (cuisines?.selected?.length > 0) {
+      filteredData = filteredData.filter(item =>
+        item.cuisines.some(cuisine => cuisines?.selected?.includes(cuisine))
+      )
     }
 
     // Set filtered data
@@ -478,21 +460,13 @@ function Menu({ route, props }) {
     if (
       ratings?.selected?.length === 0 &&
       offers?.selected?.length === 0 &&
-      sort?.selected?.length === 0
+      sort?.selected?.length === 0 &&
+      cuisines?.selected?.length === 0
     ) {
       setRestaurantData(data.nearByRestaurants.restaurants)
     }
 
-    // If any filter is removed, restore the previous state
-    // if (appliedFilters.length < 3) {
-    //     appliedFilters.forEach(filter => {
-    //         filters[filter].selected = [];
-    //     });
-    //     applyFilters();
-    // }
   }
-
-  console.log('LENGTH => ', restaurantData?.length)
 
   return (
     <>

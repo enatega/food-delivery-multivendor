@@ -219,6 +219,7 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       distanceWithCurrentLocation @client
       freeDelivery @client
       acceptVouchers @client
+      cuisines
       reviewData{
           total
           ratings
@@ -354,6 +355,14 @@ export const restaurant = `query Restaurant($id:String){
         endTime
       }
     }
+  }
+}`
+
+export const getCuisines = `query Cuisines{
+  cuisines {
+    _id
+    name
+    description
   }
 }`
 
