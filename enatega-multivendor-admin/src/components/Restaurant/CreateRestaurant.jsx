@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import { validateFunc } from '../../constraints/constraints'
 import { withTranslation } from 'react-i18next'
-import { useMutation, gql } from '@apollo/client'
-import { createRestaurant, restaurantByOwner } from '../../apollo'
+import { useMutation, gql, useQuery } from '@apollo/client'
+import { createRestaurant, getCuisines, restaurantByOwner } from '../../apollo'
 
 import {
   Box,
@@ -12,7 +12,12 @@ import {
   Input,
   Switch,
   Grid,
-  Checkbox
+  Checkbox,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  ListItemText
 } from '@mui/material'
 
 import ConfigurableValues from '../../config/constants'
@@ -31,6 +36,19 @@ const CREATE_RESTAURANT = gql`
 const RESTAURANT_BY_OWNER = gql`
   ${restaurantByOwner}
 `
+const CUISINES = gql`
+  ${getCuisines}
+`
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+}
 
 const CreateRestaurant = props => {
   const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
@@ -47,6 +65,8 @@ const CreateRestaurant = props => {
   const [deliveryTimeError, setDeliveryTimeError] = useState(null)
   const [minimumOrderError, setMinimumOrderError] = useState(null)
   const [salesTaxError, setSalesTaxError] = useState(null)
+  const [restaurantCuisines, setRestaurantCuisines] = React.useState([])
+
   // const [shopType, setShopType] = useState(SHOP_TYPE.RESTAURANT)
   const [errors, setErrors] = useState('')
   const [success, setSuccess] = useState('')
@@ -87,6 +107,14 @@ const CreateRestaurant = props => {
     setErrors('')
     setSuccess('')
   }
+
+  const { data: cuisines } = useQuery(CUISINES)
+  const cuisinesInDropdown = useMemo(
+    () => cuisines?.cuisines?.map(item => item.name),
+    [cuisines]
+  )
+  console.log('cuisines => ', cuisinesInDropdown)
+
   const [mutate, { loading }] = useMutation(CREATE_RESTAURANT, {
     onError,
     onCompleted,
@@ -219,8 +247,20 @@ const CreateRestaurant = props => {
     form.minimumOrder.value = 0
     setImgUrl('')
   }
+
+  const handleCuisineChange = event => {
+    const {
+      target: { value }
+    } = event
+    setRestaurantCuisines(
+      typeof value === 'string' ? value.split(',') : value
+    )
+  }
+  
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
+
+
   return (
     <Box container className={classes.container}>
       <Box style={{ alignItems: 'start' }} className={classes.flexRow}>
@@ -429,6 +469,34 @@ const CreateRestaurant = props => {
                 displayEmpty={true}
               />
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box>
+                <Typography className={classes.labelText}>
+                  {t('Cuisines')}
+                </Typography>
+                <Select
+                  multiple
+                  value={restaurantCuisines}
+                  onChange={handleCuisineChange}
+                  input={<OutlinedInput />}
+                  renderValue={selected => selected.join(', ')}
+                  MenuProps={MenuProps}
+                  className={[globalClasses.input]}
+                  style={{ margin: '0 0 0 -20px', padding: '0px 0px' }}>
+                  {cuisinesInDropdown?.map(cuisine => (
+                    <MenuItem
+                      key={'restaurant-cuisine-' + cuisine}
+                      value={cuisine}
+                      style={{ color: '#000000', textTransform: 'capitalize' }}>
+                      <Checkbox
+                        checked={restaurantCuisines.indexOf(cuisine) > -1}
+                      />
+                      <ListItemText primary={cuisine} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            </Grid>
           </Grid>
 
           <Box
@@ -486,7 +554,8 @@ const CreateRestaurant = props => {
                         minimumOrder: Number(minimumOrder),
                         username,
                         password,
-                        shopType
+                        shopType,
+                        cuisines: restaurantCuisines
                       }
                     }
                   })

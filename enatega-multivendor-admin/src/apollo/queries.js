@@ -429,6 +429,14 @@ export const getCoupons = `query Coupons{
     }
   }`
 
+  export const getCuisines = `query Cuisines{
+    cuisines {
+      _id
+      name
+      description
+    }
+  }`
+
 export const getTipping = `query Tips{
     tips {
       _id
@@ -549,6 +557,7 @@ export const getRestaurantProfile = `query Restaurant($id:String){
         email
       }
       shopType
+      cuisines
     }
 }`
 

@@ -608,6 +608,24 @@ export const deleteCoupon = `mutation DeleteCoupon($id:String!){
         deleteCoupon(id:$id)
       }`
 
+export const createCuisine = `mutation CreateCuisine($cuisineInput:CuisineInput!){
+        createCuisine(cuisineInput:$cuisineInput){
+          _id
+          name
+          description
+        }
+      }`
+export const editCuisine = `mutation editCuisine($cuisineInput:CuisineInput!){
+        editCuisine(cuisineInput:$cuisineInput){
+          _id
+          name
+          description
+              }
+            }`
+export const deleteCuisine = `mutation DeleteCuisine($id:String!){
+              deleteCuisine(id:$id)
+            }`
+
 export const createTipping = `mutation CreateTipping($tippingInput:TippingInput!){
         createTipping(tippingInput:$tippingInput){
           _id
@@ -761,6 +779,7 @@ export const createRestaurant = `mutation CreateRestaurant($restaurant:Restauran
     tax
     location{coordinates}
     shopType
+    cuisines
   }
 }`
 

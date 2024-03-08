@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { validateFunc } from '../constraints/constraints'
 import { withTranslation, useTranslation } from 'react-i18next'
 import Header from '../components/Headers/Header'
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { getRestaurantProfile, editRestaurant } from '../apollo'
+import { getRestaurantProfile, editRestaurant, getCuisines } from '../apollo'
 import ConfigurableValues from '../config/constants'
 import useStyles from '../components/Restaurant/styles'
 import useGlobalStyles from '../utils/globalStyles'
@@ -14,7 +14,11 @@ import {
   Button,
   Input,
   Grid,
-  Checkbox
+  Checkbox,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  ListItemText
 } from '@mui/material'
 import { Container } from '@mui/system'
 import CustomLoader from '../components/Loader/CustomLoader'
@@ -30,6 +34,20 @@ const GET_PROFILE = gql`
 const EDIT_RESTAURANT = gql`
   ${editRestaurant}
 `
+const CUISINES = gql`
+  ${getCuisines}
+`
+
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+}
 
 const VendorProfile = () => {
   const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
@@ -49,6 +67,8 @@ const VendorProfile = () => {
   const [salesTaxError, setSalesTaxError] = useState(null)
   const [errors, setErrors] = useState('')
   const [success, setSuccess] = useState('')
+  const [restaurantCuisines, setRestaurantCuisines] = useState([])
+
   const onCompleted = data => {
     setNameError(null)
     setAddressError(null)
@@ -94,7 +114,8 @@ const VendorProfile = () => {
   console.log('Rest data: ', data)
   const [mutate, { loading }] = useMutation(EDIT_RESTAURANT, {
     onError,
-    onCompleted
+    onCompleted,
+    refetchQueries: [GET_PROFILE]
   })
 
   const formRef = useRef(null)
@@ -201,6 +222,24 @@ const VendorProfile = () => {
       salesTaxError
     )
   }
+
+  const { data: cuisines } = useQuery(CUISINES)
+  const cuisinesInDropdown = useMemo(
+    () => cuisines?.cuisines?.map(item => item.name),
+    [cuisines]
+  )
+  const handleCuisineChange = event => {
+    const {
+      target: { value }
+    } = event
+    setRestaurantCuisines(
+      typeof value === 'string' ? value.split(',') : value
+    )
+  }
+
+  useEffect(()=>{
+    setRestaurantCuisines(data?.restaurant?.cuisines)
+  },[data?.restaurant?.cuisines])
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
@@ -455,6 +494,38 @@ const VendorProfile = () => {
                       displayEmpty={true}
                     />
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Box>
+                      <Typography className={classes.labelText}>
+                        {t('Cuisines')}
+                      </Typography>
+                      <Select
+                        multiple
+                        onChange={handleCuisineChange}
+                        input={<OutlinedInput />}
+                        value={restaurantCuisines}
+                        renderValue={selected => selected.join(', ')}
+                        defaultValue={data?.restaurant?.cuisines}
+                        MenuProps={MenuProps}
+                        className={[globalClasses.input]}
+                        style={{ margin: '0 0 0 -20px', padding: '0px 0px' }}>
+                        {cuisinesInDropdown?.map(cuisine => (
+                          <MenuItem
+                            key={'restaurant-cuisine-' + cuisine}
+                            value={cuisine}
+                            style={{
+                              color: '#000000',
+                              textTransform: 'capitalize'
+                            }}>
+                            <Checkbox
+                              checked={restaurantCuisines?.indexOf(cuisine) > -1}
+                            />
+                            <ListItemText primary={cuisine} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Box>
+                  </Grid>
                 </Grid>
                 <Box
                   mt={3}
@@ -516,7 +587,8 @@ const VendorProfile = () => {
                               username: username,
                               password: password,
                               salesTax: +salesTax,
-                              shopType
+                              shopType,
+                              cuisines: restaurantCuisines
                             }
                           }
                         })
