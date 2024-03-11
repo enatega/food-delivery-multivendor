@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react'
-import { Restaurant } from '../context'
+import { Configuration, Restaurant } from '../context'
 
 export default function useOrders() {
   const [active, setActive] = useState(0)
@@ -7,6 +7,7 @@ export default function useOrders() {
   const { loading, error, data, refetch, networkStatus } = useContext(
     Restaurant.Context
   )
+  const configuration = useContext(Configuration.Context)
   const activeOrders =
     data &&
     data.restaurantOrders.filter(order => order.orderStatus === 'PENDING')
@@ -33,6 +34,7 @@ export default function useOrders() {
     active,
     setActive,
     showVideo,
-    setShowVideo
+    setShowVideo,
+    configuration
   }
 }

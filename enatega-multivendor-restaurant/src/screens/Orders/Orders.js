@@ -25,7 +25,8 @@ const Orders = props => {
     refetch,
     setActive,
     showVideo,
-    setShowVideo
+    setShowVideo,
+    configuration
   } = useOrders()
 
   const { loading: mutateLoading } = useAcceptOrder()
@@ -51,9 +52,9 @@ const Orders = props => {
                 PlaceholderContent={<ActivityIndicator />}
                 style={{ width: 250, height: 100 }}
               />}
-            <Button
+            {configuration?.enableRestaurantDemo && <Button
               title={showVideo ? 'Stop' : 'Demo?'}
-              onPress={() => { setShowVideo(!showVideo) }}/>
+              onPress={() => { setShowVideo(!showVideo) }}/>}
           </View>
           <View
             style={[

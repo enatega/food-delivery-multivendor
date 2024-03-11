@@ -28,7 +28,8 @@ export default function Login() {
     username,
     password,
     showVideo,
-    setShowVideo
+    setShowVideo,
+    configuration
   } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
   const { t } = useTranslation()
@@ -59,9 +60,9 @@ export default function Login() {
                   PlaceholderContent={<ActivityIndicator />}
                   style={{ width: 150, height: 140 }}
                 />}
-              <Button
+              {configuration?.enableRestaurantDemo && <Button
                 title={showVideo ? 'Stop' : 'How to get credentials?'}
-                onPress={() => { setShowVideo(!showVideo) }}/>
+                onPress={() => { setShowVideo(!showVideo) }}/>}
             </View>
           </View>
           <View style={styles.lowerContainer}>
