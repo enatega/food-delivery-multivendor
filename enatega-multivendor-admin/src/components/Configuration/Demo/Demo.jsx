@@ -38,7 +38,7 @@ function DemoConfiguration(props) {
             <Typography className={classes.labelText}>
              Enable Rider Demo
           <Switch
-            defaultChecked={props.skipMobileVerification}
+            defaultChecked={props.enableRiderDemo}
             id="input-rider-demo"
             name="input-rider-demo"
             style={{ color: 'black' }}
@@ -49,7 +49,7 @@ function DemoConfiguration(props) {
             <Typography className={classes.labelText}>
             Enable Restaurant Demo
           <Switch
-            defaultChecked={props.skipEmailVerification}
+            defaultChecked={props.enableRestaurantDemo}
             id="input-restaurant-demo"
             name="input-restaurant-demo"
             style={{ color: 'black' }}
@@ -60,7 +60,7 @@ function DemoConfiguration(props) {
             <Typography className={classes.labelText}>
             Enable Admin Demo
           <Switch
-            defaultChecked={props.skipEmailVerification}
+            defaultChecked={props.enableAdminDemo}
             id="input-admin-demo"
             name="input-admin-demo"
             style={{ color: 'black' }}
