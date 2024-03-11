@@ -54,7 +54,6 @@ import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
-import ActiveOrders from '../../components/Main/ActiveOrders'
 
 // const RESTAURANTS = gql`
 //   ${restaurantList}
@@ -101,7 +100,7 @@ function Main(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+      StatusBar.setBackgroundColor(currentTheme.main)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -155,7 +154,7 @@ function Main(props) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
@@ -530,18 +529,17 @@ function Main(props) {
                       ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (
-                      <MaterialIcons
-                        name="check"
-                        size={scale(25)}
-                        color={currentTheme.iconColorPink}
-                      />
-                    )}
+                        <MaterialIcons
+                          name="check"
+                          size={scale(25)}
+                          color={currentTheme.iconColorPink}
+                        />
+                      )}
                   </View>
                 </View>
               )
             }}></Modalize>
         </View>
-        {/* <ActiveOrders/> */}
       </SafeAreaView>
     </>
   )

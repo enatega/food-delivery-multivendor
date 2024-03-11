@@ -78,13 +78,11 @@ const styles = (props = null) =>
     },
     textInput: {
       width: '100%',
-      height: '18%',
+      height: '22%',
       alignItems: 'center',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-
+      justifyContent: 'center',
       paddingLeft: scale(15),
+      paddingRight: scale(15),
       marginTop: scale(15),
       borderWidth: 1,
       borderColor: props != null ? props.borderBottomColor : '#E5E7EB',

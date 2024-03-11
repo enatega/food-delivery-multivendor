@@ -14,9 +14,9 @@ const styles = (props = null) =>
     //   ...alignment.MLlarge,
     // },
     offerContainer: {
-      elevation: 3,
-      shadowColor: theme.Pink.white,
-      height: scale(200),
+      //elevation: 3,
+      //shadowColor: theme.Pink.white,
+      //height: scale(200),
       borderRadius: 25,
       width: scale(270)
     },
@@ -61,15 +61,18 @@ const styles = (props = null) =>
     //   backgroundColor: props != null ? props.iconColorPink : 'red'
     // },
     descriptionContainer: {
-      paddingTop: verticalScale(12),
-      paddingBottom: verticalScale(12),
+      //paddingTop: scale(15),
+      //paddingBottom: verticalScale(12),
       paddingLeft: scale(10),
       paddingRight: scale(10),
       width: '100%',
       borderColor: props !=null ? props.iconBackground: '#E5E7EB',
       borderWidth:1,
-      borderBottomLeftRadius:8,
-      borderBottomRightRadius:8
+      borderBottomLeftRadius:15,
+      borderBottomRightRadius: 15,
+      height: '35%',
+      justifyContent:'center'
+      
     },
     aboutRestaurant: {   
       flexDirection: 'row',
@@ -100,7 +103,7 @@ const styles = (props = null) =>
     imageContainer: {
       position: 'relative',
       alignItems: 'center',
-      height: '80%'
+      height: '65%'
     },
     restaurantTotalRating:{
       paddingLeft: scale(5)

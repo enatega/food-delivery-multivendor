@@ -10,6 +10,7 @@ const CustomMapView = React.memo(
       <MapView
         ref={ref}
         initialRegion={initialRegion}
+        region={initialRegion}
         style={{ flex: 1 }}
         provider={PROVIDER_GOOGLE}
         showsTraffic={false}
@@ -20,7 +21,10 @@ const CustomMapView = React.memo(
     )
   }),
   (prevProps, nextProps) => {
-    return JSON.stringify(prevProps.initialRegion) === JSON.stringify(nextProps)
+    return (
+      JSON.stringify(prevProps.initialRegion) ===
+      JSON.stringify(nextProps.initialRegion)
+    )
   }
 )
 
