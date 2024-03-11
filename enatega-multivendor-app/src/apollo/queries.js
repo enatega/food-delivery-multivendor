@@ -226,6 +226,7 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
           reviews{
             _id
             order{
+              _id
               user{
                 _id
                 name
@@ -279,6 +280,99 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
     }
   }
 }
+}`
+export const topRatedVendorsInfo = `query TopRatedVendors($latitude: Float!, $longitude: Float!) {
+  topRatedVendors(latitude: $latitude, longitude: $longitude) {
+    _id
+    orderId
+    orderPrefix
+    name
+    image
+    address
+    location {
+      coordinates
+    }
+    categories {
+      _id
+      title
+      foods {
+        _id
+        title
+        description
+        variations {
+          _id
+          title
+          price
+          discounted
+          addons
+        }
+        image
+        isActive
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+    options {
+      _id
+      title
+      description
+      price
+    }
+    addons {
+      _id
+      options
+      title
+      description
+      quantityMinimum
+      quantityMaximum
+    }
+    reviewData {
+      reviews {
+        _id
+        order {
+          _id
+          user {
+            email
+            name
+            _id
+          }
+        }
+        rating
+        description
+        isActive
+        createdAt
+        updatedAt
+      }
+      ratings
+      total
+    }
+    username
+    password
+    deliveryTime
+    minimumOrder
+    sections
+    rating
+    isActive
+    isAvailable
+    openingTimes {
+      day
+      times {
+        startTime
+        endTime
+      }
+    }
+    slug
+    stripeDetailsSubmitted
+    commissionRate
+    tax
+    notificationToken
+    enableNotification
+    shopType
+    cuisines
+    
+  }
 }`
 
 export const restaurant = `query Restaurant($id:String){
@@ -543,7 +637,6 @@ export const chat = `query Chat($order: ID!) {
     createdAt
   }
 }`
-
 
 export const recentOrderRestaurantsInfo = `query RecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
   recentOrderRestaurants(latitude: $latitude, longitude: $longitude) {
@@ -1053,4 +1146,3 @@ export const food = `fragment FoodItem on Food{
   }
 }
 `
-

@@ -111,9 +111,6 @@ function Menu({ route, props }) {
         ip: null
       },
       onCompleted: data => {
-        data.nearByRestaurants.restaurants?.map(item => {
-          console.log('cuisines => ', item?.cuisines)
-        })
         setRestaurantData(data.nearByRestaurants.restaurants)
         setSectionData(data.nearByRestaurants.sections)
       },

@@ -114,7 +114,9 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center'
     },
-
+    searchList: {
+      marginBottom: 70
+    }
 
   })
 export default styles

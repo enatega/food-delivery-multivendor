@@ -1,68 +1,68 @@
 import React, { useContext } from 'react'
-import { View, FlatList, Text, Image, Alert } from 'react-native'
-import UserContext from '../../../context/User'
+import { View, FlatList, Text, Image } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { scale } from '../../../utils/scaling'
-import { useTranslation } from 'react-i18next'
+
 import { LocationContext } from '../../../context/Location'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { MaterialIcons } from '@expo/vector-icons'
+import { topRatedVendorsInfo } from '../../../apollo/queries'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/client'
+import { useNavigation } from '@react-navigation/native'
 
-// suggested Items List Data
-const dataItems = [
-  { id: '1', name: 'Carrefour', description: '25 mins',  },
-  { id: '2', name: 'Carrefour', description: '25 mins',  },
-  { id: '3', name: 'Carrefour', description: '25 mins', },
-  { id: '3', name: 'Carrefour', description: '25 mins', }
-]
+const TOP_BRANDS = gql`
+  ${topRatedVendorsInfo}
+`
+
 function TopBrands(props) {
-  const renderItem = ({ item }) => (
-   
-      <TouchableOpacity style={styles().topbrandsContainer}
-        onPress={() => {
-          Alert.alert('Alert', 'Under development')
-        }}>
-      
-          <View style={styles().brandImgContainer}>
-            <Image
-            source={require('../../../assets/images/Carrefour.png')}
-            style={styles().brandImg}
-            resizeMode="contain"
-          />
-          </View>
-          
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-           <TextDefault
-            style={styles().brandName}
-            textColor={currentTheme.fontThirdColor}
-            H5
-            bolder>
-            {item.name}
-          </TextDefault>
-          <TextDefault
-            textColor={currentTheme.fontFifthColor}
-            normal>
-            {item.description}
-          </TextDefault>
-          </View>
-
-      </TouchableOpacity>
-    
-  )
   const { location } = useContext(LocationContext)
-
-  const { t } = useTranslation()
-
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const navigation = useNavigation()
+
+  const { loading, error, data } = useQuery(TOP_BRANDS, {
+    variables: {
+      latitude: location?.latitude,
+      longitude: location?.longitude
+    }
+  })
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles().topbrandsContainer}
+      onPress={() => navigation.navigate('Restaurant', { ...item })}>
+      <View style={styles().brandImgContainer}>
+        <Image
+          source={{ uri: item.image }}
+          style={styles().brandImg}
+          resizeMode="contain"
+        />
+      </View>
+
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+        <TextDefault
+          style={styles().brandName}
+          textColor={currentTheme.fontThirdColor}
+          H5
+          bolder>
+          {item?.name}
+        </TextDefault>
+        <TextDefault textColor={currentTheme.fontFifthColor} normal>
+          {item?.deliveryTime + ' Mins'}
+        </TextDefault>
+      </View>
+    </TouchableOpacity>
+  )
+
+  if (loading) return <Text style={styles().margin}>Loading...</Text>
+  if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
   return (
     <View style={styles().topbrandsSec}>
@@ -74,15 +74,15 @@ function TopBrands(props) {
         Top Brands
       </TextDefault>
       <View style={{ ...alignment.PRsmall }}>
-      <FlatList
-        data={dataItems}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      />
+        <FlatList
+          data={data?.topRatedVendors}
+          renderItem={renderItem}
+          keyExtractor={item => item?._id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        />
       </View>
     </View>
   )
