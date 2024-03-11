@@ -121,9 +121,25 @@ const usePhoneOtp = () => {
   })
 
   useEffect(() => {
-    otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
-    mutate({ variables: { phone: profile?.phone, otp: otpFrom.current } })
-  }, [])
+    if (!configuration) return
+    if (!configuration.skipMobileVerification) {
+      otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
+      mutate({ variables: { phone: profile?.phone, otp: otpFrom.current } })
+    }
+  }, [configuration])
+
+  useEffect(() => {
+    let timer = null
+    if (!configuration || !profile) return
+    if (configuration.skipMobileVerification) {
+      setOtp(TEST_OTP)
+      timer = setTimeout(() => {
+        onCodeFilled(TEST_OTP)
+      }, 3000)
+    }
+
+    return () => { timer && clearTimeout(timer) }
+  }, [configuration, profile])
 
   return {
     otp,

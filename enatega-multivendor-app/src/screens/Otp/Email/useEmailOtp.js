@@ -13,6 +13,7 @@ import analytics from '../../../utils/analytics'
 import AuthContext from '../../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
+import useEnvVars from '../../../../environment'
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -21,6 +22,7 @@ const CREATEUSER = gql`
   ${createUser}
 `
 const useEmailOtp = () => {
+  const { TEST_OTP } = useEnvVars()
   const Analytics = analytics()
 
   const { t } = useTranslation()
@@ -152,9 +154,26 @@ const useEmailOtp = () => {
   })
 
   useEffect(() => {
-    otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
-    mutate({ variables: { email: user.email, otp: otpFrom.current } })
-  }, [])
+    if (!configuration) return
+    if (!configuration.skipEmailVerification) {
+      otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
+      mutate({ variables: { email: user.email, otp: otpFrom.current } })
+    }
+  }, [configuration])
+
+  useEffect(() => {
+    let timer = null
+    if (!configuration) return
+    if (configuration.skipEmailVerification) {
+      setOtp(TEST_OTP)
+      timer = setTimeout(() => {
+        onCodeFilled(TEST_OTP)
+      }, 3000)
+    }
+    return () => {
+      timer && clearTimeout(timer)
+    }
+  }, [configuration])
 
   return {
     otp,
