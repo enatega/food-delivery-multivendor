@@ -34,7 +34,7 @@ const ActiveOrders = ({
       {showActiveHeader && (
         <Heading headerName={t('ActiveOrder')} textWidth="90%" />
       )}
-      {activeOrders.map((item, index) => (
+      {activeOrders?.map((item, index) => (
         <Item
           key={index.toString()}
           item={item}

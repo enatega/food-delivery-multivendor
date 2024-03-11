@@ -46,6 +46,7 @@ import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
 import { TopBrands } from '../../components/Main/TopBrands'
+import ActiveOrders from '../../components/MyOrders/ActiveOrders'
 
 const RESTAURANTS = gql`
   ${restaurantList}
