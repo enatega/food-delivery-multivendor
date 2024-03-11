@@ -1,27 +1,27 @@
-import { FlatList, Image, Text, View, TouchableOpacity } from "react-native";
-import { scale } from "../../utils/scaling";
-import styles from "./styles";
-import UserContext from '../../context/User'
+import { FlatList, Image, Text, View, TouchableOpacity } from 'react-native'
+import { scale } from '../../utils/scaling'
+import styles from './styles'
 
-const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {  
+const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
   const handleAddToCart = () => {
     onPressItem({
-        ...item,
-        restaurant: restaurant._id,
-        restaurantName: restaurant.name
-    });
+      ...item,
+      restaurant: restaurant._id,
+      restaurantName: restaurant.name
+    })
   }
 
   return (
     <TouchableOpacity onPress={handleAddToCart}>
       <View style={styles().card}>
         {tagCart(item._id)}
-        <Text style={{
-          color: '#4B5563',
-          fontSize: scale(12),
-          fontWeight: '600',
-          marginBottom: scale(11)
-        }}>
+        <Text
+          style={{
+            color: '#4B5563',
+            fontSize: scale(12),
+            fontWeight: '600',
+            marginBottom: scale(11)
+          }}>
           {item.title}
         </Text>
         <View style={{ alignItems: 'center' }}>
@@ -33,11 +33,12 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
             <Text style={{ color: '#1C1C1E', fontSize: scale(12) }}>
               ${item.variations[0].price}
             </Text>
-            <Text style={{
-              color: '#9CA3AF',
-              fontSize: scale(12),
-              textDecorationLine: 'line-through'
-            }}>
+            <Text
+              style={{
+                color: '#9CA3AF',
+                fontSize: scale(12),
+                textDecorationLine: 'line-through'
+              }}>
               ${item.variations[0].discounted}
             </Text>
           </View>
@@ -45,7 +46,6 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
       </View>
     </TouchableOpacity>
   )
-  
 }
 
-export default ItemCard;
+export default ItemCard

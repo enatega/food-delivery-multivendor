@@ -17,11 +17,11 @@ const styles = (props = null) => {
     },
     item: {
       height: '9.5%',
-      ...alignment.MBxsmall
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props !== null ? props.horizontalLine : '#9B9A9A'
     },
     iconContainer: {
-      backgroundColor: theme.Pink.deleteButton,
-    
+      backgroundColor: theme.Pink.deleteButton
     }
   })
 }
