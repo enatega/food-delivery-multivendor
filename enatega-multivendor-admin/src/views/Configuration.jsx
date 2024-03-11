@@ -9,6 +9,7 @@ import DeliveryRateConfiguration from '../components/Configuration/DeliveryRate/
 import PaypalConfiguration from '../components/Configuration/Paypal/Paypal'
 import StripeConfiguration from '../components/Configuration/Stripe/Stripe'
 import CurrencyConfiguration from '../components/Configuration/Currency/Currency'
+import DemoConfiguration from '../components/Configuration/Demo/Demo'
 import { Grid } from '@mui/material'
 import { ReactComponent as ConfigIcon } from '../assets/svg/svg/Configuration.svg'
 import TwilioConfiguration from '../components/Configuration/Twilio/Twilio'
@@ -173,6 +174,13 @@ const Configuration = props => {
           <VerificationConfiguration
           skipEmailVerification={data.configuration.skipEmailVerification}
           skipMobileVerification={data.configuration.skipMobileVerification}
+            />
+          </Grid>
+          <Grid item sx={12} md={12} lg={5}>
+          <DemoConfiguration
+          enableRiderDemo={data.configuration.enableRiderDemo}
+          enableRestaurantDemo={data.configuration.enableRestaurantDemo}
+          enableAdminDemo={data.configuration.enableAdminDemo}
             />
           </Grid>
         </Grid>:

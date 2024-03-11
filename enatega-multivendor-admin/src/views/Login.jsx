@@ -23,6 +23,7 @@ import LoginPageIcon from '../assets/img/LoginPageIcon.png'
 import InputAdornment from '@mui/material/InputAdornment'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import DemoLink from '../components/Demo/Link'
 
 const LOGIN = gql`
   ${ownerLogin}
@@ -172,6 +173,7 @@ const Login = props => {
           <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>
             {t('enterYourDetailsBelow')}
           </Typography>
+          <DemoLink title={'Watch our demo now – just click here!'} link={'https://www.youtube.com/watch?v=eTWRsUJOtSQ&ab_channel=JaniKiChah'}/>
           <Box container sx={{ width: 600 }} className={classes.container}>
             <Box className={classes.flexRow}>
               <Box item className={classes.heading}>

@@ -34,7 +34,13 @@ const useStyles = makeStyles(theme => ({
     fontSize: '15px',
     fontWeight: '500',
     marginTop: '10px'
-  }
+  },
+  sidebarLink: {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main2,
+      boxShadow: `0px 0px 5px ${theme.palette.warning.darkest}`
+    }
+  },
 }))
 
 export default useStyles

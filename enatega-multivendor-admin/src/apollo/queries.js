@@ -245,7 +245,6 @@ export const getConfiguration = `query GetConfiguration{
       androidClientID
       iOSClientID
       expoClientID
-     
       googleMapLibraries
       googleColor    
       termsAndConditions
@@ -261,6 +260,9 @@ export const getConfiguration = `query GetConfiguration{
       isPaidVersion
       skipEmailVerification
       skipMobileVerification
+      enableRiderDemo
+      enableRestaurantDemo
+      enableAdminDemo
     }
   }`
 

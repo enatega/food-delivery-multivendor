@@ -330,6 +330,14 @@ export const saveVerificationToggles = `mutation SaveVerificationsToggle($config
     skipMobileVerification
   }
 }`
+export const saveDemoConfiguration = `mutation SaveDemoConfiguration($configurationInput: DemoConfigurationInput!) {
+  saveDemoConfiguration(configurationInput: $configurationInput) {
+    _id
+    enableRiderDemo
+    enableRestaurantDemo
+    enableAdminDemo
+  }
+}`
 
 export const saveCurrencyConfiguration = `mutation SaveCurrencyConfiguration($configurationInput:CurrencyConfigurationInput!){
   saveCurrencyConfiguration(configurationInput:$configurationInput){
