@@ -1,2 +1,2 @@
-import ActiveOrdersAndSections from './ActiveOrdersAndSectionsV2'
+import ActiveOrdersAndSections from './ActiveOrdersAndSections'
 export { ActiveOrdersAndSections }

@@ -11,31 +11,24 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.gray100 : 'transparent',
-      ...alignment.Mmedium,
+      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
       paddingBottom: scale(8),
-      borderRadius: scale(10)
+      borderRadius: scale(15),
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+      ...alignment.PTsmall
     },
     buttonContainer: {
-      width: '100%',
-      backgroundColor: props !== null ? props.menuBar : 'transparent',
-      elevation: 12,
-      shadowColor: props !== null ? props.shadowColor : 'black',
-      shadowOffset: {
-        width: 0,
-        height: -3
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: scale(2)
+      width: '100%'
     },
     buttonStyles: {
       margin: scale(10),
       paddingHorizontal: scale(50),
       paddingVertical: scale(15),
-      backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
+      backgroundColor: props !== null ? props.main : '#6FCF97',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: scale(50)
+      borderRadius: scale(40)
     },
     backButton: {
       backgroundColor: theme.Pink.white,

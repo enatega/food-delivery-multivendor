@@ -28,23 +28,28 @@ export default function Detail({
   const { t } = useTranslation()
   return (
     <View style={styles.container(theme)}>
-      {(rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED) && (
-        <ChatButton
-          onPress={() => navigation.navigate('ChatWithRider', { id })}
-          title={t('chatWithRider')}
-          description={'Ask for contactless delivery'}
-          theme={theme}
-        />
+      {rider && (
+        <>
+          <View
+            style={{
+              paddingVertical: 47
+            }}>
+            <Button
+              buttonProps={{
+                onPress: () =>
+                  navigation.navigate('ChatWithRider', { id, orderNo, total })
+              }}
+              buttonStyles={styles.chatButton(theme)}
+              textStyles={styles.chatButtonText(theme)}
+              text={t('chatWithRider')}
+            />
+          </View>
+          <View style={styles.line(theme)}></View>
+        </>
       )}
-      <TextDefault textColor={theme.gray500} bolder H5 style={{ ...alignment.MBsmall }}>
-        {t('yourOrder')} ({items.length})
-      </TextDefault>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TextDefault textColor={theme.gray500} bolder Normal style={{ ...alignment.MBsmall }}>
-          {t('itemsAndQuantity')}
-        </TextDefault>
-        <TextDefault textColor={theme.gray500} bolder Normal style={{ ...alignment.MBsmall }}>
-          {t('price')}
+      <View style={styles.orderDetailsContainer}>
+        <TextDefault textColor={theme.main} bold H3>
+          {t('orderDetail')}
         </TextDefault>
       </View>
       <View style={styles.itemsContainer}>
@@ -77,8 +82,18 @@ const ItemRow = ({
 }) => {
   return (
     <View style={styles.itemRow}>
-      <View >
-        <Image style={{ width: scale(48), height: scale(64), borderRadius: scale(8) }} source={image ? { uri: image } : require('../../../assets/images/food_placeholder.png')}></Image>
+      <View>
+        <Image
+          style={{
+            width: scale(48),
+            height: scale(64),
+            borderRadius: scale(8)
+          }}
+          source={
+            image
+              ? { uri: image }
+              : require('../../../assets/images/food_placeholder.png')
+          }></Image>
       </View>
       <View style={{ width: '60%', justifyContent: 'space-between' }}>
         <TextDefault
@@ -100,9 +115,8 @@ const ItemRow = ({
         </TextDefault>
 
         <TextDefault Regular left bolder textColor={theme.gray900}>
-            x{quantity}
+          x{quantity}
         </TextDefault>
-
       </View>
       <TextDefault
         right
@@ -110,7 +124,8 @@ const ItemRow = ({
         bolder
         textColor={theme.gray900}
         H5>
-        {currency}{price}
+        {currency}
+        {price}
       </TextDefault>
     </View>
   )

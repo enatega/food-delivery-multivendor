@@ -24,7 +24,7 @@ function RadioButton(props) {
     width: size + size * DEFAULT_SIZE_MULTIPLIER,
     height: size + size * DEFAULT_SIZE_MULTIPLIER,
     borderRadius: (size + size * DEFAULT_SIZE_MULTIPLIER) / 2,
-    borderWidth: 2
+    borderWidth: 1
   }
 
   const innerStyle = {

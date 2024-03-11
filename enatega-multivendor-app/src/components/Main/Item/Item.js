@@ -7,7 +7,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
-import { AntDesign, Ionicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons, MaterialIcons, Feather } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { DAYS } from '../../../utils/enums'
 import { profile } from '../../../apollo/queries'
@@ -17,8 +17,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import Spinner from '../../Spinner/Spinner'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -28,7 +27,7 @@ const PROFILE = gql`
 `
 
 function Item(props) {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props.item._id) : false
@@ -115,7 +114,7 @@ function Item(props) {
                   </TextDefault>
                 </View>
               )}
-              <View style={styles(currentTheme).deliveryRestaurantOverlay}>
+              {/* <View style={styles(currentTheme).deliveryRestaurantOverlay}>
                 <TextDefault
                   textColor={currentTheme.fontMainColor}
                   numberOfLines={1}
@@ -125,60 +124,87 @@ function Item(props) {
                   {item.deliveryTime + ' '}
                   {t('min')}
                 </TextDefault>
-              </View>
+              </View> */}
             </View>
           </View>
           <View style={styles().descriptionContainer}>
             <View style={styles().aboutRestaurant}>
               <TextDefault
                 style={{ width: '77%' }}
+                H4
                 numberOfLines={1}
-                textColor={currentTheme.fontMainColor}
+                textColor={currentTheme.fontThirdColor}
                 bolder>
                 {item.name}
               </TextDefault>
               <View style={[styles().aboutRestaurant, { width: '23%' }]}>
-                <Ionicons
-                  name="md-star"
-                  size={scale(15)}
-                  color={currentTheme.primery}
-                />
+                <Feather name="star" size={18} color={currentTheme.stars} />
                 <TextDefault
-                  textColor={currentTheme.fontMainColor}
-                  style={{ marginLeft: scale(2), fontSize: 12 }}
-                  bolder
-                  smaller>
+                textColor={currentTheme.fontThirdColor}
+       
+                H4
+                 bolder
+                  style={{ marginLeft: scale(2), marginRight: scale(5)}}
+                 >
                   {item.reviewData.ratings}
                 </TextDefault>
                 <TextDefault
-                  textColor={currentTheme.fontSecondColor}
-                  style={{ marginLeft: scale(2), fontSize: 12 }}
-                  bold
-                  smaller>
+                   textColor={currentTheme.fontNewColor}
+                  style={{ marginLeft: scale(2)}}
+                 
+                  H5>
                   ({item.reviewData.reviews.length})
                 </TextDefault>
               </View>
             </View>
             <TextDefault
               style={styles().offerCategoty}
-              textColor={currentTheme.fontSecondColor}
               numberOfLines={1}
-              small>
+            bold
+            Normal
+            textColor={currentTheme.fontNewColor}
+            >
               {category.toString()}
             </TextDefault>
             <View style={styles().priceRestaurant}>
-              <TextDefault
-                style={styles().offerCategoty}
-                textColor={currentTheme.fontMainColor}
-                numberOfLines={1}
-                small
-                bold>
-                {configuration.currencySymbol + ' ' + item.minimumOrder}{' '}
-                <TextDefault textColor={currentTheme.fontSecondColor} small>
-                  {' '}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 5,
+                  justifyContent: 'center',
+                  marginRight: 18
+                }}>
+                <AntDesign name="clockcircleo" size={16}
+                color={currentTheme.fontNewColor} />
+                <TextDefault
+                  textColor={currentTheme.fontNewColor}
+                  numberOfLines={1}
+                  bold
+                  Normal>
+                  {item.deliveryTime + ' '}
                   {t('min')}
                 </TextDefault>
-              </TextDefault>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                  justifyContent: 'center',
+                  marginRight: 10
+                }}>
+                <MaterialIcons name="directions-bike" size={16}
+                color={currentTheme.fontNewColor}/>
+                <TextDefault
+                  style={styles().offerCategoty}
+                  textColor={currentTheme.fontNewColor}
+                numberOfLines={1}
+                bold
+                Normal>
+                  {configuration.currencySymbol + '' + item.minimumOrder}{' '}
+                </TextDefault>
+              </View>
             </View>
           </View>
         </View>

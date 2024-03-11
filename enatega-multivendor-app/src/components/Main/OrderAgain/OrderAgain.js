@@ -44,9 +44,6 @@ function OrderAgain(props) {
           <TextDefault
             numberOfLines={1}
             textColor={currentTheme.fontFourthColor}
-            style={{
-              ...alignment.MLlarge
-            }}
             bolder
             H4>
             Order it again
@@ -54,12 +51,9 @@ function OrderAgain(props) {
           <TextDefault
             Normal
             textColor={currentTheme.secondaryText}
-            style={[
-              styles().ItemDescription,
-              {
-                ...alignment.MLlarge
-              }
-            ]}>
+            style={
+              styles().ItemDescription
+            }>
             Most ordered right now.
           </TextDefault>
           <FlatList

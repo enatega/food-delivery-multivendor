@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+import { View, Image, TouchableOpacity, StatusBar } from 'react-native'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -10,9 +11,11 @@ import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { Entypo } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
+
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
+import { textStyles } from '../../utils/textStyles'
 
 function Payment(props) {
   const Analytics = analytics()
@@ -27,51 +30,67 @@ function Payment(props) {
       payment: 'STRIPE',
       label: t('creditCart'),
       index: 0,
-      icon: require('../../assets/images/masterIcon.png'),
-      icon1: require('../../assets/images/visaIcon.png')
+      icon: require('../../assets/images/credit-card.png'),
+      // icon1: require('../../assets/images/visaIcon.png')
     },
     {
       payment: 'PAYPAL',
       label: t('paypal'),
       index: 1,
-      icon: require('../../assets/images/paypal.png')
+      icon: require('../../assets/images/paypal-1.png')
     },
     {
       payment: 'COD',
       label: t('cod'),
       index: 2,
-      icon: require('../../assets/images/cashIcon.png')
+      icon: require('../../assets/images/dollar.png')
     }
   ]
 
+  useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(currentTheme.themeBackground)
+    }
+    StatusBar.setBarStyle('dark-content')
+  })
+
   useLayoutEffect(() => {
     props.navigation.setOptions({
+      headerTitle: () => (
+        <View style={{ alignItems: 'center', gap: scale(2) }}>
+          <TextDefault
+            style={{
+              color: currentTheme.btnText,
+              ...textStyles.H4,
+              ...textStyles.Bolder
+            }}>
+            Payment Methods
+          </TextDefault>
+        </View>
+      ),
       headerRight: null,
-      title: t('titlePayment'),
       headerTitleAlign: 'center',
-      headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        shadowColor: 'transparent',
-        shadowRadius: 0
+      headerTitleStyle: {
+        color: currentTheme.btnText,
+        ...textStyles.H4,
+        ...textStyles.Bolder
       },
       headerTitleContainerStyle: {
-        marginTop: '1%',
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
-        height: '75%',
-        borderRadius: scale(10),
-        backgroundColor: currentTheme.black,
-        marginLeft: 0
+        backgroundColor: currentTheme.transparent
       },
-
-      headerTitleAlign: 'center',
-      headerRight: null,
+      headerStyle: {
+        backgroundColor: currentTheme.themeBackground
+      },
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
-            <View style={styles().backButton}>
-              <Entypo name="cross" size={30} color="black" />
+            <View style={{ ...alignment.PLxSmall }}>
+              <AntDesign
+                name="arrowleft"
+                size={22}
+                color={currentTheme.fontFourthColor}
+              />
             </View>
           )}
           onPress={() => {
@@ -88,60 +107,57 @@ function Payment(props) {
     Track()
   }, [])
   function onSelectPayment(paymentMethod) {
-    props.navigation.navigate('Cart', { coupon, paymentMethod })
+    props.navigation.navigate('Checkout', { coupon, paymentMethod })
   }
   return (
     <>
-      <View style={styles(currentTheme).mainContainer}>
-        <View
-          style={{
-            backgroundColor: currentTheme.themeBackground,
-            borderRadius: 20
-          }}>
+      <View style={[styles(currentTheme).mainContainer, styles().flex]}>
+        <View>
           {CASH.map((item, index) => (
-            <TouchableOpacity
-              style={[
-                styles(currentTheme).radioGroup,
-                styles(currentTheme).pT20
-              ]}
+           <View>
+             <TouchableOpacity
+              style={styles(currentTheme).radioGroup}
               key={index.toString()}
               onPress={() => {
                 onSelectPayment(item)
               }}>
-              <View style={styles(currentTheme).radioContainer}>
-                <RadioButton
-                  animation={'bounceIn'}
-                  outerColor={currentTheme.darkBgFont}
-                  innerColor={currentTheme.radioColor}
-                  isSelected={paymentMethod.index === item.index}
-                  onPress={() => {
-                    onSelectPayment(item)
-                  }}
-                />
-              </View>
               <View style={styles(currentTheme).paymentMethod}>
-                <TextDefault
-                  numberOfLines={1}
-                  textColor={currentTheme.fontSecondColor}
-                  style={{ width: '60%' }}>
-                  {item.label}
-                </TextDefault>
                 <View style={styles(currentTheme).iconContainer}>
-                  {item.icon1 && (
+                  {/* {item.icon1 && (
                     <Image
                       resizeMode="cover"
                       style={[styles().iconStyle, { ...alignment.MRsmall }]}
                       source={item.icon1}
                     />
-                  )}
+                  )} */}
                   <Image
                     resizeMode="cover"
                     style={styles().iconStyle}
                     source={item.icon}
                   />
                 </View>
+                <TextDefault
+                   textColor={currentTheme.fontFourthColor}
+                   medium
+                   bolder>
+                  {item.label}
+                </TextDefault>
+              </View>
+              <View style={styles(currentTheme).radioContainer}>
+                <RadioButton
+                  outerColor={currentTheme.horizontalLine}
+                  innerColor={currentTheme.main}
+                  isSelected={paymentMethod.index === item.index}
+                  size={12} 
+                  onPress={() => {
+                    onSelectPayment(item)
+                  }}
+                />
               </View>
             </TouchableOpacity>
+            <View style={styles(currentTheme).horizontalLine} />
+
+           </View>
           ))}
         </View>
       </View>

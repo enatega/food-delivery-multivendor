@@ -1,16 +1,22 @@
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
+import { scale } from '../../../utils/scaling'
 const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      height: height * 0.07,
-      backgroundColor: props !== null ? props.buttonBackgroundPink : '#000000',
+      width: '90%',
+      alignSelf: 'center',
+      height: height * 0.08,
       flexDirection: 'row',
       alignItems: 'center',
-      borderRadius: 10,
-      ...alignment.PLsmall
+      ...alignment.PRlarge,
+      backgroundColor: 'transparent',
+      justifyContent: 'space-evenly',
+      borderRadius: scale(28),
+      borderWidth: scale(1),
+      borderBottomColor: '#000'
     },
     marginLeft5: {
       ...alignment.MLsmall

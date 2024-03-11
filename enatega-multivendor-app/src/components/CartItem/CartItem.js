@@ -29,10 +29,7 @@ const cartItem = props => {
         }}>
         <View style={styles().suggestItemImgContainer}>
           <Image
-            source={{
-              uri:
-                'https://enatega.com/wp-content/uploads/2024/02/burger-removebg-preview-1.png'
-            }}
+            source={require('../../assets/images/burger-menu.png')}
             style={styles().suggestItemImg}
             resizeMode="contain"
           />
@@ -43,12 +40,12 @@ const cartItem = props => {
             textColor={currentTheme.fontFourthColor}
             bolder
             H5>
-            {props.dealName.length > 20
+            {props?.dealName?.length > 20
               ? props.dealName.substring(0, 17) + '...'
               : props.dealName}
           </TextDefault>
 
-          {props.optionsTitle.map((option, index) => (
+          {props.optionsTitle?.map((option, index) => (
             <TextDefault
               key={`options${props.dealName + option + index}`}
               numberOfLines={1}
@@ -77,7 +74,7 @@ const cartItem = props => {
               </TouchableOpacity>
               {isDropdownOpen && (
                 <View style={styles().itemsDropdown}>
-                  {dropdownItems.map((item, index) => (
+                  {dropdownItems?.map((item, index) => (
                     <TextDefault
                       key={index}
                       textColor={currentTheme.secondaryText}

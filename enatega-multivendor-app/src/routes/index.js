@@ -7,12 +7,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
 //import Login from '../screens/Login/Login'
-import Login from '../screens/Login/LoginV2'
+import Login from '../screens/Login/Login'
 import Register from '../screens/Register/Register'
 import ForgotPassword from '../screens/ForgotPassword/ForgotPassword'
 import SetYourPassword from '../screens/ForgotPassword/SetYourPassword'
 //import CreateAccount from '../screens/CreateAccount/CreateAccount'
-import CreateAccount from '../screens/CreateAccount/CreateAccountV2'
+import CreateAccount from '../screens/CreateAccount/CreateAccount'
 import SideBar from '../components/Sidebar/Sidebar'
 import ItemDetail from '../screens/ItemDetail/ItemDetail'
 import MyOrders from '../screens/MyOrders/MyOrders'
@@ -37,7 +37,7 @@ import Main from '../screens/Main/Main'
 import Restaurant from '../screens/Restaurant/Restaurant'
 import About from '../screens/About'
 import SelectLocation from '../screens/SelectLocation'
-import AddNewAddress from '../screens/SelectLocation/AddNewAddressV2'
+import AddNewAddress from '../screens/SelectLocation/AddNewAddress'
 import CurrentLocation from '../screens/CurrentLocation'
 import ThemeContext from '../ui/ThemeContext/ThemeContext'
 import { theme } from '../utils/themeColors'
@@ -56,6 +56,7 @@ import PhoneNumber from '../screens/PhoneNumber/PhoneNumber'
 import { useApolloClient, gql } from '@apollo/client'
 import { myOrders } from '../apollo/queries'
 import Checkout from '../screens/Checkout/Checkout'
+import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
 
 const NavigationStack = createStackNavigator()
@@ -88,6 +89,7 @@ function NoDrawer() {
         iconColor: currentTheme.iconColorPink
       })}>
       <NavigationStack.Screen name="Main" component={Main} />
+      <NavigationStack.Screen name="Menu" component={Menu} />
       <NavigationStack.Screen
         name="Restaurant"
         component={Restaurant}
@@ -128,10 +130,7 @@ function NoDrawer() {
         component={About}
         options={{ header: () => null }}
       />
-      <NavigationStack.Screen
-        name="Reviews"
-        component={Reviews}
-      />
+      <NavigationStack.Screen name="Reviews" component={Reviews} />
       <NavigationStack.Screen name="Coupon" component={Coupon} />
       <NavigationStack.Screen name="Paypal" component={Paypal} />
       <NavigationStack.Screen name="Tip" component={Tip} />

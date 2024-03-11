@@ -31,17 +31,17 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
-import Item from '../../components/Main/Item/ItemV2'
+import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
-import styles from './stylesV2'
+import styles from './styles'
 import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import navigationOptions from './navigationOptions'
+import navigationOptions from '../Main/navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
@@ -58,9 +58,9 @@ const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
-function Main(props) {
+function Menu({ route, props }) {
   const Analytics = analytics()
-
+  const { selectedType } = route.params;
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
@@ -71,13 +71,14 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-
+  
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
       variables: {
         longitude: location.longitude || null,
         latitude: location.latitude || null,
+        shopType: selectedType || null,
         ip: null
       },
       fetchPolicy: 'network-only'
@@ -398,7 +399,6 @@ function Main(props) {
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
                   <Search setSearch={setSearch} search={search} />
                   <Filters />
-                  {/* <MapSection location={location} restaurants={restaurants} /> */}
                 </CollapsibleSubHeaderAnimator>
               </View>
             </View>
@@ -470,4 +470,4 @@ function Main(props) {
   )
 }
 
-export default Main
+export default Menu

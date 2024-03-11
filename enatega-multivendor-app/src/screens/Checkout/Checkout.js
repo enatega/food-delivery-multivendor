@@ -6,7 +6,7 @@ import React, {
   useLayoutEffect,
   useRef
 } from 'react'
-import { MaterialIcons, Entypo, Feather } from '@expo/vector-icons'
+import { MaterialIcons, Entypo, Feather, Ionicons } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
@@ -22,7 +22,7 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AntDesign, EvilIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
@@ -31,7 +31,7 @@ import { placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
-import MapView, { Marker } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
@@ -54,6 +54,8 @@ import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import styles from './styles'
 import Location from '../../components/Main/Location/Location'
+import { customMapStyle } from '../../utils/customMapStyles'
+import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 
 // Constants
 const PLACEORDER = gql`
@@ -91,8 +93,15 @@ function Checkout(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
+  const [restaurantName, setrestaurantName] = useState('...')
 
   const { loading, data } = useRestaurant(cartRestaurant)
+  const initialRegion = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.0022,
+    longitudeDelta: 0.0021
+  }
 
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
     fetchPolicy: 'network-only'
@@ -149,23 +158,23 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async () => {
-      if (data && !!data.restaurant) {
-        const latOrigin = Number(data.restaurant.location.coordinates[1])
-        const lonOrigin = Number(data.restaurant.location.coordinates[0])
-        const latDest = Number(location.latitude)
-        const longDest = Number(location.longitude)
-        const distance = await calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
-        const amount = Math.ceil(distance) * configuration.deliveryRate
-        isSubscribed &&
-          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-      }
-    })()
+      ; (async () => {
+        if (data && !!data.restaurant) {
+          const latOrigin = Number(data.restaurant.location.coordinates[1])
+          const lonOrigin = Number(data.restaurant.location.coordinates[0])
+          const latDest = Number(location.latitude)
+          const longDest = Number(location.longitude)
+          const distance = await calculateDistance(
+            latOrigin,
+            lonOrigin,
+            latDest,
+            longDest
+          )
+          const amount = Math.ceil(distance) * configuration.deliveryRate
+          isSubscribed &&
+            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+        }
+      })()
     return () => {
       isSubscribed = false
     }
@@ -178,7 +187,7 @@ function Checkout(props) {
     StatusBar.setBarStyle('dark-content')
   })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     props.navigation.setOptions({
       headerTitle: () => (
         <View style={{ alignItems: 'center', gap: scale(2) }}>
@@ -192,7 +201,9 @@ function Checkout(props) {
           </TextDefault>
           <TextDefault
             style={{ color: currentTheme.btnText, ...textStyles.H5 }}>
-            Hardee’s - Z Block
+            {data && data.restaurant.name}
+            {' - '}
+            {data && data.restaurant.address}
           </TextDefault>
         </View>
       ),
@@ -204,8 +215,6 @@ function Checkout(props) {
         ...textStyles.Bolder
       },
       headerTitleContainerStyle: {
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
         backgroundColor: currentTheme.transparent
       },
       headerStyle: {
@@ -215,11 +224,7 @@ function Checkout(props) {
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
-            <View
-              style={{
-                ...alignment.PLsmall,
-                alignItems: 'center'
-              }}>
+            <View style={{ ...alignment.PLxSmall }}>
               <AntDesign
                 name="arrowleft"
                 size={22}
@@ -233,11 +238,12 @@ function Checkout(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props.navigation, data])
 
   useEffect(() => {
     if (!data) return
     didFocus()
+    setrestaurantName(`${data.restaurant.name} - ${data.restaurant.address}`)
   }, [data])
   useEffect(() => {
     async function Track() {
@@ -274,7 +280,7 @@ function Checkout(props) {
         },
         {
           text: 'Continue',
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel'
         }
       ],
@@ -424,9 +430,8 @@ function Checkout(props) {
     if (calculatePrice(deliveryCharges, true) < minimumOrder) {
       FlashMessage({
         // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
-        message: `(${t(minAmount)}) (${
-          configuration.currencySymbol
-        } ${minimumOrder}) (${t(forYourOrder)})`
+        message: `(${t(minAmount)}) (${configuration.currencySymbol
+          } ${minimumOrder}) (${t(forYourOrder)})`
       })
       return false
     }
@@ -472,9 +477,9 @@ function Checkout(props) {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-              _id,
-              options: options.map(({ _id }) => _id)
-            }))
+            _id,
+            options: options.map(({ _id }) => _id)
+          }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -545,9 +550,8 @@ function Checkout(props) {
           )
           if (!variation) return null
 
-          const title = `${food.title}${
-            variation.title ? `(${variation.title})` : ''
-          }`
+          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+            }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -593,41 +597,6 @@ function Checkout(props) {
     }
   }
 
-  // function emptyCart() {
-  //   return (
-  //     <View style={styles().subContainerImage}>
-  //       <View style={styles().imageContainer}>
-  //         <EmptyCart width={scale(200)} height={scale(200)} />
-  //       </View>
-  //       <View style={styles().descriptionEmpty}>
-  //         <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-  //           {t('hungry')}?
-  //         </TextDefault>
-  //         <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-  //           {t('emptyCart')}
-  //         </TextDefault>
-  //       </View>
-  //       <TouchableOpacity
-  //         activeOpacity={0.7}
-  //         style={styles(currentTheme).emptyButton}
-  //         onPress={() =>
-  //           props.navigation.navigate({
-  //             name: 'Main',
-  //             merge: true
-  //           })
-  //         }>
-  //         <TextDefault
-  //           textColor={currentTheme.buttonText}
-  //           bolder
-  //           B700
-  //           center
-  //           uppercase>
-  //           {t('emptyCartBtn')}
-  //         </TextDefault>
-  //       </TouchableOpacity>
-  //     </View>
-  //   )
-  // }
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -706,27 +675,6 @@ function Checkout(props) {
     )
   }
 
-  // function renderRightSwipe(progress, key) {
-  //   const scaleX = progress.interpolate({
-  //     inputRange: [0, 1, 3],
-  //     outputRange: [100, 0, 0]
-  //   })
-  //   return (
-  //     <Animated.View
-  //       style={[
-  //         styles().trashContainer,
-  //         { transform: [{ translateX: scaleX }] }
-  //       ]}>
-  //       <RectButton
-  //         rippleColor="black"
-  //         style={styles().trashIcon}
-  //         onPress={() => deleteItem(key)}>
-  //         <EvilIcons name="trash" size={scale(25)} color={currentTheme.white} />
-  //       </RectButton>
-  //     </Animated.View>
-  //   )
-  // }
-
   if (loading || loadingData || loadingTip) return loadginScreen()
   return (
     <>
@@ -737,108 +685,163 @@ function Checkout(props) {
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={[styles().flex]}>
-              <View
-                style={{
-                  ...alignment.PLsmall,
-                  ...alignment.PRsmall
-                }}>
-                {/* <View style={styles().flex}>
-                  <MapView
-                    style={styles().map}
-                    initialRegion={{
-                      latitude: 37.78825,
-                      longitude: -122.4324,
-                      latitudeDelta: 0.0922,
-                      longitudeDelta: 0.0421
-                    }}>
-                    <Marker
-                      coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-                      title="Marker Title"
-                      description="Marker Description"
-                    />
-                  </MapView>
-                </View> */}
+              <View>
                 <View style={[styles(currentTheme).headerContainer]}>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles().locationContainer}
-                  onPress={event => {
-                    if (!profile.addresses.length) {
-                      props.navigation.navigate('NewAddress', {
-                        backScreen: 'Cart'
-                      })
-                    } else {
-                      props.navigation.navigate('CartAddress', {
-                        address: location
-                      })
-                    }
-                  }}>
+                  <View style={styles().mapView}>
+                    <MapView
+                      style={styles().flex}
+                      scrollEnabled={false}
+                      zoomEnabled={false}
+                      zoomControlEnabled={false}
+                      rotateEnabled={false}
+                      cacheEnabled={false}
+                      initialRegion={initialRegion}
+                      customMapStyle={customMapStyle}
+                      provider={PROVIDER_GOOGLE}></MapView>
+                    <View style={styles().marker}>
+                      <CustomMarker
+                        width={40}
+                        height={40}
+                        transform={[{ translateY: -20 }]}
+                        translateY={-20}
+                      />
+                    </View>
+                  </View>
+                  <View
+                    style={[
+                      styles(currentTheme).horizontalLine,
+                      styles().width100,
+                      styles().mB10
+                    ]}
+                  />
+                </View>
+                <View style={[styles(currentTheme).headerContainer]}>
                   <View style={styles().location}>
                     <Location
                       locationIconGray={{
-                        backgroundColor: currentTheme.newBorderColor,
-                        borderWidth: 1,
-                        borderColor: currentTheme.iconBackground,
-                        width: 30,
-                        height: 30
+                        backgroundColor: 'transparent',
+                        width: 17
                       }}
                     />
                   </View>
-                  
-
-                  {/* <View style={[styles().floatView, styles().pB10]}>
+                  <View
+                    style={[
+                      styles(currentTheme).horizontalLine,
+                      styles().width100,
+                      styles().mB10
+                    ]}
+                  />
+                  <View style={styles(currentTheme).deliveryTime}>
+                    <View style={styles().clockIcon}>
+                      <AntDesign
+                        name="clockcircleo"
+                        size={14}
+                        color={currentTheme.fontFourthColor}
+                      />
+                    </View>
+                    <TextDefault
+                      textColor={props.black}
+                      numberOfLines={1}
+                      H5
+                      bolder>
+                      Within {data.restaurant.deliveryTime} -{' '}
+                      {data?.restaurant.deliveryTime + 10} mins
+                    </TextDefault>
+                  </View>
+                </View>
+                <View style={styles().tipSec}>
+                  <View style={[styles().tipRow]}>
                     <TextDefault
                       numberOfLines={1}
-                      small
-                      bold
-                      textColor={currentTheme.darkBgFont}
-                      style={{ width: '30%' }}>
-                      {t('titleDeliveryDetails')} {' :'}
+                      H5
+                      bolder
+                      textColor={currentTheme.fontNewColor}>
+                      Add a Tip for Rider
                     </TextDefault>
-                    {location ? (
-                      <View style={[styles().addressAllignment]}>
-                        <TextDefault
-                          small
-                          bold
-                          textColor={
-                            currentTheme.darkBgFont
-                          }>{`${location.deliveryAddress}`}</TextDefault>
-                        <View style={[styles().addressDetailAllign]}>
-                          <TextDefault textColor={currentTheme.darkBgFont}>
-                            {' '}
-                            {location.details}
+                    <TextDefault
+                      numberOfLines={1}
+                      normal
+                      bolder
+                      uppercase
+                      textItalic
+                      textColor={currentTheme.fontNewColor}>
+                      optional
+                    </TextDefault>
+                  </View>
+                  {dataTip && (
+                    <View style={styles().buttonInline}>
+                      {dataTip.tips.tipVariations.map((label, index) => (
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          key={index}
+                          style={[
+                            selectedTip === label
+                              ? styles(currentTheme).activeLabel
+                              : styles(currentTheme).labelButton
+                          ]}
+                          onPress={() => {
+                            props.navigation.setParams({ tipAmount: null })
+                            setSelectedTip(prevState =>
+                              prevState === label ? null : label
+                            )
+                          }}>
+                          <TextDefault
+                            textColor={currentTheme.fontFourthColor}
+                            normal
+                            bolder
+                            center>
+                            {label}%
                           </TextDefault>
-                          <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={props.modalOn}
-                            style={styles.textContainer}>
-                            <TextDefault
-                              textColor={props.linkColor}
-                              numberOfLines={1}
-                              H5
-                              bolder>
-                              {''}
-                              {truncatedTranslatedAddress}
-                            </TextDefault>
-                          </TouchableOpacity>
-                          <View style={styles().locationIcon}>
-                            <EvilIcons
-                              name="location"
-                              size={20}
-                              color="black"
-                            />
-                          </View>
-                        </View>
-                      </View>
-                    ) : (
+                        </TouchableOpacity>
+                      ))}
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={
+                          tip
+                            ? styles(currentTheme).activeLabel
+                            : styles(currentTheme).labelButton
+                        }
+                        onPress={() => {
+                          props.navigation.navigate('Tip')
+                        }}>
+                        <TextDefault
+                          textColor={currentTheme.fontFourthColor}
+                          normal
+                          bolder
+                          center>
+                          Others
+                        </TextDefault>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
+                  {/* <View
+                    numberOfLines={1}
+                    style={[styles().floatText, styles().tipContainer]}>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{ ...alignment.PxSmall }}
+                      onPress={() => {
+                        setSelectedTip(null)
+                        props.navigation.setParams({ tipAmount: null })
+                      }}>
                       <TextDefault
                         small
-                        textColor={currentTheme.fontSecondColor}>
-                        {t('deliveryAddressmessage')}
+                        bold
+                        textColor={currentTheme.darkBgFont}>
+                        {tip || selectedTip ? t('remove') : null}
                       </TextDefault>
-                    )}
+                    </TouchableOpacity>
+                    <TextDefault
+                      textColor={currentTheme.fontMainColor}
+                      large
+                      bold>
+                      {configuration.currencySymbol}{' '}
+                      {parseFloat(calculateTip()).toFixed(2)}
+                    </TextDefault>
                   </View> */}
-                </TouchableOpacity>
+                </View>
+
                 {/* <View
                   style={[
                     styles(currentTheme).priceContainer,
@@ -879,99 +882,22 @@ function Checkout(props) {
                     </View>
                   </View>
                 </View> */}
-              </View>
-                <View
-                  style={[
-                    styles(currentTheme).priceContainer,
-                    styles().pT10,
-                    styles().mB10
-                  ]}>
-                  <View
-                    style={[styles().floatView, styles().pB10, styles().pT10]}>
-                    <TextDefault
-                      numberOfLines={1}
-                      large
-                      bold
-                      textColor={currentTheme.darkBgFont}
-                      style={{ width: '30%' }}>
-                      {t('subTotal')}
-                    </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      large
-                      bold
-                      style={{ width: '70%' }}
-                      right>
-                      {configuration.currencySymbol} {calculatePrice(0, false)}
-                    </TextDefault>
-                  </View>
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
 
-                  {!isPickedUp && (
-                    <View style={[styles().floatView, styles().pB10]}>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.darkBgFont}
-                        large
-                        bold
-                        style={{ width: '30%' }}>
-                        {t('deliveryFee')}
-                      </TextDefault>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontMainColor}
-                        style={{ width: '70%' }}
-                        large
-                        bold
-                        right>
-                        {configuration.currencySymbol}{' '}
-                        {deliveryCharges.toFixed(2)}
-                      </TextDefault>
-                    </View>
-                  )}
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
+                <View style={styles().voucherSec}>
+                  <TextDefault
+                    numberOfLines={1}
+                    H5
+                    bolder
+                    textColor={currentTheme.fontNewColor}>
+                    Voucher
+                  </TextDefault>
 
-                  <View style={[styles().floatView, styles().pB10]}>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.darkBgFont}
-                      large
-                      bold
-                      style={{ width: '30%' }}>
-                      {t('taxFee')}
-                    </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{ width: '70%' }}
-                      large
-                      bold
-                      right>
-                      {configuration.currencySymbol} {taxCalculation()}
-                    </TextDefault>
-                  </View>
                   {!coupon ? (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={[styles().pB10, styles().width100]}
-                      onPress={() => {
-                        props.navigation.navigate('Coupon', {
-                          paymentMethod,
-                          coupon
-                        })
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
                       }}>
                       <TextDefault
                         numberOfLines={1}
@@ -980,23 +906,64 @@ function Checkout(props) {
                         textColor={currentTheme.darkBgFont}>
                         {t('haveVoucher')}
                       </TextDefault>
-                    </TouchableOpacity>
+                      <View style={styles(currentTheme).changeBtn}>
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          onPress={() => {
+                            props.navigation.navigate('Coupon', {
+                              coupon
+                            })
+                          }}>
+                          <TextDefault
+                            small
+                            bold
+                            textColor={currentTheme.darkBgFont}
+                            center>
+                            Add
+                          </TextDefault>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                   ) : (
-                    <View style={[styles().floatView, styles().pB10]}>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontMainColor}
-                        small
-                        style={{ width: '30%' }}>
-                        {coupon ? coupon.title : null}
-                      </TextDefault>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
                       <View
-                        numberOfLines={1}
-                        style={[
-                          styles().floatText,
-                          styles(currentTheme).floatRight,
-                          styles().couponContainer
-                        ]}>
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          paddingTop: scale(8),
+                          gap: scale(5)
+                        }}>
+                        <AntDesign
+                          name="tags"
+                          size={24}
+                          color={currentTheme.main}
+                        />
+                        <View>
+                          <TextDefault
+                            numberOfLines={1}
+                            tnormal
+                            bold
+                            textColor={currentTheme.fontFourthColor}>
+                            {coupon ? coupon.title : null} applied
+                          </TextDefault>
+                          <TextDefault
+                            small
+                            bold
+                            textColor={currentTheme.fontFourthColor}>
+                            -{configuration.currencySymbol}
+                            {parseFloat(
+                              calculatePrice(0, false) - calculatePrice(0, true)
+                            ).toFixed(2)}
+                          </TextDefault>
+                        </View>
+                      </View>
+                      <View style={styles(currentTheme).changeBtn}>
                         <TouchableOpacity
                           activeOpacity={0.7}
                           onPress={() => {
@@ -1004,15 +971,171 @@ function Checkout(props) {
                           }}>
                           <TextDefault
                             small
-                            textColor={currentTheme.buttonBackgroundPink}>
+                            bold
+                            textColor={currentTheme.darkBgFont}
+                            center>
                             {coupon ? t('remove') : null}
                           </TextDefault>
                         </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+                </View>
+
+                {isLoggedIn && profile && (
+                  <>
+                    <View style={styles().paymentSec}>
+                      <TextDefault
+                        numberOfLines={1}
+                        H5
+                        bolder
+                        textColor={currentTheme.fontNewColor}>
+                        Choose Payment Method
+                      </TextDefault>
+                      <View style={[styles(currentTheme).paymentSecInner]}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: scale(18)
+                          }}>
+                          <View style={styles().currencyLogo}>
+                            <Ionicons
+                              name="logo-usd"
+                              size={15}
+                              color={currentTheme.fontFourthColor}
+                            />
+                          </View>
+                          <TextDefault
+                            textColor={currentTheme.fontFourthColor}
+                            medium
+                            bolder>
+                            {paymentMethod.label}
+                          </TextDefault>
+                        </View>
+                        <View style={styles(currentTheme).changeBtn}>
+                          <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => {
+                              props.navigation.navigate('Payment', {
+                                paymentMethod
+                              })
+                            }}>
+                            <TextDefault
+                              small
+                              bold
+                              textColor={currentTheme.darkBgFont}
+                              center>
+                              {t('change')}
+                            </TextDefault>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  </>
+                )}
+
+                <View style={[styles(currentTheme).priceContainer]}>
+                  <TextDefault
+                    numberOfLines={1}
+                    H5
+                    bolder
+                    textColor={currentTheme.fontNewColor}
+                    style={{ ...alignment.MBmedium }}>
+                    Payment Summary
+                  </TextDefault>
+                  <View style={styles().billsec}>
+                    <TextDefault
+                      numberOfLines={1}
+                      normal
+                      bold
+                      textColor={currentTheme.fontFourthColor}>
+                      {t('subTotal')}
+                    </TextDefault>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      {configuration.currencySymbol}
+                      {calculatePrice(0, false)}
+                    </TextDefault>
+                  </View>
+                  <View style={styles(currentTheme).horizontalLine2} />
+
+                  {!isPickedUp && (
+                    <View style={styles().billsec}>
+                      <TextDefault
+                        numberOfLines={1}
+                        textColor={currentTheme.fontFourthColor}
+                        normal
+                        bold>
+                        {t('deliveryFee')}
+                      </TextDefault>
+                      <TextDefault
+                        numberOfLines={1}
+                        textColor={currentTheme.fontFourthColor}
+                        normal
+                        bold>
+                        {configuration.currencySymbol}
+                        {deliveryCharges.toFixed(2)}
+                      </TextDefault>
+                    </View>
+                  )}
+                  <View style={styles(currentTheme).horizontalLine2} />
+
+                  <View style={styles().billsec}>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      {t('taxFee')}
+                    </TextDefault>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      {configuration.currencySymbol}
+                      {taxCalculation()}
+                    </TextDefault>
+                  </View>
+                  <View style={styles(currentTheme).horizontalLine2} />
+                  <View style={styles().billsec}>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      Tip
+                    </TextDefault>
+                    <TextDefault
+                      numberOfLines={1}
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
+                      {configuration.currencySymbol}
+                      {parseFloat(calculateTip()).toFixed(2)}
+                    </TextDefault>
+                  </View>
+                  {coupon && (
+                    <View>
+                      <View style={styles(currentTheme).horizontalLine2} />
+                      <View style={styles().billsec}>
                         <TextDefault
-                          textColor={currentTheme.fontMainColor}
-                          bold
-                          large>
-                          {configuration.currencySymbol}
+                          numberOfLines={1}
+                          textColor={currentTheme.fontFourthColor}
+                          normal
+                          bold>
+                          Voucher Discount
+                        </TextDefault>
+                        <TextDefault
+                          numberOfLines={1}
+                          textColor={currentTheme.fontFourthColor}
+                          normal
+                          bold>
+                          -{configuration.currencySymbol}
                           {parseFloat(
                             calculatePrice(0, false) - calculatePrice(0, true)
                           ).toFixed(2)}
@@ -1020,397 +1143,26 @@ function Checkout(props) {
                       </View>
                     </View>
                   )}
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().pB5,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
-
-                  <View
-                    style={[
-                      styles().floatView,
-                      styles().pB10,
-                      styles().tipRow
-                    ]}>
+                  <View style={styles(currentTheme).horizontalLine2} />
+                  <View style={styles().billsec}>
                     <TextDefault
                       numberOfLines={1}
-                      large
-                      bold
-                      textColor={currentTheme.darkBgFont}
-                      style={{ width: '30%' }}>
-                      {t('tip')}
-                    </TextDefault>
-                    <View
-                      numberOfLines={1}
-                      style={[
-                        styles().floatText,
-                        styles(currentTheme).floatRight,
-                        styles().tipContainer
-                      ]}>
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={{ ...alignment.PxSmall }}
-                        onPress={() => {
-                          setSelectedTip(null)
-                          props.navigation.setParams({ tipAmount: null })
-                        }}>
-                        <TextDefault
-                          small
-                          bold
-                          textColor={currentTheme.darkBgFont}>
-                          {tip || selectedTip ? t('remove') : null}
-                        </TextDefault>
-                      </TouchableOpacity>
-                      <TextDefault
-                        textColor={currentTheme.fontMainColor}
-                        large
-                        bold>
-                        {configuration.currencySymbol}{' '}
-                        {parseFloat(calculateTip()).toFixed(2)}
-                      </TextDefault>
-                    </View>
-                  </View>
-                  {dataTip && (
-                    <View style={styles().buttonInline}>
-                      {dataTip.tips.tipVariations.map((label, index) => (
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          key={index}
-                          style={[
-                            selectedTip === label
-                              ? styles(currentTheme).activeLabel
-                              : styles(currentTheme).labelButton
-                          ]}
-                          onPress={() => {
-                            props.navigation.setParams({ tipAmount: null })
-                            setSelectedTip(label)
-                          }}>
-                          <TextDefault
-                            style={
-                              selectedTip === label && {
-                                ...textStyles.Bolder
-                              }
-                            }
-                            textColor={
-                              selectedTip === label
-                                ? currentTheme.black
-                                : currentTheme.darkBgFont
-                            }
-                            small
-                            bold
-                            center>
-                            {label}%
-                          </TextDefault>
-                        </TouchableOpacity>
-                      ))}
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={
-                          tip
-                            ? styles(currentTheme).activeLabel
-                            : styles(currentTheme).labelButton
-                        }
-                        onPress={() => {
-                          props.navigation.navigate('Tip')
-                        }}>
-                        <TextDefault
-                          style={
-                            !!tip && {
-                              ...textStyles.Bolder
-                            }
-                          }
-                          textColor={
-                            tip ? currentTheme.black : currentTheme.darkBgFont
-                          }
-                          small
-                          bold
-                          center>
-                          {t('Custom')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().pB10,
-                      styles().width100,
-                      styles().mB10
-                    ]}
-                  />
-                  <View style={[styles().floatView, styles().pB10]}>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{ width: '30%' }}
+                      textColor={currentTheme.fontFourthColor}
+                      H4
                       bolder>
                       {t('total')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{ width: '70%' }}
-                      bolder
-                      right>
+                      textColor={currentTheme.fontFourthColor}
+                      normal
+                      bold>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
                   </View>
                 </View>
 
-                {isLoggedIn && profile && (
-                  <>
-                    <View
-                      style={[
-                        styles(currentTheme).dealContainer,
-                        styles().pT10,
-                        styles().mB10
-                      ]}>
-                      <View style={[styles().floatView, styles().pB10]}>
-                        <MaterialIcons
-                          style={{ marginRight: 10 }}
-                          name="place"
-                          size={24}
-                          color={currentTheme.main}
-                        />
-                        <TextDefault
-                          numberOfLines={1}
-                          large
-                          bolder
-                          textColor={currentTheme.fontMainColor}>
-                          {t('contactInfo')}
-                        </TextDefault>
-                      </View>
-                      <View style={[styles().floatView, styles().pB10]}>
-                        <TextDefault
-                          numberOfLines={1}
-                          small
-                          bold
-                          textColor={currentTheme.darkBgFont}
-                          style={{ width: '30%' }}>
-                          {t('email')}
-                          {' :'}
-                        </TextDefault>
-                        <TextDefault
-                          numberOfLines={1}
-                          small
-                          bold
-                          textColor={currentTheme.darkBgFont}
-                          style={{ width: '70%' }}
-                          right>
-                          {profile.email}
-                        </TextDefault>
-                      </View>
-                      <View style={[styles().floatView, styles().pB10]}>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.darkBgFont}
-                          small
-                          bold
-                          style={{ width: '30%' }}>
-                          {t('phone')}
-                          {' :'}
-                        </TextDefault>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.darkBgFont}
-                          small
-                          bold
-                          style={{ width: '70%' }}
-                          right>
-                          {profile.phone ? profile.phone : 'None'}
-                        </TextDefault>
-                      </View>
-                      <View
-                        style={[
-                          styles(currentTheme).horizontalLine,
-                          styles().width100,
-                          styles().mB10
-                        ]}
-                      />
-                      {isPickedUp ? (
-                        <>
-                          <View style={[styles().floatView, styles().pB10]}>
-                            <TextDefault
-                              numberOfLines={1}
-                              textColor={currentTheme.fontSecondColor}
-                              small
-                              bold
-                              style={{ width: '30%' }}>
-                              {t('titlePickUpDetails')}
-                              {' :'}
-                            </TextDefault>
-                            <TextDefault
-                              small
-                              right
-                              bold
-                              textColor={currentTheme.black}
-                              style={{ width: '70%' }}>
-                              {`${selectedRestaurant.address}`}
-                            </TextDefault>
-                          </View>
-                          <View style={[styles().width100, styles().mB10]} />
-                        </>
-                      ) : (
-                        <>
-                          <TouchableOpacity
-                            activeOpacity={0.7}
-                            style={styles().pB10}
-                            onPress={event => {
-                              if (!profile.addresses.length) {
-                                props.navigation.navigate('NewAddress', {
-                                  backScreen: 'Cart'
-                                })
-                              } else {
-                                props.navigation.navigate('CartAddress', {
-                                  address: location
-                                })
-                              }
-                            }}>
-                            <View style={[styles().floatView, styles().pB10]}>
-                              <TextDefault
-                                numberOfLines={1}
-                                small
-                                bold
-                                textColor={currentTheme.darkBgFont}
-                                style={{ width: '30%' }}>
-                                {t('titleDeliveryDetails')} {' :'}
-                              </TextDefault>
-                              {location ? (
-                                <View style={[styles().addressAllignment]}>
-                                  <TextDefault
-                                    small
-                                    bold
-                                    right
-                                    style={{ width: '65%' }}
-                                    textColor={
-                                      currentTheme.darkBgFont
-                                    }>{`${location.deliveryAddress}`}</TextDefault>
-                                  <View style={[styles().addressDetailAllign]}>
-                                    <TextDefault
-                                      textColor={currentTheme.darkBgFont}>
-                                      {' '}
-                                      {location.details}
-                                    </TextDefault>
-                                  </View>
-                                </View>
-                              ) : (
-                                <TextDefault
-                                  small
-                                  textColor={currentTheme.fontSecondColor}>
-                                  {t('deliveryAddressmessage')}
-                                </TextDefault>
-                              )}
-                            </View>
-                          </TouchableOpacity>
-                          <View style={styles().changeAddressContainer}>
-                            <TouchableOpacity
-                              activeOpacity={0.7}
-                              style={styles(currentTheme).changeAddressBtn}
-                              onPress={event => {
-                                if (!profile.addresses.length) {
-                                  props.navigation.navigate('NewAddress', {
-                                    backScreen: 'Cart'
-                                  })
-                                } else {
-                                  props.navigation.navigate('CartAddress', {
-                                    address: location
-                                  })
-                                }
-                              }}>
-                              <TextDefault bolder small>
-                                {' '}
-                                {t('changeAddress')}
-                              </TextDefault>
-                            </TouchableOpacity>
-                          </View>
-                        </>
-                      )}
-                      <View style={[styles().width100, styles().mB10]} />
-                    </View>
-                    <View
-                      style={[
-                        styles(currentTheme).dealContainer,
-                        styles().pT10,
-                        styles().mB10
-                      ]}>
-                      <View style={[styles().floatView, styles().mB10]}>
-                        <MaterialIcons
-                          style={{ marginRight: 10 }}
-                          name="payment"
-                          size={24}
-                          color={currentTheme.main}
-                        />
-                        <TextDefault
-                          large
-                          bolder
-                          textColor={currentTheme.fontMainColor}
-                          style={{ width: '60%' }}>
-                          {t('paymentMethod')}
-                        </TextDefault>
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          style={[styles().width30]}
-                          onPress={() => {
-                            props.navigation.navigate('Payment', {
-                              paymentMethod,
-                              coupon
-                            })
-                          }}>
-                          <TextDefault
-                            small
-                            bolder
-                            textColor={currentTheme.darkBgFont}
-                            right>
-                            {t('change')}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      </View>
-
-                      <TouchableOpacity
-                        style={[
-                          styles().floatView,
-                          styles().pB10,
-                          styles().pT10
-                        ]}
-                        onPress={() => {
-                          props.navigation.navigate('Payment', {
-                            paymentMethod,
-                            coupon
-                          })
-                        }}>
-                        <View style={{ width: '10%' }}>
-                          <Image
-                            resizeMode="cover"
-                            style={[
-                              styles().iconStyle,
-                              { ...alignment.MRxSmall }
-                            ]}
-                            source={paymentMethod.icon}
-                          />
-                        </View>
-                        <TextDefault
-                          textColor={currentTheme.darkBgFont}
-                          medium
-                          bolder
-                          style={{ width: '45%' }}>
-                          {paymentMethod.label}
-                        </TextDefault>
-                        <TextDefault
-                          textColor={currentTheme.fontMainColor}
-                          style={{ width: '45%' }}
-                          large
-                          bold
-                          right>
-                          {configuration.currencySymbol} {calculateTotal()}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
                 <View
                   style={[
                     styles(currentTheme).termsContainer,
@@ -1434,100 +1186,23 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={styles().totalBillContainer}>
-                <View style={styles(currentTheme).buttonContainer}>
-                 
-
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => {
-                        if (validateOrder()) onPayment()
-                      }}
-                    style={styles(currentTheme).button}>
-                    <TextDefault
-                      textColor={currentTheme.white}
-                      style={styles().checkoutBtn}
-                      bold
-                      H5>
-                      {t('Place Order')}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
+              <View style={styles(currentTheme).buttonContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    if (validateOrder()) onPayment()
+                  }}
+                  style={styles(currentTheme).button}>
+                  <TextDefault
+                    textColor={currentTheme.fontFourthColor}
+                    style={styles().checkoutBtn}
+                    bold
+                    H4>
+                    {t('Place Order')}
+                  </TextDefault>
+                </TouchableOpacity>
               </View>
             )}
-
-            {/* {!isModalOpen && (
-              <View style={styles(currentTheme).buttonContainer}>
-                {isLoggedIn && profile ? (
-                  <TouchableOpacity
-                    disabled={loadingOrderMutation}
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      if (validateOrder()) onPayment()
-                    }}
-                    style={styles(currentTheme).button}>
-                    {loadingOrderMutation ? (
-                      <ActivityIndicator
-                        size="large"
-                        style={{ flex: 1, justifyContent: 'center' }}
-                        color={currentTheme.buttonText}
-                      />
-                    ) : (
-                      <>
-                        <View style={styles().buttontLeft}>
-                          <View style={styles(currentTheme).buttonLeftCircle}>
-                            <TextDefault
-                              bolder
-                              center
-                              textColor={currentTheme.white}
-                              smaller>
-                              {cartCount}
-                            </TextDefault>
-                          </View>
-                        </View>
-                        <TextDefault
-                          textColor={currentTheme.white}
-                          style={{ width: '30%' }}
-                          bolder
-                          B700
-                          small
-                          center
-                          uppercase>
-                          {t('orderBtn')}
-                        </TextDefault>
-                        
-                        <TextDefault
-                          textColor={currentTheme.black}
-                          style={{ width: '35%' }}
-                          bold
-                          small
-                          right>
-                          {configuration.currencySymbol}
-                          {calculateTotal()}
-                        </TextDefault>
-                      </>
-                    )}
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      props.navigation.navigate({ name: 'CreateAccount' })
-                    }}
-                    style={styles(currentTheme).button}>
-                    <TextDefault
-                      textColor={currentTheme.black}
-                      style={{ width: '100%' }}
-                      H5
-                      bolder
-                      center
-                      uppercase>
-                      {t('loginOrCreateAccount')}
-                    </TextDefault>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )} */}
           </>
         )}
         <Modalize

@@ -30,15 +30,17 @@ function Location(props) {
     translatedAddress.length > 26
       ? translatedAddress.substring(0, 17) + '...'
       : translatedAddress
-    
 
   return (
     <View>
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View
-          style={{ flexDirection: 'row', alignItems: 'center', gap: scale(1) }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={[styles().locationIcon, props.locationIconGray]}>
-            <EvilIcons name="location" size={20} color="black" />
+            <EvilIcons
+              name="location"
+              size={20}
+              color={currentTheme.fontFourthColor}
+            />
           </View>
           <View style={styles(currentTheme).headerContainer}>
             <TextDefault textColor={props.fontFourthColor} left>
@@ -49,11 +51,7 @@ function Location(props) {
               activeOpacity={1}
               onPress={props.modalOn}
               style={styles.textContainer}>
-              <TextDefault
-                textColor={props.linkColor}
-                numberOfLines={1}
-                H5
-                bolder>
+              <TextDefault textColor={props.black} numberOfLines={1} H5 bolder>
                 {''}
                 {truncatedTranslatedAddress}
               </TextDefault>

@@ -11,10 +11,23 @@ import styles from './styles'
 import {
   AntDesign,
   FontAwesome5,
-  Ionicons,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { addFavouriteRestaurant } from '../../../apollo/mutations'
+import UserContext from '../../../context/User'
+import { useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
+import { profile } from '../../../apollo/queries'
+import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
+import Spinner from '../../Spinner/Spinner'
+
+const ADD_FAVOURITE = gql`
+  ${addFavouriteRestaurant}
+`
+const PROFILE = gql`
+  ${profile}
+`
 
 function NewRestaurantCard(props) {
   const { t } = useTranslation()
@@ -22,9 +35,26 @@ function NewRestaurantCard(props) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { profile } = useContext(UserContext)
+  const heart = profile ? profile.favourite.includes(props._id) : false
+  const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
+    onCompleted,
+    refetchQueries: [{ query: PROFILE }]
+  })
+
+  function onCompleted() {
+    FlashMessage({ message: t('favouritelistUpdated') })
+    // alert("favv list updated")
+  }
+
+  const handleAddToFavorites = () => {
+    if (!loadingMutation && profile) {
+      mutate({ variables: { id: props._id } });
+    }
+  };
 
   return (
-    <View style={{ ...alignment.PRsmall }}>
+    
       <TouchableOpacity
         style={styles(currentTheme).offerContainer}
         activeOpacity={1}
@@ -39,15 +69,18 @@ function NewRestaurantCard(props) {
           <View style={styles().overlayContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => {
-                alert('Coming soon')
-              }}>
+              disabled={loadingMutation}
+              onPress={handleAddToFavorites}>
               <View style={styles(currentTheme).favouriteOverlay}>
-                <Ionicons
-                  name="heart-outline"
-                  size={20}
-                  color={currentTheme.iconColorDark}
-                />
+                {loadingMutation ? (
+                  <Spinner size={'small'} backColor={'transparent'} />
+                ) : (
+                  <AntDesign
+                    name={heart ? 'heart' : 'hearto'}
+                    size={scale(15)}
+                    color="black"
+                  />
+                )}
               </View>
             </TouchableOpacity>
           </View>
@@ -62,7 +95,7 @@ function NewRestaurantCard(props) {
               {props.name}
             </TextDefault>
             <View style={styles().aboutRestaurant}>
-              <FontAwesome5 name="star" size={18} color={currentTheme.orange} />
+              <FontAwesome5 name="star" size={18} color={currentTheme.stars} />
 
               <TextDefault
                 textColor={currentTheme.fontThirdColor}
@@ -78,7 +111,11 @@ function NewRestaurantCard(props) {
                   styles().restaurantTotalRating
                 ]}
                 H5>
-                ({props.reviewData.reviews.length > 0 ? props.reviewData.reviews.length + '+' : props.reviewData.reviews.length})
+                (
+                {props.reviewData.reviews.length > 0
+                  ? props.reviewData.reviews.length + '+'
+                  : props.reviewData.reviews.length}
+                )
               </TextDefault>
             </View>
           </View>
@@ -103,15 +140,10 @@ function NewRestaurantCard(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                30
+                {props.deliveryTime + ' '}
+                {t('min')}
               </TextDefault>
-              <TextDefault
-                textColor={currentTheme.fontNewColor}
-                numberOfLines={1}
-                bold
-                Normal>
-                mins
-              </TextDefault>
+            
             </View>
             <View style={styles().deliveryTime}>
               <MaterialCommunityIcons
@@ -125,26 +157,13 @@ function NewRestaurantCard(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                $2
+                ${props.tax}
               </TextDefault>
             </View>
           </View>
-
-          {/* <TextDefault
-            textColor={currentTheme.fontMainColor}
-            numberOfLines={1}
-            style={styles().restaurantPriceContainer}
-            bold
-            small>
-            {configuration.currencySymbol} {props.minimumOrder}
-            <TextDefault textColor={currentTheme.fontSecondColor} small>
-              {' '}
-              {t('min')}
-            </TextDefault>
-          </TextDefault> */}
         </View>
       </TouchableOpacity>
-    </View>
+   
   )
 }
 

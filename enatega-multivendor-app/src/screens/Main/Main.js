@@ -10,12 +10,9 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Animated,
   StatusBar,
   Platform,
-  RefreshControl,
   Image,
-  FlatList,
   ScrollView
 } from 'react-native'
 import { Modalize } from 'react-native-modalize'
@@ -25,22 +22,17 @@ import {
   AntDesign,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
-import { useQuery, useMutation } from '@apollo/client'
-import {
-  useCollapsibleSubHeader,
-  CollapsibleSubHeaderAnimator
-} from 'react-navigation-collapsible'
+import { useMutation } from '@apollo/client'
+import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
-import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
-import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -50,14 +42,15 @@ import { LocationContext } from '../../context/Location'
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
-import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
+import { TopBrands } from '../../components/Main/TopBrands'
+import ActiveOrders from '../../components/MyOrders/ActiveOrders'
 
-// const RESTAURANTS = gql`
-//   ${restaurantList}
-// `
+const RESTAURANTS = gql`
+  ${restaurantList}
+`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
@@ -75,28 +68,11 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
+  const [selectedType, setSelectedType] = useState('restaurant')
 
-  // const { data, refetch, networkStatus, loading, error } = useQuery(
-  //   RESTAURANTS,
-  //   {
-  //     variables: {
-  //       longitude: location.longitude || null,
-  //       latitude: location.latitude || null,
-  //       ip: null
-  //     },
-  //     fetchPolicy: 'network-only'
-  //   }
-  // )
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
-
-  const {
-    onScroll /* Event handler */,
-    containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */,
-    translateY
-  } = useCollapsibleSubHeader()
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -116,7 +92,6 @@ function Main(props) {
     navigation.setOptions(
       navigationOptions({
         headerMenuBackground: currentTheme.newheaderColor,
-        horizontalLine: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen
@@ -315,40 +290,57 @@ function Main(props) {
 
   // const { restaurants, sections } = data.nearByRestaurants
 
+  // const searchRestaurants = searchText => {
+  //   const data = []
+  //   const regex = new RegExp(searchText, 'i')
+  //   restaurants.forEach(restaurant => {
+  //     const resultName = restaurant.name.search(regex)
+  //     if (resultName < 0) {
+  //       const resultCatFoods = restaurant.categories.some(category => {
+  //         const result = category.title.search(regex)
+  //         if (result < 0) {
+  //           const result = category.foods.some(food => {
+  //             const result = food.title.search(regex)
+  //             return result > -1
+  //           })
+  //           return result
+  //         }
+  //         return true
+  //       })
+  //       if (!resultCatFoods) {
+  //         const resultOptions = restaurant.options.some(option => {
+  //           const result = option.title.search(regex)
+  //           return result > -1
+  //         })
+  //         if (!resultOptions) {
+  //           const resultAddons = restaurant.addons.some(addon => {
+  //             const result = addon.title.search(regex)
+  //             return result > -1
+  //           })
+  //           if (!resultAddons) return
+  //         }
+  //       }
+  //     }
+  //     data.push(restaurant)
+  //   })
+  //   return data
+  // }
+
   const searchRestaurants = searchText => {
-    const data = []
+    if (!searchText) return data?.nearByRestaurants?.restaurants || []
+
     const regex = new RegExp(searchText, 'i')
-    restaurants.forEach(restaurant => {
+    return (data?.nearByRestaurants?.restaurants || []).filter(restaurant => {
       const resultName = restaurant.name.search(regex)
-      if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some(category => {
-          const result = category.title.search(regex)
-          if (result < 0) {
-            const result = category.foods.some(food => {
-              const result = food.title.search(regex)
-              return result > -1
-            })
-            return result
-          }
-          return true
-        })
-        if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some(option => {
-            const result = option.title.search(regex)
-            return result > -1
-          })
-          if (!resultOptions) {
-            const resultAddons = restaurant.addons.some(addon => {
-              const result = addon.title.search(regex)
-              return result > -1
-            })
-            if (!resultAddons) return
-          }
-        }
-      }
-      data.push(restaurant)
+      if (resultName >= 0) return true
+
+      return restaurant.categories.some(category => {
+        const result = category.title.search(regex)
+        if (result >= 0) return true
+
+        return category.foods.some(food => food.title.search(regex) >= 0)
+      })
     })
-    return data
   }
 
   // Flatten the array. That is important for data sequence
@@ -361,9 +353,7 @@ function Main(props) {
 
   return (
     <>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
@@ -373,7 +363,13 @@ function Main(props) {
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
-                    <View style={styles().mainItem}>
+                    <TouchableOpacity
+                      style={styles().mainItem}
+                      onPress={() =>
+                        navigation.navigate('Menu', {
+                          selectedType: 'restaurant'
+                        })
+                      }>
                       <View>
                         <TextDefault
                           H4
@@ -389,17 +385,17 @@ function Main(props) {
                           Order food you love
                         </TextDefault>
                       </View>
-
                       <Image
-                        source={{
-                          uri:
-                            'https://enatega.com/wp-content/uploads/2024/02/pngimg-1.png'
-                        }}
+                        source={require('../../assets/images/ItemsList/menu.png')}
                         style={styles().popularMenuImg}
                         resizeMode="contain"
                       />
-                    </View>
-                    <View style={styles().mainItem}>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles().mainItem}
+                      onPress={() =>
+                        navigation.navigate('Menu', { selectedType: 'grocery' })
+                      }>
                       <TextDefault
                         H4
                         bolder
@@ -414,20 +410,20 @@ function Main(props) {
                         Essentials delivered fast
                       </TextDefault>
                       <Image
-                        source={{
-                          uri:
-                            'https://enatega.com/wp-content/uploads/2024/02/pngwing-4.png'
-                        }}
+                        source={require('../../assets/images/ItemsList/grocery.png')}
                         style={styles().popularMenuImg}
                         resizeMode="contain"
                       />
-                    </View>
+                    </TouchableOpacity>
                   </View>
                   <View>
                     <OrderAgain />
                   </View>
-                  <View style={styles().topPicksSection}>
+                  <View>
                     <TopPicks />
+                  </View>
+                  <View>
+                    <TopBrands />
                   </View>
                 </ScrollView>
 
@@ -540,6 +536,7 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
+        <ActiveOrders />
       </SafeAreaView>
     </>
   )

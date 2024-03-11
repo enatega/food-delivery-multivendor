@@ -8,60 +8,44 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
-    pT20: {
-      ...alignment.PTmedium,
-      ...alignment.PBmedium,
-      ...alignment.PRmedium,
-      ...alignment.MTmedium,
-      backgroundColor: props != null? props.radioOuterColor : 'white',
-      borderRadius: scale(20)
-    },
     paymentMethod: {
-      backgroundColor: theme.Pink.lightHorizontalLine,
+      // backgroundColor: theme.Pink.lightHorizontalLine,
       borderRadius: scale(20),
-      padding: scale(10),
-      display: 'flex',
+      paddingVertical: scale(10),
+      flexDirection: 'row',
       alignItems: 'center',
-      width: '80%',
-      justifyContent: 'space-between',
-      flexDirection: 'row'
+      gap:scale(7)
     },
     mainContainer: {
       backgroundColor: props != null? props.themeBackground : 'white',
-      borderBottomRightRadius: scale(35),
-      borderBottomLeftRadius: scale(35),
-      ...alignment.PTlarge,
-      ...alignment.PLsmall,
-      ...alignment.PRsmall,
-      paddingBottom: scale(25)
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
     },
     radioContainer: {
-      width: '15%',
+      width: '10%',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      
     },
-    backButton: {
-      backgroundColor: theme.Pink.white,
-      borderRadius: scale(50),
-      marginLeft: scale(10),
-      width: scale(55),
-      alignItems: 'center'
+    horizontalLine: {
+      borderWidth: 0.5,
+      borderColor: props !== null ? props.iconBackground : 'white'
     },
     radioGroup: {
-      flexDirection: 'row',
-      width: '100%',
+      flexDirection: 'row',  
       alignItems: 'center',
- 
+      justifyContent: 'space-between',
+      marginVertical:scale(10),
     },
-    iconContainer: {
-      width: '25%',
-      justifyContent: 'flex-end',
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
+    // iconContainer: {
+    //   width: '25%',
+     
+    //   flexDirection: 'row',
+    //   alignItems: 'center'
+    // },
     iconStyle: {
       height: verticalScale(20),
-      width: verticalScale(25)
+      width: verticalScale(20)
     }
   })
 export default styles
