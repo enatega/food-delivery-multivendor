@@ -32,7 +32,8 @@ export default function Login() {
     loading,
     height,
     showVideo,
-    setShowVideo
+    setShowVideo,
+    configuration
   } = useLogin()
 
   const { t } = useTranslation()
@@ -57,9 +58,10 @@ export default function Login() {
             width={250}
           />}
         <View style={styles.innerContainer}>
+          {configuration?.enableRiderDemo &&
           <Button
             title={showVideo ? 'Stop' : 'How to get credentials?'}
-            onPress={() => { setShowVideo(!showVideo) }}/>
+            onPress={() => { setShowVideo(!showVideo) }}/>}
           <TextDefault bolder H2 center style={styles.signInText}>
             {t('signInText')}
           </TextDefault>

@@ -23,6 +23,7 @@ export const configuration = `query Configuration{
       currencySymbol
       riderAppSentryUrl
       googleApiKey
+      enableRiderDemo
     }
   }`
 
