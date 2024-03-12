@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { riderLogin } from '../../apollo/mutations'
+import { defaultRiderCreds } from '../../apollo/queries'
 import { AuthContext } from '../../context/auth'
 import { FlashMessage } from '../../components/FlashMessage/FlashMessage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
 import { useTranslation } from 'react-i18next'
@@ -12,11 +13,12 @@ import { useTranslation } from 'react-i18next'
 const RIDER_LOGIN = gql`
   ${riderLogin}
 `
+const RIDER_CREDS = gql`${defaultRiderCreds}`
 
 const useLogin = () => {
   const { t } = useTranslation()
-  const [username, setUsername] = useState('rider2')
-  const [password, setPassword] = useState('12345')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(true)
   const [usernameError, setUsernameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
@@ -28,6 +30,8 @@ const useLogin = () => {
     onCompleted,
     onError
   })
+
+  useQuery(RIDER_CREDS, { onCompleted, onError })
 
   function validateForm() {
     let result = true
@@ -45,11 +49,15 @@ const useLogin = () => {
     return result
   }
 
-  async function onCompleted(data) {
-
-    FlashMessage({ message: t('loginFlashMsg') })
-    await AsyncStorage.setItem('rider-id', data.riderLogin.userId)
-    await setTokenAsync(data.riderLogin.token)
+  async function onCompleted({ riderLogin, lastOrderCreds }) {
+    if (riderLogin) {
+      FlashMessage({ message: t('loginFlashMsg') })
+      await AsyncStorage.setItem('rider-id', riderLogin.userId)
+      await setTokenAsync(riderLogin.token)
+    } else if (lastOrderCreds && lastOrderCreds.riderUsername && lastOrderCreds.riderPassword) {
+      setUsername(lastOrderCreds.riderUsername)
+      setPassword(lastOrderCreds.riderPassword)
+    }
   }
   function onError(error) {
     console.log('error', JSON.stringify(error))
@@ -63,8 +71,8 @@ const useLogin = () => {
   async function onSubmit() {
     if (validateForm()) {
       // Get notification permissions
-      const settings = await Notifications.getPermissionsAsync();
-      let notificationPermissions = { ...settings };
+      const settings = await Notifications.getPermissionsAsync()
+      let notificationPermissions = { ...settings }
 
       // Request notification permissions if not granted or not provisional on iOS
       if (
@@ -77,12 +85,12 @@ const useLogin = () => {
             allowAlert: true,
             allowBadge: true,
             allowSound: true,
-            allowAnnouncements: true,
-          },
-        });
+            allowAnnouncements: true
+          }
+        })
       }
 
-      let notificationToken = null;
+      let notificationToken = null
       // Get notification token if permissions are granted and it's a device
       if (
         (notificationPermissions?.status === 'granted' ||
@@ -90,7 +98,7 @@ const useLogin = () => {
           Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
-        notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
+        notificationToken = (await Notifications.getExpoPushTokenAsync()).data
       }
 
       // Perform mutation with the obtained data
@@ -98,9 +106,9 @@ const useLogin = () => {
         variables: {
           username: username.toLowerCase(),
           password: password,
-          notificationToken: notificationToken,
-        },
-      });
+          notificationToken: notificationToken
+        }
+      })
     }
   }
   return {

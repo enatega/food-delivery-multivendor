@@ -109,7 +109,7 @@ export const restaurantInfo = `query Restaurant($id:String){
   }
 }}
 `
-export const defaultRiderCreds = `query LastOrderCreds {
+export const defaultRestaurantCreds = `query LastOrderCreds {
   lastOrderCreds {
     restaurantUsername
     restaurantPassword

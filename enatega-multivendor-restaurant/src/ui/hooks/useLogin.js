@@ -1,7 +1,7 @@
 import { useState, useRef, useContext } from 'react'
 import { useMutation, gql, useQuery } from '@apollo/client'
 import { FlashMessage } from '../../components'
-import { login as loginQuery, defaultRiderCreds } from '../../apollo'
+import { login as loginQuery, defaultRestaurantCreds } from '../../apollo'
 import { validateLogin } from '../validate'
 import { AuthContext } from '../context'
 
@@ -18,7 +18,7 @@ export default function useLogin() {
     `,
     { onCompleted, onError }
   )
-  useQuery(gql`${defaultRiderCreds}`, { onCompleted, onError })
+  useQuery(gql`${defaultRestaurantCreds}`, { onCompleted, onError })
   function onCompleted({ restaurantLogin, lastOrderCreds }) {
     if (lastOrderCreds) {
       if (lastOrderCreds.restaurantUsername && lastOrderCreds.restaurantPassword) {
