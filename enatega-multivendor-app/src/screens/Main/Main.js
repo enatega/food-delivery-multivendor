@@ -74,6 +74,8 @@ function Main(props) {
     onError
   })
 
+  const newheaderColor = currentTheme.newheaderColor;
+
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
@@ -243,7 +245,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
+        <Search search={''} setSearch={() => { }} newheaderColor={newheaderColor}/>
         <Placeholder
           Animation={props => (
             <Fade
@@ -359,7 +361,7 @@ function Main(props) {
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
                 <View style={styles().searchbar}>
-                  <Search setSearch={setSearch} search={search} />
+                  <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor} />
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
