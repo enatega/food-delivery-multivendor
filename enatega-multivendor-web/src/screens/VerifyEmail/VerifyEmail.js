@@ -167,7 +167,7 @@ function VerifyEmail() {
     let timer = null
     if(!SKIP_EMAIL_VERIFICATION) return
     setOtp('111111')
-    setTimeout(()=>{
+    timer = setTimeout(()=>{
       handleCreateUser('111111')
     },3000)
     return ()=>{timer && clearTimeout(timer)}
