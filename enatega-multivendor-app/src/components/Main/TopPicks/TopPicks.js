@@ -30,8 +30,8 @@ function TopPicks(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  if (loading) return <Text>Loading...</Text>
-  if (error) return <Text>Error: {error.message}</Text>
+  if (loading) return <Text style={styles().margin}>Loading...</Text>
+  if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
   // console.log(isLoggedIn, loading, error, data)
   return (

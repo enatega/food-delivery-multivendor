@@ -13,7 +13,9 @@ import {
   StatusBar,
   Platform,
   Image,
-  ScrollView
+  ScrollView,
+  Animated,
+  RefreshControl
 } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import {
@@ -22,7 +24,7 @@ import {
   AntDesign,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
@@ -46,7 +48,7 @@ import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
 import { TopBrands } from '../../components/Main/TopBrands'
-import ActiveOrders from '../../components/MyOrders/ActiveOrders'
+import Item from '../../components/Main/Item/Item'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -68,11 +70,25 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
+
+  const { data, refetch, networkStatus, loading, error } = useQuery(
+    RESTAURANTS,
+    {
+      variables: {
+        longitude: location.longitude || null,
+        latitude: location.latitude || null,
+        shopType: null,
+        ip: null
+      },
+      fetchPolicy: 'network-only'
+    }
+  )
   const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
+
 
   const newheaderColor = currentTheme.newheaderColor;
 
@@ -117,6 +133,12 @@ function Main(props) {
     Work: 'briefcase',
     Other: 'location-pin'
   }
+
+  const {
+    onScroll /* Event handler */,
+    containerPaddingTop /* number */,
+    scrollIndicatorInsetTop /* number */,
+  } = useCollapsibleSubHeader()
 
   const setAddressLocation = async address => {
     setLocation({
@@ -286,73 +308,48 @@ function Main(props) {
     )
   }
 
-  // if (error) return <TextError text={t('networkError')} />
+  const  restaurants  = data?.nearByRestaurants?.restaurants
 
-  // if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  // const { restaurants, sections } = data.nearByRestaurants
-
-  // const searchRestaurants = searchText => {
-  //   const data = []
-  //   const regex = new RegExp(searchText, 'i')
-  //   restaurants.forEach(restaurant => {
-  //     const resultName = restaurant.name.search(regex)
-  //     if (resultName < 0) {
-  //       const resultCatFoods = restaurant.categories.some(category => {
-  //         const result = category.title.search(regex)
-  //         if (result < 0) {
-  //           const result = category.foods.some(food => {
-  //             const result = food.title.search(regex)
-  //             return result > -1
-  //           })
-  //           return result
-  //         }
-  //         return true
-  //       })
-  //       if (!resultCatFoods) {
-  //         const resultOptions = restaurant.options.some(option => {
-  //           const result = option.title.search(regex)
-  //           return result > -1
-  //         })
-  //         if (!resultOptions) {
-  //           const resultAddons = restaurant.addons.some(addon => {
-  //             const result = addon.title.search(regex)
-  //             return result > -1
-  //           })
-  //           if (!resultAddons) return
-  //         }
-  //       }
-  //     }
-  //     data.push(restaurant)
-  //   })
-  //   return data
-  // }
-
-  const searchRestaurants = searchText => {
-    if (!searchText) return data?.nearByRestaurants?.restaurants || []
-
+  const searchAllShops = searchText => {
+    const data = []
     const regex = new RegExp(searchText, 'i')
-    return (data?.nearByRestaurants?.restaurants || []).filter(restaurant => {
+    restaurants?.forEach(restaurant => {
       const resultName = restaurant.name.search(regex)
-      if (resultName >= 0) return true
-
-      return restaurant.categories.some(category => {
-        const result = category.title.search(regex)
-        if (result >= 0) return true
-
-        return category.foods.some(food => food.title.search(regex) >= 0)
-      })
+      if (resultName < 0) {
+        const resultCatFoods = restaurant.categories.some(category => {
+          const result = category.title.search(regex)
+          if (result < 0) {
+            const result = category.foods.some(food => {
+              const result = food.title.search(regex)
+              return result > -1
+            })
+            return result
+          }
+          return true
+        })
+        if (!resultCatFoods) {
+          const resultOptions = restaurant.options.some(option => {
+            const result = option.title.search(regex)
+            return result > -1
+          })
+          if (!resultOptions) {
+            const resultAddons = restaurant.addons.some(addon => {
+              const result = addon.title.search(regex)
+              return result > -1
+            })
+            if (!resultAddons) return
+          }
+        }
+      }
+      data.push(restaurant)
     })
+    return data
   }
 
-  // Flatten the array. That is important for data sequence
-  // const restaurantSections = sections.map(sec => ({
-  //   ...sec,
-  //   restaurants: sec.restaurants
-  //     .map(id => restaurants.filter(res => res._id === id))
-  //     .flat()
-  // }))
 
+  if (error) return <TextError text={t('networkError')} />
+  
   return (
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
@@ -363,116 +360,105 @@ function Main(props) {
                 <View style={styles().searchbar}>
                   <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor} />
                 </View>
-                <ScrollView>
-                  <View style={styles().mainItemsContainer}>
-                    <TouchableOpacity
-                      style={styles().mainItem}
-                      onPress={() =>
-                        navigation.navigate('Menu', {
-                          selectedType: 'restaurant'
-                        })
-                      }>
-                      <View>
-                        <TextDefault
-                          H4
-                          bolder
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemName}>
-                          Food Delivery
-                        </TextDefault>
-                        <TextDefault
-                          Normal
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemDescription}>
-                          Order food you love
-                        </TextDefault>
-                      </View>
-                      <Image
-                        source={require('../../assets/images/ItemsList/menu.png')}
-                        style={styles().popularMenuImg}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles().mainItem}
-                      onPress={() =>
-                        navigation.navigate('Menu', { selectedType: 'grocery' })
-                      }>
-                      <TextDefault
-                        H4
-                        bolder
-                        textColor={currentTheme.fontThirdColor}
-                        style={styles().ItemName}>
-                        Grocery
-                      </TextDefault>
-                      <TextDefault
-                        Normal
-                        textColor={currentTheme.fontThirdColor}
-                        style={styles().ItemDescription}>
-                        Essentials delivered fast
-                      </TextDefault>
-                      <Image
-                        source={require('../../assets/images/ItemsList/grocery.png')}
-                        style={styles().popularMenuImg}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View>
-                    <OrderAgain />
-                  </View>
-                  <View>
-                    <TopPicks />
-                  </View>
-                  <View>
-                    <TopBrands />
-                  </View>
-                </ScrollView>
-
-                {/* <Animated.FlatList
-                  contentInset={{ top: containerPaddingTop }}
-                  contentContainerStyle={{
-                    paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop
-                  }}
-                  contentOffset={{ y: -containerPaddingTop }}
-                  onScroll={onScroll}
-                  scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-                  showsVerticalScrollIndicator={false}
-                  ListHeaderComponent={
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontMainColor}
-                      style={{
-                        ...alignment.MLlarge,
-                        ...alignment.PBsmall,
-                        marginRight: scale(20)
-                      }}
-                      bolder
-                      H3>
-                      {t('allRestaurant')}
-                    </TextDefault>
-                  }
-                  ListEmptyComponent={emptyView()}
-                  keyExtractor={(item, index) => index.toString()}
-                  refreshControl={
-                    <RefreshControl
-                      progressViewOffset={containerPaddingTop}
-                      colors={[currentTheme.iconColorPink]}
-                      refreshing={networkStatus === 4}
-                      onRefresh={() => {
-                        if (networkStatus === 7) {
-                          refetch()
+                  {search ? (
+                    <View style={styles().searchList}>
+                      <Animated.FlatList
+                        contentInset={{ top: containerPaddingTop }}
+                        contentContainerStyle={{
+                          paddingTop:
+                            Platform.OS === 'ios' ? 0 : containerPaddingTop
+                        }}
+                        contentOffset={{ y: -containerPaddingTop }}
+                        onScroll={onScroll}
+                        scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+                        showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={emptyView()}
+                        keyExtractor={(item, index) => index.toString()}
+                        refreshControl={
+                          <RefreshControl
+                            progressViewOffset={containerPaddingTop}
+                            colors={[currentTheme.iconColorPink]}
+                            refreshing={networkStatus === 4}
+                            onRefresh={() => {
+                              if (networkStatus === 7) {
+                                refetch()
+                              }
+                            }}
+                          />
                         }
-                      }}
-                    />
-                  }
-                  data={search ? searchRestaurants(search) : restaurants}
-                  renderItem={({ item }) => <Item item={item} />}
-                /> */}
-                {/* <CollapsibleSubHeaderAnimator translateY={translateY}>
-                  <Search setSearch={setSearch} search={search} /> 
-                  <MapSection location={location} restaurants={restaurants} />
-                </CollapsibleSubHeaderAnimator> */}
+                        data={searchAllShops(search)}
+                        renderItem={({ item }) => <Item item={item} />}
+                      />
+                    </View>
+                  ) : (
+                    <ScrollView>
+                      <View style={styles().mainItemsContainer}>
+                        <TouchableOpacity
+                          style={styles().mainItem}
+                          onPress={() =>
+                            navigation.navigate('Menu', {
+                              selectedType: 'restaurant'
+                            })
+                          }>
+                          <View>
+                            <TextDefault
+                              H4
+                              bolder
+                              textColor={currentTheme.fontThirdColor}
+                              style={styles().ItemName}>
+                              Food Delivery
+                            </TextDefault>
+                            <TextDefault
+                              Normal
+                              textColor={currentTheme.fontThirdColor}
+                              style={styles().ItemDescription}>
+                              Order food you love
+                            </TextDefault>
+                          </View>
+                          <Image
+                            source={require('../../assets/images/ItemsList/menu.png')}
+                            style={styles().popularMenuImg}
+                            resizeMode="contain"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles().mainItem}
+                          onPress={() =>
+                            navigation.navigate('Menu', {
+                              selectedType: 'grocery'
+                            })
+                          }>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}>
+                            Grocery
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}>
+                            Essentials delivered fast
+                          </TextDefault>
+                          <Image
+                            source={require('../../assets/images/ItemsList/grocery.png')}
+                            style={styles().popularMenuImg}
+                            resizeMode="contain"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      <View>
+                        <OrderAgain />
+                      </View>
+                      <View>
+                        <TopPicks />
+                      </View>
+                      <View>
+                        <TopBrands />
+                      </View>
+                    </ScrollView>
+                  )}
               </View>
             </View>
           </View>
@@ -538,7 +524,6 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
-        <ActiveOrders />
       </SafeAreaView>
     </>
   )
