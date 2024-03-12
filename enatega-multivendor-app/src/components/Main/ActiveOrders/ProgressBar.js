@@ -51,26 +51,46 @@ export const checkStatus = status => {
   return obj[0]
 }
 
-export const ProgressBar = ({ currentTheme, item }) => {
+export const ProgressBar = ({ currentTheme, item, customWidth }) => {
   if (item.orderStatus === ORDER_STATUS_ENUM.CANCELLED) return null
   useSubscription(
     gql`
-        ${subscriptionOrder}
-      `,
+      ${subscriptionOrder}
+    `,
     { variables: { id: item._id } }
   )
+
+  const defaultWidth = scale(50)
+  const width = customWidth !== undefined ? customWidth : defaultWidth
+
   return (
     <View style={{ marginTop: scale(10) }}>
       <View style={{ flexDirection: 'row' }}>
         {Array(checkStatus(item.orderStatus).status)
           .fill(0)
           .map((item, index) => (
-            <View key={index} style={{ height: scale(4), backgroundColor: currentTheme.primary, width: scale(50), marginRight: scale(10) }}/>
+            <View
+              key={index}
+              style={{
+                height: scale(4),
+                backgroundColor: currentTheme.primary,
+                width: width,
+                marginRight: scale(10)
+              }}
+            />
           ))}
         {Array(4 - checkStatus(item.orderStatus).status)
           .fill(0)
           .map((item, index) => (
-            <View key={index} style={{ height: scale(4), backgroundColor: currentTheme.gray200, width: scale(50), marginRight: scale(10) }}/>
+            <View
+              key={index}
+              style={{
+                height: scale(4),
+                backgroundColor: currentTheme.gray200,
+                width: width,
+                marginRight: scale(10)
+              }}
+            />
           ))}
       </View>
     </View>

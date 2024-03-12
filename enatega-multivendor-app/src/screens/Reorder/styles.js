@@ -2,6 +2,7 @@ import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { theme } from '../../utils/themeColors'
 import { alignment } from '../../utils/alignment'
+
 const styles = (props = null) =>
   StyleSheet.create({
     scrollViewStyle: {

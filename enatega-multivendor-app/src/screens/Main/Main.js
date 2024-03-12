@@ -78,7 +78,7 @@ function Main(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+      StatusBar.setBackgroundColor(currentTheme.main)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
