@@ -141,7 +141,7 @@ function VerifyPhone() {
     let timer = null
     if(!SKIP_MOBILE_VERIFICATION) return
     setOtp('111111')
-    setTimeout(()=>{
+    timer = setTimeout(()=>{
       handleCode('111111')
     },3000)
     return ()=>{timer && clearTimeout(timer)}
