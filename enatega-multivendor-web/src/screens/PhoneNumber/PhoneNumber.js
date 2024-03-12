@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlashMessage from "../../components/FlashMessage";
 import { LoginWrapper } from "../Wrapper";
@@ -38,7 +38,7 @@ function PhoneNumber() {
   const { state } = useLocation();
   const [loading, setLoading] = useState(false);
   const [phone, setPhone] = useState("");
-  const [setPhoneError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   const [mutate] = useMutation(UPDATEUSER);
   const { profile } = useContext(UserContext);
@@ -79,11 +79,16 @@ function PhoneNumber() {
         }
       } catch (error) {
         console.error("Error:", error);
+      } finally {
+        setLoading(false);
       }
+      
     }
   }
-  function onError({ error }) {
-    setError("Something went wrong");
+
+  function onError(errors) {
+    setLoading(false);
+    setError(errors.message || "Something went wrong");
   }
 
   const handleAction = () => {
@@ -95,6 +100,7 @@ function PhoneNumber() {
       return;
     }
     if (validate) {
+      setLoading(true);
       if (`+${phone}` !== state?.prevPhone) {
         PhoneEixst({ variables: { phone: `+${phone}` } });
       } else {
@@ -103,12 +109,24 @@ function PhoneNumber() {
     }
   };
 
+  const toggleSnackbar = useCallback(() => {
+    setError("");
+  }, []);
+
+  const onPhoneChange = (phone) => {
+    setPhone(phone);
+    if(phoneError) {
+      setPhoneError("");
+    }
+  }
+
   return (
     <LoginWrapper>
       <FlashMessage
         open={Boolean(error)}
         severity={"error"}
         alertMessage={error}
+        handleClose={toggleSnackbar}
       />
       <Box display="flex">
         <Box m="auto">
@@ -142,7 +160,7 @@ function PhoneNumber() {
             placeholder="Enter phone number"
             country={"pk"}
             value={phone}
-            onChange={(phone) => setPhone(phone)}
+            onChange={(phone) => onPhoneChange(phone)}
             containerStyle={{
               textAlign: "center",
               marginRight: theme.spacing(2),
@@ -155,9 +173,12 @@ function PhoneNumber() {
             }}
           />
         </Box>
-        <Typography variant="caption" style={{ color: "red" }}>
-          {t("mobileErr1")}
-        </Typography>
+        {
+          phoneError && 
+          <Typography variant="caption" style={{ color: "red" }}>
+            {phoneError}
+          </Typography>
+        }
         <Box mt={theme.spacing(8)} />
         <Button
           variant="contained"
