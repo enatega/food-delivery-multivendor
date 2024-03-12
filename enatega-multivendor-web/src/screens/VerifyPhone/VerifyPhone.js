@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useMutation, gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -108,7 +108,7 @@ function VerifyPhone() {
     onError: onUpdateUserError,
   });
 
-  const onCodeFilled = async (code) => {
+  const onCodeFilled =  useCallback((code) => {
     if (SKIP_MOBILE_VERIFICATION || code === otpFrom) {
       mutate({
         variables: {
@@ -124,18 +124,28 @@ function VerifyPhone() {
       setOtpError(true);
       setError("Invalid Code");
     }
-  };
+  },[SKIP_MOBILE_VERIFICATION, mutate, navigate, otpFrom, profile?.name, profile?.phone,  state?.phone]);
 
   const resendOtp = () => {
     setOtpFrom(Math.floor(100000 + Math.random() * 900000).toString());
   };
-  const handleCode = (val) => {
+  const handleCode = useCallback((val) => {
     const code = val;
     setOtp(val);
     if (code.length === 6) {
       onCodeFilled(code);
     }
-  };
+  },[onCodeFilled]);
+
+  useEffect(()=>{
+    let timer = null
+    if(!SKIP_MOBILE_VERIFICATION) return
+    setOtp('111111')
+    setTimeout(()=>{
+      handleCode('111111')
+    },3000)
+    return ()=>{timer && clearTimeout(timer)}
+  },[SKIP_MOBILE_VERIFICATION,handleCode])
 
   return (
     <LoginWrapper>
