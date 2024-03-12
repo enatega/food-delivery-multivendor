@@ -123,6 +123,8 @@ function Menu({ route, props }) {
 
   const { data: allCuisines } = useQuery(GET_CUISINES)
 
+  const newheaderColor = currentTheme.newheaderColor;
+
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
@@ -311,7 +313,7 @@ function Menu({ route, props }) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
+        <Search search={''} setSearch={() => { }} newheaderColor={newheaderColor}/>
         <Placeholder
           Animation={props => (
             <Fade
@@ -506,7 +508,8 @@ function Menu({ route, props }) {
                   renderItem={({ item }) => <Item item={item} />}
                 />
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
-                  <Search setSearch={setSearch} search={search} />
+
+                  <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor}/>
                   <Filters
                     filters={filters}
                     setFilters={setFilters}

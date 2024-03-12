@@ -17,7 +17,7 @@ import SideBar from '../components/Sidebar/Sidebar'
 import ItemDetail from '../screens/ItemDetail/ItemDetail'
 import MyOrders from '../screens/MyOrders/MyOrders'
 import Cart from '../screens/Cart/Cart'
-
+import SaveAddress from '../screens/SaveAddress/SaveAddress'
 import RateAndReview from '../screens/RateAndReview/RateAndReview'
 import Payment from '../screens/Payment/Payment'
 import Help from '../screens/Help/Help'
@@ -57,6 +57,7 @@ import { useApolloClient, gql } from '@apollo/client'
 import { myOrders } from '../apollo/queries'
 import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
+import Reviews from '../screens/Reviews'
 
 const NavigationStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -108,9 +109,9 @@ function NoDrawer() {
         name="OrderDetail"
         component={OrderDetail}
         options={{
-          headerTransparent: true,
-          headerRight: null,
-          title: '',
+          // headerTransparent: true,
+          // headerRight: null,
+          // title: '',
           headerBackImage: () =>
             DarkBackButton({
               iconColor: currentTheme.backIcon,
@@ -129,6 +130,7 @@ function NoDrawer() {
         component={About}
         options={{ header: () => null }}
       />
+      <NavigationStack.Screen name="Reviews" component={Reviews} />
       <NavigationStack.Screen name="Coupon" component={Coupon} />
       <NavigationStack.Screen name="Paypal" component={Paypal} />
       <NavigationStack.Screen name="Tip" component={Tip} />
@@ -163,6 +165,7 @@ function NoDrawer() {
         component={SelectLocation}
       />
       <NavigationStack.Screen name="AddNewAddress" component={AddNewAddress} />
+      <NavigationStack.Screen name="SaveAddress" component={SaveAddress} />
       <NavigationStack.Screen name="Favourite" component={Favourite} />
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
     </NavigationStack.Navigator>
@@ -212,23 +215,13 @@ function AppContainer() {
     if (
       lastNotificationResponse &&
       lastNotificationResponse.notification.request.content.data.type ===
-      'order' &&
+        'order' &&
       lastNotificationResponse.actionIdentifier ===
-      Notifications.DEFAULT_ACTION_IDENTIFIER
+        Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
       handleNotification(lastNotificationResponse)
     }
   }, [lastNotificationResponse])
-
-  useEffect(() => {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false
-      })
-    })
-  }, [])
 
   return (
     <SafeAreaProvider>

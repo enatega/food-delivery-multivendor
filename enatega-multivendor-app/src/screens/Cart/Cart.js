@@ -64,12 +64,6 @@ const PLACEORDER = gql`
 const TIPPING = gql`
   ${getTipping}
 `
-// suggested Items List Data
-const dataItems = [
-  { id: '1', name: 'Burger', description: 'Large', price: '$20' },
-  { id: '2', name: 'Burger', description: 'Small', price: '$5' },
-  { id: '3', name: 'Burger', description: 'Medium', price: '$10' }
-]
 
 function Cart(props) {
   const Analytics = analytics()
@@ -237,7 +231,7 @@ function Cart(props) {
     })
   }, [props.navigation])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!data) return
     didFocus()
   }, [data])
@@ -366,7 +360,8 @@ function Cart(props) {
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0
     cart.forEach(cartItem => {
-      itemTotal += cartItem.price * cartItem.quantity
+      const food = populateFood(cartItem)
+      itemTotal += food.price * food.quantity
     })
     if (withDiscount && coupon && coupon.discount) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal
@@ -504,55 +499,56 @@ function Cart(props) {
 
   async function didFocus() {
     const { restaurant } = data
+    const foods = restaurant.categories.map(c => c.foods.flat()).flat()
     setSelectedRestaurant(restaurant)
     setMinimumOrder(restaurant.minimumOrder)
-    const foods = restaurant.categories.map(c => c.foods.flat()).flat()
     const { addons, options } = restaurant
+    setLoadingData(false)
     try {
       if (cartCount && cart) {
-        const transformCart = cart.map(cartItem => {
-          const food = foods.find(food => food._id === cartItem._id)
-          if (!food) return null
-          const variation = food.variations.find(
-            variation => variation._id === cartItem.variation._id
-          )
-          if (!variation) return null
+        // const transformCart = cart.map(cartItem => {
+        //   const food = foods.find(food => food._id === cartItem._id)
+        //   if (!food) return null
+        //   const variation = food.variations.find(
+        //     variation => variation._id === cartItem.variation._id
+        //   )
+        //   if (!variation) return null
 
-          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
-            }`
-          let price = variation.price
-          const optionsTitle = []
-          if (cartItem.addons) {
-            cartItem.addons.forEach(addon => {
-              const cartAddon = addons.find(add => add._id === addon._id)
-              if (!cartAddon) return null
-              addon.options.forEach(option => {
-                const cartOption = options.find(opt => opt._id === option._id)
-                if (!cartOption) return null
-                price += cartOption.price
-                optionsTitle.push(cartOption.title)
-              })
-            })
-          }
-          return {
-            ...cartItem,
-            optionsTitle,
-            title: title,
-            price: price.toFixed(2)
-          }
-        })
+        //   const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+        //     }`
+        //   let price = variation.price
+        //   const optionsTitle = []
+        //   if (cartItem.addons) {
+        //     cartItem.addons.forEach(addon => {
+        //       const cartAddon = addons.find(add => add._id === addon._id)
+        //       if (!cartAddon) return null
+        //       addon.options.forEach(option => {
+        //         const cartOption = options.find(opt => opt._id === option._id)
+        //         if (!cartOption) return null
+        //         price += cartOption.price
+        //         optionsTitle.push(cartOption.title)
+        //       })
+        //     })
+        //   }
+        //   return {
+        //     ...cartItem,
+        //     optionsTitle,
+        //     title: title,
+        //     price: price.toFixed(2)
+        //   }
+        // })
 
-        if (props.navigation.isFocused()) {
-          const updatedItems = transformCart.filter(item => item)
-          if (updatedItems.length === 0) await clearCart()
-          await updateCart(updatedItems)
-          setLoadingData(false)
-          if (transformCart.length !== updatedItems.length) {
-            FlashMessage({
-              message: t('itemNotAvailable')
-            })
-          }
-        }
+        // if (props.navigation.isFocused()) {
+        //   const updatedItems = transformCart.filter(item => item)
+        //   if (updatedItems.length === 0) await clearCart()
+        //   await updateCart(updatedItems)
+        //   setLoadingData(false)
+        //   if (transformCart.length !== updatedItems.length) {
+        //     FlashMessage({
+        //       message: t('itemNotAvailable')
+        //     })
+        //   }
+        // }
       } else {
         if (props.navigation.isFocused()) {
           setLoadingData(false)
@@ -564,6 +560,7 @@ function Cart(props) {
       })
     }
   }
+
 
   function emptyCart() {
     return (
@@ -700,10 +697,43 @@ function Cart(props) {
   }
   if (loading || loadingData || loadingTip) return loadginScreen()
 
-
   const { restaurant } = data
+  const { addons, options } = restaurant
   const foods = restaurant.categories.map(c => c.foods.flat()).flat()
-  console.log("restaurant: ", restaurant._id, "foods", foods[0]._id);
+
+  function populateFood(cartItem) {
+    const food = foods.find(food => food._id === cartItem._id)
+    if (!food) return null
+    const variation = food.variations.find(
+      variation => variation._id === cartItem.variation._id
+    )
+    if (!variation) return null
+
+    const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+      }`
+    let price = variation.price
+    const optionsTitle = []
+    if (cartItem.addons) {
+      cartItem.addons.forEach(addon => {
+        const cartAddon = addons.find(add => add._id === addon._id)
+        if (!cartAddon) return null
+        addon.options.forEach(option => {
+          const cartOption = options.find(opt => opt._id === option._id)
+          if (!cartOption) return null
+          price += cartOption.price
+          optionsTitle.push(cartOption.title)
+        })
+      })
+    }
+    return {
+      ...cartItem,
+      optionsTitle,
+      title: title,
+      price: price.toFixed(2),
+      image: food.image,
+      addons: food.variations[0].addons,
+    }
+  }
 
   return (
     <>
@@ -760,24 +790,29 @@ function Cart(props) {
                   <TextDefault style={styles().totalOrder} H5 bolder>
                     Your Order ({cartLength})
                   </TextDefault>
-                  {cart.map((food, index) => (
-                    <View style={[styles(currentTheme).itemContainer]}>
-                      <CartItem
-                        quantity={food.quantity}
-                        dealName={food.title}
-                        optionsTitle={food.optionsTitle}
-                        dealPrice={(
-                          parseFloat(food.price) * food.quantity
-                        ).toFixed(2)}
-                        addQuantity={() => {
-                          addQuantity(food.key)
-                        }}
-                        removeQuantity={() => {
-                          removeQuantity(food.key)
-                        }}
-                      />
-                    </View>
-                  ))}
+                  {cart.map((cartItem, index) => {
+                    const food = populateFood(cartItem)
+                    return (
+                      <View style={[styles(currentTheme).itemContainer]}>
+                        <CartItem
+                          quantity={food.quantity}
+                          dealName={food.title}
+                          optionsTitle={food.optionsTitle}
+                          itemImage={food.image}
+                          itemAddons={food.addons}
+                          dealPrice={(
+                            parseFloat(food.price) * food.quantity
+                          ).toFixed(2)}
+                          addQuantity={() => {
+                            addQuantity(food.key)
+                          }}
+                          removeQuantity={() => {
+                            removeQuantity(food.key)
+                          }}
+                        />
+                      </View>
+                    )
+                  })}
                 </View>
 
               </View>

@@ -160,6 +160,7 @@ export const myOrders = `query Orders($offset:Int){
     taxationAmount
     createdAt
     completionTime
+    preparationTime
     orderDate
     expectedTime
     isPickedUp
@@ -618,6 +619,7 @@ export const orderFragment = `fragment NewOrder on Order {
   taxationAmount
   createdAt
   completionTime
+  preparationTime
   deliveryCharges
   acceptedAt
   pickedAt
@@ -1143,6 +1145,14 @@ export const food = `fragment FoodItem on Food{
     price
     discounted
     addons
+  }
+}
+`
+
+export const popularItems = `query PopularItems($restaurantId: String!) {
+  popularItems(restaurantId: $restaurantId) {
+    id
+    count
   }
 }
 `

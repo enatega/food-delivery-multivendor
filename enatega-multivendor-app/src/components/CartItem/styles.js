@@ -57,7 +57,7 @@ const styles = (props = null) =>
     },
     additionalItem:{
       marginTop:scale(4),
-      marginBottom:scale(4),
+      marginBottom:scale(2),
     },
     itemsDropdown:{
       borderLeftWidth:2.5,

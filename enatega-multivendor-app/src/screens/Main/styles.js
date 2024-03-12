@@ -8,26 +8,26 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
-    mainItemsContainer:{
-      flexDirection:'row',
-      justifyContent:'center',
-      gap:scale(20),
-      marginTop:scale(16),
-      marginBottom:scale(30)   
+    mainItemsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: scale(20),
+      marginTop: scale(16),
+      marginBottom: scale(30)
     },
-    mainItem:{
-      padding:12,
-      borderWidth:1,
+    mainItem: {
+      padding: 12,
+      borderWidth: 1,
       borderColor: '#E5E7EB',
       width: windowWidth / 2 - 30,
-      borderRadius:8,
-      justifyContent:'space-between'
+      borderRadius: 8,
+      justifyContent: 'space-between'
     },
-    popularMenuImg:{
-      width: '100%', 
-      aspectRatio: 15/8,
+    popularMenuImg: {
+      width: '100%',
+      aspectRatio: 15 / 8
     },
-    
+
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF',
       ...alignment.PBlarge
@@ -116,7 +116,7 @@ const styles = (props = null) =>
     },
     searchList: {
       marginBottom: 70
+    },
     }
-
   })
 export default styles

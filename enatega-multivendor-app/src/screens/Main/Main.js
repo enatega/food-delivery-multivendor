@@ -83,14 +83,18 @@ function Main(props) {
       fetchPolicy: 'network-only'
     }
   )
+  const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
 
+
+  const newheaderColor = currentTheme.newheaderColor;
+
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+      StatusBar.setBackgroundColor(currentTheme.main)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -106,7 +110,6 @@ function Main(props) {
     navigation.setOptions(
       navigationOptions({
         headerMenuBackground: currentTheme.newheaderColor,
-        horizontalLine: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen
@@ -264,7 +267,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
+        <Search search={''} setSearch={() => { }} newheaderColor={newheaderColor}/>
         <Placeholder
           Animation={props => (
             <Fade
@@ -307,6 +310,7 @@ function Main(props) {
 
   const  restaurants  = data?.nearByRestaurants?.restaurants
 
+
   const searchAllShops = searchText => {
     const data = []
     const regex = new RegExp(searchText, 'i')
@@ -343,19 +347,18 @@ function Main(props) {
     return data
   }
 
+
   if (error) return <TextError text={t('networkError')} />
   
   return (
     <>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
                 <View style={styles().searchbar}>
-                  <Search setSearch={setSearch} search={search} />
+                  <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor} />
                 </View>
                   {search ? (
                     <View style={styles().searchList}>

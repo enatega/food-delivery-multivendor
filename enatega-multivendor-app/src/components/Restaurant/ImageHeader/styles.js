@@ -13,7 +13,7 @@ const styles = (props = null) =>
       backgroundColor: '#fff',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
-     height: height * 0.5,
+      // height: height * 0.5
     },
 
     touchArea: {
@@ -21,12 +21,29 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: scale(20)
     },
+    favouriteOverlay: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      width: scale(38),
+      height: scale(28),
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+      borderRadius: scale(16),
+      backgroundColor: props != null ? props.menuBar : 'white',
+      borderWidth: 1,
+      borderColor: props != null ? props.newBorderColor : '#F3F4F6'
+    },
     fixedViewNavigation: {
+      // height: scale(40),
+      // backgroundColor: 'red',
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingTop: scale(15)
+      // alignItems: 'center',
+      ...alignment.PTsmall
     },
 
     fixedIcons: {
@@ -42,7 +59,7 @@ const styles = (props = null) =>
     restaurantImg: {
       width: scale(80),
       height: scale(80),
-      borderRadius:12
+      borderRadius: 12
     },
     restaurantAbout: {
       fontSize: scale(14),
@@ -66,12 +83,10 @@ const styles = (props = null) =>
     },
     ratingBox: {
       flexDirection: 'row',
-      gap: 3,
+      gap: scale(3),
       alignItems: 'center'
       // marginTop: scale(15)
     },
-   
-   
 
     // headerTitle: {
     //   ...textStyles.H5,
@@ -83,7 +98,7 @@ const styles = (props = null) =>
     flatListStyle: {
       height: '10%',
       width: '100%',
-      marginTop: scale(25),
+      marginTop: scale(25)
       // backgroundColor: props != null ? props.themeBackground : 'white',
       // borderBottomLeftRadius: 25,
       // borderBottomRightRadius: 25,

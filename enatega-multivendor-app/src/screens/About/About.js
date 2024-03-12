@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
@@ -27,6 +27,9 @@ function About(props) {
   const RestAbout = {
     name: restaurantObject.name,
     address: restaurantObject.address,
+    deliveryTime: restaurantObject.deliveryTime,
+    rating: restaurantObject.rating,
+    average: restaurantObject.average,
     map: {
       latitude: Number(restaurantObject.latitude),
       longitude: Number(restaurantObject.longitude),
@@ -72,162 +75,212 @@ function About(props) {
     return date.toDateString()
   }
 
-  function AboutTab() {
-    return (
-      <ScrollView style={{ ...alignment.MTmedium }}>
-        <View style={styles(currentTheme).mapMainContainer}>
-          <View
-            style={[
-              styles(currentTheme).inlineFloat,
-              styles(currentTheme).MB15
-            ]}>
-            <MaterialIcons
-              name="location-on"
-              size={30}
-              color={currentTheme.darkBgFont}
-            />
-            <TextDefault
-              style={styles(currentTheme).width90}
-              large
-              bold
-              textColor={currentTheme.darkBgFont}>
-              {RestAbout.address}
-            </TextDefault>
-          </View>
-          <View style={[styles(currentTheme).MB15]}>
-            <View
-              style={[styles(currentTheme).inlineFloat, alignment.MBxSmall]}>
-              <MaterialIcons
-                name="access-time"
-                size={30}
-                color={currentTheme.darkBgFont}
-              />
-              <TextDefault
-                style={{ paddingLeft: 10 }}
-                bold
-                textColor={currentTheme.darkBgFont}>
-                {t('Openingtimes')}
-              </TextDefault>
-            </View>
+  // function AboutTab() {
+  //   return (
+  //     <ScrollView>
+  //       <View style={styles(currentTheme).mapMainContainer}>
+  //         <View style={styles(currentTheme).restaurantInfo}>
+  //           {!props.loading && (
+  //             <View
+  //               style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+  //               <MaterialIcons
+  //                 name="timer"
+  //                 size={20}
+  //                 color={currentTheme.fontThirdColor}
+  //               />
+  //               <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
+  //                 {t('delivery')} {restaurantObject.deliveryTime} {t('Min')}
+  //               </TextDefault>
+  //             </View>
+  //           )}
+  //           <View style={styles().ratingContainer}>
+  //             <MaterialIcons
+  //               name="star-border"
+  //               size={20}
+  //               color={currentTheme.fontThirdColor}
+  //             />
 
-            <View style={styles().timingContainer}>
-              {restaurantObject.openingTimes.map((v, index) => (
-                <View key={index} style={styles().timingRow}>
-                  <TextDefault
-                    style={styles().timingText}
-                    textColor={currentTheme.black}
-                    large>
-                    {t(v.day)}{' '}
-                  </TextDefault>
-                  {v.times.length < 1 ? (
-                    <TextDefault key={index + 8} small bold center>
-                      {t('ClosedAllDay')}
-                    </TextDefault>
-                  ) : (
-                    v.times.map(t => (
-                      <TextDefault
-                        key={index + 8}
-                        textColor={currentTheme.black}
-                        large>
-                        {t.startTime[0]}:{t.startTime[1]}
-                        {' - '}
-                        {t.endTime[0]}:{t.endTime[1]}
-                      </TextDefault>
-                    ))
-                  )}
-                </View>
-              ))}
-            </View>
-          </View>
-          <View style={styles(currentTheme).mapContainer}>
-            <MapView
-              style={styles().flex}
-              scrollEnabled={false}
-              zoomEnabled={false}
-              zoomControlEnabled={false}
-              rotateEnabled={false}
-              cacheEnabled={false}
-              initialRegion={RestAbout.map}
-              customMapStyle={
-                themeContext.ThemeValue === 'Dark' ? mapStyle : null
-              }
-              provider={PROVIDER_GOOGLE}></MapView>
-            <View style={styles().marker}>
-              <CustomMarker
-                width={40}
-                height={40}
-                transform={[{ translateY: -20 }]}
-                translateY={-20}
-              />
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    )
-  }
+  //             <TextDefault
+  //               style={{ paddingLeft: 4 }}
+  //               textColor={currentTheme.fontThirdColor}
+  //               H5
+  //               bolder>
+  //               {restaurantObject.average}
+  //             </TextDefault>
+  //             <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
+  //               ({restaurantObject.total})
+  //             </TextDefault>
+  //           </View>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //               alignItems: 'center',
+  //               gap: 4
+  //             }}>
+  //             <MaterialIcons
+  //               name="location-on"
+  //               size={20}
+  //               color={currentTheme.fontThirdColor}
+  //             />
+  //             <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
+  //               {RestAbout.address}
+  //             </TextDefault>
+  //           </View>
+  //         </View>
 
-  function ReviewTab() {
-    return (
-      <FlatList
-        contentContainerStyle={styles(currentTheme).mapMainContainer}
-        data={Reviews}
-        ListEmptyComponent={emptyView}
-        keyExtractor={(item, index) => index.toString()}
-        ListHeaderComponent={header}
-        ItemSeparatorComponent={line}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item, index }) => (
-          <View style={styles(currentTheme).review}>
-            <View style={styles().reviewerContainer}>
-              <TextDefault
-                style={styles().reviewerName}
-                textColor={currentTheme.white}
-                bolder>
-                {item.order.user.name}
-              </TextDefault>
-              <View style={styles().ratingContainer}>
-                {Array(5)
-                  .fill(1)
-                  .map((value, index) => {
-                    if (index < item.rating) {
-                      return (
-                        <MaterialIcons
-                          key={index}
-                          name="star"
-                          size={scale(13)}
-                          color={currentTheme.starRating}
-                        />
-                      )
-                    } else if (index >= item.rating && index < 5) {
-                      return (
-                        <MaterialIcons
-                          key={index}
-                          name="star"
-                          size={scale(13)}
-                          color={currentTheme.white}
-                        />
-                      )
-                    }
-                  })}
-              </View>
-            </View>
-            <TextDefault
-              style={styles().dateReview}
-              textColor={currentTheme.secondaryBackground}
-              numberOfLines={1}
-              small>
-              {formatDate(item.createdAt)}
-            </TextDefault>
-            <TextDefault textColor={currentTheme.white} small bold>
-              {item.description}
-            </TextDefault>
-          </View>
-        )}
-      />
-    )
-  }
+  //         <View>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //               alignItems: 'center',
+  //               marginVertical: scale(8),
+  //               gap: 4
+  //             }}>
+  //             <MaterialIcons
+  //               name="access-time"
+  //               size={20}
+  //               color={currentTheme.fontThirdColor}
+  //             />
+  //             <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
+  //               {t('Openingtimes')}:
+  //             </TextDefault>
+  //           </View>
+
+  //           <View style={styles().timingContainer}>
+  //             {restaurantObject.openingTimes.map((v, index) => (
+  //               <View key={index} style={styles(currentTheme).timingRow}>
+  //                 <TextDefault
+  //                   style={styles().timingText}
+  //                   textColor={currentTheme.black}
+  //                   bolder
+  //                   large>
+  //                   {t(v.day)}{' '}
+  //                 </TextDefault>
+  //                 {v.times.length < 1 ? (
+  //                   <TextDefault key={index + 8} small bold center>
+  //                     {t('ClosedAllDay')}
+  //                   </TextDefault>
+  //                 ) : (
+  //                   v.times.map(t => (
+  //                     <TextDefault
+  //                       key={index + 8}
+  //                       textColor={currentTheme.black}
+  //                       large>
+  //                       {t.startTime[0]}:{t.startTime[1]}
+  //                       {' - '}
+  //                       {t.endTime[0]}:{t.endTime[1]}
+  //                     </TextDefault>
+  //                   ))
+  //                 )}
+  //               </View>
+  //             ))}
+  //           </View>
+  //         </View>
+  //         <View style={styles(currentTheme).mapContainer}>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //               alignItems: 'center',
+  //               gap: 8,
+  //               ...alignment.PBsmall
+  //             }}>
+  //             <FontAwesome5
+  //               name="map-marked-alt"
+  //               size={20}
+  //               color={currentTheme.fontThirdColor}
+  //             />
+  //             <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
+  //               Location
+  //             </TextDefault>
+  //           </View>
+  //           <MapView
+  //             style={styles().flex}
+  //             scrollEnabled={false}
+  //             zoomEnabled={false}
+  //             zoomControlEnabled={false}
+  //             rotateEnabled={false}
+  //             cacheEnabled={false}
+  //             initialRegion={RestAbout.map}
+  //             customMapStyle={
+  //               themeContext.ThemeValue === 'Dark' ? mapStyle : null
+  //             }
+  //             provider={PROVIDER_GOOGLE}></MapView>
+  //           <View style={styles().marker}>
+  //             <CustomMarker
+  //               width={40}
+  //               height={40}
+  //               transform={[{ translateY: -20 }]}
+  //               translateY={-20}
+  //             />
+  //           </View>
+  //         </View>
+  //       </View>
+  //     </ScrollView>
+  //   )
+  // }
+
+  // function ReviewTab() {
+  //   return (
+  //     <FlatList
+  //       contentContainerStyle={styles(currentTheme).mapMainContainer}
+  //       data={Reviews}
+  //       ListEmptyComponent={emptyView}
+  //       keyExtractor={(item, index) => index.toString()}
+  //       ListHeaderComponent={header}
+  //       ItemSeparatorComponent={line}
+  //       showsVerticalScrollIndicator={false}
+  //       renderItem={({ item, index }) => (
+  //         <View style={styles(currentTheme).review}>
+  //           <View style={styles().reviewerContainer}>
+  //             <TextDefault
+  //               style={styles().reviewerName}
+  //               textColor={currentTheme.white}
+  //               bolder>
+  //               {item.order.user.name}
+  //             </TextDefault>
+  //             <View style={styles().ratingContainer}>
+  //               {Array(5)
+  //                 .fill(1)
+  //                 .map((value, index) => {
+  //                   if (index < item.rating) {
+  //                     return (
+  //                       <MaterialIcons
+  //                         key={index}
+  //                         name="star"
+  //                         size={scale(13)}
+  //                         color={currentTheme.starRating}
+  //                       />
+  //                     )
+  //                   } else if (index >= item.rating && index < 5) {
+  //                     return (
+  //                       <MaterialIcons
+  //                         key={index}
+  //                         name="star"
+  //                         size={scale(13)}
+  //                         color={currentTheme.white}
+  //                       />
+  //                     )
+  //                   }
+  //                 })}
+  //             </View>
+  //           </View>
+  //           <TextDefault
+  //             style={styles().dateReview}
+  //             textColor={currentTheme.secondaryBackground}
+  //             numberOfLines={1}
+  //             small>
+  //             {formatDate(item.createdAt)}
+  //           </TextDefault>
+  //           <TextDefault textColor={currentTheme.white} small bold>
+  //             {item.description}
+  //           </TextDefault>
+  //         </View>
+  //       )}
+  //     />
+  //   )
+  // }
   return (
-    <SafeAreaView
+    <ScrollView
       style={[
         styles().flex,
         { backgroundColor: currentTheme.headerMenuBackground }
@@ -249,13 +302,149 @@ function About(props) {
         />
       }
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <View style={styles().navigationContainer}>
+        <View style={styles(currentTheme).restaurantInfo}>
+          {!props.loading && (
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <MaterialIcons
+                name="timer"
+                size={20}
+                color={currentTheme.fontThirdColor}
+              />
+              <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
+                {t('delivery')} {restaurantObject.deliveryTime} {t('Min')}
+              </TextDefault>
+            </View>
+          )}
+          <View style={styles().ratingContainer}>
+            <MaterialIcons
+              name="star-border"
+              size={20}
+              color={currentTheme.fontThirdColor}
+            />
+
+            <TextDefault
+              style={{ paddingLeft: 4 }}
+              textColor={currentTheme.fontThirdColor}
+              H5
+              bolder>
+              {restaurantObject.average}
+            </TextDefault>
+            <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
+              ({restaurantObject.total})
+            </TextDefault>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 4
+            }}>
+            <MaterialIcons
+              name="location-on"
+              size={20}
+              color={currentTheme.fontThirdColor}
+            />
+            <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
+              {RestAbout.address}
+            </TextDefault>
+          </View>
+        </View>
+
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: scale(8),
+              gap: 4
+            }}>
+            <MaterialIcons
+              name="access-time"
+              size={20}
+              color={currentTheme.fontThirdColor}
+            />
+            <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
+              {t('Openingtimes')}:
+            </TextDefault>
+          </View>
+
+          <View style={styles().timingContainer}>
+            {restaurantObject.openingTimes.map((v, index) => (
+              <View key={index} style={styles(currentTheme).timingRow}>
+                <TextDefault
+                  style={styles().timingText}
+                  textColor={currentTheme.black}
+                  bolder
+                  large>
+                  {t(v.day)}{' '}
+                </TextDefault>
+                {v.times.length < 1 ? (
+                  <TextDefault key={index + 8} small bold center>
+                    {t('ClosedAllDay')}
+                  </TextDefault>
+                ) : (
+                  v.times.map(t => (
+                    <TextDefault
+                      key={index + 8}
+                      textColor={currentTheme.black}
+                      large>
+                      {t.startTime[0]}:{t.startTime[1]}
+                      {' - '}
+                      {t.endTime[0]}:{t.endTime[1]}
+                    </TextDefault>
+                  ))
+                )}
+              </View>
+            ))}
+          </View>
+        </View>
+        <View style={styles(currentTheme).mapContainer}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              ...alignment.PBsmall
+            }}>
+            <FontAwesome5
+              name="map-marked-alt"
+              size={20}
+              color={currentTheme.fontThirdColor}
+            />
+            <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
+              Location
+            </TextDefault>
+          </View>
+          <MapView
+            style={styles().flex}
+            scrollEnabled={false}
+            zoomEnabled={false}
+            zoomControlEnabled={false}
+            rotateEnabled={false}
+            cacheEnabled={false}
+            initialRegion={RestAbout.map}
+            customMapStyle={
+              themeContext.ThemeValue === 'Dark' ? mapStyle : null
+            }
+            provider={PROVIDER_GOOGLE}></MapView>
+          <View style={styles().marker}>
+            <CustomMarker
+              width={40}
+              height={40}
+              transform={[{ translateY: -20 }]}
+              translateY={-20}
+            />
+          </View>
+        </View>
+
+        {/* <View style={styles().navigationContainer}>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => pagerSetter(true)}
             style={[
               styles(currentTheme).tab,
-              pager && styles(currentTheme).selectedTab
+              !pager && styles(currentTheme).selectedTab
             ]}>
             <TextDefault
               textColor={pager ? currentTheme.black : currentTheme.darkBgFont}
@@ -271,7 +460,7 @@ function About(props) {
             onPress={() => pagerSetter(false)}
             style={[
               styles(currentTheme).tab,
-              !pager && styles(currentTheme).selectedTab
+              pager && styles(currentTheme).selectedTab
             ]}>
             <TextDefault
               textColor={pager ? currentTheme.darkBgFont : currentTheme.black}
@@ -281,11 +470,11 @@ function About(props) {
               {t('Reviews')}
             </TextDefault>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
-        {pager ? AboutTab() : ReviewTab()}
+        {/* {pager ? ReviewTab() : AboutTab()} */}
       </View>
-    </SafeAreaView>
+    </ScrollView>
   )
 }
 

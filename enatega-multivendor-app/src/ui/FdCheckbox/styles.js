@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native'
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      borderColor: props !== null ? props.radioOuterColor : 'grey',
-      borderWidth: scale(1.5),
+      borderColor: props !== null ? props.gray : 'gray',
+      borderWidth: scale(1),
       width: scale(20),
       height: scale(20),
       borderRadius: scale(4),

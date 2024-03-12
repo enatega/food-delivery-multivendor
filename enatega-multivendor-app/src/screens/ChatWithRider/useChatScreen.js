@@ -90,7 +90,7 @@ export const useChatScreen = ({ navigation, route }) => {
           style={{
             borderRadius: 30,
             borderWidth: 1,
-            borderColor:currentTheme.fontFourthColor,
+            borderColor: currentTheme.fontFourthColor,
             ...alignment.MLmedium
           }}>
           <Entypo
@@ -106,7 +106,6 @@ export const useChatScreen = ({ navigation, route }) => {
           style={{
             ...alignment.MRmedium
           }}>
-          
           <Ionicons
             name="call-outline"
             size={24}
@@ -124,13 +123,11 @@ export const useChatScreen = ({ navigation, route }) => {
         ${subscriptionNewMessage}
       `,
       variables: { order: orderId },
-  
 
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev
         return {
-
-          chat: [...prev.chat, subscriptionData.data.subscriptionNewMessage]
+          chat: [subscriptionData.data.subscriptionNewMessage, ...prev.chat]
         }
       }
     })

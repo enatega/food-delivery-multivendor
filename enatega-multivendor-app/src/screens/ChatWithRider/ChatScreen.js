@@ -18,14 +18,13 @@ import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 import ConfigurationContext from '../../context/Configuration'
 
-
 const renderInputToolbar = props => {
   return (
     <InputToolbar
       {...props}
       containerStyle={{
         backgroundColor: '#90E36D',
-        paddingVertical: scale(20),
+        paddingVertical: scale(20)
       }}
     />
   )
@@ -60,7 +59,7 @@ const renderActions = props => {
   )
 }
 const ChatScreen = ({ navigation, route }) => {
-const configuration = useContext(ConfigurationContext)
+  const configuration = useContext(ConfigurationContext)
 
   const {
     messages,
@@ -100,8 +99,18 @@ const configuration = useContext(ConfigurationContext)
 
   const renderSend = props => {
     return (
-      <Send {...props} sendButtonProps={{ ...props, onPress: () => inputMessage.trim().length > 0 && onSend() }}>
-        <View style={{ width: scale(34), justifyContent:'center', alignItems:'center', }}>
+      <Send
+        {...props}
+        sendButtonProps={{
+          ...props,
+          onPress: () => inputMessage.trim().length > 0 && onSend()
+        }}>
+        <View
+          style={{
+            width: scale(34),
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
           <Image
             source={require('../../assets/images/send-icon.png')}
             resizeMode="contain"
@@ -128,22 +137,28 @@ const configuration = useContext(ConfigurationContext)
 
   const renderBubble = props => {
     return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: styles(currentTheme).bubbleRight,
-          left: styles(currentTheme).bubbleLeft
-        }}
-        textStyle={{
-          right: {
-            color: currentTheme.chatColor
-          },
-          left: {
-            color: currentTheme.chatColor
-          }
-        }}
-        
-      />
+      <View>
+        {props.position === 'left' && (
+          <TextDefault
+            normal
+            textColor={currentTheme.btnText}
+            style={{ ...alignment.PLsmall }}>
+            {props.currentMessage.user.name}
+          </TextDefault>
+        )}
+        <Bubble
+          {...props}
+          renderUsername={null}
+          wrapperStyle={{
+            right: { backgroundColor: 'transparent' },
+            left: { backgroundColor: 'transparent' }
+          }}
+          textStyle={{
+            right: styles(currentTheme).textRight,
+            left: styles(currentTheme).textLeft
+          }}
+        />
+      </View>
     )
   }
   const renderTime = props => {
@@ -152,12 +167,12 @@ const configuration = useContext(ConfigurationContext)
         {...props}
         timeTextStyle={{
           left: {
-            color: '#000', 
-            fontSize: 11 
+            color: '#000',
+            fontSize: 11
           },
           right: {
-            color: '#000', 
-            fontSize: 11 
+            color: '#000',
+            fontSize: 11
           }
         }}
       />
@@ -175,7 +190,6 @@ const configuration = useContext(ConfigurationContext)
   }
 
   return (
-    
     <View style={styles(currentTheme).chatSec}>
       <View style={styles(currentTheme).orderDetails}>
         <View style={styles(currentTheme).orderNoSec}>
@@ -184,12 +198,13 @@ const configuration = useContext(ConfigurationContext)
           </TextDefault>
           <View style={styles(currentTheme).orderNo}>
             <TextDefault textColor={currentTheme.fontNewColor} small bold>
-            {orderNo}
+              {orderNo}
             </TextDefault>
           </View>
         </View>
         <TextDefault textColor={currentTheme.fontFourthColor} normal bold>
-        {configuration.currencySymbol}{total} 
+          {configuration.currencySymbol}
+          {total}
         </TextDefault>
       </View>
 
@@ -204,7 +219,6 @@ const configuration = useContext(ConfigurationContext)
         scrollToBottom
         scrollToBottomComponent={scrollToBottomComponent}
         renderAvatar={null}
-        renderUsernameOnMessage
         renderChatEmpty={renderChatEmpty}
         inverted={Platform.OS !== 'web' || messages.length === 0}
         placeholder="Send a reply to rider!"
@@ -226,7 +240,7 @@ const configuration = useContext(ConfigurationContext)
         renderAccessory={image.length > 0 ? renderAccessory : null}
         text={inputMessage}
         onInputTextChanged={m => setInputMessage(m)}
-        messagesContainerStyle={{  paddingBottom:scale(40) }}
+        messagesContainerStyle={{ paddingBottom: scale(40) }}
       />
     </View>
   )

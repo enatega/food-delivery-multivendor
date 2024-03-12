@@ -13,12 +13,11 @@ const styles = (props = null) =>
     },
     container: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.white : 'transparent'
     },
     contentContainer: {
       flexGrow: 1,
-      ...alignment.PBsmall,
-      
+      ...alignment.PBsmall
     },
     subContainerImage: {
       flex: 1,
@@ -122,6 +121,29 @@ const styles = (props = null) =>
       marginLeft: scale(10),
       width: scale(55),
       alignItems: 'center'
+    },
+    tabContainer: {
+      width: '100%',
+      height: scale(45),
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignSelf: 'center',
+      backgroundColor: props !== null ? props.white : 'transparent'
+    },
+    activeTabStyles: {
+      width: '45%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderBottomWidth: 3,
+      borderBottomColor: props !== null ? props.newheaderColor : 'transparent',
+    },
+    inactiveTabStyles: {
+      width: '45%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderBottomWidth: 3,
+      borderBottomColor: 'transparent'
     }
   })
 
