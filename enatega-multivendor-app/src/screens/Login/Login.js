@@ -104,6 +104,7 @@ function Login(props) {
                     onChangeText={handleEmailChange}
                     keyboardType="email-address"
                     autoCompleteType="email"
+                    defaultValue='demo-customer@enatega.com'
                   />
                   {emailError !== null && (
                     <TextDefault
@@ -118,6 +119,7 @@ function Login(props) {
                   <>
                     <View style={styles().passwordField}>
                       <TextInput
+                        defaultValue='DemoCustomer55!'
                         secureTextEntry={showPassword}
                         placeholder={t('password')}
                         style={[
