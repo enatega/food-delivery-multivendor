@@ -49,6 +49,7 @@ import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
 import { TopBrands } from '../../components/Main/TopBrands'
 import Item from '../../components/Main/Item/Item'
+import TextError from '../../components/Text/TextError/TextError'
 
 const RESTAURANTS = gql`
   ${restaurantList}

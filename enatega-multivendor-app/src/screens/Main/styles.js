@@ -117,6 +117,6 @@ const styles = (props = null) =>
     searchList: {
       marginBottom: 70
     },
-    }
-  })
+  }
+  )
 export default styles
