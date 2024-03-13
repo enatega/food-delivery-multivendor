@@ -179,7 +179,7 @@ export const de = {
   emailErr2: 'Ungültige E-Mail!',
   passErr1: 'Passwort ist erforderlich',
   passErr2:
-    'Ungültiges Passwort. Das Passwort muss 1 Großbuchstaben, 1 Kleinbuchstaben und 1 Zahl enthalten.',
+    'Ungültiges Passwort. Das Passwort muss mindestens 8 Zeichen lang sein und 1 Großbuchstaben, 1 Kleinbuchstaben und 1 Zahl enthalten.',
   letsGetStarted: 'Lass uns anfangen!',
   createAccount: 'Erstellen Sie Ihr Enatega-Konto',
   firstnameErr1: 'Vorname ist erforderlich!',

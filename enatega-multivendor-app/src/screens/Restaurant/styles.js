@@ -119,7 +119,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      borderRadius: scale(16),
+      borderRadius: scale(40),
       backgroundColor: props !== null ? props.buttonBackground : 'black',
       height: '75%',
       width: '95%',

@@ -46,7 +46,7 @@ const styles = (props = null) =>
     appleBtn: {
       width: '100%'
     },
-    logoContainer: {},
+
     form: {
       width: '100%',
       flex: 1,
@@ -56,18 +56,9 @@ const styles = (props = null) =>
     textField: {
       borderColor: props !== null ? props.borderColor : '#efefef',
       borderWidth: scale(1),
-      borderRadius: scale(10),
-      backgroundColor: props !== null ? props.white : '#fff',
-      padding: scale(14),
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      shadowOffset: {
-        width: scale(0),
-        height: scale(2)
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 1,
-      ...alignment.MTlarge
+      borderRadius: scale(6),
+      backgroundColor: props !== null ? props.white : 'white',
+      padding: scale(12)
     },
     errorInput: {
       backgroundColor: props !== null ? props.errorInputBack : '#F7E7E5',
@@ -78,13 +69,13 @@ const styles = (props = null) =>
     },
     passwordField: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      ...alignment.MTlarge
     },
     passwordInput: {
       width: '100%'
     },
     eyeBtn: {
-      marginTop: scale(32),
       marginLeft: scale(-40),
       elevation: scale(999)
     },
@@ -93,7 +84,7 @@ const styles = (props = null) =>
       // marginTop: '55%',
       width: '100%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.main : '#',
+      backgroundColor: props !== null ? props.main : '#000',
       alignSelf: 'center',
       padding: scale(15),
       borderRadius: scale(28)

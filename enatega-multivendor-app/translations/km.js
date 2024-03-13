@@ -170,7 +170,8 @@ export const km = {
   emailErr1: 'តនគតអ៏មែត',
   emailErr2: 'អ៏មែត',
   passErr1: 'តនតព',
-  passErr2: 'ព',
+  passErr2:
+    'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ។ ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ 8 តួអក្សរ និងមានអក្សរធំ 1 អក្សរតូច 1 លេខ។',
   letsGetStarted: 'តនត',
   createAccount: 'តវតន៏តត',
   firstnameErr1: 'វតតអ៏ត',

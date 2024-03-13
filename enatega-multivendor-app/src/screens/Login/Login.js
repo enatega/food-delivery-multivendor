@@ -13,7 +13,7 @@ import styles from './styles'
 import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { FontAwesome, Feather } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +61,7 @@ function Login(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
-                <Feather name="mail" size={30} color="black" />
+                <SimpleLineIcons name="envelope" size={30} color="black" />
               </View>
               <View>
                 <TextDefault
@@ -71,17 +71,20 @@ function Login(props) {
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
-                  {t('whatsYourEmail')}
+                  {registeredEmail
+                    ? 'Enter Your Email and Password'
+                    : t('whatsYourEmail')}
                 </TextDefault>
-                {registeredEmail === false && (
-                  <TextDefault
-                    H5
-                    bold
-                    textColor={currentTheme.horizontalLine}
-                    style={{}}>
-                    {registeredEmail ? t('signInWithEmail') : t('checkAccount')}
-                  </TextDefault>
-                )}
+
+                <TextDefault
+                  H5
+                  bold
+                  textColor={currentTheme.horizontalLine}
+                  style={{ ...alignment.MBmedium }}>
+                  {registeredEmail
+                    ? 'Your email already exists.'
+                    : t('checkAccount')}
+                </TextDefault>
               </View>
               <View style={styles().form}>
                 <View>
@@ -126,16 +129,16 @@ function Login(props) {
                         />
                         <FontAwesome
                           onPress={() => setShowPassword(!showPassword)}
-                          name={showPassword ? 'eye' : 'eye-slash'}
+                          name={!showPassword ? 'eye' : 'eye-slash'}
                           size={24}
                           color={
                             passwordError === null
-                              ? currentTheme.startColor
+                              ? currentTheme.black
                               : currentTheme.textErrorColor
                           }
                           style={[
                             styles().eyeBtn,
-                            Platform.OS === 'android' && { marginTop: 40 }
+                            Platform.OS === 'android' && { marginTop: 14 }
                           ]}
                         />
                       </View>
@@ -176,11 +179,12 @@ function Login(props) {
                     style={styles(currentTheme).btn}>
                     <TextDefault
                       H4
-                      textColor={currentTheme.black}
-                      style={alignment.MLsmall}
+                      textColor={currentTheme.fontFourthColor}
                       bold>
                       {loading || loginLoading ? (
                         <Spinner backColor="transparent" size="small" />
+                      ) : registeredEmail ? (
+                        'Login'
                       ) : (
                         t('continueBtn')
                       )}

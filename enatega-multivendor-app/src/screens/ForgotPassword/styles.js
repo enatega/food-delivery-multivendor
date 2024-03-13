@@ -14,17 +14,14 @@ const styles = (props = null) =>
     mainContainer: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      ...alignment.MTlarge,
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     },
-    subContainer: {
-      width: '85%',
-      height: '100%'
-    },
-    logoContainer: {
-      width: scale(120),
-      height: scale(130),
-      alignSelf: 'center'
-    },
+
     marginTop3: {
       ...alignment.MTxSmall
     },
@@ -44,19 +41,12 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     textField: {
-      borderColor: props !== null ? props.borderColor :'#efefef',
+      borderColor: props !== null ? props.borderColor : '#efefef',
       borderWidth: scale(1),
-      borderRadius: scale(10),
+      borderRadius: scale(6),
       backgroundColor: props !== null ? props.white : 'white',
-      padding: scale(14),
+      padding: scale(12),
       shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      shadowOffset: {
-        width: scale(0),
-        height: scale(2)
-      },
-      shadowOpacity: scale(0.25),
-      shadowRadius: scale(3.84),
-      elevation: scale(5),
       ...alignment.MTlarge
     },
     errorInput: {
@@ -67,12 +57,12 @@ const styles = (props = null) =>
       ...alignment.MTxSmall
     },
     btn: {
-      width: '70%',
+      width: '100%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props.main : '#F7E7E5',
       alignSelf: 'center',
-      padding: scale(15),
-      borderRadius: scale(10),
+      padding: 15,
+      borderRadius: 40,
       ...alignment.MTlarge
     },
     passwordField: {

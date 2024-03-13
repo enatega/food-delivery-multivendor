@@ -14,7 +14,9 @@ import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import analytics from '../../utils/analytics'
 import { useForgotPassword } from './useForgotPassword'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Feather } from '@expo/vector-icons'
+import { scale } from '../../utils/scaling'
 
 function ForgotPassword(props) {
   const Analytics = analytics()
@@ -28,7 +30,7 @@ function ForgotPassword(props) {
     themeContext,
     loading
   } = useForgotPassword()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
@@ -48,7 +50,7 @@ function ForgotPassword(props) {
   return (
     <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
       <StatusBar
-        backgroundColor={currentTheme.buttonText}
+        backgroundColor={currentTheme.themeBackground}
         barStyle={
           themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
         }
@@ -56,17 +58,18 @@ function ForgotPassword(props) {
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
-            <Image
-              source={require('../../../assets/login-icon.png')}
-              style={styles().logoContainer}
+            <Feather
+              name="lock"
+              size={30}
+              color={currentTheme.fontFourthColor}
             />
           </View>
           <View>
             <TextDefault
               H3
               bolder
+              textColor={currentTheme.fontfourthColor}
               style={{
-                textAlign: 'center',
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
               }}>
@@ -77,12 +80,12 @@ function ForgotPassword(props) {
               bold
               textColor={currentTheme.fontSecondColor}
               style={{
-                textAlign: 'center'
+                paddingBottom: scale(5)
               }}>
               {t('enterYourEmail')}
             </TextDefault>
           </View>
-          <View style={{ ...alignment.MTmedium }}>
+          <View>
             <TextInput
               placeholder={t('email')}
               style={[
@@ -102,7 +105,9 @@ function ForgotPassword(props) {
               </TextDefault>
             )}
           </View>
-          <View style={styles().marginTop10}>
+        </View>
+        <View style={{ width: '100%', marginBottom: 20 }}>
+          <View>
             {loading ? (
               <Spinner backColor="transparent" size="small" />
             ) : (
@@ -112,7 +117,7 @@ function ForgotPassword(props) {
                 onPress={() => forgotPassword()}>
                 <TextDefault
                   H4
-                  textColor={currentTheme.buttonTextPink}
+                  textColor={currentTheme.fontFourthColor}
                   style={alignment.MLsmall}
                   bold>
                   {t('continueBtn')}
@@ -120,7 +125,7 @@ function ForgotPassword(props) {
               </TouchableOpacity>
             )}
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={alignment.MBxSmall}
             activeOpacity={0.7}
             onPress={() => props.navigation.goBack()}>
@@ -128,11 +133,11 @@ function ForgotPassword(props) {
               center
               H5
               bold
-              textColor={currentTheme.buttonBackgroundPink}
+              textColor={currentTheme.main}
               style={alignment.MTsmall}>
               {t('backToLogin')}
             </TextDefault>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </SafeAreaView>

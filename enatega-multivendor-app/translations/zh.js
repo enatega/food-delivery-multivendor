@@ -165,7 +165,8 @@ export const zh = {
   emailErr1: '电子邮件是必填项',
   emailErr2: '无效的电子邮件！',
   passErr1: '密码是必填项',
-  passErr2: '无效的密码。密码必须包含1个大写字母，1个小写字母，1个数字。',
+  passErr2:
+    '无效的密码。密码必须至少为 8 个字符，且包含 1 个大写字母、1 个小写字母、1 个数字。',
   letsGetStarted: '让我们开始吧！',
   createAccount: '创建您的Enatega帐户',
   firstnameErr1: '名字是必填项！',
