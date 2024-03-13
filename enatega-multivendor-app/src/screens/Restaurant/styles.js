@@ -87,14 +87,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       ...alignment.MRxSmall
     },
-    // listSeperator: {
-    //   borderBottomWidth: StyleSheet.hairlineWidth,
-    //   borderColor: theme.Pink.black,
-    //   paddingTop: scale(15),
-    //   marginBottom: scale(15),
-    //   width: '90%',
-    //   alignSelf: 'center'
-    // },
+
     sectionSeparator: {
       width: '100%',
       height: scale(15),

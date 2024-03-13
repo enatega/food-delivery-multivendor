@@ -22,11 +22,6 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
 
-    // logoContainer: {
-    //   width: 120,
-    //   height: 130,
-    //   alignSelf: 'center'
-    // },
     marginTop3: {
       ...alignment.MTxSmall
     },

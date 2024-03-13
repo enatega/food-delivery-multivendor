@@ -125,19 +125,6 @@ function ForgotPassword(props) {
               </TouchableOpacity>
             )}
           </View>
-          {/* <TouchableOpacity
-            style={alignment.MBxSmall}
-            activeOpacity={0.7}
-            onPress={() => props.navigation.goBack()}>
-            <TextDefault
-              center
-              H5
-              bold
-              textColor={currentTheme.main}
-              style={alignment.MTsmall}>
-              {t('backToLogin')}
-            </TextDefault>
-          </TouchableOpacity> */}
         </View>
       </View>
     </SafeAreaView>
