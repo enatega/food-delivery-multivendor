@@ -64,12 +64,6 @@ const PLACEORDER = gql`
 const TIPPING = gql`
   ${getTipping}
 `
-// suggested Items List Data
-const dataItems = [
-  { id: '1', name: 'Burger', description: 'Large', price: '$20' },
-  { id: '2', name: 'Burger', description: 'Small', price: '$5' },
-  { id: '3', name: 'Burger', description: 'Medium', price: '$10' }
-]
 
 function Cart(props) {
   const Analytics = analytics()
@@ -366,7 +360,7 @@ function Cart(props) {
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0
     cart.forEach(cartItem => {
-      const food =populateFood(cartItem)
+      const food = populateFood(cartItem)
       itemTotal += food.price * food.quantity
     })
     if (withDiscount && coupon && coupon.discount) {
@@ -735,10 +729,12 @@ function Cart(props) {
       ...cartItem,
       optionsTitle,
       title: title,
-      price: price.toFixed(2)
+      price: price.toFixed(2),
+      image: food.image,
+      addons: food.variations[0].addons,
     }
   }
-  
+
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -797,23 +793,26 @@ function Cart(props) {
                   {cart.map((cartItem, index) => {
                     const food = populateFood(cartItem)
                     return (
-                    <View style={[styles(currentTheme).itemContainer]}>
-                      <CartItem
-                        quantity={food.quantity}
-                        dealName={food.title}
-                        optionsTitle={food.optionsTitle}
-                        dealPrice={(
-                          parseFloat(food.price) * food.quantity
-                        ).toFixed(2)}
-                        addQuantity={() => {
-                          addQuantity(food.key)
-                        }}
-                        removeQuantity={() => {
-                          removeQuantity(food.key)
-                        }}
-                      />
-                    </View>
-                  )})}
+                      <View style={[styles(currentTheme).itemContainer]}>
+                        <CartItem
+                          quantity={food.quantity}
+                          dealName={food.title}
+                          optionsTitle={food.optionsTitle}
+                          itemImage={food.image}
+                          itemAddons={food.addons}
+                          dealPrice={(
+                            parseFloat(food.price) * food.quantity
+                          ).toFixed(2)}
+                          addQuantity={() => {
+                            addQuantity(food.key)
+                          }}
+                          removeQuantity={() => {
+                            removeQuantity(food.key)
+                          }}
+                        />
+                      </View>
+                    )
+                  })}
                 </View>
 
               </View>

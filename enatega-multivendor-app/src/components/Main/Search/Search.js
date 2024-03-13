@@ -5,15 +5,17 @@ import styles from './styles'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function Search(props) {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
-    <View style={styles(currentTheme).mainContainerHolder}>
-      <View style={styles(currentTheme).mainContainer}>
+    <View style={styles(currentTheme, props.newheaderColor).mainContainerHolder}>
+      <View style={styles(currentTheme, props.cartContainer).mainContainer}>
+    {/* <View style={styles(currentTheme).mainContainerHolder}>
+      <View style={styles(currentTheme).mainContainer}> */}
         <View style={styles().subContainer}>
           <View style={styles().leftContainer}>
             <View style={styles().searchContainer}>

@@ -14,6 +14,9 @@ import {
 } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import useEnvVars from '../../environment'
+import { useContext } from 'react'
+import { LocationContext } from '../context/Location'
+import { calculateDistance } from '../utils/customFunctions'
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
@@ -44,6 +47,29 @@ const setupApollo = () => {
               return incoming
             }
           }
+        }
+      },
+      Restaurant: {
+        fields: {
+          distanceWithCurrentLocation: {
+            read(_existing, {variables, field, readField}) {
+              const restaurantLocation = readField('location')
+              const distance = calculateDistance(restaurantLocation?.coordinates[0], restaurantLocation?.coordinates[1], variables.latitude, variables.longitude)
+              return distance
+            }
+          },
+          freeDelivery: {
+            read(_existing) {
+              const randomValue = Math.random() * 10;
+              return randomValue > 5
+            }
+          },
+          acceptVouchers: {
+            read(_existing) {
+              const randomValue = Math.random() * 10;
+              return randomValue < 5
+            }
+          },
         }
       }
     }
