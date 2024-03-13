@@ -24,6 +24,10 @@ const styles = (props = null) =>
     topPicksSec: {
       ...alignment.MLmedium,
       marginBottom: scale(30)
+    },
+    margin: {
+      ...alignment.MLmedium,
+      ...alignment.MBmedium,
     }
   })
 

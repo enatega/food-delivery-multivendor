@@ -8,16 +8,21 @@ import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
+import { useNavigation } from '@react-navigation/native'
 
-const cartItem = props => {
+const CartItem = (props) => {
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const dropdownItems = ['Item 1', 'Item 2', 'Item 3']
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
+  const navigation = useNavigation()
+  const navigateBack = () => {
+    navigation.goBack() // Navigate back function
+  }
+
   return (
     <View style={styles().itemContainer}>
       <View
@@ -25,11 +30,11 @@ const cartItem = props => {
           flexDirection: 'row',
           justifyContent: 'flex-start',
           alignItems: 'center',
-          gap: scale(7)
+          gap: scale(7),
         }}>
         <View style={styles().suggestItemImgContainer}>
           <Image
-            source={require('../../assets/images/burger-menu.png')}
+            source={{ uri: props?.itemImage }}
             style={styles().suggestItemImg}
             resizeMode="contain"
           />
@@ -54,44 +59,47 @@ const cartItem = props => {
               +{option}
             </TextDefault>
           ))}
-          <View style={styles().additionalItem}>
-            <View>
-              <TouchableOpacity
-                onPress={toggleDropdown}
-                activeOpacity={1}
-                style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TextDefault
-                  style={{ marginRight: scale(5) }}
-                  textColor={currentTheme.secondaryText}
-                  Normal>
-                  {dropdownItems.length} Additional Items
-                </TextDefault>
-                <Feather
-                  name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
-                  size={20}
-                  color={currentTheme.iconColorDark}
-                />
-              </TouchableOpacity>
-              {isDropdownOpen && (
-                <View style={styles().itemsDropdown}>
-                  {dropdownItems?.map((item, index) => (
-                    <TextDefault
-                      key={index}
-                      textColor={currentTheme.secondaryText}
-                      Normal>
-                      {item}
-                    </TextDefault>
-                  ))}
-                </View>
-              )}
+          {props?.itemAddons?.length > 0 && (
+            <View style={styles().additionalItem}>
+              <View>
+                <TouchableOpacity
+                  onPress={toggleDropdown}
+                  activeOpacity={1}
+                  style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <TextDefault
+                    style={{ marginRight: scale(5) }}
+                    textColor={currentTheme.secondaryText}
+                    Normal>
+                    {props?.itemAddons?.length} Additional Items
+                  </TextDefault>
+                  <Feather
+                    name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
+                    size={20}
+                    color={currentTheme.iconColorDark}
+                  />
+                </TouchableOpacity>
+                {isDropdownOpen && (
+                  <View style={styles().itemsDropdown}>
+                    {props?.itemAddons?.map((item, index) => (
+                      <TextDefault
+                        key={index}
+                        textColor={currentTheme.secondaryText}
+                        Normal>
+                        {item}
+                      </TextDefault>
+                    ))}
+                  </View>
+                )}
+              </View>
             </View>
-          </View>
+          )}
 
           <View
             style={{
               flexDirection: 'row',
               gap: scale(8),
-              alignItems: 'center'
+              alignItems: 'center',
+              marginTop: scale(4),
             }}>
             <TextDefault
               numberOfLines={1}
@@ -103,9 +111,7 @@ const cartItem = props => {
             </TextDefault>
             <View style={styles().divider} />
             <TouchableOpacity
-              onPress={() => {
-                Alert.alert('Alert', 'Under development')
-              }}>
+              onPress={navigateBack}>
               <TextDefault
                 textColor={currentTheme.fontFourthColor}
                 bolder
@@ -121,7 +127,7 @@ const cartItem = props => {
           activeOpacity={0.7}
           style={[
             styles(currentTheme).actionContainerBtns,
-            styles(currentTheme).minusBtn
+            styles(currentTheme).minusBtn,
           ]}
           onPress={props.removeQuantity}>
           <AntDesign
@@ -140,14 +146,18 @@ const cartItem = props => {
           activeOpacity={0.7}
           style={[
             styles(currentTheme).actionContainerBtns,
-            styles(currentTheme).plusBtn
+            styles(currentTheme).plusBtn,
           ]}
           onPress={props.addQuantity}>
-          <AntDesign name="plus" size={scale(18)} color={currentTheme.white} />
+          <AntDesign
+            name="plus"
+            size={scale(18)}
+            color={currentTheme.white}
+          />
         </TouchableOpacity>
       </View>
     </View>
   )
 }
 
-export default cartItem
+export default CartItem

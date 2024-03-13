@@ -13,7 +13,7 @@ const styles = (props = null) =>
       backgroundColor: '#fff',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
-      height: height * 0.5
+      // height: height * 0.5
     },
 
     touchArea: {
@@ -21,11 +21,28 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: scale(20)
     },
+    favouriteOverlay: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      width: scale(38),
+      height: scale(28),
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+      borderRadius: scale(16),
+      backgroundColor: props != null ? props.menuBar : 'white',
+      borderWidth: 1,
+      borderColor: props != null ? props.newBorderColor : '#F3F4F6'
+    },
     fixedViewNavigation: {
+      // height: scale(40),
+      // backgroundColor: 'red',
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      // alignItems: 'center',
       ...alignment.PTsmall
     },
 

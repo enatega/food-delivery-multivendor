@@ -11,27 +11,23 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.white : 'transparent'
     },
     containerInfo: {
       width: '100%',
-      ...alignment.MTmedium,
+      ...alignment.MTmedium
     },
     formSubContainer: {
-      borderRadius: scale(18),
-      width: '95%',
-      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
+      borderRadius: scale(8),
+      flexDirection: 'row',
+      width: '92%',
+      backgroundColor: props !== null ? props.gray100 : 'transparent',
       alignSelf: 'center',
-      shadowOffset: { width: 2, height: 4 },
-      shadowColor: props !== null ? props.shadowColor : 'transparent',
-      shadowOpacity: 0.1,
-      shadowRadius: 10,
-      elevation: 15,
-      borderWidth:
-        props !== null && props.themeBackground !== '#FAFAFA' ? 2 : 0,
-      borderColor: props !== null ? props.shadowColor : 'transparent',
+      elevation: 1,
+      borderWidth: props !== null && props.gray200 !== '#E5E7EB' ? 2 : 0,
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
       ...alignment.MTsmall,
-      ...alignment.Pmedium
+      ...alignment.Psmall,
     },
     flexRow: {
       display: 'flex',
@@ -39,21 +35,24 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     containerHeading: {
+      width: '100%',
       flexDirection: 'row',
-      alignContent: 'space-between',
+      alignItems: 'flex-start'
     },
     headingTitle: {
-      width: '50%',
+      width: '50%'
     },
     textAlignLeft: {
-      textAlign: 'left',
+      textAlign: 'left'
     },
     headingLink: {
-      width: '50%',
-      flexDirection: 'row',
-      justifyContent: 'flex-end'
+      flex: 1,
+      ...alignment.MRxSmall,
+      justifyContent: 'center',
+      alignItems:'flex-end',
     },
     headingButton: {
+      marginLeft: scale(5),
       justifyContent: 'center',
       ...alignment.PLmedium
     },
@@ -62,23 +61,20 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: scale(6),
-      padding: scale(5),
-      paddingLeft: scale(20),
-      paddingRight: scale(20),
-      width: '28%'
+      padding: scale(15),
+      width: '40%'
     },
     bacKButton: {
       backgroundColor: 'white',
       borderRadius: scale(50),
-      marginLeft: scale(10),
-      width: scale(55),
-      alignItems: 'center'
+      width: scale(40),
+      alignItems: 'flex-start',
+      marginLeft: scale(5)
     },
     verifiedButton: {
       padding: scale(8),
-      paddingLeft: scale(10),
-      paddingRight: scale(10),
-      borderRadius: scale(6),
+      //paddingLeft: scale(10),
+      borderRadius: scale(16),
       width: '28%',
       // height: scale(30),
       marginTop: scale(10)

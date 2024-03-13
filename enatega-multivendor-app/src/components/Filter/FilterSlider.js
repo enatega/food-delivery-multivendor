@@ -15,78 +15,20 @@ import styles from './styles'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { useTranslation } from 'react-i18next'
-const FILTER_TYPE = {
-  CHECKBOX: 'checkbox',
-  RADIO: 'radio'
-}
-const FILTER_VALUES = {
-  Sort: {
-    type: FILTER_TYPE.RADIO,
-    values: ['Relevance (Default)', 'Fast Delivery', 'Distance'],
-    selected: []
-  },
-  Cuisines: {
-    selected: [],
-    type: FILTER_TYPE.CHECKBOX,
-    values: [
-      'American',
-      'BBQ',
-      'Beverages',
-      'Biryani',
-      'Broast',
-      'Burgers',
-      'Cakes & Bakery',
-      'Chinese',
-      'Continental',
-      'Desserts',
-      'Fast Food',
-      'Haleem',
-      'Ice cream',
-      'Japanese',
-      'Karahi',
-      'Middle Eastern',
-      'Nhari',
-      'Pakistani',
-      'Pizza',
-      'Pulao',
-      'Qeema',
-      'Samosa',
-      'Sandwich',
-      'Steaks',
-      'Tea & Coffee',
-      'Thai',
-      'Vegetarian',
-      'Western'
-    ]
-  },
-  Offers: {
-    selected: [],
-    type: FILTER_TYPE.CHECKBOX,
-    values: ['Free Delivery', 'Accept Vouchers', 'Deal']
-  },
-  Rating: {
-    selected: [],
-    type: FILTER_TYPE.CHECKBOX,
-    values: ['3+ Rating', '4+ Rating', '5 star Rating']
-  }
-}
+import { FILTER_TYPE } from '../../screens/Menu/Menu'
 
-const Filters = () => {
-  const { t } = useTranslation()
-
+const Filters = ({ filters, setFilters, applyFilters }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const [filters, setFilters] = useState(FILTER_VALUES)
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('all')
 
-  const result = Object.keys(FILTER_VALUES).filter(k =>
+  const result =filters &&  Object.keys(filters).filter(k =>
     selectedFilter === 'all'
-      ? FILTER_VALUES[k]
+      ? filters[k]
       : selectedFilter === k
-      ? FILTER_VALUES[k]
-      : null
+        ? filters[k]
+        : null
   )
 
   const handleOptionsClick = () => {
@@ -100,7 +42,7 @@ const Filters = () => {
   }
 
   const handleValueSelection = (filterTitle, filterValue) => {
-    console.log('handleValueSelection', filterTitle, filterValue)
+    // console.log('handleValueSelection', filterTitle, filterValue)
     const selectedFilter = filters[filterTitle]
     if (selectedFilter.type === FILTER_TYPE.RADIO) {
       selectedFilter.selected = [filterValue]
@@ -113,8 +55,9 @@ const Filters = () => {
       } else selectedFilter.selected.push(filterValue)
     }
     setFilters({ ...filters, [filterTitle]: selectedFilter })
-    console.log({ ...filters, [filterTitle]: selectedFilter })
+    // console.log({ ...filters, [filterTitle]: selectedFilter })
   }
+  // console.log('Filters => ', JSON.stringify(filters, null, 4))
 
   return (
     <ScrollView
@@ -127,7 +70,7 @@ const Filters = () => {
         <Ionicons name="options" size={24} color="#000" />
       </TouchableOpacity>
 
-      {Object.keys(FILTER_VALUES).map((filter, index) => (
+      {filters && Object.keys(filters)?.map((filter, index) => (
         <TouchableOpacity
           key={index}
           style={[
@@ -158,7 +101,7 @@ const Filters = () => {
             <View key={filterValue}>
               <Text style={styles(currentTheme).modalTitle}>{filterValue}</Text>
               <View>
-                {FILTER_VALUES[filterValue].values.map((value, index) => (
+                {filters && filters[filterValue].values.map((value, index) => (
                   <TouchableOpacity
                     key={index}
                     style={[
@@ -171,23 +114,23 @@ const Filters = () => {
                     <Text style={styles(currentTheme).modalItemText}>
                       {value}
                     </Text>
-                    {FILTER_VALUES[filterValue].type ===
+                    {filters && filters[filterValue].type ===
                     FILTER_TYPE.CHECKBOX ? (
-                      <CheckboxBtn
-                        checked={filters[filterValue].selected.includes(value)}
-                        onPress={() => handleValueSelection(filterValue, value)}
-                      />
-                    ) : (
-                      <RadioButton
-                        size={12}
-                        innerColor={currentTheme.main}
-                        outerColor={currentTheme.radioOuterColor}
-                        isSelected={filters[filterValue].selected.includes(
-                          value
-                        )}
-                        onPress={() => handleValueSelection(filterValue, value)}
-                      />
-                    )}
+                        <CheckboxBtn
+                          checked={filters[filterValue].selected.includes(value)}
+                          onPress={() => handleValueSelection(filterValue, value)}
+                        />
+                      ) : (
+                        <RadioButton
+                          size={12}
+                          innerColor={currentTheme.main}
+                          outerColor={currentTheme.radioOuterColor}
+                          isSelected={filters[filterValue].selected.includes(
+                            value
+                          )}
+                          onPress={() => handleValueSelection(filterValue, value)}
+                        />
+                      )}
                   </TouchableOpacity>
                 ))}
               </View>
@@ -196,6 +139,7 @@ const Filters = () => {
           <TouchableOpacity
             onPress={() => {
               setModalVisible(false)
+              applyFilters && applyFilters()
             }}
             activeOpacity={0.5}
             style={styles(currentTheme).saveBtnContainer}>

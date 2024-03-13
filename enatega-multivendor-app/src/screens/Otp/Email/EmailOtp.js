@@ -53,10 +53,6 @@ function EmailOtp(props) {
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
-            {/* <Image
-              source={require('../../../../assets/login-icon.png')}
-              style={styles().logoContainer}
-            /> */}
             <SimpleLineIcons name="envelope" size={30} color="black" />
           </View>
           <View>

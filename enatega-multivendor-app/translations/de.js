@@ -58,7 +58,7 @@ export const de = {
   titleCheckout: 'Kasse',
   titlePayment: 'Zahlung',
   totalOrderAmount: 'Gesamtbetrag der Bestellung',
-  reOrder: 'Erneut bestellen',
+  reOrder: 'Wählen Sie Artikel zum Nachbestellen aus',
   previous: 'Vorherige Bestellung',
   unReadNotifications: 'Keine ungelesenen Benachrichtigungen',
   upload: 'Hochladen',
@@ -150,7 +150,8 @@ export const de = {
   validateItems:
     'Fügen Sie Artikel zum Warenkorb hinzu, bevor Sie zur Kasse gehen',
   validateDelivery: 'Legen Sie die Lieferadresse vor dem Auschecken fest',
-  titleFavourite: 'Favoriten',
+  Favourite: 'Favoriten',
+  titleFavourite: 'Lieblingsrestaurants',
   titleEmptyFav: 'Keine Favoriten gespeichert',
   emptyFavDesc:
     'Sie werden hier alle Ihre Favoriten sehen, um die Bestellung noch schneller zu gestalten.',
@@ -352,8 +353,8 @@ export const de = {
   statusDelivered: 'Geliefert',
   selectLocation: 'auswählen',
   languageSetting: 'Spracheinstellung',
-  receiveSpecialOffers: 'Spezielle Angebote erhalten',
-  getUpdates: 'Aktualisierungen zum Bestellstatus erhalten',
+  receiveOfferByEmail: 'Angebot per E-Mail erhalten',
+  receivePushNotification: 'Push-Benachrichtigung erhalten',
   turnOnDarkTheme: 'Dunkles Thema aktivieren',
   selectLanguage: 'Sprache auswählen',
   Select: 'Auswählen',
@@ -387,5 +388,20 @@ export const de = {
   noRestaurants: 'Keine Restaurants',
   clearCartText:
     'Beim Verlassen dieser Restaurantseite werden die Artikel, die Sie zum Warenkorb hinzugefügt haben, gelöscht',
-  okText: 'OK'
+  okText: 'OK',
+  edit: 'bearbeiten',
+  change: 'Ändern',
+  myAccount: 'mein Konto',
+  estimatedDeliveryTime: 'Voraussichtliche Lieferzeit',
+  current: 'aktuell',
+  past: 'Vergangenheit',
+  deliveredOn: 'geliefert am',
+  address: 'Adresse',
+  language: 'Sprache',
+  house: 'Haus',
+  office: 'Büro',
+  Appartment: 'Wohnung',
+  tapToRate: 'Zum Bewerten tippen',
+  locationType: 'Standorttyp',
+  locationTypeDetails: 'Der Standorttyp hilft uns, Sie besser zu finden'
 }

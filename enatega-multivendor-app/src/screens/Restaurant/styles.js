@@ -46,7 +46,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       gap: scale(5)
     },
-    dealSection: {
+    searchDealSection: {
       // position: 'relative',
       backgroundColor: props != null ? props.themeBackground : 'white',
       paddingVertical: scale(10),

@@ -13,7 +13,9 @@ import {
   Image,
   Dimensions,
   SectionList,
-  Text
+  Text,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native'
 import Animated, {
   Extrapolate,
@@ -42,7 +44,7 @@ import styles from './styles'
 import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
 import TextError from '../../components/Text/TextError/TextError'
-import { MaterialIcons, Ionicons } from '@expo/vector-icons'
+import { MaterialIcons, Ionicons, Entypo } from '@expo/vector-icons'
 import analytics from '../../utils/analytics'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { popularItems, food } from '../../apollo/queries'
@@ -51,6 +53,7 @@ const { height } = Dimensions.get('screen')
 
 import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
+import { ScrollView } from 'react-native-gesture-handler'
 
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
@@ -83,7 +86,6 @@ function Restaurant(props) {
   const route = useRoute()
   const inset = useSafeAreaInsets()
   const propsData = route.params
-  console.log('propsData', propsData)
   const animation = useValue(0)
   const circle = useValue(0)
   const themeContext = useContext(ThemeContext)
@@ -91,6 +93,10 @@ function Restaurant(props) {
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [search, setSearch] = useState('');
+  const [filterData, setFilterData] = useState([])
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const {
     restaurant: restaurantCart,
     setCartRestaurant,
@@ -123,6 +129,40 @@ function Restaurant(props) {
       return foodDetails
     })
 
+  const searchHandler = () => {
+    setSearchOpen(!searchOpen);
+    setShowSearchResults(!showSearchResults);
+  }
+
+  const searchPopupHandler = () => {
+    setSearchOpen(!searchOpen);
+    setSearch('')
+  }
+
+  useEffect(() => {
+    if (search === '') {
+      setFilterData([]);
+      setShowSearchResults(false);
+    } else if (deals) {
+      const regex = new RegExp(search, 'i');
+      let filteredData = [];
+      deals.forEach(category => {
+        category.data.forEach(deals => {
+          const title = deals.title.search(regex);
+          if (title < 0) {
+            const description = deals.description.search(regex);
+            if (description > 0) {
+              filteredData.push(deals);
+            }
+          } else {
+            filteredData.push(deals);
+          }
+        });
+      });
+      setFilterData(filteredData);
+      setShowSearchResults(true);
+    }
+  }, [search, deals, searchOpen]);
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -433,6 +473,7 @@ function Restaurant(props) {
           iconTouchHeight={iconTouchHeight}
           // headerTextFlex={headerTextFlex}
           restaurantName={propsData.name}
+          restaurantId={propsData._id}
           restaurantImage={propsData.image}
           restaurant={null}
           topaBarData={[]}
@@ -440,6 +481,12 @@ function Restaurant(props) {
           minimumOrder={propsData.minimumOrder}
           tax={propsData.tax}
           updatedDeals={updatedDeals}
+          searchOpen={searchOpen}
+          showSearchResults={showSearchResults}
+          setSearch={setSearch}
+          search={search}
+          searchHandler={searchHandler}
+          searchPopupHandler={searchPopupHandler}
         />
 
         <View
@@ -511,6 +558,7 @@ function Restaurant(props) {
             iconTouchHeight={iconTouchHeight}
             // headerTextFlex={headerTextFlex}
             restaurantName={propsData.name}
+            restaurantId={propsData._id}
             restaurantImage={propsData.image}
             restaurant={data.restaurant}
             topaBarData={updatedDeals}
@@ -519,74 +567,196 @@ function Restaurant(props) {
             minimumOrder={propsData.minimumOrder}
             tax={propsData.tax}
             updatedDeals={updatedDeals}
+            searchOpen={searchOpen}
+            showSearchResults={showSearchResults}
+            setSearch={setSearch}
+            search={search}
+            searchHandler={searchHandler}
+            searchPopupHandler={searchPopupHandler}
           />
 
-
-          <AnimatedSectionList
-            ref={scrollRef}
-            sections={updatedDeals}
-            // Important
-            // contentContainerStyle={{
-            //   paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-            // }}
-            scrollEventThrottle={1}
-            stickySectionHeadersEnabled={false}
-            showsVerticalScrollIndicator={false}
-            refreshing={networkStatus === 4}
-            onRefresh={() => networkStatus === 7 && refetch()}
-            onViewableItemsChanged={onViewableItemsChanged}
-            // onMomentumScrollEnd={event => {
-            //   onScrollEndSnapToEdge(event)
-            // }}
-            // // Important
-            // onScroll={Animated.event([
-            //   {
-            //     nativeEvent: {
-            //       contentOffset: {
-            //         y: animation
-            //       }
-            //     }
-            //   }
-            // ])}
-            keyExtractor={(item, index) => item + index}
-            // ItemSeparatorComponent={() => (
-            //   <View style={styles(currentTheme).listSeperator} />
-            // )}
-            // SectionSeparatorComponent={props => {
-            //   if (!props.leadingItem) return null
-            //   return <View style={styles(currentTheme).sectionSeparator} />
-            // }}
-            // renderSectionHeader={({ section: { title } }) => {
-            //   // if (title === 'Popular') {
-            //   //   if (!dataList || dataList.length === 0) {
-            //   //     return null;
-            //   //   }
-            //   return (
-            //     <View style={{ backgroundColor: '#fff' }}>
-            //       <TextDefault
-            //         style={styles(currentTheme).sectionHeaderText}
-            //         textColor="#111827"
-            //         bolder>
-            //         {title}
-            //       </TextDefault>
-            //       <Text
-            //         style={{
-            //           color: '#4B5563',
-            //           ...alignment.PLmedium,
-            //           fontSize: scale(12),
-            //           fontWeight: '400',
-            //           marginTop: scale(3)
-            //         }}>
-            //         Most ordered right now.
-            //       </Text>
-            //     </View>
-            //   )
-            // }}
-            renderSectionHeader={({ section: { title, data } }) => {
-              if (title === 'Popular') {
-                if (!dataList || dataList.length === 0) {
-                  return null // Don't render the section header if dataList is empty
+          {/* <View> */}
+          {showSearchResults ? (
+            <ScrollView>
+              {filterData.map((item, index) => (
+                <View key={index}>
+                  <TouchableOpacity
+                    style={styles(currentTheme).searchDealSection}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      onPressItem({
+                        ...item,
+                        restaurant: restaurant._id,
+                        restaurantName: restaurant.name
+                      })
+                    }>
+                    {/* {section.title === isPopular ? (  */}
+                    {/* <View style={styles().popularItemCards}>
+                    <ItemCard restaurantId={restaurantId}/>
+                  </View> */}
+                    {/* ) : (  */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                      <View style={styles(currentTheme).deal}>
+                        {item.image ? (
+                          <Image
+                            style={{
+                              height: scale(60),
+                              width: scale(60),
+                              borderRadius: 30
+                            }}
+                            source={{ uri: item.image }}
+                          />
+                        ) : null}
+                        <View style={styles(currentTheme).flex}>
+                          <View style={styles(currentTheme).dealDescription}>
+                            <TextDefault
+                              textColor={currentTheme.fontMainColor}
+                              style={styles(currentTheme).headerText}
+                              numberOfLines={1}
+                              bolder>
+                              {item.title}
+                            </TextDefault>
+                            <TextDefault
+                              style={styles(currentTheme).priceText}
+                              small>
+                              {wrapContentAfterWords(item.description, 5)}
+                            </TextDefault>
+                            <View style={styles(currentTheme).dealPrice}>
+                              <TextDefault
+                                numberOfLines={1}
+                                textColor={currentTheme.fontMainColor}
+                                style={styles(currentTheme).priceText}
+                                bolder
+                                small>
+                                {configuration.currencySymbol}{' '}
+                                {parseFloat(item.variations[0].price).toFixed(2)}
+                              </TextDefault>
+                              {item.variations[0].discounted > 0 && (
+                                <TextDefault
+                                  numberOfLines={1}
+                                  textColor={currentTheme.fontSecondColor}
+                                  style={styles().priceText}
+                                  small
+                                  lineOver>
+                                  {configuration.currencySymbol}{' '}
+                                  {(
+                                    item.variations[0].price +
+                                    item.variations[0].discounted
+                                  ).toFixed(2)}
+                                </TextDefault>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                      <View style={styles().addToCart}>
+                        <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                      </View>
+                    </View>
+                    {/* )} */}
+                    {tagCart(item._id)}
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+          ) : (
+            <AnimatedSectionList
+              ref={scrollRef}
+              sections={updatedDeals}
+              // Important
+              // contentContainerStyle={{
+              //   paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
+              // }}
+              scrollEventThrottle={1}
+              stickySectionHeadersEnabled={false}
+              showsVerticalScrollIndicator={false}
+              refreshing={networkStatus === 4}
+              onRefresh={() => networkStatus === 7 && refetch()}
+              onViewableItemsChanged={onViewableItemsChanged}
+              // onMomentumScrollEnd={event => {
+              //   onScrollEndSnapToEdge(event)
+              // }}
+              // // Important
+              // onScroll={Animated.event([
+              //   {
+              //     nativeEvent: {
+              //       contentOffset: {
+              //         y: animation
+              //       }
+              //     }
+              //   }
+              // ])}
+              keyExtractor={(item, index) => item + index}
+              // ItemSeparatorComponent={() => (
+              //   <View style={styles(currentTheme).listSeperator} />
+              // )}
+              // SectionSeparatorComponent={props => {
+              //   if (!props.leadingItem) return null
+              //   return <View style={styles(currentTheme).sectionSeparator} />
+              // }}
+              // renderSectionHeader={({ section: { title } }) => {
+              //   // if (title === 'Popular') {
+              //   //   if (!dataList || dataList.length === 0) {
+              //   //     return null;
+              //   //   }
+              //   return (
+              //     <View style={{ backgroundColor: '#fff' }}>
+              //       <TextDefault
+              //         style={styles(currentTheme).sectionHeaderText}
+              //         textColor="#111827"
+              //         bolder>
+              //         {title}
+              //       </TextDefault>
+              //       <Text
+              //         style={{
+              //           color: '#4B5563',
+              //           ...alignment.PLmedium,
+              //           fontSize: scale(12),
+              //           fontWeight: '400',
+              //           marginTop: scale(3)
+              //         }}>
+              //         Most ordered right now.
+              //       </Text>
+              //     </View>
+              //   )
+              // }}
+              renderSectionHeader={({ section: { title, data } }) => {
+                if (title === 'Popular') {
+                  if (!dataList || dataList.length === 0) {
+                    return null // Don't render the section header if dataList is empty
+                  }
+                  return (
+                    <View style={{ backgroundColor: '#fff' }}>
+                      <TextDefault
+                        style={styles(currentTheme).sectionHeaderText}
+                        textColor="#111827"
+                        bolder>
+                        {title}
+                      </TextDefault>
+                      <Text
+                        style={{
+                          color: '#4B5563',
+                          ...alignment.PLmedium,
+                          fontSize: scale(12),
+                          fontWeight: '400',
+                          marginTop: scale(3)
+                        }}>
+                        Most ordered right now.
+                      </Text>
+                      <View style={styles().popularItemCards}>
+                        {data.map(item => (
+                          <ItemCard item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart} />
+                        ))}
+                      </View>
+                    </View>
+                  )
                 }
+                // Render other section headers as usual
                 return (
                   <View style={{ backgroundColor: '#fff' }}>
                     <TextDefault
@@ -595,128 +765,104 @@ function Restaurant(props) {
                       bolder>
                       {title}
                     </TextDefault>
-                    <Text
-                      style={{
-                        color: '#4B5563',
-                        ...alignment.PLmedium,
-                        fontSize: scale(12),
-                        fontWeight: '400',
-                        marginTop: scale(3)
-                      }}>
-                      Most ordered right now.
-                    </Text>
-                    <View style={styles().popularItemCards}>
-                      {data.map(item => (
-                        <ItemCard item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart}/>
-                      ))}
-                    </View>
                   </View>
                 )
-              }
-              // Render other section headers as usual
-              return (
-                <View style={{ backgroundColor: '#fff' }}>
-                  <TextDefault
-                    style={styles(currentTheme).sectionHeaderText}
-                    textColor="#111827"
-                    bolder>
-                    {title}
-                  </TextDefault>
-                </View>
-              )
-            }}
-            renderItem={({ item, index, section }) => {
-              if (section.title === 'Popular') {
-                if (!dataList || dataList.length === 0) {
+              }}
+              renderItem={({ item, index, section }) => {
+                if (section.title === 'Popular') {
+                  if (!dataList || dataList.length === 0) {
+                    return null
+                  }
                   return null
                 }
-                return null
-              }
-              return (
-                <TouchableOpacity
-                  style={styles(currentTheme).dealSection}
-                  activeOpacity={0.7}
-                  onPress={() =>
-                    onPressItem({
-                      ...item,
-                      restaurant: restaurant._id,
-                      restaurantName: restaurant.name
-                    })
-                  }>
-                  {/* {section.title === isPopular ? (  */}
-                  {/* <View style={styles().popularItemCards}>
+                return (
+                  <TouchableOpacity
+                    style={styles(currentTheme).dealSection}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      onPressItem({
+                        ...item,
+                        restaurant: restaurant._id,
+                        restaurantName: restaurant.name
+                      })
+                    }>
+                    {/* {section.title === isPopular ? (  */}
+                    {/* <View style={styles().popularItemCards}>
                     <ItemCard restaurantId={restaurantId}/>
                   </View> */}
-                  {/* ) : (  */}
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                    <View style={styles(currentTheme).deal}>
-                      {item.image ? (
-                        <Image
-                          style={{
-                            height: scale(60),
-                            width: scale(60),
-                            borderRadius: 30
-                          }}
-                          source={{ uri: item.image }}
-                        />
-                      ) : null}
-                      <View style={styles(currentTheme).flex}>
-                        <View style={styles(currentTheme).dealDescription}>
-                          <TextDefault
-                            textColor={currentTheme.fontMainColor}
-                            style={styles(currentTheme).headerText}
-                            numberOfLines={1}
-                            bolder>
-                            {item.title}
-                          </TextDefault>
-                          <TextDefault
-                            style={styles(currentTheme).priceText}
-                            small>
-                            {wrapContentAfterWords(item.description, 5)}
-                          </TextDefault>
-                          <View style={styles(currentTheme).dealPrice}>
+                    {/* ) : (  */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                      <View style={styles(currentTheme).deal}>
+                        {item.image ? (
+                          <Image
+                            style={{
+                              height: scale(60),
+                              width: scale(60),
+                              borderRadius: 30
+                            }}
+                            source={{ uri: item.image }}
+                          />
+                        ) : null}
+                        <View style={styles(currentTheme).flex}>
+                          <View style={styles(currentTheme).dealDescription}>
                             <TextDefault
-                              numberOfLines={1}
                               textColor={currentTheme.fontMainColor}
-                              style={styles(currentTheme).priceText}
-                              bolder
-                              small>
-                              {configuration.currencySymbol}{' '}
-                              {parseFloat(item.variations[0].price).toFixed(2)}
+                              style={styles(currentTheme).headerText}
+                              numberOfLines={1}
+                              bolder>
+                              {item.title}
                             </TextDefault>
-                            {item.variations[0].discounted > 0 && (
+                            <TextDefault
+                              style={styles(currentTheme).priceText}
+                              small>
+                              {wrapContentAfterWords(item.description, 5)}
+                            </TextDefault>
+                            <View style={styles(currentTheme).dealPrice}>
                               <TextDefault
                                 numberOfLines={1}
-                                textColor={currentTheme.fontSecondColor}
-                                style={styles().priceText}
-                                small
-                                lineOver>
+                                textColor={currentTheme.fontMainColor}
+                                style={styles(currentTheme).priceText}
+                                bolder
+                                small>
                                 {configuration.currencySymbol}{' '}
-                                {(
-                                  item.variations[0].price +
-                                  item.variations[0].discounted
-                                ).toFixed(2)}
+                                {parseFloat(item.variations[0].price).toFixed(2)}
                               </TextDefault>
-                            )}
+                              {item.variations[0].discounted > 0 && (
+                                <TextDefault
+                                  numberOfLines={1}
+                                  textColor={currentTheme.fontSecondColor}
+                                  style={styles().priceText}
+                                  small
+                                  lineOver>
+                                  {configuration.currencySymbol}{' '}
+                                  {(
+                                    item.variations[0].price +
+                                    item.variations[0].discounted
+                                  ).toFixed(2)}
+                                </TextDefault>
+                              )}
+                            </View>
                           </View>
                         </View>
                       </View>
+                      <View style={styles().addToCart}>
+                        <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                      </View>
                     </View>
-                    <View style={styles().addToCart}>
-                      <MaterialIcons name="add" size={scale(20)} color="#fff" />
-                    </View>
-                  </View>
-                  {/* )} */}
-                  {tagCart(item._id)}
-                </TouchableOpacity>
-              )
-            }}
-          />
+                    {/* )} */}
+                    {tagCart(item._id)}
+                  </TouchableOpacity>
+                )
+              }}
+            />
+          )}
+          {/* </View> */}
+
           {cartCount > 0 && (
             <View style={styles(currentTheme).buttonContainer}>
               <TouchableOpacity

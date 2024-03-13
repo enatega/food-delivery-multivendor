@@ -82,7 +82,7 @@ function ChangePassword(props) {
             <View style={{ ...alignment.MTsmall }}>
               <OutlinedTextField
                 autoFocus={true}
-                label={t('changePassword')}
+                label={t('currentPassword')}
                 labelFontSize={scale(10)}
                 fontSize={scale(12)}
                 labelHeight={10}
@@ -95,9 +95,7 @@ function ChangePassword(props) {
                 error={oldPasswordError}
                 onChangeText={setOldPassword}
                 onBlur={() => {
-                  setOldPasswordError(
-                    !oldPassword ? t('passErr1') : ''
-                  )
+                  setOldPasswordError(!oldPassword ? t('passErr1') : '')
                 }}
               />
             </View>
@@ -125,9 +123,7 @@ function ChangePassword(props) {
                 error={newPasswordError}
                 onChangeText={setNewPassword}
                 onBlur={() => {
-                  setNewPasswordError(
-                    !newPassword ? t('passErr1') : ''
-                  )
+                  setNewPasswordError(!newPassword ? t('passErr1') : '')
                 }}
               />
             </View>
@@ -139,10 +135,8 @@ function ChangePassword(props) {
               if (newPassword === '' || oldPassword === '') {
                 props.hideModal()
               }
-              const newPasswordError =
-                newPassword === '' ? t('passErr1') : ''
-              const oldPasswordError =
-                oldPassword === '' ? t('passErr1') : ''
+              const newPasswordError = newPassword === '' ? t('passErr1') : ''
+              const oldPasswordError = oldPassword === '' ? t('passErr1') : ''
               setNewPasswordError(newPasswordError)
               setOldPasswordError(oldPasswordError)
 

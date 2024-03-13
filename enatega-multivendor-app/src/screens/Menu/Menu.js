@@ -33,7 +33,7 @@ import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
-import { restaurantList } from '../../apollo/queries'
+import { getCuisines, restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -58,20 +58,49 @@ const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 
+const GET_CUISINES = gql`
+  ${getCuisines}
+`
+
+export const FILTER_TYPE = {
+  CHECKBOX: 'checkbox',
+  RADIO: 'radio'
+}
+export const FILTER_VALUES = {
+  Sort: {
+    type: FILTER_TYPE.RADIO,
+    values: ['Relevance (Default)', 'Fast Delivery', 'Distance'],
+    selected: []
+  },
+  Offers: {
+    selected: [],
+    type: FILTER_TYPE.CHECKBOX,
+    values: ['Free Delivery', 'Accept Vouchers', 'Deal']
+  },
+  Rating: {
+    selected: [],
+    type: FILTER_TYPE.CHECKBOX,
+    values: ['3+ Rating', '4+ Rating', '5 star Rating']
+  }
+}
+
 function Menu({ route, props }) {
   const Analytics = analytics()
-  const { selectedType } = route.params;
+  const { selectedType } = route.params
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState(FILTER_VALUES)
+  const [restaurantData, setRestaurantData] = useState([])
+  const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-  
+
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
@@ -81,12 +110,20 @@ function Menu({ route, props }) {
         shopType: selectedType || null,
         ip: null
       },
+      onCompleted: data => {
+        setRestaurantData(data.nearByRestaurants.restaurants)
+        setSectionData(data.nearByRestaurants.sections)
+      },
       fetchPolicy: 'network-only'
     }
   )
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
+
+  const { data: allCuisines } = useQuery(GET_CUISINES)
+
+  const newheaderColor = currentTheme.newheaderColor;
 
   const {
     onScroll /* Event handler */,
@@ -120,6 +157,17 @@ function Menu({ route, props }) {
       })
     )
   }, [navigation, currentTheme])
+
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      Cuisines: {
+        selected: [],
+        type: FILTER_TYPE.CHECKBOX,
+        values: allCuisines?.cuisines?.map(item => item.name)
+      }
+    }))
+  }, [allCuisines])
 
   const onOpen = () => {
     const modal = modalRef.current
@@ -265,7 +313,7 @@ function Menu({ route, props }) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
+        <Search search={''} setSearch={() => { }} newheaderColor={newheaderColor}/>
         <Placeholder
           Animation={props => (
             <Fade
@@ -310,12 +358,12 @@ function Menu({ route, props }) {
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  const { restaurants, sections } = data.nearByRestaurants
+  // const { restaurants, sections } = data.nearByRestaurants
 
   const searchRestaurants = searchText => {
     const data = []
     const regex = new RegExp(searchText, 'i')
-    restaurants.forEach(restaurant => {
+    restaurantData?.forEach(restaurant => {
       const resultName = restaurant.name.search(regex)
       if (resultName < 0) {
         const resultCatFoods = restaurant.categories.some(category => {
@@ -349,12 +397,65 @@ function Menu({ route, props }) {
   }
 
   // Flatten the array. That is important for data sequence
-  const restaurantSections = sections.map(sec => ({
+  const restaurantSections = sectionData?.map(sec => ({
     ...sec,
     restaurants: sec.restaurants
-      .map(id => restaurants.filter(res => res._id === id))
+      .map(id => restaurantData?.filter(res => res._id === id))
       .flat()
   }))
+
+  const extractRating = ratingString => parseInt(ratingString)
+
+  const applyFilters = () => {
+    let filteredData = [...data.nearByRestaurants.restaurants]
+
+    const ratings = filters['Rating']
+    const sort = filters['Sort']
+    const offers = filters['Offers']
+    const cuisines = filters['Cuisines']
+
+    // Apply filters incrementally
+    // Ratings filter
+    if (ratings?.selected?.length > 0) {
+      const numericRatings = ratings.selected.map(extractRating)
+      filteredData = filteredData.filter(
+        item => item?.reviewData?.ratings >= Math.min(...numericRatings)
+      )
+    }
+
+    // Sort filter
+    if (sort?.selected?.length > 0) {
+      if (sort.selected[0] === 'Fast Delivery') {
+        filteredData.sort((a, b) => a.deliveryTime - b.deliveryTime)
+      } else if (sort.selected[0] === 'Distance') {
+        filteredData.sort(
+          (a, b) =>
+            a.distanceWithCurrentLocation - b.distanceWithCurrentLocation
+        )
+      }
+    }
+
+    // Offers filter
+    if (offers?.selected?.length > 0) {
+      if (offers.selected.includes('Free Delivery')) {
+        filteredData = filteredData.filter(item => item?.freeDelivery)
+      }
+      if (offers.selected.includes('Accept Vouchers')) {
+        filteredData = filteredData.filter(item => item?.acceptVouchers)
+      }
+    }
+
+    // Cuisine filter
+    if (cuisines?.selected?.length > 0) {
+      filteredData = filteredData.filter(item =>
+        item.cuisines.some(cuisine => cuisines?.selected?.includes(cuisine))
+      )
+    }
+
+    // Set filtered data
+    setRestaurantData(filteredData)
+
+  }
 
   return (
     <>
@@ -393,12 +494,17 @@ function Menu({ route, props }) {
                       }}
                     />
                   }
-                  data={search ? searchRestaurants(search) : restaurants}
+                  data={search ? searchRestaurants(search) : restaurantData}
                   renderItem={({ item }) => <Item item={item} />}
                 />
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
-                  <Search setSearch={setSearch} search={search} />
-                  <Filters />
+
+                  <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor}/>
+                  <Filters
+                    filters={filters}
+                    setFilters={setFilters}
+                    applyFilters={applyFilters}
+                  />
                 </CollapsibleSubHeaderAnimator>
               </View>
             </View>

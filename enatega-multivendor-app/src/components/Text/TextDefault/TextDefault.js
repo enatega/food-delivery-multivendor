@@ -28,6 +28,7 @@ function TextDefault(props) {
   if (props.B700) customStyles.push(textStyles.B700)
   if (props.textItalic) customStyles.push(textStyles.TextItalic)
 
+  if (props.left) customStyles.push(textStyles.Left)
 
   customStyles = StyleSheet.flatten([customStyles, props.style])
   return (
