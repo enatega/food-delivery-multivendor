@@ -20,8 +20,6 @@ import { calculateDistance } from '../utils/customFunctions'
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
-  // const { location } = useContext(LocationContext)
-  // const locationStr = await AsyncStorage.getItem('location')
 
   const cache = new InMemoryCache({
     typePolicies: {

@@ -93,8 +93,8 @@ function Menu({ route, props }) {
   const { location, setLocation } = useContext(LocationContext)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
-  const [restaurantData, setRestaurantData] = useState()
-  const [sectionData, setSectionData] = useState()
+  const [restaurantData, setRestaurantData] = useState([])
+  const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -454,16 +454,6 @@ function Menu({ route, props }) {
 
     // Set filtered data
     setRestaurantData(filteredData)
-
-    // If no filters applied, reset to original data
-    if (
-      ratings?.selected?.length === 0 &&
-      offers?.selected?.length === 0 &&
-      sort?.selected?.length === 0 &&
-      cuisines?.selected?.length === 0
-    ) {
-      setRestaurantData(data.nearByRestaurants.restaurants)
-    }
 
   }
 

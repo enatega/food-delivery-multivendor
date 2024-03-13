@@ -15,7 +15,6 @@ const CartItem = (props) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const dropdownItems = props.itemAddons
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
@@ -60,7 +59,7 @@ const CartItem = (props) => {
               +{option}
             </TextDefault>
           ))}
-          {dropdownItems.length > 0 && (
+          {props?.itemAddons?.length > 0 && (
             <View style={styles().additionalItem}>
               <View>
                 <TouchableOpacity
@@ -71,7 +70,7 @@ const CartItem = (props) => {
                     style={{ marginRight: scale(5) }}
                     textColor={currentTheme.secondaryText}
                     Normal>
-                    {dropdownItems.length} Additional Items
+                    {props?.itemAddons?.length} Additional Items
                   </TextDefault>
                   <Feather
                     name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
@@ -81,7 +80,7 @@ const CartItem = (props) => {
                 </TouchableOpacity>
                 {isDropdownOpen && (
                   <View style={styles().itemsDropdown}>
-                    {dropdownItems?.map((item, index) => (
+                    {props?.itemAddons?.map((item, index) => (
                       <TextDefault
                         key={index}
                         textColor={currentTheme.secondaryText}
