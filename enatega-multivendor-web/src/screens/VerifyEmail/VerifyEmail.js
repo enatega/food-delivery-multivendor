@@ -156,7 +156,7 @@ function VerifyEmail() {
 
       <Box display="flex">
         <Box m="auto">
-          {/* <Avatar
+          <Avatar
             m="auto"
             alt="email"
             src={VerifyEmailIcon}
@@ -166,7 +166,7 @@ function VerifyEmail() {
               display: "flex",
               alignSelf: "center",
             }}
-          /> */}
+          />
         </Box>
       </Box>
       {createLoading ? (

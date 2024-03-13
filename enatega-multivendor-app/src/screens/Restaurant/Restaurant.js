@@ -94,9 +94,9 @@ function Restaurant(props) {
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
   const [filterData, setFilterData] = useState([])
-  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false)
   const {
     restaurant: restaurantCart,
     setCartRestaurant,
@@ -130,39 +130,39 @@ function Restaurant(props) {
     })
 
   const searchHandler = () => {
-    setSearchOpen(!searchOpen);
-    setShowSearchResults(!showSearchResults);
+    setSearchOpen(!searchOpen)
+    setShowSearchResults(!showSearchResults)
   }
 
   const searchPopupHandler = () => {
-    setSearchOpen(!searchOpen);
+    setSearchOpen(!searchOpen)
     setSearch('')
   }
 
   useEffect(() => {
     if (search === '') {
-      setFilterData([]);
-      setShowSearchResults(false);
+      setFilterData([])
+      setShowSearchResults(false)
     } else if (deals) {
-      const regex = new RegExp(search, 'i');
-      let filteredData = [];
+      const regex = new RegExp(search, 'i')
+      let filteredData = []
       deals.forEach(category => {
         category.data.forEach(deals => {
-          const title = deals.title.search(regex);
+          const title = deals.title.search(regex)
           if (title < 0) {
-            const description = deals.description.search(regex);
+            const description = deals.description.search(regex)
             if (description > 0) {
-              filteredData.push(deals);
+              filteredData.push(deals)
             }
           } else {
-            filteredData.push(deals);
+            filteredData.push(deals)
           }
-        });
-      });
-      setFilterData(filteredData);
-      setShowSearchResults(true);
+        })
+      })
+      setFilterData(filteredData)
+      setShowSearchResults(true)
     }
-  }, [search, deals, searchOpen]);
+  }, [search, deals, searchOpen])
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -342,8 +342,6 @@ function Restaurant(props) {
         animated: true,
         sectionIndex: index,
         itemIndex: 0
-        // viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
-        // viewPosition: 0
       })
     }
   }
@@ -376,39 +374,6 @@ function Restaurant(props) {
       scrollToNavbar(viewableItems[0].section.index)
     }
   }
-  // const onScrollEndSnapToEdge = event => {
-  //   const y = event.nativeEvent.contentOffset.y
-  //   if (y > 0 && y < HALF_HEADER_SCROLL / 2) {
-  //     if (scrollRef.current) {
-  //       timing(animation, config(0)).start(({ finished }) => {
-  //         if (finished) {
-  //           scrollRef.current.scrollToLocation({
-  //             animated: false,
-  //             sectionIndex: 0,
-  //             itemIndex: 0,
-  //             viewOffset: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-  //             viewPosition: 0
-  //           })
-  //         }
-  //       })
-  //     }
-  //   } else if (HALF_HEADER_SCROLL / 2 <= y && y < HALF_HEADER_SCROLL) {
-  //     if (scrollRef.current) {
-  //       timing(animation, config(SCROLL_RANGE)).start(({ finished }) => {
-  //         if (finished) {
-  //           scrollRef.current.scrollToLocation({
-  //             animated: false,
-  //             sectionIndex: 0,
-  //             itemIndex: 0,
-  //             viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
-  //             viewPosition: 0
-  //           })
-  //         }
-  //       })
-  //     }
-  //   }
-  //   buttonClickedSetter(false)
-  // }
 
   // Important
   const headerHeight = interpolateNode(animation, {
@@ -416,12 +381,6 @@ function Restaurant(props) {
     outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
     extrapolate: Extrapolate.CLAMP
   })
-
-  // const opacity = interpolateNode(animation, {
-  //   inputRange: [0, height * 0.05, SCROLL_RANGE / 2],
-  //   outputRange: [1, 0.8, 0],
-  //   extrapolate: Extrapolate.CLAMP
-  // })
 
   const iconColor = currentTheme.iconColorPink
 
@@ -434,15 +393,6 @@ function Restaurant(props) {
   const iconTouchHeight = scale(30)
 
   const iconTouchWidth = scale(30)
-
-  // const headerTextFlex = concat(
-  //   interpolateNode(animation, {
-  //     inputRange: [0, 80, SCROLL_RANGE],
-  //     outputRange: [-10, -10, 0],
-  //     extrapolate: Extrapolate.CLAMP
-  //   }),
-  //   '%'
-  // )
 
   const circleSize = interpolateNode(circle, {
     inputRange: [0, 0.5, 1],
@@ -471,7 +421,6 @@ function Restaurant(props) {
           iconRadius={iconRadius}
           iconTouchWidth={iconTouchWidth}
           iconTouchHeight={iconTouchHeight}
-          // headerTextFlex={headerTextFlex}
           restaurantName={propsData.name}
           restaurantId={propsData._id}
           restaurantImage={propsData.image}
@@ -556,7 +505,6 @@ function Restaurant(props) {
             iconRadius={iconRadius}
             iconTouchWidth={iconTouchWidth}
             iconTouchHeight={iconTouchHeight}
-            // headerTextFlex={headerTextFlex}
             restaurantName={propsData.name}
             restaurantId={propsData._id}
             restaurantImage={propsData.image}
@@ -575,7 +523,6 @@ function Restaurant(props) {
             searchPopupHandler={searchPopupHandler}
           />
 
-          {/* <View> */}
           {showSearchResults ? (
             <ScrollView>
               {filterData.map((item, index) => (
@@ -590,11 +537,6 @@ function Restaurant(props) {
                         restaurantName: restaurant.name
                       })
                     }>
-                    {/* {section.title === isPopular ? (  */}
-                    {/* <View style={styles().popularItemCards}>
-                    <ItemCard restaurantId={restaurantId}/>
-                  </View> */}
-                    {/* ) : (  */}
                     <View
                       style={{
                         flexDirection: 'row',
@@ -634,7 +576,9 @@ function Restaurant(props) {
                                 bolder
                                 small>
                                 {configuration.currencySymbol}{' '}
-                                {parseFloat(item.variations[0].price).toFixed(2)}
+                                {parseFloat(item.variations[0].price).toFixed(
+                                  2
+                                )}
                               </TextDefault>
                               {item.variations[0].discounted > 0 && (
                                 <TextDefault
@@ -655,7 +599,11 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles().addToCart}>
-                        <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                        <MaterialIcons
+                          name="add"
+                          size={scale(20)}
+                          color="#fff"
+                        />
                       </View>
                     </View>
                     {/* )} */}
@@ -668,63 +616,13 @@ function Restaurant(props) {
             <AnimatedSectionList
               ref={scrollRef}
               sections={updatedDeals}
-              // Important
-              // contentContainerStyle={{
-              //   paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-              // }}
               scrollEventThrottle={1}
               stickySectionHeadersEnabled={false}
               showsVerticalScrollIndicator={false}
               refreshing={networkStatus === 4}
               onRefresh={() => networkStatus === 7 && refetch()}
               onViewableItemsChanged={onViewableItemsChanged}
-              // onMomentumScrollEnd={event => {
-              //   onScrollEndSnapToEdge(event)
-              // }}
-              // // Important
-              // onScroll={Animated.event([
-              //   {
-              //     nativeEvent: {
-              //       contentOffset: {
-              //         y: animation
-              //       }
-              //     }
-              //   }
-              // ])}
               keyExtractor={(item, index) => item + index}
-              // ItemSeparatorComponent={() => (
-              //   <View style={styles(currentTheme).listSeperator} />
-              // )}
-              // SectionSeparatorComponent={props => {
-              //   if (!props.leadingItem) return null
-              //   return <View style={styles(currentTheme).sectionSeparator} />
-              // }}
-              // renderSectionHeader={({ section: { title } }) => {
-              //   // if (title === 'Popular') {
-              //   //   if (!dataList || dataList.length === 0) {
-              //   //     return null;
-              //   //   }
-              //   return (
-              //     <View style={{ backgroundColor: '#fff' }}>
-              //       <TextDefault
-              //         style={styles(currentTheme).sectionHeaderText}
-              //         textColor="#111827"
-              //         bolder>
-              //         {title}
-              //       </TextDefault>
-              //       <Text
-              //         style={{
-              //           color: '#4B5563',
-              //           ...alignment.PLmedium,
-              //           fontSize: scale(12),
-              //           fontWeight: '400',
-              //           marginTop: scale(3)
-              //         }}>
-              //         Most ordered right now.
-              //       </Text>
-              //     </View>
-              //   )
-              // }}
               renderSectionHeader={({ section: { title, data } }) => {
                 if (title === 'Popular') {
                   if (!dataList || dataList.length === 0) {
@@ -750,7 +648,12 @@ function Restaurant(props) {
                       </Text>
                       <View style={styles().popularItemCards}>
                         {data.map(item => (
-                          <ItemCard item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart} />
+                          <ItemCard
+                            item={item}
+                            onPressItem={onPressItem}
+                            restaurant={restaurant}
+                            tagCart={tagCart}
+                          />
                         ))}
                       </View>
                     </View>
@@ -786,11 +689,6 @@ function Restaurant(props) {
                         restaurantName: restaurant.name
                       })
                     }>
-                    {/* {section.title === isPopular ? (  */}
-                    {/* <View style={styles().popularItemCards}>
-                    <ItemCard restaurantId={restaurantId}/>
-                  </View> */}
-                    {/* ) : (  */}
                     <View
                       style={{
                         flexDirection: 'row',
@@ -830,7 +728,9 @@ function Restaurant(props) {
                                 bolder
                                 small>
                                 {configuration.currencySymbol}{' '}
-                                {parseFloat(item.variations[0].price).toFixed(2)}
+                                {parseFloat(item.variations[0].price).toFixed(
+                                  2
+                                )}
                               </TextDefault>
                               {item.variations[0].discounted > 0 && (
                                 <TextDefault
@@ -851,7 +751,11 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles().addToCart}>
-                        <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                        <MaterialIcons
+                          name="add"
+                          size={scale(20)}
+                          color="#fff"
+                        />
                       </View>
                     </View>
                     {/* )} */}

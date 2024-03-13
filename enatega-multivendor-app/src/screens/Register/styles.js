@@ -42,23 +42,15 @@ const styles = (props = null) =>
       //alignSelf: 'center'
     },
     form: {
-      width: '100%',
-      ...alignment.MTlarge
+      width: '100%'
     },
     textField: {
-      borderColor: '#efefef',
+      borderColor: props !== null ? props.verticalLine : '#000',
       borderWidth: 1,
       borderRadius: 10,
       backgroundColor: props !== null ? props.white : '#fff',
-      padding: 14,
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
+      padding: 12,
+
       ...alignment.MTlarge
     },
     passwordField: {
@@ -78,12 +70,12 @@ const styles = (props = null) =>
       marginLeft: -40
     },
     btn: {
-      width: '70%',
+      width: '100%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props.main : '#000',
       alignSelf: 'center',
       padding: 15,
-      borderRadius: 10
+      borderRadius: 40
     },
     number: {
       display: 'flex',

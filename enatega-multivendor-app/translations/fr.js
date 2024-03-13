@@ -179,7 +179,7 @@ export const fr = {
   emailErr2: 'E-mail non valide !',
   passErr1: 'Le mot de passe est requis',
   passErr2:
-    'Mot de passe non valide. Le mot de passe doit contenir 1 lettre majuscule, 1 lettre minuscule, 1 chiffre.',
+    'Mot de passe incorrect. Le mot de passe doit être dau moins 8 caractères et contenir 1 lettre majuscule, 1 lettre minuscule, 1 chiffre.',
   letsGetStarted: 'Commençons !',
   createAccount: 'Créez votre compte Enatega',
   firstnameErr1: 'Le prénom est requis !',

@@ -84,16 +84,10 @@ const styles = (props = null) =>
       borderRadius: scale(12.5),
       backgroundColor: '#000',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      ...alignment.MRxSmall
     },
-    // listSeperator: {
-    //   borderBottomWidth: StyleSheet.hairlineWidth,
-    //   borderColor: theme.Pink.black,
-    //   paddingTop: scale(15),
-    //   marginBottom: scale(15),
-    //   width: '90%',
-    //   alignSelf: 'center'
-    // },
+
     sectionSeparator: {
       width: '100%',
       height: scale(15),
@@ -119,7 +113,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      borderRadius: scale(16),
+      borderRadius: scale(40),
       backgroundColor: props !== null ? props.buttonBackground : 'black',
       height: '75%',
       width: '95%',
