@@ -27,8 +27,8 @@ function Location(props) {
       : location.deliveryAddress
 
   const truncatedTranslatedAddress =
-    translatedAddress.length > 26
-      ? translatedAddress.substring(0, 17) + '...'
+    translatedAddress?.length > 26
+      ? translatedAddress?.substring(0, 17) + '...'
       : translatedAddress
 
   return (
