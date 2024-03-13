@@ -94,9 +94,9 @@ function Restaurant(props) {
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
   const [filterData, setFilterData] = useState([])
-  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false)
   const {
     restaurant: restaurantCart,
     setCartRestaurant,
@@ -130,39 +130,39 @@ function Restaurant(props) {
     })
 
   const searchHandler = () => {
-    setSearchOpen(!searchOpen);
-    setShowSearchResults(!showSearchResults);
+    setSearchOpen(!searchOpen)
+    setShowSearchResults(!showSearchResults)
   }
 
   const searchPopupHandler = () => {
-    setSearchOpen(!searchOpen);
+    setSearchOpen(!searchOpen)
     setSearch('')
   }
 
   useEffect(() => {
     if (search === '') {
-      setFilterData([]);
-      setShowSearchResults(false);
+      setFilterData([])
+      setShowSearchResults(false)
     } else if (deals) {
-      const regex = new RegExp(search, 'i');
-      let filteredData = [];
+      const regex = new RegExp(search, 'i')
+      let filteredData = []
       deals.forEach(category => {
         category.data.forEach(deals => {
-          const title = deals.title.search(regex);
+          const title = deals.title.search(regex)
           if (title < 0) {
-            const description = deals.description.search(regex);
+            const description = deals.description.search(regex)
             if (description > 0) {
-              filteredData.push(deals);
+              filteredData.push(deals)
             }
           } else {
-            filteredData.push(deals);
+            filteredData.push(deals)
           }
-        });
-      });
-      setFilterData(filteredData);
-      setShowSearchResults(true);
+        })
+      })
+      setFilterData(filteredData)
+      setShowSearchResults(true)
     }
-  }, [search, deals, searchOpen]);
+  }, [search, deals, searchOpen])
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -634,7 +634,9 @@ function Restaurant(props) {
                                 bolder
                                 small>
                                 {configuration.currencySymbol}{' '}
-                                {parseFloat(item.variations[0].price).toFixed(2)}
+                                {parseFloat(item.variations[0].price).toFixed(
+                                  2
+                                )}
                               </TextDefault>
                               {item.variations[0].discounted > 0 && (
                                 <TextDefault
@@ -655,7 +657,11 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles().addToCart}>
-                        <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                        <MaterialIcons
+                          name="add"
+                          size={scale(20)}
+                          color="#fff"
+                        />
                       </View>
                     </View>
                     {/* )} */}
@@ -750,7 +756,12 @@ function Restaurant(props) {
                       </Text>
                       <View style={styles().popularItemCards}>
                         {data.map(item => (
-                          <ItemCard item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart} />
+                          <ItemCard
+                            item={item}
+                            onPressItem={onPressItem}
+                            restaurant={restaurant}
+                            tagCart={tagCart}
+                          />
                         ))}
                       </View>
                     </View>
@@ -830,7 +841,9 @@ function Restaurant(props) {
                                 bolder
                                 small>
                                 {configuration.currencySymbol}{' '}
-                                {parseFloat(item.variations[0].price).toFixed(2)}
+                                {parseFloat(item.variations[0].price).toFixed(
+                                  2
+                                )}
                               </TextDefault>
                               {item.variations[0].discounted > 0 && (
                                 <TextDefault
@@ -851,7 +864,11 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles().addToCart}>
-                        <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                        <MaterialIcons
+                          name="add"
+                          size={scale(20)}
+                          color="#fff"
+                        />
                       </View>
                     </View>
                     {/* )} */}

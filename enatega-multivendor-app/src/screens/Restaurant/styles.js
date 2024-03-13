@@ -84,7 +84,8 @@ const styles = (props = null) =>
       borderRadius: scale(12.5),
       backgroundColor: '#000',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      ...alignment.MRxSmall
     },
     // listSeperator: {
     //   borderBottomWidth: StyleSheet.hairlineWidth,

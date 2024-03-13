@@ -123,7 +123,7 @@ function Menu({ route, props }) {
 
   const { data: allCuisines } = useQuery(GET_CUISINES)
 
-  const newheaderColor = currentTheme.newheaderColor;
+  const newheaderColor = currentTheme.newheaderColor
 
   const {
     onScroll /* Event handler */,
@@ -313,7 +313,11 @@ function Menu({ route, props }) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => { }} newheaderColor={newheaderColor}/>
+        <Search
+          search={''}
+          setSearch={() => {}}
+          newheaderColor={newheaderColor}
+        />
         <Placeholder
           Animation={props => (
             <Fade
@@ -417,7 +421,7 @@ function Menu({ route, props }) {
     // Apply filters incrementally
     // Ratings filter
     if (ratings?.selected?.length > 0) {
-      const numericRatings = ratings.selected.map(extractRating)
+      const numericRatings = ratings.selected?.map(extractRating)
       filteredData = filteredData.filter(
         item => item?.reviewData?.ratings >= Math.min(...numericRatings)
       )
@@ -454,7 +458,6 @@ function Menu({ route, props }) {
 
     // Set filtered data
     setRestaurantData(filteredData)
-
   }
 
   return (
@@ -498,8 +501,11 @@ function Menu({ route, props }) {
                   renderItem={({ item }) => <Item item={item} />}
                 />
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
-
-                  <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor}/>
+                  <Search
+                    setSearch={setSearch}
+                    search={search}
+                    newheaderColor={newheaderColor}
+                  />
                   <Filters
                     filters={filters}
                     setFilters={setFilters}
