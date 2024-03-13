@@ -134,13 +134,13 @@ function ForgotPassword(props) {
             onPress={() => resetYourPassword()}
             activeOpacity={0.7}
             style={styles(currentTheme).btn}>
-            <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
-              {loading ? (
-                <Spinner size="small" backColor="transparent" />
-              ) : (
-                t('saveBtn')
-              )}
-            </TextDefault>
+            {loading ? (
+              <Spinner size="small" backColor="transparent" />
+            ) : (
+              <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+                {t('saveBtn')}
+              </TextDefault>
+            )}
           </TouchableOpacity>
         </View>
       </View>

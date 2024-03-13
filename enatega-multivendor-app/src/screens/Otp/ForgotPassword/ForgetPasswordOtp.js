@@ -126,13 +126,13 @@ function ForgotPasswordOtp(props) {
             ]}
             disabled={seconds !== 0}
             onPress={() => resendOtp()}>
-            <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
-              {loading ? (
-                <Spinner backColor="transparent" size="small" />
-              ) : (
-                t('resendBtn')
-              )}
-            </TextDefault>
+            {loading ? (
+              <Spinner backColor="transparent" size="small" />
+            ) : (
+              <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+                {t('resendBtn')}
+              </TextDefault>
+            )}
           </TouchableOpacity>
         </View>
       </View>

@@ -61,7 +61,7 @@ function PhoneOtp(props) {
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
               }}>
-              Verify your mobile number
+              {t('verifyPhone')}
             </TextDefault>
             <TextDefault
               H5
