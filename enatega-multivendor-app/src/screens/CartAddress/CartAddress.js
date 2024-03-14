@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useLayoutEffect } from 'react'
 import { View, TouchableOpacity, FlatList } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { EvilIcons } from '@expo/vector-icons'
+import { EvilIcons, MaterialIcons } from '@expo/vector-icons'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { scale } from '../../utils/scaling'
@@ -17,7 +17,6 @@ import { LocationContext } from '../../context/Location'
 import { HeaderBackButton } from '@react-navigation/elements'
 import analytics from '../../utils/analytics'
 import navigationService from '../../routes/navigationService'
-import { Entypo } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 
 const SELECT_ADDRESS = gql`
@@ -34,43 +33,33 @@ function CartAddresses(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const [mutate] = useMutation(SELECT_ADDRESS, { onError })
-  console.log('profile', profile)
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      headerRight: null,
       title: t('myAddresses'),
+      headerRight: null,
       headerTitleAlign: 'center',
+      headerTitleStyle: {
+        color: '#000',
+        fontWeight: 'bold'
+      },
       headerTitleContainerStyle: {
-        marginTop: '1%',
+        marginTop: '2%',
         paddingLeft: scale(25),
         paddingRight: scale(25),
         height: '75%',
-        borderRadius: scale(10),
-        backgroundColor: currentTheme.black,
-        borderColor: currentTheme.white,
-        borderWidth: 1
+        marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        shadowColor: 'transparent',
-        shadowRadius: 0
+        backgroundColor: currentTheme.white,
+        elevation: 0
       },
-      headerTitleAlign: 'center',
-      headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 50,
-                marginLeft: 10,
-                width: 55,
-                alignItems: 'center'
-              }}>
-              <Entypo name="cross" size={30} color="black" />
+            <View>
+              <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
           onPress={() => {
@@ -105,79 +94,80 @@ function CartAddresses(props) {
 
   return (
     <>
-      {!location._id && (
-        <View
-          style={{
-            backgroundColor: currentTheme.themeBackground,
-            ...alignment.PTlarge
-          }}>
-          <View style={styles(currentTheme).addressContainer}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).addressContainer}
-              onPress={() => {
-                props.navigation.navigate('NewAddress', { location })
-              }}>
-              <View style={styles(currentTheme).width100}>
-                <View style={[styles().titleAddress, styles().width100]}>
-                  <View style={[styles().homeIcon]}>
-                    <RadioButton
-                      size={13}
-                      outerColor={currentTheme.radioOuterColor}
-                      innerColor={currentTheme.radioColor}
-                      animation={'bounceIn'}
-                      isSelected={true}
-                    />
-                  </View>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={{ width: '70%' }}
-                    H5
-                    bold>
-                    {location.label}
-                  </TextDefault>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={styles().width10}
-                    onPress={() =>
-                      props.navigation.navigate('NewAddress', { location })
-                    }>
+      <View style={styles(currentTheme).flex}>
+        {!location._id && (
+          <View
+            style={{
+              backgroundColor: currentTheme.themeBackground,
+              ...alignment.PTlarge
+            }}>
+            <View style={styles(currentTheme).addressContainer}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles(currentTheme).addressContainer}
+                onPress={() => {
+                  props.navigation.navigate('NewAddress', { location })
+                }}>
+                <View style={styles(currentTheme).width100}>
+                  <View style={[styles().titleAddress, styles().width100]}>
+                    <View style={[styles().homeIcon]}>
+                      <RadioButton
+                        size={13}
+                        outerColor={currentTheme.radioOuterColor}
+                        innerColor={currentTheme.radioColor}
+                        animation={'bounceIn'}
+                        isSelected={true}
+                      />
+                    </View>
                     <TextDefault
-                      textColor={currentTheme.iconColorPink}
-                      small
-                      bolder>
-                      {t('save')}
+                      textColor={currentTheme.fontMainColor}
+                      style={{ width: '70%' }}
+                      H5
+                      bold>
+                      {location.label}
                     </TextDefault>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={styles().width10}
+                      onPress={() =>
+                        props.navigation.navigate('NewAddress', { location })
+                      }>
+                      <TextDefault
+                        textColor={currentTheme.iconColorPink}
+                        small
+                        bolder>
+                        {t('save')}
+                      </TextDefault>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ ...alignment.MTxSmall }}></View>
+                  <View style={[styles().addressDetail]}>
+                    <TextDefault
+                      line={4}
+                      textColor={currentTheme.fontSecondColor}
+                      bold>
+                      {location.deliveryAddress}
+                    </TextDefault>
+                  </View>
                 </View>
-                <View style={{ ...alignment.MTxSmall }}></View>
-                <View style={[styles().addressDetail]}>
-                  <TextDefault
-                    line={4}
-                    textColor={currentTheme.fontSecondColor}
-                    bold>
-                    {location.deliveryAddress}
-                  </TextDefault>
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )}
-      <FlatList
-        style={{ backgroundColor: currentTheme.themeBackground }}
-        data={profile?.addresses}
-        keyExtractor={item => item._id}
-        contentContainerStyle={{ flexGrow: 1 }}
-        ItemSeparatorComponent={() => (
-          <View style={{ ...alignment.MBmedium }} />
         )}
-        ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
-        renderItem={({ item: address }) => (
-          <View style={styles(currentTheme).addressContainer}>
+        <FlatList
+          // style={{ backgroundColor: currentTheme.themeBackground }}
+          data={profile?.addresses}
+          keyExtractor={item => item._id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ItemSeparatorComponent={() => (
+            <View style={{ ...alignment.MBmedium }} />
+          )}
+          ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
+          renderItem={({ item: address }) => (
+            // <View style={styles(currentTheme).addressContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles().width100}
+              style={[styles(currentTheme).containerSpace]}
               onPress={() => {
                 onSelectAddress(address)
               }}>
@@ -213,7 +203,7 @@ function CartAddresses(props) {
                     <EvilIcons
                       name="pencil"
                       size={scale(25)}
-                      color={currentTheme.iconColorPink}
+                      color={currentTheme.darkBgFont}
                       style={styles().width100}
                     />
                   </TouchableOpacity>
@@ -235,15 +225,16 @@ function CartAddresses(props) {
                 </View>
               </View>
             </TouchableOpacity>
-          </View>
-        )}
-      />
-      <View
+            // </View>
+          )}
+        />
+      </View>
+      {/* <View
         style={{
           paddingBottom: inset.bottom,
           backgroundColor: currentTheme.themeBackground
         }}
-      />
+      /> */}
     </>
   )
 }

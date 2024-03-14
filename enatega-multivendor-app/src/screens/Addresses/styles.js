@@ -94,7 +94,7 @@ const styles = (props = null) =>
       fontSize: scale(4),
       fontWeight: '300',
       textAlign: 'justify',
-      paddingLeft: scale(45),
+      paddingLeft: scale(45)
     },
     line: {
       width: '80%',
