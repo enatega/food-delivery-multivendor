@@ -3,26 +3,21 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useLayoutEffect,
   useRef
 } from 'react'
-import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
   TouchableOpacity,
-  Image,
-  ActivityIndicator,
   StatusBar,
   Platform,
   Alert,
-  Animated,
   Text
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
@@ -43,8 +38,6 @@ import { useRestaurant } from '../../ui/hooks'
 import { LocationContext } from '../../context/Location'
 import { useFocusEffect } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
-import { RectButton } from 'react-native-gesture-handler'
 import { textStyles } from '../../utils/textStyles'
 import Pickup from '../../components/Pickup'
 import { calculateDistance } from '../../utils/customFunctions'
@@ -56,6 +49,7 @@ import styles from './styles'
 import Location from '../../components/Main/Location/Location'
 import { customMapStyle } from '../../utils/customMapStyles'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
+import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 
 // Constants
 const PLACEORDER = gql`
@@ -76,9 +70,6 @@ function Checkout(props) {
     restaurant: cartRestaurant,
     cart,
     cartCount,
-    addQuantity,
-    removeQuantity,
-    deleteItem,
     updateCart
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -106,14 +97,6 @@ function Checkout(props) {
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
     fetchPolicy: 'network-only'
   })
-
-  const onOpen = () => {
-    const modal = modalRef.current
-    if (modal) {
-      modal.open()
-      setIsModalOpen(true)
-    }
-  }
 
   const [mutateOrder, { loading: loadingOrderMutation }] = useMutation(
     PLACEORDER,
@@ -145,7 +128,6 @@ function Checkout(props) {
       ? props.route.params.tipAmount
       : null
 
-  console.log("paymentMethod", paymentMethod);
   const [selectedTip, setSelectedTip] = useState()
   const inset = useSafeAreaInsets()
 
@@ -159,7 +141,7 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async () => {
+      ; (async() => {
         if (data && !!data.restaurant) {
           const latOrigin = Number(data.restaurant.location.coordinates[1])
           const lonOrigin = Number(data.restaurant.location.coordinates[0])
@@ -430,9 +412,7 @@ function Checkout(props) {
     }
     if (calculatePrice(deliveryCharges, true) < minimumOrder) {
       FlashMessage({
-        // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
-        message: `(${t(minAmount)}) (${configuration.currencySymbol
-          } ${minimumOrder}) (${t(forYourOrder)})`
+        message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
       })
       return false
     }
@@ -596,6 +576,42 @@ function Checkout(props) {
         message: e.message
       })
     }
+  }
+
+    function emptyCart() {
+    return (
+      <View style={styles().subContainerImage}>
+        <View style={styles().imageContainer}>
+          <EmptyCart width={scale(200)} height={scale(200)} />
+        </View>
+        <View style={styles().descriptionEmpty}>
+          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
+            {t('hungry')}?
+          </TextDefault>
+          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
+            {t('emptyCart')}
+          </TextDefault>
+        </View>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles(currentTheme).emptyButton}
+          onPress={() =>
+            props.navigation.navigate({
+              name: 'Main',
+              merge: true
+            })
+          }>
+          <TextDefault
+            textColor={currentTheme.buttonText}
+            bolder
+            B700
+            center
+            uppercase>
+            {t('emptyCartBtn')}
+          </TextDefault>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   function loadginScreen() {
