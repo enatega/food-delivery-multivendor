@@ -197,12 +197,12 @@ function ImageTextCenterHeader(props, ref) {
                       onPress={handleAddToFavorites}>
                       <View>
                         {loadingMutation ? (
-                          <Spinner size={'small'} backColor={'transparent'} />
+                          <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} />
                         ) : (
                           <AntDesign
                             name={heart ? 'heart' : 'hearto'}
                             size={scale(15)}
-                            color="black"
+                            color={currentTheme.iconColorDark}
                           />
                         )}
                       </View>
@@ -226,7 +226,7 @@ function ImageTextCenterHeader(props, ref) {
                       <SimpleLineIcons
                         name="info"
                         size={scale(17)}
-                        color="black"
+                        color={currentTheme.iconColorDark}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -243,9 +243,9 @@ function ImageTextCenterHeader(props, ref) {
                       <Ionicons
                         name="search-outline"
                         style={{
-                          color: props.black,
                           fontSize: props.iconSize
                         }}
+                        color={currentTheme.iconColorDark}
                       />
                     </TouchableOpacity>
                   </>
