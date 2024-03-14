@@ -117,6 +117,12 @@ const styles = (props = null) =>
     searchList: {
       marginBottom: 70
     },
+    errorViewContainer: {
+      marginTop: verticalScale(30),
+      marginHorizontal: scale(10),
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
   }
   )
 export default styles

@@ -90,8 +90,7 @@ function Main(props) {
     onError
   })
 
-
-  const newheaderColor = currentTheme.newheaderColor;
+  const newheaderColor = currentTheme.newheaderColor
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -138,7 +137,7 @@ function Main(props) {
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */,
+    scrollIndicatorInsetTop /* number */
   } = useCollapsibleSubHeader()
 
   const setAddressLocation = async address => {
@@ -236,6 +235,21 @@ function Main(props) {
     }
   }
 
+  const errorView = () => {
+    return (
+      <View style={styles().errorViewContainer}>
+        <MaterialIcons
+          name="error-outline"
+          size={scale(80)}
+          color={currentTheme.main}
+        />
+        <TextDefault center H3>
+          {t('networkError')}
+        </TextDefault>
+      </View>
+    )
+  }
+
   const modalFooter = () => (
     <View style={styles().addressbtn}>
       <View style={styles(currentTheme).addressContainer}>
@@ -268,7 +282,12 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => { }} newheaderColor={newheaderColor} placeHolder={t('searchRestaurant')} />
+        <Search
+          search={''}
+          setSearch={() => {}}
+          newheaderColor={newheaderColor}
+          placeHolder={t('searchRestaurant')}
+        />
         <Placeholder
           Animation={props => (
             <Fade
@@ -309,8 +328,7 @@ function Main(props) {
     )
   }
 
-  const  restaurants  = data?.nearByRestaurants?.restaurants
-
+  const restaurants = data?.nearByRestaurants?.restaurants
 
   const searchAllShops = searchText => {
     const data = []
@@ -348,9 +366,8 @@ function Main(props) {
     return data
   }
 
+  if (error) return errorView()
 
-  if (error) return <TextError text={t('networkError')} />
-  
   return (
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
@@ -359,107 +376,112 @@ function Main(props) {
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
                 <View style={styles().searchbar}>
-                  <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor} placeHolder={t('searchRestaurant')} />
+                  <Search
+                    setSearch={setSearch}
+                    search={search}
+                    newheaderColor={newheaderColor}
+                    placeHolder={t('searchRestaurant')}
+                  />
                 </View>
-                  {search ? (
-                    <View style={styles().searchList}>
-                      <Animated.FlatList
-                        contentInset={{ top: containerPaddingTop }}
-                        contentContainerStyle={{
-                          paddingTop:
-                            Platform.OS === 'ios' ? 0 : containerPaddingTop
-                        }}
-                        contentOffset={{ y: -containerPaddingTop }}
-                        onScroll={onScroll}
-                        scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-                        showsVerticalScrollIndicator={false}
-                        ListEmptyComponent={emptyView()}
-                        keyExtractor={(item, index) => index.toString()}
-                        refreshControl={
-                          <RefreshControl
-                            progressViewOffset={containerPaddingTop}
-                            colors={[currentTheme.iconColorPink]}
-                            refreshing={networkStatus === 4}
-                            onRefresh={() => {
-                              if (networkStatus === 7) {
-                                refetch()
-                              }
-                            }}
-                          />
-                        }
-                        data={searchAllShops(search)}
-                        renderItem={({ item }) => <Item item={item} />}
-                      />
-                    </View>
-                  ) : (
-                    <ScrollView>
-                      <View style={styles().mainItemsContainer}>
-                        <TouchableOpacity
-                          style={styles().mainItem}
-                          onPress={() =>
-                            navigation.navigate('Menu', {
-                              selectedType: 'restaurant'
-                            })
-                          }>
-                          <View>
-                            <TextDefault
-                              H4
-                              bolder
-                              textColor={currentTheme.fontThirdColor}
-                              style={styles().ItemName}>
-                              Food Delivery
-                            </TextDefault>
-                            <TextDefault
-                              Normal
-                              textColor={currentTheme.fontThirdColor}
-                              style={styles().ItemDescription}>
-                              Order food you love
-                            </TextDefault>
-                          </View>
-                          <Image
-                            source={require('../../assets/images/ItemsList/menu.png')}
-                            style={styles().popularMenuImg}
-                            resizeMode="contain"
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={styles().mainItem}
-                          onPress={() =>
-                            navigation.navigate('Menu', {
-                              selectedType: 'grocery'
-                            })
-                          }>
+                {search ? (
+                  <View style={styles().searchList}>
+                    <Animated.FlatList
+                      contentInset={{ top: containerPaddingTop }}
+                      contentContainerStyle={{
+                        paddingTop:
+                          Platform.OS === 'ios' ? 0 : containerPaddingTop
+                      }}
+                      contentOffset={{ y: -containerPaddingTop }}
+                      onScroll={onScroll}
+                      scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+                      showsVerticalScrollIndicator={false}
+                      ListEmptyComponent={emptyView()}
+                      keyExtractor={(item, index) => index.toString()}
+                      refreshControl={
+                        <RefreshControl
+                          progressViewOffset={containerPaddingTop}
+                          colors={[currentTheme.iconColorPink]}
+                          refreshing={networkStatus === 4}
+                          onRefresh={() => {
+                            if (networkStatus === 7) {
+                              refetch()
+                            }
+                          }}
+                        />
+                      }
+                      data={searchAllShops(search)}
+                      renderItem={({ item }) => <Item item={item} />}
+                    />
+                  </View>
+                ) : (
+                  <ScrollView>
+                    <View style={styles().mainItemsContainer}>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'restaurant'
+                          })
+                        }>
+                        <View>
                           <TextDefault
                             H4
                             bolder
                             textColor={currentTheme.fontThirdColor}
                             style={styles().ItemName}>
-                            Grocery
+                            Food Delivery
                           </TextDefault>
                           <TextDefault
                             Normal
                             textColor={currentTheme.fontThirdColor}
                             style={styles().ItemDescription}>
-                            Essentials delivered fast
+                            Order food you love
                           </TextDefault>
-                          <Image
-                            source={require('../../assets/images/ItemsList/grocery.png')}
-                            style={styles().popularMenuImg}
-                            resizeMode="contain"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      <View>
-                        <OrderAgain />
-                      </View>
-                      <View>
-                        <TopPicks />
-                      </View>
-                      <View>
-                        <TopBrands />
-                      </View>
-                    </ScrollView>
-                  )}
+                        </View>
+                        <Image
+                          source={require('../../assets/images/ItemsList/menu.png')}
+                          style={styles().popularMenuImg}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'grocery'
+                          })
+                        }>
+                        <TextDefault
+                          H4
+                          bolder
+                          textColor={currentTheme.fontThirdColor}
+                          style={styles().ItemName}>
+                          Grocery
+                        </TextDefault>
+                        <TextDefault
+                          Normal
+                          textColor={currentTheme.fontThirdColor}
+                          style={styles().ItemDescription}>
+                          Essentials delivered fast
+                        </TextDefault>
+                        <Image
+                          source={require('../../assets/images/ItemsList/grocery.png')}
+                          style={styles().popularMenuImg}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <OrderAgain />
+                    </View>
+                    <View>
+                      <TopPicks />
+                    </View>
+                    <View>
+                      <TopBrands />
+                    </View>
+                  </ScrollView>
+                )}
               </View>
             </View>
           </View>

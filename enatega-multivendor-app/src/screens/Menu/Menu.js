@@ -280,6 +280,20 @@ function Menu({ route, props }) {
       )
     }
   }
+  const errorView = () => {
+    return (
+      <View style={styles().errorViewContainer}>
+        <MaterialIcons
+          name="error-outline"
+          size={scale(80)}
+          color={currentTheme.main}
+        />
+        <TextDefault center H3>
+          {t('networkError')}
+        </TextDefault>
+      </View>
+    )
+  }
 
   const modalFooter = () => (
     <View style={styles().addressbtn}>
@@ -359,7 +373,7 @@ function Menu({ route, props }) {
     )
   }
 
-  if (error) return <TextError text={t('networkError')} />
+  if (error) return errorView()
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
