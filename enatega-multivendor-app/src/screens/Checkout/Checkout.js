@@ -6,7 +6,7 @@ import React, {
   useLayoutEffect,
   useRef
 } from 'react'
-import { MaterialIcons, Entypo, Feather, Ionicons } from '@expo/vector-icons'
+import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
@@ -128,7 +128,7 @@ function Checkout(props) {
     payment: 'COD',
     label: t('cod'),
     index: 2,
-    icon: require('../../assets/images/cashIcon.png')
+    icon: 'dollar'
   }
 
   const paymentMethod =
@@ -145,6 +145,7 @@ function Checkout(props) {
       ? props.route.params.tipAmount
       : null
 
+  console.log("paymentMethod", paymentMethod);
   const [selectedTip, setSelectedTip] = useState()
   const inset = useSafeAreaInsets()
 
@@ -999,18 +1000,18 @@ function Checkout(props) {
                             alignItems: 'center',
                             gap: scale(18)
                           }}>
-                          <View style={styles().currencyLogo}>
-                            <Ionicons
-                              name="logo-usd"
+                          <View>
+                            <FontAwesome
+                              name={paymentMethod?.icon}
                               size={15}
-                              color={currentTheme.fontFourthColor}
-                            />
+                              color={currentTheme.fontFourthColor} />
+
                           </View>
                           <TextDefault
                             textColor={currentTheme.fontFourthColor}
                             medium
                             bolder>
-                            {paymentMethod.label}
+                            {paymentMethod?.label}
                           </TextDefault>
                         </View>
                         <View style={styles(currentTheme).changeBtn}>

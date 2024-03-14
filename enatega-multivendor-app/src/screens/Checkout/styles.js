@@ -288,15 +288,6 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.main : 'transparent',
       height: scale(37)
     },
-    currencyLogo: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: props !== null ? props.fontFourthColor : 'black',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
     headerContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#6FCF97'
     },

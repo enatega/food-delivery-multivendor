@@ -11,7 +11,7 @@ import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
@@ -25,25 +25,25 @@ function Payment(props) {
   const inset = useSafeAreaInsets()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const CASH = [
+  const iconArray = [
     {
       payment: 'STRIPE',
       label: t('creditCart'),
       index: 0,
-      icon: require('../../assets/images/credit-card.png'),
+      icon: 'credit-card',
       // icon1: require('../../assets/images/visaIcon.png')
     },
     {
       payment: 'PAYPAL',
       label: t('paypal'),
       index: 1,
-      icon: require('../../assets/images/paypal-1.png')
+      icon: 'paypal'
     },
     {
       payment: 'COD',
       label: t('cod'),
       index: 2,
-      icon: require('../../assets/images/dollar.png')
+      icon: 'dollar'
     }
   ]
 
@@ -113,51 +113,40 @@ function Payment(props) {
     <>
       <View style={[styles(currentTheme).mainContainer, styles().flex]}>
         <View>
-          {CASH.map((item, index) => (
-           <View>
-             <TouchableOpacity
-              style={styles(currentTheme).radioGroup}
-              key={index.toString()}
-              onPress={() => {
-                onSelectPayment(item)
-              }}>
-              <View style={styles(currentTheme).paymentMethod}>
-                <View style={styles(currentTheme).iconContainer}>
-                  {/* {item.icon1 && (
-                    <Image
-                      resizeMode="cover"
-                      style={[styles().iconStyle, { ...alignment.MRsmall }]}
-                      source={item.icon1}
-                    />
-                  )} */}
-                  <Image
-                    resizeMode="cover"
-                    style={styles().iconStyle}
-                    source={item.icon}
+          {iconArray.map((item, index) => (
+            <View>
+              <TouchableOpacity
+                style={styles(currentTheme).radioGroup}
+                key={index.toString()}
+                onPress={() => {
+                  onSelectPayment(item)
+                }}>
+                <View style={styles(currentTheme).paymentMethod}>
+                  <View style={styles(currentTheme).iconContainer}>
+                    <FontAwesome style={styles().iconStyle} name={item.icon} size={18} />
+                  </View>
+                  <TextDefault
+                    textColor={currentTheme.fontFourthColor}
+                    medium
+                    bolder>
+                    {item.label}
+                  </TextDefault>
+                </View>
+                <View style={styles(currentTheme).radioContainer}>
+                  <RadioButton
+                    outerColor={currentTheme.horizontalLine}
+                    innerColor={currentTheme.main}
+                    isSelected={paymentMethod.index === item.index}
+                    size={12}
+                    onPress={() => {
+                      onSelectPayment(item)
+                    }}
                   />
                 </View>
-                <TextDefault
-                   textColor={currentTheme.fontFourthColor}
-                   medium
-                   bolder>
-                  {item.label}
-                </TextDefault>
-              </View>
-              <View style={styles(currentTheme).radioContainer}>
-                <RadioButton
-                  outerColor={currentTheme.horizontalLine}
-                  innerColor={currentTheme.main}
-                  isSelected={paymentMethod.index === item.index}
-                  size={12} 
-                  onPress={() => {
-                    onSelectPayment(item)
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <View style={styles(currentTheme).horizontalLine} />
+              </TouchableOpacity>
+              <View style={styles(currentTheme).horizontalLine} />
 
-           </View>
+            </View>
           ))}
         </View>
       </View>
