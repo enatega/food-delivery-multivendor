@@ -3,26 +3,21 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useLayoutEffect,
   useRef
 } from 'react'
-import { MaterialIcons, Entypo, Feather, Ionicons } from '@expo/vector-icons'
+import { Ionicons, AntDesign } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
   TouchableOpacity,
-  Image,
-  ActivityIndicator,
   StatusBar,
   Platform,
   Alert,
-  Animated,
   Text
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AntDesign } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
@@ -43,8 +38,6 @@ import { useRestaurant } from '../../ui/hooks'
 import { LocationContext } from '../../context/Location'
 import { useFocusEffect } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
-import { RectButton } from 'react-native-gesture-handler'
 import { textStyles } from '../../utils/textStyles'
 import Pickup from '../../components/Pickup'
 import { calculateDistance } from '../../utils/customFunctions'
@@ -158,7 +151,7 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async () => {
+      ; (async() => {
         if (data && !!data.restaurant) {
           const latOrigin = Number(data.restaurant.location.coordinates[1])
           const lonOrigin = Number(data.restaurant.location.coordinates[0])
