@@ -151,7 +151,7 @@ export default function App() {
       if (notification?.request?.trigger?.remoteMessage?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
         const id = notification?.request?.trigger?.remoteMessage?.data?._id
         if (id) {
-          setOrderId()
+          setOrderId(id)
           reviewModalRef.current.open()
         }
       }
