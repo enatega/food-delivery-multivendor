@@ -313,6 +313,7 @@ export const km = {
   otpResentToEmail: 'OTP បានផ្ញើទៅអ៊ីមែលរបស់អ្នកឡើងវិញ',
   search: 'ស្វែងរក',
   searchRestaurant: 'ស្វែងរកហាងនៅ',
+  searchItems: 'ស្វែងរកធាតុ',
   message: 'សារ',
   aptFloor: 'ខេត្ត | ជាន់',
   confirmPassword: 'បញ្ជាក់ពាក្យសំងាត់',

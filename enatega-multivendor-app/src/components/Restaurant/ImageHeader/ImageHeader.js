@@ -178,6 +178,7 @@ function ImageTextCenterHeader(props, ref) {
                       search={props.search}
                       newheaderColor={newheaderColor}
                       cartContainer={cartContainer}
+                      placeHolder={t('searchItems')}
                     />
                   </>
                 ) : (

@@ -327,6 +327,7 @@ export const de = {
   otpResentToEmail: 'OTP erneut an Ihre E-Mail gesendet.',
   search: 'Suche',
   searchRestaurant: 'Nach Restaurants suchen',
+  searchItems: 'Nach Elementen suchen',
   message: 'Nachricht',
   aptFloor: 'Apt | Etage',
   confirmPassword: 'Passwort bestätigen',

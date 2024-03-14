@@ -303,6 +303,7 @@ export const zh = {
   otpResentToEmail: 'OTP重新发送到您的电子邮件。',
   search: '搜索',
   searchRestaurant: '搜索餐馆',
+  searchItems: '搜索物品',
   message: '消息',
   aptFloor: '公寓 | 楼层',
   confirmPassword: '确认密码',
