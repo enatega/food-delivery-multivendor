@@ -48,6 +48,9 @@ function ItemDetail(props) {
     })
   })
 
+
+  const imageUrl = food?.image && food?.image.trim() !== '' ? food.image : 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp';
+
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')
   const {
@@ -309,7 +312,7 @@ function ItemDetail(props) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? `${0}` : `${100}`}>
-          {!!food.image && <ImageHeader image={food.image} />}
+          {imageUrl && <ImageHeader image={imageUrl} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>
