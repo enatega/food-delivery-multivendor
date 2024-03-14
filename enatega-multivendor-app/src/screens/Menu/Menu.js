@@ -134,7 +134,7 @@ function Menu({ route, props }) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerColor)
+      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'

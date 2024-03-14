@@ -18,7 +18,6 @@ export const theme = {
     iconBackground: '#D1D5DB',
     itemCardColor: '#FFF',
     headerColor: '#6FCF97',
-    newheaderColor: '#90E36D',
     tagColor: '#6FCF97',
     radioColor: '#6FCF97',
     // radioOuterColor: '#949393',
