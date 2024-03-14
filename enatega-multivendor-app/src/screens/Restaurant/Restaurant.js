@@ -284,8 +284,8 @@ function Restaurant(props) {
 
   const addToCart = async (food, clearFlag) => {
     if (
-      food.variations.length === 1 &&
-      food.variations[0].addons.length === 0
+      food?.variations?.length === 1 &&
+      food?.variations[0].addons?.length === 0
     ) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
@@ -365,7 +365,7 @@ function Restaurant(props) {
   }
 
   function onViewableItemsChanged({ viewableItems }) {
-    if (viewableItems.length === 0) return
+    if (viewableItems?.length === 0) return
     if (
       selectedLabel !== viewableItems[0].section.index &&
       buttonClicked === false
@@ -470,7 +470,7 @@ function Restaurant(props) {
   }
   if (error) return <TextError text={JSON.stringify(error)} />
   const restaurant = data.restaurant
-  const allDeals = restaurant.categories.filter(cat => cat.foods.length)
+  const allDeals = restaurant.categories.filter(cat => cat?.foods?.length)
   const deals = allDeals.map((c, index) => ({
     ...c,
     data: c.foods,
@@ -625,7 +625,7 @@ function Restaurant(props) {
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title, data } }) => {
                 if (title === 'Popular') {
-                  if (!dataList || dataList.length === 0) {
+                  if (!dataList || dataList?.length === 0) {
                     return null // Don't render the section header if dataList is empty
                   }
                   return (
@@ -672,8 +672,9 @@ function Restaurant(props) {
                 )
               }}
               renderItem={({ item, index, section }) => {
+                const imageUrl = item.image && item.image.trim() !== '' ? item.image : 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp';
                 if (section.title === 'Popular') {
-                  if (!dataList || dataList.length === 0) {
+                  if (!dataList || dataList?.length === 0) {
                     return null
                   }
                   return null
@@ -696,16 +697,14 @@ function Restaurant(props) {
                         alignItems: 'center'
                       }}>
                       <View style={styles(currentTheme).deal}>
-                        {item.image ? (
                           <Image
                             style={{
                               height: scale(60),
                               width: scale(60),
                               borderRadius: 30
                             }}
-                            source={{ uri: item.image }}
+                          source={{ uri: imageUrl }}
                           />
-                        ) : null}
                         <View style={styles(currentTheme).flex}>
                           <View style={styles(currentTheme).dealDescription}>
                             <TextDefault

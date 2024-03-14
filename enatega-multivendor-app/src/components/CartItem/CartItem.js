@@ -15,6 +15,7 @@ const CartItem = (props) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const imageUrl = props?.itemImage && props?.itemImage.trim() !== '' ? props.itemImage : 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp';
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
@@ -34,7 +35,7 @@ const CartItem = (props) => {
         }}>
         <View style={styles().suggestItemImgContainer}>
           <Image
-            source={{ uri: props?.itemImage }}
+            source={{ uri: imageUrl }}
             style={styles().suggestItemImg}
             resizeMode="contain"
           />
