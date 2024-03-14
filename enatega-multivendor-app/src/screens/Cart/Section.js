@@ -55,19 +55,12 @@ const Section = ({ itemId, restaurantId }) => {
                         />
                     </View>
                 }
-                <ScrollView>
                     <TextDefault
                         style={styles().suggestItemName}
                         textColor={currentTheme.fontFourthColor}
                         H5
                         bolder>
                         {food.title}
-                    </TextDefault>
-                    <TextDefault
-                        style={styles().suggestItemDesciption}
-                        textColor={currentTheme.secondaryText}
-                        normal>
-                        {food.description}
                     </TextDefault>
                     <View
                         style={{
@@ -88,7 +81,6 @@ const Section = ({ itemId, restaurantId }) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                </ScrollView>
             </View>
         </View>
     }
