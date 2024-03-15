@@ -139,7 +139,7 @@ const CreateAccount = (props) => {
 
   return (
     <View style={[styles(currentTheme).subContainer]}>
-      {user && JSON.stringify(user, null, 2)}
+      {/* {user && JSON.stringify(user, null, 2)} */}
       <TextDefault
         H2
         bolder
