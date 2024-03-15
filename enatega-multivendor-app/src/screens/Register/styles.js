@@ -87,6 +87,10 @@ const styles = (props = null) =>
     phoneNumber: {
       width: '70%'
     },
+    phoneFieldInner: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
     error: {
       marginTop: 3
     },

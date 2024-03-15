@@ -216,12 +216,7 @@ function Register(props) {
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
                     ]}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingTop: 3
-                      }}>
+                    <View style={styles().phoneFieldInner}>
                       <Text>+{country.callingCode[0]} </Text>
                       <TextInput
                         placeholder={t('mobileNumber')}

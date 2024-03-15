@@ -17,6 +17,7 @@ import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
+import { scale } from '../../utils/scaling'
 
 function Login(props) {
   const {
@@ -168,7 +169,7 @@ function Login(props) {
                     </>
                   )}
                 </View>
-                <View style={{ marginBottom: 20 }}>
+                <View>
                   <TouchableOpacity
                     onPress={() =>
                       registeredEmail
