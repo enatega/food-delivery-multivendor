@@ -10,9 +10,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useCreateAccount } from './useCreateAccount'
 import navigationOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
-import {
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin'
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
 
 const CreateAccount = (props) => {
   const {
@@ -27,7 +25,7 @@ const CreateAccount = (props) => {
     openTerms,
     openPrivacyPolicy,
     navigation,
-    signIn,
+    signIn
   } = useCreateAccount()
   const { t } = useTranslation()
   useLayoutEffect(() => {
@@ -102,21 +100,23 @@ const CreateAccount = (props) => {
   }
 
   function renderGoogleAction() {
+    if (loading && loginButton === 'Google') {
+      return (
+        <View style={[styles().buttonBackground, styles().marginBottom5]}>
+          <Spinner
+            spinnerColor={currentTheme.primery}
+            style={{ marginBottom: 20 }}
+          />
+        </View>
+      )
+    }
+
     return (
-      // <FdGoogleBtn
-      //   loadingIcon={loading && loginButton === 'Google'}
-      //   onPressIn={() => {
-      //     loginButtonSetter('Google')
-      //   }}
-      //   disabled={!googleRequest}
-      //   onPress={() => googlePromptAsync()}
-      // />
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Light}
         onPress={signIn}
-        // style={{height: height * 0.07, backgroundColor: 'white !important'}}
-
+        disabled={loading && loginButton === 'Google'}
       />
     )
   }

@@ -41,8 +41,6 @@ export const useCreateAccount = () => {
     TERMS_AND_CONDITIONS,
     PRIVACY_POLICY
   } = useEnvVars()
-  console.log('IOS_CLIENT_ID_GOOGLE', IOS_CLIENT_ID_GOOGLE)
-  console.log('ANDROID_CLIENT_ID_GOOGLE', ANDROID_CLIENT_ID_GOOGLE)
 
   const configureGoogleSignin = () => {
     GoogleSignin.configure({
@@ -56,11 +54,10 @@ export const useCreateAccount = () => {
   }, [])
 
   const signIn = async () => {
-    console.log('pressed')
     try {
+      loginButtonSetter('Google')
       await GoogleSignin.hasPlayServices()
       const user = await GoogleSignin.signIn()
-      console.log('🚀 ~ signIn ~ user:', user.user)
       const userData = {
         phone: '',
         email: user.user.email,
@@ -69,13 +66,12 @@ export const useCreateAccount = () => {
         picture: user.user.photo,
         type: 'google'
       }
-      console.log('userData:', userData)
       await mutateLogin(userData)
 
       setUser(user)
     } catch (error) {
       console.log('🚀 ~ signIn ~ error:', error)
-    }
+    } 
   }
 
   const { t } = useTranslation()
@@ -111,14 +107,11 @@ export const useCreateAccount = () => {
     let notificationToken = null
     if (Device.isDevice) {
       const { status: existingStatus } =
-        await Notifications.getPermissionsAsync()
-        console.log('status->', existingStatus)
+      await Notifications.getPermissionsAsync()
       if (existingStatus === 'granted') {
-
         notificationToken = (await Notifications.getExpoPushTokenAsync()).data
       }
     }
-    console.log('notificationToken->', notificationToken)
     mutate({
       variables: {
         ...user,
@@ -164,7 +157,6 @@ export const useCreateAccount = () => {
   }
 
   async function onCompleted(data) {
-    console.log('DATA => ', data)
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
       setLoading(false)
@@ -196,6 +188,7 @@ export const useCreateAccount = () => {
           })
         }
         setTokenAsync(data.login.token)
+        FlashMessage({ message: 'Successfully logged in' })
         // eslint-disable-next-line no-unused-expressions
         data.login?.phone === '' ? navigateToPhone() : navigateToMain()
       } catch (e) {
@@ -207,7 +200,6 @@ export const useCreateAccount = () => {
   }
 
   function onError(error) {
-    console.log('Error => ', error)
     try {
       FlashMessage({
         message: error.message
