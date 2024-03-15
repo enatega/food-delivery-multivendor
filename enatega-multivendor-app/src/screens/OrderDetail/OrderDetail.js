@@ -34,6 +34,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { calulateRemainingTime } from '../../utils/customFunctions'
 import PlaceOrder from '../../assets/SVG/place-order'
 import FoodPicked from '../../assets/SVG/food-picked'
+import OrderPlacedIcon from '../../assets/SVG/order-placed'
 const { height: HEIGHT } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`${cancelOrderMutation}`
@@ -67,6 +68,9 @@ function OrderDetail(props) {
     }
     Track()
   }, [])
+
+  const order = orders.find(o => o._id === id)
+
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
@@ -75,9 +79,7 @@ function OrderDetail(props) {
       headerTitleStyle: { color: currentTheme.black },
       headerStyle: { backgroundColor: currentTheme.white }
     })
-  }, [props.navigation, location])
-
-  const order = orders.find(o => o._id === id)
+  }, [props.navigation, location], order)
 
   if (loadingOrders || !order) return <Spinner />
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
@@ -93,7 +95,7 @@ function OrderDetail(props) {
     deliveryCharges
   } = order
   const subTotal = total - tip - tax - deliveryCharges
-  console.log('order details', order)
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -220,7 +222,7 @@ function OrderDetail(props) {
 
 export const OrderStatusImage = ({ status }) => {
   switch (status) {
-    case ORDER_STATUS_ENUM.PENDING: return <OrderPreparing/>
+    case ORDER_STATUS_ENUM.PENDING: return <OrderPlacedIcon/>
     case ORDER_STATUS_ENUM.ACCEPTED: return <OrderPreparing/>
     case ORDER_STATUS_ENUM.ASSIGNED: return <FoodPicked/>
     case ORDER_STATUS_ENUM.CANCELLED: return null
