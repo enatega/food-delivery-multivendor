@@ -70,7 +70,7 @@ function OrderDetail(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
-      headerTitle: `${location?.deliveryAddress?.substr(0, 10)}...`,
+      headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 10)}...`,
       title: null,
       headerTitleStyle: { color: currentTheme.black },
       headerStyle: { backgroundColor: currentTheme.white }

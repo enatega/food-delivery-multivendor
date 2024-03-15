@@ -3,52 +3,36 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useLayoutEffect,
-  useRef
+  useLayoutEffect
 } from 'react'
-import { MaterialIcons, Entypo, Feather } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
   TouchableOpacity,
-  Image,
-  ActivityIndicator,
   StatusBar,
   Platform,
-  Alert,
-  Animated,
-  Text,
-  FlatList
+  Alert
 } from 'react-native'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AntDesign, EvilIcons } from '@expo/vector-icons'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
-import { Modalize } from 'react-native-modalize'
-import moment from 'moment'
 import CartItem from '../../components/CartItem/CartItem'
-import { getTipping, orderFragment } from '../../apollo/queries'
-import { placeOrder } from '../../apollo/mutations'
+import { getTipping } from '../../apollo/queries'
 import { scale } from '../../utils/scaling'
-import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
 import { alignment } from '../../utils/alignment'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
 import styles from './styles'
-import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useRestaurant } from '../../ui/hooks'
 import { LocationContext } from '../../context/Location'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
-import { RectButton } from 'react-native-gesture-handler'
 import { textStyles } from '../../utils/textStyles'
-import Pickup from '../../components/Pickup'
 import { calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -58,9 +42,6 @@ import Location from '../../components/Main/Location/Location'
 import WouldYouLikeToAddThese from './Section'
 
 // Constants
-const PLACEORDER = gql`
-  ${placeOrder}
-`
 const TIPPING = gql`
   ${getTipping}
 `
@@ -72,36 +53,21 @@ function Cart(props) {
   const {
     isLoggedIn,
     profile,
-    clearCart,
     restaurant: cartRestaurant,
     cart,
     cartCount,
     addQuantity,
-    removeQuantity,
-    deleteItem,
-    updateCart
+    removeQuantity
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
-  const modalRef = useRef(null)
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
-  const [isPickedUp, setIsPickedUp] = useState(false)
-  const [orderDate, setOrderDate] = useState(moment())
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
-
-  {
-    /* Check if cart is empty */
-  }
   const isCartEmpty = cart.length === 0
-
-  {
-    /* If cart is not empty, store its length in a variable */
-  }
   const cartLength = !isCartEmpty ? cart.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
 
@@ -109,34 +75,6 @@ function Cart(props) {
     fetchPolicy: 'network-only'
   })
 
-  const onOpen = () => {
-    const modal = modalRef.current
-    if (modal) {
-      modal.open()
-      setIsModalOpen(true)
-    }
-  }
-
-  const [mutateOrder, { loading: loadingOrderMutation }] = useMutation(
-    PLACEORDER,
-    {
-      onCompleted,
-      onError,
-      update
-    }
-  )
-
-  const COD_PAYMENT = {
-    payment: 'COD',
-    label: t('cod'),
-    index: 2,
-    icon: require('../../assets/images/cashIcon.png')
-  }
-
-  const paymentMethod =
-    props.route.params && props.route.params.paymentMethod
-      ? props.route.params.paymentMethod
-      : COD_PAYMENT
   const coupon =
     props.route.params && props.route.params.coupon
       ? props.route.params.coupon
@@ -148,7 +86,6 @@ function Cart(props) {
       : null
 
   const [selectedTip, setSelectedTip] = useState()
-  const inset = useSafeAreaInsets()
 
   useEffect(() => {
     if (tip) {
@@ -160,7 +97,7 @@ function Cart(props) {
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async () => {
+      ; (async() => {
         if (data && !!data.restaurant) {
           const latOrigin = Number(data.restaurant.location.coordinates[1])
           const lonOrigin = Number(data.restaurant.location.coordinates[0])
@@ -278,89 +215,11 @@ function Cart(props) {
     )
   }
 
-  function update(cache, { data: { placeOrder } }) {
-    try {
-      if (placeOrder && placeOrder.paymentMethod === 'COD') {
-        cache.modify({
-          fields: {
-            orders(existingOrders = []) {
-              const newOrder = cache.writeFragment({
-                data: placeOrder,
-                fragment: gql`
-                  ${orderFragment}
-                `
-              })
-              return [newOrder, ...existingOrders]
-            }
-          }
-        })
-      }
-    } catch (error) {
-      console.log('update error', error)
-    }
-  }
-
-  async function onCompleted(data) {
-    await Analytics.track(Analytics.events.ORDER_PLACED, {
-      userId: data.placeOrder.user._id,
-      orderId: data.placeOrder.orderId,
-      name: data.placeOrder.user.name,
-      email: data.placeOrder.user.email,
-      restaurantName: data.placeOrder.restaurant.name,
-      restaurantAddress: data.placeOrder.restaurant.address,
-      orderPaymentMethod: data.placeOrder.paymentMethod,
-      orderItems: data.placeOrder.items,
-      orderAmount: data.placeOrder.orderAmount,
-      orderPaidAmount: data.placeOrder.paidAmount,
-      tipping: data.placeOrder.tipping,
-      orderStatus: data.placeOrder.orderStatus,
-      orderDate: data.placeOrder.orderDate
-    })
-    if (paymentMethod.payment === 'COD') {
-      await clearCart()
-      props.navigation.reset({
-        routes: [
-          { name: 'Main' },
-          {
-            name: 'OrderDetail',
-            params: { _id: data.placeOrder._id }
-          }
-        ]
-      })
-    } else if (paymentMethod.payment === 'PAYPAL') {
-      console.log('here')
-      props.navigation.replace('Paypal', {
-        _id: data.placeOrder.orderId,
-        currency: configuration.currency
-      })
-    } else if (paymentMethod.payment === 'STRIPE') {
-      props.navigation.replace('StripeCheckout', {
-        _id: data.placeOrder.orderId,
-        amount: data.placeOrder.orderAmount,
-        email: data.placeOrder.user.email,
-        currency: configuration.currency
-      })
-    }
-  }
-  function onError(error) {
-    console.log('onError', error)
-    if (error.graphQLErrors.length) {
-      console.log('error', JSON.stringify(error))
-      FlashMessage({
-        message: error.graphQLErrors[0].message
-      })
-    } else {
-      FlashMessage({
-        message: error.message
-      })
-    }
-  }
-
-
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0
     cart.forEach(cartItem => {
       const food = populateFood(cartItem)
+      if (!food) return
       itemTotal += food.price * food.quantity
     })
     if (withDiscount && coupon && coupon.discount) {
@@ -377,105 +236,6 @@ function Cart(props) {
     // total += +taxCalculation()
     // total += +calculateTip()
     return parseFloat(total).toFixed(2)
-  }
-
-  function validateOrder() {
-    if (!data.restaurant.isAvailable || !isOpen()) {
-      showAvailablityMessage()
-      return
-    }
-    if (!cart.length) {
-      FlashMessage({
-        message: t('validateItems')
-      })
-      return false
-    }
-    if (calculatePrice(deliveryCharges, true) < minimumOrder) {
-      FlashMessage({
-        // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
-        message: `(${t(minAmount)}) (${configuration.currencySymbol
-          } ${minimumOrder}) (${t(forYourOrder)})`
-      })
-      return false
-    }
-    if (!location._id) {
-      props.navigation.navigate('CartAddress')
-      return false
-    }
-    if (!paymentMethod) {
-      FlashMessage({
-        message: t('setPaymentMethod')
-      })
-      return false
-    }
-    if (profile.phone.length < 1) {
-      props.navigation.navigate('Profile', { backScreen: 'Cart' })
-      return false
-    }
-    if (profile.phone.length > 0 && !profile.phoneIsVerified) {
-      FlashMessage({
-        message: t('numberVerificationAlert')
-      })
-      props.navigation.navigate('Profile')
-      return false
-    }
-    return true
-  }
-
-  function checkPaymentMethod(currency) {
-    if (paymentMethod.payment === 'STRIPE') {
-      return stripeCurrencies.find(val => val.currency === currency)
-    }
-    if (paymentMethod.payment === 'PAYPAL') {
-      return paypalCurrencies.find(val => val.currency === currency)
-    }
-    return true
-  }
-
-  function transformOrder(cartData) {
-    return cartData.map(food => {
-      return {
-        food: food._id,
-        quantity: food.quantity,
-        variation: food.variation._id,
-        addons: food.addons
-          ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id)
-          }))
-          : [],
-        specialInstructions: food.specialInstructions
-      }
-    })
-  }
-  async function onPayment() {
-    if (checkPaymentMethod(configuration.currency)) {
-      const items = transformOrder(cart)
-      mutateOrder({
-        variables: {
-          restaurant: cartRestaurant,
-          orderInput: items,
-          paymentMethod: paymentMethod.payment,
-          couponCode: coupon ? coupon.title : null,
-          tipping: +calculateTip(),
-          taxationAmount: +taxCalculation(),
-          orderDate: orderDate,
-          isPickedUp: isPickedUp,
-          deliveryCharges: isPickedUp ? 0 : deliveryCharges,
-          address: {
-            label: location.label,
-            deliveryAddress: location.deliveryAddress,
-            details: location.details,
-            longitude: '' + location.longitude,
-            latitude: '' + location.latitude
-          }
-        }
-      })
-    } else {
-      FlashMessage({
-        message: t('paymentNotSupported')
-      })
-    }
   }
 
   const isOpen = () => {
@@ -499,68 +259,10 @@ function Cart(props) {
 
   async function didFocus() {
     const { restaurant } = data
-    const foods = restaurant.categories.map(c => c.foods.flat()).flat()
     setSelectedRestaurant(restaurant)
     setMinimumOrder(restaurant.minimumOrder)
-    const { addons, options } = restaurant
     setLoadingData(false)
-    try {
-      if (cartCount && cart) {
-        // const transformCart = cart.map(cartItem => {
-        //   const food = foods.find(food => food._id === cartItem._id)
-        //   if (!food) return null
-        //   const variation = food.variations.find(
-        //     variation => variation._id === cartItem.variation._id
-        //   )
-        //   if (!variation) return null
-
-        //   const title = `${food.title}${variation.title ? `(${variation.title})` : ''
-        //     }`
-        //   let price = variation.price
-        //   const optionsTitle = []
-        //   if (cartItem.addons) {
-        //     cartItem.addons.forEach(addon => {
-        //       const cartAddon = addons.find(add => add._id === addon._id)
-        //       if (!cartAddon) return null
-        //       addon.options.forEach(option => {
-        //         const cartOption = options.find(opt => opt._id === option._id)
-        //         if (!cartOption) return null
-        //         price += cartOption.price
-        //         optionsTitle.push(cartOption.title)
-        //       })
-        //     })
-        //   }
-        //   return {
-        //     ...cartItem,
-        //     optionsTitle,
-        //     title: title,
-        //     price: price.toFixed(2)
-        //   }
-        // })
-
-        // if (props.navigation.isFocused()) {
-        //   const updatedItems = transformCart.filter(item => item)
-        //   if (updatedItems.length === 0) await clearCart()
-        //   await updateCart(updatedItems)
-        //   setLoadingData(false)
-        //   if (transformCart.length !== updatedItems.length) {
-        //     FlashMessage({
-        //       message: t('itemNotAvailable')
-        //     })
-        //   }
-        // }
-      } else {
-        if (props.navigation.isFocused()) {
-          setLoadingData(false)
-        }
-      }
-    } catch (e) {
-      FlashMessage({
-        message: e.message
-      })
-    }
   }
-
 
   function emptyCart() {
     return (
@@ -674,27 +376,6 @@ function Cart(props) {
       </View>
     )
   }
-
-  function renderRightSwipe(progress, key) {
-    const scaleX = progress.interpolate({
-      inputRange: [0, 1, 3],
-      outputRange: [100, 0, 0]
-    })
-    return (
-      <Animated.View
-        style={[
-          styles().trashContainer,
-          { transform: [{ translateX: scaleX }] }
-        ]}>
-        <RectButton
-          rippleColor="black"
-          style={styles().trashIcon}
-          onPress={() => deleteItem(key)}>
-          <EvilIcons name="trash" size={scale(25)} color={currentTheme.white} />
-        </RectButton>
-      </Animated.View>
-    )
-  }
   if (loading || loadingData || loadingTip) return loadginScreen()
 
   const { restaurant } = data
@@ -731,7 +412,7 @@ function Cart(props) {
       title: title,
       price: price.toFixed(2),
       image: food.image,
-      addons: food.variations[0].addons,
+      addons: food.variations[0].addons
     }
   }
 
@@ -792,8 +473,9 @@ function Cart(props) {
                   </TextDefault>
                   {cart.map((cartItem, index) => {
                     const food = populateFood(cartItem)
+                    if (!food) return null
                     return (
-                      <View style={[styles(currentTheme).itemContainer]}>
+                      <View key={cartItem._id} style={[styles(currentTheme).itemContainer]}>
                         <CartItem
                           quantity={food.quantity}
                           dealName={food.title}
@@ -821,7 +503,6 @@ function Cart(props) {
               </View>
             </ScrollView>
 
-            {!isModalOpen && (
               <View style={styles().totalBillContainer}>
                 <View style={styles(currentTheme).buttonContainer}>
                   <View>
@@ -875,7 +556,6 @@ function Cart(props) {
                   )}
                 </View>
               </View>
-            )}
           </>
         )}
       </View>
