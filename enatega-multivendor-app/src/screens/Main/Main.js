@@ -50,6 +50,9 @@ import { TopPicks } from '../../components/Main/TopPicks'
 import { TopBrands } from '../../components/Main/TopBrands'
 import Item from '../../components/Main/Item/Item'
 import TextError from '../../components/Text/TextError/TextError'
+import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
+import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -71,7 +74,7 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-
+  const locationData = location
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
@@ -129,9 +132,9 @@ function Main(props) {
   }
 
   const addressIcons = {
-    Home: 'home',
-    Work: 'briefcase',
-    Other: 'location-pin'
+    Home: CustomHomeIcon,
+    Work: CustomWorkIcon,
+    Other: CustomOtherIcon
   }
 
   const {
@@ -189,35 +192,22 @@ function Main(props) {
   }
 
   const modalHeader = () => (
-    <View style={[styles().addressbtn]}>
-      <TouchableOpacity
-        style={[styles(currentTheme).addressContainer]}
-        activeOpacity={0.7}
-        onPress={setCurrentLocation}>
-        <View style={styles().addressSubContainer}>
-          <MaterialCommunityIcons
-            name="target"
-            size={scale(25)}
-            color={currentTheme.black}
-          />
-          <View style={styles().mL5p} />
-          <TextDefault bold>{t('currentLocation')}</TextDefault>
-        </View>
-      </TouchableOpacity>
-      <View style={styles().addressTick}>
-        {location.label === 'currentLocation' && (
-          <MaterialIcons
-            name="check"
-            size={scale(15)}
-            color={currentTheme.iconColorPink}
-          />
-        )}
-        {busy && (
-          <Spinner
-            size={'small'}
-            backColor={currentTheme.lightHorizontalLine}
-          />
-        )}
+    <View style={[styles().addNewAddressbtn]}>
+      <View style={styles(currentTheme).addressContainer}>
+        <TouchableOpacity
+          style={[styles(currentTheme).addButton]}
+          activeOpacity={0.7}
+          onPress={setCurrentLocation}>
+          <View style={styles().addressSubContainer}>
+            <MaterialCommunityIcons
+              name="target"
+              size={scale(25)}
+              color={currentTheme.black}
+            />
+            <View style={styles().mL5p} />
+            <TextDefault bold>{t('currentLocation')}</TextDefault>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -251,13 +241,14 @@ function Main(props) {
   }
 
   const modalFooter = () => (
-    <View style={styles().addressbtn}>
+    <View style={styles().addNewAddressbtn}>
       <View style={styles(currentTheme).addressContainer}>
         <TouchableOpacity
           activeOpacity={0.5}
+          style={styles(currentTheme).addButton}
           onPress={() => {
             if (isLoggedIn) {
-              navigation.navigate('NewAddress')
+              navigation.navigate('AddNewAddress', { locationData })
             } else {
               const modal = modalRef.current
               modal?.close()
@@ -267,7 +258,7 @@ function Main(props) {
           <View style={styles().addressSubContainer}>
             <AntDesign
               name="pluscircleo"
-              size={scale(12)}
+              size={scale(20)}
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
@@ -514,21 +505,33 @@ function Main(props) {
                     activeOpacity={0.7}
                     onPress={() => setAddressLocation(address)}>
                     <View style={styles().addressSubContainer}>
-                      <SimpleLineIcons
-                        name={addressIcons[address.label]}
-                        size={scale(12)}
-                        color={currentTheme.black}
-                      />
-                      <View style={styles().mL5p} />
-                      <TextDefault bold>{t(address.label)}</TextDefault>
+                      <View style={[styles(currentTheme).homeIcon]}>
+                        {addressIcons[address.label] ? (
+                          React.createElement(addressIcons[address.label], {
+                            fill: currentTheme.darkBgFont
+                          })
+                        ) : (
+                          <AntDesign name="question" size={20} color="black" />
+                        )}
+                      </View>
+                      {/* <View style={styles().mL5p} /> */}
+                      <View style={[styles().titleAddress]}>
+                        <TextDefault
+                          textColor={currentTheme.darkBgFont}
+                          style={styles(currentTheme).labelStyle}>
+                          {t(address.label)}
+                        </TextDefault>
+                      </View>
                     </View>
-                    <View style={styles().addressTextContainer}>
-                      <TextDefault
-                        style={{ ...alignment.PLlarge }}
-                        textColor={currentTheme.fontSecondColor}
-                        small>
-                        {address.deliveryAddress}
-                      </TextDefault>
+                    <View style={styles(currentTheme).addressTextContainer}>
+                      <View style={styles(currentTheme).addressDetail}>
+                        <TextDefault
+                          style={{ ...alignment.PLlarge }}
+                          textColor={currentTheme.fontSecondColor}
+                          small>
+                          {address.deliveryAddress}
+                        </TextDefault>
+                      </View>
                     </View>
                   </TouchableOpacity>
                   <View style={styles().addressTick}>

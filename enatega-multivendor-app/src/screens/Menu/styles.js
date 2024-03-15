@@ -35,8 +35,11 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      // padding: scale(5),
-      // paddingTop: scale(10),
+      ...alignment.PLmedium,
+      ...alignment.PRmedium
+    },
+    addNewAddressbtn: {
+      padding: scale(5),
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
@@ -44,6 +47,15 @@ const styles = (props = null) =>
       width: '100%',
       ...alignment.PTsmall,
       ...alignment.PBsmall
+    },
+    addButton: {
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '100%',
+      height: scale(40),
+      borderRadius: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
     },
     addressSubContainer: {
       width: '90%',
@@ -63,9 +75,8 @@ const styles = (props = null) =>
       shadowOpacity: 0
     },
     addressTextContainer: {
-      ...alignment.PLlarge,
-      ...alignment.PRlarge,
-      ...alignment.PTxSmall
+      display: 'flex',
+      flexDirection: 'row'
     },
     addressTick: {
       width: '10%',
@@ -108,6 +119,33 @@ const styles = (props = null) =>
       marginHorizontal: scale(10),
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    mL5p: {
+      ...alignment.MLsmall
+    },
+    homeIcon: {
+      color: props !== null ? props.darkBgFont : '#000',
+      width: '15%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    titleAddress: {
+      width: '55%',
+      justifyContent: 'center'
+    },
+    labelStyle: {
+      textAlignVertical: 'bottom',
+      fontSize: scale(14),
+      fontWeight: '700',
+      textAlign: 'left'
+    },
+    addressDetail: {
+      alignSelf: 'flex-end',
+      fontSize: scale(4),
+      fontWeight: '300',
+      textAlign: 'justify',
+      paddingLeft: scale(38)
     }
   })
 export default styles
