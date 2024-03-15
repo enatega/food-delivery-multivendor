@@ -4,7 +4,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import TextError from '../../components/Text/TextError/TextError'
@@ -19,7 +19,6 @@ import TrackingRider from '../../components/OrderDetail/TrackingRider/TrackingRi
 import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 import { useTranslation } from 'react-i18next'
-import { LocationContext } from '../../context/Location'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
 import { ProgressBar, checkStatus } from '../../components/Main/ActiveOrders/ProgressBar'
@@ -42,7 +41,6 @@ const CANCEL_ORDER = gql`${cancelOrderMutation}`
 function OrderDetail(props) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
   const Analytics = analytics()
-  const { location } = useContext(LocationContext)
   const id = props.route.params ? props.route.params._id : null
   const user = props.route.params ? props.route.params.user : null
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
@@ -70,8 +68,10 @@ function OrderDetail(props) {
   }, [])
 
   const order = orders.find(o => o._id === id)
-
-  useLayoutEffect(() => {
+  const headerRef = useRef(false)
+  if (loadingOrders || !order) return <Spinner backColor={currentTheme.white} spinnerColor={currentTheme.primary}/>
+  if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
+  if (!headerRef.current) {
     props.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
       headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
@@ -79,10 +79,8 @@ function OrderDetail(props) {
       headerTitleStyle: { color: currentTheme.black },
       headerStyle: { backgroundColor: currentTheme.white }
     })
-  }, [props.navigation, location], order)
-
-  if (loadingOrders || !order) return <Spinner />
-  if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
+    headerRef.current = true
+  }
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,

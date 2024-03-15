@@ -483,11 +483,6 @@ function Restaurant(props) {
     ...deals
   ]
 
-  console.log(
-    'updated deals in restaurant:',
-    JSON.stringify(updatedDeals, null, 2)
-  )
-
   return (
     <>
       <SafeAreaView style={styles(currentTheme).flex}>
