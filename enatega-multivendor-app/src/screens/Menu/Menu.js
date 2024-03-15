@@ -50,6 +50,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import Filters from '../../components/Filter/FilterSlider'
+import { FILTER_TYPE } from '../../utils/enums'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -62,10 +63,6 @@ const GET_CUISINES = gql`
   ${getCuisines}
 `
 
-export const FILTER_TYPE = {
-  CHECKBOX: 'checkbox',
-  RADIO: 'radio'
-}
 export const FILTER_VALUES = {
   Sort: {
     type: FILTER_TYPE.RADIO,
@@ -199,7 +196,7 @@ function Menu({ route, props }) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async () => {
+  const setCurrentLocation = async() => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
@@ -413,10 +410,10 @@ function Menu({ route, props }) {
   const applyFilters = () => {
     let filteredData = [...data.nearByRestaurants.restaurants]
 
-    const ratings = filters['Rating']
-    const sort = filters['Sort']
-    const offers = filters['Offers']
-    const cuisines = filters['Cuisines']
+    const ratings = filters.Rating
+    const sort = filters.Sort
+    const offers = filters.Offers
+    const cuisines = filters.Cuisines
 
     // Apply filters incrementally
     // Ratings filter
@@ -566,12 +563,12 @@ function Menu({ route, props }) {
                       ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (
-                        <MaterialIcons
-                          name="check"
-                          size={scale(25)}
-                          color={currentTheme.iconColorPink}
-                        />
-                      )}
+                      <MaterialIcons
+                        name="check"
+                        size={scale(25)}
+                        color={currentTheme.iconColorPink}
+                      />
+                    )}
                   </View>
                 </View>
               )

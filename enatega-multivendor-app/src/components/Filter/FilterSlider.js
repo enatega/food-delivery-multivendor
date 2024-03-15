@@ -15,7 +15,7 @@ import styles from './styles'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { FILTER_TYPE } from '../../screens/Menu/Menu'
+import { FILTER_TYPE } from '../../utils/enums'
 
 const Filters = ({ filters, setFilters, applyFilters }) => {
   const themeContext = useContext(ThemeContext)
@@ -23,7 +23,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('all')
 
-  const result =filters &&  Object.keys(filters).filter(k =>
+  const result = filters && Object.keys(filters).filter(k =>
     selectedFilter === 'all'
       ? filters[k]
       : selectedFilter === k
