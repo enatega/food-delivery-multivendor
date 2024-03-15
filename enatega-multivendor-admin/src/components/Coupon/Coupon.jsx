@@ -152,6 +152,7 @@ function Category(props) {
                   onBlur={event => {
                     onBlur(discountErrorSetter, 'discount', event.target.value)
                   }}
+                  inputProps={{ min: "0" }} // Add min attribute to restrict negative values
                   disableUnderline
                   className={[
                     globalClasses.input,
