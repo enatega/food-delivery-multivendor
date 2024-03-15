@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Dimensions } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -11,9 +11,7 @@ import { useCreateAccount } from './useCreateAccount'
 import navigationOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
 import {
-  GoogleSignin,
   GoogleSigninButton,
-  statusCodes
 } from '@react-native-google-signin/google-signin'
 
 const CreateAccount = (props) => {
@@ -22,8 +20,6 @@ const CreateAccount = (props) => {
     loginButton,
     loginButtonSetter,
     loading,
-    googleRequest,
-    googlePromptAsync,
     themeContext,
     currentTheme,
     mutateLogin,
@@ -32,7 +28,6 @@ const CreateAccount = (props) => {
     openPrivacyPolicy,
     navigation,
     signIn,
-    user
   } = useCreateAccount()
   const { t } = useTranslation()
   useLayoutEffect(() => {
@@ -117,9 +112,11 @@ const CreateAccount = (props) => {
       //   onPress={() => googlePromptAsync()}
       // />
       <GoogleSigninButton
-        size={GoogleSigninButton.Size.Standard}
-        color={GoogleSigninButton.Color.Dark}
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Light}
         onPress={signIn}
+        // style={{height: height * 0.07, backgroundColor: 'white !important'}}
+
       />
     )
   }
