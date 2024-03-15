@@ -234,7 +234,7 @@ function Profile(props) {
                     : currentTheme.buttonText
                 }
               ]}>
-              <TextDefault textColor={currentTheme.white}>
+              <TextDefault textColor={currentTheme.fontFourthColor} bold>
                 {profile.emailIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
@@ -277,8 +277,8 @@ function Profile(props) {
                 styles().verifiedButton,
                 {
                   backgroundColor: profile.phoneIsVerified
-                    ? currentTheme.newheaderColor
-                    : currentTheme.buttonText
+                    ? currentTheme.main
+                    : currentTheme.fontFourthColor
                 }
               ]}>
               <TextDefault textColor={currentTheme.white}>
@@ -359,9 +359,7 @@ function Profile(props) {
                     activeOpacity={0.7}
                     style={styles(currentTheme).saveContainer}
                     onPress={handleNamePressUpdate}>
-                    <TextDefault style={styles(currentTheme).textAlignLeft}>
-                      {t('update')}
-                    </TextDefault>
+                    <TextDefault bold>{t('update')}</TextDefault>
                   </TouchableOpacity>
                 </View>
               )}
@@ -418,7 +416,7 @@ function Profile(props) {
             <View style={styles().headingLink}>
               <TouchableOpacity
                 activeOpacity={0.3}
-                style={{...styles().headingButton}}
+                style={{ ...styles().headingButton }}
                 onPress={showModal}>
                 <TextDefault textColor={currentTheme.editProfileButton}>
                   {t('change')}

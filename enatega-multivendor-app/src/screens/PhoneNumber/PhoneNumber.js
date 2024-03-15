@@ -119,7 +119,7 @@ function PhoneNumber(props) {
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
                     ]}>
-                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                    <View style={{ flexDirection: 'row', paddingTop: 3 }}>
                       <Text>+{country.callingCode[0]} </Text>
                       <TextInput
                         placeholder={t('mobileNumber')}
@@ -148,26 +148,21 @@ function PhoneNumber(props) {
                     </TextDefault>
                   </View>
                 )}
-
-                <View style={styles().marginTop10}>
-                  <TouchableOpacity
-                    onPress={() => registerAction()}
-                    activeOpacity={0.7}
-                    style={styles(currentTheme).btn}>
-                    <TextDefault
-                      H4
-                      textColor={currentTheme.buttonTextPink}
-                      style={alignment.MLsmall}
-                      bold>
-                      {loading ? (
-                        <Spinner size="small" backColor="transparent" />
-                      ) : (
-                        t('continueBtn')
-                      )}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
               </View>
+            </View>
+            <View style={{ width: '100%', marginBottom: 20 }}>
+              <TouchableOpacity
+                onPress={() => registerAction()}
+                activeOpacity={0.7}
+                style={styles(currentTheme).btn}>
+                <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+                  {loading ? (
+                    <Spinner size="small" backColor="transparent" />
+                  ) : (
+                    t('continueBtn')
+                  )}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

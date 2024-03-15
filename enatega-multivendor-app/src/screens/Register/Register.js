@@ -5,7 +5,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  TextInput
+  TextInput,
+  Text
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -94,7 +95,7 @@ function Register(props) {
                   H5
                   bold
                   textColor={currentTheme.fontSecondColor}
-                  style={{}}>
+                  style={{ ...alignment.PBmedium }}>
                   {t('createAccount')}
                 </TextDefault>
               </View>
@@ -172,13 +173,15 @@ function Register(props) {
                     value={password}
                     onChangeText={e => setPassword(e)}
                   />
-                  <FontAwesome
-                    onPress={() => setShowPassword(!showPassword)}
-                    name={!showPassword ? 'eye' : 'eye-slash'}
-                    size={20}
-                    color={currentTheme.fontFourthColor}
-                    style={styles().eyeBtn}
-                  />
+                  <View>
+                    <FontAwesome
+                      onPress={() => setShowPassword(!showPassword)}
+                      name={showPassword ? 'eye' : 'eye-slash'}
+                      size={24}
+                      color={currentTheme.fontFourthColor}
+                      style={styles().eyeBtn}
+                    />
+                  </View>
                 </View>
                 {passwordError && (
                   <View>
@@ -207,17 +210,22 @@ function Register(props) {
                       {country?.cca2}
                     </TextDefault>
                   </View>
-                  <TextInput
-                    placeholder={t('mobileNumber')}
+                  <View
                     style={[
                       styles(currentTheme).textField,
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={phone}
-                    onChangeText={e => setPhone(e)}
-                  />
+                    ]}>
+                    <View style={styles().phoneFieldInner}>
+                      <Text>+{country.callingCode[0]} </Text>
+                      <TextInput
+                        placeholder={t('mobileNumber')}
+                        placeholderTextColor={currentTheme.fontSecondColor}
+                        value={phone}
+                        onChangeText={e => setPhone(e)}
+                      />
+                    </View>
+                  </View>
                 </View>
                 {phoneError && (
                   <View style={{ marginLeft: '30%' }}>
