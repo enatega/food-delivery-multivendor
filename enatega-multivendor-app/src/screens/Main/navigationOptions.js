@@ -20,7 +20,7 @@ const navigationOptions = props => ({
     ...alignment.MLxSmall
   },
   headerTitleAlign: 'left',
-  headerLeft: () => <LeftButton iconColor={props.fontMainColor} />,
+  headerLeft: () => <LeftButton icon={props.icon} iconColor={props.fontMainColor} />,
   headerTitle: headerProp => (
     <SelectedLocation
       {...headerProp}
