@@ -48,7 +48,7 @@ export const useLogin = () => {
   // Debounce the setEmail function
   const debouncedSetEmail = _.debounce(text => {
     setEmail(text.toLowerCase().trim())
-  }, 1) // Adjust the delay as needed (in milliseconds)
+  }, 0.5) // Adjust the delay as needed (in milliseconds)
 
   function validateCredentials() {
     let result = true

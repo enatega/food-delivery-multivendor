@@ -27,7 +27,7 @@ const styles = (props = null) =>
       borderWidth: props !== null && props.gray200 !== '#E5E7EB' ? 2 : 0,
       borderColor: props !== null ? props.gray200 : '#E5E7EB',
       ...alignment.MTsmall,
-      ...alignment.Psmall,
+      ...alignment.Psmall
     },
     flexRow: {
       display: 'flex',
@@ -42,14 +42,12 @@ const styles = (props = null) =>
     headingTitle: {
       width: '50%'
     },
-    textAlignLeft: {
-      textAlign: 'left'
-    },
+
     headingLink: {
       flex: 1,
       ...alignment.MRxSmall,
       justifyContent: 'center',
-      alignItems:'flex-end',
+      alignItems: 'flex-end'
     },
     headingButton: {
       marginLeft: scale(5),
@@ -57,12 +55,12 @@ const styles = (props = null) =>
       ...alignment.PLmedium
     },
     saveContainer: {
-      backgroundColor: theme.Pink.main,
+      backgroundColor: props !== null ? props.main : '#90E36D',
+      padding: scale(8),
+      borderRadius: scale(16),
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: scale(6),
-      padding: scale(15),
-      width: '40%'
+      width: scale(120)
     },
     bacKButton: {
       backgroundColor: 'white',
@@ -73,12 +71,13 @@ const styles = (props = null) =>
     },
     verifiedButton: {
       padding: scale(8),
-      //paddingLeft: scale(10),
       borderRadius: scale(16),
-      width: '28%',
-      // height: scale(30),
-      marginTop: scale(10)
+      marginTop: scale(10),
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: scale(120)
     },
+
     // Model for password changing
     modalContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#FFF',
