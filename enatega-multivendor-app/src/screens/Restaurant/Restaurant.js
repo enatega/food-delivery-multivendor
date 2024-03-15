@@ -13,7 +13,8 @@ import {
   Image,
   Dimensions,
   SectionList,
-  Text} from 'react-native'
+  Text
+} from 'react-native'
 import Animated, {
   Extrapolate,
   interpolateNode,
@@ -21,7 +22,7 @@ import Animated, {
   EasingNode,
   timing
 } from 'react-native-reanimated'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   Placeholder,
   PlaceholderMedia,
@@ -56,14 +57,6 @@ const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
 const HEADER_MAX_HEIGHT = height * 0.3
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
-const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
-const isPopular = 'Popular'
-const config = to => ({
-  duration: 250,
-  toValue: to,
-  easing: EasingNode.inOut(EasingNode.ease)
-})
 
 const POPULAR_ITEMS = gql`
   ${popularItems}
@@ -80,7 +73,6 @@ function Restaurant(props) {
   const flatListRef = useRef(null)
   const navigation = useNavigation()
   const route = useRoute()
-  const inset = useSafeAreaInsets()
   const propsData = route.params
   const animation = useValue(0)
   const circle = useValue(0)
@@ -107,8 +99,6 @@ function Restaurant(props) {
   )
   const client = useApolloClient()
   const {
-    loading: loadingPopularItems,
-    error: errorPopularItems,
     data: popularItems
   } = useQuery(POPULAR_ITEMS, {
     variables: { restaurantId }
@@ -158,7 +148,7 @@ function Restaurant(props) {
       setFilterData(filteredData)
       setShowSearchResults(true)
     }
-  }, [search, deals, searchOpen])
+  }, [search, searchOpen])
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -202,7 +192,7 @@ function Restaurant(props) {
   }, [data])
 
   const isOpen = () => {
-    if (data.restaurant.openingTimes.length < 1) return false
+    if (data.restaurant.openingTimes?.length < 1) return false
     const date = new Date()
     const day = date.getDay()
     const hours = date.getHours()
@@ -640,6 +630,7 @@ function Restaurant(props) {
                       <View style={styles().popularItemCards}>
                         {data.map(item => (
                           <ItemCard
+                            key={item._id}
                             item={item}
                             onPressItem={onPressItem}
                             restaurant={restaurant}
@@ -662,7 +653,7 @@ function Restaurant(props) {
                   </View>
                 )
               }}
-              renderItem={({ item, index, section }) => {
+              renderItem={({ item, section }) => {
                 if (section.title === 'Popular') {
                   if (!dataList || dataList.length === 0) {
                     return null
