@@ -1,69 +1,60 @@
-/* eslint-disable react/display-name */
 import React, { useState } from 'react'
+import { useQuery, useMutation, gql } from '@apollo/client'
+import { withTranslation } from 'react-i18next'
 import Header from '../components/Headers/Header'
-import OptionComponent from '../components/Option/Option'
 import CustomLoader from '../components/Loader/CustomLoader'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
-
-import { withTranslation } from 'react-i18next'
-import { useQuery, useMutation, gql } from '@apollo/client'
-import { getRestaurantDetail, deleteOption } from '../apollo'
+import { getCuisines, editCuisine, deleteCuisine } from '../apollo'
 import SearchBar from '../components/TableHeader/SearchBar'
 import useGlobalStyles from '../utils/globalStyles'
+import { customStyles } from '../utils/tableCustomStyles'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Container,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
   Modal,
   Paper,
+  Switch,
   Typography,
   ListItemIcon
 } from '@mui/material'
-import { customStyles } from '../utils/tableCustomStyles'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { ReactComponent as CouponsIcon } from '../assets/svg/svg/Coupons.svg'
 import TableHeader from '../components/TableHeader'
-import Alert from '../components/Alert'
-import ConfigurableValues from '../config/constants'
+import CuisineComponent from '../components/Cuisine/Cuisine'
 
-const GET_OPTIONS = gql`
-  ${getRestaurantDetail}
+const GET_CUISINES = gql`
+  ${getCuisines}
 `
-const DELETE_OPTION = gql`
-  ${deleteOption}
+const EDIT_CUISINE = gql`
+  ${editCuisine}
+`
+const DELETE_CUISINE = gql`
+  ${deleteCuisine}
 `
 
-const Option = props => {
+const Cuisines = props => {
   const { t } = props
-  const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
-  const [option, setOption] = useState(null)
+  const [cuisine, setCuisine] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [isOpen, setIsOpen] = useState(false)
   const onChangeSearch = e => setSearchQuery(e.target.value)
-
-  const toggleModal = option => {
-    setEditModal(!editModal)
-    setOption(option)
-  }
-  const closeEditModal = () => {
-    setEditModal(false)
-  }
-
-  const restaurantId = localStorage.getItem('restaurantId')
-
-  const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
-    GET_OPTIONS,
-    {
-      variables: { id: restaurantId }
-    }
-  )
-  const [mutate, { loading }] = useMutation(DELETE_OPTION, {
-    refetchQueries: [{ query: GET_OPTIONS, variables: { id: restaurantId } }]
+  const [mutateEdit] = useMutation(EDIT_CUISINE)
+  const [mutateDelete] = useMutation(DELETE_CUISINE, {
+    refetchQueries: [{ query: GET_CUISINES }]
   })
+  const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
+    GET_CUISINES
+  )
+  const toggleModal = cuisine => {
+    setEditModal(!editModal)
+    setCuisine(cuisine)
+  }
 
   const customSort = (rows, field, direction) => {
     const handleField = row => {
@@ -77,14 +68,11 @@ const Option = props => {
     return orderBy(rows, handleField, direction)
   }
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection)
-
   const columns = [
     {
-      name: t('Title'),
+      name: t('Name'),
       sortable: true,
-      selector: 'title'
+      selector: 'name'
     },
     {
       name: t('Description'),
@@ -92,15 +80,19 @@ const Option = props => {
       selector: 'description'
     },
     {
-      name: t('Price'),
-      sortable: true,
-      selector: 'price'
-    },
-    {
       name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
+  const regex =
+    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
+  const filtered =
+    searchQuery.length < 3
+      ? data && data.cuisines
+      : data &&
+        data.cuisines.filter(cuisine => {
+          return cuisine.name.toLowerCase().search(regex) > -1
+        })
 
   const actionButtons = row => {
     const [anchorEl, setAnchorEl] = React.useState(null)
@@ -133,15 +125,7 @@ const Option = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                 
-                  if(PAID_VERSION)
                   toggleModal(row)
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -152,17 +136,7 @@ const Option = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                 
-                  if(PAID_VERSION)
-                  mutate({
-                    variables: { id: row._id, restaurant: restaurantId }
-                  })
-                  else{
-                    setIsOpen(true)
-                    setTimeout(() => {
-                      setIsOpen(false)
-                    }, 5000)
-                  }
+                  mutateDelete({ variables: { id: row._id } })
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -176,36 +150,27 @@ const Option = props => {
       </>
     )
   }
-
-  const regex =
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.restaurant.options
-      : data &&
-        data.restaurant.options.filter(option => {
-          return (
-            option.title.toLowerCase().search(regex) > -1 ||
-            option.description.toLowerCase().search(regex) > -1
-          )
-        })
   const globalClasses = useGlobalStyles()
   return (
     <>
       <Header />
-      {isOpen && (
-        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
-      )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
-        <OptionComponent />
-        {errorQuery && (
-          <tr>
-            <td>{`${'Error'} ${errorQuery.message}`}</td>
-          </tr>
-        )}
-        {loading ? (
+        <Grid container>
+          <Grid item>
+            <CuisineComponent />
+          </Grid>
+          <Grid sx={{ display: { xs: 'none', lg: 'block' } }} item mt={2}>
+            <CouponsIcon />
+          </Grid>
+        </Grid>
+
+        {errorQuery ? (
+          <span>
+            `${t('Error')}! ${errorQuery.message}`
+          </span>
+        ) : null}
+        {loadingQuery ? (
           <CustomLoader />
         ) : (
           <DataTable
@@ -217,35 +182,32 @@ const Option = props => {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title={t('Options')} />}
+            title={<TableHeader title={t('Cuisines')} />}
             columns={columns}
-            data={data && data.restaurant ? filtered : {}}
+            data={filtered}
             pagination
             progressPending={loadingQuery}
             progressComponent={<CustomLoader />}
-            onSort={handleSort}
             sortFunction={customSort}
-            defaultSortField="title"
+            defaultSortField="name"
             customStyles={customStyles}
-            selectableRows
-            paginationIconLastPage=""
-            paginationIconFirstPage=""
           />
         )}
         <Modal
           open={editModal}
           onClose={() => {
-            toggleModal()
+            toggleModal(null)
           }}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          <OptionComponent option={option} onClose={closeEditModal} />
+          <CuisineComponent cuisine={cuisine} />
         </Modal>
       </Container>
     </>
   )
 }
-export default withTranslation()(Option)
+
+export default withTranslation()(Cuisines)

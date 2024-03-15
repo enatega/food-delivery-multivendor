@@ -152,6 +152,8 @@ const zh = {
     SalesTax: '销售税',
     RiderUpdatedSuccessfully: '骑手已成功更新',
     RiderAddedSuccessfully: '骑手已成功添加',
+    UsernameCannotBeBlank: '用户名不能为空',
+    UsernameCannotContainSpaces: '用户名不能包含空格',
     EditRider: '编辑骑手',
     AddRider: '添加骑手',
     Available: '可用',

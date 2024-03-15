@@ -152,6 +152,8 @@ const km = {
     SalesTax: 'ពន្ធលក់',
     RiderUpdatedSuccessfully: 'ជូនដំណឹងតាមលំដាប់',
     RiderAddedSuccessfully: 'ជូនដំណឹងតាមលំដាប់បានបន្ថែមដោយជោគជ័យ',
+    UsernameCannotBeBlank: 'ឈ្មោះអ្នកប្រើមិនអាចទទេបានទេ។',
+    UsernameCannotContainSpaces: 'ឈ្មោះអ្នកប្រើមិនអាចមានដកឃ្លាបានទេ។',
     EditRider: 'កែប្រែជូនដំណឹង',
     AddRider: 'បន្ថែមជូនដំណឹង',
     Available: 'មាន',

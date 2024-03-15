@@ -25,6 +25,7 @@ import { createUser, sendOtpToEmail } from "../../apollo/server";
 import UserContext from "../../context/User";
 import OtpInput from "react-otp-input";
 import { useTranslation } from 'react-i18next';
+import ConfigurableValues from "../../config/constants";
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -45,6 +46,7 @@ function VerifyEmail() {
   const [otpError, setOtpError] = useState(false);
   const [seconds, setSeconds] = useState(30);
   const [otp, setOtp] = useState("");
+  const { SKIP_EMAIL_VERIFICATION } = ConfigurableValues()
   const handleBackNavigation = () => {
     // Use history.push to navigate to the desired route
     navigate("/registration");
@@ -136,7 +138,7 @@ function VerifyEmail() {
   }, []);
 
   const onCodeFilled = (code) => {
-    if (code === otpFrom) {
+    if (SKIP_EMAIL_VERIFICATION || code === otpFrom) {
       createUser({
         variables: {
           phone: user.phone,
@@ -223,6 +225,7 @@ function VerifyEmail() {
               outlineColor: theme.palette.grey[900],
             }}
             editable
+            renderInput={(props) => <input {...props} />}
           />
           <Box mt={2} />
           {otpError && (

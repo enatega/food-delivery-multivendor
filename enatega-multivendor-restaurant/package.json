@@ -76,7 +76,6 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-tab-view": "^2.16.0",
     "react-native-web": "~0.19.6",
-    "react-native-webview": "13.6.4",
     "sentry-expo": "~7.2.0",
     "subscriptions-transport-ws": "^0.9.16",
     "validate.js": "^0.13.1"

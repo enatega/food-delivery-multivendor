@@ -152,6 +152,8 @@ const ar = {
     SalesTax: 'ضريبة المبيعات',
     RiderUpdatedSuccessfully: 'تم تحديث الراكب بنجاح',
     RiderAddedSuccessfully: 'تمت إضافة الراكب بنجاح',
+    UsernameCannotBeBlank: 'لا يمكن أن يكون اسم المستخدم فارغًا',
+    UsernameCannotContainSpaces: 'لا يمكن أن يحتوي اسم المستخدم على مسافات',
     EditRider: 'تحرير الراكب',
     AddRider: 'إضافة الراكب',
     Available: 'متاح',

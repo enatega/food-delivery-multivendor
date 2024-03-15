@@ -12,6 +12,7 @@ import CurrencyConfiguration from '../components/Configuration/Currency/Currency
 import { Grid } from '@mui/material'
 import { ReactComponent as ConfigIcon } from '../assets/svg/svg/Configuration.svg'
 import TwilioConfiguration from '../components/Configuration/Twilio/Twilio'
+import VerificationConfiguration from '../components/Configuration/Verification/Verification'
 import SendGridConfiguration from '../components/Configuration/SendGrid/SendGrid'
 
 import SentryConfiguration from '../components/Configuration/Sentry/Sentry'
@@ -22,6 +23,7 @@ import GoogleClientIDConfiguration from '../components/Configuration/GoogleClien
 import WebConfiguration from '../components/Configuration/Web/Web'
 import AppConfigurations from '../components/Configuration/App/App'
 import FirebaseConfiguration from '../components/Configuration/FireBase/FireBase'
+import Configuration1 from './Configuration1'
 
 const GET_CONFIGURATION = gql`
   ${getConfiguration}
@@ -30,8 +32,9 @@ const Configuration = props => {
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_CONFIGURATION
   )
+  console.log('configuration', data)
   const { t } = props
-
+  
   return (
     <>
       <Header />
@@ -39,6 +42,7 @@ const Configuration = props => {
       {loadingQuery ? (
         t('LoadingDots')
       ) : (
+        data.configuration.isPaidVersion?
         <Grid container ml={2} spacing={2}>
           <Grid item sx={12} md={7} lg={7}>
             <EmailConfiguration
@@ -165,7 +169,14 @@ const Configuration = props => {
               testOtp={data && data.configuration.testOtp}
             />
           </Grid>
-        </Grid>
+          <Grid item sx={12} md={12} lg={5}>
+          <VerificationConfiguration
+          skipEmailVerification={data.configuration.skipEmailVerification}
+          skipMobileVerification={data.configuration.skipMobileVerification}
+            />
+          </Grid>
+        </Grid>:
+        <Configuration1 t={t}/>
       )}
     </>
   )
