@@ -44,12 +44,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:650001300965:android:9af80d70d1b1bb1b6bc30c",
+        "mobilesdk_app_id": "1:650001300965:android:6c9c0fedca09492b6bc30c",
         "android_client_info": {
-          "package_name": "com.enategamultivendor.app"
+          "package_name": "com.enatega.multivendor"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "650001300965-fnumuadf66rhah0o1a9d7ci0fg8vuesv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.enatega.multivendor",
+            "certificate_hash": "7fa9f5ce09bef5d511dd8823138aa6b1c21a8989"
+          }
+        },
         {
           "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
           "client_type": 3

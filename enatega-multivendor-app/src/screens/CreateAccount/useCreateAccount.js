@@ -46,8 +46,8 @@ export const useCreateAccount = () => {
 
   const configureGoogleSignin = () => {
     GoogleSignin.configure({
-      iosClientId: '967541328677-gvm85f1ouq92aucsannaduurf5r8mh2r.apps.googleusercontent.com',
-      androidClientId: '967541328677-o7lcengpu35dugcdbnp4otsfnmngoknr.apps.googleusercontent.com'
+      iosClientId: '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
+      androidClientId: '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com'
     })
   }
 
