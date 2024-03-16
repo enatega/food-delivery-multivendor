@@ -115,8 +115,16 @@ const styles = (props = null) =>
       marginBottom: scale(12),
       padding: scale(12)
     },
+    brandsPlaceHolderContainer: {
+      backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
+      borderRadius: scale(3),
+      paddingHorizontal: scale(20)
+    },
     height200: {
       height: scale(200)
+    },
+    height80: {
+      height: scale(80)
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'

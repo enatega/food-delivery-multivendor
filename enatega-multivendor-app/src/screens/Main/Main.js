@@ -20,14 +20,12 @@ import {
 import { Modalize } from 'react-native-modalize'
 import {
   MaterialIcons,
-  SimpleLineIcons,
   AntDesign,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
-import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import UserContext from '../../context/User'
@@ -42,17 +40,16 @@ import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
 import { alignment } from '../../utils/alignment'
-import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import { OrderAgain } from '../../components/Main/OrderAgain'
 import { TopPicks } from '../../components/Main/TopPicks'
 import { TopBrands } from '../../components/Main/TopBrands'
 import Item from '../../components/Main/Item/Item'
-import TextError from '../../components/Text/TextError/TextError'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
+import useRestaurantOrderInfo from '../../ui/hooks/useRestaurantOrderInfo'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -60,7 +57,6 @@ const RESTAURANTS = gql`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
-
 function Main(props) {
   const Analytics = analytics()
 
@@ -87,12 +83,14 @@ function Main(props) {
       fetchPolicy: 'network-only'
     }
   )
+  const { orderLoading, orderError, orderData } = useRestaurantOrderInfo()
   const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
-
+  const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
+  const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
   const newheaderColor = currentTheme.newheaderColor
 
   useFocusEffect(() => {
@@ -248,11 +246,15 @@ function Main(props) {
           style={styles(currentTheme).addButton}
           onPress={() => {
             if (isLoggedIn) {
-              navigation.navigate('AddNewAddress', { locationData })
+              navigation.navigate('AddNewAddress', {
+                locationData
+              })
             } else {
               const modal = modalRef.current
               modal?.close()
-              props.navigation.navigate({ name: 'CreateAccount' })
+              props.navigation.navigate({
+                name: 'CreateAccount'
+              })
             }
           }}>
           <View style={styles().addressSubContainer}>
@@ -273,12 +275,6 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search
-          search={''}
-          setSearch={() => {}}
-          newheaderColor={newheaderColor}
-          placeHolder={t('searchRestaurant')}
-        />
         <Placeholder
           Animation={props => (
             <Fade
@@ -291,6 +287,13 @@ function Main(props) {
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
+      </View>
+    )
+  }
+
+  function brandsLoadingScreen() {
+    return (
+      <View style={styles(currentTheme).screenBackground}>
         <Placeholder
           Animation={props => (
             <Fade
@@ -299,21 +302,8 @@ function Main(props) {
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
+          style={styles(currentTheme).brandsPlaceHolderContainer}>
+          <PlaceholderLine style={styles().height80} />
         </Placeholder>
       </View>
     )
@@ -377,14 +367,20 @@ function Main(props) {
                 {search ? (
                   <View style={styles().searchList}>
                     <Animated.FlatList
-                      contentInset={{ top: containerPaddingTop }}
+                      contentInset={{
+                        top: containerPaddingTop
+                      }}
                       contentContainerStyle={{
                         paddingTop:
                           Platform.OS === 'ios' ? 0 : containerPaddingTop
                       }}
-                      contentOffset={{ y: -containerPaddingTop }}
+                      contentOffset={{
+                        y: -containerPaddingTop
+                      }}
                       onScroll={onScroll}
-                      scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+                      scrollIndicatorInsets={{
+                        top: scrollIndicatorInsetTop
+                      }}
                       showsVerticalScrollIndicator={false}
                       ListEmptyComponent={emptyView()}
                       keyExtractor={(item, index) => index.toString()}
@@ -463,13 +459,31 @@ function Main(props) {
                       </TouchableOpacity>
                     </View>
                     <View>
-                      <OrderAgain />
+                      {orderLoading ? (
+                        loadingScreen()
+                      ) : (
+                        <OrderAgain
+                          recentOrderRestaurants={recentOrderRestaurantsVar}
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Order it again'}
+                        />
+                      )}
+                      <View>
+                        {orderLoading ? (
+                          loadingScreen()
+                        ) : (
+                          <TopPicks
+                            mostOrderedRestaurants={mostOrderedRestaurantsVar}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Top Picks for you'}
+                          />
+                        )}
+                      </View>
                     </View>
                     <View>
-                      <TopPicks />
-                    </View>
-                    <View>
-                      <TopBrands />
+                      {orderLoading ? brandsLoadingScreen() : <TopBrands />}
                     </View>
                   </ScrollView>
                 )}

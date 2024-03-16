@@ -6,54 +6,54 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { scale } from '../../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
-import { gql, useQuery } from '@apollo/client'
-import { recentOrderRestaurantsInfo } from '../../../apollo/queries'
-import { LocationContext } from '../../../context/Location'
-
-const RECENT_ORDER_RESTAURANTS = gql`
-  ${recentOrderRestaurantsInfo}
-`
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 
 function OrderAgain(props) {
-  const { location } = useContext(LocationContext)
   const { t } = useTranslation()
-  const { isLoggedIn, profile } = useContext(UserContext)
+  const { isLoggedIn } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  const { loading, error, data } = useQuery(RECENT_ORDER_RESTAURANTS, {
-    variables: {
-      latitude: location.latitude,
-      longitude: location.longitude
-    },
-    skip:!isLoggedIn
-  })
+  function loadingScreen() {
+    return (
+      <View style={styles(currentTheme).screenBackground}>
+        <Placeholder
+          Animation={props => (
+            <Fade
+              {...props}
+              style={styles(currentTheme).placeHolderFadeColor}
+              duration={600}
+            />
+          )}
+          style={styles(currentTheme).placeHolderContainer}>
+          <PlaceholderLine style={styles().height200} />
+          <PlaceholderLine />
+        </Placeholder>
+      </View>
+    )
+  }
 
-  
   if (!isLoggedIn) return null
-  if (loading) return <Text>Loading...</Text>
-  if (error) return <Text>Error: {error.message}</Text>
+  if (props?.loading) return loadingScreen()
+  if (props?.error) return <Text>Error: {props?.error?.message}</Text>
 
   return (
     <View style={styles().orderAgainSec}>
       {isLoggedIn && (
-        <View >
+        <View>
           <TextDefault
             numberOfLines={1}
             textColor={currentTheme.fontFourthColor}
             bolder
             H4>
-            Order it again
+            {props?.title}
           </TextDefault>
           <TextDefault
             Normal
             textColor={currentTheme.secondaryText}
-            style={
-              styles().ItemDescription
-            }>
+            style={styles().ItemDescription}>
             Most ordered right now.
           </TextDefault>
           <FlatList
@@ -62,7 +62,7 @@ function OrderAgain(props) {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            data={data?.recentOrderRestaurants}
+            data={props?.recentOrderRestaurants}
             keyExtractor={item => item._id}
             renderItem={({ item }) => {
               return <NewRestaurantCard {...item} />

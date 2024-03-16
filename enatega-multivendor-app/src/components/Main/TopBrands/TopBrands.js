@@ -12,6 +12,7 @@ import { topRatedVendorsInfo } from '../../../apollo/queries'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 
 const TOP_BRANDS = gql`
   ${topRatedVendorsInfo}
@@ -29,6 +30,25 @@ function TopBrands(props) {
       longitude: location?.longitude
     }
   })
+
+  function loadingScreen() {
+    return (
+      <View style={styles(currentTheme).screenBackground}>
+        <Placeholder
+          Animation={props => (
+            <Fade
+              {...props}
+              style={styles(currentTheme).placeHolderFadeColor}
+              duration={600}
+            />
+          )}
+          style={styles(currentTheme).brandsPlaceHolderContainer}>
+          <PlaceholderLine style={styles().height80} />
+          {/* <PlaceholderLine /> */}
+        </Placeholder>
+      </View>
+    )
+  }
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -61,7 +81,7 @@ function TopBrands(props) {
     </TouchableOpacity>
   )
 
-  if (loading) return <Text style={styles().margin}>Loading...</Text>
+  if (loading) return loadingScreen()
   if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
   return (
