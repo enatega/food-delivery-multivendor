@@ -97,11 +97,11 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
           </TouchableOpacity>
         </View>
         <ScrollView style={styles(currentTheme).modalContainer}>
-          {result.map(filterValue => (
+          {result?.map(filterValue => (
             <View key={filterValue}>
               <Text style={styles(currentTheme).modalTitle}>{filterValue}</Text>
               <View>
-                {filters && filters[filterValue].values.map((value, index) => (
+                {filters && filters[filterValue].values?.map((value, index) => (
                   <TouchableOpacity
                     key={index}
                     style={[

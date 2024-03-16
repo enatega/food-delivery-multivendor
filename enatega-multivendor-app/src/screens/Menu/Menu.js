@@ -413,8 +413,8 @@ function Menu({ route, props }) {
   // Flatten the array. That is important for data sequence
   const restaurantSections = sectionData?.map(sec => ({
     ...sec,
-    restaurants: sec.restaurants
-      .map(id => restaurantData?.filter(res => res._id === id))
+    restaurants: sec?.restaurants
+      ?.map(id => restaurantData?.filter(res => res._id === id))
       .flat()
   }))
 

@@ -32,7 +32,7 @@ function Item(props) {
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props.item._id) : false
   const item = props.item
-  const category = item.categories.map(category => category.title)
+  const category = item?.categories?.map(category => category.title)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
