@@ -89,22 +89,24 @@ function PhoneNumber() {
   }
 
   const handleAction = async () => {
-    setError("");
-    let validate = true;
-    if (!phone) {
-      setPhoneError("Phone number required");
-      validate = false;
-      return;
+  setError("");
+  setPhoneError(""); // Reset phone error state to clear any previous errors
+  let validate = true;
+  if (!phone) {
+    setPhoneError("Phone number required");
+    validate = false;
+    return;
+  }
+  if (validate) {
+    if (`+${phone}` !== state?.prevPhone) {
+      setLoading(true); // Turn on loading animation before making the mutation call
+      await PhoneExist({ variables: { phone: `+${phone}` } });
+    } else {
+      setPhoneError("New phone number must be different from previous one");
     }
-    if (validate) {
-      if (`+${phone}` !== state?.prevPhone) {
-        setLoading(true); // Turn on loading animation before making the mutation call
-        await PhoneExist({ variables: { phone: `+${phone}` } });
-      } else {
-        setPhoneError("New phone number must be different from previous one");
-      }
-    }
-  };
+  }
+};
+
 
   return (
     <LoginWrapper>
