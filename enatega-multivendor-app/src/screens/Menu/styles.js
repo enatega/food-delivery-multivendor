@@ -109,10 +109,19 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
     },
     emptyViewContainer: {
-      width: '100%',
-      height: verticalScale(40),
+      flex: 1,
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    emptyViewBox: {
+      backgroundColor: '#f0f0f0',
+      borderRadius: scale(10),
+      width: '85%',
+      height: verticalScale(130),
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: scale(15),
+      marginTop: scale(30)
     },
     errorViewContainer: {
       marginTop: verticalScale(30),

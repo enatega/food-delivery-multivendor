@@ -264,9 +264,14 @@ function Menu({ route, props }) {
     else {
       return (
         <View style={styles().emptyViewContainer}>
-          <TextDefault textColor={currentTheme.fontMainColor}>
-            {t('noRestaurants')}
-          </TextDefault>
+          <View style={styles().emptyViewBox}>
+            <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
+              We are not currently available in your area
+            </TextDefault>
+            <TextDefault textColor={currentTheme.fontMainColor} center>
+              No restaurant currently offers delivery in your area
+            </TextDefault>
+          </View>
         </View>
       )
     }
