@@ -17,6 +17,7 @@ import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
+import { scale } from '../../utils/scaling'
 
 function Login(props) {
   const {
@@ -129,7 +130,7 @@ function Login(props) {
                         />
                         <FontAwesome
                           onPress={() => setShowPassword(!showPassword)}
-                          name={!showPassword ? 'eye' : 'eye-slash'}
+                          name={showPassword ? 'eye' : 'eye-slash'}
                           size={24}
                           color={
                             passwordError === null
@@ -137,8 +138,8 @@ function Login(props) {
                               : currentTheme.textErrorColor
                           }
                           style={[
-                            styles().eyeBtn,
-                            Platform.OS === 'android' && { marginTop: 14 }
+                            styles().eyeBtn
+                            // Platform.OS === 'android' && { marginTop: 14 }
                           ]}
                         />
                       </View>
@@ -168,7 +169,7 @@ function Login(props) {
                     </>
                   )}
                 </View>
-                <View style={{ marginBottom: 20 }}>
+                <View>
                   <TouchableOpacity
                     onPress={() =>
                       registeredEmail

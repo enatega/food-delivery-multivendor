@@ -411,9 +411,11 @@ function Checkout(props) {
       return false
     }
     if (calculatePrice(deliveryCharges, true) < minimumOrder) {
-      FlashMessage({
-        message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
-      })
+      // FlashMessage({
+      //   // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
+      //   message: `(${t(minAmount)}) (${configuration.currencySymbol
+      //     } ${minimumOrder}) (${t(forYourOrder)})`
+      // })
       return false
     }
     if (!location._id) {
@@ -696,7 +698,6 @@ function Checkout(props) {
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
-        {!cart.length && emptyCart()}
         {!!cart.length && (
           <>
             <ScrollView

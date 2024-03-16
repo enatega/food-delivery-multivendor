@@ -6,7 +6,7 @@ import React, {
   useRef,
   useEffect
 } from 'react'
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { LocationContext } from '../../context/Location'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -101,7 +101,6 @@ export default function AddNewAddress(props) {
   })
 
   useEffect(() => {
-    console.log('useEffect')
     setCoordinates({ longitude, latitude })
   }, [])
 

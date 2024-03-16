@@ -1,5 +1,11 @@
 import React, { useLayoutEffect } from 'react'
-import { View, TouchableOpacity, StatusBar, Image } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+  KeyboardAvoidingView
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../styles'
 import Spinner from '../../../components/Spinner/Spinner'
@@ -47,6 +53,7 @@ function PhoneOtp(props) {
           themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
         }
       />
+
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
@@ -104,33 +111,33 @@ function PhoneOtp(props) {
               </TextDefault>
             )}
           </View>
-          <View style={{ ...alignment.MTlarge }}>
-            {loading || updateUserLoading ? (
-              <Spinner backColor="transparent" size="small" />
-            ) : (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[
-                  styles(currentTheme).btn,
-                  seconds !== 0 && styles(currentTheme).disabledBtn
-                ]}
-                disabled={seconds !== 0}
-                onPress={() => resendOtp()}>
-                <TextDefault
-                  H4
-                  textColor={currentTheme.buttonTextPink}
-                  style={alignment.MLsmall}
-                  bold>
-                  {t('resendBtn')}
-                </TextDefault>
-              </TouchableOpacity>
-            )}
-          </View>
-          <View style={alignment.MBxSmall}>
-            <TextDefault center H4 bold style={alignment.MTsmall}>
-              {seconds !== 0 ? `Retry after ${seconds}s` : ''}
-            </TextDefault>
-          </View>
+        </View>
+        <View style={alignment.MBxSmall}>
+          <TextDefault center H4 bold style={alignment.MTsmall}>
+            {seconds !== 0 ? `Retry after ${seconds}s` : ''}
+          </TextDefault>
+        </View>
+        <View style={styles().btnContainer}>
+          {loading || updateUserLoading ? (
+            <Spinner backColor="transparent" size="small" />
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[
+                styles(currentTheme).btn,
+                seconds !== 0 && styles(currentTheme).disabledBtn
+              ]}
+              disabled={seconds !== 0}
+              onPress={() => resendOtp()}>
+              <TextDefault
+                H4
+                textColor={currentTheme.fontfourthColor}
+                style={alignment.MLsmall}
+                bold>
+                {t('resendBtn')}
+              </TextDefault>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </SafeAreaView>

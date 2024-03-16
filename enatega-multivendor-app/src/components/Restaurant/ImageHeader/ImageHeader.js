@@ -349,7 +349,10 @@ function ImageTextCenterHeader(props, ref) {
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles().ratingBox}
-                  onPress={() => alert('Coming soon')}>
+                  onPress={() => navigation.navigate('Reviews', {
+                    restaurantObject: { ...aboutObject, isOpen: null },
+                    tab: false
+                  })}>
                   <Text
                     style={{
                       fontSize: scale(14),

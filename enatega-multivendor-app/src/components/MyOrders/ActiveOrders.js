@@ -36,22 +36,11 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   if (error) return <TextError text={error.message} />
 
   return (
-    <React.Fragment>
-      {showActiveHeader && (
-        <Heading headerName={t('ActiveOrder')} textWidth="90%" />
-      )}
-      {activeOrders?.map((item, index) => (
-        <Item
-          key={index.toString()}
-          item={item}
-          navigation={navigation}
-          currentTheme={currentTheme}
-        />
-      ))}
-      {showPastHeader && (
-        <Heading headerName={t('PastOrder')} textWidth="90%" />
-      )}
-    </React.Fragment>
+    <FlatList
+      data={activeOrders}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+    />
   )
 }
 
@@ -91,7 +80,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
               {remainingTime}-{remainingTime + 5} mins
             </TextDefault>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{flex:1}}>
             <ProgressBar
               configuration={configuration}
               currentTheme={currentTheme}

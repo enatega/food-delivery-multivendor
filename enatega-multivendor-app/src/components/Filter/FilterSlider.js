@@ -15,7 +15,7 @@ import styles from './styles'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { FILTER_TYPE } from '../../screens/Menu/Menu'
+import { FILTER_TYPE } from '../../utils/enums'
 
 const Filters = ({ filters, setFilters, applyFilters }) => {
   const themeContext = useContext(ThemeContext)

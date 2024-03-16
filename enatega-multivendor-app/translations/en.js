@@ -221,7 +221,7 @@ export const en = {
   PICKED: 'PICKED',
   DELIVERED: 'DELIVERED',
   COMPLETED: 'COMPLETED',
-  pendingOrder: 'Your order is pending confirmation from restaurant.',
+  pendingOrder: 'Order received! Your meal is in the works, soon to be at your doorstep.',
   acceptedOrder: 'Preparing your food. Rider will pick it up once its ready.',
   assignedOrder: 'Preparing your food. Rider will pick it up once its ready.',
   pickedOrder:

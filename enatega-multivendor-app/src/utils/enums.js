@@ -11,3 +11,8 @@ export const ORDER_STATUS_ENUM = {
 export const NOTIFICATION_TYPES = {
   REVIEW_ORDER: 'REVIEW_ORDER'
 }
+
+export const FILTER_TYPE = {
+  CHECKBOX: 'checkbox',
+  RADIO: 'radio'
+}

@@ -50,6 +50,7 @@ import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import useRestaurantOrderInfo from '../../ui/hooks/useRestaurantOrderInfo'
+import ActiveOrders from '../../components/MyOrders/ActiveOrders'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -154,7 +155,7 @@ function Main(props) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async () => {
+  const setCurrentLocation = async() => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
@@ -569,6 +570,7 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
+        <ActiveOrders/>
       </SafeAreaView>
     </>
   )

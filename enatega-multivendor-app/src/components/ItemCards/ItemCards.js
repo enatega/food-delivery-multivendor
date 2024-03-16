@@ -1,4 +1,5 @@
-import { FlatList, Image, Text, View, TouchableOpacity } from 'react-native'
+import React from 'react'
+import { Image, Text, View, TouchableOpacity } from 'react-native'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
 import { useContext } from 'react'

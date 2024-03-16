@@ -48,11 +48,11 @@ const Section = ({ itemId, restaurantId }) => {
             <View style={styles().suggestItemContainer}>
                 {food.image &&
                     <View style={styles().suggestItemImgContainer}>
-                        <Image
-                            source={{ uri: food.image }}
-                            style={styles().suggestItemImg}
-                            resizeMode="contain"
-                        />
+                      <Image
+                        source={{ uri: food.image }}
+                        style={styles().suggestItemImg}
+                        resizeMode="contain"
+                      />
                     </View>
                 }
                     <TextDefault
@@ -86,25 +86,25 @@ const Section = ({ itemId, restaurantId }) => {
     }
 
 
-    return (
-        <View>
-            <TextDefault
-                style={styles().suggestItemDesciption}
-                textColor={currentTheme.fontNewColor}
-                H5
-                bolder>
+  return (
+    <View>
+      <TextDefault
+        style={styles().suggestItemDesciption}
+        textColor={currentTheme.fontNewColor}
+        H5
+        bolder>
                 Would you like to add these?
-            </TextDefault>
-            <FlatList
-                data={slicedItems}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-            />
-        </View>
-    )
+      </TextDefault>
+      <FlatList
+        data={slicedItems}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      />
+    </View>
+  )
 }
 export default Section

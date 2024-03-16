@@ -10,14 +10,12 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  ScrollView,
-  Image
+  ScrollView
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
-import { OutlinedTextField, TextField } from 'react-native-material-textfield'
+import { OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import gql from 'graphql-tag'
 import { editAddress } from '../../apollo/mutations'
 import * as Location from 'expo-location'
@@ -28,9 +26,6 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { LocationContext } from '../../context/Location'
-import { mapStyle } from '../../utils/mapStyle'
-import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
-import AddressText from '../../components/Address/AddressText'
 import SearchModal from '../../components/Address/SearchModal'
 import Analytics from '../../utils/analytics'
 import { MaterialIcons, Entypo, Foundation } from '@expo/vector-icons'
@@ -123,7 +118,6 @@ function EditAddress(props) {
         elevation: 1
       },
       headerTitleAlign: 'center',
-      headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=""
