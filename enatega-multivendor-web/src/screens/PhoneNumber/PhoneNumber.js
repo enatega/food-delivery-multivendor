@@ -36,7 +36,7 @@ function PhoneNumber() {
   const navigate = useNavigate();
   const formRef = useRef(null);
   const { state } = useLocation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // State to manage loading animation
   const [phone, setPhone] = useState("");
   const [setPhoneError] = useState("");
 
@@ -44,15 +44,15 @@ function PhoneNumber() {
   const { profile } = useContext(UserContext);
   const configuration = useContext(ConfigurationContext);
 
-  const [PhoneEixst] = useMutation(PHONE, {
+  const [PhoneExist] = useMutation(PHONE, {
     onCompleted,
     onError,
   });
 
   async function onCompleted({ phoneExist }) {
     if (phoneExist?._id !== null) {
-      setError("Phone number already assocaited with some other user");
-      setLoading(false);
+      setError("Phone number already associated with some other user");
+      setLoading(false); // Turn off loading animation if an error occurs
     } else {
       try {
         if (configuration?.twilioEnabled) {
@@ -82,11 +82,13 @@ function PhoneNumber() {
       }
     }
   }
+  
   function onError({ error }) {
     setError("Something went wrong");
+    setLoading(false); // Turn off loading animation if an error occurs
   }
 
-  const handleAction = () => {
+  const handleAction = async () => {
     setError("");
     let validate = true;
     if (!phone) {
@@ -96,9 +98,10 @@ function PhoneNumber() {
     }
     if (validate) {
       if (`+${phone}` !== state?.prevPhone) {
-        PhoneEixst({ variables: { phone: `+${phone}` } });
+        setLoading(true); // Turn on loading animation before making the mutation call
+        await PhoneExist({ variables: { phone: `+${phone}` } });
       } else {
-        setPhoneError("New phone number must be different from pervious one");
+        setPhoneError("New phone number must be different from previous one");
       }
     }
   };
