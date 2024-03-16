@@ -15,8 +15,6 @@ import useStyle from "./styles";
 import PasswordIcon from "@mui/icons-material/Password";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from 'react-i18next';
-import { passwordRegex, passwordErrorMessage } from '../../../utils/passwordUtils';  
-
 
 const CHANGE_PASSWORD = gql`
   ${changePassword}
@@ -64,11 +62,12 @@ function PasswordCard() {
         const newPassword = formRef.current["newPassword"].value;
         
         // Password validation requirements
-        if (!passwordRegex.test(newPassword)) {  
-            setConfirmError("Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number");  
-            validate = false;  
-            return;  
-        }  
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/; // At least 8 characters, one lowercase letter, one uppercase letter, one number
+        if (!passwordRegex.test(newPassword)) {
+            setConfirmError("Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number");
+            validate = false;
+            return;
+        }
 
         if (!oldPassword) {
             setPassError("Current password is required");
