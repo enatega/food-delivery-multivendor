@@ -50,6 +50,7 @@ export const en = {
   titleProfile: 'Profile',
   titleSettings: 'Settings',
   titleHelp: 'Help',
+  titleFAQ: 'FAQs',
   titleChat: 'Chat',
   titleLogout: 'Logout',
   titleCart: 'Your Cart',
