@@ -96,10 +96,6 @@ export default function AddNewAddress(props) {
     })
   })
 
-  const onSelectSearch = location => {
-    setCoordinates(location)
-  }
-
   const setCoordinates = useCallback(location => {
     mapRef.current.fitToCoordinates([
       {
@@ -187,17 +183,17 @@ export default function AddNewAddress(props) {
               Save
             </TextDefault>
           </TouchableOpacity>
-          {searchModalVisible && <SearchModal
+          <SearchModal
             visible={searchModalVisible}
             onClose={() => setSearchModalVisible(false)}
-            onSubmit={(...props) => {
-              onSelectSearch({
-                latitude: props[1].lat,
-                longitude: props[1].lng
+            onSubmit={(description, coords) => {
+              setCoordinates({
+                latitude: coords.lat,
+                longitude: coords.lng
               })
               setSearchModalVisible(false)
             }}
-          />}
+          />
         </View>
         <View style={{ paddingBottom: inset.bottom }} />
       </View>
