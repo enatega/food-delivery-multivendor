@@ -121,7 +121,6 @@ export default function AddNewAddress(props) {
       longitude: selectedValue.longitude,
       city: selectedValue.city
     })
-    navigation.navigate('Main')
   }
 
   return (
@@ -188,7 +187,7 @@ export default function AddNewAddress(props) {
               Save
             </TextDefault>
           </TouchableOpacity>
-          <SearchModal
+          {searchModalVisible && <SearchModal
             visible={searchModalVisible}
             onClose={() => setSearchModalVisible(false)}
             onSubmit={(...props) => {
@@ -198,7 +197,7 @@ export default function AddNewAddress(props) {
               })
               setSearchModalVisible(false)
             }}
-          />
+          />}
         </View>
         <View style={{ paddingBottom: inset.bottom }} />
       </View>
