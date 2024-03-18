@@ -24,24 +24,23 @@ import { fetchAddressFromCoordinates } from '../../utils/geocoding'
 import { useNavigation } from '@react-navigation/native'
 import MapView from './MapView'
 import screenOptions from './screenOptions'
+import { useLocation } from '../../ui/hooks'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
-const LATITUDE_DELTA = 40
-const LONGITUDE_DELTA = 40
+const LATITUDE_DELTA = 0.2
+const LONGITUDE_DELTA = 0.2
 
 export default function AddNewAddress(props) {
-  const { longitude, latitude } = props.route.params?.location || {}
-  console.log('AddNewAddress', latitude, longitude)
-  // city, latitude, longitude
-
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
+
+  const { longitude, latitude } = props.route.params || {}
   const [selectedValue, setSelectedValue] = useState({
     city: '',
     address: '',
-    latitude: '',
-    longitude: ''
+    latitude: LATITUDE,
+    longitude: LONGITUDE
   })
   const { setLocation } = useContext(LocationContext)
   const mapRef = useRef()
@@ -50,8 +49,18 @@ export default function AddNewAddress(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const inset = useSafeAreaInsets()
   const navigation = useNavigation()
+  const { getCurrentLocation } = useLocation()
 
   const { t } = useTranslation()
+  const setCurrentLocation = async() => {
+    const { coords, error } = await getCurrentLocation()
+    if (!error) {
+      setCoordinates({
+        latitude: coords.latitude,
+        longitude: coords.longitude
+      })
+    }
+  }
 
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -60,20 +69,21 @@ export default function AddNewAddress(props) {
         fontColor: currentTheme.fontMainColor,
         backColor: currentTheme.white,
         iconColor: currentTheme.black,
-        lineColor: currentTheme.lightHorizontalLine
+        lineColor: currentTheme.lightHorizontalLine,
+        setCurrentLocation
       })
     )
   }, [])
 
   const onSelectCity = item => {
-    console.log(' ', item)
-    setSelectedValue(item.name)
-    setCoordinates({ longitude: item.longitude, latitude: item.latitude })
+    setCoordinates({
+      latitude: +item.latitude,
+      longitude: +item.longitude
+    })
     setCityModalVisible(false)
   }
 
   const onRegionChangeComplete = useCallback(async coordinates => {
-    console.log('onRegionChangeComplete', coordinates)
     const response = await fetchAddressFromCoordinates(
       coordinates.latitude,
       coordinates.longitude
@@ -84,12 +94,7 @@ export default function AddNewAddress(props) {
       latitude: coordinates.latitude,
       longitude: coordinates.longitude
     })
-    // populate city, address info based on coordinates
   })
-
-  const onSelectSearch = location => {
-    setCoordinates(location)
-  }
 
   const setCoordinates = useCallback(location => {
     mapRef.current.fitToCoordinates([
@@ -101,7 +106,7 @@ export default function AddNewAddress(props) {
   })
 
   useEffect(() => {
-    setCoordinates({ longitude, latitude })
+    onRegionChangeComplete({ longitude, latitude })
   }, [])
 
   const onSelectLocation = () => {
@@ -109,9 +114,9 @@ export default function AddNewAddress(props) {
       label: 'Location',
       deliveryAddress: selectedValue.address,
       latitude: selectedValue.latitude,
-      longitude: selectedValue.longitude
+      longitude: selectedValue.longitude,
+      city: selectedValue.city
     })
-    navigation.navigate('Main')
   }
 
   return (
@@ -121,8 +126,8 @@ export default function AddNewAddress(props) {
           <MapView
             ref={mapRef}
             initialRegion={{
-              latitude: LATITUDE,
-              longitude: LONGITUDE,
+              latitude: latitude,
+              longitude: longitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA
             }}
@@ -152,6 +157,7 @@ export default function AddNewAddress(props) {
             {t('addAddress')}
           </TextDefault>
           <CityModal
+            theme={currentTheme}
             setCityModalVisible={setCityModalVisible}
             selectedValue={selectedValue.city}
             cityModalVisible={cityModalVisible}
@@ -170,23 +176,6 @@ export default function AddNewAddress(props) {
               </Text>
             </TouchableOpacity>
           </View>
-          {/* <View style={[styles(currentTheme).textInput]}>
-            <TextInput
-              style={[styles().flex, { color: currentTheme.buttonText }]}
-              placeholder="Address"
-              placeholderTextColor={currentTheme.placeholderText}
-              value={selectedValue.address}
-              onChangeText={text => {}}
-            />
-            <TouchableOpacity onPress={() => setSearchModalVisible(true)}>
-              <MaterialIcons
-                name="edit"
-                size={18}
-                color={currentTheme.darkBgFont}
-                style={{ marginRight: 10, marginLeft: 10 }}
-              />
-            </TouchableOpacity>
-          </View> */}
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
@@ -198,13 +187,12 @@ export default function AddNewAddress(props) {
           <SearchModal
             visible={searchModalVisible}
             onClose={() => setSearchModalVisible(false)}
-            onSubmit={(...props) => {
-              onSelectSearch({
-                latitude: props[1].lat,
-                longitude: props[1].lng
+            onSubmit={(description, coords) => {
+              setCoordinates({
+                latitude: coords.lat,
+                longitude: coords.lng
               })
               setSearchModalVisible(false)
-              console.log('onSearchItemSelect', props[1].lat, props[1].lng)
             }}
           />
         </View>
@@ -216,6 +204,7 @@ export default function AddNewAddress(props) {
 
 const CityModal = React.memo(
   function CityModal({
+    theme,
     setCityModalVisible,
     selectedValue,
     cityModalVisible,
@@ -240,6 +229,7 @@ const CityModal = React.memo(
           />
         </TouchableOpacity>
         <ModalDropdown
+          theme={theme}
           visible={cityModalVisible}
           onItemPress={onSelect}
           onClose={() => {

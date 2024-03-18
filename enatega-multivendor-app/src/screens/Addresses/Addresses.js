@@ -4,11 +4,8 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
-  Platform,
-  Text,
-  ScrollView
+  Platform
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'
 import {
   AntDesign,
@@ -51,9 +48,8 @@ function Addresses() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { location } = useContext(LocationContext)
-  const inset = useSafeAreaInsets()
   const { t } = useTranslation()
-  const locationData = location;
+  const locationData = location
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor('transparent')
@@ -131,12 +127,9 @@ function Addresses() {
       </View>
     )
   }
-  //console.log('Location Data:', JSON.stringify(locationData, null, 2))
+
   return (
     <View style={styles(currentTheme).flex}>
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles().mainView}> */}
       <FlatList
         data={profile?.addresses}
         ListEmptyComponent={emptyView}
@@ -171,7 +164,6 @@ function Addresses() {
                   disabled={loadingMutation}
                   activeOpacity={0.7}
                   onPress={() => {
-                    //console.log(JSON.stringify(address))
                     navigation.navigate('AddNewAddress', { locationData })
                   }}>
                   <SimpleLineIcons
