@@ -229,21 +229,6 @@ function Main(props) {
     }
   }
 
-  const errorView = () => {
-    return (
-      <View style={styles().errorViewContainer}>
-        <MaterialIcons
-          name="error-outline"
-          size={scale(80)}
-          color={currentTheme.main}
-        />
-        <TextDefault center H3>
-          {t('networkError')}
-        </TextDefault>
-      </View>
-    )
-  }
-
   const modalFooter = () => (
     <View style={styles().addNewAddressbtn}>
       <View style={styles(currentTheme).addressContainer}>
