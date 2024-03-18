@@ -119,7 +119,7 @@ function LoginEmail() {
         <Box mt={theme.spacing(2)} />
         <TextField
           name={"userEmail"}
-          defaultValue={state?.email ?? ""}
+          defaultValue={state?.email ?? "demo-customer@enatega.com"}
           error={Boolean(emailError)}
           helperText={emailError}
           fullWidth
@@ -134,6 +134,7 @@ function LoginEmail() {
         <Box mt={theme.spacing(2)} />
         <TextField
           name={"userPass"}
+          defaultValue={"DemoCustomer55!"}
           InputLabelProps={{
             style: {
               color: theme.palette.grey[600],

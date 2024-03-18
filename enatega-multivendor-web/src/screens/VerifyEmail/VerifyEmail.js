@@ -137,7 +137,7 @@ function VerifyEmail() {
     setError("");
   }, []);
 
-  const onCodeFilled = (code) => {
+  const onCodeFilled = useCallback((code) => {
     if (SKIP_EMAIL_VERIFICATION || code === otpFrom) {
       createUser({
         variables: {
@@ -151,17 +151,28 @@ function VerifyEmail() {
     } else {
       setOtpError(true);
     }
-  };
+  },[SKIP_EMAIL_VERIFICATION, createUser, otpFrom, user.email, user.name, user.password, user.phone]);
 
   const resendOtp = () => {
     setOtpFrom(Math.floor(100000 + Math.random() * 900000).toString());
   };
-  const handleCreateUser = (val) => {
+  const handleCreateUser = useCallback((val) => {
     setOtp(val);
     if (val.length === 6) {
       onCodeFilled(val);
     }
-  };
+  },[onCodeFilled]);
+
+  useEffect(()=>{
+    let timer = null
+    if(!SKIP_EMAIL_VERIFICATION) return
+    setOtp('111111')
+    timer = setTimeout(()=>{
+      handleCreateUser('111111')
+    },3000)
+    return ()=>{timer && clearTimeout(timer)}
+  },[SKIP_EMAIL_VERIFICATION,handleCreateUser])
+
   return user?.email ? (
     <LoginWrapper>
       <FlashMessage

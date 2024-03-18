@@ -138,3 +138,10 @@ export const chat = `query Chat($order: ID!) {
     createdAt
   }
 }`
+
+export const defaultRiderCreds = `query LastOrderCreds {
+  lastOrderCreds {
+    riderUsername
+    riderPassword
+  }
+}`
