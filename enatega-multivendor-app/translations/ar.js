@@ -389,5 +389,7 @@ export const ar = {
   Appartment: 'شقة',
   tapToRate: 'انقر للتقييم',
   locationType: 'نوع الموقع',
-  locationTypeDetails: 'يساعدنا نوع الموقع في العثور عليك بشكل أفضل'
+  locationTypeDetails: 'يساعدنا نوع الموقع في العثور عليك بشكل أفضل',
+  notAvailableinYourArea: 'نحن غير متاحين حاليًا في منطقتك',
+  noRestaurant: 'لا يقدم أي مطعم توصيل في منطقتك حاليًا'
 }

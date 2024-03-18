@@ -402,5 +402,9 @@ export const fr = {
   Appartment: 'Appartement',
   tapToRate: 'Appuyez pour noter',
   locationType: 'Type de lieu',
-  locationTypeDetails: 'Le type de localisation nous aide à mieux vous trouver'
+  locationTypeDetails: 'Le type de localisation nous aide à mieux vous trouver',
+  notAvailableinYourArea:
+    'Nous ne sommes actuellement pas disponibles dans votre région',
+  noRestaurant:
+    'Aucun restaurant ne propose actuellement de livraison dans votre région'
 }

@@ -6,10 +6,12 @@ import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
+import { useTranslation } from 'react-i18next'
 
 const ErrorView = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { t } = useTranslation()
 
   return (
     <View style={styles().errorViewContainer}>

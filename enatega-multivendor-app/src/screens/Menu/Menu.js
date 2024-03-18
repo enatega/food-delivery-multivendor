@@ -264,10 +264,10 @@ function Menu({ route, props }) {
         <View style={styles().emptyViewContainer}>
           <View style={styles().emptyViewBox}>
             <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
-              We are not currently available in your area
+              {t('notAvailableinYourArea')}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontMainColor} center>
-              No restaurant currently offers delivery in your area
+              {t('noRestaurant')}
             </TextDefault>
           </View>
         </View>

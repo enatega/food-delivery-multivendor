@@ -398,5 +398,7 @@ export const en = {
   apartment: 'Apartment',
   tapToRate: 'Tap to Rate',
   locationType: 'Location Type',
-  locationTypeDetails: 'The location type helps us to find you better'
+  locationTypeDetails: 'The location type helps us to find you better',
+  notAvailableinYourArea: 'We are not currently available in your area',
+  noRestaurant: 'No restaurant currently offers delivery in your area'
 }
