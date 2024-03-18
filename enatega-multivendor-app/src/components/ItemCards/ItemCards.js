@@ -4,6 +4,7 @@ import { scale } from '../../utils/scaling'
 import styles from './styles'
 import { useContext } from 'react'
 import ConfigurationContext from '../../context/Configuration'
+import { IMAGE_LINK } from '../../utils/constants'
 
 const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
   const configuration = useContext(ConfigurationContext)
@@ -14,7 +15,8 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
       restaurantName: restaurant.name
     })
   }
-  const imageUrl = item.image && item.image.trim() !== '' ? item.image : 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp';
+  const imageUrl =
+    item.image && item.image.trim() !== '' ? item.image : IMAGE_LINK
 
   return (
     <TouchableOpacity onPress={handleAddToCart}>

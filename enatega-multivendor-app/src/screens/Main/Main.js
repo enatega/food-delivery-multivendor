@@ -49,8 +49,8 @@ import Item from '../../components/Main/Item/Item'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
-import useRestaurantOrderInfo from '../../ui/hooks/useRestaurantOrderInfo'
-import ActiveOrders from '../../components/MyOrders/ActiveOrders'
+import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
+import ErrorView from '../../components/ErrorView/ErrorView'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -84,7 +84,7 @@ function Main(props) {
       fetchPolicy: 'network-only'
     }
   )
-  const { orderLoading, orderError, orderData } = useRestaurantOrderInfo()
+  const { orderLoading, orderError, orderData } = useHomeRestaurants()
   const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
@@ -155,7 +155,7 @@ function Main(props) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
@@ -353,7 +353,7 @@ function Main(props) {
     return data
   }
 
-  if (error) return errorView()
+  if (error) return <ErrorView />
 
   return (
     <>
@@ -570,7 +570,6 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
-        <ActiveOrders/>
       </SafeAreaView>
     </>
   )

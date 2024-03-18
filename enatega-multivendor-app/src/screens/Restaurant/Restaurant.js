@@ -49,6 +49,7 @@ import { popularItems, food } from '../../apollo/queries'
 import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { ScrollView } from 'react-native-gesture-handler'
+import { IMAGE_LINK } from '../../utils/constants'
 
 const { height } = Dimensions.get('screen')
 
@@ -98,9 +99,7 @@ function Restaurant(props) {
     propsData._id
   )
   const client = useApolloClient()
-  const {
-    data: popularItems
-  } = useQuery(POPULAR_ITEMS, {
+  const { data: popularItems } = useQuery(POPULAR_ITEMS, {
     variables: { restaurantId }
   })
 
@@ -654,7 +653,10 @@ function Restaurant(props) {
                 )
               }}
               renderItem={({ item, section }) => {
-                const imageUrl = item.image && item.image.trim() !== '' ? item.image : 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp';
+                const imageUrl =
+                  item.image && item.image.trim() !== ''
+                    ? item.image
+                    : IMAGE_LINK
                 if (section.title === 'Popular') {
                   if (!dataList || dataList?.length === 0) {
                     return null

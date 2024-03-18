@@ -26,6 +26,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
+import { IMAGE_LINK } from '../../utils/constants'
 
 function ItemDetail(props) {
   const Analytics = analytics()
@@ -48,8 +49,8 @@ function ItemDetail(props) {
     })
   })
 
-
-  const imageUrl = food?.image && food?.image.trim() !== '' ? food.image : 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp';
+  const imageUrl =
+    food?.image && food?.image.trim() !== '' ? food.image : IMAGE_LINK
 
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')

@@ -53,6 +53,7 @@ import { FILTER_TYPE } from '../../utils/enums'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
+import ErrorView from '../../components/ErrorView/ErrorView'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -273,20 +274,6 @@ function Menu({ route, props }) {
       )
     }
   }
-  const errorView = () => {
-    return (
-      <View style={styles().errorViewContainer}>
-        <MaterialIcons
-          name="error-outline"
-          size={scale(80)}
-          color={currentTheme.main}
-        />
-        <TextDefault center H3>
-          {t('networkError')}
-        </TextDefault>
-      </View>
-    )
-  }
 
   const modalFooter = () => (
     <View style={styles().addNewAddressbtn}>
@@ -367,7 +354,7 @@ function Menu({ route, props }) {
     )
   }
 
-  if (error) return errorView()
+  if (error) return <ErrorView />
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 

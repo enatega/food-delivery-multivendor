@@ -40,7 +40,7 @@ function CartAddresses(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: '#000',
+        color: currentTheme.btnText,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {

@@ -7,7 +7,7 @@ import {
 import { LocationContext } from '../../context/Location'
 import UserContext from '../../context/User'
 
-export default function useRestaurantOrderInfo() {
+export default function useHomeRestaurants() {
   const { location } = useContext(LocationContext)
   const { isLoggedIn } = useContext(UserContext)
 
@@ -26,19 +26,14 @@ export default function useRestaurantOrderInfo() {
   const orderError =
     recentOrderRestaurants.error || mostOrderedRestaurants.error
 
-  let orderData = {
-    recentOrderRestaurants: null,
-    mostOrderedRestaurants: null
-  }
-
-  if (!orderLoading && !orderError) {
-    orderData = {
+  return {
+    orderLoading,
+    orderError,
+    orderData: {
       recentOrderRestaurants:
-        recentOrderRestaurants.data?.recentOrderRestaurants,
+        recentOrderRestaurants?.data?.recentOrderRestaurants,
       mostOrderedRestaurants:
-        mostOrderedRestaurants.data?.mostOrderedRestaurants
+        mostOrderedRestaurants?.data?.mostOrderedRestaurants
     }
   }
-
-  return { orderLoading, orderError, orderData }
 }

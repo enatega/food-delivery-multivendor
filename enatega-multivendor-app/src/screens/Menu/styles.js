@@ -123,12 +123,6 @@ const styles = (props = null) =>
       padding: scale(15),
       marginTop: scale(30)
     },
-    errorViewContainer: {
-      marginTop: verticalScale(30),
-      marginHorizontal: scale(10),
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
     mL5p: {
       ...alignment.MLsmall
     },
