@@ -380,5 +380,12 @@ export const zh = {
   locationType: '位置类型',
   locationTypeDetails: '位置类型有助于我们更好地找到您',
   notAvailableinYourArea: '我们目前不在您所在的区域提供服务',
-  noRestaurant: '目前没有餐厅在您所在的区域提供送餐服务'
+  noRestaurant: '目前没有餐厅在您所在的区域提供送餐服务',
+  noRestaurant: '目前没有餐厅在您的地区提供送餐服务',
+  titleEmptyActiveOrders: '目前没有活动订单！',
+  emptyActiveOrdersDesc: '您将在这里看到您的活动订单。',
+  emptyActiveOrdersBtn: '让我们来点什么吧！',
+  titleEmptyPastOrders: '目前没有过去的订单！',
+  emptyPastOrdersDesc: '您将在这里看到您的过去订单。',
+  emptyPastOrdersBtn: '让我们来点什么吧！'
 }

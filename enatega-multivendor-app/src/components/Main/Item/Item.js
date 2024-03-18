@@ -83,7 +83,7 @@ function Item(props) {
                   profile ? mutate({ variables: { id: item._id } }) : null
                 }>
                 {loadingMutation ? (
-                  <Spinner size={'small'} backColor={'transparent'} />
+                  <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} />
                 ) : (
                   <AntDesign
                     name={heart ? 'heart' : 'hearto'}
