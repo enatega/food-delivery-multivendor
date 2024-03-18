@@ -51,6 +51,7 @@ import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -557,6 +558,7 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
+        <ActiveOrders />
       </SafeAreaView>
     </>
   )
