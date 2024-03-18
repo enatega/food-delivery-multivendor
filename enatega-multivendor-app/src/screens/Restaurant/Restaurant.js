@@ -49,6 +49,7 @@ import { popularItems, food } from '../../apollo/queries'
 import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { ScrollView } from 'react-native-gesture-handler'
+import { IMAGE_LINK } from '../../utils/constants'
 
 const { height } = Dimensions.get('screen')
 
@@ -98,9 +99,7 @@ function Restaurant(props) {
     propsData._id
   )
   const client = useApolloClient()
-  const {
-    data: popularItems
-  } = useQuery(POPULAR_ITEMS, {
+  const { data: popularItems } = useQuery(POPULAR_ITEMS, {
     variables: { restaurantId }
   })
 
@@ -270,8 +269,8 @@ function Restaurant(props) {
 
   const addToCart = async(food, clearFlag) => {
     if (
-      food.variations.length === 1 &&
-      food.variations[0].addons.length === 0
+      food?.variations?.length === 1 &&
+      food?.variations[0].addons?.length === 0
     ) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
@@ -351,7 +350,7 @@ function Restaurant(props) {
   }
 
   function onViewableItemsChanged({ viewableItems }) {
-    if (viewableItems.length === 0) return
+    if (viewableItems?.length === 0) return
     if (
       selectedLabel !== viewableItems[0].section.index &&
       buttonClicked === false
@@ -456,7 +455,7 @@ function Restaurant(props) {
   }
   if (error) return <TextError text={JSON.stringify(error)} />
   const restaurant = data.restaurant
-  const allDeals = restaurant.categories.filter(cat => cat.foods.length)
+  const allDeals = restaurant.categories.filter(cat => cat?.foods?.length)
   const deals = allDeals.map((c, index) => ({
     ...c,
     data: c.foods,
@@ -606,7 +605,7 @@ function Restaurant(props) {
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title, data } }) => {
                 if (title === 'Popular') {
-                  if (!dataList || dataList.length === 0) {
+                  if (!dataList || dataList?.length === 0) {
                     return null // Don't render the section header if dataList is empty
                   }
                   return (
@@ -654,8 +653,12 @@ function Restaurant(props) {
                 )
               }}
               renderItem={({ item, section }) => {
+                const imageUrl =
+                  item.image && item.image.trim() !== ''
+                    ? item.image
+                    : IMAGE_LINK
                 if (section.title === 'Popular') {
-                  if (!dataList || dataList.length === 0) {
+                  if (!dataList || dataList?.length === 0) {
                     return null
                   }
                   return null
@@ -678,16 +681,14 @@ function Restaurant(props) {
                         alignItems: 'center'
                       }}>
                       <View style={styles(currentTheme).deal}>
-                        {item.image ? (
                           <Image
                             style={{
                               height: scale(60),
                               width: scale(60),
                               borderRadius: 30
                             }}
-                            source={{ uri: item.image }}
+                          source={{ uri: imageUrl }}
                           />
-                        ) : null}
                         <View style={styles(currentTheme).flex}>
                           <View style={styles(currentTheme).dealDescription}>
                             <TextDefault

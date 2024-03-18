@@ -327,6 +327,7 @@ export const de = {
   otpResentToEmail: 'OTP erneut an Ihre E-Mail gesendet.',
   search: 'Suche',
   searchRestaurant: 'Nach Restaurants suchen',
+  searchItems: 'Nach Elementen suchen',
   message: 'Nachricht',
   aptFloor: 'Apt | Etage',
   confirmPassword: 'Passwort bestätigen',
@@ -403,5 +404,7 @@ export const de = {
   Appartment: 'Wohnung',
   tapToRate: 'Zum Bewerten tippen',
   locationType: 'Standorttyp',
-  locationTypeDetails: 'Der Standorttyp hilft uns, Sie besser zu finden'
+  locationTypeDetails: 'Der Standorttyp hilft uns, Sie besser zu finden',
+  notAvailableinYourArea: 'Wir sind derzeit nicht in Ihrer Region verfügbar',
+  noRestaurant: 'Kein Restaurant bietet derzeit Lieferung in Ihrer Region an'
 }

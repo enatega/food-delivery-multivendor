@@ -55,7 +55,7 @@ const styles = (props = null) =>
     },
     dealDescription: {
       backgroundColor: props != null ? props.themeBackground : 'white',
-
+      ...alignment.PBsmall,
       ...alignment.PRxSmall
     },
     dealPrice: {

@@ -114,7 +114,7 @@ const styles = (props = null) =>
       padding:scale(8),
       width: scale(120),
       marginTop:scale(14),
-      height: scale(180),
+      height: scale(160),
       
     },
     suggestItemImgContainer:{

@@ -313,6 +313,7 @@ export const km = {
   otpResentToEmail: 'OTP បានផ្ញើទៅអ៊ីមែលរបស់អ្នកឡើងវិញ',
   search: 'ស្វែងរក',
   searchRestaurant: 'ស្វែងរកហាងនៅ',
+  searchItems: 'ស្វែងរកធាតុ',
   message: 'សារ',
   aptFloor: 'ខេត្ត | ជាន់',
   confirmPassword: 'បញ្ជាក់ពាក្យសំងាត់',
@@ -388,5 +389,8 @@ export const km = {
   Appartment: 'ផ្ទះល្វែង',
   tapToRate: 'ប៉ះដើម្បីវាយតម្លៃ',
   locationType: 'ប្រភេទទីតាំង',
-  locationTypeDetails: 'ប្រភេទទីតាំងជួយយើងក្នុងការស្វែងរកអ្នកកាន់តែប្រសើរ'
+  locationTypeDetails: 'ប្រភេទទីតាំងជួយយើងក្នុងការស្វែងរកអ្នកកាន់តែប្រសើរ',
+  notAvailableinYourArea: 'យើងមិនមាននៅក្នុងតំបន់របស់អ្នកទេ',
+  noRestaurant:
+    'មិនមានភេទផ្ទះសំរាប់សេវាកម្មសំរាប់ផ្ទះសំរាប់នៅក្នុងតំបន់របស់អ្នកទេ'
 }

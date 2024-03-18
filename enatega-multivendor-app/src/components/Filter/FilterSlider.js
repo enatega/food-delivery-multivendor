@@ -76,7 +76,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
           style={[
             styles(currentTheme).filterButton,
             selectedFilter === filter &&
-              styles(currentTheme).selectedFilterButton
+            styles(currentTheme).selectedFilterButton
           ]}
           onPress={() => handleFilterClick(filter)}>
           <SafeAreaView style={styles(currentTheme).itemContainer}>
@@ -97,40 +97,40 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
           </TouchableOpacity>
         </View>
         <ScrollView style={styles(currentTheme).modalContainer}>
-          {result.map(filterValue => (
+          {result?.map(filterValue => (
             <View key={filterValue}>
               <Text style={styles(currentTheme).modalTitle}>{filterValue}</Text>
               <View>
-                {filters && filters[filterValue].values.map((value, index) => (
+                {filters && filters[filterValue].values?.map((value, index) => (
                   <TouchableOpacity
                     key={index}
                     style={[
                       { flexDirection: 'row', justifyContent: 'space-between' },
                       styles(currentTheme).modalItem,
                       filters[filterValue].selected === value &&
-                        styles(currentTheme).selectedModalItem
+                      styles(currentTheme).selectedModalItem
                     ]}
                     onPress={() => handleValueSelection(filterValue, value)}>
                     <Text style={styles(currentTheme).modalItemText}>
                       {value}
                     </Text>
                     {filters && filters[filterValue].type ===
-                    FILTER_TYPE.CHECKBOX ? (
-                        <CheckboxBtn
-                          checked={filters[filterValue].selected.includes(value)}
-                          onPress={() => handleValueSelection(filterValue, value)}
-                        />
-                      ) : (
-                        <RadioButton
-                          size={12}
-                          innerColor={currentTheme.main}
-                          outerColor={currentTheme.radioOuterColor}
-                          isSelected={filters[filterValue].selected.includes(
-                            value
-                          )}
-                          onPress={() => handleValueSelection(filterValue, value)}
-                        />
-                      )}
+                      FILTER_TYPE.CHECKBOX ? (
+                      <CheckboxBtn
+                        checked={filters[filterValue].selected.includes(value)}
+                        onPress={() => handleValueSelection(filterValue, value)}
+                      />
+                    ) : (
+                      <RadioButton
+                        size={12}
+                        innerColor={currentTheme.main}
+                        outerColor={currentTheme.iconColorDark}
+                        isSelected={filters[filterValue].selected.includes(
+                          value
+                        )}
+                        onPress={() => handleValueSelection(filterValue, value)}
+                      />
+                    )}
                   </TouchableOpacity>
                 ))}
               </View>

@@ -5,7 +5,6 @@ import React, {
   useContext,
   useRef
 } from 'react'
-import { Ionicons, AntDesign } from '@expo/vector-icons'
 import {
   View,
   ScrollView,
@@ -18,6 +17,7 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
@@ -49,6 +49,7 @@ import styles from './styles'
 import Location from '../../components/Main/Location/Location'
 import { customMapStyle } from '../../utils/customMapStyles'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
+import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 
 // Constants
 const PLACEORDER = gql`
@@ -69,9 +70,6 @@ function Checkout(props) {
     restaurant: cartRestaurant,
     cart,
     cartCount,
-    addQuantity,
-    removeQuantity,
-    deleteItem,
     updateCart
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -100,14 +98,6 @@ function Checkout(props) {
     fetchPolicy: 'network-only'
   })
 
-  const onOpen = () => {
-    const modal = modalRef.current
-    if (modal) {
-      modal.open()
-      setIsModalOpen(true)
-    }
-  }
-
   const [mutateOrder, { loading: loadingOrderMutation }] = useMutation(
     PLACEORDER,
     {
@@ -121,7 +111,7 @@ function Checkout(props) {
     payment: 'COD',
     label: t('cod'),
     index: 2,
-    icon: require('../../assets/images/cashIcon.png')
+    icon: 'dollar'
   }
 
   const paymentMethod =
@@ -590,6 +580,42 @@ function Checkout(props) {
     }
   }
 
+    function emptyCart() {
+    return (
+      <View style={styles().subContainerImage}>
+        <View style={styles().imageContainer}>
+          <EmptyCart width={scale(200)} height={scale(200)} />
+        </View>
+        <View style={styles().descriptionEmpty}>
+          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
+            {t('hungry')}?
+          </TextDefault>
+          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
+            {t('emptyCart')}
+          </TextDefault>
+        </View>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles(currentTheme).emptyButton}
+          onPress={() =>
+            props.navigation.navigate({
+              name: 'Main',
+              merge: true
+            })
+          }>
+          <TextDefault
+            textColor={currentTheme.buttonText}
+            bolder
+            B700
+            center
+            uppercase>
+            {t('emptyCartBtn')}
+          </TextDefault>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -991,18 +1017,18 @@ function Checkout(props) {
                             alignItems: 'center',
                             gap: scale(18)
                           }}>
-                          <View style={styles().currencyLogo}>
-                            <Ionicons
-                              name="logo-usd"
+                          <View>
+                            <FontAwesome
+                              name={paymentMethod?.icon}
                               size={15}
-                              color={currentTheme.fontFourthColor}
-                            />
+                              color={currentTheme.fontFourthColor} />
+
                           </View>
                           <TextDefault
                             textColor={currentTheme.fontFourthColor}
                             medium
                             bolder>
-                            {paymentMethod.label}
+                            {paymentMethod?.label}
                           </TextDefault>
                         </View>
                         <View style={styles(currentTheme).changeBtn}>

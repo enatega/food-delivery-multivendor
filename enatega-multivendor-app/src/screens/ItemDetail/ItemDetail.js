@@ -26,6 +26,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
+import { IMAGE_LINK } from '../../utils/constants'
 
 function ItemDetail(props) {
   const Analytics = analytics()
@@ -47,6 +48,9 @@ function ItemDetail(props) {
       }
     })
   })
+
+  const imageUrl =
+    food?.image && food?.image.trim() !== '' ? food.image : IMAGE_LINK
 
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')
@@ -309,7 +313,7 @@ function ItemDetail(props) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? `${0}` : `${100}`}>
-          {!!food.image && <ImageHeader image={food.image} />}
+          {imageUrl && <ImageHeader image={imageUrl} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>

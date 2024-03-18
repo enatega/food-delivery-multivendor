@@ -27,7 +27,23 @@ const styles = (props = null) =>
     },
     margin: {
       ...alignment.MLmedium,
-      ...alignment.MBmedium,
+      ...alignment.MBmedium
+    },
+    screenBackground: {
+      backgroundColor: props != null ? props.themeBackground : '#FFF'
+    },
+    placeHolderFadeColor: {
+      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+    },
+    placeHolderContainer: {
+      backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
+      borderRadius: scale(3),
+      elevation: scale(3),
+      marginBottom: scale(12),
+      padding: scale(12)
+    },
+    height200: {
+      height: scale(200)
     }
   })
 

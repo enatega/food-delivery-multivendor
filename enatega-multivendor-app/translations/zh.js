@@ -303,6 +303,7 @@ export const zh = {
   otpResentToEmail: 'OTP重新发送到您的电子邮件。',
   search: '搜索',
   searchRestaurant: '搜索餐馆',
+  searchItems: '搜索物品',
   message: '消息',
   aptFloor: '公寓 | 楼层',
   confirmPassword: '确认密码',
@@ -377,5 +378,7 @@ export const zh = {
   Appartment: '公寓',
   tapToRate: '点击评分',
   locationType: '位置类型',
-  locationTypeDetails: '位置类型有助于我们更好地找到您'
+  locationTypeDetails: '位置类型有助于我们更好地找到您',
+  notAvailableinYourArea: '我们目前不在您所在的区域提供服务',
+  noRestaurant: '目前没有餐厅在您所在的区域提供送餐服务'
 }

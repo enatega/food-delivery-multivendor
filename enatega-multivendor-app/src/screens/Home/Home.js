@@ -267,7 +267,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
+        <Search search={''} setSearch={() => { }} placeHolder={t('searchRestaurant')} />
         <Placeholder
           Animation={props => (
             <Fade
@@ -368,7 +368,7 @@ function Main(props) {
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
                 <View style={styles().searchbar}>
-                  <Search setSearch={setSearch} search={search} />
+                  <Search setSearch={setSearch} search={search} placeHolder={t('searchRestaurant')} />
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>

@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -7,7 +7,6 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { EvilIcons } from '@expo/vector-icons'
-import { scale } from '../../../utils/scaling'
 
 function Location(props) {
   const { t } = useTranslation()
@@ -25,11 +24,6 @@ function Location(props) {
     location.deliveryAddress === 'Current Location'
       ? t('currentLocation')
       : location.deliveryAddress
-
-  const truncatedTranslatedAddress =
-    translatedAddress?.length > 26
-      ? translatedAddress?.substring(0, 17) + '...'
-      : translatedAddress
 
   return (
     <View>
@@ -53,7 +47,7 @@ function Location(props) {
               style={styles.textContainer}>
               <TextDefault textColor={props.black} numberOfLines={1} H5 bolder>
                 {''}
-                {truncatedTranslatedAddress}
+                {translatedAddress}
               </TextDefault>
             </TouchableOpacity>
           </View>
