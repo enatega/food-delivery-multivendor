@@ -101,7 +101,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
             <View key={filterValue}>
               <Text style={styles(currentTheme).modalTitle}>{filterValue}</Text>
               <View>
-                {filters && filters[filterValue].values?.map((value, index) => (
+                {filters && filters[filterValue]?.values?.map((value, index) => (
                   <TouchableOpacity
                     key={index}
                     style={[
