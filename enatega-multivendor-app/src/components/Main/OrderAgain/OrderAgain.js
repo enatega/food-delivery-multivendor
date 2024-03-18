@@ -12,7 +12,6 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 
 function OrderAgain(props) {
   const { t } = useTranslation()
-  const { isLoggedIn } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -35,13 +34,11 @@ function OrderAgain(props) {
     )
   }
 
-  if (!isLoggedIn) return null
   if (props?.loading) return loadingScreen()
   if (props?.error) return <Text>Error: {props?.error?.message}</Text>
 
   return (
     <View style={styles().orderAgainSec}>
-      {isLoggedIn && (
         <View>
           <TextDefault
             numberOfLines={1}
@@ -69,7 +66,6 @@ function OrderAgain(props) {
             }}
           />
         </View>
-      )}
     </View>
   )
 }
