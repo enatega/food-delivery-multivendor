@@ -8,33 +8,14 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
+import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 
 function OrderAgain(props) {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  function loadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-      </View>
-    )
-  }
-
-  if (props?.loading) return loadingScreen()
+  if (props?.loading) return <MainLoadingUI />
   if (props?.error) return <Text>Error: {props?.error?.message}</Text>
 
   return (

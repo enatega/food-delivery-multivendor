@@ -52,6 +52,8 @@ import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
+import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
+import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -213,7 +215,7 @@ function Main(props) {
   )
 
   const emptyView = () => {
-    if (loading || mutationLoading || loadingOrders) return loadingScreen()
+    if (loading || mutationLoading || loadingOrders) return <MainLoadingUI />
     else {
       return (
         <View style={styles().emptyViewContainer}>
@@ -264,42 +266,6 @@ function Main(props) {
     </View>
   )
 
-  function loadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-      </View>
-    )
-  }
-
-  function brandsLoadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).brandsPlaceHolderContainer}>
-          <PlaceholderLine style={styles().height80} />
-        </Placeholder>
-      </View>
-    )
-  }
 
   const restaurants = data?.nearByRestaurants?.restaurants
 
@@ -459,7 +425,7 @@ function Main(props) {
                           recentOrderRestaurantsVar.length > 0 && (
                             <>
                               {orderLoading ? (
-                                loadingScreen()
+                                <MainLoadingUI />
                               ) : (
                                 <OrderAgain
                                   recentOrderRestaurants={
@@ -475,7 +441,7 @@ function Main(props) {
                       </View>
                       <View>
                         {orderLoading ? (
-                          loadingScreen()
+                          <MainLoadingUI />
                         ) : (
                           <TopPicks
                             mostOrderedRestaurants={mostOrderedRestaurantsVar}
@@ -487,7 +453,7 @@ function Main(props) {
                       </View>
                     </View>
                     <View>
-                      {orderLoading ? brandsLoadingScreen() : <TopBrands />}
+                      {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
                     </View>
                   </ScrollView>
                 )}
