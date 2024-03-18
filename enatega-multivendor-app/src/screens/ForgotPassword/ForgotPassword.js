@@ -79,9 +79,7 @@ function ForgotPassword(props) {
               H5
               bold
               textColor={currentTheme.fontSecondColor}
-              style={{
-                paddingBottom: scale(15)
-              }}>
+              style={styles().emailHeading}>
               {t('enterYourEmail')}
             </TextDefault>
           </View>

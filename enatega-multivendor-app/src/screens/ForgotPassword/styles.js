@@ -50,7 +50,6 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.white : 'white',
       padding: scale(12),
       shadowColor: props !== null ? props.fontSecondColor : '#545454'
-      // ...alignment.MTlarge
     },
     errorInput: {
       backgroundColor: props !== null ? props.errorInputBack : '#F7E7E5',
