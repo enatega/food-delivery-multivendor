@@ -156,10 +156,10 @@ const Restaurants = props => {
       : data &&
         data.restaurants.filter(restaurant => {
           return (
-              (restaurant.name?.toLowerCase().search(regex) ?? -1) > -1 ||
-              (restaurant.orderPrefix?.toLowerCase().search(regex) ?? -1) > -1 ||
-              (restaurant.owner.email?.toLowerCase().search(regex) ?? -1) > -1 ||
-              (restaurant.address?.toLowerCase().search(regex) ?? -1) > -1
+              (restaurant.name?.toLowerCase().search(regex)) > -1 ||
+              (restaurant.orderPrefix?.toLowerCase().search(regex)) > -1 ||
+              (restaurant.owner.email?.toLowerCase().search(regex)) > -1 ||
+              (restaurant.address?.toLowerCase().search(regex) )> -1
           );
         })
 
