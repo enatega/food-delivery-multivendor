@@ -157,6 +157,7 @@ export default function AddNewAddress(props) {
             {t('addAddress')}
           </TextDefault>
           <CityModal
+            theme={currentTheme}
             setCityModalVisible={setCityModalVisible}
             selectedValue={selectedValue.city}
             cityModalVisible={cityModalVisible}
@@ -203,6 +204,7 @@ export default function AddNewAddress(props) {
 
 const CityModal = React.memo(
   function CityModal({
+    theme,
     setCityModalVisible,
     selectedValue,
     cityModalVisible,
@@ -227,6 +229,7 @@ const CityModal = React.memo(
           />
         </TouchableOpacity>
         <ModalDropdown
+          theme={theme}
           visible={cityModalVisible}
           onItemPress={onSelect}
           onClose={() => {

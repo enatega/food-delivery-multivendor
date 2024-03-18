@@ -183,6 +183,7 @@ export default function SelectLocation(props) {
       </View>
 
       <ModalDropdown
+        theme={currentTheme}
         visible={modalVisible}
         onItemPress={onItemPress}
         onClose={() => setModalVisible(false)}
