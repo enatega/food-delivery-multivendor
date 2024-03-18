@@ -221,7 +221,8 @@ export const en = {
   PICKED: 'PICKED',
   DELIVERED: 'DELIVERED',
   COMPLETED: 'COMPLETED',
-  pendingOrder: 'Order received! Your meal is in the works, soon to be at your doorstep.',
+  pendingOrder:
+    'Order received! Your meal is in the works, soon to be at your doorstep.',
   acceptedOrder: 'Preparing your food. Rider will pick it up once its ready.',
   assignedOrder: 'Preparing your food. Rider will pick it up once its ready.',
   pickedOrder:
@@ -397,5 +398,7 @@ export const en = {
   apartment: 'Apartment',
   tapToRate: 'Tap to Rate',
   locationType: 'Location Type',
-  locationTypeDetails: 'The location type helps us to find you better'
+  locationTypeDetails: 'The location type helps us to find you better',
+  additionalItems: 'Additional Items',
+  edit: 'Edit'
 }

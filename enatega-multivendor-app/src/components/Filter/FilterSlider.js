@@ -23,13 +23,15 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('all')
 
-  const result = filters && Object.keys(filters).filter(k =>
-    selectedFilter === 'all'
-      ? filters[k]
-      : selectedFilter === k
+  const result =
+    filters &&
+    Object.keys(filters).filter(k =>
+      selectedFilter === 'all'
+        ? filters[k]
+        : selectedFilter === k
         ? filters[k]
         : null
-  )
+    )
 
   const handleOptionsClick = () => {
     setSelectedFilter('all')
@@ -70,28 +72,31 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
         <Ionicons name="options" size={24} color="#000" />
       </TouchableOpacity>
 
-      {filters && Object.keys(filters)?.map((filter, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles(currentTheme).filterButton,
-            selectedFilter === filter &&
-              styles(currentTheme).selectedFilterButton
-          ]}
-          onPress={() => handleFilterClick(filter)}>
-          <SafeAreaView style={styles(currentTheme).itemContainer}>
-            <Text style={styles(currentTheme).filterButtonText}>{filter}</Text>
-            <AntDesign name="down" size={14} color="black" />
-          </SafeAreaView>
-        </TouchableOpacity>
-      ))}
+      {filters &&
+        Object.keys(filters)?.map((filter, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles(currentTheme).filterButton,
+              selectedFilter === filter &&
+                styles(currentTheme).selectedFilterButton
+            ]}
+            onPress={() => handleFilterClick(filter)}>
+            <SafeAreaView style={styles(currentTheme).itemContainer}>
+              <Text style={styles(currentTheme).filterButtonText}>
+                {filter}
+              </Text>
+              <AntDesign name="down" size={14} color="black" />
+            </SafeAreaView>
+          </TouchableOpacity>
+        ))}
 
       <Modal visible={modalVisible} adjustToContentHeight animationType="slide">
         <View style={styles(currentTheme).modalHeader}>
           <TouchableOpacity onPress={() => setModalVisible(false)}>
             <AntDesign name="arrowleft" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles(currentTheme).filterText}> Filters</Text>
+          <Text style={styles(currentTheme).filterText}> {t('filters')}</Text>
           <TouchableOpacity onPress={() => setModalVisible(false)}>
             <AntDesign name="close" size={24} color="black" />
           </TouchableOpacity>
@@ -101,24 +106,32 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
             <View key={filterValue}>
               <Text style={styles(currentTheme).modalTitle}>{filterValue}</Text>
               <View>
-                {filters && filters[filterValue].values.map((value, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={[
-                      { flexDirection: 'row', justifyContent: 'space-between' },
-                      styles(currentTheme).modalItem,
-                      filters[filterValue].selected === value &&
-                        styles(currentTheme).selectedModalItem
-                    ]}
-                    onPress={() => handleValueSelection(filterValue, value)}>
-                    <Text style={styles(currentTheme).modalItemText}>
-                      {value}
-                    </Text>
-                    {filters && filters[filterValue].type ===
-                    FILTER_TYPE.CHECKBOX ? (
+                {filters &&
+                  filters[filterValue].values.map((value, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        {
+                          flexDirection: 'row',
+                          justifyContent: 'space-between'
+                        },
+                        styles(currentTheme).modalItem,
+                        filters[filterValue].selected === value &&
+                          styles(currentTheme).selectedModalItem
+                      ]}
+                      onPress={() => handleValueSelection(filterValue, value)}>
+                      <Text style={styles(currentTheme).modalItemText}>
+                        {value}
+                      </Text>
+                      {filters &&
+                      filters[filterValue].type === FILTER_TYPE.CHECKBOX ? (
                         <CheckboxBtn
-                          checked={filters[filterValue].selected.includes(value)}
-                          onPress={() => handleValueSelection(filterValue, value)}
+                          checked={filters[filterValue].selected.includes(
+                            value
+                          )}
+                          onPress={() =>
+                            handleValueSelection(filterValue, value)
+                          }
                         />
                       ) : (
                         <RadioButton
@@ -128,11 +141,13 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
                           isSelected={filters[filterValue].selected.includes(
                             value
                           )}
-                          onPress={() => handleValueSelection(filterValue, value)}
+                          onPress={() =>
+                            handleValueSelection(filterValue, value)
+                          }
                         />
                       )}
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ))}
               </View>
             </View>
           ))}
@@ -144,7 +159,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
             activeOpacity={0.5}
             style={styles(currentTheme).saveBtnContainer}>
             <TextDefault textColor={'black'} H4 bold>
-              Apply
+              {t('apply')}
             </TextDefault>
           </TouchableOpacity>
         </ScrollView>

@@ -29,10 +29,9 @@ function OrderAgain(props) {
       latitude: location.latitude,
       longitude: location.longitude
     },
-    skip:!isLoggedIn
+    skip: !isLoggedIn
   })
 
-  
   if (!isLoggedIn) return null
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error: {error.message}</Text>
@@ -40,21 +39,19 @@ function OrderAgain(props) {
   return (
     <View style={styles().orderAgainSec}>
       {isLoggedIn && (
-        <View >
+        <View>
           <TextDefault
             numberOfLines={1}
             textColor={currentTheme.fontFourthColor}
             bolder
             H4>
-            Order it again
+            {t('orderItAgain')}
           </TextDefault>
           <TextDefault
             Normal
             textColor={currentTheme.secondaryText}
-            style={
-              styles().ItemDescription
-            }>
-            Most ordered right now.
+            style={styles().ItemDescription}>
+            {t('mostOrderedNow')}
           </TextDefault>
           <FlatList
             style={styles().offerScroll}

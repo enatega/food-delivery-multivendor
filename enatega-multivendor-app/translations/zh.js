@@ -377,5 +377,7 @@ export const zh = {
   Appartment: '公寓',
   tapToRate: '点击评分',
   locationType: '位置类型',
-  locationTypeDetails: '位置类型有助于我们更好地找到您'
+  locationTypeDetails: '位置类型有助于我们更好地找到您',
+  additionalItems: '附加项目',
+  edit: '修改'
 }

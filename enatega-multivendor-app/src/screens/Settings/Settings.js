@@ -56,7 +56,7 @@ const languageTypes = [
   { value: 'ភាសាខ្មែរ', code: 'km', index: 2 },
   { value: '中文', code: 'zh', index: 3 },
   { value: 'Deutsche', code: 'de', index: 4 },
-  { value: 'arabic', code: 'ar', index: 5 }
+  { value: 'العربية', code: 'ar', index: 5 }
 ]
 
 const PUSH_TOKEN = gql`
@@ -327,7 +327,12 @@ function Settings(props) {
                 </TextDefault>
               </View>
             </View>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder H5 B700>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              bolder
+              H5
+              B700
+              left>
               {languageName}
             </TextDefault>
           </View>

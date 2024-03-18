@@ -401,5 +401,7 @@ export const fr = {
   Appartment: 'Appartement',
   tapToRate: 'Appuyez pour noter',
   locationType: 'Type de lieu',
-  locationTypeDetails: 'Le type de localisation nous aide à mieux vous trouver'
+  locationTypeDetails: 'Le type de localisation nous aide à mieux vous trouver',
+  additionalItems: 'Éléments supplémentaires',
+  edit: 'Modifier'
 }

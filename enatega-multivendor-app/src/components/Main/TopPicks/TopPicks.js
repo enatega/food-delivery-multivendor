@@ -36,35 +36,31 @@ function TopPicks(props) {
   // console.log(isLoggedIn, loading, error, data)
   return (
     <View style={styles().topPicksSec}>
-     
-        <TextDefault
-          numberOfLines={1}
-          textColor={currentTheme.fontFourthColor}
-          bolder
-          H4>
-          Top Picks for you
-        </TextDefault>
-        <TextDefault
-          Normal
-          textColor={currentTheme.secondaryText}
-          style={
-            styles().ItemDescription
-            }>
-          Most ordered right now.
-        </TextDefault>
-        <FlatList
-          style={styles().offerScroll}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={data?.mostOrderedRestaurants}
-          keyExtractor={item => item._id}
-          renderItem={({ item }) => {
-            return <NewRestaurantCard {...item} />
-          }}
-        />
-      </View>
-    
+      <TextDefault
+        numberOfLines={1}
+        textColor={currentTheme.fontFourthColor}
+        bolder
+        H4>
+        {t('topPicksForYou')}
+      </TextDefault>
+      <TextDefault
+        Normal
+        textColor={currentTheme.secondaryText}
+        style={styles().ItemDescription}>
+        {t('mostOrderedNow')}
+      </TextDefault>
+      <FlatList
+        style={styles().offerScroll}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+        data={data?.mostOrderedRestaurants}
+        keyExtractor={item => item._id}
+        renderItem={({ item }) => {
+          return <NewRestaurantCard {...item} />
+        }}
+      />
+    </View>
   )
 }
 

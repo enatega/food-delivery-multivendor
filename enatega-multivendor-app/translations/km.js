@@ -388,5 +388,7 @@ export const km = {
   Appartment: 'ផ្ទះល្វែង',
   tapToRate: 'ប៉ះដើម្បីវាយតម្លៃ',
   locationType: 'ប្រភេទទីតាំង',
-  locationTypeDetails: 'ប្រភេទទីតាំងជួយយើងក្នុងការស្វែងរកអ្នកកាន់តែប្រសើរ'
+  locationTypeDetails: 'ប្រភេទទីតាំងជួយយើងក្នុងការស្វែងរកអ្នកកាន់តែប្រសើរ',
+  additionalItems: 'ធាតុបន្ថែម',
+  edit: 'កែប្រែ'
 }

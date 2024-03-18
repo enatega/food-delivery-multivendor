@@ -403,5 +403,7 @@ export const de = {
   Appartment: 'Wohnung',
   tapToRate: 'Zum Bewerten tippen',
   locationType: 'Standorttyp',
-  locationTypeDetails: 'Der Standorttyp hilft uns, Sie besser zu finden'
+  locationTypeDetails: 'Der Standorttyp hilft uns, Sie besser zu finden',
+  additionalItems: 'Zusätzliche Gegenstände',
+  edit: 'Bearbeiten'
 }
