@@ -118,7 +118,8 @@ export default function AddNewAddress(props) {
       label: 'Location',
       deliveryAddress: selectedValue.address,
       latitude: selectedValue.latitude,
-      longitude: selectedValue.longitude
+      longitude: selectedValue.longitude,
+      city: selectedValue.city
     })
     navigation.navigate('Main')
   }
