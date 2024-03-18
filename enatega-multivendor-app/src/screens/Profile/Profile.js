@@ -234,7 +234,13 @@ function Profile(props) {
                     : currentTheme.buttonText
                 }
               ]}>
-              <TextDefault textColor={currentTheme.fontFourthColor} bold>
+              <TextDefault
+                style={{
+                  color: profile.emailIsVerified
+                    ? currentTheme.fontFourthColor
+                    : currentTheme.white
+                }}
+                bold>
                 {profile.emailIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
@@ -281,7 +287,13 @@ function Profile(props) {
                     : currentTheme.fontFourthColor
                 }
               ]}>
-              <TextDefault textColor={currentTheme.white}>
+              <TextDefault
+                style={{
+                  color: profile.phoneIsVerified
+                    ? currentTheme.fontFourthColor
+                    : currentTheme.white
+                }}
+                bold>
                 {profile.phoneIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>

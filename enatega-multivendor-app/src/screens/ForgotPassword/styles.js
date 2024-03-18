@@ -40,14 +40,17 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center'
     },
+    emailHeading: {
+      paddingBottom: scale(15)
+    },
     textField: {
       borderColor: props !== null ? props.borderColor : '#efefef',
       borderWidth: scale(1),
       borderRadius: scale(6),
       backgroundColor: props !== null ? props.white : 'white',
       padding: scale(12),
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      ...alignment.MTlarge
+      shadowColor: props !== null ? props.fontSecondColor : '#545454'
+      // ...alignment.MTlarge
     },
     errorInput: {
       backgroundColor: props !== null ? props.errorInputBack : '#F7E7E5',
@@ -67,14 +70,21 @@ const styles = (props = null) =>
     },
     passwordField: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    enterPass: {
+      paddingBottom: scale(15)
+    },
+    confirmField: {
+      marginTop: scale(15)
     },
     passwordInput: {
       width: '100%'
     },
     eyeBtn: {
-      marginTop: scale(32),
-      marginLeft: scale(-40)
+      marginLeft: scale(-40),
+      elevation: scale(999)
     },
     headerLeftIcon: {
       ...alignment.PLsmall
