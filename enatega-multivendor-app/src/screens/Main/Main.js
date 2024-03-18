@@ -392,7 +392,9 @@ function Main(props) {
                     />
                   </View>
                 ) : (
-                  <ScrollView>
+                  <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
                     <View style={styles().mainItemsContainer}>
                       <TouchableOpacity
                         style={styles().mainItem}
