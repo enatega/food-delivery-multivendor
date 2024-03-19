@@ -11,7 +11,10 @@
         {
           "username": "ninjas_code"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-localization",
+      "sentry-expo"
     ],
     "androidStatusBar": {
       "backgroundColor": "#000"
@@ -48,7 +51,6 @@
     "android": {
       "versionCode": 30,
       "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi": true,
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"

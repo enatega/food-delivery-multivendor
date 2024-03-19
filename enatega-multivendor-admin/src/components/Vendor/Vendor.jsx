@@ -3,9 +3,12 @@ import { useMutation, gql } from '@apollo/client'
 import { validateFunc } from '../../constraints/constraints'
 import { withTranslation } from 'react-i18next'
 import { createVendor, editVendor, getVendors } from '../../apollo'
-import { Input, Button, Alert, Box, Typography } from '@mui/material'
+import { Input, Button, Alert, Box, Typography, Checkbox } from '@mui/material'
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
+import InputAdornment from '@mui/material/InputAdornment'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const CREATE_VENDOR = gql`
   ${createVendor}
@@ -19,6 +22,7 @@ const GET_VENDORS = gql`
 
 function Vendor(props) {
   const formRef = useRef()
+  const [showPassword, setShowPassword] = useState(false)
   const mutation = props.vendor ? EDIT_VENDOR : CREATE_VENDOR
   const email = props.vendor ? props.vendor.email : ''
   const [error, errorSetter] = useState('')
@@ -26,14 +30,15 @@ function Vendor(props) {
   const [emailError, emailErrorSetter] = useState(null)
   const [passError, passErrorSetter] = useState(null)
   const { t } = props
+  console.log('vendor props: ', props)
   const onCompleted = data => {
     if (!props.vendor) clearFields()
     const message = props.vendor
-      ? 'Vendor updated successfully'
-      : 'Vendor added successfully'
+      ? t('VendorUpdatedSuccessfully')
+      : t('VendorAddedSuccessfully')
     errorSetter('')
     successSetter(message)
-    setTimeout(hideAlert, 5000)
+    setTimeout(hideAlert, 3000)
   }
 
   const onError = ({ graphQLErrors, networkError }) => {
@@ -41,7 +46,7 @@ function Vendor(props) {
     if (graphQLErrors) errorSetter(graphQLErrors[0].message)
     else if (networkError) errorSetter(networkError.result.errors[0].message)
     else errorSetter('Something went wrong!')
-    setTimeout(hideAlert, 5000)
+    setTimeout(hideAlert, 3000)
   }
   const [mutate, { loading: mutateLoading }] = useMutation(mutation, {
     refetchQueries: [{ query: GET_VENDORS }],
@@ -61,9 +66,9 @@ function Vendor(props) {
     const passwordError = props.vendor
       ? true
       : !validateFunc(
-        { password: formRef.current['input-password'].value },
-        'password'
-      )
+          { password: formRef.current['input-password'].value },
+          'password'
+        )
 
     emailErrorSetter(emailError)
     passErrorSetter(passwordError)
@@ -86,15 +91,20 @@ function Vendor(props) {
     <Box className={classes.container}>
       <Box className={props.vendor ? classes.headingBlack : classes.heading}>
         <Typography className={props.vendor ? classes.textWhite : classes.text}>
-          {props.vendor ? t('Edit Vendor') : t('Add Vendor')}
+          {props.vendor ? t('EditVendor') : t('AddVendor')}
         </Typography>
       </Box>
-      <Box item lg={12} className={[globalClasses.flex, classes.form]}>
+      {/* <Box item lg={12} className={[globalClasses.flex, classes.form]}> */}
+      <Box className={classes.form}>
         <form ref={formRef}>
+          {/* <Box > */}
+          <Typography className={classes.labelText}>{t('Email')}</Typography>
           <Input
+            style={{ marginTop: -1 }}
             id="input-email"
             name="input-email"
-            placeholder="Email"
+            placeholder={t('Email')}
+            margin="0px"
             type="email"
             disableUnderline
             className={[
@@ -102,33 +112,51 @@ function Vendor(props) {
               emailError === false
                 ? globalClasses.inputError
                 : emailError === true
-                  ? globalClasses.inputSuccess
-                  : ''
+                ? globalClasses.inputSuccess
+                : ''
             ]}
             defaultValue={email}
             onBlur={event =>
               onBlur(emailErrorSetter, 'email', event.target.value)
             }
           />
+          {/* </Box> */}
           {!props.vendor ? (
-            <Input
-              placeholder="Password"
-              disableUnderline
-              className={[
-                globalClasses.input,
-                passError === false
-                  ? globalClasses.inputError
-                  : passError === true
+            <>
+              <Typography className={classes.labelText}>
+                {t('Password')}
+              </Typography>
+              <Input
+                style={{ marginTop: -1 }}
+                placeholder={t('Password')}
+                disableUnderline
+                className={[
+                  globalClasses.input,
+                  passError === false
+                    ? globalClasses.inputError
+                    : passError === true
                     ? globalClasses.inputSuccess
                     : ''
-              ]}
-              id="input-password"
-              name="input-password"
-              type="text"
-              onBlur={event => {
-                onBlur(passErrorSetter, 'password', event.target.value)
-              }}
-            />
+                ]}
+                id="input-password"
+                name="input-password"
+                type={showPassword ? 'text' : 'password'}
+                onBlur={event => {
+                  onBlur(passErrorSetter, 'password', event.target.value)
+                }}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <Checkbox
+                      checked={showPassword}
+                      onChange={() => setShowPassword(!showPassword)}
+                      color="primary"
+                      icon={<VisibilityOffIcon />}
+                      checkedIcon={<VisibilityIcon />}
+                    />
+                  </InputAdornment>
+                }
+              />
+            </>
           ) : null}
           <Button
             className={globalClasses.button}
@@ -147,9 +175,15 @@ function Vendor(props) {
                     }
                   }
                 })
+                // Close the modal after 3 seconds by calling the parent's onClose callback
+                setTimeout(() => {
+                  if (typeof props.onClose === 'function') {
+                    props.onClose() // Close the modal
+                  }
+                }, 4000)
               }
             }}>
-            {props.vendor ? 'Update' : 'Save'}
+            {props.vendor ? t('Update') : t('Save')}
           </Button>
         </form>
         <Box mt={2}>
@@ -158,7 +192,7 @@ function Vendor(props) {
               className={globalClasses.alertSuccess}
               variant="filled"
               severity="success">
-              Success
+              {success}
             </Alert>
           )}
           {error && (
@@ -166,7 +200,7 @@ function Vendor(props) {
               className={globalClasses.alertError}
               variant="filled"
               severity="error">
-              Error
+              {error}
             </Alert>
           )}
         </Box>

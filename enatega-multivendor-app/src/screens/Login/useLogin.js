@@ -24,8 +24,8 @@ export const useLogin = () => {
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('demo-customer@enatega.com')
+  const [password, setPassword] = useState('DemoCustomer55!')
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -54,7 +54,6 @@ export const useLogin = () => {
     let result = true
     setEmailError(null)
     setPasswordError(null)
-
     if (!email) {
       setEmailError(t('emailErr1'))
       result = false

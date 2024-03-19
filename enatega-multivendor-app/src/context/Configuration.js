@@ -22,9 +22,9 @@ export const ConfigurationProvider = props => {
           expoClientID:
             '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
           androidClientID:
-            '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+            '967541328677-o7lcengpu35dugcdbnp4otsfnmngoknr.apps.googleusercontent.com',
           iOSClientID:
-            '967541328677-30n1b9dljqadrr4badeku41980rf2dt1.apps.googleusercontent.com'
+            '967541328677-gvm85f1ouq92aucsannaduurf5r8mh2r.apps.googleusercontent.com'
         }
       : data.configuration
   return (

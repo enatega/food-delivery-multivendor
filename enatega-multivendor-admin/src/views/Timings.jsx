@@ -1,14 +1,14 @@
 /* eslint-disable react/display-name */
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
 // core components
 import Header from '../components/Headers/Header'
 import { getRestaurantProfile, updateTimings } from '../apollo'
 import TimeRangePicker from '@wojtekmaj/react-timerange-picker'
 import CustomLoader from '../components/Loader/CustomLoader'
 import useGlobalStyles from '../utils/globalStyles'
-import { Container, Grid, Box, Button } from '@mui/material'
+import { Container, Grid, Box, Button, Alert, useTheme } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 const GET_RESTAURANT_PROFILE = gql`
@@ -20,6 +20,9 @@ const UPDATE_TIMINGS = gql`
 const Timings = props => {
   const [value, onChange] = useState({})
   const restaurantId = localStorage.getItem('restaurantId')
+
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const { t } = props
   const onChangeTime = (day, values) => {
@@ -46,7 +49,7 @@ const Timings = props => {
   )
   const transformedTimes = {}
 
-  const [mutate, { error, loading }] = useMutation(UPDATE_TIMINGS)
+  const [mutate, { loading }] = useMutation(UPDATE_TIMINGS)
 
   data &&
     data.restaurant.openingTimes.forEach(value => {
@@ -69,10 +72,10 @@ const Timings = props => {
           <Box className={globalClasses.timing}>
             <Grid container className={globalClasses.timingHeader}>
               <Grid item md={2} lg={2}>
-                Days
+                {t('Days')}
               </Grid>
               <Grid item md={7} lg={7}>
-                Open Times
+                {t('OpenTimes')}
               </Grid>
             </Grid>
             <DayComponent
@@ -118,13 +121,38 @@ const Timings = props => {
                   variables: {
                     id: restaurantId,
                     openingTimes
+                  },
+                  onCompleted: () => {
+                    setSuccessMessage(t('TimeSavedSuccessfully'))
+                    setTimeout(() => setSuccessMessage(''), 5000)
+                    setErrorMessage('')
+                  },
+                  onError: error => {
+                    setErrorMessage(t('ErrorWhileSavingTime'))
+                    setTimeout(() => setErrorMessage(''), 5000)
+                    setSuccessMessage('')
                   }
                 })
               }}
               className={[globalClasses.button, globalClasses.mb]}>
-              {loading ? 'Saving...' : 'Save'}
+              {loading ? t('SavingDots') : t('Save')}
             </Button>
-            {error && <span>{error.message}</span>}
+            {successMessage && (
+              <Alert
+                className={globalClasses.alertSuccess}
+                variant="filled"
+                severity="success">
+                {successMessage}
+              </Alert>
+            )}
+            {errorMessage && (
+              <Alert
+                className={globalClasses.alertError}
+                variant="filled"
+                severity="error">
+                {errorMessage}
+              </Alert>
+            )}
           </Box>
         )}
       </Container>
@@ -134,6 +162,8 @@ const Timings = props => {
 
 export default withTranslation()(Timings)
 const DayComponent = ({ day, value, onChangeTime }) => {
+  const { t } = useTranslation()
+  const theme = useTheme()
   useEffect(() => {
     onChangeTime(day, values)
   })
@@ -164,8 +194,8 @@ const DayComponent = ({ day, value, onChangeTime }) => {
             {index === values.length - 1 && (
               <AddIcon
                 style={{
-                  backgroundColor: '#90EA93',
-                  color: '#000',
+                  backgroundColor: theme.palette.warning.dark,
+                  color: theme.palette.common.black,
                   borderRadius: '50%',
                   marginBottom: -5,
                   marginLeft: 10
@@ -179,8 +209,8 @@ const DayComponent = ({ day, value, onChangeTime }) => {
             {values.length > 1 && (
               <RemoveIcon
                 style={{
-                  backgroundColor: '#000',
-                  color: '#90EA93',
+                  backgroundColor: theme.palette.common.black,
+                  color: theme.palette.warning.dark,
                   borderRadius: '50%',
                   marginLeft: 10,
                   marginRight: 10,
@@ -195,7 +225,7 @@ const DayComponent = ({ day, value, onChangeTime }) => {
             )}
           </Box>
         ))}
-        {values.length === 0 && <span>Closed All day</span>}
+        {values.length === 0 && <span>{t('ClosedAllDay')}</span>}
       </Grid>
       <Grid item lg={3} md={3}>
         {values.length > 0 ? (
@@ -205,7 +235,7 @@ const DayComponent = ({ day, value, onChangeTime }) => {
               onChange([])
             }}
             className={globalClasses.closeBtn}>
-            Closed all Day
+            {t('ClosedAllDay')}
           </Button>
         ) : null}
         {values.length === 0 ? (
@@ -215,7 +245,7 @@ const DayComponent = ({ day, value, onChangeTime }) => {
               onChange([['00:00', '23:59']])
             }}
             className={globalClasses.openBtn}>
-            Open
+            {t('Open')}
           </Button>
         ) : null}
       </Grid>

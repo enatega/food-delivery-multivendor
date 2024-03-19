@@ -4,22 +4,24 @@ import { Link } from 'react-router-dom'
 import { useQuery, gql } from '@apollo/client'
 import { restaurantByOwner } from '../apollo'
 import CreateRestaurant from '../components/Restaurant/CreateRestaurant'
-import { Box, Button, Modal, Container, Grid } from '@mui/material'
+import { Box, Button, Modal, Container, Grid, useTheme } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import useGlobalStyles from '../utils/globalStyles'
+import { withTranslation } from 'react-i18next'
 
 const RESTAURANT_BY_OWNER = gql`
   ${restaurantByOwner}
 `
 const Restaurant = props => {
+  const theme = useTheme()
+  const { t } = props
   const [owner, setOwner] = useState()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const vendorId = localStorage.getItem('vendorId')
   const toggleModal = () => {
     setIsModalVisible(prevState => !prevState)
   }
-  const loggedInUser = localStorage.getItem('user-enatega')
-  const { userType } = loggedInUser ? JSON.parse(loggedInUser) : {}
+
   const globalClasses = useGlobalStyles()
 
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
@@ -54,8 +56,7 @@ const Restaurant = props => {
         sx={{
           height: '160px',
           width: '100%',
-          background:
-            'linear-gradient(91.18deg, #90EA93 1.49%, #6FCF97 99.86%);',
+          background: `linear-gradient(91.18deg, ${theme.palette.warning.dark} 1.49%, ${theme.palette.primary.main} 99.86%)`,
           borderRadius: '0 0 40px 40px',
           marginBottom: 1,
           mt: -10
@@ -64,7 +65,7 @@ const Restaurant = props => {
       {/* Page content */}
       <Container fluid>
         <Box mt={-10}>
-          {loadingQuery ? <div>loading</div> : null}
+          {loadingQuery ? <div>{t('Loading')}</div> : null}
           {errorQuery ? <span>`${errorQuery.message}`</span> : null}
           {!loadingQuery && !errorQuery && (
             <Grid container spacing={2}>
@@ -72,24 +73,22 @@ const Restaurant = props => {
             </Grid>
           )}
         </Box>
-        {userType === 'ADMIN' && (
-          <Box mt={6} className={globalClasses.flexRow}>
-            <Button
-              variant="contained"
-              onClick={() => {
-                setOwner(data.restaurantByOwner._id)
-                toggleModal()
-              }}
-              style={{
-                backgroundColor: '#000',
-                color: '#90EA93',
-                borderRadius: 10
-              }}
-              startIcon={<AddIcon fill="#000" />}>
-              Add New Restaurant
-            </Button>
-          </Box>
-        )}
+        <Box mt={6} className={globalClasses.flexRow}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOwner(data.restaurantByOwner._id)
+              toggleModal()
+            }}
+            style={{
+              backgroundColor: theme.palette.common.black,
+              color: theme.palette.warning.dark,
+              borderRadius: 10
+            }}
+            startIcon={<AddIcon fill={theme.palette.common.black} />}>
+            {t('AddNewRestaurant')}
+          </Button>
+        </Box>
         <Modal
           open={isModalVisible}
           onClose={toggleModal}
@@ -104,4 +103,4 @@ const Restaurant = props => {
     </>
   )
 }
-export default Restaurant
+export default withTranslation()(Restaurant)

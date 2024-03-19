@@ -234,7 +234,13 @@ function Profile(props) {
                     : currentTheme.buttonText
                 }
               ]}>
-              <TextDefault textColor={currentTheme.fontFourthColor} bold>
+              <TextDefault
+                style={{
+                  color: profile.emailIsVerified
+                    ? currentTheme.fontFourthColor
+                    : currentTheme.white
+                }}
+                bold>
                 {profile.emailIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>

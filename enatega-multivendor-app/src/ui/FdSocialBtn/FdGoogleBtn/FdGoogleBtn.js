@@ -4,11 +4,12 @@ import { FontAwesome } from '@expo/vector-icons'
 import styles from './styles'
 import { scale } from '../../../utils/scaling'
 import Spinner from '../../../components/Spinner/Spinner'
+import { theme } from '../../../utils/themeColors'
+import ThemeContext from '../../ThemeContext/ThemeContext'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+
 
 const FdGoogleBtn = props => {
   const themeContext = useContext(ThemeContext)

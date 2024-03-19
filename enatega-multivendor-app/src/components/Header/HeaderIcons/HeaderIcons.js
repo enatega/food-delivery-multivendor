@@ -276,7 +276,6 @@ function DarkBackButton(props) {
     <View
       style={{
         backgroundColor: props.icon,
-        margin: 5,
         borderRadius: 5
       }}>
       <Ionicons
@@ -294,7 +293,7 @@ function HelpButton(props) {
       style={{
         backgroundColor: props.iconBackground,
         borderRadius: scale(10),
-        margin: scale(5)
+        marginRight: scale(5)
       }}>
       <TextDefault style={{ padding: scale(7) }} small bold>
         Help

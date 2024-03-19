@@ -14,8 +14,6 @@ export async function fetchAddressFromCoordinates(latitude, longitude) {
       response.data.results &&
       response.data.results.length > 0
     ) {
-      console.log('city info', JSON.stringify(response.data.results, null, 2))
-
       // Extract the formatted address from the first result
       const formattedAddress = response.data.results[0].formatted_address
 

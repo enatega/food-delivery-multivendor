@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,9 +27,39 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.main,
       },
     },
+    backgroundColor: theme.palette.primary.dark,
   },
   marginHeader: {
-    marginTop: "200px",
+    marginTop: "140px",
+  },
+  topContainer: {
+    marginTop: "210px",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  bg: {
+    position: "absolute",
+    left: "-100px",
+    [theme.breakpoints.down("md")]: {
+      left: "-50px",
+    },
+    maxWidth: "100%",
+  },
+  footerContainer: {
+    background: theme.palette.primary.dark,
+    width: "100%",
+    marginTop: 100,
+  },
+  footerWrapper: {
+    backgroundColor: theme.palette.primary.main,
+    width: "90%",
+    display: "flex",
+    marginLeft: "auto",
+    borderTopLeftRadius: "5rem",
+    borderBottomLeftRadius: "5rem",
   },
 }));
 

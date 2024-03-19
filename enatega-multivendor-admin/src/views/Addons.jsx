@@ -26,6 +26,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
+import ConfigurableValues from '../config/constants'
 
 const GET_ADDONS = gql`
   ${getRestaurantDetail}
@@ -34,6 +35,8 @@ const DELETE_ADDON = gql`
   ${deleteAddon}
 `
 const Addon = props => {
+  const { t } = props
+  const {PAID_VERSION} = ConfigurableValues()
   const [addon, setAddon] = useState(null)
   const [editModal, setEditModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -44,6 +47,9 @@ const Addon = props => {
     setEditModal(!editModal)
     setAddon(addon)
   }
+  const closeEditModal = () => {
+    setEditModal(false)
+  }
   const restaurantId = localStorage.getItem('restaurantId')
 
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
@@ -52,7 +58,7 @@ const Addon = props => {
       variables: { id: restaurantId }
     }
   )
-  const [/*mutate*/ { loading }] = useMutation(DELETE_ADDON, {
+  const [mutate, { loading }] = useMutation(DELETE_ADDON, {
     refetchQueries: [{ query: GET_ADDONS, variables: { id: restaurantId } }]
   })
 
@@ -68,27 +74,27 @@ const Addon = props => {
 
   const columns = [
     {
-      name: 'Title',
+      name: t('Title'),
       sortable: true,
       selector: 'title'
     },
     {
-      name: 'Description',
+      name: t('Description'),
       sortable: true,
       selector: 'description'
     },
     {
-      name: 'Minimum',
+      name: t('Minimum'),
       sortable: true,
       selector: 'quantityMinimum'
     },
     {
-      name: 'Maximum',
+      name: t('Maximum'),
       sortable: true,
       selector: 'quantityMaximum'
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -124,36 +130,42 @@ const Addon = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                  if(PAID_VERSION)
+                  toggleModal(row)
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
-                  //uncomment this for paid version
-                  //toggleModal(row)
+                }
+                  console.log('PAID_VERSION', PAID_VERSION)
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                  //uncomment this for paid version
-                  // mutate({  
-                  //   variables: { id: row._id, restaurant: restaurantId }
-                  // })
+                 
+                  if(PAID_VERSION)
+                  mutate({
+                    variables: { id: row._id, restaurant: restaurantId }
+                  })
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -180,11 +192,8 @@ const Addon = props => {
     <>
       <Header />
       {isOpen && (
-            <Alert
-              message="This feature will available after purchasing product"
-              severity="warning"
-              />
-          )}
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+      )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
         <AddonComponent />
@@ -205,7 +214,7 @@ const Addon = props => {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Addons" />}
+            title={<TableHeader title={t('Addons')} />}
             columns={columns}
             data={data && data.restaurant ? filtered : {}}
             pagination
@@ -226,7 +235,7 @@ const Addon = props => {
           onClose={() => {
             toggleModal()
           }}>
-          <AddonComponent addon={addon} />
+          <AddonComponent addon={addon} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

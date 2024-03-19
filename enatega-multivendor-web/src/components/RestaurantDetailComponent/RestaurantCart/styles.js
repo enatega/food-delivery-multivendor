@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyle = makeStyles((theme) => ({
   infoText: {
@@ -39,7 +39,7 @@ const useStyle = makeStyles((theme) => ({
   },
   checkoutText: {
     ...theme.typography.h6,
-    fontWeight: 600,
+    fontWeight: 700,
     fontSize: "0.875rem",
   },
   totalText: {
@@ -56,6 +56,9 @@ const useStyle = makeStyles((theme) => ({
   optionTextStyle: {
     ...theme.typography.body1,
     color: theme.palette.primary.main,
+  },
+  border: {
+    borderBottom: `1px solid ${theme.palette.grey[500]}`,
   },
 }));
 

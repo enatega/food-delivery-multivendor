@@ -11,6 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import useEnvVars from '../../../../environment'
 
 import { useTranslation } from 'react-i18next'
+import ConfigurationContext from '../../../context/Configuration'
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -23,6 +24,7 @@ const usePhoneOtp = () => {
   const { TEST_OTP } = useEnvVars()
   const { t } = useTranslation()
   const navigation = useNavigation()
+  const configuration = useContext(ConfigurationContext)
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
@@ -69,9 +71,9 @@ const usePhoneOtp = () => {
     route.params?.prevScreen
       ? navigation.navigate(route.params.prevScreen)
       : navigation.navigate({
-          name: 'Main',
-          merge: true
-        })
+        name: 'Main',
+        merge: true
+      })
   }
 
   const [mutate, { loading }] = useMutation(SEND_OTP_TO_PHONE, {
@@ -85,7 +87,7 @@ const usePhoneOtp = () => {
   })
 
   const onCodeFilled = code => {
-    if (code === otpFrom.current || code === TEST_OTP) {
+    if (configuration.skipMobileVerification || code === otpFrom.current || code === TEST_OTP) {
       mutateUser({
         variables: {
           name: profile.name,
@@ -119,9 +121,25 @@ const usePhoneOtp = () => {
   })
 
   useEffect(() => {
-    otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
-    mutate({ variables: { phone: profile?.phone, otp: otpFrom.current } })
-  }, [])
+    if (!configuration) return
+    if (!configuration.skipMobileVerification) {
+      otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
+      mutate({ variables: { phone: profile?.phone, otp: otpFrom.current } })
+    }
+  }, [configuration])
+
+  useEffect(() => {
+    let timer = null
+    if (!configuration || !profile) return
+    if (configuration.skipMobileVerification) {
+      setOtp(TEST_OTP)
+      timer = setTimeout(() => {
+        onCodeFilled(TEST_OTP)
+      }, 3000)
+    }
+
+    return () => { timer && clearTimeout(timer) }
+  }, [configuration, profile])
 
   return {
     otp,

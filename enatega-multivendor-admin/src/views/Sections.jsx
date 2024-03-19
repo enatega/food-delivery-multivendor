@@ -6,7 +6,7 @@ import SectionComponent from '../components/Section/Section'
 import CustomLoader from '../components/Loader/CustomLoader'
 
 // core components
-import {/*deleteSection*/editSection, getSections } from '../apollo'
+import { deleteSection, editSection, getSections } from '../apollo'
 import Header from '../components/Headers/Header'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
@@ -31,6 +31,7 @@ import TableHeader from '../components/TableHeader'
 import SearchBar from '../components/TableHeader/SearchBar'
 import { ReactComponent as SectionIcon } from '../assets/svg/svg/RestaurantSection.svg'
 import Alert from '../components/Alert'
+import ConfigurableValues from '../config/constants'
 
 const GET_SECTIONS = gql`
   ${getSections}
@@ -38,11 +39,13 @@ const GET_SECTIONS = gql`
 const EDIT_SECTION = gql`
   ${editSection}
 `
-// const DELETE_SECTION = gql`
-//   ${deleteSection}
-// `
+const DELETE_SECTION = gql`
+  ${deleteSection}
+`
 
 function Sections(props) {
+  const { t } = props
+  const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [sections, setSections] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -51,12 +54,17 @@ function Sections(props) {
     setSections(section)
   }
 
+  // Callback function to close the modal
+  const closeEditModal = () => {
+    setEditModal(false)
+  }
+
   const restaurantId = localStorage.getItem('restaurantId')
 
   const [mutateEdit] = useMutation(EDIT_SECTION)
-  // const [mutateDelete] = useMutation(DELETE_SECTION, {
-  //   refetchQueries: [{ query: GET_SECTIONS }]
-  // })
+  const [mutateDelete] = useMutation(DELETE_SECTION, {
+    refetchQueries: [{ query: GET_SECTIONS }]
+  })
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_SECTIONS,
     {
@@ -79,22 +87,22 @@ function Sections(props) {
 
   const columns = [
     {
-      name: 'Name',
+      name: t('Name'),
       sortable: true,
       selector: 'name'
     },
     {
-      name: 'Status',
+      name: t('Status'),
       sortable: false,
       cell: row => <>{statusChanged(row)}</>
     },
     {
-      name: 'Restaurants',
+      name: t('Restaurants'),
       sortable: true,
       cell: row => <>{row.restaurants.map(item => `${item.name}`).join(', ')}</>
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -156,34 +164,40 @@ function Sections(props) {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                 
+                  if(PAID_VERSION)
+                  toggleModal(row)
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
-                  //uncomment this for paid version
-                  //toggleModal(row)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                 
+                  if(PAID_VERSION)
+                  mutateDelete({ variables: { id: row._id } })
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
-                  //uncomment this for paid version
-                  //mutateDelete({ variables: { id: row._id } })
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -203,7 +217,7 @@ function Sections(props) {
         data.sections.filter(section => {
           return section.name.toLowerCase().search(regex) > -1
         })
-  const { t } = props
+
   const globalClasses = useGlobalStyles()
 
   return (
@@ -225,11 +239,8 @@ function Sections(props) {
           </Grid>
         </Grid>
         {isOpen && (
-            <Alert
-              message="This feature will available after purchasing product"
-              severity="warning"
-              />
-          )}
+          <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+        )}
 
         {/* Table */}
         {errorQuery && `${t('Error')}! ${errorQuery.message}`}
@@ -237,7 +248,7 @@ function Sections(props) {
           <CustomLoader />
         ) : (
           <DataTable
-            title={<TableHeader title="Restaurant Sections" />}
+            title={<TableHeader title={t('RestaurantSections')} />}
             subHeader={true}
             subHeaderComponent={
               <SearchBar
@@ -267,7 +278,7 @@ function Sections(props) {
             marginLeft: '18%',
             overflowY: 'auto'
           }}>
-          <SectionComponent section={sections} />
+          <SectionComponent section={sections} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

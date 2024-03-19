@@ -28,6 +28,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
+import ConfigurableValues from '../config/constants'
 
 const GET_CATEGORIES = gql`
   ${getRestaurantDetail}
@@ -36,6 +37,8 @@ const DELETE_CATEGORY = gql`
   ${deleteCategory}
 `
 const Category = props => {
+  const { t } = props
+  const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [category, setCategory] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -46,9 +49,12 @@ const Category = props => {
     setEditModal(!editModal)
     setCategory(category)
   }
+  const closeEditModal = () => {
+    setEditModal(false)
+  }
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [/*mutate*/ { loading }] = useMutation(DELETE_CATEGORY)
+  const [mutate, { loading }] = useMutation(DELETE_CATEGORY)
 
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
     GET_CATEGORIES,
@@ -69,12 +75,12 @@ const Category = props => {
   }
   const columns = [
     {
-      name: 'Title',
+      name: t('Title'),
       sortable: true,
       selector: 'title'
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
@@ -109,36 +115,42 @@ const Category = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
+                  
+                  if(PAID_VERSION)
+                  toggleModal(row)
+                else{
                   setIsOpen(true)
                   setTimeout(() => {
                     setIsOpen(false)
                   }, 5000)
-                  //uncomment this for paid version
-                  //toggleModal(row)
+                }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
                   <EditIcon fontSize="small" style={{ color: 'green' }} />
                 </ListItemIcon>
-                <Typography color="green">Edit</Typography>
+                <Typography color="green">{t('Edit')}</Typography>
               </MenuItem>
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                  //uncomment this for paid version
-                  // mutate({
-                  //   variables: { id: row._id, restaurant: restaurantId }
-                  // })
+                 
+                  if(PAID_VERSION)
+                  mutate({
+                    variables: { id: row._id, restaurant: restaurantId }
+                  })
+                  else{
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
                   <DeleteIcon fontSize="small" style={{ color: 'red' }} />
                 </ListItemIcon>
-                <Typography color="red">Delete</Typography>
+                <Typography color="red">{t('Delete')}</Typography>
               </MenuItem>
             </Menu>
           </Paper>
@@ -162,11 +174,8 @@ const Category = props => {
     <>
       <Header />
       {isOpen && (
-            <Alert
-              message="This feature will available after purchasing product"
-              severity="warning"
-              />
-          )}
+        <Alert message={t('AvailableAfterPurchasing')} severity="warning" />
+      )}
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
         <Grid container mb={3}>
@@ -187,7 +196,7 @@ const Category = props => {
                 onClick={() => refetch()}
               />
             }
-            title={<TableHeader title="Categories" />}
+            title={<TableHeader title={t('Categories')} />}
             columns={columns}
             data={filtered}
             pagination
@@ -212,7 +221,7 @@ const Category = props => {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          <CategoryComponent category={category} />
+          <CategoryComponent category={category} onClose={closeEditModal} />
         </Modal>
       </Container>
     </>

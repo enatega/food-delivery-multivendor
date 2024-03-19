@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react'
-import { View, StatusBar, TouchableOpacity, Linking } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { View, TouchableOpacity, Linking } from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation } from '@react-navigation/native'
@@ -8,7 +8,6 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import { useFocusEffect } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
 import Spinner from '../../components/Spinner/Spinner'
 import { useTranslation } from 'react-i18next'
@@ -29,28 +28,23 @@ export default function CurrentLocation() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
     }
     Track()
-    // StatusBar.setHidden(true)
-
-    // return () => {
-    //   StatusBar.setHidden(false)
-    // }
   }, [])
 
   const initialRegion = {
     latitude: 31.0461,
-    longitude: 34.8516, // Longitude for Israel
+    longitude: 34.8516,
     latitudeDelta: 1,
     longitudeDelta: 1
   }
   const markerCoordinate = { latitude: 31.0461, longitude: 34.8516 }
 
-  const setCurrentLocation = async () => {
+  const setCurrentLocation = async() => {
     setLoading(true)
     const { status, canAskAgain } = await getLocationPermission()
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
         message: t('locationPermissionMessage'),
-        onPress: async () => {
+        onPress: async() => {
           await Linking.openSettings()
         }
       })
@@ -68,11 +62,7 @@ export default function CurrentLocation() {
     setLoading(false)
     navigation.navigate('AddNewAddress', {
       latitude: coords.latitude,
-      longitude: coords.longitude,
-      location: {
-        latitude: coords.latitude,
-        longitude: coords.longitude
-      }
+      longitude: coords.longitude
     })
   }
 

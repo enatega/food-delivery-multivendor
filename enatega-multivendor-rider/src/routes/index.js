@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
 import React, { useCallback, useContext, useEffect } from 'react'
-import { Platform } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -18,7 +17,7 @@ import Help from '../screens/Help/Help'
 import HelpBrowser from '../screens/HelpBrowser/HelpBrowser'
 import { UserProvider } from '../context/user'
 import { screenOptions, tabOptions, tabIcon } from './screenOptions'
-import { LeftButton } from '../components/Header/HeaderIcons/HeaderIcons'
+import LeftButton from '../components/Header/HeaderIcons/HeaderIcons'
 import navigationService from './navigationService'
 import LocationPermissions from '../screens/LocationPermissions/LocationPermissions'
 import { useLocationContext } from '../context/location'
@@ -32,6 +31,7 @@ import { SoundContextProvider } from '../context/sound'
 import { gql, useApolloClient } from '@apollo/client'
 import { riderOrders } from '../apollo/queries'
 import { useTranslation } from 'react-i18next'
+
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
 const Tab = createBottomTabNavigator()
@@ -41,8 +41,10 @@ function MyTabs() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({ route }) => tabIcon(route)}
-      tabBarOptions={tabOptions()}>
+      screenOptions={({ route }) => ({
+        ...tabIcon(route),
+        ...tabOptions()
+      })}>
       <Tab.Screen
         name="Home"
         component={NewOrders}
@@ -87,7 +89,10 @@ function MyTabs() {
 
 function Auth() {
   return (
-    <Stack.Navigator headerMode="none">
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}>
       <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   )
@@ -163,7 +168,8 @@ function Main() {
         <Drawer.Navigator
           drawerType="slide"
           drawerPosition="right"
-          drawerContent={props => <Sidebar {...props} />}>
+          drawerContent={props => <Sidebar {...props} />}
+          screenOptions={{ headerShown: false }}>
           {/*<Drawer.Screen name="SidebBar" component={Sidebar} />*/}
 
           <Drawer.Screen name="noDrawer" component={NoDrawer} />

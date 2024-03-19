@@ -2,7 +2,7 @@ import React from 'react'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import styles from './styles'
 import { useNavigation } from '@react-navigation/native'
-import { HeaderBackButton } from '@react-navigation/stack'
+import { HeaderBackButton } from '@react-navigation/elements'
 import PropTypes from 'prop-types'
 
 function BackButton(props) {
@@ -56,4 +56,4 @@ BackButton.propTypes = {
   icon: PropTypes.string.isRequired
 }
 
-export { BackButton, LeftButton }
+export default LeftButton
