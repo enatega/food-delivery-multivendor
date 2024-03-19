@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react'
-import { View, TouchableOpacity, Keyboard } from 'react-native'
+import { View, TouchableOpacity, Keyboard, StatusBar } from 'react-native'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -8,13 +8,14 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import styles from './styles'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { Entypo } from '@expo/vector-icons'
+import { AntDesign, Entypo } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { textStyles } from '../../utils/textStyles'
 
 function Tip(props) {
   const Analytics = analytics()
@@ -26,33 +27,50 @@ function Tip(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  useLayoutEffect(() => {
+  useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(currentTheme.themeBackground)
+    }
+    StatusBar.setBarStyle('dark-content')
+  })
+
+  useFocusEffect(() => {
     props.navigation.setOptions({
+      headerTitle: () => (
+        <View style={{ alignItems: 'center', gap: scale(2) }}>
+          <TextDefault
+            style={{
+              color: currentTheme.btnText,
+              ...textStyles.H4,
+              ...textStyles.Bolder
+            }}>
+            Tipping
+          </TextDefault>
+        </View>
+      ),
       headerRight: null,
-      title: t('titleTipping'),
       headerTitleAlign: 'center',
+      headerTitleStyle: {
+        color: currentTheme.btnText,
+        ...textStyles.H4,
+        ...textStyles.Bolder
+      },
       headerTitleContainerStyle: {
-        marginTop: '1%',
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
-        height: '75%',
-        borderRadius: scale(10),
-        borderWidth: 1,
-        borderColor: currentTheme.white,
-        backgroundColor: currentTheme.black,
-        marginLeft: 0
+        backgroundColor: currentTheme.transparent
       },
       headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        shadowColor: 'transparent',
-        shadowRadius: 0
+        backgroundColor: currentTheme.themeBackground
       },
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
-            <View style={styles().bacKButton}>
-              <Entypo name="cross" size={30} color="black" />
+            <View style={{ ...alignment.PLxSmall }}>
+              <AntDesign
+                name="arrowleft"
+                size={22}
+                color={currentTheme.fontFourthColor}
+              />
             </View>
           )}
           onPress={() => {
@@ -73,14 +91,14 @@ function Tip(props) {
     if (isNaN(tipAmount)) FlashMessage({ message: t('invalidAmount') })
     else if (Number(tipAmount) <= 0) {
       FlashMessage({ message: t('amountMustBe') })
-    } else navigation.navigate('Cart', { tipAmount: Number(tipAmount) })
+    } else navigation.navigate('Checkout', { tipAmount: Number(tipAmount) })
   }
 
   const HeaderLine = props => {}
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <HeaderLine textWidth="45%" lineWidth="25%" />
+        <HeaderLine textWidth="100%" lineWidth="25%" />
         <View style={styles(currentTheme).upperContainer}>
           <View style={styles(currentTheme).innerContainer}>
             <OutlinedTextField
@@ -99,26 +117,24 @@ function Tip(props) {
               tintColor={currentTheme.iconColorPink}
               labelOffset={{ y1: -5 }}
               labelTextStyle={{
-                fontSize: scale(12),
-                paddingTop: scale(1)
+                fontSize: scale(12)
               }}
+              keyboardType="numeric"
             />
           </View>
-          <TouchableOpacity
-            onPress={onTipping}
-            style={styles(currentTheme).buttonContainer}>
-            <TextDefault textColor={currentTheme.buttonText} H5 bold uppercase>
-              {t('apply')}
-            </TextDefault>
-          </TouchableOpacity>
+          <View style={styles(currentTheme).buttonContainer}>
+            <TouchableOpacity onPress={onTipping}>
+              <TextDefault
+                textColor={currentTheme.buttonText}
+                H5
+                bold
+                uppercase>
+                {t('apply')}
+              </TextDefault>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-      <View
-        style={{
-          paddingBottom: inset.bottom,
-          backgroundColor: currentTheme.themeBackground
-        }}
-      />
     </>
   )
 }

@@ -10,46 +10,48 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Animated,
   StatusBar,
   Platform,
+  Image,
+  ScrollView,
+  Animated,
   RefreshControl
 } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import {
   MaterialIcons,
-  SimpleLineIcons,
   AntDesign,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
-import { useQuery, useMutation } from '@apollo/client'
-import {
-  useCollapsibleSubHeader,
-  CollapsibleSubHeaderAnimator
-} from 'react-navigation-collapsible'
+import { useMutation, useQuery, gql } from '@apollo/client'
+import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
-import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
-import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
-import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
-import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import { alignment } from '../../utils/alignment'
-import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
-import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
+import { OrderAgain } from '../../components/Main/OrderAgain'
+import { TopPicks } from '../../components/Main/TopPicks'
+import { TopBrands } from '../../components/Main/TopBrands'
+import Item from '../../components/Main/Item/Item'
+import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
+import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
+import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
+import ErrorView from '../../components/ErrorView/ErrorView'
+import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -57,7 +59,6 @@ const RESTAURANTS = gql`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
-
 function Main(props) {
   const Analytics = analytics()
 
@@ -71,32 +72,32 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-
+  const locationData = location
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
       variables: {
         longitude: location.longitude || null,
         latitude: location.latitude || null,
+        shopType: null,
         ip: null
       },
       fetchPolicy: 'network-only'
     }
   )
+  const { orderLoading, orderError, orderData } = useHomeRestaurants()
+  const [selectedType, setSelectedType] = useState('restaurant')
+
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
-  
-  const {
-    onScroll /* Event handler */,
-    containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */,
-    translateY
-  } = useCollapsibleSubHeader()
+  const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
+  const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
+  const newheaderColor = currentTheme.newheaderColor
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerColor)
+      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -111,8 +112,7 @@ function Main(props) {
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
-        headerMenuBackground: currentTheme.headerColor,
-        horizontalLine: currentTheme.headerColor,
+        headerMenuBackground: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen
@@ -132,10 +132,16 @@ function Main(props) {
   }
 
   const addressIcons = {
-    Home: 'home',
-    Work: 'briefcase',
-    Other: 'location-pin'
+    Home: CustomHomeIcon,
+    Work: CustomWorkIcon,
+    Other: CustomOtherIcon
   }
+
+  const {
+    onScroll /* Event handler */,
+    containerPaddingTop /* number */,
+    scrollIndicatorInsetTop /* number */
+  } = useCollapsibleSubHeader()
 
   const setAddressLocation = async address => {
     setLocation({
@@ -186,35 +192,22 @@ function Main(props) {
   }
 
   const modalHeader = () => (
-    <View style={[styles().addressbtn]}>
-      <TouchableOpacity
-        style={[styles(currentTheme).addressContainer]}
-        activeOpacity={0.7}
-        onPress={setCurrentLocation}>
-        <View style={styles().addressSubContainer}>
-          <MaterialCommunityIcons
-            name="target"
-            size={scale(25)}
-            color={currentTheme.black}
-          />
-          <View style={styles().mL5p} />
-          <TextDefault bold>{t('currentLocation')}</TextDefault>
-        </View>
-      </TouchableOpacity>
-      <View style={styles().addressTick}>
-        {location.label === 'currentLocation' && (
-          <MaterialIcons
-            name="check"
-            size={scale(15)}
-            color={currentTheme.iconColorPink}
-          />
-        )}
-        {busy && (
-          <Spinner
-            size={'small'}
-            backColor={currentTheme.lightHorizontalLine}
-          />
-        )}
+    <View style={[styles().addNewAddressbtn]}>
+      <View style={styles(currentTheme).addressContainer}>
+        <TouchableOpacity
+          style={[styles(currentTheme).addButton]}
+          activeOpacity={0.7}
+          onPress={setCurrentLocation}>
+          <View style={styles().addressSubContainer}>
+            <MaterialCommunityIcons
+              name="target"
+              size={scale(25)}
+              color={currentTheme.black}
+            />
+            <View style={styles().mL5p} />
+            <TextDefault bold>{t('currentLocation')}</TextDefault>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -224,32 +217,42 @@ function Main(props) {
     else {
       return (
         <View style={styles().emptyViewContainer}>
-          <TextDefault textColor={currentTheme.fontMainColor}>
-           {t('noRestaurants')}
-          </TextDefault>
+          <View style={styles().emptyViewBox}>
+            <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
+              {t('notAvailableinYourArea')}
+            </TextDefault>
+            <TextDefault textColor={currentTheme.fontMainColor} center>
+              {t('noRestaurant')}
+            </TextDefault>
+          </View>
         </View>
       )
     }
   }
 
   const modalFooter = () => (
-    <View style={styles().addressbtn}>
+    <View style={styles().addNewAddressbtn}>
       <View style={styles(currentTheme).addressContainer}>
         <TouchableOpacity
           activeOpacity={0.5}
+          style={styles(currentTheme).addButton}
           onPress={() => {
             if (isLoggedIn) {
-              navigation.navigate('NewAddress')
+              navigation.navigate('AddNewAddress', {
+                locationData
+              })
             } else {
               const modal = modalRef.current
               modal?.close()
-              props.navigation.navigate({ name: 'CreateAccount' })
+              props.navigation.navigate({
+                name: 'CreateAccount'
+              })
             }
           }}>
           <View style={styles().addressSubContainer}>
             <AntDesign
               name="pluscircleo"
-              size={scale(12)}
+              size={scale(20)}
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
@@ -264,31 +267,6 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} />
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
         <Placeholder
           Animation={props => (
             <Fade
@@ -305,16 +283,30 @@ function Main(props) {
     )
   }
 
-  if (error) return <TextError text={t('networkError')} />
+  function brandsLoadingScreen() {
+    return (
+      <View style={styles(currentTheme).screenBackground}>
+        <Placeholder
+          Animation={props => (
+            <Fade
+              {...props}
+              style={styles(currentTheme).placeHolderFadeColor}
+              duration={600}
+            />
+          )}
+          style={styles(currentTheme).brandsPlaceHolderContainer}>
+          <PlaceholderLine style={styles().height80} />
+        </Placeholder>
+      </View>
+    )
+  }
 
-  if (loading || mutationLoading || loadingOrders) return loadingScreen()
+  const restaurants = data?.nearByRestaurants?.restaurants
 
-  const { restaurants, sections } = data.nearByRestaurants
-
-  const searchRestaurants = searchText => {
+  const searchAllShops = searchText => {
     const data = []
     const regex = new RegExp(searchText, 'i')
-    restaurants.forEach(restaurant => {
+    restaurants?.forEach(restaurant => {
       const resultName = restaurant.name.search(regex)
       if (resultName < 0) {
         const resultCatFoods = restaurant.categories.some(category => {
@@ -347,58 +339,148 @@ function Main(props) {
     return data
   }
 
-  // Flatten the array. That is important for data sequence
-  const restaurantSections = sections.map(sec => ({
-    ...sec,
-    restaurants: sec.restaurants
-      .map(id => restaurants.filter(res => res._id === id))
-      .flat()
-  }))
+  if (error) return <ErrorView />
 
   return (
     <>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
-                <Animated.FlatList
-                  contentInset={{ top: containerPaddingTop }}
-                  contentContainerStyle={{
-                    paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop
-                  }}
-                  contentOffset={{ y: -containerPaddingTop }}
-                  onScroll={onScroll}
-                  scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-                  showsVerticalScrollIndicator={false}
-                  ListHeaderComponent={
-                    search ? null : (
-                      <ActiveOrdersAndSections sections={restaurantSections} />
-                    )
-                  }
-                  ListEmptyComponent={emptyView()}
-                  keyExtractor={(item, index) => index.toString()}
-                  refreshControl={
-                    <RefreshControl
-                      progressViewOffset={containerPaddingTop}
-                      colors={[currentTheme.iconColorPink]}
-                      refreshing={networkStatus === 4}
-                      onRefresh={() => {
-                        if (networkStatus === 7) {
-                          refetch()
-                        }
+                <View style={styles().searchbar}>
+                  <Search
+                    setSearch={setSearch}
+                    search={search}
+                    newheaderColor={newheaderColor}
+                    placeHolder={t('searchRestaurant')}
+                  />
+                </View>
+                {search ? (
+                  <View style={styles().searchList}>
+                    <Animated.FlatList
+                      contentInset={{
+                        top: containerPaddingTop
                       }}
+                      contentContainerStyle={{
+                        paddingTop:
+                          Platform.OS === 'ios' ? 0 : containerPaddingTop
+                      }}
+                      contentOffset={{
+                        y: -containerPaddingTop
+                      }}
+                      onScroll={onScroll}
+                      scrollIndicatorInsets={{
+                        top: scrollIndicatorInsetTop
+                      }}
+                      showsVerticalScrollIndicator={false}
+                      ListEmptyComponent={emptyView()}
+                      keyExtractor={(item, index) => index.toString()}
+                      refreshControl={
+                        <RefreshControl
+                          progressViewOffset={containerPaddingTop}
+                          colors={[currentTheme.iconColorPink]}
+                          refreshing={networkStatus === 4}
+                          onRefresh={() => {
+                            if (networkStatus === 7) {
+                              refetch()
+                            }
+                          }}
+                        />
+                      }
+                      data={searchAllShops(search)}
+                      renderItem={({ item }) => <Item item={item} />}
                     />
-                  }
-                  data={search ? searchRestaurants(search) : restaurants}
-                  renderItem={({ item }) => <Item item={item} />}
-                />
-                <CollapsibleSubHeaderAnimator translateY={translateY}>
-                  <Search setSearch={setSearch} search={search} />
-                  <MapSection location={location} restaurants={restaurants} />
-                </CollapsibleSubHeaderAnimator>
+                  </View>
+                ) : (
+                  <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
+                    <View style={styles().mainItemsContainer}>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'restaurant'
+                          })
+                        }>
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}>
+                            Food Delivery
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}>
+                            Order food you love
+                          </TextDefault>
+                        </View>
+                        <Image
+                          source={require('../../assets/images/ItemsList/menu.png')}
+                          style={styles().popularMenuImg}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'grocery'
+                          })
+                        }>
+                        <TextDefault
+                          H4
+                          bolder
+                          textColor={currentTheme.fontThirdColor}
+                          style={styles().ItemName}>
+                          Grocery
+                        </TextDefault>
+                        <TextDefault
+                          Normal
+                          textColor={currentTheme.fontThirdColor}
+                          style={styles().ItemDescription}>
+                          Essentials delivered fast
+                        </TextDefault>
+                        <Image
+                          source={require('../../assets/images/ItemsList/grocery.png')}
+                          style={styles().popularMenuImg}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      {orderLoading ? (
+                        loadingScreen()
+                      ) : (
+                        <OrderAgain
+                          recentOrderRestaurants={recentOrderRestaurantsVar}
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Order it again'}
+                        />
+                      )}
+                      <View>
+                        {orderLoading ? (
+                          loadingScreen()
+                        ) : (
+                          <TopPicks
+                            mostOrderedRestaurants={mostOrderedRestaurantsVar}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Top Picks for you'}
+                          />
+                        )}
+                      </View>
+                    </View>
+                    <View>
+                      {orderLoading ? brandsLoadingScreen() : <TopBrands />}
+                    </View>
+                  </ScrollView>
+                )}
               </View>
             </View>
           </View>
@@ -431,21 +513,33 @@ function Main(props) {
                     activeOpacity={0.7}
                     onPress={() => setAddressLocation(address)}>
                     <View style={styles().addressSubContainer}>
-                      <SimpleLineIcons
-                        name={addressIcons[address.label]}
-                        size={scale(12)}
-                        color={currentTheme.black}
-                      />
-                      <View style={styles().mL5p} />
-                      <TextDefault bold>{t(address.label)}</TextDefault>
+                      <View style={[styles(currentTheme).homeIcon]}>
+                        {addressIcons[address.label] ? (
+                          React.createElement(addressIcons[address.label], {
+                            fill: currentTheme.darkBgFont
+                          })
+                        ) : (
+                          <AntDesign name="question" size={20} color="black" />
+                        )}
+                      </View>
+                      {/* <View style={styles().mL5p} /> */}
+                      <View style={[styles().titleAddress]}>
+                        <TextDefault
+                          textColor={currentTheme.darkBgFont}
+                          style={styles(currentTheme).labelStyle}>
+                          {t(address.label)}
+                        </TextDefault>
+                      </View>
                     </View>
-                    <View style={styles().addressTextContainer}>
-                      <TextDefault
-                        style={{ ...alignment.PLlarge }}
-                        textColor={currentTheme.fontSecondColor}
-                        small>
-                        {address.deliveryAddress}
-                      </TextDefault>
+                    <View style={styles(currentTheme).addressTextContainer}>
+                      <View style={styles(currentTheme).addressDetail}>
+                        <TextDefault
+                          style={{ ...alignment.PLlarge }}
+                          textColor={currentTheme.fontSecondColor}
+                          small>
+                          {address.deliveryAddress}
+                        </TextDefault>
+                      </View>
                     </View>
                   </TouchableOpacity>
                   <View style={styles().addressTick}>
@@ -464,6 +558,7 @@ function Main(props) {
               )
             }}></Modalize>
         </View>
+        <ActiveOrders />
       </SafeAreaView>
     </>
   )

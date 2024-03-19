@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { theme } from '../../../utils/themeColors'
 
-const styles = (props = null) =>
+const styles = (props = null, newheaderColor = '#fafafa', cartContainer = '#fafafa') =>
   StyleSheet.create({
     bodyStyleOne: {
       fontFamily: fontStyles.MuseoSans500,
@@ -12,12 +12,12 @@ const styles = (props = null) =>
       color: props != null ? props.fontMainColor : 'black'
     },
     mainContainerHolder: {
+      // backgroundColor: 'red',
+      // height: scale(55),
       zIndex: 333,
       width: '100%',
-      alignItems: 'center',
-      borderBottomLeftRadius: scale(25),
-      borderBottomRightRadius: scale(25),
-      backgroundColor: props != null ? props.headerColor : '#fafafa',
+      alignItems: 'center',     
+      backgroundColor: newheaderColor,
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,
@@ -25,16 +25,16 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.1,
       shadowRadius: verticalScale(1),
-      ...alignment.MBmedium
+      // ...alignment.MBmedium
     },
     mainContainer: {
       width: '90%',
-      height: scale(50),
+      height: scale(36),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
       borderRadius: scale(40),
-      backgroundColor: props != null ? props.cartContainer : 'white',
+      backgroundColor: cartContainer,
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,
@@ -42,7 +42,7 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.2,
       shadowRadius: verticalScale(1),
-      ...alignment.MTlarge,
+     marginTop:scale(3),
       ...alignment.MBmedium
     },
     subContainer: {

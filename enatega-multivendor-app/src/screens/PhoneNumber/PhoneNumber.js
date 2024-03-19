@@ -19,6 +19,8 @@ import CountryPicker from 'react-native-country-picker-modal'
 import usePhoneNumber from './usePhoneNumber'
 import PhoneInput from 'react-native-phone-number-input'
 import { useTranslation } from 'react-i18next'
+import { Ionicons } from '@expo/vector-icons'
+import { scale } from '../../utils/scaling'
 
 function PhoneNumber(props) {
   const {
@@ -66,18 +68,18 @@ function PhoneNumber(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
-                <Image
-                  source={require('../../../assets/login-icon.png')}
-                  style={styles().logoContainer}
+                <Ionicons
+                  name="phone-portrait-outline"
+                  size={30}
+                  color="black"
                 />
               </View>
               <View>
                 <TextDefault
                   H3
                   bolder
-                  textColor={currentTheme.fontSecondColor}
+                  textColor={currentTheme.fontfourthColor}
                   style={{
-                    textAlign: 'center',
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
@@ -88,7 +90,7 @@ function PhoneNumber(props) {
                   bold
                   textColor={currentTheme.fontSecondColor}
                   style={{
-                    textAlign: 'center'
+                    paddingBottom: scale(5)
                   }}>
                   {t('secureAccountWithPhone')}
                 </TextDefault>
@@ -117,7 +119,7 @@ function PhoneNumber(props) {
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
                     ]}>
-                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                    <View style={{ flexDirection: 'row', paddingTop: 3 }}>
                       <Text>+{country.callingCode[0]} </Text>
                       <TextInput
                         placeholder={t('mobileNumber')}
@@ -146,26 +148,21 @@ function PhoneNumber(props) {
                     </TextDefault>
                   </View>
                 )}
-
-                <View style={styles().marginTop10}>
-                  <TouchableOpacity
-                    onPress={() => registerAction()}
-                    activeOpacity={0.7}
-                    style={styles(currentTheme).btn}>
-                    <TextDefault
-                      H4
-                      textColor={currentTheme.buttonTextPink}
-                      style={alignment.MLsmall}
-                      bold>
-                      {loading ? (
-                        <Spinner size="small" backColor="transparent" />
-                      ) : (
-                        t('continueBtn')
-                      )}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
               </View>
+            </View>
+            <View style={{ width: '100%', marginBottom: 20 }}>
+              <TouchableOpacity
+                onPress={() => registerAction()}
+                activeOpacity={0.7}
+                style={styles(currentTheme).btn}>
+                <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+                  {loading ? (
+                    <Spinner size="small" backColor="transparent" />
+                  ) : (
+                    t('continueBtn')
+                  )}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

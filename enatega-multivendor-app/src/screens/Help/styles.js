@@ -5,7 +5,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.white : 'transparent'
     },
     backButton: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
@@ -15,17 +15,17 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     mainContainer: {
-
-      margin: scale(15),
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      ...alignment.Msmall,
+      marginTop: scale(5),
+      backgroundColor: props !== null ? props.white : 'transparent',
+      gap: scale(10)
     },
     itemContainer: {
-
       margin: scale(4),
       borderWidth: 1,
-      borderColor: props !== null ? props.mustard : '#d8d8d874',
-      borderRadius: scale(16),
-      backgroundColor: props !== null ? props.radioOuterColor : 'white',
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderRadius: scale(8),
+      backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -35,11 +35,15 @@ const styles = (props = null) =>
       ...alignment.PRlarge
     },
     backImageContainer: {
-      backgroundColor: props !== null ? props.white :'white',
+      backgroundColor: props !== null ? props.white : 'white',
       borderRadius: scale(50),
+      width: scale(40),
+      alignItems: 'flex-start',
+      marginLeft: scale(5)
+    },
+    topContainer: {
       marginLeft: scale(10),
-      width: scale(55),
-      alignItems: 'center'
+      marginTop: scale(10)
     }
   })
 export default styles

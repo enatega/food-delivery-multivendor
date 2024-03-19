@@ -32,7 +32,11 @@ const screenOptions = props => ({
     <RightButton
       icon="target"
       iconColor={props.iconColor}
-      onPressRight={props.setCurrentLocation}
+      onPressRight={
+        props.setCurrentLocation
+          ? props.setCurrentLocation
+          : props.handleLocationWithoutCoords
+      }
     />
   )
 })

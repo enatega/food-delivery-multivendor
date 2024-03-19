@@ -12,22 +12,22 @@ function Search(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
-    <View style={styles(currentTheme).mainContainerHolder}>
-      <View style={styles(currentTheme).mainContainer}>
+    <View style={styles(currentTheme, props.newheaderColor).mainContainerHolder}>
+      <View style={styles(currentTheme, props.cartContainer).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().leftContainer}>
             <View style={styles().searchContainer}>
               <Ionicons
-                name="search"
-                color={currentTheme.fontSecondColor}
+                name="ios-search"
+                color={currentTheme.fontNewColor}
                 size={scale(20)}
               />
             </View>
             <View style={styles().inputContainer}>
               <TextInput
                 style={styles(currentTheme).bodyStyleOne}
-                placeholder={t('searchRestaurant')}
-                placeholderTextColor={currentTheme.fontSecondColor}
+                placeholder={props.placeHolder}
+                placeholderTextColor={currentTheme.fontNewColor}
                 onChangeText={text => props.setSearch(text)}
                 value={props.search}
               />

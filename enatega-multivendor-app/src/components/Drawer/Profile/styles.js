@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.headerBackground : 'transparent'
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent'
     },
     logInContainer: {
       width: '100%',
@@ -15,7 +15,7 @@ const styles = (props = null) =>
       ...alignment.PLsmall,
       ...alignment.PBlarge
     },
-    alignLeft:{
+    alignLeft: {
       textAlign: 'left'
     },
     loggedInContainer: {
@@ -25,7 +25,7 @@ const styles = (props = null) =>
     },
     subContainer: {
       width: '85%',
-      height: '80%',
+      height: '70%',
       justifyContent: 'space-between',
       ...alignment.MBlarge
     },

@@ -37,29 +37,21 @@ const styles = (props = null) =>
       width: '48%'
     },
     logoContainer: {
-      width: 120,
-      height: 130,
-      alignSelf: 'center'
+      // width: 120,
+      // height: 130,
+      //alignSelf: 'center'
     },
     form: {
-      width: '100%',
-      ...alignment.MTlarge
+      width: '100%'
     },
     textField: {
-      borderColor: '#efefef',
+      borderColor: props !== null ? props.verticalLine : '#000',
       borderWidth: 1,
       borderRadius: 10,
       backgroundColor: props !== null ? props.white : '#fff',
-      padding: 14,
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-      ...alignment.MTlarge
+      padding: 12,
+      ...alignment.MBxSmall,
+      ...alignment.MTxSmall
     },
     passwordField: {
       display: 'flex',
@@ -67,23 +59,21 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     passwordInput: {
-      width: '100%'
+      width: '100%',
+      alignItems: 'center'
     },
     eyeBtn: {
-      position: 'relative',
-      display: 'flex',
       zIndex: 1,
       elevation: 999,
-      marginTop: 20,
       marginLeft: -40
     },
     btn: {
-      width: '70%',
+      width: '100%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props.main : '#000',
       alignSelf: 'center',
       padding: 15,
-      borderRadius: 10
+      borderRadius: 40
     },
     number: {
       display: 'flex',
@@ -96,6 +86,10 @@ const styles = (props = null) =>
     },
     phoneNumber: {
       width: '70%'
+    },
+    phoneFieldInner: {
+      flexDirection: 'row',
+      alignItems: 'center'
     },
     error: {
       marginTop: 3

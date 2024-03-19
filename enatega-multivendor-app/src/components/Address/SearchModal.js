@@ -36,7 +36,7 @@ export default function SearchModal({
   const { t } = useTranslation()
   const animation = useSharedValue(0)
   const { GOOGLE_MAPS_KEY } = useEnvVars()
-  console.log('GOOGLE_MAPS_KEY', GOOGLE_MAPS_KEY)
+
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 

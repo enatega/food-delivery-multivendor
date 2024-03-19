@@ -97,21 +97,20 @@ function NewAddress(props) {
     props.navigation.setOptions({
       headerRight: null,
       title: t('addAddress'),
-      headerStyle: {
-        backgroundColor: currentTheme.headerBackground,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20
+      headerTitleStyle: {
+        color: '#000',
+        fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
-        marginTop: '1%',
-        marginLeft: '10%',
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
+        marginTop: '2%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
         height: '75%',
-        borderRadius: scale(10),
-        backgroundColor: currentTheme.black,
-        borderColor: currentTheme.white,
-        borderWidth: 1
+        marginLeft: 0
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.white,
+        elevation: 1
       },
       headerTitleAlign: 'center',
       headerRight: null,
@@ -119,7 +118,7 @@ function NewAddress(props) {
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
-            <View style={styles(currentTheme).headerBackBtnContainer}>
+            <View>
               <MaterialIcons name="arrow-back" size={30} color="black" />
             </View>
           )}
@@ -377,7 +376,7 @@ function NewAddress(props) {
                           center>
                           {t(label.title)}
                         </TextDefault>
-                        </React.Fragment>
+                      </React.Fragment>
                     ))}
                   </View>
                 </View>
@@ -431,7 +430,7 @@ function NewAddress(props) {
           onSubmit={onSubmit}
         />
       ) : null}
-      
+
       <View
         style={{
           paddingBottom: inset.bottom,

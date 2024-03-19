@@ -20,12 +20,13 @@ import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { TextField } from 'react-native-material-textfield'
-import { scale } from '../../utils/scaling'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
+import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
+import { IMAGE_LINK } from '../../utils/constants'
 
 function ItemDetail(props) {
   const Analytics = analytics()
@@ -47,6 +48,9 @@ function ItemDetail(props) {
       }
     })
   })
+
+  const imageUrl =
+    food?.image && food?.image.trim() !== '' ? food.image : IMAGE_LINK
 
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')
@@ -81,26 +85,21 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: t('titleCustomize'),
-      headerTitleContainerStyle: {
-        marginTop: scale(10),
-        paddingLeft: scale(15),
-        paddingRight: scale(15),
-        borderRadius: scale(10),
-        height: scale(35),
-        backgroundColor: currentTheme.customizeOpacityBtn,
-        borderWidth: 1,
-        borderColor: currentTheme.white
-      },
-      headerTransparent: true,
+      title: food.restaurantName,
       headerTitleAlign: 'center',
-
+      headerStyle: {
+        backgroundColor: currentTheme.white
+      },
+      headerTitleStyle: {
+        color: currentTheme.black
+      },
+      headerShadowVisible: false,
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=""
           backImage={() => (
             <View style={styles(currentTheme).backBtnContainer}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+              <MaterialIcons name="arrow-back" size={25} color="black" />
             </View>
           )}
           onPress={() => {
@@ -120,7 +119,7 @@ function ItemDetail(props) {
         validatedAddons.push(false)
       } else if (
         selected &&
-        selected.options.length >= addon.quantityMinimum &&
+        selected?.options?.length >= addon.quantityMinimum &&
         selected.options.length <= addon.quantityMaximum
       ) {
         validatedAddons.push(false)
@@ -150,7 +149,7 @@ function ItemDetail(props) {
             },
             {
               text: 'OK',
-              onPress: async () => {
+              onPress: async() => {
                 await addToCart(quantity, true)
               }
             }
@@ -161,7 +160,7 @@ function ItemDetail(props) {
     }
   }
 
-  const addToCart = async (quantity, clearFlag) => {
+  const addToCart = async(quantity, clearFlag) => {
     const addons = selectedAddons.map(addon => ({
       ...addon,
       options: addon.options.map(({ _id }) => ({
@@ -172,35 +171,35 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find(cartItem => {
-          if (
-            cartItem._id === food._id &&
+        if (
+          cartItem._id === food._id &&
             cartItem.variation._id === selectedVariation._id
-          ) {
-            if (cartItem.addons.length === addons.length) {
-              if (addons.length === 0) return true
-              const addonsResult = addons.every(newAddon => {
-                const cartAddon = cartItem.addons.find(
-                  ad => ad._id === newAddon._id
+        ) {
+          if (cartItem?.addons?.length === addons.length) {
+            if (addons.length === 0) return true
+            const addonsResult = addons.every(newAddon => {
+              const cartAddon = cartItem.addons.find(
+                ad => ad._id === newAddon._id
+              )
+
+              if (!cartAddon) return false
+              const optionsResult = newAddon.options.every(newOption => {
+                const cartOption = cartAddon.options.find(
+                  op => op._id === newOption._id
                 )
 
-                if (!cartAddon) return false
-                const optionsResult = newAddon.options.every(newOption => {
-                  const cartOption = cartAddon.options.find(
-                    op => op._id === newOption._id
-                  )
-
-                  if (!cartOption) return false
-                  return true
-                })
-
-                return optionsResult
+                if (!cartOption) return false
+                return true
               })
 
-              return addonsResult
-            }
+              return optionsResult
+            })
+
+            return addonsResult
           }
-          return false
-        })
+        }
+        return false
+      })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -314,28 +313,27 @@ function ItemDetail(props) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? `${0}` : `${100}`}>
-          {!!food.image && <ImageHeader image={food.image} />}
+          {imageUrl && <ImageHeader image={imageUrl} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles().scrollViewContainer}>
             <View style={styles().subContainer}>
               <HeadingComponent title={food.title} price={calculatePrice()} />
 
-              {food.variations.length > 1 && (
-                <>
-                  <View>
-                    <TitleComponent
-                      title={t('SelectVariation')}
-                      subTitle={t('SelectOne')}
-                      status={t('Required')}
-                    />
-                    <RadioComponent
-                      options={food.variations}
-                      selected={selectedVariation}
-                      onPress={onSelectVariation}
-                    />
-                  </View>
-                </>
+              {food?.variations?.length > 1 && (
+                <View>
+                  <TitleComponent
+                    title={t('SelectVariation')}
+                    subTitle={t('SelectOne')}
+                    status={t('Required')}
+                  />
+                  <RadioComponent
+                    options={food.variations}
+                    selected={selectedVariation}
+                    onPress={onSelectVariation}
+                  />
+                </View>
+
               )}
               {selectedVariation.addons.map(addon => (
                 <View key={addon._id}>
@@ -345,7 +343,7 @@ function ItemDetail(props) {
                     error={addon.error}
                     status={
                       addon.quantityMinimum === 0
-                        ? 'OPTIONAL'
+                        ? 'Optional'
                         : `${addon.quantityMinimum} REQUIRED`
                     }
                   />
@@ -373,6 +371,8 @@ function ItemDetail(props) {
                 tintColor={currentTheme.themeBackground}
               />
             </View>
+            {/** frequently bought together */}
+            <FrequentlyBoughtTogether itemId={food._id} restaurantId={restaurant}/>
           </ScrollView>
         </KeyboardAvoidingView>
       </View>

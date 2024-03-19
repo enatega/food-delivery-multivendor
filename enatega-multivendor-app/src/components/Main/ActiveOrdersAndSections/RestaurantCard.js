@@ -58,7 +58,7 @@ function RestaurantCard(props) {
               <Ionicons
                 name="star"
                 size={scale(12)}
-                color={currentTheme.primery}
+                color={currentTheme.primary}
               />
               <TextDefault
                 textColor={currentTheme.fontMainColor}

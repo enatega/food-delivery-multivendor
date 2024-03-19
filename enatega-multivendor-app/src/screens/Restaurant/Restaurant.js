@@ -12,19 +12,17 @@ import {
   Platform,
   Image,
   Dimensions,
-  SectionList
+  SectionList,
+  Text
 } from 'react-native'
 import Animated, {
-  Extrapolation,
-  interpolate,
-  useSharedValue,
-  Easing as EasingNode,
-  withTiming,
-  withRepeat,
-  useAnimatedStyle,
-  useAnimatedScrollHandler
+  Extrapolate,
+  interpolateNode,
+  useValue,
+  EasingNode,
+  timing
 } from 'react-native-reanimated'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   Placeholder,
   PlaceholderMedia,
@@ -43,46 +41,53 @@ import styles from './styles'
 import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
 import TextError from '../../components/Text/TextError/TextError'
-
+import { MaterialIcons } from '@expo/vector-icons'
 import analytics from '../../utils/analytics'
+import { gql, useApolloClient, useQuery } from '@apollo/client'
+import { popularItems, food } from '../../apollo/queries'
+
+import { useTranslation } from 'react-i18next'
+import ItemCard from '../../components/ItemCards/ItemCards'
+import { ScrollView } from 'react-native-gesture-handler'
+import { IMAGE_LINK } from '../../utils/constants'
 
 const { height } = Dimensions.get('screen')
-import { useTranslation } from 'react-i18next'
 
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
 const HEADER_MAX_HEIGHT = height * 0.3
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
-const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
 
-const config = (to) => ({
-  duration: 250,
-  toValue: to,
-  easing: EasingNode.inOut(EasingNode.ease)
-})
+const POPULAR_ITEMS = gql`
+  ${popularItems}
+`
+const FOOD = gql`
+  ${food}
+`
 
 // const concat = (...args) => args.join('')
 function Restaurant(props) {
+  const { _id: restaurantId } = props.route.params
   const Analytics = analytics()
-
   const { t } = useTranslation()
   const scrollRef = useRef(null)
   const flatListRef = useRef(null)
   const navigation = useNavigation()
   const route = useRoute()
-  const inset = useSafeAreaInsets()
   const propsData = route.params
   const animation = useSharedValue(0)
   const translationY = useSharedValue(0)
   const circle = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const [filterData, setFilterData] = useState([])
+  const [showSearchResults, setShowSearchResults] = useState(false)
   const {
     restaurant: restaurantCart,
     setCartRestaurant,
@@ -95,6 +100,56 @@ function Restaurant(props) {
   const { data, refetch, networkStatus, loading, error } = useRestaurant(
     propsData._id
   )
+  const client = useApolloClient()
+  const { data: popularItems } = useQuery(POPULAR_ITEMS, {
+    variables: { restaurantId }
+  })
+
+  const fetchFoodDetails = itemId => {
+    return client.readFragment({ id: `Food:${itemId}`, fragment: FOOD })
+  }
+
+  const dataList =
+    popularItems &&
+    popularItems?.popularItems?.map(item => {
+      const foodDetails = fetchFoodDetails(item.id)
+      return foodDetails
+    })
+
+  const searchHandler = () => {
+    setSearchOpen(!searchOpen)
+    setShowSearchResults(!showSearchResults)
+  }
+
+  const searchPopupHandler = () => {
+    setSearchOpen(!searchOpen)
+    setSearch('')
+  }
+
+  useEffect(() => {
+    if (search === '') {
+      setFilterData([])
+      setShowSearchResults(false)
+    } else if (deals) {
+      const regex = new RegExp(search, 'i')
+      const filteredData = []
+      deals.forEach(category => {
+        category.data.forEach(deals => {
+          const title = deals.title.search(regex)
+          if (title < 0) {
+            const description = deals.description.search(regex)
+            if (description > 0) {
+              filteredData.push(deals)
+            }
+          } else {
+            filteredData.push(deals)
+          }
+        })
+      })
+      setFilterData(filteredData)
+      setShowSearchResults(true)
+    }
+  }, [search, searchOpen])
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -137,9 +192,23 @@ function Restaurant(props) {
     }
   }, [data])
 
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    translationY.value = event.contentOffset.y
-  })
+  const isOpen = () => {
+    if (data.restaurant.openingTimes?.length < 1) return false
+    const date = new Date()
+    const day = date.getDay()
+    const hours = date.getHours()
+    const minutes = date.getMinutes()
+    const todaysTimings = data.restaurant.openingTimes.find(
+      o => o.day === DAYS[day]
+    )
+    if (todaysTimings === undefined) return false
+    const times = todaysTimings.times.filter(
+      t =>
+        hours >= Number(t.startTime[0]) &&
+        minutes >= Number(t.startTime[1]) &&
+        hours <= Number(t.endTime[0]) &&
+        minutes <= Number(t.endTime[1])
+    )
 
   const isOpen = () => {
     if (data) {
@@ -201,7 +270,7 @@ function Restaurant(props) {
           },
           {
             text: t('okText'),
-            onPress: async () => {
+            onPress: async() => {
               await addToCart(food, true)
             }
           }
@@ -222,14 +291,13 @@ function Restaurant(props) {
     return wrappedContent.join('\n')
   }
 
-  const addToCart = async (food, clearFlag) => {
+  const addToCart = async(food, clearFlag) => {
     if (
-      food.variations.length === 1 &&
-      food.variations[0].addons.length === 0
+      food?.variations?.length === 1 &&
+      food?.variations[0].addons?.length === 0
     ) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
-
       if (result.exist) await addQuantity(result.key)
       else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
       animate()
@@ -284,9 +352,7 @@ function Restaurant(props) {
       scrollRef.current.scrollToLocation({
         animated: true,
         sectionIndex: index,
-        itemIndex: 0,
-        viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
-        viewPosition: 0
+        itemIndex: 0
       })
     }
   }
@@ -299,7 +365,7 @@ function Restaurant(props) {
       scrollToNavbar(index)
     }
   }
-  function scrollToNavbar(value) {
+  function scrollToNavbar(value = 0) {
     if (flatListRef.current != null) {
       flatListRef.current.scrollToIndex({
         animated: true,
@@ -310,95 +376,79 @@ function Restaurant(props) {
   }
 
   function onViewableItemsChanged({ viewableItems }) {
-    if (viewableItems?.length === 0) return
+    buttonClickedSetter(false)
+    if (viewableItems.length === 0) return
     if (
       selectedLabel !== viewableItems[0].section.index &&
       buttonClicked === false
     ) {
+      console.log('IFIFIFIi')
       selectedLabelSetter(viewableItems[0].section.index)
       scrollToNavbar(viewableItems[0].section.index)
     }
   }
-  const onScrollEndSnapToEdge = (event) => {
-    event.persist()
-    const y = event.nativeEvent.contentOffset.y
 
-    if (y > 0 && y < HALF_HEADER_SCROLL / 2) {
-      if (scrollRef.current) {
-        withTiming(translationY.value, config(0), (finished) => {
-          if (finished) {
-            scrollRef.current.scrollToLocation({
-              animated: false,
-              sectionIndex: 0,
-              itemIndex: 0,
-              viewOffset: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-              viewPosition: 0
-            })
-          }
-        })
-      }
-    } else if (HALF_HEADER_SCROLL / 2 <= y && y < HALF_HEADER_SCROLL) {
-      if (scrollRef.current) {
-        withTiming(translationY.value, config(SCROLL_RANGE), (finished) => {
-          if (finished) {
-            scrollRef.current.scrollToLocation({
-              animated: false,
-              sectionIndex: 0,
-              itemIndex: 0,
-              viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
-              viewPosition: 0
-            })
-          }
-        })
-      }
-    }
-    buttonClickedSetter(false)
-  }
+  // Important
+  const headerHeight = interpolateNode(animation, {
+    inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+    extrapolate: Extrapolate.CLAMP
+  })
 
-  const circleSize = interpolate(
-    circle.value,
-    [0, 0.5, 1],
-    [scale(18), scale(24), scale(18)],
-    Extrapolation.CLAMP
-  )
-  const radiusSize = interpolate(
-    circle.value,
-    [0, 0.5, 1],
-    [scale(9), scale(12), scale(9)],
-    Extrapolation.CLAMP
-  )
+  const iconColor = currentTheme.iconColorPink
 
-  const fontStyles = useAnimatedStyle(() => {
-    return {
-      fontSize: interpolate(
-        circle.value,
-        [0, 0.5, 1],
-        [8, 12, 8],
-        Extrapolation.CLAMP
-      )
-    }
+  const iconBackColor = currentTheme.white
+
+  const iconRadius = scale(15)
+
+  const iconSize = scale(20)
+
+  const iconTouchHeight = scale(30)
+
+  const iconTouchWidth = scale(30)
+
+  const circleSize = interpolateNode(circle, {
+    inputRange: [0, 0.5, 1],
+    outputRange: [scale(18), scale(24), scale(18)],
+    extrapolate: Extrapolate.CLAMP
+  })
+  const radiusSize = interpolateNode(circle, {
+    inputRange: [0, 0.5, 1],
+    outputRange: [scale(9), scale(12), scale(9)],
+    extrapolate: Extrapolate.CLAMP
+  })
+  const fontChange = interpolateNode(circle, {
+    inputRange: [0, 0.5, 1],
+    outputRange: [scale(8), scale(12), scale(8)],
+    extrapolate: Extrapolate.CLAMP
   })
 
   if (loading) {
     return (
-      <Animated.View
-        style={[
-          styles().flex,
-          {
-            marginTop: inset.top,
-            paddingBottom: inset.bottom,
-            paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-            backgroundColor: currentTheme.headerMenuBackground
-          }
-        ]}
-      >
+      <View style={[styles().flex]}>
         <ImageHeader
+          iconColor={iconColor}
+          iconSize={iconSize}
+          height={headerHeight}
+          iconBackColor={iconBackColor}
+          iconRadius={iconRadius}
+          iconTouchWidth={iconTouchWidth}
+          iconTouchHeight={iconTouchHeight}
           restaurantName={propsData.name}
+          restaurantId={propsData._id}
           restaurantImage={propsData.image}
           restaurant={null}
           topaBarData={[]}
           loading={loading}
-          translationY={translationY}
+          minimumOrder={propsData.minimumOrder}
+          tax={propsData.tax}
+          updatedDeals={[]}
+          searchOpen={searchOpen}
+          showSearchResults={showSearchResults}
+          setSearch={setSearch}
+          search={search}
+          searchHandler={searchHandler}
+          searchPopupHandler={searchPopupHandler}
         />
 
         <View
@@ -430,147 +480,307 @@ function Restaurant(props) {
             </Placeholder>
           ))}
         </View>
-      </Animated.View>
+      </View>
     )
   }
   if (error) return <TextError text={JSON.stringify(error)} />
-  const restaurant = data && data.restaurant
-  const allDeals = restaurant.categories.filter((cat) => cat.foods.length)
+  const restaurant = data.restaurant
+  const allDeals = restaurant.categories.filter(cat => cat?.foods?.length)
   const deals = allDeals.map((c, index) => ({
     ...c,
     data: c.foods,
-    index
+    index: dataList?.length > 0 ? index+1 : index
   }))
+
+  const updatedDeals = dataList?.length > 0 ? [
+    {
+      title: 'Popular',
+      id: new Date().getTime(),
+      data: dataList,
+      index: 0
+    },
+    ...deals
+  ] : [...deals]
 
   return (
     <>
       <SafeAreaView style={styles(currentTheme).flex}>
-        <Animated.View style={styles(currentTheme).flex}>
+        <View style={styles(currentTheme).flex}>
           <ImageHeader
             ref={flatListRef}
+            iconColor={iconColor}
+            iconSize={iconSize}
+            height={headerHeight}
+            iconBackColor={iconBackColor}
+            iconRadius={iconRadius}
+            iconTouchWidth={iconTouchWidth}
+            iconTouchHeight={iconTouchHeight}
             restaurantName={propsData.name}
+            restaurantId={propsData._id}
             restaurantImage={propsData.image}
             restaurant={data.restaurant}
-            topaBarData={deals}
+            topaBarData={updatedDeals}
             changeIndex={changeIndex}
             selectedLabel={selectedLabel}
-            translationY={translationY}
+            minimumOrder={propsData.minimumOrder}
+            tax={propsData.tax}
+            updatedDeals={updatedDeals}
+            searchOpen={searchOpen}
+            showSearchResults={showSearchResults}
+            setSearch={setSearch}
+            search={search}
+            searchHandler={searchHandler}
+            searchPopupHandler={searchPopupHandler}
           />
 
-          <AnimatedSectionList
-            ref={scrollRef}
-            sections={deals}
-            style={{
-              flexGrow: 1,
-              zIndex: -1,
-              paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-              marginTop: HEADER_MIN_HEIGHT
-            }}
-            // Important
-            contentContainerStyle={{
-              paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-            }}
-            scrollEventThrottle={1}
-            stickySectionHeadersEnabled={false}
-            showsVerticalScrollIndicator={false}
-            refreshing={networkStatus === 4}
-            onRefresh={() => networkStatus === 7 && refetch()}
-            onViewableItemsChanged={onViewableItemsChanged}
-            onMomentumScrollEnd={(event) => {
-              onScrollEndSnapToEdge(event)
-            }}
-            onScroll={scrollHandler}
-            keyExtractor={(item, index) => item + index}
-            ItemSeparatorComponent={() => (
-              <View style={styles(currentTheme).listSeperator} />
-            )}
-            SectionSeparatorComponent={(props) => {
-              if (!props.leadingItem) return null
-              return <View style={styles(currentTheme).sectionSeparator} />
-            }}
-            renderSectionHeader={({ section: { title } }) => {
-              return (
-                <TextDefault
-                  style={styles(currentTheme).sectionHeaderText}
-                  textColor={currentTheme.fontMainColor}
-                  bolder
-                  B700
-                  H4
-                >
-                  {title}
-                </TextDefault>
-              )
-            }}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity
-                style={styles(currentTheme).dealSection}
-                activeOpacity={0.7}
-                onPress={() =>
-                  onPressItem({
-                    ...item,
-                    restaurant: restaurant._id,
-                    restaurantName: restaurant.name
-                  })
-                }
-              >
-                <View style={styles(currentTheme).deal}>
-                  <View style={styles(currentTheme).flex}>
-                    <View style={styles(currentTheme).dealDescription}>
-                      <TextDefault
-                        textColor={currentTheme.fontMainColor}
-                        style={styles(currentTheme).headerText}
-                        numberOfLines={1}
-                        bolder
-                      >
-                        {item.title}
-                      </TextDefault>
-                      <TextDefault style={styles(currentTheme).priceText} small>
-                        {wrapContentAfterWords(item.description, 5)}
-                      </TextDefault>
-                      <View style={styles(currentTheme).dealPrice}>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.fontMainColor}
-                          style={styles(currentTheme).priceText}
-                          bolder
-                          small
-                        >
-                          {configuration.currencySymbol}{' '}
-                          {parseFloat(item.variations[0].price).toFixed(2)}
-                        </TextDefault>
-                        {item.variations[0].discounted > 0 && (
-                          <TextDefault
-                            numberOfLines={1}
-                            textColor={currentTheme.fontSecondColor}
-                            style={styles().priceText}
-                            small
-                            lineOver
-                          >
-                            {configuration.currencySymbol}{' '}
-                            {(
-                              item.variations[0].price +
-                              item.variations[0].discounted
-                            ).toFixed(2)}
-                          </TextDefault>
-                        )}
+          {showSearchResults ? (
+            <ScrollView>
+              {filterData.map((item, index) => (
+                <View key={index}>
+                  <TouchableOpacity
+                    style={styles(currentTheme).searchDealSection}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      onPressItem({
+                        ...item,
+                        restaurant: restaurant._id,
+                        restaurantName: restaurant.name
+                      })
+                    }>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                      <View style={styles(currentTheme).deal}>
+                        {item?.image ? (
+                          <Image
+                            style={{
+                              height: scale(60),
+                              width: scale(60),
+                              borderRadius: 30
+                            }}
+                            source={{ uri: item.image }}
+                          />
+                        ) : null}
+                        <View style={styles(currentTheme).flex}>
+                          <View style={styles(currentTheme).dealDescription}>
+                            <TextDefault
+                              textColor={currentTheme.fontMainColor}
+                              style={styles(currentTheme).headerText}
+                              numberOfLines={1}
+                              bolder>
+                              {item.title}
+                            </TextDefault>
+                            <TextDefault
+                              style={styles(currentTheme).priceText}
+                              small>
+                              {wrapContentAfterWords(item.description, 5)}
+                            </TextDefault>
+                            <View style={styles(currentTheme).dealPrice}>
+                              <TextDefault
+                                numberOfLines={1}
+                                textColor={currentTheme.fontMainColor}
+                                style={styles(currentTheme).priceText}
+                                bolder
+                                small>
+                                {configuration.currencySymbol}{' '}
+                                {parseFloat(item.variations[0].price).toFixed(
+                                  2
+                                )}
+                              </TextDefault>
+                              {item.variations[0].discounted > 0 && (
+                                <TextDefault
+                                  numberOfLines={1}
+                                  textColor={currentTheme.fontSecondColor}
+                                  style={styles().priceText}
+                                  small
+                                  lineOver>
+                                  {configuration.currencySymbol}{' '}
+                                  {(
+                                    item.variations[0].price +
+                                    item.variations[0].discounted
+                                  ).toFixed(2)}
+                                </TextDefault>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                      <View style={styles().addToCart}>
+                        <MaterialIcons
+                          name="add"
+                          size={scale(20)}
+                          color="#fff"
+                        />
                       </View>
                     </View>
-                  </View>
-                  {item.image ? (
-                    <Image
-                      style={{
-                        height: scale(60),
-                        width: scale(60),
-                        borderRadius: 30
-                      }}
-                      source={{ uri: item.image }}
-                    />
-                  ) : null}
+                    {/* )} */}
+                    {tagCart(item._id)}
+                  </TouchableOpacity>
                 </View>
-                {tagCart(item._id)}
-              </TouchableOpacity>
-            )}
-          />
+              ))}
+            </ScrollView>
+          ) : (
+            <AnimatedSectionList
+              ref={scrollRef}
+              sections={updatedDeals}
+              scrollEventThrottle={1}
+              stickySectionHeadersEnabled={false}
+              showsVerticalScrollIndicator={false}
+              refreshing={networkStatus === 4}
+              onRefresh={() => networkStatus === 7 && refetch()}
+              onViewableItemsChanged={onViewableItemsChanged}
+              keyExtractor={(item, index) => item + index}
+              contentContainerStyle={{ paddingBottom: 150 }}
+              renderSectionHeader={({ section: { title, data } }) => {
+                if (title === 'Popular') {
+                  if (!dataList || dataList?.length === 0) {
+                    return null // Don't render the section header if dataList is empty
+                  }
+                  return (
+                    <View style={{ backgroundColor: '#fff' }}>
+                      <TextDefault
+                        style={styles(currentTheme).sectionHeaderText}
+                        textColor="#111827"
+                        bolder>
+                        {title}
+                      </TextDefault>
+                      <Text
+                        style={{
+                          color: '#4B5563',
+                          ...alignment.PLmedium,
+                          fontSize: scale(12),
+                          fontWeight: '400',
+                          marginTop: scale(3)
+                        }}>
+                        Most ordered right now.
+                      </Text>
+                      <View style={styles().popularItemCards}>
+                        {data.map(item => (
+                          <ItemCard
+                            key={item._id}
+                            item={item}
+                            onPressItem={onPressItem}
+                            restaurant={restaurant}
+                            tagCart={tagCart}
+                          />
+                        ))}
+                      </View>
+                    </View>
+                  )
+                }
+                // Render other section headers as usual
+                return (
+                  <View style={{ backgroundColor: '#fff' }}>
+                    <TextDefault
+                      style={styles(currentTheme).sectionHeaderText}
+                      textColor="#111827"
+                      bolder>
+                      {title}
+                    </TextDefault>
+                  </View>
+                )
+              }}
+              renderItem={({ item, section }) => {
+                const imageUrl =
+                  item.image && item.image.trim() !== ''
+                    ? item.image
+                    : IMAGE_LINK
+                if (section.title === 'Popular') {
+                  if (!dataList || dataList?.length === 0) {
+                    return null
+                  }
+                  return null
+                }
+                return (
+                  <TouchableOpacity
+                    style={styles(currentTheme).dealSection}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      onPressItem({
+                        ...item,
+                        restaurant: restaurant._id,
+                        restaurantName: restaurant.name
+                      })
+                    }>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                      <View style={styles(currentTheme).deal}>
+                          <Image
+                            style={{
+                              height: scale(60),
+                              width: scale(60),
+                              borderRadius: 30
+                            }}
+                          source={{ uri: imageUrl }}
+                          />
+                        <View style={styles(currentTheme).flex}>
+                          <View style={styles(currentTheme).dealDescription}>
+                            <TextDefault
+                              textColor={currentTheme.fontMainColor}
+                              style={styles(currentTheme).headerText}
+                              numberOfLines={1}
+                              bolder>
+                              {item.title}
+                            </TextDefault>
+                            <TextDefault
+                              style={styles(currentTheme).priceText}
+                              small>
+                              {wrapContentAfterWords(item.description, 5)}
+                            </TextDefault>
+                            <View style={styles(currentTheme).dealPrice}>
+                              <TextDefault
+                                numberOfLines={1}
+                                textColor={currentTheme.fontMainColor}
+                                style={styles(currentTheme).priceText}
+                                bolder
+                                small>
+                                {configuration.currencySymbol}{' '}
+                                {parseFloat(item.variations[0].price).toFixed(
+                                  2
+                                )}
+                              </TextDefault>
+                              {item.variations[0].discounted > 0 && (
+                                <TextDefault
+                                  numberOfLines={1}
+                                  textColor={currentTheme.fontSecondColor}
+                                  style={styles().priceText}
+                                  small
+                                  lineOver>
+                                  {configuration.currencySymbol}{' '}
+                                  {(
+                                    item.variations[0].price +
+                                    item.variations[0].discounted
+                                  ).toFixed(2)}
+                                </TextDefault>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                      <View style={styles().addToCart}>
+                        <MaterialIcons
+                          name="add"
+                          size={scale(20)}
+                          color="#fff"
+                        />
+                      </View>
+                    </View>
+                    {/* )} */}
+                    {tagCart(item._id)}
+                  </TouchableOpacity>
+                )
+              }}
+            />
+          )}
+          {/* </View> */}
+
           {cartCount > 0 && (
             <View style={styles(currentTheme).buttonContainer}>
               <TouchableOpacity
@@ -611,7 +821,7 @@ function Restaurant(props) {
               </TouchableOpacity>
             </View>
           )}
-        </Animated.View>
+        </View>
       </SafeAreaView>
     </>
   )
