@@ -9,8 +9,7 @@ import ThemeContext from '../../ThemeContext/ThemeContext'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+
 
 const FdGoogleBtn = props => {
   const themeContext = useContext(ThemeContext)

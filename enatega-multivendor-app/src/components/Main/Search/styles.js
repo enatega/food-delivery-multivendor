@@ -54,14 +54,10 @@ const styles = (props = null, newheaderColor = '#fafafa', cartContainer = '#fafa
     },
     leftContainer: {
       flexDirection: 'row',
-      width: '90%'
+      width: '90%',
     },
     searchContainer: {
       width: '10%',
-      height: '80%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...alignment.MBxSmall
     },
     inputContainer: {
       width: '100%',

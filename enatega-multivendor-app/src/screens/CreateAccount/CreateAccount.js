@@ -1,5 +1,10 @@
 import React, { useLayoutEffect } from 'react'
 import { View, Image, TouchableOpacity } from 'react-native'
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes
+} from '@react-native-google-signin/google-signin'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -21,7 +26,9 @@ const CreateAccount = (props) => {
     currentTheme,
     mutateLogin,
     navigateToLogin,
-    navigation
+    navigation,
+    signIn,
+    user
   } = useCreateAccount()
   const { t } = useTranslation()
   useLayoutEffect(() => {

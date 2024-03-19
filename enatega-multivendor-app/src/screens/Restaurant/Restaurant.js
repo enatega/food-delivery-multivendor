@@ -16,11 +16,14 @@ import {
   Text
 } from 'react-native'
 import Animated, {
-  Extrapolate,
-  interpolateNode,
-  useValue,
-  EasingNode,
-  timing
+  Extrapolation,
+  interpolate,
+  useSharedValue,
+  Easing as EasingNode,
+  withTiming,
+  withRepeat,
+  useAnimatedStyle,
+  useAnimatedScrollHandler
 } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
@@ -58,6 +61,8 @@ const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
 const HEADER_MAX_HEIGHT = height * 0.3
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
+const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
 
 const POPULAR_ITEMS = gql`
   ${popularItems}
@@ -191,24 +196,6 @@ function Restaurant(props) {
       )
     }
   }, [data])
-
-  const isOpen = () => {
-    if (data.restaurant.openingTimes?.length < 1) return false
-    const date = new Date()
-    const day = date.getDay()
-    const hours = date.getHours()
-    const minutes = date.getMinutes()
-    const todaysTimings = data.restaurant.openingTimes.find(
-      o => o.day === DAYS[day]
-    )
-    if (todaysTimings === undefined) return false
-    const times = todaysTimings.times.filter(
-      t =>
-        hours >= Number(t.startTime[0]) &&
-        minutes >= Number(t.startTime[1]) &&
-        hours <= Number(t.endTime[0]) &&
-        minutes <= Number(t.endTime[1])
-    )
 
   const isOpen = () => {
     if (data) {
@@ -357,6 +344,45 @@ function Restaurant(props) {
     }
   }
 
+  const onScrollEndSnapToEdge = (event) => {
+    event.persist()
+    const y = event.nativeEvent.contentOffset.y
+
+    if (y > 0 && y < HALF_HEADER_SCROLL / 2) {
+      if (scrollRef.current) {
+        withTiming(translationY.value, config(0), (finished) => {
+          if (finished) {
+            scrollRef.current.scrollToLocation({
+              animated: false,
+              sectionIndex: 0,
+              itemIndex: 0,
+              viewOffset: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
+              viewPosition: 0
+            })
+          }
+        })
+      }
+    } else if (HALF_HEADER_SCROLL / 2 <= y && y < HALF_HEADER_SCROLL) {
+      if (scrollRef.current) {
+        withTiming(translationY.value, config(SCROLL_RANGE), (finished) => {
+          if (finished) {
+            scrollRef.current.scrollToLocation({
+              animated: false,
+              sectionIndex: 0,
+              itemIndex: 0,
+              viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
+              viewPosition: 0
+            })
+          }
+        })
+      }
+    }
+    buttonClickedSetter(false)
+  }
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    translationY.value = event.contentOffset.y
+  })
+
   function changeIndex(index) {
     if (selectedLabel !== index) {
       selectedLabelSetter(index)
@@ -388,13 +414,6 @@ function Restaurant(props) {
     }
   }
 
-  // Important
-  const headerHeight = interpolateNode(animation, {
-    inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-    extrapolate: Extrapolate.CLAMP
-  })
-
   const iconColor = currentTheme.iconColorPink
 
   const iconBackColor = currentTheme.white
@@ -407,20 +426,28 @@ function Restaurant(props) {
 
   const iconTouchWidth = scale(30)
 
-  const circleSize = interpolateNode(circle, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [scale(18), scale(24), scale(18)],
-    extrapolate: Extrapolate.CLAMP
-  })
-  const radiusSize = interpolateNode(circle, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [scale(9), scale(12), scale(9)],
-    extrapolate: Extrapolate.CLAMP
-  })
-  const fontChange = interpolateNode(circle, {
-    inputRange: [0, 0.5, 1],
-    outputRange: [scale(8), scale(12), scale(8)],
-    extrapolate: Extrapolate.CLAMP
+  const circleSize = interpolate(
+    circle.value,
+    [0, 0.5, 1],
+    [scale(18), scale(24), scale(18)],
+    Extrapolation.CLAMP
+  )
+  const radiusSize = interpolate(
+    circle.value,
+    [0, 0.5, 1],
+    [scale(9), scale(12), scale(9)],
+    Extrapolation.CLAMP
+  )
+
+  const fontStyles = useAnimatedStyle(() => {
+    return {
+      fontSize: interpolate(
+        circle.value,
+        [0, 0.5, 1],
+        [8, 12, 8],
+        Extrapolation.CLAMP
+      )
+    }
   })
 
   if (loading) {
@@ -429,7 +456,6 @@ function Restaurant(props) {
         <ImageHeader
           iconColor={iconColor}
           iconSize={iconSize}
-          height={headerHeight}
           iconBackColor={iconBackColor}
           iconRadius={iconRadius}
           iconTouchWidth={iconTouchWidth}
@@ -449,6 +475,7 @@ function Restaurant(props) {
           search={search}
           searchHandler={searchHandler}
           searchPopupHandler={searchPopupHandler}
+          translationY={translationY}
         />
 
         <View
@@ -510,7 +537,6 @@ function Restaurant(props) {
             ref={flatListRef}
             iconColor={iconColor}
             iconSize={iconSize}
-            height={headerHeight}
             iconBackColor={iconBackColor}
             iconRadius={iconRadius}
             iconTouchWidth={iconTouchWidth}
@@ -531,6 +557,7 @@ function Restaurant(props) {
             search={search}
             searchHandler={searchHandler}
             searchPopupHandler={searchPopupHandler}
+            translationY={translationY}
           />
 
           {showSearchResults ? (
@@ -632,6 +659,10 @@ function Restaurant(props) {
               refreshing={networkStatus === 4}
               onRefresh={() => networkStatus === 7 && refetch()}
               onViewableItemsChanged={onViewableItemsChanged}
+              onMomentumScrollEnd={(event) => {
+                onScrollEndSnapToEdge(event)
+              }}
+              onScroll={scrollHandler}
               keyExtractor={(item, index) => item + index}
               contentContainerStyle={{ paddingBottom: 150 }}
               renderSectionHeader={({ section: { title, data } }) => {
