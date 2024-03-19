@@ -108,7 +108,7 @@ const styles = (props = null) =>
     titleContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'white',
       color: props !== null ? props.darkBgFont : 'white',
-      padding: scale(25),
+      paddingTop: scale(8),
       fontSize: scale(20),
       fontWeight: '600'
     },
