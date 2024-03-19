@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Dimensions } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -10,22 +10,22 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useCreateAccount } from './useCreateAccount'
 import navigationOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
 
-const CreateAccount = props => {
+const CreateAccount = (props) => {
   const {
     enableApple,
     loginButton,
     loginButtonSetter,
     loading,
-    googleRequest,
-    googlePromptAsync,
     themeContext,
     currentTheme,
     mutateLogin,
     navigateToLogin,
     openTerms,
     openPrivacyPolicy,
-    navigation
+    navigation,
+    signIn
   } = useCreateAccount()
   const { t } = useTranslation()
   useLayoutEffect(() => {
@@ -44,7 +44,7 @@ const CreateAccount = props => {
       return (
         <View style={styles().buttonBackground}>
           <Spinner
-            backColor="rgba(0,0,0,0.1)"
+            backColor='rgba(0,0,0,0.1)'
             spinnerColor={currentTheme.white}
           />
         </View>
@@ -100,14 +100,23 @@ const CreateAccount = props => {
   }
 
   function renderGoogleAction() {
+    if (loading && loginButton === 'Google') {
+      return (
+        <View style={[styles().buttonBackground, styles().marginBottom5]}>
+          <Spinner
+            spinnerColor={currentTheme.primery}
+            style={{ marginBottom: 20 }}
+          />
+        </View>
+      )
+    }
+
     return (
-      <FdGoogleBtn
-        loadingIcon={loading && loginButton === 'Google'}
-        onPressIn={() => {
-          loginButtonSetter('Google')
-        }}
-        disabled={!googleRequest}
-        onPress={() => googlePromptAsync()}
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Light}
+        onPress={signIn}
+        disabled={loading && loginButton === 'Google'}
       />
     )
   }
@@ -127,6 +136,7 @@ const CreateAccount = props => {
 
   return (
     <View style={[styles(currentTheme).subContainer]}>
+      {/* {user && JSON.stringify(user, null, 2)} */}
       <TextDefault
         H2
         bolder
@@ -135,7 +145,8 @@ const CreateAccount = props => {
           textAlign: 'center',
           ...alignment.MTlarge,
           ...alignment.MBlarge
-        }}>
+        }}
+      >
         {t('signUporSignIn')}
       </TextDefault>
       <View>
@@ -147,14 +158,16 @@ const CreateAccount = props => {
           style={[
             styles().marginTop5,
             { flexDirection: 'row', alignItems: 'center' }
-          ]}>
+          ]}
+        >
           <View style={styles().line} />
           <View>
             <TextDefault
               H4
               bolder
               textColor={currentTheme.horizontalLine}
-              style={{ width: 50, textAlign: 'center' }}>
+              style={{ width: 50, textAlign: 'center' }}
+            >
               {t('or')}
             </TextDefault>
           </View>
@@ -170,7 +183,8 @@ const CreateAccount = props => {
           flexWrap: 'wrap',
           ...alignment.MTlarge,
           ...alignment.MBlarge
-        }}>
+        }}
+      >
         <TextDefault textColor={currentTheme.horizontalLine}>
           {t('termCondition1')}{' '}
         </TextDefault>

@@ -4,7 +4,7 @@ import * as Notifications from 'expo-notifications'
 import * as Font from 'expo-font'
 import 'react-native-gesture-handler'
 import * as SplashScreen from 'expo-splash-screen'
-import * as Sentry from 'sentry-expo'
+// import * as Sentry from 'sentry-expo'
 import {
   BackHandler,
   Platform,
@@ -114,16 +114,16 @@ export default function App() {
   const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()
 
-  useEffect(() => {
-    if (SENTRY_DSN) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-        enableInExpoDevelopment: true,
-        debug: !isProduction,
-        tracesSampleRate: 1.0 // to be changed to 0.2 in production
-      })
-    }
-  }, [SENTRY_DSN])
+  // useEffect(() => {
+  //   if (SENTRY_DSN) {
+  //     Sentry.init({
+  //       dsn: SENTRY_DSN,
+  //       enableInExpoDevelopment: true,
+  //       debug: !isProduction,
+  //       tracesSampleRate: 1.0 // to be changed to 0.2 in production
+  //     })
+  //   }
+  // }, [SENTRY_DSN])
 
   useEffect(() => {
     // eslint-disable-next-line no-undef

@@ -61,6 +61,9 @@ const styles = (props = null) =>
       flex: 1,
       height: 1,
       backgroundColor: props !== null ? props.horizontalLine : '#9B9A9A'
-    }
+    },
+    marginBottom5: {
+      ...alignment.MBsmall
+    },
   })
 export default styles
