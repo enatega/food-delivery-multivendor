@@ -42,8 +42,7 @@ import { LocationContext } from '../../context/Location'
 import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
-import { OrderAgain } from '../../components/Main/OrderAgain'
-import { TopPicks } from '../../components/Main/TopPicks'
+import MainRestaurantCard from '../../components/Main/MainRestaurantCard/MainRestaurantCard'
 import { TopBrands } from '../../components/Main/TopBrands'
 import Item from '../../components/Main/Item/Item'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
@@ -266,7 +265,6 @@ function Main(props) {
     </View>
   )
 
-
   const restaurants = data?.nearByRestaurants?.restaurants
 
   const searchAllShops = searchText => {
@@ -311,6 +309,7 @@ function Main(props) {
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
+          
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
@@ -427,10 +426,8 @@ function Main(props) {
                               {orderLoading ? (
                                 <MainLoadingUI />
                               ) : (
-                                <OrderAgain
-                                  recentOrderRestaurants={
-                                    recentOrderRestaurantsVar
-                                  }
+                                <MainRestaurantCard
+                                  orders={recentOrderRestaurantsVar}
                                   loading={orderLoading}
                                   error={orderError}
                                   title={'Order it again'}
@@ -443,8 +440,8 @@ function Main(props) {
                         {orderLoading ? (
                           <MainLoadingUI />
                         ) : (
-                          <TopPicks
-                            mostOrderedRestaurants={mostOrderedRestaurantsVar}
+                          <MainRestaurantCard
+                            orders={mostOrderedRestaurantsVar}
                             loading={orderLoading}
                             error={orderError}
                             title={'Top Picks for you'}

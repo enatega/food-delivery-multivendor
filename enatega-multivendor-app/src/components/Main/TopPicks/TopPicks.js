@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { View, FlatList, Text } from 'react-native'
-import styles from '../OrderAgain/styles'
+import styles from '../MainRestaurantCard/styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
