@@ -406,5 +406,13 @@ export const fr = {
   notAvailableinYourArea:
     'Nous ne sommes actuellement pas disponibles dans votre région',
   noRestaurant:
-    'Aucun restaurant ne propose actuellement de livraison dans votre région'
+    'Aucun restaurant ne propose actuellement de livraison dans votre région',
+  noRestaurant:
+    'Aucun restaurant ne propose actuellement de livraison dans votre région',
+  titleEmptyActiveOrders: 'Aucune commande active pour le moment !',
+  emptyActiveOrdersDesc: 'Vous verrez vos commandes actives ici.',
+  emptyActiveOrdersBtn: 'Passons une commande !',
+  titleEmptyPastOrders: 'Aucune commande passée pour le moment !',
+  emptyPastOrdersDesc: 'Vous verrez vos commandes passées ici.',
+  emptyPastOrdersBtn: 'Passons une commande !'
 }

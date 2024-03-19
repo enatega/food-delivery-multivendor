@@ -391,5 +391,12 @@ export const ar = {
   locationType: 'نوع الموقع',
   locationTypeDetails: 'يساعدنا نوع الموقع في العثور عليك بشكل أفضل',
   notAvailableinYourArea: 'نحن غير متاحين حاليًا في منطقتك',
-  noRestaurant: 'لا يقدم أي مطعم توصيل في منطقتك حاليًا'
+  noRestaurant: 'لا يقدم أي مطعم توصيل في منطقتك حاليًا',
+  noRestaurant: 'لا يقدم أي مطعم توصيل حاليًا في منطقتك',
+  titleEmptyActiveOrders: 'لا توجد طلبات نشطة بعد!',
+  emptyActiveOrdersDesc: 'سوف تظهر طلباتك النشطة هنا.',
+  emptyActiveOrdersBtn: 'لنطلب شيئًا!',
+  titleEmptyPastOrders: 'لا توجد طلبات سابقة بعد!',
+  emptyPastOrdersDesc: 'سوف تظهر طلباتك السابقة هنا.',
+  emptyPastOrdersBtn: 'لنطلب شيئًا!'
 }
