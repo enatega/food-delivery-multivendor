@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation, gql } from '@apollo/client'
 import { withTranslation } from 'react-i18next'
 import { sendNotificationUser } from '../apollo'
@@ -21,7 +21,9 @@ import { ReactComponent as NotificationIcon } from '../assets/svg/svg/Notificati
 const NOTIFICATION_USER = gql`
   ${sendNotificationUser}
 `
+
 const Notifications = props => {
+  const { t } = props
   const [notificationTitle, setNotificationTitle] = useState('')
   const [notificationBody, setNotificationBody] = useState('')
   const [bodyError, setBodyError] = useState(null)
@@ -29,14 +31,29 @@ const Notifications = props => {
   const [mainError, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const [mutate, { error, loading }] = useMutation(NOTIFICATION_USER)
+  useEffect(() => {
+    // Use a timer to clear the success message after 5 seconds
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess('')
+      }, 5000)
 
-  if (error) {
-    console.log('error', JSON.stringify(error))
-    setError('Failed.Please try again')
-  }
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
-  const onSubmitValidaiton = () => {
+  const [mutate, { loading }] = useMutation(NOTIFICATION_USER, {
+    onCompleted: () => {
+      setSuccess(t('NotificationSentAuccessfully')) // Set success message
+      setNotificationTitle('') // Clear the title field
+      setNotificationBody('') // Clear the body field
+    },
+    onError: error => {
+      setError(t('ActionFailedTryAgain')) // Set error message
+    }
+  })
+
+  const onSubmitValidation = () => {
     const nTitleError = !validateFunc(
       { notificationTitle },
       'notificationTitle'
@@ -61,7 +78,7 @@ const Notifications = props => {
               <Box className={classes.flexRow}>
                 <Box item className={classes.heading}>
                   <Typography variant="h6" className={classes.text}>
-                    Notifications
+                    {t('Notifications')}
                   </Typography>
                 </Box>
               </Box>
@@ -71,51 +88,67 @@ const Notifications = props => {
                   <CustomLoader />
                 ) : (
                   <form>
-                    <Box className={globalClasses.flexRow}>
-                      <Input
-                        id="input-title"
-                        placeholder="Title"
-                        type="text"
-                        value={notificationTitle}
-                        onChange={event => {
-                          setNotificationTitle(event.target.value)
-                        }}
-                        disableUnderline
-                        className={[
-                          globalClasses.input,
-                          titleError === false
-                            ? globalClasses.inputError
-                            : titleError === true
-                              ? globalClasses.inputSuccess
-                              : ''
-                        ]}
-                      />
-                      <Input
-                        id="input-title"
-                        placeholder="Body"
-                        type="text"
-                        value={notificationBody}
-                        onChange={event => {
-                          setNotificationBody(event.target.value)
-                        }}
-                        disableUnderline
-                        className={[
-                          globalClasses.input,
-                          bodyError === false
-                            ? globalClasses.inputError
-                            : bodyError === true
-                              ? globalClasses.inputSuccess
-                              : ''
-                        ]}
-                      />
-                    </Box>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <Box>
+                          <Typography className={classes.labelText}>
+                            {t('Title')}
+                          </Typography>
+                          <Input
+                            style={{ marginTop: -1 }}
+                            id="input-title"
+                            placeholder={t('Title')}
+                            type="text"
+                            value={notificationTitle}
+                            onChange={event => {
+                              setNotificationTitle(event.target.value)
+                            }}
+                            disableUnderline
+                            className={[
+                              globalClasses.input,
+                              titleError === false
+                                ? globalClasses.inputError
+                                : titleError === true
+                                ? globalClasses.inputSuccess
+                                : ''
+                            ]}
+                          />
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Box>
+                          <Typography className={classes.labelText}>
+                            {t('Body')}
+                          </Typography>
+                          <Input
+                            style={{ marginTop: -1 }}
+                            id="input-body"
+                            placeholder={t('Body')}
+                            type="text"
+                            value={notificationBody}
+                            onChange={event => {
+                              setNotificationBody(event.target.value)
+                            }}
+                            disableUnderline
+                            className={[
+                              globalClasses.input,
+                              bodyError === false
+                                ? globalClasses.inputError
+                                : bodyError === true
+                                ? globalClasses.inputSuccess
+                                : ''
+                            ]}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
                     <Box>
                       <Button
                         className={globalClasses.button}
                         disabled={loading}
                         onClick={async e => {
                           e.preventDefault()
-                          if (onSubmitValidaiton()) {
+                          if (onSubmitValidation()) {
                             mutate({
                               variables: {
                                 notificationBody: notificationBody,
@@ -126,19 +159,25 @@ const Notifications = props => {
                           setSuccess('')
                           setError('')
                         }}>
-                        SAVE
+                        {t('Save')}
                       </Button>
                     </Box>
                   </form>
                 )}
                 <Box mt={2}>
                   {success && (
-                    <Alert variant="filled" severity="success">
+                    <Alert
+                      className={globalClasses.alertSuccess}
+                      variant="filled"
+                      severity="success">
                       {success}
                     </Alert>
                   )}
                   {mainError && (
-                    <Alert variant="filled" severity="error">
+                    <Alert
+                      className={globalClasses.alertError}
+                      variant="filled"
+                      severity="error">
                       {mainError}
                     </Alert>
                   )}

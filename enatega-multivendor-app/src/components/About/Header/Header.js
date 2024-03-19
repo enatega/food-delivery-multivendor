@@ -29,13 +29,7 @@ function ImageHeader(props) {
             width: '20%'
           }}
           onPress={() => navigation.goBack()}>
-          <Ionicons
-            name="ios-arrow-back"
-            style={{
-              color: props.black
-            }}
-            size={20}
-          />
+          <AnimatedIon name="arrow-back" size={25} />
         </TouchableOpacity>
         <View>
           <TextDefault

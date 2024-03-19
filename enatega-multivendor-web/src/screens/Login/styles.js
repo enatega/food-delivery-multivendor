@@ -1,6 +1,8 @@
 import makeStyles from "@mui/styles/makeStyles";
-import { COLORS } from "../../config/constants";
+//import ConfigurableValues from "../../config/constants";
 
+// const { COLORS } = ConfigurableValues();
+const COLORS = "#dd4b39";
 const useStyles = makeStyles((theme) => ({
   font700: {
     fontWeight: theme.typography.fontWeightBold,
@@ -9,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.875rem",
   },
   fontGrey: {
-    color: theme.palette.primary.dark,
+    color: theme.palette.common.black,
   },
   fontSubHead: {
     color: theme.palette.primary.main,
@@ -25,12 +27,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "20px",
   },
   customBtn: {
-    background: theme.palette.primary.dark,
+    background: theme.palette.common.black,
     width: "70%",
+    transition: "opacity 0.3s",
+    opacity: 1,
+    "&:hover": {
+      backgroundColor: theme.palette.common.black,
+      opacity: 0.8,
+    },
   },
   gButton: {
     marginTop: theme.spacing(3),
     background: COLORS.GOOGLE,
+    transition: "opacity 0.3s",
     "&:disabled": {
       backgroundColor: COLORS.GOOGLE,
     },

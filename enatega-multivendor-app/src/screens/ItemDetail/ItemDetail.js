@@ -311,12 +311,12 @@ function ItemDetail(props) {
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? `${0}` : `${100}`}>
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          style={styles().flex}>
           {imageUrl && <ImageHeader image={imageUrl} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={styles().scrollViewContainer}>
+            contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles().subContainer}>
               <HeadingComponent title={food.title} price={calculatePrice()} />
 

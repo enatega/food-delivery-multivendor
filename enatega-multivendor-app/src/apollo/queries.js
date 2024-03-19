@@ -438,6 +438,8 @@ export const getConfiguration = `query Configuration{
     termsAndConditions 
     privacyPolicy 
     testOtp 
+    skipMobileVerification
+    skipEmailVerification
   }
 }`
 

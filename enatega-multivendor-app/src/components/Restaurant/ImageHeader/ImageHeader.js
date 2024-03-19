@@ -46,6 +46,7 @@ const PROFILE = gql`
 `
 
 function ImageTextCenterHeader(props, ref) {
+  const { translationY } = props
   const flatListRef = ref
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -91,10 +92,10 @@ function ImageTextCenterHeader(props, ref) {
       const hours = date.getHours()
       const minutes = date.getMinutes()
       const todaysTimings = props.restaurant.openingTimes.find(
-        o => o.day === DAYS[day]
+        (o) => o.day === DAYS[day]
       )
       const times = todaysTimings.times.filter(
-        t =>
+        (t) =>
           hours >= Number(t.startTime[0]) &&
           minutes >= Number(t.startTime[1]) &&
           hours <= Number(t.endTime[0]) &&
@@ -116,11 +117,13 @@ function ImageTextCenterHeader(props, ref) {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center'
-        }}>
+        }}
+      >
         <TextError text={t('noItemsExists')} />
       </View>
     )
   }
+
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={styles(currentTheme).mainContainer}>
@@ -321,7 +324,8 @@ function ImageTextCenterHeader(props, ref) {
                       restaurantObject: { ...aboutObject, isOpen: null },
                       tab: false
                     })
-                  }}>
+                  }}
+                >
                   <MaterialIcons
                     name="star-border"
                     size={scale(20)}

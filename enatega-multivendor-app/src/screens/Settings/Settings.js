@@ -36,7 +36,7 @@ import UserContext from '../../context/User'
 import { Modalize } from 'react-native-modalize'
 import { useNavigation } from '@react-navigation/native'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import Constants from 'expo-constants'
+import * as Constants from 'expo-constants'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import * as Device from 'expo-device'
@@ -71,6 +71,8 @@ const PROFILE = gql`
 const DEACTIVATE = gql`
   ${Deactivate}
 `
+
+const appVersion = Constants.default.expoConfig.version
 
 function Settings(props) {
   const Analytics = analytics()
@@ -237,7 +239,6 @@ function Settings(props) {
       // Display loading indicator
       setLoadingLang(true)
       const languageInd = activeRadio
-      // if (Platform.OS === 'android') {
       await AsyncStorage.setItem(
         'enatega-language',
         languageTypes[languageInd].code
@@ -251,12 +252,10 @@ function Settings(props) {
       }
       i18next.changeLanguage(lang)
       modalVisibleSetter(false)
-      //Updates.reloadAsync()
-      // }
     } catch (error) {
       console.error('Error during language selection:', error)
     } finally {
-      setLoadingLang(false) // Hide loading indicator
+      setLoadingLang(false)
     }
   }
 
@@ -271,7 +270,7 @@ function Settings(props) {
       FlashMessage({
         message: error.networkError.result.errors[0].message
       })
-    } catch (err) {}
+    } catch (err) { }
   }
 
   async function updateNotificationStatus(notificationCheck) {
@@ -457,7 +456,7 @@ function Settings(props) {
         </View>
         <View style={styles().versionContainer}>
           <TextDefault textColor={currentTheme.statusSecondColor}>
-            Version: {Constants.expoConfig.version}
+            Version: {appVersion}
           </TextDefault>
         </View>
       </View>
@@ -468,7 +467,7 @@ function Settings(props) {
         isVisible={modalVisible}
         onBackdropPress={() => modalVisibleSetter(false)}
         onBackButtonPress={() => modalVisibleSetter(false)}>
-        <View style={styles().modalContainer}>
+        <View style={styles(currentTheme).modalContainer}>
           <TextDefault
             textColor={currentTheme.fontMainColor}
             bolder
@@ -482,7 +481,7 @@ function Settings(props) {
               activeOpacity={0.7}
               key={index}
               onPress={() => activeRadioSetter(item.index)}
-              style={[styles().radioContainer]}>
+              style={[styles(currentTheme).radioContainer]}>
               <RadioButton
                 animation={'bounceIn'}
                 size={13}
@@ -544,8 +543,17 @@ function Settings(props) {
         })}
         keyboardAvoidingOffset={2}
         keyboardAvoidingBehavior="height">
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <TextDefault bolder H5 style={{ marginTop: 20 }}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            backgroundColor: currentTheme.backgroundColor3
+          }}>
+          <TextDefault
+            bolder
+            H5
+            textColor={currentTheme.darkBgFont}
+            style={{ marginTop: 20 }}>
             {t('DeleteConfirmation')}
           </TextDefault>
           <TouchableOpacity
@@ -568,7 +576,10 @@ function Settings(props) {
             activeOpacity={0.7}
             style={{ width: '100%', paddingTop: 30, paddingBottom: 40 }}
             onPress={() => onClose()}>
-            <TextDefault center> {t('Cancel')}</TextDefault>
+            <TextDefault textColor={currentTheme.darkBgFont} center>
+              {' '}
+              {t('Cancel')}
+            </TextDefault>
           </TouchableOpacity>
         </View>
       </Modalize>

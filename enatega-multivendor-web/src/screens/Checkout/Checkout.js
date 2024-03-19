@@ -5,13 +5,28 @@ import {
   Box,
   CircularProgress,
   Container,
+  Dialog,
   Grid,
   Typography,
+  useTheme,
+  useMediaQuery,
+  Paper,
+  Divider,
+  IconButton,
+  Button,
 } from "@mui/material";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { myOrders, placeOrder } from "../../apollo/server";
 import CodIcon from "../../assets/icons/CodIcon";
+import RiderImage from "../../assets/images/rider.png";
+import MarkerImage from "../../assets/images/marker.png";
 import {
   CartItemCard,
   DeliveryCard,
@@ -19,20 +34,32 @@ import {
   PersonalCard,
   OrderOption,
 } from "../../components/Checkout";
+import CloseIcon from "@mui/icons-material/Close";
+
 import FlashMessage from "../../components/FlashMessage";
 import Footer from "../../components/Footer/Footer";
 import { Header } from "../../components/Header";
 import { RestaurantClose } from "../../components/Modals";
 import ConfigurationContext from "../../context/Configuration";
-import { LocationContext, useLocationContext } from "../../context/Location";
+import { useLocationContext } from "../../context/Location";
 import UserContext from "../../context/User";
 import { useRestaurant } from "../../hooks";
 import { DAYS } from "../../utils/constantValues";
 import { paypalCurrencies, stripeCurrencies } from "../../utils/currencies";
 import { calculateDistance } from "../../utils/customFunction";
 import useStyle from "./styles";
-import { SERVER_URL } from "../../config/constants";
+
 import Analytics from "../../utils/analytics";
+import { GoogleMap, Marker } from "@react-google-maps/api";
+import { mapStyles } from "../OrderDetail/mapStyles";
+import RestMarker from "../../assets/images/rest-map-2.png";
+import NearMeIcon from "@mui/icons-material/NearMe";
+import clsx from "clsx";
+
+import { useLocation } from "../../hooks";
+import { useTranslation } from "react-i18next";
+
+import moment from "moment";
 
 const PLACEORDER = gql`
   ${placeOrder}
@@ -49,33 +76,45 @@ const PAYMENT = {
 };
 
 function Checkout() {
+  const { t } = useTranslation();
   const classes = useStyle();
   const navigate = useNavigate();
   const [isClose, setIsClose] = useState(false);
   const [mainError, setMainError] = useState({});
   const [loadingData, setLoadingData] = useState(false);
   const configuration = useContext(ConfigurationContext);
+  const [addressModal, setAddressModal] = useState(false);
+  const [orderOptionModal, setOrderOptionModal] = useState(false);
+  const fetchRef = useRef(false);
+
+  const [loadingLocation, setLoadingLocation] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const {
     profile,
     clearCart,
     restaurant: cartRestaurant,
     cart,
     cartCount,
+    addQuantity,
+    removeQuantity,
   } = useContext(UserContext);
-  const { location, setLocation } = useLocationContext();
 
+  const { location, setLocation } = useLocationContext();
+  // const { getCurrentLocation } = useLocation();
+  const theme = useTheme();
   const [minimumOrder, setMinimumOrder] = useState("");
   const [selectedTip, setSelectedTip] = useState();
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT);
   const [taxValue, setTaxValue] = useState();
-  const [selectedAddress, setSelectedAddress] = useState();
+
   const [coupon, setCoupon] = useState({});
   const [selectedDate, handleDateChange] = useState(new Date());
   const [isPickUp, setIsPickUp] = useState(false);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
 
+  let restCoordinates = {};
   const { loading, data, error } = useRestaurant(cartRestaurant);
-
+  const extraSmall = useMediaQuery(theme.breakpoints.down("sm"));
   const [mutateOrder, { loading: loadingOrderMutation }] = useMutation(
     PLACEORDER,
     {
@@ -113,6 +152,14 @@ function Checkout() {
     })();
   }, [data, location]);
 
+  const onLoad = useCallback(
+    (map) => {
+      const bounds = new window.google.maps.LatLngBounds();
+      map.panToBounds(bounds);
+    },
+    [restCoordinates]
+  );
+
   const isOpen = () => {
     const date = new Date();
     const day = date.getDay();
@@ -131,6 +178,9 @@ function Checkout() {
 
     return times.length > 0;
   };
+  const toggleAdressModal = useCallback(() => {
+    setAddressModal((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     if (cart && cartCount > 0) {
@@ -150,12 +200,12 @@ function Checkout() {
   const setDeliveryAddress = (item) => {
     setSelectedAddress(item);
     setLocation({
-      _id: item._id,
-      label: item.label,
-      latitude: Number(item.location.coordinates[1]),
-      longitude: Number(item.location.coordinates[0]),
-      deliveryAddress: item.deliveryAddress,
-      details: item.details,
+      _id: item?._id,
+      label: item?.label,
+      latitude: Number(item?.location.coordinates[1]),
+      longitude: Number(item?.location.coordinates[0]),
+      deliveryAddress: item?.deliveryAddress,
+      details: item?.details,
     });
   };
 
@@ -194,6 +244,10 @@ function Checkout() {
       </Grid>
     );
   }
+  restCoordinates = {
+    lat: parseFloat(data.restaurant.location.coordinates[1]),
+    lng: parseFloat(data.restaurant.location.coordinates[0]),
+  };
 
   function update(cache, { data: { placeOrder } }) {
     console.log("update");
@@ -265,7 +319,7 @@ function Checkout() {
     } else if (paymentMethod.payment === "PAYPAL") {
       navigate(`/paypal?id=${data.placeOrder._id}`, { replace: true });
     } else if (paymentMethod.payment === "STRIPE") {
-      window.location = `${SERVER_URL}stripe/create-checkout-session?id=${data.placeOrder.orderId}&platform=web`;
+      navigate(`/stripe?id=${data.placeOrder._id}`, { replace: true });
     }
   }
 
@@ -348,6 +402,45 @@ function Checkout() {
     }
   }
 
+  const locationCallback = (error, data) => {
+    setLoadingLocation(false); // Stop loading
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    // Create an object for the selected address using the current location data
+    const selectedAddress = {
+      label: "Your Location",
+      deliveryAddress: data.label,
+      details: data.details,
+      latitude: data.coords.latitude,
+      longitude: data.coords.longitude,
+    };
+
+    // Update the selected address in state
+    setSelectedAddress(selectedAddress);
+    setAddressModal((prev) => !prev);
+  };
+
+  const getCurrentLocation = () => {
+    setLoadingLocation(true); // Start loading (optional)
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          locationCallback(null, position);
+        },
+        (error) => {
+          locationCallback(error, null);
+        }
+      );
+    } else {
+      // Geolocation is not supported by the browser
+      locationCallback(new Error("Geolocation is not supported."), null);
+    }
+  };
+
   function validateOrder() {
     if (!data.restaurant.isAvailable || !isOpen()) {
       toggleCloseModal();
@@ -368,7 +461,7 @@ function Checkout() {
       });
       return false;
     }
-    if (!location._id) {
+    if (!location) {
       showMessage({
         alive: true,
         type: "Warning",
@@ -387,8 +480,13 @@ function Checkout() {
       showMessage({
         alive: true,
         type: "Error",
-        message: "Phone Number is missing",
+        message: t("phoneNumMissing"),
       });
+
+      setTimeout(() => {
+        navigate("/phone-number");
+      }, 1000);
+
       return false;
     }
     if (!profile.phoneIsVerified) {
@@ -397,11 +495,16 @@ function Checkout() {
         type: "Error",
         message: "Phone Number is not verified",
       });
+
+      setTimeout(() => {
+        navigate("/phone-number");
+      }, 1000);
+
       return false;
     }
     return true;
   }
-
+  // console.log("isPickUp", isPickUp, selectedDate);
   return (
     <Grid container className={classes.root}>
       <FlashMessage
@@ -411,6 +514,7 @@ function Checkout() {
         handleClose={toggleSnackbar}
         alive={mainError.alive || false}
       />
+
       <Header />
       <Grid
         container
@@ -418,30 +522,118 @@ function Checkout() {
         className={classes.mainContainer}
         justifyContent="center"
       >
-        <Container maxWidth="md">
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={8}>
-              <OrderOption
-                selectedDate={selectedDate}
-                handleDateChange={handleDateChange}
-                setIsPickUp={setIsPickUp}
-              />
-              {!isPickUp && (
-                <DeliveryCard
-                  selectedAddress={selectedAddress}
-                  setSelectedAddress={setDeliveryAddress}
+        <Grid container item>
+          <Grid item xs={12} className={classes.topContainer}>
+            <GoogleMap
+              mapContainerStyle={{
+                height: "450px",
+                width: "100%",
+              }}
+              zoom={14}
+              center={restCoordinates}
+              onLoad={restCoordinates && onLoad}
+              options={{
+                styles: mapStyles,
+                zoomControl: true,
+                zoomControlOptions: {
+                  position: window.google.maps.ControlPosition.RIGHT_CENTER,
+                },
+              }}
+            >
+              {location && (
+                <Marker
+                  position={{
+                    lat: location?.latitude,
+                    lng: location?.longitude,
+                  }}
+                  icon={MarkerImage}
                 />
               )}
-              <PersonalCard />
-              <PaymentCard
-                paymentMethod={paymentMethod}
-                setPaymentMethod={setPaymentMethod}
-                validateOrder={validateOrder}
-                onPayment={onPayment}
-                loading={loadingOrderMutation}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
+              <Marker position={restCoordinates} icon={RestMarker} />
+            </GoogleMap>
+          </Grid>
+        </Grid>
+        <Container maxWidth="md" className={classes.containerCard}>
+          <Box
+            className={classes.headerBar}
+            display="flex"
+            alignItems={"center"}
+          >
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <img src={RiderImage} alt="rider" />
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="center"
+              flexDirection="column"
+              style={{
+                marginLeft: "20px",
+              }}
+            >
+              <Typography
+                style={{
+                  ...theme.typography.body1,
+                  color: theme.palette.common.black,
+                  fontSize: "1.275rem",
+                  fontWeight: 600,
+                }}
+              >
+                {t("deliveryTime")}
+              </Typography>
+              <Typography
+                style={{
+                  ...theme.typography.body1,
+                  color: theme.palette.grey[600],
+                  fontSize: "0.775rem",
+                  fontWeight: 600,
+                }}
+              >
+                {moment().format("DD-MM-YYYY")} | {moment().format("LT")}
+              </Typography>
+              <Box display="flex" mt={2} alignItems="center">
+                <Typography
+                  style={{
+                    ...theme.typography.body1,
+                    color: theme.palette.common.white,
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  {isPickUp ? t("pickUp") : t("delivery")}
+                </Typography>
+                <Button
+                  variant="contained"
+                  style={{
+                    marginLeft: theme.spacing(1),
+                    backgroundColor: "black",
+                    borderRadius: theme.spacing(1.5),
+                  }}
+                  onClick={() => setOrderOptionModal((prev) => !prev)}
+                >
+                  <Typography
+                    style={{
+                      color: theme.palette.common.white,
+                      fontSize: "0.775rem",
+                      fontWeight: 600,
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {t("change")}
+                  </Typography>
+                </Button>
+                <OrderOption
+                  selectedDate={selectedDate}
+                  handleDateChange={handleDateChange}
+                  setIsPickUp={setIsPickUp}
+                  orderOptionModal={orderOptionModal}
+                  setOrderOptionModal={setOrderOptionModal}
+                  isPickUp={isPickUp}
+                />
+              </Box>
+            </Box>
+          </Box>
+          <Grid container spacing={2} sx={{ mt: 2, mb: 25 }}>
+            <Grid item xs={12} sm={6}>
               <CartItemCard
                 setSelectedTip={setSelectedTip}
                 selectedTip={selectedTip}
@@ -455,12 +647,152 @@ function Checkout() {
                 calculateTip={calculateTip}
                 isPickUp={isPickUp}
                 deliveryCharges={deliveryCharges}
+                addQuantity={addQuantity}
+                removeQuantity={removeQuantity}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              {!isPickUp && (
+                <Dialog
+                  fullScreen={extraSmall}
+                  onClose={toggleAdressModal}
+                  open={addressModal}
+                  maxWidth="md"
+                  PaperProps={{
+                    style: {
+                      borderRadius: 30,
+                      overflowY: "scroll",
+                      height: extraSmall ? 500 : null,
+                    },
+                  }}
+                >
+                  <>
+                    <Box display="flex" justifyContent="flex-end">
+                      <IconButton
+                        size={extraSmall ? "medium" : "small"}
+                        onClick={toggleAdressModal}
+                        className={classes.closeContainer}
+                      >
+                        <CloseIcon color="primary" />
+                      </IconButton>
+                    </Box>
+                    <Box style={{ width: "90%", margin: `16px auto` }}>
+                      <Box display="flex">
+                        <Typography
+                          style={{ color: theme.palette.primary.main }}
+                          variant="caption"
+                          fontWeight={800}
+                        >
+                          {t("deliverTo")}:
+                        </Typography>
+                        <Typography
+                          style={{
+                            color: theme.palette.common.black,
+                            marginLeft: 10,
+                          }}
+                          variant="caption"
+                          fontWeight={800}
+                        >
+                          {location?.label}
+                        </Typography>
+                      </Box>
+                      <Typography
+                        style={{ color: theme.palette.grey[600] }}
+                        variant="caption"
+                        fontWeight={600}
+                      >
+                        {location?.deliveryAddress}
+                      </Typography>
+                    </Box>
+
+                    <Grid
+                      //container
+                      item
+                      xs={12}
+                      justifyContent="center"
+                      style={{
+                        background: theme.palette.common.white,
+                        padding: theme.spacing(2, 0),
+                        marginLeft: "20px",
+                      }}
+                    >
+                      <Paper
+                        className={classes.deliveryPaperProfile}
+                        style={{ width: "90%" }}
+                      >
+                        <Box
+                          className={clsx(
+                            classes.PH1,
+                            classes.PB2,
+                            classes.PT2
+                          )}
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            console.log("clicked");
+                            getCurrentLocation();
+                          }}
+                        >
+                          <Box display="flex" alignItems="center">
+                            <NearMeIcon
+                              width={100}
+                              height={100}
+                              style={{ color: theme.palette.common.black }}
+                            />
+                            <Typography
+                              variant="subtitle2"
+                              color="textSecondary"
+                              align="left"
+                              className={clsx(classes.smallText, classes.PH1)}
+                              fontWeight={600}
+                            >
+                              {t("currentLocation")}
+                            </Typography>
+                          </Box>
+                          {loadingLocation && (
+                            <CircularProgress color={"warning"} />
+                          )}
+                        </Box>
+                      </Paper>
+                    </Grid>
+                    <Divider
+                      orientation="horizontal"
+                      className={classes.divider}
+                    />
+                    <DeliveryCard
+                      selectedAddress={selectedAddress}
+                      setSelectedAddress={setDeliveryAddress}
+                      isProfile={true}
+                      isCheckout={true}
+                      close={toggleAdressModal}
+                    />
+                  </>
+                </Dialog>
+              )}
+
+              <PersonalCard
+                toggleModal={toggleAdressModal}
+                location={location}
+              />
+              <PaymentCard
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+                validateOrder={validateOrder}
+                onPayment={onPayment}
+                loading={loadingOrderMutation}
+                calculateTotal={calculateTotal}
               />
             </Grid>
           </Grid>
         </Container>
       </Grid>
-      <Footer />
+      <Box className={classes.footerContainer}>
+        <Box className={classes.footerWrapper}>
+          <Footer />
+        </Box>
+      </Box>
       <RestaurantClose
         closeMenu={false}
         isVisible={isClose}

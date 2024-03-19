@@ -5,7 +5,15 @@ import { withTranslation } from 'react-i18next'
 import { editCoupon, createCoupon, getCoupons } from '../../apollo'
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
-import { Box, Switch, Typography, Input, Button, Alert } from '@mui/material'
+import {
+  Box,
+  Switch,
+  Typography,
+  Input,
+  Button,
+  Alert,
+  Grid
+} from '@mui/material'
 
 const CREATE_COUPON = gql`
   ${createCoupon}
@@ -33,7 +41,7 @@ function Category(props) {
     setter(!validateFunc({ [field]: state }, field))
   }
   const onCompleted = data => {
-    const message = props.coupon ? 'Coupon updated' : 'Coupon added'
+    const message = props.coupon ? t('CouponUpdated') : t('CouponAdded')
     successSetter(message)
     mainErrorSetter('')
     if (!props.coupon) clearFields()
@@ -43,7 +51,7 @@ function Category(props) {
     try {
       message = error.graphQLErrors[0].message
     } catch (err) {
-      message = 'Action failed. Please Try again'
+      message = t('ActionFailedTryAgain')
     }
     successSetter('')
     mainErrorSetter(message)
@@ -86,11 +94,11 @@ function Category(props) {
           <Typography
             variant="h6"
             className={props.coupon ? classes.textWhite : classes.text}>
-            {props.coupon ? t('Edit Coupon') : t('Add Coupon')}
+            {props.coupon ? t('EditCoupon') : t('AddCoupon')}
           </Typography>
         </Box>
         <Box ml={10} mt={1}>
-          <label>{enabled ? 'Disable' : 'Enable'}</label>
+          <label>{enabled ? t('Disable') : t('Enable')}</label>
           <Switch
             defaultChecked={enabled}
             value={enabled}
@@ -104,45 +112,60 @@ function Category(props) {
       <Box className={classes.form}>
         <form ref={formRef}>
           <Box className={globalClasses.flexRow}>
-            <Input
-              id="input-code"
-              name="input-code"
-              placeholder="Code e.g SALE50"
-              type="text"
-              defaultValue={title}
-              onBlur={event =>
-                onBlur(titleErrorSetter, 'title', event.target.value)
-              }
-              disableUnderline
-              className={[
-                globalClasses.input,
-                titleError === false
-                  ? globalClasses.inputError
-                  : titleError === true
-                    ? globalClasses.inputSuccess
-                    : ''
-              ]}
-            />
-            <Input
-              id="input-discount"
-              name="input-discount"
-              placeholder="Discount % i.e 1-99"
-              type="number"
-              defaultValue={discount}
-              onBlur={event => {
-                onBlur(discountErrorSetter, 'discount', event.target.value)
-              }}
-              disableUnderline
-              className={[
-                globalClasses.input,
-                discountError === false
-                  ? globalClasses.inputError
-                  : discountError === true
-                    ? globalClasses.inputSuccess
-                    : ''
-              ]}
-            />
+            <Grid container spacing={0}>
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.labelText}>
+                  {t('Code')}
+                </Typography>
+                <Input
+                  style={{ marginTop: -1 }}
+                  id="input-code"
+                  name="input-code"
+                  placeholder={t('PHCode')}
+                  type="text"
+                  defaultValue={title}
+                  onBlur={event =>
+                    onBlur(titleErrorSetter, 'title', event.target.value)
+                  }
+                  disableUnderline
+                  className={[
+                    globalClasses.input,
+                    titleError === false
+                      ? globalClasses.inputError
+                      : titleError === true
+                      ? globalClasses.inputSuccess
+                      : ''
+                  ]}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.labelText}>
+                  {t('Discount')}
+                </Typography>
+                <Input
+                  style={{ marginTop: -1 }}
+                  id="input-discount"
+                  name="input-discount"
+                  placeholder={t('PHDiscount')}
+                  type="number"
+                  defaultValue={discount}
+                  onBlur={event => {
+                    onBlur(discountErrorSetter, 'discount', event.target.value)
+                  }}
+                  disableUnderline
+                  className={[
+                    globalClasses.input,
+                    discountError === false
+                      ? globalClasses.inputError
+                      : discountError === true
+                      ? globalClasses.inputSuccess
+                      : ''
+                  ]}
+                />
+              </Grid>
+            </Grid>
           </Box>
+
           {loading ? t('Loading') : null}
           <Box>
             <Button
@@ -163,7 +186,7 @@ function Category(props) {
                   })
                 }
               }}>
-              SAVE
+              {t('Save')}
             </Button>
           </Box>
         </form>

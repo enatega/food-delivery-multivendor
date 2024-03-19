@@ -6,11 +6,13 @@ import { withTranslation } from 'react-i18next'
 import { GoogleMap, Polygon } from '@react-google-maps/api'
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
-import { Box, Typography, Input, Button, Alert } from '@mui/material'
+import { Box, Typography, Input, Button, Alert, Grid } from '@mui/material'
 
 // core components
 import { createZone, editZone, getZones } from '../../apollo'
 import { transformPath, transformPolygon } from '../../utils/coordinates'
+import ConfigurableValues from '../../config/constants'
+
 const CREATE_ZONE = gql`
   ${createZone}
 `
@@ -25,6 +27,7 @@ const Zone = props => {
   const [path, setPath] = useState(
     props.zone ? transformPolygon(props.zone.location.coordinates[0]) : []
   )
+  const {PAID_VERSION}=ConfigurableValues()
   const [mutation] = useState(props.zone ? EDIT_ZONE : CREATE_ZONE)
   const [title, setTitle] = useState(props.zone ? props.zone.title : '')
   const [description, setDescription] = useState(
@@ -32,32 +35,38 @@ const Zone = props => {
   )
   const listenersRef = useRef([])
   const [errors, setErrors] = useState('')
-  const [succes, setSuccess] = useState('')
+  const [success, setSuccess] = useState('')
   const [titleError, setTitleError] = useState(null)
   const [descriptionError, setDescriptionError] = useState(null)
+
   const onCompleted = data => {
     if (!props.zone) clearFields()
     const message = props.zone
-      ? 'Zones updated successfully'
-      : 'Zone added successfully'
+      ? t('ZoneUpdatedSuccessfully')
+      : t('ZoneAddedSuccessfully')
     setErrors('')
     setSuccess(message)
-    setTimeout(hideAlert, 5000)
+    setTimeout(hideAlert, 3000)
   }
 
   const onError = error => {
     setErrors(error.message)
     setSuccess('')
-    setTimeout(hideAlert, 5000)
+    setTimeout(hideAlert, 3000)
   }
-  const [mutate, { loading }] = useMutation(mutation, {
-    refetchQueries: [{ query: GET_ZONE }, onError, onCompleted]
+
+  const [mutate /*{ loading }*/] = useMutation(mutation, {
+    refetchQueries: [{ query: GET_ZONE }],
+    onError,
+    onCompleted
   })
+
   const [center] = useState(
     props.zone
       ? setCenter(props.zone.location.coordinates[0])
       : { lat: 33.684422, lng: 73.047882 }
   )
+
   const polygonRef = useRef()
 
   const onClick = e => {
@@ -99,7 +108,7 @@ const Zone = props => {
     return { lat: coordinates[0][1], lng: coordinates[0][0] }
   }
 
-  const onSubmitValidaiton = () => {
+  const onSubmitValidation = () => {
     setErrors('')
     const titleErrors = !validateFunc({ title: title }, 'title')
     const descriptionErrors = !validateFunc(
@@ -109,7 +118,7 @@ const Zone = props => {
     let zoneErrors = true
     if (path.length < 3) {
       zoneErrors = false
-      setErrors('Set Zone on Map')
+      setErrors(t('SetZoneOnMap'))
       return false
     }
 
@@ -117,6 +126,7 @@ const Zone = props => {
     setDescriptionError(descriptionErrors)
     return titleErrors && descriptionErrors && zoneErrors
   }
+
   const clearFields = () => {
     setTitle('')
     setDescription('')
@@ -129,6 +139,7 @@ const Zone = props => {
     setErrors('')
     setSuccess('')
   }
+
   const { t } = props
 
   const classes = useStyles()
@@ -143,51 +154,67 @@ const Zone = props => {
           <Typography
             variant="h6"
             className={props.zone ? classes.textWhite : classes.text}>
-            {props.zone ? t('Edit Zone') : t('Add Zone')}
+            {props.zone ? t('EditZone') : t('AddZone')}
           </Typography>
         </Box>
       </Box>
 
       <Box className={classes.form}>
         <form>
-          <Box className={globalClasses.flexRow}>
-            <Input
-              id="input-title"
-              placeholder="Title"
-              type="title"
-              value={title}
-              onChange={event => {
-                setTitle(event.target.value)
-              }}
-              disableUnderline
-              className={[
-                globalClasses.input,
-                titleError === false
-                  ? globalClasses.inputError
-                  : titleError === true
-                    ? globalClasses.inputSuccess
-                    : ''
-              ]}
-            />
-            <Input
-              id="input-description"
-              placeholder="Description"
-              type="text"
-              value={description}
-              onChange={event => {
-                setDescription(event.target.value)
-              }}
-              disableUnderline
-              className={[
-                globalClasses.input,
-                descriptionError === false
-                  ? globalClasses.inputError
-                  : descriptionError === true
-                    ? globalClasses.inputSuccess
-                    : ''
-              ]}
-            />
-          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Box>
+                <Typography className={classes.labelText}>
+                  {t('Title')}
+                </Typography>
+                <Input
+                  style={{ marginTop: -1 }}
+                  id="input-title"
+                  placeholder={t('Title')}
+                  type="text"
+                  value={title}
+                  onChange={event => {
+                    setTitle(event.target.value)
+                  }}
+                  disableUnderline
+                  className={[
+                    globalClasses.input,
+                    titleError === false
+                      ? globalClasses.inputError
+                      : titleError === true
+                      ? globalClasses.inputSuccess
+                      : ''
+                  ]}
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box>
+                <Typography className={classes.labelText}>
+                  {t('Description')}
+                </Typography>
+                <Input
+                  style={{ marginTop: -1 }}
+                  id="input-description"
+                  placeholder={t('Description')}
+                  type="text"
+                  value={description}
+                  onChange={event => {
+                    setDescription(event.target.value)
+                  }}
+                  disableUnderline
+                  className={[
+                    globalClasses.input,
+                    descriptionError === false
+                      ? globalClasses.inputError
+                      : descriptionError === true
+                      ? globalClasses.inputSuccess
+                      : ''
+                  ]}
+                />
+              </Box>
+            </Grid>
+          </Grid>
           <Box mt={2} className={globalClasses.flexRow}>
             <GoogleMap
               mapContainerStyle={{
@@ -215,10 +242,10 @@ const Zone = props => {
           <Box>
             <Button
               className={globalClasses.button}
-              disabled={loading}
+              disabled={!PAID_VERSION}
               onClick={async e => {
                 e.preventDefault()
-                if (onSubmitValidaiton()) {
+                if (onSubmitValidation()) {
                   mutate({
                     variables: {
                       zone: {
@@ -229,19 +256,23 @@ const Zone = props => {
                       }
                     }
                   })
+                  // Close the modal after 3 seconds by calling the parent's onClose callback
+                  setTimeout(() => {
+                    props.onClose() // Close the modal
+                  }, 4000)
                 }
               }}>
-              {props.zone ? 'Update' : t('Save')}
+              {props.zone ? t('Update') : t('Save')}
             </Button>
           </Box>
         </form>
         <Box mt={2}>
-          {succes && (
+          {success && (
             <Alert
               className={globalClasses.alertSuccess}
               variant="filled"
               severity="success">
-              {succes}
+              {success}
             </Alert>
           )}
           {errors && (

@@ -16,7 +16,7 @@ import {useTranslation} from 'react-i18next'
 export const useWithdrawRequest = () => {
   const {t} = useTranslation()
   const [error, setError] = useState(false)
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState("")
   const [requestSent, setRequestSent] = useState(false)
   const { height } = Dimensions.get('window')
   const { dataProfile } = useContext(UserContext)

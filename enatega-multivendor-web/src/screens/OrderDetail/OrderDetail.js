@@ -8,6 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -26,14 +27,26 @@ import { ORDER_STATUS } from "../../utils/constantValues";
 import Background from "./Background";
 import useStyles from "./styles";
 import { mapStyles } from "./mapStyles";
+import { useLocationContext } from "../../context/Location";
 import Promotion from "../../components/Promotion/Promotion";
 import { Chat } from "../../components/Chat";
 import RestMarker from "../../assets/images/rest-map-2.png";
 import DestMarker from "../../assets/images/dest-map-2.png";
+import MarkerImage from "../../assets/images/marker.png";
 import TrackingRider from "../../components/Orders/OrderDetail/TrackingRider";
 import { useSubscription } from "@apollo/client";
 import { subscriptionOrder } from "../../apollo/server";
 import gql from "graphql-tag";
+import Modal from "react-modal";
+import { reviewOrder } from "../../apollo/server";
+import { useMutation } from "@apollo/client";
+import FlashMessage from "../../components/FlashMessage";
+import ThreeDots from "../../components/ThreeDots/ThreeDots";
+import StarRatings from "react-star-ratings";
+
+const REVIEWORDER = gql`
+  ${reviewOrder}
+`;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -49,6 +62,58 @@ function OrderDetail() {
   let restCoordinates = {};
   const queryParams = useQuery();
   const [toggleChat, setToggleChat] = useState(false);
+  const { location } = useLocationContext();
+  const [isOpen, setIsOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [description, setDescription] = useState("");
+  const mobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [mutate, { loading: loadingMutation }] = useMutation(REVIEWORDER, {
+    onError,
+    onCompleted,
+  });
+
+  useEffect(() => {
+    async function Track() {
+      await Analytics.track(Analytics.events.NAVIGATE_TO_RATEANDREVIEW);
+    }
+    Track();
+  }, []);
+
+  function onFinishRating(rating) {
+    setRating(rating);
+  }
+
+  function onChangeText(description) {
+    setDescription(description);
+  }
+
+  function onSubmit() {
+    mutate({
+      variables: {
+        order: id,
+        rating: rating,
+        description: description,
+      },
+    });
+  }
+
+  function onCompleted(data) {
+    closeModal();
+  }
+
+  function onError(error) {
+    FlashMessage({
+      message: error.networkError.result.errors[0].message,
+    });
+  }
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   useSubscription(
     gql`
@@ -94,7 +159,6 @@ function OrderDetail() {
     );
   }
   const order = orders.find((o) => o._id === id);
-  console.log("order detail", order);
   if (loadingOrders || !order) {
     return (
       <Grid container className={classes.spinnerContainer}>
@@ -128,7 +192,7 @@ function OrderDetail() {
             <Typography>Unable to load data </Typography>
           ) : order?.orderStatus !== "CANCELLED" ? (
             <Grid container item>
-              {!["CANCELLED", "DELIVERED"].includes(order.orderStatus) && (
+              {!["CANCELLED"].includes(order.orderStatus) && (
                 <Grid item xs={12} className={classes.topContainer}>
                   <GoogleMap
                     mapContainerStyle={{
@@ -140,8 +204,21 @@ function OrderDetail() {
                     onLoad={destCoordinates && onLoad}
                     options={{
                       styles: mapStyles,
+                      zoomControl: true,
+                      zoomControlOptions: {
+                        position: window.google.maps.ControlPosition.RIGHT_TOP,
+                      },
                     }}
                   >
+                    {location && (
+                      <Marker
+                        position={{
+                          lat: location?.latitude,
+                          lng: location?.longitude,
+                        }}
+                        icon={MarkerImage}
+                      />
+                    )}
                     <Marker position={restCoordinates} icon={RestMarker} />
                     <Marker position={destCoordinates} icon={DestMarker} />
                     {order.rider && <TrackingRider id={order.rider._id} />}
@@ -172,7 +249,22 @@ function OrderDetail() {
                   </Typography>
                 </Box>
               )}
-
+              {order.orderStatus === "DELIVERED" && !order.review && (
+                <Box
+                  className={classes.review}
+                  onClick={() => {
+                    openModal();
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    color="common"
+                    className={(classes.textBold, classes.smallText)}
+                  >
+                    Review your order
+                  </Typography>
+                </Box>
+              )}
               {toggleChat && (
                 <Chat setToggleChat={setToggleChat} id={order?._id} />
               )}
@@ -197,6 +289,49 @@ function OrderDetail() {
       </Background>
       <Promotion />
       <Footer />
+
+      <Modal isOpen={isOpen} onRequestClose={closeModal}>
+        <CloseIcon className={classes.closeButton} onClick={closeModal} />
+        <div className={classes.modalContainer}>
+          <div className={classes.title}>
+            <h2>Write a Review</h2>
+          </div>
+          <div className={classes.starContainer}>
+            <div className={classes.starWrapper}>
+              <StarRatings
+                maxStars={5}
+                rating={rating}
+                changeRating={onFinishRating}
+                starDimension={mobile ? "20px" : "50px"}
+                starRatedColor={theme.palette.primary.main}
+              />
+            </div>
+          </div>
+          <div className={classes.inputContainer}>
+            <input
+              className={classes.input}
+              placeholderTextColor={theme.palette.secondary.dark}
+              onChange={(e) => onChangeText(e.target.value)}
+              placeholder="More detailed reviews get more visibility..."
+            />
+          </div>
+          <div className={classes.submitContainer}>
+            <div className={classes.submit}>
+              {loadingMutation && <ThreeDots />}
+              {!loadingMutation && (
+                <button
+                  onClick={onSubmit}
+                  className={classes.submitButton}
+                  disabled={rating < 2 || description.length < 1}
+                >
+                  Submit
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className={classes.backdrop} />
+      </Modal>
     </>
   );
 }

@@ -1,14 +1,14 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyle = makeStyles((theme) => ({
   restaurantTitle: {
     ...theme.typography.h6,
-    color: theme.palette.text.secondary,
+    color: theme.palette.common.white,
     fontWeight: 700,
   },
   tagStyles: {
     ...theme.typography.caption,
-    color: theme.palette.primary.light,
+    color: theme.palette.common.white,
     fontWeight: 700,
   },
   tagContainer: {
@@ -29,11 +29,16 @@ const useStyle = makeStyles((theme) => ({
   currentRatingText: {
     ...theme.typography.caption,
     fontWeight: 700,
-    color: theme.palette.text.secondary,
+    color: theme.palette.common.white,
+    fontSize: "0.875rem",
   },
   totalRatingText: {
     ...theme.typography.caption,
-    color: theme.palette.text.disabled,
+    color: theme.palette.common.white,
+    fontSize: "0.875rem",
+  },
+  categoriesStyle: {
+    color: theme.palette.common.white,
   },
 }));
 

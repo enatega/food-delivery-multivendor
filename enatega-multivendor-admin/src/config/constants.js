@@ -1,16 +1,45 @@
-export const GOOGLE_MAPS_KEY = process.env.REACT_APP_GOOGLE_API_KEY
-export const FIREBASE_KEY = process.env.REACT_APP_FIREBASE_KEY
-export const APP_ID = process.env.REACT_APP_APP_ID
-export const DB_URL = process.env.REACT_APP_DB_URL
-export const AUTH_DOMAIN = process.env.REACT_APP_AUTH_DOMAIN
-export const STORAGE_BUCKET = process.env.REACT_APP_STORAGE_BUCKET
-export const MSG_SENDER_ID = process.env.REACT_APP_MSG_SENDER_ID
-export const MEASUREMENT_ID = process.env.REACT_APP_MEASUREMENT_ID
-export const PROJECT_ID = process.env.REACT_APP_PROJECT_ID
-export const SERVER_URL = process.env.REACT_APP_SERVER_URL
-export const WS_SERVER_URL = process.env.REACT_APP_WS_SERVER_URL
-export const PUBLIC_VAPID_KEY = process.env.REACT_APP_PUBLIC_VAPID_KEY
-export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN
-export const CLOUDINARY_UPLOAD_URL = process.env.REACT_APP_CLOUDINARY_UPLOAD_URL
-export const CLOUDINARY_FOOD = process.env.REACT_APP_CLOUDINARY_FOOD
-export const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY
+import { useContext } from 'react'
+import ConfigurationContext from '../context/Configuration'
+
+const ConfigurableValues = () => {
+  const configuration = useContext(ConfigurationContext)
+  console.log('configuration', configuration)
+  const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
+  const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
+  // const SERVER_URL = 'http://10.97.17.9:8001'
+  // const WS_SERVER_URL = 'wss://10.97.17.9:8001'
+  const GOOGLE_MAPS_KEY = configuration.googleApiKey
+  const FIREBASE_KEY = configuration.firebaseKey
+  const APP_ID = configuration.appId
+  const AUTH_DOMAIN = configuration.authDomain
+  const STORAGE_BUCKET = configuration.storageBucket
+  const MSG_SENDER_ID = configuration.msgSenderId
+  const MEASUREMENT_ID = configuration.measurementId
+  const PROJECT_ID = configuration.projectId
+  const SENTRY_DSN = configuration.dashboardSentryUrl
+  const CLOUDINARY_UPLOAD_URL = configuration.cloudinaryUploadUrl
+  const CLOUDINARY_FOOD = configuration.cloudinaryApiKey
+  const VAPID_KEY =
+    'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w'
+  const PAID_VERSION = configuration.isPaidVersion
+
+  return {
+    GOOGLE_MAPS_KEY,
+    FIREBASE_KEY,
+    APP_ID,
+    AUTH_DOMAIN,
+    STORAGE_BUCKET,
+    MSG_SENDER_ID,
+    MEASUREMENT_ID,
+    PROJECT_ID,
+    SERVER_URL,
+    WS_SERVER_URL,
+    SENTRY_DSN,
+    CLOUDINARY_UPLOAD_URL,
+    CLOUDINARY_FOOD,
+    VAPID_KEY,
+    PAID_VERSION
+  }
+}
+
+export default ConfigurableValues

@@ -1,9 +1,14 @@
 {
   "build": {
     "development": {
-      "developmentClient": false,
-      "releaseChannel": "development",
-      "distribution": "internal"
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      }
     },
     "staging": {
       "developmentClient": false,
@@ -12,7 +17,6 @@
     },
     "production": {
       "channel": "production"
-    
     }
   },
   "submit": {

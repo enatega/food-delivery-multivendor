@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
+  Button,
   CircularProgress,
   Container,
   Divider,
@@ -16,13 +17,12 @@ import Scrollspy from "react-scrollspy";
 import FlashMessage from "../../components/FlashMessage";
 import Footer from "../../components/Footer/Footer";
 import { Header, LoginHeader } from "../../components/Header";
-import Analytics from '../../utils/analytics'
+import Analytics from "../../utils/analytics";
 import {
   RestaurantClose,
   RestaurantInfo,
   VariationModal,
 } from "../../components/Modals";
-import { Subheader } from "../../components/RestaurantComponent";
 import {
   ItemCard,
   MRestaurantCart,
@@ -33,6 +33,7 @@ import UserContext from "../../context/User";
 import { useRestaurant } from "../../hooks";
 import { DAYS } from "../../utils/constantValues";
 import useStyles from "./styles";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 function RestaurantDetail() {
   const theme = useTheme();
@@ -70,6 +71,7 @@ function RestaurantDetail() {
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
     deals: deals,
+    deliveryTime: data?.restaurant?.deliveryTime,
   };
   const restaurantInfo = {
     _id: data?.restaurant._id ?? "",
@@ -87,9 +89,9 @@ function RestaurantDetail() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  useEffect(async()=>{
-    await Analytics.track(Analytics.events.NAVIGATE_TO_RESTAURANTS_DETAIL)
-  },[])
+  useEffect(async () => {
+    await Analytics.track(Analytics.events.NAVIGATE_TO_RESTAURANTS_DETAIL);
+  }, []);
   useEffect(() => {
     if (data?.restaurant && (!isOpen || !data?.restaurant?.isAvailable)) {
       toggleCloseModal();
@@ -158,16 +160,15 @@ function RestaurantDetail() {
         addons: data?.restaurant.addons,
         options: data?.restaurant.options,
         restaurant: data?.restaurant._id,
+        image: data?.restaurant?.image,
       });
       toggleVariationModal();
     }
-    await Analytics.track(Analytics.events.ADD_TO_CART,{
+    await Analytics.track(Analytics.events.ADD_TO_CART, {
       title: food.title,
-      restaurantName:food.restaurantName,
-      variations:food.variations
-
-
-    })
+      restaurantName: food.restaurantName,
+      variations: food.variations,
+    });
   };
 
   const showMessage = useCallback((messageObj) => {
@@ -184,7 +185,7 @@ function RestaurantDetail() {
         <Grid container>
           {isLoggedIn ? <Header /> : <LoginHeader showIcon />}
         </Grid>
-        <Subheader />
+        {/* <Subheader /> */}
         <Grid container style={{ display: "flex" }}>
           <Grid item lg={9} xs={12}>
             <Container
@@ -197,7 +198,9 @@ function RestaurantDetail() {
             >
               <Box
                 className={classes.imageContainer}
-                style={{ backgroundImage: `url('${restaurantInfo?.image ?? ""}')` }}
+                style={{
+                  backgroundImage: `url('${restaurantInfo?.image ?? ""}')`,
+                }}
               />
               <Box style={{ backgroundColor: theme.palette.common.white }}>
                 <RestaurantHeader headerData={restaurantInfo} loading />
@@ -213,8 +216,13 @@ function RestaurantDetail() {
             </Box>
           </Grid>
         </Grid>
-        <Box style={{ backgroundColor: theme.palette.common.white }}>
-          <Footer />
+        <Box
+          className={classes.footerContainer}
+          style={{ background: "transparent" }}
+        >
+          <Box className={classes.footerWrapper}>
+            <Footer />
+          </Box>
         </Box>
       </div>
     );
@@ -232,15 +240,17 @@ function RestaurantDetail() {
         style={{
           backgroundColor: theme.palette.grey[200],
           scrollBehavior: "smooth",
+          marginTop:'20px',
         }}
       >
         <Grid container>
           {isLoggedIn ? <Header /> : <LoginHeader showIcon />}
         </Grid>
-        <Subheader />
+        {/* <Subheader /> */}
         <Grid
           container
           style={{ display: "flex", flexDirection: "row-reverse" }}
+          className={classes.bg}
         >
           {!isTablet && <RestaurantCart showMessage={showMessage} />}
           <Grid item lg={9} xs={12}>
@@ -250,88 +260,122 @@ function RestaurantDetail() {
                 marginLeft: "0px",
                 paddingLeft: "0px",
                 paddingRight: "0px",
+                marginTop: "44px",
+                borderBottomLeftRadius: 50,
+                borderBottomRightRadius: 50,
               }}
             >
               <Box
                 className={classes.imageContainer}
-                style={{ backgroundImage: `url('${restaurantInfo?.image ?? ""}')` }}
-              />
-              <Box style={{ backgroundColor: theme.palette.common.white }}>
-                <RestaurantHeader
-                  toggleModal={toggleReviewModal}
-                  headerData={headerData}
-                />
-              </Box>
-              <Divider orientation="horizontal" light />
-            </Container>
-            <Container
-              maxWidth="xl"
-              style={{
-                marginLeft: "0px",
-                paddingLeft: "0px",
-                paddingRight: "0px",
-                position: "sticky",
-                zIndex: 1200,
-                top: "140px",
-                display: "flex",
-              }}
-            >
-              <div className={classes.tabContainer}>
-                <Container style={{ marginLeft: "0px" }}>
-                  <Scrollspy
-                    offset={-220}
-                    className={classes.scrollpyStyles}
-                    items={deals.map((item) => item._id)}
-                    currentClassName={classes.active}
-                  >
-                    {deals.map((item, index) => (
-                      <li
-                        key={`STICKY_${index}`}
-                        className={classes.tabListStyle}
-                      >
-                        <Link
-                          to={item._id}
-                          spy={true}
-                          smooth={true}
-                          className={classes.anchorStyle}
-                          offset={-220}
-                        >
-                          <Typography className={classes.tabTextStyle}>
-                            {item.title}
-                          </Typography>
-                        </Link>
-                      </li>
-                    ))}
-                  </Scrollspy>
-                </Container>
-              </div>
-            </Container>
-            <Container
-              maxWidth="xl"
-              style={{
-                marginLeft: "0px",
-                paddingLeft: "0px",
-                paddingRight: "0px",
-              }}
-            >
-              {deals.map((item, index) => (
-                <section key={`SECTION_${index}`} id={item._id}>
-                  <ItemCard
-                    {...item}
-                    onPress={addFoodToCart}
-                    restaurant={{
-                      restaurant: restaurantInfo._id,
-                      restaurantName: restaurantInfo.name,
-                      deliveryCharges: restaurantInfo.deliveryCharges,
+                style={{
+                  backgroundImage: `url('${restaurantInfo?.image ?? ""}')`,
+                }}
+              >
+                <Button
+                  onClick={toggleReviewModal}
+                  style={{ position: "absolute", top: 10, right: 10 }}
+                >
+                  <MoreHorizIcon
+                    style={{
+                      background: theme.palette.common.blackShade,
+                      color: theme.palette.common.white,
+                      borderRadius: 20,
+                      padding: 2,
+                      marginTop:5,
                     }}
                   />
-                </section>
-              ))}
+                </Button>
+                <Box
+                  style={{
+                    border: `2px solid ${theme.palette.primary.main}`,
+                    borderRadius: 10,
+                  }}
+                  className={classes.restaurantDetail}
+                >
+                  <RestaurantHeader
+                    toggleModal={toggleReviewModal}
+                    headerData={headerData}
+                  />
+                </Box>
+              </Box>
             </Container>
+            <Box p={3}>
+              <Container
+                maxWidth="xl"
+                style={{
+                  marginLeft: "0px",
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+                  position: "sticky",
+                  zIndex: 1200,
+                  top: "63px",
+                  display: "flex",
+                }}
+              >
+                <div className={classes.tabContainer}>
+                  <Container
+                    style={{ marginLeft: "0px", justifyContent: "center" }}
+                  >
+                    <Scrollspy
+                      offset={-220}
+                      className={classes.scrollpyStyles}
+                      items={deals.map((item) => item._id)}
+                      currentClassName={classes.active}
+                    >
+                      {deals.map((item, index) => (
+                        <li
+                          key={`STICKY_${index}`}
+                          className={classes.tabListStyle}
+                        >
+                          <Link
+                            to={item._id}
+                            spy={true}
+                            smooth={true}
+                            className={classes.anchorStyle}
+                            offset={-220}
+                          >
+                            <Typography className={classes.tabTextStyle}>
+                              {item.title}
+                            </Typography>
+                          </Link>
+                        </li>
+                      ))}
+                    </Scrollspy>
+                  </Container>
+                </div>
+              </Container>
+              <Container
+                maxWidth="xl"
+                style={{
+                  marginLeft: "0px",
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+                }}
+              >
+                {deals.map((item, index) => (
+                  <section key={`SECTION_${index}`} id={item._id}>
+                    <ItemCard
+                      {...item}
+                      onPress={addFoodToCart}
+                      restaurant={{
+                        restaurant: restaurantInfo._id,
+                        restaurantName: restaurantInfo.name,
+                        deliveryCharges: restaurantInfo.deliveryCharges,
+                      }}
+                    />
+                  </section>
+                ))}
+              </Container>
+            </Box>
           </Grid>
         </Grid>
-        <Box style={{ backgroundColor: theme.palette.common.white }}>
-          <Footer />
+        <Box
+          className={classes.footerContainer}
+          style={{ background: "transparent" }}
+        >
+          <Box className={classes.footerWrapper}>
+            <Footer />
+          </Box>
         </Box>
         <RestaurantClose
           isVisible={isClose}

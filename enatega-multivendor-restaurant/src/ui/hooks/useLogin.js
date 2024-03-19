@@ -1,15 +1,15 @@
 import { useState, useRef, useContext } from 'react'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation, gql, useQuery } from '@apollo/client'
 import { FlashMessage } from '../../components'
-import { login as loginQuery } from '../../apollo'
+import { login as loginQuery, defaultRestaurantCreds } from '../../apollo'
 import { validateLogin } from '../validate'
 import { AuthContext } from '../context'
 
 export default function useLogin() {
   const [errors, setErrors] = useState()
   const { login } = useContext(AuthContext)
-  const [username, setUserName] = useState('Bakeshop')
-  const [password, setPassword] = useState('12345')
+  const [username, setUserName] = useState('')
+  const [password, setPassword] = useState('')
   const usernameRef = useRef()
   const passwordRef = useRef()
   const [mutate, { loading, error }] = useMutation(
@@ -18,9 +18,16 @@ export default function useLogin() {
     `,
     { onCompleted, onError }
   )
-
-  function onCompleted({ restaurantLogin }) {
-    login(restaurantLogin.token, restaurantLogin.restaurantId)
+  useQuery(gql`${defaultRestaurantCreds}`, { onCompleted, onError })
+  function onCompleted({ restaurantLogin, lastOrderCreds }) {
+    if (lastOrderCreds) {
+      if (lastOrderCreds.restaurantUsername && lastOrderCreds.restaurantPassword) {
+        setUserName(lastOrderCreds.restaurantUsername)
+        setPassword(lastOrderCreds.restaurantPassword)
+      }
+    } else {
+      login(restaurantLogin.token, restaurantLogin.restaurantId)
+    }
   }
 
   function onError(error) {

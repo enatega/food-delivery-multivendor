@@ -2,14 +2,12 @@ import React, { useState, useRef } from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { validateFunc } from '../../constraints/constraints'
 import { withTranslation } from 'react-i18next'
-
 import {
   editSection,
   restaurantList,
   createSection,
   getSections
 } from '../../apollo'
-
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
 import {
@@ -53,19 +51,21 @@ function Section(props) {
 
   const onCompleted = data => {
     const message = props.section
-      ? 'Section updated successfully'
-      : 'Section added successfully'
+      ? t('SectionUpdatedSuccessfully')
+      : t('SectionAddeduccessfully')
     successSetter(message)
     errorSetter('')
     if (!props.section) clearFields()
   }
   function onError(error) {
-    const message = `Action failed. Please Try again ${error}`
+    const message = `${t('ActionFailedTryAgain')} ${error}`
     successSetter('')
     errorSetter(message)
   }
   const [mutate, { loading }] = useMutation(mutation, {
-    refetchQueries: [{ query: GET_SECTIONS }, onCompleted]
+    refetchQueries: [{ query: GET_SECTIONS }],
+    onCompleted,
+    onError
   })
 
   const {
@@ -75,7 +75,7 @@ function Section(props) {
   } = useQuery(GET_RESTAURANT, { onError })
 
   const onChange = event => {
-    // added this keep default checked on editing
+    // added this to keep default checked on editing
     const value = event.target.value
     const ids = restaurant
     if (event.target.checked) {
@@ -90,7 +90,7 @@ function Section(props) {
   const onBlur = (setter, field, state) => {
     setter(!validateFunc({ [field]: state }, field))
   }
-  const onSubmitValidaiton = () => {
+  const onSubmitValidation = () => {
     const nameErrors = !validateFunc(
       { name: formRef.current['input-name'].value },
       'name'
@@ -116,11 +116,11 @@ function Section(props) {
           <Typography
             variant="h6"
             className={props.section ? classes.textWhite : classes.text}>
-            {props.section ? 'Edit Section' : 'Add Section'}
+            {props.section ? t('EditSection') : t('AddSection')}
           </Typography>
         </Box>
         <Box ml={12} mt={1}>
-          <label>{sectionEnable ? 'Disable' : 'Enable'}</label>
+          <label>{sectionEnable ? t('Disable') : t('Enable')}</label>
           <Switch
             defaultChecked={sectionEnable}
             value={sectionEnable}
@@ -138,7 +138,7 @@ function Section(props) {
             <Input
               id="input-name"
               name="input-name"
-              placeholder="Section Name"
+              placeholder={t('SectionName')}
               type="text"
               defaultValue={name}
               onBlur={event => {
@@ -150,14 +150,18 @@ function Section(props) {
                 nameError === false
                   ? globalClasses.inputError
                   : nameError === true
-                    ? globalClasses.inputSuccess
-                    : ''
+                  ? globalClasses.inputSuccess
+                  : ''
               ]}
             />
           </Box>
           <Grid container spacing={1} mt={1} className={classes.section}>
-            {loadingQuery ? <div>Loading ...</div> : null}
-            {errorQuery ? <div>Error ... {JSON.stringify(error)}</div> : null}
+            {loadingQuery ? <div>{t('LoadingDots')}</div> : null}
+            {errorQuery ? (
+              <div>
+                {t('ErrorDots')} {JSON.stringify(error)}
+              </div>
+            ) : null}
             {data &&
               data.restaurantList.map(restaurantItem => (
                 <Grid item xs={12} md={6} key={restaurantItem._id}>
@@ -180,7 +184,7 @@ function Section(props) {
               disabled={loading}
               onClick={async e => {
                 e.preventDefault()
-                if (onSubmitValidaiton() && !loading) {
+                if (onSubmitValidation() && !loading) {
                   mutate({
                     variables: {
                       section: {
@@ -191,9 +195,15 @@ function Section(props) {
                       }
                     }
                   })
+                  // Clear the form fields after submission
+                  clearFields()
+                  // Close the modal after 3 seconds
+                  setTimeout(() => {
+                    props.onClose() // Close the modal
+                  }, 4000)
                 }
               }}>
-              {props.section ? 'Update' : t('Save')}
+              {props.section ? t('Update') : t('Save')}
             </Button>
           </Box>
         </form>

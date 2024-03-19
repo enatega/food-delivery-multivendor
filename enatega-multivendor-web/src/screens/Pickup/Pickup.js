@@ -20,7 +20,7 @@ import { LocationContext } from "../../context/Location";
 import UserContext from "../../context/User";
 import useStyles from "./styles";
 import { GoogleMap, Marker } from "@react-google-maps/api";
-import locationIcon from "../../assets/images/location.png";
+import MarkerImage from "../../assets/images/marker.png";
 
 const RESTAURANTS = gql`
    ${restaurantList}
@@ -202,7 +202,7 @@ function Pickup() {
                         lat: parseFloat(location.latitude),
                         lng: parseFloat(location.longitude),
                      }}
-                     icon={locationIcon}
+                     icon={MarkerImage}
                      title={location.deliveryAddress}
                   />
                   {restaurants?.map((item) => {

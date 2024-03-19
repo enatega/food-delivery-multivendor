@@ -135,7 +135,7 @@ const styles = (props = null) =>
     buttonLeftCircle: {
       backgroundColor: props != null ? props.black : 'black',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     buttonTextLeft: {
       ...textStyles.Bolder,

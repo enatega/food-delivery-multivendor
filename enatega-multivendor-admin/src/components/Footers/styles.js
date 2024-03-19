@@ -5,7 +5,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '20%',
     width: '100%',
     padding: 3,
-    background: 'linear-gradient(237.49deg, #EEF4FA 0.63%, #DEE6ED 85.49%)'
+    background: `linear-gradient(237.49deg, ${theme.palette.success.lightest} 0.63%, ${theme.palette.success.darkest} 85.49%)`
   },
   link: {
     padding: 10,

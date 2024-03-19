@@ -13,9 +13,10 @@ import EmailImage from "../../assets/images/email.png";
 import FlashMessage from "../../components/FlashMessage";
 import { LoginWrapper } from "../Wrapper";
 import useStyles from "./styles";
+import { useTranslation } from 'react-i18next';
 
 function isValidEmailAddress(address) {
-  return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(address);
+  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(address);
 }
 
 const EMAIL = gql`
@@ -23,6 +24,7 @@ const EMAIL = gql`
 `;
 
 function NewLogin() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const [error, setError] = useState("");
@@ -96,14 +98,14 @@ function NewLogin() {
       </Box>
       <Box mt={theme.spacing(1)} />
       <Typography variant="h5" className={classes.font700}>
-        What's your email?
+        {t('whatsYourEmail')}
       </Typography>
       <Box mt={theme.spacing(1)} />
       <Typography
         variant="caption"
         className={`${classes.caption} ${classes.fontGrey}`}
       >
-        We'll check if you have an account
+        {t('checkAccount')}
       </Typography>
       <Box mt={theme.spacing(4)} />
       <form ref={formRef}>
@@ -112,7 +114,9 @@ function NewLogin() {
           error={Boolean(error)}
           helperText={error}
           variant="outlined"
+          value={"demo-customer@enatega.com"}
           label="Email"
+          type={"email"}
           fullWidth
           InputLabelProps={{
             style: {
@@ -127,7 +131,7 @@ function NewLogin() {
           type="email"
           disableElevation
           disabled={loading}
-          className={classes.btnBase}
+          className={`${classes.btnBase} ${classes.customBtn}`}
           onClick={(e) => {
             e.preventDefault();
             handleAction();
@@ -140,7 +144,7 @@ function NewLogin() {
               variant="caption"
               className={`${classes.caption} ${classes.font700}`}
             >
-              CONTINUE
+              {t('continue')}
             </Typography>
           )}
         </Button>

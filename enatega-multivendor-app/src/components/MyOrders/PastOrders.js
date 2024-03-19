@@ -16,8 +16,9 @@ import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
 import StarIcon from '../../../src/assets/SVG/imageComponents/starIcon'
 import { scale } from '../../utils/scaling'
+import EmptyView from '../EmptyView/EmptyView'
 
-function emptyView({ currentTheme, navigation, t }) {
+function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
   const orderStatusInactive = ['DELIVERED', 'COMPLETED']
   const { orders, loadingOrders, errorOrders } = useContext(OrdersContext)
@@ -31,48 +32,11 @@ function emptyView({ currentTheme, navigation, t }) {
       orders.filter(o => orderStatusInactive.includes(o.orderStatus)).length > 0
     if (hasActiveOrders || hasPastOrders) return null
     return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <SearchFood width={scale(300)} height={scale(300)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault
-            style={{ ...alignment.MBlarge }}
-            textColor={currentTheme.fontMainColor}
-            bolder
-            center
-            H2>
-            {t('unReadOrders')}
-          </TextDefault>
-          <TextDefault
-            textColor={currentTheme.fontMainColor}
-            bold
-            center
-            H5
-            style={{ ...alignment.MBxLarge }}>
-            {t('dontHaveAnyOrderYet')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() =>
-            navigation.navigate({
-              name: 'Main',
-              merge: true
-            })
-          }>
-          <TextDefault
-            style={{ ...alignment.Psmall }}
-            textColor={currentTheme.fontMainColor}
-            bolder
-            B700
-            center
-            uppercase>
-            {t('BrowseRESTAURANTS')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
+      <EmptyView
+        title={'titleEmptyPastOrders'}
+        description={'emptyPastOrdersDesc'}
+        buttonText={'emptyPastOrdersBtn'}
+      />
     )
   }
 }
@@ -107,7 +71,7 @@ const PastOrders = ({ navigation, loading, error, pastOrders }) => {
       data={pastOrders}
       renderItem={renderItem}
       keyExtractor={(item, index) => index.toString()}
-      ListEmptyComponent={emptyView({ currentTheme, navigation, t })}
+      ListEmptyComponent={emptyViewPastOrders()}
       refreshing={networkStatusOrders === 4}
       onRefresh={() => networkStatusOrders === 7 && reFetchOrders()}
       onEndReached={fetchMoreOrdersFunc}

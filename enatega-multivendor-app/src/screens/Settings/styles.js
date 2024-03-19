@@ -109,13 +109,13 @@ const styles = (props = null) =>
     },
     modalContainer: {
       width: '100%',
-      backgroundColor: 'white',
+      backgroundColor: props !== null ? props.themeBackground : '#FFF',
       borderRadius: verticalScale(4),
       ...alignment.Plarge
     },
     radioContainer: {
       width: '100%',
-      backgroundColor: '#FFF',
+      backgroundColor: props !== null ? props.themeBackground : '#FFF',
       flexDirection: 'row',
       alignItems: 'center',
       ...alignment.PTxSmall,

@@ -3,8 +3,8 @@ import Category from './views/Category'
 import Food from './views/Food'
 import Profile from './views/VendorProfile'
 import Orders from './views/Orders'
-//import Configuration from './views/Configuration' //uncomment this for paid version
-import Configuration from './views/Configuration1' //comment this for paid version
+import Configuration from './views/Configuration' //uncomment this for paid version
+import DemoConfiguration from './views/Configuration1' //comment this for paid version
 import Users from './views/Users'
 import Vendors from './views/Vendors'
 import RestaurantList from './views/RestaurantList'
@@ -53,7 +53,7 @@ import { ReactComponent as RatingIcon } from './assets/svg/rating.svg'
 import { ReactComponent as TimingIcon } from './assets/svg/timings.svg'
 import { ReactComponent as RestaurantSectionIcon } from './assets/svg/restSection.svg'
 import SuperAdminDashboard from './views/SuperAdminDashboard'
-// import { ReactComponent as Icon } from './assets/svg/.svg'
+import Cuisines from './views/Cuisines'
 
 var routes = [
   {
@@ -124,6 +124,15 @@ var routes = [
     name: 'Coupons',
     icon: CouponsIcon,
     component: Coupons,
+    layout: '/super_admin',
+    appearInSidebar: true,
+    admin: true
+  },
+  {
+    path: '/cuisines',
+    name: 'Cousines',
+    icon: CouponsIcon,
+    component: Cuisines,
     layout: '/super_admin',
     appearInSidebar: true,
     admin: true

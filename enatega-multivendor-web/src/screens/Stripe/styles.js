@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   btn: {
-    backgroundColor: "#0070ba",
+    backgroundColor: theme.palette.button.light,
     minWidth: "50%",
     height: "100%",
     borderRadius: 5,
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
     border: `1px solid ${theme.palette.grey[300]}`,
     "&:hover": {
-      backgroundColor: "#0070ba",
+      backgroundColor: theme.palette.button.light,
       opacity: 0.8,
     },
   },

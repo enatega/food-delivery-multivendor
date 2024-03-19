@@ -7,7 +7,7 @@ export const LocationProvider = ({ children }) => {
     const isInitialRender = useRef(true)
     useEffect(() => {
         const locationStr = localStorage.getItem('location')
-        console.log('locationStr', locationStr)
+        
         if (locationStr && locationStr !== "undefined") {
             setLocation(JSON.parse(locationStr))
         }
@@ -21,7 +21,7 @@ export const LocationProvider = ({ children }) => {
             localStorage.setItem('location', JSON.stringify(location))
     }, [location])
 
-    console.log('location', location)
+    
     return <LocationContext.Provider value={{ location, setLocation }}>
         {children}
     </LocationContext.Provider>

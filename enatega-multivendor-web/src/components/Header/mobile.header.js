@@ -1,4 +1,11 @@
-import { Box, Divider, Menu, MenuItem, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Menu,
+  MenuItem,
+  MenuList,
+  useTheme,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
@@ -41,21 +48,23 @@ function MHeader({
           getcontentanchorel={null}
           style={{ marginTop: "40px", marginLeft: "-8px" }}
         >
-          {navitems.map((item, index) => (
-            <Box key={index}>
-              <MenuItem
-                className={classes.menuItem}
-                onClick={() => close(item.title)}
-              >
-                <RouterLink to={item.link} style={{ textDecoration: "none" }}>
-                  <Typography color="textSecondary" variant="body2">
-                    {item.title}
-                  </Typography>
-                </RouterLink>
-              </MenuItem>
-              {index === 2 && <Divider light />}
-            </Box>
-          ))}
+          <MenuList style={{ padding: 0 }}>
+            {navitems.map((item, index) => (
+              <Box key={index}>
+                <MenuItem
+                  className={classes.menuItem}
+                  onClick={() => close(item.title)}
+                >
+                  <RouterLink to={item.link} style={{ textDecoration: "none" }}>
+                    <Typography color="textSecondary" variant="body2">
+                      {item.title}
+                    </Typography>
+                  </RouterLink>
+                </MenuItem>
+                {index === 2 && <Divider light />}
+              </Box>
+            ))}
+          </MenuList>
         </Menu>
         <RouterLink to="/" style={{ textDecoration: "none" }}>
           <Typography

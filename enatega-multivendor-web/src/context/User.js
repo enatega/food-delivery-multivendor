@@ -108,7 +108,7 @@ export const UserProvider = (props) => {
   }, []);
 
   function onCompleted({ profile, orders, saveNotificationTokenWeb }) {
-    console.log("onCompleted");
+    
     if (profile) {
       updateNotificationToken();
     }
@@ -135,13 +135,13 @@ export const UserProvider = (props) => {
   };
 
   const subscribeOrders = () => {
-    console.log("before subscribe");
+  
     try {
       const unsubscribeOrders = subscribeToMoreOrders({
         document: SUBSCRIPTION_ORDERS,
         variables: { userId: dataProfile.profile._id },
         updateQuery: (prev, { subscriptionData }) => {
-          console.log("after subscribe");
+      
           if (!subscriptionData.data) return prev;
           const { _id } = subscriptionData.data.orderStatusChanged.order;
           if (subscriptionData.data.orderStatusChanged.origin === "new") {
@@ -283,10 +283,10 @@ export const UserProvider = (props) => {
   };
 
   const updateNotificationToken = () => {
-    console.log("updateNotificationToken");
+   
     const token = localStorage.getItem("messaging-token");
     if (token) {
-      console.log("token found", token);
+     
       saveNotificationToken({ variables: { token } });
     }
   };

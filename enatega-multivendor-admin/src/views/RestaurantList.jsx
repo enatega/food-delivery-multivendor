@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
 import Loader from 'react-loader-spinner'
 import SearchBar from '../components/TableHeader/SearchBar'
-import { Container, Button, Box } from '@mui/material'
+import { Container, Button, Box, useTheme } from '@mui/material'
 import { customStyles } from '../utils/tableCustomStyles'
 import useGlobalStyles from '../utils/globalStyles'
 import { ReactComponent as RestIcon } from '../assets/svg/svg/Restaurant.svg'
@@ -24,6 +24,7 @@ const DELETE_RESTAURANT = gql`
 `
 
 const Restaurants = props => {
+  const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const globalClasses = useGlobalStyles()
@@ -50,15 +51,20 @@ const Restaurants = props => {
 
   const columns = [
     {
-      name: 'Image',
+      name: t('Image'),
       cell: row => (
         <>
           {!!row.image && (
             <img
               className="img-responsive"
               src={row.image}
-              alt="img menu"
-              style={{ width: 30, height: 30, borderRadius: 15 }}
+              alt={t('ImageMenu')}
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 15,
+                cursor: 'pointer'
+              }}
               onClick={() => {
                 localStorage.setItem('restaurant_id', row._id)
                 props.history.push('/admin/dashboard')
@@ -71,35 +77,48 @@ const Restaurants = props => {
       selector: 'image'
     },
     {
-      name: 'Name',
+      name: t('Name'),
       // sortable: true,
-      selector: 'name'
+      selector: 'name',
+      style: {
+        cursor: 'pointer'
+      }
     },
     {
-      name: 'Address',
-      selector: 'address'
+      name: t('Address'),
+      selector: 'address',
+      style: {
+        cursor: 'pointer'
+      }
     },
     {
-      name: 'Order Prefix',
-      selector: 'orderPrefix'
+      name: t('OrderPrefix'),
+      selector: 'orderPrefix',
+      style: {
+        cursor: 'pointer'
+      }
     },
     {
-      name: 'Vendor',
+      name: t('Vendor'),
       selector: 'owner',
+      style: {
+        cursor: 'pointer'
+      },
       cell: row => <>{row.owner ? row.owner.email : null}</>
     },
     {
-      name: 'Action',
+      name: t('Action'),
       cell: row => <>{actionButtons(row)}</>
     }
   ]
+  const theme = useTheme()
   const actionButtons = row => {
     return (
       <>
         {loading ? (
           <Loader
             type="ThreeDots"
-            color="#BB2124"
+            color={theme.palette.error.light}
             height={20}
             width={40}
             visible={loading}
@@ -114,7 +133,7 @@ const Restaurants = props => {
             e.preventDefault()
             mutate({ variables: { id: row._id } })
           }}>
-          {row.isActive ? 'Disable' : 'Enable'}
+          {row.isActive ? t('Disable') : t('Enable')}
         </Button>
       </>
     )
@@ -124,7 +143,7 @@ const Restaurants = props => {
     {
       when: row => !row.isActive,
       style: {
-        backgroundColor: '#f9fafc'
+        backgroundColor: theme.palette.background.primary
       }
     }
   ]
@@ -164,7 +183,7 @@ const Restaurants = props => {
                 onClick={() => onClickRefetch(refetch)}
               />
             }
-            title={<TableHeader title="Restaurants" />}
+            title={<TableHeader title={t('Restaurants')} />}
             columns={columns}
             data={filtered}
             pagination

@@ -5,8 +5,15 @@ import * as Device from 'expo-device'
 import * as Font from 'expo-font'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import * as SplashScreen from 'expo-splash-screen'
-import * as Sentry from 'sentry-expo'
-import { BackHandler, Platform, StatusBar, LogBox } from 'react-native'
+// import * as Sentry from 'sentry-expo'
+import {
+  BackHandler,
+  Platform,
+  StatusBar,
+  LogBox,
+  StyleSheet,
+  ActivityIndicator
+} from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import { exitAlert } from './src/utils/androidBackButton'
 import FlashMessage from 'react-native-flash-message'
@@ -24,6 +31,7 @@ import useEnvVars, { isProduction } from './environment'
 import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
 import { OrdersProvider } from './src/context/Orders'
 import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
+import * as Updates from 'expo-updates'
 import ReviewModal from './src/components/Review'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 
@@ -56,6 +64,7 @@ export default function App() {
   const [orderId, setOrderId] = useState()
   // Theme Reducer
   const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
+  const [isUpdating, setIsUpdating] = useState(false)
 
   useEffect(() => {
     const loadAppData = async() => {
@@ -86,7 +95,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      AsyncStorage.getItem('theme').then(response =>
+      AsyncStorage.getItem('theme').then((response) =>
         response !== 'Pink' ? themeSetter({ type: response }) : null
       )
     } catch (error) {
@@ -122,16 +131,54 @@ export default function App() {
   const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()
 
+  // useEffect(() => {
+  //   if (SENTRY_DSN) {
+  //     Sentry.init({
+  //       dsn: SENTRY_DSN,
+  //       enableInExpoDevelopment: true,
+  //       debug: !isProduction,
+  //       tracesSampleRate: 1.0 // to be changed to 0.2 in production
+  //     })
+  //   }
+  // }, [SENTRY_DSN])
+
   useEffect(() => {
-    if (SENTRY_DSN) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-        enableInExpoDevelopment: true,
-        debug: !isProduction,
-        tracesSampleRate: 1.0 // to be changed to 0.2 in production
-      })
-    }
-  }, [SENTRY_DSN])
+    // eslint-disable-next-line no-undef
+    if (__DEV__) return
+    ;(async () => {
+      const { isAvailable } = await Updates.checkForUpdateAsync()
+      if (isAvailable) {
+        try {
+          setIsUpdating(true)
+          const { isNew } = await Updates.fetchUpdateAsync()
+          if (isNew) {
+            await Updates.reloadAsync()
+          }
+        } catch (error) {
+          console.log('error while updating app', JSON.stringify(error))
+        } finally {
+          setIsUpdating(false)
+        }
+      }
+    })()
+  }, [])
+
+  if (isUpdating) {
+    return (
+      <View
+        style={[
+          styles.flex,
+          styles.mainContainer,
+          { backgroundColor: Theme[theme].startColor }
+        ]}
+      >
+        <TextDefault textColor={Theme[theme].white} bold>
+          Please wait while app is updating
+        </TextDefault>
+        <ActivityIndicator size='large' color={Theme[theme].white} />
+      </View>
+    )
+  }
 
   async function getActiveLocation() {
     try {
@@ -208,6 +255,15 @@ export default function App() {
   }
 }
 
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1
+  },
+  mainContainer: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {

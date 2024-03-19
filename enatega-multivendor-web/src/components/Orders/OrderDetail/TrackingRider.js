@@ -21,7 +21,7 @@ const TrackingRider = ({ id }) => {
       document: RIDER_LOCATION,
       variables: { riderId: id },
       updateQuery: (prev, { subscriptionData }) => {
-        console.log("subscription", subscriptionData);
+        
         if (!subscriptionData.data) return prev;
         return {
           rider: {
