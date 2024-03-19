@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { View, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import navigationService from '../../routes/navigationService'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -15,11 +15,14 @@ import Analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
+import ReviewModal from '../../components/Review'
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED']
 
 function MyOrders(props) {
+  const reviewModalRef = useRef()
+  const [reviewOrderId, setReviewOrderId] = useState()
   const analytics = Analytics()
   const { t } = useTranslation()
   const {
@@ -40,6 +43,12 @@ function MyOrders(props) {
   const pastOrders = useMemo(() => {
     return orders.filter(o => orderStatusInactive.includes(o.orderStatus))
   }, [orders])
+  const openReviewModal = ()=>{
+    reviewModalRef.current.open()
+  }
+  const closeReviewModal = ()=>{
+    reviewModalRef.current.close()
+  }
 
   useEffect(() => {
     async function Track() {
@@ -109,6 +118,11 @@ function MyOrders(props) {
     )
   }
 
+  const onPressReview = (id)=>{
+    setReviewOrderId(id)
+    reviewModalRef.current.open()
+  }
+
   return (
     <>
       <View style={styles(currentTheme).container}>
@@ -141,6 +155,7 @@ function MyOrders(props) {
             pastOrders={pastOrders}
             loading={loadingOrders}
             error={errorOrders}
+            onPressReview={onPressReview}
           />
         )}
 
@@ -151,6 +166,7 @@ function MyOrders(props) {
           }}
         />
       </View>
+      <ReviewModal ref={reviewModalRef} onOverlayPress={closeReviewModal} theme={currentTheme} orderId={reviewOrderId}/>
     </>
   )
 }
