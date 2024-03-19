@@ -289,17 +289,20 @@ function DarkBackButton(props) {
   )
 }
 function HelpButton(props) {
+  const navigation = useNavigation()
   return (
-    <View
+    <TouchableOpacity
       style={{
         backgroundColor: props.iconBackground,
         borderRadius: scale(10),
-        margin: scale(5)
-      }}>
-      <TextDefault style={{ padding: scale(7) }} small bold>
+        margin: scale(5),
+      }}
+      onPress={() => navigation.navigate('Help')}
+    >
+      <TextDefault style={{ padding: scale(5), width: 55 }} small bold center>
         Help
       </TextDefault>
-    </View>
+    </TouchableOpacity>
   )
 }
 export { BackButton, LeftButton, RightButton, DarkBackButton, HelpButton }
