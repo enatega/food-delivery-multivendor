@@ -238,16 +238,10 @@ function Main(props) {
           style={styles(currentTheme).addButton}
           onPress={() => {
             if (isLoggedIn) {
-              console.log('isLoggedIn => ', isLoggedIn)
               navigation.navigate('AddNewAddress', {
                 locationData
               })
-              // props.navigation.navigate({
-              //   name: 'AddNewAddress'
-              // })
-              console.log('isLoggedIn after => ', isLoggedIn)
             } else {
-              console.log('isLoggedIn else => ', isLoggedIn)
               const modal = modalRef.current
               modal?.close()
               props.navigation.navigate({

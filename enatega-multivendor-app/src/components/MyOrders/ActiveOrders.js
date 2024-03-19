@@ -107,8 +107,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
               //alignItems: 'center',
               justifyContent: 'center',
               ...alignment.Mmedium,
-              ...alignment.MTlarge,
-              ...alignment.PLmedium
+              ...alignment.MTlarge
             }}>
             <Image
               style={styles(currentTheme).restaurantImage1}
