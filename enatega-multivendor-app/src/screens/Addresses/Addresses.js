@@ -34,7 +34,6 @@ import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import { useTranslation } from 'react-i18next'
-import { LocationContext } from '../../context/Location'
 
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
@@ -48,9 +47,8 @@ function Addresses() {
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const { location } = useContext(LocationContext)
   const { t } = useTranslation()
-  const locationData = location
+
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor('transparent')
@@ -165,7 +163,8 @@ function Addresses() {
                   disabled={loadingMutation}
                   activeOpacity={0.7}
                   onPress={() => {
-                    navigation.navigate('AddNewAddress', { locationData })
+                    const [longitude, latitude] = address.location.coordinates
+                    navigation.navigate('AddNewAddress', { longitude: +longitude, latitude: +latitude })
                   }}>
                   <SimpleLineIcons
                     name="pencil"
