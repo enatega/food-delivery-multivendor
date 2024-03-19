@@ -35,7 +35,7 @@ export default function AddNewAddress(props) {
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
 
-  const { longitude, latitude } = props.route.params || {}
+  const { locationData: {longitude, latitude} } = props.route.params || {}
   const [selectedValue, setSelectedValue] = useState({
     city: '',
     address: '',

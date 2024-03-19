@@ -39,7 +39,7 @@ const styles = (props = null) =>
     },
     textContainer2: {
       width: '58%',
-      ...alignment.PTsmall,
+      // ...alignment.PTsmall,
       ...alignment.PLsmall,
       //backgroundColor: props !== null ? props.newheaderColor : '#90E36D'
     },
@@ -55,9 +55,8 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     subContainerRight: {
-      ...alignment.PTsmall,
       justifyContent: 'flex-start',
-      width: '25%'
+      width: '35%',
     },
     rateOrderContainer: {
       flex: 1,
@@ -115,13 +114,13 @@ const styles = (props = null) =>
       ...alignment.Pmedium
     },
     restaurantImage: {
-      height: '120%',
-      width: '28%',
-      borderRadius: 10
+      height: 85,
+      width: 85,
+      borderRadius: 10,
     },
     restaurantImage1: {
-      height: '120%',
-      width: '28%',
+      height: 85,
+      width: 85,
       borderRadius: 10
     },
     restaurantName: { ...alignment.MBxSmall, width: '65%' },
@@ -153,6 +152,7 @@ const styles = (props = null) =>
     starsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'space-between',
       width: '100%',
       height: scale(50)
       //backgroundColor: props !== null ? props.gray200 : '#F3F4F6'
