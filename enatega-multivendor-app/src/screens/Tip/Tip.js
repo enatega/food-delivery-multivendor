@@ -79,7 +79,7 @@ function Tip(props) {
         />
       )
     })
-  }, [navigation])
+  })
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_TIPS)

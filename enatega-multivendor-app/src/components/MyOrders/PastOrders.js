@@ -178,23 +178,23 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
                   </TextDefault>
                 </View>
               </View>
-              <View>
+              <View style={{marginTop: 'auto'}}>
                 <TextDefault
                   numberOfLines={1}
                   style={{
                     ...alignment.MTxSmall,
                     width: '122%'
                   }}
-                  textColor={currentTheme.fontSecondColor}
-                  small>
+                  textColor={currentTheme.secondaryText}
+                  >
                   {t('deliveredOn')} {formatDeliveredAt(item.deliveredAt)}
                 </TextDefault>
                 <TextDefault
                   numberOfLines={1}
                   style={{ ...alignment.MTxSmall }}
-                  textColor={currentTheme.fontMainColor}
-                  bolder
-                  small>
+                  textColor={currentTheme.secondaryText}
+                  
+                  >
                   {getItems(item.items)}
                 </TextDefault>
               </View>
@@ -212,13 +212,12 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
             </TouchableOpacity>
           </View>
           <View style={styles(currentTheme).starsContainer}>
-            <View style={{ flex: 3 }}>
-              <TextDefault H4 bolder>
+            <View>
+              <TextDefault H5 bolder>
                 {t('tapToRate')}
               </TextDefault>
             </View>
-            <View style={{ flex: 5 }}>
-              <TouchableOpacity style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
                 {[1, 2, 3, 4, 5].map(index => (
                   <StarIcon
                     key={`star-icon-${index}`}
@@ -226,7 +225,6 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
                     onPress={() => handleRating(index)}
                   />
                 ))}
-              </TouchableOpacity>
             </View>
           </View>
         </View>

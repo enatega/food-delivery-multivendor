@@ -21,7 +21,10 @@ import { mapStyle } from '../../utils/mapStyle'
 import { useTranslation } from 'react-i18next'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
-import { ProgressBar, checkStatus } from '../../components/Main/ActiveOrders/ProgressBar'
+import {
+  ProgressBar,
+  checkStatus
+} from '../../components/Main/ActiveOrders/ProgressBar'
 import { useNavigation } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
@@ -36,7 +39,9 @@ import FoodPicked from '../../assets/SVG/food-picked'
 import OrderPlacedIcon from '../../assets/SVG/order-placed'
 const { height: HEIGHT } = Dimensions.get('screen')
 
-const CANCEL_ORDER = gql`${cancelOrderMutation}`
+const CANCEL_ORDER = gql`
+  ${cancelOrderMutation}
+`
 
 function OrderDetail(props) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
@@ -52,7 +57,10 @@ function OrderDetail(props) {
   const cancelModalToggle = () => {
     setCancelModalVisible(!cancelModalVisible)
   }
-  const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, { onError, variables: { abortOrderId: id } })
+  const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
+    onError,
+    variables: { abortOrderId: id }
+  })
   function onError(error) {
     FlashMessage({
       message: error.message
@@ -69,13 +77,19 @@ function OrderDetail(props) {
 
   const order = orders.find(o => o._id === id)
   const headerRef = useRef(false)
-  if (loadingOrders || !order) return <Spinner backColor={currentTheme.white} spinnerColor={currentTheme.primary}/>
+  if (loadingOrders || !order) {
+    return (
+      <Spinner
+        backColor={currentTheme.white}
+        spinnerColor={currentTheme.primary}
+      />
+    )
+  }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
   if (!headerRef.current) {
     props.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
       headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
-      // title: null,
       headerTitleStyle: { color: currentTheme.black },
       headerStyle: { backgroundColor: currentTheme.white }
     })
@@ -97,56 +111,99 @@ function OrderDetail(props) {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, backgroundColor: currentTheme.white, paddingBottom: scale(100) }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          backgroundColor: currentTheme.white,
+          paddingBottom: scale(100)
+        }}
         showsVerticalScrollIndicator={false}
         overScrollMode="never">
-        {(order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED) &&
-        <MapView
-          style={{ flex: 1, height: HEIGHT * 0.6 }}
-          showsUserLocation={false}
-          initialRegion={{
-            latitude: +deliveryAddress.location.coordinates[1],
-            longitude: +deliveryAddress.location.coordinates[0],
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-          zoomEnabled={true}
-          zoomControlEnabled={true}
-          rotateEnabled={false}
-          customMapStyle={mapStyle}
-          provider={PROVIDER_GOOGLE}>
-          <Marker
-            coordinate={{
-              longitude: +restaurant.location.coordinates[0],
-              latitude: +restaurant.location.coordinates[1]
-            }}>
-            <RestaurantMarker />
-          </Marker>
-          <Marker
-            coordinate={{
+        {order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED && (
+          <MapView
+            style={{ flex: 1, height: HEIGHT * 0.6 }}
+            showsUserLocation={false}
+            initialRegion={{
               latitude: +deliveryAddress.location.coordinates[1],
-              longitude: +deliveryAddress.location.coordinates[0]
-            }}>
-            <CustomerMarker />
-          </Marker>
-          {order.rider && <TrackingRider id={order.rider._id} />}
-        </MapView>}
-        <View style={{ justifyContent: 'center', alignItems: 'center', ...alignment.Pmedium }}>
-          <OrderStatusImage status={order.orderStatus}/>
-          {order.orderStatus !== ORDER_STATUS_ENUM.DELIVERED &&
-          <View style={{ ...alignment.MTxSmall, alignItems: 'center', justifyContent: 'space-between' }}>
-            {(![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.CANCELLED].includes(order.orderStatus) && <><TextDefault style={{ ...alignment.MTxSmall }} textColor={currentTheme.gray500} H5>Estimated delivery time</TextDefault>
-              <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>{remainingTime}-{remainingTime + 5} mins</TextDefault>
-              <ProgressBar configuration={configuration}
-                currentTheme={currentTheme}
-                item={order}
-                navigation={navigation}/>
-            </>)}
-            <TextDefault H5 style={{ ...alignment.Mmedium, textAlign: 'center' }} textColor={currentTheme.gray600} bold>  {t(checkStatus(order.orderStatus).statusText)}</TextDefault>
-          </View>}
+              longitude: +deliveryAddress.location.coordinates[0],
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
+            }}
+            zoomEnabled={true}
+            zoomControlEnabled={true}
+            rotateEnabled={false}
+            customMapStyle={mapStyle}
+            provider={PROVIDER_GOOGLE}>
+            <Marker
+              coordinate={{
+                longitude: +restaurant.location.coordinates[0],
+                latitude: +restaurant.location.coordinates[1]
+              }}>
+              <RestaurantMarker />
+            </Marker>
+            <Marker
+              coordinate={{
+                latitude: +deliveryAddress.location.coordinates[1],
+                longitude: +deliveryAddress.location.coordinates[0]
+              }}>
+              <CustomerMarker />
+            </Marker>
+            {order.rider && <TrackingRider id={order.rider._id} />}
+          </MapView>
+        )}
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            ...alignment.Pmedium
+          }}>
+          <OrderStatusImage status={order.orderStatus} />
+          {order.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
+            <View
+              style={{
+                ...alignment.MTxSmall,
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+              {![
+                ORDER_STATUS_ENUM.PENDING,
+                ORDER_STATUS_ENUM.CANCELLED
+              ].includes(order.orderStatus) && (
+                <>
+                  <TextDefault
+                    style={{ ...alignment.MTxSmall }}
+                    textColor={currentTheme.gray500}
+                    H5>
+                    Estimated delivery time
+                  </TextDefault>
+                  <TextDefault
+                    style={{ ...alignment.MTxSmall }}
+                    Regular
+                    textColor={currentTheme.gray900}
+                    H1
+                    bolder>
+                    {remainingTime}-{remainingTime + 5} mins
+                  </TextDefault>
+                  <ProgressBar
+                    configuration={configuration}
+                    currentTheme={currentTheme}
+                    item={order}
+                    navigation={navigation}
+                  />
+                </>
+              )}
+              <TextDefault
+                H5
+                style={{ ...alignment.Mmedium, textAlign: 'center' }}
+                textColor={currentTheme.gray600}
+                bold>
+                {' '}
+                {t(checkStatus(order.orderStatus).statusText)}
+              </TextDefault>
+            </View>
+          )}
         </View>
-
-        {order.orderStatus === 'DELIVERED' && !order.review && (
+        {/* Write a review button hide */}
+        {/* {order.orderStatus === 'DELIVERED' && !order.review && (
           <View style={styles().review}>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -172,7 +229,7 @@ function OrderDetail(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
         <Detail
           navigation={props.navigation}
           currencySymbol={configuration.currencySymbol}
@@ -196,16 +253,19 @@ function OrderDetail(props) {
           theme={currentTheme}
           title={t('total')}
           currency={configuration.currencySymbol}
-          price={total.toFixed(2)}/>
-        {order.orderStatus === ORDER_STATUS_ENUM.PENDING &&
-        <View style={{ margin: scale(20) }}>
-          <Button
-            text={'Cancel Order'}
-            buttonProps={{ onPress: cancelModalToggle }}
-            buttonStyles={styles().cancelButtonContainer(currentTheme)}
-            textProps={{ textColor: currentTheme.red600 }}
-            textStyles={{ ...alignment.Pmedium }}/>
-        </View>}
+          price={total.toFixed(2)}
+        />
+        {order.orderStatus === ORDER_STATUS_ENUM.PENDING && (
+          <View style={{ margin: scale(20) }}>
+            <Button
+              text={'Cancel Order'}
+              buttonProps={{ onPress: cancelModalToggle }}
+              buttonStyles={styles().cancelButtonContainer(currentTheme)}
+              textProps={{ textColor: currentTheme.red600 }}
+              textStyles={{ ...alignment.Pmedium }}
+            />
+          </View>
+        )}
       </View>
       <CancelModal
         theme={currentTheme}
@@ -213,20 +273,28 @@ function OrderDetail(props) {
         setModalVisible={cancelModalToggle}
         cancelOrder={cancelOrder}
         loading={loadingCancel}
-        orderStatus={order.orderStatus}/>
+        orderStatus={order.orderStatus}
+      />
     </View>
   )
 }
 
 export const OrderStatusImage = ({ status }) => {
   switch (status) {
-    case ORDER_STATUS_ENUM.PENDING: return <OrderPlacedIcon/>
-    case ORDER_STATUS_ENUM.ACCEPTED: return <OrderPreparing/>
-    case ORDER_STATUS_ENUM.ASSIGNED: return <FoodPicked/>
-    case ORDER_STATUS_ENUM.CANCELLED: return null
-    case ORDER_STATUS_ENUM.COMPLETED: return <PlaceOrder/>
-    case ORDER_STATUS_ENUM.DELIVERED: return <PlaceOrder/>
-    default: return null
+    case ORDER_STATUS_ENUM.PENDING:
+      return <OrderPlacedIcon />
+    case ORDER_STATUS_ENUM.ACCEPTED:
+      return <OrderPreparing />
+    case ORDER_STATUS_ENUM.ASSIGNED:
+      return <FoodPicked />
+    case ORDER_STATUS_ENUM.CANCELLED:
+      return null
+    case ORDER_STATUS_ENUM.COMPLETED:
+      return <PlaceOrder />
+    case ORDER_STATUS_ENUM.DELIVERED:
+      return <PlaceOrder />
+    default:
+      return null
   }
 }
 
