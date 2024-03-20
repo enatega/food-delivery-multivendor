@@ -28,11 +28,11 @@ function Location(props) {
   return (
     <View>
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5, gap: 5 }}>
           <View style={[styles().locationIcon, props.locationIconGray]}>
             <EvilIcons
               name="location"
-              size={20}
+              size={16}
               color={currentTheme.fontFourthColor}
             />
           </View>

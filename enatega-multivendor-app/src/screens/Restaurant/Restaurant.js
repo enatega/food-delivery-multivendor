@@ -53,6 +53,7 @@ import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { ScrollView } from 'react-native-gesture-handler'
 import { IMAGE_LINK } from '../../utils/constants'
+import { LocationContext } from '../../context/Location'
 
 const { height } = Dimensions.get('screen')
 
@@ -85,6 +86,7 @@ function Restaurant(props) {
   const translationY = useSharedValue(0)
   const circle = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
+  
   const currentTheme = theme[themeContext.ThemeValue]
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)

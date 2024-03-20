@@ -12,8 +12,8 @@ const styles = (props = null) => {
     },
     locationIcon:{
       backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
-      width: 23,
-    height: 23,
+      width: 24,
+    height: 24,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
