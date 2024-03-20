@@ -296,7 +296,7 @@ function HelpButton(props) {
         marginRight: scale(5)
       }}>
       <TextDefault style={{ padding: scale(7) }} small bold>
-        Help
+        {t('help')}
       </TextDefault>
     </View>
   )

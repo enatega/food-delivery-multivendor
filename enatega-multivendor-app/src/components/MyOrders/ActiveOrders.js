@@ -77,10 +77,10 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
           </View>
           <View style={styles().orderDescriptionContainer}>
             <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>
-              {remainingTime}-{remainingTime + 5} mins
+              {remainingTime}-{remainingTime + 5} {t('mins')}
             </TextDefault>
           </View>
-          <View style={{flex:1}}>
+          <View style={{ flex: 1 }}>
             <ProgressBar
               configuration={configuration}
               currentTheme={currentTheme}

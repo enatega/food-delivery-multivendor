@@ -12,6 +12,7 @@ function TopPicks(props) {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  console.log('props:', props)
 
   function loadingScreen() {
     return (
@@ -35,7 +36,6 @@ function TopPicks(props) {
   if (props?.loading) return loadingScreen()
   if (props?.error)
     return <Text style={styles().margin}>Error: {props?.error?.message}</Text>
-
   return (
     <View style={styles().topPicksSec}>
       <TextDefault
@@ -43,13 +43,13 @@ function TopPicks(props) {
         textColor={currentTheme.fontFourthColor}
         bolder
         H4>
-        {props?.title}
+        {props.title}
       </TextDefault>
       <TextDefault
         Normal
         textColor={currentTheme.secondaryText}
         style={styles().ItemDescription}>
-        Most ordered right now.
+        {t('mostOrderedNow')}
       </TextDefault>
       <FlatList
         style={styles().offerScroll}

@@ -51,10 +51,11 @@ function About(props) {
         { marginTop: inset.top },
         styles().flex,
         { backgroundColor: currentTheme.headerMenuBackground }
-      ]}>
+      ]}
+    >
       <ImageHeader
         iconColor={currentTheme.iconColorPink}
-        svgNameL="leftArrow"
+        svgNameL='leftArrow'
         restaurantImage={restaurantObject.restaurantImage}
         iconBackColor={currentTheme.white}
         restaurantName={restaurantObject.restaurantName}
@@ -70,9 +71,10 @@ function About(props) {
         <View style={styles(currentTheme).restaurantInfo}>
           {!props.loading && (
             <View
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+            >
               <MaterialIcons
-                name="timer"
+                name='timer'
                 size={20}
                 color={currentTheme.fontThirdColor}
               />
@@ -83,7 +85,7 @@ function About(props) {
           )}
           <View style={styles().ratingContainer}>
             <MaterialIcons
-              name="star-border"
+              name='star-border'
               size={20}
               color={currentTheme.fontThirdColor}
             />
@@ -92,7 +94,8 @@ function About(props) {
               style={{ paddingLeft: 4 }}
               textColor={currentTheme.fontThirdColor}
               H5
-              bolder>
+              bolder
+            >
               {restaurantObject.average}
             </TextDefault>
             <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
@@ -104,9 +107,10 @@ function About(props) {
               flexDirection: 'row',
               alignItems: 'center',
               gap: 4
-            }}>
+            }}
+          >
             <MaterialIcons
-              name="location-on"
+              name='location-on'
               size={20}
               color={currentTheme.fontThirdColor}
             />
@@ -123,9 +127,10 @@ function About(props) {
               alignItems: 'center',
               marginTop: scale(8),
               gap: 4
-            }}>
+            }}
+          >
             <MaterialIcons
-              name="access-time"
+              name='access-time'
               size={20}
               color={currentTheme.fontThirdColor}
             />
@@ -141,7 +146,8 @@ function About(props) {
                   style={styles().timingText}
                   textColor={currentTheme.black}
                   bolder
-                  large>
+                  large
+                >
                   {t(v.day)}{' '}
                 </TextDefault>
                 {v.times.length < 1 ? (
@@ -149,11 +155,12 @@ function About(props) {
                     {t('ClosedAllDay')}
                   </TextDefault>
                 ) : (
-                  v.times.map(t => (
+                  v.times.map((t) => (
                     <TextDefault
                       key={index + 8}
                       textColor={currentTheme.black}
-                      large>
+                      large
+                    >
                       {t.startTime[0]}:{t.startTime[1]}
                       {' - '}
                       {t.endTime[0]}:{t.endTime[1]}
@@ -171,14 +178,15 @@ function About(props) {
               alignItems: 'center',
               gap: 8,
               ...alignment.PBsmall
-            }}>
+            }}
+          >
             <FontAwesome5
-              name="map-marked-alt"
+              name='map-marked-alt'
               size={20}
               color={currentTheme.fontThirdColor}
             />
             <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
-              Location
+              {t('location')}
             </TextDefault>
           </View>
           <MapView
@@ -192,7 +200,8 @@ function About(props) {
             customMapStyle={
               themeContext.ThemeValue === 'Dark' ? mapStyle : null
             }
-            provider={PROVIDER_GOOGLE}></MapView>
+            provider={PROVIDER_GOOGLE}
+          ></MapView>
           <View style={styles().marker}>
             <CustomMarker
               width={40}

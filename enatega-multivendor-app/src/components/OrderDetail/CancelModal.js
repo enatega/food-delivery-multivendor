@@ -5,41 +5,72 @@ import Button from '../Button/Button'
 import styles from './styles'
 import { alignment } from '../../utils/alignment'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
+import { useTranslation } from 'react-i18next'
 
-export const CancelModal = ({ theme, modalVisible, setModalVisible, cancelOrder, loading, orderStatus }) => {
-  return (<Modal
-    animationType='slide'
-    visible={modalVisible}
-    transparent={true}
-  >
-    <Pressable style={styles.container(theme)} onPress={setModalVisible}>
-      {orderStatus === ORDER_STATUS_ENUM.CANCELLED && <View style={styles.modalContainer(theme)}>
-        <View style={{ ...alignment.MBsmall }}><TextDefault H4 bolder textColor={theme.gray900}>Your order is cancelled</TextDefault></View>
-        <View><TextDefault H5 textColor={theme.gray500}>{'If you have any questions feel free to react out to our support team'}</TextDefault></View>
-      </View>}
-      {orderStatus !== ORDER_STATUS_ENUM.CANCELLED && <View style={styles.modalContainer(theme)}>
-        <View style={{ ...alignment.MBsmall }}><TextDefault H4 bolder textColor={theme.gray900}>Cancel your order</TextDefault></View>
-        <View><TextDefault H5 textColor={theme.gray500}>{"We've got your order and may find you a rider any second now. Cancel anyway"}</TextDefault></View>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+export const CancelModal = ({
+  theme,
+  modalVisible,
+  setModalVisible,
+  cancelOrder,
+  loading,
+  orderStatus
+}) => {
+  const { t } = useTranslation()
 
-          <View style={{ ...alignment.MTlarge }}>
-            <Button
-              text={'Cancel Order'}
-              buttonProps={{ onPress: cancelOrder, disabled: loading }}
-              buttonStyles={[styles.cancelButtonContainer(theme), { backgroundColor: theme.red600 }]}
-              textProps={{ textColor: theme.white }}
-              textStyles={{ ...alignment.Pmedium }}/>
+  return (
+    <Modal animationType="slide" visible={modalVisible} transparent={true}>
+      <Pressable style={styles.container(theme)} onPress={setModalVisible}>
+        {orderStatus === ORDER_STATUS_ENUM.CANCELLED && (
+          <View style={styles.modalContainer(theme)}>
+            <View style={{ ...alignment.MBsmall }}>
+              <TextDefault H4 bolder textColor={theme.gray900}>
+                {t('yourOrderCancelled')}
+              </TextDefault>
+            </View>
+            <View>
+              <TextDefault H5 textColor={theme.gray500}>
+                {t('anyQuestions')}
+              </TextDefault>
+            </View>
           </View>
-          <View style={{ ...alignment.MTsmall }}>
-            <Button
-              text={'I will wait for my order'}
-              buttonProps={{ onPress: setModalVisible }}
-              buttonStyles={styles.dismissButtonContainer(theme)}
-              textStyles={{ ...alignment.Pmedium }}/>
+        )}
+        {orderStatus !== ORDER_STATUS_ENUM.CANCELLED && (
+          <View style={styles.modalContainer(theme)}>
+            <View style={{ ...alignment.MBsmall }}>
+              <TextDefault H4 bolder textColor={theme.gray900}>
+                {t('cancelOrder')}
+              </TextDefault>
+            </View>
+            <View>
+              <TextDefault H5 textColor={theme.gray500}>
+                {t('cancelAnyway')}
+              </TextDefault>
+            </View>
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{ ...alignment.MTlarge }}>
+                <Button
+                  text={t('cancelOrder')}
+                  buttonProps={{ onPress: cancelOrder, disabled: loading }}
+                  buttonStyles={[
+                    styles.cancelButtonContainer(theme),
+                    { backgroundColor: theme.red600 }
+                  ]}
+                  textProps={{ textColor: theme.white }}
+                  textStyles={{ ...alignment.Pmedium }}
+                />
+              </View>
+              <View style={{ ...alignment.MTsmall }}>
+                <Button
+                  text={t('waitForOrder')}
+                  buttonProps={{ onPress: setModalVisible }}
+                  buttonStyles={styles.dismissButtonContainer(theme)}
+                  textStyles={{ ...alignment.Pmedium }}
+                />
+              </View>
+            </View>
           </View>
-
-        </View>
-      </View>}
-    </Pressable>
-  </Modal>)
+        )}
+      </Pressable>
+    </Modal>
+  )
 }

@@ -1,10 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import {
-  View,
-  StatusBar,
-  Platform,
-  FlatList
-} from 'react-native'
+import { View, StatusBar, Platform, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -21,37 +16,36 @@ import Accordion from '../../components/Accordion/Accordion'
 
 const FAQs = [
   {
-    "id": 1,
-    "heading": "How do I place an order?",
-    "description": "To place an order, simply download our app, sign up or log in, browse through the list of restaurants available in your area, select your desired items from the menu, and proceed to checkout. You can also track your order in real-time."
+    id: 1,
+    heading: 'faq1',
+    description: 'faq1Description'
   },
   {
-    "id": 2,
-    "heading": "What payment methods are accepted?",
-    "description": "We accept a variety of payment methods including credit/debit cards, digital wallets, and cash on delivery. You can choose your preferred payment option during the checkout process."
+    id: 2,
+    heading: 'faq2',
+    description: 'faq2Description'
   },
   {
-    "id": 3,
-    "heading": "Can I schedule orders in advance?",
-    "description": "Yes, you can schedule orders for later delivery. Simply select the desired delivery time during checkout, and our app will ensure your order reaches you at the specified time."
+    id: 3,
+    heading: 'faq3',
+    description: 'faq3Description'
   },
   {
-    "id": 4,
-    "heading": "How do I modify or cancel my order?",
-    "description": "If you need to modify or cancel your order, please contact our customer support team as soon as possible. Depending on the stage of preparation, modifications or cancellations may be accommodated."
+    id: 4,
+    heading: 'faq4',
+    description: 'faq4Description'
   },
   {
-    "id": 5,
-    "heading": "Is there a minimum order requirement?",
-    "description": "Minimum order requirements may vary depending on the restaurant you choose. The minimum order amount, if applicable, will be displayed during the checkout process."
+    id: 5,
+    heading: 'faq5',
+    description: 'faq5Description'
   },
   {
-    "id": 6,
-    "heading": "What if I have dietary restrictions or allergies?",
-    "description": "Our app allows you to filter restaurants based on dietary preferences and allergens. Additionally, you can leave special instructions for the restaurant regarding any dietary restrictions or allergies, and they will do their best to accommodate your needs."
+    id: 6,
+    heading: 'faq6',
+    description: 'faq6Description'
   }
 ]
-
 
 const Help = props => {
   const { t } = useTranslation()
@@ -67,9 +61,9 @@ const Help = props => {
 
   useEffect(() => {
     async function Track() {
-      try{
+      try {
         await Analytics.track('NAVIGATE_TO_FAQS')
-      } catch(err){
+      } catch (err) {
         console.log('ERORORORO =>', err)
       }
     }
@@ -127,8 +121,8 @@ const Help = props => {
             keyExtractor={item => 'Faq-' + item.id}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             renderItem={({ item }) => (
-              <Accordion heading={item.heading}>
-                <TextDefault>{item.description}</TextDefault>
+              <Accordion heading={t(item.heading)}>
+                <TextDefault>{t(item.description)}</TextDefault>
               </Accordion>
             )}
           />

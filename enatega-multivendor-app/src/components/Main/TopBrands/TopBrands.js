@@ -5,7 +5,7 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-
+import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { topRatedVendorsInfo } from '../../../apollo/queries'
@@ -19,6 +19,7 @@ const TOP_BRANDS = gql`
 `
 
 function TopBrands(props) {
+  const { t } = useTranslation()
   const { location } = useContext(LocationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -75,7 +76,7 @@ function TopBrands(props) {
           {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>
-          {item?.deliveryTime + ' Mins'}
+          {item?.deliveryTime} + {t('mins')}
         </TextDefault>
       </View>
     </TouchableOpacity>
@@ -91,7 +92,7 @@ function TopBrands(props) {
         textColor={currentTheme.fontFourthColor}
         bolder
         H4>
-        Top Brands
+        {t('topBrands')}
       </TextDefault>
       <View style={{ ...alignment.PRsmall }}>
         <FlatList

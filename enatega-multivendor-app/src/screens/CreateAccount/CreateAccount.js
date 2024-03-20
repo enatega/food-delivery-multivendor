@@ -139,7 +139,7 @@ const CreateAccount = (props) => {
       <View style={styles().image}>
         <Image
           source={require('../../assets/images/loginHeader.png')}
-          resizeMode="cover"
+          resizeMode='cover'
           style={styles().image1}
         />
       </View>
@@ -150,16 +150,18 @@ const CreateAccount = (props) => {
               width: '90%',
               alignSelf: 'center',
               marginBottom: scale(10)
-            }}>
+            }}
+          >
             <TextDefault
               H4
               bolder
               textColor={currentTheme.black}
-              style={{ marginBottom: scale(7) }}>
+              style={{ marginBottom: scale(7) }}
+            >
               {t('signUporSignIn')}
             </TextDefault>
             <TextDefault textColor={currentTheme.black}>
-              {'sign up to get your discount'}
+              {t('signUpDiscount')}
             </TextDefault>
           </View>
 
@@ -184,17 +186,19 @@ const CreateAccount = (props) => {
             style={styles().guestButton}
             onPress={() => {
               navigation.navigate('Main')
-            }}>
+            }}
+          >
             {props.loadingIcon ? (
-              <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={'#000'} />
+              <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={'#000'} />
             ) : (
               <>
                 <TextDefault
                   H4
                   textColor={currentTheme.black}
                   style={alignment.MLsmall}
-                  bold>
-                  {'Continue as Guest'}
+                  bold
+                >
+                  {t('continueAsGuest')}
                 </TextDefault>
               </>
             )}

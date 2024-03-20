@@ -1,6 +1,12 @@
 import React, { useContext, useEffect, useLayoutEffect } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
-import { View, Image, TouchableOpacity, StatusBar } from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  Platform
+} from 'react-native'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -30,7 +36,7 @@ function Payment(props) {
       payment: 'STRIPE',
       label: t('creditCart'),
       index: 0,
-      icon: 'credit-card',
+      icon: 'credit-card'
       // icon1: require('../../assets/images/visaIcon.png')
     },
     {
@@ -63,8 +69,9 @@ function Payment(props) {
               color: currentTheme.btnText,
               ...textStyles.H4,
               ...textStyles.Bolder
-            }}>
-            Payment Methods
+            }}
+          >
+            {t('paymentMethod')}
           </TextDefault>
         </View>
       ),
@@ -83,11 +90,11 @@ function Payment(props) {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall }}>
               <AntDesign
-                name="arrowleft"
+                name='arrowleft'
                 size={22}
                 color={currentTheme.fontFourthColor}
               />
@@ -120,15 +127,21 @@ function Payment(props) {
                 key={index.toString()}
                 onPress={() => {
                   onSelectPayment(item)
-                }}>
+                }}
+              >
                 <View style={styles(currentTheme).paymentMethod}>
                   <View style={styles(currentTheme).iconContainer}>
-                    <FontAwesome style={styles().iconStyle} name={item.icon} size={18} />
+                    <FontAwesome
+                      style={styles().iconStyle}
+                      name={item.icon}
+                      size={18}
+                    />
                   </View>
                   <TextDefault
                     textColor={currentTheme.fontFourthColor}
                     medium
-                    bolder>
+                    bolder
+                  >
                     {item.label}
                   </TextDefault>
                 </View>
@@ -145,7 +158,6 @@ function Payment(props) {
                 </View>
               </TouchableOpacity>
               <View style={styles(currentTheme).horizontalLine} />
-
             </View>
           ))}
         </View>

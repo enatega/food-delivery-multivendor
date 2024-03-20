@@ -48,13 +48,13 @@ function OrderAgain(props) {
             textColor={currentTheme.fontFourthColor}
             bolder
             H4>
-            {props?.title}
+            {t(props?.title)}
           </TextDefault>
           <TextDefault
             Normal
             textColor={currentTheme.secondaryText}
             style={styles().ItemDescription}>
-            Most ordered right now.
+            {t('mostOrderedNow')}
           </TextDefault>
           <FlatList
             style={styles().offerScroll}

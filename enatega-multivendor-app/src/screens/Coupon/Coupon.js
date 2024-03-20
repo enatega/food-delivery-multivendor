@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
-import { View, TouchableOpacity, StatusBar } from 'react-native'
+import { View, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'
@@ -80,8 +80,9 @@ function SelectVoucher(props) {
               color: currentTheme.btnText,
               ...textStyles.H4,
               ...textStyles.Bolder
-            }}>
-            Add Voucher Code
+            }}
+          >
+            {t('addVoucher')}
           </TextDefault>
         </View>
       ),
@@ -100,11 +101,11 @@ function SelectVoucher(props) {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall }}>
               <AntDesign
-                name="arrowleft"
+                name='arrowleft'
                 size={22}
                 color={currentTheme.fontFourthColor}
               />
@@ -122,38 +123,39 @@ function SelectVoucher(props) {
     mutate({ variables: { coupon: text } })
   }
 
-  const HeaderLine = props => {}
+  const HeaderLine = (props) => {}
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <HeaderLine
           // headerName="TYPe voucher code"
-          textWidth="45%"
-          lineWidth="25%"
+          textWidth='45%'
+          lineWidth='25%'
         />
         <View style={styles(currentTheme).upperContainer}>
           <View style={styles().innerContainer}>
             <OutlinedTextField
-              label="Voucher Code"
+              label={t('voucher')}
               placeholder={t('voucherCode')}
               labelFontSize={scale(12)}
               fontSize={scale(12)}
               maxLength={15}
-              textAlignVertical="top"
+              textAlignVertical='top'
               textColor={currentTheme.darkBgFont}
               baseColor={currentTheme.darkBgFont}
               errorColor={currentTheme.textErrorColor}
               tintColor={currentTheme.iconColorPink}
               labelOffset={{ y1: -5 }}
               labelTextStyle={{ fontSize: scale(12), paddingTop: scale(1) }}
-              onChangeText={text => {
+              onChangeText={(text) => {
                 voucherCodeSetter(text)
               }}
             />
           </View>
           <TouchableOpacity
             onPress={() => onSelectCoupon(voucherCode)}
-            style={styles(currentTheme).buttonContainer}>
+            style={styles(currentTheme).buttonContainer}
+          >
             <TextDefault textColor={currentTheme.buttonText} H5 bold uppercase>
               {t('apply')}
             </TextDefault>

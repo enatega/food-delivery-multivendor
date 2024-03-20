@@ -52,7 +52,7 @@ export default function AddNewAddress(props) {
   const { getCurrentLocation } = useLocation()
 
   const { t } = useTranslation()
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     const { coords, error } = await getCurrentLocation()
     if (!error) {
       setCoordinates({
@@ -75,7 +75,7 @@ export default function AddNewAddress(props) {
     )
   }, [])
 
-  const onSelectCity = item => {
+  const onSelectCity = (item) => {
     setCoordinates({
       latitude: +item.latitude,
       longitude: +item.longitude
@@ -83,7 +83,7 @@ export default function AddNewAddress(props) {
     setCityModalVisible(false)
   }
 
-  const onRegionChangeComplete = useCallback(async coordinates => {
+  const onRegionChangeComplete = useCallback(async (coordinates) => {
     const response = await fetchAddressFromCoordinates(
       coordinates.latitude,
       coordinates.longitude
@@ -96,7 +96,7 @@ export default function AddNewAddress(props) {
     })
   })
 
-  const setCoordinates = useCallback(location => {
+  const setCoordinates = useCallback((location) => {
     mapRef.current.fitToCoordinates([
       {
         latitude: location.latitude,
@@ -153,7 +153,8 @@ export default function AddNewAddress(props) {
             H3
             bolder
             Left
-            style={styles().addressHeading}>
+            style={styles().addressHeading}
+          >
             {t('addAddress')}
           </TextDefault>
           <CityModal
@@ -170,7 +171,8 @@ export default function AddNewAddress(props) {
                 style={{
                   color: currentTheme.buttonText,
                   overflow: 'scroll'
-                }}>
+                }}
+              >
                 {selectedValue.address || 'Address'}
               </Text>
             </TouchableOpacity>
@@ -178,9 +180,10 @@ export default function AddNewAddress(props) {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
-            onPress={onSelectLocation}>
+            onPress={onSelectLocation}
+          >
             <TextDefault textColor={currentTheme.buttonText} center H5>
-              Save
+              {t('saveBtn')}
             </TextDefault>
           </TouchableOpacity>
           <SearchModal
@@ -215,15 +218,16 @@ const CityModal = React.memo(
           style={styles().button1}
           onPress={() => {
             setCityModalVisible(true)
-          }}>
+          }}
+        >
           {selectedValue && <Text>{selectedValue}</Text>}
           {!selectedValue && (
             <Text style={styles().placeholder}>Select City</Text>
           )}
           <Feather
-            name="chevron-down"
+            name='chevron-down'
             size={18}
-            color="black"
+            color='black'
             style={styles().icon1}
           />
         </TouchableOpacity>

@@ -28,27 +28,42 @@ export default function Detail({
   const { t } = useTranslation()
   return (
     <View style={styles.container(theme)}>
-      {(rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED) && (
+      {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
         <ChatButton
           onPress={() => navigation.navigate('ChatWithRider', { id })}
           title={t('chatWithRider')}
-          description={'Ask for contactless delivery'}
+          description={t('askContactlessDelivery')}
           theme={theme}
         />
       )}
-      <TextDefault textColor={theme.gray500} bolder H5 style={{ ...alignment.MBsmall }}>
+      <TextDefault
+        textColor={theme.gray500}
+        bolder
+        H5
+        style={{ ...alignment.MBsmall }}
+      >
         {t('yourOrder')} ({items.length})
       </TextDefault>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TextDefault textColor={theme.gray500} bolder Normal style={{ ...alignment.MBsmall }}>
+        <TextDefault
+          textColor={theme.gray500}
+          bolder
+          Normal
+          style={{ ...alignment.MBsmall }}
+        >
           {t('itemsAndQuantity')}
         </TextDefault>
-        <TextDefault textColor={theme.gray500} bolder Normal style={{ ...alignment.MBsmall }}>
+        <TextDefault
+          textColor={theme.gray500}
+          bolder
+          Normal
+          style={{ ...alignment.MBsmall }}
+        >
           {t('price')}
         </TextDefault>
       </View>
       <View style={styles.itemsContainer}>
-        {items.map(item => (
+        {items.map((item) => (
           <ItemRow
             key={item._id}
             theme={theme}
@@ -56,7 +71,7 @@ export default function Detail({
             title={`${item.title} ${item.variation.title}`}
             currency={currencySymbol}
             price={item.variation.price}
-            options={item.addons.map(addon =>
+            options={item.addons.map((addon) =>
               addon.options.map(({ title }) => title)
             )}
             image={item.image}
@@ -75,10 +90,22 @@ const ItemRow = ({
   currency,
   image
 }) => {
+  const { t } = useTranslation()
   return (
     <View style={styles.itemRow}>
-      <View >
-        <Image style={{ width: scale(48), height: scale(64), borderRadius: scale(8) }} source={image ? { uri: image } : require('../../../assets/images/food_placeholder.png')}></Image>
+      <View>
+        <Image
+          style={{
+            width: scale(48),
+            height: scale(64),
+            borderRadius: scale(8)
+          }}
+          source={
+            image
+              ? { uri: image }
+              : require('../../../assets/images/food_placeholder.png')
+          }
+        ></Image>
       </View>
       <View style={{ width: '60%', justifyContent: 'space-between' }}>
         <TextDefault
@@ -87,7 +114,8 @@ const ItemRow = ({
           textColor={theme.gray900}
           H5
           bolder
-          style={{ ...alignment.MBxSmall }}>
+          style={{ ...alignment.MBxSmall }}
+        >
           {title}
         </TextDefault>
 
@@ -95,22 +123,24 @@ const ItemRow = ({
           bold
           textColor={theme.gray600}
           left
-          style={{ ...alignment.MBxSmall }}>
+          style={{ ...alignment.MBxSmall }}
+        >
           {options.join(',')}
         </TextDefault>
 
         <TextDefault Regular left bolder textColor={theme.gray900}>
-            x{quantity}
+          x{quantity}
         </TextDefault>
-
       </View>
       <TextDefault
         right
         style={{ width: '20%' }}
         bolder
         textColor={theme.gray900}
-        H5>
-        {currency}{price}
+        H5
+      >
+        {currency}
+        {price}
       </TextDefault>
     </View>
   )

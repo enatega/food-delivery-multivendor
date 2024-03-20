@@ -1,10 +1,5 @@
 /* eslint-disable indent */
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef
-} from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import {
   View,
   ScrollView,
@@ -141,23 +136,23 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async() => {
-        if (data && !!data.restaurant) {
-          const latOrigin = Number(data.restaurant.location.coordinates[1])
-          const lonOrigin = Number(data.restaurant.location.coordinates[0])
-          const latDest = Number(location.latitude)
-          const longDest = Number(location.longitude)
-          const distance = await calculateDistance(
-            latOrigin,
-            lonOrigin,
-            latDest,
-            longDest
-          )
-          const amount = Math.ceil(distance) * configuration.deliveryRate
-          isSubscribed &&
-            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-        }
-      })()
+    ;(async () => {
+      if (data && !!data.restaurant) {
+        const latOrigin = Number(data.restaurant.location.coordinates[1])
+        const lonOrigin = Number(data.restaurant.location.coordinates[0])
+        const latDest = Number(location.latitude)
+        const longDest = Number(location.longitude)
+        const distance = await calculateDistance(
+          latOrigin,
+          lonOrigin,
+          latDest,
+          longDest
+        )
+        const amount = Math.ceil(distance) * configuration.deliveryRate
+        isSubscribed &&
+          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+      }
+    })()
     return () => {
       isSubscribed = false
     }
@@ -179,11 +174,13 @@ function Checkout(props) {
               color: currentTheme.btnText,
               ...textStyles.H4,
               ...textStyles.Bolder
-            }}>
+            }}
+          >
             {t('titleCheckout')}
           </TextDefault>
           <TextDefault
-            style={{ color: currentTheme.btnText, ...textStyles.H5 }}>
+            style={{ color: currentTheme.btnText, ...textStyles.H5 }}
+          >
             {data && data.restaurant.name}
             {' - '}
             {data && data.restaurant.address}
@@ -205,11 +202,11 @@ function Checkout(props) {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall }}>
               <AntDesign
-                name="arrowleft"
+                name='arrowleft'
                 size={22}
                 color={currentTheme.fontFourthColor}
               />
@@ -263,7 +260,7 @@ function Checkout(props) {
         },
         {
           text: 'Continue',
-          onPress: () => { },
+          onPress: () => {},
           style: 'cancel'
         }
       ],
@@ -380,7 +377,7 @@ function Checkout(props) {
 
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0
-    cart.forEach(cartItem => {
+    cart.forEach((cartItem) => {
       itemTotal += cartItem.price * cartItem.quantity
     })
     if (withDiscount && coupon && coupon.discount) {
@@ -444,25 +441,25 @@ function Checkout(props) {
 
   function checkPaymentMethod(currency) {
     if (paymentMethod.payment === 'STRIPE') {
-      return stripeCurrencies.find(val => val.currency === currency)
+      return stripeCurrencies.find((val) => val.currency === currency)
     }
     if (paymentMethod.payment === 'PAYPAL') {
-      return paypalCurrencies.find(val => val.currency === currency)
+      return paypalCurrencies.find((val) => val.currency === currency)
     }
     return true
   }
 
   function transformOrder(cartData) {
-    return cartData.map(food => {
+    return cartData.map((food) => {
       return {
         food: food._id,
         quantity: food.quantity,
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id)
-          }))
+              _id,
+              options: options.map(({ _id }) => _id)
+            }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -504,10 +501,10 @@ function Checkout(props) {
     const hours = date.getHours()
     const minutes = date.getMinutes()
     const todaysTimings = data.restaurant.openingTimes.find(
-      o => o.day === DAYS[day]
+      (o) => o.day === DAYS[day]
     )
     const times = todaysTimings.times.filter(
-      t =>
+      (t) =>
         hours >= Number(t.startTime[0]) &&
         minutes >= Number(t.startTime[1]) &&
         hours <= Number(t.endTime[0]) &&
@@ -521,28 +518,29 @@ function Checkout(props) {
     const { restaurant } = data
     setSelectedRestaurant(restaurant)
     setMinimumOrder(restaurant.minimumOrder)
-    const foods = restaurant.categories.map(c => c.foods.flat()).flat()
+    const foods = restaurant.categories.map((c) => c.foods.flat()).flat()
     const { addons, options } = restaurant
     try {
       if (cartCount && cart) {
-        const transformCart = cart.map(cartItem => {
-          const food = foods.find(food => food._id === cartItem._id)
+        const transformCart = cart.map((cartItem) => {
+          const food = foods.find((food) => food._id === cartItem._id)
           if (!food) return null
           const variation = food.variations.find(
-            variation => variation._id === cartItem.variation._id
+            (variation) => variation._id === cartItem.variation._id
           )
           if (!variation) return null
 
-          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
-            }`
+          const title = `${food.title}${
+            variation.title ? `(${variation.title})` : ''
+          }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
-            cartItem.addons.forEach(addon => {
-              const cartAddon = addons.find(add => add._id === addon._id)
+            cartItem.addons.forEach((addon) => {
+              const cartAddon = addons.find((add) => add._id === addon._id)
               if (!cartAddon) return null
-              addon.options.forEach(option => {
-                const cartOption = options.find(opt => opt._id === option._id)
+              addon.options.forEach((option) => {
+                const cartOption = options.find((opt) => opt._id === option._id)
                 if (!cartOption) return null
                 price += cartOption.price
                 optionsTitle.push(cartOption.title)
@@ -558,7 +556,7 @@ function Checkout(props) {
         })
 
         if (props.navigation.isFocused()) {
-          const updatedItems = transformCart.filter(item => item)
+          const updatedItems = transformCart.filter((item) => item)
           if (updatedItems.length === 0) await clearCart()
           await updateCart(updatedItems)
           setLoadingData(false)
@@ -580,7 +578,7 @@ function Checkout(props) {
     }
   }
 
-    function emptyCart() {
+  function emptyCart() {
     return (
       <View style={styles().subContainerImage}>
         <View style={styles().imageContainer}>
@@ -602,13 +600,15 @@ function Checkout(props) {
               name: 'Main',
               merge: true
             })
-          }>
+          }
+        >
           <TextDefault
             textColor={currentTheme.buttonText}
             bolder
             B700
             center
-            uppercase>
+            uppercase
+          >
             {t('emptyCartBtn')}
           </TextDefault>
         </TouchableOpacity>
@@ -620,41 +620,44 @@ function Checkout(props) {
     return (
       <View style={styles(currentTheme).screenBackground}>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
 
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height60} />
           <PlaceholderLine />
         </Placeholder>
 
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
@@ -669,14 +672,15 @@ function Checkout(props) {
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
@@ -702,7 +706,8 @@ function Checkout(props) {
           <>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={[styles().flex]}>
+              style={[styles().flex]}
+            >
               <View>
                 <View style={[styles(currentTheme).headerContainer]}>
                   <View style={styles().mapView}>
@@ -715,7 +720,8 @@ function Checkout(props) {
                       cacheEnabled={false}
                       initialRegion={initialRegion}
                       customMapStyle={customMapStyle}
-                      provider={PROVIDER_GOOGLE}></MapView>
+                      provider={PROVIDER_GOOGLE}
+                    ></MapView>
                     <View style={styles().marker}>
                       <CustomMarker
                         width={40}
@@ -752,7 +758,7 @@ function Checkout(props) {
                   <View style={styles(currentTheme).deliveryTime}>
                     <View style={styles().clockIcon}>
                       <AntDesign
-                        name="clockcircleo"
+                        name='clockcircleo'
                         size={14}
                         color={currentTheme.fontFourthColor}
                       />
@@ -761,9 +767,10 @@ function Checkout(props) {
                       textColor={props.black}
                       numberOfLines={1}
                       H5
-                      bolder>
-                      Within {data.restaurant.deliveryTime} -{' '}
-                      {data?.restaurant.deliveryTime + 10} mins
+                      bolder
+                    >
+                      {t('within')} {data.restaurant.deliveryTime} -{' '}
+                      {data?.restaurant.deliveryTime + 10} {t('mins')}
                     </TextDefault>
                   </View>
                 </View>
@@ -773,8 +780,9 @@ function Checkout(props) {
                       numberOfLines={1}
                       H5
                       bolder
-                      textColor={currentTheme.fontNewColor}>
-                      Add a Tip for Rider
+                      textColor={currentTheme.fontNewColor}
+                    >
+                      {t('AddTip')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
@@ -782,8 +790,9 @@ function Checkout(props) {
                       bolder
                       uppercase
                       textItalic
-                      textColor={currentTheme.fontNewColor}>
-                      optional
+                      textColor={currentTheme.fontNewColor}
+                    >
+                      {t('optional')}
                     </TextDefault>
                   </View>
                   {dataTip && (
@@ -799,15 +808,17 @@ function Checkout(props) {
                           ]}
                           onPress={() => {
                             props.navigation.setParams({ tipAmount: null })
-                            setSelectedTip(prevState =>
+                            setSelectedTip((prevState) =>
                               prevState === label ? null : label
                             )
-                          }}>
+                          }}
+                        >
                           <TextDefault
                             textColor={currentTheme.fontFourthColor}
                             normal
                             bolder
-                            center>
+                            center
+                          >
                             {label}%
                           </TextDefault>
                         </TouchableOpacity>
@@ -821,93 +832,29 @@ function Checkout(props) {
                         }
                         onPress={() => {
                           props.navigation.navigate('Tip')
-                        }}>
+                        }}
+                      >
                         <TextDefault
                           textColor={currentTheme.fontFourthColor}
                           normal
                           bolder
-                          center>
-                          Others
+                          center
+                        >
+                          {t('Other')}
                         </TextDefault>
                       </TouchableOpacity>
                     </View>
                   )}
-
-                  {/* <View
-                    numberOfLines={1}
-                    style={[styles().floatText, styles().tipContainer]}>
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={{ ...alignment.PxSmall }}
-                      onPress={() => {
-                        setSelectedTip(null)
-                        props.navigation.setParams({ tipAmount: null })
-                      }}>
-                      <TextDefault
-                        small
-                        bold
-                        textColor={currentTheme.darkBgFont}>
-                        {tip || selectedTip ? t('remove') : null}
-                      </TextDefault>
-                    </TouchableOpacity>
-                    <TextDefault
-                      textColor={currentTheme.fontMainColor}
-                      large
-                      bold>
-                      {configuration.currencySymbol}{' '}
-                      {parseFloat(calculateTip()).toFixed(2)}
-                    </TextDefault>
-                  </View> */}
                 </View>
-
-                {/* <View
-                  style={[
-                    styles(currentTheme).priceContainer,
-                    styles().pT10,
-                    styles().mB10,
-                    styles().pB10
-                  ]}>
-                  <View style={styles(currentTheme).imageContainer}>
-                    <View style={{ marginLeft: scale(10) }}>
-                      <Image
-                        resizeMode="cover"
-                        source={require('../../assets/images/delivery.png')}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        marginLeft: scale(20)
-                      }}>
-                      <TextDefault
-                        textColor={currentTheme.darkBgFont}
-                        style={{ padding: 5 }}
-                        bolder>
-                        {isPickedUp ? t('pickUp') : t('delivery')}{' '}
-                      </TextDefault>
-                      <TextDefault
-                        textColor={currentTheme.darkBgFont}
-                        style={{ padding: 5 }}
-                        bold>
-                        {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
-                      </TextDefault>
-                      <TouchableOpacity
-                        onPress={onOpen}
-                        style={styles(currentTheme).cartInnerContainer}>
-                        <TextDefault bold textColor={'white'} center>
-                          {t('change')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View> */}
 
                 <View style={styles().voucherSec}>
                   <TextDefault
                     numberOfLines={1}
                     H5
                     bolder
-                    textColor={currentTheme.fontNewColor}>
-                    Voucher
+                    textColor={currentTheme.fontNewColor}
+                  >
+                    {t('voucher')}
                   </TextDefault>
 
                   {!coupon ? (
@@ -916,12 +863,14 @@ function Checkout(props) {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between'
-                      }}>
+                      }}
+                    >
                       <TextDefault
                         numberOfLines={1}
                         large
                         bolder
-                        textColor={currentTheme.darkBgFont}>
+                        textColor={currentTheme.darkBgFont}
+                      >
                         {t('haveVoucher')}
                       </TextDefault>
                       <View style={styles(currentTheme).changeBtn}>
@@ -931,13 +880,15 @@ function Checkout(props) {
                             props.navigation.navigate('Coupon', {
                               coupon
                             })
-                          }}>
+                          }}
+                        >
                           <TextDefault
                             small
                             bold
                             textColor={currentTheme.darkBgFont}
-                            center>
-                            Add
+                            center
+                          >
+                            {t('add')}
                           </TextDefault>
                         </TouchableOpacity>
                       </View>
@@ -948,7 +899,8 @@ function Checkout(props) {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between'
-                      }}>
+                      }}
+                    >
                       <View
                         style={{
                           flexDirection: 'row',
@@ -956,24 +908,27 @@ function Checkout(props) {
                           justifyContent: 'center',
                           paddingTop: scale(8),
                           gap: scale(5)
-                        }}>
+                        }}
+                      >
                         <AntDesign
-                          name="tags"
+                          name='tags'
                           size={24}
                           color={currentTheme.main}
                         />
                         <View>
                           <TextDefault
                             numberOfLines={1}
-                            tnormal
+                            normal
                             bold
-                            textColor={currentTheme.fontFourthColor}>
-                            {coupon ? coupon.title : null} applied
+                            textColor={currentTheme.fontFourthColor}
+                          >
+                            {coupon ? coupon.title : null} {t('coupanApply')}
                           </TextDefault>
                           <TextDefault
                             small
                             bold
-                            textColor={currentTheme.fontFourthColor}>
+                            textColor={currentTheme.fontFourthColor}
+                          >
                             -{configuration.currencySymbol}
                             {parseFloat(
                               calculatePrice(0, false) - calculatePrice(0, true)
@@ -986,12 +941,14 @@ function Checkout(props) {
                           activeOpacity={0.7}
                           onPress={() => {
                             props.navigation.setParams({ coupon: null })
-                          }}>
+                          }}
+                        >
                           <TextDefault
                             small
                             bold
                             textColor={currentTheme.darkBgFont}
-                            center>
+                            center
+                          >
                             {coupon ? t('remove') : null}
                           </TextDefault>
                         </TouchableOpacity>
@@ -1007,8 +964,9 @@ function Checkout(props) {
                         numberOfLines={1}
                         H5
                         bolder
-                        textColor={currentTheme.fontNewColor}>
-                        Choose Payment Method
+                        textColor={currentTheme.fontNewColor}
+                      >
+                        {t('paymentText')}
                       </TextDefault>
                       <View style={[styles(currentTheme).paymentSecInner]}>
                         <View
@@ -1016,18 +974,20 @@ function Checkout(props) {
                             flexDirection: 'row',
                             alignItems: 'center',
                             gap: scale(18)
-                          }}>
+                          }}
+                        >
                           <View>
                             <FontAwesome
                               name={paymentMethod?.icon}
                               size={15}
-                              color={currentTheme.fontFourthColor} />
-
+                              color={currentTheme.fontFourthColor}
+                            />
                           </View>
                           <TextDefault
                             textColor={currentTheme.fontFourthColor}
                             medium
-                            bolder>
+                            bolder
+                          >
                             {paymentMethod?.label}
                           </TextDefault>
                         </View>
@@ -1038,12 +998,14 @@ function Checkout(props) {
                               props.navigation.navigate('Payment', {
                                 paymentMethod
                               })
-                            }}>
+                            }}
+                          >
                             <TextDefault
                               small
                               bold
                               textColor={currentTheme.darkBgFont}
-                              center>
+                              center
+                            >
                               {t('change')}
                             </TextDefault>
                           </TouchableOpacity>
@@ -1059,22 +1021,25 @@ function Checkout(props) {
                     H5
                     bolder
                     textColor={currentTheme.fontNewColor}
-                    style={{ ...alignment.MBmedium }}>
-                    Payment Summary
+                    style={{ ...alignment.MBmedium }}
+                  >
+                    {t('paymentSummary')}
                   </TextDefault>
                   <View style={styles().billsec}>
                     <TextDefault
                       numberOfLines={1}
                       normal
                       bold
-                      textColor={currentTheme.fontFourthColor}>
+                      textColor={currentTheme.fontFourthColor}
+                    >
                       {t('subTotal')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       normal
-                      bold>
+                      bold
+                    >
                       {configuration.currencySymbol}
                       {calculatePrice(0, false)}
                     </TextDefault>
@@ -1087,14 +1052,16 @@ function Checkout(props) {
                         numberOfLines={1}
                         textColor={currentTheme.fontFourthColor}
                         normal
-                        bold>
+                        bold
+                      >
                         {t('deliveryFee')}
                       </TextDefault>
                       <TextDefault
                         numberOfLines={1}
                         textColor={currentTheme.fontFourthColor}
                         normal
-                        bold>
+                        bold
+                      >
                         {configuration.currencySymbol}
                         {deliveryCharges.toFixed(2)}
                       </TextDefault>
@@ -1107,14 +1074,16 @@ function Checkout(props) {
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       normal
-                      bold>
+                      bold
+                    >
                       {t('taxFee')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       normal
-                      bold>
+                      bold
+                    >
                       {configuration.currencySymbol}
                       {taxCalculation()}
                     </TextDefault>
@@ -1125,14 +1094,16 @@ function Checkout(props) {
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       normal
-                      bold>
-                      Tip
+                      bold
+                    >
+                      {t('tip')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       normal
-                      bold>
+                      bold
+                    >
                       {configuration.currencySymbol}
                       {parseFloat(calculateTip()).toFixed(2)}
                     </TextDefault>
@@ -1145,14 +1116,16 @@ function Checkout(props) {
                           numberOfLines={1}
                           textColor={currentTheme.fontFourthColor}
                           normal
-                          bold>
-                          Voucher Discount
+                          bold
+                        >
+                          {t('voucherDiscount')}
                         </TextDefault>
                         <TextDefault
                           numberOfLines={1}
                           textColor={currentTheme.fontFourthColor}
                           normal
-                          bold>
+                          bold
+                        >
                           -{configuration.currencySymbol}
                           {parseFloat(
                             calculatePrice(0, false) - calculatePrice(0, true)
@@ -1167,14 +1140,16 @@ function Checkout(props) {
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       H4
-                      bolder>
+                      bolder
+                    >
                       {t('total')}
                     </TextDefault>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
                       normal
-                      bold>
+                      bold
+                    >
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
@@ -1186,18 +1161,21 @@ function Checkout(props) {
                     styles(currentTheme).termsContainer,
                     styles().pT10,
                     styles().mB10
-                  ]}>
+                  ]}
+                >
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
                     style={alignment.MBsmall}
-                    small>
+                    small
+                  >
                     {t('condition1')}
                   </TextDefault>
                   <TextDefault
                     textColor={currentTheme.fontSecondColor}
                     style={alignment.MBsmall}
                     small
-                    bold>
+                    bold
+                  >
                     {t('condition2')}
                   </TextDefault>
                 </View>
@@ -1210,13 +1188,15 @@ function Checkout(props) {
                   onPress={() => {
                     if (validateOrder()) onPayment()
                   }}
-                  style={styles(currentTheme).button}>
+                  style={styles(currentTheme).button}
+                >
                   <TextDefault
                     textColor={currentTheme.fontFourthColor}
                     style={styles().checkoutBtn}
                     bold
-                    H4>
-                    {t('Place Order')}
+                    H4
+                  >
+                    {t('placeOrder')}
                   </TextDefault>
                 </TouchableOpacity>
               </View>
@@ -1229,7 +1209,7 @@ function Checkout(props) {
           modalHeight={Platform.OS === 'android' ? 280 : 420}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
-          handlePosition="inside"
+          handlePosition='inside'
           onClosed={() => {
             setIsModalOpen(false)
           }}
@@ -1243,7 +1223,8 @@ function Checkout(props) {
           closeAnimationConfig={{
             timing: { duration: 400 },
             spring: { speed: 20, bounciness: 10 }
-          }}>
+          }}
+        >
           <Pickup
             minimumTime={new Date()}
             setOrderDate={setOrderDate}
@@ -1265,7 +1246,8 @@ function Checkout(props) {
                 width: '90%',
                 alignSelf: 'center'
               }
-            ]}>
+            ]}
+          >
             <Text style={{ fontSize: 20, fontWeight: '500' }}>
               {t('apply')}
             </Text>

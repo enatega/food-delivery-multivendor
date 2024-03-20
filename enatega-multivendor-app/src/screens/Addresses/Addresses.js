@@ -113,14 +113,14 @@ function Addresses() {
           <View style={styles().descriptionEmpty}>
             <View style={styles().viewTitle}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder>
-                It&#39;s empty here.
+                {t('It&#39;s empty here')}
               </TextDefault>
             </View>
             <View>
               <TextDefault textColor={currentTheme.fontMainColor} bold>
-                You haven&#39;t saved any address yet.
+                {t('You have not saved any address yet')}
                 {'\n'}
-                Click Add New Address to get started
+                {t('Click Add New Address to get started')}
               </TextDefault>
             </View>
           </View>
@@ -196,10 +196,6 @@ function Addresses() {
                   textColor={currentTheme.darkBgFont}
                   style={{ ...alignment.PBxSmall }}>
                   {address.deliveryAddress}
-                </TextDefault>
-                <TextDefault textColor={currentTheme.darkBgFont}>
-                  {/* Islamabad Islamabad */}
-                  Islamabad
                 </TextDefault>
               </View>
             </View>

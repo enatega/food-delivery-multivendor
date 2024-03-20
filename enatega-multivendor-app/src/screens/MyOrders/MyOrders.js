@@ -114,14 +114,14 @@ function MyOrders(props) {
       <View style={styles(currentTheme).container}>
         <View style={styles(currentTheme).tabContainer}>
           <TabButton
-            text="current"
+            text={t('current')}
             onPress={() => setSelectedTab('current')}
             isSelected={selectedTab === 'current'}
             currentTheme={currentTheme}
           />
 
           <TabButton
-            text="past"
+            text={t('past')}
             onPress={() => setSelectedTab('past')}
             isSelected={selectedTab === 'past'}
             currentTheme={currentTheme}
