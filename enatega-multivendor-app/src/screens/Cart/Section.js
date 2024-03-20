@@ -16,7 +16,6 @@ const RELATED_ITEMS = gql`${relatedItemsQuery}`
 const RESTAURANT = gql`${restaurantQuery}`
 const FOOD = gql`${food}`
 const Section = ({ itemId, restaurantId }) => {
-    console.log("Section Props:", itemId, restaurantId);
     const navigation = useNavigation()
     const client = useApolloClient()
     const themeContext = useContext(ThemeContext)
@@ -32,7 +31,6 @@ const Section = ({ itemId, restaurantId }) => {
     const restaurant = result?.restaurant
     const renderItem = ({ item }) => {
         const food = client.readFragment({ id: `Food:${item}`, fragment: FOOD })
-        console.log("food in section:", JSON.stringify(food, null, 3));
         const onAdd = () => {
             navigation.push('ItemDetail', {
                 food: {
