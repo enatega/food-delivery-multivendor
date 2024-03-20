@@ -10,7 +10,7 @@ import { alignment } from '../../../utils/alignment'
 import { AntDesign, Ionicons, MaterialIcons, Feather } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { DAYS } from '../../../utils/enums'
-import { profile } from '../../../apollo/queries'
+import { profile, FavouriteRestaurant } from '../../../apollo/queries'
 import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
 import gql from 'graphql-tag'
@@ -25,6 +25,9 @@ const ADD_FAVOURITE = gql`
 const PROFILE = gql`
   ${profile}
 `
+const FAVOURITERESTAURANTS = gql`
+  ${FavouriteRestaurant}
+`
 
 function Item(props) {
   const { t } = useTranslation()
@@ -38,7 +41,7 @@ function Item(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
     onCompleted,
-    refetchQueries: [{ query: PROFILE }]
+    refetchQueries: [PROFILE,FAVOURITERESTAURANTS ]
   })
   const { isAvailable, openingTimes } = item
   const isOpen = () => {
