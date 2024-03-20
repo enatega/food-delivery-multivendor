@@ -100,7 +100,8 @@ function Addresses() {
   const addressIcons = {
     Home: CustomHomeIcon,
     Work: CustomWorkIcon,
-    Other: CustomOtherIcon
+    Other: CustomOtherIcon,
+    House: CustomHomeIcon,
   }
 
   function emptyView() {

@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, Image, TouchableOpacity, Dimensions } from 'react-native'
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -15,6 +15,7 @@ import { useCreateAccount } from './useCreateAccount'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
+const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
   const {
@@ -100,25 +101,14 @@ const CreateAccount = (props) => {
   }
 
   function renderGoogleAction() {
-    if (loading && loginButton === 'Google') {
-      return (
-        <View style={[styles().buttonBackground, styles().marginBottom5]}>
-          <Spinner
-            spinnerColor={currentTheme.primery}
-            style={{ marginBottom: 20 }}
-          />
-        </View>
-      )
-    }
-
-    return (
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Light}
-        onPress={signIn}
+    return (<FdGoogleBtn
+        loadingIcon={loading && loginButton === 'Google'}
+        onPressIn={() => {
+          loginButtonSetter('Google')
+        }}
         disabled={loading && loginButton === 'Google'}
-      />
-    )
+        onPress={signIn}
+      />)
   }
 
   function renderEmailAction() {
@@ -139,7 +129,7 @@ const CreateAccount = (props) => {
       <View style={styles().image}>
         <Image
           source={require('../../assets/images/loginHeader.png')}
-          resizeMode="cover"
+          resizeMode='cover'
           style={styles().image1}
         />
       </View>
@@ -150,12 +140,14 @@ const CreateAccount = (props) => {
               width: '90%',
               alignSelf: 'center',
               marginBottom: scale(10)
-            }}>
+            }}
+          >
             <TextDefault
               H4
               bolder
               textColor={currentTheme.black}
-              style={{ marginBottom: scale(7) }}>
+              style={{ marginBottom: scale(7) }}
+            >
               {t('signUporSignIn')}
             </TextDefault>
             <TextDefault textColor={currentTheme.black}>
@@ -184,16 +176,18 @@ const CreateAccount = (props) => {
             style={styles().guestButton}
             onPress={() => {
               navigation.navigate('Main')
-            }}>
+            }}
+          >
             {props.loadingIcon ? (
-              <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={'#000'} />
+              <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={'#000'} />
             ) : (
               <>
                 <TextDefault
                   H4
                   textColor={currentTheme.black}
                   style={alignment.MLsmall}
-                  bold>
+                  bold
+                >
                   {'Continue as Guest'}
                 </TextDefault>
               </>
