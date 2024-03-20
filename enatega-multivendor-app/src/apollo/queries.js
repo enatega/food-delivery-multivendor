@@ -399,6 +399,7 @@ export const myOrders = `query Orders($offset:Int){
     }
     review{
       _id
+      rating
     }
     paymentMethod
     paidAmount

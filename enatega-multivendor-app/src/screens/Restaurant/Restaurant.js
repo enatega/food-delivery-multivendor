@@ -335,6 +335,11 @@ function Restaurant(props) {
   function animate() {
     scaleValue.value = withRepeat(withTiming(1.5, { duration: 250 }), 2, true)
   }
+  const config = to => ({
+    duration: 250,
+    toValue: to,
+    easing: EasingNode.inOut(EasingNode.ease)
+  })
 
   const scrollToSection = (index) => {
     if (scrollRef.current != null) {
