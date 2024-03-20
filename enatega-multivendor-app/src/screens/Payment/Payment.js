@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
-import { View, Image, TouchableOpacity, StatusBar } from 'react-native'
+import { View, Image, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -114,7 +114,7 @@ function Payment(props) {
       <View style={[styles(currentTheme).mainContainer, styles().flex]}>
         <View>
           {iconArray.map((item, index) => (
-            <View>
+            <View key={'iconArray-'+ index}>
               <TouchableOpacity
                 style={styles(currentTheme).radioGroup}
                 key={index.toString()}
