@@ -22,7 +22,7 @@ const orderStatusInactive = ['DELIVERED', 'COMPLETED']
 
 function MyOrders(props) {
   const reviewModalRef = useRef()
-  const [reviewOrderId, setReviewOrderId] = useState()
+  const [reviewInfo, setReviewInfo] = useState()
   const analytics = Analytics()
   const { t } = useTranslation()
   const {
@@ -118,9 +118,9 @@ function MyOrders(props) {
     )
   }
 
-  const onPressReview = (id)=>{
-    setReviewOrderId(id)
-    reviewModalRef.current.open()
+  const onPressReview = (order, selectedRating)=>{
+    setReviewInfo({order, selectedRating})
+    openReviewModal()
   }
 
   return (
@@ -166,7 +166,7 @@ function MyOrders(props) {
           }}
         />
       </View>
-      <ReviewModal ref={reviewModalRef} onOverlayPress={closeReviewModal} theme={currentTheme} orderId={reviewOrderId}/>
+      <ReviewModal ref={reviewModalRef} onOverlayPress={closeReviewModal} theme={currentTheme} orderId={reviewInfo?.order._id} rating={reviewInfo?.selectedRating}/>
     </>
   )
 }

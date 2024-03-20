@@ -17,6 +17,7 @@ import ConfigurationContext from '../../context/Configuration'
 import StarIcon from '../../../src/assets/SVG/imageComponents/starIcon'
 import { scale } from '../../utils/scaling'
 import EmptyView from '../EmptyView/EmptyView'
+import { ORDER_STATUS_ENUM } from '../../utils/enums'
 
 function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
@@ -130,7 +131,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
     gql`
       ${subscriptionOrder}
     `,
-    { variables: { id: item._id } }
+    { variables: { id: item._id }, skip:item.orderStatus===ORDER_STATUS_ENUM.DELIVERED }
   )
   const { t } = useTranslation()
 
@@ -219,7 +220,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                   <StarIcon
                     key={`star-icon-${index}`}
                     isFilled={index <= item?.review?.rating}
-                    onPress={()=>onPressReview(item._id)}
+                    onPress={()=>onPressReview(item, index)}
                   />
                 ))}
             </View>

@@ -22,7 +22,7 @@ const REVIEWORDER = gql`
   ${reviewOrder}
 `
 
-function Review({ onOverlayPress, theme, orderId }, ref) {
+function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   const ratingRef = useRef()
   const [description, setDescription] = useState('')
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
@@ -71,16 +71,16 @@ function Review({ onOverlayPress, theme, orderId }, ref) {
             </View>
           </View>
           <View>
-            <Image source={order?.restaurant?.image ? require('../../assets/images/food_placeholder.png') : { uri: order?.restaurant?.image }} style={styles.image}/>
+            <Image source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
 
           </View>
         </View>
 
         <View style={{ flexDirection: 'row' }}>
-          <StarRating numberOfStars={5} onSelect={onSelectRating}/>
+          <StarRating numberOfStars={5} onSelect={onSelectRating} defaultRating={rating}/>
         </View>
 
-        {showSection && <View>
+        {(showSection || rating>0) && <View>
           <TextDefault textColor={theme.gray900} H4 bolder style={{ marginVertical: scale(8) }}>Tell others about your experience with {order.restaurant.name}</TextDefault>
           <OutlinedTextField
             label={'Review'}
@@ -102,9 +102,9 @@ function Review({ onOverlayPress, theme, orderId }, ref) {
   )
 }
 
-const StarRating = ({ numberOfStars = 5, onSelect }) => {
+const StarRating = ({ numberOfStars = 5, onSelect, defaultRating=0 }) => {
   const stars = Array.from({ length: numberOfStars }, (_, index) => index + 1)
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(defaultRating)
   const onPress = index => {
     onSelect(index)
     setSelected(index)
