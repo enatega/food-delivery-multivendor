@@ -411,4 +411,5 @@ export const en = {
   emptyPastOrdersDesc:
     "You'll see your past orders here.",
   emptyPastOrdersBtn: "Let's order something!",
+  restaurantName:'Restaurant Name'
 }

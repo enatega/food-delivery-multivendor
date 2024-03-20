@@ -415,7 +415,6 @@ function Restaurant(props) {
       selectedLabel !== viewableItems[0].section.index &&
       buttonClicked === false
     ) {
-      console.log('IFIFIFIi')
       selectedLabelSetter(viewableItems[0].section.index)
       scrollToNavbar(viewableItems[0].section.index)
     }
@@ -530,7 +529,7 @@ function Restaurant(props) {
     {
       title: 'Popular',
       id: new Date().getTime(),
-      data: dataList,
+      data: dataList?.slice(0,4),
       index: 0
     },
     ...deals

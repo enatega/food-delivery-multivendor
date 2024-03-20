@@ -40,11 +40,15 @@ export default StyleSheet.create({
     height: scale(1),
     width: '100%'
   }),
-  itemRow: {
+  itemRow: theme=>({
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: scale(5)
-  },
+    alignItems: 'center', 
+    marginVertical: scale(5),
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.gray100,
+    borderRadius:scale(10)
+  }),
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
