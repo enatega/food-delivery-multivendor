@@ -23,7 +23,7 @@ function ActiveOrdersAndSections(props) {
         bolder
         H4
         >
-        {t('allRestaurant')}
+        {props?.menuPageHeading}
       </TextDefault>
       <TextDefault
         Normal

@@ -404,11 +404,12 @@ export const en = {
   notAvailableinYourArea: 'We are not currently available in your area',
   noRestaurant: 'No restaurant currently offers delivery in your area',
   titleEmptyActiveOrders: 'No Active Orders Yet!',
-  emptyActiveOrdersDesc:
-    "You'll see your active orders here.",
+  emptyActiveOrdersDesc: "You'll see your active orders here.",
   emptyActiveOrdersBtn: "Let's order something!",
   titleEmptyPastOrders: 'No Past Orders Yet!',
-  emptyPastOrdersDesc:
-    "You'll see your past orders here.",
+  emptyPastOrdersDesc: "You'll see your past orders here.",
   emptyPastOrdersBtn: "Let's order something!",
+  allGrocery: 'All Grocery Shops',
+  searchGrocery: 'Search for grocery shops',
+  noGrocery: 'No grocery shop currently offers delivery in your area'
 }

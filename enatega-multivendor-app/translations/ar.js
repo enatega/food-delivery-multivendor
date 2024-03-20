@@ -398,5 +398,8 @@ export const ar = {
   emptyActiveOrdersBtn: 'لنطلب شيئًا!',
   titleEmptyPastOrders: 'لا توجد طلبات سابقة بعد!',
   emptyPastOrdersDesc: 'سوف تظهر طلباتك السابقة هنا.',
-  emptyPastOrdersBtn: 'لنطلب شيئًا!'
+  emptyPastOrdersBtn: 'لنطلب شيئًا!',
+  allGrocery: 'جميع متاجر البقالة',
+  searchGrocery: 'البحث عن متاجر البقالة',
+  noGrocery: 'لا يقدم أي متجر بقالة تسليمًا حاليًا في منطقتك'
 }
