@@ -202,11 +202,13 @@ function CartAddresses(props) {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     style={styles().width10}
-                    onPress={() =>
-                      props.navigation.navigate('EditAddress', {
-                        ...address
+                    onPress={() => {
+                      const [longitude, latitude] = address.location.coordinates
+                      props.navigation.navigate('AddNewAddress', {
+                        longitude: +longitude,
+                        latitude: +latitude
                       })
-                    }>
+                    }}>
                     <EvilIcons
                       name="pencil"
                       size={scale(25)}
