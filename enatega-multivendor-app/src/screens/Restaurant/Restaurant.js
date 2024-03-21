@@ -222,20 +222,22 @@ function Restaurant(props) {
     }
   }
   const onPressItem = async (food) => {
+    const { t } = useTranslation()
+
     if (!data?.restaurant.isAvailable || !isOpen()) {
       Alert.alert(
         '',
-        'Restaurant Closed at the moment',
+        t('restaurantClosed'),
         [
           {
-            text: 'Go back to restaurants',
+            text: t('backToRestaurants'),
             onPress: () => {
               navigation.goBack()
             },
             style: 'cancel'
           },
           {
-            text: 'See Menu',
+            text: t('seeMenu'),
             onPress: () => console.log('see menu')
           }
         ],
@@ -246,6 +248,8 @@ function Restaurant(props) {
     if (!restaurantCart || food.restaurant === restaurantCart) {
       await addToCart(food, food.restaurant !== restaurantCart)
     } else if (food.restaurant !== restaurantCart) {
+      const { t } = useTranslation()
+
       Alert.alert(
         '',
         t('clearCartText'),

@@ -141,15 +141,16 @@ function Cart(props) {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View
               style={{
                 ...alignment.PLsmall,
                 alignItems: 'center'
-              }}>
+              }}
+            >
               <AntDesign
-                name="arrowleft"
+                name='arrowleft'
                 size={22}
                 color={currentTheme.fontFourthColor}
               />
@@ -177,7 +178,7 @@ function Cart(props) {
     if (cart && cartCount > 0) {
       if (
         data &&
-        data.restaurant &&
+        data?.restaurant &&
         (!data.restaurant.isAvailable || !isOpen())
       ) {
         showAvailablityMessage()
@@ -186,12 +187,13 @@ function Cart(props) {
   }, [data])
 
   const showAvailablityMessage = () => {
+    const { t } = useTranslation()
     Alert.alert(
       '',
-      `${data.restaurant.name} closed at the moment`,
+      `${data?.restaurant.name} ${t('restaurantClosed')}`,
       [
         {
-          text: 'Go back to restaurants',
+          text: t('backToRestaurants'),
           onPress: () => {
             props.navigation.navigate({
               name: 'Main',
@@ -201,7 +203,7 @@ function Cart(props) {
           style: 'cancel'
         },
         {
-          text: 'Continue',
+          text: t('continueBtn'),
           onPress: () => {},
           style: 'cancel'
         }
@@ -212,7 +214,7 @@ function Cart(props) {
 
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0
-    cart.forEach(cartItem => {
+    cart.forEach((cartItem) => {
       const food = populateFood(cartItem)
       if (!food) return
       itemTotal += food.price * food.quantity
@@ -238,11 +240,11 @@ function Cart(props) {
     const day = date.getDay()
     const hours = date.getHours()
     const minutes = date.getMinutes()
-    const todaysTimings = data.restaurant.openingTimes.find(
-      o => o.day === DAYS[day]
+    const todaysTimings = data?.restaurant.openingTimes.find(
+      (o) => o.day === DAYS[day]
     )
     const times = todaysTimings.times.filter(
-      t =>
+      (t) =>
         hours >= Number(t.startTime[0]) &&
         minutes >= Number(t.startTime[1]) &&
         hours <= Number(t.endTime[0]) &&
@@ -281,13 +283,15 @@ function Cart(props) {
               name: 'Main',
               merge: true
             })
-          }>
+          }
+        >
           <TextDefault
             textColor={currentTheme.buttonText}
             bolder
             B700
             center
-            uppercase>
+            uppercase
+          >
             {t('emptyCartBtn')}
           </TextDefault>
         </TouchableOpacity>
@@ -298,41 +302,44 @@ function Cart(props) {
     return (
       <View style={styles(currentTheme).screenBackground}>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
 
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height60} />
           <PlaceholderLine />
         </Placeholder>
 
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
@@ -347,14 +354,15 @@ function Cart(props) {
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
@@ -375,13 +383,13 @@ function Cart(props) {
 
   const { restaurant } = data
   const { addons, options } = restaurant
-  const foods = restaurant.categories.map(c => c.foods.flat()).flat()
+  const foods = restaurant.categories.map((c) => c.foods.flat()).flat()
 
   function populateFood(cartItem) {
-    const food = foods.find(food => food._id === cartItem._id)
+    const food = foods.find((food) => food._id === cartItem._id)
     if (!food) return null
     const variation = food.variations.find(
-      variation => variation._id === cartItem.variation._id
+      (variation) => variation._id === cartItem.variation._id
     )
     if (!variation) return null
 
@@ -391,11 +399,11 @@ function Cart(props) {
     let price = variation.price
     const optionsTitle = []
     if (cartItem.addons) {
-      cartItem.addons.forEach(addon => {
-        const cartAddon = addons.find(add => add._id === addon._id)
+      cartItem.addons.forEach((addon) => {
+        const cartAddon = addons.find((add) => add._id === addon._id)
         if (!cartAddon) return null
-        addon.options.forEach(option => {
-          const cartOption = options.find(opt => opt._id === option._id)
+        addon.options.forEach((option) => {
+          const cartOption = options.find((opt) => opt._id === option._id)
           if (!cartOption) return null
           price += cartOption.price
           optionsTitle.push(cartOption.title)
@@ -420,12 +428,13 @@ function Cart(props) {
           <>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={[styles().flex, styles().cartItems]}>
+              style={[styles().flex, styles().cartItems]}
+            >
               <View style={[styles(currentTheme).headerContainer]}>
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles().locationContainer}
-                  onPress={event => {
+                  onPress={(event) => {
                     if (!profile.addresses.length) {
                       props.navigation.navigate('NewAddress', {
                         backScreen: 'Cart'
@@ -435,7 +444,8 @@ function Cart(props) {
                         address: location
                       })
                     }
-                  }}>
+                  }}
+                >
                   <View style={styles().location}>
                     <Location
                       locationIconGray={{
@@ -448,7 +458,7 @@ function Cart(props) {
                     />
                   </View>
                   <Feather
-                    name="chevron-right"
+                    name='chevron-right'
                     size={20}
                     color={currentTheme.secondaryText}
                   />
@@ -459,9 +469,11 @@ function Cart(props) {
                   ...alignment.PLsmall,
                   ...alignment.PRsmall,
                   marginTop: 10
-                }}>
+                }}
+              >
                 <View
-                  style={[styles(currentTheme).dealContainer, styles().mB10]}>
+                  style={[styles(currentTheme).dealContainer, styles().mB10]}
+                >
                   <TextDefault style={styles().totalOrder} H5 bolder>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
@@ -471,7 +483,8 @@ function Cart(props) {
                     return (
                       <View
                         key={cartItem._id}
-                        style={[styles(currentTheme).itemContainer]}>
+                        style={[styles(currentTheme).itemContainer]}
+                      >
                         <CartItem
                           quantity={food.quantity}
                           dealName={food.title}
@@ -508,7 +521,8 @@ function Cart(props) {
                     textColor={currentTheme.black}
                     style={styles().totalBill}
                     bolder
-                    H2>
+                    H2
+                  >
                     {configuration.currencySymbol}
                     {calculateTotal()}
                   </TextDefault>
@@ -516,7 +530,8 @@ function Cart(props) {
                     textColor={currentTheme.black}
                     style={styles().totalBill}
                     bolder
-                    Smaller>
+                    Smaller
+                  >
                     {t('exclusiveVAt')}
                   </TextDefault>
                 </View>
@@ -526,12 +541,14 @@ function Cart(props) {
                     onPress={() => {
                       navigation.navigate('Checkout')
                     }}
-                    style={styles(currentTheme).button}>
+                    style={styles(currentTheme).button}
+                  >
                     <TextDefault
                       textColor={currentTheme.themeBackground}
                       style={styles().checkoutBtn}
                       bold
-                      H5>
+                      H5
+                    >
                       {t('checkoutBtn')}
                     </TextDefault>
                   </TouchableOpacity>
@@ -541,13 +558,15 @@ function Cart(props) {
                     onPress={() => {
                       props.navigation.navigate({ name: 'CreateAccount' })
                     }}
-                    style={styles(currentTheme).button}>
+                    style={styles(currentTheme).button}
+                  >
                     <TextDefault
                       textColor={currentTheme.white}
                       style={{ width: '100%' }}
                       H5
                       bolder
-                      center>
+                      center
+                    >
                       {t('loginOrCreateAccount')}
                     </TextDefault>
                   </TouchableOpacity>

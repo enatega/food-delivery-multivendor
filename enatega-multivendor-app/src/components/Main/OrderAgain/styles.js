@@ -15,7 +15,8 @@ const styles = (props = null) =>
     ItemDescription: {
       fontWeight: '400',
       marginTop: scale(5),
-      marginBottom: scale(7)
+      marginBottom: scale(7),
+      ...alignment.MRmedium
     },
     orderAgainSec: {
       marginBottom: scale(30),
