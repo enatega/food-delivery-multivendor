@@ -419,5 +419,6 @@ export const fr = {
   searchGrocery: "Rechercher des magasins d'alimentation",
   noGrocery:
     "Aucun magasin d'alimentation ne propose actuellement de livraison dans votre région",
-  cartAddresses: 'Adresses du panier'
+  cartAddresses: 'Adresses du panier',
+  addressDeletedMessage: 'Adresse supprimée !'
 }

@@ -402,5 +402,6 @@ export const ar = {
   allGrocery: 'جميع متاجر البقالة',
   searchGrocery: 'البحث عن متاجر البقالة',
   noGrocery: 'لا يقدم أي متجر بقالة تسليمًا حاليًا في منطقتك',
-  cartAddresses: 'عناوين السلة'
+  cartAddresses: 'عناوين السلة',
+  addressDeletedMessage: 'تم حذف العنوان!'
 }

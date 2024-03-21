@@ -419,5 +419,6 @@ export const de = {
   searchGrocery: 'Suche nach Lebensmittelgeschäften',
   noGrocery:
     'Kein Lebensmittelgeschäft bietet derzeit Lieferungen in Ihrer Gegend an',
-  cartAddresses: 'Warenkorb-Adressen'
+  cartAddresses: 'Warenkorb-Adressen',
+  addressDeletedMessage: 'Adresse gelöscht!'
 }
