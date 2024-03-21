@@ -414,5 +414,9 @@ export const de = {
   emptyActiveOrdersBtn: 'Laten we iets bestellen!',
   titleEmptyPastOrders: 'Nog geen eerdere bestellingen!',
   emptyPastOrdersDesc: 'U ziet hier uw eerdere bestellingen.',
-  emptyPastOrdersBtn: 'Laten we iets bestellen!'
+  emptyPastOrdersBtn: 'Laten we iets bestellen!',
+  allGrocery: 'Alle Lebensmittelgeschäfte',
+  searchGrocery: 'Suche nach Lebensmittelgeschäften',
+  noGrocery:
+    'Kein Lebensmittelgeschäft bietet derzeit Lieferungen in Ihrer Gegend an'
 }

@@ -8,12 +8,7 @@ const navigationOptions = props => {
     // eslint-disable-next-line react/display-name
     headerRight: () => (
       <Ionicons
-        onPress={() =>
-          props.navigation.navigate({
-            name: 'Main',
-            merge: true
-          })
-        }
+        onPress={() => props.navigation.goBack()}
         name="close"
         size={24}
         color="black"

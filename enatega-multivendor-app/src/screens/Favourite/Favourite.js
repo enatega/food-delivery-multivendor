@@ -113,7 +113,13 @@ function Favourite() {
     )
   }
 
-  if (loading) return <Spinner />
+  if (loading)
+    return (
+      <Spinner
+        backColor={'transparent'}
+        spinnerColor={currentTheme.main}
+      />
+    )
   if (error) return <ErrorView />
   return (
     <SafeAreaView edges={['bottom']} style={styles(currentTheme).flex}>

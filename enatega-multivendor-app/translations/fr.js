@@ -414,5 +414,9 @@ export const fr = {
   emptyActiveOrdersBtn: 'Passons une commande !',
   titleEmptyPastOrders: 'Aucune commande passée pour le moment !',
   emptyPastOrdersDesc: 'Vous verrez vos commandes passées ici.',
-  emptyPastOrdersBtn: 'Passons une commande !'
+  emptyPastOrdersBtn: 'Passons une commande !',
+  allGrocery: "Tous les magasins d'alimentation",
+  searchGrocery: "Rechercher des magasins d'alimentation",
+  noGrocery:
+    "Aucun magasin d'alimentation ne propose actuellement de livraison dans votre région"
 }

@@ -399,5 +399,8 @@ export const km = {
   emptyActiveOrdersBtn: 'ចាប់បានការបញ្ជាទិញមួយចំនេះ!',
   titleEmptyPastOrders: 'គ្មានការបញ្ជាទិញមុនសម្រាប់ឡេងហើយ!',
   emptyPastOrdersDesc: 'អ្នកនឹងឃើញការបញ្ជាទិញមុននេះទៀត។',
-  emptyPastOrdersBtn: 'ចាប់បានការបញ្ជាទិញមួយចំនេះ!'
+  emptyPastOrdersBtn: 'ចាប់បានការបញ្ជាទិញមួយចំនេះ!',
+  allGrocery: 'ហាងទំនិញគ្រឿងសំរាប់ទាំងអស់',
+  searchGrocery: 'ស្វែងរកហាងទំនិញគ្រឿងសំរាប់',
+  noGrocery: 'គ្មានហាងទំនិញគ្រឿងសំរាប់ដឹងស្រឡាយនៅក្នុងតំបន់របស់អ្នកលើកទី'
 }
