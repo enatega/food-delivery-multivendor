@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
-import { View, TouchableOpacity, StatusBar } from 'react-native'
+import { View, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation } from '@apollo/client'

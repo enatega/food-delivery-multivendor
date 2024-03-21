@@ -411,5 +411,6 @@ export const en = {
   emptyPastOrdersBtn: "Let's order something!",
   allGrocery: 'All Grocery Shops',
   searchGrocery: 'Search for grocery shops',
-  noGrocery: 'No grocery shop currently offers delivery in your area'
+  noGrocery: 'No grocery shop currently offers delivery in your area',
+  restaurantName:'Restaurant Name'
 }

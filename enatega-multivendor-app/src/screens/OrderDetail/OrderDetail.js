@@ -202,34 +202,6 @@ function OrderDetail(props) {
             </View>
           )}
         </View>
-        {/* Write a review button hide */}
-        {/* {order.orderStatus === 'DELIVERED' && !order.review && (
-          <View style={styles().review}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles().floatView, { justifyContent: 'center' }]}
-              onPress={() =>
-                props.navigation.navigate('RateAndReview', {
-                  _id: order._id,
-                  restaurant: restaurant,
-                  user: user
-                })
-              }>
-              <MaterialIcons
-                name="rate-review"
-                size={scale(20)}
-                color={currentTheme.iconColorPink}
-              />
-              <TextDefault
-                textColor={currentTheme.iconColorPink}
-                style={[alignment.MBsmall, alignment.MTsmall, alignment.ML10]}
-                bolder
-                center>
-                {t('writeAReview')}
-              </TextDefault>
-            </TouchableOpacity>
-          </View>
-        )} */}
         <Detail
           navigation={props.navigation}
           currencySymbol={configuration.currencySymbol}

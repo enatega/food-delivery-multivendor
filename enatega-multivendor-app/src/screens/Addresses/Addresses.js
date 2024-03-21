@@ -100,7 +100,8 @@ function Addresses() {
   const addressIcons = {
     Home: CustomHomeIcon,
     Work: CustomWorkIcon,
-    Other: CustomOtherIcon
+    Other: CustomOtherIcon,
+    House: CustomHomeIcon,
   }
 
   function emptyView() {
@@ -148,7 +149,9 @@ function Addresses() {
                     fill: currentTheme.darkBgFont
                   })
                 ) : (
-                  <AntDesign name="question" size={20} color="black" />
+                  React.createElement(addressIcons['Other'], {
+                    fill: currentTheme.darkBgFont
+                  })
                 )}
               </View>
               <View style={[styles().titleAddress]}>

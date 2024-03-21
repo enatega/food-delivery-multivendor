@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react'
-import { View, TouchableOpacity, Keyboard, StatusBar } from 'react-native'
+import { View, TouchableOpacity, Keyboard, StatusBar, Platform } from 'react-native'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
