@@ -42,7 +42,15 @@ export default function Detail({
         H5
         style={{ ...alignment.MBsmall }}
       >
-        {t('yourOrder')} ({items.length})
+        {t('yourOrder')}: #{orderNo}
+      </TextDefault>
+      <TextDefault
+        textColor={theme.gray500}
+        bolder
+        H5
+        style={{ ...alignment.MBsmall }}
+      >
+        {t('restaurantName')}: {from}
       </TextDefault>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <TextDefault
@@ -51,7 +59,7 @@ export default function Detail({
           Normal
           style={{ ...alignment.MBsmall }}
         >
-          {t('itemsAndQuantity')}
+          {t('itemsAndQuantity')} ({items.length})
         </TextDefault>
         <TextDefault
           textColor={theme.gray500}
@@ -92,7 +100,7 @@ const ItemRow = ({
 }) => {
   const { t } = useTranslation()
   return (
-    <View style={styles.itemRow}>
+    <View style={styles.itemRow(theme)}>
       <View>
         <Image
           style={{
@@ -107,7 +115,7 @@ const ItemRow = ({
           }
         ></Image>
       </View>
-      <View style={{ width: '60%', justifyContent: 'space-between' }}>
+      <View style={{ width: '60%', justifyContent: 'center' }}>
         <TextDefault
           left
           numberOfLines={1}
@@ -119,14 +127,16 @@ const ItemRow = ({
           {title}
         </TextDefault>
 
-        <TextDefault
-          bold
-          textColor={theme.gray600}
-          left
-          style={{ ...alignment.MBxSmall }}
-        >
-          {options.join(',')}
-        </TextDefault>
+        {options.length > 0 && (
+          <TextDefault
+            bold
+            textColor={theme.gray600}
+            left
+            style={{ ...alignment.MBxSmall }}
+          >
+            {options.join(',')}
+          </TextDefault>
+        )}
 
         <TextDefault Regular left bolder textColor={theme.gray900}>
           x{quantity}

@@ -53,6 +53,7 @@ import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { ScrollView } from 'react-native-gesture-handler'
 import { IMAGE_LINK } from '../../utils/constants'
+import { LocationContext } from '../../context/Location'
 
 const { height } = Dimensions.get('screen')
 
@@ -85,6 +86,7 @@ function Restaurant(props) {
   const translationY = useSharedValue(0)
   const circle = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
+
   const currentTheme = theme[themeContext.ThemeValue]
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
@@ -337,6 +339,11 @@ function Restaurant(props) {
   function animate() {
     scaleValue.value = withRepeat(withTiming(1.5, { duration: 250 }), 2, true)
   }
+  const config = (to) => ({
+    duration: 250,
+    toValue: to,
+    easing: EasingNode.inOut(EasingNode.ease)
+  })
 
   const scrollToSection = (index) => {
     if (scrollRef.current != null) {
@@ -412,7 +419,6 @@ function Restaurant(props) {
       selectedLabel !== viewableItems[0].section.index &&
       buttonClicked === false
     ) {
-      console.log('IFIFIFIi')
       selectedLabelSetter(viewableItems[0].section.index)
       scrollToNavbar(viewableItems[0].section.index)
     }
@@ -529,7 +535,7 @@ function Restaurant(props) {
           {
             title: 'Popular',
             id: new Date().getTime(),
-            data: dataList,
+            data: dataList?.slice(0, 4),
             index: 0
           },
           ...deals
@@ -687,22 +693,23 @@ function Restaurant(props) {
                     <View style={{ backgroundColor: '#fff' }}>
                       <TextDefault
                         style={styles(currentTheme).sectionHeaderText}
-                        textColor='#111827'
+                        textColor={currentTheme.fontFourthColor}
                         bolder
                       >
                         {title}
                       </TextDefault>
-                      <Text
+                      <TextDefault
+                        textColor={currentTheme.fontFourthColor}
                         style={{
-                          color: '#4B5563',
                           ...alignment.PLmedium,
+                          ...alignment.PRmedium,
                           fontSize: scale(12),
                           fontWeight: '400',
                           marginTop: scale(3)
                         }}
                       >
                         {t('mostOrderedNow')}
-                      </Text>
+                      </TextDefault>
                       <View style={styles().popularItemCards}>
                         {data.map((item) => (
                           <ItemCard
@@ -722,7 +729,7 @@ function Restaurant(props) {
                   <View style={{ backgroundColor: '#fff' }}>
                     <TextDefault
                       style={styles(currentTheme).sectionHeaderText}
-                      textColor='#111827'
+                      textColor={currentTheme.fontFourthColor}
                       bolder
                     >
                       {title}

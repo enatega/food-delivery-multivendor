@@ -16,7 +16,7 @@ const ReviewCard = ({ theme, name, rating, description, date }) => {
       <View style={styles.reviewContainer}>
         <StarRating numberOfStars={5} rating={rating} />
         <TextDefault textColor={theme.gray500}>
-          {date} {t('Days ago')}
+          {date} {t('daysAgo')}
         </TextDefault>
       </View>
       <TextDefault textColor={theme.gray500} numberOfLines={5}>

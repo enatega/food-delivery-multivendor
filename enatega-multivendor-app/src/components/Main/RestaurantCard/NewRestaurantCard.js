@@ -73,7 +73,7 @@ function NewRestaurantCard(props) {
               onPress={handleAddToFavorites}>
               <View style={styles(currentTheme).favouriteOverlay}>
                 {loadingMutation ? (
-                  <Spinner size={'small'} backColor={'transparent'} />
+                  <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} />
                 ) : (
                   <AntDesign
                     name={heart ? 'heart' : 'hearto'}

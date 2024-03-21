@@ -16,8 +16,10 @@ import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
 import StarIcon from '../../../src/assets/SVG/imageComponents/starIcon'
 import { scale } from '../../utils/scaling'
+import EmptyView from '../EmptyView/EmptyView'
+import { ORDER_STATUS_ENUM } from '../../utils/enums'
 
-function emptyView({ currentTheme, navigation, t }) {
+function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
   const orderStatusInactive = ['DELIVERED', 'COMPLETED']
   const { orders, loadingOrders, errorOrders } = useContext(OrdersContext)
@@ -31,53 +33,16 @@ function emptyView({ currentTheme, navigation, t }) {
       orders.filter(o => orderStatusInactive.includes(o.orderStatus)).length > 0
     if (hasActiveOrders || hasPastOrders) return null
     return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <SearchFood width={scale(300)} height={scale(300)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault
-            style={{ ...alignment.MBlarge }}
-            textColor={currentTheme.fontMainColor}
-            bolder
-            center
-            H2>
-            {t('unReadOrders')}
-          </TextDefault>
-          <TextDefault
-            textColor={currentTheme.fontMainColor}
-            bold
-            center
-            H5
-            style={{ ...alignment.MBxLarge }}>
-            {t('dontHaveAnyOrderYet')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() =>
-            navigation.navigate({
-              name: 'Main',
-              merge: true
-            })
-          }>
-          <TextDefault
-            style={{ ...alignment.Psmall }}
-            textColor={currentTheme.fontMainColor}
-            bolder
-            B700
-            center
-            uppercase>
-            {t('BrowseRESTAURANTS')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
+      <EmptyView
+        title={'titleEmptyPastOrders'}
+        description={'emptyPastOrdersDesc'}
+        buttonText={'emptyPastOrdersBtn'}
+      />
     )
   }
 }
 
-const PastOrders = ({ navigation, loading, error, pastOrders }) => {
+const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) => {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -94,6 +59,7 @@ const PastOrders = ({ navigation, loading, error, pastOrders }) => {
       navigation={navigation}
       currentTheme={currentTheme}
       configuration={configuration}
+      onPressReview={onPressReview}
     />
   )
 
@@ -107,7 +73,7 @@ const PastOrders = ({ navigation, loading, error, pastOrders }) => {
       data={pastOrders}
       renderItem={renderItem}
       keyExtractor={(item, index) => index.toString()}
-      ListEmptyComponent={emptyView({ currentTheme, navigation, t })}
+      ListEmptyComponent={emptyViewPastOrders()}
       refreshing={networkStatusOrders === 4}
       onRefresh={() => networkStatusOrders === 7 && reFetchOrders()}
       onEndReached={fetchMoreOrdersFunc}
@@ -160,17 +126,13 @@ const getItems = items => {
     .join('\n')
 }
 
-const Item = ({ item, navigation, currentTheme, configuration }) => {
+const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) => {
   useSubscription(
     gql`
       ${subscriptionOrder}
     `,
-    { variables: { id: item._id } }
+    { variables: { id: item._id }, skip:item.orderStatus===ORDER_STATUS_ENUM.DELIVERED }
   )
-  const [rating, setRating] = useState(0)
-  const handleRating = index => {
-    setRating(index)
-  }
   const { t } = useTranslation()
 
   return (
@@ -214,23 +176,23 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
                   </TextDefault>
                 </View>
               </View>
-              <View>
+              <View style={{marginTop: 'auto'}}>
                 <TextDefault
                   numberOfLines={1}
                   style={{
                     ...alignment.MTxSmall,
                     width: '122%'
                   }}
-                  textColor={currentTheme.fontSecondColor}
-                  small>
+                  textColor={currentTheme.secondaryText}
+                  >
                   {t('deliveredOn')} {formatDeliveredAt(item.deliveredAt)}
                 </TextDefault>
                 <TextDefault
                   numberOfLines={1}
                   style={{ ...alignment.MTxSmall }}
-                  textColor={currentTheme.fontMainColor}
-                  bolder
-                  small>
+                  textColor={currentTheme.secondaryText}
+                  
+                  >
                   {getItems(item.items)}
                 </TextDefault>
               </View>
@@ -248,21 +210,19 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
             </TouchableOpacity>
           </View>
           <View style={styles(currentTheme).starsContainer}>
-            <View style={{ flex: 3 }}>
-              <TextDefault H4 bolder>
+            <View>
+              <TextDefault H5 bolder>
                 {t('tapToRate')}
               </TextDefault>
             </View>
-            <View style={{ flex: 5 }}>
-              <TouchableOpacity style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
                 {[1, 2, 3, 4, 5].map(index => (
                   <StarIcon
                     key={`star-icon-${index}`}
-                    isFilled={index <= rating}
-                    onPress={() => handleRating(index)}
+                    isFilled={index <= item?.review?.rating}
+                    onPress={()=>onPressReview(item, index)}
                   />
                 ))}
-              </TouchableOpacity>
             </View>
           </View>
         </View>

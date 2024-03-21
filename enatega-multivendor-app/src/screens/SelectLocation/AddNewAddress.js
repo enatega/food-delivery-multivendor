@@ -25,6 +25,7 @@ import { useNavigation } from '@react-navigation/native'
 import MapView from './MapView'
 import screenOptions from './screenOptions'
 import { useLocation } from '../../ui/hooks'
+import UserContext from '../../context/User'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -32,10 +33,13 @@ const LATITUDE_DELTA = 0.2
 const LONGITUDE_DELTA = 0.2
 
 export default function AddNewAddress(props) {
+  const { isLoggedIn } = useContext(UserContext)
+
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
 
   const { longitude, latitude } = props.route.params || {}
+
   const [selectedValue, setSelectedValue] = useState({
     city: '',
     address: '',
@@ -117,6 +121,17 @@ export default function AddNewAddress(props) {
       longitude: selectedValue.longitude,
       city: selectedValue.city
     })
+    if (isLoggedIn) {
+      navigation.navigate('SaveAddress', {
+        locationData: {
+          label: 'Location',
+          deliveryAddress: selectedValue.address,
+          latitude: selectedValue.latitude,
+          longitude: selectedValue.longitude,
+          city: selectedValue.city
+        }
+      })
+    }
   }
 
   return (
@@ -181,6 +196,7 @@ export default function AddNewAddress(props) {
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
             onPress={onSelectLocation}
+            disabled={!selectedValue.address || !selectedValue.city}
           >
             <TextDefault textColor={currentTheme.buttonText} center H5>
               {t('saveBtn')}
@@ -190,11 +206,11 @@ export default function AddNewAddress(props) {
             visible={searchModalVisible}
             onClose={() => setSearchModalVisible(false)}
             onSubmit={(description, coords) => {
+              setSearchModalVisible(false)
               setCoordinates({
                 latitude: coords.lat,
                 longitude: coords.lng
               })
-              setSearchModalVisible(false)
             }}
           />
         </View>

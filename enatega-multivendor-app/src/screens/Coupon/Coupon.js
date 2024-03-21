@@ -117,7 +117,7 @@ function SelectVoucher(props) {
         />
       )
     })
-  }, [props.navigation])
+  })
 
   function onSelectCoupon(text) {
     mutate({ variables: { coupon: text } })

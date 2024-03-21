@@ -13,6 +13,7 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
+import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 
 const TOP_BRANDS = gql`
   ${topRatedVendorsInfo}
@@ -32,34 +33,16 @@ function TopBrands(props) {
     }
   })
 
-  function loadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).brandsPlaceHolderContainer}>
-          <PlaceholderLine style={styles().height80} />
-          {/* <PlaceholderLine /> */}
-        </Placeholder>
-      </View>
-    )
-  }
-
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles().topbrandsContainer}
-      onPress={() => navigation.navigate('Restaurant', { ...item })}>
+      onPress={() => navigation.navigate('Restaurant', { ...item })}
+    >
       <View style={styles().brandImgContainer}>
         <Image
           source={{ uri: item.image }}
           style={styles().brandImg}
-          resizeMode="contain"
+          resizeMode='contain'
         />
       </View>
 
@@ -67,12 +50,14 @@ function TopBrands(props) {
         style={{
           alignItems: 'center',
           justifyContent: 'center'
-        }}>
+        }}
+      >
         <TextDefault
           style={styles().brandName}
           textColor={currentTheme.fontThirdColor}
           H5
-          bolder>
+          bolder
+        >
           {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>
@@ -82,7 +67,7 @@ function TopBrands(props) {
     </TouchableOpacity>
   )
 
-  if (loading) return loadingScreen()
+  if (loading) return <TopBrandsLoadingUI />
   if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
   return (
@@ -91,14 +76,15 @@ function TopBrands(props) {
         numberOfLines={1}
         textColor={currentTheme.fontFourthColor}
         bolder
-        H4>
+        H4
+      >
         {t('topBrands')}
       </TextDefault>
       <View style={{ ...alignment.PRsmall }}>
         <FlatList
           data={data?.topRatedVendors}
           renderItem={renderItem}
-          keyExtractor={item => item?._id}
+          keyExtractor={(item) => item?._id}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}

@@ -14,12 +14,24 @@ import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
 import { ProgressBar } from '../Main/ActiveOrders/ProgressBar'
 import { calulateRemainingTime } from '../../utils/customFunctions'
+import Spinner from '../Spinner/Spinner'
+import EmptyView from '../EmptyView/EmptyView'
 
 const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const configuration = useContext(ConfigurationContext)
+
+  const emptyView = () => {
+    return (
+      <EmptyView
+        title={'titleEmptyActiveOrders'}
+        description={'emptyActiveOrdersDesc'}
+        buttonText={'emptyActiveOrdersBtn'}
+      />
+    )
+  }
 
   const renderItem = ({ item }) => (
     <Item
@@ -31,7 +43,13 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   )
 
   if (loading) {
-    return <></>
+    return (
+      <Spinner
+        size={'small'}
+        backColor={'transparent'}
+        spinnerColor={currentTheme.iconColorDark}
+      />
+    )
   }
   if (error) return <TextError text={error.message} />
 
@@ -40,6 +58,7 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
       data={activeOrders}
       renderItem={renderItem}
       keyExtractor={(item, index) => index.toString()}
+      ListEmptyComponent={emptyView}
     />
   )
 }
@@ -107,7 +126,8 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
               //alignItems: 'center',
               justifyContent: 'center',
               ...alignment.Mmedium,
-              ...alignment.MTlarge
+              ...alignment.MTlarge,
+              ...alignment.PLmedium
             }}>
             <Image
               style={styles(currentTheme).restaurantImage1}

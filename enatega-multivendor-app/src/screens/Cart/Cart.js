@@ -381,9 +381,11 @@ function Cart(props) {
   }
   if (loading || loadingData || loadingTip) return loadginScreen()
 
-  const { restaurant } = data
-  const { addons, options } = restaurant
-  const foods = restaurant.categories.map((c) => c.foods.flat()).flat()
+  const restaurant = data?.restaurant
+  const addons = restaurant?.addons
+  const options = restaurant?.options
+  // const { addons, options } = restaurant
+  const foods = restaurant?.categories?.map((c) => c.foods.flat()).flat()
 
   function populateFood(cartItem) {
     const food = foods.find((food) => food._id === cartItem._id)
@@ -423,8 +425,9 @@ function Cart(props) {
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
-        {!cart.length && emptyCart()}
-        {!!cart.length && (
+        {cart?.length === 0 ? (
+          emptyCart()
+        ) : (
           <>
             <ScrollView
               showsVerticalScrollIndicator={false}
@@ -477,7 +480,7 @@ function Cart(props) {
                   <TextDefault style={styles().totalOrder} H5 bolder>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
-                  {cart.map((cartItem, index) => {
+                  {cart?.map((cartItem, index) => {
                     const food = populateFood(cartItem)
                     if (!food) return null
                     return (

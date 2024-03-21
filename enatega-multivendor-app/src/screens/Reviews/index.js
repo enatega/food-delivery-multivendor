@@ -18,21 +18,24 @@ import {
   sortReviews
 } from '../../utils/customFunctions'
 
-const sortingParams = {
-  newest: 'Newest',
-  highest: 'Highest Rating',
-  lowest: 'Lowest Rating'
-}
+
+
+
 
 const Reviews = ({ navigation, route }) => {
+  const { t } = useTranslation()
+
   const restaurant = route.params.restaurantObject
   const { reviews } = restaurant
   const reviewGroups = groupAndCount(reviews, 'rating')
   const [sortBy, setSortBy] = useState('newest')
-
+  const sortingParams = {
+    newest: t('Newest'),
+    highest: t('HighestRating'),
+    lowest: t('LowestRating')
+  }
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const { t } = useTranslation()
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
@@ -147,7 +150,7 @@ const Reviews = ({ navigation, route }) => {
         </View>
         <View style={{ ...alignment.MTsmall }}>
           <TextDefault textColor={currentTheme.gray900} H3 bold>
-            Reviews
+            {t('titleReviews')}
           </TextDefault>
           <View style={{ flexDirection: 'row', ...alignment.MTsmall }}>
             {Object.keys(sortingParams).map((key) => (

@@ -121,7 +121,7 @@ function Payment(props) {
       <View style={[styles(currentTheme).mainContainer, styles().flex]}>
         <View>
           {iconArray.map((item, index) => (
-            <View>
+            <View key={'iconArray-' + index}>
               <TouchableOpacity
                 style={styles(currentTheme).radioGroup}
                 key={index.toString()}

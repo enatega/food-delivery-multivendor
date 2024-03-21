@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { View, FlatList, Text } from 'react-native'
-import styles from '../OrderAgain/styles'
+import styles from '../MainRestaurantCard/styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
+import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 
 function TopPicks(props) {
   const { t } = useTranslation()
@@ -14,26 +14,7 @@ function TopPicks(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   console.log('props:', props)
 
-  function loadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={props => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-      </View>
-    )
-  }
-
-  if (props?.loading) return loadingScreen()
+  if (props?.loading) return <MainLoadingUI />
   if (props?.error)
     return <Text style={styles().margin}>Error: {props?.error?.message}</Text>
   return (

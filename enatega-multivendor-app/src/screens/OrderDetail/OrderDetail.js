@@ -77,22 +77,19 @@ function OrderDetail(props) {
 
   const order = orders.find((o) => o._id === id)
   const headerRef = useRef(false)
-  if (loadingOrders || !order)
+  if (loadingOrders || !order) {
     return (
       <Spinner
         backColor={currentTheme.white}
         spinnerColor={currentTheme.primary}
       />
     )
+  }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
   if (!headerRef.current) {
     props.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
-      headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(
-        0,
-        20
-      )}...`,
-      // title: null,
+      headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
       headerTitleStyle: { color: currentTheme.black },
       headerStyle: { backgroundColor: currentTheme.white }
     })
@@ -183,7 +180,7 @@ function OrderDetail(props) {
                     textColor={currentTheme.gray500}
                     H5
                   >
-                    {t('estimatedDeliveryTime')}
+                    Estimated delivery time
                   </TextDefault>
                   <TextDefault
                     style={{ ...alignment.MTxSmall }}
@@ -192,7 +189,7 @@ function OrderDetail(props) {
                     H1
                     bolder
                   >
-                    {remainingTime}-{remainingTime + 5} {t('mins')}
+                    {remainingTime}-{remainingTime + 5} mins
                   </TextDefault>
                   <ProgressBar
                     configuration={configuration}
@@ -214,36 +211,6 @@ function OrderDetail(props) {
             </View>
           )}
         </View>
-
-        {order.orderStatus === 'DELIVERED' && !order.review && (
-          <View style={styles().review}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles().floatView, { justifyContent: 'center' }]}
-              onPress={() =>
-                props.navigation.navigate('RateAndReview', {
-                  _id: order._id,
-                  restaurant: restaurant,
-                  user: user
-                })
-              }
-            >
-              <MaterialIcons
-                name='rate-review'
-                size={scale(20)}
-                color={currentTheme.iconColorPink}
-              />
-              <TextDefault
-                textColor={currentTheme.iconColorPink}
-                style={[alignment.MBsmall, alignment.MTsmall, alignment.ML10]}
-                bolder
-                center
-              >
-                {t('writeAReview')}
-              </TextDefault>
-            </TouchableOpacity>
-          </View>
-        )}
         <Detail
           navigation={props.navigation}
           currencySymbol={configuration.currencySymbol}

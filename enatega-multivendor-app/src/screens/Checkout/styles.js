@@ -181,7 +181,7 @@ const styles = (props = null) =>
 
       justifyContent: 'center',
       alignItems: 'center',
-
+      flexDirection:'row',
       height: scale(50),
       borderRadius: 40
     },

@@ -45,6 +45,7 @@ import Location from '../../components/Main/Location/Location'
 import { customMapStyle } from '../../utils/customMapStyles'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
+import Spinner from '../../components/Spinner/Spinner'
 
 // Constants
 const PLACEORDER = gql`
@@ -82,6 +83,7 @@ function Checkout(props) {
   const [restaurantName, setrestaurantName] = useState('...')
 
   const { loading, data } = useRestaurant(cartRestaurant)
+  const [loadingOrder, setLoadingOrder] = useState(false)
   const initialRegion = {
     latitude: location.latitude,
     longitude: location.longitude,
@@ -93,14 +95,11 @@ function Checkout(props) {
     fetchPolicy: 'network-only'
   })
 
-  const [mutateOrder, { loading: loadingOrderMutation }] = useMutation(
-    PLACEORDER,
-    {
-      onCompleted,
-      onError,
-      update
-    }
-  )
+  const [mutateOrder] = useMutation(PLACEORDER, {
+    onCompleted,
+    onError,
+    update
+  })
 
   const COD_PAYMENT = {
     payment: 'COD',
@@ -307,7 +306,6 @@ function Checkout(props) {
       orderDate: data.placeOrder.orderDate
     })
     if (paymentMethod.payment === 'COD') {
-      await clearCart()
       props.navigation.reset({
         routes: [
           { name: 'Main' },
@@ -317,8 +315,8 @@ function Checkout(props) {
           }
         ]
       })
+      clearCart()
     } else if (paymentMethod.payment === 'PAYPAL') {
-      console.log('here')
       props.navigation.replace('Paypal', {
         _id: data.placeOrder.orderId,
         currency: configuration.currency
@@ -333,6 +331,7 @@ function Checkout(props) {
     }
   }
   function onError(error) {
+    setLoadingOrder(false)
     console.log('onError', error)
     if (error.graphQLErrors.length) {
       console.log('error', JSON.stringify(error))
@@ -1184,20 +1183,30 @@ function Checkout(props) {
             {!isModalOpen && (
               <View style={styles(currentTheme).buttonContainer}>
                 <TouchableOpacity
+                  disabled={loadingOrder}
                   activeOpacity={0.7}
                   onPress={() => {
-                    if (validateOrder()) onPayment()
+                    if (validateOrder()) {
+                      setLoadingOrder(true)
+                      onPayment()
+                    }
                   }}
-                  style={styles(currentTheme).button}
+                  style={[
+                    styles(currentTheme).button,
+                    { opacity: loadingOrder ? 0.5 : 1 }
+                  ]}
                 >
-                  <TextDefault
-                    textColor={currentTheme.fontFourthColor}
-                    style={styles().checkoutBtn}
-                    bold
-                    H4
-                  >
-                    {t('placeOrder')}
-                  </TextDefault>
+                  {!loadingOrder && (
+                    <TextDefault
+                      textColor={currentTheme.fontFourthColor}
+                      style={styles().checkoutBtn}
+                      bold
+                      H4
+                    >
+                      {t('placeOrder')}
+                    </TextDefault>
+                  )}
+                  {loadingOrder && <Spinner backColor={'transparent'} />}
                 </TouchableOpacity>
               </View>
             )}

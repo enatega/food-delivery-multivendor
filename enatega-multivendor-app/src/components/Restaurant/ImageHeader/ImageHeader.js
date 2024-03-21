@@ -37,6 +37,8 @@ import Spinner from '../../Spinner/Spinner'
 import UserContext from '../../../context/User'
 import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import { profile } from '../../../apollo/queries'
+import { calculateDistance } from '../../../utils/customFunctions'
+import { LocationContext } from '../../../context/Location'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -51,6 +53,7 @@ function ImageTextCenterHeader(props, ref) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { location } = useContext(LocationContext)
   const { t } = useTranslation()
   const newheaderColor = currentTheme.backgroundColor
   const cartContainer = currentTheme.gray500
@@ -105,6 +108,13 @@ function ImageTextCenterHeader(props, ref) {
       return times.length > 0
     }
   }
+
+  const distance = calculateDistance(
+    aboutObject?.latitude,
+    aboutObject?.longitude,
+    location?.latitude,
+    location?.longitude
+  )
 
   const hideKeyboard = () => {
     Keyboard.dismiss()
@@ -300,7 +310,9 @@ function ImageTextCenterHeader(props, ref) {
                 </View>
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-                <Text style={styles().restaurantAbout}>1.6km {t('away')}</Text>
+                <Text style={styles().restaurantAbout}>
+                  {distance.toFixed(2)}km away
+                </Text>
                 <Text style={styles().restaurantAbout}>|</Text>
                 <Text style={styles().restaurantAbout}>
                   ${aboutObject.restaurantTax} {t('deliveryCharges')}

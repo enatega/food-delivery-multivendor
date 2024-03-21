@@ -12,6 +12,9 @@ const styles = (props = null) =>
       height: height * 0.376,
       width: '100%'
     },
+    ItemTitle: {
+      ...alignment.MRmedium
+    },
     ItemDescription: {
       fontWeight: '400',
       marginTop: scale(5),

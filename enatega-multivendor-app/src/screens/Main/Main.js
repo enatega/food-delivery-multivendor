@@ -42,8 +42,7 @@ import { LocationContext } from '../../context/Location'
 import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
-import { OrderAgain } from '../../components/Main/OrderAgain'
-import { TopPicks } from '../../components/Main/TopPicks'
+import MainRestaurantCard from '../../components/Main/MainRestaurantCard/MainRestaurantCard'
 import { TopBrands } from '../../components/Main/TopBrands'
 import Item from '../../components/Main/Item/Item'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
@@ -52,6 +51,8 @@ import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
+import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
+import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -214,7 +215,7 @@ function Main(props) {
   )
 
   const emptyView = () => {
-    if (loading || mutationLoading || loadingOrders) return loadingScreen()
+    if (loading || mutationLoading || loadingOrders) return <MainLoadingUI />
     else {
       return (
         <View style={styles().emptyViewContainer}>
@@ -265,45 +266,6 @@ function Main(props) {
       <View style={styles().addressTick}></View>
     </View>
   )
-
-  function loadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-      </View>
-    )
-  }
-
-  function brandsLoadingScreen() {
-    return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).brandsPlaceHolderContainer}
-        >
-          <PlaceholderLine style={styles().height80} />
-        </Placeholder>
-      </View>
-    )
-  }
 
   const restaurants = data?.nearByRestaurants?.restaurants
 
@@ -464,22 +426,30 @@ function Main(props) {
                       </TouchableOpacity>
                     </View>
                     <View>
-                      {orderLoading ? (
-                        loadingScreen()
-                      ) : (
-                        <OrderAgain
-                          recentOrderRestaurants={recentOrderRestaurantsVar}
-                          loading={orderLoading}
-                          error={orderError}
-                          title={'Order it again'}
-                        />
-                      )}
+                      <View>
+                        {isLoggedIn &&
+                          recentOrderRestaurantsVar &&
+                          recentOrderRestaurantsVar.length > 0 && (
+                            <>
+                              {orderLoading ? (
+                                <MainLoadingUI />
+                              ) : (
+                                <MainRestaurantCard
+                                  orders={recentOrderRestaurantsVar}
+                                  loading={orderLoading}
+                                  error={orderError}
+                                  title={'Order it again'}
+                                />
+                              )}
+                            </>
+                          )}
+                      </View>
                       <View>
                         {orderLoading ? (
-                          loadingScreen()
+                          <MainLoadingUI />
                         ) : (
-                          <TopPicks
-                            mostOrderedRestaurants={mostOrderedRestaurantsVar}
+                          <MainRestaurantCard
+                            orders={mostOrderedRestaurantsVar}
                             loading={orderLoading}
                             error={orderError}
                             title={'Top Picks for you'}
@@ -488,21 +458,22 @@ function Main(props) {
                       </View>
                     </View>
                     <View>
-                      {orderLoading ? brandsLoadingScreen() : <TopBrands />}
+                      {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
                     </View>
                   </ScrollView>
                 )}
               </View>
             </View>
           </View>
-
+          <ActiveOrders />
           <Modalize
             ref={modalRef}
             modalStyle={styles(currentTheme).modal}
-            modalHeight={350}
+            modalHeight={400}
             overlayStyle={styles(currentTheme).overlay}
             handleStyle={styles(currentTheme).handle}
             handlePosition='inside'
+            modalPosition='top'
             openAnimationConfig={{
               timing: { duration: 400 },
               spring: { speed: 20, bounciness: 10 }
@@ -526,13 +497,13 @@ function Main(props) {
                   >
                     <View style={styles().addressSubContainer}>
                       <View style={[styles(currentTheme).homeIcon]}>
-                        {addressIcons[address.label] ? (
-                          React.createElement(addressIcons[address.label], {
-                            fill: currentTheme.darkBgFont
-                          })
-                        ) : (
-                          <AntDesign name='question' size={20} color='black' />
-                        )}
+                        {addressIcons[address.label]
+                          ? React.createElement(addressIcons[address.label], {
+                              fill: currentTheme.darkBgFont
+                            })
+                          : React.createElement(addressIcons['Other'], {
+                              fill: currentTheme.darkBgFont
+                            })}
                       </View>
                       {/* <View style={styles().mL5p} /> */}
                       <View style={[styles().titleAddress]}>
@@ -573,7 +544,6 @@ function Main(props) {
             }}
           ></Modalize>
         </View>
-        <ActiveOrders />
       </SafeAreaView>
     </>
   )

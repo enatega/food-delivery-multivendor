@@ -6,6 +6,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import { useTranslation } from 'react-i18next'
+import styles from './styles'
 
 function ActiveOrdersAndSections(props) {
   const { t } = useTranslation()
@@ -15,15 +16,15 @@ function ActiveOrdersAndSections(props) {
 
   return (
     <View
-      style={{
-        ...alignment.MLmedium
-      }}>
+      style={styles().menuPageHeading}
+    >
       <TextDefault
         numberOfLines={1}
         textColor={currentTheme.fontFourthColor}
         bolder
-        H4>
-        {t('allRestaurant')}
+        H4
+      >
+        {props?.menuPageHeading}
       </TextDefault>
       <TextDefault
         Normal
@@ -31,7 +32,8 @@ function ActiveOrdersAndSections(props) {
         textColor={currentTheme.secondaryText}
         style={{
           marginTop: scale(5)
-        }}>
+        }}
+      >
         {t('mostOrderedNow')}
       </TextDefault>
     </View>

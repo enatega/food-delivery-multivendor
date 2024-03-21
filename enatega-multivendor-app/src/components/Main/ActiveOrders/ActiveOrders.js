@@ -42,7 +42,7 @@ const ActiveOrders = () => {
 
   const displayOrders = showAll ? activeOrders : activeOrders.slice(0, 2)
 
-  if (loadingOrders) return <Spinner />
+  if (loadingOrders) return null
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   if (!displayOrders.length) return null
   const order = displayOrders[0]

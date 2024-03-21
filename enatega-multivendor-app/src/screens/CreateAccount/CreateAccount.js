@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, Image, TouchableOpacity, Dimensions } from 'react-native'
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -15,6 +15,7 @@ import { useCreateAccount } from './useCreateAccount'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
+const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
   const {
@@ -100,23 +101,14 @@ const CreateAccount = (props) => {
   }
 
   function renderGoogleAction() {
-    if (loading && loginButton === 'Google') {
-      return (
-        <View style={[styles().buttonBackground, styles().marginBottom5]}>
-          <Spinner
-            spinnerColor={currentTheme.primery}
-            style={{ marginBottom: 20 }}
-          />
-        </View>
-      )
-    }
-
     return (
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Light}
-        onPress={signIn}
+      <FdGoogleBtn
+        loadingIcon={loading && loginButton === 'Google'}
+        onPressIn={() => {
+          loginButtonSetter('Google')
+        }}
         disabled={loading && loginButton === 'Google'}
+        onPress={signIn}
       />
     )
   }
