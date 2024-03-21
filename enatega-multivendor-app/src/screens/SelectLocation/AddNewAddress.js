@@ -38,7 +38,7 @@ export default function AddNewAddress(props) {
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
 
-  const { longitude, latitude } = props.route.params || {}
+  const { longitude, latitude, id } = props.route.params || {}
 
   const [selectedValue, setSelectedValue] = useState({
     city: '',
@@ -124,6 +124,7 @@ export default function AddNewAddress(props) {
     if (isLoggedIn) {
       navigation.navigate('SaveAddress', {
         locationData: {
+          id,
           label: 'Location',
           deliveryAddress: selectedValue.address,
           latitude: selectedValue.latitude,

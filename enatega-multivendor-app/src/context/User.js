@@ -55,7 +55,8 @@ export const UserProvider = props => {
     loading: loadingProfile,
     error: errorProfile,
     data: dataProfile,
-    refetch: refetchProfile
+    refetch: refetchProfile,
+    networkStatus
   } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
     onError,
@@ -226,7 +227,8 @@ export const UserProvider = props => {
         deleteItem,
         restaurant,
         setCartRestaurant,
-        refetchProfile
+        refetchProfile,
+        networkStatus
       }}>
       {props.children}
     </UserContext.Provider>
