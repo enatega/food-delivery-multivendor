@@ -488,8 +488,8 @@ function Settings(props) {
               <RadioButton
                 animation={'bounceIn'}
                 size={13}
-                outerColor={currentTheme.main}
-                innerColor={currentTheme.iconColorDark}
+                outerColor={currentTheme.iconColorDark}
+                innerColor={currentTheme.main}
                 isSelected={activeRadio === item.index}
                 onPress={() => activeRadioSetter(item.index)}
               />
