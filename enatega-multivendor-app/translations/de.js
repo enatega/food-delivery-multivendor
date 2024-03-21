@@ -418,5 +418,6 @@ export const de = {
   allGrocery: 'Alle Lebensmittelgeschäfte',
   searchGrocery: 'Suche nach Lebensmittelgeschäften',
   noGrocery:
-    'Kein Lebensmittelgeschäft bietet derzeit Lieferungen in Ihrer Gegend an'
+    'Kein Lebensmittelgeschäft bietet derzeit Lieferungen in Ihrer Gegend an',
+  cartAddresses: 'Warenkorb-Adressen'
 }

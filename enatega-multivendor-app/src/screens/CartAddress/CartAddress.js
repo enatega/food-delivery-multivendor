@@ -36,7 +36,7 @@ function CartAddresses(props) {
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: t('myAddresses'),
+      title: t('cartAddresses'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
@@ -105,9 +105,14 @@ function CartAddresses(props) {
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles(currentTheme).addressContainer}
-                onPress={() => {
-                  props.navigation.navigate('NewAddress', { location })
-                }}>
+                              onPress={() => {
+                const latitude = location.latitude
+                const longitude = location.longitude
+                props.navigation.navigate('AddNewAddress', {
+                  longitude: +longitude,
+                  latitude: +latitude
+                })
+              }}>
                 <View style={styles(currentTheme).width100}>
                   <View style={[styles().titleAddress, styles().width100]}>
                     <View style={[styles().homeIcon]}>

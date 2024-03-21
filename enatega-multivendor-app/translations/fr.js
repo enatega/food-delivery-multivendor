@@ -418,5 +418,6 @@ export const fr = {
   allGrocery: "Tous les magasins d'alimentation",
   searchGrocery: "Rechercher des magasins d'alimentation",
   noGrocery:
-    "Aucun magasin d'alimentation ne propose actuellement de livraison dans votre région"
+    "Aucun magasin d'alimentation ne propose actuellement de livraison dans votre région",
+  cartAddresses: 'Adresses du panier'
 }

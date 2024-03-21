@@ -401,5 +401,6 @@ export const ar = {
   emptyPastOrdersBtn: 'لنطلب شيئًا!',
   allGrocery: 'جميع متاجر البقالة',
   searchGrocery: 'البحث عن متاجر البقالة',
-  noGrocery: 'لا يقدم أي متجر بقالة تسليمًا حاليًا في منطقتك'
+  noGrocery: 'لا يقدم أي متجر بقالة تسليمًا حاليًا في منطقتك',
+  cartAddresses: 'عناوين السلة'
 }
