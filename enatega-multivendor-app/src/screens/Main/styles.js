@@ -3,6 +3,9 @@ import { Dimensions, StyleSheet } from 'react-native'
 const windowWidth = Dimensions.get('window').width
 import { alignment } from '../../utils/alignment'
 
+const SCREEN_HEIGHT = Dimensions.get('screen').height
+const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
+
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -175,6 +178,9 @@ const styles = (props = null) =>
       fontWeight: '300',
       textAlign: 'justify',
       paddingLeft: scale(38)
+    },
+    topBrandsMargin: {
+      marginBottom: MODAL_HEIGHT
     }
   })
 export default styles
