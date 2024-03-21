@@ -85,7 +85,9 @@ export const theme = {
     gray700: '#374151',
     primary: '#90E36D',
     borderLight: '#D9D9D9',
-    red600: '#DC2626'
+    red600: '#DC2626',
+    lightBlue: '#3B82F6',
+    deleteAccountBtn: '#EF4444'
   },
   Dark: {
     black: '#000',
@@ -161,6 +163,9 @@ export const theme = {
     gray700: '#374151',
     primary: '#90E36D',
     borderLight: '#D9D9D9',
-    red600: '#DC2626'
+    red600: '#DC2626',
+    lightBlue: '#3B82F6',
+    deleteAccountBtn: '#EF4444'
+
   }
 }

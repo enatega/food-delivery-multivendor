@@ -11,7 +11,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
-  Text
+  Text,
+  Modal,
+  Pressable
 } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -49,6 +51,7 @@ function Profile(props) {
   const [toggleView, setToggleView] = useState(true)
   const [modelVisible, setModalVisible] = useState(false)
   const [showPass, setShowPass] = useState(false)
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -98,10 +101,10 @@ function Profile(props) {
       passwordButton: setShowPass,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons name="arrow-back" size={25} color="black" />
+              <MaterialIcons name='arrow-back' size={25} color='black' />
             </View>
           )}
           onPress={() => {
@@ -120,10 +123,10 @@ function Profile(props) {
   }, [backScreen])
 
   function viewHideAndShowName() {
-    setToggleNameView(prev => !prev)
+    setToggleNameView((prev) => !prev)
   }
   function viewHideAndShowEmail() {
-    setToggleEmailView(prev => !prev)
+    setToggleEmailView((prev) => !prev)
   }
 
   function onCompleted({ updateUser }) {
@@ -204,7 +207,8 @@ function Profile(props) {
           <TextDefault
             textColor={currentTheme.iconColor}
             style={{ fontSize: scale(13) }}
-            bolder>
+            bolder
+          >
             {profile.name}
           </TextDefault>
         </View>
@@ -220,7 +224,8 @@ function Profile(props) {
             <TextDefault
               style={{ fontSize: scale(13) }}
               textColor={currentTheme.iconColor}
-              bolder>
+              bolder
+            >
               {profile.email}
             </TextDefault>
           </View>
@@ -233,14 +238,16 @@ function Profile(props) {
                     ? currentTheme.newheaderColor
                     : currentTheme.buttonText
                 }
-              ]}>
+              ]}
+            >
               <TextDefault
                 style={{
                   color: profile.emailIsVerified
                     ? currentTheme.fontFourthColor
                     : currentTheme.white
                 }}
-                bold>
+                bold
+              >
                 {profile.emailIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
@@ -257,7 +264,8 @@ function Profile(props) {
           <TextDefault
             textColor={currentTheme.iconColor}
             style={{ fontSize: scale(13) }}
-            bolder>
+            bolder
+          >
             ***********
           </TextDefault>
         </View>
@@ -273,7 +281,8 @@ function Profile(props) {
             <TextDefault
               style={{ fontSize: scale(13) }}
               textColor={currentTheme.iconColor}
-              bolder>
+              bolder
+            >
               {profile.phone}
             </TextDefault>
           </View>
@@ -286,7 +295,8 @@ function Profile(props) {
                     ? currentTheme.main
                     : currentTheme.fontFourthColor
                 }
-              ]}>
+              ]}
+            >
               <TextDefault textColor={currentTheme.fontFourthColor} bold>
                 {profile.phoneIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
@@ -312,7 +322,8 @@ function Profile(props) {
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
-          style={styles(currentTheme).flex}>
+          style={styles(currentTheme).flex}
+        >
           <View style={styles(currentTheme).formSubContainer}>
             <View style={{ flex: 3 }}>
               <View style={styles(currentTheme).containerHeading}>
@@ -324,7 +335,8 @@ function Profile(props) {
                         B700
                         bolder
                         textColor={currentTheme.darkBgFont}
-                        style={styles(currentTheme).textAlignLeft}>
+                        style={styles(currentTheme).textAlignLeft}
+                      >
                         {t('name')}
                       </TextDefault>
                     </View>
@@ -341,7 +353,8 @@ function Profile(props) {
                         H5
                         B700
                         bolder
-                        style={styles(currentTheme).textAlignLeft}>
+                        style={styles(currentTheme).textAlignLeft}
+                      >
                         {t('name')}
                       </TextDefault>
                     </View>
@@ -364,7 +377,8 @@ function Profile(props) {
                     disabled={loadingMutation}
                     activeOpacity={0.7}
                     style={styles(currentTheme).saveContainer}
-                    onPress={handleNamePressUpdate}>
+                    onPress={handleNamePressUpdate}
+                  >
                     <TextDefault bold>{t('update')}</TextDefault>
                   </TouchableOpacity>
                 </View>
@@ -374,7 +388,8 @@ function Profile(props) {
               <TouchableOpacity
                 activeOpacity={0.3}
                 style={styles().headingButton}
-                onPress={handleNamePress}>
+                onPress={handleNamePress}
+              >
                 <TextDefault textColor={currentTheme.editProfileButton}>
                   {t('edit')}
                 </TextDefault>
@@ -392,7 +407,8 @@ function Profile(props) {
                     B700
                     bolder
                     textColor={currentTheme.darkBgFont}
-                    style={styles(currentTheme).textAlignLeft}>
+                    style={styles(currentTheme).textAlignLeft}
+                  >
                     {t('email')}
                   </TextDefault>
                 </View>
@@ -412,7 +428,8 @@ function Profile(props) {
                     B700
                     bolder
                     textColor={currentTheme.darkBgFont}
-                    style={styles(currentTheme).textAlignLeft}>
+                    style={styles(currentTheme).textAlignLeft}
+                  >
                     {t('password')}
                   </TextDefault>
                 </View>
@@ -423,7 +440,8 @@ function Profile(props) {
               <TouchableOpacity
                 activeOpacity={0.3}
                 style={{ ...styles().headingButton }}
-                onPress={showModal}>
+                onPress={showModal}
+              >
                 <TextDefault textColor={currentTheme.editProfileButton}>
                   {t('change')}
                 </TextDefault>
@@ -443,7 +461,8 @@ function Profile(props) {
                         B700
                         bolder
                         textColor={currentTheme.darkBgFont}
-                        style={styles(currentTheme).textAlignLeft}>
+                        style={styles(currentTheme).textAlignLeft}
+                      >
                         {t('mobileNumber')}
                       </TextDefault>
                     </View>
@@ -461,7 +480,8 @@ function Profile(props) {
                         H5
                         B700
                         bolder
-                        style={styles(currentTheme).textAlignLeft}>
+                        style={styles(currentTheme).textAlignLeft}
+                      >
                         {t('mobileNumber')}
                       </TextDefault>
                     </View>
@@ -487,26 +507,28 @@ function Profile(props) {
                             }
                             disabled={
                               profile.phoneIsVerified && profile.phone !== ''
-                            }>
+                            }
+                          >
                             <TextDefault
                               bold
                               textColor={
                                 profile.phoneIsVerified
                                   ? currentTheme.startColor
                                   : currentTheme.textErrorColor
-                              }>
+                              }
+                            >
                               {profile.phone === ''
                                 ? t('addPhone')
                                 : profile.phoneIsVerified
-                                ? t('verified')
-                                : t('verify')}
+                                  ? t('verified')
+                                  : t('verify')}
                             </TextDefault>
                           </TouchableOpacity>
                         )}
                         {profile.phone !== '' && (
                           <Feather
                             style={{ marginLeft: 10, marginTop: -5 }}
-                            name="check"
+                            name='check'
                             size={20}
                             color={currentTheme.black}
                             onPress={() =>
@@ -530,12 +552,80 @@ function Profile(props) {
                   props.navigation.navigate('PhoneNumber', {
                     prevScreen: 'Profile'
                   })
-                }>
+                }
+              >
                 <TextDefault textColor={currentTheme.editProfileButton}>
                   {t('edit')}
                 </TextDefault>
               </TouchableOpacity>
             </View>
+          </View>
+          <View style={{ alignItems: 'center', marginTop: '65%' }}>
+            <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
+              <TextDefault bolder H4 textColor={currentTheme.deleteAccountBtn}>
+                Delete Account
+              </TextDefault>
+            </TouchableOpacity>
+          </View>
+          <View style={styles().centeredView}>
+            <Modal
+              animationType='slide'
+              transparent={true}
+              visible={deleteModalVisible}
+              onRequestClose={() => {
+                setDeleteModalVisible(!deleteModalVisible)
+              }}
+            >
+              <View style={styles().centeredView}>
+                <View style={styles().modalView}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      gap: 24,
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <TextDefault bolder H3 style={{ alignSelf: 'start' }}>
+                      Are you sure you want to delete your account
+                    </TextDefault>
+                    <Feather
+                      name='x-circle'
+                      size={24}
+                      color='black'
+                      onPress={() => setDeleteModalVisible(!deleteModalVisible)}
+                    />
+                  </View>
+                  <TextDefault
+                    H5
+                    textColor='#6B7280'
+                    style={{ alignSelf: 'left' }}
+                  >
+                    Are you sure you want to delete your account? This action
+                    cannot be undone. Deleting your account will permanently
+                    remove all of your data, including your orders and
+                    preferences. If you proceed, you will lose access to your
+                    account and its benefits
+                  </TextDefault>
+                  <TouchableOpacity
+                    style={[styles(currentTheme).btn, styles().btnDelete]}
+                    onPress={() => setDeleteModalVisible(false)}
+                  >
+                    <TextDefault bolder H4 textColor={currentTheme.white}>
+                      Yes, I'm Sure
+                    </TextDefault>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles(currentTheme).btn, styles().btnCancel]}
+                    onPress={() => setDeleteModalVisible(false)}
+                  >
+                    <TextDefault bolder H4 textColor={currentTheme.black}>
+                      No, Don't Delete it
+                    </TextDefault>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </View>
         </KeyboardAvoidingView>
       </View>

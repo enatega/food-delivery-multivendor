@@ -115,6 +115,47 @@ const styles = (props = null) =>
     phoneDetailsContainer: {
       display: 'flex',
       flexDirection: 'row'
+    },
+    //Modal
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+    },
+    modalView: {
+      width: '90%',
+      alignItems: 'flex-start',
+      gap: 24,
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 20,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    btn: {
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection:'row',
+      height: scale(50),
+      borderRadius: 40
+    },
+    btnCancel: {
+      backgroundColor: props !== null ? props.white : 'white',
+      borderWidth: 1,
+      borderColor: props !== null ? props.black : 'black'
+    },
+    btnDelete: {
+      backgroundColor: props !== null ? props.red600 : '#DC2626',
     }
   })
 export default styles

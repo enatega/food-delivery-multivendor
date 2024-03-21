@@ -78,7 +78,11 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.cartContainer : '#FFF',
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
-      shadowOpacity: 0
+      shadowOpacity: 0,
+      paddingTop: 24,
+      paddingBottom: 24,
+      paddingLeft: 16,
+      paddingRight: 16,
     },
     overlay: {
       backgroundColor: props !== null ? props.backgroundColor2 : 'transparent'
@@ -172,18 +176,22 @@ const styles = (props = null) =>
 
       justifyContent: 'center',
       alignItems: 'center',
-      width: scale(70),
+      width: scale(80),
       height: scale(30),
       borderRadius: 40
     },
     button: {
       backgroundColor: props !== null ? props.main : 'gray',
-
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection:'row',
       height: scale(50),
       borderRadius: 40
+    },
+    buttonDisabled: {
+      backgroundColor: props !== null ? props.white : 'white',
+      borderWidth: 1,
+      borderColor: props !== null ? props.black : 'black'
     },
 
     // totalBill:{
@@ -373,6 +381,31 @@ const styles = (props = null) =>
       width: '65%',
       display: 'flex',
       alignItems: 'flex-end'
+    },
+    modalContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      gap: 24
+    },
+    modalHeader: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    modalheading: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignContent: 'center',
+      gap: 5
+    },
+    modalInput: {
+      height: scale(40),
+      borderWidth: 1,
+      borderColor: props != null ? props.verticalLine : '#B8B8B8',
+      padding: 5,
+      borderRadius: 6
     }
   })
 export default styles

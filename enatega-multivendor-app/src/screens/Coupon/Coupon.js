@@ -71,53 +71,52 @@ function SelectVoucher(props) {
     StatusBar.setBarStyle('dark-content')
   })
 
-  useFocusEffect(() => {
-    props.navigation.setOptions({
-      headerTitle: () => (
-        <View style={{ alignItems: 'center', gap: scale(2) }}>
-          <TextDefault
-            style={{
-              color: currentTheme.btnText,
-              ...textStyles.H4,
-              ...textStyles.Bolder
-            }}
-          >
-            {t('addVoucher')}
-          </TextDefault>
-        </View>
-      ),
-      headerRight: null,
-      headerTitleAlign: 'center',
-      headerTitleStyle: {
-        color: currentTheme.btnText,
-        ...textStyles.H4,
-        ...textStyles.Bolder
-      },
-      headerTitleContainerStyle: {
-        backgroundColor: currentTheme.transparent
-      },
-      headerStyle: {
-        backgroundColor: currentTheme.themeBackground
-      },
-      headerLeft: () => (
-        <HeaderBackButton
-          truncatedLabel=''
-          backImage={() => (
-            <View style={{ ...alignment.PLxSmall }}>
-              <AntDesign
-                name='arrowleft'
-                size={22}
-                color={currentTheme.fontFourthColor}
-              />
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
-      )
-    })
-  })
+  // useFocusEffect(() => {
+  //   props.navigation.setOptions({
+  //     headerTitle: () => (
+  //       <View style={{ alignItems: 'center', gap: scale(2) }}>
+  //         <TextDefault
+  //           style={{
+  //             color: currentTheme.btnText,
+  //             ...textStyles.H4,
+  //             ...textStyles.Bolder
+  //           }}>
+  //           Add Voucher Code
+  //         </TextDefault>
+  //       </View>
+  //     ),
+  //     headerRight: null,
+  //     headerTitleAlign: 'center',
+  //     headerTitleStyle: {
+  //       color: currentTheme.btnText,
+  //       ...textStyles.H4,
+  //       ...textStyles.Bolder
+  //     },
+  //     headerTitleContainerStyle: {
+  //       backgroundColor: currentTheme.transparent
+  //     },
+  //     headerStyle: {
+  //       backgroundColor: currentTheme.themeBackground
+  //     },
+  //     headerLeft: () => (
+  //       <HeaderBackButton
+  //         truncatedLabel=""
+  //         backImage={() => (
+  //           <View style={{ ...alignment.PLxSmall }}>
+  //             <AntDesign
+  //               name="arrowleft"
+  //               size={22}
+  //               color={currentTheme.fontFourthColor}
+  //             />
+  //           </View>
+  //         )}
+  //         onPress={() => {
+  //           navigationService.goBack()
+  //         }}
+  //       />
+  //     )
+  //   })
+  // })
 
   function onSelectCoupon(text) {
     mutate({ variables: { coupon: text } })

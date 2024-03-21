@@ -7,6 +7,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+import ErrorSvg from '../../assets/SVG/error'
 
 const ErrorView = () => {
   const themeContext = useContext(ThemeContext)
@@ -15,13 +16,12 @@ const ErrorView = () => {
 
   return (
     <View style={styles().errorViewContainer}>
-      <MaterialIcons
-        name="error-outline"
-        size={scale(80)}
-        color={currentTheme.main}
-      />
-      <TextDefault center H3>
-        {t('networkError')}
+      <ErrorSvg />
+      <TextDefault center H3 bolder>
+        {t('somethingWentWrong')}
+      </TextDefault>
+      <TextDefault center H4>
+        {t('checkInternet')}
       </TextDefault>
     </View>
   )

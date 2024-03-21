@@ -68,86 +68,15 @@ function About(props) {
         }
       />
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <View style={styles(currentTheme).restaurantInfo}>
-          {!props.loading && (
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
-            >
-              <MaterialIcons
-                name='timer'
-                size={20}
-                color={currentTheme.fontThirdColor}
-              />
-              <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-                {t('delivery')} {restaurantObject.deliveryTime} {t('Min')}
-              </TextDefault>
-            </View>
-          )}
-          <View style={styles().ratingContainer}>
-            <MaterialIcons
-              name='star-border'
-              size={20}
-              color={currentTheme.fontThirdColor}
-            />
-
-            <TextDefault
-              style={{ paddingLeft: 4 }}
-              textColor={currentTheme.fontThirdColor}
-              H5
-              bolder
-            >
-              {restaurantObject.average}
-            </TextDefault>
-            <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-              ({restaurantObject.total})
-            </TextDefault>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 4
-            }}
-          >
-            <MaterialIcons
-              name='location-on'
-              size={20}
-              color={currentTheme.fontThirdColor}
-            />
-            <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
-              {RestAbout.address}
-            </TextDefault>
-          </View>
-        </View>
-
         <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: scale(8),
-              gap: 4
-            }}
-          >
-            <MaterialIcons
-              name='access-time'
-              size={20}
-              color={currentTheme.fontThirdColor}
-            />
-            <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-              {t('Openingtimes')}:
-            </TextDefault>
-          </View>
-
           <View style={styles().timingContainer}>
             {restaurantObject.openingTimes.map((v, index) => (
               <View key={index} style={styles(currentTheme).timingRow}>
                 <TextDefault
                   style={styles().timingText}
                   textColor={currentTheme.black}
-                  bolder
-                  large
-                >
+                  bold
+                  large>
                   {t(v.day)}{' '}
                 </TextDefault>
                 {v.times.length < 1 ? (
@@ -158,6 +87,7 @@ function About(props) {
                   v.times.map((t) => (
                     <TextDefault
                       key={index + 8}
+                      bolder
                       textColor={currentTheme.black}
                       large
                     >
@@ -169,46 +99,6 @@ function About(props) {
                 )}
               </View>
             ))}
-          </View>
-        </View>
-        <View style={styles(currentTheme).mapContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
-              ...alignment.PBsmall
-            }}
-          >
-            <FontAwesome5
-              name='map-marked-alt'
-              size={20}
-              color={currentTheme.fontThirdColor}
-            />
-            <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
-              {t('location')}
-            </TextDefault>
-          </View>
-          <MapView
-            style={styles().flex}
-            scrollEnabled={false}
-            zoomEnabled={false}
-            zoomControlEnabled={false}
-            rotateEnabled={false}
-            cacheEnabled={false}
-            initialRegion={RestAbout.map}
-            customMapStyle={
-              themeContext.ThemeValue === 'Dark' ? mapStyle : null
-            }
-            provider={PROVIDER_GOOGLE}
-          ></MapView>
-          <View style={styles().marker}>
-            <CustomMarker
-              width={40}
-              height={40}
-              transform={[{ translateY: -20 }]}
-              translateY={-20}
-            />
           </View>
         </View>
       </View>

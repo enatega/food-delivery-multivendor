@@ -39,9 +39,7 @@ function ImageHeader(props) {
             textColor={currentTheme.fontThirdColor}
             numberOfLines={1}
             ellipsizeMode="tail">
-            {props.restaurantName.length > 20
-              ? `${props.restaurantName.slice(0, 15)}...`
-              : props.restaurantName}
+            Opening Times
           </TextDefault>
         </View>
         <View style={{ width: '20%' }}></View>
@@ -52,6 +50,15 @@ function ImageHeader(props) {
           resizeMode="contain"
           source={{ uri: props.restaurantImage }}
         />
+        <TextDefault
+            H4
+            bolder
+            Center
+            textColor={currentTheme.fontThirdColor}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {props.restaurantName}
+          </TextDefault>
       </View>
     </View>
   )
