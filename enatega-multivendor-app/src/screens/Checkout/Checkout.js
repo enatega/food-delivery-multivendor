@@ -1223,7 +1223,7 @@ function Checkout(props) {
                     H4>
                     {t('Place Order')}
                   </TextDefault>}
-                  {loadingOrder && <Spinner backColor={'transparent'} />}
+                  {loadingOrder && <Spinner backColor={'transparent'} spinnerColor={currentTheme.main}/>}
                 </TouchableOpacity>
               </View>
             )}

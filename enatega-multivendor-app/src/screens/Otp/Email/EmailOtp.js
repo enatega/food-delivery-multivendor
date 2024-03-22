@@ -126,7 +126,7 @@ function EmailOtp(props) {
             </TextDefault>
           </View>
           {loading || updateUserLoading ? (
-            <Spinner backColor="transparent" size="small" />
+            <Spinner backColor="transparent" size="small" spinnerColor={currentTheme.main} />
           ) : (
             <TouchableOpacity
               activeOpacity={0.7}
