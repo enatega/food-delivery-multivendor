@@ -52,7 +52,7 @@ function ForgotPasswordOtp(props) {
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
-            <Feather name="lock" size={30} color="black" />
+            <Feather name='lock' size={30} color='black' />
           </View>
           <View>
             <TextDefault
@@ -62,7 +62,8 @@ function ForgotPasswordOtp(props) {
               style={{
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
-              }}>
+              }}
+            >
               {t('forgotPassword')}
             </TextDefault>
             <TextDefault
@@ -71,7 +72,8 @@ function ForgotPasswordOtp(props) {
               textColor={currentTheme.fontSecondColor}
               style={{
                 paddingBottom: scale(5)
-              }}>
+              }}
+            >
               {t('otpSentToEmail')}
             </TextDefault>
             <TextDefault H5 bold textColor={currentTheme.fontfourthColor}>
@@ -91,8 +93,8 @@ function ForgotPasswordOtp(props) {
               }}
               autoFocusOnLoad
               code={otp}
-              onCodeChanged={code => setOtp(code)}
-              onCodeFilled={code => {
+              onCodeChanged={(code) => setOtp(code)}
+              onCodeFilled={(code) => {
                 onCodeFilled(code)
               }}
               editable
@@ -101,7 +103,8 @@ function ForgotPasswordOtp(props) {
               <TextDefault
                 style={styles().error}
                 bold
-                textColor={currentTheme.textErrorColor}>
+                textColor={currentTheme.textErrorColor}
+              >
                 {t('wrongOtp')}
               </TextDefault>
             )}
@@ -114,8 +117,9 @@ function ForgotPasswordOtp(props) {
               H4
               bold
               style={alignment.MTsmall}
-              textColor={currentTheme.fontNewColor}>
-              {seconds !== 0 ? `Retry after ${seconds}s` : ''}
+              textColor={currentTheme.fontNewColor}
+            >
+              {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
             </TextDefault>
           </View>
           <TouchableOpacity
@@ -125,9 +129,10 @@ function ForgotPasswordOtp(props) {
               seconds !== 0 && styles(currentTheme).disabledBtn
             ]}
             disabled={seconds !== 0}
-            onPress={() => resendOtp()}>
+            onPress={() => resendOtp()}
+          >
             {loading ? (
-              <Spinner backColor="transparent" size="small" spinnerColor={currentTheme.main} />
+              <Spinner backColor='transparent' size='small' spinnerColor={currentTheme.main} />
             ) : (
               <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
                 {t('resendBtn')}

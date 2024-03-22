@@ -1,4 +1,10 @@
-import React, { useState, useContext, useLayoutEffect, useEffect, useRef } from 'react'
+import React, {
+  useState,
+  useContext,
+  useLayoutEffect,
+  useEffect,
+  useRef
+} from 'react'
 import { View, TouchableOpacity, StatusBar, Linking } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
@@ -67,13 +73,13 @@ export default function SelectLocation(props) {
 
   StatusBar.setBarStyle('dark-content')
 
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     setLoading(true)
     const { status, canAskAgain } = await getLocationPermission()
     if (status !== 'granted' && !canAskAgain) {
       FlashMessage({
         message: t('locationPermissionMessage'),
-        onPress: async() => {
+        onPress: async () => {
           await Linking.openSettings()
         }
       })
@@ -95,13 +101,13 @@ export default function SelectLocation(props) {
     })
   }
 
-  const onRegionChangeComplete = coords => {
+  const onRegionChangeComplete = (coords) => {
     setCoordinates({
       ...coords
     })
   }
 
-  const onItemPress = city => {
+  const onItemPress = (city) => {
     setModalVisible(false)
     navigation.navigate('AddNewAddress', {
       latitude: +city.latitude,
@@ -141,19 +147,21 @@ export default function SelectLocation(props) {
             H3
             bolder
             Left
-            style={styles().heading}>
+            style={styles().heading}
+          >
             {t('selectLocation')}
           </TextDefault>
 
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).button}
-            onPress={setCurrentLocation}>
+            onPress={setCurrentLocation}
+          >
             <View style={styles(currentTheme).icon}>
-              <EvilIcons name="location" size={18} color="black" />
+              <EvilIcons name='location' size={18} color='black' />
             </View>
             <TextDefault textColor={currentTheme.buttonText} H5 bold>
-              Use my current Location
+              {t('useCurrentLocation')}
             </TextDefault>
             {loading && (
               <Spinner
@@ -168,13 +176,14 @@ export default function SelectLocation(props) {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).button}
-            onPress={() => setModalVisible(true)}>
+            onPress={() => setModalVisible(true)}
+          >
             <View style={styles(currentTheme).icon}>
-              <Feather name="list" size={18} color="black" />
+              <Feather name='list' size={18} color='black' />
             </View>
 
             <TextDefault textColor={currentTheme.buttonText} H5 bold>
-              Browse All Cities
+              {t('browseCities')}
             </TextDefault>
           </TouchableOpacity>
           <View style={styles(currentTheme).line} />

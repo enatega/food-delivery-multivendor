@@ -73,7 +73,7 @@ function Login(props) {
                     ...alignment.MBmedium
                   }}>
                   {registeredEmail
-                    ? 'Enter Your Email and Password'
+                    ? t('enterEmailPassword')
                     : t('whatsYourEmail')}
                 </TextDefault>
 
@@ -82,9 +82,7 @@ function Login(props) {
                   bold
                   textColor={currentTheme.horizontalLine}
                   style={{ ...alignment.MBmedium }}>
-                  {registeredEmail
-                    ? 'Your email already exists.'
-                    : t('checkAccount')}
+                  {registeredEmail ? t('emailExists') : t('checkAccount')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
@@ -186,7 +184,7 @@ function Login(props) {
                           size="small"
                         />
                       ) : registeredEmail ? (
-                        'Login'
+                        t('loginBtn')
                       ) : (
                         t('continueBtn')
                       )}

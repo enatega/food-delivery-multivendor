@@ -57,7 +57,7 @@ function PhoneOtp(props) {
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
-            <Ionicons name="phone-portrait-outline" size={30} color="black" />
+            <Ionicons name='phone-portrait-outline' size={30} color='black' />
           </View>
           <View>
             <TextDefault
@@ -67,7 +67,8 @@ function PhoneOtp(props) {
               style={{
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
-              }}>
+              }}
+            >
               {t('verifyPhone')}
             </TextDefault>
             <TextDefault
@@ -76,8 +77,9 @@ function PhoneOtp(props) {
               textColor={currentTheme.fontSecondColor}
               style={{
                 paddingBottom: scale(5)
-              }}>
-              Enter 4 digit code sent to you mobile
+              }}
+            >
+              {t('enterOtp')}
             </TextDefault>
             <TextDefault H5 bold textColor={currentTheme.fontfourthColor}>
               {phone}
@@ -96,8 +98,8 @@ function PhoneOtp(props) {
               }}
               autoFocusOnLoad
               code={otp}
-              onCodeChanged={code => setOtp(code)}
-              onCodeFilled={code => {
+              onCodeChanged={(code) => setOtp(code)}
+              onCodeFilled={(code) => {
                 onCodeFilled(code)
               }}
               editable
@@ -106,7 +108,8 @@ function PhoneOtp(props) {
               <TextDefault
                 style={styles().error}
                 bold
-                textColor={currentTheme.textErrorColor}>
+                textColor={currentTheme.textErrorColor}
+              >
                 {t('wrongOtp')}
               </TextDefault>
             )}
@@ -115,7 +118,7 @@ function PhoneOtp(props) {
         <View style={styles().btnContainer}>
           <View style={alignment.MBxSmall}>
             <TextDefault center H4 bold style={alignment.MTsmall}>
-              {seconds !== 0 ? `Retry after ${seconds}s` : ''}
+              {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
             </TextDefault>
           </View>
           <View>
@@ -123,7 +126,7 @@ function PhoneOtp(props) {
               <Spinner
                 backColor={currentTheme.backgroundColor}
                 spinnerColor={currentTheme.white}
-                size="small"
+                size='small'
               />
             ) : (
               <TouchableOpacity
@@ -133,12 +136,14 @@ function PhoneOtp(props) {
                   seconds !== 0 && styles(currentTheme).disabledBtn
                 ]}
                 disabled={seconds !== 0}
-                onPress={() => resendOtp()}>
+                onPress={() => resendOtp()}
+              >
                 <TextDefault
                   H4
                   textColor={currentTheme.fontfourthColor}
                   style={alignment.MLsmall}
-                  bold>
+                  bold
+                >
                   {t('resendBtn')}
                 </TextDefault>
               </TouchableOpacity>
