@@ -3,7 +3,10 @@ import { Dimensions, StyleSheet } from 'react-native'
 const windowWidth = Dimensions.get('window').width
 import { alignment } from '../../utils/alignment'
 
-const styles = (props = null) =>
+const SCREEN_HEIGHT = Dimensions.get('screen').height
+const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
+
+const styles = (props = null, hasActiveOrders = false) =>
   StyleSheet.create({
     flex: {
       flex: 1
@@ -169,12 +172,14 @@ const styles = (props = null) =>
       textAlign: 'left'
     },
     addressDetail: {
-      // width: '80%',
       alignSelf: 'flex-end',
       fontSize: scale(4),
       fontWeight: '300',
       textAlign: 'justify',
       paddingLeft: scale(38)
+    },
+    topBrandsMargin: {
+      marginBottom: hasActiveOrders ? MODAL_HEIGHT : 0
     }
   })
 export default styles

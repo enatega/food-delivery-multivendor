@@ -490,6 +490,7 @@ export const ar = {
   allGrocery: 'جميع متاجر البقالة',
   searchGrocery: 'البحث عن متاجر البقالة',
   noGrocery: 'لا يقدم أي متجر بقالة تسليمًا حاليًا في منطقتك',
+
   alertLocation: 'نوع الموقع غير محدد',
   Sort: 'ترتيب',
   Offers: 'عروض',
@@ -507,5 +508,7 @@ export const ar = {
   Newest: 'الأحدث',
 HighestRating: 'أعلى تقييم',
 LowestRating: 'أقل تقييم',
+  cartAddresses: 'عناوين السلة',
+  addressDeletedMessage: 'تم حذف العنوان!'
 
 }

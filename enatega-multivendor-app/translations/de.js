@@ -524,5 +524,7 @@ export const de = {
   Newest: 'Neueste',
 HighestRating: 'Höchste Bewertung',
 LowestRating: 'Niedrigste Bewertung',
+  cartAddresses: 'Warenkorb-Adressen',
+  addressDeletedMessage: 'Adresse gelöscht!'
 
 }

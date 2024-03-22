@@ -505,5 +505,6 @@ export const km = {
   Newest: 'ថ្មីបំផុត',
 HighestRating: 'ការវាយតម្លៃខ្ពស់បំផុត',
 LowestRating: 'ការវាយតម្លៃទាបបំផុត',
-
+  cartAddresses: 'អាសយដ្ឋានប្រអប់',
+  addressDeletedMessage: 'បានលុបអាសយដ្ឋាន!'
 }

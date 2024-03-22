@@ -493,5 +493,6 @@ export const zh = {
   Newest: '最新',
 HighestRating: '最高评分',
 LowestRating: '最低评分',
-
+  cartAddresses: '购物车地址',
+  addressDeletedMessage: '地址已删除！'
 }

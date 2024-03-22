@@ -515,4 +515,7 @@ export const en = {
   Newest:'Newest',
   HighestRating:'Highest Rating',
   LowestRating: 'Lowest Rating',
+  cartAddresses: 'Cart Addresses',
+  addressDeletedMessage: 'Address deleted!'
+
 }

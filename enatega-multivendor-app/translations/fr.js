@@ -521,5 +521,6 @@ export const fr = {
   Newest: 'Plus récent',
 HighestRating: 'Meilleure évaluation',
 LowestRating: 'Plus basse évaluation',
-
+  cartAddresses: 'Adresses du panier',
+  addressDeletedMessage: 'Adresse supprimée !'
 }
