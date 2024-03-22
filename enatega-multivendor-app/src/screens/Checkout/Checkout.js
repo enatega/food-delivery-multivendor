@@ -51,6 +51,7 @@ import { customMapStyle } from '../../utils/customMapStyles'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Spinner from '../../components/Spinner/Spinner'
+import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 
 // Constants
 const PLACEORDER = gql`
@@ -89,9 +90,11 @@ function Checkout(props) {
 
   const { loading, data } = useRestaurant(cartRestaurant)
   const [loadingOrder, setLoadingOrder] = useState(false)
+  const latOrigin = data?.restaurant?.location?.coordinates[1]
+  const lonOrigin = data?.restaurant?.location?.coordinates[0]
   const initialRegion = {
-    latitude: location.latitude,
-    longitude: location.longitude,
+    latitude: +latOrigin,
+    longitude: +lonOrigin,
     latitudeDelta: 0.0022,
     longitudeDelta: 0.0021
   }
@@ -719,12 +722,7 @@ function Checkout(props) {
                       customMapStyle={customMapStyle}
                       provider={PROVIDER_GOOGLE}></MapView>
                     <View style={styles().marker}>
-                      <CustomMarker
-                        width={40}
-                        height={40}
-                        transform={[{ translateY: -20 }]}
-                        translateY={-20}
-                      />
+                      <RestaurantMarker />
                     </View>
                   </View>
                   <View
