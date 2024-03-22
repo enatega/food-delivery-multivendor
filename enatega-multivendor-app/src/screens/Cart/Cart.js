@@ -385,10 +385,11 @@ function Cart(props) {
   const addons = restaurant?.addons
   const options = restaurant?.options
   // const { addons, options } = restaurant
-  const foods = restaurant?.categories?.map((c) => c.foods.flat()).flat()
+  const foods = restaurant?.categories?.map(c => c.foods.flat()).flat()
+  console.log('Foodsssss => ', foods?.length)
 
   function populateFood(cartItem) {
-    const food = foods.find((food) => food._id === cartItem._id)
+    const food = foods?.find(food => food._id === cartItem._id)
     if (!food) return null
     const variation = food.variations.find(
       (variation) => variation._id === cartItem.variation._id
@@ -482,6 +483,7 @@ function Cart(props) {
                   </TextDefault>
                   {cart?.map((cartItem, index) => {
                     const food = populateFood(cartItem)
+                    console.log('CART FOOD => ', food)
                     if (!food) return null
                     return (
                       <View

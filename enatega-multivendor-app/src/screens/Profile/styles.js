@@ -2,6 +2,8 @@ import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
+import { Dimensions } from 'react-native'
+const {height} = Dimensions.get('screen')
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -11,7 +13,9 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.white : 'transparent'
+      backgroundColor: props !== null ? props.white : 'transparent',
+      // backgroundColor: 'red',
+      // height: '100%'
     },
     containerInfo: {
       width: '100%',
@@ -121,7 +125,9 @@ const styles = (props = null) =>
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22,
+      backgroundColor: '#000',
+      filter: 'blur(10)'
+      
     },
     modalView: {
       width: '90%',
@@ -142,12 +148,13 @@ const styles = (props = null) =>
       elevation: 5,
     },
     btn: {
-      width: '100%',
+      flex: 'none',
+      display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection:'row',
+      alignSelf: 'stretch',
       height: scale(50),
-      borderRadius: 40
+      borderRadius: 40,
     },
     btnCancel: {
       backgroundColor: props !== null ? props.white : 'white',

@@ -6,9 +6,10 @@ export const FlashMessage = props => {
     message: props.message,
     hideOnPress: false,
     onPress: props.onPress,
-    duration: 1500
+    duration: props.duration ?? 1500
   })
 }
 FlashMessage.propTypes = {
-  message: PropTypes.string.isRequired
+  message: PropTypes.string.isRequired,
+  duration: PropTypes.number,
 }
