@@ -6,7 +6,7 @@ import {
   StatusBar,
   Platform
 } from 'react-native'
-import { useMutation } from '@apollo/client'
+import { NetworkStatus, useMutation } from '@apollo/client'
 import {
   AntDesign,
   EvilIcons,
@@ -44,7 +44,7 @@ function Addresses() {
 
   const navigation = useNavigation()
   const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS)
-  const { profile } = useContext(UserContext)
+  const { profile, refetchProfile, networkStatus } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
@@ -131,6 +131,8 @@ function Addresses() {
   return (
     <View style={styles(currentTheme).flex}>
       <FlatList
+        onRefresh={refetchProfile}
+        refreshing={networkStatus === NetworkStatus.refetch}
         data={profile?.addresses}
         ListEmptyComponent={emptyView}
         keyExtractor={(item) => item._id}
@@ -167,7 +169,10 @@ function Addresses() {
                   activeOpacity={0.7}
                   onPress={() => {
                     const [longitude, latitude] = address.location.coordinates
+
+                    console.log(longitude, latitude,address._id )
                     navigation.navigate('AddNewAddress', {
+                      id:address._id,
                       longitude: +longitude,
                       latitude: +latitude
                     })

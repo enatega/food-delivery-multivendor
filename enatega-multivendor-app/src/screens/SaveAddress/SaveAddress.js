@@ -31,6 +31,7 @@ import { createAddress, editAddress } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import Spinner from '../../components/Spinner/Spinner'
 
 const CREATE_ADDRESS = gql`
   ${createAddress}
@@ -49,20 +50,17 @@ function SaveAddress(props) {
   const [selectedLabel, setSelectedLabel] = useState('')
   const inset = useSafeAreaInsets()
 
-  const [mutate, { loading }] = useMutation(
-    locationData._id ? EDIT_ADDRESS : CREATE_ADDRESS,
-    {
-      onCompleted,
-      onError
-    }
-  )
 
-  function onCompleted(data) {
+  const [mutate, { loading }] = useMutation(locationData.id ? EDIT_ADDRESS : CREATE_ADDRESS, {
+    onCompleted,
+    onError
+  })
+  function onCompleted({createAddress, editAddress}) {
     FlashMessage({
       message: t('addressUpdated')
     })
-
-    const address = data.createAddress.addresses.find((a) => a.selected)
+    
+    const address = (createAddress||editAddress)?.addresses.find(a => a.selected) || 
     setLocation({
       _id: address._id,
       label: selectedLabel,
@@ -129,14 +127,14 @@ function SaveAddress(props) {
       return
     }
     const addressInput = {
-      longitude: `${locationData.latitude}`,
-      latitude: `${locationData.longitude}`,
+      longitude: `${locationData.longitude}`,
+      latitude: `${locationData.latitude}`,
       deliveryAddress: locationData.deliveryAddress,
       details: locationData.deliveryAddress,
       label: selectedLabel
     }
     if (locationData.id) {
-      addressInput._id = locationData._id
+      addressInput._id = locationData.id
     }
 
     mutate({ variables: { addressInput } })
@@ -336,11 +334,12 @@ function SaveAddress(props) {
                 disabled={loading}
                 onPress={onSelectLocation}
                 activeOpacity={0.5}
-                style={styles(currentTheme).saveBtnContainer}
-              >
-                <TextDefault textColor={currentTheme.black} H5 bold>
+
+                style={styles(currentTheme).saveBtnContainer}>
+                {!loading && <TextDefault textColor={currentTheme.black} H5 bold>
                   {t('saveAddress')}
-                </TextDefault>
+                </TextDefault>}
+                {loading && <Spinner backColor={'transparent'} />}
               </TouchableOpacity>
             </View>
           </ScrollView>
