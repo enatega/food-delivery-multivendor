@@ -30,7 +30,7 @@ export default function Detail({
     <View style={styles.container(theme)}>
       {(rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED) && (
         <ChatButton
-          onPress={() => navigation.navigate('ChatWithRider', { id })}
+          onPress={() => navigation.navigate('ChatWithRider', { id, orderNo, total })}
           title={t('chatWithRider')}
           description={'Ask for contactless delivery'}
           theme={theme}

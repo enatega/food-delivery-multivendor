@@ -43,11 +43,17 @@ function Addresses() {
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS)
+  const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS, {
+    onCompleted
+  })
   const { profile, refetchProfile, networkStatus } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
+
+    function onCompleted() {
+      FlashMessage({ message: t('addressDeletedMessage') })
+    }
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {

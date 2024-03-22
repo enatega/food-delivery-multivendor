@@ -309,13 +309,16 @@ function Settings(props) {
       message: t('errorInProfile')
     })
   }
-  if (loadingProfile) return <Spinner />
+  if (loadingProfile)
+    return (
+      <Spinner backColor={'transparent'} spinnerColor={currentTheme.main} />
+    )
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
       style={[styles().flex, styles(currentTheme).mainContainer]}>
       <View style={styles().flex}>
-        <View style={[styles(currentTheme).languageContainer]}>
+        <TouchableOpacity style={[styles(currentTheme).languageContainer]} onPress={() => modalVisibleSetter(true)}>
           <View style={{ flex: 3 }}>
             <View style={styles().changeLanguage}>
               <View style={styles().width85}>
@@ -340,7 +343,7 @@ function Settings(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={styles(currentTheme).mainContainerArea}>
           <View
             style={[
@@ -485,8 +488,8 @@ function Settings(props) {
               <RadioButton
                 animation={'bounceIn'}
                 size={13}
-                outerColor={currentTheme.main}
-                innerColor={currentTheme.iconColorDark}
+                outerColor={currentTheme.iconColorDark}
+                innerColor={currentTheme.main}
                 isSelected={activeRadio === item.index}
                 onPress={() => activeRadioSetter(item.index)}
               />

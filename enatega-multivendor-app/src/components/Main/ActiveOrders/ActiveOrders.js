@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { View, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -21,7 +21,7 @@ const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 
-const ActiveOrders = () => {
+const ActiveOrders = ({ onActiveOrdersChange }) => {
   const { t } = useTranslation()
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
@@ -41,6 +41,11 @@ const ActiveOrders = () => {
   const [showAll, setShowAll] = useState(false)
 
   const displayOrders = showAll ? activeOrders : activeOrders.slice(0, 2)
+
+  useEffect(() => {
+    const hasActiveOrders = displayOrders.length > 0
+    onActiveOrdersChange(hasActiveOrders)
+  }, [displayOrders, onActiveOrdersChange])
 
   if (loadingOrders) return null
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />

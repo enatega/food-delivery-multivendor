@@ -390,5 +390,7 @@ export const zh = {
   emptyPastOrdersBtn: '让我们来点什么吧！',
   allGrocery: '所有杂货店',
   searchGrocery: '搜索杂货店',
-  noGrocery: '您所在的区域目前没有杂货店提供送货服务'
+  noGrocery: '您所在的区域目前没有杂货店提供送货服务',
+  cartAddresses: '购物车地址',
+  addressDeletedMessage: '地址已删除！'
 }
