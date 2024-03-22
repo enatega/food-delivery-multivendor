@@ -44,14 +44,17 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
             <Text style={{ color: '#1C1C1E', fontSize: scale(12) }}>
               {`${configuration.currencySymbol}${item.variations[0].price}`}
             </Text>
-            <Text
+            {item.variations[0].discounted > 0 && (
+              <Text
               style={{
                 color: '#9CA3AF',
                 fontSize: scale(12),
                 textDecorationLine: 'line-through'
               }}>
-              {`${configuration.currencySymbol}${item.variations[0].discounted}`}
+                {`${configuration.currencySymbol} ${parseFloat(item.variations[0].price + item.variations[0].discounted).toFixed(2)}`}
+
             </Text>
+            )}
           </View>
         </View>
       </View>
