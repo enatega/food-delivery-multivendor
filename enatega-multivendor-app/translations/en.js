@@ -414,5 +414,6 @@ export const en = {
   noGrocery: 'No grocery shop currently offers delivery in your area',
   restaurantName: 'Restaurant Name',
   cartAddresses: 'Cart Addresses',
-  addressDeletedMessage: 'Address deleted!'
+  addressDeletedMessage: 'Address deleted!',
+  logoutMessage: 'Successfully logged out'
 }

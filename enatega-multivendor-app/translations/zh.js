@@ -392,5 +392,6 @@ export const zh = {
   searchGrocery: '搜索杂货店',
   noGrocery: '您所在的区域目前没有杂货店提供送货服务',
   cartAddresses: '购物车地址',
-  addressDeletedMessage: '地址已删除！'
+  addressDeletedMessage: '地址已删除！',
+  logoutMessage: '成功登出'
 }

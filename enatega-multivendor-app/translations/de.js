@@ -420,5 +420,6 @@ export const de = {
   noGrocery:
     'Kein Lebensmittelgeschäft bietet derzeit Lieferungen in Ihrer Gegend an',
   cartAddresses: 'Warenkorb-Adressen',
-  addressDeletedMessage: 'Adresse gelöscht!'
+  addressDeletedMessage: 'Adresse gelöscht!',
+  logoutMessage: 'Erfolgreich ausgeloggt'
 }

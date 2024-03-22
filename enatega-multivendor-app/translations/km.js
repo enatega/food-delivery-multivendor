@@ -404,5 +404,6 @@ export const km = {
   searchGrocery: 'ស្វែងរកហាងទំនិញគ្រឿងសំរាប់',
   noGrocery: 'គ្មានហាងទំនិញគ្រឿងសំរាប់ដឹងស្រឡាយនៅក្នុងតំបន់របស់អ្នកលើកទី',
   cartAddresses: 'អាសយដ្ឋានប្រអប់',
-  addressDeletedMessage: 'បានលុបអាសយដ្ឋាន!'
+  addressDeletedMessage: 'បានលុបអាសយដ្ឋាន!',
+  logoutMessage: 'បាន​ចេញ​ពី​ប្រព័ន្ធ​រួច​ហើយ'
 }

@@ -420,5 +420,6 @@ export const fr = {
   noGrocery:
     "Aucun magasin d'alimentation ne propose actuellement de livraison dans votre région",
   cartAddresses: 'Adresses du panier',
-  addressDeletedMessage: 'Adresse supprimée !'
+  addressDeletedMessage: 'Adresse supprimée !',
+  logoutMessage: 'Déconnexion réussie'
 }
