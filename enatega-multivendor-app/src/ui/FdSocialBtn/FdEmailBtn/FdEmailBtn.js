@@ -20,7 +20,7 @@ const FdEmailBtn = props => {
       style={styles(currentTheme).mainContainer}
       onPress={props.onPress}>
       {props.loadingIcon ? (
-        <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={'#000'} />
+        <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={currentTheme.main} />
       ) : (
         <>
           <MaterialIcons

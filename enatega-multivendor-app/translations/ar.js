@@ -509,6 +509,6 @@ export const ar = {
 HighestRating: 'أعلى تقييم',
 LowestRating: 'أقل تقييم',
   cartAddresses: 'عناوين السلة',
-  addressDeletedMessage: 'تم حذف العنوان!'
-
+  addressDeletedMessage: 'تم حذف العنوان!',
+  logoutMessage: 'تم تسجيل الخروج بنجاح'
 }

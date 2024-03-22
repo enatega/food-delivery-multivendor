@@ -46,7 +46,7 @@ const CreateAccount = (props) => {
         <View style={styles().buttonBackground}>
           <Spinner
             backColor='rgba(0,0,0,0.1)'
-            spinnerColor={currentTheme.white}
+            spinnerColor={currentTheme.main}
           />
         </View>
       )
@@ -181,7 +181,7 @@ const CreateAccount = (props) => {
             }}
           >
             {props.loadingIcon ? (
-              <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={'#000'} />
+              <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
             ) : (
               <>
                 <TextDefault

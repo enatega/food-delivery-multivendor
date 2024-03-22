@@ -258,7 +258,7 @@ export const en = {
   Cancel: 'Cancel',
   DeleteAccount: 'Delete Account',
   DeleteConfirmation: 'Are you Sure you want to delete Account?',
-  chatWithRider: 'Let&#39;s Chat with rider',
+  chatWithRider: "Let's Chat with rider",
   yourOrderIs: 'Your order is',
   noItemsExists: 'No items exists',
   pickUpAddress: 'PickUp Address',
@@ -516,6 +516,7 @@ export const en = {
   HighestRating:'Highest Rating',
   LowestRating: 'Lowest Rating',
   cartAddresses: 'Cart Addresses',
-  addressDeletedMessage: 'Address deleted!'
+  addressDeletedMessage: 'Address deleted!',
+  logoutMessage: 'Successfully logged out'
 
 }

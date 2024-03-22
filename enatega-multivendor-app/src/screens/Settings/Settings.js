@@ -384,7 +384,7 @@ function Settings(props) {
               </View>
               {loading && btnText === 'order' && (
                 <View>
-                  <Spinner size='small' backColor='transparent' />
+                  <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
                 </View>
               )}
             </TouchableOpacity>
@@ -423,7 +423,7 @@ function Settings(props) {
               </View>
               {loading && btnText === 'offer' && (
                 <View>
-                  <Spinner size='small' backColor='transparent' />
+                  <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
                 </View>
               )}
             </TouchableOpacity>

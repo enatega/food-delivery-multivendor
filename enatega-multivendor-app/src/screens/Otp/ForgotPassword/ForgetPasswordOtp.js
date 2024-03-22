@@ -132,7 +132,7 @@ function ForgotPasswordOtp(props) {
             onPress={() => resendOtp()}
           >
             {loading ? (
-              <Spinner backColor='transparent' size='small' />
+              <Spinner backColor='transparent' size='small' spinnerColor={currentTheme.main} />
             ) : (
               <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
                 {t('resendBtn')}

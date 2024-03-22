@@ -171,7 +171,7 @@ const Reviews = ({ navigation, route }) => {
               />
             ))}
           </View>
-          <View>
+          <View style={{ ...alignment.MBlarge }}>
             {sorted.map((review) => (
               <ReviewCard
                 key={review._id}

@@ -118,7 +118,7 @@ export default function CurrentLocation() {
                 <Spinner
                   size={'small'}
                   backColor={'transparent'}
-                  spinnerColor={'#fff'}
+                   spinnerColor={currentTheme.main}
                 />
               )}
             </TouchableOpacity>

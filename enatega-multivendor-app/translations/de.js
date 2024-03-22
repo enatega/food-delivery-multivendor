@@ -525,6 +525,7 @@ export const de = {
 HighestRating: 'Höchste Bewertung',
 LowestRating: 'Niedrigste Bewertung',
   cartAddresses: 'Warenkorb-Adressen',
-  addressDeletedMessage: 'Adresse gelöscht!'
+  addressDeletedMessage: 'Adresse gelöscht!',
+  logoutMessage: 'Erfolgreich ausgeloggt'
 
 }

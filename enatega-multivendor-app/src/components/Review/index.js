@@ -67,7 +67,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
           <View style={{ justifyContent: 'space-evenly' }}>
             {order?.items?.slice(0, 2).map((item, index) => (<TextDefault key={`${item.food}-${index}`} H5 bold textColor={theme.gray900}>{item.title}</TextDefault>))}
             <View>
-              {order?.deliveredAt && <TextDefault textColor={theme.gray500} H5>{(new Date(order?.deliveredAt).toString())}</TextDefault>}
+              {order?.deliveredAt && <TextDefault textColor={theme.gray500} >{(new Date(order?.deliveredAt).toString())}</TextDefault>}
             </View>
           </View>
           <View>

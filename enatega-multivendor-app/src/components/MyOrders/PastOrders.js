@@ -23,7 +23,7 @@ function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
   const orderStatusInactive = ['DELIVERED', 'COMPLETED']
   const { orders, loadingOrders, errorOrders } = useContext(OrdersContext)
-  if (loadingOrders) return <Spinner visible={loadingOrders} />
+  if (loadingOrders) return <Spinner visible={loadingOrders} backColor="transparent" spinnerColor={currentTheme.main} />
   if (errorOrders) return <TextError text={errorOrders.message} />
   else {
     const hasActiveOrders =

@@ -494,5 +494,6 @@ export const zh = {
 HighestRating: '最高评分',
 LowestRating: '最低评分',
   cartAddresses: '购物车地址',
-  addressDeletedMessage: '地址已删除！'
+  addressDeletedMessage: '地址已删除！',
+  logoutMessage: '成功登出'
 }
