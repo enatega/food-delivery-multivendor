@@ -48,7 +48,7 @@ const themeValue = 'Pink'
 Notifications.setNotificationHandler({
   handleNotification: async notification => {
     return {
-      shouldShowAlert: notification?.request?.content?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
+      shouldShowAlert: notification?.request?.trigger?.remoteMessage?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
       shouldPlaySound: false,
       shouldSetBadge: false
     }
@@ -195,33 +195,23 @@ export default function App() {
     registerForPushNotificationsAsync()
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log('addNotificationReceivedListener', notification?.request?.content?.data)
-      try {
-      if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = notification?.request?.content?.data?._id
+      if (notification?.request?.trigger?.remoteMessage?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = notification?.request?.trigger?.remoteMessage?.data?._id
         if (id) {
           setOrderId(id)
           reviewModalRef.current.open()
         }
       }
-      } catch (error) {
-      console.log('addNotificationReceivedListener', error) 
-    }
     })
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-try {
-      console.log('addNotificationResponseReceivedListener', response?.notification?.request?.content?.data)
-      if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = response?.notification?.request?.content?.data?._id
-        if (id){
+      if (response?.notification?.request?.trigger?.remoteMessage?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = response?.notification?.request?.trigger?.remoteMessage?.data?._id
+        if (id) {
           setOrderId(id)
           reviewModalRef.current.open()
         }
       }
-    } catch (error) {
-      console.log('addNotificationResponseReceivedListener', error)
-    }
     })
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current)
@@ -304,9 +294,8 @@ async function registerForPushNotificationsAsync() {
 //     content: {
 //       title: "You've got mail! 📬",
 //       body: 'Here is the notification body',
-//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, _id: '65fad0fddb4a3e93b540845a' }
+//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, orderId: '65e068b2150aab288f2b821f' }
 //     },
 //     trigger: { seconds: 10 }
 //   })
 // }
-// {"_id": "65fad0fddb4a3e93b540845a", "order": "CI8ZU-489", "status": "DELIVERED", "type": "REVIEW_ORDER"}

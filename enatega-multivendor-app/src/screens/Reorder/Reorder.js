@@ -46,8 +46,9 @@ function Reorder(props) {
               color: currentTheme.btnText,
               ...textStyles.H4,
               ...textStyles.Bolder
-            }}>
-            Previous Order
+            }}
+          >
+            {t('previousOrder')}
           </TextDefault>
         </View>
       ),
@@ -66,11 +67,11 @@ function Reorder(props) {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall }}>
               <AntDesign
-                name="arrowleft"
+                name='arrowleft'
                 size={22}
                 color={currentTheme.fontFourthColor}
               />
@@ -89,9 +90,9 @@ function Reorder(props) {
     }
     Track()
   }, [])
-  const onSelect = index => {
+  const onSelect = (index) => {
     if (selectedItems.includes(index)) {
-      const filteredItems = selectedItems.filter(i => i !== index)
+      const filteredItems = selectedItems.filter((i) => i !== index)
       setItems(filteredItems)
     } else {
       setItems([...selectedItems, index])
@@ -100,9 +101,9 @@ function Reorder(props) {
 
   const onAddToCart = async () => {
     await setCartRestaurant(order.restaurant._id)
-    selectedItems.forEach(async index => {
+    selectedItems.forEach(async (index) => {
       const item = order.items[index]
-      const addons = item.addons.map(addon => ({
+      const addons = item.addons.map((addon) => ({
         _id: addon._id,
         options: addon.options.map(({ _id }) => ({
           _id
@@ -126,10 +127,11 @@ function Reorder(props) {
       <ScrollView
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}
-        contentContainerStyle={styles(currentTheme).scrollViewStyle}>
+        contentContainerStyle={styles(currentTheme).scrollViewStyle}
+      >
         <View style={styles(currentTheme).mainContainer}>
           <TextDefault bolder H4 textColor={currentTheme.fontMainColor}>
-            Select Items to order again
+            {t('ItemsOrderAgain')}
           </TextDefault>
           {order.items.map((item, index) => {
             return (
@@ -139,7 +141,8 @@ function Reorder(props) {
                   flexDirection: 'row',
                   alignItems: 'center',
                   ...alignment.MTmedium
-                }}>
+                }}
+              >
                 <TouchableOpacity onPress={() => onSelect(index)}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={[alignment.MRmedium]}>
@@ -152,7 +155,8 @@ function Reorder(props) {
                     <TextDefault
                       numberOfLines={1}
                       H5
-                      textColor={currentTheme.fontMainColor}>
+                      textColor={currentTheme.fontMainColor}
+                    >
                       {item.title}
                     </TextDefault>
                   </View>
@@ -165,7 +169,8 @@ function Reorder(props) {
                         <TextDefault
                           style={alignment.MTxSmall}
                           textColor={currentTheme.fontSecondColor}
-                          numberOfLines={1}>
+                          numberOfLines={1}
+                        >
                           + {addon.title}
                         </TextDefault>
                         {addon.options.map((option, index) => (
@@ -173,7 +178,8 @@ function Reorder(props) {
                             key={index}
                             style={alignment.MLsmall}
                             textColor={currentTheme.fontSecondColor}
-                            numberOfLines={1}>
+                            numberOfLines={1}
+                          >
                             - {option.title}
                           </TextDefault>
                         ))}
@@ -196,7 +202,8 @@ function Reorder(props) {
                     backgroundColor: currentTheme.lightHorizontalLine
                   }
             }
-            onPress={onAddToCart}>
+            onPress={onAddToCart}
+          >
             <TextDefault bolder textColor={currentTheme.black}>
               {t('addToCart')}
             </TextDefault>

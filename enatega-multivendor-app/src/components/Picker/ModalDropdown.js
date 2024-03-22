@@ -11,8 +11,10 @@ import { Feather, Entypo } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { LocationContext } from '../../context/Location'
+import { useTranslation } from 'react-i18next'
 
 const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
+  const { t } = useTranslation()
   const { cities } = useContext(LocationContext)
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -20,7 +22,9 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
       onPress={() => {
         onItemPress(item)
       }}>
-      <TextDefault H5 bold textColor={theme.gray700}>{item.name}</TextDefault>
+      <TextDefault H5 bold textColor={theme.gray700}>
+        {item.name}
+      </TextDefault>
       <Entypo name="chevron-right" size={24} color="black" />
     </TouchableOpacity>
   )
@@ -38,7 +42,7 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
       <View style={styles.modalContainer}>
         <View style={styles.header}>
           <TextDefault textColor={theme.gray900} H3 bolder>
-            Explore Cities
+            {t('exploreCities')}
           </TextDefault>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Feather name="x-circle" size={30} color="black" />

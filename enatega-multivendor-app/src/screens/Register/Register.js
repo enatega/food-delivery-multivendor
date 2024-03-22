@@ -59,18 +59,18 @@ function Register(props) {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[
-        styles().flex,
-        { backgroundColor: currentTheme.themeBackground }
-      ]}>
+      style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles().flex}>
+        style={styles().flex}
+      >
         <ScrollView
           style={styles().flex}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}>
+          alwaysBounceVertical={false}
+        >
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
@@ -79,7 +79,7 @@ function Register(props) {
                   style={styles().logoContainer}
                 /> */}
 
-                <SimpleLineIcons name="user" size={30} color="black" />
+                <SimpleLineIcons name='user' size={30} color='black' />
               </View>
               <View>
                 <TextDefault
@@ -88,14 +88,16 @@ function Register(props) {
                   style={{
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
-                  }}>
+                  }}
+                >
                   {t('letsGetStarted')}
                 </TextDefault>
                 <TextDefault
                   H5
                   bold
                   textColor={currentTheme.fontSecondColor}
-                  style={{ ...alignment.PBmedium }}>
+                  style={{ ...alignment.PBmedium }}
+                >
                   {t('createAccount')}
                 </TextDefault>
               </View>
@@ -109,13 +111,14 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={email}
-                    onChangeText={e => setEmail(e)}
+                    onChangeText={(e) => setEmail(e)}
                   />
                   {emailError && (
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {emailError}
                     </TextDefault>
                   )}
@@ -129,13 +132,14 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={firstname}
-                    onChangeText={e => setFirstname(e)}
+                    onChangeText={(e) => setFirstname(e)}
                   />
                   {firstnameError && (
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {firstnameError}
                     </TextDefault>
                   )}
@@ -149,13 +153,14 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={lastname}
-                    onChangeText={e => setLastname(e)}
+                    onChangeText={(e) => setLastname(e)}
                   />
                   {lastnameError && (
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {lastnameError}
                     </TextDefault>
                   )}
@@ -171,7 +176,7 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={password}
-                    onChangeText={e => setPassword(e)}
+                    onChangeText={(e) => setPassword(e)}
                   />
                   <View>
                     <FontAwesome
@@ -188,7 +193,8 @@ function Register(props) {
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {passwordError}
                     </TextDefault>
                   </View>
@@ -198,15 +204,17 @@ function Register(props) {
                     style={[
                       styles(currentTheme).textField,
                       styles().countryCode
-                    ]}>
+                    ]}
+                  >
                     <CountryPicker
                       countryCode={countryCode}
-                      onSelect={country => onCountrySelect(country)}
+                      onSelect={(country) => onCountrySelect(country)}
                       withAlphaFilter
                       withFilter
                     />
                     <TextDefault
-                      style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}>
+                      style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}
+                    >
                       {country?.cca2}
                     </TextDefault>
                   </View>
@@ -215,14 +223,15 @@ function Register(props) {
                       styles(currentTheme).textField,
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
-                    ]}>
+                    ]}
+                  >
                     <View style={styles().phoneFieldInner}>
                       <Text>+{country.callingCode[0]} </Text>
                       <TextInput
                         placeholder={t('mobileNumber')}
                         placeholderTextColor={currentTheme.fontSecondColor}
                         value={phone}
-                        onChangeText={e => setPhone(e)}
+                        onChangeText={(e) => setPhone(e)}
                       />
                     </View>
                   </View>
@@ -232,23 +241,24 @@ function Register(props) {
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {phoneError}
                     </TextDefault>
                   </View>
                 )}
-
-                <View style={styles().marginTop10}>
-                  <TouchableOpacity
-                    onPress={() => registerAction()}
-                    activeOpacity={0.7}
-                    style={styles(currentTheme).btn}>
-                    <TextDefault H4 textColor={currentTheme.gray900} bold>
-                      Create Account
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
               </View>
+            </View>
+            <View style={styles().btnContainer}>
+              <TouchableOpacity
+                onPress={() => registerAction()}
+                activeOpacity={0.7}
+                style={styles(currentTheme).btn}
+              >
+                <TextDefault H4 textColor={currentTheme.gray900} bold>
+                  {t('createAccount')}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

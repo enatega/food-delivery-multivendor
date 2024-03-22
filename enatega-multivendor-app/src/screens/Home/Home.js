@@ -267,7 +267,11 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => { }} placeHolder={t('searchRestaurant')} />
+        <Search
+          search={''}
+          setSearch={() => {}}
+          placeHolder={t('searchRestaurant')}
+        />
         <Placeholder
           Animation={props => (
             <Fade
@@ -368,7 +372,11 @@ function Main(props) {
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
                 <View style={styles().searchbar}>
-                  <Search setSearch={setSearch} search={search} placeHolder={t('searchRestaurant')} />
+                  <Search
+                    setSearch={setSearch}
+                    search={search}
+                    placeHolder={t('searchRestaurant')}
+                  />
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
@@ -379,13 +387,13 @@ function Main(props) {
                           bolder
                           textColor={currentTheme.fontThirdColor}
                           style={styles().ItemName}>
-                          Food Delivery
+                          {t('foodDelivery')}
                         </TextDefault>
                         <TextDefault
                           Normal
                           textColor={currentTheme.fontThirdColor}
                           style={styles().ItemDescription}>
-                          Order food you love
+                          {t('OrderfoodLove')}
                         </TextDefault>
                       </View>
 
@@ -404,13 +412,13 @@ function Main(props) {
                         bolder
                         textColor={currentTheme.fontThirdColor}
                         style={styles().ItemName}>
-                        Grocery
+                        {t('grocery')}
                       </TextDefault>
                       <TextDefault
                         Normal
                         textColor={currentTheme.fontThirdColor}
                         style={styles().ItemDescription}>
-                        Essentials delivered fast
+                        {t('essentialsDeliveredFast')}
                       </TextDefault>
                       <Image
                         source={{
@@ -433,7 +441,7 @@ function Main(props) {
                       }}
                       bolder
                       H4>
-                      Order it again
+                      {t('orderItAgain')}
                     </TextDefault>
                     <TextDefault
                       Normal
@@ -444,7 +452,7 @@ function Main(props) {
                           ...alignment.MLlarge
                         }
                       ]}>
-                      Most ordered right now.
+                      {t('mostOrderedNow')}
                     </TextDefault>
                     {search ? null : (
                       <ActiveOrdersAndSections sections={restaurantSections} />

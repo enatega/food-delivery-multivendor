@@ -25,14 +25,17 @@ function MainRestaurantCard(props) {
           numberOfLines={1}
           textColor={currentTheme.fontFourthColor}
           bolder
-          H4>
-          {props?.title}
+          H4
+          style={styles().ItemTitle}
+        >
+          {t(props?.title)}
         </TextDefault>
         <TextDefault
           Normal
           textColor={currentTheme.secondaryText}
-          style={styles().ItemDescription}>
-          Most ordered right now.
+          style={styles().ItemDescription}
+        >
+          {t('mostOrderedNow')}
         </TextDefault>
         <FlatList
           style={styles().offerScroll}
@@ -41,7 +44,7 @@ function MainRestaurantCard(props) {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={props?.orders}
-          keyExtractor={item => item._id}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => {
             return <NewRestaurantCard {...item} />
           }}

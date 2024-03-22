@@ -9,9 +9,11 @@ import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useNavigation } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 import { IMAGE_LINK } from '../../utils/constants'
 
 const CartItem = props => {
+  const { t } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -75,7 +77,7 @@ const CartItem = props => {
                     style={{ marginRight: scale(5) }}
                     textColor={currentTheme.secondaryText}
                     Normal>
-                    {props?.itemAddons?.length} Additional Items
+                    {props?.itemAddons?.length} {t('additionalItems')}
                   </TextDefault>
                   <Feather
                     name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
@@ -120,7 +122,7 @@ const CartItem = props => {
                 textColor={currentTheme.fontFourthColor}
                 bolder
                 Normal>
-                Edit
+                {t('edit')}
               </TextDefault>
             </TouchableOpacity>
           </View>

@@ -5,6 +5,7 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
+import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { topRatedVendorsInfo } from '../../../apollo/queries'
@@ -19,6 +20,7 @@ const TOP_BRANDS = gql`
 `
 
 function TopBrands(props) {
+  const { t } = useTranslation()
   const { location } = useContext(LocationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -31,16 +33,16 @@ function TopBrands(props) {
     }
   })
 
-
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles().topbrandsContainer}
-      onPress={() => navigation.navigate('Restaurant', { ...item })}>
+      onPress={() => navigation.navigate('Restaurant', { ...item })}
+    >
       <View style={styles().brandImgContainer}>
         <Image
           source={{ uri: item.image }}
           style={styles().brandImg}
-          resizeMode="contain"
+          resizeMode='contain'
         />
       </View>
 
@@ -48,16 +50,18 @@ function TopBrands(props) {
         style={{
           alignItems: 'center',
           justifyContent: 'center'
-        }}>
+        }}
+      >
         <TextDefault
           style={styles().brandName}
           textColor={currentTheme.fontThirdColor}
           H5
-          bolder>
+          bolder
+        >
           {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>
-          {item?.deliveryTime + ' Mins'}
+          {item?.deliveryTime} + {t('mins')}
         </TextDefault>
       </View>
     </TouchableOpacity>
@@ -72,14 +76,15 @@ function TopBrands(props) {
         numberOfLines={1}
         textColor={currentTheme.fontFourthColor}
         bolder
-        H4>
-        Top Brands
+        H4
+      >
+        {t('topBrands')}
       </TextDefault>
       <View style={{ ...alignment.PRsmall }}>
         <FlatList
           data={data?.topRatedVendors}
           renderItem={renderItem}
-          keyExtractor={item => item?._id}
+          keyExtractor={(item) => item?._id}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}

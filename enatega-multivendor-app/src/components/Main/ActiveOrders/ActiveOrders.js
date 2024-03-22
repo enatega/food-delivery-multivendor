@@ -31,7 +31,7 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   const activeOrders = orders.filter(o =>
     orderStatusActive.includes(o.orderStatus)
   )
-  const onPressDetails = (order) => {
+  const onPressDetails = order => {
     navigation.navigate('OrderDetail', {
       _id: order._id,
       currencySymbol: configuration.currencySymbol
@@ -54,16 +54,26 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   const remainingTime = calulateRemainingTime(order)
 
   return (
-    <Modalize alwaysOpen={MODAL_HEIGHT} withHandle={false} modalHeight={MODAL_HEIGHT} modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}>
+    <Modalize
+      alwaysOpen={MODAL_HEIGHT}
+      withHandle={false}
+      modalHeight={MODAL_HEIGHT}
+      modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}>
       <View style={{ marginTop: scale(20), marginHorizontal: scale(10) }}>
         <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-          <TextDefault Regular textColor={currentTheme.gray600}>Estimated delivery time</TextDefault>
+          <TextDefault Regular textColor={currentTheme.gray600}>
+            {t('estimatedDeliveryTime')}
+          </TextDefault>
           <TouchableOpacity onPress={() => onPressDetails(order)}>
-            <TextDefault textColor={currentTheme.gray700} bolder>Details</TextDefault>
+            <TextDefault textColor={currentTheme.gray700} bolder>
+              {t('details')}
+            </TextDefault>
           </TouchableOpacity>
         </View>
         <View style={{ marginTop: scale(10) }}>
-          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>{remainingTime}-{remainingTime + 5} mins</TextDefault>
+          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>
+            {remainingTime}-{remainingTime + 5} {t('mins')}
+          </TextDefault>
         </View>
         <View>
           <ProgressBar
@@ -73,7 +83,9 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
             navigation={navigation}
           />
           <View style={{ marginTop: scale(10) }}>
-            <TextDefault numberOfLines={2} style={styles(currentTheme).statusText}>
+            <TextDefault
+              numberOfLines={2}
+              style={styles(currentTheme).statusText}>
               {t(checkStatus(order.orderStatus).statusText)}
             </TextDefault>
           </View>

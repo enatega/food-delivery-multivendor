@@ -75,7 +75,7 @@ function OrderDetail(props) {
     Track()
   }, [])
 
-  const order = orders.find(o => o._id === id)
+  const order = orders.find((o) => o._id === id)
   const headerRef = useRef(false)
   if (loadingOrders || !order) {
     return (
@@ -117,7 +117,8 @@ function OrderDetail(props) {
           paddingBottom: scale(100)
         }}
         showsVerticalScrollIndicator={false}
-        overScrollMode="never">
+        overScrollMode='never'
+      >
         {order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED && (
           <MapView
             style={{ flex: 1, height: HEIGHT * 0.6 }}
@@ -132,19 +133,22 @@ function OrderDetail(props) {
             zoomControlEnabled={true}
             rotateEnabled={false}
             customMapStyle={mapStyle}
-            provider={PROVIDER_GOOGLE}>
+            provider={PROVIDER_GOOGLE}
+          >
             <Marker
               coordinate={{
                 longitude: +restaurant.location.coordinates[0],
                 latitude: +restaurant.location.coordinates[1]
-              }}>
+              }}
+            >
               <RestaurantMarker />
             </Marker>
             <Marker
               coordinate={{
                 latitude: +deliveryAddress.location.coordinates[1],
                 longitude: +deliveryAddress.location.coordinates[0]
-              }}>
+              }}
+            >
               <CustomerMarker />
             </Marker>
             {order.rider && <TrackingRider id={order.rider._id} />}
@@ -155,7 +159,8 @@ function OrderDetail(props) {
             justifyContent: 'center',
             alignItems: 'center',
             ...alignment.Pmedium
-          }}>
+          }}
+        >
           <OrderStatusImage status={order.orderStatus} />
           {order.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
             <View
@@ -163,7 +168,8 @@ function OrderDetail(props) {
                 ...alignment.MTxSmall,
                 alignItems: 'center',
                 justifyContent: 'space-between'
-              }}>
+              }}
+            >
               {![
                 ORDER_STATUS_ENUM.PENDING,
                 ORDER_STATUS_ENUM.CANCELLED
@@ -172,7 +178,8 @@ function OrderDetail(props) {
                   <TextDefault
                     style={{ ...alignment.MTxSmall }}
                     textColor={currentTheme.gray500}
-                    H5>
+                    H5
+                  >
                     Estimated delivery time
                   </TextDefault>
                   <TextDefault
@@ -180,7 +187,8 @@ function OrderDetail(props) {
                     Regular
                     textColor={currentTheme.gray900}
                     H1
-                    bolder>
+                    bolder
+                  >
                     {remainingTime}-{remainingTime + 5} mins
                   </TextDefault>
                   <ProgressBar
@@ -195,7 +203,8 @@ function OrderDetail(props) {
                 H5
                 style={{ ...alignment.Mmedium, textAlign: 'center' }}
                 textColor={currentTheme.gray600}
-                bold>
+                bold
+              >
                 {' '}
                 {t(checkStatus(order.orderStatus).statusText)}
               </TextDefault>
@@ -230,7 +239,7 @@ function OrderDetail(props) {
         {order.orderStatus === ORDER_STATUS_ENUM.PENDING && (
           <View style={{ margin: scale(20) }}>
             <Button
-              text={'Cancel Order'}
+              text={t('cancelOrder')}
               buttonProps={{ onPress: cancelModalToggle }}
               buttonStyles={styles().cancelButtonContainer(currentTheme)}
               textProps={{ textColor: currentTheme.red600 }}

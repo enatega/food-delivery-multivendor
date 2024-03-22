@@ -40,7 +40,8 @@ const styles = (props = null) =>
     },
     heading: {
       paddingLeft: scale(20),
-      ...alignment.MBlarge
+      ...alignment.MBlarge,
+      ...alignment.MRmedium
     },
     addressHeading: {
       marginBottom: scale(30)

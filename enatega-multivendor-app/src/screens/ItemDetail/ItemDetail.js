@@ -37,10 +37,10 @@ function ItemDetail(props) {
 
   const [selectedVariation, setSelectedVariation] = useState({
     ...food.variations[0],
-    addons: food.variations[0].addons.map(fa => {
-      const addon = addons.find(a => a._id === fa)
-      const addonOptions = addon.options.map(ao => {
-        return options.find(o => o._id === ao)
+    addons: food.variations[0].addons.map((fa) => {
+      const addon = addons.find((a) => a._id === fa)
+      const addonOptions = addon.options.map((ao) => {
+        return options.find((o) => o._id === ao)
       })
       return {
         ...addon,
@@ -96,10 +96,10 @@ function ItemDetail(props) {
       headerShadowVisible: false,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={styles(currentTheme).backBtnContainer}>
-              <MaterialIcons name="arrow-back" size={25} color="black" />
+              <MaterialIcons name='arrow-back' size={25} color='black' />
             </View>
           )}
           onPress={() => {
@@ -113,8 +113,8 @@ function ItemDetail(props) {
   function validateButton() {
     if (!selectedVariation) return false
     const validatedAddons = []
-    selectedVariation.addons.forEach(addon => {
-      const selected = selectedAddons.find(ad => ad._id === addon._id)
+    selectedVariation.addons.forEach((addon) => {
+      const selected = selectedAddons.find((ad) => ad._id === addon._id)
       if (!selected && addon.quantityMinimum === 0) {
         validatedAddons.push(false)
       } else if (
@@ -125,7 +125,7 @@ function ItemDetail(props) {
         validatedAddons.push(false)
       } else validatedAddons.push(true)
     })
-    return validatedAddons.every(val => val === false)
+    return validatedAddons.every((val) => val === false)
   }
 
   async function onPressAddToCart(quantity) {
@@ -140,16 +140,16 @@ function ItemDetail(props) {
       } else if (food.restaurant !== restaurantCart) {
         Alert.alert(
           '',
-          'By leaving this restaurant page, the items you`ve added to cart will be cleared',
+          t('cartClearWarning'),
           [
             {
-              text: 'Cancel',
+              text: t('Cancel'),
               onPress: () => console.log('Cancel Pressed'),
               style: 'cancel'
             },
             {
-              text: 'OK',
-              onPress: async() => {
+              text: t('okText'),
+              onPress: async () => {
                 await addToCart(quantity, true)
               }
             }
@@ -160,8 +160,8 @@ function ItemDetail(props) {
     }
   }
 
-  const addToCart = async(quantity, clearFlag) => {
-    const addons = selectedAddons.map(addon => ({
+  const addToCart = async (quantity, clearFlag) => {
+    const addons = selectedAddons.map((addon) => ({
       ...addon,
       options: addon.options.map(({ _id }) => ({
         _id
@@ -170,36 +170,36 @@ function ItemDetail(props) {
 
     const cartItem = clearFlag
       ? null
-      : cart.find(cartItem => {
-        if (
-          cartItem._id === food._id &&
+      : cart.find((cartItem) => {
+          if (
+            cartItem._id === food._id &&
             cartItem.variation._id === selectedVariation._id
-        ) {
-          if (cartItem?.addons?.length === addons.length) {
-            if (addons.length === 0) return true
-            const addonsResult = addons.every(newAddon => {
-              const cartAddon = cartItem.addons.find(
-                ad => ad._id === newAddon._id
-              )
-
-              if (!cartAddon) return false
-              const optionsResult = newAddon.options.every(newOption => {
-                const cartOption = cartAddon.options.find(
-                  op => op._id === newOption._id
+          ) {
+            if (cartItem?.addons?.length === addons.length) {
+              if (addons.length === 0) return true
+              const addonsResult = addons.every((newAddon) => {
+                const cartAddon = cartItem.addons.find(
+                  (ad) => ad._id === newAddon._id
                 )
 
-                if (!cartOption) return false
-                return true
+                if (!cartAddon) return false
+                const optionsResult = newAddon.options.every((newOption) => {
+                  const cartOption = cartAddon.options.find(
+                    (op) => op._id === newOption._id
+                  )
+
+                  if (!cartOption) return false
+                  return true
+                })
+
+                return optionsResult
               })
 
-              return optionsResult
-            })
-
-            return addonsResult
+              return addonsResult
+            }
           }
-        }
-        return false
-      })
+          return false
+        })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -220,10 +220,10 @@ function ItemDetail(props) {
   function onSelectVariation(variation) {
     setSelectedVariation({
       ...variation,
-      addons: variation.addons.map(fa => {
-        const addon = addons.find(a => a._id === fa)
-        const addonOptions = addon.options.map(ao => {
-          return options.find(o => o._id === ao)
+      addons: variation.addons.map((fa) => {
+        const addon = addons.find((a) => a._id === fa)
+        const addonOptions = addon.options.map((ao) => {
+          return options.find((o) => o._id === ao)
         })
         return {
           ...addon,
@@ -234,17 +234,17 @@ function ItemDetail(props) {
   }
 
   async function onSelectOption(addon, option) {
-    const index = selectedAddons.findIndex(ad => ad._id === addon._id)
+    const index = selectedAddons.findIndex((ad) => ad._id === addon._id)
     if (index > -1) {
       if (addon.quantityMinimum === 1 && addon.quantityMaximum === 1) {
         selectedAddons[index].options = [option]
       } else {
         const optionIndex = selectedAddons[index].options.findIndex(
-          opt => opt._id === option._id
+          (opt) => opt._id === option._id
         )
         if (optionIndex > -1) {
           selectedAddons[index].options = selectedAddons[index].options.filter(
-            opt => opt._id !== option._id
+            (opt) => opt._id !== option._id
           )
         } else {
           selectedAddons[index].options.push(option)
@@ -262,7 +262,7 @@ function ItemDetail(props) {
   function calculatePrice() {
     const variation = selectedVariation.price
     let addons = 0
-    selectedAddons.forEach(addon => {
+    selectedAddons.forEach((addon) => {
       addons += addon.options.reduce((acc, option) => {
         return acc + option.price
       }, 0)
@@ -271,8 +271,8 @@ function ItemDetail(props) {
   }
 
   function validateOrderItem() {
-    const validatedAddons = selectedVariation.addons.map(addon => {
-      const selected = selectedAddons.find(ad => ad._id === addon._id)
+    const validatedAddons = selectedVariation.addons.map((addon) => {
+      const selected = selectedAddons.find((ad) => ad._id === addon._id)
 
       if (!selected && addon.quantityMinimum === 0) {
         addon.error = false
@@ -286,7 +286,7 @@ function ItemDetail(props) {
       return addon
     })
     setSelectedVariation({ ...selectedVariation, addons: validatedAddons })
-    return validatedAddons.every(addon => addon.error === false)
+    return validatedAddons.every((addon) => addon.error === false)
   }
 
   function renderOption(addon) {
@@ -312,11 +312,13 @@ function ItemDetail(props) {
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
-          style={styles().flex}>
+          style={styles().flex}
+        >
           {imageUrl && <ImageHeader image={imageUrl} />}
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}>
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
             <View style={styles().subContainer}>
               <HeadingComponent title={food.title} price={calculatePrice()} />
 
@@ -333,9 +335,8 @@ function ItemDetail(props) {
                     onPress={onSelectVariation}
                   />
                 </View>
-
               )}
-              {selectedVariation.addons.map(addon => (
+              {selectedVariation.addons.map((addon) => (
                 <View key={addon._id}>
                   <TitleComponent
                     title={addon.title}
@@ -343,8 +344,8 @@ function ItemDetail(props) {
                     error={addon.error}
                     status={
                       addon.quantityMinimum === 0
-                        ? 'Optional'
-                        : `${addon.quantityMinimum} REQUIRED`
+                        ? t('optional')
+                        : `${addon.quantityMinimum} ${t('Required')}`
                     }
                   />
                   {renderOption(addon)}
@@ -361,7 +362,7 @@ function ItemDetail(props) {
               <TextField
                 style={styles(currentTheme).input}
                 placeholder={t('noMayo')}
-                textAlignVertical="center"
+                textAlignVertical='center'
                 value={specialInstructions}
                 onChangeText={setSpecialInstructions}
                 maxLength={144}
@@ -372,7 +373,10 @@ function ItemDetail(props) {
               />
             </View>
             {/** frequently bought together */}
-            <FrequentlyBoughtTogether itemId={food._id} restaurantId={restaurant}/>
+            <FrequentlyBoughtTogether
+              itemId={food._id}
+              restaurantId={restaurant}
+            />
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
