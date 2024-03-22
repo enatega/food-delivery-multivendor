@@ -6,7 +6,7 @@ import { alignment } from '../../utils/alignment'
 const SCREEN_HEIGHT = Dimensions.get('screen').height
 const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
 
-const styles = (props = null) =>
+const styles = (props = null, hasActiveOrders = false) =>
   StyleSheet.create({
     flex: {
       flex: 1
@@ -172,7 +172,6 @@ const styles = (props = null) =>
       textAlign: 'left'
     },
     addressDetail: {
-      // width: '80%',
       alignSelf: 'flex-end',
       fontSize: scale(4),
       fontWeight: '300',
@@ -180,7 +179,7 @@ const styles = (props = null) =>
       paddingLeft: scale(38)
     },
     topBrandsMargin: {
-      marginBottom: MODAL_HEIGHT
+      marginBottom: hasActiveOrders ? MODAL_HEIGHT : 0
     }
   })
 export default styles

@@ -454,15 +454,9 @@ function Main(props) {
                         )}
                       </View>
                     </View>
-                    {hasActiveOrders ? (
-                      <View style={styles(currentTheme).topBrandsMargin}>
+                    <View style={ styles(currentTheme, hasActiveOrders).topBrandsMargin } >
                         {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
-                      </View>
-                    ) : (
-                      <View>
-                        {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
-                      </View>
-                    )}
+                    </View>
                   </ScrollView>
                 )}
               </View>
@@ -509,7 +503,6 @@ function Main(props) {
                           })
                         )}
                       </View>
-                      {/* <View style={styles().mL5p} /> */}
                       <View style={[styles().titleAddress]}>
                         <TextDefault
                           textColor={currentTheme.darkBgFont}

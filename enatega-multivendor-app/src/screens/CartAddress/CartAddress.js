@@ -136,8 +136,14 @@ function CartAddresses(props) {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     style={styles().width10}
-                    onPress={() =>
-                      props.navigation.navigate('NewAddress', { location })
+                    onPress={() =>{
+                        const latitude = location.latitude
+                        const longitude = location.longitude
+                        props.navigation.navigate('AddNewAddress', {
+                          longitude: +longitude,
+                          latitude: +latitude
+                        })
+                      }
                     }
                   >
                     <TextDefault
