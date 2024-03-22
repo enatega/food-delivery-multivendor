@@ -635,7 +635,7 @@ function Restaurant(props) {
                                   2
                                 )}
                               </TextDefault>
-                              {item.variations[0].discounted > 0 && (
+                              {item?.variations[0]?.discounted > 0 && (
                                 <TextDefault
                                   numberOfLines={1}
                                   textColor={currentTheme.fontSecondColor}
@@ -805,7 +805,7 @@ function Restaurant(props) {
                                   2
                                 )}
                               </TextDefault>
-                              {item.variations[0].discounted > 0 && (
+                              {item?.variations[0]?.discounted > 0 && (
                                 <TextDefault
                                   numberOfLines={1}
                                   textColor={currentTheme.fontSecondColor}
