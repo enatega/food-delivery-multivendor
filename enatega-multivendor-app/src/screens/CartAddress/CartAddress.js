@@ -98,13 +98,12 @@ function CartAddresses(props) {
         {!location._id && (
           <View
             style={{
-              backgroundColor: currentTheme.themeBackground,
-              ...alignment.PTlarge
+              backgroundColor: currentTheme.themeBackground
             }}
           >
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles(currentTheme).containerSpace}
+              style={[styles(currentTheme).containerSpace, alignment.MBsmall]}
               onPress={() => {
                 const latitude = location.latitude
                 const longitude = location.longitude
@@ -171,85 +170,84 @@ function CartAddresses(props) {
         )}
         <FlatList
           data={profile?.addresses}
-          keyExtractor={item => item._id}
+          keyExtractor={(item) => item._id}
           contentContainerStyle={{ flexGrow: 1 }}
-          ItemSeparatorComponent={() => (
-            <View style={{ ...alignment.MBmedium }} />
-          )}
+          ItemSeparatorComponent={() => <View />}
           ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
           renderItem={({ item: address }) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles(currentTheme).containerSpace]}
-              onPress={() => {
-                onSelectAddress(address)
-              }}>
-              <View style={styles().width100}>
-                <View style={[styles().titleAddress, styles().width100]}>
-                  <View style={[styles().homeIcon]}>
-                    <RadioButton
-                      size={13}
-                      outerColor={currentTheme.darkBgFont}
-                      innerColor={currentTheme.radioColor}
-                      animation={'bounceIn'}
-                      isSelected={address._id === location._id}
+            <View style={{ ...alignment.MBlarge }}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={[styles(currentTheme).containerSpace]}
+                onPress={() => {
+                  onSelectAddress(address)
+                }}
+              >
+                <View style={styles().width100}>
+                  <View style={[styles().titleAddress, styles().width100]}>
+                    <View style={[styles().homeIcon]}>
+                      <RadioButton
+                        size={13}
+                        outerColor={currentTheme.darkBgFont}
+                        innerColor={currentTheme.radioColor}
+                        animation={'bounceIn'}
+                        isSelected={address._id === location._id}
+                        onPress={() => {
+                          onSelectAddress(address)
+                        }}
+                      />
+                    </View>
+                    <TextDefault
+                      textColor={currentTheme.fontMainColor}
+                      style={{ width: '70%', textAlign: 'left' }}
+                      H5
+                      bold
+                    >
+                      {t(address.label)}
+                    </TextDefault>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={styles().width10}
                       onPress={() => {
-                        onSelectAddress(address)
+                        const [longitude, latitude] =
+                          address.location.coordinates
+                        props.navigation.navigate('AddNewAddress', {
+                          longitude: +longitude,
+                          latitude: +latitude
+                        })
                       }}
-                    />
+                    >
+                      <EvilIcons
+                        name='pencil'
+                        size={scale(25)}
+                        color={currentTheme.darkBgFont}
+                        style={styles().width100}
+                      />
+                    </TouchableOpacity>
                   </View>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={{ width: '70%', textAlign: 'left' }}
-                    H5
-                    bold>
-                    {t(address.label)}
-                  </TextDefault>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={styles().width10}
-                    onPress={() => {
-                      const [longitude, latitude] = address.location.coordinates
-                      props.navigation.navigate('AddNewAddress', {
-                        longitude: +longitude,
-                        latitude: +latitude
-                      })
-                    }}>
-                    <EvilIcons
-                      name="pencil"
-                      size={scale(25)}
-                      color={currentTheme.darkBgFont}
-                      style={styles().width100}
-                    />
-                  </TouchableOpacity>
+                  <View style={{ ...alignment.MTxSmall }}></View>
+                  <View style={styles().addressDetail}>
+                    <TextDefault
+                      line={4}
+                      textColor={currentTheme.fontSecondColor}
+                      bold
+                    >
+                      {address.deliveryAddress}
+                    </TextDefault>
+                    <TextDefault
+                      line={3}
+                      textColor={currentTheme.fontSecondColor}
+                      bold
+                    >
+                      {address.details}
+                    </TextDefault>
+                  </View>
                 </View>
-                <View style={{ ...alignment.MTxSmall }}></View>
-                <View style={styles().addressDetail}>
-                  <TextDefault
-                    line={4}
-                    textColor={currentTheme.fontSecondColor}
-                    bold>
-                    {address.deliveryAddress}
-                  </TextDefault>
-                  <TextDefault
-                    line={3}
-                    textColor={currentTheme.fontSecondColor}
-                    bold>
-                    {address.details}
-                  </TextDefault>
-                </View>
-              </View>
-            </TouchableOpacity>
-            // </View>
+              </TouchableOpacity>
+            </View>
           )}
         />
       </View>
-      {/* <View
-        style={{
-          paddingBottom: inset.bottom,
-          backgroundColor: currentTheme.themeBackground
-        }}
-      /> */}
     </>
   )
 }
