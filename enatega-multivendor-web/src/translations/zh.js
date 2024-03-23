@@ -156,6 +156,7 @@ const zh = {
     generalErr: "有东西缺失",
     verifyEmail: "验证您的电子邮件",
     enterOtp: "请输入我们发送到您更新的电子邮件的OTP",
+    enterOtpPhone : "请输入我们发送到您更新的电话号码的OTP",
     invalidCode: "无效的代码，请检查并重新输入",
     resendCode: "重新发送代码",
     retryAfter: "稍后重试",

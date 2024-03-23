@@ -38,7 +38,7 @@ function PhoneNumber() {
   const { state } = useLocation();
   const [loading, setLoading] = useState(false); // State to manage loading animation
   const [phone, setPhone] = useState("");
-  const [setPhoneError] = useState("");
+  const [phoneError, setPhoneError] = useState(""); // State to manage phone input error
 
   const [mutate] = useMutation(UPDATEUSER);
   const { profile } = useContext(UserContext);
@@ -89,23 +89,22 @@ function PhoneNumber() {
   }
 
   const handleAction = async () => {
-  setError("");
-  setPhoneError(""); // Reset phone error state to clear any previous errors
-  let validate = true;
-  if (!phone) {
-    setPhoneError("Phone number required");
-    validate = false;
-    return;
-  }
-  if (validate) {
-    if (`+${phone}` !== state?.prevPhone) {
-      setLoading(true); // Turn on loading animation before making the mutation call
-      await PhoneExist({ variables: { phone: `+${phone}` } });
-    } else {
-      setPhoneError("New phone number must be different from previous one");
+    setError("");
+    setPhoneError(""); // Reset phone error state to clear any previous errors
+    let validate = true;
+    if (!phone) {
+      setPhoneError("Phone number required");
+      validate = false;
     }
-  }
-};
+    if (validate) {
+      if (`+${phone}` !== state?.prevPhone) {
+        setLoading(true); // Turn on loading animation before making the mutation call
+        await PhoneExist({ variables: { phone: `+${phone}` } });
+      } else {
+        setPhoneError("New phone number must be different from previous one");
+      }
+    }
+  };
 
 
   return (
@@ -161,7 +160,7 @@ function PhoneNumber() {
           />
         </Box>
         <Typography variant="caption" style={{ color: "red" }}>
-          {t("mobileErr1")}
+          {phoneError}
         </Typography>
         <Box mt={theme.spacing(8)} />
         <Button

@@ -165,6 +165,7 @@ const fr = {
     verifyEmail: "Vérifiez votre e-mail",
     enterOtp:
       "Veuillez entrer le code OTP que nous avons envoyé à votre e-mail mis à jour",
+    enterOtpPhone : "Veuillez entrer le code OTP que nous avons envoyé à votre numéro de numéro mis à jour",
     invalidCode: "Code invalide, veuillez vérifier et entrer à nouveau",
     resendCode: "Renvoyer le code",
     retryAfter: "Réessayer après",

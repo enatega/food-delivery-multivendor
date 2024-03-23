@@ -177,7 +177,7 @@ function VerifyPhone() {
         variant="caption"
         className={`${classes.caption} ${classes.fontGrey}`}
       >
-        {t('enterOtp')}
+        {t('enterOtpPhone')}
       </Typography>
       <Box display="flex">
         <Box m="auto">

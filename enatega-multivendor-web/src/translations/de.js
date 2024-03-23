@@ -163,6 +163,7 @@ const de = {
     verifyEmail: "Bestätigen Sie Ihre E-Mail",
     enterOtp:
       "Bitte geben Sie den OTP ein, den wir an Ihre aktualisierte E-Mail gesendet haben",
+    enterOtpPhone: "Bitte geben Sie den OTP ein, den wir an Ihre aktualisierte Telefonnummer gesendet haben",
     invalidCode: "Ungültiger Code, bitte überprüfen und erneut eingeben",
     resendCode: "Code erneut senden",
     retryAfter: "Erneuter Versuch nach",
