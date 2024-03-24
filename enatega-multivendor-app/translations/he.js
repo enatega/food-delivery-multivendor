@@ -495,5 +495,8 @@ export const he = {
   Newest: 'החדש ביותר',
 HighestRating: 'הדירוג הגבוה ביותר',
 LowestRating: 'הדירוג הנמוך ביותר',
-
+restaurantName: 'שם המסעדה',
+price: 'מחיר',
+itemsAndQuantity: 'פריטים וכמות',
+selectCity: 'בחר עיר',
 }

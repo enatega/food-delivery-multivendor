@@ -26,6 +26,7 @@ import MapView from './MapView'
 import screenOptions from './screenOptions'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
+import { t } from 'i18n-js'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -179,6 +180,7 @@ export default function AddNewAddress(props) {
             selectedValue={selectedValue.city}
             cityModalVisible={cityModalVisible}
             onSelect={onSelectCity}
+            t={t}
           />
 
           <View style={[styles(currentTheme).textInput]}>
@@ -189,7 +191,7 @@ export default function AddNewAddress(props) {
                   overflow: 'scroll'
                 }}
               >
-                {selectedValue.address || 'Address'}
+                {selectedValue.address || t('address')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -222,12 +224,14 @@ export default function AddNewAddress(props) {
 }
 
 const CityModal = React.memo(
+  
   function CityModal({
     theme,
     setCityModalVisible,
     selectedValue,
     cityModalVisible,
-    onSelect
+    onSelect,
+    t
   }) {
     return (
       <View style={styles().dropdownContainer}>
@@ -239,7 +243,7 @@ const CityModal = React.memo(
         >
           {selectedValue && <Text>{selectedValue}</Text>}
           {!selectedValue && (
-            <Text style={styles().placeholder}>Select City</Text>
+            <Text style={styles().placeholder}>{t('selectCity')}</Text>
           )}
           <Feather
             name='chevron-down'

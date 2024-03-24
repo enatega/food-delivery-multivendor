@@ -507,5 +507,9 @@ HighestRating: 'ការវាយតម្លៃខ្ពស់បំផុត'
 LowestRating: 'ការវាយតម្លៃទាបបំផុត',
   cartAddresses: 'អាសយដ្ឋានប្រអប់',
   addressDeletedMessage: 'បានលុបអាសយដ្ឋាន!',
-  logoutMessage: 'បាន​ចេញ​ពី​ប្រព័ន្ធ​រួច​ហើយ'
+  logoutMessage: 'បាន​ចេញ​ពី​ប្រព័ន្ធ​រួច​ហើយ',
+  restaurantName: 'ឈ្មោះភោជនីយដ្ឋាន',
+  price: 'តម្លៃ',
+  itemsAndQuantity: 'ទំនិញ និង ចំនួន',
+  selectCity: 'ជ្រើសរើសទីក្រុង',
 }

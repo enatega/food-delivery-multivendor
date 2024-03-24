@@ -519,5 +519,7 @@ export const en = {
   addressDeletedMessage: 'Address deleted!',
   logoutMessage: 'Successfully logged out',
   somethingWentWrong: 'Something went wrong',
-  checkInternet: 'Check your internet connection'
+  checkInternet: 'Check your internet connection',
+  selectCity: 'Select City',
+
 }

@@ -495,5 +495,9 @@ HighestRating: '最高评分',
 LowestRating: '最低评分',
   cartAddresses: '购物车地址',
   addressDeletedMessage: '地址已删除！',
-  logoutMessage: '成功登出'
+  logoutMessage: '成功登出',
+  restaurantName: '餐厅名称',
+  price: '价格',
+  itemsAndQuantity: '商品和数量',
+  selectCity: '选择城市',
 }

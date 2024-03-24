@@ -285,9 +285,9 @@ function Settings(props) {
     >
       <View style={styles().flex}>
         <TouchableOpacity style={[styles(currentTheme).languageContainer]} onPress={() => modalVisibleSetter(true)}>
-          <View style={{ flex: 3 }}>
+          <View style={{ flex: 1 }}>
             <View style={styles().changeLanguage}>
-              <View style={styles().width85}>
+              <View>
                 <TextDefault
                   numberOfLines={1}
                   textColor={currentTheme.fontSecondColor}
