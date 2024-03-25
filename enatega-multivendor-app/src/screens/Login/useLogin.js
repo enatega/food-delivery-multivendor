@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import _ from 'lodash' // Import lodash
 import * as Device from 'expo-device'
 import { useMutation } from '@apollo/client'
@@ -24,7 +24,7 @@ export const useLogin = () => {
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const [email, setEmail] = useState('demo-customer@enatega.com')
+  const emailRef = useRef('demo-customer@enatega.com')
   const [password, setPassword] = useState('DemoCustomer55!')
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
@@ -46,20 +46,19 @@ export const useLogin = () => {
   })
 
   // Debounce the setEmail function
-  const debouncedSetEmail = _.debounce(text => {
-    setEmail(text.toLowerCase().trim())
-  }, 0.5) // Adjust the delay as needed (in milliseconds)
-
+  const setEmail = (email)=>{
+    emailRef.current = email
+  }
   function validateCredentials() {
     let result = true
     setEmailError(null)
     setPasswordError(null)
-    if (!email) {
+    if (!emailRef.current) {
       setEmailError(t('emailErr1'))
       result = false
     } else {
       const emailRegex = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/
-      if (emailRegex.test(email) !== true) {
+      if (emailRegex.test(emailRef.current) !== true) {
         setEmailError(t('emailErr2'))
         result = false
       }
@@ -89,7 +88,7 @@ export const useLogin = () => {
           navigation.navigate({ name: 'Main', merge: true })
         }
       } else {
-        navigation.navigate('Register', { email })
+        navigation.navigate('Register', { email:emailRef.current })
       }
     }
   }
@@ -173,8 +172,8 @@ export const useLogin = () => {
     }
   }
 
-  function checkEmailExist(email) {
-    EmailEixst({ variables: { email } })
+  function checkEmailExist() {
+    EmailEixst({ variables: { email:emailRef.current } })
   }
 
   function onBackButtonPressAndroid() {
@@ -186,8 +185,7 @@ export const useLogin = () => {
   }
 
   return {
-    email,
-    setEmail: debouncedSetEmail, // Use the debounced setEmail
+    setEmail,
     password,
     setPassword,
     showPassword,
@@ -200,6 +198,7 @@ export const useLogin = () => {
     loginLoading,
     loginAction,
     checkEmailExist,
-    onBackButtonPressAndroid
+    onBackButtonPressAndroid,
+    emailRef
   }
 }
