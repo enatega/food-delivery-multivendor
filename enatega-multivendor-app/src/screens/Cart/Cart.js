@@ -187,7 +187,6 @@ function Cart(props) {
   }, [data])
 
   const showAvailablityMessage = () => {
-    const { t } = useTranslation()
     Alert.alert(
       '',
       `${data?.restaurant.name} ${t('restaurantClosed')}`,
