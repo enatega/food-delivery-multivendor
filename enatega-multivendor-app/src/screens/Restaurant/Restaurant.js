@@ -224,8 +224,6 @@ function Restaurant(props) {
     }
   }
   const onPressItem = async (food) => {
-    const { t } = useTranslation()
-
     if (!data?.restaurant.isAvailable || !isOpen()) {
       Alert.alert(
         '',
