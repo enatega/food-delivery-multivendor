@@ -199,7 +199,7 @@ export default function App() {
         const id = notification?.request?.content?.data?._id
         if (id) {
           setOrderId(id)
-          reviewModalRef.current.open()
+          reviewModalRef?.current?.open()
         }
       }
     })
@@ -209,7 +209,7 @@ export default function App() {
         const id = response?.notification?.request?.content?.data?._id
         if (id) {
           setOrderId(id)
-          reviewModalRef.current.open()
+          reviewModalRef?.current?.open()
         }
       }
     })
@@ -220,7 +220,7 @@ export default function App() {
   }, [])
 
   const onOverlayPress = () => {
-    reviewModalRef.current.close()
+    reviewModalRef?.current?.close()
   }
 
   if (appIsReady) {
@@ -294,7 +294,7 @@ async function registerForPushNotificationsAsync() {
 //     content: {
 //       title: "You've got mail! 📬",
 //       body: 'Here is the notification body',
-//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, orderId: '65e068b2150aab288f2b821f' }
+//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, _id: '65e068b2150aab288f2b821f' }
 //     },
 //     trigger: { seconds: 10 }
 //   })
