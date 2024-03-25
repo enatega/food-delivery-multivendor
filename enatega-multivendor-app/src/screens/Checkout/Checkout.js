@@ -7,17 +7,24 @@ import {
   StatusBar,
   Platform,
   Alert,
-  Text
+  Text,
+  TextInput
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import {
+  AntDesign,
+  Feather,
+  FontAwesome,
+  MaterialCommunityIcons,
+  Octicons
+} from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import moment from 'moment'
 import { getTipping, orderFragment } from '../../apollo/queries'
-import { placeOrder } from '../../apollo/mutations'
+import { getCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
@@ -55,6 +62,9 @@ const PLACEORDER = gql`
 const TIPPING = gql`
   ${getTipping}
 `
+const GET_COUPON = gql`
+  ${getCoupon}
+`
 
 function Checkout(props) {
   const Analytics = analytics()
@@ -74,6 +84,8 @@ function Checkout(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const modalRef = useRef(null)
+  const voucherModalRef = useRef(null)
+  const tipModalRef = useRef(null)
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
   const [isPickedUp, setIsPickedUp] = useState(false)
@@ -82,6 +94,10 @@ function Checkout(props) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
   const [restaurantName, setrestaurantName] = useState('...')
+  const [voucherCode, setVoucherCode] = useState('')
+  const [coupon, setCoupon] = useState(null)
+  const [tip, setTip] = useState(null)
+  const [tipAmount, setTipAmount] = useState(null)
 
   const { loading, data } = useRestaurant(cartRestaurant)
   const [loadingOrder, setLoadingOrder] = useState(false)
@@ -93,6 +109,47 @@ function Checkout(props) {
     latitudeDelta: 0.0022,
     longitudeDelta: 0.0021
   }
+
+  const onModalOpen = (modalRef) => {
+    const modal = modalRef.current
+    if (modal) {
+      modal.open()
+    }
+  }
+  const onModalClose = (modalRef) => {
+    const modal = modalRef.current
+    if (modal) {
+      modal.close()
+    }
+  }
+
+  function onCouponCompleted(data) {
+    if (data?.coupon) {
+      if (data?.coupon.enabled) {
+        setCoupon(data?.coupon)
+        FlashMessage({
+          message: t('coupanApply')
+        })
+        setVoucherCode('')
+        onModalClose(voucherModalRef)
+      } else {
+        FlashMessage({
+          message: t('coupanFailed')
+        })
+      }
+    }
+  }
+
+  function onCouponError() {
+    FlashMessage({
+      message: t('invalidCoupan')
+    })
+  }
+
+  const [mutateCoupon, { loading: couponLoading }] = useMutation(GET_COUPON, {
+    onCompleted: onCouponCompleted,
+    onError: onCouponError
+  })
 
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
     fetchPolicy: 'network-only'
@@ -115,18 +172,20 @@ function Checkout(props) {
     props.route.params && props.route.params.paymentMethod
       ? props.route.params.paymentMethod
       : COD_PAYMENT
-  const coupon =
-    props.route.params && props.route.params.coupon
-      ? props.route.params.coupon
-      : null
-
-  const tip =
-    props.route.params && props.route.params.tipAmount
-      ? props.route.params.tipAmount
-      : null
 
   const [selectedTip, setSelectedTip] = useState()
   const inset = useSafeAreaInsets()
+
+  function onTipping() {
+    if (isNaN(tipAmount)) FlashMessage({ message: t('invalidAmount') })
+    else if (Number(tipAmount) <= 0) {
+      FlashMessage({ message: t('amountMustBe') })
+    } else {
+      setTip(tipAmount)
+      setTipAmount(null)
+      onModalClose(tipModalRef)
+    }
+  }
 
   useEffect(() => {
     if (tip) {
@@ -827,9 +886,7 @@ function Checkout(props) {
                             ? styles(currentTheme).activeLabel
                             : styles(currentTheme).labelButton
                         }
-                        onPress={() => {
-                          props.navigation.navigate('Tip')
-                        }}
+                        onPress={() => onModalOpen(tipModalRef)}
                       >
                         <TextDefault
                           textColor={currentTheme.fontFourthColor}
@@ -844,115 +901,46 @@ function Checkout(props) {
                   )}
                 </View>
 
-                <View style={styles().voucherSec}>
-                  <TextDefault
-                    numberOfLines={1}
-                    H5
-                    bolder
-                    textColor={currentTheme.fontNewColor}
-                  >
-                    {t('voucher')}
-                  </TextDefault>
-
-                  {!coupon ? (
+                {/* <View
+                  style={[
+                    styles(currentTheme).priceContainer,
+                    styles().pT10,
+                    styles().mB10,
+                    styles().pB10
+                  ]}>
+                  <View style={styles(currentTheme).imageContainer}>
+                    <View style={{ marginLeft: scale(10) }}>
+                      <Image
+                        resizeMode="cover"
+                        source={require('../../assets/images/delivery.png')}
+                      />
+                    </View>
                     <View
                       style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                    >
+                        marginLeft: scale(20)
+                      }}>
                       <TextDefault
-                        numberOfLines={1}
-                        large
-                        bolder
                         textColor={currentTheme.darkBgFont}
-                      >
-                        {t('haveVoucher')}
+                        style={{ padding: 5 }}
+                        bolder>
+                        {isPickedUp ? t('pickUp') : t('delivery')}{' '}
                       </TextDefault>
-                      <View style={styles(currentTheme).changeBtn}>
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          onPress={() => {
-                            props.navigation.navigate('Coupon', {
-                              coupon
-                            })
-                          }}
-                        >
-                          <TextDefault
-                            small
-                            bold
-                            textColor={currentTheme.darkBgFont}
-                            center
-                          >
-                            {t('add')}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      </View>
+                      <TextDefault
+                        textColor={currentTheme.darkBgFont}
+                        style={{ padding: 5 }}
+                        bold>
+                        {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
+                      </TextDefault>
+                      <TouchableOpacity
+                        onPress={onOpen}
+                        style={styles(currentTheme).cartInnerContainer}>
+                        <TextDefault bold textColor={'white'} center>
+                          {t('change')}
+                        </TextDefault>
+                      </TouchableOpacity>
                     </View>
-                  ) : (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          paddingTop: scale(8),
-                          gap: scale(5)
-                        }}
-                      >
-                        <AntDesign
-                          name='tags'
-                          size={24}
-                          color={currentTheme.main}
-                        />
-                        <View>
-                          <TextDefault
-                            numberOfLines={1}
-                            normal
-                            bold
-                            textColor={currentTheme.fontFourthColor}
-                          >
-                            {coupon ? coupon.title : null} {t('coupanApply')}
-                          </TextDefault>
-                          <TextDefault
-                            small
-                            bold
-                            textColor={currentTheme.fontFourthColor}
-                          >
-                            -{configuration.currencySymbol}
-                            {parseFloat(
-                              calculatePrice(0, false) - calculatePrice(0, true)
-                            ).toFixed(2)}
-                          </TextDefault>
-                        </View>
-                      </View>
-                      <View style={styles(currentTheme).changeBtn}>
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          onPress={() => {
-                            props.navigation.setParams({ coupon: null })
-                          }}
-                        >
-                          <TextDefault
-                            small
-                            bold
-                            textColor={currentTheme.darkBgFont}
-                            center
-                          >
-                            {coupon ? t('remove') : null}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-                </View>
+                  </View>
+                </View> */}
 
                 {isLoggedIn && profile && (
                   <>
@@ -996,6 +984,12 @@ function Checkout(props) {
                                 paymentMethod
                               })
                             }}
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              alignContent: 'center',
+                              gap: 5
+                            }}
                           >
                             <TextDefault
                               small
@@ -1005,12 +999,120 @@ function Checkout(props) {
                             >
                               {t('change')}
                             </TextDefault>
+                            <Octicons name='pencil' size={16} color='black' />
                           </TouchableOpacity>
                         </View>
                       </View>
                     </View>
                   </>
                 )}
+                <View
+                  style={[
+                    styles(currentTheme).horizontalLine2,
+                    { width: '92%', alignSelf: 'center' }
+                  ]}
+                />
+
+                <View style={styles().voucherSec}>
+                  {!coupon ? (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        gap: 5,
+                        marginTop: 10,
+                        marginBottom: 10
+                      }}
+                      onPress={() => onModalOpen(voucherModalRef)}
+                    >
+                      <MaterialCommunityIcons
+                        name='ticket-confirmation-outline'
+                        size={24}
+                        color={currentTheme.lightBlue}
+                      />
+                      <TextDefault
+                        H4
+                        bolder
+                        textColor={currentTheme.lightBlue}
+                        center
+                      >
+                        Apply a Voucher
+                      </TextDefault>
+                    </TouchableOpacity>
+                  ) : (
+                    <>
+                      <TextDefault
+                        numberOfLines={1}
+                        H5
+                        bolder
+                        textColor={currentTheme.fontNewColor}
+                      >
+                        Voucher
+                      </TextDefault>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingTop: scale(8),
+                            gap: scale(5)
+                          }}
+                        >
+                          <AntDesign
+                            name='tags'
+                            size={24}
+                            color={currentTheme.main}
+                          />
+                          <View>
+                            <TextDefault
+                              numberOfLines={1}
+                              tnormal
+                              bold
+                              textColor={currentTheme.fontFourthColor}
+                            >
+                              {coupon ? coupon.title : null} applied
+                            </TextDefault>
+                            <TextDefault
+                              small
+                              bold
+                              textColor={currentTheme.fontFourthColor}
+                            >
+                              -{configuration.currencySymbol}
+                              {parseFloat(
+                                calculatePrice(0, false) -
+                                  calculatePrice(0, true)
+                              ).toFixed(2)}
+                            </TextDefault>
+                          </View>
+                        </View>
+                        <View style={styles(currentTheme).changeBtn}>
+                          <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => setCoupon(null)}
+                          >
+                            <TextDefault
+                              small
+                              bold
+                              textColor={currentTheme.darkBgFont}
+                              center
+                            >
+                              {coupon ? t('remove') : null}
+                            </TextDefault>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </>
+                  )}
+                </View>
 
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault
@@ -1201,15 +1303,164 @@ function Checkout(props) {
                       bold
                       H4
                     >
-                      {t('placeOrder')}
+                      {t('Place Order')}
                     </TextDefault>
                   )}
-                  {loadingOrder && <Spinner backColor={'transparent'} spinnerColor={currentTheme.main}/>}
+                  {loadingOrder && <Spinner backColor={'transparent'} />}
                 </TouchableOpacity>
               </View>
             )}
           </>
         )}
+
+        {/* Tip Modal */}
+        <Modalize
+          ref={tipModalRef}
+          modalStyle={[styles(currentTheme).modal, {marginTop: inset.top}]}
+          overlayStyle={styles(currentTheme).overlay}
+          handleStyle={styles(currentTheme).handle}
+          handlePosition='inside'
+          openAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+          closeAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+        >
+          <View style={styles().modalContainer}>
+            <View style={styles().modalHeader}>
+              <View activeOpacity={0.7} style={styles().modalheading}>
+                <FontAwesome
+                  name={paymentMethod?.icon}
+                  size={20}
+                  color={currentTheme.black}
+                />
+                <TextDefault
+                  H4
+                  bolder
+                  textColor={currentTheme.black}
+                  center
+                >
+                  Add Tip
+                </TextDefault>
+              </View>
+              <Feather
+                name='x-circle'
+                size={24}
+                color='black'
+                onPress={() => onModalClose(tipModalRef)}
+              />
+            </View>
+            <View style={{ gap: 8 }}>
+              <TextDefault uppercase bold textColor={currentTheme.gray500}>
+                Enter code
+              </TextDefault>
+              <TextInput
+                keyboardType='numeric'
+                placeholder='Enter amount'
+                value={tipAmount}
+                onChangeText={(text) => setTipAmount(text)}
+                style={styles(currentTheme).modalInput}
+              />
+            </View>
+            <TouchableOpacity
+              disabled={!tipAmount}
+              activeOpacity={0.7}
+              onPress={onTipping}
+              style={[styles(currentTheme).button, { height: scale(40) }]}
+            >
+              <TextDefault
+                textColor={currentTheme.fontFourthColor}
+                style={styles().checkoutBtn}
+                bold
+                H4
+              >
+                {t('Apply')}
+              </TextDefault>
+            </TouchableOpacity>
+          </View>
+        </Modalize>
+        {/* Voucher Modal */}
+        <Modalize
+          ref={voucherModalRef}
+          modalStyle={[styles(currentTheme).modal, {marginTop: inset.top}]}
+          overlayStyle={styles(currentTheme).overlay}
+          handleStyle={styles(currentTheme).handle}
+          handlePosition='inside'
+          openAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+          closeAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+        >
+          <View style={styles().modalContainer}>
+            <View style={styles().modalHeader}>
+              <View activeOpacity={0.7} style={styles().modalheading}>
+                <MaterialCommunityIcons
+                  name='ticket-confirmation-outline'
+                  size={24}
+                  color={currentTheme.black}
+                />
+                <TextDefault
+                  H4
+                  bolder
+                  textColor={currentTheme.black}
+                  center
+                >
+                  Apply a Voucher
+                </TextDefault>
+              </View>
+              <Feather
+                name='x-circle'
+                size={24}
+                color='black'
+                onPress={() => onModalClose(voucherModalRef)}
+              />
+            </View>
+            <View style={{ gap: 8 }}>
+              <TextDefault uppercase bold textColor={currentTheme.gray500}>
+                Enter code
+              </TextDefault>
+              <TextInput
+                label='Input Code'
+                placeholder='Input Code'
+                value={voucherCode}
+                onChangeText={(text) => setVoucherCode(text)}
+                style={styles(currentTheme).modalInput}
+              />
+            </View>
+            <TouchableOpacity
+              disabled={!voucherCode || couponLoading}
+              activeOpacity={0.7}
+              onPress={() => {
+                mutateCoupon({ variables: { coupon: voucherCode } })
+              }}
+              style={[
+                styles(currentTheme).button,
+                !voucherCode && styles(currentTheme).buttonDisabled,
+                { height: scale(40) },
+                { opacity: couponLoading ? 0.5 : 1 }
+              ]}
+            >
+              {!couponLoading && (
+                <TextDefault
+                  textColor={currentTheme.fontFourthColor}
+                  style={styles().checkoutBtn}
+                  bold
+                  H4
+                >
+                  {t('Apply')}
+                </TextDefault>
+              )}
+              {couponLoading && <Spinner backColor={'transparent'} />}
+            </TouchableOpacity>
+          </View>
+        </Modalize>
         <Modalize
           ref={modalRef}
           modalStyle={styles(currentTheme).modal}

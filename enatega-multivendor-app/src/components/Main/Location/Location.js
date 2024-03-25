@@ -47,7 +47,7 @@ function Location(props) {
               style={styles.textContainer}>
               <TextDefault textColor={props.black} numberOfLines={1} H5 bolder>
                 {''}
-                {translatedAddress}
+                {translatedAddress?.slice(0, 20)}...
               </TextDefault>
             </TouchableOpacity>
           </View>

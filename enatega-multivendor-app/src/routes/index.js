@@ -32,7 +32,6 @@ import FullMap from '../screens/FullMap/FullMap'
 import OrderDetail from '../screens/OrderDetail/OrderDetail'
 import Settings from '../screens/Settings/Settings'
 import HelpBrowser from '../screens/HelpBrowser/HelpBrowser'
-import Coupon from '../screens/Coupon/Coupon'
 import Main from '../screens/Main/Main'
 import Restaurant from '../screens/Restaurant/Restaurant'
 import About from '../screens/About'
@@ -44,10 +43,8 @@ import { theme } from '../utils/themeColors'
 import screenOptions from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
-import Chat from '../screens/Chat/Chat'
 import Favourite from '../screens/Favourite/Favourite'
 import ChatScreen from '../screens/ChatWithRider/ChatScreen'
-import Tip from '../screens/Tip/Tip'
 import { DarkBackButton } from '../components/Header/HeaderIcons/HeaderIcons'
 import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
@@ -122,7 +119,6 @@ function NoDrawer() {
       <NavigationStack.Screen name="Settings" component={Settings} />
       <NavigationStack.Screen name="MyOrders" component={MyOrders} />
       <NavigationStack.Screen name="Reorder" component={Reorder} />
-      <NavigationStack.Screen name="Chat" component={Chat} />
       <NavigationStack.Screen name="Help" component={Help} />
       <NavigationStack.Screen name="HelpBrowser" component={HelpBrowser} />
       <NavigationStack.Screen
@@ -131,9 +127,7 @@ function NoDrawer() {
         options={{ header: () => null }}
       />
       <NavigationStack.Screen name="Reviews" component={Reviews} />
-      <NavigationStack.Screen name="Coupon" component={Coupon} />
       <NavigationStack.Screen name="Paypal" component={Paypal} />
-      <NavigationStack.Screen name="Tip" component={Tip} />
       <NavigationStack.Screen name="RateAndReview" component={RateAndReview} />
 
       <NavigationStack.Screen

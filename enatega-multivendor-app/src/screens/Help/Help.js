@@ -63,8 +63,8 @@ const Help = props => {
     async function Track() {
       try {
         await Analytics.track('NAVIGATE_TO_FAQS')
-      } catch (err) {
-        console.log('ERORORORO =>', err)
+      } catch(err){
+        // console.log('ERORORORO =>', err)
       }
     }
     Track()

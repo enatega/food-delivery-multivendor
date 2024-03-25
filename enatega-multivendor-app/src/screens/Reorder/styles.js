@@ -14,6 +14,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
       paddingBottom: scale(8),
       borderRadius: scale(15),
+      gap: 8,
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       ...alignment.PTsmall

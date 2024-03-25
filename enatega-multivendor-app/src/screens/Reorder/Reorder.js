@@ -1,8 +1,7 @@
-import React, { useLayoutEffect, useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { theme } from '../../utils/themeColors'
-import screenOptions from './screenOptions'
 import { View, TouchableOpacity, ScrollView, StatusBar, Platform } from 'react-native'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import { alignment } from '../../utils/alignment'
@@ -16,8 +15,10 @@ import { textStyles } from '../../utils/textStyles'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons'
+import {  AntDesign } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { useRestaurant } from '../../ui/hooks'
+import ReorderItem from '../../components/ReorderItem/ReorderItem'
 
 function Reorder(props) {
   const analytics = Analytics()
@@ -27,6 +28,7 @@ function Reorder(props) {
   const themeContext = useContext(ThemeContext)
   const { setCartRestaurant, addCartItem } = useContext(UserContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { data } = useRestaurant(order.restaurant._id)
 
   const inset = useSafeAreaInsets()
   useFocusEffect(() => {
@@ -83,7 +85,7 @@ function Reorder(props) {
         />
       )
     })
-  }, [props.navigation])
+  })
   useEffect(() => {
     async function Track() {
       await analytics.track(analytics.events.NAVIGATE_TO_REORDER)
@@ -122,6 +124,45 @@ function Reorder(props) {
     })
   }
 
+  const restaurant = data?.restaurant
+  const addons = restaurant?.addons
+  const options = restaurant?.options
+  const foods = restaurant?.categories?.map(c => c.foods.flat()).flat()
+
+  function populateFood(cartItem) {
+    const food = foods?.find(food => food._id === cartItem.food)
+    if (!food) return null
+    const variation = food.variations.find(
+      variation => variation._id === cartItem.variation._id
+    )
+    if (!variation) return null
+
+    const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+      }`
+    let price = variation.price
+    const optionsTitle = []
+    if (cartItem.addons) {
+      cartItem.addons.forEach(addon => {
+        const cartAddon = addons.find(add => add._id === addon._id)
+        if (!cartAddon) return null
+        addon.options.forEach(option => {
+          const cartOption = options.find(opt => opt._id === option._id)
+          if (!cartOption) return null
+          price += cartOption.price
+          optionsTitle.push(cartOption.title)
+        })
+      })
+    }
+    return {
+      ...cartItem,
+      optionsTitle,
+      title: title,
+      price: price.toFixed(2),
+      image: food.image,
+      addons: food.variations[0].addons
+    }
+  }
+
   return (
     <>
       <ScrollView
@@ -134,60 +175,25 @@ function Reorder(props) {
             {t('ItemsOrderAgain')}
           </TextDefault>
           {order.items.map((item, index) => {
+            const food = populateFood(item)
+            if(!food){
+              return null
+            }
             return (
-              <View
-                key={index}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  ...alignment.MTmedium
-                }}
-              >
-                <TouchableOpacity onPress={() => onSelect(index)}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={[alignment.MRmedium]}>
-                      <CheckboxBtn
-                        checked={selectedItems.includes(index)}
+              <ReorderItem
+              key={food?._id}
+                quantity={food?.quantity}
+                dealName={food?.title}
+                optionsTitle={food?.optionsTitle}
+                itemImage={food?.image}
+                itemAddons={food?.addons}
+                dealPrice={(
+                  parseFloat(food?.price) * food?.quantity
+                ).toFixed(2)}
+                checked={selectedItems.includes(index)}
                         onPress={() => onSelect(index)}
-                      />
-                    </View>
-
-                    <TextDefault
-                      numberOfLines={1}
-                      H5
-                      textColor={currentTheme.fontMainColor}
-                    >
-                      {item.title}
-                    </TextDefault>
-                  </View>
-                </TouchableOpacity>
-
-                <View style={{ width: '50%' }}>
-                  {item.addons.map((addon, index) => {
-                    return (
-                      <View key={index}>
-                        <TextDefault
-                          style={alignment.MTxSmall}
-                          textColor={currentTheme.fontSecondColor}
-                          numberOfLines={1}
-                        >
-                          + {addon.title}
-                        </TextDefault>
-                        {addon.options.map((option, index) => (
-                          <TextDefault
-                            key={index}
-                            style={alignment.MLsmall}
-                            textColor={currentTheme.fontSecondColor}
-                            numberOfLines={1}
-                          >
-                            - {option.title}
-                          </TextDefault>
-                        ))}
-                      </View>
-                    )
-                  })}
-                </View>
-              </View>
+              
+              />
             )
           })}
         </View>
