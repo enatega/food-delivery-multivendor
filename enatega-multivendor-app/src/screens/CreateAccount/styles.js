@@ -24,7 +24,7 @@ const styles = (props = null) =>
       marginBottom: scale(-20),
 
       flex: 1,
-
+      backgroundColor: '#f3f0eb',
       shadowColor: '#f3f0eb',
       shadowOffset: { width: 16, height: 8 },
       shadowOpacity: 0.1,

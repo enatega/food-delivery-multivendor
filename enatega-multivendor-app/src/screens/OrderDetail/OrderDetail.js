@@ -54,18 +54,13 @@ function OrderDetail(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const navigation = useNavigation()
-  const cancelModalToggle = () => {
-    setCancelModalVisible(!cancelModalVisible)
-  }
+  const headerRef = useRef(false)
+
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
     variables: { abortOrderId: id }
   })
-  function onError(error) {
-    FlashMessage({
-      message: error.message
-    })
-  }
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
@@ -75,8 +70,30 @@ function OrderDetail(props) {
     Track()
   }, [])
 
-  const order = orders.find((o) => o._id === id)
-  const headerRef = useRef(false)
+  const cancelModalToggle = () => {
+    setCancelModalVisible(!cancelModalVisible)
+  }
+  
+  function onError(error) {
+    FlashMessage({
+      message: error.message
+    })
+  }
+
+  const order = orders.find(o => o?._id === id)
+  
+  useEffect(()=>{
+    if (!headerRef.current && order) {
+      props.navigation.setOptions({
+        headerRight: () => HelpButton({ iconBackground: currentTheme.primary, navigation, t }),
+        headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
+        headerTitleStyle: { color: currentTheme.black },
+        headerStyle: { backgroundColor: currentTheme.white }
+      })
+      headerRef.current = true
+    }
+  },[headerRef.current, order])
+
   if (loadingOrders || !order) {
     return (
       <Spinner
@@ -86,15 +103,8 @@ function OrderDetail(props) {
     )
   }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
-  if (!headerRef.current) {
-    props.navigation.setOptions({
-      headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
-      headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
-      headerTitleStyle: { color: currentTheme.black },
-      headerStyle: { backgroundColor: currentTheme.white }
-    })
-    headerRef.current = true
-  }
+  
+  
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,
@@ -107,6 +117,8 @@ function OrderDetail(props) {
     deliveryCharges
   } = order
   const subTotal = total - tip - tax - deliveryCharges
+
+  
 
   return (
     <View style={{ flex: 1 }}>
