@@ -19,7 +19,7 @@ export const theme = {
     iconBackground: '#D1D5DB',
     itemCardColor: '#FFF',
     headerColor: '#6FCF97',
-    tagColor: '#6FCF97',
+    tagColor: '#90E36D',
     radioColor: '#6FCF97',
     startColor: '#6FCF97',
     startOutlineColor: '#6FCF97',
@@ -92,7 +92,13 @@ export const theme = {
     newheaderBG:'#fff',
     newFontcolor: '#000',
     newIconColor: '#000',
-    newBackground: '#949393',
+    newBackground: '#f0f0f0',
+    color1:'#fafafa',
+    color2: '#6B7280',
+    color3: 'transparent',
+    color4: '#111827',
+    color5: '#F3F4F6',
+    color6: '#F3F4F6'
   },
   Dark: {
     black: '#000',
@@ -103,7 +109,7 @@ export const theme = {
     iconColor: '#FCFCFC',
     iconColorDark: '#FCFCFC',
     itemCardColor: '#000',
-    tagColor: '#6FCF97',
+    tagColor: '#90E36D',
     iconColorPink: '#6FCF97',
     radioColor: '#6FCF97',
     radioOuterColor: '#383737',
@@ -177,6 +183,11 @@ export const theme = {
     newFontcolor: '#fff',
     newIconColor: '#fff',
     newBackground: '#000',
-
+    color1:'#282828',
+    color2: '#000',
+    color3: 'transparent',
+    color4: '#111827',
+    color5: '#000',
+    color6: '#000'
   }
 }

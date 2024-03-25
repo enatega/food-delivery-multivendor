@@ -30,7 +30,7 @@ function TitleComponent(props) {
       <View style={styles.rightContainer}>
         <TextDefault
           textColor={
-            currentTheme.gray500
+            currentTheme.color2
           }
           H6
           center>

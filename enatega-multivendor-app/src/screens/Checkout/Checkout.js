@@ -232,7 +232,7 @@ function Checkout(props) {
         <View style={{ alignItems: 'center', gap: scale(2) }}>
           <TextDefault
             style={{
-              color: currentTheme.btnText,
+              color: currentTheme.newFontcolor,
               ...textStyles.H4,
               ...textStyles.Bolder
             }}
@@ -240,26 +240,26 @@ function Checkout(props) {
             {t('titleCheckout')}
           </TextDefault>
           <TextDefault
-            style={{ color: currentTheme.btnText, ...textStyles.H5 }}
-          >
-            {data && data.restaurant.name}
-            {' - '}
-            {data && data.restaurant.address}
+            style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
+            {data && data.restaurant.name && data.restaurant.address && (
+  <>
+    {data.restaurant.name} {' - '} {data.restaurant.address}
+  </>
+)}
+
           </TextDefault>
         </View>
       ),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.btnText,
+        color: currentTheme.newFontcolor,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
-      headerTitleContainerStyle: {
-        backgroundColor: currentTheme.transparent
-      },
+      
       headerStyle: {
-        backgroundColor: currentTheme.themeBackground
+        backgroundColor: currentTheme.newheaderBG
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -820,7 +820,7 @@ function Checkout(props) {
                       />
                     </View>
                     <TextDefault
-                      textColor={props.black}
+                      textColor={currentTheme.newFontcolor}
                       numberOfLines={1}
                       H5
                       bolder
@@ -870,7 +870,11 @@ function Checkout(props) {
                           }}
                         >
                           <TextDefault
-                            textColor={currentTheme.fontFourthColor}
+                            textColor={
+                              selectedTip === label
+                                ? currentTheme.black 
+                                : currentTheme.fontFourthColor 
+                            }
                             normal
                             bolder
                             center
@@ -889,7 +893,11 @@ function Checkout(props) {
                         onPress={() => onModalOpen(tipModalRef)}
                       >
                         <TextDefault
-                          textColor={currentTheme.fontFourthColor}
+                          textColor={
+                            tip
+                              ? currentTheme.black 
+                              : currentTheme.fontFourthColor 
+                          }
                           normal
                           bolder
                           center
@@ -994,9 +1002,8 @@ function Checkout(props) {
                             <TextDefault
                               small
                               bold
-                              textColor={currentTheme.darkBgFont}
-                              center
-                            >
+                              textColor={currentTheme.color4}
+                              center>
                               {t('change')}
                             </TextDefault>
                             <Octicons name='pencil' size={16} color='black' />
@@ -1291,21 +1298,14 @@ function Checkout(props) {
                       onPayment()
                     }
                   }}
-                  style={[
-                    styles(currentTheme).button,
-                    { opacity: loadingOrder ? 0.5 : 1 }
-                  ]}
-                >
-                  {!loadingOrder && (
-                    <TextDefault
-                      textColor={currentTheme.fontFourthColor}
-                      style={styles().checkoutBtn}
-                      bold
-                      H4
-                    >
-                      {t('Place Order')}
-                    </TextDefault>
-                  )}
+                  style={[styles(currentTheme).button,{opacity:loadingOrder?0.5:1}]}>
+                  {!loadingOrder && <TextDefault
+                    textColor={currentTheme.color4}
+                    style={styles().checkoutBtn}
+                    bold
+                    H4>
+                    {t('Place Order')}
+                  </TextDefault>}
                   {loadingOrder && <Spinner backColor={'transparent'} />}
                 </TouchableOpacity>
               </View>

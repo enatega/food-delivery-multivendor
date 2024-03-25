@@ -74,8 +74,8 @@ const Section = ({ itemId, restaurantId }) => {
                             {`${configuration.currencySymbol}${food.variations[0].price}`}
                         </TextDefault>
                         <TouchableOpacity onPress={onAdd}>
-                            <View style={styles().addToCart}>
-                                <MaterialIcons name="add" size={scale(20)} color="#fff" />
+                            <View style={styles(currentTheme).addToCart}>
+                                <MaterialIcons name="add" size={scale(20)} color={currentTheme.themeBackground} />
                             </View>
                         </TouchableOpacity>
                     </View>

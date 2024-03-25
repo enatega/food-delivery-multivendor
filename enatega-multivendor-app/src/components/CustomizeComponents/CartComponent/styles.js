@@ -34,7 +34,7 @@ const styles = (props = null) =>
     icon: {
       width: '8%',
       height: '55%',
-      backgroundColor: 'black',
+      backgroundColor: props !== null ? props.newFontcolor :'#fafafa',
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: scale(15)
@@ -46,7 +46,7 @@ const styles = (props = null) =>
       paddingTop: scale(10),
       paddingBottom: scale(10),
       borderRadius: scale(10),
-      borderColor: 'black'
+      borderColor: props !== null ? props.newFontcolor :'#fafafa',
     },
     btnContainer: {
       width: '60%',

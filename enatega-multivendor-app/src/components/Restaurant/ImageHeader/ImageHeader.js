@@ -387,8 +387,7 @@ function ImageTextCenterHeader(props, ref) {
                     tab: false
                   })}>
                   <TextDefault
-                                        textColor= {currentTheme.editProfileButton}
-
+                    textColor= {currentTheme.editProfileButton}
                     style={{
                       fontSize: scale(14),
                       fontWeight: '600',

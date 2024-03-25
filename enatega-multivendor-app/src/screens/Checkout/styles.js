@@ -38,7 +38,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       width: '100%',
-      backgroundColor: props !== null ? props.cartContainer : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       ...alignment.MTxSmall
     },
     totalOrder: {
@@ -66,7 +66,7 @@ const styles = (props = null) =>
     },
     priceContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.cartContainer : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: scale(20),
       borderBottomColor:
         props !== null ? props.lightHorizontalLine : 'transparent',
@@ -116,7 +116,7 @@ const styles = (props = null) =>
     deliveryTime: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: scale(1),
+      gap: scale(8),
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       marginLeft: scale(2)
@@ -284,7 +284,7 @@ const styles = (props = null) =>
       width: '23%',
       borderWidth: 1,
       borderColor: props !== null ? props.iconBackground : 'transparent',
-      backgroundColor: props !== null ? props.newBorderColor : 'transparent',
+      backgroundColor: props !== null ? props.color6 : 'transparent',
       justifyContent: 'center',
       height: scale(37)
     },

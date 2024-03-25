@@ -9,7 +9,7 @@ const styles = (props = null, newheaderColor = '#fafafa') =>
     bodyStyleOne: {
       fontFamily: fontStyles.MuseoSans500,
       fontSize: scale(14),
-      color: props != null ? props.gray500 : 'black'
+      color: props != null ? props.fontMainColor : 'black'
     },
     mainContainerHolder: {
       // backgroundColor: 'red',
@@ -34,7 +34,7 @@ const styles = (props = null, newheaderColor = '#fafafa') =>
       alignItems: 'center',
       alignSelf: 'center',
       borderRadius: scale(40),
-      backgroundColor: props != null ? props.themeBackground : 'black',
+      backgroundColor: props != null ? props.color1 : 'black',
 
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {

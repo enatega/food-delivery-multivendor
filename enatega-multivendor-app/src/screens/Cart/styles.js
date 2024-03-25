@@ -36,7 +36,7 @@ const styles = (props = null) =>
     },
     dealContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.cartContainer : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: scale(10),
       ...alignment.PLsmall,
       ...alignment.PRsmall
@@ -134,7 +134,7 @@ const styles = (props = null) =>
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: '#000',
+      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
       justifyContent: 'center',
       alignItems: 'center'
     },

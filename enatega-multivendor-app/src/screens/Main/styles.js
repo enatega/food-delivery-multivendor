@@ -142,7 +142,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: props != null ? props.newBackground : '#B8B8B8',
+      backgroundColor: props != null ? props.newBackground : '#f0f0f0',
       borderRadius: scale(10),
       width: '85%',
       height: verticalScale(130),
