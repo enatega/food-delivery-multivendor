@@ -339,7 +339,7 @@ function SaveAddress(props) {
                 {!loading && <TextDefault textColor={currentTheme.black} H5 bold>
                   {t('saveAddress')}
                 </TextDefault>}
-                {loading && <Spinner backColor={'transparent'} spinnerColor={currentTheme.main} />}
+                {loading && <Spinner backColor={'transparent'} />}
               </TouchableOpacity>
             </View>
           </ScrollView>
