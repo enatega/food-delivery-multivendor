@@ -48,7 +48,7 @@ const themeValue = 'Pink'
 Notifications.setNotificationHandler({
   handleNotification: async notification => {
     return {
-      shouldShowAlert: notification?.request?.trigger?.remoteMessage?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
+      shouldShowAlert: notification?.request?.content?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
       shouldPlaySound: false,
       shouldSetBadge: false
     }
@@ -195,8 +195,8 @@ export default function App() {
     registerForPushNotificationsAsync()
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      if (notification?.request?.trigger?.remoteMessage?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = notification?.request?.trigger?.remoteMessage?.data?._id
+      if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = notification?.request?.content?.data?._id
         if (id) {
           setOrderId(id)
           reviewModalRef.current.open()
@@ -205,8 +205,8 @@ export default function App() {
     })
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      if (response?.notification?.request?.trigger?.remoteMessage?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = response?.notification?.request?.trigger?.remoteMessage?.data?._id
+      if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = response?.notification?.request?.content?.data?._id
         if (id) {
           setOrderId(id)
           reviewModalRef.current.open()
