@@ -27,12 +27,17 @@ const styles = (props = null) =>
       height: scale(15)
     },
     addressContainer: {
-      width: '90%',
+      width: '93%',
       alignSelf: 'center',
       borderRadius: scale(10),
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props !== null ? props.gray100 : 'transparent',
       ...alignment.PTsmall,
-      ...alignment.PBsmall
+      ...alignment.PBsmall,
+      ...alignment.PRsmall,
+      ...alignment.PLsmall,
+      borderWidth: 1,
+      alignSelf: 'center',
+      borderColor: props !== null ? props.gray200 : '#E5E7EB'
     },
     addressDetail: {
       width: '80%',

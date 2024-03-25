@@ -40,17 +40,17 @@ const Reviews = ({ navigation, route }) => {
     navigation.setOptions({
       headerTitle: () => (
         <View style={styles.headerContainer}>
-          <TextDefault H4 bold>
+          <TextDefault H4 bold textColor={currentTheme.newFontcolor}>
             {t('ratingAndreviews')}
           </TextDefault>
-          <TextDefault H5 style={{ ...alignment.MTxSmall }}>
+          <TextDefault H5 style={{ ...alignment.MTxSmall }} textColor={currentTheme.newFontcolor}>
             {restaurant.restaurantName}
           </TextDefault>
         </View>
       ),
       headerRight: null,
       headerStyle: {
-        backgroundColor: currentTheme.white
+        backgroundColor: currentTheme.newheaderBG
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -60,7 +60,7 @@ const Reviews = ({ navigation, route }) => {
               <MaterialIcons
                 name='arrow-back'
                 size={30}
-                color={currentTheme.black}
+                color={currentTheme.newIconColor}
               />
             </View>
           )}

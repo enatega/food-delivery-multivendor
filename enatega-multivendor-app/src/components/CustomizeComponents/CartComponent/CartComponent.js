@@ -27,12 +27,12 @@ function CartComponent(props) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={onRemove}
-          style={styles().icon}>
-          <AntDesign name="minus" size={scale(16)} color={currentTheme.white} />
+          style={styles(currentTheme).icon}>
+          <AntDesign name="minus" size={scale(16)} color={currentTheme.themeBackground} />
         </TouchableOpacity>
         <TextDefault
           textColor={currentTheme.fontMainColor}
-          style={styles().quantity}
+          style={styles(currentTheme).quantity}
           H4
           bold
           center>
@@ -41,8 +41,8 @@ function CartComponent(props) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={onAdd}
-          style={styles().icon}>
-          <AntDesign name="plus" size={scale(16)} color={currentTheme.white} />
+          style={styles(currentTheme).icon}>
+          <AntDesign name="plus" size={scale(16)} color={currentTheme.themeBackground} />
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.7}

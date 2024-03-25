@@ -26,7 +26,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.black : 'black'
     },
     input: {
-      backgroundColor: props !== null ? props.radioOuterColor : 'black',
+      backgroundColor: props !== null ? props.themeBackground : 'black',
       borderRadius: scale(10),
       height: scale(50),
       paddingLeft: scale(10),
@@ -39,7 +39,7 @@ const styles = (props = null) =>
 
     },
     backBtnContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
+      
       borderRadius: scale(50),
       width: scale(55),
       alignItems: 'center'

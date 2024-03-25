@@ -127,17 +127,17 @@ function Cart(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.btnText,
+        color: currentTheme.newFontcolor,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
       headerTitleContainerStyle: {
         paddingLeft: scale(25),
         paddingRight: scale(25),
-        backgroundColor: currentTheme.transparent
+        
       },
       headerStyle: {
-        backgroundColor: currentTheme.themeBackground
+        backgroundColor: currentTheme.newheaderBG
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -152,7 +152,7 @@ function Cart(props) {
               <AntDesign
                 name='arrowleft'
                 size={22}
-                color={currentTheme.fontFourthColor}
+                color={currentTheme.newIconColor}
               />
             </View>
           )}

@@ -139,7 +139,7 @@ const CartItem = props => {
           <AntDesign
             name={props.quantity < 2 ? 'delete' : 'minus'}
             size={scale(18)}
-            color={currentTheme.fontFourthColor}
+            color={currentTheme.color4}
           />
         </TouchableOpacity>
 

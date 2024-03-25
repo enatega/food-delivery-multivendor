@@ -121,7 +121,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: scale(40),
-      backgroundColor: props !== null ? props.buttonBackground : 'black',
+      backgroundColor: props !== null ? props.main : 'black',
       height: '75%',
       width: '95%',
       ...alignment.PLsmall,
