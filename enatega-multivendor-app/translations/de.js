@@ -531,4 +531,5 @@ LowestRating: 'Niedrigste Bewertung',
   price: 'PREIS',
   itemsAndQuantity: 'ARTIKEL UND MENGE',
   selectCity: 'Stadt auswählen',
+  Location: 'Ort',
 }

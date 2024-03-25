@@ -499,4 +499,5 @@ restaurantName: 'שם המסעדה',
 price: 'מחיר',
 itemsAndQuantity: 'פריטים וכמות',
 selectCity: 'בחר עיר',
+Location: 'מיקום',
 }

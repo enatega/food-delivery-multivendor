@@ -512,4 +512,5 @@ LowestRating: 'ការវាយតម្លៃទាបបំផុត',
   price: 'តម្លៃ',
   itemsAndQuantity: 'ទំនិញ និង ចំនួន',
   selectCity: 'ជ្រើសរើសទីក្រុង',
+  Location: 'ទីតាំង',
 }

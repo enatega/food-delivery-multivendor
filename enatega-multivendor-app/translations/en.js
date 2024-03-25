@@ -521,5 +521,5 @@ export const en = {
   somethingWentWrong: 'Something went wrong',
   checkInternet: 'Check your internet connection',
   selectCity: 'Select City',
-
+Location:'Location',
 }

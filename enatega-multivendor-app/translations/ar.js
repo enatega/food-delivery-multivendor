@@ -515,7 +515,7 @@ LowestRating: 'أقل تقييم',
   price: 'السعر',
   itemsAndQuantity: 'العناصر والكمية',
   selectCity: 'اختر المدينة',
-
+Location: 'الموقع',
 
 
 

@@ -500,4 +500,6 @@ LowestRating: '最低评分',
   price: '价格',
   itemsAndQuantity: '商品和数量',
   selectCity: '选择城市',
+  Location:'位置',
+
 }
