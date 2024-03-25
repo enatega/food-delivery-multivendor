@@ -612,11 +612,10 @@ function Profile(props) {
           <View style={{ alignItems: 'center', marginTop: '65%' }}>
             <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
               <TextDefault bolder H4 textColor={currentTheme.deleteAccountBtn}>
-                Delete Account
+                Delete my account
               </TextDefault>
             </TouchableOpacity>
           </View>
-          {/* <View style={styles().centeredView}> */}
             <Modal
               onBackdropPress={() => setDeleteModalVisible(false)}
               onBackButtonPress={() => setDeleteModalVisible(false)}
@@ -683,7 +682,6 @@ function Profile(props) {
               </View>
               </View>
             </Modal>
-          {/* </View> */}
         </KeyboardAvoidingView>
       </View>
     </>

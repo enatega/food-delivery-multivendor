@@ -1316,8 +1316,7 @@ function Checkout(props) {
         {/* Tip Modal */}
         <Modalize
           ref={tipModalRef}
-          modalStyle={styles(currentTheme).modal}
-          modalHeight={240}
+          modalStyle={[styles(currentTheme).modal, {marginTop: inset.top}]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
           handlePosition='inside'
@@ -1342,7 +1341,6 @@ function Checkout(props) {
                   H4
                   bolder
                   textColor={currentTheme.black}
-                  style={{ size: 18 }}
                   center
                 >
                   Add Tip
@@ -1387,8 +1385,7 @@ function Checkout(props) {
         {/* Voucher Modal */}
         <Modalize
           ref={voucherModalRef}
-          modalStyle={styles(currentTheme).modal}
-          modalHeight={240}
+          modalStyle={[styles(currentTheme).modal, {marginTop: inset.top}]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
           handlePosition='inside'
@@ -1413,7 +1410,6 @@ function Checkout(props) {
                   H4
                   bolder
                   textColor={currentTheme.black}
-                  style={{ size: 18 }}
                   center
                 >
                   Apply a Voucher

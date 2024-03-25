@@ -181,6 +181,7 @@ function Reorder(props) {
             }
             return (
               <ReorderItem
+              key={food?._id}
                 quantity={food?.quantity}
                 dealName={food?.title}
                 optionsTitle={food?.optionsTitle}
