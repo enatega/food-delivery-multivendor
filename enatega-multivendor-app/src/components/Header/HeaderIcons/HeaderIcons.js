@@ -303,7 +303,7 @@ function HelpButton(props) {
       }}
       onPress={() => props.navigation.navigate('Help')}
     >
-      <TextDefault style={{ padding: scale(5), width: 55, textAlign: 'center' }} small bold>
+      <TextDefault style={styles().rightButtonContainer} center small bold>
         {t('help')}
       </TextDefault>
     </TouchableOpacity>

@@ -39,7 +39,7 @@ const useRegister = () => {
     subregion: 'Southern Asia'
   })
 
-  const [PhoneExist, { loading }] = useMutation(PHONE, {
+  const [phoneExist, { loading }] = useMutation(PHONE, {
     onCompleted,
     onError
   })
@@ -105,7 +105,7 @@ const useRegister = () => {
 
   function registerAction() {
     if (validateCredentials()) {
-      PhoneExist({
+      phoneExist({
         variables: { phone: ''.concat('+', country.callingCode[0], phone) }
       })
     }
