@@ -68,6 +68,7 @@ const styles = (props = null) =>
       paddingTop: scale(3),
       fontWeight: '700'
     },
+
     statusText: {
       color: props !== null ? props.statusSecondColor : 'grey',
       fontSize: verticalScale(13),

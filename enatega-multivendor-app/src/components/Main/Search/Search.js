@@ -19,7 +19,7 @@ function Search(props) {
             <View style={styles().searchContainer}>
               <Ionicons
                 name="ios-search"
-                color={currentTheme.fontNewColor}
+                color={currentTheme.gray500}
                 size={scale(20)}
               />
             </View>
@@ -27,7 +27,7 @@ function Search(props) {
               <TextInput
                 style={styles(currentTheme).bodyStyleOne}
                 placeholder={props.placeHolder}
-                placeholderTextColor={currentTheme.fontNewColor}
+                placeholderTextColor={currentTheme.gray500}
                 onChangeText={text => props.setSearch(text)}
                 value={props.search}
               />

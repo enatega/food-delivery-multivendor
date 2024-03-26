@@ -42,7 +42,7 @@ function BackButton(props) {
       <SimpleLineIcons
         name='menu'
         size={20}
-        color={props.fontFourthColor}
+        color={props.iconColorDark}
         style={styles().leftIconPadding}
       />
     )
@@ -164,7 +164,7 @@ function RightButton(props) {
         <SimpleLineIcons
           name='handbag'
           size={24}
-          color={currentTheme.fontFourthColor}
+          color={currentTheme.black}
         />
         <View
           style={
