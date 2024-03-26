@@ -527,6 +527,11 @@ export const de = {
   cartAddresses: 'Warenkorb-Adressen',
   addressDeletedMessage: 'Adresse gelöscht!',
   logoutMessage: 'Erfolgreich ausgeloggt',
+  restaurantName: 'Restaurantname',
+  price: 'PREIS',
+  itemsAndQuantity: 'ARTIKEL UND MENGE',
+  selectCity: 'Stadt auswählen',
+  Location: 'Ort',
   phoneNumberExist: 'Die angegebene Telefonnummer existiert bereits!',
   phoneCheckingError:
     'Fehler beim Überprüfen der Telefonnummer. Versuchen Sie es später erneut!'

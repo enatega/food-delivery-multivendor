@@ -311,7 +311,7 @@ function ImageTextCenterHeader(props, ref) {
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
                 <Text style={styles().restaurantAbout}>
-                  {distance.toFixed(2)}km away
+                  {distance.toFixed(2)}km {t('away')}
                 </Text>
                 <Text style={styles().restaurantAbout}>|</Text>
                 <Text style={styles().restaurantAbout}>

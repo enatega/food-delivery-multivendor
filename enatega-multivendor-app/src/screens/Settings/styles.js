@@ -38,10 +38,12 @@ const styles = (props = null) =>
     },
     mainContainer: {
       backgroundColor: props !== null ? props.white : 'transparent',
-      ...alignment.PxSmall
+      ...alignment.PRmedium,
+      ...alignment.PLmedium,
+
     },
     languageContainer: {
-      width: '95%',
+      width: '100%',
       backgroundColor: props !== null ? props.gray100 : '#FFF',
       borderRadius: scale(10),
       borderWidth: 1,

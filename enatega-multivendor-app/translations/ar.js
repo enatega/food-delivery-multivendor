@@ -511,6 +511,11 @@ export const ar = {
   cartAddresses: 'عناوين السلة',
   addressDeletedMessage: 'تم حذف العنوان!',
   logoutMessage: 'تم تسجيل الخروج بنجاح',
+  restaurantName: 'اسم المطعم',
+  price: 'السعر',
+  itemsAndQuantity: 'العناصر والكمية',
+  selectCity: 'اختر المدينة',
+Location: 'الموقع',
   phoneNumberExist: 'رقم الهاتف المقدم موجود بالفعل!',
   phoneCheckingError: 'خطأ أثناء التحقق من رقم الهاتف. حاول مرة أخرى لاحقًا!'
 }

@@ -508,6 +508,11 @@ export const km = {
   cartAddresses: 'អាសយដ្ឋានប្រអប់',
   addressDeletedMessage: 'បានលុបអាសយដ្ឋាន!',
   logoutMessage: 'បាន​ចេញ​ពី​ប្រព័ន្ធ​រួច​ហើយ',
+  restaurantName: 'ឈ្មោះភោជនីយដ្ឋាន',
+  price: 'តម្លៃ',
+  itemsAndQuantity: 'ទំនិញ និង ចំនួន',
+  selectCity: 'ជ្រើសរើសទីក្រុង',
+  Location: 'ទីតាំង',
   phoneNumberExist: 'លេខទូរស័ព្ទដែលបានផ្ដល់មានរួចហើយ!',
   phoneCheckingError:
     'មានកំហុសពេលពិនិត្យលេខទូរស័ព្ទ។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ!'
