@@ -179,7 +179,7 @@ export const theme = {
     deleteAccountBtn: '#EF4444'
 ,
     fontGrayNew:'#F9F9F9',
-    newheaderBG:'#282828',
+    newheaderBG:'#000',
     newFontcolor: '#fff',
     newIconColor: '#fff',
     newBackground: '#000',

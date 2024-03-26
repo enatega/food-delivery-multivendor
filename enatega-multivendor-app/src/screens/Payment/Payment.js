@@ -67,7 +67,7 @@ function Payment(props) {
         <View style={{ alignItems: 'center', gap: scale(2) }}>
           <TextDefault
             style={{
-              color: currentTheme.btnText,
+              color: currentTheme.newFontcolor,
               ...textStyles.H4,
               ...textStyles.Bolder
             }}
@@ -79,15 +79,15 @@ function Payment(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.btnText,
+        color: currentTheme.newFontcolor,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
       headerTitleContainerStyle: {
-        backgroundColor: currentTheme.transparent
+        backgroundColor: currentTheme.newheaderBG
       },
       headerStyle: {
-        backgroundColor: currentTheme.themeBackground
+        backgroundColor: currentTheme.newheaderBG
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -97,7 +97,7 @@ function Payment(props) {
               <AntDesign
                 name='arrowleft'
                 size={22}
-                color={currentTheme.fontFourthColor}
+                color={currentTheme.newIconColor}
               />
             </View>
           )}
@@ -132,14 +132,10 @@ function Payment(props) {
               >
                 <View style={styles(currentTheme).paymentMethod}>
                   <View style={styles(currentTheme).iconContainer}>
-                    <FontAwesome
-                      style={styles().iconStyle}
-                      name={item.icon}
-                      size={18}
-                    />
+                    <FontAwesome style={styles().iconStyle} name={item.icon} size={18} color={currentTheme.newIconColor}/>
                   </View>
                   <TextDefault
-                    textColor={currentTheme.fontFourthColor}
+                    textColor={currentTheme.newFontcolor}
                     medium
                     bolder
                   >
