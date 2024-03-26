@@ -522,8 +522,8 @@ export const de = {
   '4+ Rating': 'Bewertung 4+',
   '5 star Rating': 'Bewertung 5 Sterne',
   Newest: 'Neueste',
-HighestRating: 'Höchste Bewertung',
-LowestRating: 'Niedrigste Bewertung',
+  HighestRating: 'Höchste Bewertung',
+  LowestRating: 'Niedrigste Bewertung',
   cartAddresses: 'Warenkorb-Adressen',
   addressDeletedMessage: 'Adresse gelöscht!',
   logoutMessage: 'Erfolgreich ausgeloggt',
@@ -532,4 +532,7 @@ LowestRating: 'Niedrigste Bewertung',
   itemsAndQuantity: 'ARTIKEL UND MENGE',
   selectCity: 'Stadt auswählen',
   Location: 'Ort',
+  phoneNumberExist: 'Die angegebene Telefonnummer existiert bereits!',
+  phoneCheckingError:
+    'Fehler beim Überprüfen der Telefonnummer. Versuchen Sie es später erneut!'
 }

@@ -503,8 +503,8 @@ export const km = {
   '4+ Rating': 'ការវាយតម្លៃ 4+',
   '5 star Rating': 'ការវាយតម្លៃ 5 ផ្កាយ',
   Newest: 'ថ្មីបំផុត',
-HighestRating: 'ការវាយតម្លៃខ្ពស់បំផុត',
-LowestRating: 'ការវាយតម្លៃទាបបំផុត',
+  HighestRating: 'ការវាយតម្លៃខ្ពស់បំផុត',
+  LowestRating: 'ការវាយតម្លៃទាបបំផុត',
   cartAddresses: 'អាសយដ្ឋានប្រអប់',
   addressDeletedMessage: 'បានលុបអាសយដ្ឋាន!',
   logoutMessage: 'បាន​ចេញ​ពី​ប្រព័ន្ធ​រួច​ហើយ',
@@ -513,4 +513,7 @@ LowestRating: 'ការវាយតម្លៃទាបបំផុត',
   itemsAndQuantity: 'ទំនិញ និង ចំនួន',
   selectCity: 'ជ្រើសរើសទីក្រុង',
   Location: 'ទីតាំង',
+  phoneNumberExist: 'លេខទូរស័ព្ទដែលបានផ្ដល់មានរួចហើយ!',
+  phoneCheckingError:
+    'មានកំហុសពេលពិនិត្យលេខទូរស័ព្ទ។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ!'
 }

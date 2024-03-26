@@ -86,7 +86,7 @@ function OrderDetail(props) {
     if (!headerRef.current && order) {
       props.navigation.setOptions({
         headerRight: () => HelpButton({ iconBackground: currentTheme.primary, navigation, t }),
-        headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
+        headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
         headerTitleStyle: { color: currentTheme.black },
         headerStyle: { backgroundColor: currentTheme.white }
       })

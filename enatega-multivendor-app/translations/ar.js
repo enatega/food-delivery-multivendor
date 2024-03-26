@@ -506,8 +506,8 @@ export const ar = {
   '4+ Rating': 'تقييم +4',
   '5 star Rating': 'تقييم 5 نجوم',
   Newest: 'الأحدث',
-HighestRating: 'أعلى تقييم',
-LowestRating: 'أقل تقييم',
+  HighestRating: 'أعلى تقييم',
+  LowestRating: 'أقل تقييم',
   cartAddresses: 'عناوين السلة',
   addressDeletedMessage: 'تم حذف العنوان!',
   logoutMessage: 'تم تسجيل الخروج بنجاح',
@@ -516,8 +516,6 @@ LowestRating: 'أقل تقييم',
   itemsAndQuantity: 'العناصر والكمية',
   selectCity: 'اختر المدينة',
 Location: 'الموقع',
-
-
-
-
+  phoneNumberExist: 'رقم الهاتف المقدم موجود بالفعل!',
+  phoneCheckingError: 'خطأ أثناء التحقق من رقم الهاتف. حاول مرة أخرى لاحقًا!'
 }

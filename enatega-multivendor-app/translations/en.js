@@ -512,8 +512,8 @@ export const en = {
   '3+ Rating': '3+ Rating',
   '4+ Rating': '4+ Rating',
   '5 star Rating': '5 star Rating',
-  Newest:'Newest',
-  HighestRating:'Highest Rating',
+  Newest: 'Newest',
+  HighestRating: 'Highest Rating',
   LowestRating: 'Lowest Rating',
   cartAddresses: 'Cart Addresses',
   addressDeletedMessage: 'Address deleted!',
@@ -522,4 +522,6 @@ export const en = {
   checkInternet: 'Check your internet connection',
   selectCity: 'Select City',
 Location:'Location',
+  phoneNumberExist: 'Provided phone number already exist!',
+  phoneCheckingError: 'Error while checking phone number. Try again later!'
 }

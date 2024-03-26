@@ -491,8 +491,8 @@ export const zh = {
   '4+ Rating': '4+ 评分',
   '5 star Rating': '5星评分',
   Newest: '最新',
-HighestRating: '最高评分',
-LowestRating: '最低评分',
+  HighestRating: '最高评分',
+  LowestRating: '最低评分',
   cartAddresses: '购物车地址',
   addressDeletedMessage: '地址已删除！',
   logoutMessage: '成功登出',
@@ -501,5 +501,6 @@ LowestRating: '最低评分',
   itemsAndQuantity: '商品和数量',
   selectCity: '选择城市',
   Location:'位置',
-
+  phoneNumberExist: '提供的电话号码已经存在！',
+  phoneCheckingError: '检查电话号码时出错。请稍后重试！'
 }
