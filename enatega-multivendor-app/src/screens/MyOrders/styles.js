@@ -129,7 +129,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignSelf: 'center',
-      backgroundColor: props !== null ? props.white : 'transparent'
+      backgroundColor: props !== null ? props.newheaderBG : 'transparent'
     },
     activeTabStyles: {
       width: '45%',

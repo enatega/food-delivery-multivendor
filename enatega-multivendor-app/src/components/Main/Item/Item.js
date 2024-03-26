@@ -141,7 +141,7 @@ function Item(props) {
                 {item.name}
               </TextDefault>
               <View style={[styles().aboutRestaurant, { width: '23%' }]}>
-                <Feather name="star" size={18} color={currentTheme.stars} />
+                <Feather name="star" size={18} color={currentTheme.newIconColor} />
                 <TextDefault
                 textColor={currentTheme.fontThirdColor}
        

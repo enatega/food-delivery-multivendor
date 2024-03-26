@@ -27,13 +27,13 @@ const styles = (props = null) =>
     },
     container2: {
       flex: 1,
-      backgroundColor: 'red',
+  
       height: '90%',
       overflow: 'visible',
       justifyContent: 'space-around',
       borderTopLeftRadius: scale(30),
       borderTopRightRadius: scale(30),
-      backgroundColor: '#FFF',
+      backgroundColor:props !==null ? props.themeBackground : '#f5f5f5',
       borderWidth: scale(1),
       borderColor: '#DAD6D6',
       padding: scale(25)
@@ -71,8 +71,8 @@ const styles = (props = null) =>
       alignItems: 'center',
       padding: 10
     },
-    placeholder: {
-      color: '#A0A0A0' // Add the color you want for the placeholder
+    cityField: {
+      color:props != null ? props.newFontcolor : '#E5E7EB',
     },
     icon1: {
       marginLeft: 10
@@ -113,7 +113,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       width: '100%',
       height: '20%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props.main : 'transparent',
       justifyContent: 'space-evenly',
       alignItems: 'center',
       alignSelf: 'center',
