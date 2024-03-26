@@ -73,13 +73,13 @@ function About(props) {
               <View key={index} style={styles(currentTheme).timingRow}>
                 <TextDefault
                   style={styles().timingText}
-                  textColor={currentTheme.black}
+                  textColor={currentTheme.newFontcolor}
                   bold
                   large>
                   {t(v.day)}{' '}
                 </TextDefault>
                 {v.times.length < 1 ? (
-                  <TextDefault key={index + 8} small bold center>
+                  <TextDefault key={index + 8} small bold center textColor={currentTheme.newFontcolor}>
                     {t('ClosedAllDay')}
                   </TextDefault>
                 ) : (
@@ -87,7 +87,7 @@ function About(props) {
                     <TextDefault
                       key={index + 8}
                       bolder
-                      textColor={currentTheme.black}
+                      textColor={currentTheme.newFontcolor}
                       large
                     >
                       {t.startTime[0]}:{t.startTime[1]}

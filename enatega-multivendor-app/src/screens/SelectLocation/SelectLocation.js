@@ -62,10 +62,10 @@ export default function SelectLocation(props) {
     navigation.setOptions(
       screenOptions({
         title: t('setLocation'),
-        fontColor: currentTheme.fontMainColor,
-        backColor: currentTheme.white,
-        iconColor: currentTheme.black,
-        lineColor: currentTheme.lightHorizontalLine,
+        fontColor: currentTheme.newFontcolor,
+        backColor: currentTheme.newheaderBG,
+        iconColor: currentTheme.newIconColor,
+        lineColor: currentTheme.newIconColor,
         setCurrentLocation
       })
     )
@@ -143,7 +143,7 @@ export default function SelectLocation(props) {
         </View>
         <View style={styles(currentTheme).container}>
           <TextDefault
-            textColor={currentTheme.buttonText}
+            textColor={currentTheme.newFontcolor}
             H3
             bolder
             Left
@@ -160,7 +160,7 @@ export default function SelectLocation(props) {
             <View style={styles(currentTheme).icon}>
               <EvilIcons name='location' size={18} color='black' />
             </View>
-            <TextDefault textColor={currentTheme.buttonText} H5 bold>
+            <TextDefault textColor={currentTheme.newFontcolor} H5 bold>
               {t('useCurrentLocation')}
             </TextDefault>
             {loading && (
@@ -182,7 +182,7 @@ export default function SelectLocation(props) {
               <Feather name='list' size={18} color='black' />
             </View>
 
-            <TextDefault textColor={currentTheme.buttonText} H5 bold>
+            <TextDefault textColor={currentTheme.newFontcolor} H5 bold>
               {t('browseCities')}
             </TextDefault>
           </TouchableOpacity>

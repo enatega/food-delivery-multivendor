@@ -311,13 +311,13 @@ function ImageTextCenterHeader(props, ref) {
                 </View>
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-                <Text style={styles().restaurantAbout}>
+                <TextDefault style={styles().restaurantAbout}  textColor={currentTheme.fontMainColor}>
                   {distance.toFixed(2)}km {t('away')}
-                </Text>
-                <Text style={styles().restaurantAbout}>|</Text>
-                <Text style={styles().restaurantAbout}>
+                </TextDefault>
+                <TextDefault style={styles().restaurantAbout}  textColor={currentTheme.fontMainColor}>|</TextDefault>
+                <TextDefault style={styles().restaurantAbout}  textColor={currentTheme.fontMainColor}>
                   ${aboutObject.restaurantTax} {t('deliveryCharges')}
-                </Text>
+                </TextDefault>
               </View>
               <View
                 style={{
@@ -327,13 +327,13 @@ function ImageTextCenterHeader(props, ref) {
                   marginTop: scale(5)
                 }}
               >
-                <Text style={styles().restaurantAbout}>
+                <TextDefault style={styles().restaurantAbout}  textColor={currentTheme.fontMainColor}>
                   ${aboutObject.restaurantMinOrder} {t('minimum')}
-                </Text>
-                <Text style={styles().restaurantAbout}>|</Text>
-                <Text style={styles().restaurantAbout}>
+                </TextDefault>
+                <TextDefault style={styles().restaurantAbout}  textColor={currentTheme.fontMainColor}>|</TextDefault>
+                <TextDefault style={styles().restaurantAbout}  textColor={currentTheme.fontMainColor}>
                   {t('serviceFeeApply')}
-                </Text>
+                </TextDefault>
               </View>
               <View
                 style={{
@@ -391,7 +391,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={{
                       fontSize: scale(14),
                       fontWeight: '600',
-                      color: '#3B82F6'
+                     
                     }}
                   >
                     {t('seeReviews')}
