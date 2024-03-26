@@ -246,7 +246,7 @@ function Main(props) {
           onPress={() => {
             if (isLoggedIn) {
               navigation.navigate('AddNewAddress', {
-                locationData
+                ...locationData
               })
             } else {
               const modal = modalRef.current

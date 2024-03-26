@@ -175,8 +175,6 @@ function Addresses() {
                   activeOpacity={0.7}
                   onPress={() => {
                     const [longitude, latitude] = address.location.coordinates
-
-                    console.log(longitude, latitude,address._id )
                     navigation.navigate('AddNewAddress', {
                       id:address._id,
                       longitude: +longitude,

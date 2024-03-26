@@ -237,7 +237,6 @@ function Profile(props) {
   }
 
   async function deactivatewithemail() {
-    console.log('Calling deactivatewithemail')
     try {
       // setDeleteModalVisible(false)
       // setDeleteConfirmationModalVisible(true)
