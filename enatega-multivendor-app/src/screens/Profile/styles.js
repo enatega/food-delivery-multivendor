@@ -13,7 +13,7 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       // backgroundColor: 'red',
       // height: '100%'
     },
@@ -25,10 +25,10 @@ const styles = (props = null) =>
       borderRadius: scale(8),
       flexDirection: 'row',
       width: '92%',
-      backgroundColor: props !== null ? props.gray100 : 'transparent',
+      backgroundColor: props !== null ? props.color5 : 'transparent',
       alignSelf: 'center',
       elevation: 1,
-      borderWidth: props !== null && props.gray200 !== '#E5E7EB' ? 2 : 0,
+      borderWidth: props !== null && props.gray200 !== '#E5E7EB' ? 0 : 1,
       borderColor: props !== null ? props.gray200 : '#E5E7EB',
       ...alignment.MTsmall,
       ...alignment.Psmall
@@ -89,7 +89,9 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       ...alignment.PTmedium,
-      ...alignment.PBsmall
+      ...alignment.PBsmall,
+      borderWidth: props !== null && props.gray200 !== '#E5E7EB' ? 0 : 1,
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
     },
     modalContent: {
       width: '90%'

@@ -284,7 +284,7 @@ const styles = (props = null) =>
       width: '23%',
       borderWidth: 1,
       borderColor: props !== null ? props.iconBackground : 'transparent',
-      backgroundColor: props !== null ? props.color6 : 'transparent',
+      backgroundColor: props !== null ? props.color5 : 'transparent',
       justifyContent: 'center',
       height: scale(37)
     },

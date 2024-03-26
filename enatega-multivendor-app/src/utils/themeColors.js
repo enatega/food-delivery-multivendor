@@ -98,7 +98,10 @@ export const theme = {
     color3: 'transparent',
     color4: '#111827',
     color5: '#F3F4F6',
-    color6: '#F3F4F6'
+    color6: '#949393',
+    color7: '#374151',
+
+   
   },
   Dark: {
     black: '#000',
@@ -176,8 +179,7 @@ export const theme = {
     borderLight: '#D9D9D9',
     red600: '#DC2626',
     lightBlue: '#3B82F6',
-    deleteAccountBtn: '#EF4444'
-,
+    deleteAccountBtn: '#EF4444',
     fontGrayNew:'#F9F9F9',
     newheaderBG:'#000',
     newFontcolor: '#fff',
@@ -188,6 +190,9 @@ export const theme = {
     color3: 'transparent',
     color4: '#111827',
     color5: '#000',
-    color6: '#000'
+    borderColor: '#efefef',
+    color6: '#f9f9f9',
+    borderBottomColor: '#f9f9f9',
+    color7: '#fff',
   }
 }

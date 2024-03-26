@@ -19,7 +19,7 @@ const styles = (props = null) =>
       justifyContent: 'space-around',
       borderTopLeftRadius: scale(30),
       borderTopRightRadius: scale(30),
-      backgroundColor: '#FFF',
+      backgroundColor: props !==null ? props.themeBackground : '#f5f5f5',
       borderWidth: scale(1),
       borderColor: '#DAD6D6',
       paddingTop: scale(20),

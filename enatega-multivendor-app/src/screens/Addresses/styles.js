@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.white : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     containerInfo: {
       width: '100%',
@@ -34,7 +34,7 @@ const styles = (props = null) =>
       marginBottom: scale(65)
     },
     containerButton: {
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       width: '90%',
       height: scale(55),
       bottom: verticalScale(0),

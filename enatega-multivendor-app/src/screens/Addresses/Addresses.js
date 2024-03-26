@@ -73,7 +73,7 @@ function Addresses() {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: '#000',
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -84,7 +84,7 @@ function Addresses() {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
       headerLeft: () => (
@@ -93,8 +93,8 @@ function Addresses() {
          
           backImage={() => (
             <View>
-              <MaterialIcons name='arrow-back' size={30} color='black' />
-              <MaterialIcons name='arrow-back' size={30} color='black' />
+              <MaterialIcons name='arrow-back' size={30} color={currentTheme.newIconColor} />
+            
             </View>
           )}
           onPress={() => {
@@ -164,13 +164,7 @@ function Addresses() {
                   : React.createElement(addressIcons['Other'], {
                       fill: currentTheme.darkBgFont
                     })}
-                {addressIcons[address.label]
-                  ? React.createElement(addressIcons[address.label], {
-                      fill: currentTheme.darkBgFont
-                    })
-                  : React.createElement(addressIcons['Other'], {
-                      fill: currentTheme.darkBgFont
-                    })}
+               
               </View>
               <View style={[styles().titleAddress]}>
                 <TextDefault

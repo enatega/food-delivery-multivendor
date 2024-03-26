@@ -546,7 +546,7 @@ function Cart(props) {
                     style={styles(currentTheme).button}
                   >
                     <TextDefault
-                      textColor={currentTheme.themeBackground}
+                      textColor={currentTheme.white}
                       style={styles().checkoutBtn}
                       bold
                       H5
