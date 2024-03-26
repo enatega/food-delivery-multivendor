@@ -50,13 +50,7 @@ export const LocationProvider = ({ children }) => {
         const data = response.data
 
         const ipResponse = await axios.get(`https://ipinfo.io/${data.ip}/json`)
-        console.log(
-          'country data',
-          JSON.stringify(ipResponse.data),
-          JSON.stringify(data)
-        )
         const countryName = ipResponse.data.country // missing 'US'
-        console.log('country by ipify', countryName)
         setCountry(countryName)
       } catch (error) {
         setErrorCountry(error.message)

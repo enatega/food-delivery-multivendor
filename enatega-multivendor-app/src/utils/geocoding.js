@@ -24,7 +24,6 @@ export async function fetchAddressFromCoordinates(latitude, longitude) {
           component.types.includes('administrative_area_level_2')
       )
       const city = cityComponent ? cityComponent.long_name : null
-      console.log('city', city)
       return { formattedAddress, city }
     } else {
       throw new Error('No address found for the given coordinates.')

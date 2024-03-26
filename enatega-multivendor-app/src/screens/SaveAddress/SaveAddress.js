@@ -51,7 +51,7 @@ function SaveAddress(props) {
   const inset = useSafeAreaInsets()
 
 
-  const [mutate, { loading }] = useMutation(locationData.id ? EDIT_ADDRESS : CREATE_ADDRESS, {
+  const [mutate, { loading }] = useMutation(locationData?.id ? EDIT_ADDRESS : CREATE_ADDRESS, {
     onCompleted,
     onError
   })
@@ -119,7 +119,7 @@ function SaveAddress(props) {
         />
       )
     })
-  }, [props.navigation])
+  })
 
   const onSelectLocation = () => {
     if (!selectedLabel) {

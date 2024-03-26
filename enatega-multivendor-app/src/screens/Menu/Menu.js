@@ -290,7 +290,7 @@ function Menu({ route, props }) {
           style={styles(currentTheme).addButton}
           onPress={() => {
             if (isLoggedIn) {
-              navigation.navigate('AddNewAddress', { locationData })
+              navigation.navigate('AddNewAddress', { ...locationData })
             } else {
               const modal = modalRef.current
               modal?.close()

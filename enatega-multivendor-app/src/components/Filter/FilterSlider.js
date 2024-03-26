@@ -45,7 +45,6 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
   }
 
   const handleValueSelection = (filterTitle, filterValue) => {
-    // console.log('handleValueSelection', filterTitle, filterValue)
     const selectedFilter = filters[filterTitle]
     if (selectedFilter.type === FILTER_TYPE.RADIO) {
       selectedFilter.selected = [filterValue]
@@ -58,9 +57,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
       } else selectedFilter.selected.push(filterValue)
     }
     setFilters({ ...filters, [filterTitle]: selectedFilter })
-    // console.log({ ...filters, [filterTitle]: selectedFilter })
   }
-  // console.log('Filters => ', JSON.stringify(filters, null, 4))
 
   return (
     <ScrollView
