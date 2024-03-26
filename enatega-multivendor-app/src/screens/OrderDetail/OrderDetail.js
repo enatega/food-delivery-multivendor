@@ -97,14 +97,21 @@ function OrderDetail(props) {
   if (loadingOrders || !order) {
     return (
       <Spinner
-        backColor={currentTheme.white}
+        backColor={currentTheme.newheaderBG}
         spinnerColor={currentTheme.primary}
       />
     )
   }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
-  
-  
+  if (!headerRef.current) {
+    props.navigation.setOptions({
+      headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
+      headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
+      headerTitleStyle: { color: currentTheme.newFontcolor },
+      headerStyle: { backgroundColor: currentTheme.newheaderBG }
+    })
+    headerRef.current = true
+  }
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,
@@ -125,7 +132,7 @@ function OrderDetail(props) {
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          backgroundColor: currentTheme.white,
+          backgroundColor: currentTheme.themeBackground,
           paddingBottom: scale(100)
         }}
         showsVerticalScrollIndicator={false}
