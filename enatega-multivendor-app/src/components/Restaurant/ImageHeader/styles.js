@@ -12,7 +12,7 @@ const styles = (props = null) =>
     mainContainer: {
       backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      ...alignment.PRmedium
       // height: height * 0.5
     },
 
@@ -98,11 +98,11 @@ const styles = (props = null) =>
     flatListStyle: {
       height: '10%',
       width: '100%',
-      marginTop: scale(25)
+      marginTop: scale(25),
       // backgroundColor: props != null ? props.themeBackground : 'white',
       // borderBottomLeftRadius: 25,
       // borderBottomRightRadius: 25,
-      // zIndex: 2
+      zIndex: 2
     },
     headerContainer: {
       height: '100%',
@@ -119,6 +119,15 @@ const styles = (props = null) =>
     },
     heading: {
       fontWeight: 'bold'
+    },
+    overlayContainer: {
+      position: 'absolute',
+      top: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0,0,0,0.01)',
+      ...alignment.PRsmall,
+      ...alignment.PLsmall
     }
     // navbarTextContainer: {
     //   display: 'flex',
