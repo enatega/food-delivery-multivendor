@@ -519,9 +519,12 @@ export const fr = {
   '4+ Rating': 'Évaluation 4+',
   '5 star Rating': 'Évaluation 5 étoiles',
   Newest: 'Plus récent',
-HighestRating: 'Meilleure évaluation',
-LowestRating: 'Plus basse évaluation',
+  HighestRating: 'Meilleure évaluation',
+  LowestRating: 'Plus basse évaluation',
   cartAddresses: 'Adresses du panier',
   addressDeletedMessage: 'Adresse supprimée !',
-  logoutMessage: 'Déconnexion réussie'
+  logoutMessage: 'Déconnexion réussie',
+  phoneNumberExist: 'Le numéro de téléphone fourni existe déjà !',
+  phoneCheckingError:
+    'Erreur lors de la vérification du numéro de téléphone. Veuillez réessayer plus tard !'
 }

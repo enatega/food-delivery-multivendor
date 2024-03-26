@@ -282,6 +282,15 @@ export const emailExist = `
     }
   }`
 
+export const phoneExist = `
+  mutation PhoneExist($phone: String!) {
+    phoneExist(phone: $phone) {
+      userType
+      _id
+      phone
+    }
+  }`
+
 export const sendOtpToEmail = `
   mutation SendOtpToEmail($email: String!, $otp: String!) {
     sendOtpToEmail(email: $email, otp: $otp) {
