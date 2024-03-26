@@ -15,7 +15,7 @@ const styles = (props = null) =>
       width: '10%'
     },
     titleAddress: {
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     homeIcon: {
       width: '20%',
