@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { verticalScale, scale } from '../../../utils/scaling'
 
-const styles = backColor =>
+const styles = (backColor) =>
   StyleSheet.create({
     leftIconPadding: {
       ...alignment.MLsmall
@@ -59,6 +59,10 @@ const styles = backColor =>
       ...alignment.PRxSmall,
       ...alignment.PTxSmall,
       ...alignment.PBxSmall
+    },
+    rightButtonContainer: {
+      padding: scale(5),
+      width: scale(60)
     }
   })
 
