@@ -520,7 +520,6 @@ export const en = {
   logoutMessage: 'Successfully logged out',
   somethingWentWrong: 'Something went wrong',
   checkInternet: 'Check your internet connection',
-  logoutMessage: 'Successfully logged out',
   phoneNumberExist: 'Provided phone number already exist!',
   phoneCheckingError: 'Error while checking phone number. Try again later!'
 }
