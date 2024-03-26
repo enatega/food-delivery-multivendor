@@ -40,6 +40,9 @@ const styles = (props = null, hasActiveOrders = false) =>
       height: '100%',
       alignSelf: 'center'
     },
+    searchbar:{
+      backgroundColor: props != null ? props.main : 'black',
+    },
 
     addressbtn: {
       backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
@@ -139,14 +142,17 @@ const styles = (props = null, hasActiveOrders = false) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: props != null ? props.newBackground : '#B8B8B8',
       borderRadius: scale(10),
       width: '85%',
       height: verticalScale(130),
       justifyContent: 'center',
       alignItems: 'center',
       padding: scale(15),
-      marginTop: scale(30)
+      marginTop: scale(30),
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderWidth:scale(1),
+      borderRadius:scale(10)
     },
     searchList: {
       marginBottom: 70

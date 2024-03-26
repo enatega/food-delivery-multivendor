@@ -10,13 +10,14 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: '#fff',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       // height: height * 0.5
     },
 
     touchArea: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(20)
@@ -63,7 +64,7 @@ const styles = (props = null) =>
     },
     restaurantAbout: {
       fontSize: scale(14),
-      color: '#6B7280',
+      color: props != null ? props.fontMainColor : 'white',
       fontWeight: '500'
     },
     fixedText: {

@@ -29,7 +29,7 @@ const styles = (props = null) =>
       marginLeft: scale(5)
     },
     mainContainerArea: {
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: scale(30),
       shadowOffset: { width: 0 },
       shadowColor: theme.Pink.black,
@@ -37,8 +37,10 @@ const styles = (props = null) =>
       marginTop: scale(20)
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.white : 'transparent',
-      ...alignment.PxSmall
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      ...alignment.PLxSmall,
+      ...alignment.PRxSmall,
+      ...alignment.PTmedium,
     },
     languageContainer: {
       width: '95%',
@@ -111,7 +113,11 @@ const styles = (props = null) =>
       width: '100%',
       backgroundColor: props !== null ? props.themeBackground : '#FFF',
       borderRadius: verticalScale(4),
-      ...alignment.Plarge
+      ...alignment.Plarge,
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderWidth:scale(1),
+      borderRadius:scale(10)
+
     },
     radioContainer: {
       width: '100%',

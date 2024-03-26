@@ -113,7 +113,7 @@ function Settings(props) {
           truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons name='arrow-back' size={25} color='black' />
+              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -124,7 +124,7 @@ function Settings(props) {
       headerTitle: t('titleSettings'),
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: '#000',
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -135,7 +135,7 @@ function Settings(props) {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       }
     })
@@ -477,7 +477,7 @@ function Settings(props) {
             >
               <TextDefault
                 numberOfLines={1}
-                textColor={currentTheme.tagColor}
+                textColor={currentTheme.main}
                 small
                 bolder
                 uppercase
@@ -491,7 +491,7 @@ function Settings(props) {
               onPress={() => onSelectedLanguage()}
             >
               <TextDefault
-                textColor={currentTheme.tagColor}
+                textColor={currentTheme.main}
                 bolder
                 uppercase
                 small

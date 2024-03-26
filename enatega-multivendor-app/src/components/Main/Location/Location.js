@@ -33,7 +33,7 @@ function Location(props) {
             <EvilIcons
               name="location"
               size={16}
-              color={currentTheme.fontFourthColor}
+              color={currentTheme.black}
             />
           </View>
           <View style={styles(currentTheme).headerContainer}>

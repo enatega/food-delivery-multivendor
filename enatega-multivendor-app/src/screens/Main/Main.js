@@ -223,12 +223,12 @@ function Main(props) {
     if (loading || mutationLoading || loadingOrders) return <MainLoadingUI />
     else {
       return (
-        <View style={styles().emptyViewContainer}>
-          <View style={styles().emptyViewBox}>
+        <View style={styles(currentTheme).emptyViewContainer}>
+          <View style={styles(currentTheme).emptyViewBox}>
             <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
               {t('notAvailableinYourArea')}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} center>
+            <TextDefault textColor={currentTheme.fontGrayNew} center>
               {t('noRestaurant')}
             </TextDefault>
           </View>
@@ -319,7 +319,7 @@ function Main(props) {
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
-                <View style={styles().searchbar}>
+                <View style={styles(currentTheme).searchbar}>
                   <Search
                     setSearch={setSearch}
                     search={search}
