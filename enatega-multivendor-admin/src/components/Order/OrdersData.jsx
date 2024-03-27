@@ -18,13 +18,12 @@ const ORDERCOUNT = gql`
 const ORDER_PLACED = gql`
   ${subscribePlaceOrder}
 `
-
 const OrdersData = props => {
-  const theme = useTheme()
-  const { t } = props
-  const { selected, updateSelected } = props
-  const [searchQuery, setSearchQuery] = useState('')
-  const onChangeSearch = e => setSearchQuery(e.target.value)
+  const theme = useTheme();
+  const { t } = props;
+  const { selected, updateSelected } = props;
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = e => setSearchQuery(e.target.value);
   const getItems = items => {
     return items
       .map(
@@ -33,13 +32,13 @@ const OrdersData = props => {
             item.variation.title ? `(${item.variation.title})` : ''
           }`
       )
-      .join('\n')
-  }
-  const restaurantId = localStorage.getItem('restaurantId')
+      .join('\n');
+  };
+  const restaurantId = localStorage.getItem('restaurantId');
 
   const { data, loading: loadingQuery } = useQuery(ORDERCOUNT, {
     variables: { restaurant: restaurantId }
-  })
+  });
 
   const propExists = (obj, path) => {
     return path.split('.').reduce((obj, prop) => {
@@ -59,14 +58,21 @@ const OrdersData = props => {
     return orderBy(rows, handleField, direction)
   }
 
-  const handlePerRowsChange = (perPage, page) => {
-    props.page(page)
-    props.rows(perPage)
+  const handlePerRowsChange = async (perPage, page) => {
+  try {
+    await props.onChangeRowsPerPage(perPage, page);
+  } catch (error) {
+    console.error('Error occurred while changing rows per page:', error);
   }
+}
 
-  const handlePageChange = async page => {
-    props.page(page)
+const handlePageChange = async page => {
+  try {
+    await props.onChangePage(page);
+  } catch (error) {
+    console.error('Error occurred while changing page:', error);
   }
+}
 
   const columns = [
     {
