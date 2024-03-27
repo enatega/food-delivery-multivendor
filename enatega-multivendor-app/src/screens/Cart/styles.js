@@ -42,7 +42,6 @@ const styles = (props = null) =>
       ...alignment.PRsmall
     },
     totalOrder: {
-      color: props != null ? props.fontNewColor : '#6B7280',
       marginBottom: scale(12)
     },
     termsContainer: {

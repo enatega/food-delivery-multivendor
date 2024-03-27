@@ -523,5 +523,12 @@ export const en = {
   selectCity: 'Select City',
 Location:'Location',
   phoneNumberExist: 'Provided phone number already exist!',
-  phoneCheckingError: 'Error while checking phone number. Try again later!'
+  phoneCheckingError: 'Error while checking phone number. Try again later!',
+  cancelledOrder:
+  'Your order is cancelled. If you have any questions, please reach out to our support team.',
+addMore: 'Would you like to add these?',
+howWasOrder: 'How was your order?',
+tellAboutExp: 'Tell others about your experience with',
+typeHere:'Type Here',
+review: 'Review',
 }

@@ -45,7 +45,7 @@ function Reorder(props) {
         <View style={{ alignItems: 'center', gap: scale(2) }}>
           <TextDefault
             style={{
-              color: currentTheme.btnText,
+              color: currentTheme.newFontcolor,
               ...textStyles.H4,
               ...textStyles.Bolder
             }}
@@ -57,12 +57,12 @@ function Reorder(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.btnText,
+        color: currentTheme.newFontcolor,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
       headerTitleContainerStyle: {
-        backgroundColor: currentTheme.transparent
+        backgroundColor: currentTheme.newheaderBG
       },
       headerStyle: {
         backgroundColor: currentTheme.themeBackground

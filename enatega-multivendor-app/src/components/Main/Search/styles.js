@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { theme } from '../../../utils/themeColors'
 
-const styles = (props = null, newheaderColor = '#fafafa') =>
+const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
   StyleSheet.create({
     bodyStyleOne: {
       fontFamily: fontStyles.MuseoSans500,
@@ -12,12 +12,10 @@ const styles = (props = null, newheaderColor = '#fafafa') =>
       color: props != null ? props.fontMainColor : 'black'
     },
     mainContainerHolder: {
-      // backgroundColor: 'red',
-      // height: scale(55),
       zIndex: 333,
       width: '100%',
       alignItems: 'center',     
-      backgroundColor: props != null ? props.main : 'black',
+      backgroundColor:newheaderColor,
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,

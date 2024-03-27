@@ -103,7 +103,7 @@ function CartAddresses(props) {
           >
             <TouchableOpacity
               activeOpacity={0.7}
-              style={[styles(currentTheme).containerSpace, alignment.MBsmall]}
+              style={[styles(currentTheme).containerSpace]}
               onPress={() => {
                 const latitude = location.latitude
                 const longitude = location.longitude
@@ -176,7 +176,7 @@ function CartAddresses(props) {
           ItemSeparatorComponent={() => <View />}
           ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
           renderItem={({ item: address }) => (
-            <View style={{ ...alignment.MBlarge }}>
+            <View style={{ ...alignment.MBsmall }}>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={[styles(currentTheme).containerSpace]}

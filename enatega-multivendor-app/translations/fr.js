@@ -531,5 +531,11 @@ export const fr = {
   Location:'Lieu',
   phoneNumberExist: 'Le numéro de téléphone fourni existe déjà !',
   phoneCheckingError:
-    'Erreur lors de la vérification du numéro de téléphone. Veuillez réessayer plus tard !'
+    'Erreur lors de la vérification du numéro de téléphone. Veuillez réessayer plus tard !',
+    cancelledOrder:'Votre commande a été annulée. Si vous avez des questions, veuillez contacter notre équipe de support.',
+    addMore: 'Souhaitez-vous ajouter ceci ?',
+howWasOrder: 'Comment s’est passée votre commande ?',
+tellAboutExp: 'Parlez-nous de votre expérience avec',
+typeHere: 'Tapez ici',
+review: 'Avis',
 }

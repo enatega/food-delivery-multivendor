@@ -56,7 +56,7 @@ function BackButton(props) {
     )
   } else if (props.icon === 'target') {
     return (
-      <MaterialIcons name='my-location' size={16} color={props.iconColorDark} />
+      <MaterialIcons name='my-location' size={16} color={props.iconColor} />
     )
   } else if (props.icon === 'fav') {
     return <AntDesign name='hearto' size={20} color={props.iconColorDark} />
@@ -66,7 +66,7 @@ function BackButton(props) {
         name='close'
         size={16}
         style={styles().leftIconPadding}
-        color={props.iconColor}
+        color={props.newIconColor}
       />
     )
   }
@@ -79,7 +79,7 @@ function LeftButton(props) {
       <HeaderBackButton
         truncatedLabel=''
         backImage={() =>
-          BackButton({ iconColor: props.iconColor, icon: 'leftArrow' })
+          BackButton({ iconColor: props.newIconColor, icon: 'leftArrow' })
         }
         onPress={() => {
           navigationService.goBack()
@@ -93,7 +93,7 @@ function LeftButton(props) {
         pressColorAndroid={rippleColor}
         labelVisible={false}
         backImage={() =>
-          BackButton({ iconColor: props.iconColor, icon: 'close' })
+          BackButton({ iconColor: props.newIconColor, icon: 'close' })
         }
         onPress={() => {
           navigation.dispatch((state) => {
@@ -114,7 +114,7 @@ function LeftButton(props) {
         labelVisible={false}
         backImage={() =>
           BackButton({
-            iconColor: props.iconColor,
+            iconColor: props.newIconColor,
             icon: props.toggleValue ? 'leftArrow' : 'close'
           })
         }
@@ -132,7 +132,7 @@ function LeftButton(props) {
         pressColorAndroid={rippleColor}
         labelVisible={false}
         backImage={() =>
-          BackButton({ iconColor: props.iconColor, icon: 'menu' })
+          BackButton({ iconColor: props.newIconColor, icon: 'menu' })
         }
         onPress={() => navigation.toggleDrawer()}
       />
@@ -141,7 +141,7 @@ function LeftButton(props) {
 }
 
 function RightButton(props) {
-  const { t } = useTranslation()
+
   const [password, setPassword] = useState(false)
   const navigation = useNavigation()
   const route = useRoute()
@@ -279,15 +279,16 @@ function DarkBackButton(props) {
   return (
     <View
       style={{
-        backgroundColor: props.icon,
-        borderRadius: 5
+        backgroundColor: props.themeBackground,
+        borderRadius: 5,
+    
       }}
     >
       <Ionicons
         name='close-circle-outline'
         size={20}
         style={styles().darkBackArrow}
-        color={props.iconBackground}
+        color={props.color}
       />
     </View>
   )

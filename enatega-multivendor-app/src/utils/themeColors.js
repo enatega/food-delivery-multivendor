@@ -69,7 +69,7 @@ export const theme = {
     backgroundColor2: 'rgba(0, 0, 0, 0.5)',
     backgroundColor3: 'rgba(256, 256, 256, 0.9)',
     hex: '#b0afbc',
-    gray: 'grey',
+    gray: 'gray',
     darkBgFont: '#000',
     btnText: '#000',
     stars: '#FFA921',
@@ -101,8 +101,10 @@ export const theme = {
     color6: '#949393',
     color7: '#374151',
     color8:'#f0f0f0',
-
-   
+    filtersBg: '#f0f0f0',
+   color9:'gray',
+    iconStroke:'#0F172A',
+    color9:'transparent',
   },
   Dark: {
     black: '#000',
@@ -196,6 +198,11 @@ export const theme = {
     borderBottomColor: '#f9f9f9',
     color7: '#fff',
     color8:'#000',
-
+    filtersBg: '#90E36D',
+    gray: 'gray',
+    color9:'#fff',
+    hex: '#b0afbc',
+    iconStroke:'#0F172A',
+    color9:'#fff',
   }
 }

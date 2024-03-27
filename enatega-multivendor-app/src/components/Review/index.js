@@ -12,6 +12,7 @@ import { order } from '../../apollo/queries'
 import gql from 'graphql-tag'
 import { useApolloClient, useMutation } from '@apollo/client'
 import { reviewOrder } from '../../apollo/mutations'
+import { useTranslation } from 'react-i18next'
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height
 const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
@@ -23,6 +24,8 @@ const REVIEWORDER = gql`
 `
 
 function Review({ onOverlayPress, theme, orderId, rating }, ref) {
+  const { t } = useTranslation()
+
   const ratingRef = useRef()
   const [description, setDescription] = useState('')
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
@@ -54,13 +57,13 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   }
   return (
     <Modalize snapPoint={SNAP_HEIGHT} handlePosition='inside' ref={ref} withHandle={false} adjustToContentHeight modalStyle={{ borderWidth: StyleSheet.hairlineWidth }} onOverlayPress={onOverlayPress}>
-      <View style={styles.container}>
+      <View style={styles.container(theme)}>
         <View style={styles.headingContainer}>
           <TextDefault bolder H3 textColor={theme.gray900}>
-            {'How was your order?'}
+            {t('howWasOrder')}
           </TextDefault>
           <TouchableOpacity onPress={onCompleted}>
-            <CrossCirleIcon/>
+            <CrossCirleIcon stroke={theme.newIconColor}/>
           </TouchableOpacity>
         </View>
         <View style={styles.itemContainer}>
@@ -81,16 +84,18 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
         </View>
 
         {(showSection || rating>0) && <View>
-          <TextDefault textColor={theme.gray900} H4 bolder style={{ marginVertical: scale(8) }}>Tell others about your experience with {order?.restaurant?.name}</TextDefault>
+          <TextDefault textColor={theme.gray900} H4 bolder style={{ marginVertical: scale(8) }}>{t('tellAboutExp')} {order?.restaurant?.name}</TextDefault>
           <OutlinedTextField
-            label={'Review'}
-            placeholder='Type here'
+            label={t('review')}
+            placeholder={t('typeHere')}
             fontSize={scale(12)}
             maxLength={200}
             textAlignVertical="top"
             baseColor={theme.verticalLine}
             multiline={true}
             onChangeText={setDescription}
+            placeholderTextColor={theme.newFontcolor}
+            textColor={theme.newFontcolor}
           />
           <Button text={'Submit'}
             buttonProps={{ onPress: onSubmit }}

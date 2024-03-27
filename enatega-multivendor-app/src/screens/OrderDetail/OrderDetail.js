@@ -85,10 +85,10 @@ function OrderDetail(props) {
   useEffect(()=>{
     if (!headerRef.current && order) {
       props.navigation.setOptions({
-        headerRight: () => HelpButton({ iconBackground: currentTheme.primary, navigation, t }),
+        headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
         headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
-        headerTitleStyle: { color: currentTheme.black },
-        headerStyle: { backgroundColor: currentTheme.white }
+        headerTitleStyle: { color: currentTheme.newFontcolor },
+        headerStyle: { backgroundColor: currentTheme.newheaderBG }
       })
       headerRef.current = true
     }
@@ -103,15 +103,15 @@ function OrderDetail(props) {
     )
   }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
-  if (!headerRef.current) {
-    props.navigation.setOptions({
-      headerRight: () => HelpButton({ iconBackground: currentTheme.primary }),
-      headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 20)}...`,
-      headerTitleStyle: { color: currentTheme.newFontcolor },
-      headerStyle: { backgroundColor: currentTheme.newheaderBG }
-    })
-    headerRef.current = true
-  }
+  // if (!headerRef.current) {
+  //   props.navigation.setOptions({
+  //     headerRight: () => HelpButton({ iconBackground: currentTheme.main , t}),
+  //     headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
+  //     headerTitleStyle: { color: currentTheme.newFontcolor },
+  //     headerStyle: { backgroundColor: currentTheme.newheaderBG }
+  //   })
+  //   headerRef.current = true
+  // }
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,

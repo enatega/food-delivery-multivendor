@@ -11,11 +11,13 @@ import { theme } from '../../utils/themeColors'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import ConfigurationContext from '../../context/Configuration'
+import { useTranslation } from 'react-i18next'
 
 const RELATED_ITEMS = gql`${relatedItemsQuery}`
 const RESTAURANT = gql`${restaurantQuery}`
 const FOOD = gql`${food}`
 const Section = ({ itemId, restaurantId }) => {
+    const { t } = useTranslation()
     const navigation = useNavigation()
     const client = useApolloClient()
     const themeContext = useContext(ThemeContext)
@@ -91,7 +93,7 @@ const Section = ({ itemId, restaurantId }) => {
         textColor={currentTheme.fontNewColor}
         H5
         bolder>
-                Would you like to add these?
+        {t('addMore')}
       </TextDefault>
       <FlatList
         data={slicedItems}

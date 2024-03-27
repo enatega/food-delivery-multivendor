@@ -457,6 +457,12 @@ function Cart(props) {
                         width: 30,
                         height: 30
                       }}
+                      locationLabel={
+                       currentTheme.newFontcolor
+                      } 
+                      location={
+                        currentTheme.newFontcolor
+                       } 
                     />
                   </View>
                   <Feather
@@ -476,7 +482,7 @@ function Cart(props) {
                 <View
                   style={[styles(currentTheme).dealContainer, styles().mB10]}
                 >
-                  <TextDefault style={styles().totalOrder} H5 bolder>
+                  <TextDefault textColor={currentTheme.gray500} style={styles().totalOrder} H5 bolder>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
                   {cart?.map((cartItem, index) => {

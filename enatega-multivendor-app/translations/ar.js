@@ -517,5 +517,12 @@ export const ar = {
   selectCity: 'اختر المدينة',
 Location: 'الموقع',
   phoneNumberExist: 'رقم الهاتف المقدم موجود بالفعل!',
-  phoneCheckingError: 'خطأ أثناء التحقق من رقم الهاتف. حاول مرة أخرى لاحقًا!'
+  phoneCheckingError: 'خطأ أثناء التحقق من رقم الهاتف. حاول مرة أخرى لاحقًا!',
+  cancelledOrder:'تم إلغاء طلبك. إذا كان لديك أي أسئلة، يرجى التواصل مع فريق الدعم الخاص بنا.',
+  addMore: 'هل ترغب في إضافة هذه؟',
+  howWasOrder: 'كيف كان طلبك؟',
+  tellAboutExp: 'شارك الآخرين تجربتك مع',
+  typeHere: 'اكتب هنا',
+  review: 'المراجعة',
+
 }
