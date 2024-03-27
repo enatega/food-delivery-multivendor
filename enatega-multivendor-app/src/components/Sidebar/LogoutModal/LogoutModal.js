@@ -1,12 +1,9 @@
 import React, { useContext } from 'react'
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native'
-import Button from '../../Button/Button'
+import { View, Text, TouchableOpacity, Modal } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { alignment } from '../../../utils/alignment'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import { scale } from '../../../utils/scaling'
 import styles from './styles'
 
 const LogoutModal = ({ visible, onCancel, onLogout }) => {

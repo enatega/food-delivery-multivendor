@@ -1,30 +1,24 @@
-import React, { useContext } from'react'
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 
 const styles = (props = null) => {
-    const themeContext = useContext(ThemeContext)
-    const currentTheme = theme[themeContext.ThemeValue]
-
   return StyleSheet.create({
     modalContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: currentTheme.customizeOpacityBtn
+      backgroundColor:
+        props !== null ? props.customizeOpacityBtn : 'rgba(0, 0, 0, 0.74)'
     },
     modalContent: {
-      backgroundColor: currentTheme.themeBackground,
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       padding: scale(20),
       borderRadius: scale(10)
     },
     modalText: {
       fontSize: scale(15),
       marginBottom: scale(10),
-      color: currentTheme.secondaryText
+      color: props !== null ? props.secondaryText : '#4B5563'
     },
     modalButtonsContainer: {
       flexDirection: 'row',
@@ -35,7 +29,7 @@ const styles = (props = null) => {
       fontSize: scale(20),
       marginBottom: scale(10),
       fontWeight: 'bold',
-      color: currentTheme.secondaryText
+      color: props !== null ? props.secondaryText : '#4B5563'
     }
   })
 }
