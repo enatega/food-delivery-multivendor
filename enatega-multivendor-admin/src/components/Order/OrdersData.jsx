@@ -19,11 +19,10 @@ const ORDER_PLACED = gql`
   ${subscribePlaceOrder}
 `
 const OrdersData = props => {
-  const theme = useTheme();
-  const { t } = props;
-  const { selected, updateSelected } = props;
-  const [searchQuery, setSearchQuery] = useState('');
-  const onChangeSearch = e => setSearchQuery(e.target.value);
+  const theme = useTheme()
+  const { t, selected, updateSelected } = props
+  const [searchQuery, setSearchQuery] = useState('')
+  const onChangeSearch = e => setSearchQuery(e.target.value)
   const getItems = items => {
     return items
       .map(
@@ -32,13 +31,13 @@ const OrdersData = props => {
             item.variation.title ? `(${item.variation.title})` : ''
           }`
       )
-      .join('\n');
-  };
-  const restaurantId = localStorage.getItem('restaurantId');
+      .join('\n')
+  }
+  const restaurantId = localStorage.getItem('restaurantId')
 
   const { data, loading: loadingQuery } = useQuery(ORDERCOUNT, {
     variables: { restaurant: restaurantId }
-  });
+  })
 
   const propExists = (obj, path) => {
     return path.split('.').reduce((obj, prop) => {
