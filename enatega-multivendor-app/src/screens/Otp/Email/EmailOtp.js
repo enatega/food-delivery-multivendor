@@ -34,9 +34,9 @@ function EmailOtp(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        iconColor: currentTheme.iconColorPink,
+        iconColor: currentTheme.newIconColors,
         backColor: currentTheme.themeBackground,
-        fontColor: currentTheme.fontMainColor,
+        fontColor: currentTheme.newFontcolor,
         navigation: props.navigation
       })
     )
@@ -53,13 +53,13 @@ function EmailOtp(props) {
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
-            <SimpleLineIcons name='envelope' size={30} color='black' />
+            <SimpleLineIcons name='envelope' size={30} color={currentTheme.newIconColor} />
           </View>
           <View>
             <TextDefault
               H3
               bolder
-              textColor={currentTheme.fontfourthColor}
+              textColor={currentTheme.newFontcolor}
               style={{
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
@@ -77,7 +77,7 @@ function EmailOtp(props) {
             >
               {t('otpSentToEmail')}
             </TextDefault>
-            <TextDefault H5 bold textColor={currentTheme.fontfourthColor}>
+            <TextDefault H5 bold  textColor={currentTheme.newFontcolor}>
               {userData.email}
             </TextDefault>
           </View>
@@ -86,7 +86,7 @@ function EmailOtp(props) {
               pinCount={6}
               style={styles().otpInput}
               codeInputFieldStyle={[
-                styles().otpBox,
+                styles(currentTheme).otpBox,
                 otpError && styles(currentTheme).errorInput
               ]}
               codeInputHighlightStyle={{
@@ -142,7 +142,7 @@ function EmailOtp(props) {
               disabled={seconds !== 0}
               onPress={() => resendOtp()}
             >
-              <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+              <TextDefault H4 textColor={currentTheme.black} bold>
                 {t('resendBtn')}
               </TextDefault>
             </TouchableOpacity>

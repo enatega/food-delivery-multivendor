@@ -269,7 +269,7 @@ function Menu({ route, props }) {
     else {
       return (
         <View style={styles().emptyViewContainer}>
-          <View style={styles().emptyViewBox}>
+          <View style={styles(currentTheme).emptyViewBox}>
             <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
               {t('notAvailableinYourArea')}
             </TextDefault>

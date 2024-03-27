@@ -69,7 +69,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
         style={styles(currentTheme).filterButton}
         onPress={handleOptionsClick}
       >
-        <Ionicons name='options' size={24} color='#000' />
+        <Ionicons name='options' size={24} color={currentTheme.newIconColor} />
       </TouchableOpacity>
 
       {filters &&
@@ -84,10 +84,10 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
             onPress={() => handleFilterClick(filter)}
           >
             <SafeAreaView style={styles(currentTheme).itemContainer}>
-              <Text style={styles(currentTheme).filterButtonText}>
+              <TextDefault textColor={currentTheme.newFontcolor} style={styles(currentTheme).filterButtonText}>
                 {t(filter)}
-              </Text>
-              <AntDesign name='down' size={14} color='black' />
+              </TextDefault>
+              <AntDesign name='down' size={14} color={currentTheme.newIconColor}/>
             </SafeAreaView>
           </TouchableOpacity>
         ))}

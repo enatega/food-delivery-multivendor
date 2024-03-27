@@ -17,7 +17,7 @@ const styles = (props = null, newheaderColor = '#fafafa') =>
       zIndex: 333,
       width: '100%',
       alignItems: 'center',     
-      // backgroundColor: props != null ? props.main : 'black',
+      backgroundColor: props != null ? props.main : 'black',
       shadowColor: props != null ? props.shadowColor : 'black',
       shadowOffset: {
         width: 0,

@@ -6,7 +6,7 @@ const styles = (props = null) =>
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       padding: scale(10),
       marginBottom: scale(10)
     },

@@ -37,9 +37,9 @@ function PhoneOtp(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        iconColor: currentTheme.iconColorPink,
+        iconColor: currentTheme.newIconColors,
         backColor: currentTheme.themeBackground,
-        fontColor: currentTheme.fontMainColor,
+        fontColor: currentTheme.newFontcolor,
         navigation: props.navigation
       })
     )
@@ -90,7 +90,7 @@ function PhoneOtp(props) {
               pinCount={6}
               style={styles().otpInput}
               codeInputFieldStyle={[
-                styles().otpBox,
+                styles(currentTheme).otpBox,
                 otpError && styles().errorInput
               ]}
               codeInputHighlightStyle={{
@@ -117,7 +117,7 @@ function PhoneOtp(props) {
         </View>
         <View style={styles().btnContainer}>
           <View style={alignment.MBxSmall}>
-            <TextDefault center H4 bold style={alignment.MTsmall}>
+            <TextDefault center H4 bold textColor={currentTheme.fontNewColor} style={alignment.MTsmall}>
               {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
             </TextDefault>
           </View>
@@ -125,7 +125,7 @@ function PhoneOtp(props) {
             {loading || updateUserLoading ? (
               <Spinner
                 backColor={currentTheme.backgroundColor}
-                spinnerColor={currentTheme.white}
+                spinnerColor={currentTheme.main}
                 size='small'
               />
             ) : (
@@ -140,7 +140,7 @@ function PhoneOtp(props) {
               >
                 <TextDefault
                   H4
-                  textColor={currentTheme.fontfourthColor}
+                  textColor={currentTheme.black}
                   style={alignment.MLsmall}
                   bold
                 >

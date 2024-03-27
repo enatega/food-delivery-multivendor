@@ -76,7 +76,7 @@ const Help = props => {
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleStyle: {
-        color: '#000',
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -87,7 +87,7 @@ const Help = props => {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
       headerLeft: () => (
@@ -95,7 +95,7 @@ const Help = props => {
           truncatedLabel=""
           backImage={() => (
             <View>
-              <MaterialIcons name="arrow-back" size={25} color="black" />
+              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -122,7 +122,7 @@ const Help = props => {
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             renderItem={({ item }) => (
               <Accordion heading={t(item.heading)}>
-                <TextDefault>{t(item.description)}</TextDefault>
+                <TextDefault textColor={currentTheme.newFontcolor}>{t(item.description)}</TextDefault>
               </Accordion>
             )}
           />

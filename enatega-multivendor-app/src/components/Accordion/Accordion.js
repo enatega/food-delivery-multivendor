@@ -12,9 +12,9 @@ const Accordion = ({ heading, children }) => {
   const currentTheme = theme[themeContext.ThemeValue]
 
   return (
-    <View style={styles().container}>
+    <View style={styles(currentTheme).container}>
       <TouchableOpacity style={styles().header} onPress={() => setOpen(!open)} activeOpacity={0.5}>
-        <TextDefault bold H5 style={styles().heading}>{heading}</TextDefault>
+        <TextDefault bold H5 style={styles().heading} textColor={currentTheme.newFontcolor}>{heading}</TextDefault>
         <Entypo name={open ? "chevron-small-up" : "chevron-small-down"} size={24} color={currentTheme.darkBgFont} />
       </TouchableOpacity>
       {open ? children : null}

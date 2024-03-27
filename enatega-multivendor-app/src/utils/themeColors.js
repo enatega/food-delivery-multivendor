@@ -100,6 +100,7 @@ export const theme = {
     color5: '#F3F4F6',
     color6: '#949393',
     color7: '#374151',
+    color8:'#f0f0f0',
 
    
   },
@@ -156,7 +157,7 @@ export const theme = {
     main: '#90E36D',
     secondaryBackground: '#ECECEC',
     shadow: '#707070',
-    errorInputBack: '#F7E7E5',
+    errorInputBack: '#000',
     errorInputBorder: '#DB4A39',
     inputPlaceHolder: '#F3F4F8',
     transparent: '#ff000080',
@@ -194,5 +195,7 @@ export const theme = {
     color6: '#f9f9f9',
     borderBottomColor: '#f9f9f9',
     color7: '#fff',
+    color8:'#000',
+
   }
 }

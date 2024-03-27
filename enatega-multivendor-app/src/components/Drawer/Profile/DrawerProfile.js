@@ -27,7 +27,7 @@ function DrawerProfile(props) {
             }}>
             <TextDefault
               style={styles(currentTheme).alignLeft}
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.fontNewColor}
               bold
               H5>
               {t('loginOrCreateAccount')}
