@@ -503,5 +503,9 @@ Location: 'מיקום',
   HighestRating: 'הדירוג הגבוה ביותר',
   LowestRating: 'הדירוג הנמוך ביותר',
   phoneNumberExist: 'מספר הטלפון שסופק כבר קיים!',
-  phoneCheckingError: 'שגיאה בעת בדיקת מספר הטלפון. נסה שוב מאוחר יותר!'
+  phoneCheckingError: 'שגיאה בעת בדיקת מספר הטלפון. נסה שוב מאוחר יותר!',
+    Logout: 'התנתק',
+  LoggingOut: 'מתנתק?',
+  SeeYouAgainSoon: 'נתראה בקרוב!'
+
 }

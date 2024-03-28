@@ -7,7 +7,7 @@ import { useContext } from 'react'
 import ConfigurationContext from './src/context/Configuration'
 import * as Updates from 'expo-updates'
 
-const useEnvVars = (env = Updates.releaseChannel) => {
+const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
 
   if (env === 'production' || env === 'staging') {

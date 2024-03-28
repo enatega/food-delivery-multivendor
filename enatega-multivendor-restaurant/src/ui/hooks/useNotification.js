@@ -7,7 +7,7 @@ import * as Device from 'expo-device'
 import { useTranslation } from 'react-i18next'
 
 export default function useNotification() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   // get permission
   // request permission
   // send token to backend

@@ -218,6 +218,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
             <View style={{ flexDirection: 'row', gap: 10 }}>
                 {[1, 2, 3, 4, 5].map(index => (
                   <StarIcon
+                    disabled={Boolean(item?.review)}
                     key={`star-icon-${index}`}
                     isFilled={index <= item?.review?.rating}
                     onPress={()=>onPressReview(item, index)}
