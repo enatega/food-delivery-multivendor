@@ -34,6 +34,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       deliveryAddress{
         location{coordinates}
         deliveryAddress
+        id
       }
       items{
         _id
