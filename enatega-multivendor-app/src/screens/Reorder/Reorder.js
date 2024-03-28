@@ -154,7 +154,7 @@ function Reorder(props) {
       })
     }
     const populateAddons = addons.filter((addon) =>
-      food.variations[0].addons.includes(addon._id)
+      food?.variations[0]?.addons?.includes(addon._id)
     )
     return {
       ...cartItem,
