@@ -14,7 +14,7 @@ import RiderLogin from '../../assets/svg/RiderLogin.png'
 import { FontAwesome } from '@expo/vector-icons'
 import Spinner from '../../components/Spinner/Spinner'
 import useLogin from './useLogin'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export default function Login() {
   const {
@@ -31,7 +31,7 @@ export default function Login() {
     height
   } = useLogin()
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <SafeAreaView style={[styles.flex, styles.bgColor]}>
       <ScrollView

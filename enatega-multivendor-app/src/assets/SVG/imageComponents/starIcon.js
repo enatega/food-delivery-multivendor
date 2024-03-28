@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Svg, { Path } from 'react-native-svg'
 import { View, TouchableOpacity } from 'react-native'
-const StarIcon = ({ isFilled = false, onPress, height, width }) => (
-  <TouchableOpacity onPress={onPress}>
+const StarIcon = ({ isFilled = false, onPress, height, width, disabled }) => (
+  <TouchableOpacity disabled={disabled} onPress={onPress}>
     <View>
     <Svg
       width={24}

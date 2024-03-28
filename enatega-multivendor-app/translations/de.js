@@ -543,4 +543,7 @@ typeHere: 'Hier eingeben',
 review: 'Bewertung',
 somethingWentWrong: 'Etwas ist schief gegangen',
   checkInternet: 'Überprüfen Sie Ihre Internetverbindung',
+  Logout: 'Ausloggen',
+  LoggingOut: 'Ausloggen?',
+  SeeYouAgainSoon: 'Bis bald!'
 }

@@ -512,5 +512,7 @@ Location: 'מיקום',
   review: 'ביקורת',
   somethingWentWrong:'משהו השתבש' ,
   checkInternet: 'בדוק את החיבור לאינטרנט שלך',
-
+    Logout: 'התנתק',
+  LoggingOut: 'מתנתק?',
+  SeeYouAgainSoon: 'נתראה בקרוב!'
 }

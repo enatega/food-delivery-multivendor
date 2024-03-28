@@ -524,5 +524,7 @@ export const km = {
     review: 'ពិនិត្យឡើងវិញ',
     somethingWentWrong: 'មានបញ្ហា​មួយ​កើតឡើង',
   checkInternet:'ពិនិត្យការតភ្ជាប់​អ៊ីនធឺណិតរបស់អ្នក' ,
-
+      Logout: 'ចាកចេញ',
+  LoggingOut: 'កំពុងចាកចេញ?',
+  SeeYouAgainSoon: 'មកជួបគាត់ម្តងទៀតអី!'
 }
