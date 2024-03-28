@@ -16,7 +16,7 @@ const navigationOptions = props => {
         }
         name="close"
         size={24}
-        color="black"
+        color={props.fontColor}
         style={styles().headerRightIcon}
       />
     ),

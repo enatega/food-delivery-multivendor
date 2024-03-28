@@ -45,7 +45,7 @@ const styles = (props = null, hasActiveOrders = false) =>
     },
 
     addressbtn: {
-      backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
+      backgroundColor: props != null ? props.color8 : '#f0f0f0',
       marginLeft: scale(10),
       marginRight: scale(10),
       marginBottom: scale(10),
@@ -55,7 +55,9 @@ const styles = (props = null, hasActiveOrders = false) =>
       justifyContent: 'center',
       padding: scale(5),
       ...alignment.PLmedium,
-      ...alignment.PRmedium
+      ...alignment.PRmedium,
+      borderWidth:scale(1),
+      borderColor:props != null ? props.color9 : '#FFF', 
     },
     addNewAddressbtn: {
       padding: scale(5),
@@ -86,13 +88,15 @@ const styles = (props = null, hasActiveOrders = false) =>
       ...alignment.PTlarge
     },
     modal: {
-      backgroundColor: props != null ? props.cartContainer : '#FFF',
+      backgroundColor: props != null ? props.themeBackground : '#FFF',
       paddingTop: scale(10),
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       position: 'relative',
       zIndex: 999,
-      shadowOpacity: 0 
+      shadowOpacity: 0 ,
+      borderWidth:scale(1),
+      borderColor:props != null ? props.color9 : '#FFF', 
     },
     addressTextContainer: {
       display: 'flex',

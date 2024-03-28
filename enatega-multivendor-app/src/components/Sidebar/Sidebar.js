@@ -70,9 +70,11 @@ function SidebBar(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('transparent')
+      StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle(
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    )
   })
 
   return (

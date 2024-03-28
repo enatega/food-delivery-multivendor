@@ -97,8 +97,8 @@ function OrderDetail(props) {
   if (loadingOrders || !order) {
     return (
       <Spinner
-        backColor={currentTheme.newheaderBG}
-        spinnerColor={currentTheme.primary}
+      backColor={currentTheme.themeBackground}
+      spinnerColor={currentTheme.main}
       />
     )
   }

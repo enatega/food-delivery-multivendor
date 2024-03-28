@@ -166,8 +166,8 @@ export default function SelectLocation(props) {
             {loading && (
               <Spinner
                 size={'small'}
-                backColor={'transparent'}
-                 spinnerColor={currentTheme.main}
+                backColor={currentTheme.themeBackground}
+                spinnerColor={currentTheme.main}
               />
             )}
           </TouchableOpacity>

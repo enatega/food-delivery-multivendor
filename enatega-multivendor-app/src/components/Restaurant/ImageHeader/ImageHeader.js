@@ -213,8 +213,8 @@ function ImageTextCenterHeader(props, ref) {
                         {loadingMutation ? (
                           <Spinner
                             size={'small'}
-                            backColor={'transparent'}
-                            spinnerColor={currentTheme.iconColorDark}
+                            backColor={currentTheme.themeBackground}
+                            spinnerColor={currentTheme.main}
                           />
                         ) : (
                           <AntDesign

@@ -132,7 +132,7 @@ function ForgotPassword(props) {
             activeOpacity={0.7}
             style={styles(currentTheme).btn}>
             {loading ? (
-              <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.main}/>
+              <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.white}/>
             ) : (
               <TextDefault H4 textColor={currentTheme.black} bold>
                 {t('saveBtn')}

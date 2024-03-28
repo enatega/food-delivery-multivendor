@@ -42,6 +42,7 @@ function Login(props) {
       screenOptions({
         backColor: currentTheme.themeBackground,
         fontColor: currentTheme.newFontcolor,
+        iconColor: currentTheme.newIconColor,
         navigation: props.navigation
       })
     )
@@ -181,8 +182,8 @@ function Login(props) {
                       bold>
                       {loading || loginLoading ? (
                         <Spinner
-                          backColor={currentTheme.backgroundColor}
-                          spinnerColor={currentTheme.white}
+                        backColor={currentTheme.themeBackground}
+                        spinnerColor={currentTheme.white}
                           size="small"
                         />
                       ) : registeredEmail ? (

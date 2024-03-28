@@ -494,7 +494,7 @@ function Main(props) {
               showsVerticalScrollIndicator: false,
               keyExtractor: (item) => item._id,
               renderItem: ({ item: address }) => (
-                <View style={styles().addressbtn}>
+                <View style={styles(currentTheme).addressbtn}>
                   <TouchableOpacity
                     style={styles(currentTheme).addressContainer}
                     activeOpacity={0.7}

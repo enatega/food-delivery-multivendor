@@ -33,7 +33,7 @@ function ForgotPasswordOtp(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        iconColor: currentTheme.newIconColors,
+        iconColor: currentTheme.newIconColor,
         backColor: currentTheme.themeBackground,
         fontColor: currentTheme.newFontcolor,
         navigation: props.navigation

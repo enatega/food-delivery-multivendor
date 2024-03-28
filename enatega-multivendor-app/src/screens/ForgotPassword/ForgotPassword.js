@@ -42,6 +42,7 @@ function ForgotPassword(props) {
     props.navigation.setOptions(
       screenOptions({
         backColor: currentTheme.themeBackground,
+        iconColor:currentTheme.newIconColor,
         navigation: props.navigation
       })
     )
@@ -113,8 +114,8 @@ function ForgotPassword(props) {
               <TextDefault H4 textColor={currentTheme.black} bold>
                 {loading ? (
                   <Spinner
-                    backColor={currentTheme.backgroundColor}
-                    spinnerColor={currentTheme.white}
+                  backColor={currentTheme.themeBackground}
+                  spinnerColor={currentTheme.white}
                     size="small"
                   />
                 ) : (

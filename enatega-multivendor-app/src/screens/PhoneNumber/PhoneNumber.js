@@ -40,9 +40,9 @@ function PhoneNumber(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        fontColor: currentTheme.fontMainColor,
+        iconColor: currentTheme.newIconColor,
         backColor: currentTheme.themeBackground,
-        iconColor: currentTheme.iconColorPink,
+        fontColor: currentTheme.newFontcolor,
         navigation: props.navigation
       })
     )

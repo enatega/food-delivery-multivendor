@@ -124,8 +124,8 @@ function PhoneOtp(props) {
           <View>
             {loading || updateUserLoading ? (
               <Spinner
-                backColor={currentTheme.backgroundColor}
-                spinnerColor={currentTheme.main}
+              backColor={currentTheme.themeBackground}
+              spinnerColor={currentTheme.main}
                 size='small'
               />
             ) : (

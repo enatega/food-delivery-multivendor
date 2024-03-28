@@ -45,8 +45,8 @@ const CreateAccount = (props) => {
       return (
         <View style={styles(currentTheme).buttonBackground}>
           <Spinner
-            backColor='rgba(0,0,0,0.1)'
-            spinnerColor={currentTheme.main}
+               backColor={currentTheme.themeBackground}
+               spinnerColor={currentTheme.main}
           />
         </View>
       )
