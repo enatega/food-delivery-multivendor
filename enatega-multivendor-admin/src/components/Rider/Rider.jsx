@@ -295,7 +295,7 @@ function Rider(props) {
                 id="input-phone"
                 name="input-phone"
                 placeholder={t('PhoneNumber')}
-                type="number"
+                type="tel"
                 defaultValue={phone}
                 onBlur={event =>
                   onBlur(phoneErrorSetter, 'phone', event.target.value)
@@ -309,6 +309,7 @@ function Rider(props) {
                     ? globalClasses.inputSuccess
                     : ''
                 ]}
+                pattern="[0-9]*"
               />
               {/* </Box> */}
             </Grid>
