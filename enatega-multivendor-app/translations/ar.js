@@ -515,7 +515,7 @@ export const ar = {
   price: 'السعر',
   itemsAndQuantity: 'العناصر والكمية',
   selectCity: 'اختر المدينة',
-Location: 'الموقع',
+  Location: 'الموقع',
   phoneNumberExist: 'رقم الهاتف المقدم موجود بالفعل!',
   phoneCheckingError: 'خطأ أثناء التحقق من رقم الهاتف. حاول مرة أخرى لاحقًا!',
   cancelledOrder:'تم إلغاء طلبك. إذا كان لديك أي أسئلة، يرجى التواصل مع فريق الدعم الخاص بنا.',
@@ -526,4 +526,7 @@ Location: 'الموقع',
   review: 'المراجعة',
   somethingWentWrong: 'حدث خلل ما',
   checkInternet: 'تحقق من اتصالك بالإنترنت',
+  Logout: 'تسجيل الخروج',
+  LoggingOut: 'جاري تسجيل الخروج؟',
+  SeeYouAgainSoon: 'إلى اللقاء قريبا!'
 }
