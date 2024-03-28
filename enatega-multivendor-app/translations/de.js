@@ -541,4 +541,6 @@ howWasOrder: 'Wie war Ihre Bestellung?',
 tellAboutExp: 'Berichten Sie anderen von Ihren Erfahrungen mit',
 typeHere: 'Hier eingeben',
 review: 'Bewertung',
+somethingWentWrong: 'Etwas ist schief gegangen',
+  checkInternet: 'Überprüfen Sie Ihre Internetverbindung',
 }

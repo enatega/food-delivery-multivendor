@@ -104,7 +104,7 @@ export const theme = {
     filtersBg: '#f0f0f0',
    color9:'gray',
     iconStroke:'#0F172A',
-    color9:'transparent',
+    color10:'transparent',
   },
   Dark: {
     black: '#000',
@@ -203,6 +203,6 @@ export const theme = {
     color9:'#fff',
     hex: '#b0afbc',
     iconStroke:'#0F172A',
-    color9:'#fff',
+    color10:'#fff',
   }
 }

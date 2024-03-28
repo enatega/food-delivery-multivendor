@@ -89,7 +89,8 @@ const styles = (props = null) =>
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: props !=null ? props.newFontcolor : '#fff',
+      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
+
       justifyContent: 'center',
       alignItems: 'center',
       ...alignment.MRxSmall

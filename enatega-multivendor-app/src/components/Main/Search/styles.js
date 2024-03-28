@@ -41,12 +41,11 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       },
       shadowOpacity: 0.2,
       shadowRadius: verticalScale(1),
-     marginTop:scale(3),
-      ...alignment.MBmedium
+
     },
     subContainer: {
       width: '90%',
-      height: '80%',
+      height: '60%',
       alignItems: 'center',
       justifyContent: 'space-between',
       flexDirection: 'row'
@@ -66,7 +65,7 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
     },
     filterContainer: {
       width: '10%',
-      height: '80%',
+      height: '90%',
       justifyContent: 'center',
       alignItems: 'center'
     }

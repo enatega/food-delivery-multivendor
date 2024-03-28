@@ -509,4 +509,6 @@ export const zh = {
   tellAboutExp: '告诉其他人您与之的经历',
   typeHere: '在此输入',
   review: '评论',
+  somethingWentWrong: '出了一些问题',
+  checkInternet: '检查一下您的互联网连接',
 }

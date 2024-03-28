@@ -522,5 +522,7 @@ export const km = {
     tellAboutExp: 'ប្រាប់ពីបទពិសោធន៍របស់អ្នកជាមួយ',
     typeHere: 'វាយបញ្ចូលនៅទីនេះ',
     review: 'ពិនិត្យឡើងវិញ',
+    somethingWentWrong: 'មានបញ្ហា​មួយ​កើតឡើង',
+  checkInternet:'ពិនិត្យការតភ្ជាប់​អ៊ីនធឺណិតរបស់អ្នក' ,
 
 }

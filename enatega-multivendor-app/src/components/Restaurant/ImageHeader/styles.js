@@ -43,7 +43,7 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      // alignItems: 'center',
+      alignItems: 'center',
       ...alignment.PTsmall
     },
 

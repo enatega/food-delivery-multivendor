@@ -12,7 +12,7 @@ function Spinner(props) {
       animating={true}
       style={{
         flex: 1,
-        backgroundColor: props.themeBackground
+        backgroundColor: props.backColor
           ? props.backColor
           : currentTheme.newheaderColor
       }}

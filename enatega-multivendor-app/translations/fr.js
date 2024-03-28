@@ -538,4 +538,6 @@ howWasOrder: 'Comment s’est passée votre commande ?',
 tellAboutExp: 'Parlez-nous de votre expérience avec',
 typeHere: 'Tapez ici',
 review: 'Avis',
+somethingWentWrong: 'Il y a eu un problème',
+  checkInternet:'Vérifiez votre connexion à Internet' ,
 }

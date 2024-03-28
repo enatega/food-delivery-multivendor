@@ -510,5 +510,7 @@ Location: 'מיקום',
   tellAboutExp: 'ספר לאחרים על החוויה שלך עם',
   typeHere: 'הקלד כאן',
   review: 'ביקורת',
+  somethingWentWrong:'משהו השתבש' ,
+  checkInternet: 'בדוק את החיבור לאינטרנט שלך',
 
 }

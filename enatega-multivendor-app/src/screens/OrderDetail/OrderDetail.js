@@ -88,7 +88,8 @@ function OrderDetail(props) {
         headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
         headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
         headerTitleStyle: { color: currentTheme.newFontcolor },
-        headerStyle: { backgroundColor: currentTheme.newheaderBG }
+        headerStyle: { backgroundColor: currentTheme.newheaderBG },
+        // iconColor:{ color: currentTheme.newIconColor}
       })
       headerRef.current = true
     }

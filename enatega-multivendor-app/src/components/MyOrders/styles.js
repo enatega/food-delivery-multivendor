@@ -105,7 +105,7 @@ const styles = (props = null) =>
     subContainer: {
       flex: 1,
       backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
-      borderColor: props !== null ? props.color9 : '#fff',
+      borderColor: props !== null ? props.color10 : '#fff',
       borderWidth:scale(1),
       borderRadius: scale(8),
       elevation: 1,

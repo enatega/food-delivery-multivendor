@@ -216,7 +216,7 @@ const styles = (props = null) =>
       padding: 12
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+      backgroundColor: props != null ? props.gray : '#B8B8B8'
     },
     height100: {
       height: 100

@@ -524,5 +524,6 @@ Location: 'الموقع',
   tellAboutExp: 'شارك الآخرين تجربتك مع',
   typeHere: 'اكتب هنا',
   review: 'المراجعة',
-
+  somethingWentWrong: 'حدث خلل ما',
+  checkInternet: 'تحقق من اتصالك بالإنترنت',
 }

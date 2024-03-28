@@ -42,6 +42,7 @@ const styles = (props = null, hasActiveOrders = false) =>
     },
     searchbar:{
       backgroundColor: props != null ? props.main : 'black',
+      ...alignment.PBmedium
     },
 
     addressbtn: {
@@ -57,7 +58,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       borderWidth:scale(1),
-      borderColor:props != null ? props.color9 : '#FFF', 
+      borderColor:props != null ? props.color10 : '#FFF', 
     },
     addNewAddressbtn: {
       padding: scale(5),
@@ -96,7 +97,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       zIndex: 999,
       shadowOpacity: 0 ,
       borderWidth:scale(1),
-      borderColor:props != null ? props.color9 : '#FFF', 
+      borderColor:props != null ? props.color10 : '#FFF', 
     },
     addressTextContainer: {
       display: 'flex',

@@ -141,7 +141,7 @@ function LeftButton(props) {
 }
 
 function RightButton(props) {
-
+  const { t } = props
   const [password, setPassword] = useState(false)
   const navigation = useNavigation()
   const route = useRoute()
@@ -276,6 +276,8 @@ function RightButton(props) {
   }
 }
 function DarkBackButton(props) {
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
   return (
     <View
       style={{
@@ -288,7 +290,7 @@ function DarkBackButton(props) {
         name='close-circle-outline'
         size={20}
         style={styles().darkBackArrow}
-        color={props.color}
+        color={currentTheme.newIconColor}
       />
     </View>
   )

@@ -212,7 +212,7 @@ function Reorder(props) {
             }
             onPress={onAddToCart}
           >
-            <TextDefault bolder textColor={currentTheme.black}>
+            <TextDefault bolder textColor={selectedItems.length > 0 ? currentTheme.black : currentTheme.newFontcolor}>
               {t('addToCart')}
             </TextDefault>
           </TouchableOpacity>

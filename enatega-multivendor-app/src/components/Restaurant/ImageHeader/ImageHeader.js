@@ -147,7 +147,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles().touchArea,
                       {
-                        backgroundColor: props.iconBackColor,
+                        backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -156,10 +156,8 @@ function ImageTextCenterHeader(props, ref) {
                   >
                     <Entypo
                       name='cross'
-                      style={{
-                        color: props.black,
-                        fontSize: props.iconSize
-                      }}
+                      color= {currentTheme.newIconColor}
+                      size={scale(17)}
                     />
                   </TouchableOpacity>
                 ) : (
