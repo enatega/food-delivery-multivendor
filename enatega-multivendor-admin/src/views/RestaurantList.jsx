@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { withTranslation } from 'react-i18next'
 import CustomLoader from '../components/Loader/CustomLoader'
@@ -148,21 +148,24 @@ const Restaurants = props => {
     }
   ]
 
-  const regex =
+  const regex = useMemo(()=>(
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  const filtered =
+  ),[searchQuery])
+
+  const filtered = useMemo(()=>(
     searchQuery.length < 3
       ? data && data.restaurants
       : data &&
         data.restaurants.filter(restaurant => {
           return (
-            restaurant.name.toLowerCase().search(regex) > -1 ||
-            restaurant.orderPrefix.toLowerCase().search(regex) > -1 ||
-            restaurant.owner.email.toLowerCase().search(regex) > -1 ||
-            restaurant.address.toLowerCase().search(regex) > -1
+            (restaurant.name && restaurant.name.toLowerCase().search(regex) > -1) ||
+            (restaurant.orderPrefix && restaurant.orderPrefix.toLowerCase().search(regex) > -1) ||
+            (restaurant.owner && restaurant.owner.email.toLowerCase().search(regex) > -1) ||
+            (restaurant.address && restaurant.address.toLowerCase().search(regex) > -1)
           )
         })
-
+  ), [searchQuery, data, regex])
+    
   return (
     <>
       <Header />
