@@ -32,14 +32,10 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
           {item.title}
         </Text>
         <View style={{ alignItems: 'center' }}>
-          {item.image ? (
-            <Image
-              source={{ uri: item.image }}
-              style={[{ width: 138, height: 120 }, styles().popularMenuImg]}
-            />
-          ) : (
-            <View style={[{ width: 138, height: 120 }, styles().popularMenuImg]} />
-          )}
+          <Image
+            source={{ uri: imageUrl }}
+            style={[{ width: 138, height: 120 }, styles().popularMenuImg]}
+          />
           <View style={styles().popularMenuPrice}>
             <Text style={{ color: '#1C1C1E', fontSize: scale(12) }}>
               {`${configuration.currencySymbol}${item.variations[0].price}`}
