@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
 import Loader from 'react-loader-spinner'
 import SearchBar from '../components/TableHeader/SearchBar'
-import { Container, Button, Box, useTheme } from '@mui/material'
+import { Container, Button, Box, useTheme, Snackbar } from '@mui/material'
 import { customStyles } from '../utils/tableCustomStyles'
 import useGlobalStyles from '../utils/globalStyles'
 import { ReactComponent as RestIcon } from '../assets/svg/svg/Restaurant.svg'
@@ -26,10 +26,15 @@ const DELETE_RESTAURANT = gql`
 const Restaurants = props => {
   const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
+  const [error, setError] = useState(null)
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const globalClasses = useGlobalStyles()
 
-  const [mutate, { loading }] = useMutation(DELETE_RESTAURANT)
+  const [mutate, { loading }] = useMutation(DELETE_RESTAURANT, {
+    onError: (error)=> {
+      setError(error.graphQLErrors[0].message || 'Something went wrong') 
+    }
+  })
   const {
     data,
     loading: loadingQuery,
@@ -204,6 +209,12 @@ const Restaurants = props => {
             selectableRows
           />
         )}
+        <Snackbar
+          open={error}
+          autoHideDuration={5000}
+          onClose={()=>setError(null)}
+          message={error}
+        />
       </Container>
     </>
   )
