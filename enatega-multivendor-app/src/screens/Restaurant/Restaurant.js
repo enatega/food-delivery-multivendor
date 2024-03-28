@@ -59,7 +59,7 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.3
+const HEADER_MAX_HEIGHT = height * 0.4
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
@@ -247,7 +247,6 @@ function Restaurant(props) {
     if (!restaurantCart || food.restaurant === restaurantCart) {
       await addToCart(food, food.restaurant !== restaurantCart)
     } else if (food.restaurant !== restaurantCart) {
-
       Alert.alert(
         '',
         t('clearCartText'),
@@ -346,7 +345,9 @@ function Restaurant(props) {
       scrollRef.current.scrollToLocation({
         animated: true,
         sectionIndex: index,
-        itemIndex: 0
+        itemIndex: 0,
+        viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
+        viewPosition: 0
       })
     }
   }
