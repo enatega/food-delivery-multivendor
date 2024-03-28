@@ -153,7 +153,7 @@ function PhoneNumber(props) {
                 style={styles(currentTheme).btn}>
                 <TextDefault H4 textColor={currentTheme.color4} bold>
                   {loading ? (
-                    <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.main} />
+                    <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.white} />
                   ) : (
                     t('continueBtn')
                   )}

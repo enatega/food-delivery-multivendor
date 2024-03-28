@@ -6,7 +6,7 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.themeBackground : '#FFF'
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+      backgroundColor: props != null ? props.gray : '#B8B8B8'
     },
     placeHolderContainer: {
       backgroundColor: props != null ? props.cartContainer : '#B8B8B8',

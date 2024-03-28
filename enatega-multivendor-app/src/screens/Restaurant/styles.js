@@ -46,6 +46,10 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       rowGap: scale(10)
     },
+    dealSection:{
+      ...alignment.PLsmall,
+      ...alignment.PRsmall,
+    },
     deal: {
       width: '80%',
       flexDirection: 'row',
