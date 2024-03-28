@@ -23,7 +23,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
-import { RectButton } from 'react-native-gesture-handler'
+import { BorderlessButton, RectButton } from 'react-native-gesture-handler'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
@@ -46,9 +46,11 @@ import Animated, {
 } from 'react-native-reanimated'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
+const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
+
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * .35
+const HEADER_MAX_HEIGHT = height * 0.4
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
@@ -121,16 +123,16 @@ function ImageTextCenterHeader(props, ref) {
     }
   }
 
-    const minutesOpacity = useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(
-          translationY.value,
-          [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2],
-          [0, 0.8, 1],
-          Extrapolation.CLAMP
-        )
-      }
-    })
+  const minutesOpacity = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translationY.value,
+        [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2],
+        [0, 0.8, 1],
+        Extrapolation.CLAMP
+      )
+    }
+  })
 
   const headerHeight = useAnimatedStyle(() => {
     return {
@@ -143,55 +145,55 @@ function ImageTextCenterHeader(props, ref) {
     }
   })
 
-    const headerHeightWithoutTopbar = useAnimatedStyle(() => {
-      return {
-        height: interpolate(
+  const headerHeightWithoutTopbar = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        translationY.value,
+        [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+        [
+          HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT,
+          HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
+        ],
+        Extrapolation.CLAMP
+      )
+    }
+  })
+
+  const opacity = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translationY.value,
+        [0, height * 0.05, SCROLL_RANGE / 2],
+        [1, 0.8, 0],
+        Extrapolation.CLAMP
+      )
+    }
+  })
+
+  const headerTextFlex = useAnimatedStyle(() => {
+    const concat = (...args) => args.join('')
+    return {
+      marginBottom: concat(
+        interpolate(
           translationY.value,
-          [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-          [
-            HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT,
-            HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
-          ],
+          [0, 80, SCROLL_RANGE],
+          [-10, -10, 0],
           Extrapolation.CLAMP
-        )
-      }
-    })
+        ),
+        '%'
+      )
+    }
+  })
 
-      const opacity = useAnimatedStyle(() => {
-        return {
-          opacity: interpolate(
-            translationY.value,
-            [0, height * 0.05, SCROLL_RANGE / 2],
-            [1, 0.8, 0],
-            Extrapolation.CLAMP
-          )
-        }
-      })
+  const iconBackColor = currentTheme.white
 
-      const headerTextFlex = useAnimatedStyle(() => {
-        const concat = (...args) => args.join('')
-        return {
-          marginBottom: concat(
-            interpolate(
-              translationY.value,
-              [0, 80, SCROLL_RANGE],
-              [-10, -10, 0],
-              Extrapolation.CLAMP
-            ),
-            '%'
-          )
-        }
-      })
+  const iconRadius = scale(15)
 
-      const iconBackColor = currentTheme.white
+  const iconSize = scale(20)
 
-      const iconRadius = scale(15)
+  const iconTouchHeight = scale(30)
 
-      const iconSize = scale(20)
-
-      const iconTouchHeight = scale(30)
-
-      const iconTouchWidth = scale(30)
+  const iconTouchWidth = scale(30)
 
   const distance = calculateDistance(
     aboutObject?.latitude,
@@ -221,14 +223,19 @@ function ImageTextCenterHeader(props, ref) {
   return (
     // <TouchableWithoutFeedback onPress={hideKeyboard}>
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
-      {/* <Animated.View style={[styles().topBar]}> */}
-        <Animated.View
-          style={[styles().overlayContainer, headerHeightWithoutTopbar]}
-        >
+      <Animated.View
+        style={[
+          headerHeightWithoutTopbar,
+          {
+            backgroundColor: 'white'
+          }
+        ]}
+      >
+        <Animated.View style={[styles().overlayContainer]}>
           <View style={styles().fixedViewNavigation}>
             <View style={styles().backIcon}>
               {props.searchOpen ? (
-                <TouchableOpacity
+                <AnimatedBorderless
                   activeOpacity={0.7}
                   style={[
                     styles().touchArea,
@@ -247,9 +254,9 @@ function ImageTextCenterHeader(props, ref) {
                       fontSize: props.iconSize
                     }}
                   />
-                </TouchableOpacity>
+                </AnimatedBorderless>
               ) : (
-                <TouchableOpacity
+                <AnimatedBorderless
                   activeOpacity={0.7}
                   style={[
                     styles().touchArea,
@@ -268,7 +275,7 @@ function ImageTextCenterHeader(props, ref) {
                       fontSize: props.iconSize
                     }}
                   />
-                </TouchableOpacity>
+                </AnimatedBorderless>
               )}
             </View>
             <View style={styles().fixedIcons}>
@@ -360,22 +367,19 @@ function ImageTextCenterHeader(props, ref) {
               )}
             </View>
           </View>
-        </Animated.View>
-      {/* </Animated.View> */}
-
-      {!props.search && (
-        <>
-          <Animated.View style={[(styles().restaurantDetails, opacity)]}>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: scale(15),
-                marginBottom: scale(20)
-              }}
+          <Animated.View style={[styles().restaurantDetails, opacity]}>
+            <Animated.View
+              style={[
+                {
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: scale(15),
+                  marginBottom: scale(20)
+                }
+              ]}
             >
-              <View style={styles().restImageContainer}>
+              <View style={[styles().restImageContainer]}>
                 <Image
                   resizeMode='cover'
                   source={{ uri: aboutObject.restaurantImage }}
@@ -394,7 +398,7 @@ function ImageTextCenterHeader(props, ref) {
                   {aboutObject.restaurantName}
                 </TextDefault>
               </View>
-            </View>
+            </Animated.View>
             <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
               <Text style={styles().restaurantAbout}>
                 {distance.toFixed(2)}km {t('away')}
@@ -498,55 +502,56 @@ function ImageTextCenterHeader(props, ref) {
               </Text>
             </View>
           </Animated.View>
-          <View>
-            {!props.loading && (
-              <FlatList
-                ref={flatListRef}
-                style={styles(currentTheme).flatListStyle}
-                contentContainerStyle={{ flexGrow: 1 }}
-                data={props.loading ? [] : [...props.topaBarData]}
-                horizontal={true}
-                ListEmptyComponent={emptyView()}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => (
-                  <View
-                    style={
-                      props.selectedLabel === index
-                        ? styles(currentTheme).activeHeader
-                        : null
-                    }
+        </Animated.View>
+      </Animated.View>
+
+      {!props.search && (
+        <>
+          {!props.loading && (
+            <FlatList
+              ref={flatListRef}
+              style={styles(currentTheme).flatListStyle}
+              contentContainerStyle={{ flexGrow: 1 }}
+              data={props.loading ? [] : [...props.topaBarData]}
+              horizontal={true}
+              ListEmptyComponent={emptyView()}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <View
+                  style={
+                    props.selectedLabel === index
+                      ? styles(currentTheme).activeHeader
+                      : null
+                  }
+                >
+                  <RectButton
+                    rippleColor={currentTheme.rippleColor}
+                    onPress={() => props.changeIndex(index)}
+                    style={styles(currentTheme).headerContainer}
                   >
-                    <RectButton
-                      rippleColor={currentTheme.rippleColor}
-                      onPress={() => props.changeIndex(index)}
-                      style={styles(currentTheme).headerContainer}
-                    >
-                      <View style={styles().navbarTextContainer}>
-                        <TextDefault
-                          style={
-                            props.selectedLabel === index
-                              ? textStyles.Bolder
-                              : textStyles.H5
-                          }
-                          textColor={
-                            props.selectedLabel === index
-                              ? '#111827'
-                              : '#6B7280'
-                          }
-                          center
-                          H5
-                        >
-                          {item.title}
-                        </TextDefault>
-                      </View>
-                    </RectButton>
-                  </View>
-                )}
-              />
-            )}
-          </View>
+                    <View style={styles().navbarTextContainer}>
+                      <TextDefault
+                        style={
+                          props.selectedLabel === index
+                            ? textStyles.Bolder
+                            : textStyles.H5
+                        }
+                        textColor={
+                          props.selectedLabel === index ? '#111827' : '#6B7280'
+                        }
+                        center
+                        H5
+                      >
+                        {item.title}
+                      </TextDefault>
+                    </View>
+                  </RectButton>
+                </View>
+              )}
+            />
+          )}
         </>
       )}
     </Animated.View>
