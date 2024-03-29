@@ -214,7 +214,8 @@ function CartAddresses(props) {
                           address.location.coordinates
                         props.navigation.navigate('AddNewAddress', {
                           longitude: +longitude,
-                          latitude: +latitude
+                          latitude: +latitude,
+                          prevScreen: 'CartAddress'
                         })
                       }}
                     >

@@ -69,7 +69,11 @@ function SaveAddress(props) {
       longitude: locationData.longitude,
       city: locationData.city
     })
-    navigation.dispatch(StackActions.popToTop())
+    if(locationData.prevScreen){
+      navigation.navigate(locationData.prevScreen)
+    } else{
+      navigation.dispatch(StackActions.popToTop())
+    }
   }
 
   function onError(error) {
