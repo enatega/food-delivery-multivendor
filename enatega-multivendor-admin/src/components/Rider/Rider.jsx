@@ -166,9 +166,8 @@ function Rider(props) {
         <Box ml={10} mt={1}>
           <label>{t('Available')}</label>
           <Switch
-            defaultChecked={riderAvailable}
-            value={riderAvailable}
-            onChange={e => setRiderAvailable(e.target.checked)}
+            checked={riderAvailable}
+            onChange={() => setRiderAvailable(!riderAvailable)}
             id="input-available"
             name="input-available"
             style={{ color: 'black' }}
