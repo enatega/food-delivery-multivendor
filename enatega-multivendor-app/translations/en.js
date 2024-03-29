@@ -533,5 +533,10 @@ typeHere:'Type Here',
 review: 'Review',
   Logout: 'Logout',
   LoggingOut: 'Logging out?',
-  SeeYouAgainSoon: 'See you again soon!'
+  SeeYouAgainSoon: 'See you again soon!',
+  enterCode: 'ENTER CODE',
+enterAmount: 'ENTER AMOUNT',
+applyVoucher: 'Apply a Voucher',
+inputCode: 'Input Code',
+AddTip:'Add Tip'
 }

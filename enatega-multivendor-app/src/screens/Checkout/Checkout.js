@@ -267,7 +267,7 @@ function Checkout(props) {
         <HeaderBackButton
           truncatedLabel=''
           backImage={() => (
-            <View style={{ ...alignment.PLxSmall }}>
+            <View style={{ ...alignment.PLxSmall, width:scale(30) }}>
               <AntDesign
                 name='arrowleft'
                 size={22}
@@ -1044,7 +1044,7 @@ function Checkout(props) {
                         textColor={currentTheme.lightBlue}
                         center
                       >
-                        Apply a Voucher
+                        {t('applyVoucher')}
                       </TextDefault>
                     </TouchableOpacity>
                   ) : (
@@ -1342,7 +1342,7 @@ function Checkout(props) {
                   textColor={currentTheme.newFontcolor}
                   center
                 >
-                  Add Tip
+                  {t('AddTip')}
                 </TextDefault>
               </View>
               <Feather
@@ -1354,11 +1354,11 @@ function Checkout(props) {
             </View>
             <View style={{ gap: 8 }}>
               <TextDefault uppercase bold textColor={currentTheme.gray500}>
-                Enter code
+              {t('enterCode')}
               </TextDefault>
               <TextInput
                 keyboardType='numeric'
-                placeholder='Enter amount'
+                placeholder={t('enterAmount')}
                 value={tipAmount}
                 onChangeText={(text) => setTipAmount(text)}
                 style={styles(currentTheme).modalInput}
@@ -1376,7 +1376,7 @@ function Checkout(props) {
                 bold
                 H4
               >
-                {t('Apply')}
+                {t('apply')}
               </TextDefault>
             </TouchableOpacity>
           </View>
@@ -1411,7 +1411,7 @@ function Checkout(props) {
                   textColor={currentTheme.newFontcolor}
                   center
                 >
-                  Apply a Voucher
+                  {t('applyVoucher')}
                 </TextDefault>
               </View>
               <Feather
@@ -1423,11 +1423,11 @@ function Checkout(props) {
             </View>
             <View style={{ gap: 8 }}>
               <TextDefault uppercase bold textColor={currentTheme.gray500}>
-                Enter code
+              {t('enterCode')}
               </TextDefault>
               <TextInput
-                label='Input Code'
-                placeholder='Input Code'
+                label={t('inputCode')}
+                placeholder={t('inputCode')}
                 value={voucherCode}
                 onChangeText={(text) => setVoucherCode(text)}
                 style={styles(currentTheme).modalInput}
@@ -1453,7 +1453,7 @@ function Checkout(props) {
                   bold
                   H4
                 >
-                  {t('Apply')}
+                  {t('apply')}
                 </TextDefault>
               )}
               {couponLoading && <Spinner backColor={'transparent'} />}

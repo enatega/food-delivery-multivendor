@@ -528,5 +528,11 @@ export const ar = {
   checkInternet: 'تحقق من اتصالك بالإنترنت',
   Logout: 'تسجيل الخروج',
   LoggingOut: 'جاري تسجيل الخروج؟',
-  SeeYouAgainSoon: 'إلى اللقاء قريبا!'
+  SeeYouAgainSoon: 'إلى اللقاء قريبا!',
+  enterCode: 'أدخل الرمز',
+  enterAmount: 'أدخل المبلغ',
+  applyVoucher: 'قدّم قسيمة',
+  inputCode: 'ادخل الرمز',
+AddTip:'إضافة بقشيش'
+
 }

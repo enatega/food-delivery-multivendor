@@ -514,5 +514,11 @@ Location: 'מיקום',
   checkInternet: 'בדוק את החיבור לאינטרנט שלך',
     Logout: 'התנתק',
   LoggingOut: 'מתנתק?',
-  SeeYouAgainSoon: 'נתראה בקרוב!'
+  SeeYouAgainSoon: 'נתראה בקרוב!',
+enterCode: 'הזן קוד',
+enterAmount: 'הזן סכום',
+applyVoucher: 'החל קופון',
+inputCode: 'הזן קוד',
+AddTip:'הוסף טיפ'
+
 }

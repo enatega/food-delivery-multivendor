@@ -526,5 +526,11 @@ export const km = {
   checkInternet:'ពិនិត្យការតភ្ជាប់​អ៊ីនធឺណិតរបស់អ្នក' ,
       Logout: 'ចាកចេញ',
   LoggingOut: 'កំពុងចាកចេញ?',
-  SeeYouAgainSoon: 'មកជួបគាត់ម្តងទៀតអី!'
+  SeeYouAgainSoon: 'មកជួបគាត់ម្តងទៀតអី!',
+enterCode: 'បញ្ចូល​កូដ',
+enterAmount: 'បញ្ចូល​ចំនួន',
+applyVoucher: 'អនុវត្ត​ប័ណ្ណ​បញ្ចូល',
+inputCode: 'បញ្ចូលកូដ',
+AddTip:'បន្ថែម​ការយោង'
+
 }

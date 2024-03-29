@@ -545,5 +545,11 @@ somethingWentWrong: 'Etwas ist schief gegangen',
   checkInternet: 'Überprüfen Sie Ihre Internetverbindung',
   Logout: 'Ausloggen',
   LoggingOut: 'Ausloggen?',
-  SeeYouAgainSoon: 'Bis bald!'
+  SeeYouAgainSoon: 'Bis bald!',
+  enterCode: 'CODE EINGEBEN',
+  enterAmount: 'BETRAG EINGEBEN',
+  applyVoucher: 'Gutschein anwenden',
+  inputCode: 'Code eingeben',
+  AddTip:'Trinkgeld hinzufügen',
+
 }

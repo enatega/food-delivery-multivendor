@@ -5,6 +5,7 @@ const { width: WIDTH } = Dimensions.get('window')
 export default StyleSheet.create({
   container: theme => ({
     marginHorizontal: scale(10),
+
   
   }),
   line: theme => ({

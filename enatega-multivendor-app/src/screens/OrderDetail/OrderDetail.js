@@ -134,7 +134,7 @@ function OrderDetail(props) {
         contentContainerStyle={{
           flexGrow: 1,
           backgroundColor: currentTheme.themeBackground,
-          paddingBottom: scale(100)
+          paddingBottom: scale(150)
         }}
         showsVerticalScrollIndicator={false}
         overScrollMode='never'

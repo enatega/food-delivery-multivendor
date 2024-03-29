@@ -513,5 +513,11 @@ export const zh = {
   checkInternet: '检查一下您的互联网连接',
   Logout: '登出',
   LoggingOut: '正在退出?',
-  SeeYouAgainSoon: '很快再见!'
+  SeeYouAgainSoon: '很快再见!',
+  enterCode: '输入代码',
+  enterAmount: '输入金额',
+  applyVoucher: '使用优惠券',
+  inputCode: '输入代码',
+  AddTip:'添加小费'
+
 }

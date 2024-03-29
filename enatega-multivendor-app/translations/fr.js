@@ -542,5 +542,11 @@ somethingWentWrong: 'Il y a eu un problème',
   checkInternet:'Vérifiez votre connexion à Internet' ,
   Logout: 'Déconnexion',
   LoggingOut: 'Déconnexion ?',
-  SeeYouAgainSoon: 'À bientôt !'
+  SeeYouAgainSoon: 'À bientôt !',
+  enterCode: 'SAISIR LE CODE',
+  enterAmount: 'SAISIR LE MONTANT',
+  applyVoucher: 'Appliquer un bon',
+  inputCode: 'Saisir le code',
+  AddTip:'Ajouter un pourboire'
+
 }
