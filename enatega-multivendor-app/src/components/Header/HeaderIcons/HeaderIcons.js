@@ -23,15 +23,13 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { HeaderBackButton } from '@react-navigation/elements'
 import UserContext from '../../../context/User'
-import { alignment } from '../../../utils/alignment'
-import { useTranslation } from 'react-i18next'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
   if (props.icon === 'leftArrow') {
     return (
       <Ionicons
-        name='ios-arrow-back'
+        name='arrow-back'
         size={18}
         style={styles().leftIconPadding}
         color={props.iconColor}
