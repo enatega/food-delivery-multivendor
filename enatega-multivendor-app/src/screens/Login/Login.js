@@ -182,7 +182,7 @@ function Login(props) {
                       bold>
                       {loading || loginLoading ? (
                         <Spinner
-                        backColor={currentTheme.themeBackground}
+                        backColor={currentTheme.main}
                         spinnerColor={currentTheme.white}
                           size="small"
                         />
