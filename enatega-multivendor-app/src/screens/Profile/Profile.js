@@ -100,9 +100,11 @@ function Profile(props) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('transparent')
+      StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle(
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    )
   })
   useEffect(() => {
     async function Track() {
@@ -116,7 +118,7 @@ function Profile(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: '#000',
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -127,7 +129,7 @@ function Profile(props) {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
       passChecker: showPass,
@@ -140,7 +142,7 @@ function Profile(props) {
           truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons name='arrow-back' size={25} color='black' />
+              <MaterialIcons name='arrow-back' size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -289,11 +291,7 @@ function Profile(props) {
               ]}
             >
               <TextDefault
-                style={{
-                  color: profile?.emailIsVerified
-                    ? currentTheme.fontFourthColor
-                    : currentTheme.white
-                }}
+               textColor={currentTheme.color4}
                 bold
               >
                 {profile?.emailIsVerified ? t('verified') : t('unverified')}
@@ -345,7 +343,7 @@ function Profile(props) {
                 }
               ]}
             >
-              <TextDefault textColor={currentTheme.fontFourthColor} bold>
+              <TextDefault textColor={currentTheme.color4} bold>
                 {profile?.phoneIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
@@ -382,6 +380,7 @@ function Profile(props) {
                         H5
                         B700
                         bolder
+                        left
                         textColor={currentTheme.darkBgFont}
                         style={styles(currentTheme).textAlignLeft}
                       >
@@ -401,6 +400,8 @@ function Profile(props) {
                         H5
                         B700
                         bolder
+                        left
+                        textColor={currentTheme.newFontcolor}
                         style={styles(currentTheme).textAlignLeft}
                       >
                         {t('name')}
@@ -413,10 +414,10 @@ function Profile(props) {
                       defaultValue={profile?.name}
                       autoFocus={true}
                       maxLength={20}
-                      textColor={currentTheme.fontMainColor}
-                      baseColor={currentTheme.fontSecondColor}
+                      textColor={currentTheme.newFontcolor}
+                      baseColor={currentTheme.newFontcolor}
                       errorColor={currentTheme.textErrorColor}
-                      tintColor={!nameError ? currentTheme.black : 'red'}
+                      tintColor={!nameError ? currentTheme.newFontcolor : 'red'}
                       error={nameError}
                     />
                   </View>
@@ -454,6 +455,7 @@ function Profile(props) {
                     H5
                     B700
                     bolder
+                    left
                     textColor={currentTheme.darkBgFont}
                     style={styles(currentTheme).textAlignLeft}
                   >
@@ -475,6 +477,7 @@ function Profile(props) {
                     H5
                     B700
                     bolder
+                    left
                     textColor={currentTheme.darkBgFont}
                     style={styles(currentTheme).textAlignLeft}
                   >
@@ -508,6 +511,7 @@ function Profile(props) {
                         H5
                         B700
                         bolder
+                        left
                         textColor={currentTheme.darkBgFont}
                         style={styles(currentTheme).textAlignLeft}
                       >

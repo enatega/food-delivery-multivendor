@@ -46,7 +46,7 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.borderColor : '#efefef',
       borderWidth: scale(1),
       borderRadius: scale(6),
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props.themeBackground : 'white',
       padding: scale(10),
       justifyContent: 'center'
     },
@@ -70,6 +70,12 @@ const styles = (props = null) =>
     },
     phoneNumber: {
       width: '70%'
+    },
+    phoneField:{
+      flexDirection: 'row', paddingTop: 3, alignItems:'center' 
+    },
+    phoneNo:{
+      color: props !== null ? props.newFontcolor : '#f5f5f5f',
     },
     error: {
       marginTop: 3

@@ -10,13 +10,14 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: '#fff',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       // height: height * 0.5
     },
 
     touchArea: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(20)
@@ -42,7 +43,7 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      // alignItems: 'center',
+      alignItems: 'center',
       ...alignment.PTsmall
     },
 
@@ -63,7 +64,6 @@ const styles = (props = null) =>
     },
     restaurantAbout: {
       fontSize: scale(14),
-      color: '#6B7280',
       fontWeight: '500'
     },
     fixedText: {

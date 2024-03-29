@@ -13,7 +13,7 @@ const styles = (props = null) =>
     },
     container: {
       flex: 1,
-      backgroundColor: props !== null ? props.white : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     contentContainer: {
       flexGrow: 1,
@@ -129,7 +129,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignSelf: 'center',
-      backgroundColor: props !== null ? props.white : 'transparent'
+      backgroundColor: props !== null ? props.newheaderBG : 'transparent'
     },
     activeTabStyles: {
       width: '45%',

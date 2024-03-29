@@ -40,17 +40,17 @@ const Reviews = ({ navigation, route }) => {
     navigation.setOptions({
       headerTitle: () => (
         <View style={styles.headerContainer}>
-          <TextDefault H4 bold>
+          <TextDefault H4 bold textColor={currentTheme.newFontcolor}>
             {t('ratingAndreviews')}
           </TextDefault>
-          <TextDefault H5 style={{ ...alignment.MTxSmall }}>
+          <TextDefault H5 style={{ ...alignment.MTxSmall }} textColor={currentTheme.newFontcolor}>
             {restaurant.restaurantName}
           </TextDefault>
         </View>
       ),
       headerRight: null,
       headerStyle: {
-        backgroundColor: currentTheme.white
+        backgroundColor: currentTheme.newheaderBG
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -60,7 +60,7 @@ const Reviews = ({ navigation, route }) => {
               <MaterialIcons
                 name='arrow-back'
                 size={30}
-                color={currentTheme.black}
+                color={currentTheme.newIconColor}
               />
             </View>
           )}
@@ -73,7 +73,7 @@ const Reviews = ({ navigation, route }) => {
   }, [navigation])
   const sorted = sortReviews([...reviews], sortBy)
   return (
-    <View style={{ flex: 1, backgroundColor: currentTheme.white }}>
+    <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
       <ScrollView style={[styles.container]}>
         <View>
           <View
@@ -84,12 +84,12 @@ const Reviews = ({ navigation, route }) => {
               ...alignment.MBsmall
             }}
           >
-            <TextDefault bold H3>
+            <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
               {t('allRatings')} ({restaurant.total})
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <StarRating />
-              <TextDefault bold H3>
+              <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
                 {restaurant.average}
               </TextDefault>
             </View>
@@ -156,7 +156,7 @@ const Reviews = ({ navigation, route }) => {
             {Object.keys(sortingParams).map((key) => (
               <Button
                 key={key}
-                textProps={{ textColor: currentTheme.gray900 }}
+                textProps={{ textColor: currentTheme.color4 }}
                 buttonProps={{ onPress: () => setSortBy(key) }}
                 text={sortingParams[key]}
                 textStyles={styles.text}

@@ -60,9 +60,11 @@ function Favourite() {
   }, [])
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.white)
+      StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle(
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    )
   })
 
   useEffect(() => {
@@ -71,7 +73,7 @@ function Favourite() {
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleStyle: {
-        color: '#000',
+        color:currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -82,7 +84,7 @@ function Favourite() {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
       headerTitleAlign: 'center',
@@ -92,7 +94,7 @@ function Favourite() {
           truncatedLabel=""
           backImage={() => (
             <View>
-              <MaterialIcons name="arrow-back" size={25} color="black" />
+              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newFontcolor} />
             </View>
           )}
           onPress={() => {
@@ -116,7 +118,7 @@ function Favourite() {
   if (loading)
     return (
       <Spinner
-        backColor={'transparent'}
+        backColor={currentTheme.themeBackground}
         spinnerColor={currentTheme.main}
       />
     )

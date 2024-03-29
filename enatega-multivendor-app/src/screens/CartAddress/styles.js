@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.white : 'transparent'
+      
     },
     width100: {
       width: '100%'
@@ -26,13 +26,23 @@ const styles = (props = null) =>
       width: scale(15),
       height: scale(15)
     },
+    cartAddress:{
+      ...alignment.PBmedium,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+
+    },
     addressContainer: {
-      width: '90%',
+      width: '93%',
       alignSelf: 'center',
       borderRadius: scale(10),
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props !== null ? props.gray100 : 'transparent',
       ...alignment.PTsmall,
-      ...alignment.PBsmall
+      ...alignment.PBsmall,
+      ...alignment.PRsmall,
+      ...alignment.PLsmall,
+      borderWidth: 1,
+      alignSelf: 'center',
+      borderColor: props !== null ? props.gray200 : '#E5E7EB'
     },
     addressDetail: {
       width: '80%',
@@ -46,6 +56,7 @@ const styles = (props = null) =>
       ...alignment.MTmedium,
       ...alignment.MBmedium
     },
+    
     containerSpace: {
       backgroundColor: props !== null ? props.gray100 : 'transparent',
       width: '92%',
@@ -54,7 +65,7 @@ const styles = (props = null) =>
       borderRadius: scale(10),
       borderWidth: 1,
       alignSelf: 'center',
-      borderColor: props !== null ? props.gray200 : '#E5E7EB'
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
     }
   })
 export default styles

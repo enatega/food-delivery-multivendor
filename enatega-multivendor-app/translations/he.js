@@ -504,8 +504,21 @@ Location: 'מיקום',
   LowestRating: 'הדירוג הנמוך ביותר',
   phoneNumberExist: 'מספר הטלפון שסופק כבר קיים!',
   phoneCheckingError: 'שגיאה בעת בדיקת מספר הטלפון. נסה שוב מאוחר יותר!',
+  cancelledOrder:'ההזמנה שלך בוטלה. אם יש לך שאלות, נא לפנות לצוות התמיכה שלנו.',
+  addMore: 'האם תרצה להוסיף אלה?',
+  howWasOrder: 'כיצד היה ההזמנה שלך?',
+  tellAboutExp: 'ספר לאחרים על החוויה שלך עם',
+  typeHere: 'הקלד כאן',
+  review: 'ביקורת',
+  somethingWentWrong:'משהו השתבש' ,
+  checkInternet: 'בדוק את החיבור לאינטרנט שלך',
     Logout: 'התנתק',
   LoggingOut: 'מתנתק?',
-  SeeYouAgainSoon: 'נתראה בקרוב!'
+  SeeYouAgainSoon: 'נתראה בקרוב!',
+enterCode: 'הזן קוד',
+enterAmount: 'הזן סכום',
+applyVoucher: 'החל קופון',
+inputCode: 'הזן קוד',
+AddTip:'הוסף טיפ'
 
 }

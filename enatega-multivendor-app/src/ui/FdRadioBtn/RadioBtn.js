@@ -14,7 +14,7 @@ function RadioButton(props) {
   const {
     size = 16,
     innerColor = currentTheme.radioColor,
-    outerColor = currentTheme.filterRadioOuterColor,
+    outerColor = currentTheme.gray,
     isSelected = false,
     onPress = () => null
   } = props

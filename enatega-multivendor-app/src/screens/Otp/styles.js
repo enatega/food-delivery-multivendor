@@ -54,8 +54,8 @@ const styles = (props = null) =>
       ...alignment.MBlarge
     },
     otpBox: {
-      backgroundColor: '#fff',
-      color: '#000',
+      backgroundColor: props !== null ? props.themeBackground : '#F7E7E5',
+      color: props !== null ? props.newFontcolor : '#F7E7E5',
       borderRadius: scale(6)
     },
     headerLeftIcon: {
