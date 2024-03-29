@@ -105,9 +105,7 @@ function Main(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle( 'dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -223,12 +221,12 @@ function Main(props) {
     if (loading || mutationLoading || loadingOrders) return <MainLoadingUI />
     else {
       return (
-        <View style={styles().emptyViewContainer}>
-          <View style={styles().emptyViewBox}>
+        <View style={styles(currentTheme).emptyViewContainer}>
+          <View style={styles(currentTheme).emptyViewBox}>
             <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
               {t('notAvailableinYourArea')}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} center>
+            <TextDefault textColor={currentTheme.fontGrayNew} center>
               {t('noRestaurant')}
             </TextDefault>
           </View>
@@ -319,7 +317,7 @@ function Main(props) {
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
-                <View style={styles().searchbar}>
+                <View style={styles(currentTheme).searchbar}>
                   <Search
                     setSearch={setSearch}
                     search={search}
@@ -494,7 +492,7 @@ function Main(props) {
               showsVerticalScrollIndicator: false,
               keyExtractor: (item) => item._id,
               renderItem: ({ item: address }) => (
-                <View style={styles().addressbtn}>
+                <View style={styles(currentTheme).addressbtn}>
                   <TouchableOpacity
                     style={styles(currentTheme).addressContainer}
                     activeOpacity={0.7}

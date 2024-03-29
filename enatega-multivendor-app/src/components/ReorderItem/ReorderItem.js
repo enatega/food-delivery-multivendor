@@ -9,8 +9,11 @@ import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { IMAGE_LINK } from '../../utils/constants'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
+import { useTranslation } from 'react-i18next'
 
 const ReorderItem = props => {
+  const { t } = useTranslation()
+
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -61,7 +64,9 @@ const ReorderItem = props => {
                     style={{ marginRight: scale(5) }}
                     textColor={currentTheme.secondaryText}
                     Normal>
-                    {props?.optionsTitle?.slice(0, 3).length} Additional Items
+
+                    {props?.optionsTitle?.slice(0, 3).length} {t('additionalItems')}
+
                   </TextDefault>
                   <Feather
                     name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}

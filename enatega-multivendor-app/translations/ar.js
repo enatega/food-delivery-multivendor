@@ -518,7 +518,21 @@ export const ar = {
   Location: 'الموقع',
   phoneNumberExist: 'رقم الهاتف المقدم موجود بالفعل!',
   phoneCheckingError: 'خطأ أثناء التحقق من رقم الهاتف. حاول مرة أخرى لاحقًا!',
+  cancelledOrder:'تم إلغاء طلبك. إذا كان لديك أي أسئلة، يرجى التواصل مع فريق الدعم الخاص بنا.',
+  addMore: 'هل ترغب في إضافة هذه؟',
+  howWasOrder: 'كيف كان طلبك؟',
+  tellAboutExp: 'شارك الآخرين تجربتك مع',
+  typeHere: 'اكتب هنا',
+  review: 'المراجعة',
+  somethingWentWrong: 'حدث خلل ما',
+  checkInternet: 'تحقق من اتصالك بالإنترنت',
   Logout: 'تسجيل الخروج',
   LoggingOut: 'جاري تسجيل الخروج؟',
-  SeeYouAgainSoon: 'إلى اللقاء قريبا!'
+  SeeYouAgainSoon: 'إلى اللقاء قريبا!',
+  enterCode: 'أدخل الرمز',
+  enterAmount: 'أدخل المبلغ',
+  applyVoucher: 'قدّم قسيمة',
+  inputCode: 'ادخل الرمز',
+AddTip:'إضافة بقشيش'
+
 }

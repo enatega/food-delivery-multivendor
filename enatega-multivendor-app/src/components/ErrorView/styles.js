@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native'
 import { verticalScale, scale } from '../../utils/scaling'
 
-const useStyle = () => {
+const useStyle = (props) => {
   return StyleSheet.create({
     errorViewContainer: {
-      marginTop: verticalScale(50),
-      marginHorizontal: scale(10),
+      flex:1,
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      // paddingTop: verticalScale(50),
+      // paHorizontal: scale(10),
       justifyContent: 'center',
       alignItems: 'center',
       gap: 16,

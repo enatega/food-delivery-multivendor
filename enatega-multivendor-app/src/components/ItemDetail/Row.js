@@ -41,15 +41,15 @@ export default function Row({ id, restaurant }) {
       </View>}
 
       <View mainContainer style={{ flex: 3, alignSelf: 'center', alignContent: 'center', marginLeft: scale(5) }}>
-        <TextDefault bolder small style={{ marginBottom: scale(10) }}>{food.title}</TextDefault>
-        <TextDefault bolder small>{`${configuration.currencySymbol}${food.variations[0].price}`}</TextDefault>
+        <TextDefault bolder small textColor={currentTheme.newFontcolor} style={{ marginBottom: scale(10) }}>{food.title}</TextDefault>
+        <TextDefault bolder small textColor={currentTheme.newFontcolor}>{`${configuration.currencySymbol}${food.variations[0].price}`}</TextDefault>
       </View>
       <View rightContainer style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
         <View
           activeOpacity={0.7}
           style={styles.actionContainerBtns}
         >
-          <AntDesign name="plus" size={scale(10)} color={currentTheme.white} />
+          <AntDesign name="plus" size={scale(10)} color={currentTheme.themeBackground} />
         </View>
       </View>
 

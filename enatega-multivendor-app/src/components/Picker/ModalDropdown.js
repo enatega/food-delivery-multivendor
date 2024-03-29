@@ -14,18 +14,19 @@ import { LocationContext } from '../../context/Location'
 import { useTranslation } from 'react-i18next'
 
 const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
+
   const { t } = useTranslation()
   const { cities } = useContext(LocationContext)
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.item}
+      style={styles.item(theme)}
       onPress={() => {
         onItemPress(item)
       }}>
-      <TextDefault H5 bold textColor={theme.gray700}>
+      <TextDefault H5 bold textColor={theme.color7}>
         {item.name}
       </TextDefault>
-      <Entypo name="chevron-right" size={24} color="black" />
+      <Entypo name="chevron-right" size={24} color={theme.newIconColor} />
     </TouchableOpacity>
   )
 
@@ -39,13 +40,13 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay} />
       </TouchableWithoutFeedback>
-      <View style={styles.modalContainer}>
+      <View style={styles.modalContainer(theme)}>
         <View style={styles.header}>
           <TextDefault textColor={theme.gray900} H3 bolder>
             {t('exploreCities')}
           </TextDefault>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Feather name="x-circle" size={30} color="black" />
+            <Feather name="x-circle" size={30} color={theme.newIconColor} />
           </TouchableOpacity>
         </View>
         <FlatList
@@ -63,16 +64,16 @@ const styles = StyleSheet.create({
     height: '20%',
     backgroundColor: 'rgba(0, 0, 0, 0.8)'
   },
-  modalContainer: {
+  modalContainer: theme => ({
     flex: 1,
     justifyContent: 'flex-end',
     borderTopLeftRadius: scale(24),
     borderTopRightRadius: scale(24),
-    backgroundColor: 'white',
+    backgroundColor: theme.newheaderBG,
     borderColor: 'gray',
     borderWidth: scale(1),
     marginTop: scale(-20)
-  },
+  }),
   header: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -87,15 +88,15 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     margin: scale(10)
   },
-  item: {
+  item: theme =>({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: 'white',
+    backgroundColor: theme.newheaderBG,
     borderBottomWidth: scale(1),
     borderBottomColor: '#ccc'
-  }
+  })
 })
 
 export default ModalDropdown

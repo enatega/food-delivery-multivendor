@@ -40,9 +40,13 @@ const styles = (props = null, hasActiveOrders = false) =>
       height: '100%',
       alignSelf: 'center'
     },
+    searchbar:{
+      backgroundColor: props != null ? props.main : 'black',
+      ...alignment.PBmedium
+    },
 
     addressbtn: {
-      backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
+      backgroundColor: props != null ? props.color8 : '#f0f0f0',
       marginLeft: scale(10),
       marginRight: scale(10),
       marginBottom: scale(10),
@@ -52,7 +56,9 @@ const styles = (props = null, hasActiveOrders = false) =>
       justifyContent: 'center',
       padding: scale(5),
       ...alignment.PLmedium,
-      ...alignment.PRmedium
+      ...alignment.PRmedium,
+      borderWidth:scale(1),
+      borderColor:props != null ? props.color10 : '#FFF', 
     },
     addNewAddressbtn: {
       padding: scale(5),
@@ -83,13 +89,15 @@ const styles = (props = null, hasActiveOrders = false) =>
       ...alignment.PTlarge
     },
     modal: {
-      backgroundColor: props != null ? props.cartContainer : '#FFF',
+      backgroundColor: props != null ? props.themeBackground : '#FFF',
       paddingTop: scale(10),
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       position: 'relative',
       zIndex: 999,
-      shadowOpacity: 0 
+      shadowOpacity: 0 ,
+      borderWidth:scale(1),
+      borderColor:props != null ? props.color10 : '#FFF', 
     },
     addressTextContainer: {
       display: 'flex',
@@ -139,14 +147,17 @@ const styles = (props = null, hasActiveOrders = false) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: props != null ? props.newBackground : '#f0f0f0',
       borderRadius: scale(10),
       width: '85%',
       height: verticalScale(130),
       justifyContent: 'center',
       alignItems: 'center',
       padding: scale(15),
-      marginTop: scale(30)
+      marginTop: scale(30),
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderWidth:scale(1),
+      borderRadius:scale(10)
     },
     searchList: {
       marginBottom: 70

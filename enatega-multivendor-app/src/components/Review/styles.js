@@ -3,10 +3,11 @@ import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 
 export const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: scale(16),
-    paddingVertical: scale(24)
-  },
+  container: theme => ({
+    paddingHorizontal: scale(16),
+    paddingVertical: scale(24),
+    backgroundColor:theme.themeBackground
+  }),
   starContainer: {
     width: '100%',
     flexDirection: 'row',

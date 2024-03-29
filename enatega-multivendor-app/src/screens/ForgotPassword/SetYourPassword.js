@@ -33,9 +33,9 @@ function ForgotPassword(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        iconColor: currentTheme.iconColorPink,
+        iconColor: currentTheme.newIconColor,
         backColor: currentTheme.themeBackground,
-        fontColor: currentTheme.fontMainColor,
+        fontColor: currentTheme.newFontcolor,
         navigation: props.navigation
       })
     )
@@ -55,14 +55,14 @@ function ForgotPassword(props) {
             <Feather
               name="lock"
               size={30}
-              color={currentTheme.fontFourthColor}
+              color={currentTheme.newIconColor}
             />
           </View>
           <View>
             <TextDefault
               H3
               bolder
-              textColor={currentTheme.fontfourthColor}
+              textColor={currentTheme.newFontcolor}
               style={{
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
@@ -84,7 +84,7 @@ function ForgotPassword(props) {
               style={[
                 styles(currentTheme).textField,
                 styles().passwordInput,
-                passwordError && styles().errorInput
+                passwordError && styles(currentTheme).errorInput
               ]}
               placeholderTextColor={currentTheme.fontSecondColor}
               value={password}
@@ -132,9 +132,9 @@ function ForgotPassword(props) {
             activeOpacity={0.7}
             style={styles(currentTheme).btn}>
             {loading ? (
-              <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.main}/>
+              <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.white}/>
             ) : (
-              <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+              <TextDefault H4 textColor={currentTheme.black} bold>
                 {t('saveBtn')}
               </TextDefault>
             )}

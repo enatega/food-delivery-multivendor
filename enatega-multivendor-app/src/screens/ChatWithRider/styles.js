@@ -28,7 +28,7 @@ const styles = (props = null) =>
       gap: scale(4)
     },
     orderNo: {
-      backgroundColor: '#f3f4f6',
+      backgroundColor: props !== null ? props.color5 : 'transparent',
       borderWidth: 1,
       borderColor: '#E5E7EB',
       paddingVertical: scale(8),

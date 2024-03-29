@@ -40,7 +40,7 @@ function CartAddresses(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.btnText,
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -51,7 +51,7 @@ function CartAddresses(props) {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
       headerLeft: () => (
@@ -59,7 +59,7 @@ function CartAddresses(props) {
           truncatedLabel=""
           backImage={() => (
             <View>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+              <MaterialIcons name="arrow-back" size={30} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -94,7 +94,7 @@ function CartAddresses(props) {
 
   return (
     <>
-      <View style={styles(currentTheme).flex}>
+      <View style={[styles().flex, styles(currentTheme).cartAddress]}>
         {!location._id && (
           <View
             style={{
@@ -103,7 +103,7 @@ function CartAddresses(props) {
           >
             <TouchableOpacity
               activeOpacity={0.7}
-              style={[styles(currentTheme).containerSpace, alignment.MBsmall]}
+              style={[styles(currentTheme).containerSpace]}
               onPress={() => {
                 const latitude = location.latitude
                 const longitude = location.longitude
@@ -176,7 +176,7 @@ function CartAddresses(props) {
           ItemSeparatorComponent={() => <View />}
           ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
           renderItem={({ item: address }) => (
-            <View style={{ ...alignment.MBlarge }}>
+            <View style={{ ...alignment.MBsmall }}>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={[styles(currentTheme).containerSpace]}

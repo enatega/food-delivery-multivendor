@@ -23,12 +23,19 @@ const styles = (props = null) =>
       shadowRadius: verticalScale(2),
       zIndex: 1
     },
+    sectionHeader:{
+      backgroundColor: props != null ? props.themeBackground : '#fff',
+    },
     sectionHeaderText: {
       textTransform: 'capitalize',
       ...alignment.PLmedium,
       ...alignment.PTlarge,
       fontSize: scale(18),
       fontWeight: '600'
+    },
+    restaurantItems:{
+      backgroundColor: props != null ? props.themeBackground : 'white'
+
     },
     popularItemCards: {
       ...alignment.PTlarge,
@@ -38,6 +45,10 @@ const styles = (props = null) =>
       paddingRight: scale(17),
       justifyContent: 'space-between',
       rowGap: scale(10)
+    },
+    dealSection:{
+      ...alignment.PLsmall,
+      ...alignment.PRsmall,
     },
     deal: {
       width: '80%',
@@ -82,7 +93,8 @@ const styles = (props = null) =>
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: '#000',
+      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
+
       justifyContent: 'center',
       alignItems: 'center',
       ...alignment.MRxSmall
@@ -114,7 +126,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: scale(40),
-      backgroundColor: props !== null ? props.buttonBackground : 'black',
+      backgroundColor: props !== null ? props.main : 'black',
       height: '75%',
       width: '95%',
       ...alignment.PLsmall,

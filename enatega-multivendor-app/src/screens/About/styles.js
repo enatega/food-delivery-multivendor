@@ -42,10 +42,10 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     mapContainer: {
-      marginBottom: 20,
+      marginBottom: scale(20),
       borderRadius: scale(10),
       height: 200,
-      backgroundColor: props != null ? props.white : 'white'
+      backgroundColor: props != null ? props.themeBackground : 'white'
     },
     marker: {
       width: 50,

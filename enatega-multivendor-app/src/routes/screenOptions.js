@@ -7,8 +7,10 @@ import {
 import { StyleSheet } from 'react-native'
 import { textStyles } from '../utils/textStyles'
 import { scale } from '../utils/scaling'
+import { useTranslation } from 'react-i18next'
 
 const screenOptions = props => {
+  const { t } = useTranslation()
   return {
     headerTitleAlign: 'center',
     headerBackTitleVisible: false,
@@ -29,7 +31,7 @@ const screenOptions = props => {
     headerBackImage: () =>
       BackButton({ iconColor: props.textColor, icon: 'leftArrow' }),
     headerRight: () => (
-      <RightButton icon="cart" iconColor={props.iconColor} menuHeader={false} />
+      <RightButton icon="cart" iconColor={props.iconColor} menuHeader={false} t={t}/>
     )
   }
 }

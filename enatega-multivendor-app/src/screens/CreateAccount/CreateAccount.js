@@ -43,10 +43,10 @@ const CreateAccount = (props) => {
   function renderAppleAction() {
     if (loading && loginButton === 'Apple') {
       return (
-        <View style={styles().buttonBackground}>
+        <View style={styles(currentTheme).buttonBackground}>
           <Spinner
-            backColor='rgba(0,0,0,0.1)'
-            spinnerColor={currentTheme.main}
+               backColor={currentTheme.themeBackground}
+               spinnerColor={currentTheme.main}
           />
         </View>
       )
@@ -135,7 +135,7 @@ const CreateAccount = (props) => {
           style={styles().image1}
         />
       </View>
-      <View style={[styles().subContainer]}>
+      <View style={[styles(currentTheme).subContainer]}>
         <View style={[styles().signupContainer]}>
           <View
             style={{
@@ -147,12 +147,12 @@ const CreateAccount = (props) => {
             <TextDefault
               H4
               bolder
-              textColor={currentTheme.black}
+              textColor={currentTheme.newFontcolor}
               style={{ marginBottom: scale(7) }}
             >
               {t('signUporSignIn')}
             </TextDefault>
-            <TextDefault textColor={currentTheme.black}>
+            <TextDefault textColor={currentTheme.newFontcolor}>
               {t('signUpDiscount')}
             </TextDefault>
           </View>
@@ -165,17 +165,17 @@ const CreateAccount = (props) => {
           )}
           <View style={{ marginBottom: scale(5) }}>{renderEmailAction()}</View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={styles().line} />
+            <View style={styles(currentTheme).line} />
             <View style={{ marginBottom: scale(5) }}>
-              <TextDefault H4 bolder style={{ width: 50, textAlign: 'center' }}>
+              <TextDefault H4 bolder textColor={currentTheme.newFontcolor} style={{ width: 50, textAlign: 'center' }}>
                 {t('or')}
               </TextDefault>
             </View>
-            <View style={styles().line} />
+            <View style={styles(currentTheme).line} />
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
-            style={styles().guestButton}
+            style={styles(currentTheme).guestButton}
             onPress={() => {
               navigation.navigate('Main')
             }}
@@ -186,7 +186,7 @@ const CreateAccount = (props) => {
               <>
                 <TextDefault
                   H4
-                  textColor={currentTheme.black}
+                  textColor={currentTheme.newFontcolor}
                   style={alignment.MLsmall}
                   bold
                 >
