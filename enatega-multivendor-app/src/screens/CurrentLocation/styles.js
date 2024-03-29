@@ -58,7 +58,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       width: '82%',
       height: '20%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props.main : 'transparent',
       justifyContent: 'space-evenly',
       alignItems: 'center',
       alignSelf: 'center',
@@ -75,7 +75,7 @@ const styles = (props = null) =>
       alignSelf: 'center',
       borderRadius: scale(28),
       borderWidth: scale(1),
-      borderBottomColor: '#000',
+      borderColor: props !== null ? props.newIconColor : 'transparent',
       ...alignment.Mmedium
     }
   })

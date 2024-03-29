@@ -21,6 +21,12 @@ const styles = (props = null) =>
       width: '100%',
       ...alignment.MTmedium
     },
+    mainContainer:{
+      flex: 1,
+      flexDirection:'column',
+  justifyContent:'space-between',
+  ...alignment.MBlarge
+    },
     formSubContainer: {
       borderRadius: scale(8),
       flexDirection: 'row',
@@ -129,14 +135,15 @@ const styles = (props = null) =>
       alignItems: 'center',
       backgroundColor: '#000',
       filter: 'blur(10)'
-      
     },
     modalView: {
       width: '90%',
       alignItems: 'flex-start',
       gap: 24,
       margin: 20,
-      backgroundColor: 'white',
+      backgroundColor: props !== null ? props.themeBackground : 'white',
+      borderWidth:scale(1),
+      borderColor:props !== null ? props.color10 : 'white',
       borderRadius: 20,
       padding: 20,
       alignItems: 'center',
@@ -150,7 +157,6 @@ const styles = (props = null) =>
       elevation: 5,
     },
     btn: {
-      flex: 'none',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',

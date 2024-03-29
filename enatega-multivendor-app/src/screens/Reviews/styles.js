@@ -16,5 +16,8 @@ export const styles = StyleSheet.create({
   },
   reviewCardSec:{
     paddingBottom:scale(20)
+  },
+  backImageContainer:{
+    width:scale(30)
   }
 })

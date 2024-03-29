@@ -97,7 +97,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
             placeholderTextColor={theme.newFontcolor}
             textColor={theme.newFontcolor}
           />
-          <Button text={'Submit'}
+          <Button text={t('submit')}
             buttonProps={{ onPress: onSubmit }}
             buttonStyles={{ borderRadius: 15, backgroundColor: theme.primary, margin: 10 }} textStyles={{ margin: 10, alignSelf: 'center' }}
             textProps={{ H4: true, bold: true, textColor: theme.black }}/>

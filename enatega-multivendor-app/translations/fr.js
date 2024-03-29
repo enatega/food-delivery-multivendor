@@ -547,6 +547,8 @@ somethingWentWrong: 'Il y a eu un problème',
   enterAmount: 'SAISIR LE MONTANT',
   applyVoucher: 'Appliquer un bon',
   inputCode: 'Saisir le code',
-  AddTip:'Ajouter un pourboire'
-
+  AddTip:'Ajouter un pourboire',
+  permanentDeleteMessage:"Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée. La suppression de votre compte entraînera la perte définitive de toutes vos données, y compris vos commandes et préférences. Si vous continuez, vous perdrez l'accès à votre compte et à ses avantages.",
+  yesSure:"Oui, je suis sûr(e)",
+  noDelete:'Non, ne le supprimez pas',
 }
