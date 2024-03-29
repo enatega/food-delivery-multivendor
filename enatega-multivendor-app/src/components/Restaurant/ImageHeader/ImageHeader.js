@@ -367,141 +367,143 @@ function ImageTextCenterHeader(props, ref) {
               )}
             </View>
           </View>
-          <Animated.View style={[styles().restaurantDetails, opacity]}>
-            <Animated.View
-              style={[
-                {
+          {!props.search && !props.loading && (
+            <Animated.View style={[styles().restaurantDetails, opacity]}>
+              <Animated.View
+                style={[
+                  {
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: scale(15),
+                    marginBottom: scale(20)
+                  }
+                ]}
+              >
+                <View style={[styles().restImageContainer]}>
+                  <Image
+                    resizeMode='cover'
+                    source={{ uri: aboutObject.restaurantImage }}
+                    style={[styles().restaurantImg]}
+                  />
+                </View>
+                <View style={styles().restaurantTitle}>
+                  <TextDefault
+                    H4
+                    bolder
+                    Center
+                    textColor={currentTheme.fontMainColor}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {aboutObject.restaurantName}
+                  </TextDefault>
+                </View>
+              </Animated.View>
+              <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
+                <Text style={styles().restaurantAbout}>
+                  {distance.toFixed(2)}km {t('away')}
+                </Text>
+                <Text style={styles().restaurantAbout}>|</Text>
+                <Text style={styles().restaurantAbout}>
+                  ${aboutObject.restaurantTax} {t('deliveryCharges')}
+                </Text>
+              </View>
+              <View
+                style={{
                   display: 'flex',
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: scale(15),
-                  marginBottom: scale(20)
-                }
-              ]}
-            >
-              <View style={[styles().restImageContainer]}>
-                <Image
-                  resizeMode='cover'
-                  source={{ uri: aboutObject.restaurantImage }}
-                  style={[styles().restaurantImg]}
-                />
-              </View>
-              <View style={styles().restaurantTitle}>
-                <TextDefault
-                  H4
-                  bolder
-                  Center
-                  textColor={currentTheme.fontMainColor}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                >
-                  {aboutObject.restaurantName}
-                </TextDefault>
-              </View>
-            </Animated.View>
-            <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-              <Text style={styles().restaurantAbout}>
-                {distance.toFixed(2)}km {t('away')}
-              </Text>
-              <Text style={styles().restaurantAbout}>|</Text>
-              <Text style={styles().restaurantAbout}>
-                ${aboutObject.restaurantTax} {t('deliveryCharges')}
-              </Text>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 7,
-                marginTop: scale(5)
-              }}
-            >
-              <Text style={styles().restaurantAbout}>
-                ${aboutObject.restaurantMinOrder} {t('minimum')}
-              </Text>
-              <Text style={styles().restaurantAbout}>|</Text>
-              <Text style={styles().restaurantAbout}>
-                {t('serviceFeeApply')}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: scale(15)
-              }}
-            >
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles().ratingBox}
-                onPress={() => {
-                  navigation.navigate('Reviews', {
-                    restaurantObject: { ...aboutObject, isOpen: null },
-                    tab: false
-                  })
+                  gap: 7,
+                  marginTop: scale(5)
                 }}
               >
-                <MaterialIcons
-                  name='star-border'
-                  size={scale(20)}
-                  color='#111827'
-                />
-
-                <Text
-                  style={{
-                    fontWeight: '700',
-                    fontSize: scale(16),
-                    color: '#374151'
+                <Text style={styles().restaurantAbout}>
+                  ${aboutObject.restaurantMinOrder} {t('minimum')}
+                </Text>
+                <Text style={styles().restaurantAbout}>|</Text>
+                <Text style={styles().restaurantAbout}>
+                  {t('serviceFeeApply')}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: scale(15)
+                }}
+              >
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles().ratingBox}
+                  onPress={() => {
+                    navigation.navigate('Reviews', {
+                      restaurantObject: { ...aboutObject, isOpen: null },
+                      tab: false
+                    })
                   }}
                 >
-                  {aboutObject.average}
-                </Text>
+                  <MaterialIcons
+                    name='star-border'
+                    size={scale(20)}
+                    color='#111827'
+                  />
+
+                  <Text
+                    style={{
+                      fontWeight: '700',
+                      fontSize: scale(16),
+                      color: '#374151'
+                    }}
+                  >
+                    {aboutObject.average}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: '400',
+                      fontSize: scale(14),
+                      color: '#6B7280',
+                      marginLeft: scale(5)
+                    }}
+                  >
+                    ({aboutObject.total})
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles().ratingBox}
+                  disabled={props.loading}
+                  onPress={() =>
+                    navigation.navigate('Reviews', {
+                      restaurantObject: { ...aboutObject, isOpen: null },
+                      tab: false
+                    })
+                  }
+                >
+                  <Text
+                    style={{
+                      fontSize: scale(14),
+                      fontWeight: '600',
+                      color: '#3B82F6'
+                    }}
+                  >
+                    {t('seeReviews')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
+                <MaterialIcons name='timer' size={scale(20)} color='#111827' />
                 <Text
                   style={{
                     fontWeight: '400',
                     fontSize: scale(14),
-                    color: '#6B7280',
-                    marginLeft: scale(5)
+                    color: '#6B7280'
                   }}
                 >
-                  ({aboutObject.total})
+                  {aboutObject.deliveryTime} {t('Min')}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles().ratingBox}
-                disabled={props.loading}
-                onPress={() =>
-                  navigation.navigate('Reviews', {
-                    restaurantObject: { ...aboutObject, isOpen: null },
-                    tab: false
-                  })
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: scale(14),
-                    fontWeight: '600',
-                    color: '#3B82F6'
-                  }}
-                >
-                  {t('seeReviews')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-              <MaterialIcons name='timer' size={scale(20)} color='#111827' />
-              <Text
-                style={{
-                  fontWeight: '400',
-                  fontSize: scale(14),
-                  color: '#6B7280'
-                }}
-              >
-                {aboutObject.deliveryTime} {t('Min')}
-              </Text>
-            </View>
-          </Animated.View>
+              </View>
+            </Animated.View>
+          )}
         </Animated.View>
       </Animated.View>
 

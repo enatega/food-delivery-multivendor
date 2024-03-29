@@ -130,11 +130,19 @@ function Restaurant(props) {
   const searchPopupHandler = () => {
     setSearchOpen(!searchOpen)
     setSearch('')
+    translationY.value = 0
   }
 
   useEffect(() => {
     if (search === '') {
-      setFilterData([])
+      // setFilterData([])
+      const filteredData = []
+      deals?.forEach((category) => {
+        category.data.forEach((deals) => {
+          filteredData.push(deals)
+        })
+      })
+      setFilterData(filteredData)
       setShowSearchResults(false)
     } else if (deals) {
       const regex = new RegExp(search, 'i')
@@ -570,8 +578,14 @@ function Restaurant(props) {
             translationY={translationY}
           />
 
-          {showSearchResults ? (
-            <ScrollView>
+          {showSearchResults || searchOpen ? (
+            <ScrollView
+              style={{
+                flexGrow: 1,
+                marginTop: TOP_BAR_HEIGHT,
+                backgroundColor: currentTheme.white,
+              }}
+            >
               {filterData.map((item, index) => (
                 <View key={index}>
                   <TouchableOpacity
