@@ -53,15 +53,6 @@ const ReorderItem = props => {
               : props.dealName}
           </TextDefault>
 
-          {props.optionsTitle?.map((option, index) => (
-            <TextDefault
-              key={`options${props.dealName + option + index}`}
-              numberOfLines={1}
-              textColor={currentTheme.fontSecondColor}
-              bolder>
-              +{option}
-            </TextDefault>
-          ))}
           {props?.itemAddons?.length > 0 && (
             <View style={styles().additionalItem}>
               <View>
@@ -73,7 +64,9 @@ const ReorderItem = props => {
                     style={{ marginRight: scale(5) }}
                     textColor={currentTheme.secondaryText}
                     Normal>
-                    {props?.itemAddons?.length} {t('additionalItems')}
+
+                    {props?.optionsTitle?.slice(0, 3).length} {t('additionalItems')}
+
                   </TextDefault>
                   <Feather
                     name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
@@ -83,7 +76,7 @@ const ReorderItem = props => {
                 </TouchableOpacity>
                 {isDropdownOpen && (
                   <View style={styles().itemsDropdown}>
-                    {props?.itemAddons?.map((item, index) => (
+                    {props?.optionsTitle?.slice(0, 3).map((item, index) => (
                       <TextDefault
                         key={index}
                         textColor={currentTheme.secondaryText}
