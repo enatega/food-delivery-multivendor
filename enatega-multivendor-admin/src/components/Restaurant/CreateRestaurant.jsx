@@ -68,7 +68,6 @@ const CreateRestaurant = props => {
   const [minimumOrderError, setMinimumOrderError] = useState(null)
   const [salesTaxError, setSalesTaxError] = useState(null)
   const [restaurantCuisines, setRestaurantCuisines] = React.useState([])
-  const [isOpen, setIsOpen] = useState(true); // State to control visibility
   // const [shopType, setShopType] = useState(SHOP_TYPE.RESTAURANT)
   const [errors, setErrors] = useState('')
   const [success, setSuccess] = useState('')
@@ -168,7 +167,7 @@ const CreateRestaurant = props => {
     }
   }
 
-  const onSubmitValidaiton = data => {
+  const onSubmitValidation = data => {
     const form = formRef.current
     const name = form.name.value
     const address = form.address.value
@@ -250,17 +249,15 @@ const CreateRestaurant = props => {
     setImgUrl('')
   }
 
- const handleClose = () => {
-    setIsOpen(false); // Set isOpen to false to close the component
+  const { onClose } = props // Extracting onClose from props
+   const handleClose = () => {
+    onClose(); // Calling onClose to close the popup
   };
+
   const handleContainerClick = (e) => {
-    // Prevent closing if the click event occurs within the container
     e.stopPropagation();
   };
-  if (!isOpen) {
-    return null; // Render nothing if isOpen is false
-  }
-
+ 
   const handleCuisineChange = event => {
     const {
       target: { value }
@@ -545,7 +542,7 @@ const CreateRestaurant = props => {
               disabled={loading}
               onClick={async e => {
                 e.preventDefault()
-                if (onSubmitValidaiton()) {
+                if (onSubmitValidation()) {
                   const imgUpload = await uploadImageToCloudinary()
                   const form = formRef.current
                   const name = form.name.value
