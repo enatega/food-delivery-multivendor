@@ -527,10 +527,11 @@ const CreateRestaurant = props => {
           <Box>
             <Button
               className={globalClasses.button}
-              disabled={loading}
-              onClick={async e => {
+               disabled={loading}
+                onClick={async e => {
                 e.preventDefault()
-                if (onSubmitValidaiton()) {
+                const isValid = onSubmitValidaiton()
+                if (isValid) {
                   const imgUpload = await uploadImageToCloudinary()
                   const form = formRef.current
                   const name = form.name.value
@@ -540,7 +541,6 @@ const CreateRestaurant = props => {
                   const username = form.username.value
                   const password = form.password.value
                   const shopType = form.shopType.value
-
                   mutate({
                     variables: {
                       owner,
