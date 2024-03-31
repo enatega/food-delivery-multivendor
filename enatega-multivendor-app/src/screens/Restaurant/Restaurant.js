@@ -583,7 +583,7 @@ function Restaurant(props) {
               style={{
                 flexGrow: 1,
                 marginTop: TOP_BAR_HEIGHT,
-                backgroundColor: currentTheme.white,
+                backgroundColor: currentTheme.themeBackground,
               }}
             >
               {filterData.map((item, index) => (

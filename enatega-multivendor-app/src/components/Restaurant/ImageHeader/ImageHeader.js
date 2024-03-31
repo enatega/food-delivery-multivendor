@@ -221,16 +221,8 @@ function ImageTextCenterHeader(props, ref) {
   }
 
   return (
-    // <TouchableWithoutFeedback onPress={hideKeyboard}>
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
-      <Animated.View
-        style={[
-          headerHeightWithoutTopbar,
-          {
-            backgroundColor: 'white'
-          }
-        ]}
-      >
+      <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
           <View style={styles().fixedViewNavigation}>
             <View style={styles().backIcon}>
@@ -240,7 +232,7 @@ function ImageTextCenterHeader(props, ref) {
                   style={[
                     styles().touchArea,
                     {
-                      backgroundColor: props.iconBackColor,
+                      backgroundColor: props.themeBackground,
                       borderRadius: props.iconRadius,
                       height: props.iconTouchHeight
                     }
@@ -249,10 +241,8 @@ function ImageTextCenterHeader(props, ref) {
                 >
                   <Entypo
                     name='cross'
-                    style={{
-                      color: props.black,
-                      fontSize: props.iconSize
-                    }}
+                    color={currentTheme.newIconColor}
+                    size={scale(17)}
                   />
                 </AnimatedBorderless>
               ) : (
@@ -261,19 +251,24 @@ function ImageTextCenterHeader(props, ref) {
                   style={[
                     styles().touchArea,
                     {
-                      backgroundColor: props.iconBackColor,
+                      backgroundColor: props.themeBackground,
                       borderRadius: props.iconRadius,
                       height: props.iconTouchHeight
                     }
                   ]}
                   onPress={() => navigation.goBack()}
                 >
-                  <Ionicons
+                  {/* <Ionicons
                     name='ios-arrow-back'
                     style={{
                       color: props.black,
                       fontSize: props.iconSize
                     }}
+                  /> */}
+                  <Ionicons
+                    name='arrow-back'
+                    color={currentTheme.newIconColor}
+                    size={scale(17)}
                   />
                 </AnimatedBorderless>
               )}
@@ -297,7 +292,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles().touchArea,
                       {
-                        backgroundColor: props.iconBackColor,
+                        backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -315,7 +310,7 @@ function ImageTextCenterHeader(props, ref) {
                         <AntDesign
                           name={heart ? 'heart' : 'hearto'}
                           size={scale(15)}
-                          color={currentTheme.iconColorDark}
+                          color={currentTheme.newIconColor}
                         />
                       )}
                     </View>
@@ -337,10 +332,10 @@ function ImageTextCenterHeader(props, ref) {
                       })
                     }}
                   >
-                    <Entypo
-                      name='cross'
-                      color= {currentTheme.newIconColor}
+                    <SimpleLineIcons
+                      name='info'
                       size={scale(17)}
+                      color={currentTheme.newIconColor}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -360,7 +355,7 @@ function ImageTextCenterHeader(props, ref) {
                       style={{
                         fontSize: props.iconSize
                       }}
-                      color={currentTheme.iconColorDark}
+                      color={currentTheme.newIconColor}
                     />
                   </TouchableOpacity>
                 </>
@@ -401,13 +396,24 @@ function ImageTextCenterHeader(props, ref) {
                 </View>
               </Animated.View>
               <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-                <Text style={styles().restaurantAbout}>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
                   {distance.toFixed(2)}km {t('away')}
-                </Text>
-                <Text style={styles().restaurantAbout}>|</Text>
-                <Text style={styles().restaurantAbout}>
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  |
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
                   ${aboutObject.restaurantTax} {t('deliveryCharges')}
-                </Text>
+                </TextDefault>
               </View>
               <View
                 style={{
@@ -417,13 +423,24 @@ function ImageTextCenterHeader(props, ref) {
                   marginTop: scale(5)
                 }}
               >
-                <Text style={styles().restaurantAbout}>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
                   ${aboutObject.restaurantMinOrder} {t('minimum')}
-                </Text>
-                <Text style={styles().restaurantAbout}>|</Text>
-                <Text style={styles().restaurantAbout}>
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  |
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
                   {t('serviceFeeApply')}
-                </Text>
+                </TextDefault>
               </View>
               <View
                 style={{
@@ -445,28 +462,28 @@ function ImageTextCenterHeader(props, ref) {
                   <MaterialIcons
                     name='star-border'
                     size={scale(20)}
-                    color='#111827'
+                    color={currentTheme.newIconColor}
                   />
 
-                  <Text
+                  <TextDefault
+                    textColor={currentTheme.fontNewColor}
                     style={{
                       fontWeight: '700',
-                      fontSize: scale(16),
-                      color: '#374151'
+                      fontSize: scale(16)
                     }}
                   >
                     {aboutObject.average}
-                  </Text>
-                  <Text
+                  </TextDefault>
+                  <TextDefault
+                    textColor={currentTheme.fontNewColor}
                     style={{
                       fontWeight: '400',
                       fontSize: scale(14),
-                      color: '#6B7280',
                       marginLeft: scale(5)
                     }}
                   >
                     ({aboutObject.total})
-                  </Text>
+                  </TextDefault>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -479,28 +496,32 @@ function ImageTextCenterHeader(props, ref) {
                     })
                   }
                 >
-                  <Text
+                  <TextDefault
+                    textColor={currentTheme.editProfileButton}
                     style={{
                       fontSize: scale(14),
-                      fontWeight: '600',
-                      color: '#3B82F6'
+                      fontWeight: '600'
                     }}
                   >
                     {t('seeReviews')}
-                  </Text>
+                  </TextDefault>
                 </TouchableOpacity>
               </View>
               <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-                <MaterialIcons name='timer' size={scale(20)} color='#111827' />
-                <Text
+                <MaterialIcons
+                  name='timer'
+                  size={scale(20)}
+                  color={currentTheme.newIconColor}
+                />
+                <TextDefault
+                  textColor={currentTheme.fontNewColor}
                   style={{
                     fontWeight: '400',
-                    fontSize: scale(14),
-                    color: '#6B7280'
+                    fontSize: scale(14)
                   }}
                 >
                   {aboutObject.deliveryTime} {t('Min')}
-                </Text>
+                </TextDefault>
               </View>
             </Animated.View>
           )}
@@ -541,7 +562,9 @@ function ImageTextCenterHeader(props, ref) {
                             : textStyles.H5
                         }
                         textColor={
-                          props.selectedLabel === index ? '#111827' : '#6B7280'
+                          props.selectedLabel === index
+                            ? currentTheme.fontFourthColor
+                            : currentTheme.gray500
                         }
                         center
                         H5
@@ -557,7 +580,6 @@ function ImageTextCenterHeader(props, ref) {
         </>
       )}
     </Animated.View>
-    // </TouchableWithoutFeedback>
   )
 }
 
