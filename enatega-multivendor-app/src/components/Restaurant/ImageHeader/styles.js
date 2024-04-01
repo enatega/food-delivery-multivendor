@@ -49,9 +49,9 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      // alignItems: 'center',
-      ...alignment.PTsmall,
-      height: height * 0.07,
+      alignItems: 'center',
+      // ...alignment.PTsmall,
+      height: height * 0.05,
       zIndex: 1
     },
 
