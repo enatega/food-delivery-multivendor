@@ -1,10 +1,5 @@
 import React, { useLayoutEffect } from 'react'
 import { View, Image, TouchableOpacity, Dimensions } from 'react-native'
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes
-} from '@react-native-google-signin/google-signin'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -45,8 +40,8 @@ const CreateAccount = (props) => {
       return (
         <View style={styles(currentTheme).buttonBackground}>
           <Spinner
-               backColor={currentTheme.themeBackground}
-               spinnerColor={currentTheme.main}
+            backColor={currentTheme.themeBackground}
+            spinnerColor={currentTheme.main}
           />
         </View>
       )
@@ -167,7 +162,12 @@ const CreateAccount = (props) => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={styles(currentTheme).line} />
             <View style={{ marginBottom: scale(5) }}>
-              <TextDefault H4 bolder textColor={currentTheme.newFontcolor} style={{ width: 50, textAlign: 'center' }}>
+              <TextDefault
+                H4
+                bolder
+                textColor={currentTheme.newFontcolor}
+                style={{ width: 50, textAlign: 'center' }}
+              >
                 {t('or')}
               </TextDefault>
             </View>
@@ -181,7 +181,10 @@ const CreateAccount = (props) => {
             }}
           >
             {props.loadingIcon ? (
-              <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
+              <Spinner
+                backColor='rgba(0,0,0,0.1)'
+                spinnerColor={currentTheme.main}
+              />
             ) : (
               <>
                 <TextDefault

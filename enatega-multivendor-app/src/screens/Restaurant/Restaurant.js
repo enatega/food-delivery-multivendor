@@ -12,8 +12,7 @@ import {
   Platform,
   Image,
   Dimensions,
-  SectionList,
-  Text
+  SectionList
 } from 'react-native'
 import Animated, {
   Extrapolation,
@@ -25,7 +24,7 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedScrollHandler
 } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   Placeholder,
   PlaceholderMedia,
@@ -60,7 +59,7 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.3
+const HEADER_MAX_HEIGHT = height * 0.4
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
@@ -131,11 +130,19 @@ function Restaurant(props) {
   const searchPopupHandler = () => {
     setSearchOpen(!searchOpen)
     setSearch('')
+    translationY.value = 0
   }
 
   useEffect(() => {
     if (search === '') {
-      setFilterData([])
+      // setFilterData([])
+      const filteredData = []
+      deals?.forEach((category) => {
+        category.data.forEach((deals) => {
+          filteredData.push(deals)
+        })
+      })
+      setFilterData(filteredData)
       setShowSearchResults(false)
     } else if (deals) {
       const regex = new RegExp(search, 'i')
@@ -248,7 +255,6 @@ function Restaurant(props) {
     if (!restaurantCart || food.restaurant === restaurantCart) {
       await addToCart(food, food.restaurant !== restaurantCart)
     } else if (food.restaurant !== restaurantCart) {
-
       Alert.alert(
         '',
         t('clearCartText'),
@@ -347,7 +353,9 @@ function Restaurant(props) {
       scrollRef.current.scrollToLocation({
         animated: true,
         sectionIndex: index,
-        itemIndex: 0
+        itemIndex: 0,
+        viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
+        viewPosition: 0
       })
     }
   }
@@ -542,8 +550,7 @@ function Restaurant(props) {
   return (
     <>
       <SafeAreaView style={styles(currentTheme).flex}>
-      
-        <View style={styles(currentTheme).flex}>
+        <Animated.View style={styles(currentTheme).flex}>
           <ImageHeader
             ref={flatListRef}
             iconColor={iconColor}
@@ -571,8 +578,14 @@ function Restaurant(props) {
             translationY={translationY}
           />
 
-          {showSearchResults ? (
-            <ScrollView>
+          {showSearchResults || searchOpen ? (
+            <ScrollView
+              style={{
+                flexGrow: 1,
+                marginTop: TOP_BAR_HEIGHT,
+                backgroundColor: currentTheme.themeBackground,
+              }}
+            >
               {filterData.map((item, index) => (
                 <View key={index}>
                   <TouchableOpacity
@@ -668,6 +681,15 @@ function Restaurant(props) {
             </ScrollView>
           ) : (
             <AnimatedSectionList
+              style={{
+                flexGrow: 1,
+                zIndex: -1,
+                paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
+                marginTop: HEADER_MIN_HEIGHT
+              }}
+              contentContainerStyle={{
+                paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
+              }}
               ref={scrollRef}
               sections={updatedDeals}
               scrollEventThrottle={1}
@@ -681,7 +703,7 @@ function Restaurant(props) {
               }}
               onScroll={scrollHandler}
               keyExtractor={(item, index) => item + index}
-              contentContainerStyle={{ paddingBottom: 150 }}
+              // contentContainerStyle={{ paddingBottom: 150 }}
               renderSectionHeader={({ section: { title, data } }) => {
                 if (title === 'Popular') {
                   if (!dataList || dataList?.length === 0) {
@@ -877,7 +899,7 @@ function Restaurant(props) {
               </TouchableOpacity>
             </View>
           )}
-        </View>
+        </Animated.View>
       </SafeAreaView>
     </>
   )
