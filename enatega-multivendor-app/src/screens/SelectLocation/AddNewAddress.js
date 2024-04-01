@@ -130,7 +130,8 @@ export default function AddNewAddress(props) {
           deliveryAddress: selectedValue.address,
           latitude: selectedValue.latitude,
           longitude: selectedValue.longitude,
-          city: selectedValue.city
+          city: selectedValue.city,
+          prevScreen: props.route.params.prevScreen ? props.route.params.prevScreen : null
         }
       })
     }
