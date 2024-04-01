@@ -1,9 +1,10 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../../utils/scaling'
-import { textStyles } from '../../../utils/textStyles'
 import { alignment } from '../../../utils/alignment'
+import { textStyles } from '../../../utils/textStyles'
+
 const { height } = Dimensions.get('window')
-const windowWidth = Dimensions.get('window').width
+
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -13,7 +14,12 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
-      // height: height * 0.5
+      width: '100%',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0
+      // height: height * 0.3,
     },
 
     touchArea: {
@@ -43,8 +49,10 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      ...alignment.PTsmall
+      // alignItems: 'center',
+      ...alignment.PTsmall,
+      height: height * 0.07,
+      zIndex: 1
     },
 
     fixedIcons: {
@@ -54,7 +62,7 @@ const styles = (props = null) =>
       gap: 12
     },
     restaurantDetails: {
-      marginTop: scale(16)
+      marginTop: scale(8)
     },
 
     restaurantImg: {
@@ -85,24 +93,15 @@ const styles = (props = null) =>
       flexDirection: 'row',
       gap: scale(3),
       alignItems: 'center'
-      // marginTop: scale(15)
     },
 
-    // headerTitle: {
-    //   ...textStyles.H5,
-    //   ...textStyles.Bolder,
-    //   color: props != null ? props.black : 'black',
-    //   flex: 1,
-    //   textAlign: 'center'
-    // },
     flatListStyle: {
-      height: '10%',
+      height: '100%',
       width: '100%',
-      marginTop: scale(25)
-      // backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       // borderBottomLeftRadius: 25,
       // borderBottomRightRadius: 25,
-      // zIndex: 2
+      zIndex: 2
     },
     headerContainer: {
       height: '100%',
@@ -119,14 +118,28 @@ const styles = (props = null) =>
     },
     heading: {
       fontWeight: 'bold'
+    },
+    overlayContainer: {
+      position: 'absolute',
+      top: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0,0,0,0.01)',
+      ...alignment.PRsmall,
+      ...alignment.PLsmall
+    },
+    headerTitle: {
+      ...textStyles.H5,
+      ...textStyles.Bolder,
+      color: props != null ? props.newFontcolor : 'black',
+      flex: 1,
+      textAlign: 'center'
+    },
+    center: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
     }
-    // navbarTextContainer: {
-    //   display: 'flex',
-    //   flex: 1,
-    //   flexDirection: 'row',
-    //   height: '100%',
-    //   justifyContent: 'center',
-    //   alignItems: 'center'
-    // }
   })
 export default styles
