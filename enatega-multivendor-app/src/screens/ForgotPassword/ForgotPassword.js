@@ -114,7 +114,7 @@ function ForgotPassword(props) {
               <TextDefault H4 textColor={currentTheme.black} bold>
                 {loading ? (
                   <Spinner
-                  backColor={currentTheme.themeBackground}
+                  backColor='transparent'
                   spinnerColor={currentTheme.white}
                     size="small"
                   />

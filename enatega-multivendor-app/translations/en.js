@@ -539,7 +539,7 @@ enterAmount: 'ENTER AMOUNT',
 applyVoucher: 'Apply a Voucher',
 inputCode: 'Input Code',
 AddTip:'Add Tip',
-permanentDeleteMessage: 'Are you sure you want to delete your account? This action cannot be undone. Deleting your account will permanently remove all of your data, including your orders and preferences. If you proceed, you will lose access to your account and its benefits',
+permanentDeleteMessage: 'Are you sure you want to delete your account? This action cannot be undone. Deleting your account will permanently remove all of your data, including your orders and preferences. If you proceed, you will lose access to your account and its benefits.',
 yesSure:"Yes, I'm Sure",
 noDelete:"No, Don't Delete it",
 }
