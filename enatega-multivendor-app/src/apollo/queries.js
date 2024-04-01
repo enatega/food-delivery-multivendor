@@ -822,6 +822,7 @@ export const orderFragment = `fragment NewOrder on Order {
   deliveryAddress{
     location{coordinates}
     deliveryAddress
+    id
   }
   items{
     _id
