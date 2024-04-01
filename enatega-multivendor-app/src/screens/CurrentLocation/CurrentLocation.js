@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TouchableOpacity, Linking } from 'react-native'
+import { View, TouchableOpacity, Linking, Platform, StatusBar } from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -29,7 +29,12 @@ export default function CurrentLocation() {
     }
     Track()
   }, [])
-
+  useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(currentTheme.white)
+    }
+    StatusBar.setBarStyle( 'dark-content')
+  })
   const initialRegion = {
     latitude: 31.0461,
     longitude: 34.8516,
@@ -72,7 +77,7 @@ export default function CurrentLocation() {
         style={[
           styles().flex,
           {
-            backgroundColor: currentTheme.headerBackground,
+            backgroundColor: currentTheme.themeBackground,
             paddingTop: inset.top
           }
         ]}>
@@ -86,7 +91,7 @@ export default function CurrentLocation() {
               <Marker coordinate={markerCoordinate} />
             </MapView>
           </View>
-          <View style={styles().subContainerImage}>
+          <View style={styles(currentTheme).subContainerImage}>
             <TextDefault
               textColor={currentTheme.fontMainColor}
               center
@@ -117,19 +122,19 @@ export default function CurrentLocation() {
               {loading && (
                 <Spinner
                   size={'small'}
-                  backColor={currentTheme.themeBackground}
-                  spinnerColor={currentTheme.main}
+                  backColor={'trasnparent'}
+                  spinnerColor={currentTheme.white}
                 />
               )}
             </TouchableOpacity>
 
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles().linkButton}
+              style={styles(currentTheme).linkButton}
               onPress={() => {
                 navigation.navigate('SelectLocation')
               }}>
-              <TextDefault textColor={currentTheme.black} H5 center>
+              <TextDefault textColor={currentTheme.fontMainColor} H5 center>
                 {t('selectAnotherLocation')}
               </TextDefault>
             </TouchableOpacity>

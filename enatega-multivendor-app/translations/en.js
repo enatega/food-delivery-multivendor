@@ -256,7 +256,7 @@ export const en = {
   ContinueWithGoogle: 'Continue with Google',
   ContinueWithEmail: 'Continue with Email',
   Cancel: 'Cancel',
-  DeleteAccount: 'Delete Account',
+  DeleteAccount: 'Delete my Account',
   DeleteConfirmation: 'Are you Sure you want to delete Account?',
   chatWithRider: "Let's Chat with rider",
   yourOrderIs: 'Your order is',
@@ -538,5 +538,8 @@ review: 'Review',
 enterAmount: 'ENTER AMOUNT',
 applyVoucher: 'Apply a Voucher',
 inputCode: 'Input Code',
-AddTip:'Add Tip'
+AddTip:'Add Tip',
+permanentDeleteMessage: 'Are you sure you want to delete your account? This action cannot be undone. Deleting your account will permanently remove all of your data, including your orders and preferences. If you proceed, you will lose access to your account and its benefits',
+yesSure:"Yes, I'm Sure",
+noDelete:"No, Don't Delete it",
 }

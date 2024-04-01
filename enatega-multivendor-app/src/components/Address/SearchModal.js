@@ -116,9 +116,9 @@ export default function SearchModal({
           styles(currentTheme).modalContainer, marginTop, borderTopLeftRadius, borderTopRightRadius,
         ]}>
         <TouchableOpacity style={styles().modalTextBtn} onPress={close}>
-          <CloseIcon />
+          <CloseIcon fill={currentTheme.newIconColor}/>
         </TouchableOpacity>
-        <TextDefault bold H4>
+        <TextDefault bold H4 textColor={currentTheme.newFontcolor}>
           {t('searchAddress')}
         </TextDefault>
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
@@ -141,21 +141,29 @@ export default function SearchModal({
               key: GOOGLE_MAPS_KEY,
               language: 'en' // language of the results
             }}
+            textInputProps={{
+              placeholderTextColor: currentTheme.fontMainColor,
+            }}
             styles={{
+              
               description: {
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                color: currentTheme.black,
               },
               predefinedPlacesDescription: {
                 color: '#1faadb'
               },
               textInputContainer: {
                 borderWidth: 1,
-                borderColor: currentTheme.tagColor,
-                ...alignment.PRxSmall,
-                padding: 5
+                borderColor: currentTheme.verticalLine,
+                borderRadius:scale(6),
+                backgroundColor:currentTheme.themeBackground,
               },
               textInput: {
-                ...alignment.MLxSmall
+                ...alignment.MTxSmall,
+                color: currentTheme.newFontcolor,
+                backgroundColor:currentTheme.themeBackground,
+
               }
             }}
             nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
