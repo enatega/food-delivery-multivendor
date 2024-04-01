@@ -58,9 +58,11 @@ function MyOrders(props) {
   }, [])
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.themeBackground)
+      StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle(
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    )
   })
   useEffect(() => {
     props.navigation.setOptions({
@@ -70,7 +72,7 @@ function MyOrders(props) {
           truncatedLabel=""
           backImage={() => (
             <View style={styles().backButton}>
-              <MaterialIcons name="arrow-back" size={25} color="black" />
+              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -81,7 +83,7 @@ function MyOrders(props) {
       headerTitle: t('titleOrders'),
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: '#000',
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -92,7 +94,7 @@ function MyOrders(props) {
         marginLeft: 0
       },
       headerStyle: {
-        backgroundColor: currentTheme.white,
+        backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       }
     })
@@ -110,7 +112,7 @@ function MyOrders(props) {
           <TextDefault
             H4
             bold
-            textColor={isSelected ? currentTheme.black : currentTheme.gray500}>
+            textColor={isSelected ? currentTheme.newFontcolor : currentTheme.gray500}>
             {t(text)}
           </TextDefault>
         </TouchableOpacity>

@@ -36,13 +36,12 @@ const styles = (props = null) =>
     },
     dealContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.cartContainer : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       borderRadius: scale(10),
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },
     totalOrder: {
-      color: props != null ? props.fontNewColor : '#6B7280',
       marginBottom: scale(12)
     },
     termsContainer: {
@@ -134,7 +133,7 @@ const styles = (props = null) =>
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: '#000',
+      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -217,7 +216,7 @@ const styles = (props = null) =>
       padding: 12
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+      backgroundColor: props != null ? props.gray : '#B8B8B8'
     },
     height100: {
       height: 100

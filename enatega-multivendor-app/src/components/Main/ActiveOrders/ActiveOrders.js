@@ -52,22 +52,19 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   if (!displayOrders.length) return null
   const order = displayOrders[0]
   const remainingTime = calulateRemainingTime(order)
+  const modalStyle = {
+    borderWidth: StyleSheet.hairlineWidth,  
+    backgroundColor: currentTheme.themeBackground,
+   
+  };
 
   return (
-    <Modalize
-      alwaysOpen={MODAL_HEIGHT}
-      withHandle={false}
-      modalHeight={MODAL_HEIGHT}
-      modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}>
+    <Modalize alwaysOpen={MODAL_HEIGHT} withHandle={false} modalHeight={MODAL_HEIGHT} modalStyle={modalStyle}>
       <View style={{ marginTop: scale(20), marginHorizontal: scale(10) }}>
         <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-          <TextDefault Regular textColor={currentTheme.gray600}>
-            {t('estimatedDeliveryTime')}
-          </TextDefault>
+          <TextDefault Regular textColor={currentTheme.fontGrayNew}>{t('estimatedDeliveryTime')}</TextDefault>
           <TouchableOpacity onPress={() => onPressDetails(order)}>
-            <TextDefault textColor={currentTheme.gray700} bolder>
-              {t('details')}
-            </TextDefault>
+            <TextDefault textColor={currentTheme.gray700} bolder>{t('details')}</TextDefault>
           </TouchableOpacity>
         </View>
         <View style={{ marginTop: scale(10) }}>
@@ -92,6 +89,7 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
         </View>
       </View>
     </Modalize>
+    
   )
 }
 

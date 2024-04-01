@@ -1,6 +1,8 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
+import { textStyles } from '../../../utils/textStyles'
+
 const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
@@ -9,7 +11,7 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: '#fff',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       width: '100%',
@@ -21,6 +23,7 @@ const styles = (props = null) =>
     },
 
     touchArea: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(20)
@@ -69,7 +72,6 @@ const styles = (props = null) =>
     },
     restaurantAbout: {
       fontSize: scale(14),
-      color: '#6B7280',
       fontWeight: '500'
     },
     fixedText: {
@@ -125,6 +127,19 @@ const styles = (props = null) =>
       backgroundColor: 'rgba(0,0,0,0.01)',
       ...alignment.PRsmall,
       ...alignment.PLsmall
+    },
+    headerTitle: {
+      ...textStyles.H5,
+      ...textStyles.Bolder,
+      color: props != null ? props.black : 'black',
+      flex: 1,
+      textAlign: 'center'
+    },
+    center: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   })
 export default styles

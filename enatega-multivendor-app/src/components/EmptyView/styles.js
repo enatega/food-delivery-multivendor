@@ -26,7 +26,7 @@ const styles = (props = null) =>
     emptyButton: {
       width: '60%',
       height: scale(40),
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props.main : 'transparent',
       borderRadius: scale(10),
       justifyContent: 'center',
       alignItems: 'center',

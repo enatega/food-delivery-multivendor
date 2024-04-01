@@ -157,7 +157,6 @@ function Settings(props) {
   }, [props.navigation, languageName])
 
   async function deactivatewithemail() {
-    console.log('Calling deactivatewithemail')
     try {
       await deactivated({
         variables: { isActive: false, email: profile.email }
@@ -178,7 +177,7 @@ function Settings(props) {
       const permission = await getPermission()
       if (permission === 'granted') {
         if (!profile.notificationToken) {
-          token = await Notifications.getExpoPushTokenAsync()
+          token = await Notifications.getExpoPushTokenAsync({  projectId: Constants.expoConfig.extra.eas.projectId})
           uploadToken({ variables: { token: token.data } })
         }
         offerNotificationSetter(profile.isOfferNotification)
@@ -222,7 +221,6 @@ function Settings(props) {
 
   async function selectLanguage() {
     const lang = await AsyncStorage.getItem('enatega-language')
-    console.log(lang)
     if (lang) {
       const defLang = languageTypes.findIndex(el => el.code === lang)
       const langName = languageTypes[defLang].value

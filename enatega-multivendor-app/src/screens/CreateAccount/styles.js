@@ -77,7 +77,7 @@ const styles = (props = null) =>
     },
     buttonBackground: {
       width: '100%',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props.newFontcolor : '#000',
       alignItems: 'center'
     },
     appleBtn: {
@@ -92,7 +92,7 @@ const styles = (props = null) =>
     line: {
       flex: 1,
       height: 1,
-      backgroundColor: props !== null ? props.horizontalLine : '#9B9A9A'
+      backgroundColor: props !== null ? props.color6 : '#9B9A9A'
     },
     guestButton: {
       width: '90%',
@@ -106,7 +106,7 @@ const styles = (props = null) =>
       justifyContent: 'space-evenly',
       borderRadius: scale(28),
       borderWidth: scale(1),
-      borderBottomColor: '#000'
+      borderColor: props !== null ? props.newIconColor : '#9B9A9A'
     }
   })
 export default styles

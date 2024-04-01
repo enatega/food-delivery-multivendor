@@ -18,8 +18,6 @@ const styles = (props = null) =>
       borderColor: 'grey',
       justifyContent: 'space-between',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      shadowColor: '#00000026',
-      shadowRadius: 11,
       ...alignment.PTsmall
     },
     upperContainer: {
@@ -42,11 +40,6 @@ const styles = (props = null) =>
     addressContainer: {
       paddingTop: 0,
       width: '100%',
-      //shadowOffset: { width: 0, height: scale(2) },
-      shadowColor: props !== null ? props.verticalLine : '#D1D5DB',
-      shadowOpacity: 0.3,
-      shadowRadius: scale(1),
-      elevation: 5
     },
     addressTag: {
       ...alignment.MTmedium

@@ -3,7 +3,7 @@ import {
   View,
   Dimensions,
   Text,
-  TouchableOpacity,
+  // TouchableOpacity,
   Image,
   FlatList,
   ScrollView,
@@ -23,7 +23,11 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
-import { BorderlessButton, RectButton } from 'react-native-gesture-handler'
+import {
+  BorderlessButton,
+  RectButton,
+  TouchableOpacity
+} from 'react-native-gesture-handler'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
@@ -47,6 +51,7 @@ import Animated, {
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
 const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
@@ -221,16 +226,8 @@ function ImageTextCenterHeader(props, ref) {
   }
 
   return (
-    // <TouchableWithoutFeedback onPress={hideKeyboard}>
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
-      <Animated.View
-        style={[
-          headerHeightWithoutTopbar,
-          {
-            backgroundColor: 'white'
-          }
-        ]}
-      >
+      <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
           <View style={styles().fixedViewNavigation}>
             <View style={styles().backIcon}>
@@ -240,7 +237,7 @@ function ImageTextCenterHeader(props, ref) {
                   style={[
                     styles().touchArea,
                     {
-                      backgroundColor: props.iconBackColor,
+                      backgroundColor: props.themeBackground,
                       borderRadius: props.iconRadius,
                       height: props.iconTouchHeight
                     }
@@ -249,10 +246,8 @@ function ImageTextCenterHeader(props, ref) {
                 >
                   <Entypo
                     name='cross'
-                    style={{
-                      color: props.black,
-                      fontSize: props.iconSize
-                    }}
+                    color={currentTheme.newIconColor}
+                    size={scale(17)}
                   />
                 </AnimatedBorderless>
               ) : (
@@ -261,21 +256,36 @@ function ImageTextCenterHeader(props, ref) {
                   style={[
                     styles().touchArea,
                     {
-                      backgroundColor: props.iconBackColor,
+                      backgroundColor: props.themeBackground,
                       borderRadius: props.iconRadius,
                       height: props.iconTouchHeight
                     }
                   ]}
                   onPress={() => navigation.goBack()}
                 >
-                  <Ionicons
+                  {/* <Ionicons
                     name='ios-arrow-back'
                     style={{
                       color: props.black,
                       fontSize: props.iconSize
                     }}
+                  /> */}
+                  <Ionicons
+                    name='arrow-back'
+                    color={currentTheme.newIconColor}
+                    size={scale(17)}
                   />
                 </AnimatedBorderless>
+              )}
+            </View>
+            <View style={styles().center}>
+              {!props.searchOpen && (
+                <AnimatedText
+                  numberOfLines={1}
+                  style={[styles(currentTheme).headerTitle, minutesOpacity]}
+                >
+                  {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
+                </AnimatedText>
               )}
             </View>
             <View style={styles().fixedIcons}>
@@ -297,7 +307,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles().touchArea,
                       {
-                        backgroundColor: props.iconBackColor,
+                        backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -315,7 +325,7 @@ function ImageTextCenterHeader(props, ref) {
                         <AntDesign
                           name={heart ? 'heart' : 'hearto'}
                           size={scale(15)}
-                          color={currentTheme.iconColorDark}
+                          color={currentTheme.newIconColor}
                         />
                       )}
                     </View>
@@ -325,7 +335,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles().touchArea,
                       {
-                        backgroundColor: props.iconBackColor,
+                        backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -340,15 +350,15 @@ function ImageTextCenterHeader(props, ref) {
                     <SimpleLineIcons
                       name='info'
                       size={scale(17)}
-                      color={currentTheme.iconColorDark}
+                      color={currentTheme.newIconColor}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     style={[
-                      styles().touchArea,
+                      styles(currentTheme).touchArea,
                       {
-                        backgroundColor: props.iconBackColor,
+                        backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -360,148 +370,176 @@ function ImageTextCenterHeader(props, ref) {
                       style={{
                         fontSize: props.iconSize
                       }}
-                      color={currentTheme.iconColorDark}
+                      color={currentTheme.newIconColor}
                     />
                   </TouchableOpacity>
                 </>
               )}
             </View>
           </View>
-          <Animated.View style={[styles().restaurantDetails, opacity]}>
-            <Animated.View
-              style={[
-                {
+          {!props.search && !props.loading && (
+            <Animated.View style={[styles().restaurantDetails, opacity]}>
+              <Animated.View
+                style={[
+                  {
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: scale(15),
+                    marginBottom: scale(20)
+                  }
+                ]}
+              >
+                <View style={[styles().restImageContainer]}>
+                  <Image
+                    resizeMode='cover'
+                    source={{ uri: aboutObject.restaurantImage }}
+                    style={[styles().restaurantImg]}
+                  />
+                </View>
+                <View style={styles().restaurantTitle}>
+                  <TextDefault
+                    H4
+                    bolder
+                    Center
+                    textColor={currentTheme.fontMainColor}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {aboutObject.restaurantName}
+                  </TextDefault>
+                </View>
+              </Animated.View>
+              <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  {distance.toFixed(2)}km {t('away')}
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  |
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  ${aboutObject.restaurantTax} {t('deliveryCharges')}
+                </TextDefault>
+              </View>
+              <View
+                style={{
                   display: 'flex',
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: scale(15),
-                  marginBottom: scale(20)
-                }
-              ]}
-            >
-              <View style={[styles().restImageContainer]}>
-                <Image
-                  resizeMode='cover'
-                  source={{ uri: aboutObject.restaurantImage }}
-                  style={[styles().restaurantImg]}
-                />
-              </View>
-              <View style={styles().restaurantTitle}>
+                  gap: 7,
+                  marginTop: scale(5)
+                }}
+              >
                 <TextDefault
-                  H4
-                  bolder
-                  Center
+                  style={styles().restaurantAbout}
                   textColor={currentTheme.fontMainColor}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
                 >
-                  {aboutObject.restaurantName}
+                  ${aboutObject.restaurantMinOrder} {t('minimum')}
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  |
+                </TextDefault>
+                <TextDefault
+                  style={styles().restaurantAbout}
+                  textColor={currentTheme.fontMainColor}
+                >
+                  {t('serviceFeeApply')}
+                </TextDefault>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: scale(15)
+                }}
+              >
+                <AnimatedTouchable
+                  activeOpacity={0.7}
+                  style={styles().ratingBox}
+                  onPress={() => {
+                    navigation.navigate('Reviews', {
+                      restaurantObject: { ...aboutObject, isOpen: null },
+                      tab: false
+                    })
+                  }}
+                >
+                  <MaterialIcons
+                    name='star-border'
+                    size={scale(20)}
+                    color={currentTheme.newIconColor}
+                  />
+
+                  <TextDefault
+                    textColor={currentTheme.fontNewColor}
+                    style={{
+                      fontWeight: '700',
+                      fontSize: scale(16)
+                    }}
+                  >
+                    {aboutObject.average}
+                  </TextDefault>
+                  <TextDefault
+                    textColor={currentTheme.fontNewColor}
+                    style={{
+                      fontWeight: '400',
+                      fontSize: scale(14),
+                      marginLeft: scale(5)
+                    }}
+                  >
+                    ({aboutObject.total})
+                  </TextDefault>
+                </AnimatedTouchable>
+                <AnimatedTouchable
+                  activeOpacity={0.7}
+                  style={styles().ratingBox}
+                  disabled={props.loading}
+                  onPress={() => {
+                    navigation.navigate('Reviews', {
+                      restaurantObject: { ...aboutObject, isOpen: null },
+                      tab: false
+                    })
+                  }}
+                >
+                  <TextDefault
+                    textColor={currentTheme.editProfileButton}
+                    style={{
+                      fontSize: scale(14),
+                      fontWeight: '600'
+                    }}
+                  >
+                    {t('seeReviews')}
+                  </TextDefault>
+                </AnimatedTouchable>
+              </View>
+              <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
+                <MaterialIcons
+                  name='timer'
+                  size={scale(20)}
+                  color={currentTheme.newIconColor}
+                />
+                <TextDefault
+                  textColor={currentTheme.fontNewColor}
+                  style={{
+                    fontWeight: '400',
+                    fontSize: scale(14)
+                  }}
+                >
+                  {aboutObject.deliveryTime} {t('Min')}
                 </TextDefault>
               </View>
             </Animated.View>
-            <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-              <Text style={styles().restaurantAbout}>
-                {distance.toFixed(2)}km {t('away')}
-              </Text>
-              <Text style={styles().restaurantAbout}>|</Text>
-              <Text style={styles().restaurantAbout}>
-                ${aboutObject.restaurantTax} {t('deliveryCharges')}
-              </Text>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 7,
-                marginTop: scale(5)
-              }}
-            >
-              <Text style={styles().restaurantAbout}>
-                ${aboutObject.restaurantMinOrder} {t('minimum')}
-              </Text>
-              <Text style={styles().restaurantAbout}>|</Text>
-              <Text style={styles().restaurantAbout}>
-                {t('serviceFeeApply')}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: scale(15)
-              }}
-            >
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles().ratingBox}
-                onPress={() => {
-                  navigation.navigate('Reviews', {
-                    restaurantObject: { ...aboutObject, isOpen: null },
-                    tab: false
-                  })
-                }}
-              >
-                <MaterialIcons
-                  name='star-border'
-                  size={scale(20)}
-                  color='#111827'
-                />
-
-                <Text
-                  style={{
-                    fontWeight: '700',
-                    fontSize: scale(16),
-                    color: '#374151'
-                  }}
-                >
-                  {aboutObject.average}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '400',
-                    fontSize: scale(14),
-                    color: '#6B7280',
-                    marginLeft: scale(5)
-                  }}
-                >
-                  ({aboutObject.total})
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles().ratingBox}
-                disabled={props.loading}
-                onPress={() =>
-                  navigation.navigate('Reviews', {
-                    restaurantObject: { ...aboutObject, isOpen: null },
-                    tab: false
-                  })
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: scale(14),
-                    fontWeight: '600',
-                    color: '#3B82F6'
-                  }}
-                >
-                  {t('seeReviews')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-              <MaterialIcons name='timer' size={scale(20)} color='#111827' />
-              <Text
-                style={{
-                  fontWeight: '400',
-                  fontSize: scale(14),
-                  color: '#6B7280'
-                }}
-              >
-                {aboutObject.deliveryTime} {t('Min')}
-              </Text>
-            </View>
-          </Animated.View>
+          )}
         </Animated.View>
       </Animated.View>
 
@@ -539,7 +577,9 @@ function ImageTextCenterHeader(props, ref) {
                             : textStyles.H5
                         }
                         textColor={
-                          props.selectedLabel === index ? '#111827' : '#6B7280'
+                          props.selectedLabel === index
+                            ? currentTheme.fontFourthColor
+                            : currentTheme.gray500
                         }
                         center
                         H5
@@ -555,7 +595,6 @@ function ImageTextCenterHeader(props, ref) {
         </>
       )}
     </Animated.View>
-    // </TouchableWithoutFeedback>
   )
 }
 

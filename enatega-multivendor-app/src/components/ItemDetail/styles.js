@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 import { scale } from '../../utils/scaling'
 export const styles = (props) => StyleSheet.create({
   actionContainerBtns: {
-    backgroundColor: 'black',
+    backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
     justifyContent: 'center',
     borderRadius: scale(12),
     alignItems: 'center',

@@ -521,7 +521,22 @@ export const en = {
   somethingWentWrong: 'Something went wrong',
   checkInternet: 'Check your internet connection',
   selectCity: 'Select City',
-Location:'Location',
+  Location: 'Location',
   phoneNumberExist: 'Provided phone number already exist!',
-  phoneCheckingError: 'Error while checking phone number. Try again later!'
+  phoneCheckingError: 'Error while checking phone number. Try again later!',
+  cancelledOrder:
+  'Your order is cancelled. If you have any questions, please reach out to our support team.',
+addMore: 'Would you like to add these?',
+howWasOrder: 'How was your order?',
+tellAboutExp: 'Tell others about your experience with',
+typeHere:'Type Here',
+review: 'Review',
+  Logout: 'Logout',
+  LoggingOut: 'Logging out?',
+  SeeYouAgainSoon: 'See you again soon!',
+  enterCode: 'ENTER CODE',
+enterAmount: 'ENTER AMOUNT',
+applyVoucher: 'Apply a Voucher',
+inputCode: 'Input Code',
+AddTip:'Add Tip'
 }

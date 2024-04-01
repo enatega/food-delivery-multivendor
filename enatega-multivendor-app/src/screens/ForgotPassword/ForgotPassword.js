@@ -42,6 +42,7 @@ function ForgotPassword(props) {
     props.navigation.setOptions(
       screenOptions({
         backColor: currentTheme.themeBackground,
+        iconColor:currentTheme.newIconColor,
         navigation: props.navigation
       })
     )
@@ -61,14 +62,14 @@ function ForgotPassword(props) {
             <Feather
               name="lock"
               size={30}
-              color={currentTheme.fontFourthColor}
+              color={currentTheme.newIconColor}
             />
           </View>
           <View>
             <TextDefault
               H3
               bolder
-              textColor={currentTheme.fontfourthColor}
+              textColor={currentTheme.newFontcolor}
               style={{
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
@@ -110,11 +111,11 @@ function ForgotPassword(props) {
               activeOpacity={0.7}
               style={styles(currentTheme).btn}
               onPress={() => forgotPassword()}>
-              <TextDefault H4 textColor={currentTheme.fontFourthColor} bold>
+              <TextDefault H4 textColor={currentTheme.black} bold>
                 {loading ? (
                   <Spinner
-                    backColor={currentTheme.backgroundColor}
-                    spinnerColor={currentTheme.white}
+                  backColor={currentTheme.themeBackground}
+                  spinnerColor={currentTheme.white}
                     size="small"
                   />
                 ) : (

@@ -6,7 +6,7 @@ const styles = (props = null) =>
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       padding: scale(10),
       marginBottom: scale(10)
     },
@@ -14,7 +14,7 @@ const styles = (props = null) =>
       paddingHorizontal: 15,
       paddingVertical: 10,
       borderRadius: scale(20),
-      backgroundColor: props !== null ? props.lightHorizontalLine : '#f0f0f0',
+      backgroundColor: props !== null ? props.filtersBg : '#f0f0f0',
       marginRight: scale(10)
     },
     selectedFilterButton: {
@@ -23,24 +23,23 @@ const styles = (props = null) =>
     filterText: {
       fontSize: 20,
       fontWeight: 'bold',
-      color: '#000',
+      color: props !== null ? props.newFontcolor : '#90E36D',
       marginRight: scale(10)
     },
     filterButtonText: {
       fontSize: 14,
-      color: props !== null ? props.fontFourthColor : '#fff',
       marginRight: scale(10)
     },
     itemContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: 2,
+      paddingVertical: scale(2),
       rowGap: scale(10)
     },
     modalContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       paddingTop: scale(20),
       paddingHorizontal: scale(20)
     },
@@ -48,7 +47,9 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingTop: scale(40),
-      paddingHorizontal: scale(18)
+      paddingHorizontal: scale(18),
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
+
     },
     modalTitle: {
       fontSize: 18,
@@ -63,7 +64,7 @@ const styles = (props = null) =>
     },
     modalItemText: {
       fontSize: 16,
-      color: props !== null ? props.black : '#000'
+      
     },
     saveBtnContainer: {
       width: '100%',

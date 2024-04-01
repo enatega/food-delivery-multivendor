@@ -130,11 +130,19 @@ function Restaurant(props) {
   const searchPopupHandler = () => {
     setSearchOpen(!searchOpen)
     setSearch('')
+    translationY.value = 0
   }
 
   useEffect(() => {
     if (search === '') {
-      setFilterData([])
+      // setFilterData([])
+      const filteredData = []
+      deals?.forEach((category) => {
+        category.data.forEach((deals) => {
+          filteredData.push(deals)
+        })
+      })
+      setFilterData(filteredData)
       setShowSearchResults(false)
     } else if (deals) {
       const regex = new RegExp(search, 'i')
@@ -421,7 +429,7 @@ function Restaurant(props) {
     }
   }
 
-  const iconColor = currentTheme.iconColorPink
+  const iconColor = currentTheme.white
 
   const iconBackColor = currentTheme.white
 
@@ -484,11 +492,10 @@ function Restaurant(props) {
           searchPopupHandler={searchPopupHandler}
           translationY={translationY}
         />
-
-        <View
+<View
           style={[
-            styles().navbarContainer,
-            styles().flex,
+            styles(currentTheme).navbarContainer,
+            styles(currentTheme).flex,
             {
               paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
             }
@@ -500,7 +507,7 @@ function Restaurant(props) {
               Animation={(props) => (
                 <Fade
                   {...props}
-                  style={{ backgroundColor: currentTheme.fontSecondColor }}
+                  style={{ backgroundColor: currentTheme.gray }}
                   duration={600}
                 />
               )}
@@ -514,6 +521,7 @@ function Restaurant(props) {
             </Placeholder>
           ))}
         </View>
+
       </View>
     )
   }
@@ -570,8 +578,14 @@ function Restaurant(props) {
             translationY={translationY}
           />
 
-          {showSearchResults ? (
-            <ScrollView>
+          {showSearchResults || searchOpen ? (
+            <ScrollView
+              style={{
+                flexGrow: 1,
+                marginTop: TOP_BAR_HEIGHT,
+                backgroundColor: currentTheme.themeBackground,
+              }}
+            >
               {filterData.map((item, index) => (
                 <View key={index}>
                   <TouchableOpacity
@@ -655,7 +669,7 @@ function Restaurant(props) {
                         <MaterialIcons
                           name='add'
                           size={scale(20)}
-                          color='#fff'
+                          color={currentTheme.black}
                         />
                       </View>
                     </View>
@@ -696,17 +710,16 @@ function Restaurant(props) {
                     return null // Don't render the section header if dataList is empty
                   }
                   return (
-                    <View style={{ backgroundColor: '#fff' }}>
+                    <View style={styles(currentTheme).restaurantItems}>
                       <TextDefault
                         style={styles(currentTheme).sectionHeaderText}
                         textColor={currentTheme.fontFourthColor}
-                        bolder
-                      >
+                        bolder>
                         {title}
                       </TextDefault>
                       <TextDefault
                         textColor={currentTheme.fontFourthColor}
-                        style={{
+                        style={{                        
                           ...alignment.PLmedium,
                           ...alignment.PRmedium,
                           fontSize: scale(12),
@@ -732,12 +745,11 @@ function Restaurant(props) {
                 }
                 // Render other section headers as usual
                 return (
-                  <View style={{ backgroundColor: '#fff' }}>
+                  <View style={styles(currentTheme).sectionHeader}>
                     <TextDefault
                       style={styles(currentTheme).sectionHeaderText}
                       textColor={currentTheme.fontFourthColor}
-                      bolder
-                    >
+                      bolder>
                       {title}
                     </TextDefault>
                   </View>
@@ -830,11 +842,11 @@ function Restaurant(props) {
                           </View>
                         </View>
                       </View>
-                      <View style={styles().addToCart}>
+                      <View style={styles(currentTheme).addToCart}>
                         <MaterialIcons
                           name='add'
                           size={scale(20)}
-                          color='#fff'
+                          color={currentTheme.themeBackground}
                         />
                       </View>
                     </View>

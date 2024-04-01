@@ -10,7 +10,7 @@ const styles = (props = null) =>
     safeAreaViewStyles: {
       flex: 1,
       backgroundColor:
-        props !== null ? props.headerBackgroundTwo : 'transparent'
+        props !== null ? props.themeBackground : 'transparent'
     },
     mainContainer: {
       flex: 1,
@@ -57,8 +57,9 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.borderColor : '#efefef',
       borderWidth: scale(1),
       borderRadius: scale(6),
-      backgroundColor: props !== null ? props.white : 'white',
-      padding: scale(12)
+      backgroundColor: props !== null ? props.themeBackground : 'white',
+      padding: scale(12),
+      color: props !==null ? props.newFontcolor : 'red'
     },
     errorInput: {
       backgroundColor: props !== null ? props.errorInputBack : '#F7E7E5',

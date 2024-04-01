@@ -5,7 +5,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.white : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     backButton: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
@@ -17,7 +17,7 @@ const styles = (props = null) =>
     mainContainer: {
       ...alignment.Msmall,
       marginTop: scale(5),
-      backgroundColor: props !== null ? props.white : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
       gap: scale(10)
     },
     itemContainer: {

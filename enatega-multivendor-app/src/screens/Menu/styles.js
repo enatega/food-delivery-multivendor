@@ -9,12 +9,19 @@ const styles = (props = null) =>
       flex: 1
     },
     screenBackground: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF'
+      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      
     },
+    searchbar:{
+      ...alignment.PBmedium,
+      backgroundColor: props != null ? props.main : '#FFF',
+
+    },
+
     mainContentContainer: {
       width: '100%',
       height: '100%',
-      alignSelf: 'center'
+      alignSelf: 'center',
     },
 
     ML20: {
@@ -106,7 +113,7 @@ const styles = (props = null) =>
       height: scale(200)
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+      backgroundColor: props != null ? props.gray : '#B8B8B8'
     },
     emptyViewContainer: {
       flex: 1,
@@ -114,7 +121,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: props !== null ? props.color8 : '#000',
       borderRadius: scale(10),
       width: '85%',
       height: verticalScale(130),

@@ -528,8 +528,25 @@ export const fr = {
   price: 'PRIX',
   itemsAndQuantity: 'ARTICLES ET QUANTITÉ',
   selectCity: 'Sélectionner une ville',
-  Location:'Lieu',
+  Location: 'Lieu',
   phoneNumberExist: 'Le numéro de téléphone fourni existe déjà !',
   phoneCheckingError:
-    'Erreur lors de la vérification du numéro de téléphone. Veuillez réessayer plus tard !'
+    'Erreur lors de la vérification du numéro de téléphone. Veuillez réessayer plus tard !',
+    cancelledOrder:'Votre commande a été annulée. Si vous avez des questions, veuillez contacter notre équipe de support.',
+    addMore: 'Souhaitez-vous ajouter ceci ?',
+howWasOrder: 'Comment s’est passée votre commande ?',
+tellAboutExp: 'Parlez-nous de votre expérience avec',
+typeHere: 'Tapez ici',
+review: 'Avis',
+somethingWentWrong: 'Il y a eu un problème',
+  checkInternet:'Vérifiez votre connexion à Internet' ,
+  Logout: 'Déconnexion',
+  LoggingOut: 'Déconnexion ?',
+  SeeYouAgainSoon: 'À bientôt !',
+  enterCode: 'SAISIR LE CODE',
+  enterAmount: 'SAISIR LE MONTANT',
+  applyVoucher: 'Appliquer un bon',
+  inputCode: 'Saisir le code',
+  AddTip:'Ajouter un pourboire'
+
 }

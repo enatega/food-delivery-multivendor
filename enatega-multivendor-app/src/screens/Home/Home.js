@@ -215,7 +215,8 @@ function Main(props) {
         {busy && (
           <Spinner
             size={'small'}
-            backColor={currentTheme.lightHorizontalLine}
+            backColor={currentTheme.themeBackground}
+            
           />
         )}
       </View>

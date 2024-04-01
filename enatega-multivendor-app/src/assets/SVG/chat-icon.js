@@ -1,15 +1,18 @@
 import * as React from 'react'
+import { useContext } from 'react'
 import Svg, { Path } from 'react-native-svg'
+
 const ChatIcon = (props) => (
+  
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     width={24}
     height={24}
-    fill="none"
+    fill={props.fill}
     {...props}
   >
     <Path
-      stroke="#0F172A"
+      stroke={props.stroke}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}

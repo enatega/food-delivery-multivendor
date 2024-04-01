@@ -27,7 +27,7 @@ function DrawerProfile(props) {
             }}>
             <TextDefault
               style={styles(currentTheme).alignLeft}
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.black}
               bold
               H5>
               {t('loginOrCreateAccount')}
@@ -43,7 +43,7 @@ function DrawerProfile(props) {
                 {profile.name.substr(0, 1).toUpperCase()}
               </TextDefault>
             </View>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder H2>
+            <TextDefault textColor={currentTheme.color4} bolder H2>
               {profile.name}
             </TextDefault>
           </View>
