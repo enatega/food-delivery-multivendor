@@ -131,7 +131,7 @@ const styles = (props = null) =>
     headerTitle: {
       ...textStyles.H5,
       ...textStyles.Bolder,
-      color: props != null ? props.black : 'black',
+      color: props != null ? props.newFontcolor : 'black',
       flex: 1,
       textAlign: 'center'
     },
