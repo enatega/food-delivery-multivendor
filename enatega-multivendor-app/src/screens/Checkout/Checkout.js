@@ -8,7 +8,8 @@ import {
   Platform,
   Alert,
   Text,
-  TextInput
+  TextInput,
+  Image
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -841,6 +842,49 @@ function Checkout(props) {
                     </TextDefault>
                   </View>
                 </View>
+
+                <View
+                  style={[
+                    styles(currentTheme).priceContainer,
+                    styles().pT10,
+                    styles().mB10,
+                    styles().pB10
+                  ]}>
+                  <View style={styles(currentTheme).imageContainer}>
+                    <View style={{ marginLeft: scale(10) }}>
+                      <Image
+                        resizeMode="cover"
+                        source={require('../../assets/images/delivery.png')}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        marginLeft: scale(20)
+                      }}>
+                      <TextDefault
+                        textColor={currentTheme.darkBgFont}
+                        style={{ padding: 5 }}
+                        bolder>
+                        {isPickedUp ? t('pickUp') : t('delivery')}{' '}
+                      </TextDefault>
+                      <TextDefault
+                        textColor={currentTheme.darkBgFont}
+                        style={{ padding: 5 }}
+                        bold>
+                        {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
+                      </TextDefault>
+                      <TouchableOpacity
+                        onPress={()=>onModalOpen(modalRef)}
+                        style={styles(currentTheme).cartInnerContainer}>
+                        <TextDefault bold textColor={'white'} center>
+                          {t('change')}
+                        </TextDefault>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+
+                
                 <View style={styles().tipSec}>
                   <View style={[styles().tipRow]}>
                     <TextDefault
@@ -919,47 +963,6 @@ function Checkout(props) {
                     </View>
                   )}
                 </View>
-
-                {/* <View
-                  style={[
-                    styles(currentTheme).priceContainer,
-                    styles().pT10,
-                    styles().mB10,
-                    styles().pB10
-                  ]}>
-                  <View style={styles(currentTheme).imageContainer}>
-                    <View style={{ marginLeft: scale(10) }}>
-                      <Image
-                        resizeMode="cover"
-                        source={require('../../assets/images/delivery.png')}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        marginLeft: scale(20)
-                      }}>
-                      <TextDefault
-                        textColor={currentTheme.darkBgFont}
-                        style={{ padding: 5 }}
-                        bolder>
-                        {isPickedUp ? t('pickUp') : t('delivery')}{' '}
-                      </TextDefault>
-                      <TextDefault
-                        textColor={currentTheme.darkBgFont}
-                        style={{ padding: 5 }}
-                        bold>
-                        {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
-                      </TextDefault>
-                      <TouchableOpacity
-                        onPress={onOpen}
-                        style={styles(currentTheme).cartInnerContainer}>
-                        <TextDefault bold textColor={'white'} center>
-                          {t('change')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View> */}
 
                 {isLoggedIn && profile && (
                   <>
@@ -1463,7 +1466,7 @@ function Checkout(props) {
         <Modalize
           ref={modalRef}
           modalStyle={styles(currentTheme).modal}
-          modalHeight={Platform.OS === 'android' ? 280 : 420}
+          modalHeight={Platform.OS === 'android' ? 300 : 420}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
           handlePosition='inside'
