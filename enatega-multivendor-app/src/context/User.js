@@ -49,6 +49,7 @@ export const UserProvider = props => {
   const { location, setLocation } = useContext(LocationContext)
   const [cart, setCart] = useState([])
   const [restaurant, setRestaurant] = useState(null)
+  const [isPickup, setIsPickup] = useState(false)
 
   const {
     called: calledProfile,
@@ -228,7 +229,9 @@ export const UserProvider = props => {
         restaurant,
         setCartRestaurant,
         refetchProfile,
-        networkStatus
+        networkStatus,
+        isPickup,
+        setIsPickup
       }}>
       {props.children}
     </UserContext.Provider>
