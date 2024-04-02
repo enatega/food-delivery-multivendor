@@ -18,7 +18,6 @@
       "bundleIdentifier": "multivendor.enatega.restaurant",
       "infoPlist": {
         "UIBackgroundModes": [
-          "audio",
           "remote-notification"
         ]
       }
