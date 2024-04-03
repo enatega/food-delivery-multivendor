@@ -27,7 +27,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^17.0.2",
-    "react-calendar": "^3.7.0",
+    "react-calendar": "^4.8.0",
     "react-dom": "^17.0.2",
     "react-geocode": "^0.2.2",
     "react-google-login": "^5.2.2",
