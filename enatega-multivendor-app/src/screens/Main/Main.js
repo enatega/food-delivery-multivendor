@@ -15,7 +15,8 @@ import {
   Image,
   ScrollView,
   Animated,
-  RefreshControl
+  RefreshControl,
+  ImageBackground
 } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import {
@@ -53,6 +54,7 @@ import ErrorView from '../../components/ErrorView/ErrorView'
 import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
 import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
+import Banner from '../../components/Main/Banner/Banner'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -310,6 +312,7 @@ function Main(props) {
 
   if (error) return <ErrorView />
 
+
   return (
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
@@ -366,6 +369,7 @@ function Main(props) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                   >
+                    <Banner />
                     <View style={styles().mainItemsContainer}>
                       <TouchableOpacity
                         style={styles().mainItem}
