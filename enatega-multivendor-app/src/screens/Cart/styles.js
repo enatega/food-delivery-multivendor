@@ -12,9 +12,9 @@ const styles = (props = null) =>
       ...alignment.PTsmall
     },
     locationContainer: {
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:'center'
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
 
     mB10: {
@@ -94,65 +94,63 @@ const styles = (props = null) =>
       borderBottomColor: props !== null ? props.black : 'black',
       borderBottomWidth: StyleSheet.hairlineWidth
     },
-    suggestedItems:{
-      paddingBottom:scale(30),
-      ...alignment.PLlarge,
+    suggestedItems: {
+      paddingBottom: scale(30),
+      ...alignment.PLlarge
     },
-    suggestItemDesciption:{
-      ...alignment.PRlarge,
+    suggestItemDesciption: {
+      ...alignment.PRlarge
     },
-    suggestItemImg:{
-      width: '100%', 
+    suggestItemImg: {
+      width: '100%',
       // aspectRatio: 18/8,
-      height:scale(70) 
+      height: scale(70)
     },
-    suggestItemContainer:{
-      borderWidth:1,
-      borderColor:'#D1D5DB',
-      borderRadius:12,
-      padding:scale(8),
+    suggestItemContainer: {
+      borderWidth: 1,
+      borderColor: '#D1D5DB',
+      borderRadius: 12,
+      padding: scale(8),
       width: scale(120),
-      marginTop:scale(14),
-      height: scale(160),
-      
+      marginTop: scale(14),
+      height: scale(160)
     },
-    suggestItemImgContainer:{
+    suggestItemImgContainer: {
       backgroundColor: '#F3F4F6',
-      borderWidth:1,
-      borderColor:'#E5E7EB',
-      borderRadius:8,
-      padding:scale(4),
+      borderWidth: 1,
+      borderColor: '#E5E7EB',
+      borderRadius: 8,
+      padding: scale(4)
     },
-    suggestItemName:{
-      marginVertical:scale(5)
+    suggestItemName: {
+      marginVertical: scale(5)
     },
-    suggestItemPrice:{
-      marginTop:scale(5)
+    suggestItemPrice: {
+      marginTop: scale(5)
     },
     addToCart: {
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
+      backgroundColor: props !== null ? props.newFontcolor : '#f0f0f0',
       justifyContent: 'center',
       alignItems: 'center'
     },
-    totalBillContainer:{
+    totalBillContainer: {
       width: '100%',
       height: '20%',
       backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
       ...alignment.PLlarge,
-      ...alignment.PRlarge,
-      
+      ...alignment.PRlarge
     },
-    cartAmount:{
-      width:'50%'
+    cartAmount: {
+      width: '50%'
     },
-    buttonContainer: {     
+    buttonContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center', 
-      paddingTop:scale(28)
+      alignItems: 'center',
+      paddingTop: scale(28)
     },
     button: {
       backgroundColor: '#111827',
@@ -160,7 +158,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       width: scale(140),
       height: scale(40),
-      borderRadius:40
+      borderRadius: 40
     },
 
     // totalBill:{
@@ -286,15 +284,10 @@ const styles = (props = null) =>
       display: 'flex',
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center'
     },
     cartInnerContainer: {
-      marginTop: 4,
-      padding: 6,
-      backgroundColor: props != null ? props.black : '#B8B8B8',
-      width: '50%',
-      borderRadius: 6
+      ...alignment.MTsmall
     },
     couponContainer: {
       flexDirection: 'row',
@@ -329,6 +322,26 @@ const styles = (props = null) =>
       width: '65%',
       display: 'flex',
       alignItems: 'flex-end'
+    },
+    locationIcon: {
+      backgroundColor: props != null ? props.newBorderColor : '#E5E7EB',
+      width: scale(30),
+      height: scale(30),
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: scale(10),
+      borderWidth: 1,
+      borderColor: props?.iconBackground || '#E5E7EB'
+    },
+    pickupButton: {
+      backgroundColor: props?.buttonBackground,
+      alignItems: 'center',
+      height: scale(35),
+      justifyContent: 'center',
+      borderRadius: scale(10),
+      width: '90%',
+      alignSelf: 'center'
     }
   })
 export default styles

@@ -12,7 +12,8 @@ import {
   StatusBar,
   LogBox,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  I18nManager
 } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import { exitAlert } from './src/utils/androidBackButton'
@@ -130,7 +131,12 @@ export default function App() {
 
   const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()
-
+  const shouldBeRTL = false;
+  if (shouldBeRTL !== I18nManager.isRTL && Platform.OS !== 'web') {
+    I18nManager.allowRTL(shouldBeRTL);
+    I18nManager.forceRTL(shouldBeRTL);
+    Updates.reloadAsync();
+  }
   // useEffect(() => {
   //   if (SENTRY_DSN) {
   //     Sentry.init({

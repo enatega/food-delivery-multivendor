@@ -1,6 +1,8 @@
 import { verticalScale, scale } from '../../utils/scaling'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+
+const height = Dimensions.get('window').height
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -307,7 +309,7 @@ const styles = (props = null) =>
       ...alignment.PRmedium
     },
     mapView: {
-      height: scale(119)
+      height: height/3
     },
     marker: {
       width: 50,

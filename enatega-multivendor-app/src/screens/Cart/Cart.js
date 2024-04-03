@@ -1,16 +1,23 @@
-/* eslint-disable indent */
-import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+  useRef
+} from 'react'
 import {
   View,
   ScrollView,
   TouchableOpacity,
   StatusBar,
   Platform,
-  Alert
+  Alert,
+  Image,
+  Text
 } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { AntDesign, EvilIcons, Feather } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import CartItem from '../../components/CartItem/CartItem'
 import { getTipping } from '../../apollo/queries'
@@ -35,7 +42,9 @@ import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import Location from '../../components/Main/Location/Location'
 import WouldYouLikeToAddThese from './Section'
-
+import moment from 'moment'
+import { Modalize } from 'react-native-modalize'
+import Pickup from '../../components/Pickup'
 // Constants
 const TIPPING = gql`
   ${getTipping}
@@ -52,18 +61,23 @@ function Cart(props) {
     cart,
     cartCount,
     addQuantity,
-    removeQuantity
+    removeQuantity,
+    isPickup,
+    setIsPickup
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const [loadingData, setLoadingData] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [minimumOrder, setMinimumOrder] = useState('')
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
-  const isCartEmpty = cart.length === 0
-  const cartLength = !isCartEmpty ? cart.length : 0
+
+  const [orderDate, setOrderDate] = useState(moment().add(5, 'minute'))
+  const isCartEmpty = cart?.length === 0
+  const cartLength = !isCartEmpty ? cart?.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
 
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
@@ -81,6 +95,7 @@ function Cart(props) {
       : null
 
   const [selectedTip, setSelectedTip] = useState()
+  const modalRef = useRef(null)
 
   useEffect(() => {
     if (tip) {
@@ -135,8 +150,7 @@ function Cart(props) {
       },
       headerTitleContainerStyle: {
         paddingLeft: scale(25),
-        paddingRight: scale(25),
-        
+        paddingRight: scale(25)
       },
       headerStyle: {
         backgroundColor: currentTheme.newheaderBG
@@ -229,8 +243,8 @@ function Cart(props) {
 
   function calculateTotal() {
     let total = 0
-    // const delivery = isPickedUp ? 0 : deliveryCharges
-    total += +calculatePrice()
+    const delivery = isPickup ? 0 : deliveryCharges
+    total += +calculatePrice(delivery)
     // total += +taxCalculation()
     // total += +calculateTip()
     return parseFloat(total).toFixed(2)
@@ -380,16 +394,28 @@ function Cart(props) {
       </View>
     )
   }
+  const onModalOpen = (modalRef) => {
+    const modal = modalRef.current
+    if (modal) {
+      modal.open()
+    }
+  }
+  const onModalClose = (modalRef) => {
+    const modal = modalRef.current
+    if (modal) {
+      modal.close()
+    }
+  }
   if (loading || loadingData || loadingTip) return loadginScreen()
 
   const restaurant = data?.restaurant
   const addons = restaurant?.addons
   const options = restaurant?.options
-  // const { addons, options } = restaurant
-  const foods = restaurant?.categories?.map(c => c.foods.flat()).flat()
+
+  const foods = restaurant?.categories?.map((c) => c.foods.flat()).flat()
 
   function populateFood(cartItem) {
-    const food = foods?.find(food => food._id === cartItem._id)
+    const food = foods?.find((food) => food._id === cartItem._id)
     if (!food) return null
     const variation = food.variations.find(
       (variation) => variation._id === cartItem.variation._id
@@ -437,6 +463,45 @@ function Cart(props) {
               showsVerticalScrollIndicator={false}
               style={[styles().flex, styles().cartItems]}
             >
+              <View
+                style={[
+                  styles(currentTheme).priceContainer,
+                  styles().pT10,
+                  styles().mB10
+                ]}
+              >
+                <View style={styles(currentTheme).imageContainer}>
+                  <View style={{ marginLeft: scale(10) }}>
+                    <View style={[styles(currentTheme).locationIcon]}>
+                      <EvilIcons name='location' size={scale(16)} />
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: scale(20)
+                    }}
+                  >
+                    <TextDefault textColor={currentTheme.darkBgFont} bolder>
+                      {isPickup ? t('pickUp') : t('delivery')}{' '}
+                    </TextDefault>
+                    <TextDefault textColor={currentTheme.darkBgFont} bold>
+                      {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
+                    </TextDefault>
+                    <TouchableOpacity
+                      onPress={() => onModalOpen(modalRef)}
+                      style={styles(currentTheme).cartInnerContainer}
+                    >
+                      <TextDefault
+                        bold
+                        textColor={currentTheme.editProfileButton}
+                      >
+                        {t('change')}
+                      </TextDefault>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
               <View style={[styles(currentTheme).headerContainer]}>
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -462,12 +527,8 @@ function Cart(props) {
                         width: 30,
                         height: 30
                       }}
-                      locationLabel={
-                       currentTheme.newFontcolor
-                      } 
-                      location={
-                        currentTheme.newFontcolor
-                       } 
+                      locationLabel={currentTheme.newFontcolor}
+                      location={currentTheme.newFontcolor}
                     />
                   </View>
                   <Feather
@@ -487,7 +548,12 @@ function Cart(props) {
                 <View
                   style={[styles(currentTheme).dealContainer, styles().mB10]}
                 >
-                  <TextDefault textColor={currentTheme.gray500} style={styles().totalOrder} H5 bolder>
+                  <TextDefault
+                    textColor={currentTheme.gray500}
+                    style={styles().totalOrder}
+                    H5
+                    bolder
+                  >
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
                   {cart?.map((cartItem, index) => {
@@ -529,7 +595,7 @@ function Cart(props) {
 
             <View style={styles().totalBillContainer}>
               <View style={styles(currentTheme).buttonContainer}>
-                <View style={styles().cartAmount}> 
+                <View style={styles().cartAmount}>
                   <TextDefault
                     textColor={currentTheme.black}
                     style={styles().totalBill}
@@ -589,6 +655,44 @@ function Cart(props) {
           </>
         )}
       </View>
+      <Modalize
+        ref={modalRef}
+        modalStyle={styles(currentTheme).modal}
+        modalHeight={Platform.OS === 'android' ? 300 : 420}
+        overlayStyle={styles(currentTheme).overlay}
+        handleStyle={styles(currentTheme).handle}
+        handlePosition='inside'
+        onClosed={() => {
+          setIsModalOpen(false)
+        }}
+        onOpened={() => {
+          setIsModalOpen(true)
+        }}
+        openAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+      >
+        <Pickup
+          minimumTime={moment().add(5, 'minute')}
+          setOrderDate={setOrderDate}
+          isPickedUp={isPickup}
+          setIsPickedUp={setIsPickup}
+          orderDate={orderDate}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            modalRef.current.close()
+          }}
+          style={styles(currentTheme).pickupButton}
+        >
+          <Text style={{ fontSize: 20, fontWeight: '500' }}>{t('apply')}</Text>
+        </TouchableOpacity>
+      </Modalize>
     </>
   )
 }
