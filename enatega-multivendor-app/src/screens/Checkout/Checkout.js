@@ -800,7 +800,7 @@ function Checkout(props) {
                     <Location
                       locationIconGray={{
                         backgroundColor: 'transparent',
-                        width: 17
+                        width: 22,
                       }}
                       locationIcon={currentTheme.newIconColor}
                       locationLabel={currentTheme.newFontcolor}
@@ -1279,9 +1279,10 @@ function Checkout(props) {
         {/* Tip Modal */}
         <Modalize
           ref={tipModalRef}
-          modalStyle={[styles(currentTheme).modal, { marginTop: inset.top }]}
+          modalStyle={[styles(currentTheme).modal]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
+          modalHeight={550}
           handlePosition='inside'
           openAnimationConfig={{
             timing: { duration: 400 },
@@ -1348,9 +1349,10 @@ function Checkout(props) {
         {/* Voucher Modal */}
         <Modalize
           ref={voucherModalRef}
-          modalStyle={[styles(currentTheme).modal, { marginTop: inset.top }]}
+          modalStyle={[styles(currentTheme).modal]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
+          modalHeight={550}
           handlePosition='inside'
           openAnimationConfig={{
             timing: { duration: 400 },

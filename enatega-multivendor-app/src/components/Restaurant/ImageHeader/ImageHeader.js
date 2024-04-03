@@ -15,7 +15,8 @@ import {
   Ionicons,
   Entypo,
   AntDesign,
-  SimpleLineIcons
+  SimpleLineIcons,
+  MaterialCommunityIcons
 } from '@expo/vector-icons'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -523,11 +524,8 @@ function ImageTextCenterHeader(props, ref) {
                 </AnimatedTouchable>
               </View>
               <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-                <MaterialIcons
-                  name='timer'
-                  size={scale(20)}
-                  color={currentTheme.newIconColor}
-                />
+                <MaterialCommunityIcons name="timer-outline" size={scale(20)}
+                  color={currentTheme.newIconColor} />
                 <TextDefault
                   textColor={currentTheme.fontNewColor}
                   style={{

@@ -15,7 +15,7 @@ const styles = (props = null) =>
       width: '100%'
     },
     card: {
-      width: windowWidth / 2 - 20, // assuming 20 is the total margin/padding
+      width: windowWidth / 2 - 30, // assuming 20 is the total margin/padding
       borderRadius: 8, // adjust border radius as per your requirement
       paddingTop: scale(17),
       paddingLeft: scale(17),
@@ -24,6 +24,7 @@ const styles = (props = null) =>
       borderColor: '#E5E7EB',
       borderWidth: 1,
       backgroundColor: props != null ? props.gray100 : 'black',
+      flexGrow: 1
     },
     popularMenuPrice: {
       flexDirection: 'row',

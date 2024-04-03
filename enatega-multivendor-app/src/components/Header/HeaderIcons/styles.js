@@ -18,7 +18,8 @@ const styles = (backColor) =>
     },
     favContainer: {
       height: '100%',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      ...alignment.MRmedium
     },
     imgContainer: {
       width: verticalScale(20),

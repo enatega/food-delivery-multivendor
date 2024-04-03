@@ -415,7 +415,7 @@ const styles = (props = null) =>
       height: scale(40),
       borderWidth: 1,
       borderColor: props != null ? props.verticalLine : '#B8B8B8',
-      padding: 5,
+      padding: 10,
       borderRadius: 6,
       color: props !== null ? props.newFontcolor : '#f9f9f9'
     }
