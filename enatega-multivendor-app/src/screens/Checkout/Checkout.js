@@ -29,7 +29,7 @@ import { getCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
-import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
@@ -774,38 +774,18 @@ function Checkout(props) {
                   <View style={styles().mapView}>
                     <MapView
                       style={styles().flex}
-                      scrollEnabled={true}
-                      zoomEnabled={true}
+                      scrollEnabled={false}
+                      zoomEnabled={false}
                       zoomControlEnabled={false}
-                      rotateEnabled={true}
+                      rotateEnabled={false}
                       cacheEnabled={false}
                       initialRegion={initialRegion}
                       customMapStyle={customMapStyle}
                       provider={PROVIDER_GOOGLE}
-                    >
-                      <Polyline
-                        coordinates={[
-                          { latitude: +latOrigin, longitude: +lonOrigin },
-                          {
-                            latitude: location.latitude,
-                            longitude: location.longitude
-                          }
-                        ]}
-                        strokeColor='#000' // fallback for when `strokeColors` is not supported by the map-provider
-                        strokeWidth={2}
-                        lineDashPattern={[5, 1]}
-                      />
-                      <Marker
-                        coordinate={{
-                          latitude: location.latitude,
-                          longitude: location.longitude
-                        }}
-                      >
-                        <View>
-                          <RestaurantMarker />
-                        </View>
-                      </Marker>
-                    </MapView>
+                    ></MapView>
+                    <View style={styles().marker}>
+                      <RestaurantMarker />
+                    </View>
                   </View>
                   <View
                     style={[
