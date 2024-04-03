@@ -75,7 +75,7 @@ function Cart(props) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
 
-  const [orderDate, setOrderDate] = useState(moment())
+  const [orderDate, setOrderDate] = useState(new Date())
   const isCartEmpty = cart?.length === 0
   const cartLength = !isCartEmpty ? cart?.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
@@ -451,7 +451,8 @@ function Cart(props) {
       addons: populateAddons
     }
   }
-
+  let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
+  if (deliveryTime < 1) deliveryTime += restaurant.deliveryTime
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -485,14 +486,16 @@ function Cart(props) {
                       {isPickup ? t('pickupTime') : t('deliveryTime')}{' '}
                     </TextDefault>
                     <TextDefault textColor={currentTheme.darkBgFont} bolder H4>
-                      {t('asap')}({Math.floor((new Date(orderDate) - Date.now()) / 1000 / 60) + restaurant.deliveryTime} {t('mins')})
+                      {t('asap')}({deliveryTime} {t('mins')})
                     </TextDefault>
                     <TouchableOpacity
                       onPress={() => onModalOpen(modalRef)}
-                      style={styles(currentTheme).cartInnerContainer}>
+                      style={styles(currentTheme).cartInnerContainer}
+                    >
                       <TextDefault
                         bold
-                        textColor={currentTheme.editProfileButton}>
+                        textColor={currentTheme.editProfileButton}
+                      >
                         {t('change')}
                       </TextDefault>
                     </TouchableOpacity>

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { Text, TouchableOpacity, View, Platform } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { TouchableOpacity, View, Platform } from 'react-native'
 import styles from './styles'
 import { theme } from '../../utils/themeColors'
 import DatePicker, {
@@ -15,43 +15,39 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const [showPicker, setShowPicker] = useState(false)
   const [isPickUp, setIsPickup] = useState(props?.isPickedUp)
-  const [orderDate, setOrderDate] = useState(new Date(props?.orderDate))
-  const minimumTime = useRef(moment().add('M', props?.minimumTime).toDate())
+  const currentDate = new Date().getTime() + (props?.minimumTime * 60000 || 0)
   const { t } = useTranslation()
 
-  const onPressEdit = () => {
-    if (Platform.OS === 'android') {
-      DateTimePickerAndroid.open(datePickerProps)
+  const datePickerOptions = {
+    // Note that on Android, minimumDate only works for date mode because TimePicker does not support this.
+    minimumDate: new Date(currentDate),
+    mode: 'time',
+    display: 'spinner',
+    value: props.orderDate,
+    onChange: (event, date) => {
+      if (date && new Date(date) >= new Date(currentDate)) {
+        props.setOrderDate(date)
+      }
     }
   }
-  const datePickerProps = useMemo(() => ({
-    minimumDate: minimumTime.current,
-    mode: 'time',
-    display: 'default',
-    value: orderDate,
-    onChange: (event, date) => {
-      const {
-        type,
-        nativeEvent: { timestamp, utcOffset }
-      } = event
-      console.log('onchange', type, timestamp, utcOffset, date)
-      if (type === 'dismissed')
-        setOrderDate(new Date(timestamp))
-    }
-  }))
 
-  useEffect(() => {
-    props?.setIsPickedUp(isPickUp)
-  }, [isPickUp])
-  useEffect(() => {
-    console.log('useeffect', orderDate)
-    props?.setOrderDate(orderDate)
-  }, [orderDate])
+  const onEditPress = () => {
+    if (Platform.OS === 'android') DateTimePickerAndroid.open(datePickerOptions)
+  }
 
   return (
-    <View style={{ paddingTop: scale(30) }}>
+    <View style={{ paddingTop: 30 }}>
+      {isPickUp ? (
+        <TextDefault style={styles().tabHeading}>
+          {t('SelectPickupDT')}
+        </TextDefault>
+      ) : (
+        <TextDefault style={styles().tabHeading}>
+          {t('SelectDeliveryDT')}
+        </TextDefault>
+      )}
+
       <View style={styles(currentTheme).tabContainer}>
         <TouchableOpacity
           onPress={() => {
@@ -100,40 +96,38 @@ function PickUp(props) {
           </View>
         </TouchableOpacity>
       </View>
-      {Platform.OS === 'android' && (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignContent: 'center',
-            paddingTop: scale(4)
-          }}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignContent: 'center',
+          paddingTop: scale(4)
+        }}
+      >
+        <TouchableOpacity
+          disabled={Platform.OS === 'ios'}
+          onPress={onEditPress}
         >
-          <TouchableOpacity
-            disabled={Platform.OS === 'ios'}
-            onPress={onPressEdit}
+          <TextDefault
+            style={
+              Platform.OS === 'android'
+                ? styles().androidDateFormat
+                : styles().iosDateFormat
+            }
           >
-            <Text
-              style={
-                Platform.OS === 'android'
-                  ? styles().androidDateFormat
-                  : styles().iosDateFormat
-              }
-            >
-              {orderDate.format('MM-D-YYYY, h:mm a')}{' '}
-              {Platform.OS === 'android' && (
-                <FontAwesome
-                  name='edit'
-                  size={25}
-                  color={theme.Pink.iconColorPink}
-                />
-              )}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        {Platform.OS === 'ios' && <DatePicker {...datePickerProps} />}
+            {moment(props.orderDate).format('MM-D-YYYY, h:mm a')}{' '}
+            {Platform.OS === 'android' && (
+              <FontAwesome
+                name='edit'
+                size={25}
+                color={theme.Pink.iconColorPink}
+              />
+            )}
+          </TextDefault>
+        </TouchableOpacity>
+      </View>
+      <View>
+        {Platform.OS === 'ios' && <DatePicker {...datePickerOptions} />}
       </View>
     </View>
   )
