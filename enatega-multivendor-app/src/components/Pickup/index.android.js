@@ -15,32 +15,28 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const [showPicker, setShowPicker] = useState(false)
   const [isPickUp, setIsPickup] = useState(props?.isPickedUp)
-  const [orderDate, setOrderDate] = useState(new Date(props?.orderDate))
+  const [orderDate, setOrderDate] = useState(props?.orderDate)
   const minimumTime = useRef(moment().add('M', props?.minimumTime).toDate())
   const { t } = useTranslation()
 
   const onPressEdit = () => {
-    if (Platform.OS === 'android') {
-      DateTimePickerAndroid.open(datePickerProps)
-    }
+    DateTimePickerAndroid.open(datePickerProps)
   }
-  const datePickerProps = useMemo(() => ({
+  const datePickerProps = {
     minimumDate: minimumTime.current,
     mode: 'time',
     display: 'default',
-    value: orderDate,
+    value: new Date(orderDate),
     onChange: (event, date) => {
       const {
         type,
         nativeEvent: { timestamp, utcOffset }
       } = event
       console.log('onchange', type, timestamp, utcOffset, date)
-      if (type === 'dismissed')
-        setOrderDate(new Date(timestamp))
+      if (type === 'dismissed') setOrderDate(moment(timestamp).utcOffset(utcOffset, true))
     }
-  }))
+  }
 
   useEffect(() => {
     props?.setIsPickedUp(isPickUp)
@@ -57,15 +53,10 @@ function PickUp(props) {
           onPress={() => {
             setIsPickup(true)
           }}
-          style={
-            isPickUp
+          style={ isPickUp
               ? styles(currentTheme).activeLabel
-              : styles(currentTheme).labelButton
-          }
-        >
-          <View
-            style={isPickUp ? styles(currentTheme).tabSubHeadingActive : {}}
-          >
+              : styles(currentTheme).labelButton}>
+          <View style={isPickUp ? styles(currentTheme).tabSubHeadingActive : {}}>
             <TextDefault
               style={styles(currentTheme).tabSubHeading}
               textColor={isPickUp ? currentTheme.editProfileButton : ''}
@@ -84,8 +75,7 @@ function PickUp(props) {
             !isPickUp
               ? styles(currentTheme).activeLabel
               : styles(currentTheme).labelButton
-          }
-        >
+          }>
           <View
             style={!isPickUp ? styles(currentTheme).tabSubHeadingActive : {}}
           >
@@ -100,40 +90,36 @@ function PickUp(props) {
           </View>
         </TouchableOpacity>
       </View>
-      {Platform.OS === 'android' && (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignContent: 'center',
-            paddingTop: scale(4)
-          }}
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignContent: 'center',
+          paddingTop: scale(4)
+        }}
+      >
+        <TouchableOpacity
+          disabled={Platform.OS === 'ios'}
+          onPress={onPressEdit}
         >
-          <TouchableOpacity
-            disabled={Platform.OS === 'ios'}
-            onPress={onPressEdit}
+          <Text
+            style={
+              Platform.OS === 'android'
+                ? styles().androidDateFormat
+                : styles().iosDateFormat
+            }
           >
-            <Text
-              style={
-                Platform.OS === 'android'
-                  ? styles().androidDateFormat
-                  : styles().iosDateFormat
-              }
-            >
-              {orderDate.format('MM-D-YYYY, h:mm a')}{' '}
-              {Platform.OS === 'android' && (
-                <FontAwesome
-                  name='edit'
-                  size={25}
-                  color={theme.Pink.iconColorPink}
-                />
-              )}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        {Platform.OS === 'ios' && <DatePicker {...datePickerProps} />}
+            {orderDate.format('MM-D-YYYY, h:mm a')}{' '}
+            {Platform.OS === 'android' && (
+              <FontAwesome
+                name='edit'
+                size={25}
+                color={theme.Pink.iconColorPink}
+              />
+            )}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )

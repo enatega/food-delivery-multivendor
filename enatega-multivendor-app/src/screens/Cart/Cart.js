@@ -75,7 +75,7 @@ function Cart(props) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
 
-  const [orderDate, setOrderDate] = useState(moment().add(5, 'minute'))
+  const [orderDate, setOrderDate] = useState(moment())
   const isCartEmpty = cart?.length === 0
   const cartLength = !isCartEmpty ? cart?.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
@@ -481,20 +481,18 @@ function Cart(props) {
                       marginLeft: scale(20)
                     }}
                   >
-                    <TextDefault textColor={currentTheme.darkBgFont} bolder>
-                      {isPickup ? t('pickUp') : t('delivery')}{' '}
+                    <TextDefault H5 textColor={currentTheme.darkBgFont} bold>
+                      {isPickup ? t('pickupTime') : t('deliveryTime')}{' '}
                     </TextDefault>
-                    <TextDefault textColor={currentTheme.darkBgFont} bold>
-                      {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
+                    <TextDefault textColor={currentTheme.darkBgFont} bolder H4>
+                      {t('asap')}({Math.floor((new Date(orderDate) - Date.now()) / 1000 / 60) + restaurant.deliveryTime} {t('mins')})
                     </TextDefault>
                     <TouchableOpacity
                       onPress={() => onModalOpen(modalRef)}
-                      style={styles(currentTheme).cartInnerContainer}
-                    >
+                      style={styles(currentTheme).cartInnerContainer}>
                       <TextDefault
                         bold
-                        textColor={currentTheme.editProfileButton}
-                      >
+                        textColor={currentTheme.editProfileButton}>
                         {t('change')}
                       </TextDefault>
                     </TouchableOpacity>
@@ -678,7 +676,7 @@ function Cart(props) {
         }}
       >
         <Pickup
-          minimumTime={moment().add(5, 'minute')}
+          minimumTime={restaurant.deliveryTime}
           setOrderDate={setOrderDate}
           isPickedUp={isPickup}
           setIsPickedUp={setIsPickup}
