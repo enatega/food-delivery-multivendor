@@ -34,7 +34,6 @@ export default StyleSheet.create({
   addressText: { width: '50%', textAlign: 'left' },
   itemsContainer: {
     width: WIDTH - 20,
-    paddingVertical: scale(20)
   },
   line2: theme => ({
     marginVertical: scale(10),
