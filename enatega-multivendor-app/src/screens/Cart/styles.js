@@ -287,7 +287,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     cartInnerContainer: {
-      ...alignment.MTsmall
+      ...alignment.MTxSmall
     },
     couponContainer: {
       flexDirection: 'row',

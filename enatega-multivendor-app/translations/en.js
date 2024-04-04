@@ -272,7 +272,7 @@ export const en = {
   emptyHereDecs1: "You haven't saved any address yet.",
   emptyHereDecs2: 'Click Add New Address to get started.',
   changeAddress: 'Change Address',
-  pickUp: 'Pick Up',
+  pickUp: 'Pick-up',
   Custom: 'Custom',
   save: 'Save',
   SelectPickupDT: 'Select Pickup date and time',
@@ -542,4 +542,7 @@ AddTip:'Add Tip',
 permanentDeleteMessage: 'Are you sure you want to delete your account? This action cannot be undone. Deleting your account will permanently remove all of your data, including your orders and preferences. If you proceed, you will lose access to your account and its benefits.',
 yesSure:"Yes, I'm Sure",
 noDelete:"No, Don't Delete it",
+deliveryTime:'Delivery Time',
+pickupTime:'Pickup Time',
+asap:'ASAP'
 }
