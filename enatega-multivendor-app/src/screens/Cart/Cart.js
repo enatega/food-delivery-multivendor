@@ -647,7 +647,7 @@ function Cart(props) {
                       bolder
                       center
                     >
-                      {t('loginOrCreateAccount')}
+                      {t('loginOrSignUp')}
                     </TextDefault>
                   </TouchableOpacity>
                 )}

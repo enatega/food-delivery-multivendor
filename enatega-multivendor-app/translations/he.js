@@ -524,4 +524,5 @@ permanentDeleteMessage:"האם את/ה בטוח/ה שברצונך למחוק א�
 yesSure:"כן, אני בטוח",
 noDelete:' לא, אל תמחק אותו',
 logoutMessage: 'יצאת מהמערכת בהצלחה',
+loginOrSignUp: 'התחברות/הרשמה'
 }

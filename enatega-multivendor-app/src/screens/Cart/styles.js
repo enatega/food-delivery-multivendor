@@ -112,8 +112,7 @@ const styles = (props = null) =>
       borderRadius: 12,
       padding: scale(8),
       width: scale(120),
-      marginTop: scale(14),
-      height: scale(160)
+      marginTop: scale(14)
     },
     suggestItemImgContainer: {
       backgroundColor: '#F3F4F6',
@@ -123,7 +122,7 @@ const styles = (props = null) =>
       padding: scale(4)
     },
     suggestItemName: {
-      marginVertical: scale(5)
+      marginVertical: scale(10)
     },
     suggestItemPrice: {
       marginTop: scale(5)

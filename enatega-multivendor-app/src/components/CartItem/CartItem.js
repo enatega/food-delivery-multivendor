@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Alert, Image, TouchableOpacity, View } from 'react-native'
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { AntDesign, Feather, EvilIcons} from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
@@ -128,11 +128,19 @@ const CartItem = props => {
             styles(currentTheme).minusBtn
           ]}
           onPress={props.removeQuantity}>
-          <AntDesign
-            name={props.quantity < 2 ? 'delete' : 'minus'}
-            size={scale(18)}
-            color={currentTheme.color4}
-          />
+          {props.quantity < 2 ? (
+            <EvilIcons 
+              name="trash"
+              size={scale(25)}
+              color={currentTheme.color4}
+            />
+          ) : (
+            <AntDesign
+              name="minus"
+              size={scale(18)}
+              color={currentTheme.color4}
+            />
+          )}
         </TouchableOpacity>
 
         <View style={styles(currentTheme).actionContainerView}>
