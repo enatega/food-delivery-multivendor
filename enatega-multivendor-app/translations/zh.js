@@ -522,5 +522,5 @@ export const zh = {
   permanentDeleteMessage:"您确定要删除您的帐户吗？此操作无法撤销。删除您的帐户将永久删除所有数据，包括您的订单和偏好设置。如果继续，您将失去对您的帐户及其优惠的访问权。",
   yesSure:"是的，我确定",
   noDelete:'不要，不要删除它',
-
+  loginOrSignUp: '登录/注册'
 }

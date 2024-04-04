@@ -99,7 +99,7 @@ const Filters = ({ filters, setFilters, applyFilters }) => {
           </TouchableOpacity>
           <Text style={styles(currentTheme).filterText}> {t('filters')}</Text>
           <TouchableOpacity onPress={() => setModalVisible(false)}>
-            <AntDesign name='close' size={24} color={currentTheme.newIconColor}  />
+            <AntDesign name='closecircleo' size={24} color={currentTheme.newIconColor}  />
           </TouchableOpacity>
         </View>
         <ScrollView style={styles(currentTheme).modalContainer}>

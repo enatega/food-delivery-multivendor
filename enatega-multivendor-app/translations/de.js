@@ -554,10 +554,5 @@ somethingWentWrong: 'Etwas ist schief gegangen',
   permanentDeleteMessage:"Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden. Durch das Löschen Ihres Kontos werden alle Ihre Daten einschließlich Ihrer Bestellungen und Einstellungen dauerhaft entfernt. Wenn Sie fortfahren, verlieren Sie den Zugriff auf Ihr Konto und dessen Vorteile.",
   yesSure:"Ja, ich bin sicher",
   noDelete:'Nein, bitte nicht löschen',
-
-
-
-
-
-
+  loginOrSignUp: 'Anmelden/Registrieren'
 }
