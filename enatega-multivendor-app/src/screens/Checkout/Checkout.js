@@ -53,6 +53,7 @@ import { customMapStyle } from '../../utils/customMapStyles'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
+import { fontStyles } from '../../utils/fontStyles'
 
 // Constants
 const PLACEORDER = gql`

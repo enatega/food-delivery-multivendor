@@ -1,6 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { fontStyles } from '../../utils/fontStyles'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -417,7 +418,8 @@ const styles = (props = null) =>
       borderColor: props != null ? props.verticalLine : '#B8B8B8',
       padding: 10,
       borderRadius: 6,
-      color: props !== null ? props.newFontcolor : '#f9f9f9'
+      color: props !== null ? props.newFontcolor : '#f9f9f9',
+      fontFamily: fontStyles.MuseoSans500
     }
   })
 export default styles

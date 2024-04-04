@@ -41,7 +41,7 @@ const currentTheme = theme[themeContext.ThemeValue]
         <View style={{ alignItems: 'center', marginTop: 'auto' }}>
           <Image
             source={{ uri: imageUrl }}
-            style={[{ width: 138, height: 120 }, styles().popularMenuImg]}
+            style={[{ width: 138, height: 120, borderRadius: 8 }, styles().popularMenuImg]}
           />
           <View style={styles().popularMenuPrice}>
             <Text style={{ color: '#1C1C1E', fontSize: scale(12) }}>

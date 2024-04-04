@@ -69,7 +69,8 @@ const styles = (props = null) =>
     },
     titleAddress: {
       width: '55%',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      marginTop: -4
     },
     labelStyle: {
       textAlignVertical: 'bottom',
