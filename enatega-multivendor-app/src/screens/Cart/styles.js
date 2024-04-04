@@ -201,10 +201,10 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
-      borderRadius: scale(10),
-      width: '60%',
-      height: '8%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '70%',
+      height: scale(40),
+      borderRadius: scale(20),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
@@ -283,7 +283,6 @@ const styles = (props = null) =>
     imageContainer: {
       display: 'flex',
       width: '100%',
-      flexDirection: 'row',
       alignItems: 'center'
     },
     cartInnerContainer: {
