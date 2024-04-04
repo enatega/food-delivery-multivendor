@@ -1,6 +1,7 @@
 export const theme = {
   Pink: {
     black: '#000',
+    CustomLoadingBG: '#FFF',
     white: '#FFF',
     radioOuterColor: '#fff',
     filterRadioOuterColor: '#90E36D',
@@ -108,6 +109,7 @@ export const theme = {
   },
   Dark: {
     black: '#000',
+    CustomLoadingBG: '#000',
     white: '#FFF',
     themeBackground: '#000',
     newheaderColor: '#90E36D',
