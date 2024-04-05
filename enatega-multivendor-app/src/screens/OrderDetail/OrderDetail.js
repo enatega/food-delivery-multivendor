@@ -37,7 +37,9 @@ import { calulateRemainingTime } from '../../utils/customFunctions'
 import PlaceOrder from '../../assets/SVG/place-order'
 import FoodPicked from '../../assets/SVG/food-picked'
 import OrderPlacedIcon from '../../assets/SVG/order-placed'
-const { height: HEIGHT } = Dimensions.get('screen')
+import MapViewDirections from 'react-native-maps-directions'
+import useEnvVars from '../../../environment'
+const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`
   ${cancelOrderMutation}
@@ -55,7 +57,8 @@ function OrderDetail(props) {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const headerRef = useRef(false)
-
+  const { GOOGLE_MAPS_KEY } = useEnvVars()
+  const mapView = useRef(null)
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
     variables: { abortOrderId: id }
@@ -73,7 +76,6 @@ function OrderDetail(props) {
   const cancelModalToggle = () => {
     setCancelModalVisible(!cancelModalVisible)
   }
-  
   function onError(error) {
     FlashMessage({
       message: error.message
@@ -87,17 +89,16 @@ function OrderDetail(props) {
         headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
         headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
         headerTitleStyle: { color: currentTheme.newFontcolor },
-        headerStyle: { backgroundColor: currentTheme.newheaderBG },
+        headerStyle: { backgroundColor: currentTheme.newheaderBG }
         // iconColor:{ color: currentTheme.newIconColor}
       })
-      headerRef.current = true
-  },[headerRef.current, order])
+  },[orders])
 
   if (loadingOrders || !order) {
     return (
       <Spinner
-      backColor={currentTheme.themeBackground}
-      spinnerColor={currentTheme.main}
+        backColor={currentTheme.themeBackground}
+        spinnerColor={currentTheme.main}
       />
     )
   }
@@ -123,9 +124,6 @@ function OrderDetail(props) {
     deliveryCharges
   } = order
   const subTotal = total - tip - tax - deliveryCharges
-
-  
-
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -139,6 +137,7 @@ function OrderDetail(props) {
       >
         {order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED && (
           <MapView
+            ref={(c) => (mapView.current = c)}
             style={{ flex: 1, height: HEIGHT * 0.6 }}
             showsUserLocation={false}
             initialRegion={{
@@ -169,6 +168,36 @@ function OrderDetail(props) {
             >
               <CustomerMarker />
             </Marker>
+            <MapViewDirections
+              origin={{
+                longitude: +restaurant.location.coordinates[0],
+                latitude: +restaurant.location.coordinates[1]
+              }}
+              destination={{
+                latitude: +deliveryAddress.location.coordinates[1],
+                longitude: +deliveryAddress.location.coordinates[0]
+              }}
+              apikey={GOOGLE_MAPS_KEY}
+              strokeWidth={6}
+              strokeColor={currentTheme.main}
+              optimizeWaypoints={true}
+              onReady={(result) => {
+                //result.distance} km
+                //Duration: ${result.duration} min.
+
+                mapView?.current?.fitToCoordinates(result.coordinates, {
+                  edgePadding: {
+                    right: WIDTH / 20,
+                    bottom: HEIGHT / 20,
+                    left: WIDTH / 20,
+                    top: HEIGHT / 20
+                  }
+                })
+              }}
+              onError={(error) => {
+                console.log('onerror', error)
+              }}
+            />
             {order.rider && <TrackingRider id={order.rider._id} />}
           </MapView>
         )}

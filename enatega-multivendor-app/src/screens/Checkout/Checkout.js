@@ -16,6 +16,7 @@ import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   AntDesign,
+  EvilIcons,
   Feather,
   FontAwesome,
   MaterialCommunityIcons,
@@ -196,23 +197,23 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async () => {
-      if (data && !!data.restaurant) {
-        const latOrigin = Number(data.restaurant.location.coordinates[1])
-        const lonOrigin = Number(data.restaurant.location.coordinates[0])
-        const latDest = Number(location.latitude)
-        const longDest = Number(location.longitude)
-        const distance = await calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
-        const amount = Math.ceil(distance) * configuration.deliveryRate
-        isSubscribed &&
-          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-      }
-    })()
+      ; (async () => {
+        if (data && !!data.restaurant) {
+          const latOrigin = Number(data.restaurant.location.coordinates[1])
+          const lonOrigin = Number(data.restaurant.location.coordinates[0])
+          const latDest = Number(location.latitude)
+          const longDest = Number(location.longitude)
+          const distance = await calculateDistance(
+            latOrigin,
+            lonOrigin,
+            latDest,
+            longDest
+          )
+          const amount = Math.ceil(distance) * configuration.deliveryRate
+          isSubscribed &&
+            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+        }
+      })()
     return () => {
       isSubscribed = false
     }
@@ -322,7 +323,7 @@ function Checkout(props) {
         },
         {
           text: 'Continue',
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel'
         }
       ],
@@ -519,9 +520,9 @@ function Checkout(props) {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-              _id,
-              options: options.map(({ _id }) => _id)
-            }))
+            _id,
+            options: options.map(({ _id }) => _id)
+          }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -592,9 +593,8 @@ function Checkout(props) {
           )
           if (!variation) return null
 
-          const title = `${food.title}${
-            variation.title ? `(${variation.title})` : ''
-          }`
+          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+            }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -640,44 +640,7 @@ function Checkout(props) {
     }
   }
 
-  function emptyCart() {
-    return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <EmptyCart width={scale(200)} height={scale(200)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-            {t('hungry')}?
-          </TextDefault>
-          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-            {t('emptyCart')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() =>
-            props.navigation.navigate({
-              name: 'Main',
-              merge: true
-            })
-          }
-        >
-          <TextDefault
-            textColor={currentTheme.buttonText}
-            bolder
-            B700
-            center
-            uppercase
-          >
-            {t('emptyCartBtn')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
+ 
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -797,43 +760,38 @@ function Checkout(props) {
                   />
                 </View>
                 <View style={[styles(currentTheme).headerContainer]}>
-                  <View style={styles().location}>
-                    <Location
-                      locationIconGray={{
-                        backgroundColor: 'transparent',
-                        width: 22,
-                      }}
-                      locationIcon={currentTheme.newIconColor}
-                      locationLabel={currentTheme.newFontcolor}
-                      location={currentTheme.newFontcolor}
-                    />
-                  </View>
+
+                  <Location
+                    locationIcon={currentTheme.newIconColor}
+                    locationLabel={currentTheme.newFontcolor}
+                    location={currentTheme.newFontcolor}
+                  />
+
                   <View
                     style={[
                       styles(currentTheme).horizontalLine,
                       styles().width100,
-                      styles().mB10
                     ]}
                   />
                   <View style={styles(currentTheme).deliveryTime}>
-                    <View style={styles().clockIcon}>
-                      <AntDesign
-                        name='clockcircleo'
-                        size={14}
-                        color={currentTheme.fontFourthColor}
-                      />
+                    <View style={styles().iconContainer}>
+                      <EvilIcons name='calendar' size={scale(16)} />
                     </View>
-                    <TextDefault
-                      textColor={currentTheme.newFontcolor}
-                      numberOfLines={1}
-                      H5
-                      bolder
-                    >
-                      {t(isPickup ? 'pickUp' : 'delivery')}
-                      {'\r\t'}
-                      {t('within')} {data.restaurant.deliveryTime} -{' '}
-                      {data?.restaurant.deliveryTime + 10} {t('mins')}
-                    </TextDefault>
+                    <View style={styles(currentTheme).labelContainer}>
+                      <View style={{ marginLeft: scale(5) }}>
+                        <TextDefault
+                          textColor={currentTheme.newFontcolor}
+                          numberOfLines={1}
+                          H5
+                          bolder
+                        >
+                          {t(isPickup ? 'pickUp' : 'delivery')}
+                          {' '}
+                          {t('within')} {data.restaurant.deliveryTime} - {' '}
+                          {data?.restaurant.deliveryTime + 10} {t('mins')}
+                        </TextDefault>
+                      </View>
+                    </View>
                   </View>
                 </View>
 
@@ -1052,7 +1010,7 @@ function Checkout(props) {
                               -{configuration.currencySymbol}
                               {parseFloat(
                                 calculatePrice(0, false) -
-                                  calculatePrice(0, true)
+                                calculatePrice(0, true)
                               ).toFixed(2)}
                             </TextDefault>
                           </View>

@@ -280,9 +280,8 @@ const styles = (props = null) =>
       ...alignment.PRsmall
     },
     imageContainer: {
-      flexDirection: 'row',
-      width: '100%',
-      alignItems: 'center'
+      alignItems: 'center',
+      flexDirection:'row',
     },
     cartInnerContainer: {
       ...alignment.MTxSmall
