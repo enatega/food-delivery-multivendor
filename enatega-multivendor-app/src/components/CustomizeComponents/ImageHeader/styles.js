@@ -1,9 +1,11 @@
 import { Dimensions } from 'react-native'
 const { height } = Dimensions.get('window')
+import { alignment } from '../../../utils/alignment'
 
 export default {
   backgroundImage: {
-    width: '100%',
-    height: height * 0.20
+    height: height * 0.20,
+    objectFit: 'cover',
+    ...alignment.Mmedium,
   }
 }

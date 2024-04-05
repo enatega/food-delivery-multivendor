@@ -7,6 +7,7 @@ import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 import { ChatButton } from './ChatButton'
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
+import { formatNumber } from '../../../utils/formatNumber'
 
 export default function Detail({
   theme,
@@ -39,24 +40,36 @@ export default function Detail({
       <TextDefault
         textColor={theme.gray500}
         bolder
-        H5
-        style={{ ...alignment.MBmedium }}
+        H4
+        style={{ ...alignment.MBsmall }}
       >
-        {t('yourOrder')}: #{orderNo}
+        {from}
       </TextDefault>
-      <TextDefault
-        textColor={theme.gray500}
-        bolder
-        H5
-        style={{ ...alignment.MBmedium }}
-      >
-        {t('restaurantName')}: {from}
-      </TextDefault>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems:'center' }}>
+      <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
         <TextDefault
           textColor={theme.gray500}
           bolder
           H5
+          style={{ ...alignment.MBmedium }}
+        >
+          {t('yourOrder')}
+        </TextDefault>
+        <TextDefault
+          textColor={theme.lightBlue}
+          bolder
+          H4
+          style={{ ...alignment.MBmedium }}
+        >
+          #{orderNo.toLowerCase()}
+        </TextDefault>
+      </View>
+      
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems:'center', ...alignment.MBsmall }}>
+        <TextDefault
+          textColor={theme.gray500}
+          bolder
+          H5
+          bold
         >
           {t('itemsAndQuantity')} ({items.length})
         </TextDefault>
@@ -64,6 +77,7 @@ export default function Detail({
           textColor={theme.gray500}
           bolder
           H5
+          bold
         >
           {t('price')}
         </TextDefault>
@@ -148,7 +162,7 @@ const ItemRow = ({
         H5
       >
         {currency}
-        {price}
+        {formatNumber(price)}
       </TextDefault>
     </View>
   )
