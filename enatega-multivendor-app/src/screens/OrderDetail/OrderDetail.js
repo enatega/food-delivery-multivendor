@@ -92,8 +92,7 @@ function OrderDetail(props) {
         headerStyle: { backgroundColor: currentTheme.newheaderBG }
         // iconColor:{ color: currentTheme.newIconColor}
       })
-      headerRef.current = true
-  },[headerRef.current, order])
+  },[orders])
 
   if (loadingOrders || !order) {
     return (
