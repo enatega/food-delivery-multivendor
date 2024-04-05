@@ -528,5 +528,8 @@ export const he = {
   logoutMessage: 'יצאת מהמערכת בהצלחה',
   loginOrSignUp: 'התחברות/הרשמה',
   salesTa: 'מס מכירות',
-  minimumOrder: 'הזמנה מינימלית'
+  minimumOrder: 'הזמנה מינימלית',
+  deliveryTime: 'זמן משלוח',
+  pickupTime: 'זמן איסוף',
+  asap: 'בהקדם האפשרי'
 }

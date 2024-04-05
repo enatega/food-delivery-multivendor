@@ -474,14 +474,14 @@ function Cart(props) {
                 ]}
               >
                 <View style={styles(currentTheme).imageContainer}>
-                  <View style={{ marginLeft: scale(10) }}>
+                  <View style={{ marginLeft: scale(15) }}>
                     <View style={[styles(currentTheme).locationIcon]}>
                       <EvilIcons name='calendar' size={scale(18)} />
                     </View>
                   </View>
                   <View
                     style={{
-                      marginLeft: scale(20)
+                      marginLeft: scale(10)
                     }}
                   >
                     <TextDefault H5 textColor={currentTheme.darkBgFont} bold>
@@ -686,6 +686,7 @@ function Cart(props) {
           isPickedUp={isPickup}
           setIsPickedUp={setIsPickup}
           orderDate={orderDate}
+          pickupTextColor={currentTheme.newFontcolor}
         />
         <TouchableOpacity
           onPress={() => {
@@ -693,7 +694,7 @@ function Cart(props) {
           }}
           style={styles(currentTheme).pickupButton}
         >
-          <Text style={{ fontSize: 20, fontWeight: '500' }}>{t('apply')}</Text>
+          <Text style={styles(currentTheme).applyButton}>{t('apply')}</Text>
         </TouchableOpacity>
       </Modalize>
     </>

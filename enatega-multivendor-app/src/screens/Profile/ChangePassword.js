@@ -171,7 +171,7 @@ function ChangePassword(props) {
           style={[styles(currentTheme).btnContainer]}
         >
           <TextDefault
-            textColor={currentTheme.black}
+            textColor={currentTheme.newFontcolor}
             style={styles().checkoutBtn}
             bold
             H4
