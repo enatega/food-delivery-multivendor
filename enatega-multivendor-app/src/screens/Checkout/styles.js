@@ -118,6 +118,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       margin: scale(5),
+      ...alignment.PLxSmall
     },
 
     suggestedItems: {

@@ -640,44 +640,7 @@ function Checkout(props) {
     }
   }
 
-  function emptyCart() {
-    return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <EmptyCart width={scale(200)} height={scale(200)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-            {t('hungry')}?
-          </TextDefault>
-          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-            {t('emptyCart')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() =>
-            props.navigation.navigate({
-              name: 'Main',
-              merge: true
-            })
-          }
-        >
-          <TextDefault
-            textColor={currentTheme.buttonText}
-            bolder
-            B700
-            center
-            uppercase
-          >
-            {t('emptyCartBtn')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
+ 
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
