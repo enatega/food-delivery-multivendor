@@ -104,7 +104,8 @@
     "sentry-expo": "~7.2.0",
     "subscriptions-transport-ws": "^0.11.0",
     "uglify-js": "^3.17.4",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "lottie-react-native": "6.5.1"
   },
   "devDependencies": {
     "@expo/metro-config": "^0.17.3",

@@ -20,7 +20,7 @@ import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 import { useTranslation } from 'react-i18next'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
-import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
+
 import {
   ProgressBar,
   checkStatus
@@ -34,11 +34,10 @@ import { gql, useMutation } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { calulateRemainingTime } from '../../utils/customFunctions'
-import PlaceOrder from '../../assets/SVG/place-order'
-import FoodPicked from '../../assets/SVG/food-picked'
-import OrderPlacedIcon from '../../assets/SVG/order-placed'
+
 import MapViewDirections from 'react-native-maps-directions'
 import useEnvVars from '../../../environment'
+import LottieView from 'lottie-react-native'
 const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`
@@ -83,16 +82,15 @@ function OrderDetail(props) {
   }
 
   const order = orders?.find(o => o?._id === id)
-  
-  useEffect(()=>{
-      props.navigation.setOptions({
-        headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-        headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
-        headerTitleStyle: { color: currentTheme.newFontcolor },
-        headerStyle: { backgroundColor: currentTheme.newheaderBG }
-        // iconColor:{ color: currentTheme.newIconColor}
-      })
-  },[orders])
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
+      headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
+      headerTitleStyle: { color: currentTheme.newFontcolor },
+      headerStyle: { backgroundColor: currentTheme.newheaderBG }
+    })
+  }, [orders])
 
   if (loadingOrders || !order) {
     return (
@@ -103,15 +101,7 @@ function OrderDetail(props) {
     )
   }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
-  // if (!headerRef.current) {
-  //   props.navigation.setOptions({
-  //     headerRight: () => HelpButton({ iconBackground: currentTheme.main , t}),
-  //     headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
-  //     headerTitleStyle: { color: currentTheme.newFontcolor },
-  //     headerStyle: { backgroundColor: currentTheme.newheaderBG }
-  //   })
-  //   headerRef.current = true
-  // }
+
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,
@@ -221,31 +211,31 @@ function OrderDetail(props) {
                 ORDER_STATUS_ENUM.PENDING,
                 ORDER_STATUS_ENUM.CANCELLED
               ].includes(order.orderStatus) && (
-                <>
-                  <TextDefault
-                    style={{ ...alignment.MTxSmall }}
-                    textColor={currentTheme.gray500}
-                    H5
-                  >
-                    {t('estimatedDeliveryTime')}
-                  </TextDefault>
-                  <TextDefault
-                    style={{ ...alignment.MTxSmall }}
-                    Regular
-                    textColor={currentTheme.gray900}
-                    H1
-                    bolder
-                  >
-                    {remainingTime}-{remainingTime + 5} {t('mins')}
-                  </TextDefault>
-                  <ProgressBar
-                    configuration={configuration}
-                    currentTheme={currentTheme}
-                    item={order}
-                    navigation={navigation}
-                  />
-                </>
-              )}
+                  <>
+                    <TextDefault
+                      style={{ ...alignment.MTxSmall }}
+                      textColor={currentTheme.gray500}
+                      H5
+                    >
+                      {t('estimatedDeliveryTime')}
+                    </TextDefault>
+                    <TextDefault
+                      style={{ ...alignment.MTxSmall }}
+                      Regular
+                      textColor={currentTheme.gray900}
+                      H1
+                      bolder
+                    >
+                      {remainingTime}-{remainingTime + 5} {t('mins')}
+                    </TextDefault>
+                    <ProgressBar
+                      configuration={configuration}
+                      currentTheme={currentTheme}
+                      item={order}
+                      navigation={navigation}
+                    />
+                  </>
+                )}
               <TextDefault
                 H5
                 style={{ ...alignment.Mmedium, textAlign: 'center' }}
@@ -308,22 +298,39 @@ function OrderDetail(props) {
 }
 
 export const OrderStatusImage = ({ status }) => {
+  console.log('status', status)
+  let imagePath = null;
   switch (status) {
     case ORDER_STATUS_ENUM.PENDING:
-      return <OrderPlacedIcon />
+      imagePath = require('../../assets/SVG/order-placed.json')
+      break
     case ORDER_STATUS_ENUM.ACCEPTED:
-      return <OrderPreparing />
+      imagePath = require('../../assets/SVG/order-tracking-preparing.json')
+      break
     case ORDER_STATUS_ENUM.ASSIGNED:
-      return <FoodPicked />
-    case ORDER_STATUS_ENUM.CANCELLED:
-      return null
+      imagePath = require('../../assets/SVG/food-picked.json')
+      break
     case ORDER_STATUS_ENUM.COMPLETED:
-      return <PlaceOrder />
+      imagePath = require('../../assets/SVG/place-order.json')
+      break
     case ORDER_STATUS_ENUM.DELIVERED:
-      return <PlaceOrder />
-    default:
-      return null
+      imagePath = require('../../assets/SVG/place-order.json')
+      break
   }
+
+  if (!imagePath) return null
+
+  return <LottieView
+    style={{
+      width: 250,
+      height: 250
+    }}
+    source={imagePath}
+    autoPlay
+    loop
+  />
+
+
 }
 
 export default OrderDetail
