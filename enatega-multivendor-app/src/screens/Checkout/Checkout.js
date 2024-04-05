@@ -871,6 +871,7 @@ function Checkout(props) {
                           ]}
                           onPress={() => {
                             props.navigation.setParams({ tipAmount: null })
+                            setTip(null)
                             setSelectedTip((prevState) =>
                               prevState === label ? null : label
                             )

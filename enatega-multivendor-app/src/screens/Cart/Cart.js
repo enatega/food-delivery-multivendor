@@ -452,7 +452,8 @@ function Cart(props) {
     }
   }
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
-  if (deliveryTime < 1) deliveryTime += restaurant.deliveryTime
+  if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
+
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -562,7 +563,7 @@ function Cart(props) {
                     if (!food) return null
                     return (
                       <View
-                        key={cartItem._id}
+                        key={cartItem._id + index}
                         style={[styles(currentTheme).itemContainer]}
                       >
                         <CartItem
@@ -679,7 +680,7 @@ function Cart(props) {
         }}
       >
         <Pickup
-          minimumTime={restaurant.deliveryTime}
+          minimumTime={restaurant?.deliveryTime}
           setOrderDate={setOrderDate}
           isPickedUp={isPickup}
           setIsPickedUp={setIsPickup}
