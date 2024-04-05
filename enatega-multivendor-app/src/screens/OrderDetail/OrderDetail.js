@@ -80,19 +80,17 @@ function OrderDetail(props) {
     })
   }
 
-  const order = orders.find(o => o?._id === id)
+  const order = orders?.find(o => o?._id === id)
   
   useEffect(()=>{
-    if (!headerRef.current && order) {
       props.navigation.setOptions({
         headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-        headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
+        headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
         headerTitleStyle: { color: currentTheme.newFontcolor },
         headerStyle: { backgroundColor: currentTheme.newheaderBG },
         // iconColor:{ color: currentTheme.newIconColor}
       })
       headerRef.current = true
-    }
   },[headerRef.current, order])
 
   if (loadingOrders || !order) {
