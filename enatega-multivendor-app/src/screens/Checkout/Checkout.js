@@ -373,7 +373,7 @@ function Checkout(props) {
           { name: 'Main' },
           {
             name: 'OrderDetail',
-            params: { _id: data.placeOrder._id }
+            params: { _id: data?.placeOrder?._id }
           }
         ]
       })
