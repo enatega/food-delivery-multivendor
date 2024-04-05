@@ -12,12 +12,12 @@ const styles = (props = null) => {
     },
     locationIcon:{
       backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
-      width: 24,
-    height: 24,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop:scale(10)
+      width: 28,
+      height: 28,
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop:scale(10)
     },
     headerContainer: {
       height: '100%',

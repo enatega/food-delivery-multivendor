@@ -24,26 +24,36 @@ function CartComponent(props) {
   return (
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles().subContainer}>
+      <View style={styles(currentTheme).actionContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={onRemove}
-          style={styles(currentTheme).icon}>
-          <AntDesign name="minus" size={scale(16)} color={currentTheme.themeBackground} />
+          style={[
+            styles(currentTheme).actionContainerBtns,
+            styles(currentTheme).minusBtn
+          ]}
+          onPress={onRemove}>
+          <AntDesign
+            name={props.quantity < 2 ? 'delete' : 'minus'}
+            size={scale(18)}
+            color={currentTheme.color4}
+          />
         </TouchableOpacity>
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          style={styles(currentTheme).quantity}
-          H4
-          bold
-          center>
+
+        <View style={styles(currentTheme).actionContainerView}>
+          <TextDefault H5 bold textColor={currentTheme.black}>
           {quantity}
-        </TextDefault>
+          </TextDefault>
+        </View>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={onAdd}
-          style={styles(currentTheme).icon}>
-          <AntDesign name="plus" size={scale(16)} color={currentTheme.themeBackground} />
+          style={[
+            styles(currentTheme).actionContainerBtns,
+            styles(currentTheme).plusBtn
+          ]}
+          onPress={onAdd}>
+          <AntDesign name="plus" size={scale(18)} color={currentTheme.white} />
         </TouchableOpacity>
+      </View>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={props.onPress.bind(this, quantity)}

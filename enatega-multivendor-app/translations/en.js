@@ -385,7 +385,7 @@ export const en = {
   clearCartText:
     'By leaving this restaurant page, the items you`ve added to cart will be cleared',
   okText: 'OK',
-  yourOrder: 'Your Order',
+  yourOrder: 'Order',
   itemsAndQuantity: 'ITEMS AND QUANTITY',
   price: 'PRICE',
   edit: 'Edit',
@@ -435,7 +435,7 @@ export const en = {
   emptyHere: "It's empty here",
   addressNotSaved: 'You have not saved any address yet',
   addNewAddress: 'Click Add New Address to get started',
-  yourOrder: 'Your Order',
+  yourOrder: 'Order',
   exclusiveVAt: 'Total is exclusive of VAT',
   replyRider: 'Send a reply to rider!',
   within: 'Within',

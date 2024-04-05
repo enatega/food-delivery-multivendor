@@ -21,7 +21,7 @@ import { Modalize } from 'react-native-modalize'
 import {
   MaterialIcons,
   AntDesign,
-  MaterialCommunityIcons
+  SimpleLineIcons
 } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
@@ -202,13 +202,10 @@ function Main(props) {
           style={[styles(currentTheme).addButton]}
           activeOpacity={0.7}
           onPress={setCurrentLocation}
+          disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            <MaterialCommunityIcons
-              name='target'
-              size={scale(25)}
-              color={currentTheme.black}
-            />
+            <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
             <View style={styles().mL5p} />
             <TextDefault bold>{t('currentLocation')}</TextDefault>
           </View>
@@ -508,7 +505,7 @@ function Main(props) {
                       <View style={[styles(currentTheme).homeIcon]}>
                         {addressIcons[address.label]
                           ? React.createElement(addressIcons[address.label], {
-                              fill: currentTheme.darkBgFont
+                              fill: currentTheme.darkBgFont,
                             })
                           : React.createElement(addressIcons['Other'], {
                               fill: currentTheme.darkBgFont

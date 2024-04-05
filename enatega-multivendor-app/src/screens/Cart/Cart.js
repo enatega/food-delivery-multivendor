@@ -562,7 +562,7 @@ function Cart(props) {
                     if (!food) return null
                     return (
                       <View
-                        key={cartItem._id}
+                        key={cartItem._id + index}
                         style={[styles(currentTheme).itemContainer]}
                       >
                         <CartItem

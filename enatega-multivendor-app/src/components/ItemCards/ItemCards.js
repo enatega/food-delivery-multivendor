@@ -8,6 +8,7 @@ import { IMAGE_LINK } from '../../utils/constants'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
+import { formatNumber } from '../../utils/formatNumber'
 
 const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
    
@@ -37,14 +38,14 @@ const currentTheme = theme[themeContext.ThemeValue]
           }}>
           {item.title}
         </TextDefault>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', marginTop: 'auto' }}>
           <Image
             source={{ uri: imageUrl }}
-            style={[{ width: 138, height: 120 }, styles().popularMenuImg]}
+            style={[{ width: 138, height: 120, borderRadius: 8 }, styles().popularMenuImg]}
           />
           <View style={styles().popularMenuPrice}>
             <Text style={{ color: '#1C1C1E', fontSize: scale(12) }}>
-              {`${configuration.currencySymbol}${item.variations[0].price}`}
+              {`${configuration.currencySymbol}${formatNumber(item.variations[0].price)}`}
             </Text>
             {item?.variations[0]?.discounted > 0 && (
               <Text
@@ -53,7 +54,7 @@ const currentTheme = theme[themeContext.ThemeValue]
                 fontSize: scale(12),
                 textDecorationLine: 'line-through'
               }}>
-                {`${configuration?.currencySymbol} ${parseFloat(item?.variations[0]?.price + item?.variations[0]?.discounted).toFixed(2)}`}
+                {`${configuration?.currencySymbol} ${formatNumber(parseFloat(item?.variations[0]?.price + item?.variations[0]?.discounted).toFixed(0))}`}
 
             </Text>
             )}
