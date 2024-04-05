@@ -28,29 +28,27 @@ function Location(props) {
   return (
     <View>
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5, gap: 5 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center',justifyContent:'center', marginLeft: 5, gap: 5 }}>
           <View style={[styles().locationIcon, props.locationIconGray]}>
             <EvilIcons
               name="location"
               size={16}
               color={props.locationIcon}
-             
             />
           </View>
           <View style={styles(currentTheme).headerContainer}>
-            <TextDefault textColor={props.locationLabel} left>
-              {''}
-              {t(translatedLabel)}
-            </TextDefault>
             <TouchableOpacity
               activeOpacity={1}
               onPress={props.modalOn}
               style={styles.textContainer}>
               <TextDefault textColor={props.location} numberOfLines={1} H5 bolder>
-                {''}
-                {translatedAddress?.slice(0, 20)}...
+                {translatedAddress?.slice(0, 40)}...
               </TextDefault>
             </TouchableOpacity>
+            <TextDefault textColor={props.locationLabel} left>
+              {''}
+              {t(translatedLabel)}
+            </TextDefault>
           </View>
         </View>
       </View>

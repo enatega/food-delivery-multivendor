@@ -476,7 +476,7 @@ function Cart(props) {
                 <View style={styles(currentTheme).imageContainer}>
                   <View style={{ marginLeft: scale(10) }}>
                     <View style={[styles(currentTheme).locationIcon]}>
-                      <EvilIcons name='location' size={scale(16)} />
+                      <EvilIcons name='calendar' size={scale(18)} />
                     </View>
                   </View>
                   <View

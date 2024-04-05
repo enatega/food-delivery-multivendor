@@ -116,12 +116,9 @@ const styles = (props = null) =>
     deliveryTime: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: scale(12),
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      marginLeft: scale(2)
+      margin: scale(5),
     },
-   
+
     suggestedItems: {
       paddingBottom: scale(30),
       ...alignment.PLlarge
@@ -177,7 +174,7 @@ const styles = (props = null) =>
       height: scale(30),
       borderRadius: 40
     },
-    changeBtnInner:{
+    changeBtnInner: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
@@ -187,7 +184,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.main : 'gray',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection:'row',
+      flexDirection: 'row',
       height: scale(50),
       borderRadius: 40
     },
@@ -302,10 +299,6 @@ const styles = (props = null) =>
     headerContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#6FCF97'
     },
-    location: {
-      ...alignment.PLsmall,
-      ...alignment.PRmedium
-    },
     mapView: {
       height: scale(119)
     },
@@ -326,7 +319,7 @@ const styles = (props = null) =>
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
-    voucherSecInner:{
+    voucherSecInner: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
@@ -418,6 +411,18 @@ const styles = (props = null) =>
       padding: 5,
       borderRadius: 6,
       color: props !== null ? props.newFontcolor : '#f9f9f9'
+    },
+    labelContainer: {
+      flex: 1,
+      marginLeft: scale(5)
+    },
+    iconContainer: {
+      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      width: scale(24),
+      height: scale(24),
+      borderRadius: scale(24),
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   })
 export default styles
