@@ -13,19 +13,17 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      // backgroundColor: 'red',
-      // height: '100%'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     containerInfo: {
       width: '100%',
       ...alignment.MTmedium
     },
-    mainContainer:{
+    mainContainer: {
       flex: 1,
-      flexDirection:'column',
-  justifyContent:'space-between',
-  ...alignment.MBlarge
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      ...alignment.MBlarge
     },
     formSubContainer: {
       borderRadius: scale(8),
@@ -91,13 +89,16 @@ const styles = (props = null) =>
     // Model for password changing
     modalContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#FFF',
-      borderRadius: scale(14),
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.PTmedium,
-      ...alignment.PBsmall,
-      borderWidth: props !== null && props.gray200 !== '#E5E7EB' ? 0 : 1,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      gap: 10,
+      borderRadius: scale(20),
+      shadowOpacity: 0,
+      paddingTop: 24,
+      paddingBottom: 24,
+      paddingLeft: 16,
+      paddingRight: 16
     },
     modalContent: {
       width: '90%'
@@ -108,14 +109,21 @@ const styles = (props = null) =>
       alignItems: 'flex-start',
       backgroundColor: props !== null ? props.radioOuterColor : 'white'
     },
+    modalHeader: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
     btnContainer: {
-      width: '30%',
+      backgroundColor: props !== null ? props.transparent : 'transparent',
       justifyContent: 'center',
-      alignItems: 'flex-end',
-      alignSelf: 'flex-end',
-      ...alignment.MTlarge,
-      ...alignment.PTxSmall,
-      ...alignment.PBxSmall
+      alignItems: 'center',
+      flexDirection: 'row',
+      height: scale(40),
+      borderRadius: 40,
+      borderWidth: 1,
+      borderColor: props !== null ? props.black : 'black'
     },
     titleContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'white',
@@ -142,19 +150,19 @@ const styles = (props = null) =>
       gap: 24,
       margin: 20,
       backgroundColor: props !== null ? props.themeBackground : 'white',
-      borderWidth:scale(1),
-      borderColor:props !== null ? props.color10 : 'white',
+      borderWidth: scale(1),
+      borderColor: props !== null ? props.color10 : 'white',
       borderRadius: 20,
       padding: 20,
       alignItems: 'center',
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
-        height: 2,
+        height: 2
       },
       shadowOpacity: 0.25,
       shadowRadius: 4,
-      elevation: 5,
+      elevation: 5
     },
     btn: {
       display: 'flex',
@@ -162,7 +170,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       alignSelf: 'stretch',
       height: scale(50),
-      borderRadius: 40,
+      borderRadius: 40
     },
     btnCancel: {
       backgroundColor: props !== null ? props.white : 'white',
@@ -170,7 +178,25 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.black : 'black'
     },
     btnDelete: {
-      backgroundColor: props !== null ? props.red600 : '#DC2626',
+      backgroundColor: props !== null ? props.red600 : '#DC2626'
+    },
+    modalInput: {
+      height: scale(40),
+      borderWidth: 1,
+      borderColor: props != null ? props.verticalLine : '#B8B8B8',
+      padding: 5,
+      borderRadius: 6,
+      color: props !== null ? props.newFontcolor : '#f9f9f9'
+    },
+    modal: {
+      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      borderTopEndRadius: scale(20),
+      borderTopStartRadius: scale(20),
+      shadowOpacity: 0,
+      paddingTop: 24,
+      paddingBottom: 24,
+      paddingLeft: 16,
+      paddingRight: 16
     }
   })
 export default styles
