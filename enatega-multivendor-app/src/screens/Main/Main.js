@@ -390,9 +390,9 @@ function Main(props) {
                           </TextDefault>
                         </View>
                         <Image
-                          source={require('../../assets/images/ItemsList/menu.png')}
+                          source={require('../../assets/images/ItemsList/menu-new.png')}
                           style={styles().popularMenuImg}
-                          resizeMode='contain'
+                          // resizeMode='contain'
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -403,25 +403,27 @@ function Main(props) {
                           })
                         }
                       >
-                        <TextDefault
-                          H4
-                          bolder
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemName}
-                        >
-                          {t('grocery')}
-                        </TextDefault>
-                        <TextDefault
-                          Normal
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemDescription}
-                        >
-                          {t('essentialsDeliveredFast')}
-                        </TextDefault>
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}
+                          >
+                            {t('grocery')}
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}
+                          >
+                            {t('essentialsDeliveredFast')}
+                          </TextDefault>
+                        </View>
                         <Image
-                          source={require('../../assets/images/ItemsList/grocery.png')}
+                          source={require('../../assets/images/ItemsList/grocery-new.png')}
                           style={styles().popularMenuImg}
-                          resizeMode='contain'
+                          // resizeMode='contain'
                         />
                       </TouchableOpacity>
                     </View>
@@ -457,8 +459,12 @@ function Main(props) {
                         )}
                       </View>
                     </View>
-                    <View style={ styles(currentTheme, hasActiveOrders).topBrandsMargin } >
-                        {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
+                    <View
+                      style={
+                        styles(currentTheme, hasActiveOrders).topBrandsMargin
+                      }
+                    >
+                      {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
                     </View>
                   </ScrollView>
                 )}

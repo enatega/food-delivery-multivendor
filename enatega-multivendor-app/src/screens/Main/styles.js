@@ -28,7 +28,8 @@ const styles = (props = null, hasActiveOrders = false) =>
     },
     popularMenuImg: {
       width: '100%',
-      aspectRatio: 15 / 8
+      // aspectRatio: 15 / 8
+      height: scale(90)
     },
 
     screenBackground: {

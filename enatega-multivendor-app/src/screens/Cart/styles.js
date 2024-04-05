@@ -112,8 +112,7 @@ const styles = (props = null) =>
       borderRadius: 12,
       padding: scale(8),
       width: scale(120),
-      marginTop: scale(14),
-      height: scale(160)
+      marginTop: scale(14)
     },
     suggestItemImgContainer: {
       backgroundColor: '#F3F4F6',
@@ -123,7 +122,7 @@ const styles = (props = null) =>
       padding: scale(4)
     },
     suggestItemName: {
-      marginVertical: scale(5)
+      marginVertical: scale(10)
     },
     suggestItemPrice: {
       marginTop: scale(5)
@@ -201,10 +200,10 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
-      borderRadius: scale(10),
-      width: '60%',
-      height: '8%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '70%',
+      height: scale(40),
+      borderRadius: scale(20),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
@@ -281,9 +280,8 @@ const styles = (props = null) =>
       ...alignment.PRsmall
     },
     imageContainer: {
-      display: 'flex',
-      width: '100%',
       flexDirection: 'row',
+      width: '100%',
       alignItems: 'center'
     },
     cartInnerContainer: {
