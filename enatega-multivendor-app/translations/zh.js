@@ -503,7 +503,7 @@ export const zh = {
   Location: '位置',
   phoneNumberExist: '提供的电话号码已经存在！',
   phoneCheckingError: '检查电话号码时出错。请稍后重试！',
-  cancelledOrder:'您的订单已取消。如果您有任何问题，请联系我们的支持团队。',
+  cancelledOrder: '您的订单已取消。如果您有任何问题，请联系我们的支持团队。',
   addMore: '您想要添加这些吗？',
   howWasOrder: '您的订单怎么样？',
   tellAboutExp: '告诉其他人您与之的经历',
@@ -518,9 +518,12 @@ export const zh = {
   enterAmount: '输入金额',
   applyVoucher: '使用优惠券',
   inputCode: '输入代码',
-  AddTip:'添加小费',
-  permanentDeleteMessage:"您确定要删除您的帐户吗？此操作无法撤销。删除您的帐户将永久删除所有数据，包括您的订单和偏好设置。如果继续，您将失去对您的帐户及其优惠的访问权。",
-  yesSure:"是的，我确定",
-  noDelete:'不要，不要删除它',
-  loginOrSignUp: '登录/注册'
+  AddTip: '添加小费',
+  permanentDeleteMessage:
+    '您确定要删除您的帐户吗？此操作无法撤销。删除您的帐户将永久删除所有数据，包括您的订单和偏好设置。如果继续，您将失去对您的帐户及其优惠的访问权。',
+  yesSure: '是的，我确定',
+  noDelete: '不要，不要删除它',
+  loginOrSignUp: '登录/注册',
+  salesTax: '销售税',
+  minimumOrder: '最低订单'
 }
