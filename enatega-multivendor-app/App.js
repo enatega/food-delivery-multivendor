@@ -35,6 +35,7 @@ import { MessageComponent } from './src/components/FlashMessage/MessageComponent
 import * as Updates from 'expo-updates'
 import ReviewModal from './src/components/Review'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
+import { useTheme } from './src/ui/hooks/useTheme'
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -63,8 +64,9 @@ export default function App() {
   const notificationListener = useRef()
   const responseListener = useRef()
   const [orderId, setOrderId] = useState()
+  const defaultTheme = useTheme()
   // Theme Reducer
-  const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
+  const [theme, themeSetter] = useReducer(ThemeReducer, defaultTheme)
   const [isUpdating, setIsUpdating] = useState(false)
 
   useEffect(() => {
@@ -97,13 +99,13 @@ export default function App() {
   useEffect(() => {
     try {
       AsyncStorage.getItem('theme').then((response) =>
-        response !== 'Pink' ? themeSetter({ type: response }) : null
+        response !== defaultTheme ? themeSetter({ type: response }) : null
       )
     } catch (error) {
       // Error retrieving data
       console.log('Theme Error : ', error.message)
     }
-  }, [theme])
+  }, [defaultTheme])
 
   useEffect(() => {
     if (!appIsReady) return

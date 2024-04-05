@@ -19,8 +19,10 @@
       "backgroundColor": "#90E36D"
     },
     "assetBundlePatterns": ["**/*"],
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
+      "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",
       "config": {
         "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
@@ -50,6 +52,7 @@
       "versionCode": 39,
       "package": "com.enatega.multivendor",
       "googleServicesFile": "./google-services.json",
+      "userInterfaceStyle": "automatic",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
