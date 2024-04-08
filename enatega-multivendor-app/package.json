@@ -60,6 +60,7 @@
     "expo-device": "~5.9.3",
     "expo-font": "~11.10.2",
     "expo-image-picker": "~14.7.1",
+    "expo-linear-gradient": "^12.7.2",
     "expo-linking": "~6.2.2",
     "expo-localization": "~14.8.3",
     "expo-location": "~16.5.2",
@@ -75,6 +76,7 @@
     "i18n-js": "^4.3.2",
     "i18next": "^23.7.6",
     "install": "^0.13.0",
+    "lottie-react-native": "6.5.1",
     "moment": "^2.29.1",
     "patch-package": "^8.0.0",
     "react": "18.2.0",
@@ -104,8 +106,7 @@
     "sentry-expo": "~7.2.0",
     "subscriptions-transport-ws": "^0.11.0",
     "uglify-js": "^3.17.4",
-    "uuid": "^9.0.1",
-    "lottie-react-native": "6.5.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@expo/metro-config": "^0.17.3",

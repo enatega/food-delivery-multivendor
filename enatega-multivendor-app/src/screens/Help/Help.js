@@ -44,6 +44,11 @@ const FAQs = [
     id: 6,
     heading: 'faq6',
     description: 'faq6Description'
+  },
+  {
+    id: 7,
+    heading: 'faq7',
+    description: 'faq7Description'
   }
 ]
 

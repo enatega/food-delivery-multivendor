@@ -465,22 +465,24 @@ export const en = {
   minimum: 'Minimum',
   faq1: 'How do I place an order? ',
   faq1Description:
-    'To place an order, simply download our app, sign up or log in, browse through the list of restaurants available in your area, select your desired items from the menu, and proceed to checkout. You can also track your order in real-time.',
-  faq2: 'What payment methods are accepted?',
+    "To place an order, simply browse through our menu, select the items you'd like to order, and proceed to checkout. You can choose your preferred payment method and delivery address before confirming your order.",
+  faq2: 'What are the delivery charges?',
   faq2Description:
-    'We accept a variety of payment methods including credit/debit cards, digital wallets, and cash on delivery. You can choose your preferred payment option during the checkout process.',
-  faq3: 'Can I schedule orders in advance?',
+    "Delivery charges vary depending on your location and the restaurant you're ordering from. You can view the delivery charges applicable to your order before finalizing it during the checkout process.",
+  faq3: 'Can I track my order?',
   faq3Description:
-    'Yes, you can schedule orders for later delivery. Simply select the desired delivery time during checkout, and our app will ensure your order reaches you at the specified time.',
-  faq4: 'How do I modify or cancel my order?',
+    "Yes, you can track your order in real-time from the moment it's confirmed to when it's out for delivery. You'll receive updates on the status of your order through notifications on the app.",
+  faq4: 'How long does delivery take?',
   faq4Description:
-    'If you need to modify or cancel your order, please contact our customer support team as soon as possible. Depending on the stage of preparation, modifications or cancellations may be accommodated.',
-  faq5: 'Is there a minimum order requirement?',
+    "Delivery times may vary depending on factors such as the restaurant's preparation time, traffic conditions, and your location. However, we strive to deliver your order within a reasonable timeframe, typically ranging from 30 to 60 minutes.",
+  faq5: "Can I cancel my order after it's been placed?",
   faq5Description:
-    'Minimum order requirements may vary depending on the restaurant you choose. The minimum order amount, if applicable, will be displayed during the checkout process.',
-  faq6: 'What if I have dietary restrictions or allergies?',
+    "Yes you can cancel your order once it is placed. However, once the order has been prepared and sent out for delivery, you can no longer cancel the order. You may contact the restaurant directly for assistance.",
+  faq6: 'How can I provide feedback on my experience?',
   faq6Description:
-    'Our app allows you to filter restaurants based on dietary preferences and allergens. Additionally, you can leave special instructions for the restaurant regarding any dietary restrictions or allergies, and they will do their best to accommodate your needs.',
+    "You can provide feedback through the app by rating your order and leaving comments. You can also give a rating to the restaurant and leave a review.",
+    faq7: "Can I order from multiple places at the same time?",
+    faq7Description: "Unfortunately, you can’t choose from multiple restaurants within the same order. However, you can place separate orders from different restaurants at the same time.",
   away: 'away',
   placeOrder: 'Place Order',
   continueAsGuest: 'Continue as Guest',

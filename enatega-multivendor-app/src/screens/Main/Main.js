@@ -53,6 +53,7 @@ import ErrorView from '../../components/ErrorView/ErrorView'
 import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
 import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
+import Spinner from '../../components/Spinner/Spinner'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -205,9 +206,15 @@ function Main(props) {
           disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-            <View style={styles().mL5p} />
-            <TextDefault bold>{t('currentLocation')}</TextDefault>
+            {
+              busy ? <Spinner size='small' /> : (
+                <>
+                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                <View style={styles().mL5p} />
+                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                </>
+              )
+            }
           </View>
         </TouchableOpacity>
       </View>
