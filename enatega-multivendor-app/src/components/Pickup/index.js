@@ -44,11 +44,17 @@ function PickUp(props) {
   return (
     <View style={{ paddingTop: 30 }}>
       {isPickUp ? (
-        <TextDefault style={styles().tabHeading}>
+        <TextDefault
+          textColor={props.pickupTextColor}
+          style={styles().tabHeading}
+        >
           {t('SelectPickupDT')}
         </TextDefault>
       ) : (
-        <TextDefault style={styles().tabHeading}>
+        <TextDefault
+          textColor={props.pickupTextColor}
+          style={styles().tabHeading}
+        >
           {t('SelectDeliveryDT')}
         </TextDefault>
       )}
@@ -69,7 +75,7 @@ function PickUp(props) {
           >
             <TextDefault
               style={styles(currentTheme).tabSubHeading}
-              textColor={isPickUp ? currentTheme.editProfileButton : ''}
+              textColor={props.pickupTextColor}
               bolder
               H5
             >
@@ -94,7 +100,7 @@ function PickUp(props) {
               style={styles(currentTheme).tabSubHeading}
               bolder
               H5
-              textColor={!isPickUp ? currentTheme.editProfileButton : ''}
+              textColor={props.pickupTextColor}
             >
               {t('delivery')}
             </TextDefault>
@@ -114,6 +120,7 @@ function PickUp(props) {
           onPress={onEditPress}
         >
           <TextDefault
+            textColor={props.pickupTextColor}
             style={
               Platform.OS === 'android'
                 ? styles().androidDateFormat
@@ -125,7 +132,7 @@ function PickUp(props) {
               <FontAwesome
                 name='edit'
                 size={25}
-                color={theme.Pink.iconColorPink}
+                color={props.pickupTextColor}
               />
             )}
           </TextDefault>

@@ -28,8 +28,8 @@ const styles = (props = null) => {
     },
     tabSubHeadingActive: {
       borderBottomWidth: 2,
-      borderBottomColor: props?.editProfileButton,
-      paddingBottom:scale(10)
+      borderBottomColor: props?.newFontcolor,
+      paddingBottom: scale(10)
     },
     activeLabel: {
       flex: 1,

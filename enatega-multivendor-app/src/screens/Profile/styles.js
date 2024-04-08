@@ -116,14 +116,14 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     btnContainer: {
-      backgroundColor: props !== null ? props.transparent : 'transparent',
+      backgroundColor: props !== null ? props.color3 : 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
       height: scale(40),
       borderRadius: 40,
       borderWidth: 1,
-      borderColor: props !== null ? props.black : 'black'
+      borderColor: props !== null ? props.borderColor : 'black'
     },
     titleContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'white',

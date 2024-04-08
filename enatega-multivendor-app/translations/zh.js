@@ -525,5 +525,8 @@ export const zh = {
   noDelete: '不要，不要删除它',
   loginOrSignUp: '登录/注册',
   salesTax: '销售税',
-  minimumOrder: '最低订单'
+  minimumOrder: '最低订单',
+  deliveryTime: '送货时间',
+  pickupTime: '取货时间',
+  asap: '尽快'
 }
