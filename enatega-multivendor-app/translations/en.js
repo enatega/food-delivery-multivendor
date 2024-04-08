@@ -548,5 +548,6 @@ export const en = {
   asap: 'ASAP',
   loginOrSignUp: 'Login/Sign Up',
   salesTax: 'Sales Tax',
-  minimumOrder: 'Minimum Order'
+  minimumOrder: 'Minimum Order',
+  selectOptionforAddon: 'Please select an option for addon'
 }

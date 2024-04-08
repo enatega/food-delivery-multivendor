@@ -528,5 +528,6 @@ export const zh = {
   minimumOrder: '最低订单',
   deliveryTime: '送货时间',
   pickupTime: '取货时间',
-  asap: '尽快'
+  asap: '尽快',
+  selectOptionforAddon: '请为附加组件选择一个选项'
 }

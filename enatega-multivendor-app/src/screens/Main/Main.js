@@ -136,8 +136,8 @@ function Main(props) {
   }
 
   const addressIcons = {
-    Home: CustomHomeIcon,
-    Work: CustomWorkIcon,
+    House: CustomHomeIcon,
+    Office: CustomWorkIcon,
     Other: CustomOtherIcon
   }
 
