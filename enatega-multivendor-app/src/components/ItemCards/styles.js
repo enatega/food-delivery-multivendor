@@ -23,7 +23,6 @@ const styles = (props = null) =>
       paddingBottom: scale(9),
       borderColor: '#E5E7EB',
       borderWidth: 1,
-      backgroundColor: props != null ? props.gray100 : 'black',
       flexGrow: 1
     },
     popularMenuPrice: {
