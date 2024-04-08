@@ -68,12 +68,15 @@ const usePhoneOtp = () => {
     FlashMessage({
       message: t('numberVerified')
     })
-    route.params?.prevScreen
+    if (!profile?.name) navigation.navigate('Profile', { editName: true })
+    else {
+      route.params?.prevScreen
       ? navigation.navigate(route.params.prevScreen)
       : navigation.navigate({
         name: 'Main',
         merge: true
       })
+    }
   }
 
   const [mutate, { loading }] = useMutation(SEND_OTP_TO_PHONE, {
