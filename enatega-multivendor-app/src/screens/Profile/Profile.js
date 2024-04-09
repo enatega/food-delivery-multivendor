@@ -28,7 +28,11 @@ import styles from './styles'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute
+} from '@react-navigation/native'
 import analytics from '../../utils/analytics'
 import { Feather } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -144,7 +148,11 @@ function Profile(props) {
           truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons name='arrow-back' size={25} color={currentTheme.newIconColor} />
+              <MaterialIcons
+                name='arrow-back'
+                size={25}
+                color={currentTheme.newIconColor}
+              />
             </View>
           )}
           onPress={() => {
@@ -237,7 +245,7 @@ function Profile(props) {
           message: error.networkError.result.errors[0].message
         })
       }
-    } catch (err) { }
+    } catch (err) {}
   }
 
   async function deactivatewithemail() {
@@ -292,10 +300,7 @@ function Profile(props) {
                 }
               ]}
             >
-              <TextDefault
-                textColor={currentTheme.color4}
-                bold
-              >
+              <TextDefault textColor={currentTheme.color4} bold>
                 {profile?.emailIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
@@ -345,7 +350,14 @@ function Profile(props) {
                 }
               ]}
             >
-              <TextDefault textColor={currentTheme.color4} bold>
+              <TextDefault
+                textColor={
+                  profile?.phoneIsVerified
+                    ? currentTheme.color4
+                    : currentTheme.white
+                }
+                bold
+              >
                 {profile?.phoneIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
             </View>
@@ -373,7 +385,7 @@ function Profile(props) {
           style={styles(currentTheme).flex}
         >
           <View style={styles(currentTheme).mainContainer}>
-            <View >
+            <View>
               <View style={styles(currentTheme).formSubContainer}>
                 <View style={{ flex: 3 }}>
                   <View style={styles(currentTheme).containerHeading}>
@@ -421,7 +433,9 @@ function Profile(props) {
                           textColor={currentTheme.newFontcolor}
                           baseColor={currentTheme.newFontcolor}
                           errorColor={currentTheme.textErrorColor}
-                          tintColor={!nameError ? currentTheme.newFontcolor : 'red'}
+                          tintColor={
+                            !nameError ? currentTheme.newFontcolor : 'red'
+                          }
                           error={nameError}
                         />
                       </View>
@@ -551,7 +565,8 @@ function Profile(props) {
                             <TextDefault>{profile?.phone}</TextDefault>
                           </View>
                           <View style={styles().phoneDetailsContainer}>
-                            {(profile?.phone === '' || !profile?.phoneIsVerified) && (
+                            {(profile?.phone === '' ||
+                              !profile?.phoneIsVerified) && (
                               <TouchableOpacity
                                 onPress={() =>
                                   props.navigation.navigate(
@@ -562,7 +577,8 @@ function Profile(props) {
                                   )
                                 }
                                 disabled={
-                                  profile?.phoneIsVerified && profile?.phone !== ''
+                                  profile?.phoneIsVerified &&
+                                  profile?.phone !== ''
                                 }
                               >
                                 <TextDefault
@@ -619,7 +635,11 @@ function Profile(props) {
             </View>
             <View style={{ alignItems: 'center' }}>
               <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
-                <TextDefault bolder H4 textColor={currentTheme.deleteAccountBtn}>
+                <TextDefault
+                  bolder
+                  H4
+                  textColor={currentTheme.deleteAccountBtn}
+                >
                   {t('DeleteAccount')}
                 </TextDefault>
               </TouchableOpacity>
