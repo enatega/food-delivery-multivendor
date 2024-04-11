@@ -42,7 +42,7 @@
     "@react-navigation/material-top-tabs": "^5.3.19",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
-    "@sentry/react-native": "5.17.0",
+    "@sentry/react-native": "5.19.1",
     "@use-expo/font": "^2.0.0",
     "expo": "~50.0.7",
     "expo-av": "~13.10.5",
