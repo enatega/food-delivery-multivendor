@@ -59,7 +59,7 @@
     "firebase": "^9.4.0",
     "graphql": "^15.0.0",
     "husky": "^8.0.3",
-    "i18next": "^17.0.0",
+    "i18next": "^23.11.2",
     "moment": "2.24.0",
     "node-sass": "^8.0.0",
     "nouislider": "13.1.1",
