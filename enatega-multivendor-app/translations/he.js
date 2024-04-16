@@ -527,5 +527,6 @@ export const he = {
   deliveryTime: 'זמן משלוח',
   pickupTime: 'זמן איסוף',
   asap: 'בהקדם האפשרי',
-  selectOptionforAddon: 'בבקשה בחר אפשרות עבור התוסף'
+  selectOptionforAddon: 'בבקשה בחר אפשרות עבור התוסף',
+  whatsAppText: 'צריך עזרה נוספת? צור קשר'
 }

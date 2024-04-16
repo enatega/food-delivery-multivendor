@@ -525,5 +525,6 @@ export const zh = {
   deliveryTime: '送货时间',
   pickupTime: '取货时间',
   asap: '尽快',
-  selectOptionforAddon: '请为附加组件选择一个选项'
+  selectOptionforAddon: '请为附加组件选择一个选项',
+  whatsAppText: '需要更多帮助？联系我们'
 }

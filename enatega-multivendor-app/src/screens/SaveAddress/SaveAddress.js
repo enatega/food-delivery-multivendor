@@ -32,6 +32,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../components/Spinner/Spinner'
+import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 
 const CREATE_ADDRESS = gql`
   ${createAddress}
@@ -166,13 +167,21 @@ function SaveAddress(props) {
               <View style={styles().upperContainer}>
                 <View style={styles(currentTheme).addressContainer}>
                   <View style={styles(currentTheme).addressTag}>
-                    <TextDefault H4 bolder textColor={currentTheme.newFontcolor}>
+                    <TextDefault
+                      H4
+                      bolder
+                      textColor={currentTheme.newFontcolor}
+                    >
                       {t('address')}
                     </TextDefault>
                   </View>
                   <View style={styles().address}>
                     <View style={styles().addressTag}>
-                      <TextDefault H5 bold textColor={currentTheme.newFontcolor}>
+                      <TextDefault
+                        H5
+                        bold
+                        textColor={currentTheme.newFontcolor}
+                      >
                         {locationData.city}
                       </TextDefault>
                     </View>
@@ -184,7 +193,11 @@ function SaveAddress(props) {
                   </View>
                   <View style={styles().address}>
                     <View style={styles().addressTag}>
-                      <TextDefault H5 bold textColor={currentTheme.newFontcolor}>
+                      <TextDefault
+                        H5
+                        bold
+                        textColor={currentTheme.newFontcolor}
+                      >
                         {t('locationType')}
                       </TextDefault>
                     </View>
@@ -201,7 +214,7 @@ function SaveAddress(props) {
                           style={styles().locationIconStyles}
                           onPress={() => handleLabelSelection('Apartment')}
                         >
-                          <CustomOtherIcon
+                          <CustomApartmentIcon
                             iconColor={
                               selectedLabel === 'Apartment'
                                 ? currentTheme.newheaderColor
@@ -340,11 +353,13 @@ function SaveAddress(props) {
                 disabled={loading}
                 onPress={onSelectLocation}
                 activeOpacity={0.5}
-
-                style={styles(currentTheme).saveBtnContainer}>
-                {!loading && <TextDefault textColor={currentTheme.black} H5 bold>
-                  {t('saveAddress')}
-                </TextDefault>}
+                style={styles(currentTheme).saveBtnContainer}
+              >
+                {!loading && (
+                  <TextDefault textColor={currentTheme.black} H5 bold>
+                    {t('saveAddress')}
+                  </TextDefault>
+                )}
                 {loading && <Spinner backColor={'transparent'} />}
               </TouchableOpacity>
             </View>

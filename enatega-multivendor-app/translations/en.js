@@ -551,5 +551,6 @@ export const en = {
   loginOrSignUp: 'Login/Sign Up',
   salesTax: 'Sales Tax',
   minimumOrder: 'Minimum Order',
-  selectOptionforAddon: 'Please select an option for addon'
+  selectOptionforAddon: 'Please select an option for addon',
+  whatsAppText: 'Need more help? Contact us'
 }

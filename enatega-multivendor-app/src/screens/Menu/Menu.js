@@ -53,6 +53,7 @@ import { FILTER_TYPE } from '../../utils/enums'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import ErrorView from '../../components/ErrorView/ErrorView'
 
 const RESTAURANTS = gql`
@@ -190,6 +191,7 @@ function Menu({ route, props }) {
   const addressIcons = {
     House: CustomHomeIcon,
     Office: CustomWorkIcon,
+    Apartment: CustomApartmentIcon,
     Other: CustomOtherIcon
   }
 
@@ -527,10 +529,11 @@ function Menu({ route, props }) {
           <Modalize
             ref={modalRef}
             modalStyle={styles(currentTheme).modal}
-            modalHeight={350}
+            modalHeight={400}
             overlayStyle={styles(currentTheme).overlay}
             handleStyle={styles(currentTheme).handle}
-            handlePosition="inside"
+            handlePosition='inside'
+            modalPosition='top'
             openAnimationConfig={{
               timing: { duration: 400 },
               spring: { speed: 20, bounciness: 10 }
@@ -544,28 +547,28 @@ function Menu({ route, props }) {
               ListHeaderComponent: modalHeader(),
               ListFooterComponent: modalFooter(),
               showsVerticalScrollIndicator: false,
-              keyExtractor: item => item._id,
+              keyExtractor: (item) => item._id,
               renderItem: ({ item: address }) => (
-                <View style={styles().addressbtn}>
+                <View style={styles(currentTheme).addressbtn}>
                   <TouchableOpacity
                     style={styles(currentTheme).addressContainer}
                     activeOpacity={0.7}
                     onPress={() => setAddressLocation(address)}>
                     <View style={styles().addressSubContainer}>
                       <View style={[styles(currentTheme).homeIcon]}>
-                        {addressIcons[address.label] ? (
-                          React.createElement(addressIcons[address.label], {
-                            fill: currentTheme.darkBgFont
-                          })
-                        ) : (
-                          <AntDesign name="question" size={20} color="black" />
-                        )}
+                        {addressIcons[address.label]
+                          ? React.createElement(addressIcons[address.label], {
+                              fill: currentTheme.darkBgFont
+                            })
+                          : React.createElement(addressIcons['Other'], {
+                              fill: currentTheme.darkBgFont
+                            })}
                       </View>
-                      {/* <View style={styles().mL5p} /> */}
                       <View style={[styles().titleAddress]}>
                         <TextDefault
                           textColor={currentTheme.darkBgFont}
-                          style={styles(currentTheme).labelStyle}>
+                          style={styles(currentTheme).labelStyle}
+                        >
                           {t(address.label)}
                         </TextDefault>
                       </View>
@@ -575,7 +578,8 @@ function Menu({ route, props }) {
                         <TextDefault
                           style={{ ...alignment.PLlarge }}
                           textColor={currentTheme.fontSecondColor}
-                          small>
+                          small
+                        >
                           {address.deliveryAddress}
                         </TextDefault>
                       </View>
@@ -586,16 +590,17 @@ function Menu({ route, props }) {
                       ![t('currentLocation'), t('selectedLocation')].includes(
                         location.label
                       ) && (
-                      <MaterialIcons
-                        name="check"
-                        size={scale(25)}
-                        color={currentTheme.iconColorPink}
-                      />
-                    )}
+                        <MaterialIcons
+                          name='check'
+                          size={scale(25)}
+                          color={currentTheme.iconColorPink}
+                        />
+                      )}
                   </View>
                 </View>
               )
-            }}></Modalize>
+            }}
+          ></Modalize>
         </View>
       </SafeAreaView>
     </>
