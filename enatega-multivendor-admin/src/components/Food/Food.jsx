@@ -56,47 +56,6 @@ function Food(props) {
   const [titleError, titleErrorSetter] = useState(null)
   const [categoryError, categoryErrorSetter] = useState(null)
   const [addonModal, addonModalSetter] = useState(false)
-  const restaurantId = localStorage.getItem('restaurantId')
-
-  const onError = error => {
-    mainErrorSetter(`${t('ActionFailedTryAgain')} ${error}`)
-    successSetter('')
-    setTimeout(onDismiss, 3000)
-  }
-  const onCompleted = data => {
-    if (!props.food) clearFields()
-    const message = props.food
-      ? t('FoodUpdatedSuccessfully')
-      : t('FoodAddedSuccessfully')
-    mainErrorSetter('')
-    successSetter(message)
-    setTitle('')
-    setDescription('')
-    setTimeout(onDismiss, 3000)
-  }
-  const [mutate, { loading: mutateLoading }] = useMutation(mutation, {
-    onError,
-    onCompleted
-  })
-  const {
-    data: dataCategories,
-    error: errorCategories,
-    loading: loadingCategories
-  } = useQuery(GET_CATEGORIES, {
-    variables: {
-      id: restaurantId
-    }
-  })
-
-  const {
-    data: dataAddons,
-    error: errorAddons,
-    loading: loadingAddons
-  } = useQuery(GET_ADDONS, {
-    variables: {
-      id: restaurantId
-    }
-  })
   const [variation, variationSetter] = useState(
     props.food
       ? props.food.variations.map(({ title, price, discounted, addons }) => {
@@ -120,6 +79,72 @@ function Food(props) {
           }
         ]
   )
+
+  const restaurantId = localStorage.getItem('restaurantId')
+
+  const clearFields = () => {
+    // formRef.current.reset()
+    variationSetter([
+      {
+        title: '',
+        price: '',
+        discounted: '',
+        addons: [],
+        titleError: null,
+        priceError: null
+      }
+    ])
+    imgMenuSetter('')
+    titleErrorSetter(null)
+    categoryErrorSetter(null)
+  }
+
+  const onDismiss = () => {
+    successSetter('')
+    mainErrorSetter('')
+  }
+
+  const onError = error => {
+    mainErrorSetter(`${t('ActionFailedTryAgain')} ${error}`)
+    successSetter('')
+    setTimeout(onDismiss, 3000)
+  }
+  const onCompleted = data => {
+    if (!props.food) clearFields()
+    const message = props.food
+      ? t('FoodUpdatedSuccessfully')
+      : t('FoodAddedSuccessfully')
+    mainErrorSetter('')
+    successSetter(message)
+    setTitle('')
+    setDescription('')
+    setTimeout(onDismiss, 3000)
+  }
+  const [mutate, { loading: mutateLoading }] = useMutation(mutation, {
+    onError,
+    onCompleted
+  })
+
+  const {
+    data: dataCategories,
+    error: errorCategories,
+    loading: loadingCategories
+  } = useQuery(GET_CATEGORIES, {
+    variables: {
+      id: restaurantId
+    }
+  })
+
+  const {
+    data: dataAddons,
+    error: errorAddons,
+    loading: loadingAddons
+  } = useQuery(GET_ADDONS, {
+    variables: {
+      id: restaurantId
+    }
+  })
+
   const onBlur = (setter, field, state) => {
     setter(!validateFunc({ [field]: state }, field))
   }
@@ -131,6 +156,15 @@ function Food(props) {
     images = images.filter(image => image.name.match(/\.(jpg|jpeg|png|gif)$/))
     return images.length ? images[0] : undefined
   }
+
+  const imageToBase64 = imgUrl => {
+    const fileReader = new FileReader()
+    fileReader.onloadend = () => {
+      imgMenuSetter(fileReader.result)
+    }
+    fileReader.readAsDataURL(imgUrl)
+  }
+
   const selectImage = (event, state) => {
     const result = filterImage(event)
     if (result) imageToBase64(result)
@@ -215,22 +249,7 @@ function Food(props) {
     variationSetter([...variations])
     return titleError && categoryError && variationsError
   }
-  const clearFields = () => {
-    // formRef.current.reset()
-    variationSetter([
-      {
-        title: '',
-        price: '',
-        discounted: '',
-        addons: [],
-        titleError: null,
-        priceError: null
-      }
-    ])
-    imgMenuSetter('')
-    titleErrorSetter(null)
-    categoryErrorSetter(null)
-  }
+
   const onBlurVariation = (index, type) => {
     const variations = [...variation]
     if (type === 'title') {
@@ -274,17 +293,7 @@ function Food(props) {
     else variations[index].addons.splice(addon, 1)
     variationSetter([...variations])
   }
-  const onDismiss = () => {
-    successSetter('')
-    mainErrorSetter('')
-  }
-  const imageToBase64 = imgUrl => {
-    const fileReader = new FileReader()
-    fileReader.onloadend = () => {
-      imgMenuSetter(fileReader.result)
-    }
-    fileReader.readAsDataURL(imgUrl)
-  }
+
   const uploadImageToCloudinary = async() => {
     if (imgMenu === '') return imgMenu
     if (props.food && props.food.image === imgMenu) return imgMenu
@@ -412,12 +421,12 @@ function Food(props) {
                   'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
                 }
               />
-              <label htmlFor="file-upload" className={classes.fileUpload}>
+              <label htmlFor={props.food ? 'edit-food-image' : 'add-food-image'} className={classes.fileUpload}>
                 {t('UploadAnImage')}
               </label>
               <input
                 className={classes.file}
-                id="file-upload"
+                id={props.food ? 'edit-food-image' : 'add-food-image'}
                 type="file"
                 accept="image/*"
                 onChange={event => {
