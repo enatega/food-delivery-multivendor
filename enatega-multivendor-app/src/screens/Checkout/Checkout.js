@@ -774,7 +774,7 @@ function Checkout(props) {
                   />
                   <View style={styles(currentTheme).deliveryTime}>
                     <View style={styles().iconContainer}>
-                      <EvilIcons name='calendar' size={scale(16)} />
+                      <EvilIcons name='calendar' size={scale(20)} />
                     </View>
                     <View style={styles(currentTheme).labelContainer}>
                       <View style={{ marginLeft: scale(5) }}>

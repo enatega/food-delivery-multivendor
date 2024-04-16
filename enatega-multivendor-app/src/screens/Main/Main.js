@@ -54,6 +54,7 @@ import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
 import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
 import Spinner from '../../components/Spinner/Spinner'
+import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -139,6 +140,7 @@ function Main(props) {
   const addressIcons = {
     House: CustomHomeIcon,
     Office: CustomWorkIcon,
+    Apartment: CustomApartmentIcon,
     Other: CustomOtherIcon
   }
 

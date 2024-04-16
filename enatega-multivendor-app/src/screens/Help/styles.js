@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { scale } from '../../utils/scaling'
+import { scale, verticalScale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -44,6 +44,33 @@ const styles = (props = null) =>
     topContainer: {
       marginLeft: scale(10),
       marginTop: scale(10)
+    },
+    containerButton: {
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      width: '90%',
+      height: scale(40),
+      bottom: verticalScale(0),
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
+    },
+    addButton: {
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '100%',
+      height: scale(40),
+      borderRadius: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
+    },
+    whatsAppText: {
+      textAlign: 'center',
+      paddingLeft: scale(5),
+    },
+    contentContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   })
 export default styles
