@@ -558,5 +558,6 @@ export const de = {
   deliveryTime: 'Levertijd',
   pickupTime: 'Ophaaltijd',
   asap: 'Zo snel mogelijk',
-  selectOptionforAddon: 'Bitte wählen Sie eine Option für das Add-On aus'
+  selectOptionforAddon: 'Bitte wählen Sie eine Option für das Add-On aus',
+  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns'
 }

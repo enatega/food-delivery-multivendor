@@ -539,5 +539,6 @@ export const km = {
   deliveryTime: 'ពេលវេលា​ដឹកជញ្ជូន',
   pickupTime: 'ពេលវេលា​យកឡើង',
   asap: 'ដោយសារយោង',
-  selectOptionforAddon: 'សូមជ្រើសរើស​ជម្រើសសម្រាប់​គ្រឿង​បន្ថែម'
+  selectOptionforAddon: 'សូមជ្រើសរើស​ជម្រើសសម្រាប់​គ្រឿង​បន្ថែម',
+  whatsAppText: 'ត្រូវការជំនួយច្រើនទៀត? ទាក់ទង​មកយើង'
 }
