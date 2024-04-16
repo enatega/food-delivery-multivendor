@@ -46,6 +46,7 @@ import WouldYouLikeToAddThese from './Section'
 import moment from 'moment'
 import { Modalize } from 'react-native-modalize'
 import Pickup from '../../components/Pickup'
+import { SpecialInstructions } from '../../components/Cart/SpecialInstructions'
 
 const { height: HEIGHT } = Dimensions.get('window')
 // Constants
@@ -540,6 +541,13 @@ function Cart(props) {
                     color={currentTheme.secondaryText}
                   />
                 </TouchableOpacity>
+              </View>
+              <View style={{
+                ...alignment.PLsmall,
+                ...alignment.PRsmall,
+                marginTop: 10
+              }}>
+                <SpecialInstructions theme={currentTheme}/>
               </View>
               <View
                 style={{
