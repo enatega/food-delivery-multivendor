@@ -106,8 +106,8 @@ function Checkout(props) {
   const initialRegion = {
     latitude: +latOrigin,
     longitude: +lonOrigin,
-    latitudeDelta: 0.0022,
-    longitudeDelta: 0.0021
+    latitudeDelta: 0.4,
+    longitudeDelta: 0.5
   }
 
   const onModalOpen = (modalRef) => {
@@ -197,23 +197,23 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async () => {
-        if (data && !!data.restaurant) {
-          const latOrigin = Number(data.restaurant.location.coordinates[1])
-          const lonOrigin = Number(data.restaurant.location.coordinates[0])
-          const latDest = Number(location.latitude)
-          const longDest = Number(location.longitude)
-          const distance = await calculateDistance(
-            latOrigin,
-            lonOrigin,
-            latDest,
-            longDest
-          )
-          const amount = Math.ceil(distance) * configuration.deliveryRate
-          isSubscribed &&
-            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-        }
-      })()
+    ;(async () => {
+      if (data && !!data.restaurant) {
+        const latOrigin = Number(data.restaurant.location.coordinates[1])
+        const lonOrigin = Number(data.restaurant.location.coordinates[0])
+        const latDest = Number(location.latitude)
+        const longDest = Number(location.longitude)
+        const distance = await calculateDistance(
+          latOrigin,
+          lonOrigin,
+          latDest,
+          longDest
+        )
+        const amount = Math.ceil(distance) * configuration.deliveryRate
+        isSubscribed &&
+          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+      }
+    })()
     return () => {
       isSubscribed = false
     }
@@ -323,7 +323,7 @@ function Checkout(props) {
         },
         {
           text: 'Continue',
-          onPress: () => { },
+          onPress: () => {},
           style: 'cancel'
         }
       ],
@@ -520,9 +520,9 @@ function Checkout(props) {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id)
-          }))
+              _id,
+              options: options.map(({ _id }) => _id)
+            }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -593,8 +593,9 @@ function Checkout(props) {
           )
           if (!variation) return null
 
-          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
-            }`
+          const title = `${food.title}${
+            variation.title ? `(${variation.title})` : ''
+          }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -640,7 +641,6 @@ function Checkout(props) {
     }
   }
 
- 
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -760,7 +760,6 @@ function Checkout(props) {
                   />
                 </View>
                 <View style={[styles(currentTheme).headerContainer]}>
-
                   <Location
                     locationIcon={currentTheme.newIconColor}
                     locationLabel={currentTheme.newFontcolor}
@@ -770,7 +769,7 @@ function Checkout(props) {
                   <View
                     style={[
                       styles(currentTheme).horizontalLine,
-                      styles().width100,
+                      styles().width100
                     ]}
                   />
                   <View style={styles(currentTheme).deliveryTime}>
@@ -785,9 +784,8 @@ function Checkout(props) {
                           H5
                           bolder
                         >
-                          {t(isPickup ? 'pickUp' : 'delivery')}
-                          {' '}
-                          {t('within')} {data.restaurant.deliveryTime} - {' '}
+                          {t(isPickup ? 'pickUp' : 'delivery')} {t('within')}{' '}
+                          {data.restaurant.deliveryTime} -{' '}
                           {data?.restaurant.deliveryTime + 10} {t('mins')}
                         </TextDefault>
                       </View>
@@ -1010,7 +1008,7 @@ function Checkout(props) {
                               -{configuration.currencySymbol}
                               {parseFloat(
                                 calculatePrice(0, false) -
-                                calculatePrice(0, true)
+                                  calculatePrice(0, true)
                               ).toFixed(2)}
                             </TextDefault>
                           </View>
