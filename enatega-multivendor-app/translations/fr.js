@@ -469,20 +469,27 @@ export const fr = {
   useCurrentLocation: 'Utiliser ma position actuelle',
   browseCities: 'Parcourir toutes les villes',
   minimum: 'le minimum',
-  faq1: "Comment passer une commande?",
-  faq1Description: "Pour passer une commande, il vous suffit de parcourir notre menu, de sélectionner les articles que vous souhaitez commander, puis de passer à la caisse. Vous pouvez choisir votre méthode de paiement préférée et votre adresse de livraison avant de confirmer votre commande.",
-  faq2: "Quels sont les frais de livraison?",
-  faq2Description: "Les frais de livraison varient en fonction de votre emplacement et du restaurant auprès duquel vous commandez. Vous pouvez consulter les frais de livraison applicables à votre commande avant de la finaliser lors du processus de paiement.",
-  faq3: "Puis-je suivre ma commande?",
-  faq3Description: "Oui, vous pouvez suivre votre commande en temps réel depuis le moment où elle est confirmée jusqu'à sa livraison. Vous recevrez des mises à jour sur le statut de votre commande via des notifications sur l'application.",
-  faq4: "Combien de temps faut-il pour la livraison?",
-  faq4Description: "Les délais de livraison peuvent varier en fonction de facteurs tels que le temps de préparation du restaurant, les conditions de circulation et votre emplacement. Cependant, nous nous efforçons de livrer votre commande dans un délai raisonnable, généralement compris entre 30 et 60 minutes.",
+  faq1: 'Comment passer une commande?',
+  faq1Description:
+    'Pour passer une commande, il vous suffit de parcourir notre menu, de sélectionner les articles que vous souhaitez commander, puis de passer à la caisse. Vous pouvez choisir votre méthode de paiement préférée et votre adresse de livraison avant de confirmer votre commande.',
+  faq2: 'Quels sont les frais de livraison?',
+  faq2Description:
+    'Les frais de livraison varient en fonction de votre emplacement et du restaurant auprès duquel vous commandez. Vous pouvez consulter les frais de livraison applicables à votre commande avant de la finaliser lors du processus de paiement.',
+  faq3: 'Puis-je suivre ma commande?',
+  faq3Description:
+    "Oui, vous pouvez suivre votre commande en temps réel depuis le moment où elle est confirmée jusqu'à sa livraison. Vous recevrez des mises à jour sur le statut de votre commande via des notifications sur l'application.",
+  faq4: 'Combien de temps faut-il pour la livraison?',
+  faq4Description:
+    'Les délais de livraison peuvent varier en fonction de facteurs tels que le temps de préparation du restaurant, les conditions de circulation et votre emplacement. Cependant, nous nous efforçons de livrer votre commande dans un délai raisonnable, généralement compris entre 30 et 60 minutes.',
   faq5: "Puis-je annuler ma commande une fois qu'elle est passée?",
-  faq5Description: "Oui, vous pouvez annuler votre commande une fois qu'elle est passée. Cependant, une fois que la commande a été préparée et envoyée pour la livraison, vous ne pouvez plus l'annuler. Vous pouvez contacter directement le restaurant pour obtenir de l'aide.",
-  faq6: "Comment puis-je donner mon avis sur mon expérience?",
-  faq6Description: "Vous pouvez donner votre avis via l'application en notant votre commande et en laissant des commentaires. Vous pouvez également donner une note au restaurant et laisser un avis.",
-  faq7: "Puis-je commander à plusieurs endroits en même temps?",
-  faq7Description: "Malheureusement, vous ne pouvez pas choisir parmi plusieurs restaurants dans la même commande. Cependant, vous pouvez passer des commandes séparées auprès de différents restaurants en même temps.",
+  faq5Description:
+    "Oui, vous pouvez annuler votre commande une fois qu'elle est passée. Cependant, une fois que la commande a été préparée et envoyée pour la livraison, vous ne pouvez plus l'annuler. Vous pouvez contacter directement le restaurant pour obtenir de l'aide.",
+  faq6: 'Comment puis-je donner mon avis sur mon expérience?',
+  faq6Description:
+    "Vous pouvez donner votre avis via l'application en notant votre commande et en laissant des commentaires. Vous pouvez également donner une note au restaurant et laisser un avis.",
+  faq7: 'Puis-je commander à plusieurs endroits en même temps?',
+  faq7Description:
+    'Malheureusement, vous ne pouvez pas choisir parmi plusieurs restaurants dans la même commande. Cependant, vous pouvez passer des commandes séparées auprès de différents restaurants en même temps.',
   away: 'loin',
   placeOrder: 'Passer commande',
   titleFAQ: 'Questions fréquemment posées',
@@ -556,5 +563,12 @@ export const fr = {
   pickupTime: 'Heure de ramassage',
   asap: 'Dès que possible',
   selectOptionforAddon: "Veuillez sélectionner une option pour l'addon",
-  whatsAppText: "Besoin de plus d'aide? Contactez-nous"
+  whatsAppText: "Besoin de plus d'aide? Contactez-nous",
+  yourEmail: 'Connectez-vous facilement en entrant votre adresse e-mail!',
+  yourEmailPassword:
+    'Veuillez entrer votre mot de passe maintenant pour accéder!',
+  brandName: 'Enatega',
+  welcomeText: 'Bienvenue chez Enatega',
+  createAccountDesc:
+    'Profitez des meilleurs restaurants ou obtenez ce dont vous avez besoin dans les magasins à proximité, livré!'
 }

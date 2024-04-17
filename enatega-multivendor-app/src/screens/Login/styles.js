@@ -9,8 +9,7 @@ const styles = (props = null) =>
     },
     safeAreaViewStyles: {
       flex: 1,
-      backgroundColor:
-        props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     mainContainer: {
       flex: 1,
@@ -59,7 +58,7 @@ const styles = (props = null) =>
       borderRadius: scale(6),
       backgroundColor: props !== null ? props.themeBackground : 'white',
       padding: scale(12),
-      color: props !==null ? props.newFontcolor : 'red'
+      color: props !== null ? props.newFontcolor : 'red'
     },
     errorInput: {
       backgroundColor: props !== null ? props.errorInputBack : '#F7E7E5',
@@ -71,7 +70,6 @@ const styles = (props = null) =>
     passwordField: {
       display: 'flex',
       flexDirection: 'row',
-      ...alignment.MTlarge,
       alignItems: 'center'
     },
     passwordInput: {
@@ -97,6 +95,7 @@ const styles = (props = null) =>
     },
     headerRightIcon: {
       ...alignment.PRsmall
-    }
+    },
+    svgContainer: {}
   })
 export default styles

@@ -10,6 +10,7 @@ import { useCreateAccount } from './useCreateAccount'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
+import LoginHeader from '../../assets/SVG/imageComponents/LoginHeader'
 const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
@@ -40,10 +41,7 @@ const CreateAccount = (props) => {
     if (loading && loginButton === 'Apple') {
       return (
         <View style={styles(currentTheme).buttonBackground}>
-          <Spinner
-            backColor='transparent'
-            spinnerColor={currentTheme.main}
-          />
+          <Spinner backColor='transparent' spinnerColor={currentTheme.main} />
         </View>
       )
     }
@@ -65,7 +63,11 @@ const CreateAccount = (props) => {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL
               ]
             })
-            const name = credential.fullName?.givenName ? credential.fullName?.givenName + ' ' + credential.fullName?.familyName : ''
+            const name = credential.fullName?.givenName
+              ? credential.fullName?.givenName +
+                ' ' +
+                credential.fullName?.familyName
+              : ''
             const user = {
               appleId: credential.user,
               phone: '',
@@ -120,12 +122,19 @@ const CreateAccount = (props) => {
 
   return (
     <View style={styles().container}>
-      <View style={styles().image}>
-        <Image
-          source={require('../../assets/images/loginHeader.png')}
-          resizeMode='cover'
-          style={styles().image1}
-        />
+      <View style={styles(currentTheme).image}>
+        <View style={styles().image1}>
+          <LoginHeader
+            blackStroke={currentTheme.themeBackground}
+            whiteStroke={currentTheme.darkBgFont}
+            fillColor={currentTheme.svgFill}
+          />
+        </View>
+        <View style={styles(currentTheme).mainHeadingTextOverlay}>
+          <TextDefault center H3 bold>
+            {t('brandName')}
+          </TextDefault>
+        </View>
       </View>
       <View style={[styles(currentTheme).subContainer]}>
         <View style={[styles().signupContainer]}>
@@ -133,19 +142,25 @@ const CreateAccount = (props) => {
             style={{
               width: '90%',
               alignSelf: 'center',
-              marginBottom: scale(10)
+              marginBottom: scale(30)
             }}
           >
             <TextDefault
-              H4
-              bolder
+              H2
+              B700
+              center
               textColor={currentTheme.newFontcolor}
               style={{ marginBottom: scale(7) }}
             >
-              {t('signUporSignIn')}
+              {t('welcomeText')}
             </TextDefault>
-            <TextDefault textColor={currentTheme.newFontcolor}>
-              {t('signUpDiscount')}
+            <TextDefault
+              center
+              H5
+              textColor={currentTheme.newFontcolor}
+              style={styles().descText}
+            >
+              {t('createAccountDesc')}
             </TextDefault>
           </View>
 

@@ -477,12 +477,13 @@ export const en = {
     "Delivery times may vary depending on factors such as the restaurant's preparation time, traffic conditions, and your location. However, we strive to deliver your order within a reasonable timeframe, typically ranging from 30 to 60 minutes.",
   faq5: "Can I cancel my order after it's been placed?",
   faq5Description:
-    "Yes you can cancel your order once it is placed. However, once the order has been prepared and sent out for delivery, you can no longer cancel the order. You may contact the restaurant directly for assistance.",
+    'Yes you can cancel your order once it is placed. However, once the order has been prepared and sent out for delivery, you can no longer cancel the order. You may contact the restaurant directly for assistance.',
   faq6: 'How can I provide feedback on my experience?',
   faq6Description:
-    "You can provide feedback through the app by rating your order and leaving comments. You can also give a rating to the restaurant and leave a review.",
-    faq7: "Can I order from multiple places at the same time?",
-    faq7Description: "Unfortunately, you can’t choose from multiple restaurants within the same order. However, you can place separate orders from different restaurants at the same time.",
+    'You can provide feedback through the app by rating your order and leaving comments. You can also give a rating to the restaurant and leave a review.',
+  faq7: 'Can I order from multiple places at the same time?',
+  faq7Description:
+    'Unfortunately, you can’t choose from multiple restaurants within the same order. However, you can place separate orders from different restaurants at the same time.',
   away: 'away',
   placeOrder: 'Place Order',
   continueAsGuest: 'Continue as Guest',
@@ -552,5 +553,11 @@ export const en = {
   salesTax: 'Sales Tax',
   minimumOrder: 'Minimum Order',
   selectOptionforAddon: 'Please select an option for addon',
-  whatsAppText: 'Need more help? Contact us'
+  whatsAppText: 'Need more help? Contact us',
+  yourEmail: 'Log in easily by entering your email!',
+  yourEmailPassword: 'Please enter your passwords now for access!',
+  brandName: 'Enatega',
+  welcomeText: 'Welcome to Enatega',
+  createAccountDesc:
+    'Enjoy the best restaurants or get what you need from nearby stores, delivered'
 }

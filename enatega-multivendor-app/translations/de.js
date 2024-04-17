@@ -472,20 +472,27 @@ export const de = {
   useCurrentLocation: 'Verwenden Sie meinen aktuellen Standort',
   browseCities: 'Alle Städte durchsuchen',
   minimum: 'Minimum',
-  faq1: "Wie kann ich eine Bestellung aufgeben?",
-  faq1Description: "Um eine Bestellung aufzugeben, durchsuchen Sie einfach unsere Speisekarte, wählen Sie die Artikel aus, die Sie bestellen möchten, und gehen Sie zum Checkout. Sie können Ihre bevorzugte Zahlungsmethode und Lieferadresse auswählen, bevor Sie Ihre Bestellung bestätigen.",
-  faq2: "Was sind die Lieferkosten?",
-  faq2Description: "Die Lieferkosten variieren je nach Ihrem Standort und dem Restaurant, von dem Sie bestellen. Sie können die Lieferkosten für Ihre Bestellung anzeigen, bevor Sie sie im Checkout-Prozess abschließen.",
-  faq3: "Kann ich meine Bestellung verfolgen?",
-  faq3Description: "Ja, Sie können Ihre Bestellung in Echtzeit verfolgen, von dem Moment an, in dem sie bestätigt wird, bis zu ihrer Auslieferung. Sie erhalten Updates zum Status Ihrer Bestellung über Benachrichtigungen in der App.",
-  faq4: "Wie lange dauert die Lieferung?",
-  faq4Description: "Die Lieferzeiten können je nach Faktoren wie der Vorbereitungszeit des Restaurants, den Verkehrsbedingungen und Ihrem Standort variieren. Wir bemühen uns jedoch, Ihre Bestellung innerhalb eines angemessenen Zeitrahmens zu liefern, der normalerweise zwischen 30 und 60 Minuten liegt.",
-  faq5: "Kann ich meine Bestellung stornieren, nachdem sie aufgegeben wurde?",
-  faq5Description: "Ja, Sie können Ihre Bestellung stornieren, sobald sie aufgegeben wurde. Sobald die Bestellung jedoch vorbereitet und zur Lieferung verschickt wurde, können Sie die Bestellung nicht mehr stornieren. Sie können sich direkt an das Restaurant wenden, um Unterstützung zu erhalten.",
-  faq6: "Wie kann ich Feedback zu meiner Erfahrung geben?",
-  faq6Description: "Sie können Feedback über die App geben, indem Sie Ihre Bestellung bewerten und Kommentare hinterlassen. Sie können auch das Restaurant bewerten und eine Rezension hinterlassen.",
-  faq7: "Kann ich gleichzeitig von mehreren Orten bestellen?",
-  faq7Description: "Leider können Sie nicht aus mehreren Restaurants innerhalb derselben Bestellung wählen. Sie können jedoch gleichzeitig separate Bestellungen von verschiedenen",
+  faq1: 'Wie kann ich eine Bestellung aufgeben?',
+  faq1Description:
+    'Um eine Bestellung aufzugeben, durchsuchen Sie einfach unsere Speisekarte, wählen Sie die Artikel aus, die Sie bestellen möchten, und gehen Sie zum Checkout. Sie können Ihre bevorzugte Zahlungsmethode und Lieferadresse auswählen, bevor Sie Ihre Bestellung bestätigen.',
+  faq2: 'Was sind die Lieferkosten?',
+  faq2Description:
+    'Die Lieferkosten variieren je nach Ihrem Standort und dem Restaurant, von dem Sie bestellen. Sie können die Lieferkosten für Ihre Bestellung anzeigen, bevor Sie sie im Checkout-Prozess abschließen.',
+  faq3: 'Kann ich meine Bestellung verfolgen?',
+  faq3Description:
+    'Ja, Sie können Ihre Bestellung in Echtzeit verfolgen, von dem Moment an, in dem sie bestätigt wird, bis zu ihrer Auslieferung. Sie erhalten Updates zum Status Ihrer Bestellung über Benachrichtigungen in der App.',
+  faq4: 'Wie lange dauert die Lieferung?',
+  faq4Description:
+    'Die Lieferzeiten können je nach Faktoren wie der Vorbereitungszeit des Restaurants, den Verkehrsbedingungen und Ihrem Standort variieren. Wir bemühen uns jedoch, Ihre Bestellung innerhalb eines angemessenen Zeitrahmens zu liefern, der normalerweise zwischen 30 und 60 Minuten liegt.',
+  faq5: 'Kann ich meine Bestellung stornieren, nachdem sie aufgegeben wurde?',
+  faq5Description:
+    'Ja, Sie können Ihre Bestellung stornieren, sobald sie aufgegeben wurde. Sobald die Bestellung jedoch vorbereitet und zur Lieferung verschickt wurde, können Sie die Bestellung nicht mehr stornieren. Sie können sich direkt an das Restaurant wenden, um Unterstützung zu erhalten.',
+  faq6: 'Wie kann ich Feedback zu meiner Erfahrung geben?',
+  faq6Description:
+    'Sie können Feedback über die App geben, indem Sie Ihre Bestellung bewerten und Kommentare hinterlassen. Sie können auch das Restaurant bewerten und eine Rezension hinterlassen.',
+  faq7: 'Kann ich gleichzeitig von mehreren Orten bestellen?',
+  faq7Description:
+    'Leider können Sie nicht aus mehreren Restaurants innerhalb derselben Bestellung wählen. Sie können jedoch gleichzeitig separate Bestellungen von verschiedenen',
   away: 'weg',
   placeOrder: 'Bestellung aufgeben',
   titleFAQ: 'Häufig gestellte Fragen',
@@ -559,5 +566,13 @@ export const de = {
   pickupTime: 'Ophaaltijd',
   asap: 'Zo snel mogelijk',
   selectOptionforAddon: 'Bitte wählen Sie eine Option für das Add-On aus',
-  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns'
+  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
+  yourEmail:
+    'Melden Sie sich einfach an, indem Sie Ihre E-Mail-Adresse eingeben!',
+  yourEmailPassword:
+    'Bitte geben Sie jetzt Ihr Passwort ein, um Zugriff zu erhalten!',
+  brandName: 'Enatega',
+  welcomeText: 'Willkommen bei Enatega',
+  createAccountDesc:
+    'Genießen Sie die besten Restaurants oder erhalten Sie, was Sie von nahegelegenen Geschäften benötigen, geliefert!'
 }

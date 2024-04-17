@@ -219,7 +219,7 @@ export const useCreateAccount = () => {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
+      StatusBar.setBackgroundColor(currentTheme.main)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'

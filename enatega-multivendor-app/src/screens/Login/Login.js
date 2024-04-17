@@ -18,6 +18,7 @@ import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
+import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 
 function Login(props) {
   const {
@@ -51,67 +52,73 @@ function Login(props) {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={styles(currentTheme).safeAreaViewStyles}>
+      style={styles(currentTheme).safeAreaViewStyles}
+    >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles().flex}>
+        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles().flex}
+      >
         <ScrollView
           style={styles().flex}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}>
+          alwaysBounceVertical={false}
+        >
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
-              <View style={styles().logoContainer}>
-                <SimpleLineIcons name="envelope" size={30} color={currentTheme.newIconColor} />
+              <View style={styles().svgContainer}>
+                <SignUpSvg strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
-                  H3
-                  bolder
+                  H2
+                  B700
                   textColor={currentTheme.newFontcolor}
                   style={{
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
-                  }}>
-                  {registeredEmail
-                    ? t('enterEmailPassword')
-                    : t('whatsYourEmail')}
+                  }}
+                >
+                  {registeredEmail ? t('yourEmailPassword') : t('yourEmail')}
                 </TextDefault>
 
                 <TextDefault
                   H5
                   bold
                   textColor={currentTheme.horizontalLine}
-                  style={{ ...alignment.MBmedium }}>
+                  style={{ ...alignment.MBmedium }}
+                >
                   {registeredEmail ? t('emailExists') : t('checkAccount')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
                 <View>
-                  <View>
-                    <TextInput
-                      placeholder={t('email')}
-                      style={[
-                        styles(currentTheme).textField,
-                        emailError !== null
-                          ? styles(currentTheme).errorInput
-                          : {}
-                      ]}
-                      placeholderTextColor={currentTheme.fontSecondColor}
-                      // value={email}
-                      defaultValue='demo-customer@enatega.com'
-                      onChangeText={e => setEmail(e.toLowerCase().trim())}
-                    />
-                    {emailError !== null && (
-                      <TextDefault
-                        style={styles().error}
-                        bold
-                        textColor={currentTheme.textErrorColor}>
-                        {emailError}
-                      </TextDefault>
-                    )}
-                  </View>
+                  {!registeredEmail && (
+                    <View>
+                      <TextInput
+                        placeholder={t('email')}
+                        style={[
+                          styles(currentTheme).textField,
+                          emailError !== null
+                            ? styles(currentTheme).errorInput
+                            : {}
+                        ]}
+                        placeholderTextColor={currentTheme.fontSecondColor}
+                        // value={email}
+                        defaultValue='demo-customer@enatega.com'
+                        onChangeText={(e) => setEmail(e.toLowerCase().trim())}
+                      />
+                      {emailError !== null && (
+                        <TextDefault
+                          style={styles().error}
+                          bold
+                          textColor={currentTheme.textErrorColor}
+                        >
+                          {emailError}
+                        </TextDefault>
+                      )}
+                    </View>
+                  )}
                   {registeredEmail && (
                     <>
                       <View style={styles().passwordField}>
@@ -127,7 +134,7 @@ function Login(props) {
                           ]}
                           placeholderTextColor={currentTheme.fontSecondColor}
                           value={password}
-                          onChangeText={e => setPassword(e)}
+                          onChangeText={(e) => setPassword(e)}
                         />
                         <FontAwesome
                           onPress={() => setShowPassword(!showPassword)}
@@ -146,7 +153,8 @@ function Login(props) {
                           <TextDefault
                             style={styles().error}
                             bold
-                            textColor={currentTheme.textErrorColor}>
+                            textColor={currentTheme.textErrorColor}
+                          >
                             {passwordError}
                           </TextDefault>
                         </View>
@@ -155,12 +163,16 @@ function Login(props) {
                         style={alignment.MBsmall}
                         activeOpacity={0.7}
                         onPress={() =>
-                          props.navigation.navigate('ForgotPassword', { email : emailRef.current})
-                        }>
+                          props.navigation.navigate('ForgotPassword', {
+                            email: emailRef.current
+                          })
+                        }
+                      >
                         <TextDefault
-                          textColor={currentTheme.main}
+                          textColor={currentTheme.linkColor}
                           style={alignment.MTsmall}
-                          bolder>
+                          bolder
+                        >
                           {t('forgotPassword')}
                         </TextDefault>
                       </TouchableOpacity>
@@ -175,16 +187,14 @@ function Login(props) {
                         : checkEmailExist()
                     }
                     activeOpacity={0.7}
-                    style={styles(currentTheme).btn}>
-                    <TextDefault
-                      H4
-                      textColor={currentTheme.black}
-                      bold>
+                    style={styles(currentTheme).btn}
+                  >
+                    <TextDefault H4 textColor={currentTheme.black} bold>
                       {loading || loginLoading ? (
                         <Spinner
-                        backColor='transparent'
-                        spinnerColor={currentTheme.white}
-                          size="small"
+                          backColor='transparent'
+                          spinnerColor={currentTheme.white}
+                          size='small'
                         />
                       ) : registeredEmail ? (
                         t('loginBtn')
