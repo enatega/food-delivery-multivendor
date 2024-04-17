@@ -34,7 +34,7 @@
     ]
   },
   "dependencies": {
-    "@amplitude/analytics-react-native": "^1.1.1",
+    "@amplitude/analytics-react-native": "^1.4.7",
     "@apollo/client": "^3.5.6",
     "@babel/plugin-transform-object-rest-spread": "^7.23.4",
     "@babel/plugin-transform-optional-catch-binding": "^7.23.4",
@@ -52,7 +52,6 @@
     "core-js": "^3.33.3",
     "deprecated-react-native-prop-types": "^5.0.0",
     "expo": "~50.0.15",
-    "expo-analytics-segment": "^11.2.1",
     "expo-apple-authentication": "~6.3.0",
     "expo-application": "~5.8.3",
     "expo-constants": "~15.4.5",
