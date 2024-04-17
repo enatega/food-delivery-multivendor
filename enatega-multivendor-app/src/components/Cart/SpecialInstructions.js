@@ -5,6 +5,7 @@ import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
 import { useStyles } from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
+import { InstructionsModal } from './InstructionsModal'
 
 export const SpecialInstructions = ({ theme }) => {
     const styles = useStyles(theme)
@@ -19,5 +20,6 @@ export const SpecialInstructions = ({ theme }) => {
         <TouchableOpacity right style={styles.iconContainer}>
             <ArrowForwardIcon />
         </TouchableOpacity>
+        <InstructionsModal theme={theme}/>
     </View>)
 }
