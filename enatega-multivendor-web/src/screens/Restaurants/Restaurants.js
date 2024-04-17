@@ -30,7 +30,6 @@ import Analytics from "../../utils/analytics";
 import useStyles from "./styles";
 import DetailedOrderCard from "../../components/Orders/DetailedOrderCard/DetailedOrderCard";
 import { ACTIVE_STATUS } from "../../utils/constantValues";
-import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -150,13 +149,6 @@ function Restaurants() {
   };
   return (
     <Grid container>
-      <TawkMessengerReact
-        propertyId="5d0f4f6b36eab9721118c84e"
-        widgetId="1ftnb355n"
-        customStyle={{
-          color: "red",
-        }}
-      />
       <FlashMessage
         open={Boolean(message.type)}
         severity={message.type}
