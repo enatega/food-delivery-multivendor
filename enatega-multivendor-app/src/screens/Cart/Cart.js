@@ -67,7 +67,9 @@ function Cart(props) {
     addQuantity,
     removeQuantity,
     isPickup,
-    setIsPickup
+    setIsPickup,
+    instructions,
+    setInstructions
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
@@ -78,7 +80,6 @@ function Cart(props) {
   const [minimumOrder, setMinimumOrder] = useState('')
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
-  const [instructions, setInstructions] = useState('')
 
   const [orderDate, setOrderDate] = useState(new Date())
   const isCartEmpty = cart?.length === 0
