@@ -10,6 +10,7 @@ const styles = (props = null) =>
       flex: 1,
       height: scale(200),
       width: width - 15 * 2.5, // 15 is the medium margin
+      backgroundColor: props !== null ? props.shadow : '#707070',
       shadowColor: props !== null ? props.shadow : '#707070',
       shadowOffset: {
         width: 0,
@@ -18,6 +19,7 @@ const styles = (props = null) =>
       shadowOpacity: 0.43,
       shadowRadius: 9.51,
       elevation: 15,
+      borderRadius: 8,
       ...alignment.MLmedium,
       ...alignment.MRmedium,
       ...alignment.MTmedium
