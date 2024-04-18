@@ -547,7 +547,7 @@ function Cart(props) {
                 ...alignment.PRsmall,
                 marginTop: 10
               }}>
-                <SpecialInstructions theme={currentTheme}/>
+                <SpecialInstructions onSubmitInstructions={(value)=>{console.log('instructions submitted', value)}} theme={currentTheme}/>
               </View>
               <View
                 style={{

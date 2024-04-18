@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, Modal, Pressable, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
@@ -8,21 +8,23 @@ import { textStyles } from '../../utils/textStyles'
 import { alignment } from '../../utils/alignment'
 
 
-export const InstructionsModal = ({ theme }) => {
-    const [visible, setVisible] = useState(true)
+export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit }) => {
+    let text = ''
     const styles = useStyles(theme)
+    const onSubmitText = _ => {
+        onSubmit(text)
+    }
 
     return (<Modal
-        visible={visible}
+        visible={isVisible}
         animationType="slide"
         transparent={true}>
         <View style={styles.layout}>
-            <Pressable style={styles.backdrop} onPress={() => { setVisible(false) }}>
-            </Pressable>
+            <Pressable style={styles.backdrop} onPress={hideModal} />
             <View style={styles.container}>
                 <View style={styles.topContainer}>
                     <TouchableOpacity
-                        onPress={() => { setVisible(false) }}
+                        onPress={onSubmitText}
                         style={styles.closeButton}>
                         <TextDefault bolder textColor={theme.newButtonText}>Done</TextDefault>
                     </TouchableOpacity>
@@ -33,8 +35,8 @@ export const InstructionsModal = ({ theme }) => {
                     <TextDefault H5 smaller textColor={theme.secondaryText} style={styles.ternaryText}>Kindly be advised that your message could also be visible to the courier partner responsible for delivering your order to the venue.</TextDefault>
                 </View>
                 <View style={styles.inputContainer}>
-                    <TextInput placeholder='Type here' allowFontScaling style={{ padding: scale(10), ...textStyles.H3, flex:1 }} maxLength={400} />
-                    <TouchableOpacity style={alignment.MRxSmall} onPress={() => { }}>
+                    <TextInput onChangeText={value => text = value} autoFocus onSubmitEditing={onSubmitText} placeholder='Type here' allowFontScaling style={{ padding: scale(10), ...textStyles.H3, flex: 1 }} maxLength={400} />
+                    <TouchableOpacity style={alignment.MRxSmall} onPress={() => text = ''}>
                         <Ionicons name='close-circle-outline' size={scale(18)} color={theme.fontNewColor} />
                     </TouchableOpacity>
                 </View>
