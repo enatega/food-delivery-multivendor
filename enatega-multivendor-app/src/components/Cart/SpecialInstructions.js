@@ -30,7 +30,7 @@ export const SpecialInstructions = ({ theme, instructions, onSubmitInstructions 
         </View>
         <View middle style={{ flex: 6, justifyContent: 'center' }}>
             <TextDefault H5 bolder>Add a message for the restaurant</TextDefault>
-            <TextDefault textColor={theme.fontNewColor} style={{ lineHeight: scale(18) }}>{instructions || 'Special requests, allergies, dietary restriction'}</TextDefault>
+            <TextDefault numberOfLines={3} textColor={theme.fontNewColor} style={{ lineHeight: scale(18) }}>{instructions || 'Special requests, allergies, dietary restriction'}</TextDefault>
         </View>
         <TouchableOpacity right style={styles.iconContainer} onPress={showModal}>
             <ArrowForwardIcon />
