@@ -24,7 +24,7 @@ const GET_CUISINES = gql`
   ${getCuisines}
 `
 
-function Category(props) {
+function Cuisine(props) {
   const formRef = useRef()
   const name = props.cuisine ? props.cuisine.name : ''
   const description = props.cuisine ? props.cuisine.description : ''
@@ -203,4 +203,4 @@ function Category(props) {
   )
 }
 
-export default withTranslation()(Category)
+export default withTranslation()(Cuisine)
