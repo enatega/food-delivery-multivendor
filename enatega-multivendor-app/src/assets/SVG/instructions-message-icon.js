@@ -1,15 +1,14 @@
 import * as React from "react"
 import Svg, { Path } from "react-native-svg"
-const InstructionMessageIcon = (props) => (
+const InstructionMessageIcon = ({stroke}) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     width={28}
     height={26}
     fill="none"
-    {...props}
   >
     <Path
-      stroke="#111827"
+      stroke={stroke}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}

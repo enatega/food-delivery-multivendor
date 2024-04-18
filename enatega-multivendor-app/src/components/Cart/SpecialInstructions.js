@@ -26,14 +26,14 @@ export const SpecialInstructions = ({ theme, instructions, onSubmitInstructions 
 
     return (<View style={{ height: 100, flex: 1, flexDirection: 'row' }}>
         <View left style={styles.iconContainer}>
-            <InstructionMessageIcon />
+            <InstructionMessageIcon stroke={theme.iconStroke}/>
         </View>
         <View middle style={{ flex: 6, justifyContent: 'center' }}>
             <TextDefault H5 bolder>Add a message for the restaurant</TextDefault>
             <TextDefault numberOfLines={3} textColor={theme.fontNewColor} style={{ lineHeight: scale(18) }}>{instructions || 'Special requests, allergies, dietary restriction'}</TextDefault>
         </View>
         <TouchableOpacity right style={styles.iconContainer} onPress={showModal}>
-            <ArrowForwardIcon />
+            <ArrowForwardIcon stroke={theme.iconStroke}/>
         </TouchableOpacity>
         <InstructionsModal theme={theme} isVisible={isVisible} hideModal={hideModal} onSubmit={onSubmit} value={value} setValue={setValue} />
     </View>)

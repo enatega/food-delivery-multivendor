@@ -1,15 +1,14 @@
 import * as React from "react"
 import Svg, { Path } from "react-native-svg"
-const ArrowForwardIcon = (props) => (
+const ArrowForwardIcon = ({stroke}) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     width={10}
     height={18}
     fill="none"
-    {...props}
   >
     <Path
-      stroke="#0F172A"
+      stroke={stroke}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}
