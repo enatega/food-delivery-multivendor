@@ -3,7 +3,7 @@ import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 const { height } = Dimensions.get('window')
 
-const MODAL_MARGIN_TOP = Math.floor(scale(height / 4))
+const BACKDROP_HEIGHT = Math.floor(scale(height / 5))
 
 export const useStyles = (theme) => StyleSheet.create({
     iconContainer: {
@@ -11,12 +11,15 @@ export const useStyles = (theme) => StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    backdrop: {
+        height: BACKDROP_HEIGHT
+    },
     layout: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     container: {
-        marginTop: MODAL_MARGIN_TOP, flex: 1,
+        flex: 1,
         backgroundColor: theme.white,
         borderTopLeftRadius: scale(15),
         borderTopRightRadius: scale(15),
@@ -40,5 +43,13 @@ export const useStyles = (theme) => StyleSheet.create({
     ternaryText: {
         lineHeight: scale(18),
         marginTop: scale(10)
+    },
+    inputContainer: {
+        ...alignment.MTlarge,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: theme.verticalLine,
+        borderRadius: scale(5),
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })
