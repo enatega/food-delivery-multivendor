@@ -92,7 +92,7 @@ const styles = (props = null) =>
     ratingBox: {
       flexDirection: 'row',
       gap: scale(3),
-      alignItems: 'center'
+      alignItems: 'center',
     },
 
     flatListStyle: {

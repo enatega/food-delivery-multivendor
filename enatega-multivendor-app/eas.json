@@ -3,9 +3,6 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
       "ios": {
         "simulator": true
       }

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { verticalScale, scale } from '../../../utils/scaling'
 
@@ -18,7 +18,8 @@ const styles = (backColor) =>
     },
     favContainer: {
       height: '100%',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      marginRight: Platform.OS === 'ios' && scale(15)
     },
     imgContainer: {
       width: verticalScale(20),

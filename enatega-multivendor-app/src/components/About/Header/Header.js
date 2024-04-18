@@ -10,15 +10,12 @@ import Animated from 'react-native-reanimated'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
-
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
-
 function ImageHeader(props) {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
-
   return (
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles().topBar}>
@@ -28,8 +25,9 @@ function ImageHeader(props) {
             backgroundColor: props.iconBackColor,
             width: '20%'
           }}
-          onPress={() => navigation.goBack()}>
-          <AnimatedIon name="arrow-back" size={25} color={currentTheme.newIconColor} />
+          onPress={() => navigation.goBack()}
+        >
+          <AnimatedIon name='arrow-back' size={25} />
         </TouchableOpacity>
         <View>
           <TextDefault
@@ -38,30 +36,16 @@ function ImageHeader(props) {
             Center
             textColor={currentTheme.fontThirdColor}
             numberOfLines={1}
-            ellipsizeMode="tail">
-            {t('Openingtimes')}
+            ellipsizeMode='tail'
+          >
+            {props.restaurantName.length > 20
+              ? `${props.restaurantName.slice(0, 15)}...`
+              : props.restaurantName}
           </TextDefault>
         </View>
         <View style={{ width: '20%' }}></View>
       </View>
-      <View style={styles().restImageContainer}>
-        <Image
-          style={styles().headerImage}
-          resizeMode="contain"
-          source={{ uri: props.restaurantImage }}
-        />
-        <TextDefault
-            H4
-            bolder
-            Center
-            textColor={currentTheme.fontThirdColor}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {props.restaurantName}
-          </TextDefault>
-      </View>
     </View>
   )
 }
-
 export default ImageHeader

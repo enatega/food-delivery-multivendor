@@ -30,6 +30,7 @@ const CreateAccount = (props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
+      headerLeft: null,
       title: t(''),
       headerTransparent: true,
       headerTitleAlign: 'center'
@@ -64,21 +65,17 @@ const CreateAccount = (props) => {
                 AppleAuthentication.AppleAuthenticationScope.EMAIL
               ]
             })
-            {
-              const user = {
-                appleId: credential.user,
-                phone: '',
-                email: credential.email,
-                password: '',
-                name:
-                  credential.fullName.givenName +
-                  ' ' +
-                  credential.fullName.familyName,
-                picture: '',
-                type: 'apple'
-              }
-              mutateLogin(user)
+            const name = credential.fullName?.givenName ? credential.fullName?.givenName + ' ' + credential.fullName?.familyName : ''
+            const user = {
+              appleId: credential.user,
+              phone: '',
+              email: credential.email,
+              password: '',
+              name: name,
+              picture: '',
+              type: 'apple'
             }
+            mutateLogin(user)
             loginButtonSetter('Apple')
             // signed in
           } catch (e) {

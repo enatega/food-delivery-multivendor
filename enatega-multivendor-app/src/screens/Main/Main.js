@@ -22,7 +22,7 @@ import { Modalize } from 'react-native-modalize'
 import {
   MaterialIcons,
   AntDesign,
-  MaterialCommunityIcons
+  SimpleLineIcons
 } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
@@ -55,6 +55,8 @@ import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
 import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
 import Banner from '../../components/Main/Banner/Banner'
+import Spinner from '../../components/Spinner/Spinner'
+import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -138,8 +140,9 @@ function Main(props) {
   }
 
   const addressIcons = {
-    Home: CustomHomeIcon,
-    Work: CustomWorkIcon,
+    House: CustomHomeIcon,
+    Office: CustomWorkIcon,
+    Apartment: CustomApartmentIcon,
     Other: CustomOtherIcon
   }
 
@@ -204,15 +207,18 @@ function Main(props) {
           style={[styles(currentTheme).addButton]}
           activeOpacity={0.7}
           onPress={setCurrentLocation}
+          disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            <MaterialCommunityIcons
-              name='target'
-              size={scale(25)}
-              color={currentTheme.black}
-            />
-            <View style={styles().mL5p} />
-            <TextDefault bold>{t('currentLocation')}</TextDefault>
+            {
+              busy ? <Spinner size='small' /> : (
+                <>
+                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                <View style={styles().mL5p} />
+                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                </>
+              )
+            }
           </View>
         </TouchableOpacity>
       </View>
@@ -397,9 +403,9 @@ function Main(props) {
                           </TextDefault>
                         </View>
                         <Image
-                          source={require('../../assets/images/ItemsList/menu.png')}
+                          source={require('../../assets/images/ItemsList/menu-new.png')}
                           style={styles().popularMenuImg}
-                          resizeMode='contain'
+                          // resizeMode='contain'
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -410,25 +416,27 @@ function Main(props) {
                           })
                         }
                       >
-                        <TextDefault
-                          H4
-                          bolder
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemName}
-                        >
-                          {t('grocery')}
-                        </TextDefault>
-                        <TextDefault
-                          Normal
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemDescription}
-                        >
-                          {t('essentialsDeliveredFast')}
-                        </TextDefault>
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}
+                          >
+                            {t('grocery')}
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}
+                          >
+                            {t('essentialsDeliveredFast')}
+                          </TextDefault>
+                        </View>
                         <Image
-                          source={require('../../assets/images/ItemsList/grocery.png')}
+                          source={require('../../assets/images/ItemsList/grocery-new.png')}
                           style={styles().popularMenuImg}
-                          resizeMode='contain'
+                          // resizeMode='contain'
                         />
                       </TouchableOpacity>
                     </View>
@@ -464,8 +472,12 @@ function Main(props) {
                         )}
                       </View>
                     </View>
-                    <View style={ styles(currentTheme, hasActiveOrders).topBrandsMargin } >
-                        {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
+                    <View
+                      style={
+                        styles(currentTheme, hasActiveOrders).topBrandsMargin
+                      }
+                    >
+                      {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
                     </View>
                   </ScrollView>
                 )}
@@ -506,7 +518,7 @@ function Main(props) {
                       <View style={[styles(currentTheme).homeIcon]}>
                         {addressIcons[address.label]
                           ? React.createElement(addressIcons[address.label], {
-                              fill: currentTheme.darkBgFont
+                              fill: currentTheme.darkBgFont,
                             })
                           : React.createElement(addressIcons['Other'], {
                               fill: currentTheme.darkBgFont

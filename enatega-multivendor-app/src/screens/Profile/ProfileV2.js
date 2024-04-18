@@ -99,10 +99,10 @@ function Profile(props) {
       passwordButton: setShowPass,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={styles().bacKButton}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+              <MaterialIcons name='arrow-back' size={30} color='black' />
             </View>
           )}
           onPress={() => {
@@ -121,10 +121,10 @@ function Profile(props) {
   }, [backScreen])
 
   function viewHideAndShowName() {
-    setToggleNameView(prev => !prev)
+    setToggleNameView((prev) => !prev)
   }
   function viewHideAndShowEmail() {
-    setToggleEmailView(prev => !prev)
+    setToggleEmailView((prev) => !prev)
   }
 
   function onCompleted({ updateUser }) {
@@ -205,7 +205,8 @@ function Profile(props) {
           <TextDefault
             textColor={currentTheme.iconColor}
             style={{ fontSize: scale(13) }}
-            bolder>
+            bolder
+          >
             {profile.name}
           </TextDefault>
         </View>
@@ -221,7 +222,8 @@ function Profile(props) {
             <TextDefault
               style={{ fontSize: scale(13) }}
               textColor={currentTheme.iconColor}
-              bolder>
+              bolder
+            >
               {profile.email}
             </TextDefault>
           </View>
@@ -237,7 +239,8 @@ function Profile(props) {
           <TextDefault
             textColor={currentTheme.iconColor}
             style={{ fontSize: scale(13) }}
-            bolder>
+            bolder
+          >
             ***********
           </TextDefault>
         </View>
@@ -253,7 +256,8 @@ function Profile(props) {
             <TextDefault
               style={{ fontSize: scale(13) }}
               textColor={currentTheme.iconColor}
-              bolder>
+              bolder
+            >
               {profile.phone}
             </TextDefault>
           </View>
@@ -264,9 +268,10 @@ function Profile(props) {
                 {
                   backgroundColor: profile.phoneIsVerified
                     ? currentTheme.main
-                    : currentTheme.buttonText
+                    : currentTheme.white
                 }
-              ]}>
+              ]}
+            >
               <TextDefault textColor={currentTheme.white}>
                 {profile.phoneIsVerified ? t('verified') : t('unverified')}
               </TextDefault>
@@ -295,7 +300,8 @@ function Profile(props) {
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
-          style={styles(currentTheme).flex}>
+          style={styles(currentTheme).flex}
+        >
           <View style={styles(currentTheme).formSubContainer}>
             <View style={styles(currentTheme).containerHeading}>
               {toggleNameView && (
@@ -306,7 +312,8 @@ function Profile(props) {
                       B700
                       bolder
                       textColor={currentTheme.darkBgFont}
-                      style={styles(currentTheme).textAlignLeft}>
+                      style={styles(currentTheme).textAlignLeft}
+                    >
                       {t('name')}
                     </TextDefault>
                   </View>
@@ -315,9 +322,10 @@ function Profile(props) {
                     <TouchableOpacity
                       activeOpacity={0.3}
                       style={styles().headingButton}
-                      onPress={handleNamePress}>
+                      onPress={handleNamePress}
+                    >
                       <MaterialIcons
-                        name="edit"
+                        name='edit'
                         size={25}
                         color={currentTheme.darkBgFont}
                       />
@@ -336,7 +344,8 @@ function Profile(props) {
                       H5
                       B700
                       bolder
-                      style={styles(currentTheme).textAlignLeft}>
+                      style={styles(currentTheme).textAlignLeft}
+                    >
                       {t('name')}
                     </TextDefault>
                   </View>
@@ -359,7 +368,8 @@ function Profile(props) {
                   disabled={loadingMutation}
                   activeOpacity={0.7}
                   style={styles(currentTheme).saveContainer}
-                  onPress={handleNamePressUpdate}>
+                  onPress={handleNamePressUpdate}
+                >
                   <TextDefault style={styles(currentTheme).textAlignLeft}>
                     {t('update')}
                   </TextDefault>
@@ -378,7 +388,8 @@ function Profile(props) {
                     B700
                     bolder
                     textColor={currentTheme.darkBgFont}
-                    style={styles(currentTheme).textAlignLeft}>
+                    style={styles(currentTheme).textAlignLeft}
+                  >
                     {t('email')}
                   </TextDefault>
                 </View>
@@ -397,7 +408,8 @@ function Profile(props) {
                     B700
                     bolder
                     textColor={currentTheme.darkBgFont}
-                    style={styles(currentTheme).textAlignLeft}>
+                    style={styles(currentTheme).textAlignLeft}
+                  >
                     {t('password')}
                   </TextDefault>
                 </View>
@@ -406,9 +418,10 @@ function Profile(props) {
                   <TouchableOpacity
                     activeOpacity={0.3}
                     style={styles().headingButton}
-                    onPress={showModal}>
+                    onPress={showModal}
+                  >
                     <MaterialIcons
-                      name="edit"
+                      name='edit'
                       size={25}
                       color={currentTheme.darkBgFont}
                     />
@@ -430,7 +443,8 @@ function Profile(props) {
                       B700
                       bolder
                       textColor={currentTheme.darkBgFont}
-                      style={styles(currentTheme).textAlignLeft}>
+                      style={styles(currentTheme).textAlignLeft}
+                    >
                       {t('mobile')}
                     </TextDefault>
                   </View>
@@ -442,9 +456,10 @@ function Profile(props) {
                         props.navigation.navigate('PhoneNumber', {
                           prevScreen: 'Profile'
                         })
-                      }>
+                      }
+                    >
                       <MaterialIcons
-                        name="edit"
+                        name='edit'
                         size={25}
                         color={currentTheme.darkBgFont}
                       />
@@ -464,7 +479,8 @@ function Profile(props) {
                       H5
                       B700
                       bolder
-                      style={styles(currentTheme).textAlignLeft}>
+                      style={styles(currentTheme).textAlignLeft}
+                    >
                       {t('mobile')}
                     </TextDefault>
                   </View>
@@ -488,26 +504,28 @@ function Profile(props) {
                           }
                           disabled={
                             profile.phoneIsVerified && profile.phone !== ''
-                          }>
+                          }
+                        >
                           <TextDefault
                             bolder
                             textColor={
                               profile.phoneIsVerified
                                 ? currentTheme.startColor
                                 : currentTheme.textErrorColor
-                            }>
+                            }
+                          >
                             {profile.phone === ''
                               ? t('addPhone')
                               : profile.phoneIsVerified
-                              ? t('verified')
-                              : t('verify')}
+                                ? t('verified')
+                                : t('verify')}
                           </TextDefault>
                         </TouchableOpacity>
                       )}
                       {profile.phone !== '' && (
                         <Feather
                           style={{ marginLeft: 10, marginTop: -5 }}
-                          name="check"
+                          name='check'
                           size={20}
                           color={currentTheme.black}
                           onPress={() =>

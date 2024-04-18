@@ -5,50 +5,50 @@ const styles = (props = null) => {
   return StyleSheet.create({
     tabStyles: {
       flex: 1,
-
       alignItems: 'center',
       justifyContent: 'center',
       height: 40
     },
     tabContainer: {
-      margin: 15,
+      margin: scale(15),
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      width: '90%'
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.borderLight
     },
     tabHeading: {
       textAlign: 'center',
       fontSize: 20,
-      fontWeight: '700',
-    
+      fontWeight: '700'
     },
     tabSubHeading: {
       fontSize: 20,
       fontWeight: '500'
     },
+    tabSubHeadingActive: {
+      borderBottomWidth: 2,
+      borderBottomColor: props?.newFontcolor,
+      paddingBottom: scale(10)
+    },
     activeLabel: {
       flex: 1,
-      borderWidth: 2,
-      justifyContent: 'center',
-      backgroundColor: props !== null ? props.tagColor : 'transparent',
-      color: props !== null ? props.tagColor : 'transparent',
-      borderColor: props !== null ? props.tagColor : 'transparent',
+      justifyContent: 'flex-end',
+      // borderBottomWidth: 1,
+      // borderBottomColor: props !== null ? props.tagColor : 'transparent',
       height: scale(35),
-      alignItems: 'center',
-      borderRadius: scale(10),
-      marginRight: scale(-15),
-      zIndex: 999
+      alignItems: 'center'
+      // marginRight: scale(-15),
     },
     labelButton: {
       flex: 1,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props !== null ? props.horizontalLine : 'transparent',
-      justifyContent: 'center',
+      // borderWidth: StyleSheet.hairlineWidth,
+      // borderColor: props !== null ? props.horizontalLine : 'transparent',
+      justifyContent: 'flex-end',
       height: scale(35),
       alignItems: 'center',
-      borderRadius: scale(10),
-      marginRight: scale(-15)
+      borderRadius: scale(10)
+      // marginRight: scale(-15),
     },
     iosDateFormat: {
       fontSize: 16

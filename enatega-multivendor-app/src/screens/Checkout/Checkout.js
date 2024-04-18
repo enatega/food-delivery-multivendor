@@ -16,6 +16,7 @@ import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   AntDesign,
+  EvilIcons,
   Feather,
   FontAwesome,
   MaterialCommunityIcons,
@@ -29,7 +30,7 @@ import { getCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
-import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
@@ -53,6 +54,7 @@ import { customMapStyle } from '../../utils/customMapStyles'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
+import { fontStyles } from '../../utils/fontStyles'
 
 // Constants
 const PLACEORDER = gql`
@@ -104,8 +106,8 @@ function Checkout(props) {
   const initialRegion = {
     latitude: +latOrigin,
     longitude: +lonOrigin,
-    latitudeDelta: 0.0022,
-    longitudeDelta: 0.0021
+    latitudeDelta: 0.4,
+    longitudeDelta: 0.5
   }
 
   const onModalOpen = (modalRef) => {
@@ -373,7 +375,7 @@ function Checkout(props) {
           { name: 'Main' },
           {
             name: 'OrderDetail',
-            params: { _id: data.placeOrder._id }
+            params: { _id: data?.placeOrder?._id }
           }
         ]
       })
@@ -639,44 +641,6 @@ function Checkout(props) {
     }
   }
 
-  function emptyCart() {
-    return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <EmptyCart width={scale(200)} height={scale(200)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-            {t('hungry')}?
-          </TextDefault>
-          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-            {t('emptyCart')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() =>
-            props.navigation.navigate({
-              name: 'Main',
-              merge: true
-            })
-          }
-        >
-          <TextDefault
-            textColor={currentTheme.buttonText}
-            bolder
-            B700
-            center
-            uppercase
-          >
-            {t('emptyCartBtn')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
@@ -774,38 +738,18 @@ function Checkout(props) {
                   <View style={styles().mapView}>
                     <MapView
                       style={styles().flex}
-                      scrollEnabled={true}
-                      zoomEnabled={true}
+                      scrollEnabled={false}
+                      zoomEnabled={false}
                       zoomControlEnabled={false}
-                      rotateEnabled={true}
+                      rotateEnabled={false}
                       cacheEnabled={false}
                       initialRegion={initialRegion}
                       customMapStyle={customMapStyle}
                       provider={PROVIDER_GOOGLE}
-                    >
-                      <Polyline
-                        coordinates={[
-                          { latitude: +latOrigin, longitude: +lonOrigin },
-                          {
-                            latitude: location.latitude,
-                            longitude: location.longitude
-                          }
-                        ]}
-                        strokeColor='#000' // fallback for when `strokeColors` is not supported by the map-provider
-                        strokeWidth={2}
-                        lineDashPattern={[5, 1]}
-                      />
-                      <Marker
-                        coordinate={{
-                          latitude: location.latitude,
-                          longitude: location.longitude
-                        }}
-                      >
-                        <View>
-                          <RestaurantMarker />
-                        </View>
-                      </Marker>
-                    </MapView>
+                    ></MapView>
+                    <View style={styles().marker}>
+                      <RestaurantMarker />
+                    </View>
                   </View>
                   <View
                     style={[
@@ -816,43 +760,36 @@ function Checkout(props) {
                   />
                 </View>
                 <View style={[styles(currentTheme).headerContainer]}>
-                  <View style={styles().location}>
-                    <Location
-                      locationIconGray={{
-                        backgroundColor: 'transparent',
-                        width: 17
-                      }}
-                      locationIcon={currentTheme.newIconColor}
-                      locationLabel={currentTheme.newFontcolor}
-                      location={currentTheme.newFontcolor}
-                    />
-                  </View>
+                  <Location
+                    locationIcon={currentTheme.newIconColor}
+                    locationLabel={currentTheme.newFontcolor}
+                    location={currentTheme.newFontcolor}
+                  />
+
                   <View
                     style={[
                       styles(currentTheme).horizontalLine,
-                      styles().width100,
-                      styles().mB10
+                      styles().width100
                     ]}
                   />
                   <View style={styles(currentTheme).deliveryTime}>
-                    <View style={styles().clockIcon}>
-                      <AntDesign
-                        name='clockcircleo'
-                        size={14}
-                        color={currentTheme.fontFourthColor}
-                      />
+                    <View style={styles().iconContainer}>
+                      <EvilIcons name='calendar' size={scale(20)} />
                     </View>
-                    <TextDefault
-                      textColor={currentTheme.newFontcolor}
-                      numberOfLines={1}
-                      H5
-                      bolder
-                    >
-                      {t(isPickup ? 'pickUp' : 'delivery')}
-                      {'\r\t'}
-                      {t('within')} {data.restaurant.deliveryTime} -{' '}
-                      {data?.restaurant.deliveryTime + 10} {t('mins')}
-                    </TextDefault>
+                    <View style={styles(currentTheme).labelContainer}>
+                      <View style={{ marginLeft: scale(5) }}>
+                        <TextDefault
+                          textColor={currentTheme.newFontcolor}
+                          numberOfLines={1}
+                          H5
+                          bolder
+                        >
+                          {t(isPickup ? 'pickUp' : 'delivery')} {t('within')}{' '}
+                          {data.restaurant.deliveryTime} -{' '}
+                          {data?.restaurant.deliveryTime + 10} {t('mins')}
+                        </TextDefault>
+                      </View>
+                    </View>
                   </View>
                 </View>
 
@@ -890,6 +827,7 @@ function Checkout(props) {
                           ]}
                           onPress={() => {
                             props.navigation.setParams({ tipAmount: null })
+                            setTip(null)
                             setSelectedTip((prevState) =>
                               prevState === label ? null : label
                             )
@@ -1299,9 +1237,10 @@ function Checkout(props) {
         {/* Tip Modal */}
         <Modalize
           ref={tipModalRef}
-          modalStyle={[styles(currentTheme).modal, { marginTop: inset.top }]}
+          modalStyle={[styles(currentTheme).modal]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
+          modalHeight={550}
           handlePosition='inside'
           openAnimationConfig={{
             timing: { duration: 400 },
@@ -1368,9 +1307,10 @@ function Checkout(props) {
         {/* Voucher Modal */}
         <Modalize
           ref={voucherModalRef}
-          modalStyle={[styles(currentTheme).modal, { marginTop: inset.top }]}
+          modalStyle={[styles(currentTheme).modal]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
+          modalHeight={550}
           handlePosition='inside'
           openAnimationConfig={{
             timing: { duration: 400 },

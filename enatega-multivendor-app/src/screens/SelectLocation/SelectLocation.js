@@ -98,7 +98,7 @@ export default function SelectLocation(props) {
     navigation.navigate('AddNewAddress', {
       latitude: coords.latitude,
       longitude: coords.longitude,
-      prevScreen: props.route.params.prevScreen ? props.route.params.prevScreen : null
+      prevScreen: props?.route?.params?.prevScreen ? props.route.params.prevScreen : null
     })
   }
 
@@ -113,7 +113,7 @@ export default function SelectLocation(props) {
     navigation.navigate('AddNewAddress', {
       latitude: +city.latitude,
       longitude: +city.longitude,
-      prevScreen: props.route.params.prevScreen ? props.route.params.prevScreen : null
+      prevScreen: props?.route?.params?.prevScreen ? props.route.params.prevScreen : null
     })
   }
 

@@ -7,6 +7,8 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { EvilIcons } from '@expo/vector-icons'
+import { alignment } from '../../../utils/alignment'
+import { scale } from '../../../utils/scaling'
 
 function Location(props) {
   const { t } = useTranslation()
@@ -24,33 +26,29 @@ function Location(props) {
     location.deliveryAddress === 'Current Location'
       ? t('currentLocation')
       : location.deliveryAddress
-
   return (
-    <View>
+    <View style={{...alignment.PLxSmall}}>
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5, gap: 5 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center',justifyContent:'center', marginLeft: 5, gap: 5 }}>
           <View style={[styles().locationIcon, props.locationIconGray]}>
             <EvilIcons
               name="location"
-              size={16}
-              color={props.locationIcon}
-             
+              size={scale(20)}
             />
           </View>
           <View style={styles(currentTheme).headerContainer}>
-            <TextDefault textColor={props.locationLabel} left>
-              {''}
-              {t(translatedLabel)}
-            </TextDefault>
             <TouchableOpacity
               activeOpacity={1}
               onPress={props.modalOn}
               style={styles.textContainer}>
               <TextDefault textColor={props.location} numberOfLines={1} H5 bolder>
-                {''}
-                {translatedAddress?.slice(0, 20)}...
+                {translatedAddress?.slice(0, 40)}...
               </TextDefault>
             </TouchableOpacity>
+            <TextDefault textColor={props.locationLabel} left>
+              {''}
+              {t(translatedLabel)}
+            </TextDefault>
           </View>
         </View>
       </View>

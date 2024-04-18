@@ -1,8 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-
-const height = Dimensions.get('window').height
+import { fontStyles } from '../../utils/fontStyles'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -118,12 +117,10 @@ const styles = (props = null) =>
     deliveryTime: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: scale(12),
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      marginLeft: scale(2)
+      margin: scale(5),
+      ...alignment.PLxSmall
     },
-   
+
     suggestedItems: {
       paddingBottom: scale(30),
       ...alignment.PLlarge
@@ -179,7 +176,7 @@ const styles = (props = null) =>
       height: scale(30),
       borderRadius: 40
     },
-    changeBtnInner:{
+    changeBtnInner: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
@@ -189,7 +186,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.main : 'gray',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection:'row',
+      flexDirection: 'row',
       height: scale(50),
       borderRadius: 40
     },
@@ -239,10 +236,10 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
-      borderRadius: scale(10),
-      width: '60%',
-      height: '8%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '70%',
+      height: scale(40),
+      borderRadius: scale(20),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
@@ -304,12 +301,8 @@ const styles = (props = null) =>
     headerContainer: {
       backgroundColor: props !== null ? props.themeBackground : '#6FCF97'
     },
-    location: {
-      ...alignment.PLsmall,
-      ...alignment.PRmedium
-    },
     mapView: {
-      height: height/3
+      height: scale(119)
     },
     marker: {
       width: 50,
@@ -328,7 +321,7 @@ const styles = (props = null) =>
       ...alignment.PLmedium,
       ...alignment.PRmedium
     },
-    voucherSecInner:{
+    voucherSecInner: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
@@ -417,9 +410,21 @@ const styles = (props = null) =>
       height: scale(40),
       borderWidth: 1,
       borderColor: props != null ? props.verticalLine : '#B8B8B8',
-      padding: 5,
+      padding: 10,
       borderRadius: 6,
       color: props !== null ? props.newFontcolor : '#f9f9f9'
+    },
+    labelContainer: {
+      flex: 1,
+      marginLeft: scale(5)
+    },
+    iconContainer: {
+      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      width: scale(24),
+      height: scale(24),
+      borderRadius: scale(24),
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   })
 export default styles

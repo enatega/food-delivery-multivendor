@@ -20,7 +20,7 @@ import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 import { useTranslation } from 'react-i18next'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
-import OrderPreparing from '../../assets/SVG/order-tracking-preparing'
+
 import {
   ProgressBar,
   checkStatus
@@ -34,10 +34,11 @@ import { gql, useMutation } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { calulateRemainingTime } from '../../utils/customFunctions'
-import PlaceOrder from '../../assets/SVG/place-order'
-import FoodPicked from '../../assets/SVG/food-picked'
-import OrderPlacedIcon from '../../assets/SVG/order-placed'
-const { height: HEIGHT } = Dimensions.get('screen')
+
+import MapViewDirections from 'react-native-maps-directions'
+import useEnvVars from '../../../environment'
+import LottieView from 'lottie-react-native'
+const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`
   ${cancelOrderMutation}
@@ -55,7 +56,8 @@ function OrderDetail(props) {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const headerRef = useRef(false)
-
+  const { GOOGLE_MAPS_KEY } = useEnvVars()
+  const mapView = useRef(null)
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
     variables: { abortOrderId: id }
@@ -73,46 +75,33 @@ function OrderDetail(props) {
   const cancelModalToggle = () => {
     setCancelModalVisible(!cancelModalVisible)
   }
-  
   function onError(error) {
     FlashMessage({
       message: error.message
     })
   }
 
-  const order = orders.find(o => o?._id === id)
-  
-  useEffect(()=>{
-    if (!headerRef.current && order) {
-      props.navigation.setOptions({
-        headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-        headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
-        headerTitleStyle: { color: currentTheme.newFontcolor },
-        headerStyle: { backgroundColor: currentTheme.newheaderBG },
-        // iconColor:{ color: currentTheme.newIconColor}
-      })
-      headerRef.current = true
-    }
-  },[headerRef.current, order])
+  const order = orders?.find(o => o?._id === id)
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
+      headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
+      headerTitleStyle: { color: currentTheme.newFontcolor },
+      headerStyle: { backgroundColor: currentTheme.newheaderBG }
+    })
+  }, [orders])
 
   if (loadingOrders || !order) {
     return (
       <Spinner
-      backColor={currentTheme.themeBackground}
-      spinnerColor={currentTheme.main}
+        backColor={currentTheme.themeBackground}
+        spinnerColor={currentTheme.main}
       />
     )
   }
   if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
-  // if (!headerRef.current) {
-  //   props.navigation.setOptions({
-  //     headerRight: () => HelpButton({ iconBackground: currentTheme.main , t}),
-  //     headerTitle: `${order?.deliveryAddress?.deliveryAddress?.substr(0, 15)}...`,
-  //     headerTitleStyle: { color: currentTheme.newFontcolor },
-  //     headerStyle: { backgroundColor: currentTheme.newheaderBG }
-  //   })
-  //   headerRef.current = true
-  // }
+
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,
@@ -125,9 +114,6 @@ function OrderDetail(props) {
     deliveryCharges
   } = order
   const subTotal = total - tip - tax - deliveryCharges
-
-  
-
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -141,6 +127,7 @@ function OrderDetail(props) {
       >
         {order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED && (
           <MapView
+            ref={(c) => (mapView.current = c)}
             style={{ flex: 1, height: HEIGHT * 0.6 }}
             showsUserLocation={false}
             initialRegion={{
@@ -171,6 +158,36 @@ function OrderDetail(props) {
             >
               <CustomerMarker />
             </Marker>
+            <MapViewDirections
+              origin={{
+                longitude: +restaurant.location.coordinates[0],
+                latitude: +restaurant.location.coordinates[1]
+              }}
+              destination={{
+                latitude: +deliveryAddress.location.coordinates[1],
+                longitude: +deliveryAddress.location.coordinates[0]
+              }}
+              apikey={GOOGLE_MAPS_KEY}
+              strokeWidth={6}
+              strokeColor={currentTheme.main}
+              optimizeWaypoints={true}
+              onReady={(result) => {
+                //result.distance} km
+                //Duration: ${result.duration} min.
+
+                mapView?.current?.fitToCoordinates(result.coordinates, {
+                  edgePadding: {
+                    right: WIDTH / 20,
+                    bottom: HEIGHT / 20,
+                    left: WIDTH / 20,
+                    top: HEIGHT / 20
+                  }
+                })
+              }}
+              onError={(error) => {
+                console.log('onerror', error)
+              }}
+            />
             {order.rider && <TrackingRider id={order.rider._id} />}
           </MapView>
         )}
@@ -194,31 +211,31 @@ function OrderDetail(props) {
                 ORDER_STATUS_ENUM.PENDING,
                 ORDER_STATUS_ENUM.CANCELLED
               ].includes(order.orderStatus) && (
-                <>
-                  <TextDefault
-                    style={{ ...alignment.MTxSmall }}
-                    textColor={currentTheme.gray500}
-                    H5
-                  >
-                    {t('estimatedDeliveryTime')}
-                  </TextDefault>
-                  <TextDefault
-                    style={{ ...alignment.MTxSmall }}
-                    Regular
-                    textColor={currentTheme.gray900}
-                    H1
-                    bolder
-                  >
-                    {remainingTime}-{remainingTime + 5} {t('mins')}
-                  </TextDefault>
-                  <ProgressBar
-                    configuration={configuration}
-                    currentTheme={currentTheme}
-                    item={order}
-                    navigation={navigation}
-                  />
-                </>
-              )}
+                  <>
+                    <TextDefault
+                      style={{ ...alignment.MTxSmall }}
+                      textColor={currentTheme.gray500}
+                      H5
+                    >
+                      {t('estimatedDeliveryTime')}
+                    </TextDefault>
+                    <TextDefault
+                      style={{ ...alignment.MTxSmall }}
+                      Regular
+                      textColor={currentTheme.gray900}
+                      H1
+                      bolder
+                    >
+                      {remainingTime}-{remainingTime + 5} {t('mins')}
+                    </TextDefault>
+                    <ProgressBar
+                      configuration={configuration}
+                      currentTheme={currentTheme}
+                      item={order}
+                      navigation={navigation}
+                    />
+                  </>
+                )}
               <TextDefault
                 H5
                 style={{ ...alignment.Mmedium, textAlign: 'center' }}
@@ -281,22 +298,39 @@ function OrderDetail(props) {
 }
 
 export const OrderStatusImage = ({ status }) => {
+  console.log('status', status)
+  let imagePath = null;
   switch (status) {
     case ORDER_STATUS_ENUM.PENDING:
-      return <OrderPlacedIcon />
+      imagePath = require('../../assets/SVG/order-placed.json')
+      break
     case ORDER_STATUS_ENUM.ACCEPTED:
-      return <OrderPreparing />
+      imagePath = require('../../assets/SVG/order-tracking-preparing.json')
+      break
     case ORDER_STATUS_ENUM.ASSIGNED:
-      return <FoodPicked />
-    case ORDER_STATUS_ENUM.CANCELLED:
-      return null
+      imagePath = require('../../assets/SVG/food-picked.json')
+      break
     case ORDER_STATUS_ENUM.COMPLETED:
-      return <PlaceOrder />
+      imagePath = require('../../assets/SVG/place-order.json')
+      break
     case ORDER_STATUS_ENUM.DELIVERED:
-      return <PlaceOrder />
-    default:
-      return null
+      imagePath = require('../../assets/SVG/place-order.json')
+      break
   }
+
+  if (!imagePath) return null
+
+  return <LottieView
+    style={{
+      width: 250,
+      height: 250
+    }}
+    source={imagePath}
+    autoPlay
+    loop
+  />
+
+
 }
 
 export default OrderDetail

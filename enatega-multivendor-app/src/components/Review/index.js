@@ -1,7 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
-import { OutlinedTextField } from 'react-native-material-textfield'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import CrossCirleIcon from '../../assets/SVG/cross-circle-icon'
 import { scale } from '../../utils/scaling'
@@ -31,6 +30,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
 
   function onCompleted() {
+    setDescription('')
     ref?.current?.close()
   }
   function onError(error) {
@@ -85,7 +85,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
 
         {(showSection || rating>0) && <View>
           <TextDefault textColor={theme.gray900} H4 bolder style={{ marginVertical: scale(8) }}>{t('tellAboutExp')} {order?.restaurant?.name}</TextDefault>
-          <OutlinedTextField
+          {/* <OutlinedTextField
             label={t('review')}
             placeholder={t('typeHere')}
             fontSize={scale(12)}
@@ -96,6 +96,13 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
             onChangeText={setDescription}
             placeholderTextColor={theme.newFontcolor}
             textColor={theme.newFontcolor}
+          /> */}
+          <TextInput
+            label={t('review')}
+            placeholder={t('typeHere')}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+            style={styles.modalInput(theme)}
           />
           <Button text={t('submit')}
             buttonProps={{ onPress: onSubmit }}

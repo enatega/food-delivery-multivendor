@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
+import { fontStyles } from '../../utils/fontStyles'
 
 export const styles = StyleSheet.create({
   container: theme => ({
@@ -25,7 +26,8 @@ export const styles = StyleSheet.create({
   },
   itemContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    ...alignment.MTlarge
   },
   image: {
     height: scale(64),
@@ -42,5 +44,14 @@ export const styles = StyleSheet.create({
   reviewContainer: {
     flexDirection: 'row',
     alignItems: 'center'
-  }
+  },
+  modalInput: (theme)=> ({
+    height: scale(40),
+    borderWidth: 1,
+    borderColor: theme != null ? theme.verticalLine : '#B8B8B8',
+    padding: 10,
+    borderRadius: 6,
+    color: theme !== null ? theme.newFontcolor : '#f9f9f9',
+    fontFamily: fontStyles.MuseoSans500
+  })
 })

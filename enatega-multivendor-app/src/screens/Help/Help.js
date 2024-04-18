@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { View, StatusBar, Platform, FlatList } from 'react-native'
+import { View, StatusBar, Platform, FlatList, Linking, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -13,6 +13,7 @@ import navigationService from '../../routes/navigationService'
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 import Accordion from '../../components/Accordion/Accordion'
+import { FontAwesome } from '@expo/vector-icons'
 
 const FAQs = [
   {
@@ -44,6 +45,11 @@ const FAQs = [
     id: 6,
     heading: 'faq6',
     description: 'faq6Description'
+  },
+  {
+    id: 7,
+    heading: 'faq7',
+    description: 'faq7Description'
   }
 ]
 
@@ -51,6 +57,10 @@ const Help = props => {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+
+  const openWhatsAppChat = () => {
+    Linking.openURL('whatsapp://send?phone=15408006867')
+  }
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -111,23 +121,47 @@ const Help = props => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={styles(currentTheme).flex}>
+      style={styles(currentTheme).flex}
+    >
       <StatusBar
-        barStyle="light-content"
+        barStyle='light-content'
         backgroundColor={currentTheme.themeBackground}
       />
-      <View style={styles(currentTheme).flex}>
-        <View style={styles(currentTheme).mainContainer}>
-          <FlatList
-            data={FAQs}
-            keyExtractor={item => 'Faq-' + item.id}
-            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            renderItem={({ item }) => (
-              <Accordion heading={t(item.heading)}>
-                <TextDefault textColor={currentTheme.newFontcolor}>{t(item.description)}</TextDefault>
-              </Accordion>
-            )}
-          />
+      <View
+        style={[styles(currentTheme).flex, styles(currentTheme).mainContainer]}
+      >
+        <FlatList
+          data={FAQs}
+          keyExtractor={(item) => 'Faq-' + item.id}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          renderItem={({ item }) => (
+            <Accordion heading={t(item.heading)}>
+              <TextDefault textColor={currentTheme.newFontcolor}>
+                {t(item.description)}
+              </TextDefault>
+            </Accordion>
+          )}
+        />
+
+        <View>
+          <View style={styles(currentTheme).containerButton}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles(currentTheme).addButton}
+              onPress={openWhatsAppChat}
+            >
+              <View style={styles(currentTheme).contentContainer}>
+                <FontAwesome
+                  name='whatsapp'
+                  size={24}
+                  color={currentTheme.black}
+                />
+                <TextDefault bold H5 style={styles(currentTheme).whatsAppText}>
+                  {t('whatsAppText')}
+                </TextDefault>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>

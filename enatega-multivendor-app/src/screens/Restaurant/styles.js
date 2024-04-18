@@ -28,10 +28,10 @@ const styles = (props = null) =>
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
+      fontSize: scale(18),
+      fontWeight: '600',
       ...alignment.PLmedium,
       ...alignment.PTlarge,
-      fontSize: scale(18),
-      fontWeight: '600'
     },
     restaurantItems:{
       backgroundColor: props != null ? props.themeBackground : 'white'
@@ -176,6 +176,18 @@ const styles = (props = null) =>
       top: 1,
       right: 0,
       textAlign: 'center'
+    }, 
+    popularHeading: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      ...alignment.PTlarge,
+      ...alignment.PLmedium,
+    },
+    popularText: {
+      textTransform: 'capitalize',
+      fontSize: scale(18),
+      fontWeight: '600',
     }
   })
 export default styles

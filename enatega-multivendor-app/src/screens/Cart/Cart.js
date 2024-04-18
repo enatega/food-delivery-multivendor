@@ -13,7 +13,8 @@ import {
   Platform,
   Alert,
   Image,
-  Text
+  Text,
+  Dimensions
 } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -45,6 +46,8 @@ import WouldYouLikeToAddThese from './Section'
 import moment from 'moment'
 import { Modalize } from 'react-native-modalize'
 import Pickup from '../../components/Pickup'
+
+const { height: HEIGHT } = Dimensions.get('window')
 // Constants
 const TIPPING = gql`
   ${getTipping}
@@ -75,7 +78,7 @@ function Cart(props) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
 
-  const [orderDate, setOrderDate] = useState(moment().add(5, 'minute'))
+  const [orderDate, setOrderDate] = useState(new Date())
   const isCartEmpty = cart?.length === 0
   const cartLength = !isCartEmpty ? cart?.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
@@ -107,23 +110,23 @@ function Cart(props) {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async () => {
-      if (data && data?.restaurant) {
-        const latOrigin = Number(data?.restaurant.location.coordinates[1])
-        const lonOrigin = Number(data?.restaurant.location.coordinates[0])
-        const latDest = Number(location.latitude)
-        const longDest = Number(location.longitude)
-        const distance = await calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
-        const amount = Math.ceil(distance) * configuration.deliveryRate
-        isSubscribed &&
-          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-      }
-    })()
+      ; (async () => {
+        if (data && data?.restaurant) {
+          const latOrigin = Number(data?.restaurant.location.coordinates[1])
+          const lonOrigin = Number(data?.restaurant.location.coordinates[0])
+          const latDest = Number(location.latitude)
+          const longDest = Number(location.longitude)
+          const distance = await calculateDistance(
+            latOrigin,
+            lonOrigin,
+            latDest,
+            longDest
+          )
+          const amount = Math.ceil(distance) * configuration.deliveryRate
+          isSubscribed &&
+            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+        }
+      })()
     return () => {
       isSubscribed = false
     }
@@ -219,7 +222,7 @@ function Cart(props) {
         },
         {
           text: t('continueBtn'),
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel'
         }
       ],
@@ -422,9 +425,8 @@ function Cart(props) {
     )
     if (!variation) return null
 
-    const title = `${food.title}${
-      variation.title ? `(${variation.title})` : ''
-    }`
+    const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+      }`
     let price = variation.price
     const optionsTitle = []
     if (cartItem.addons) {
@@ -451,7 +453,8 @@ function Cart(props) {
       addons: populateAddons
     }
   }
-
+  let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
+  if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -471,21 +474,21 @@ function Cart(props) {
                 ]}
               >
                 <View style={styles(currentTheme).imageContainer}>
-                  <View style={{ marginLeft: scale(10) }}>
+                  <View style={{ marginLeft: scale(15) }}>
                     <View style={[styles(currentTheme).locationIcon]}>
-                      <EvilIcons name='location' size={scale(16)} />
+                      <EvilIcons name='calendar' size={scale(18)} />
                     </View>
                   </View>
                   <View
                     style={{
-                      marginLeft: scale(20)
+                      marginLeft: scale(10)
                     }}
                   >
-                    <TextDefault textColor={currentTheme.darkBgFont} bolder>
-                      {isPickup ? t('pickUp') : t('delivery')}{' '}
+                    <TextDefault H5 textColor={currentTheme.darkBgFont} bold>
+                      {isPickup ? t('pickupTime') : t('deliveryTime')}{' '}
                     </TextDefault>
-                    <TextDefault textColor={currentTheme.darkBgFont} bold>
-                      {`${orderDate.format('MM-D-YYYY, h:mm a')}`}
+                    <TextDefault textColor={currentTheme.darkBgFont} bolder H4>
+                      {t('asap')}({deliveryTime} {t('mins')})
                     </TextDefault>
                     <TouchableOpacity
                       onPress={() => onModalOpen(modalRef)}
@@ -561,7 +564,7 @@ function Cart(props) {
                     if (!food) return null
                     return (
                       <View
-                        key={cartItem._id}
+                        key={cartItem._id + index}
                         style={[styles(currentTheme).itemContainer]}
                       >
                         <CartItem
@@ -646,7 +649,7 @@ function Cart(props) {
                       bolder
                       center
                     >
-                      {t('loginOrCreateAccount')}
+                      {t('loginOrSignUp')}
                     </TextDefault>
                   </TouchableOpacity>
                 )}
@@ -658,7 +661,7 @@ function Cart(props) {
       <Modalize
         ref={modalRef}
         modalStyle={styles(currentTheme).modal}
-        modalHeight={Platform.OS === 'android' ? 300 : 420}
+        modalHeight={HEIGHT / 2}
         overlayStyle={styles(currentTheme).overlay}
         handleStyle={styles(currentTheme).handle}
         handlePosition='inside'
@@ -678,11 +681,12 @@ function Cart(props) {
         }}
       >
         <Pickup
-          minimumTime={moment().add(5, 'minute')}
+          minimumTime={restaurant?.deliveryTime}
           setOrderDate={setOrderDate}
           isPickedUp={isPickup}
           setIsPickedUp={setIsPickup}
           orderDate={orderDate}
+          pickupTextColor={currentTheme.newFontcolor}
         />
         <TouchableOpacity
           onPress={() => {
@@ -690,7 +694,7 @@ function Cart(props) {
           }}
           style={styles(currentTheme).pickupButton}
         >
-          <Text style={{ fontSize: 20, fontWeight: '500' }}>{t('apply')}</Text>
+          <Text style={styles(currentTheme).applyButton}>{t('apply')}</Text>
         </TouchableOpacity>
       </Modalize>
     </>

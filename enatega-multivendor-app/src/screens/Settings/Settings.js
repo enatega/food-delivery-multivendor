@@ -143,7 +143,7 @@ function Settings(props) {
     })
     selectLanguage()
     checkPermission()
-  }, [props.navigation, languageName])
+  }, [props.navigation, languageName, themeContext.ThemeValue])
 
   const _handleAppStateChange = async nextAppState => {
     if (nextAppState === 'active') {
@@ -278,7 +278,7 @@ function Settings(props) {
   }
   if (loadingProfile)
     return (
-      <Spinner backColor={'transparent'} spinnerColor={currentTheme.main} />
+      <Spinner backColor={currentTheme.CustomLoadingBG} spinnerColor={currentTheme.main} />
     )
   return (
     <SafeAreaView

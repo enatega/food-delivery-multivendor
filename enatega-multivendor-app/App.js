@@ -35,6 +35,7 @@ import { MessageComponent } from './src/components/FlashMessage/MessageComponent
 import * as Updates from 'expo-updates'
 import ReviewModal from './src/components/Review'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
+import { useColorScheme } from 'react-native'
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -43,8 +44,6 @@ LogBox.ignoreLogs([
 ]) // Ignore log notification by message
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
-// Default Theme
-const themeValue = 'Pink'
 
 Notifications.setNotificationHandler({
   handleNotification: async notification => {
@@ -63,8 +62,9 @@ export default function App() {
   const notificationListener = useRef()
   const responseListener = useRef()
   const [orderId, setOrderId] = useState()
+  const systemTheme = useColorScheme()
   // Theme Reducer
-  const [theme, themeSetter] = useReducer(ThemeReducer, themeValue)
+  const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   const [isUpdating, setIsUpdating] = useState(false)
 
   useEffect(() => {
@@ -96,14 +96,12 @@ export default function App() {
 
   useEffect(() => {
     try {
-      AsyncStorage.getItem('theme').then((response) =>
-        response !== 'Pink' ? themeSetter({ type: response }) : null
-      )
+      themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
     } catch (error) {
       // Error retrieving data
       console.log('Theme Error : ', error.message)
     }
-  }, [theme])
+  }, [systemTheme])
 
   useEffect(() => {
     if (!appIsReady) return
