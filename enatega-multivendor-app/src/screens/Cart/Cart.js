@@ -78,6 +78,7 @@ function Cart(props) {
   const [minimumOrder, setMinimumOrder] = useState('')
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
+  const [instructions, setInstructions] = useState('')
 
   const [orderDate, setOrderDate] = useState(new Date())
   const isCartEmpty = cart?.length === 0
@@ -547,7 +548,7 @@ function Cart(props) {
                 ...alignment.PRsmall,
                 marginTop: 10
               }}>
-                <SpecialInstructions onSubmitInstructions={(value)=>{console.log('instructions submitted', value)}} theme={currentTheme}/>
+                <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme}/>
               </View>
               <View
                 style={{

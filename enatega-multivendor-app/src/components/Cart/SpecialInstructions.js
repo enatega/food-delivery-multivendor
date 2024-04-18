@@ -7,17 +7,18 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { InstructionsModal } from './InstructionsModal'
 
-export const SpecialInstructions = ({ theme, onSubmitInstructions }) => {
+export const SpecialInstructions = ({ theme, instructions, onSubmitInstructions }) => {
+    const [value, setValue] = useState(instructions)
     const [isVisible, setIsVisible] = useState(false)
     const hideModal = _ => {
         setIsVisible(false)
     }
-    const showModal = _=>{
+    const showModal = _ => {
         setIsVisible(true)
     }
 
-    const onSubmit=(text)=>{
-        onSubmitInstructions(text)
+    const onSubmit = _ => {
+        onSubmitInstructions(value)
         hideModal()
     }
 
@@ -29,11 +30,11 @@ export const SpecialInstructions = ({ theme, onSubmitInstructions }) => {
         </View>
         <View middle style={{ flex: 6, justifyContent: 'center' }}>
             <TextDefault H5 bolder>Add a message for the restaurant</TextDefault>
-            <TextDefault textColor={theme.fontNewColor} style={{ lineHeight: scale(18) }}>Special requests, allergies, dietary restriction</TextDefault>
+            <TextDefault textColor={theme.fontNewColor} style={{ lineHeight: scale(18) }}>{instructions || 'Special requests, allergies, dietary restriction'}</TextDefault>
         </View>
         <TouchableOpacity right style={styles.iconContainer} onPress={showModal}>
             <ArrowForwardIcon />
         </TouchableOpacity>
-        <InstructionsModal theme={theme} isVisible={isVisible} hideModal={hideModal} onSubmit={onSubmit} />
+        <InstructionsModal theme={theme} isVisible={isVisible} hideModal={hideModal} onSubmit={onSubmit} value={value} setValue={setValue} />
     </View>)
 }
