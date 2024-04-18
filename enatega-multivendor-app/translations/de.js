@@ -182,7 +182,7 @@ export const de = {
   passErr2:
     'Ungültiges Passwort. Das Passwort muss mindestens 8 Zeichen lang sein und 1 Großbuchstaben, 1 Kleinbuchstaben und 1 Zahl enthalten.',
   letsGetStarted: 'Lass uns anfangen!',
-  createAccount: 'Erstellen Sie Ihr Enatega-Konto',
+  createAccountFirst: 'Erstellen Sie Ihr Enatega-Konto',
   firstnameErr1: 'Vorname ist erforderlich!',
   firstnameErr2: 'Ungültiger Vorname!',
   lastnameErr1: 'Nachname ist erforderlich!',
@@ -191,7 +191,7 @@ export const de = {
   mobileErr2: 'Ungültige Telefonnummer',
   verifyEmail: 'Ihre E-Mail bestätigen?',
   otpSentToEmail:
-    'Bitte geben Sie den OTP ein, den wir an Ihre E-Mail gesendet haben.',
+    'Geben Sie den OTP ein, um Ihre E-Mail sicher zu überprüfen. Ihre Privatsphäre ist oberstes Gebot; Ihre Daten bleiben geschützt.',
   verifyPhone: 'Ihre Telefonnummer bestätigen?',
   otpSentToPhone:
     'Bitte geben Sie den OTP ein, den wir an Ihre Telefonnummer gesendet haben.',
@@ -203,8 +203,8 @@ export const de = {
   setYourPassword: 'Legen Sie Ihr Passwort fest',
   enterPass: 'Geben Sie bitte Ihr Passwort ein',
   confirmPassRequired: 'Bestätigen Sie das Passwort!',
-  yourPhoneNumber: 'Wie lautet Ihre Telefonnummer?',
-  secureAccountWithPhone: 'Wir benötigen dies, um Ihr Konto zu sichern',
+  yourPhoneNumber: "Telefonnummer eingeben",
+secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich Ihrer Bestellung kontaktieren müssen. Als Nächstes senden wir Ihnen einen Code per SMS, um sicherzustellen, dass wir die richtige Nummer haben.',
   Home: 'Zuhause',
   Work: 'Arbeit',
   Other: 'Andere',
@@ -462,8 +462,7 @@ export const de = {
   enterEmailPassword: 'Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein',
   emailExists: 'Ihre E-Mail-Adresse existiert bereits',
   retry: 'Versuchen Sie es später erneut',
-  enterOtp:
-    'Geben Sie den 4-stelligen Code ein, der an Ihr Handy gesendet wurde',
+  enterOtp: 'Geben Sie den OTP ein, um Ihre Telefonnummer sicher zu überprüfen. Ihre Privatsphäre ist oberstes Gebot; Ihre Daten bleiben geschützt.',
   createAccount: 'Konto erstellen',
   previousOrder: 'Vorherige Bestellung',
   ItemsOrderAgain: 'Artikel auswählen, um erneut zu bestellen',
@@ -574,5 +573,9 @@ export const de = {
   brandName: 'Enatega',
   welcomeText: 'Willkommen bei Enatega',
   createAccountDesc:
-    'Genießen Sie die besten Restaurants oder erhalten Sie, was Sie von nahegelegenen Geschäften benötigen, geliefert!'
+    'Genießen Sie die besten Restaurants oder erhalten Sie, was Sie von nahegelegenen Geschäften benötigen, geliefert!',
+    phoneNumber: 'Telefonnummer',
+textWithCodeBtn: "Text mit Code senden",
+resendOtpBtn: 'OTP erneut senden',
+getRegistered: 'Registrieren'
 }

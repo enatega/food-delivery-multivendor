@@ -21,6 +21,7 @@ import PhoneInput from 'react-native-phone-number-input'
 import { useTranslation } from 'react-i18next'
 import { Ionicons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
+import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 
 function PhoneNumber(props) {
   const {
@@ -49,6 +50,7 @@ function PhoneNumber(props) {
   }, [props.navigation])
   const phoneInput = useRef < PhoneInput > null
 
+  console.log("code", country.callingCode[0]);
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
@@ -57,7 +59,7 @@ function PhoneNumber(props) {
         { backgroundColor: currentTheme.themeBackground }
       ]}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles().flex}>
         <ScrollView
           style={styles().flex}
@@ -66,17 +68,13 @@ function PhoneNumber(props) {
           alwaysBounceVertical={false}>
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
-              <View style={styles().logoContainer}>
-                <Ionicons
-                  name="phone-portrait-outline"
-                  size={30}
-                  color={currentTheme.newIconColor}
-                />
+              <View>
+                <SignUpSvg strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
-                  H3
-                  bolder
+                  H2
+                  B700
                   textColor={currentTheme.newFontcolor}
                   style={{
                     ...alignment.MTlarge,
@@ -109,7 +107,8 @@ function PhoneNumber(props) {
                     />
                     <TextDefault  textColor={currentTheme.newFontcolor}
                       style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
-                      {country?.cca2}
+                      {/* {country?.cca2} */}
+                      +{country?.callingCode[0]}
                     </TextDefault>
                   </View>
                   <View
@@ -119,9 +118,9 @@ function PhoneNumber(props) {
                       phoneError && styles(currentTheme).errorInput
                     ]}>
                     <View style={styles(currentTheme).phoneField}>
-                      <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault>
+                      {/* <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault> */}
                       <TextInput style={styles(currentTheme).phoneNo}
-                        placeholder={t('mobileNumber')}
+                        placeholder={t('phoneNumber')}
                         placeholderTextColor={currentTheme.color6}
                         value={phone}
                         onChangeText={e => {
@@ -155,7 +154,7 @@ function PhoneNumber(props) {
                   {loading ? (
                     <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.white} />
                   ) : (
-                    t('continueBtn')
+                    t('textWithCodeBtn')
                   )}
                 </TextDefault>
               </TouchableOpacity>

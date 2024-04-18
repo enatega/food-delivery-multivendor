@@ -11,7 +11,7 @@ const styles = (props = null) =>
       flex: 1,
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.MTlarge,
+      // ...alignment.MTlarge,
       ...alignment.MBlarge,
       ...alignment.MLmedium,
       ...alignment.MRmedium,
@@ -73,7 +73,8 @@ const styles = (props = null) =>
       marginLeft: -40
     },
     btnContainer: {
-      width: '100%'
+      width: '100%',
+      marginTop: scale(10),
     },
     btn: {
       width: '100%',

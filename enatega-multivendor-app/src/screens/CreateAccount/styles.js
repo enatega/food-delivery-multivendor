@@ -98,9 +98,13 @@ const styles = (props = null) =>
     },
     mainHeadingTextOverlay: {
       position: 'absolute',
-      top: scale(10),
+      top: scale(15),
       left: 0,
       right: 0
-    }
+    },
+    safeAreaViewStyles: {
+      flex: 1,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+    },
   })
 export default styles

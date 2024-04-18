@@ -174,7 +174,7 @@ export const km = {
   passErr2:
     'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ។ ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ 8 តួអក្សរ និងមានអក្សរធំ 1 អក្សរតូច 1 លេខ។',
   letsGetStarted: 'តនត',
-  createAccount: 'តវតន៏តត',
+  createAccountFirst: 'តវតន៏តត',
   firstnameErr1: 'វតតអ៏ត',
   firstnameErr2: 'វតត',
   lastnameErr1: 'វតត',
@@ -182,7 +182,7 @@ export const km = {
   mobileErr1: 'តតអ៏ត',
   mobileErr2: 'តត',
   verifyEmail: 'តតតត?',
-  otpSentToEmail: 'តបតត',
+  otpSentToEmail: "បញ្ចូល OTP ដើម្បីផ្ទៀងផ្ទាត់អ៊ីមែលរបស់អ្នកបានត្រឹមត្រូវ។ ភាពឯកជនរបស់អ្នកជាអស្ចារ្យបំផុត; ទិន្នន័យរបស់អ្នកមានការការពារ។",
   verifyPhone: 'តតត?',
   otpSentToPhone: 'តបតត',
   wrongOtp: 'តបតត!',
@@ -192,8 +192,8 @@ export const km = {
   setYourPassword: 'តប',
   enterPass: 'តតត',
   confirmPassRequired: 'តត',
-  yourPhoneNumber: 'តត',
-  secureAccountWithPhone: 'តន៏តត',
+  yourPhoneNumber: "បញ្ចូលលេខទូរស័ព្ទ",
+secureAccountWithPhone: 'យើងនឹងប្រើលេខរៀងគ្រប់យ៉ាងប្រសិនបើយើងត្រូវទៅទំនាក់ទំនងអ្នកអំពាវលេខកូដរបស់អ្នក។ បន្ទាប់ពីនេះយើងនឹងផ្ញើលេខកូដទៅអ្នកតាមសារតទៅដើម្បីបញ្ជាក់ថាយើងទាន់មានលេខត្រឹមត្រូវ។',
   Home: 'ផ្ទះ',
   Work: 'ការងារ',
   Other: 'ផ្សេងៗ',
@@ -445,7 +445,7 @@ export const km = {
   enterEmailPassword: 'បញ្ចូលអ៊ីមែលរបស់អ្នកនិងពាក្យសម្ងាត់',
   emailExists: 'អ៊ីមែលរបស់អ្នកមានរួចហើយ',
   retry: 'សាកល្បងម្តងទៀតបន្ទាប់ពី',
-  enterOtp: 'បញ្ចូលលេខកូដដែលមានចំនួន 4 ត្រួតពីទូរស័ព្ទរបស់អ្នក',
+  enterOtp: 'បញ្ចូលលេខកូដ OTP ដើម្បីផ្ទៀងផ្ទាត់លេខទូរស័ព្ទរបស់អ្នកនៅក្នុងតម្លៃនៃសុខភាព។ ភាពឯកជនរបស់អ្នកជាអស្ចារ្យបំផុត; ទិន្នន័យរបស់អ្នកមានការការពារ។',
   createAccount: 'បង្កើតគណនី',
   previousOrder: 'ការបញ្ជាទិញមុន',
   ItemsOrderAgain: 'ជ្រើសរើសធាតុដើម្បីបញ្ជាទិញម្ដងទៀត',
@@ -553,5 +553,9 @@ export const km = {
   brandName: 'អេណាទេហ្គា',
   welcomeText: 'សូមស្វាគមន៍ទៅកាន់អេណាទេហ្គា',
   createAccountDesc:
-    'សូមរីករាយនូវភេទផ្សេងៗបំផុតឬទទួលបានដោយគេហទំព័របំផុតពីហាងទាបនៅជិត, បានដូចគ្នា!'
+    'សូមរីករាយនូវភេទផ្សេងៗបំផុតឬទទួលបានដោយគេហទំព័របំផុតពីហាងទាបនៅជិត, បានដូចគ្នា!',
+    phoneNumber: 'លេខទូរស័ព្ទ',
+textWithCodeBtn: "ផ្ញើសារជាមួយកូដ",
+resendOtpBtn: 'ផ្ញើម្ដងទៀតកូដ OTP',
+getRegistered: 'ចុះឈ្មោះ'
 }

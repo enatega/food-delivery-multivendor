@@ -15,7 +15,7 @@ const styles = (props = null) =>
       flex: 1,
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.PTlarge
+      // ...alignment.PTlarge
     },
     subContainer: {
       width: '90%',
@@ -95,7 +95,6 @@ const styles = (props = null) =>
     },
     headerRightIcon: {
       ...alignment.PRsmall
-    },
-    svgContainer: {}
+    }
   })
 export default styles

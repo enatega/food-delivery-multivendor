@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
-  TextInput
+  TextInput,
+  ScrollView
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -17,6 +18,7 @@ import { useForgotPassword } from './useForgotPassword'
 import { useTranslation } from 'react-i18next'
 import { Feather } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
+import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 
 function ForgotPassword(props) {
   const Analytics = analytics()
@@ -56,19 +58,20 @@ function ForgotPassword(props) {
           themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
         }
       />
+      <ScrollView
+          style={styles().flex}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          alwaysBounceVertical={false}>
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
-          <View style={styles().logoContainer}>
-            <Feather
-              name="lock"
-              size={30}
-              color={currentTheme.newIconColor}
-            />
-          </View>
+        <View>
+                <SignUpSvg strokeColor={currentTheme.newIconColor} />
+              </View>
           <View>
             <TextDefault
-              H3
-              bolder
+              H2
+              B700
               textColor={currentTheme.newFontcolor}
               style={{
                 ...alignment.MTlarge,
@@ -126,6 +129,7 @@ function ForgotPassword(props) {
           </View>
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

@@ -17,6 +17,7 @@ import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import CountryPicker from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
 import { useTranslation } from 'react-i18next'
+import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 
 function Register(props) {
   const {
@@ -62,7 +63,7 @@ function Register(props) {
       style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles().flex}
       >
         <ScrollView
@@ -73,18 +74,13 @@ function Register(props) {
         >
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
-              <View style={styles().logoContainer}>
-                {/* <Image
-                  source={require('../../../assets/login-icon.png')}
-                  style={styles().logoContainer}
-                /> */}
-
-                <SimpleLineIcons name='user' size={30} color={currentTheme.newIconColor} />
+             <View>
+                <SignUpSvg strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
-                  H3
-                  bolder
+                  H2
+                  B700
                   textColor={currentTheme.newFontcolor}
                   style={{
                     ...alignment.MTlarge,
@@ -99,7 +95,7 @@ function Register(props) {
                   textColor={currentTheme.fontSecondColor}
                   style={{ ...alignment.PBmedium }}
                 >
-                  {t('createAccount')}
+                  {t('createAccountFirst')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
@@ -214,10 +210,11 @@ function Register(props) {
                       withFilter
                     />
                     <TextDefault
-                    textColor={currentTheme.newFontcolor}
+                      textColor={currentTheme.newFontcolor}
                       style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}
                     >
-                      {country?.cca2}
+                      {/* {country?.cca2} */}
+                      +{country?.callingCode[0]}
                     </TextDefault>
                   </View>
                   <View
@@ -228,9 +225,11 @@ function Register(props) {
                     ]}
                   >
                     <View style={styles().phoneFieldInner}>
-                      <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault>
+                      {/* <TextDefault textColor={currentTheme.newFontcolor}>
+                        +{country.callingCode[0]}{' '}
+                      </TextDefault> */}
                       <TextInput
-                        placeholder={t('mobileNumber')}
+                        placeholder={t('phoneNumber')}
                         placeholderTextColor={currentTheme.fontSecondColor}
                         value={phone}
                         onChangeText={(e) => setPhone(e)}
@@ -259,7 +258,7 @@ function Register(props) {
                 style={styles(currentTheme).btn}
               >
                 <TextDefault H4 textColor={currentTheme.black} bold>
-                  {t('createAccount')}
+                  {t('getRegistered')}
                 </TextDefault>
               </TouchableOpacity>
             </View>

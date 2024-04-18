@@ -6,7 +6,8 @@ import {
   ScrollView,
   Platform,
   Image,
-  TextInput
+  TextInput,
+  StatusBar
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -35,7 +36,8 @@ function Login(props) {
     showPassword,
     setShowPassword,
     checkEmailExist,
-    emailRef
+    emailRef,
+    themeContext
   } = useLogin()
   const { t } = useTranslation()
   useLayoutEffect(() => {
@@ -64,10 +66,16 @@ function Login(props) {
           showsVerticalScrollIndicator={false}
           alwaysBounceVertical={false}
         >
+          <StatusBar
+        backgroundColor={currentTheme.themeBackground}
+        barStyle={
+          themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+        }
+      />
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
-              <View style={styles().svgContainer}>
-                <SignUpSvg strokeColor={currentTheme.newIconColor} />
+              <View>
+                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
