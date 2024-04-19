@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Text, StyleSheet } from 'react-native'
 import color from './styles'
 import { textStyles } from '../../../utils/textStyles'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 
 function TextDefault(props) {
-  const textColor = props.textColor ? props.textColor : 'black'
+  const themeContext = useContext(ThemeContext)
+  const textColor = props.textColor ? props.textColor : themeContext.ThemeValue === 'Dark' ? 'white' : 'black'
   const defaultStyle = StyleSheet.flatten([
     color(textColor).color,
     textStyles.Regular,
