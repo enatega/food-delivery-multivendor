@@ -43,7 +43,8 @@ const styles = (props = null) =>
       alignSelf: 'center',
       width: '100%',
       flex: 1,
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      ...alignment.MBsmall
     },
     whiteColor: {
       backgroundColor: props !== null ? props.buttonText : 'transparent'
@@ -98,7 +99,7 @@ const styles = (props = null) =>
     },
     mainHeadingTextOverlay: {
       position: 'absolute',
-      top: scale(15),
+      top: scale(30),
       left: 0,
       right: 0
     },

@@ -12,7 +12,7 @@ function LoginHeader({ blackStroke, whiteStroke, fillColor }) {
   return (
     <Svg
       width='393'
-      height='400'
+      height='429'
       viewBox='0 0 393 429'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'

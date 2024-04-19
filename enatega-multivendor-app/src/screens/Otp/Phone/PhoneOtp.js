@@ -65,12 +65,12 @@ function PhoneOtp(props) {
         <View style={styles(currentTheme).mainContainer}>
           <View style={styles().subContainer}>
             <View>
-              <SignUpSvg strokeColor={currentTheme.newIconColor} />
+              <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
             </View>
             <View>
               <TextDefault
                 H2
-                B700
+                bolder
                 textColor={currentTheme.newFontcolor}
                 style={{
                   ...alignment.MTlarge,

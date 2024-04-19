@@ -161,7 +161,7 @@ const CreateAccount = (props) => {
             >
               <TextDefault
                 H2
-                B700
+                bolder
                 center
                 textColor={currentTheme.newFontcolor}
                 style={{ marginBottom: scale(7) }}

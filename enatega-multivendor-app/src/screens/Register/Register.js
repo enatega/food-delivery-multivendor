@@ -18,6 +18,8 @@ import CountryPicker from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
 import { useTranslation } from 'react-i18next'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
+import { useHeaderHeight } from '@react-navigation/elements'
+import { scale } from '../../utils/scaling'
 
 function Register(props) {
   const {
@@ -46,6 +48,7 @@ function Register(props) {
   } = useRegister()
 
   const { t } = useTranslation()
+  const headerHeight = useHeaderHeight()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -63,8 +66,9 @@ function Register(props) {
       style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
       <KeyboardAvoidingView
-        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles().flex}
+        keyboardVerticalOffset={headerHeight}
       >
         <ScrollView
           style={styles().flex}
@@ -75,12 +79,12 @@ function Register(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
              <View>
-                <SignUpSvg strokeColor={currentTheme.newIconColor} />
+                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
                   H2
-                  B700
+                  bolder
                   textColor={currentTheme.newFontcolor}
                   style={{
                     ...alignment.MTlarge,
@@ -200,7 +204,8 @@ function Register(props) {
                   <View
                     style={[
                       styles(currentTheme).textField,
-                      styles().countryCode
+                      styles().countryCode,
+                      {padding: Platform.OS === 'ios' ? scale(5) : scale(12)}
                     ]}
                   >
                     <CountryPicker

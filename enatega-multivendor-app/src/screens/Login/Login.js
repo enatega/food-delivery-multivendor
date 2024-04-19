@@ -20,6 +20,7 @@ import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 function Login(props) {
   const {
@@ -40,6 +41,7 @@ function Login(props) {
     themeContext
   } = useLogin()
   const { t } = useTranslation()
+  const headerHeight = useHeaderHeight()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
@@ -57,30 +59,36 @@ function Login(props) {
       style={styles(currentTheme).safeAreaViewStyles}
     >
       <KeyboardAvoidingView
-        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles().flex}
+        keyboardVerticalOffset={headerHeight}
       >
+        <StatusBar
+          backgroundColor={currentTheme.themeBackground}
+          barStyle={
+            themeContext.ThemeValue === 'Dark'
+              ? 'light-content'
+              : 'dark-content'
+          }
+        />
         <ScrollView
           style={styles().flex}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           alwaysBounceVertical={false}
         >
-          <StatusBar
-        backgroundColor={currentTheme.themeBackground}
-        barStyle={
-          themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-        }
-      />
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View>
-                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
+                <SignUpSvg
+                  fillColor={currentTheme.svgFill}
+                  strokeColor={currentTheme.newIconColor}
+                />
               </View>
               <View>
                 <TextDefault
                   H2
-                  B700
+                  bolder
                   textColor={currentTheme.newFontcolor}
                   style={{
                     ...alignment.MTlarge,
@@ -146,7 +154,7 @@ function Login(props) {
                         />
                         <FontAwesome
                           onPress={() => setShowPassword(!showPassword)}
-                          name={showPassword ? 'eye' : 'eye-slash'}
+                          name={showPassword ? 'eye-slash' : 'eye'}
                           size={24}
                           color={
                             passwordError === null
@@ -187,7 +195,9 @@ function Login(props) {
                     </>
                   )}
                 </View>
-                <View>
+                
+              </View>
+              <View>
                   <TouchableOpacity
                     onPress={() =>
                       registeredEmail
@@ -212,7 +222,6 @@ function Login(props) {
                     </TextDefault>
                   </TouchableOpacity>
                 </View>
-              </View>
             </View>
           </View>
         </ScrollView>

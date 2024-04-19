@@ -54,9 +54,25 @@ const styles = (props = null) =>
       borderRadius: scale(10),
       backgroundColor: props !== null ? props.themeBackground : 'white',
       padding: scale(12),
-      color: props !==null ? props.newFontcolor : 'red',
+      color: props !== null ? props.newFontcolor : 'red',
       ...alignment.MBxSmall,
       ...alignment.MTxSmall
+    },
+    countryTextField: {
+      borderColor: props !== null ? props.borderColor : '#efefef',
+      borderWidth: scale(1),
+      borderRadius: scale(10),
+      backgroundColor: props !== null ? props.themeBackground : 'white',
+      padding: scale(12),
+      color: props !== null ? props.newFontcolor : 'red',
+      ...alignment.MBxSmall,
+      ...alignment.MTxSmall
+      // ...alignment.PBxSmall,
+      // ...alignment.PTxSmall,
+    },
+    countryPickerIosFix: {
+      ...alignment.PBxSmall,
+      ...alignment.PTxSmall
     },
     passwordField: {
       display: 'flex',
@@ -74,7 +90,7 @@ const styles = (props = null) =>
     },
     btnContainer: {
       width: '100%',
-      marginTop: scale(10),
+      marginTop: scale(10)
     },
     btn: {
       width: '100%',
@@ -100,8 +116,8 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center'
     },
-    phoneField:{
-     color: props !== null ? props.newFontcolor : 'red',
+    phoneField: {
+      color: props !== null ? props.newFontcolor : 'red'
     },
     error: {
       marginTop: 3

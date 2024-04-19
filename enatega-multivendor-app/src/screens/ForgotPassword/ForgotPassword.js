@@ -44,7 +44,7 @@ function ForgotPassword(props) {
     props.navigation.setOptions(
       screenOptions({
         backColor: currentTheme.themeBackground,
-        iconColor:currentTheme.newIconColor,
+        iconColor: currentTheme.newIconColor,
         navigation: props.navigation
       })
     )
@@ -59,76 +59,84 @@ function ForgotPassword(props) {
         }
       />
       <ScrollView
-          style={styles().flex}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}>
-      <View style={styles(currentTheme).mainContainer}>
-        <View style={styles().subContainer}>
-        <View>
-                <SignUpSvg strokeColor={currentTheme.newIconColor} />
-              </View>
-          <View>
-            <TextDefault
-              H2
-              B700
-              textColor={currentTheme.newFontcolor}
-              style={{
-                ...alignment.MTlarge,
-                ...alignment.MBmedium
-              }}>
-              {t('forgotPassword')}
-            </TextDefault>
-            <TextDefault
-              H5
-              bold
-              textColor={currentTheme.fontSecondColor}
-              style={styles().emailHeading}>
-              {t('enterYourEmail')}
-            </TextDefault>
-          </View>
-          <View>
-            <TextInput
-              placeholder={t('email')}
-              style={[
-                styles(currentTheme).textField,
-                emailError !== null && styles(currentTheme).errorInput
-              ]}
-              placeholderTextColor={currentTheme.fontSecondColor}
-              value={email}
-              onChangeText={e => setEmail(e)}
-            />
-            {emailError && (
+        style={styles().flex}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        alwaysBounceVertical={false}
+      >
+        <View style={styles(currentTheme).mainContainer}>
+          <View style={styles().subContainer}>
+            <View>
+              <SignUpSvg
+                fillColor={currentTheme.svgFill}
+                strokeColor={currentTheme.newIconColor}
+              />
+            </View>
+            <View>
               <TextDefault
-                style={styles().error}
+                H2
+                bolder
+                textColor={currentTheme.newFontcolor}
+                style={{
+                  ...alignment.MTlarge,
+                  ...alignment.MBmedium
+                }}
+              >
+                {t('forgotPassword')}
+              </TextDefault>
+              <TextDefault
+                H5
                 bold
-                textColor={currentTheme.textErrorColor}>
-                {emailError}
+                textColor={currentTheme.fontSecondColor}
+                style={styles().emailHeading}
+              >
+                {t('enterYourEmail')}
               </TextDefault>
-            )}
+            </View>
+            <View>
+              <TextInput
+                placeholder={t('email')}
+                style={[
+                  styles(currentTheme).textField,
+                  emailError !== null && styles(currentTheme).errorInput
+                ]}
+                placeholderTextColor={currentTheme.fontSecondColor}
+                value={email}
+                onChangeText={(e) => setEmail(e)}
+              />
+              {emailError && (
+                <TextDefault
+                  style={styles().error}
+                  bold
+                  textColor={currentTheme.textErrorColor}
+                >
+                  {emailError}
+                </TextDefault>
+              )}
+            </View>
+          </View>
+          <View style={{ width: '100%', marginBottom: 20 }}>
+            <View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles(currentTheme).btn}
+                onPress={() => forgotPassword()}
+              >
+                <TextDefault H4 textColor={currentTheme.black} bold>
+                  {loading ? (
+                    <Spinner
+                      backColor='transparent'
+                      spinnerColor={currentTheme.white}
+                      size='small'
+                    />
+                  ) : (
+                    t('continueBtn')
+                  )}
+                </TextDefault>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-        <View style={{ width: '100%', marginBottom: 20 }}>
-          <View>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).btn}
-              onPress={() => forgotPassword()}>
-              <TextDefault H4 textColor={currentTheme.black} bold>
-                {loading ? (
-                  <Spinner
-                  backColor='transparent'
-                  spinnerColor={currentTheme.white}
-                    size="small"
-                  />
-                ) : (
-                  t('continueBtn')
-                )}
-              </TextDefault>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
       </ScrollView>
     </SafeAreaView>
   )
