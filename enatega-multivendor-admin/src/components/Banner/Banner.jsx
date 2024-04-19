@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation, gql, useQuery } from '@apollo/client'
 import { validateFunc } from '../../constraints/constraints'
 import { withTranslation } from 'react-i18next'
-import { createCuisine, editCuisine, getCuisines } from '../../apollo'
+import { createBanner, editBanner, getBannerActions, getBanners } from '../../apollo'
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
 import {
@@ -12,37 +12,46 @@ import {
   Button,
   Alert,
   Grid,
-  useTheme
+  useTheme,
+  Select,
+  MenuItem
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
+import ConfigurableValues from '../../config/constants'
 
-const CREATE_CUISINE = gql`
-  ${createCuisine}
+const CREATE_BANNER = gql`
+  ${createBanner}
 `
-const EDIT_CUISINE = gql`
-  ${editCuisine}
+const EDIT_BANNER = gql`
+  ${editBanner}
 `
-const GET_CUISINES = gql`
-  ${getCuisines}
+const GET_BANNERS = gql`
+  ${getBanners}
+`
+const GET_BANNER_ACTIONS = gql`
+  ${getBannerActions}
 `
 
 function Banner(props) {
   const formRef = useRef()
   const theme = useTheme()
-  const name = props.cuisine ? props.cuisine.name : ''
-  const description = props.cuisine ? props.cuisine.description : ''
-  const mutation = props.cuisine ? EDIT_CUISINE : CREATE_CUISINE
+  const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
+
+  const mutation = props.banner ? EDIT_BANNER : CREATE_BANNER
+  const {data: bannerActions, error} = useQuery(GET_BANNER_ACTIONS)
+  console.log('bannerActions => ', bannerActions)
+  console.log('bannerActions error => ', error)
+
   const [mainError, mainErrorSetter] = useState('')
   const [success, successSetter] = useState('')
-  const [nameError, setNameError] = useState(null)
-  const [descriptionError, setDescriptionError] = useState(null)
-  const [file, setFile] = useState('')
+  const [file, setFile] = useState(props.banner ? props.banner.file : '')
+  const [fileLoading, setFileLoading] = useState(false)
   const [data, setData] = useState({
-    title: '',
-    description: '',
-    action: '',
-    screen: '',
+    title: props.banner ? props.banner.title : '',
+    description: props.banner ? props.banner.description : '',
+    action: props.banner ? props.banner.action : '',
+    screen: props.banner ? props.banner.screen : '',
   })
   const [errors, setErrors] = useState({
     title: '',
@@ -51,7 +60,7 @@ function Banner(props) {
     screen: '',
   })
 
-  const [parameter, setParameter] = useState([
+  const [parameter, setParameter] = useState(props.banner ? JSON.parse(props.banner.parameters) : [
     {
       key: '',
       value: ''
@@ -103,16 +112,12 @@ function Banner(props) {
     setParameter([...parameters])
   }
 
-  const onBlur = (field, state) => {
-    setter(!validateFunc({ [field]: state }, field))
-  }
-
   const onCompleted = data => {
     console.log('Data => ', data)
-    const message = props.cuisine ? t('CuisineUpdated') : t('CuisineAdded')
+    const message = props.banner ? t('BannerUpdated') : t('BannerAdded')
     successSetter(message)
     mainErrorSetter('')
-    if (!props.cuisine) clearFields()
+    if (!props.banner) clearFields()
   }
   const onError = error => {
     console.log('Error => ', error)
@@ -126,36 +131,91 @@ function Banner(props) {
     mainErrorSetter(message)
   }
   const [mutate, { loading }] = useMutation(mutation, {
-    refetchQueries: [{ query: GET_CUISINES }],
+    refetchQueries: [{ query: GET_BANNERS }],
     onError,
     onCompleted
   })
 
   const onSubmitValidaiton = () => {
-    const nameError = !validateFunc(
-      { name: formRef.current['input-name'].value },
-      'name'
+    const titleError = validateFunc(
+      { title: data.title },
+      'title'
     )
-    const descriptionError = !validateFunc(
-      { description: formRef.current['input-description'].value },
+    const descriptionError = validateFunc(
+      { description: data.description },
       'description'
     )
-    setNameError(nameError)
-    setDescriptionError(descriptionError)
-    return nameError && descriptionError
+    const actionError = validateFunc(
+      { action: data.action },
+      'action'
+    )
+    const screenError = validateFunc(
+      { screen: data.screen },
+      'screen'
+    )
+    setErrors({
+      title: titleError,
+      description: descriptionError,
+      action: actionError,
+      screen: screenError
+    })
+
+    return !titleError?.title && !descriptionError?.description && !actionError?.action && !screenError?.screen
   }
 
   const clearFields = () => {
-    formRef.current.reset()
-    setNameError(null)
-    setDescriptionError(null)
+    setErrors({
+      title: '',
+      description: '',
+      action: '',
+      screen: ''
+    })
+    setData({
+      title: '',
+      description: '',
+      action: '',
+      screen: ''
+    })
+    setParameter([
+      {
+        key: '',
+        value: ''
+      }
+    ])
+    setFile('')
   }
 
   const onDataChange = (name, value) => {
-    console.log(name, value)
+    setErrors((prev)=>({...prev, [name]: null}))
     setData((prev)=>({...prev, [name]: value}))
   }
-  console.log('DATA => ', data)
+
+  const uploadImageToCloudinary = async() => {
+    if (file === '') return file
+    if (props.banner && props.banner.file === file) return file
+
+    setFileLoading(true)
+    const apiUrl = CLOUDINARY_UPLOAD_URL
+    const data = {
+      file: file,
+      upload_preset: CLOUDINARY_FOOD
+    }
+    try {
+      const result = await fetch(apiUrl, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json'
+        },
+        method: 'POST'
+      })
+      const imageData = await result.json()
+      return imageData.secure_url
+    } catch (e) {
+      console.log('Image upload error => ', e)
+    } finally{
+      setFileLoading(false)
+    }
+  }
 
   const { t } = props
   const classes = useStyles()
@@ -166,11 +226,11 @@ function Banner(props) {
       <Box className={classes.flexRow}>
         <Box
           item
-          className={props.cuisine ? classes.headingBlack : classes.heading}>
+          className={props.banner ? classes.headingBlack : classes.heading}>
           <Typography
             variant="h6"
-            className={props.cuisine ? classes.textWhite : classes.text}>
-            {props.cuisine ? t('EditBanner') : t('AddBanner')}
+            className={props.banner ? classes.textWhite : classes.text}>
+            {props.banner ? t('EditBanner') : t('AddBanner')}
           </Typography>
         </Box>
       </Box>
@@ -188,13 +248,11 @@ function Banner(props) {
                   type="text"
                   defaultValue={data.title}
                   onChange={(e)=>onDataChange('title', e.target.value)}
-                  // onBlur={event =>
-                  //   onBlur('title', event.target.value)
-                  // }
                   disableUnderline
                   className={[
                     globalClasses.input,
-                    errors.title ? globalClasses.inputError : globalClasses.inputSuccess
+                    errors.title ? globalClasses.inputError : "",
+                    data.title && !errors.title && globalClasses.inputSuccess
                   ]}
                 />
               </Grid>
@@ -207,50 +265,73 @@ function Banner(props) {
                   placeholder={t('Description')}
                   type="text"
                   defaultValue={data.description}
-                  // onBlur={event => {
-                  //   onBlur(
-                  //     setDescriptionError,
-                  //     'description',
-                  //     event.target.value
-                  //   )
-                  // }}
                   onChange={(e)=>onDataChange('description', e.target.value)}
                   disableUnderline
                   className={[
                     globalClasses.input,
                     errors.description
                       ? globalClasses.inputError
-                      : globalClasses.inputSuccess
+                      : "",
+                      data.description && !errors.description && globalClasses.inputSuccess
                   ]}
                 />
               </Grid>
             </Grid>
           </Box>
           <Box className={globalClasses.flexRow}>
+            
             <Grid container spacing={0}>
               <Grid item xs={12} sm={5}>
                 <Typography className={classes.labelText}>
                   {t('Action')}
                 </Typography>
-                <Input
+                {bannerActions?.bannerActions?.length > 0  && (
+                <Select
                   style={{ marginTop: -1 }}
+                  defaultValue={data.action}
+                  displayEmpty
+                  inputProps={{ 'aria-label': 'Without label' }}
+                  value={data.action}
+                  placeholder='Select action'
+                  onChange={(e)=>onDataChange('action', e.target.value)}
+                  className={[
+                    globalClasses.input,
+                    errors.action
+                      ? globalClasses.inputError
+                      : "",
+                      data.action && !errors.action && globalClasses.inputSuccess
+                  ]}>
+                    {
+                      bannerActions?.bannerActions?.map((item, index)=>(
+                        <MenuItem
+                          style={{ color: 'black', textTransform: 'capitalize' }}
+                          value={item}
+                          key={item+index}
+                          >
+                          {item}
+                        </MenuItem>
+                      ))}
+                </Select>
+
+                )}
+                {/* <Input
+                  
                   placeholder={
                     t('Action') + ' (Action to perform i.e navigate)'
                   }
+                  disabled
                   type="text"
                   defaultValue={data.action}
-                  // onBlur={event =>
-                  //   onBlur(setNameError, 'name', event.target.value)
-                  // }
                   onChange={(e)=>onDataChange('action', e.target.value)}
                   disableUnderline
                   className={[
                     globalClasses.input,
                     errors.action
                       ? globalClasses.inputError
-                      : globalClasses.inputSuccess
+                      : "",
+                      data.action && !errors.action && globalClasses.inputSuccess
                   ]}
-                />
+                /> */}
               </Grid>
               <Grid item xs={12} sm={5}>
                 <Typography className={classes.labelText}>
@@ -261,22 +342,23 @@ function Banner(props) {
                   placeholder={t('Screen')}
                   type="text"
                   defaultValue={data.screen}
-                  // onBlur={event =>
-                  //   onBlur(setNameError, 'name', event.target.value)
-                  // }
                   onChange={(e)=>onDataChange('screen', e.target.value)}
                   disableUnderline
                   className={[
                     globalClasses.input,
                     errors.screen
                       ? globalClasses.inputError
-                      : globalClasses.inputSuccess
+                      : "",
+                      data.screen && !errors.screen && globalClasses.inputSuccess
                   ]}
                 />
               </Grid>
             </Grid>
           </Box>
+          <Box>
+          <Typography className={classes.parametersHeading}>Other Parameters (Optional)</Typography>
 
+          </Box>
           {parameter.map((optionItem, index) => (
             <Grid container key={optionItem._id}>
               <Grid item xs={12} sm={5}>
@@ -392,32 +474,33 @@ function Banner(props) {
             />
           </Box>
 
-          {loading ? t('Loading') : null}
+          {loading || fileLoading ? t('Loading') : null}
           <Box>
             <Button
               className={globalClasses.button}
-              disabled={loading}
+              disabled={loading || fileLoading}
               onClick={async e => {
                 e.preventDefault()
-                const inputData = {
-                  title: data.title,
-                  description: data.description,
-                  action: data.action,
-                  file: file,
-                  parameters: JSON.stringify(parameter)
+                console.log('onSubmitValidaiton => ', onSubmitValidaiton())
+                if(onSubmitValidaiton()){
+                  const inputData = {
+                    title: data.title,
+                    description: data.description,
+                    action: data.action,
+                    screen: data.screen,
+                    file: await uploadImageToCloudinary(),
+                    parameters: JSON.stringify(parameter)
+                  }
+                  console.log('onSubmitValidaiton inputData => ', inputData)
+                  mutate({
+                    variables: {
+                      bannerInput: {
+                        _id: props.banner ? props.banner._id : '',
+                        ...inputData
+                      }
+                    }
+                  })
                 }
-                console.log('inputData => ', inputData)
-                // if (onSubmitValidaiton() && !loading) {
-                //   mutate({
-                //     variables: {
-                //       cuisineInput: {
-                //         _id: props.cuisine ? props.cuisine._id : '',
-                //         name: formRef.current['input-name'].value,
-                //         description: formRef.current['input-description'].value
-                //       }
-                //     }
-                //   })
-                // }
               }}>
               {t('Save')}
             </Button>

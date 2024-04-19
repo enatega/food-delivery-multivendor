@@ -16,7 +16,6 @@ import {
   ScrollView,
   Animated,
   RefreshControl,
-  ImageBackground
 } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import {
@@ -26,11 +25,10 @@ import {
 } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import UserContext from '../../context/User'
-import { restaurantList } from '../../apollo/queries'
+import { getBanners, restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -64,6 +62,10 @@ const RESTAURANTS = gql`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
+const GET_BANNERS = gql`
+  ${getBanners}
+`
+
 function Main(props) {
   const Analytics = analytics()
 
@@ -91,8 +93,13 @@ function Main(props) {
       fetchPolicy: 'network-only'
     }
   )
+  const { data: banners } = useQuery(
+    GET_BANNERS,
+    {
+      fetchPolicy: 'network-only'
+    }
+  )
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
-  const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
@@ -375,7 +382,7 @@ function Main(props) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                   >
-                    <Banner />
+                    <Banner banners={banners?.banners} />
                     <View style={styles().mainItemsContainer}>
                       <TouchableOpacity
                         style={styles().mainItem}

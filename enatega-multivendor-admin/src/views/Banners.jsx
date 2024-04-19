@@ -5,7 +5,7 @@ import Header from '../components/Headers/Header'
 import CustomLoader from '../components/Loader/CustomLoader'
 import DataTable from 'react-data-table-component'
 import orderBy from 'lodash/orderBy'
-import { getCuisines, editCuisine, deleteCuisine } from '../apollo'
+import { getBanners, editBanner, deleteBanner } from '../apollo'
 import SearchBar from '../components/TableHeader/SearchBar'
 import useGlobalStyles from '../utils/globalStyles'
 import { customStyles } from '../utils/tableCustomStyles'
@@ -20,40 +20,38 @@ import {
   MenuItem,
   Modal,
   Paper,
-  Switch,
   Typography,
   ListItemIcon
 } from '@mui/material'
-import { ReactComponent as CouponsIcon } from '../assets/svg/svg/Coupons.svg'
 import TableHeader from '../components/TableHeader'
 import BannerComponent from '../components/Banner/Banner'
 
-const GET_CUISINES = gql`
-  ${getCuisines}
+const GET_BANNERS = gql`
+  ${getBanners}
 `
-const EDIT_CUISINE = gql`
-  ${editCuisine}
+const EDIT_BANNER = gql`
+  ${editBanner}
 `
-const DELETE_CUISINE = gql`
-  ${deleteCuisine}
+const DELETE_BANNER = gql`
+  ${deleteBanner}
 `
 
 const Banners = props => {
   const { t } = props
   const [editModal, setEditModal] = useState(false)
-  const [cuisine, setCuisine] = useState(null)
+  const [banner, setBanner] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
-  const [mutateEdit] = useMutation(EDIT_CUISINE)
-  const [mutateDelete] = useMutation(DELETE_CUISINE, {
-    refetchQueries: [{ query: GET_CUISINES }]
+  const [mutateEdit] = useMutation(EDIT_BANNER)
+  const [mutateDelete] = useMutation(DELETE_BANNER, {
+    refetchQueries: [{ query: GET_BANNERS }]
   })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
-    GET_CUISINES
+    GET_BANNERS
   )
-  const toggleModal = cuisine => {
+  const toggleModal = banner => {
     setEditModal(!editModal)
-    setCuisine(cuisine)
+    setBanner(banner)
   }
 
   const customSort = (rows, field, direction) => {
@@ -70,14 +68,40 @@ const Banners = props => {
 
   const columns = [
     {
-      name: t('Name'),
+      name: t('Image'),
+      cell: row => (
+        <>
+          <img
+            className="img-responsive"
+            style={{ width: 30, height: 30, borderRadius: 15 }}
+            src={
+              row.file ||
+              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+            }
+            alt=''
+          />
+        </>
+      )
+    },
+    {
+      name: t('Title'),
       sortable: true,
-      selector: 'name'
+      selector: 'title'
     },
     {
       name: t('Description'),
       sortable: true,
       selector: 'description'
+    },
+    {
+      name: t('Screen'),
+      sortable: true,
+      selector: 'screen'
+    },
+    {
+      name: t('Action'),
+      sortable: true,
+      selector: 'action'
     },
     {
       name: t('Action'),
@@ -88,10 +112,10 @@ const Banners = props => {
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
   const filtered =
     searchQuery.length < 3
-      ? data && data.cuisines
+      ? data && data.banners
       : data &&
-        data.cuisines.filter(cuisine => {
-          return cuisine.name.toLowerCase().search(regex) > -1
+        data.banners.filter(banner => {
+          return banner.title.toLowerCase().search(regex) > -1
         })
 
   const actionButtons = row => {
@@ -157,7 +181,7 @@ const Banners = props => {
       {/* Page content */}
       <Container className={globalClasses.flex} fluid>
         <Grid container>
-          <Grid item xs={8}>
+          <Grid item xs={12} lg={8}>
             <BannerComponent />
           </Grid>
         </Grid>
@@ -200,7 +224,7 @@ const Banners = props => {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          <BannerComponent cuisine={cuisine} />
+          <BannerComponent banner={banner} />
         </Modal>
       </Container>
     </>

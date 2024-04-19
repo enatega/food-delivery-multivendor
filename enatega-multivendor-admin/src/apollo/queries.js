@@ -437,6 +437,21 @@ export const getCoupons = `query Coupons{
     }
   }`
 
+  export const getBanners = `query Banners{
+    banners {
+      _id
+      title
+      description
+      action
+      screen
+      file
+      parameters
+    }
+  }`
+  export const getBannerActions = `query BannerActions{
+    bannerActions
+  }`
+
 export const getTipping = `query Tips{
     tips {
       _id

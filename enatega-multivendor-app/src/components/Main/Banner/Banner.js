@@ -6,9 +6,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 
-const DATA = [1, 2, 3, 4, 5, 6, 7]
-
-const Banner = () => {
+const Banner = ({banners}) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -18,7 +16,7 @@ const Banner = () => {
       autoplayDelay={3}
       autoplayLoop
       showPagination
-      data={DATA}
+      data={banners ?? []}
       paginationStyle={styles().pagination}
       paginationActiveColor={currentTheme.black}
       paginationDefaultColor={currentTheme.hex}
@@ -27,16 +25,16 @@ const Banner = () => {
       renderItem={({ item }) => (
         <View style={styles(currentTheme).banner}>
           <ImageBackground
-            source={require('../../../assets/images/ItemsList/coverBreakfast.jpg')}
+            source={{uri: item.file}}
             resizeMode='cover'
             style={styles().image}
           >
             <View style={styles().container}>
-              <TextDefault H3 bolder textColor='#fff'>
-                Meet the new eat
+              <TextDefault H3 bolder textColor='#fff' style={{textTransform: 'capitalize'}}>
+                {item.title}
               </TextDefault>
               <TextDefault bolder textColor='#fff'>
-                Come check our new restaurants! {item}
+                {item.description}
               </TextDefault>
             </View>
           </ImageBackground>

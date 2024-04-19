@@ -939,3 +939,14 @@ export const popularItems = `query PopularItems($restaurantId: String!) {
 }
 `
 
+export const getBanners = `query Banners{
+  banners {
+    _id
+    title
+    description
+    action
+    screen
+    file
+    parameters
+  }
+}`

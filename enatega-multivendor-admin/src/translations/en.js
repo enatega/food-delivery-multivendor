@@ -105,6 +105,8 @@ const en = {
     CouponAdded: 'Coupon Added',
     CuisineUpdated: 'Cuisine updated',
     CuisineAdded: 'Cuisine Added',
+    BannerUpdated: 'Banner updated',
+    BannerAdded: 'Banner Added',
     Code: 'Code',
     PHCode: 'Code e.g SALE50',
     PHDiscount: 'Discount % i.e 1-99',
