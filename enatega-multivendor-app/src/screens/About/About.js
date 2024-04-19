@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, StatusBar } from 'react-native'
+import { View } from 'react-native'
 import {
   AntDesign,
   MaterialIcons,
@@ -9,7 +9,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
 import styles from './styles'
-import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -20,7 +20,6 @@ import analytics from '../../utils/analytics'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
-
 function About(props) {
   const Analytics = analytics()
   const { t } = useTranslation()
@@ -51,24 +50,18 @@ function About(props) {
 
   const inset = useSafeAreaInsets()
   return (
-<SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
-<StatusBar
-    backgroundColor={currentTheme.themeBackground}
-    barStyle={
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    }
-  />
     <ScrollView
       style={[
-        // { marginTop: inset.top },
+        { marginTop: inset.top },
         styles().flex,
         { backgroundColor: currentTheme.headerMenuBackground }
       ]}
     >
       <ImageHeader
-        iconColor={currentTheme.newIconColor}
+        iconColor={currentTheme.iconColorPink}
         svgNameL='leftArrow'
         restaurantImage={restaurantObject.restaurantImage}
+        iconBackColor={currentTheme.white}
         restaurantName={restaurantObject.restaurantName}
         deliveryTime={restaurantObject.deliveryTime}
         total={restaurantObject.total}
@@ -139,7 +132,7 @@ function About(props) {
                 color={currentTheme.fontThirdColor}
               />
               <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-                {t('minimumOrder')} {configuration.currencySymbol}
+                {t('Minimum Order')} {configuration.currencySymbol}
                 {restaurantObject.restaurantMinOrder}
               </TextDefault>
             </View>
@@ -175,7 +168,7 @@ function About(props) {
               color={currentTheme.fontThirdColor}
             />
             <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-              {t('salesTax')} {configuration.currencySymbol}
+              {t('Sales Tax')} {configuration.currencySymbol}
               {restaurantObject.restaurantTax}
             </TextDefault>
           </View>
@@ -253,7 +246,6 @@ function About(props) {
         </View>
       </View>
     </ScrollView>
-</SafeAreaView>
   )
 }
 export default About
