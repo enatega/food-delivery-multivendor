@@ -404,7 +404,7 @@ export const fr = {
   language: 'langue',
   house: 'Maison',
   office: 'Bureau',
-  Appartment: 'Appartement',
+  Appartment: 'Apartement',
   tapToRate: 'Appuyez pour noter',
   locationType: 'Type de lieu',
   locationTypeDetails: 'Le type de localisation nous aide à mieux vous trouver',
