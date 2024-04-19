@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, TouchableOpacity, Image } from 'react-native'
+import { View, TouchableOpacity, Image, StatusBar } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
@@ -17,17 +17,25 @@ function ImageHeader(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
   return (
+    <>
+        <StatusBar
+    backgroundColor={currentTheme.themeBackground}
+    barStyle={
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    }
+  />
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles().topBar}>
         <TouchableOpacity
           activeOpacity={0.7}
           style={{
             backgroundColor: props.iconBackColor,
+            color: props.iconColor,
             width: '20%'
           }}
           onPress={() => navigation.goBack()}
         >
-          <AnimatedIon name='arrow-back' size={25} />
+          <AnimatedIon color={props.iconColor} name='arrow-back' size={25} />
         </TouchableOpacity>
         <View>
           <TextDefault
@@ -46,6 +54,7 @@ function ImageHeader(props) {
         <View style={{ width: '20%' }}></View>
       </View>
     </View>
+    </>
   )
 }
 export default ImageHeader
