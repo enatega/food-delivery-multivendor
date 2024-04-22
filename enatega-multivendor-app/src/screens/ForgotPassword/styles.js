@@ -15,7 +15,7 @@ const styles = (props = null) =>
       flex: 1,
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      // ...alignment.MTlarge,
+      ...alignment.MTlarge,
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       flexDirection: 'column',

@@ -11,7 +11,7 @@ const styles = (props = null) =>
       flex: 1,
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      // ...alignment.MTlarge,
+      ...alignment.MTlarge,
       ...alignment.MBlarge,
       ...alignment.MLmedium,
       ...alignment.MRmedium,
@@ -57,22 +57,6 @@ const styles = (props = null) =>
       color: props !== null ? props.newFontcolor : 'red',
       ...alignment.MBxSmall,
       ...alignment.MTxSmall
-    },
-    countryTextField: {
-      borderColor: props !== null ? props.borderColor : '#efefef',
-      borderWidth: scale(1),
-      borderRadius: scale(10),
-      backgroundColor: props !== null ? props.themeBackground : 'white',
-      padding: scale(12),
-      color: props !== null ? props.newFontcolor : 'red',
-      ...alignment.MBxSmall,
-      ...alignment.MTxSmall
-      // ...alignment.PBxSmall,
-      // ...alignment.PTxSmall,
-    },
-    countryPickerIosFix: {
-      ...alignment.PBxSmall,
-      ...alignment.PTxSmall
     },
     passwordField: {
       display: 'flex',
