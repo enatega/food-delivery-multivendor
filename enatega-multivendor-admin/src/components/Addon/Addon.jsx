@@ -76,19 +76,7 @@ function Addon(props) {
             quantityMaximumError: false
           }
         ]
-      : [
-          {
-            title: '',
-            description: '',
-            quantityMinimum: 0,
-            quantityMaximum: 1,
-            options: [],
-            titleError: false,
-            optionsError: false,
-            quantityMinimumError: false,
-            quantityMaximumError: false
-          }
-        ]
+      : []
   )
   const [modal, modalSetter] = useState(false)
   const [addonIndex, addonIndexSetter] = useState(0)
@@ -124,7 +112,8 @@ function Addon(props) {
       )
       addons[index].quantityMinimumError =
         addons[index].quantityMinimumError ||
-        addons[index].quantityMinimum > addons[index].quantityMaximum
+        addons[index].quantityMinimum > addons[index].quantityMaximum ||
+        addons[index].quantityMinimum === 0 // Added check for zero value
       addons[index].quantityMinimumError =
         addons[index].options.length < addons[index][state]
     }
@@ -135,7 +124,8 @@ function Addon(props) {
       )
       addons[index].quantityMaximumError =
         addons[index].quantityMaximumError ||
-        addons[index].quantityMaximum < addons[index].quantityMinimum
+        addons[index].quantityMaximum < addons[index].quantityMinimum ||
+        addons[index].quantityMaximum === 0 // Added check for zero value
     }
     if (state === 'options') {
       addons[index].optionsError = addons[index].options.length === 0
