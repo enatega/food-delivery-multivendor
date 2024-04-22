@@ -59,7 +59,7 @@
     "graphql": "^15.0.0",
     "husky": "^8.0.3",
     "i18next": "^17.0.0",
-    "moment": "2.24.0",
+    "moment": "2.30.1",
     "node-sass": "^8.0.0",
     "nouislider": "13.1.1",
     "react": "^17.0.0",
