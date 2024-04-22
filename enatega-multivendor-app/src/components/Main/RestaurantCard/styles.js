@@ -17,6 +17,7 @@ const styles = (props = null) =>
     offerContainer: {
       borderRadius: 25,
       width: scale(270),
+      height: height * 0.376,
       ...alignment.MRsmall
     },
 

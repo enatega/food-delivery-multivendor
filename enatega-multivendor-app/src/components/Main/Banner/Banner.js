@@ -1,14 +1,30 @@
 import React, { useContext } from 'react'
-import { View, ImageBackground } from 'react-native'
+import { View, ImageBackground, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import { SwiperFlatList } from 'react-native-swiper-flatlist'
+import { useNavigation } from '@react-navigation/native'
 
-const Banner = ({banners}) => {
+const Banner = ({ banners }) => {
+  const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+
+  const onPressBanner = (banner) => {
+    const parameters = JSON.parse(banner.parameters)
+    const selectedType = parameters[0]?.value
+    console.log('selectedType => ', selectedType)
+    navigation.navigate(
+      navigation
+        .getState()
+        .routeNames.includes(banner.screen ? banner.screen : 'Menu'),
+      {
+        selectedType: selectedType ?? 'restaurant'
+      }
+    )
+  }
 
   return (
     <SwiperFlatList
@@ -18,19 +34,28 @@ const Banner = ({banners}) => {
       showPagination
       data={banners ?? []}
       paginationStyle={styles().pagination}
-      paginationActiveColor={currentTheme.black}
+      paginationActiveColor={currentTheme.main}
       paginationDefaultColor={currentTheme.hex}
       paginationStyleItemActive={styles().paginationItem}
       paginationStyleItemInactive={styles().paginationItem}
       renderItem={({ item }) => (
-        <View style={styles(currentTheme).banner}>
+        <TouchableOpacity
+          style={styles(currentTheme).banner}
+          activeOpacity={0.9}
+          onPress={() => onPressBanner(item)}
+        >
           <ImageBackground
-            source={{uri: item.file}}
+            source={{ uri: item.file }}
             resizeMode='cover'
             style={styles().image}
           >
             <View style={styles().container}>
-              <TextDefault H3 bolder textColor='#fff' style={{textTransform: 'capitalize'}}>
+              <TextDefault
+                H3
+                bolder
+                textColor='#fff'
+                style={{ textTransform: 'capitalize' }}
+              >
                 {item.title}
               </TextDefault>
               <TextDefault bolder textColor='#fff'>
@@ -38,7 +63,7 @@ const Banner = ({banners}) => {
               </TextDefault>
             </View>
           </ImageBackground>
-        </View>
+        </TouchableOpacity>
       )}
     />
   )

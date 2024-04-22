@@ -14,6 +14,7 @@ import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
+import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 
 const TOP_BRANDS = gql`
   ${topRatedVendorsInfo}
@@ -32,6 +33,8 @@ function TopBrands(props) {
       longitude: location?.longitude
     }
   })
+  // console.log('GROCERY => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'grocery')?.length)
+  // console.log('RESTAURANTS => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'restaurant')?.length)
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -71,6 +74,7 @@ function TopBrands(props) {
   if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
   return (
+    <View style={styles().mainContainer}>
     <View style={styles().topbrandsSec}>
       <TextDefault
         numberOfLines={1}
@@ -83,7 +87,9 @@ function TopBrands(props) {
       <View style={{ ...alignment.PRsmall }}>
         <FlatList
           data={data?.topRatedVendors}
-          renderItem={renderItem}
+          renderItem={({ item }) => {
+            return <NewRestaurantCard {...item} />
+          }}
           keyExtractor={(item) => item?._id}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
@@ -91,6 +97,53 @@ function TopBrands(props) {
           horizontal={true}
         />
       </View>
+    </View>
+    <View style={styles().topbrandsSec}>
+      <TextDefault
+        numberOfLines={1}
+        textColor={currentTheme.fontFourthColor}
+        bolder
+        H4
+      >
+        Top Restaurant Brands
+      </TextDefault>
+      <View style={{ ...alignment.PRsmall }}>
+        <FlatList
+          data={data?.topRatedVendors?.filter((item)=>item.shopType === 'restaurant')}
+          renderItem={({ item }) => {
+            return <NewRestaurantCard {...item} />
+          }}
+          keyExtractor={(item) => item?._id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        />
+      </View>
+    </View>
+    <View style={styles().topbrandsSec}>
+      <TextDefault
+        numberOfLines={1}
+        textColor={currentTheme.fontFourthColor}
+        bolder
+        H4
+      >
+        Top Grocery Brands
+      </TextDefault>
+      <View style={{ ...alignment.PRsmall }}>
+        <FlatList
+          data={data?.topRatedVendors?.filter((item)=>item.shopType === 'grocery')}
+          renderItem={({ item }) => {
+            return <NewRestaurantCard {...item} />
+          }}
+          keyExtractor={(item) => item?._id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        />
+      </View>
+    </View>
     </View>
   )
 }

@@ -6,7 +6,11 @@ const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
+    mainContainer: {
+      gap: 20
+    },
     topbrandsSec: {
+      gap: 5,
       ...alignment.PLmedium
     },
     topbrandsHeading:{

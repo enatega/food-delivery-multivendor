@@ -99,6 +99,7 @@ function Main(props) {
       fetchPolicy: 'network-only'
     }
   )
+  // console.log('banners => ', JSON.stringify(banners, null, 3))
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
@@ -106,6 +107,7 @@ function Main(props) {
   })
   const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
   const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
+  // console.log('mostOrderedRestaurantsVar => ', JSON.stringify(mostOrderedRestaurantsVar[0], null, 3))
   const newheaderColor = currentTheme.newheaderColor
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
@@ -478,6 +480,31 @@ function Main(props) {
                           />
                         )}
                       </View>
+                      <View>
+                        {orderLoading ? (
+                          <MainLoadingUI />
+                        ) : (
+                          <MainRestaurantCard
+                            orders={mostOrderedRestaurantsVar?.filter((order)=>order.shopType === 'restaurant')}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Top Restaurants'}
+                          />
+                        )}
+                      </View>
+                      <View>
+                        {orderLoading ? (
+                          <MainLoadingUI />
+                        ) : (
+                          <MainRestaurantCard
+                            orders={mostOrderedRestaurantsVar?.filter((order)=>order.shopType === 'grocery')}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Top Grocery'}
+                          />
+                        )}
+                      </View>
+                      
                     </View>
                     <View
                       style={
@@ -491,7 +518,7 @@ function Main(props) {
               </View>
             </View>
           </View>
-          <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
+          {/* <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} /> */}
           <Modalize
             ref={modalRef}
             modalStyle={styles(currentTheme).modal}
