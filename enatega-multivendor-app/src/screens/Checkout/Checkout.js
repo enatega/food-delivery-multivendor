@@ -766,6 +766,8 @@ function Checkout(props) {
                     locationIcon={currentTheme.newIconColor}
                     locationLabel={currentTheme.newFontcolor}
                     location={currentTheme.newFontcolor}
+                    navigation={props.navigation}
+                    addresses={profile.addresses}
                   />
 
                   <View

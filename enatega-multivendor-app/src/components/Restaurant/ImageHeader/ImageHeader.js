@@ -176,41 +176,12 @@ function ImageTextCenterHeader(props, ref) {
     }
   })
 
-  const headerTextFlex = useAnimatedStyle(() => {
-    const concat = (...args) => args.join('')
-    return {
-      marginBottom: concat(
-        interpolate(
-          translationY.value,
-          [0, 80, SCROLL_RANGE],
-          [-10, -10, 0],
-          Extrapolation.CLAMP
-        ),
-        '%'
-      )
-    }
-  })
-
-  const iconBackColor = currentTheme.white
-
-  const iconRadius = scale(15)
-
-  const iconSize = scale(20)
-
-  const iconTouchHeight = scale(30)
-
-  const iconTouchWidth = scale(30)
-
   const distance = calculateDistance(
     aboutObject?.latitude,
     aboutObject?.longitude,
     location?.latitude,
     location?.longitude
   )
-
-  const hideKeyboard = () => {
-    Keyboard.dismiss()
-  }
 
   const emptyView = () => {
     return (
