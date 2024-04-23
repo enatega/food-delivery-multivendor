@@ -110,8 +110,6 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.iconBackground : 'white'
     },
     horizontalLine2: {
-      borderWidth: 0.5,
-      borderColor: props !== null ? props.iconBackground : 'white',
       marginVertical: scale(11)
     },
     deliveryTime: {
