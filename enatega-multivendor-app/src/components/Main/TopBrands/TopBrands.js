@@ -8,16 +8,15 @@ import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { topRatedVendorsInfo } from '../../../apollo/queries'
+import { topRatedVendorsInfoPreview } from '../../../apollo/queries'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 
 const TOP_BRANDS = gql`
-  ${topRatedVendorsInfo}
+  ${topRatedVendorsInfoPreview}
 `
 
 function TopBrands(props) {
@@ -36,7 +35,7 @@ function TopBrands(props) {
   // console.log('GROCERY => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'grocery')?.length)
   // console.log('RESTAURANTS => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'restaurant')?.length)
 
-  const renderItem = ({ item }) => (
+  const RenderItem = ({ item }) => (
     <TouchableOpacity
       style={styles().topbrandsContainer}
       onPress={() => navigation.navigate('Restaurant', { ...item })}
@@ -64,7 +63,7 @@ function TopBrands(props) {
           {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>
-          {item?.deliveryTime} + {t('mins')}
+          {item?.deliveryTime} mins
         </TextDefault>
       </View>
     </TouchableOpacity>
@@ -75,75 +74,127 @@ function TopBrands(props) {
 
   return (
     <View style={styles().mainContainer}>
-    <View style={styles().topbrandsSec}>
-      <TextDefault
-        numberOfLines={1}
-        textColor={currentTheme.fontFourthColor}
-        bolder
-        H4
-      >
-        {t('topBrands')}
-      </TextDefault>
-      <View style={{ ...alignment.PRsmall }}>
-        <FlatList
-          data={data?.topRatedVendors}
-          renderItem={({ item }) => {
-            return <NewRestaurantCard {...item} />
-          }}
-          keyExtractor={(item) => item?._id}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        />
+      <View style={styles().topbrandsSec}>
+        <View style={styles().header}>
+          <TextDefault
+            numberOfLines={1}
+            textColor={currentTheme.fontFourthColor}
+            bolder
+            H4
+          >
+            {t('topBrands')}
+          </TextDefault>
+          <TouchableOpacity
+            style={styles(currentTheme).seeAllBtn}
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('Menu', {
+                selectedType: 'restaurant',
+                queryType: 'topBrands'
+              })
+            }}
+          >
+            <TextDefault H5 bolder textColor={currentTheme.main}>
+              See All
+            </TextDefault>
+          </TouchableOpacity>
+        </View>
+        <View style={{ ...alignment.PRsmall }}>
+          <FlatList
+            data={data?.topRatedVendors}
+            renderItem={({ item }) => {
+              return <RenderItem item={item} />
+            }}
+            keyExtractor={(item) => item?._id}
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+          />
+        </View>
       </View>
-    </View>
-    <View style={styles().topbrandsSec}>
-      <TextDefault
-        numberOfLines={1}
-        textColor={currentTheme.fontFourthColor}
-        bolder
-        H4
-      >
-        Top Restaurant Brands
-      </TextDefault>
-      <View style={{ ...alignment.PRsmall }}>
-        <FlatList
-          data={data?.topRatedVendors?.filter((item)=>item.shopType === 'restaurant')}
-          renderItem={({ item }) => {
-            return <NewRestaurantCard {...item} />
-          }}
-          keyExtractor={(item) => item?._id}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        />
+      <View style={styles().topbrandsSec}>
+        <View style={styles().header}>
+          <TextDefault
+            numberOfLines={1}
+            textColor={currentTheme.fontFourthColor}
+            bolder
+            H4
+          >
+            Top Restaurant Brands
+          </TextDefault>
+          <TouchableOpacity
+            style={styles(currentTheme).seeAllBtn}
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('Menu', {
+                selectedType: 'restaurant',
+                queryType: 'topBrands'
+              })
+            }}
+          >
+            <TextDefault H5 bolder textColor={currentTheme.main}>
+              See All
+            </TextDefault>
+          </TouchableOpacity>
+        </View>
+        <View style={{ ...alignment.PRsmall }}>
+          <FlatList
+            data={data?.topRatedVendors?.filter(
+              (item) => item.shopType === 'restaurant'
+            )}
+            renderItem={({ item }) => {
+              return <NewRestaurantCard {...item} />
+            }}
+            keyExtractor={(item) => item?._id}
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+          />
+        </View>
       </View>
-    </View>
-    <View style={styles().topbrandsSec}>
-      <TextDefault
-        numberOfLines={1}
-        textColor={currentTheme.fontFourthColor}
-        bolder
-        H4
-      >
-        Top Grocery Brands
-      </TextDefault>
-      <View style={{ ...alignment.PRsmall }}>
-        <FlatList
-          data={data?.topRatedVendors?.filter((item)=>item.shopType === 'grocery')}
-          renderItem={({ item }) => {
-            return <NewRestaurantCard {...item} />
-          }}
-          keyExtractor={(item) => item?._id}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        />
+      <View style={styles().topbrandsSec}>
+        <View style={styles().header}>
+          <TextDefault
+            numberOfLines={1}
+            textColor={currentTheme.fontFourthColor}
+            bolder
+            H4
+          >
+            Top Grocery Brands
+          </TextDefault>
+          <TouchableOpacity
+            style={styles(currentTheme).seeAllBtn}
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('Menu', {
+                selectedType: 'restaurant',
+                queryType: 'topBrands'
+              })
+            }}
+          >
+            <TextDefault H5 bolder textColor={currentTheme.main}>
+              See All
+            </TextDefault>
+          </TouchableOpacity>
+        </View>
+        <View style={{ ...alignment.PRsmall }}>
+          <FlatList
+            data={data?.topRatedVendors?.filter(
+              (item) => item.shopType === 'grocery'
+            )}
+            renderItem={({ item }) => {
+              return <NewRestaurantCard {...item} />
+            }}
+            keyExtractor={(item) => item?._id}
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+          />
+        </View>
       </View>
-    </View>
     </View>
   )
 }

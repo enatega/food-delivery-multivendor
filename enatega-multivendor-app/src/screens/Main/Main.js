@@ -28,7 +28,7 @@ import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import UserContext from '../../context/User'
-import { getBanners, restaurantList } from '../../apollo/queries'
+import { getBanners, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -57,7 +57,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 
 const RESTAURANTS = gql`
-  ${restaurantList}
+  ${restaurantListPreview}
 `
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -288,6 +288,7 @@ function Main(props) {
   )
 
   const restaurants = data?.nearByRestaurants?.restaurants
+  // console.log('data?.nearByRestaurants?.restaurants => ', JSON.stringify(restaurants[0], null, 3));
 
   const searchAllShops = (searchText) => {
     const data = []
@@ -385,70 +386,6 @@ function Main(props) {
                     showsHorizontalScrollIndicator={false}
                   >
                     <Banner banners={banners?.banners} />
-                    <View style={styles().mainItemsContainer}>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'restaurant'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('foodDelivery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('OrderfoodLove')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/menu-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'grocery'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('grocery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('essentialsDeliveredFast')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/grocery-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                    </View>
                     <View>
                       <View>
                         {isLoggedIn &&
@@ -463,6 +400,7 @@ function Main(props) {
                                   loading={orderLoading}
                                   error={orderError}
                                   title={'Order it again'}
+                                  queryType='orderAgain'
                                 />
                               )}
                             </>
@@ -477,18 +415,33 @@ function Main(props) {
                             loading={orderLoading}
                             error={orderError}
                             title={'Top Picks for you'}
+                            queryType='topPicks'
                           />
                         )}
                       </View>
                       <View>
-                        {orderLoading ? (
+                        {loading ? (
                           <MainLoadingUI />
                         ) : (
                           <MainRestaurantCard
-                            orders={mostOrderedRestaurantsVar?.filter((order)=>order.shopType === 'restaurant')}
+                            orders={data?.nearByRestaurants?.restaurants?.filter((restaurant)=>restaurant.shopType === 'restaurant')}
                             loading={orderLoading}
                             error={orderError}
-                            title={'Top Restaurants'}
+                            title={'Restaurants'}
+                            queryType='restaurant'
+                          />
+                        )}
+                      </View>
+                      <View>
+                        {loading ? (
+                          <MainLoadingUI />
+                        ) : (
+                          <MainRestaurantCard
+                            orders={data?.nearByRestaurants?.restaurants?.filter((restaurant)=>restaurant.shopType === 'grocery')}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Grocery'}
+                            queryType='grocery'
                           />
                         )}
                       </View>
@@ -501,6 +454,7 @@ function Main(props) {
                             loading={orderLoading}
                             error={orderError}
                             title={'Top Grocery'}
+                            queryType='grocery'
                           />
                         )}
                       </View>
@@ -602,3 +556,68 @@ function Main(props) {
 }
 
 export default Main
+
+{/* <View style={styles().mainItemsContainer}>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'restaurant'
+                          })
+                        }
+                      >
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}
+                          >
+                            {t('foodDelivery')}
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}
+                          >
+                            {t('OrderfoodLove')}
+                          </TextDefault>
+                        </View>
+                        <Image
+                          source={require('../../assets/images/ItemsList/menu-new.png')}
+                          style={styles().popularMenuImg}
+                          // resizeMode='contain'
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'grocery'
+                          })
+                        }
+                      >
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}
+                          >
+                            {t('grocery')}
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}
+                          >
+                            {t('essentialsDeliveredFast')}
+                          </TextDefault>
+                        </View>
+                        <Image
+                          source={require('../../assets/images/ItemsList/grocery-new.png')}
+                          style={styles().popularMenuImg}
+                          // resizeMode='contain'
+                        />
+                      </TouchableOpacity>
+                    </View> */}

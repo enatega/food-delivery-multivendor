@@ -470,6 +470,7 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       deliveryTime
       minimumOrder
       tax
+      shopType
       distanceWithCurrentLocation @client
       freeDelivery @client
       acceptVouchers @client
@@ -532,6 +533,30 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
         endTime
       }
     }
+  }
+}
+}`
+export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
+  nearByRestaurants(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+    restaurants{
+      _id
+      name
+      image
+      deliveryTime
+      tax
+      shopType
+      reviewData{
+          total
+          ratings
+          reviews{
+            _id
+            rating
+          }
+      }
+      categories{
+        _id
+        title
+      }
   }
 }
 }`
@@ -626,6 +651,29 @@ export const topRatedVendorsInfo = `query TopRatedVendors($latitude: Float!, $lo
     shopType
     cuisines
     
+  }
+}`
+
+export const topRatedVendorsInfoPreview = `query TopRatedVendors($latitude: Float!, $longitude: Float!) {
+  topRatedVendors(latitude: $latitude, longitude: $longitude) {
+    _id
+    name
+    image
+    deliveryTime
+    tax
+    shopType
+    reviewData{
+        total
+        ratings
+        reviews{
+          _id
+          rating
+        }
+    }
+    categories{
+      _id
+      title
+    }
   }
 }`
 
@@ -903,11 +951,61 @@ export const recentOrderRestaurantsQuery = gql`
   }
 `;
 
+export const recentOrderRestaurantsPreviewQuery = gql`
+  query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
+    recentOrderRestaurants(latitude: $latitude, longitude: $longitude) {
+      _id
+      name
+      image
+      deliveryTime
+      tax
+      shopType
+      reviewData{
+          total
+          ratings
+          reviews{
+            _id
+            rating
+          }
+      }
+      categories{
+        _id
+        title
+      }
+    }
+  }
+`;
+
 export const mostOrderedRestaurantsQuery = gql`
   ${restaurantFragment}
   query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
     mostOrderedRestaurants(latitude: $latitude, longitude: $longitude) {
       ...RestaurantFields
+    }
+  }
+`;
+
+export const mostOrderedRestaurantsPreviewQuery = gql`
+  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
+    mostOrderedRestaurants(latitude: $latitude, longitude: $longitude) {
+      _id
+      name
+      image
+      deliveryTime
+      tax
+      shopType
+      reviewData{
+          total
+          ratings
+          reviews{
+            _id
+            rating
+          }
+      }
+      categories{
+        _id
+        title
+      }
     }
   }
 `;

@@ -21,7 +21,8 @@ const styles = (props = null) =>
       width: '100%',
       // aspectRatio: 18/8,
       height: scale(70),
-      objectFit: 'cover'
+      objectFit: 'cover',
+      borderRadius: 8,
     },
     topbrandsContainer: {
       flexGrow: 1,
@@ -58,6 +59,22 @@ const styles = (props = null) =>
     },
     height80: {
       height: scale(80)
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...alignment.MRmedium,
+      marginBottom: scale(8),
+    },
+    seeAllBtn: {
+      backgroundColor: props != null ? props.lightGreen : '#F3FFEE',
+      borderRadius: 4,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+      
     }
   })
 

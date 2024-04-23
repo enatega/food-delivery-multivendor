@@ -33,13 +33,6 @@ function MainRestaurantCard(props) {
             >
               {t(props?.title)}
             </TextDefault>
-            {/* <TextDefault
-              Normal
-              textColor={currentTheme.secondaryText}
-              style={styles().ItemDescription}
-            >
-              {t('mostOrderedNow')}
-            </TextDefault> */}
           </View>
           <TouchableOpacity
             style={styles(currentTheme).seeAllBtn}
@@ -47,7 +40,8 @@ function MainRestaurantCard(props) {
             onPress={() => {
               navigation.navigate('Menu',
                 {
-                  selectedType: 'restaurant'
+                  selectedType: 'restaurant',
+                  queryType: props.queryType ?? 'restaurant'
                 }
               )
             }}

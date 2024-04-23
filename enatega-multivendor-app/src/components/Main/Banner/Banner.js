@@ -15,13 +15,16 @@ const Banner = ({ banners }) => {
   const onPressBanner = (banner) => {
     const parameters = JSON.parse(banner.parameters)
     const selectedType = parameters[0]?.value
+    const queryType = parameters[1]?.value
     console.log('selectedType => ', selectedType)
+    console.log('queryType => ', queryType)
     navigation.navigate(
       navigation
         .getState()
-        .routeNames.includes(banner.screen ? banner.screen : 'Menu'),
+        .routeNames.includes(banner.screen)  ? banner.screen : 'Menu',
       {
-        selectedType: selectedType ?? 'restaurant'
+        selectedType: selectedType ?? 'restaurant',
+        queryType: queryType ?? 'restaurant'
       }
     )
   }

@@ -33,7 +33,11 @@ import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
-import { getCuisines, restaurantList } from '../../apollo/queries'
+import {
+  getCuisines,
+  restaurantList,
+  topRatedVendorsInfo
+} from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -55,6 +59,10 @@ import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import {
+  recentOrderRestaurantsQuery,
+  mostOrderedRestaurantsQuery
+} from '../../apollo/queries'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -65,6 +73,9 @@ const SELECT_ADDRESS = gql`
 
 const GET_CUISINES = gql`
   ${getCuisines}
+`
+const TOP_BRANDS = gql`
+  ${topRatedVendorsInfo}
 `
 
 export const FILTER_VALUES = {
@@ -85,9 +96,25 @@ export const FILTER_VALUES = {
   }
 }
 
+const HEADING = {
+  orderAgain: 'Order Again',
+  topPicks: 'Top Picks',
+  topBrands: 'Top Brands',
+  grocery: 'All Grocery',
+  restaurant: 'All Restaurant'
+}
+
+const SUB_HEADING = {
+  orderAgain: 'From your previous orders',
+  topPicks: 'Top picked restaurants for you',
+  topBrands: 'Top brands in your area',
+  grocery: 'Most ordered grocery stores',
+  restaurant: 'Most ordered restaurants'
+}
+
 function Menu({ route, props }) {
   const Analytics = analytics()
-  const { selectedType } = route.params
+  const { selectedType, queryType } = route.params
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
@@ -95,30 +122,59 @@ function Menu({ route, props }) {
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
   const [restaurantData, setRestaurantData] = useState([])
-  const [sectionData, setSectionData] = useState([])
+  // const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
   const locationData = location
+  console.log('queryType => ', queryType)
 
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null,
-        shopType: selectedType || null,
-        ip: null
-      },
-      onCompleted: data => {
-        setRestaurantData(data.nearByRestaurants.restaurants)
-        setSectionData(data.nearByRestaurants.sections)
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
+  const query =
+    queryType === 'orderAgain'
+      ? recentOrderRestaurantsQuery
+      : queryType === 'topPicks'
+        ? mostOrderedRestaurantsQuery
+        : queryType === 'topBrands'
+          ? TOP_BRANDS
+          : RESTAURANTS
+
+  const queryVariables = {
+    longitude: location.longitude || null,
+    latitude: location.latitude || null
+  }
+
+  if (['grocery', 'restaurant'].includes(queryType)) {
+    queryVariables.shopType = selectedType || null
+    queryVariables.ip = null
+  }
+  console.log('queryVariables => ', queryVariables)
+
+  const { data, refetch, networkStatus, loading, error } = useQuery(query, {
+    variables: queryVariables,
+    onCompleted: (data) => {
+      switch (queryType) {
+        case 'orderAgain':
+          console.log('orderAgain')
+          setRestaurantData(data.recentOrderRestaurants)
+          break
+        case 'topPicks':
+          console.log('topPicks')
+          setRestaurantData(data.mostOrderedRestaurants)
+          break
+        case 'topBrands':
+          console.log('topBrands')
+          setRestaurantData(data.topRatedVendors)
+          break
+        default:
+          console.log('restaurants')
+          setRestaurantData(data.nearByRestaurants.restaurants)
+          // setSectionData(data.nearByRestaurants.sections)
+      }
+    },
+    fetchPolicy: 'network-only'
+  })
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -145,7 +201,7 @@ function Menu({ route, props }) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -167,12 +223,12 @@ function Menu({ route, props }) {
   }, [navigation, currentTheme])
 
   useEffect(() => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       Cuisines: {
         selected: [],
         type: FILTER_TYPE.CHECKBOX,
-        values: allCuisines?.cuisines?.map(item => item.name)
+        values: allCuisines?.cuisines?.map((item) => item.name)
       }
     }))
   }, [allCuisines])
@@ -195,7 +251,7 @@ function Menu({ route, props }) {
     Other: CustomOtherIcon
   }
 
-  const setAddressLocation = async address => {
+  const setAddressLocation = async (address) => {
     setLocation({
       _id: address._id,
       label: address.label,
@@ -208,14 +264,14 @@ function Menu({ route, props }) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
     fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.error) {
           console.log('Reverse geocoding request failed:', data.error)
         } else {
@@ -238,7 +294,7 @@ function Menu({ route, props }) {
           console.log(address)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching reverse geocoding data:', error)
       })
   }
@@ -249,10 +305,11 @@ function Menu({ route, props }) {
         <TouchableOpacity
           style={[styles(currentTheme).addButton]}
           activeOpacity={0.7}
-          onPress={setCurrentLocation}>
+          onPress={setCurrentLocation}
+        >
           <View style={styles().addressSubContainer}>
             <MaterialCommunityIcons
-              name="target"
+              name='target'
               size={scale(25)}
               color={currentTheme.black}
             />
@@ -296,10 +353,11 @@ function Menu({ route, props }) {
               modal?.close()
               props.navigation.navigate({ name: 'CreateAccount' })
             }
-          }}>
+          }}
+        >
           <View style={styles().addressSubContainer}>
             <AntDesign
-              name="pluscircleo"
+              name='pluscircleo'
               size={scale(20)}
               color={currentTheme.black}
             />
@@ -316,47 +374,50 @@ function Menu({ route, props }) {
     return (
       <View style={styles(currentTheme).screenBackground}>
         <View style={styles(currentTheme).searchbar}>
-        <Search
-          search={''}
-          setSearch={() => {}}
-          newheaderColor={newheaderColor}
-          placeHolder={searchPlaceholderText}
-        />
+          <Search
+            search={''}
+            setSearch={() => {}}
+            newheaderColor={newheaderColor}
+            placeHolder={searchPlaceholderText}
+          />
         </View>
-       
+
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
@@ -368,16 +429,16 @@ function Menu({ route, props }) {
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  const searchRestaurants = searchText => {
+  const searchRestaurants = (searchText) => {
     const data = []
     const regex = new RegExp(searchText, 'i')
-    restaurantData?.forEach(restaurant => {
+    restaurantData?.forEach((restaurant) => {
       const resultName = restaurant.name.search(regex)
       if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some(category => {
+        const resultCatFoods = restaurant.categories.some((category) => {
           const result = category.title.search(regex)
           if (result < 0) {
-            const result = category.foods.some(food => {
+            const result = category.foods.some((food) => {
               const result = food.title.search(regex)
               return result > -1
             })
@@ -386,12 +447,12 @@ function Menu({ route, props }) {
           return true
         })
         if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some(option => {
+          const resultOptions = restaurant.options.some((option) => {
             const result = option.title.search(regex)
             return result > -1
           })
           if (!resultOptions) {
-            const resultAddons = restaurant.addons.some(addon => {
+            const resultAddons = restaurant.addons.some((addon) => {
               const result = addon.title.search(regex)
               return result > -1
             })
@@ -404,18 +465,26 @@ function Menu({ route, props }) {
     return data
   }
 
+  // commented sections for now
   // Flatten the array. That is important for data sequence
-  const restaurantSections = sectionData?.map(sec => ({
-    ...sec,
-    restaurants: sec?.restaurants
-      ?.map(id => restaurantData?.filter(res => res._id === id))
-      .flat()
-  }))
+  // const restaurantSections = sectionData?.map((sec) => ({
+  //   ...sec,
+  //   restaurants: sec?.restaurants
+  //     ?.map((id) => restaurantData?.filter((res) => res._id === id))
+  //     .flat()
+  // }))
 
-  const extractRating = ratingString => parseInt(ratingString)
+  const extractRating = (ratingString) => parseInt(ratingString)
 
   const applyFilters = () => {
-    let filteredData = [...data.nearByRestaurants.restaurants]
+    let filteredData =
+      queryType === 'orderAgain'
+        ? [...data.recentOrderRestaurants]
+        : queryType === 'topPicks'
+          ? [...data.mostOrderedRestaurants]
+          : queryType === 'topBrands'
+            ? [...data.topRatedVendors]
+            : [...data.nearByRestaurants.restaurants]
 
     const ratings = filters.Rating
     const sort = filters.Sort
@@ -427,7 +496,7 @@ function Menu({ route, props }) {
     if (ratings?.selected?.length > 0) {
       const numericRatings = ratings.selected?.map(extractRating)
       filteredData = filteredData.filter(
-        item => item?.reviewData?.ratings >= Math.min(...numericRatings)
+        (item) => item?.reviewData?.ratings >= Math.min(...numericRatings)
       )
     }
 
@@ -446,17 +515,17 @@ function Menu({ route, props }) {
     // Offers filter
     if (offers?.selected?.length > 0) {
       if (offers.selected.includes('Free Delivery')) {
-        filteredData = filteredData.filter(item => item?.freeDelivery)
+        filteredData = filteredData.filter((item) => item?.freeDelivery)
       }
       if (offers.selected.includes('Accept Vouchers')) {
-        filteredData = filteredData.filter(item => item?.acceptVouchers)
+        filteredData = filteredData.filter((item) => item?.acceptVouchers)
       }
     }
 
     // Cuisine filter
     if (cuisines?.selected?.length > 0) {
-      filteredData = filteredData.filter(item =>
-        item.cuisines.some(cuisine => cuisines?.selected?.includes(cuisine))
+      filteredData = filteredData.filter((item) =>
+        item.cuisines.some((cuisine) => cuisines?.selected?.includes(cuisine))
       )
     }
 
@@ -468,7 +537,8 @@ function Menu({ route, props }) {
     <>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
+        style={[styles().flex, { backgroundColor: 'black' }]}
+      >
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
@@ -485,8 +555,8 @@ function Menu({ route, props }) {
                   ListHeaderComponent={
                     search || restaurantData.length === 0 ? null : (
                       <ActiveOrdersAndSections
-                        sections={restaurantSections}
-                        menuPageHeading={menuPageHeading}
+                        menuPageHeading={HEADING[queryType]}
+                        subHeading={SUB_HEADING[queryType]}
                       />
                     )
                   }
@@ -508,13 +578,13 @@ function Menu({ route, props }) {
                   renderItem={({ item }) => <Item item={item} />}
                 />
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
-                <View style={styles(currentTheme).searchbar}>
-                  <Search
-                    setSearch={setSearch}
-                    search={search}
-                    newheaderColor={newheaderColor}
-                    placeHolder={searchPlaceholderText}
-                  />
+                  <View style={styles(currentTheme).searchbar}>
+                    <Search
+                      setSearch={setSearch}
+                      search={search}
+                      newheaderColor={newheaderColor}
+                      placeHolder={searchPlaceholderText}
+                    />
                   </View>
                   <Filters
                     filters={filters}
@@ -553,7 +623,8 @@ function Menu({ route, props }) {
                   <TouchableOpacity
                     style={styles(currentTheme).addressContainer}
                     activeOpacity={0.7}
-                    onPress={() => setAddressLocation(address)}>
+                    onPress={() => setAddressLocation(address)}
+                  >
                     <View style={styles().addressSubContainer}>
                       <View style={[styles(currentTheme).homeIcon]}>
                         {addressIcons[address.label]
