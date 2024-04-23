@@ -59,6 +59,8 @@ import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
 import { Instructions } from '../../components/Checkout/Instructions'
 import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
 import PickUp from '../../components/Pickup'
+import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
+import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
 
 
 // Constants
@@ -107,6 +109,7 @@ function Checkout(props) {
   const [tip, setTip] = useState(null)
   const [tipAmount, setTipAmount] = useState(null)
   const modalRef = useRef(null)
+  const [paymentMode, setPaymentMode] = useState('COD')
 
   const { loading, data } = useRestaurant(cartRestaurant)
   const [loadingOrder, setLoadingOrder] = useState(false)
@@ -380,7 +383,7 @@ function Checkout(props) {
       orderStatus: data.placeOrder.orderStatus,
       orderDate: data.placeOrder.orderDate
     })
-    if (paymentMethod.payment === 'COD') {
+    if (paymentMode === 'COD') {
       props.navigation.reset({
         routes: [
           { name: 'Main' },
@@ -391,12 +394,12 @@ function Checkout(props) {
         ]
       })
       clearCart()
-    } else if (paymentMethod.payment === 'PAYPAL') {
+    } else if (paymentMode === 'PAYPAL') {
       props.navigation.replace('Paypal', {
         _id: data.placeOrder.orderId,
         currency: configuration.currency
       })
-    } else if (paymentMethod.payment === 'STRIPE') {
+    } else if (paymentMode === 'STRIPE') {
       props.navigation.replace('StripeCheckout', {
         _id: data.placeOrder.orderId,
         amount: data.placeOrder.orderAmount,
@@ -493,7 +496,7 @@ function Checkout(props) {
       props.navigation.navigate('CartAddress')
       return false
     }
-    if (!paymentMethod) {
+    if (!paymentMode) {
       FlashMessage({
         message: t('setPaymentMethod')
       })
@@ -514,10 +517,10 @@ function Checkout(props) {
   }
 
   function checkPaymentMethod(currency) {
-    if (paymentMethod.payment === 'STRIPE') {
+    if (paymentMode === 'STRIPE') {
       return stripeCurrencies.find((val) => val.currency === currency)
     }
-    if (paymentMethod.payment === 'PAYPAL') {
+    if (paymentMode === 'PAYPAL') {
       return paypalCurrencies.find((val) => val.currency === currency)
     }
     return true
@@ -546,7 +549,7 @@ function Checkout(props) {
         variables: {
           restaurant: cartRestaurant,
           orderInput: items,
-          paymentMethod: paymentMethod.payment,
+          paymentMethod: paymentMode,
           couponCode: coupon ? coupon.title : null,
           tipping: +calculateTip(),
           taxationAmount: +taxCalculation(),
@@ -789,7 +792,7 @@ function Checkout(props) {
                       styles().width100
                     ]}
                   />
-                  <TouchableOpacity onPress={()=>{onModalOpen(modalRef)}} style={styles(currentTheme).deliveryTime}>
+                  <TouchableOpacity onPress={() => { onModalOpen(modalRef) }} style={styles(currentTheme).deliveryTime}>
                     <View style={[styles().iconContainer]}>
                       <View style={styles().icon}>
                         <EvilIcons name='calendar' size={scale(20)} />
@@ -804,7 +807,7 @@ function Checkout(props) {
                           bolder
                         >
                           {t(isPickup ? 'pickUp' : 'delivery')}{' '}
-                            ({deliveryTime} {t('mins')})
+                          ({deliveryTime} {t('mins')})
                         </TextDefault>
                       </View>
                     </View>
@@ -913,52 +916,12 @@ function Checkout(props) {
                         bolder
                         textColor={currentTheme.fontNewColor}
                       >
-                        {t('paymentText')}
+                        {t('titlePayment')}
                       </TextDefault>
-                      <View style={[styles(currentTheme).paymentSecInner]}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: scale(18)
-                          }}
-                        >
-                          <View>
-                            <FontAwesome
-                              name={paymentMethod?.icon}
-                              size={15}
-                              color={currentTheme.fontFourthColor}
-                            />
-                          </View>
-                          <TextDefault
-                            textColor={currentTheme.fontFourthColor}
-                            medium
-                            bolder
-                          >
-                            {paymentMethod?.label}
-                          </TextDefault>
-                        </View>
-                        <View style={styles(currentTheme).changeBtn}>
-                          <TouchableOpacity
-                            activeOpacity={0.7}
-                            onPress={() => {
-                              props.navigation.navigate('Payment', {
-                                paymentMethod
-                              })
-                            }}
-                            style={styles(currentTheme).changeBtnInner}
-                          >
-                            <TextDefault
-                              small
-                              bold
-                              textColor={currentTheme.color4}
-                              center
-                            >
-                              {t('change')}
-                            </TextDefault>
-                            <Octicons name='pencil' size={16} color='black' />
-                          </TouchableOpacity>
-                        </View>
+                      <View>
+                        <PaymentModeOption title={'Cash'} icon={'dollar'} selected={paymentMode === 'COD'} theme={currentTheme} onSelect={() => { setPaymentMode('COD') }} />
+                        <PaymentModeOption title={'Card (Stripe)'} icon={'credit-card'} selected={paymentMode === 'STRIPE'} theme={currentTheme} onSelect={() => { setPaymentMode('STRIPE') }} />
+                        <PaymentModeOption title={'Card (Paypal)'} icon={'credit-card'} selected={paymentMode === 'PAYPAL'} theme={currentTheme} onSelect={() => { setPaymentMode('PAYPAL') }} />
                       </View>
                     </View>
                   </>
