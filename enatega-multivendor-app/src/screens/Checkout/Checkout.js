@@ -827,86 +827,6 @@ function Checkout(props) {
                   <Instructions theme={currentTheme} message={instructions} />
                 </View>
 
-                <View style={styles().tipSec}>
-                  <View style={[styles().tipRow]}>
-                    <TextDefault
-                      numberOfLines={1}
-                      H5
-                      bolder
-                      textColor={currentTheme.fontNewColor}
-                    >
-                      {t('AddTip')}
-                    </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      normal
-                      bolder
-                      uppercase
-                      textItalic
-                      textColor={currentTheme.fontNewColor}
-                    >
-                      {t('optional')}
-                    </TextDefault>
-                  </View>
-                  {dataTip && (
-                    <View style={styles().buttonInline}>
-                      {dataTip.tips.tipVariations.map((label, index) => (
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          key={index}
-                          style={[
-                            selectedTip === label
-                              ? styles(currentTheme).activeLabel
-                              : styles(currentTheme).labelButton
-                          ]}
-                          onPress={() => {
-                            props.navigation.setParams({ tipAmount: null })
-                            setTip(null)
-                            setSelectedTip((prevState) =>
-                              prevState === label ? null : label
-                            )
-                          }}
-                        >
-                          <TextDefault
-                            textColor={
-                              selectedTip === label
-                                ? currentTheme.black
-                                : currentTheme.fontFourthColor
-                            }
-                            normal
-                            bolder
-                            center
-                          >
-                            {label}%
-                          </TextDefault>
-                        </TouchableOpacity>
-                      ))}
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={
-                          tip
-                            ? styles(currentTheme).activeLabel
-                            : styles(currentTheme).labelButton
-                        }
-                        onPress={() => onModalOpen(tipModalRef)}
-                      >
-                        <TextDefault
-                          textColor={
-                            tip
-                              ? currentTheme.black
-                              : currentTheme.fontFourthColor
-                          }
-                          normal
-                          bolder
-                          center
-                        >
-                          {t('Other')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-
                 {isLoggedIn && profile && (
                   <>
                     <View style={styles().paymentSec}>
@@ -1026,7 +946,85 @@ function Checkout(props) {
                     </>
                   )}
                 </View>
-
+                <View style={styles().tipSec}>
+                  <View style={[styles().tipRow]}>
+                    <TextDefault
+                      numberOfLines={1}
+                      H5
+                      bolder
+                      textColor={currentTheme.fontNewColor}
+                    >
+                      {t('AddTip')}
+                    </TextDefault>
+                    <TextDefault
+                      numberOfLines={1}
+                      normal
+                      bolder
+                      uppercase
+                      textItalic
+                      textColor={currentTheme.fontNewColor}
+                    >
+                      {t('optional')}
+                    </TextDefault>
+                  </View>
+                  {dataTip && (
+                    <View style={styles().buttonInline}>
+                      {dataTip.tips.tipVariations.map((label, index) => (
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          key={index}
+                          style={[
+                            selectedTip === label
+                              ? styles(currentTheme).activeLabel
+                              : styles(currentTheme).labelButton
+                          ]}
+                          onPress={() => {
+                            props.navigation.setParams({ tipAmount: null })
+                            setTip(null)
+                            setSelectedTip((prevState) =>
+                              prevState === label ? null : label
+                            )
+                          }}
+                        >
+                          <TextDefault
+                            textColor={
+                              selectedTip === label
+                                ? currentTheme.black
+                                : currentTheme.fontFourthColor
+                            }
+                            normal
+                            bolder
+                            center
+                          >
+                            {label}%
+                          </TextDefault>
+                        </TouchableOpacity>
+                      ))}
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={
+                          tip
+                            ? styles(currentTheme).activeLabel
+                            : styles(currentTheme).labelButton
+                        }
+                        onPress={() => onModalOpen(tipModalRef)}
+                      >
+                        <TextDefault
+                          textColor={
+                            tip
+                              ? currentTheme.black
+                              : currentTheme.fontFourthColor
+                          }
+                          normal
+                          bolder
+                          center
+                        >
+                          {t('Other')}
+                        </TextDefault>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault
                     numberOfLines={1}
