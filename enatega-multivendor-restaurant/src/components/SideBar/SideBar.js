@@ -17,20 +17,18 @@ import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { useAccount } from '../../ui/hooks'
 import { Image } from 'react-native-elements'
 import useNotification from '../../ui/hooks/useNotification'
-import { PRODUCT_URL, PRIVACY_URL, ABOUT_URL } from '../../utilities'
-import { useNavigation } from '@react-navigation/native';
-import i18next from '../../../i18n'
-import {useTranslation} from 'react-i18next'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { PRODUCT_URL, ABOUT_URL } from '../../utilities'
+import { useTranslation } from 'react-i18next'
+import Constants from 'expo-constants'
 
 export default function SideBar() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const notificationRef = useRef(true)
   const openSettingsRef = useRef(false)
   const { logout, data, toggleSwitch, isAvailable } = useAccount()
   const [notificationStatus, setNotificationStatus] = useState(false)
   const appState = useRef(AppState.currentState)
-  const navigation = useNavigation();
+
   const {
     restaurantData,
     getPermission,
@@ -50,7 +48,7 @@ export default function SideBar() {
           const permissionStatus = await getPermission()
           if (permissionStatus.granted) {
             setNotificationStatus(true)
-            const token = (await getExpoPushToken()).data
+            const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
             sendTokenToBackend({ variables: { token, isEnabled: true } })
           }
         }
@@ -73,7 +71,7 @@ export default function SideBar() {
             openSettingsRef.current
           ) {
             setNotificationStatus(true)
-            const token = (await getExpoPushToken()).data
+            const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
             sendTokenToBackend({ variables: { token, isEnabled: true } })
           }
         }
@@ -92,13 +90,13 @@ export default function SideBar() {
       const permissionStatus = await getPermission()
       if (permissionStatus.granted) {
         setNotificationStatus(true)
-        const token = (await getExpoPushToken()).data
+        const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
         sendTokenToBackend({ variables: { token, isEnabled: true } })
       } else if (permissionStatus.canAskAgain) {
         const result = await requestPermission()
         if (result.granted) {
           setNotificationStatus(true)
-          const token = (await getExpoPushToken()).data
+          const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
           sendTokenToBackend({ variables: { token, isEnabled: true } })
         }
       } else {
@@ -112,9 +110,6 @@ export default function SideBar() {
       sendTokenToBackend({ variables: { token: null, isEnabled: false } })
     }
   }
-  const handleSettingsClick = () => {
-  navigation.navigate('Language');
-  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -254,7 +249,7 @@ export default function SideBar() {
               <Icon type="entypo" color="white" name="log-out" size={26} />
             </View>
             <TextDefault H4 bolder style={styles.text}>
-            {t('titleLogout')}
+              {t('titleLogout')}
             </TextDefault>
           </TouchableOpacity>
         </View>

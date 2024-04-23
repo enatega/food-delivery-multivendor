@@ -13,37 +13,70 @@ const styles = (props = null) =>
     subContainerImage: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      borderTopLeftRadius: scale(30),
+      borderTopRightRadius: scale(30),
+      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      borderWidth: scale(1),
+      borderColor: props != null ? props.borderBottomColor : '#DAD6D6',
+      paddingTop: scale(25),
+      paddingBottom: scale(25)
     },
     imageContainer: {
       justifyContent: 'center',
       alignItems: 'center',
       ...alignment.MBlarge
     },
+    mapView: {
+      height: '60%',
+      marginBottom: scale(-20)
+    },
+    line: {
+      borderBottomWidth: scale(1),
+      borderBottomColor: props != null ? props.borderBottomColor : '#DAD6D6',
+      width: '100%',
+      marginTop: scale(26),
+      marginBottom: scale(26)
+    },
     image: {
       width: scale(100),
       height: scale(100)
     },
+    welcomeHeading: {
+      fontSize: scale(30),
+      ...alignment.MTlarge
+    },
     descriptionEmpty: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.Plarge
+      color: props != null ? props.secondaryText : '#4B5563',
+      lineHeight: scale(18),
+      marginLeft: scale(50),
+      marginRight: scale(50),
+      ...alignment.PTsmall
     },
     emptyButton: {
       display: 'flex',
       flexDirection: 'row',
-      width: '80%',
-      height: '5%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      width: '82%',
+      height: '20%',
+      backgroundColor: props !== null ? props.main : 'transparent',
       justifyContent: 'space-evenly',
       alignItems: 'center',
-      alignSelf: 'center'
+      alignSelf: 'center',
+      borderRadius: scale(28)
     },
     linkButton: {
-      ...alignment.Pmedium,
-      justifyContent: 'center',
+      display: 'flex',
+      flexDirection: 'row',
+      width: '82%',
+      height: '20%',
+      backgroundColor: 'transparent',
+      justifyContent: 'space-evenly',
       alignItems: 'center',
-      backgroundColor: 'transparent'
+      alignSelf: 'center',
+      borderRadius: scale(28),
+      borderWidth: scale(1),
+      borderColor: props !== null ? props.newIconColor : 'transparent',
+      ...alignment.Mmedium
     }
   })
 

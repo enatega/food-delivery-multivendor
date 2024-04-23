@@ -207,7 +207,7 @@ function RateAndReview(props) {
           </KeyboardAvoidingView>
           <View style={styles().btnContainer}>
             <View style={styles().btnSubContainer}>
-              {loadingMutation && <Spinner />}
+              {loadingMutation && <Spinner backColor="transparent" spinnerColor={currentTheme.main} />}
               {!loadingMutation && (
                 <TouchableOpacity
                   activeOpacity={0.7}

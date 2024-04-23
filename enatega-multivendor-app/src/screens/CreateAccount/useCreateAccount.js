@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import { StatusBar, Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
+import Constants from 'expo-constants'
 import useEnvVars from '../../../environment'
 import gql from 'graphql-tag'
 import { login } from '../../apollo/mutations'
@@ -15,9 +16,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
-import {
-  GoogleSignin,
-} from '@react-native-google-signin/google-signin'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 const LOGIN = gql`
   ${login}
@@ -44,8 +43,10 @@ export const useCreateAccount = () => {
 
   const configureGoogleSignin = () => {
     GoogleSignin.configure({
-      iosClientId: '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
-      androidClientId: '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com'
+      iosClientId:
+        '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
+      androidClientId:
+        '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com'
     })
   }
 
@@ -71,7 +72,7 @@ export const useCreateAccount = () => {
       setUser(user)
     } catch (error) {
       console.log('🚀 ~ signIn ~ error:', error)
-    } 
+    }
   }
 
   const { t } = useTranslation()
@@ -107,9 +108,13 @@ export const useCreateAccount = () => {
     let notificationToken = null
     if (Device.isDevice) {
       const { status: existingStatus } =
-      await Notifications.getPermissionsAsync()
+        await Notifications.getPermissionsAsync()
       if (existingStatus === 'granted') {
-        notificationToken = (await Notifications.getExpoPushTokenAsync()).data
+        notificationToken = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId
+          })
+        ).data
       }
     }
     mutate({

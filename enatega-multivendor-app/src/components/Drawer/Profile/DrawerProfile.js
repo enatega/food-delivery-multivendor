@@ -7,10 +7,10 @@ import { theme } from '../../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function DrawerProfile(props) {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { isLoggedIn, loadingProfile, profile } = useContext(UserContext)
@@ -25,7 +25,11 @@ function DrawerProfile(props) {
             onPress={() => {
               props.navigation.navigate({ name: 'CreateAccount' })
             }}>
-            <TextDefault style={styles(currentTheme).alignLeft} textColor={currentTheme.fontMainColor} bold H5>
+            <TextDefault
+              style={styles(currentTheme).alignLeft}
+              textColor={currentTheme.black}
+              bold
+              H5>
               {t('loginOrCreateAccount')}
             </TextDefault>
           </TouchableOpacity>
@@ -39,7 +43,7 @@ function DrawerProfile(props) {
                 {profile.name.substr(0, 1).toUpperCase()}
               </TextDefault>
             </View>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder H2>
+            <TextDefault textColor={currentTheme.color4} bolder H2>
               {profile.name}
             </TextDefault>
           </View>

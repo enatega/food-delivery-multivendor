@@ -1,71 +1,59 @@
 import { Dimensions, StyleSheet } from 'react-native'
 import { scale } from '../../../utils/scaling'
+import { alignment } from '../../../utils/alignment'
 const { height } = Dimensions.get('window')
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      height: height * 0.25,
-      width: '100%'
+      width: '100%',
+      backgroundColor: props != null ? props.themeBackground : 'transparent',
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+      ...alignment.PTsmall
+    },
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...alignment.PBsmall
+    },
+    restImageContainer: {
+      ...alignment.MTxLarge,
+      ...alignment.MBlarge,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8
     },
     headerImage: {
-      width: '100%',
-      height: '100%',
-      borderBottomLeftRadius: 20,
-      borderBottomRightRadius: 20
+      width: scale(66),
+      height: scale(66),
+      objectFit: 'cover',
+      borderRadius: 8
     },
     headingTitle: {
-      position: 'absolute',
       bottom: scale(10),
       left: scale(30)
     },
-    overlayContainer: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    touchArea: {
-      position: 'absolute',
-      top: scale(20),
-      left: scale(10),
-      width: scale(50),
-      height: scale(30),
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white',
-      borderRadius: scale(15)
-    },
+    overlayContainer: {},
+    // touchArea: {
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    //   width: scale(20)
+    // },
     deliveryBoxContainer: {
-      backgroundColor:
-        props != null ? props.customizeOpacityBtn : 'transparent',
-      padding: scale(10),
-      borderRadius: scale(10),
-      borderColor: 'white',
-      borderWidth: 1,
-      width: '45%',
-      alignItems: 'center',
-      alignSelf: 'center'
+      ...alignment.PTsmall,
+      ...alignment.PLxSmall
     },
-    deliveryBox: {
-      color: 'white',
-      backgroundColor: 'black',
-      borderRadius: scale(5),
-      padding: scale(5)
-    },
+
     animatedIconStyle: {
       fontSize: scale(20)
     },
-    deliveryBoxText: {
-      paddingRight: scale(5),
-      paddingLeft: scale(5)
-    },
+
     ratingContainer: {
       flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: scale(10),
-      paddingBottom: scale(10)
+      paddingTop: scale(3),
+      gap: scale(3)
     },
     backArrow: {
       color: props != null ? props.black : '#FFF',

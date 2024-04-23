@@ -11,21 +11,21 @@ function DrawerItems(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
-    <View style={styles.flex}>
+    <View style={styles().flex}>
       <TouchableOpacity
         activeOpacity={1}
-        style={styles.container}
+        style={styles().container}
         onPress={props.onPress}>
-        <View style={styles.leftContainer}>
+        <View style={styles(currentTheme).leftContainer}>
           <SimpleLineIcons
             name={props.icon}
-            size={verticalScale(16)}
+            size={verticalScale(15)}
             color={currentTheme.darkBgFont}
           />
         </View>
-        <View style={styles.rightContainer}>
+        <View style={styles().rightContainer}>
           <TextDefault
-            style={styles.drawerContainer}
+            style={styles().drawerContainer}
             textColor={currentTheme.fontMainColor}
             small
             bold>

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { scale } from '../../utils/scaling'
+import { scale, verticalScale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -15,17 +15,17 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     mainContainer: {
-
-      margin: scale(15),
+      ...alignment.Msmall,
+      marginTop: scale(5),
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      gap: scale(10)
     },
     itemContainer: {
-
       margin: scale(4),
       borderWidth: 1,
-      borderColor: props !== null ? props.mustard : '#d8d8d874',
-      borderRadius: scale(16),
-      backgroundColor: props !== null ? props.radioOuterColor : 'white',
+      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderRadius: scale(8),
+      backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -35,11 +35,42 @@ const styles = (props = null) =>
       ...alignment.PRlarge
     },
     backImageContainer: {
-      backgroundColor: props !== null ? props.white :'white',
+      backgroundColor: props !== null ? props.white : 'white',
       borderRadius: scale(50),
+      width: scale(40),
+      alignItems: 'flex-start',
+      marginLeft: scale(5)
+    },
+    topContainer: {
       marginLeft: scale(10),
-      width: scale(55),
-      alignItems: 'center'
+      marginTop: scale(10)
+    },
+    containerButton: {
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      width: '90%',
+      height: scale(40),
+      bottom: verticalScale(0),
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
+    },
+    addButton: {
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '100%',
+      height: scale(40),
+      borderRadius: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
+    },
+    whatsAppText: {
+      textAlign: 'center',
+      paddingLeft: scale(5),
+    },
+    contentContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   })
 export default styles

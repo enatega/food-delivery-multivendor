@@ -23,29 +23,50 @@ const styles = (props = null) =>
       shadowRadius: verticalScale(2),
       zIndex: 1
     },
+    sectionHeader:{
+      backgroundColor: props != null ? props.themeBackground : '#fff',
+    },
     sectionHeaderText: {
       textTransform: 'capitalize',
-      ...alignment.PLlarge,
+      fontSize: scale(18),
+      fontWeight: '600',
+      ...alignment.PLmedium,
       ...alignment.PTlarge,
-      ...alignment.PBlarge
+    },
+    restaurantItems:{
+      backgroundColor: props != null ? props.themeBackground : 'white'
+
+    },
+    popularItemCards: {
+      ...alignment.PTlarge,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingLeft: scale(17),
+      paddingRight: scale(17),
+      justifyContent: 'space-between',
+      rowGap: scale(10)
+    },
+    dealSection:{
+      ...alignment.PLsmall,
+      ...alignment.PRsmall,
     },
     deal: {
-      width: '100%',
+      width: '80%',
       flexDirection: 'row',
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      alignItems: 'center',
+      gap: scale(5)
     },
-    dealSection: {
-      position: 'relative',
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
-      ...alignment.PLlarge,
-      ...alignment.PRxSmall,
-      borderRadius: scale(25),
-      paddingVertical: scale(10)
+    searchDealSection: {
+      // position: 'relative',
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      paddingVertical: scale(10),
+      ...alignment.PRmedium,
+      ...alignment.PLsmall
     },
     dealDescription: {
-      flex: 1,
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
-      
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      ...alignment.PBsmall,
       ...alignment.PRxSmall
     },
     dealPrice: {
@@ -60,21 +81,25 @@ const styles = (props = null) =>
       maxWidth: '100%',
       ...alignment.MRxSmall
     },
+
     headerText: {
       fontSize: 18,
       paddingTop: scale(5),
       maxWidth: '100%',
       ...alignment.MRxSmall,
-      backgroundColor: props != null ? props.radioOuterColor : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white'
     },
-    listSeperator: {
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.Pink.black,
-      paddingTop: scale(15),
-      marginBottom: scale(15),
-      width: '90%',
-      alignSelf: 'center'
+    addToCart: {
+      width: scale(25),
+      height: scale(25),
+      borderRadius: scale(12.5),
+      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
+
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...alignment.MRxSmall
     },
+
     sectionSeparator: {
       width: '100%',
       height: scale(15),
@@ -100,8 +125,8 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      borderRadius: scale(16),
-      backgroundColor: props !== null ? props.buttonBackground : 'black',
+      borderRadius: scale(40),
+      backgroundColor: props !== null ? props.main : 'black',
       height: '75%',
       width: '95%',
       ...alignment.PLsmall,
@@ -122,7 +147,7 @@ const styles = (props = null) =>
     buttonLeftCircle: {
       backgroundColor: props != null ? props.black : 'black',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     buttonTextLeft: {
       ...textStyles.Bolder,
@@ -142,7 +167,7 @@ const styles = (props = null) =>
       borderLeftWidth: scale(25),
       borderTopWidth: scale(20),
       borderLeftColor: 'transparent',
-      borderTopColor: props != null ? props.tagColor : 'red'
+      borderTopColor: props != null ? props.main : 'red'
     },
     tagText: {
       width: scale(15),
@@ -151,6 +176,18 @@ const styles = (props = null) =>
       top: 1,
       right: 0,
       textAlign: 'center'
+    }, 
+    popularHeading: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      ...alignment.PTlarge,
+      ...alignment.PLmedium,
+    },
+    popularText: {
+      textTransform: 'capitalize',
+      fontSize: scale(18),
+      fontWeight: '600',
     }
   })
 export default styles

@@ -1,13 +1,11 @@
 {
   "expo": {
-    "name": "Enatega Multivendor",
+    "name": "Enatega Multi",
     "scheme": "enategamultivendor",
-    "version": "1.0.38",
+    "version": "1.0.42",
     "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     "slug": "enategamultivendor",
     "owner": "ninjas_code",
-    "currentFullName": "@ninjas_code/enategamultivendor",
-    "originalFullName": "@ninjas_code/enategamultivendor",
     "privacy": "public",
     "androidStatusBar": {
       "backgroundColor": "#000"
@@ -18,11 +16,13 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#6FCF97"
+      "backgroundColor": "#90E36D"
     },
     "assetBundlePatterns": ["**/*"],
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
+      "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",
       "config": {
         "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
@@ -43,15 +43,16 @@
     },
     "notification": {
       "iosDisplayInForeground": true,
-      "color": "#6FCF97",
+      "color": "#90E36D",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
       "androidCollapsedTitle": "Enatega Multivendor"
     },
     "android": {
-      "versionCode": 38,
+      "versionCode": 42,
       "package": "com.enatega.multivendor",
       "googleServicesFile": "./google-services.json",
+      "userInterfaceStyle": "automatic",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"

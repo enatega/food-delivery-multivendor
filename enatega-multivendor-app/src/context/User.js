@@ -49,13 +49,15 @@ export const UserProvider = props => {
   const { location, setLocation } = useContext(LocationContext)
   const [cart, setCart] = useState([])
   const [restaurant, setRestaurant] = useState(null)
+  const [isPickup, setIsPickup] = useState(false)
 
   const {
     called: calledProfile,
     loading: loadingProfile,
     error: errorProfile,
     data: dataProfile,
-    refetch: refetchProfile
+    refetch: refetchProfile,
+    networkStatus
   } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
     onError,
@@ -226,7 +228,10 @@ export const UserProvider = props => {
         deleteItem,
         restaurant,
         setCartRestaurant,
-        refetchProfile
+        refetchProfile,
+        networkStatus,
+        isPickup,
+        setIsPickup
       }}>
       {props.children}
     </UserContext.Provider>

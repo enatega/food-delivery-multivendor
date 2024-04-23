@@ -41,6 +41,9 @@ export const textStyles = {
   Right: {
     textAlign: 'right'
   },
+  Left: {
+    textAlign: 'left'
+  },
   UpperCase: {
     textTransform: 'uppercase'
   },
@@ -49,5 +52,11 @@ export const textStyles = {
   },
   B700: {
     fontWeight: '700'
+  },
+
+  TextItalic: {
+    fontStyle: 'italic',
   }
+
+
 }

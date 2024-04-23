@@ -3,11 +3,19 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { emailRegex, passRegex, nameRegex, phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/client'
+import { phoneExist } from '../../apollo/mutations'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+
+const PHONE = gql`
+  ${phoneExist}
+`
 
 const useRegister = () => {
   const navigation = useNavigation()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const route = useRoute()
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
@@ -31,7 +39,12 @@ const useRegister = () => {
     subregion: 'Southern Asia'
   })
 
-  const onCountrySelect = country => {
+  const [phoneExist, { loading }] = useMutation(PHONE, {
+    onCompleted,
+    onError
+  })
+
+  const onCountrySelect = (country) => {
     setCountryCode(country.cca2)
     setCountry(country)
   }
@@ -92,6 +105,18 @@ const useRegister = () => {
 
   function registerAction() {
     if (validateCredentials()) {
+      phoneExist({
+        variables: { phone: ''.concat('+', country.callingCode[0], phone) }
+      })
+    }
+  }
+
+  function onCompleted({ phoneExist }) {
+    if (phoneExist.phone) {
+      FlashMessage({
+        message: t('phoneNumberExist')
+      })
+    } else {
       navigation.navigate('EmailOtp', {
         user: {
           phone: '+'.concat(country.callingCode[0]).concat(phone),
@@ -102,6 +127,19 @@ const useRegister = () => {
       })
     }
   }
+
+  function onError(error) {
+    try {
+      FlashMessage({
+        message: error.graphQLErrors[0].message
+      })
+    } catch (e) {
+      FlashMessage({
+        message: t('phoneCheckingError')
+      })
+    }
+  }
+
   return {
     email,
     setEmail,
