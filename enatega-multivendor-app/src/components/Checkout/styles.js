@@ -7,7 +7,7 @@ export const useStyles = theme => (StyleSheet.create({
         flex: 1,
     },
     ovalContainer: {
-        backgroundColor: theme.gray200,
+        backgroundColor: theme?.gray200,
         flex: 1,
         borderRadius: scale(40),
         marginHorizontal: scale(10),
@@ -22,5 +22,19 @@ export const useStyles = theme => (StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    instructionContainer: {
+        padding: scale(10),
+        flexDirection: 'row',
+        margin: scale(10),
+        borderWidth: StyleSheet.hairlineWidth,
+        borderRadius: scale(10),
+        borderColor: theme.gray500
+    },
+    leftContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    middleContainer: { flex: 6, justifyContent: 'space-evenly' },
 }))

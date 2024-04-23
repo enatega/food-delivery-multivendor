@@ -56,6 +56,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import { fontStyles } from '../../utils/fontStyles'
 import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
+import { Instructions } from '../../components/Checkout/Instructions'
 
 // Constants
 const PLACEORDER = gql`
@@ -761,7 +762,7 @@ function Checkout(props) {
                     ]}
                   />
                 </View>
-                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup}/>
+                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} />
                 <View style={[styles(currentTheme).headerContainer]}>
                   <Location
                     locationIcon={currentTheme.newIconColor}
@@ -796,6 +797,9 @@ function Checkout(props) {
                       </View>
                     </View>
                   </View>
+                </View>
+                <View>
+                  <Instructions theme={currentTheme} message={instructions} />
                 </View>
 
                 <View style={styles().tipSec}>
