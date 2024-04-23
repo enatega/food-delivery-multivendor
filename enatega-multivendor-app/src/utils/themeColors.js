@@ -106,6 +106,8 @@ export const theme = {
    color9:'gray',
     iconStroke:'#0F172A',
     color10:'transparent',
+    newButtonBackground:'#F3FFEE',
+    newButtonText:'#63C43B'
   },
   Dark: {
     black: '#000',
@@ -204,7 +206,9 @@ export const theme = {
     gray: 'gray',
     color9:'#fff',
     hex: '#b0afbc',
-    iconStroke:'#0F172A',
+    iconStroke:'#b0afbc',
     color10:'#fff',
+    newButtonBackground:'#F3FFEE',
+    newButtonText:'#63C43B'
   }
 }
