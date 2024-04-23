@@ -421,6 +421,7 @@ export const myOrders = `query Orders($offset:Int){
     deliveredAt
     cancelledAt
     assignedAt
+    instructions
   }
 }
 `

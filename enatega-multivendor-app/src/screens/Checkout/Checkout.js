@@ -824,7 +824,7 @@ function Checkout(props) {
 
                 </View>
                 <View>
-                  <Instructions theme={currentTheme} message={instructions} />
+                  <Instructions theme={currentTheme} title={'Instruction for the courier'} message={instructions} />
                 </View>
 
                 {isLoggedIn && profile && (
