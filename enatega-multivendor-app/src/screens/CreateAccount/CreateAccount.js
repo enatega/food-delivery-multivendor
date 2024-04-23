@@ -44,6 +44,7 @@ const CreateAccount = (props) => {
       headerTitleAlign: 'center'
     })
   }, [navigation])
+
   function renderAppleAction() {
     if (loading && loginButton === 'Apple') {
       return (
@@ -144,40 +145,52 @@ const CreateAccount = (props) => {
               fillColor={currentTheme.svgFill}
             />
           </View>
+
           <View style={styles(currentTheme).mainHeadingTextOverlay}>
             <TextDefault center H3 bold>
               {t('brandName')}
             </TextDefault>
           </View>
+
+          <View style={styles(currentTheme).burgerImage}>
+            <Image
+              source={require('../../assets/images/burger.png')}
+              style={{
+                height: 300,
+                resizeMode: 'contain'
+              }}
+            />
+          </View>
         </View>
         <View style={[styles(currentTheme).subContainer]}>
-          <View style={[styles().signupContainer]}>
-            <View
-              style={{
-                width: '90%',
-                alignSelf: 'center',
-                marginBottom: scale(30)
-              }}
+          <View
+            style={{
+              width: '90%',
+              alignSelf: 'center',
+              marginBottom: scale(30),
+              marginTop: scale(10)
+            }}
+          >
+            <TextDefault
+              H2
+              bolder
+              center
+              textColor={currentTheme.newFontcolor}
+              style={{ marginBottom: scale(7) }}
             >
-              <TextDefault
-                H2
-                bolder
-                center
-                textColor={currentTheme.newFontcolor}
-                style={{ marginBottom: scale(7) }}
-              >
-                {t('welcomeText')}
-              </TextDefault>
-              <TextDefault
-                center
-                H5
-                textColor={currentTheme.newFontcolor}
-                style={styles().descText}
-              >
-                {t('createAccountDesc')}
-              </TextDefault>
-            </View>
+              {t('welcomeText')}
+            </TextDefault>
+            <TextDefault
+              center
+              H5
+              textColor={currentTheme.newFontcolor}
+              style={styles().descText}
+            >
+              {t('createAccountDesc')}
+            </TextDefault>
+          </View>
 
+          <View style={[styles().signupContainer]}>
             <View style={{ marginBottom: scale(5) }}>
               {renderGoogleAction()}
             </View>

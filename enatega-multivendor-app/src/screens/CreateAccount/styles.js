@@ -19,7 +19,8 @@ const styles = (props = null) =>
       backgroundColor: '#f3f0eb'
     },
     image: {
-      height: height * 0.4,
+      // height: height * 0.4,
+      height: 300,
       backgroundColor: props != null ? props.themeBackground : '#FFF',
       shadowColor: '#f3f0eb',
       shadowOffset: { width: 16, height: 8 },
@@ -27,18 +28,19 @@ const styles = (props = null) =>
       shadowRadius: 19
     },
     image1: {
-      top: scale(-30),
+      top: scale(-50),
       overflow: 'hidden'
     },
     subContainer: {
       alignSelf: 'center',
       width: '100%',
-      height: height * 0.6,
+      // height: height * 0.6,
+      flex: 1,
       backgroundColor: props != null ? props.themeBackground : '#FFF'
 
     },
     signupContainer: {
-      paddingVertical: scale(20),
+      paddingVertical: scale(10),
       display: 'flex',
       alignSelf: 'center',
       width: '100%',
@@ -75,7 +77,7 @@ const styles = (props = null) =>
     appleBtn: {
       width: '90%',
       alignSelf: 'center',
-      height: height * 0.08
+      height: height * 0.07
     },
     orText: {
       flexDirection: 'row',
@@ -99,7 +101,7 @@ const styles = (props = null) =>
     },
     mainHeadingTextOverlay: {
       position: 'absolute',
-      top: scale(30),
+      top: scale(20),
       left: 0,
       right: 0
     },
@@ -107,5 +109,14 @@ const styles = (props = null) =>
       flex: 1,
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
+    burgerImage: {
+      position: 'absolute',
+      top: scale(30),
+      left: 0,
+      right: 0,
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
+    
   })
 export default styles
