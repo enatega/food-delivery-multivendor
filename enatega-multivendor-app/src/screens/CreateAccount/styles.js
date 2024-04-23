@@ -40,7 +40,7 @@ const styles = (props = null) =>
 
     },
     signupContainer: {
-      paddingVertical: scale(10),
+      paddingVertical: scale(20),
       display: 'flex',
       alignSelf: 'center',
       width: '100%',
