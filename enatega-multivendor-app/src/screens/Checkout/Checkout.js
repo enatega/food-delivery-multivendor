@@ -9,7 +9,7 @@ import {
   Alert,
   Text,
   TextInput,
-  Image
+  Dimensions
 } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -57,6 +57,9 @@ import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import { fontStyles } from '../../utils/fontStyles'
 import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
 import { Instructions } from '../../components/Checkout/Instructions'
+import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
+import PickUp from '../../components/Pickup'
+
 
 // Constants
 const PLACEORDER = gql`
@@ -68,6 +71,7 @@ const TIPPING = gql`
 const GET_COUPON = gql`
   ${getCoupon}
 `
+const { height: HEIGHT } = Dimensions.get('window')
 
 function Checkout(props) {
   const Analytics = analytics()
@@ -93,7 +97,7 @@ function Checkout(props) {
   const tipModalRef = useRef(null)
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
-  const [orderDate, setOrderDate] = useState(moment())
+  const [orderDate, setOrderDate] = useState(new Date())
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
@@ -102,6 +106,7 @@ function Checkout(props) {
   const [coupon, setCoupon] = useState(null)
   const [tip, setTip] = useState(null)
   const [tipAmount, setTipAmount] = useState(null)
+  const modalRef = useRef(null)
 
   const { loading, data } = useRestaurant(cartRestaurant)
   const [loadingOrder, setLoadingOrder] = useState(false)
@@ -113,6 +118,8 @@ function Checkout(props) {
     latitudeDelta: 0.4,
     longitudeDelta: 0.5
   }
+
+  const restaurant = data?.restaurant
 
   const onModalOpen = (modalRef) => {
     const modal = modalRef.current
@@ -728,6 +735,10 @@ function Checkout(props) {
   }
 
   if (loading || loadingData || loadingTip) return loadginScreen()
+
+  let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
+  if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
+
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -778,9 +789,11 @@ function Checkout(props) {
                       styles().width100
                     ]}
                   />
-                  <View style={styles(currentTheme).deliveryTime}>
-                    <View style={styles().iconContainer}>
-                      <EvilIcons name='calendar' size={scale(20)} />
+                  <TouchableOpacity onPress={()=>{onModalOpen(modalRef)}} style={styles(currentTheme).deliveryTime}>
+                    <View style={[styles().iconContainer]}>
+                      <View style={styles().icon}>
+                        <EvilIcons name='calendar' size={scale(20)} />
+                      </View>
                     </View>
                     <View style={styles(currentTheme).labelContainer}>
                       <View style={{ marginLeft: scale(5) }}>
@@ -790,13 +803,22 @@ function Checkout(props) {
                           H5
                           bolder
                         >
-                          {t(isPickup ? 'pickUp' : 'delivery')} {t('within')}{' '}
-                          {data.restaurant.deliveryTime} -{' '}
-                          {data?.restaurant.deliveryTime + 10} {t('mins')}
+                          {t(isPickup ? 'pickUp' : 'delivery')}{' '}
+                            ({deliveryTime} {t('mins')})
                         </TextDefault>
                       </View>
                     </View>
-                  </View>
+                    <View style={[styles().iconContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+                      <View style={[styles().icon, { backgroundColor: null }]}>
+                        <Feather
+                          name='chevron-right'
+                          size={20}
+                          color={currentTheme.secondaryText}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+
                 </View>
                 <View>
                   <Instructions theme={currentTheme} message={instructions} />
@@ -1400,6 +1422,39 @@ function Checkout(props) {
           backgroundColor: currentTheme.themeBackground
         }}
       />
+      <Modalize
+        ref={modalRef}
+        modalStyle={styles(currentTheme).modal}
+        modalHeight={HEIGHT / 2}
+        overlayStyle={styles(currentTheme).overlay}
+        handleStyle={styles(currentTheme).handle}
+        handlePosition='inside'
+        openAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+      >
+        <PickUp
+          minimumTime={restaurant?.deliveryTime}
+          setOrderDate={setOrderDate}
+          isPickedUp={isPickup}
+          setIsPickedUp={setIsPickup}
+          orderDate={orderDate}
+          pickupTextColor={currentTheme.newFontcolor}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            modalRef.current.close()
+          }}
+          style={styles(currentTheme).pickupButton}
+        >
+          <Text style={styles(currentTheme).applyButton}>{t('apply')}</Text>
+        </TouchableOpacity>
+      </Modalize>
     </>
   )
 }
