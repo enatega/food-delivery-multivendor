@@ -55,6 +55,7 @@ import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import { fontStyles } from '../../utils/fontStyles'
+import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
 
 // Constants
 const PLACEORDER = gql`
@@ -80,6 +81,7 @@ function Checkout(props) {
     cartCount,
     updateCart,
     isPickup,
+    setIsPickup,
     instructions
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -198,23 +200,23 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async () => {
-      if (data && !!data.restaurant) {
-        const latOrigin = Number(data.restaurant.location.coordinates[1])
-        const lonOrigin = Number(data.restaurant.location.coordinates[0])
-        const latDest = Number(location.latitude)
-        const longDest = Number(location.longitude)
-        const distance = await calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
-        const amount = Math.ceil(distance) * configuration.deliveryRate
-        isSubscribed &&
-          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-      }
-    })()
+      ; (async () => {
+        if (data && !!data.restaurant) {
+          const latOrigin = Number(data.restaurant.location.coordinates[1])
+          const lonOrigin = Number(data.restaurant.location.coordinates[0])
+          const latDest = Number(location.latitude)
+          const longDest = Number(location.longitude)
+          const distance = await calculateDistance(
+            latOrigin,
+            lonOrigin,
+            latDest,
+            longDest
+          )
+          const amount = Math.ceil(distance) * configuration.deliveryRate
+          isSubscribed &&
+            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+        }
+      })()
     return () => {
       isSubscribed = false
     }
@@ -324,7 +326,7 @@ function Checkout(props) {
         },
         {
           text: 'Continue',
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel'
         }
       ],
@@ -521,9 +523,9 @@ function Checkout(props) {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-              _id,
-              options: options.map(({ _id }) => _id)
-            }))
+            _id,
+            options: options.map(({ _id }) => _id)
+          }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -595,9 +597,8 @@ function Checkout(props) {
           )
           if (!variation) return null
 
-          const title = `${food.title}${
-            variation.title ? `(${variation.title})` : ''
-          }`
+          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+            }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -757,10 +758,10 @@ function Checkout(props) {
                     style={[
                       styles(currentTheme).horizontalLine,
                       styles().width100,
-                      styles().mB10
                     ]}
                   />
                 </View>
+                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup}/>
                 <View style={[styles(currentTheme).headerContainer]}>
                   <Location
                     locationIcon={currentTheme.newIconColor}
@@ -1012,7 +1013,7 @@ function Checkout(props) {
                               -{configuration.currencySymbol}
                               {parseFloat(
                                 calculatePrice(0, false) -
-                                  calculatePrice(0, true)
+                                calculatePrice(0, true)
                               ).toFixed(2)}
                             </TextDefault>
                           </View>
