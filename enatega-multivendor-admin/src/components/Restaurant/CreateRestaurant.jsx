@@ -18,7 +18,8 @@ import {
   OutlinedInput,
   MenuItem,
   ListItemText,
-  IconButton
+  IconButton,
+  Modal
 } from '@mui/material'
 
 import ConfigurableValues from '../../config/constants'
@@ -71,6 +72,11 @@ const CreateRestaurant = props => {
   // const [shopType, setShopType] = useState(SHOP_TYPE.RESTAURANT)
   const [errors, setErrors] = useState('')
   const [success, setSuccess] = useState('')
+  const [open, setOpen] = React.useState(true)
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const onCompleted = data => {
     console.log('on complete here')
     setNameError(null)
@@ -249,10 +255,7 @@ const CreateRestaurant = props => {
     setImgUrl('')
   }
 
-  const { onClose } = props // Extracting onClose from props
-   const handleClose = () => {
-    onClose(); // Calling onClose to close the popup
-  };
+
 
   const handleContainerClick = (e) => {
     e.stopPropagation();
@@ -272,6 +275,7 @@ const CreateRestaurant = props => {
 
 
   return (
+  <Modal open={open} onClose={handleClose} disableBackdropClick>
    <Box container className={classes.container} onClick={handleContainerClick}>
       <Box style={{ alignItems: 'start' }} className={classes.flexRow}>
         <Box item className={classes.heading}>
@@ -597,6 +601,7 @@ const CreateRestaurant = props => {
         </Box>
       </Box>
     </Box>
+  </Modal>
   )
 }
 export default withTranslation()(CreateRestaurant)
