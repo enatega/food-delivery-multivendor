@@ -28,7 +28,6 @@ import Fruits2 from "../../assets/images/fruits-2.png";
 import AppComponent from "../../components/HomeScreen/AppComponent";
 import Banner2 from "../../assets/images/banner-2.png";
 import Banner1 from "../../assets/images/banner-1.png";
-import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 import { useTranslation } from 'react-i18next';
 
 function Home() {
@@ -59,13 +58,6 @@ function Home() {
 
   return (
     <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>}>
-      <TawkMessengerReact
-        propertyId="5d0f4f6b36eab9721118c84e"
-        widgetId="1ftnb355n"
-        customStyle={{
-          color: "red",
-        }}
-      />
       <Box className={classes.root}>
         <FlashMessage
           severity={loading ? "info" : "error"}

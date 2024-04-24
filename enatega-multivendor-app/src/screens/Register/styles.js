@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -11,11 +12,14 @@ const styles = (props = null) =>
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
       ...alignment.MTlarge,
-      ...alignment.MBlarge
+      ...alignment.MBlarge,
+      ...alignment.MLmedium,
+      ...alignment.MRmedium,
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     },
     subContainer: {
-      width: '85%',
-      height: '100%'
+      width: '100%'
     },
     marginTop10: {
       ...alignment.MTlarge
@@ -37,29 +41,22 @@ const styles = (props = null) =>
       width: '48%'
     },
     logoContainer: {
-      width: 120,
-      height: 130,
-      alignSelf: 'center'
+      // width: 120,
+      // height: 130,
+      //alignSelf: 'center'
     },
     form: {
-      width: '100%',
-      ...alignment.MTlarge
+      width: '100%'
     },
     textField: {
-      borderColor: '#efefef',
-      borderWidth: 1,
-      borderRadius: 10,
-      backgroundColor: props !== null ? props.white : '#fff',
-      padding: 14,
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-      ...alignment.MTlarge
+      borderColor: props !== null ? props.borderColor : '#efefef',
+      borderWidth: scale(1),
+      borderRadius: scale(10),
+      backgroundColor: props !== null ? props.themeBackground : 'white',
+      padding: scale(12),
+      color: props !==null ? props.newFontcolor : 'red',
+      ...alignment.MBxSmall,
+      ...alignment.MTxSmall
     },
     passwordField: {
       display: 'flex',
@@ -67,23 +64,24 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     passwordInput: {
-      width: '100%'
+      width: '100%',
+      alignItems: 'center'
     },
     eyeBtn: {
-      position: 'relative',
-      display: 'flex',
       zIndex: 1,
       elevation: 999,
-      marginTop: 20,
       marginLeft: -40
     },
+    btnContainer: {
+      width: '100%'
+    },
     btn: {
-      width: '70%',
+      width: '100%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props.main : '#000',
       alignSelf: 'center',
       padding: 15,
-      borderRadius: 10
+      borderRadius: 40
     },
     number: {
       display: 'flex',
@@ -96,6 +94,13 @@ const styles = (props = null) =>
     },
     phoneNumber: {
       width: '70%'
+    },
+    phoneFieldInner: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    phoneField:{
+     color: props !== null ? props.newFontcolor : 'red',
     },
     error: {
       marginTop: 3

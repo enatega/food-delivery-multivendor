@@ -1,7 +1,8 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../../utils/scaling'
-import { textStyles } from '../../../utils/textStyles'
 import { alignment } from '../../../utils/alignment'
+import { textStyles } from '../../../utils/textStyles'
+
 const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
@@ -10,39 +11,68 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
       width: '100%',
-      elevation: 5,
-      height: height * 0.3,
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0
-      // zIndex: 1
+      // height: height * 0.3,
     },
+
     touchArea: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgba(255,255,255,1)',
-      borderRadius: scale(17),
-      height: scale(34),
-      width: scale(34)
+      width: scale(20)
+    },
+    favouriteOverlay: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      width: scale(38),
+      height: scale(28),
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+      borderRadius: scale(16),
+      backgroundColor: props != null ? props.menuBar : 'white',
+      borderWidth: 1,
+      borderColor: props != null ? props.newBorderColor : '#F3F4F6'
     },
     fixedViewNavigation: {
+      // height: scale(40),
+      // backgroundColor: 'red',
       width: '100%',
-      height: height * 0.07,
-      justifyContent: 'center',
-      zIndex: 1
-    },
-    fixedView: {
-      flex: 1,
-      backgroundColor: 'transparent',
-      ...alignment.PRsmall,
-      ...alignment.PLsmall
-    },
-    fixedIcons: {
+      display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      // ...alignment.PTsmall,
+      height: height * 0.05,
+      zIndex: 1
+    },
+
+    fixedIcons: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      gap: 12
+    },
+    restaurantDetails: {
+      marginTop: scale(8)
+    },
+
+    restaurantImg: {
+      width: scale(80),
+      height: scale(80),
+      borderRadius: 12
+    },
+    restaurantAbout: {
+      fontSize: scale(14),
+      fontWeight: '500'
     },
     fixedText: {
       padding: 10,
@@ -61,12 +91,34 @@ const styles = (props = null) =>
     },
     ratingBox: {
       flexDirection: 'row',
-      justifyContent: 'center',
+      gap: scale(3),
       alignItems: 'center',
-      ...alignment.PTsmall,
-      ...alignment.PBsmall
     },
 
+    flatListStyle: {
+      height: '100%',
+      width: '100%',
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      // borderBottomLeftRadius: 25,
+      // borderBottomRightRadius: 25,
+      zIndex: 2
+    },
+    headerContainer: {
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...alignment.PLlarge,
+      ...alignment.PRlarge
+    },
+    activeHeader: {
+      borderBottomWidth: scale(3),
+      borderColor: '#90E36D'
+    },
+    heading: {
+      fontWeight: 'bold'
+    },
     overlayContainer: {
       position: 'absolute',
       top: 0,
@@ -79,42 +131,13 @@ const styles = (props = null) =>
     headerTitle: {
       ...textStyles.H5,
       ...textStyles.Bolder,
-      color: props != null ? props.black : 'black',
+      color: props != null ? props.newFontcolor : 'black',
       flex: 1,
       textAlign: 'center'
     },
-    flatListStyle: {
-      height: '50%',
-      width: '100%',
-      backgroundColor: props != null ? props.themeBackground : 'white',
-      borderBottomLeftRadius: 25,
-      borderBottomRightRadius: 25,
-      zIndex: 2
-    },
-    headerContainer: {
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      backgroundColor: props != null ? props.menuBar : 'white',
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...alignment.PLlarge,
-      ...alignment.PRlarge,
-      borderRadius: 100
-    },
-    activeHeader: {
-      borderBottomWidth: scale(4),
-      borderColor: props != null ? props.tagColor : 'red',
-      height: '100%'
-    },
-    heading: {
-      fontWeight: 'bold'
-    },
-    navbarTextContainer: {
-      display: 'flex',
+    center: {
       flex: 1,
       flexDirection: 'row',
-      height: '100%',
       justifyContent: 'center',
       alignItems: 'center'
     }

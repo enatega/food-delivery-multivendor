@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
+
 import styles from './styles'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../ThemeContext/ThemeContext'
@@ -15,13 +16,13 @@ function CheckboxBtn(props) {
       style={[
         styles(currentTheme).mainContainer,
         props.checked
-          ? { backgroundColor: currentTheme.radioColor }
-          : { backgroundColor: currentTheme.fontWhite }
+          ? { backgroundColor: currentTheme.main, borderColor: 'transparent' }
+          : { backgroundColor: currentTheme.themeBackground }
       ]}>
       {props.checked ? (
-        <AntDesign
+        <FontAwesome
           name="check"
-          size={scale(10)}
+          size={scale(13)}
           color={currentTheme.fontWhite}
         />
       ) : null}

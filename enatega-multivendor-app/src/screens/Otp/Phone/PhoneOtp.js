@@ -1,5 +1,11 @@
 import React, { useLayoutEffect } from 'react'
-import { View, TouchableOpacity, StatusBar, Image } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+  KeyboardAvoidingView
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../styles'
 import Spinner from '../../../components/Spinner/Spinner'
@@ -9,9 +15,12 @@ import screenOptions from '../screenOptions'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import usePhoneOtp from './usePhoneOtp'
 import { useTranslation } from 'react-i18next'
+import { Ionicons } from '@expo/vector-icons'
+import { scale } from '../../../utils/scaling'
 
 function PhoneOtp(props) {
   const {
+    phone,
     otp,
     setOtp,
     otpError,
@@ -28,9 +37,9 @@ function PhoneOtp(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        iconColor: currentTheme.iconColorPink,
+        iconColor: currentTheme.newIconColors,
         backColor: currentTheme.themeBackground,
-        fontColor: currentTheme.fontMainColor,
+        fontColor: currentTheme.newFontcolor,
         navigation: props.navigation
       })
     )
@@ -39,39 +48,41 @@ function PhoneOtp(props) {
   return (
     <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
       <StatusBar
-        backgroundColor={currentTheme.buttonText}
+        backgroundColor={currentTheme.themeBackground}
         barStyle={
           themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
         }
       />
+
       <View style={styles(currentTheme).mainContainer}>
         <View style={styles().subContainer}>
           <View style={styles().logoContainer}>
-            <Image
-              source={require('../../../../assets/login-icon.png')}
-              style={styles().logoContainer}
-            />
+            <Ionicons name='phone-portrait-outline' size={30}  color={currentTheme.newIconColor}/>
           </View>
           <View>
             <TextDefault
               H3
               bolder
-              textColor={currentTheme.fontSecondColor}
+               textColor={currentTheme.newFontcolor}
               style={{
-                textAlign: 'center',
                 ...alignment.MTlarge,
                 ...alignment.MBmedium
-              }}>
+              }}
+            >
               {t('verifyPhone')}
             </TextDefault>
             <TextDefault
               H5
               bold
-              textColor={currentTheme.fontSecondColor}
+              textColor={currentTheme.color6}
               style={{
-                textAlign: 'center'
-              }}>
-              {t('otpSentToPhone')}
+                paddingBottom: scale(5)
+              }}
+            >
+              {t('enterOtp')}
+            </TextDefault>
+            <TextDefault H5 bold textColor={currentTheme.fontfourthColor}>
+              {phone}
             </TextDefault>
           </View>
           <View>
@@ -79,7 +90,7 @@ function PhoneOtp(props) {
               pinCount={6}
               style={styles().otpInput}
               codeInputFieldStyle={[
-                styles().otpBox,
+                styles(currentTheme).otpBox,
                 otpError && styles().errorInput
               ]}
               codeInputHighlightStyle={{
@@ -87,8 +98,8 @@ function PhoneOtp(props) {
               }}
               autoFocusOnLoad
               code={otp}
-              onCodeChanged={code => setOtp(code)}
-              onCodeFilled={code => {
+              onCodeChanged={(code) => setOtp(code)}
+              onCodeFilled={(code) => {
                 onCodeFilled(code)
               }}
               editable
@@ -97,14 +108,35 @@ function PhoneOtp(props) {
               <TextDefault
                 style={styles().error}
                 bold
-                textColor={currentTheme.textErrorColor}>
+                textColor={currentTheme.textErrorColor}
+              >
                 {t('wrongOtp')}
               </TextDefault>
             )}
           </View>
-          <View style={{ ...alignment.MTlarge }}>
+        </View>
+        <View>
+          {loading || updateUserLoading && (
+            <Spinner
+              backColor={currentTheme.themeBackground}
+              spinnerColor={currentTheme.main}
+              size='large'
+            />
+          )}
+        </View>
+        <View style={styles().btnContainer}>
+          <View style={alignment.MBxSmall}>
+            <TextDefault center H4 bold textColor={currentTheme.fontNewColor} style={alignment.MTsmall}>
+              {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
+            </TextDefault>
+          </View>
+          <View>
             {loading || updateUserLoading ? (
-              <Spinner backColor="transparent" size="small" />
+              <Spinner
+              backColor={currentTheme.color3}
+              spinnerColor={currentTheme.color3}
+                size='small'
+              />
             ) : (
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -113,21 +145,18 @@ function PhoneOtp(props) {
                   seconds !== 0 && styles(currentTheme).disabledBtn
                 ]}
                 disabled={seconds !== 0}
-                onPress={() => resendOtp()}>
+                onPress={() => resendOtp()}
+              >
                 <TextDefault
                   H4
-                  textColor={currentTheme.buttonTextPink}
+                  textColor={currentTheme.black}
                   style={alignment.MLsmall}
-                  bold>
+                  bold
+                >
                   {t('resendBtn')}
                 </TextDefault>
               </TouchableOpacity>
             )}
-          </View>
-          <View style={alignment.MBxSmall}>
-            <TextDefault center H4 bold style={alignment.MTsmall}>
-              {seconds !== 0 ? `Retry after ${seconds}s` : ''}
-            </TextDefault>
           </View>
         </View>
       </View>

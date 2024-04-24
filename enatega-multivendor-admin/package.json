@@ -51,7 +51,6 @@
     "@react-google-maps/api": "^2.0.0",
     "@sentry/react": "^6.16.1",
     "@sentry/tracing": "^6.16.1",
-    "@tawk.to/tawk-messenger-react": "^1.0.0",
     "@wojtekmaj/react-timerange-picker": "^3.0.0",
     "apollo-boost": "^0.4.9",
     "chart.js": "^3.6.0",

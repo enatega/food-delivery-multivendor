@@ -1,9 +1,8 @@
-import React, { useLayoutEffect, useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { theme } from '../../utils/themeColors'
-import screenOptions from './screenOptions'
-import { View, TouchableOpacity, ScrollView, StatusBar } from 'react-native'
+import { View, TouchableOpacity, ScrollView, StatusBar, Platform } from 'react-native'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -11,12 +10,15 @@ import { useFocusEffect } from '@react-navigation/native'
 import styles from './styles'
 import UserContext from '../../context/User'
 import Analytics from '../../utils/analytics'
+import { textStyles } from '../../utils/textStyles'
 
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { MaterialIcons, Entypo } from '@expo/vector-icons'
+import {  AntDesign } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { useRestaurant } from '../../ui/hooks'
+import ReorderItem from '../../components/ReorderItem/ReorderItem'
 
 function Reorder(props) {
   const analytics = Analytics()
@@ -26,43 +28,57 @@ function Reorder(props) {
   const themeContext = useContext(ThemeContext)
   const { setCartRestaurant, addCartItem } = useContext(UserContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { data } = useRestaurant(order.restaurant._id)
 
   const inset = useSafeAreaInsets()
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.headerBackground)
+      StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle('light-content')
+    StatusBar.setBarStyle(
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    )
   })
   const [selectedItems, setItems] = useState([])
 
-  useLayoutEffect(() => {
+  useFocusEffect(() => {
     props.navigation.setOptions({
-      title: t('previous'),
+      headerTitle: () => (
+        <View style={{ alignItems: 'center', gap: scale(2) }}>
+          <TextDefault
+            style={{
+              color: currentTheme.newFontcolor,
+              ...textStyles.H4,
+              ...textStyles.Bolder
+            }}
+          >
+            {t('previousOrder')}
+          </TextDefault>
+        </View>
+      ),
       headerRight: null,
       headerTitleAlign: 'center',
+      headerTitleStyle: {
+        color: currentTheme.newFontcolor,
+        ...textStyles.H4,
+        ...textStyles.Bolder
+      },
       headerTitleContainerStyle: {
-        marginTop: '1%',
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
-        height: '75%',
-        borderRadius: scale(10),
-        backgroundColor: currentTheme.black,
-        marginLeft: 0
+        backgroundColor: currentTheme.newheaderBG
       },
       headerStyle: {
-        backgroundColor: currentTheme.headerColor,
-        shadowColor: 'transparent',
-        shadowRadius: 0
+        backgroundColor: currentTheme.themeBackground
       },
-      headerTitleAlign: 'center',
-      headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
-            <View style={styles().backButton}>
-              <Entypo name="cross" size={30} color="black" />
+            <View style={{ ...alignment.PLxSmall }}>
+              <AntDesign
+                name='arrowleft'
+                size={22}
+                color={currentTheme.fontFourthColor}
+              />
             </View>
           )}
           onPress={() => {
@@ -71,17 +87,16 @@ function Reorder(props) {
         />
       )
     })
-  }, [props.navigation])
-
+  })
   useEffect(() => {
     async function Track() {
       await analytics.track(analytics.events.NAVIGATE_TO_REORDER)
     }
     Track()
   }, [])
-  const onSelect = index => {
+  const onSelect = (index) => {
     if (selectedItems.includes(index)) {
-      const filteredItems = selectedItems.filter(i => i !== index)
+      const filteredItems = selectedItems.filter((i) => i !== index)
       setItems(filteredItems)
     } else {
       setItems([...selectedItems, index])
@@ -90,9 +105,9 @@ function Reorder(props) {
 
   const onAddToCart = async () => {
     await setCartRestaurant(order.restaurant._id)
-    selectedItems.forEach(async index => {
+    selectedItems.forEach(async (index) => {
       const item = order.items[index]
-      const addons = item.addons.map(addon => ({
+      const addons = item.addons.map((addon) => ({
         _id: addon._id,
         options: addon.options.map(({ _id }) => ({
           _id
@@ -111,65 +126,79 @@ function Reorder(props) {
     })
   }
 
+  const restaurant = data?.restaurant
+  const addons = restaurant?.addons
+  const options = restaurant?.options
+  const foods = restaurant?.categories?.map(c => c.foods.flat()).flat()
+
+  function populateFood(cartItem) {
+    const food = foods?.find(food => food._id === cartItem.food)
+    if (!food) return null
+    const variation = food.variations.find(
+      variation => variation._id === cartItem.variation._id
+    )
+    if (!variation) return null
+
+    const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+      }`
+    let price = variation.price
+    const optionsTitle = []
+    if (cartItem.addons) {
+      cartItem.addons.forEach(addon => {
+        const cartAddon = addons.find(add => add._id === addon._id)
+        if (!cartAddon) return null
+        addon.options.forEach(option => {
+          const cartOption = options.find(opt => opt._id === option._id)
+          if (!cartOption) return null
+          price += cartOption.price
+          optionsTitle.push(cartOption.title)
+        })
+      })
+    }
+    const populateAddons = addons.filter((addon) =>
+      food?.variations[0]?.addons?.includes(addon._id)
+    )
+    return {
+      ...cartItem,
+      optionsTitle,
+      title: title,
+      price: price.toFixed(2),
+      image: food.image,
+      addons: populateAddons
+    }
+  }
+
   return (
     <>
       <ScrollView
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}
-        contentContainerStyle={styles(currentTheme).scrollViewStyle}>
+        contentContainerStyle={styles(currentTheme).scrollViewStyle}
+      >
         <View style={styles(currentTheme).mainContainer}>
-          <TextDefault
-            style={[alignment.MLmedium, alignment.MTmedium]}
-            bolder
-            H4
-            textColor={currentTheme.fontMainColor}>
-            {t('selectItems')}
+          <TextDefault bolder H4 textColor={currentTheme.fontMainColor}>
+            {t('ItemsOrderAgain')}
           </TextDefault>
           {order.items.map((item, index) => {
+            const food = populateFood(item)
+            if(!food){
+              return null
+            }
             return (
-              <View
-                key={index}
-                style={{
-                  flexDirection: 'row',
-                  ...alignment.MLmedium,
-                  ...alignment.MRmedium,
-                  ...alignment.MTmedium
-                }}>
-                <View style={[alignment.MRmedium]}>
-                  <CheckboxBtn
-                    checked={selectedItems.includes(index)}
-                    onPress={() => onSelect(index)}
-                  />
-                </View>
-                <View style={{ width: '50%' }}>
-                  <TextDefault
-                    numberOfLines={1}
-                    textColor={currentTheme.fontMainColor}>
-                    {item.title}
-                  </TextDefault>
-                  {item.addons.map((addon, index) => {
-                    return (
-                      <View key={index}>
-                        <TextDefault
-                          style={alignment.MTxSmall}
-                          textColor={currentTheme.fontSecondColor}
-                          numberOfLines={1}>
-                          + {addon.title}
-                        </TextDefault>
-                        {addon.options.map((option, index) => (
-                          <TextDefault
-                            key={index}
-                            style={alignment.MLsmall}
-                            textColor={currentTheme.fontSecondColor}
-                            numberOfLines={1}>
-                            - {option.title}
-                          </TextDefault>
-                        ))}
-                      </View>
-                    )
-                  })}
-                </View>
-              </View>
+              <ReorderItem
+              key={food?._id}
+                quantity={food?.quantity}
+                dealName={food?.title}
+                optionsTitle={food?.optionsTitle}
+                itemImage={food?.image}
+                itemAddons={food?.addons}
+                dealPrice={(
+                  parseFloat(food?.price) * food?.quantity
+                ).toFixed(2)}
+                checked={selectedItems.includes(index)}
+                        onPress={() => onSelect(index)}
+              
+              />
             )
           })}
         </View>
@@ -184,8 +213,9 @@ function Reorder(props) {
                     backgroundColor: currentTheme.lightHorizontalLine
                   }
             }
-            onPress={onAddToCart}>
-            <TextDefault bolder textColor={currentTheme.black}>
+            onPress={onAddToCart}
+          >
+            <TextDefault bolder textColor={selectedItems.length > 0 ? currentTheme.black : currentTheme.newFontcolor}>
               {t('addToCart')}
             </TextDefault>
           </TouchableOpacity>

@@ -13,14 +13,14 @@ import styles from './styles'
 import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
+import { scale } from '../../utils/scaling'
 
 function Login(props) {
   const {
-    email,
     setEmail,
     password,
     setPassword,
@@ -33,17 +33,16 @@ function Login(props) {
     currentTheme,
     showPassword,
     setShowPassword,
-    checkEmailExist
+    checkEmailExist,
+    emailRef
   } = useLogin()
   const { t } = useTranslation()
-  const handleEmailChange = e => {
-    setEmail(e)
-  }
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
         backColor: currentTheme.themeBackground,
-        fontColor: currentTheme.fontMainColor,
+        fontColor: currentTheme.newFontcolor,
+        iconColor: currentTheme.newIconColor,
         navigation: props.navigation
       })
     )
@@ -64,131 +63,131 @@ function Login(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
-                <Image
-                  source={require('../../../assets/login-icon.png')}
-                  style={styles().logoContainer}
-                />
+                <SimpleLineIcons name="envelope" size={30} color={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
                   H3
                   bolder
+                  textColor={currentTheme.newFontcolor}
                   style={{
-                    textAlign: 'center',
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
-                  {t('whatsYourEmail')}
+                  {registeredEmail
+                    ? t('enterEmailPassword')
+                    : t('whatsYourEmail')}
                 </TextDefault>
-                {registeredEmail === false && (
-                  <TextDefault
-                    H5
-                    bold
-                    textColor={currentTheme.horizontalLine}
-                    style={{
-                      textAlign: 'center'
-                    }}>
-                    {registeredEmail ? t('signInWithEmail') : t('checkAccount')}
-                  </TextDefault>
-                )}
+
+                <TextDefault
+                  H5
+                  bold
+                  textColor={currentTheme.horizontalLine}
+                  style={{ ...alignment.MBmedium }}>
+                  {registeredEmail ? t('emailExists') : t('checkAccount')}
+                </TextDefault>
               </View>
               <View style={styles().form}>
                 <View>
-                  <TextInput
-                    placeholder={t('email')}
-                    style={[
-                      styles(currentTheme).textField,
-                      emailError !== null ? styles(currentTheme).errorInput : {}
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    onChangeText={handleEmailChange}
-                    keyboardType="email-address"
-                    autoCompleteType="email"
-                    defaultValue='demo-customer@enatega.com'
-                  />
-                  {emailError !== null && (
-                    <TextDefault
-                      style={styles().error}
-                      bold
-                      textColor={currentTheme.textErrorColor}>
-                      {emailError}
-                    </TextDefault>
+                  <View>
+                    <TextInput
+                      placeholder={t('email')}
+                      style={[
+                        styles(currentTheme).textField,
+                        emailError !== null
+                          ? styles(currentTheme).errorInput
+                          : {}
+                      ]}
+                      placeholderTextColor={currentTheme.fontSecondColor}
+                      // value={email}
+                      defaultValue='demo-customer@enatega.com'
+                      onChangeText={e => setEmail(e.toLowerCase().trim())}
+                    />
+                    {emailError !== null && (
+                      <TextDefault
+                        style={styles().error}
+                        bold
+                        textColor={currentTheme.textErrorColor}>
+                        {emailError}
+                      </TextDefault>
+                    )}
+                  </View>
+                  {registeredEmail && (
+                    <>
+                      <View style={styles().passwordField}>
+                        <TextInput
+                          secureTextEntry={showPassword}
+                          placeholder={t('password')}
+                          style={[
+                            styles(currentTheme).textField,
+                            styles().passwordInput,
+                            passwordError !== null
+                              ? styles(currentTheme).errorInput
+                              : {}
+                          ]}
+                          placeholderTextColor={currentTheme.fontSecondColor}
+                          value={password}
+                          onChangeText={e => setPassword(e)}
+                        />
+                        <FontAwesome
+                          onPress={() => setShowPassword(!showPassword)}
+                          name={showPassword ? 'eye' : 'eye-slash'}
+                          size={24}
+                          color={
+                            passwordError === null
+                              ? currentTheme.newFontcolor
+                              : currentTheme.textErrorColor
+                          }
+                          style={[styles().eyeBtn]}
+                        />
+                      </View>
+                      {passwordError !== null && (
+                        <View>
+                          <TextDefault
+                            style={styles().error}
+                            bold
+                            textColor={currentTheme.textErrorColor}>
+                            {passwordError}
+                          </TextDefault>
+                        </View>
+                      )}
+                      <TouchableOpacity
+                        style={alignment.MBsmall}
+                        activeOpacity={0.7}
+                        onPress={() =>
+                          props.navigation.navigate('ForgotPassword', { email : emailRef.current})
+                        }>
+                        <TextDefault
+                          textColor={currentTheme.main}
+                          style={alignment.MTsmall}
+                          bolder>
+                          {t('forgotPassword')}
+                        </TextDefault>
+                      </TouchableOpacity>
+                    </>
                   )}
                 </View>
-                {registeredEmail && (
-                  <>
-                    <View style={styles().passwordField}>
-                      <TextInput
-                        defaultValue='DemoCustomer55!'
-                        secureTextEntry={showPassword}
-                        placeholder={t('password')}
-                        style={[
-                          styles(currentTheme).textField,
-                          styles().passwordInput,
-                          passwordError !== null
-                            ? styles(currentTheme).errorInput
-                            : {}
-                        ]}
-                        placeholderTextColor={currentTheme.fontSecondColor}
-                        value={password}
-                        onChangeText={e => setPassword(e)}
-                      />
-                      <FontAwesome
-                        onPress={() => setShowPassword(!showPassword)}
-                        name={showPassword ? 'eye' : 'eye-slash'}
-                        size={24}
-                        color={
-                          passwordError === null
-                            ? currentTheme.startColor
-                            : currentTheme.textErrorColor
-                        }
-                        style={[
-                          styles().eyeBtn,
-                          Platform.OS === 'android' && { marginTop: 40 }
-                        ]}
-                      />
-                    </View>
-                    {passwordError !== null && (
-                      <View>
-                        <TextDefault
-                          style={styles().error}
-                          bold
-                          textColor={currentTheme.textErrorColor}>
-                          {passwordError}
-                        </TextDefault>
-                      </View>
-                    )}
-                    <TouchableOpacity
-                      style={alignment.MBxSmall}
-                      activeOpacity={0.7}
-                      onPress={() =>
-                        props.navigation.navigate('ForgotPassword', { email })
-                      }>
-                      <TextDefault
-                        textColor={currentTheme.buttonBackgroundPink}
-                        style={alignment.MTsmall}
-                        bold>
-                        {t('forgotPassword')}
-                      </TextDefault>
-                    </TouchableOpacity>
-                  </>
-                )}
-                <View style={styles().marginTop10}>
+                <View>
                   <TouchableOpacity
                     onPress={() =>
                       registeredEmail
-                        ? loginAction(email, password)
-                        : checkEmailExist(email)
+                        ? loginAction(emailRef.current, password)
+                        : checkEmailExist()
                     }
                     activeOpacity={0.7}
-                    style={styles().btn}>
+                    style={styles(currentTheme).btn}>
                     <TextDefault
                       H4
-                      textColor={currentTheme.buttonTextPink}
-                      style={alignment.MLsmall}
+                      textColor={currentTheme.black}
                       bold>
                       {loading || loginLoading ? (
-                        <Spinner backColor="transparent" size="small" />
+                        <Spinner
+                        backColor='transparent'
+                        spinnerColor={currentTheme.white}
+                          size="small"
+                        />
+                      ) : registeredEmail ? (
+                        t('loginBtn')
                       ) : (
                         t('continueBtn')
                       )}

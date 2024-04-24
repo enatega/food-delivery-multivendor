@@ -10,18 +10,20 @@ const styles = (props = null) => {
       justifyContent: 'center',
       paddingBottom: scale(8),
     },
+    locationIcon: {
+      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      width: scale(24),
+      height: scale(24),
+      borderRadius: scale(24),
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     headerContainer: {
       height: '100%',
-      width: '110%',
-      flexDirection: 'column-reverse',
+      width: '90%',
       paddingLeft: scale(5),
-      paddingTop: scale(10)
+      marginTop: scale(10)
     },
-    textContainer: {
-      maxWidth: '100%',
-      paddingTop: scale(2),
-      paddingBottom: scale(2)
-    }
   })
 }
 export default styles

@@ -5,18 +5,18 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Image,
-  TextInput
+  TextInput,
+  Text
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import CountryPicker from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function Register(props) {
   const {
@@ -44,13 +44,13 @@ function Register(props) {
     currentTheme
   } = useRegister()
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        fontColor: currentTheme.fontMainColor,
+        fontColor: currentTheme.newFontcolor,
         backColor: currentTheme.themeBackground,
-        iconColor: currentTheme.iconColorPink,
+        iconColor: currentTheme.newIconColor,
         navigation: props.navigation
       })
     )
@@ -59,44 +59,46 @@ function Register(props) {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[
-        styles().flex,
-        { backgroundColor: currentTheme.themeBackground }
-      ]}>
+      style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles().flex}>
+        style={styles().flex}
+      >
         <ScrollView
           style={styles().flex}
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}>
+          alwaysBounceVertical={false}
+        >
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
-                <Image
+                {/* <Image
                   source={require('../../../assets/login-icon.png')}
                   style={styles().logoContainer}
-                />
+                /> */}
+
+                <SimpleLineIcons name='user' size={30} color={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
                   H3
                   bolder
+                  textColor={currentTheme.newFontcolor}
                   style={{
-                    textAlign: 'center',
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
-                  }}>
+                  }}
+                >
                   {t('letsGetStarted')}
                 </TextDefault>
                 <TextDefault
                   H5
                   bold
                   textColor={currentTheme.fontSecondColor}
-                  style={{
-                    textAlign: 'center'
-                  }}>
+                  style={{ ...alignment.PBmedium }}
+                >
                   {t('createAccount')}
                 </TextDefault>
               </View>
@@ -110,13 +112,14 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={email}
-                    onChangeText={e => setEmail(e)}
+                    onChangeText={(e) => setEmail(e)}
                   />
                   {emailError && (
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {emailError}
                     </TextDefault>
                   )}
@@ -130,13 +133,14 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={firstname}
-                    onChangeText={e => setFirstname(e)}
+                    onChangeText={(e) => setFirstname(e)}
                   />
                   {firstnameError && (
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {firstnameError}
                     </TextDefault>
                   )}
@@ -144,20 +148,20 @@ function Register(props) {
                 <View>
                   <TextInput
                     placeholder={t('lastNamePH')}
-
                     style={[
                       styles(currentTheme).textField,
                       lastnameError && styles(currentTheme).errorInput
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={lastname}
-                    onChangeText={e => setLastname(e)}
+                    onChangeText={(e) => setLastname(e)}
                   />
                   {lastnameError && (
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {lastnameError}
                     </TextDefault>
                   )}
@@ -173,22 +177,25 @@ function Register(props) {
                     ]}
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={password}
-                    onChangeText={e => setPassword(e)}
+                    onChangeText={(e) => setPassword(e)}
                   />
-                  <FontAwesome
-                    onPress={() => setShowPassword(!showPassword)}
-                    name={showPassword ? 'eye' : 'eye-slash'}
-                    size={24}
-                    color={currentTheme.startColor}
-                    style={styles().eyeBtn}
-                  />
+                  <View>
+                    <FontAwesome
+                      onPress={() => setShowPassword(!showPassword)}
+                      name={showPassword ? 'eye' : 'eye-slash'}
+                      size={24}
+                      color={currentTheme.fontFourthColor}
+                      style={styles().eyeBtn}
+                    />
+                  </View>
                 </View>
                 {passwordError && (
                   <View>
                     <TextDefault
                       style={styles().error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {passwordError}
                     </TextDefault>
                   </View>
@@ -198,56 +205,63 @@ function Register(props) {
                     style={[
                       styles(currentTheme).textField,
                       styles().countryCode
-                    ]}>
+                    ]}
+                  >
                     <CountryPicker
                       countryCode={countryCode}
-                      onSelect={country => onCountrySelect(country)}
+                      onSelect={(country) => onCountrySelect(country)}
                       withAlphaFilter
                       withFilter
                     />
                     <TextDefault
-                      style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}>
+                    textColor={currentTheme.newFontcolor}
+                      style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}
+                    >
                       {country?.cca2}
                     </TextDefault>
                   </View>
-                  <TextInput
-                    placeholder={t('mobileNumber')}
+                  <View
                     style={[
                       styles(currentTheme).textField,
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
                     ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={phone}
-                    onChangeText={e => setPhone(e)}
-                  />
+                  >
+                    <View style={styles().phoneFieldInner}>
+                      <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault>
+                      <TextInput
+                        placeholder={t('mobileNumber')}
+                        placeholderTextColor={currentTheme.fontSecondColor}
+                        value={phone}
+                        onChangeText={(e) => setPhone(e)}
+                        style={styles(currentTheme).phoneField}
+                      />
+                    </View>
+                  </View>
                 </View>
                 {phoneError && (
                   <View style={{ marginLeft: '30%' }}>
                     <TextDefault
-                      style={styles().error}
+                      style={styles(currentTheme).error}
                       bold
-                      textColor={currentTheme.textErrorColor}>
+                      textColor={currentTheme.textErrorColor}
+                    >
                       {phoneError}
                     </TextDefault>
                   </View>
                 )}
-
-                <View style={styles().marginTop10}>
-                  <TouchableOpacity
-                    onPress={() => registerAction()}
-                    activeOpacity={0.7}
-                    style={styles(currentTheme).btn}>
-                    <TextDefault
-                      H4
-                      textColor={currentTheme.buttonTextPink}
-                      style={alignment.MLsmall}
-                      bold>
-                      {t('continueBtn')}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
               </View>
+            </View>
+            <View style={styles().btnContainer}>
+              <TouchableOpacity
+                onPress={() => registerAction()}
+                activeOpacity={0.7}
+                style={styles(currentTheme).btn}
+              >
+                <TextDefault H4 textColor={currentTheme.black} bold>
+                  {t('createAccount')}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

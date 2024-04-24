@@ -11,7 +11,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     container: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.newheaderBG : 'transparent'
     },
     contentContainer: {
       flexGrow: 1,

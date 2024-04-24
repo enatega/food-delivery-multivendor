@@ -31,40 +31,35 @@ const styles = (props = null) =>
     },
     mainView: {
       paddingBottom: scale(100),
-      marginBottom: scale(25)
+      marginBottom: scale(65)
     },
     containerButton: {
-      backgroundColor: props !== null ? props.iconColorPink : 'transparent',
-      width: scale(40),
-      height: scale(40),
-      borderRadius: 50,
-      position: 'absolute',
-      right: scale(20),
-      bottom: verticalScale(20),
-      zIndex: 1,
-      elevation: 7,
-      shadowColor: props !== null ? props.shadowColor : 'transparent',
-      shadowOffset: {
-        width: scale(2),
-        height: verticalScale(6)
-      },
-      shadowOpacity: 0.6,
-      shadowRadius: verticalScale(5)
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      width: '90%',
+      height: scale(55),
+      bottom: verticalScale(0),
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
     },
     addButton: {
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
       width: '100%',
-      height: '100%',
+      height: scale(40),
+      borderRadius: 50,
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
     },
     containerSpace: {
-      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
+      backgroundColor: props !== null ? props.gray100 : 'transparent',
+      width: '92%',
       margin: scale(10),
       padding: scale(5),
       borderRadius: scale(10),
-      borderBottomWidth: 1,
-      borderBottomColor: props !== null ? props.borderBottomColor : '#DAD6D6'
+      borderWidth: 1,
+      alignSelf: 'center',
+      borderColor: props !== null ? props.gray200 : '#E5E7EB'
     },
     width100: {
       width: '100%'
@@ -73,12 +68,11 @@ const styles = (props = null) =>
       width: '10%'
     },
     titleAddress: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center'
+      width: '55%',
+      justifyContent: 'center',
+      marginTop: -4
     },
     labelStyle: {
-      width: '70%',
       textAlignVertical: 'bottom',
       fontSize: scale(14),
       fontWeight: '700',
@@ -89,17 +83,19 @@ const styles = (props = null) =>
       flexDirection: 'row'
     },
     homeIcon: {
+      color: props !== null ? props.darkBgFont : '#000',
       width: '15%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     },
     addressDetail: {
-      width: '65%',
+      width: '80%',
       alignSelf: 'flex-end',
       fontSize: scale(4),
       fontWeight: '300',
-      textAlign: 'justify'
+      textAlign: 'justify',
+      paddingLeft: scale(45)
     },
     line: {
       width: '80%',
@@ -108,12 +104,23 @@ const styles = (props = null) =>
       borderBottomWidth: StyleSheet.hairlineWidth
     },
     buttonsAddress: {
-      width: '20%',
+      width: '35%',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingBottom: scale(3)
+    },
+    rowContainer: {
+      marginTop: scale(5),
+      flexDirection: 'row',
+      alignItems: 'center', // Adjust this as needed
+      justifyContent: 'space-between'
+    },
+    footer: {
+      flex: 1,
+      width: '100%',
+      backgroundColor: props !== null ? props.white : 'transparent'
     }
   })
 export default styles

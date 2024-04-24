@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -14,17 +15,13 @@ const styles = (props = null) =>
       flex: 1,
       alignItems: 'center',
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.MTlarge
+      ...alignment.MTlarge,
+      ...alignment.PLlarge,
+      ...alignment.PRlarge,
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     },
-    subContainer: {
-      width: '85%',
-      height: '100%'
-    },
-    logoContainer: {
-      width: 120,
-      height: 130,
-      alignSelf: 'center'
-    },
+
     marginTop3: {
       ...alignment.MTxSmall
     },
@@ -42,32 +39,24 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.errorInputBorder : '#DB4A39'
     },
     btn: {
-      width: '70%',
+      width: '100%',
       alignItems: 'center',
-      backgroundColor: '#000',
+      backgroundColor: props !== null ? props.main : '#F7E7E5',
       alignSelf: 'center',
       padding: 15,
-      borderRadius: 10
+      borderRadius: 40
     },
     otpInput: {
       height: 70,
-      color: '#000',
-      ...alignment.MTlarge
+      color: '#000'
     },
     error: {
       ...alignment.MBlarge
     },
     otpBox: {
-      backgroundColor: '#fff',
-      color: '#000',
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 0.84,
-      elevation: 2
+      backgroundColor: props !== null ? props.themeBackground : '#F7E7E5',
+      color: props !== null ? props.newFontcolor : '#F7E7E5',
+      borderRadius: scale(6)
     },
     headerLeftIcon: {
       ...alignment.PLsmall
@@ -75,8 +64,12 @@ const styles = (props = null) =>
     headerRightIcon: {
       ...alignment.PRsmall
     },
+    btnContainer: {
+      width: '100%',
+      marginBottom: scale(20)
+    },
     disabledBtn: {
-      backgroundColor: props !== null ? props.iconColor : '#333333'
+      backgroundColor: props !== null ? props.iconBackground : '#333333'
     }
   })
 export default styles

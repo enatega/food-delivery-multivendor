@@ -16,7 +16,7 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.5,
       shadowRadius: verticalScale(1),
-      flexDirection: 'row',
+      //flexDirection: 'row',
       justifyContent: 'space-between',
       ...alignment.MRsmall,
       ...alignment.MLsmall,
@@ -37,6 +37,15 @@ const styles = (props = null) =>
       ...alignment.PBlarge,
       ...alignment.PLsmall
     },
+    textContainer2: {
+      width: '58%',
+      // ...alignment.PTsmall,
+      ...alignment.PLsmall,
+      //backgroundColor: props !== null ? props.newheaderColor : '#90E36D'
+    },
+    subContainerLeft: {
+      width: '100%'
+    },
     leftContainer: {
       width: '95%'
     },
@@ -44,6 +53,36 @@ const styles = (props = null) =>
       width: '20%',
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    subContainerRight: {
+      justifyContent: 'flex-start',
+      width: '35%',
+    },
+    rateOrderContainer: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: scale(20),
+      justifyContent: 'center',
+      alignItems: 'flex-end'
+    },
+    subContainerButton: {
+      backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
+      ...alignment.MTxSmall,
+      borderRadius: 40,
+      width: '100%',
+      height: verticalScale(50),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    subContainerReviewButton: {
+      backgroundColor: props !== null ? props.secondaryBackground : 'grey',
+      ...alignment.MTxSmall,
+      borderRadius: 10,
+      width: scale(80),
+      height: verticalScale(25),
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     headingContainer: {
       width: '100%',
@@ -62,6 +101,73 @@ const styles = (props = null) =>
     headingLine: {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: props !== null ? props.horizontalLine : 'grey'
+    },
+    subContainer: {
+      flex: 1,
+      backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
+      borderColor: props !== null ? props.color10 : '#fff',
+      borderWidth:scale(1),
+      borderRadius: scale(8),
+      elevation: 1,
+      ...alignment.MRmedium,
+      ...alignment.MLmedium,
+      ...alignment.MTsmall,
+      ...alignment.Pmedium
+    },
+    restaurantImage: {
+      height: 85,
+      width: 85,
+      borderRadius: 10,
+    },
+    restaurantImage1: {
+      height: 85,
+      width: 85,
+      borderRadius: 10
+    },
+    restaurantName: { ...alignment.MBxSmall, width: '65%' },
+    subContainerImage: {
+      flex: 1,
+      justifyContent: 'center',
+      alignContent: 'center',
+      ...alignment.PBlarge
+    },
+    imageContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...alignment.MBxSmall
+    },
+    descriptionEmpty: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...alignment.Plarge
+    },
+    emptyButton: {
+      width: '85%',
+      padding: scale(10),
+      backgroundColor: props !== null ? props.buttonBackground : 'grey',
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center',
+      borderRadius: scale(10)
+    },
+    starsContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+      height: scale(50)
+      //backgroundColor: props !== null ? props.gray200 : '#F3F4F6'
+    },
+    starsStyle: {
+      borderColor: props !== null ? props.newheaderColor : '#90E36D',
+      borderWidth: 1,
+      borderRadius: 5,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
+    },
+    orderDescriptionContainer: {
+      ...alignment.MTxSmall
     }
   })
 

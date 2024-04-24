@@ -1,10 +1,39 @@
 import { StyleSheet } from 'react-native'
+import { alignment } from '../../utils/alignment'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
     rowDisplay: {
       display: 'flex',
       flexDirection: 'row'
+    },
+    chatSec: {
+      flex: 1,
+
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+    },
+    orderDetails: {
+      borderColor: props !== null ? props.verticalLine : 'transparent',
+      ...alignment.Pmedium,
+      borderBottomWidth: 1,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    orderNoSec: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(4)
+    },
+    orderNo: {
+      backgroundColor: props !== null ? props.color5 : 'transparent',
+      borderWidth: 1,
+      borderColor: '#E5E7EB',
+      paddingVertical: scale(8),
+      paddingHorizontal: scale(12),
+      borderRadius: 16
     },
     accessoryContainer: {
       height: 100,
@@ -19,28 +48,32 @@ const styles = (props = null) =>
       position: 'relative',
       elevation: 999
     },
-    sendIcon: { marginBottom: 7, marginRight: 10 },
+
+    sendIcon: {
+      width: scale(25)
+    },
+
     emptyChat: {
-      marginTop: '160%',
-      transform: [{ scaleY: -1 }],
-      marginLeft: '17%'
+      marginTop: '140%',
+      transform: [
+        { scaleY: -1 },
+      ]
     },
-    bubbleRight: {
-      backgroundColor: props !== null ? props.black : 'transparent',
-      padding: 5,
-      marginBottom: 5,
-      borderTopLeftRadius: 15,
-      borderTopRightRadius: 15,
-      borderBottomLeftRadius: 15,
-      borderBottomRightRadius: 0
+
+    textRight: {
+      backgroundColor: '#E4FFD9',
+      color: '#1F2937',
+      padding: 10,
+      marginBottom: 5
     },
-    bubbleLeft: {
-      backgroundColor: props !== null ? props.iconColorPink : 'transparent',
-      padding: 5,
-      borderTopLeftRadius: 15,
-      borderTopRightRadius: 15,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 15
+    textLeft: {
+      backgroundColor: '#F3F4F6',
+      color: '#1F2937',
+      padding: 10,
+      marginBottom: 5
+    },
+    addImg: {
+      width: scale(20)
     }
   })
 export default styles

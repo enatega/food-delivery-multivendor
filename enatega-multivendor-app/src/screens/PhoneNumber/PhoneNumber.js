@@ -19,6 +19,8 @@ import CountryPicker from 'react-native-country-picker-modal'
 import usePhoneNumber from './usePhoneNumber'
 import PhoneInput from 'react-native-phone-number-input'
 import { useTranslation } from 'react-i18next'
+import { Ionicons } from '@expo/vector-icons'
+import { scale } from '../../utils/scaling'
 
 function PhoneNumber(props) {
   const {
@@ -34,14 +36,13 @@ function PhoneNumber(props) {
   } = usePhoneNumber()
 
   const { t } = useTranslation()
-  console.log(country)
 
   useLayoutEffect(() => {
     props.navigation.setOptions(
       screenOptions({
-        fontColor: currentTheme.fontMainColor,
+        iconColor: currentTheme.newIconColor,
         backColor: currentTheme.themeBackground,
-        iconColor: currentTheme.iconColorPink,
+        fontColor: currentTheme.newFontcolor,
         navigation: props.navigation
       })
     )
@@ -66,18 +67,18 @@ function PhoneNumber(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View style={styles().logoContainer}>
-                <Image
-                  source={require('../../../assets/login-icon.png')}
-                  style={styles().logoContainer}
+                <Ionicons
+                  name="phone-portrait-outline"
+                  size={30}
+                  color={currentTheme.newIconColor}
                 />
               </View>
               <View>
                 <TextDefault
                   H3
                   bolder
-                  textColor={currentTheme.fontSecondColor}
+                  textColor={currentTheme.newFontcolor}
                   style={{
-                    textAlign: 'center',
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}>
@@ -88,7 +89,7 @@ function PhoneNumber(props) {
                   bold
                   textColor={currentTheme.fontSecondColor}
                   style={{
-                    textAlign: 'center'
+                    paddingBottom: scale(5)
                   }}>
                   {t('secureAccountWithPhone')}
                 </TextDefault>
@@ -106,8 +107,8 @@ function PhoneNumber(props) {
                       withAlphaFilter
                       withFilter
                     />
-                    <TextDefault
-                      style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}>
+                    <TextDefault  textColor={currentTheme.newFontcolor}
+                      style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
                       {country?.cca2}
                     </TextDefault>
                   </View>
@@ -117,14 +118,11 @@ function PhoneNumber(props) {
                       styles().phoneNumber,
                       phoneError && styles(currentTheme).errorInput
                     ]}>
-                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                      <Text>+{country.callingCode[0]} </Text>
-                      <TextInput
+                    <View style={styles(currentTheme).phoneField}>
+                      <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault>
+                      <TextInput style={styles(currentTheme).phoneNo}
                         placeholder={t('mobileNumber')}
-                        style={{
-                          marginTop: Platform.OS === 'android' ? -4 : 0
-                        }}
-                        placeholderTextColor={currentTheme.fontSecondColor}
+                        placeholderTextColor={currentTheme.color6}
                         value={phone}
                         onChangeText={e => {
                           if (e >= 0 || e <= 9) {
@@ -146,26 +144,21 @@ function PhoneNumber(props) {
                     </TextDefault>
                   </View>
                 )}
-
-                <View style={styles().marginTop10}>
-                  <TouchableOpacity
-                    onPress={() => registerAction()}
-                    activeOpacity={0.7}
-                    style={styles(currentTheme).btn}>
-                    <TextDefault
-                      H4
-                      textColor={currentTheme.buttonTextPink}
-                      style={alignment.MLsmall}
-                      bold>
-                      {loading ? (
-                        <Spinner size="small" backColor="transparent" />
-                      ) : (
-                        t('continueBtn')
-                      )}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
               </View>
+            </View>
+            <View style={{ width: '100%', marginBottom: 20 }}>
+              <TouchableOpacity
+                onPress={() => registerAction()}
+                activeOpacity={0.7}
+                style={styles(currentTheme).btn}>
+                <TextDefault H4 textColor={currentTheme.color4} bold>
+                  {loading ? (
+                    <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.white} />
+                  ) : (
+                    t('continueBtn')
+                  )}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

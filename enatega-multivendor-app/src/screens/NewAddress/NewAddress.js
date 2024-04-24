@@ -44,17 +44,17 @@ const labelValues = [
   {
     title: 'Home',
     value: 'Home',
-    icon: <Entypo name="home" size={24} />
+    icon: <Entypo name='home' size={24} />
   },
   {
     title: 'Work',
     value: 'Work',
-    icon: <MaterialIcons name="work" size={24} />
+    icon: <MaterialIcons name='work' size={24} />
   },
   {
     title: 'Other',
     value: 'Other',
-    icon: <Foundation name="heart" size={24} />
+    icon: <Foundation name='heart' size={24} />
   }
 ]
 
@@ -97,30 +97,29 @@ function NewAddress(props) {
     props.navigation.setOptions({
       headerRight: null,
       title: t('addAddress'),
-      headerStyle: {
-        backgroundColor: currentTheme.headerBackground,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20
+      headerTitleStyle: {
+        color: '#000',
+        fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
-        marginTop: '1%',
-        marginLeft: '10%',
-        paddingLeft: scale(20),
-        paddingRight: scale(20),
+        marginTop: '2%',
+        paddingLeft: scale(25),
+        paddingRight: scale(25),
         height: '75%',
-        borderRadius: scale(10),
-        backgroundColor: currentTheme.black,
-        borderColor: currentTheme.white,
-        borderWidth: 1
+        marginLeft: 0
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.white,
+        elevation: 1
       },
       headerTitleAlign: 'center',
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
-            <View style={styles(currentTheme).headerBackBtnContainer}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+            <View>
+              <MaterialIcons name='arrow-back' size={30} color='black' />
             </View>
           )}
           onPress={() => {
@@ -146,18 +145,18 @@ function NewAddress(props) {
       latitude: region.latitude,
       longitude: region.longitude
     })
-      .then(data => {
+      .then((data) => {
         if (data.length) {
           const location = data[0]
           const deliveryAddress = Object.keys(location)
-            .map(key => location[key])
+            .map((key) => location[key])
             .join(' ')
           setDeliveryAddress(deliveryAddress)
           setRegion(region)
           addressRef.current.setValue(deliveryAddress)
         } else console.log('location not recognized')
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Error : regionChange', error)
       })
   }
@@ -166,7 +165,7 @@ function NewAddress(props) {
     FlashMessage({
       message: t('addressUpdated')
     })
-    const address = data.createAddress.addresses.find(a => a.selected)
+    const address = data.createAddress.addresses.find((a) => a.selected)
     const cartAddress = props.route.params?.backScreen || null
     setLocation({
       ...address,
@@ -209,7 +208,8 @@ function NewAddress(props) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
         style={styles(currentTheme).flex}
-        enabled={!modalVisible}>
+        enabled={!modalVisible}
+      >
         <View style={styles().flex}>
           <View style={styles(currentTheme).mapContainer}>
             <MapView
@@ -235,7 +235,8 @@ function NewAddress(props) {
                   longitude: region.longitude,
                   currentScreen: 'NewAddress'
                 })
-              }}></MapView>
+              }}
+            ></MapView>
             <View style={styles().imageContainer}>
               <Image
                 source={require('../../assets/images/user.png')}
@@ -247,7 +248,8 @@ function NewAddress(props) {
           <ScrollView
             style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}
             contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}>
+            showsVerticalScrollIndicator={false}
+          >
             <View style={styles(currentTheme).subContainer}>
               <View style={styles(currentTheme).upperContainer}>
                 <View style={styles(currentTheme).addressContainer}>
@@ -264,7 +266,7 @@ function NewAddress(props) {
                         renderRightAccessory={() => (
                           <TouchableOpacity onPress={onOpen}>
                             <MaterialIcons
-                              name="edit"
+                              name='edit'
                               size={18}
                               color={currentTheme.darkBgFont}
                             />
@@ -281,7 +283,7 @@ function NewAddress(props) {
                           fontSize: scale(12),
                           paddingTop: scale(1)
                         }}
-                        onChangeText={text => {
+                        onChangeText={(text) => {
                           setDeliveryAddress(text)
                         }}
                         onBlur={() => {
@@ -301,7 +303,7 @@ function NewAddress(props) {
                     label={t('deliveryDetails')}
                     labelFontSize={scale(12)}
                     fontSize={scale(12)}
-                    textAlignVertical="top"
+                    textAlignVertical='top'
                     multiline={false}
                     maxLength={30}
                     textColor={currentTheme.darkBgFont}
@@ -316,13 +318,13 @@ function NewAddress(props) {
                       paddingTop: scale(1)
                     }}
                     value={deliveryDetails}
-                    onChangeText={text => {
+                    onChangeText={(text) => {
                       setDeliveryDetails(text)
                     }}
                     onBlur={() => {
                       setDeliveryDetailsError(
                         !deliveryDetails.trim().length
-                          ? 'Delivery details is required'
+                          ? t('DeliveryAddressIsRequired')
                           : null
                       )
                     }}
@@ -335,7 +337,8 @@ function NewAddress(props) {
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
                       h5
-                      bolder>
+                      bolder
+                    >
                       {t('addLabel')}
                     </TextDefault>
                   </View>
@@ -351,7 +354,8 @@ function NewAddress(props) {
                           }
                           onPress={() => {
                             setSelectedLabel(label.value)
-                          }}>
+                          }}
+                        >
                           <TextDefault
                             textColor={
                               selectedLabel === label.value
@@ -359,7 +363,8 @@ function NewAddress(props) {
                                 : currentTheme.fontMainColor
                             }
                             bold
-                            center>
+                            center
+                          >
                             {label.icon}
                           </TextDefault>
                         </TouchableOpacity>
@@ -374,10 +379,11 @@ function NewAddress(props) {
                           style={styles().titlebuttonInline}
                           textColor={currentTheme.black}
                           bold
-                          center>
+                          center
+                        >
                           {t(label.title)}
                         </TextDefault>
-                        </React.Fragment>
+                      </React.Fragment>
                     ))}
                   </View>
                 </View>
@@ -415,7 +421,8 @@ function NewAddress(props) {
                 }
               }}
               activeOpacity={0.5}
-              style={styles(currentTheme).saveBtnContainer}>
+              style={styles(currentTheme).saveBtnContainer}
+            >
               <TextDefault textColor={currentTheme.black} H5 bold>
                 {t('saveContBtn')}
               </TextDefault>
@@ -431,7 +438,7 @@ function NewAddress(props) {
           onSubmit={onSubmit}
         />
       ) : null}
-      
+
       <View
         style={{
           paddingBottom: inset.bottom,

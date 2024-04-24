@@ -3,17 +3,17 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
       "ios": {
         "simulator": true
       }
     },
     "staging": {
       "developmentClient": false,
-      "releaseChannel": "staging",
-      "distribution": "internal"
+      "channel": "staging",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
       "channel": "production"

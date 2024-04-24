@@ -30,9 +30,9 @@ function RadioComponent(props) {
           style={styles.mainContainer}>
           <View style={styles.leftContainer}>
             <RadioButton
-              size={13}
-              outerColor={currentTheme.radioOuterColor}
-              innerColor={currentTheme.radioColor}
+              size={11}
+              outerColor={currentTheme.iconColorDark}
+              innerColor={currentTheme.main}
               animation={'bounceIn'}
               isSelected={selected ? selected._id === option._id : false}
               onPress={onPress.bind(this, option)}
@@ -40,16 +40,14 @@ function RadioComponent(props) {
             <TextDefault
               textColor={currentTheme.fontMainColor}
               style={alignment.MLsmall}
-              H5
-              bold>
+              bolder>
               {option.title}
             </TextDefault>
           </View>
           <View style={styles.rightContainer}>
             <TextDefault
               textColor={currentTheme.fontMainColor}
-              H5
-              bold>{`${configuration.currencySymbol} ${option.price}`}</TextDefault>
+              bolder>{`${configuration.currencySymbol}${option.price}`}</TextDefault>
           </View>
         </TouchableOpacity>
       ))}

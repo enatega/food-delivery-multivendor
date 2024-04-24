@@ -6,6 +6,7 @@ export const subscriptionOrder = `subscription SubscriptionOrder($id:String!){
             _id
         }
         completionTime
+        preparationTime
     }
   }`
 
@@ -33,6 +34,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       deliveryAddress{
         location{coordinates}
         deliveryAddress
+        id
       }
       items{
         _id
@@ -80,6 +82,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       taxationAmount
       createdAt
       completionTime
+      preparationTime
       orderDate
       expectedTime
       isPickedUp

@@ -5,7 +5,9 @@ import { scale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: 1,
+      flexDirection: 'row',
+      alignSelf: 'flex-start',
     },
     textBtn: {
       backgroundColor: 'transparent',
@@ -13,6 +15,7 @@ const styles = (props = null) =>
       alignItems: 'flex-end',
       ...alignment.PBsmall
     },
+  
     modalContainer: {
       flex: 1,
       backgroundColor: props !== null ? props.themeBackground : '#FAFAFA',
@@ -22,10 +25,18 @@ const styles = (props = null) =>
       ...alignment.PLlarge
     },
     modalTextBtn: {
-      alignSelf: 'flex-end',
+      // alignSelf: 'flex-end',
       height: scale(30),
       width: scale(30),
       ...alignment.MTsmall
-    }
+    },
+    locationIcon:{
+      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      width: 28,
+      height: 28,
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   })
 export default styles

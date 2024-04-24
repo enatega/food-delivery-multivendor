@@ -68,12 +68,13 @@ const styles = (props = null) =>
       paddingTop: scale(3),
       fontWeight: '700'
     },
+
     statusText: {
       color: props !== null ? props.statusSecondColor : 'grey',
       fontSize: verticalScale(13),
       fontFamily: fontStyles.MuseoSans500,
       marginBottom: scale(10),
-      paddingLeft: 40,
+      // paddingLeft: 40,
       fontWeight: '500'
     },
     timeText: {
