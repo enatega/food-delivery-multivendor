@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { View, StatusBar } from 'react-native'
 import {
   AntDesign,
   MaterialIcons,
@@ -9,7 +9,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
 import styles from './styles'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -50,18 +50,24 @@ function About(props) {
 
   const inset = useSafeAreaInsets()
   return (
+<SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
+<StatusBar
+    backgroundColor={currentTheme.themeBackground}
+    barStyle={
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    }
+  />
     <ScrollView
       style={[
-        { marginTop: inset.top },
+        // { marginTop: inset.top },
         styles().flex,
         { backgroundColor: currentTheme.headerMenuBackground }
       ]}
     >
       <ImageHeader
-        iconColor={currentTheme.iconColorPink}
+        iconColor={currentTheme.newIconColor}
         svgNameL='leftArrow'
         restaurantImage={restaurantObject.restaurantImage}
-        iconBackColor={currentTheme.white}
         restaurantName={restaurantObject.restaurantName}
         deliveryTime={restaurantObject.deliveryTime}
         total={restaurantObject.total}
@@ -132,7 +138,7 @@ function About(props) {
                 color={currentTheme.fontThirdColor}
               />
               <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-                {t('Minimum Order')} {configuration.currencySymbol}
+                {t('minimumOrder')} {configuration.currencySymbol}
                 {restaurantObject.restaurantMinOrder}
               </TextDefault>
             </View>
@@ -168,7 +174,7 @@ function About(props) {
               color={currentTheme.fontThirdColor}
             />
             <TextDefault H5 textColor={currentTheme.fontThirdColor} bold>
-              {t('Sales Tax')} {configuration.currencySymbol}
+              {t('salesTax')} {configuration.currencySymbol}
               {restaurantObject.restaurantTax}
             </TextDefault>
           </View>
@@ -246,6 +252,7 @@ function About(props) {
         </View>
       </View>
     </ScrollView>
+</SafeAreaView>
   )
 }
 export default About

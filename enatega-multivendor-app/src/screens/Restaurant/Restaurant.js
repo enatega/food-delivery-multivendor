@@ -207,6 +207,17 @@ function Restaurant(props) {
     }
   }, [data])
 
+  const zIndexAnimation = useAnimatedStyle(() => {
+    return {
+      zIndex: interpolate(
+        translationY.value,
+        [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2],
+        [-1, 1, 99],
+        Extrapolation.CLAMP
+      )
+    }
+  })
+
   const isOpen = () => {
     if (data) {
       if (data?.restaurant?.openingTimes?.length < 1) return false
@@ -682,12 +693,11 @@ function Restaurant(props) {
             </ScrollView>
           ) : (
             <AnimatedSectionList
-              style={{
+              style={[{
                 flexGrow: 1,
-                zIndex: -1,
                 paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-                marginTop: HEADER_MIN_HEIGHT
-              }}
+                marginTop: HEADER_MIN_HEIGHT,
+              }, zIndexAnimation]}
               contentContainerStyle={{
                 paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
               }}

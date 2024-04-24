@@ -162,7 +162,11 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.black : 'black',
       padding: 10,
       borderRadius: 10
-    }
+    },
+    safeAreaViewStyles: {
+      flex: 1,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+    },
     // timingText: {
     //   width: scale(140),
     //   textAlign: 'left'
