@@ -15,7 +15,6 @@ import {
   Platform,
   RefreshControl
 } from 'react-native'
-import { Modalize } from 'react-native-modalize'
 import {
   MaterialIcons,
   SimpleLineIcons,
@@ -57,6 +56,8 @@ import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
+import Spinner from '../../components/Spinner/Spinner'
+import MainModalize from '../../components/Main/Modalize/MainModalize'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -244,15 +245,18 @@ function Menu({ route, props }) {
           style={[styles(currentTheme).addButton]}
           activeOpacity={0.7}
           onPress={setCurrentLocation}
+          disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            <MaterialCommunityIcons
-              name='target'
-              size={scale(25)}
-              color={currentTheme.black}
-            />
-            <View style={styles().mL5p} />
-            <TextDefault bold>{t('currentLocation')}</TextDefault>
+            {
+              busy ? <Spinner size='small' /> : (
+                <>
+                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                <View style={styles().mL5p} />
+                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                </>
+              )
+            }
           </View>
         </TouchableOpacity>
       </View>
@@ -289,7 +293,7 @@ function Menu({ route, props }) {
             } else {
               const modal = modalRef.current
               modal?.close()
-              props.navigation.navigate({ name: 'CreateAccount' })
+              navigation.navigate({ name: 'CreateAccount' })
             }
           }}
         >
@@ -534,82 +538,17 @@ function Menu({ route, props }) {
             </View>
           </View>
 
-          <Modalize
-            ref={modalRef}
-            modalStyle={styles(currentTheme).modal}
-            modalHeight={400}
-            overlayStyle={styles(currentTheme).overlay}
-            handleStyle={styles(currentTheme).handle}
-            handlePosition='inside'
-            modalPosition='top'
-            openAnimationConfig={{
-              timing: { duration: 400 },
-              spring: { speed: 20, bounciness: 10 }
-            }}
-            closeAnimationConfig={{
-              timing: { duration: 400 },
-              spring: { speed: 20, bounciness: 10 }
-            }}
-            flatListProps={{
-              data: isLoggedIn && profile ? profile.addresses : '',
-              ListHeaderComponent: modalHeader(),
-              ListFooterComponent: modalFooter(),
-              showsVerticalScrollIndicator: false,
-              keyExtractor: (item) => item._id,
-              renderItem: ({ item: address }) => (
-                <View style={styles(currentTheme).addressbtn}>
-                  <TouchableOpacity
-                    style={styles(currentTheme).addressContainer}
-                    activeOpacity={0.7}
-                    onPress={() => setAddressLocation(address)}
-                  >
-                    <View style={styles().addressSubContainer}>
-                      <View style={[styles(currentTheme).homeIcon]}>
-                        {addressIcons[address.label]
-                          ? React.createElement(addressIcons[address.label], {
-                              fill: currentTheme.darkBgFont
-                            })
-                          : React.createElement(addressIcons['Other'], {
-                              fill: currentTheme.darkBgFont
-                            })}
-                      </View>
-                      <View style={[styles().titleAddress]}>
-                        <TextDefault
-                          textColor={currentTheme.darkBgFont}
-                          style={styles(currentTheme).labelStyle}
-                        >
-                          {t(address.label)}
-                        </TextDefault>
-                      </View>
-                    </View>
-                    <View style={styles(currentTheme).addressTextContainer}>
-                      <View style={styles(currentTheme).addressDetail}>
-                        <TextDefault
-                          style={{ ...alignment.PLlarge }}
-                          textColor={currentTheme.fontSecondColor}
-                          small
-                        >
-                          {address.deliveryAddress}
-                        </TextDefault>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                  <View style={styles().addressTick}>
-                    {address._id === location?._id &&
-                      ![t('currentLocation'), t('selectedLocation')].includes(
-                        location.label
-                      ) && (
-                        <MaterialIcons
-                          name='check'
-                          size={scale(25)}
-                          color={currentTheme.iconColorPink}
-                        />
-                      )}
-                  </View>
-                </View>
-              )
-            }}
-          ></Modalize>
+          <MainModalize 
+          modalRef={modalRef} 
+          currentTheme={currentTheme} 
+          isLoggedIn={isLoggedIn}
+          addressIcons={addressIcons}
+          modalHeader={modalHeader}
+          modalFooter={modalFooter}
+          setAddressLocation={setAddressLocation}
+          profile={profile}
+          location={location}
+          />
         </View>
       </SafeAreaView>
     </>

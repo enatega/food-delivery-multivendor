@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { AntDesign, EvilIcons, Feather } from '@expo/vector-icons'
+import { AntDesign, EvilIcons } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import CartItem from '../../components/CartItem/CartItem'
 import { getTipping } from '../../apollo/queries'
@@ -41,11 +41,10 @@ import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
-import Location from '../../components/Main/Location/Location'
 import WouldYouLikeToAddThese from './Section'
-import moment from 'moment'
 import { Modalize } from 'react-native-modalize'
 import Pickup from '../../components/Pickup'
+import { SpecialInstructions } from '../../components/Cart/SpecialInstructions'
 
 const { height: HEIGHT } = Dimensions.get('window')
 // Constants
@@ -66,14 +65,15 @@ function Cart(props) {
     addQuantity,
     removeQuantity,
     isPickup,
-    setIsPickup
+    setIsPickup,
+    instructions,
+    setInstructions
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const [loadingData, setLoadingData] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [minimumOrder, setMinimumOrder] = useState('')
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [deliveryCharges, setDeliveryCharges] = useState(0)
@@ -403,12 +403,6 @@ function Cart(props) {
       modal.open()
     }
   }
-  const onModalClose = (modalRef) => {
-    const modal = modalRef.current
-    if (modal) {
-      modal.close()
-    }
-  }
   if (loading || loadingData || loadingTip) return loadginScreen()
 
   const restaurant = data?.restaurant
@@ -505,41 +499,12 @@ function Cart(props) {
                 </View>
               </View>
 
-              <View style={[styles(currentTheme).headerContainer]}>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles().locationContainer}
-                  onPress={(event) => {
-                    if (!profile.addresses.length) {
-                      props.navigation.navigate('NewAddress', {
-                        backScreen: 'Cart'
-                      })
-                    } else {
-                      props.navigation.navigate('CartAddress', {
-                        address: location
-                      })
-                    }
-                  }}
-                >
-                  <View style={styles().location}>
-                    <Location
-                      locationIconGray={{
-                        backgroundColor: currentTheme.newBorderColor,
-                        borderWidth: 1,
-                        borderColor: currentTheme.iconBackground,
-                        width: 30,
-                        height: 30
-                      }}
-                      locationLabel={currentTheme.newFontcolor}
-                      location={currentTheme.newFontcolor}
-                    />
-                  </View>
-                  <Feather
-                    name='chevron-right'
-                    size={20}
-                    color={currentTheme.secondaryText}
-                  />
-                </TouchableOpacity>
+              <View style={{
+                ...alignment.PLsmall,
+                ...alignment.PRsmall,
+                marginTop: 10
+              }}>
+                <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme}/>
               </View>
               <View
                 style={{
@@ -665,12 +630,6 @@ function Cart(props) {
         overlayStyle={styles(currentTheme).overlay}
         handleStyle={styles(currentTheme).handle}
         handlePosition='inside'
-        onClosed={() => {
-          setIsModalOpen(false)
-        }}
-        onOpened={() => {
-          setIsModalOpen(true)
-        }}
         openAnimationConfig={{
           timing: { duration: 400 },
           spring: { speed: 20, bounciness: 10 }
