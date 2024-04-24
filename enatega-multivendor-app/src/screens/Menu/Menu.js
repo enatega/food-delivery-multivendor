@@ -35,13 +35,10 @@ import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import {
   getCuisines,
-  restaurantList,
-  topRatedVendorsInfo
 } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
-import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -59,23 +56,13 @@ import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import ErrorView from '../../components/ErrorView/ErrorView'
-import {
-  recentOrderRestaurantsQuery,
-  mostOrderedRestaurantsQuery
-} from '../../apollo/queries'
+import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 
-const RESTAURANTS = gql`
-  ${restaurantList}
-`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
-
 const GET_CUISINES = gql`
   ${getCuisines}
-`
-const TOP_BRANDS = gql`
-  ${topRatedVendorsInfo}
 `
 
 export const FILTER_VALUES = {
@@ -96,22 +83,6 @@ export const FILTER_VALUES = {
   }
 }
 
-const HEADING = {
-  orderAgain: 'Order Again',
-  topPicks: 'Top Picks',
-  topBrands: 'Top Brands',
-  grocery: 'All Grocery',
-  restaurant: 'All Restaurant'
-}
-
-const SUB_HEADING = {
-  orderAgain: 'From your previous orders',
-  topPicks: 'Top picked restaurants for you',
-  topBrands: 'Top brands in your area',
-  grocery: 'Most ordered grocery stores',
-  restaurant: 'Most ordered restaurants'
-}
-
 function Menu({ route, props }) {
   const Analytics = analytics()
   const { selectedType, queryType } = route.params
@@ -121,7 +92,7 @@ function Menu({ route, props }) {
   const { location, setLocation } = useContext(LocationContext)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
-  const [restaurantData, setRestaurantData] = useState([])
+  // const [restaurantData, setRestaurantData] = useState([])
   // const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
   const navigation = useNavigation()
@@ -129,52 +100,19 @@ function Menu({ route, props }) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
   const locationData = location
-  console.log('queryType => ', queryType)
 
-  const query =
-    queryType === 'orderAgain'
-      ? recentOrderRestaurantsQuery
-      : queryType === 'topPicks'
-        ? mostOrderedRestaurantsQuery
-        : queryType === 'topBrands'
-          ? TOP_BRANDS
-          : RESTAURANTS
+  const {
+    data,
+    refetch,
+    networkStatus,
+    loading,
+    error,
+    restaurantData,
+    setRestaurantData,
+    heading,
+    subHeading
+  } = useRestaurantQueries(queryType, location, selectedType)
 
-  const queryVariables = {
-    longitude: location.longitude || null,
-    latitude: location.latitude || null
-  }
-
-  if (['grocery', 'restaurant'].includes(queryType)) {
-    queryVariables.shopType = selectedType || null
-    queryVariables.ip = null
-  }
-  console.log('queryVariables => ', queryVariables)
-
-  const { data, refetch, networkStatus, loading, error } = useQuery(query, {
-    variables: queryVariables,
-    onCompleted: (data) => {
-      switch (queryType) {
-        case 'orderAgain':
-          console.log('orderAgain')
-          setRestaurantData(data.recentOrderRestaurants)
-          break
-        case 'topPicks':
-          console.log('topPicks')
-          setRestaurantData(data.mostOrderedRestaurants)
-          break
-        case 'topBrands':
-          console.log('topBrands')
-          setRestaurantData(data.topRatedVendors)
-          break
-        default:
-          console.log('restaurants')
-          setRestaurantData(data.nearByRestaurants.restaurants)
-          // setSectionData(data.nearByRestaurants.sections)
-      }
-    },
-    fetchPolicy: 'network-only'
-  })
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -553,10 +491,10 @@ function Menu({ route, props }) {
                   scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
                   showsVerticalScrollIndicator={false}
                   ListHeaderComponent={
-                    search || restaurantData.length === 0 ? null : (
+                    search || restaurantData?.length === 0 ? null : (
                       <ActiveOrdersAndSections
-                        menuPageHeading={HEADING[queryType]}
-                        subHeading={SUB_HEADING[queryType]}
+                        menuPageHeading={heading}
+                        subHeading={subHeading}
                       />
                     )
                   }

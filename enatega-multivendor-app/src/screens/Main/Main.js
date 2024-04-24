@@ -414,8 +414,9 @@ function Main(props) {
                             orders={mostOrderedRestaurantsVar}
                             loading={orderLoading}
                             error={orderError}
-                            title={'Top Picks for you'}
+                            title={'Popular right now'}
                             queryType='topPicks'
+                            icon='trending'
                           />
                         )}
                       </View>
@@ -427,8 +428,9 @@ function Main(props) {
                             orders={data?.nearByRestaurants?.restaurants?.filter((restaurant)=>restaurant.shopType === 'restaurant')}
                             loading={orderLoading}
                             error={orderError}
-                            title={'Restaurants'}
+                            title={'Restaurants near you'}
                             queryType='restaurant'
+                            icon='restaurant'
                           />
                         )}
                       </View>
@@ -440,8 +442,9 @@ function Main(props) {
                             orders={data?.nearByRestaurants?.restaurants?.filter((restaurant)=>restaurant.shopType === 'grocery')}
                             loading={orderLoading}
                             error={orderError}
-                            title={'Grocery'}
+                            title={'Grocery List'}
                             queryType='grocery'
+                            icon='grocery'
                           />
                         )}
                       </View>
@@ -453,8 +456,9 @@ function Main(props) {
                             orders={mostOrderedRestaurantsVar?.filter((order)=>order.shopType === 'grocery')}
                             loading={orderLoading}
                             error={orderError}
-                            title={'Top Grocery'}
+                            title={'Top grocery picks'}
                             queryType='grocery'
+                            icon='store'
                           />
                         )}
                       </View>
@@ -472,7 +476,7 @@ function Main(props) {
               </View>
             </View>
           </View>
-          {/* <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} /> */}
+          <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
           <Modalize
             ref={modalRef}
             modalStyle={styles(currentTheme).modal}
@@ -556,68 +560,3 @@ function Main(props) {
 }
 
 export default Main
-
-{/* <View style={styles().mainItemsContainer}>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'restaurant'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('foodDelivery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('OrderfoodLove')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/menu-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'grocery'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('grocery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('essentialsDeliveredFast')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/grocery-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                    </View> */}

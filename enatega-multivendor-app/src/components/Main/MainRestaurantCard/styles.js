@@ -56,6 +56,10 @@ const styles = (props = null) =>
       ...alignment.MRmedium,
       marginBottom: scale(8),
     },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     seeAllBtn: {
       backgroundColor: props != null ? props.lightGreen : '#F3FFEE',
       borderRadius: 4,

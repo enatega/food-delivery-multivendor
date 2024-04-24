@@ -82,7 +82,7 @@ function TopBrands(props) {
             bolder
             H4
           >
-            {t('topBrands')}
+            Our brands
           </TextDefault>
           <TouchableOpacity
             style={styles(currentTheme).seeAllBtn}

@@ -9,6 +9,14 @@ import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
+
+const ICONS = {
+  grocery: 'local-grocery-store',
+  restaurant: 'restaurant',
+  store: 'store',
+  trending: 'local-fire-department'
+}
 
 function MainRestaurantCard(props) {
   const { t } = useTranslation()
@@ -23,7 +31,7 @@ function MainRestaurantCard(props) {
     <View style={styles().orderAgainSec}>
       <View>
         <View style={styles().header}>
-          <View>
+          <View style={styles().row}>
             <TextDefault
               numberOfLines={1}
               textColor={currentTheme.fontFourthColor}
@@ -33,19 +41,24 @@ function MainRestaurantCard(props) {
             >
               {t(props?.title)}
             </TextDefault>
+            {props.icon && (
+              <MaterialIcons
+                name={ICONS[props.icon]}
+                size={24}
+                color={currentTheme.editProfileButton}
+                style={{ marginLeft: -10 }}
+              />
+            )}
           </View>
           <TouchableOpacity
             style={styles(currentTheme).seeAllBtn}
             activeOpacity={0.8}
             onPress={() => {
-              navigation.navigate('Menu',
-                {
-                  selectedType: 'restaurant',
-                  queryType: props.queryType ?? 'restaurant'
-                }
-              )
+              navigation.navigate('Menu', {
+                selectedType: 'restaurant',
+                queryType: props.queryType ?? 'restaurant'
+              })
             }}
-              
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
               See All
