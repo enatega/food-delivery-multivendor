@@ -92,6 +92,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       deliveredAt
       cancelledAt
       assignedAt
+      instructions
       }
     }
   }`
