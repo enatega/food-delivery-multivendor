@@ -121,7 +121,8 @@ function Main(props) {
         headerMenuBackground: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
-        open: onOpen
+        open: onOpen,
+        navigation
       })
     )
   }, [navigation, currentTheme])

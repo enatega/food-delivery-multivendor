@@ -784,6 +784,8 @@ function Checkout(props) {
                     location={currentTheme.newFontcolor}
                     navigation={props.navigation}
                     addresses={profile.addresses}
+                    forwardIcon={true}
+                    screenName={'checkout'}
                   />
 
                   <View

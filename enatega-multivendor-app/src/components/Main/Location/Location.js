@@ -16,7 +16,9 @@ function Location({
   locationIconGray,
   modalOn,
   location: locationParam,
-  locationLabel }) {
+  locationLabel,
+  forwardIcon = false,
+  screenName }) {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -33,18 +35,23 @@ function Location({
       ? t('currentLocation')
       : location.deliveryAddress
   const onLocationPress = (event) => {
-    if (!addresses.length) {
-      navigation.navigate('NewAddress', {
-        backScreen: 'Cart'
-      })
-    } else {
-      navigation.navigate('CartAddress', {
-        address: location
-      })
+
+    if (screenName === 'checkout') {
+      if (addresses && !addresses.length) {
+        navigation.navigate('NewAddress', {
+          backScreen: 'Cart'
+        })
+      } else {
+        navigation.navigate('CartAddress', {
+          address: location
+        })
+      }
     }
+    else
+      modalOn()
   }
   return (
-    <TouchableOpacity onPress={onLocationPress} style={{  marginHorizontal: scale(10) }}>
+    <TouchableOpacity onPress={onLocationPress} style={{ marginHorizontal: scale(10) }}>
       <View style={styles(currentTheme).headerTitleContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: scale(10), gap: 5 }}>
           <View style={[styles().locationIcon, locationIconGray]}>
@@ -66,11 +73,11 @@ function Location({
               {t(translatedLabel)}
             </TextDefault>
           </View>
-          <Feather
+          {forwardIcon && <Feather
             name='chevron-right'
             size={20}
             color={currentTheme.secondaryText}
-          />
+          />}
         </View>
       </View>
     </TouchableOpacity>
