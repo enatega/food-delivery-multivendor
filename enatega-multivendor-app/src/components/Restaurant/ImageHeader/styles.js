@@ -8,7 +8,7 @@ const { height } = Dimensions.get('window')
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1
+      flex: 1,
     },
     mainContainer: {
       backgroundColor: props != null ? props.themeBackground : 'white',
@@ -125,8 +125,6 @@ const styles = (props = null) =>
       width: '100%',
       height: '100%',
       backgroundColor: 'rgba(0,0,0,0.01)',
-      ...alignment.PRsmall,
-      ...alignment.PLsmall
     },
     headerTitle: {
       ...textStyles.H5,

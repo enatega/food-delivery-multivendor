@@ -159,26 +159,26 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={styles().rightContainer}>
-        <SimpleLineIcons
-          name='handbag'
-          size={24}
-          color={currentTheme.black}
-        />
-        <View
-          style={
-            styles(route.name === 'Main' ? 'black' : currentTheme.white)
-              .absoluteContainer
-          }
-        >
-          <TextDefault
-            textColor={currentTheme.white}
-            style={{ fontSize: scale(12) }}
-            center
-            bolder
-          >
-            {cartCount}
-          </TextDefault>
-        </View>
+        <MaterialCommunityIcons name="cart-outline" size={28} color={currentTheme.black} />
+        {
+          cartCount > 0 && (
+            <View
+              style={
+                styles(route.name === 'Main' ? 'black' : currentTheme.white)
+                  .absoluteContainer
+              }
+            >
+              <TextDefault
+                textColor={currentTheme.white}
+                style={{ fontSize: scale(10) }}
+                center
+                bolder
+              >
+                {cartCount}
+              </TextDefault>
+            </View>
+          )
+        }
       </View>
     )
   }
@@ -228,7 +228,7 @@ function RightButton(props) {
   } else if (props.icon === 'cart') {
     return (
       <View style={{ flexDirection: 'row' }}>
-        <HeaderBackButton
+        {/* <HeaderBackButton
           truncatedLabel=''
           pressColorAndroid={route.name === 'Main' && rippleColor}
           labelVisible={false}
@@ -243,7 +243,7 @@ function RightButton(props) {
               ? navigation.navigate('Favourite')
               : navigation.navigate('CreateAccount')
           }
-        />
+        /> */}
         {cartCount >= 0 && (
           <HeaderBackButton
             truncatedLabel=''

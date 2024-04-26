@@ -17,11 +17,7 @@ import {
   Animated,
   RefreshControl
 } from 'react-native'
-import {
-  MaterialIcons,
-  AntDesign,
-  SimpleLineIcons
-} from '@expo/vector-icons'
+import { MaterialIcons, AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
@@ -107,7 +103,7 @@ function Main(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -209,15 +205,19 @@ function Main(props) {
           disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            {
-              busy ? <Spinner size='small' /> : (
-                <>
-                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+            {busy ? (
+              <Spinner size='small' />
+            ) : (
+              <>
+                <SimpleLineIcons
+                  name='target'
+                  size={scale(18)}
+                  color={currentTheme.black}
+                />
                 <View style={styles().mL5p} />
                 <TextDefault bold>{t('currentLocation')}</TextDefault>
-                </>
-              )
-            }
+              </>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -324,177 +324,66 @@ function Main(props) {
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
-                <View style={styles(currentTheme).searchbar}>
-                  <Search
-                    setSearch={setSearch}
-                    search={search}
-                    newheaderColor={newheaderColor}
-                    placeHolder={t('searchRestaurant')}
-                  />
-                </View>
-                {search ? (
-                  <View style={styles().searchList}>
-                    <Animated.FlatList
-                      contentInset={{
-                        top: containerPaddingTop
-                      }}
-                      contentContainerStyle={{
-                        paddingTop:
-                          Platform.OS === 'ios' ? 0 : containerPaddingTop
-                      }}
-                      contentOffset={{
-                        y: -containerPaddingTop
-                      }}
-                      onScroll={onScroll}
-                      scrollIndicatorInsets={{
-                        top: scrollIndicatorInsetTop
-                      }}
-                      showsVerticalScrollIndicator={false}
-                      ListEmptyComponent={emptyView()}
-                      keyExtractor={(item, index) => index.toString()}
-                      refreshControl={
-                        <RefreshControl
-                          progressViewOffset={containerPaddingTop}
-                          colors={[currentTheme.iconColorPink]}
-                          refreshing={networkStatus === 4}
-                          onRefresh={() => {
-                            if (networkStatus === 7) {
-                              refetch()
-                            }
-                          }}
-                        />
-                      }
-                      data={searchAllShops(search)}
-                      renderItem={({ item }) => <Item item={item} />}
-                    />
-                  </View>
-                ) : (
-                  <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    <View style={styles().mainItemsContainer}>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'restaurant'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('foodDelivery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('OrderfoodLove')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/menu-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'grocery'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('grocery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('essentialsDeliveredFast')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/grocery-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  <View>
+                    <View>
+                      {isLoggedIn &&
+                        recentOrderRestaurantsVar &&
+                        recentOrderRestaurantsVar.length > 0 && (
+                          <>
+                            {orderLoading ? (
+                              <MainLoadingUI />
+                            ) : (
+                              <MainRestaurantCard
+                                orders={recentOrderRestaurantsVar}
+                                loading={orderLoading}
+                                error={orderError}
+                                title={'Order it again'}
+                              />
+                            )}
+                          </>
+                        )}
                     </View>
                     <View>
-                      <View>
-                        {isLoggedIn &&
-                          recentOrderRestaurantsVar &&
-                          recentOrderRestaurantsVar.length > 0 && (
-                            <>
-                              {orderLoading ? (
-                                <MainLoadingUI />
-                              ) : (
-                                <MainRestaurantCard
-                                  orders={recentOrderRestaurantsVar}
-                                  loading={orderLoading}
-                                  error={orderError}
-                                  title={'Order it again'}
-                                />
-                              )}
-                            </>
-                          )}
-                      </View>
-                      <View>
-                        {orderLoading ? (
-                          <MainLoadingUI />
-                        ) : (
-                          <MainRestaurantCard
-                            orders={mostOrderedRestaurantsVar}
-                            loading={orderLoading}
-                            error={orderError}
-                            title={'Top Picks for you'}
-                          />
-                        )}
-                      </View>
+                      {orderLoading ? (
+                        <MainLoadingUI />
+                      ) : (
+                        <MainRestaurantCard
+                          orders={mostOrderedRestaurantsVar}
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Top Picks for you'}
+                        />
+                      )}
                     </View>
-                    <View
-                      style={
-                        styles(currentTheme, hasActiveOrders).topBrandsMargin
-                      }
-                    >
-                      {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
-                    </View>
-                  </ScrollView>
-                )}
+                  </View>
+                  <View
+                    style={
+                      styles(currentTheme, hasActiveOrders).topBrandsMargin
+                    }
+                  >
+                    {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
+                  </View>
+                </ScrollView>
               </View>
             </View>
           </View>
-          <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
+          {/* <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} /> */}
 
-          <MainModalize 
-          modalRef={modalRef} 
-          currentTheme={currentTheme} 
-          isLoggedIn={isLoggedIn}
-          addressIcons={addressIcons}
-          modalHeader={modalHeader}
-          modalFooter={modalFooter}
-          setAddressLocation={setAddressLocation}
-          profile={profile}
-          location={location}
+          <MainModalize
+            modalRef={modalRef}
+            currentTheme={currentTheme}
+            isLoggedIn={isLoggedIn}
+            addressIcons={addressIcons}
+            modalHeader={modalHeader}
+            modalFooter={modalFooter}
+            setAddressLocation={setAddressLocation}
+            profile={profile}
+            location={location}
           />
-
         </View>
       </SafeAreaView>
     </>

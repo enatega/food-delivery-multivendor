@@ -12,6 +12,7 @@ export const theme = {
     backgroundColor: 'transparent',
     borderBottomColor: '#DAD6D6',
     primary: '#90E36D',
+    primaryBlue: '#0EA5E9',
     themeBackground: '#fff',
     menuBar: '#FFF',
     iconColor: '#333333',
@@ -113,6 +114,7 @@ export const theme = {
   },
   Dark: {
     black: '#000',
+    primaryBlue: '#0EA5E9',
     CustomLoadingBG: '#000',
     white: '#FFF',
     themeBackground: '#000',

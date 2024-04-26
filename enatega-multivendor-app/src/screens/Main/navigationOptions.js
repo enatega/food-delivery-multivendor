@@ -7,7 +7,7 @@ import { theme } from '../../utils/themeColors'
 
 const navigationOptions = props => ({
   headerStyle: {
-    backgroundColor: props != null ? props.headerMenuBackground : 'white',
+    // backgroundColor: props != null ? props.headerMenuBackground : 'white',
     shadowColor: 'transparent',
     shadowRadius: 0
   },
@@ -20,7 +20,7 @@ const navigationOptions = props => ({
     ...alignment.MLxSmall
   },
   headerTitleAlign: 'left',
-  headerLeft: () => <LeftButton icon={props.icon} iconColor={props.fontMainColor} />,
+  // headerLeft: () => <LeftButton icon={props.icon} iconColor={props.fontMainColor} />,
   headerTitle: headerProp => (
     <SelectedLocation
       {...headerProp}

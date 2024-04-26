@@ -55,11 +55,17 @@ import { myOrders } from '../apollo/queries'
 import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import HomeScreen from './HomeScreen'
+import SettingScreen from './SettingScreen'
+import { FontAwesome } from '@expo/vector-icons'
+import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
 
 const NavigationStack = createStackNavigator()
 const MainStack = createStackNavigator()
 const SideDrawer = createDrawerNavigator()
 const Location = createStackNavigator()
+const Tab = createBottomTabNavigator();
 
 function Drawer() {
   return (
@@ -83,8 +89,10 @@ function NoDrawer() {
         backColor: currentTheme.headerBackground,
         lineColor: currentTheme.horizontalLine,
         textColor: currentTheme.headerText,
-        iconColor: currentTheme.iconColorPink
-      })}>
+        iconColor: currentTheme.iconColorPink,
+      })}
+      
+      >
       <NavigationStack.Screen name="Main" component={Main} />
       <NavigationStack.Screen name="Menu" component={Menu} />
       <NavigationStack.Screen
@@ -180,6 +188,28 @@ function LocationStack() {
   )
 }
 
+function MyTabs() {
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
+     
+      tabBarIcon: ({ focused, color, size }) => {
+        // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
+        return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
+      },
+      tabBarStyle:{paddingHorizontal: 15, paddingVertical: 10, height: 90},
+      tabBarActiveTintColor: '#0EA5E9',
+      tabBarInactiveTintColor: '#6B7280',
+      tabBarLabelStyle: {fontSize: 12}
+    })}>
+      <Tab.Screen name="Discovery" component={NoDrawer} options={{headerShown: false}} />
+      <Tab.Screen name="Restaurants" component={SettingScreen} />
+      <Tab.Screen name="Store" component={SettingScreen} />
+      <Tab.Screen name="Search" component={SettingScreen} />
+      <Tab.Screen name="Profile" component={SettingScreen} />
+    </Tab.Navigator>
+  );
+}
+
 function AppContainer() {
   const client = useApolloClient()
   const { location } = useContext(LocationContext)
@@ -223,7 +253,7 @@ function AppContainer() {
         ref={ref => {
           navigationService.setGlobalRef(ref)
         }}>
-        {!location ? (
+        {/* {!location ? (
           <LocationStack />
         ) : (
           <MainStack.Navigator initialRouteName="Drawer">
@@ -233,7 +263,8 @@ function AppContainer() {
               component={Drawer}
             />
           </MainStack.Navigator>
-        )}
+        )} */}
+        <MyTabs />
       </NavigationContainer>
     </SafeAreaProvider>
   )
