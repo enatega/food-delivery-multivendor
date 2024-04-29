@@ -252,7 +252,35 @@ export const restaurantFragment = gql`
     shopType
   }
 `
-
+export const restaurantPreviewFragment = gql`
+fragment RestaurantPreviewFields on RestaurantPreview{
+  _id
+  orderId
+  orderPrefix
+  name
+  image
+  address
+  username
+  password
+  deliveryTime
+  minimumOrder
+  sections
+  rating
+  isActive
+  isAvailable
+  slug
+  stripeDetailsSubmitted
+  commissionRate
+  tax
+  notificationToken
+  enableNotification
+  shopType
+  cuisines
+  keywords
+  tags
+  reviewCount
+  reviewAverage
+  }`
 export const profile = `
         query{
           profile{
@@ -534,6 +562,56 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       }
     }
   }
+}
+}`
+export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
+  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+    offers{
+      _id
+      name
+      tag
+      restaurants
+    }
+    sections{
+      _id
+      name
+      restaurants
+    }
+    restaurants{
+      _id
+      orderId
+      orderPrefix
+      name
+      image
+      address
+      username
+      password
+      deliveryTime
+      minimumOrder
+      sections
+      rating
+      isActive
+      isAvailable
+      slug
+      stripeDetailsSubmitted
+      commissionRate
+      tax
+      notificationToken
+      enableNotification
+      shopType
+      cuisines
+      keywords
+      tags
+      reviewCount
+      reviewAverage
+      openingTimes{
+        day
+        times {
+          startTime
+          endTime
+        }
+      }
+    }
 }
 }`
 export const topRatedVendorsInfo = `query TopRatedVendors($latitude: Float!, $longitude: Float!) {
@@ -896,19 +974,19 @@ export const chat = `query Chat($order: ID!) {
 }`
 
 export const recentOrderRestaurantsQuery = gql`
-  ${restaurantFragment}
+  ${restaurantPreviewFragment}
   query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
-    recentOrderRestaurants(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantFields
+    recentOrderRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
+      ...RestaurantPreviewFields
     }
   }
 `;
 
 export const mostOrderedRestaurantsQuery = gql`
-  ${restaurantFragment}
+  ${restaurantPreviewFragment}
   query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
-    mostOrderedRestaurants(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantFields
+    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
+      ...RestaurantPreviewFields
     }
   }
 `;

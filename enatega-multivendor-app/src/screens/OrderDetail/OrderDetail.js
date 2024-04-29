@@ -300,7 +300,6 @@ function OrderDetail(props) {
 }
 
 export const OrderStatusImage = ({ status }) => {
-  console.log('status', status)
   let imagePath = null;
   switch (status) {
     case ORDER_STATUS_ENUM.PENDING:
