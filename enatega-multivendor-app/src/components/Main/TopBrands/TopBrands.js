@@ -9,10 +9,8 @@ import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { topRatedVendorsInfo } from '../../../apollo/queries'
-import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 
 function TopBrands(props) {
