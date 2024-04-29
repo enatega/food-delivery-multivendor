@@ -107,7 +107,7 @@ export const theme = {
     iconStroke: '#0F172A',
     color10: 'transparent',
     linkColor: '#0EA5E9',
-    svgFill: '#2E2E2E'
+    svgFill: '#2E2E2E',
     newButtonBackground:'#F3FFEE',
     newButtonText:'#63C43B'
   },
@@ -211,7 +211,7 @@ export const theme = {
     iconStroke: '#b0afbc',
     color10: '#fff',
     linkColor: '#0EA5E9',
-    svgFill: '#d9d9d9'
+    svgFill: '#d9d9d9',
     newButtonBackground:'#F3FFEE',
     newButtonText:'#63C43B'
   }
