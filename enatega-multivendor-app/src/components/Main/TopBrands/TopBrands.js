@@ -15,10 +15,6 @@ import { useNavigation } from '@react-navigation/native'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 
-const TOP_BRANDS = gql`
-  ${topRatedVendorsInfo}
-`
-
 function TopBrands(props) {
   const { t } = useTranslation()
   const { location } = useContext(LocationContext)
@@ -26,7 +22,7 @@ function TopBrands(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
 
-  const { loading, error, data } = useQuery(TOP_BRANDS, {
+  const { loading, error, data } = useQuery(topRatedVendorsInfo, {
     variables: {
       latitude: location?.latitude,
       longitude: location?.longitude
@@ -82,7 +78,7 @@ function TopBrands(props) {
       </TextDefault>
       <View style={{ ...alignment.PRsmall }}>
         <FlatList
-          data={data?.topRatedVendors}
+          data={data?.topRatedVendorsPreview}
           renderItem={renderItem}
           keyExtractor={(item) => item?._id}
           contentContainerStyle={{ flexGrow: 1 }}
