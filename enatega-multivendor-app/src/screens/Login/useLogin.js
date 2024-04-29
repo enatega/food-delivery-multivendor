@@ -203,6 +203,7 @@ export const useLogin = () => {
     loginAction,
     checkEmailExist,
     onBackButtonPressAndroid,
-    emailRef
+    emailRef,
+    themeContext
   }
 }
