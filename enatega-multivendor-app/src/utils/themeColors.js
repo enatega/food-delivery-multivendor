@@ -109,7 +109,11 @@ export const theme = {
     linkColor: '#0EA5E9',
     svgFill: '#2E2E2E',
     newButtonBackground:'#F3FFEE',
-    newButtonText:'#63C43B'
+    newButtonText:'#63C43B',
+    newButtonBackground: '#F3FFEE',
+    newButtonText: '#63C43B',
+    color11: '#4B5563',
+    color12: '#94A3B8'
   },
   Dark: {
     black: '#000',
@@ -213,6 +217,10 @@ export const theme = {
     linkColor: '#0EA5E9',
     svgFill: '#d9d9d9',
     newButtonBackground:'#F3FFEE',
-    newButtonText:'#63C43B'
+    newButtonText:'#63C43B',
+    newButtonBackground: '#F3FFEE',
+    newButtonText: '#63C43B',
+    color11: '#4B5563',
+    color12: '#94A3B8'
   }
 }
