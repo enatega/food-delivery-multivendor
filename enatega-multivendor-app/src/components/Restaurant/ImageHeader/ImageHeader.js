@@ -316,7 +316,7 @@ function ImageTextCenterHeader(props, ref) {
                     ]}
                     onPress={() => {
                       navigation.navigate('About', {
-                        restaurantObject: { ...aboutObject, isOpen: null },
+                        restaurantObject: { ...aboutObject },
                         tab: false
                       })
                     }}

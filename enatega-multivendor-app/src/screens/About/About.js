@@ -27,7 +27,7 @@ function About(props) {
   const Analytics = analytics()
   const { t } = useTranslation()
   const { restaurantObject } = props.route.params
-  console.log('restaurant info', restaurantObject)
+  const IsOpen = restaurantObject?.isOpen()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const configuration = useContext(ConfigurationContext)
@@ -39,6 +39,7 @@ function About(props) {
     minimumOrder: restaurantObject.minimumOrder,
     rating: restaurantObject.rating,
     average: restaurantObject.average,
+    isOpen: restaurantObject.isOpen,
     map: {
       latitude: Number(restaurantObject.latitude),
       longitude: Number(restaurantObject.longitude),
@@ -140,18 +141,18 @@ function About(props) {
                     <AntDesign
                       name='clockcircle'
                       size={12}
-                      color={currentTheme.main}
+                      color={!todayOpeningTimes || !IsOpen ? currentTheme.red600 : currentTheme.main}
                     />
                   </View>
                   <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
-                    {t(todayOpeningTimes.day)}{' '}
+                    {t(todayOpeningTimes?.day)}{' '}
                   </TextDefault>
-                  {todayOpeningTimes.times.length < 1 ? (
+                  {todayOpeningTimes?.times?.length < 1 ? (
                     <TextDefault small bold center>
                       {t('ClosedAllDay')}
                     </TextDefault>
                   ) : (
-                    todayOpeningTimes.times.map((timing, index) => (
+                    todayOpeningTimes?.times?.map((timing, index) => (
                       <TextDefault
                         key={index}
                         textColor={currentTheme.fontThirdColor}
@@ -175,7 +176,7 @@ function About(props) {
           </View>
 
           <View>
-            <View style={[, alignment.MTxLarge]}>
+            <View style={alignment.MTlarge}>
               <TextDefault H3 bolder textColor={currentTheme.fontThirdColor}>
                 {t('location')}
               </TextDefault>
@@ -188,7 +189,7 @@ function About(props) {
           </View>
 
           <View>
-            <View style={alignment.MTxLarge}>
+            <View style={alignment.MTlarge}>
               <TextDefault H3 textColor={currentTheme.fontThirdColor} bolder>
                 {t('openingHours')}
               </TextDefault>
@@ -229,7 +230,7 @@ function About(props) {
 
          
           <View>
-            <View style={[alignment.MTxLarge]}>
+            <View style={[alignment.MTlarge]}>
               <TextDefault H3 bolder textColor={currentTheme.fontThirdColor}>
                 {t('deliveryInformation')}
               </TextDefault>
@@ -267,7 +268,7 @@ function About(props) {
           </View>
 
           <View>
-            <View style={alignment.MTxLarge}>
+            <View style={alignment.MTlarge}>
               <TextDefault H3 bolder textColor={currentTheme.fontThirdColor}>
                 {t('contact')}
               </TextDefault>
@@ -279,7 +280,7 @@ function About(props) {
               </TextDefault>
             </View>
 
-            {/* Restaurant number and web ui */}
+            {/* Restaurant number and website ui */}
             <View style={[styles().subContainer, alignment.MTsmall]}>
               <View>
                 <TextDefault H5 bold>
