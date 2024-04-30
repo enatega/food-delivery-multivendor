@@ -102,7 +102,7 @@ function NewRestaurantCard(props) {
                 style={styles().restaurantRatingContainer}
                 bolder
                 H4>
-                {props.reviewData.ratings}
+                {props.reviewAverage}
               </TextDefault>
               <TextDefault
                 textColor={currentTheme.fontNewColor}
@@ -112,9 +112,7 @@ function NewRestaurantCard(props) {
                 ]}
                 H5>
                 (
-                {props.reviewData.reviews.length > 0
-                  ? props.reviewData.reviews.length + '+'
-                  : props.reviewData.reviews.length}
+                {props.reviewCount}
                 )
               </TextDefault>
             </View>
@@ -125,7 +123,7 @@ function NewRestaurantCard(props) {
             bold
             Normal
             style={styles().offerCategoty}>
-            {props.categories.map(category => category.title).toString()}
+            {props?.tags?.join(',')}
           </TextDefault>
           <View style={styles().deliveryInfo}>
             <View style={styles().deliveryTime}>

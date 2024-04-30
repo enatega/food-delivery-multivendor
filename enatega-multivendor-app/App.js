@@ -36,6 +36,7 @@ import * as Updates from 'expo-updates'
 import ReviewModal from './src/components/Review'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { useColorScheme } from 'react-native'
+import useWatchLocation from './src/ui/hooks/useWatchLocation'
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -66,9 +67,9 @@ export default function App() {
   // Theme Reducer
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   const [isUpdating, setIsUpdating] = useState(false)
-
+  useWatchLocation()
   useEffect(() => {
-    const loadAppData = async() => {
+    const loadAppData = async () => {
       try {
         await SplashScreen.preventAutoHideAsync()
       } catch (e) {
@@ -106,7 +107,7 @@ export default function App() {
   useEffect(() => {
     if (!appIsReady) return
 
-    const hideSplashScreen = async() => {
+    const hideSplashScreen = async () => {
       await SplashScreen.hideAsync()
     }
 
@@ -116,7 +117,7 @@ export default function App() {
   useEffect(() => {
     if (!location) return
 
-    const saveLocation = async() => {
+    const saveLocation = async () => {
       await AsyncStorage.setItem('location', JSON.stringify(location))
     }
 
@@ -149,22 +150,22 @@ export default function App() {
   useEffect(() => {
     // eslint-disable-next-line no-undef
     if (__DEV__) return
-    ;(async () => {
-      const { isAvailable } = await Updates.checkForUpdateAsync()
-      if (isAvailable) {
-        try {
-          setIsUpdating(true)
-          const { isNew } = await Updates.fetchUpdateAsync()
-          if (isNew) {
-            await Updates.reloadAsync()
+      ; (async () => {
+        const { isAvailable } = await Updates.checkForUpdateAsync()
+        if (isAvailable) {
+          try {
+            setIsUpdating(true)
+            const { isNew } = await Updates.fetchUpdateAsync()
+            if (isNew) {
+              await Updates.reloadAsync()
+            }
+          } catch (error) {
+            console.log('error while updating app', JSON.stringify(error))
+          } finally {
+            setIsUpdating(false)
           }
-        } catch (error) {
-          console.log('error while updating app', JSON.stringify(error))
-        } finally {
-          setIsUpdating(false)
         }
-      }
-    })()
+      })()
   }, [])
 
   if (isUpdating) {
@@ -243,7 +244,7 @@ export default function App() {
                   <UserProvider>
                     <OrdersProvider>
                       <AppContainer />
-                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId}/>
+                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
                     </OrdersProvider>
                   </UserProvider>
                 </AuthProvider>

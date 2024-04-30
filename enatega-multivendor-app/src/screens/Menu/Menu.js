@@ -32,7 +32,7 @@ import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
-import { getCuisines, restaurantList } from '../../apollo/queries'
+import { getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -58,7 +58,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 
 const RESTAURANTS = gql`
-  ${restaurantList}
+  ${restaurantListPreview}
 `
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -114,8 +114,8 @@ function Menu({ route, props }) {
         ip: null
       },
       onCompleted: data => {
-        setRestaurantData(data.nearByRestaurants.restaurants)
-        setSectionData(data.nearByRestaurants.sections)
+        setRestaurantData(data.nearByRestaurantsPreview.restaurants)
+        setSectionData(data.nearByRestaurantsPreview.sections)
       },
       fetchPolicy: 'network-only'
     }
@@ -146,7 +146,7 @@ function Menu({ route, props }) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -209,7 +209,7 @@ function Menu({ route, props }) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async() => {
+  const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
@@ -257,9 +257,9 @@ function Menu({ route, props }) {
             {
               busy ? <Spinner size='small' /> : (
                 <>
-                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                  <View style={styles().mL5p} />
+                  <TextDefault bold>{t('currentLocation')}</TextDefault>
                 </>
               )
             }
@@ -321,14 +321,14 @@ function Menu({ route, props }) {
     return (
       <View style={styles(currentTheme).screenBackground}>
         <View style={styles(currentTheme).searchbar}>
-        <Search
-          search={''}
-          setSearch={() => {}}
-          newheaderColor={newheaderColor}
-          placeHolder={searchPlaceholderText}
-        />
+          <Search
+            search={''}
+            setSearch={() => { }}
+            newheaderColor={newheaderColor}
+            placeHolder={searchPlaceholderText}
+          />
         </View>
-       
+
         <Placeholder
           Animation={props => (
             <Fade
@@ -377,34 +377,12 @@ function Menu({ route, props }) {
     const data = []
     const regex = new RegExp(searchText, 'i')
     restaurantData?.forEach(restaurant => {
-      const resultName = restaurant.name.search(regex)
-      if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some(category => {
-          const result = category.title.search(regex)
-          if (result < 0) {
-            const result = category.foods.some(food => {
-              const result = food.title.search(regex)
-              return result > -1
-            })
-            return result
-          }
-          return true
-        })
-        if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some(option => {
-            const result = option.title.search(regex)
-            return result > -1
-          })
-          if (!resultOptions) {
-            const resultAddons = restaurant.addons.some(addon => {
-              const result = addon.title.search(regex)
-              return result > -1
-            })
-            if (!resultAddons) return
-          }
-        }
-      }
-      data.push(restaurant)
+      const resultCatFoods = restaurant.keywords.some(keyword => {
+        const result = keyword.search(regex)
+        return result > -1
+      })
+      if (resultCatFoods)
+        data.push(restaurant)
     })
     return data
   }
@@ -420,7 +398,7 @@ function Menu({ route, props }) {
   const extractRating = ratingString => parseInt(ratingString)
 
   const applyFilters = () => {
-    let filteredData = [...data.nearByRestaurants.restaurants]
+    let filteredData = [...data.nearByRestaurantsPreview.restaurants]
 
     const ratings = filters.Rating
     const sort = filters.Sort
@@ -513,13 +491,13 @@ function Menu({ route, props }) {
                   renderItem={({ item }) => <Item item={item} />}
                 />
                 <CollapsibleSubHeaderAnimator translateY={translateY}>
-                <View style={styles(currentTheme).searchbar}>
-                  <Search
-                    setSearch={setSearch}
-                    search={search}
-                    newheaderColor={newheaderColor}
-                    placeHolder={searchPlaceholderText}
-                  />
+                  <View style={styles(currentTheme).searchbar}>
+                    <Search
+                      setSearch={setSearch}
+                      search={search}
+                      newheaderColor={newheaderColor}
+                      placeHolder={searchPlaceholderText}
+                    />
                   </View>
                   <Filters
                     filters={filters}
@@ -531,16 +509,16 @@ function Menu({ route, props }) {
             </View>
           </View>
 
-          <MainModalize 
-          modalRef={modalRef} 
-          currentTheme={currentTheme} 
-          isLoggedIn={isLoggedIn}
-          addressIcons={addressIcons}
-          modalHeader={modalHeader}
-          modalFooter={modalFooter}
-          setAddressLocation={setAddressLocation}
-          profile={profile}
-          location={location}
+          <MainModalize
+            modalRef={modalRef}
+            currentTheme={currentTheme}
+            isLoggedIn={isLoggedIn}
+            addressIcons={addressIcons}
+            modalHeader={modalHeader}
+            modalFooter={modalFooter}
+            setAddressLocation={setAddressLocation}
+            profile={profile}
+            location={location}
           />
         </View>
       </SafeAreaView>

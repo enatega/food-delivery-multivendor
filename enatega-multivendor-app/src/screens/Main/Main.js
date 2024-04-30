@@ -28,7 +28,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import UserContext from '../../context/User'
-import { restaurantList } from '../../apollo/queries'
+import { restaurantList, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -57,7 +57,7 @@ import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmen
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 
 const RESTAURANTS = gql`
-  ${restaurantList}
+  ${restaurantListPreview}
 `
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -107,7 +107,7 @@ function Main(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -212,9 +212,9 @@ function Main(props) {
             {
               busy ? <Spinner size='small' /> : (
                 <>
-                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                  <View style={styles().mL5p} />
+                  <TextDefault bold>{t('currentLocation')}</TextDefault>
                 </>
               )
             }
@@ -277,40 +277,18 @@ function Main(props) {
     </View>
   )
 
-  const restaurants = data?.nearByRestaurants?.restaurants
+  const restaurants = data?.nearByRestaurantsPreview?.restaurants
 
   const searchAllShops = (searchText) => {
     const data = []
     const regex = new RegExp(searchText, 'i')
     restaurants?.forEach((restaurant) => {
-      const resultName = restaurant.name.search(regex)
-      if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some((category) => {
-          const result = category.title.search(regex)
-          if (result < 0) {
-            const result = category.foods.some((food) => {
-              const result = food.title.search(regex)
-              return result > -1
-            })
-            return result
-          }
-          return true
-        })
-        if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some((option) => {
-            const result = option.title.search(regex)
-            return result > -1
-          })
-          if (!resultOptions) {
-            const resultAddons = restaurant.addons.some((addon) => {
-              const result = addon.title.search(regex)
-              return result > -1
-            })
-            if (!resultAddons) return
-          }
-        }
-      }
-      data.push(restaurant)
+      const resultCatFoods = restaurant.keywords.some((keyword) => {
+        const result = keyword.search(regex)
+        return result > -1
+      })
+      if (resultCatFoods)
+        data.push(restaurant)
     })
     return data
   }
@@ -402,7 +380,7 @@ function Main(props) {
                         <Image
                           source={require('../../assets/images/ItemsList/menu-new.png')}
                           style={styles().popularMenuImg}
-                          // resizeMode='contain'
+                        // resizeMode='contain'
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -433,7 +411,7 @@ function Main(props) {
                         <Image
                           source={require('../../assets/images/ItemsList/grocery-new.png')}
                           style={styles().popularMenuImg}
-                          // resizeMode='contain'
+                        // resizeMode='contain'
                         />
                       </TouchableOpacity>
                     </View>
@@ -483,16 +461,16 @@ function Main(props) {
           </View>
           <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
 
-          <MainModalize 
-          modalRef={modalRef} 
-          currentTheme={currentTheme} 
-          isLoggedIn={isLoggedIn}
-          addressIcons={addressIcons}
-          modalHeader={modalHeader}
-          modalFooter={modalFooter}
-          setAddressLocation={setAddressLocation}
-          profile={profile}
-          location={location}
+          <MainModalize
+            modalRef={modalRef}
+            currentTheme={currentTheme}
+            isLoggedIn={isLoggedIn}
+            addressIcons={addressIcons}
+            modalHeader={modalHeader}
+            modalFooter={modalFooter}
+            setAddressLocation={setAddressLocation}
+            profile={profile}
+            location={location}
           />
 
         </View>

@@ -31,9 +31,9 @@ export default function useHomeRestaurants() {
     orderError,
     orderData: {
       recentOrderRestaurants:
-        recentOrderRestaurants?.data?.recentOrderRestaurants,
+        recentOrderRestaurants?.data?.recentOrderRestaurantsPreview,
       mostOrderedRestaurants:
-        mostOrderedRestaurants?.data?.mostOrderedRestaurants
+        mostOrderedRestaurants?.data?.mostOrderedRestaurantsPreview
     }
   }
 }
