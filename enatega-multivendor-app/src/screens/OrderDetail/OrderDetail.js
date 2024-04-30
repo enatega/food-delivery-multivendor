@@ -34,6 +34,7 @@ import { gql, useMutation } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { calulateRemainingTime } from '../../utils/customFunctions'
+import { Instructions } from '../../components/Checkout/Instructions'
 
 import MapViewDirections from 'react-native-maps-directions'
 import useEnvVars from '../../../environment'
@@ -248,6 +249,7 @@ function OrderDetail(props) {
             </View>
           )}
         </View>
+        <Instructions title={'Instructions'} theme={currentTheme} message={order.instructions} />
         <Detail
           navigation={props.navigation}
           currencySymbol={configuration.currencySymbol}
@@ -298,7 +300,6 @@ function OrderDetail(props) {
 }
 
 export const OrderStatusImage = ({ status }) => {
-  console.log('status', status)
   let imagePath = null;
   switch (status) {
     case ORDER_STATUS_ENUM.PENDING:

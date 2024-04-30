@@ -32,9 +32,7 @@ import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
-import {
-  getCuisines,
-} from '../../apollo/queries'
+import { getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -251,9 +249,9 @@ function Menu({ route, props }) {
             {
               busy ? <Spinner size='small' /> : (
                 <>
-                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                  <View style={styles().mL5p} />
+                  <TextDefault bold>{t('currentLocation')}</TextDefault>
                 </>
               )
             }
@@ -374,35 +372,13 @@ function Menu({ route, props }) {
   const searchRestaurants = (searchText) => {
     const data = []
     const regex = new RegExp(searchText, 'i')
-    restaurantData?.forEach((restaurant) => {
-      const resultName = restaurant.name.search(regex)
-      if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some((category) => {
-          const result = category.title.search(regex)
-          if (result < 0) {
-            const result = category.foods.some((food) => {
-              const result = food.title.search(regex)
-              return result > -1
-            })
-            return result
-          }
-          return true
-        })
-        if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some((option) => {
-            const result = option.title.search(regex)
-            return result > -1
-          })
-          if (!resultOptions) {
-            const resultAddons = restaurant.addons.some((addon) => {
-              const result = addon.title.search(regex)
-              return result > -1
-            })
-            if (!resultAddons) return
-          }
-        }
-      }
-      data.push(restaurant)
+    restaurantData?.forEach(restaurant => {
+      const resultCatFoods = restaurant.keywords.some(keyword => {
+        const result = keyword.search(regex)
+        return result > -1
+      })
+      if (resultCatFoods)
+        data.push(restaurant)
     })
     return data
   }
@@ -538,16 +514,16 @@ function Menu({ route, props }) {
             </View>
           </View>
 
-          <MainModalize 
-          modalRef={modalRef} 
-          currentTheme={currentTheme} 
-          isLoggedIn={isLoggedIn}
-          addressIcons={addressIcons}
-          modalHeader={modalHeader}
-          modalFooter={modalFooter}
-          setAddressLocation={setAddressLocation}
-          profile={profile}
-          location={location}
+          <MainModalize
+            modalRef={modalRef}
+            currentTheme={currentTheme}
+            isLoggedIn={isLoggedIn}
+            addressIcons={addressIcons}
+            modalHeader={modalHeader}
+            modalFooter={modalFooter}
+            setAddressLocation={setAddressLocation}
+            profile={profile}
+            location={location}
           />
         </View>
       </SafeAreaView>

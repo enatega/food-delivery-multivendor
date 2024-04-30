@@ -8,16 +8,12 @@ import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { topRatedVendorsInfoPreview } from '../../../apollo/queries'
+import { topRatedVendorsInfo } from '../../../apollo/queries'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
-
-const TOP_BRANDS = gql`
-  ${topRatedVendorsInfoPreview}
-`
 
 function TopBrands(props) {
   const { t } = useTranslation()
@@ -26,7 +22,7 @@ function TopBrands(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
 
-  const { loading, error, data } = useQuery(TOP_BRANDS, {
+  const { loading, error, data } = useQuery(topRatedVendorsInfo, {
     variables: {
       latitude: location?.latitude,
       longitude: location?.longitude
@@ -101,7 +97,7 @@ function TopBrands(props) {
         </View>
         <View style={{ ...alignment.PRsmall }}>
           <FlatList
-            data={data?.topRatedVendors}
+            data={data?.topRatedVendorsPreview}
             renderItem={({ item }) => {
               return <RenderItem item={item} />
             }}
@@ -140,7 +136,7 @@ function TopBrands(props) {
         </View>
         <View style={{ ...alignment.PRsmall }}>
           <FlatList
-            data={data?.topRatedVendors?.filter(
+            data={data?.topRatedVendorsPreview?.filter(
               (item) => item.shopType === 'restaurant'
             )}
             renderItem={({ item }) => {
@@ -181,7 +177,7 @@ function TopBrands(props) {
         </View>
         <View style={{ ...alignment.PRsmall }}>
           <FlatList
-            data={data?.topRatedVendors?.filter(
+            data={data?.topRatedVendorsPreview?.filter(
               (item) => item.shopType === 'grocery'
             )}
             renderItem={({ item }) => {

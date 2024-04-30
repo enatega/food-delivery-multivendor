@@ -3,12 +3,12 @@ import { useState } from 'react'
 import {
   mostOrderedRestaurantsQuery,
   recentOrderRestaurantsQuery,
-  restaurantList,
+  restaurantListPreview,
   topRatedVendorsInfo
 } from '../../apollo/queries'
 
 const RESTAURANTS = gql`
-  ${restaurantList}
+  ${restaurantListPreview}
 `
 
 const TOP_BRANDS = gql`
@@ -31,16 +31,16 @@ const getQuery = (queryType) => {
 const getResult = (queryType, data, setRestaurantData) => {
   switch (queryType) {
     case 'orderAgain':
-      setRestaurantData(data?.recentOrderRestaurants)
+      setRestaurantData(data?.recentOrderRestaurantsPreview)
       break
     case 'topPicks':
-      setRestaurantData(data?.mostOrderedRestaurants)
+      setRestaurantData(data?.mostOrderedRestaurantsPreview)
       break
     case 'topBrands':
-      setRestaurantData(data?.topRatedVendors)
+      setRestaurantData(data?.topRatedVendorsPreview)
       break
     default:
-      setRestaurantData(data?.nearByRestaurants?.restaurants)
+      setRestaurantData(data?.nearByRestaurantsPreview?.restaurants)
   }
 }
 

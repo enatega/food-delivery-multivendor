@@ -131,7 +131,7 @@ export const en = {
   hungry: 'Hungry',
   emptyCartBtn: 'Back to Food',
   emptyFavBtn: "Let's find some favourites",
-  subTotal: 'SubTotal',
+  subTotal: 'Subtotal',
   deliveryFee: 'Delivery Fee',
   haveVoucher: 'Do you have a voucher ?',
   remove: 'Remove',

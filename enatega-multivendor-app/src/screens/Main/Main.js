@@ -118,7 +118,7 @@ function Main(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -132,7 +132,8 @@ function Main(props) {
         headerMenuBackground: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
-        open: onOpen
+        open: onOpen,
+        navigation
       })
     )
   }, [navigation, currentTheme])
@@ -222,9 +223,9 @@ function Main(props) {
             {
               busy ? <Spinner size='small' /> : (
                 <>
-                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                  <View style={styles().mL5p} />
+                  <TextDefault bold>{t('currentLocation')}</TextDefault>
                 </>
               )
             }
@@ -287,41 +288,18 @@ function Main(props) {
     </View>
   )
 
-  const restaurants = data?.nearByRestaurants?.restaurants
-  // console.log('data?.nearByRestaurants?.restaurants => ', JSON.stringify(restaurants[0], null, 3));
+  const restaurants = data?.nearByRestaurantsPreview?.restaurants
 
   const searchAllShops = (searchText) => {
     const data = []
     const regex = new RegExp(searchText, 'i')
     restaurants?.forEach((restaurant) => {
-      const resultName = restaurant.name.search(regex)
-      if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some((category) => {
-          const result = category.title.search(regex)
-          if (result < 0) {
-            const result = category.foods.some((food) => {
-              const result = food.title.search(regex)
-              return result > -1
-            })
-            return result
-          }
-          return true
-        })
-        if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some((option) => {
-            const result = option.title.search(regex)
-            return result > -1
-          })
-          if (!resultOptions) {
-            const resultAddons = restaurant.addons.some((addon) => {
-              const result = addon.title.search(regex)
-              return result > -1
-            })
-            if (!resultAddons) return
-          }
-        }
-      }
-      data.push(restaurant)
+      const resultCatFoods = restaurant.keywords.some((keyword) => {
+        const result = keyword.search(regex)
+        return result > -1
+      })
+      if (resultCatFoods)
+        data.push(restaurant)
     })
     return data
   }
@@ -425,7 +403,7 @@ function Main(props) {
                           <MainLoadingUI />
                         ) : (
                           <MainRestaurantCard
-                            orders={data?.nearByRestaurants?.restaurants?.filter((restaurant)=>restaurant.shopType === 'restaurant')}
+                            orders={data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant)=>restaurant.shopType === 'restaurant')}
                             loading={orderLoading}
                             error={orderError}
                             title={'Restaurants near you'}
@@ -439,7 +417,7 @@ function Main(props) {
                           <MainLoadingUI />
                         ) : (
                           <MainRestaurantCard
-                            orders={data?.nearByRestaurants?.restaurants?.filter((restaurant)=>restaurant.shopType === 'grocery')}
+                            orders={data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant)=>restaurant.shopType === 'grocery')}
                             loading={orderLoading}
                             error={orderError}
                             title={'Grocery List'}
@@ -478,16 +456,16 @@ function Main(props) {
           </View>
           <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
 
-          <MainModalize 
-          modalRef={modalRef} 
-          currentTheme={currentTheme} 
-          isLoggedIn={isLoggedIn}
-          addressIcons={addressIcons}
-          modalHeader={modalHeader}
-          modalFooter={modalFooter}
-          setAddressLocation={setAddressLocation}
-          profile={profile}
-          location={location}
+          <MainModalize
+            modalRef={modalRef}
+            currentTheme={currentTheme}
+            isLoggedIn={isLoggedIn}
+            addressIcons={addressIcons}
+            modalHeader={modalHeader}
+            modalFooter={modalFooter}
+            setAddressLocation={setAddressLocation}
+            profile={profile}
+            location={location}
           />
 
         </View>

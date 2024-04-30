@@ -61,7 +61,7 @@ const styles = (props = null) =>
       alignItems: 'center',
     },
     seeAllBtn: {
-      backgroundColor: props != null ? props.lightGreen : '#F3FFEE',
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
       borderRadius: 4,
       paddingTop: 8,
       paddingBottom: 8,

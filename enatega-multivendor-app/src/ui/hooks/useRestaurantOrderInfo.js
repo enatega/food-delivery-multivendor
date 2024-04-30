@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client'
 import { useContext } from 'react'
 import {
-  recentOrderRestaurantsPreviewQuery,
-  mostOrderedRestaurantsPreviewQuery
+  recentOrderRestaurantsQuery,
+  mostOrderedRestaurantsQuery
 } from '../../apollo/queries'
 import { LocationContext } from '../../context/Location'
 import UserContext from '../../context/User'
@@ -11,19 +11,13 @@ export default function useHomeRestaurants() {
   const { location } = useContext(LocationContext)
   const { isLoggedIn } = useContext(UserContext)
 
-  const recentOrderRestaurants = useQuery(recentOrderRestaurantsPreviewQuery, {
+  const recentOrderRestaurants = useQuery(recentOrderRestaurantsQuery, {
     variables: { latitude: location.latitude, longitude: location.longitude },
-    skip: !isLoggedIn,
-    onError: (err)=>{
-      console.log('recentOrderRestaurantsPreviewQuery error => ', JSON.stringify(err, null, 3))
-    }
+    skip: !isLoggedIn
   })
 
-  const mostOrderedRestaurants = useQuery(mostOrderedRestaurantsPreviewQuery, {
-    variables: { latitude: location.latitude, longitude: location.longitude },
-    onError: (err)=>{
-      console.log('mostOrderedRestaurantsPreviewQuery error => ', JSON.stringify(err, null, 3))
-    }
+  const mostOrderedRestaurants = useQuery(mostOrderedRestaurantsQuery, {
+    variables: { latitude: location.latitude, longitude: location.longitude }
   })
 
   const orderLoading =
@@ -37,9 +31,9 @@ export default function useHomeRestaurants() {
     orderError,
     orderData: {
       recentOrderRestaurants:
-        recentOrderRestaurants?.data?.recentOrderRestaurants,
+        recentOrderRestaurants?.data?.recentOrderRestaurantsPreview,
       mostOrderedRestaurants:
-        mostOrderedRestaurants?.data?.mostOrderedRestaurants
+        mostOrderedRestaurants?.data?.mostOrderedRestaurantsPreview
     }
   }
 }

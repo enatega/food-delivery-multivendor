@@ -16,8 +16,7 @@ const Banner = ({ banners }) => {
     const parameters = JSON.parse(banner.parameters)
     const selectedType = parameters[0]?.value
     const queryType = parameters[1]?.value
-    console.log('selectedType => ', selectedType)
-    console.log('queryType => ', queryType)
+
     navigation.navigate(
       navigation
         .getState()
