@@ -21,9 +21,11 @@ const styles = (props = null) =>
     },
     mainContainer: {
       flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      ...alignment.MBlarge
+      // flexDirection: 'column',
+      // justifyContent: 'space-between',
+      // ...alignment.MBlarge,
+      ...alignment.Pmedium,
+      // backgroundColor: 'red'
     },
     formSubContainer: {
       borderRadius: scale(8),
@@ -197,6 +199,70 @@ const styles = (props = null) =>
       paddingBottom: 24,
       paddingLeft: 16,
       paddingRight: 16
+    },
+    hiView: {
+      ...alignment.PLmedium
+    },
+    nameView:{
+      // flex: 1,
+      ...alignment.MTlarge,
+    },
+    line: {
+      width: '100%',
+      height: StyleSheet.hairlineWidth,
+      ...alignment.MBsmall,
+      backgroundColor: props !== null ? props.color6 : '#9B9A9A',
+      ...alignment.MTsmall
+    },
+    favView: {
+      ...alignment.MTxSmall,
+      alignItems: 'center',
+    },
+    offerScroll: {
+      height: height * 0.4,
+      width: '100%'
+    },
+    linkContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      ...alignment.MLxSmall
+    },
+    mainLeftContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    leftContainer: {
+      height: scale(35),
+      width: scale(35),
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props.gray100 : 'transparent',
+      borderRadius: 25
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: props !== null ? props.color6 : '#9B9A9A',
+      paddingTop: scale(1)
+    },
+    rightContainer: {
+      // flex: '1',
+      // height: '80%',
+      // width: '75%',
+      // justifyContent: 'center',
+    },
+    centerContainer: {
+      // flex: '1',
+      // height: '80%',
+      // width: '75%',
+      // justifyContent: 'center',
+    },
+    drawerContainer: {
+      // alignSelf: 'flex-start',
+      ...alignment.PLlarge
     }
   })
 export default styles

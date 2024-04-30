@@ -13,13 +13,15 @@ import {
   StatusBar,
   Text,
   Modal,
-  Pressable
+  Pressable,
+  FlatList
 } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
-import { scale } from '../../utils/scaling'
+import { scale, verticalScale } from '../../utils/scaling'
 import { updateUser, login, Deactivate } from '../../apollo/mutations'
+import { FavouriteRestaurant } from '../../apollo/queries'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
@@ -34,18 +36,33 @@ import {
   useRoute
 } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
-import { Feather } from '@expo/vector-icons'
-import { MaterialIcons } from '@expo/vector-icons'
+import {
+  Feather,
+  Entypo,
+  MaterialIcons,
+  Ionicons,
+  EvilIcons
+} from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import Spinner from '../../components/Spinner/Spinner'
+import MainRestaurantCard from '../../components/Main/MainRestaurantCard/MainRestaurantCard'
+import { useQuery } from '@apollo/client'
+import { LocationContext } from '../../context/Location'
+import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
+import Item from '../../components/Main/Item/Item'
+import ButtonContainer from '../../components/Profile/ButtonContainer'
 
 const UPDATEUSER = gql`
   ${updateUser}
 `
 const DEACTIVATE = gql`
   ${Deactivate}
+`
+
+const RESTAURANTS = gql`
+  ${FavouriteRestaurant}
 `
 
 function Profile(props) {
@@ -62,6 +79,7 @@ function Profile(props) {
   const [modelVisible, setModalVisible] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const { location } = useContext(LocationContext)
 
   const { profile, logout } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -71,6 +89,19 @@ function Profile(props) {
     onCompleted,
     onError
   })
+
+  const { data, refetch, networkStatus, loading, error } = useQuery(
+    RESTAURANTS,
+    {
+      variables: {
+        longitude: location.longitude || null,
+        latitude: location.latitude || null
+      },
+      fetchPolicy: 'network-only'
+    }
+  )
+
+  console.log('data', data)
 
   const onCompletedDeactivate = () => {
     setDeleteModalVisible(false)
@@ -371,6 +402,10 @@ function Profile(props) {
     setModalVisible(true)
   }
 
+  const buttonNavigation = () => {
+    navigation.navigate('Help')
+  }
+
   return (
     <>
       <ChangePassword
@@ -384,7 +419,7 @@ function Profile(props) {
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles(currentTheme).flex}
         >
-          <View style={styles(currentTheme).mainContainer}>
+          {/* <View style={styles(currentTheme).mainContainer}>
             <View>
               <View style={styles(currentTheme).formSubContainer}>
                 <View style={{ flex: 3 }}>
@@ -464,7 +499,7 @@ function Profile(props) {
                 </View>
               </View>
 
-              {/* email */}
+
               <View style={styles(currentTheme).formSubContainer}>
                 <View style={{ flex: 3 }}>
                   <View style={styles().containerHeading}>
@@ -486,7 +521,7 @@ function Profile(props) {
                 <View style={{ flex: 1 }} />
               </View>
 
-              {/* password */}
+
               <View style={styles(currentTheme).formSubContainer}>
                 <View style={{ flex: 3 }}>
                   <View style={styles().containerHeading}>
@@ -518,7 +553,7 @@ function Profile(props) {
                 </View>
               </View>
 
-              {/* phone */}
+
               <View style={styles(currentTheme).formSubContainer}>
                 <View style={{ flex: 3 }}>
                   <View style={styles().containerHeading}>
@@ -644,7 +679,159 @@ function Profile(props) {
                 </TextDefault>
               </TouchableOpacity>
             </View>
+          </View> */}
+
+          <View style={styles(currentTheme).mainContainer}>
+            <View style={styles(currentTheme).hiView}>
+              <TextDefault H2 bolder textColor={currentTheme.fontThirdColor}>
+                Hi {profile?.name}!
+              </TextDefault>
+            </View>
+
+            <View style={[styles(currentTheme).nameView, styles().flexRow]}>
+              <View>
+                <TextDefault H2 bold textColor={currentTheme.fontThirdColor}>
+                  {profile?.name}
+                </TextDefault>
+                <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
+                  2 orders
+                </TextDefault>
+              </View>
+              <View>
+                <TouchableOpacity>
+                  <Entypo
+                    name='chevron-right'
+                    size={24}
+                    color={currentTheme.darkBgFont}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* favourite section */}
+            {loading ? (
+              <Spinner
+                size={'small'}
+                backColor={currentTheme.themeBackground}
+                spinnerColor={currentTheme.main}
+              />
+            ) : (
+              data?.userFavourite?.length >= 1 && (
+                <View>
+                  <View
+                    style={[
+                      styles(currentTheme).flexRow,
+                      styles(currentTheme).favView
+                    ]}
+                  >
+                    <View>
+                      <TextDefault
+                        H2
+                        bold
+                        textColor={currentTheme.fontThirdColor}
+                      >
+                        Your Favourites
+                      </TextDefault>
+                    </View>
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('Favourite')}
+                      >
+                        <TextDefault>See All</TextDefault>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <FlatList
+                    style={styles().offerScroll}
+                    contentContainerStyle={{
+                      flexGrow: 1,
+                      ...alignment.PRlarge
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                    data={data?.userFavourite}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item }) => {
+                      return <Item item={item} />
+                    }}
+                  />
+                </View>
+              )
+            )}
+
+            <View>
+              <TextDefault H2 bold textColor={currentTheme.fontThirdColor}>
+                Quick links
+              </TextDefault>
+
+              {/* <View>
+                <View>
+                  <Ionicons
+                    name='people-outline'
+                    size={24}
+                    color={currentTheme.darkBgFont}
+                  />
+                </View>
+              </View> */}
+
+              <View style={styles().flexRow}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  style={styles().linkContainer}
+                  onPress={() => navigation.navigate('Help')}
+                >
+                  <View style={styles(currentTheme).mainLeftContainer}>
+                    <View style={styles(currentTheme).leftContainer}>
+                      <Ionicons
+                        name='people-outline'
+                        size={verticalScale(15)}
+                        color={currentTheme.darkBgFont}
+                      />
+                    </View>
+                    <TextDefault
+                      style={styles().drawerContainer}
+                      textColor={currentTheme.fontThirdColor}
+                      small
+                      H4 
+                      bolder
+                    >
+                      Customer support
+                    </TextDefault>
+                  </View>
+
+                  {/* <View style={styles().centerContainer}>
+                  <TextDefault
+                    style={styles().drawerContainer}
+                    textColor={'red'}
+                    small
+                    bold
+                  >
+                    Customer support
+                  </TextDefault>
+                  </View> */}
+                  <View style={styles(currentTheme).leftContainer}>
+                    <EvilIcons
+                      name='chevron-right'
+                      size={verticalScale(15)}
+                      color={currentTheme.darkBgFont}
+                    />
+                  </View>
+                </TouchableOpacity>
+
+              </View>
+
+              {/* <ButtonContainer
+                icon={'people-outline'}
+                iconType={'Ionicons'}
+                onPress={() => navigation.navigate('Help')}
+                title='Customer support'
+              /> */}
+              <View style={styles().line} />
+            </View>
           </View>
+
           <Modal
             onBackdropPress={() => setDeleteModalVisible(false)}
             onBackButtonPress={() => setDeleteModalVisible(false)}
