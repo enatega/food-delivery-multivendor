@@ -233,7 +233,9 @@ export const UserProvider = props => {
         refetchProfile,
         networkStatus,
         isPickup,
-        setIsPickup
+        setIsPickup,
+        instructions,
+        setInstructions
       }}>
       {props.children}
     </UserContext.Provider>
