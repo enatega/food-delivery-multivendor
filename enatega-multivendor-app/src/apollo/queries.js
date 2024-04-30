@@ -252,7 +252,35 @@ export const restaurantFragment = gql`
     shopType
   }
 `
-
+export const restaurantPreviewFragment = gql`
+fragment RestaurantPreviewFields on RestaurantPreview{
+  _id
+  orderId
+  orderPrefix
+  name
+  image
+  address
+  username
+  password
+  deliveryTime
+  minimumOrder
+  sections
+  rating
+  isActive
+  isAvailable
+  slug
+  stripeDetailsSubmitted
+  commissionRate
+  tax
+  notificationToken
+  enableNotification
+  shopType
+  cuisines
+  keywords
+  tags
+  reviewCount
+  reviewAverage
+  }`
 export const profile = `
         query{
           profile{
@@ -536,97 +564,61 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
   }
 }
 }`
-export const topRatedVendorsInfo = `query TopRatedVendors($latitude: Float!, $longitude: Float!) {
-  topRatedVendors(latitude: $latitude, longitude: $longitude) {
-    _id
-    orderId
-    orderPrefix
-    name
-    image
-    address
-    location {
-      coordinates
-    }
-    categories {
+export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
+  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+    offers{
       _id
-      title
-      foods {
-        _id
-        title
-        description
-        variations {
-          _id
-          title
-          price
-          discounted
-          addons
+      name
+      tag
+      restaurants
+    }
+    sections{
+      _id
+      name
+      restaurants
+    }
+    restaurants{
+      _id
+      orderId
+      orderPrefix
+      name
+      image
+      address
+      username
+      password
+      deliveryTime
+      minimumOrder
+      sections
+      rating
+      isActive
+      isAvailable
+      slug
+      stripeDetailsSubmitted
+      commissionRate
+      tax
+      notificationToken
+      enableNotification
+      shopType
+      cuisines
+      keywords
+      tags
+      reviewCount
+      reviewAverage
+      openingTimes{
+        day
+        times {
+          startTime
+          endTime
         }
-        image
-        isActive
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-    options {
-      _id
-      title
-      description
-      price
-    }
-    addons {
-      _id
-      options
-      title
-      description
-      quantityMinimum
-      quantityMaximum
-    }
-    reviewData {
-      reviews {
-        _id
-        order {
-          _id
-          user {
-            email
-            name
-            _id
-          }
-        }
-        rating
-        description
-        isActive
-        createdAt
-        updatedAt
-      }
-      ratings
-      total
-    }
-    username
-    password
-    deliveryTime
-    minimumOrder
-    sections
-    rating
-    isActive
-    isAvailable
-    openingTimes {
-      day
-      times {
-        startTime
-        endTime
       }
     }
-    slug
-    stripeDetailsSubmitted
-    commissionRate
-    tax
-    notificationToken
-    enableNotification
-    shopType
-    cuisines
-    
+}
+}`
+export const topRatedVendorsInfo = gql`
+${restaurantPreviewFragment}
+query TopRatedVendors($latitude: Float!, $longitude: Float!) {
+  topRatedVendorsPreview(latitude: $latitude, longitude: $longitude) {
+    ...RestaurantPreviewFields
   }
 }`
 
@@ -896,19 +888,19 @@ export const chat = `query Chat($order: ID!) {
 }`
 
 export const recentOrderRestaurantsQuery = gql`
-  ${restaurantFragment}
+  ${restaurantPreviewFragment}
   query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
-    recentOrderRestaurants(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantFields
+    recentOrderRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
+      ...RestaurantPreviewFields
     }
   }
 `;
 
 export const mostOrderedRestaurantsQuery = gql`
-  ${restaurantFragment}
+  ${restaurantPreviewFragment}
   query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
-    mostOrderedRestaurants(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantFields
+    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
+      ...RestaurantPreviewFields
     }
   }
 `;

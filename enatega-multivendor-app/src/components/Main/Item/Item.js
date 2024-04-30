@@ -35,7 +35,6 @@ function Item(props) {
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props.item._id) : false
   const item = props.item
-  const category = item?.categories?.map(category => category.title)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -149,14 +148,14 @@ function Item(props) {
                  bolder
                   style={{ marginLeft: scale(2), marginRight: scale(5)}}
                  >
-                  {item.reviewData.ratings}
+                  {item.reviewAverage}
                 </TextDefault>
                 <TextDefault
                    textColor={currentTheme.fontNewColor}
                   style={{ marginLeft: scale(2)}}
                  
                   H5>
-                  ({item.reviewData.reviews.length})
+                  ({item.reviewCount})
                 </TextDefault>
               </View>
             </View>
@@ -167,7 +166,7 @@ function Item(props) {
             Normal
             textColor={currentTheme.fontNewColor}
             >
-              {category.toString()}
+              {item?.tags?.join(',')}
             </TextDefault>
             <View style={styles().priceRestaurant}>
               <View
