@@ -14,7 +14,7 @@ const styles = (props = null) =>
     },
     searchbar: {
       ...alignment.PBmedium,
-      backgroundColor: props != null ? props.main : '#FFF'
+      backgroundColor: props != null ? props.white : '#FFF'
     },
 
     mainContentContainer: {

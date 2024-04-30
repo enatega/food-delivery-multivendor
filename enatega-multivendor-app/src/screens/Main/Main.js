@@ -328,6 +328,70 @@ function Main(props) {
                   showsVerticalScrollIndicator={false}
                   showsHorizontalScrollIndicator={false}
                 >
+                  <View style={styles().mainItemsContainer}>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'restaurant'
+                          })
+                        }
+                      >
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}
+                          >
+                            {t('foodDelivery')}
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}
+                          >
+                            {t('OrderfoodLove')}
+                          </TextDefault>
+                        </View>
+                        <Image
+                          source={require('../../assets/images/ItemsList/menu-new.png')}
+                          style={styles().popularMenuImg}
+                          // resizeMode='contain'
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles().mainItem}
+                        onPress={() =>
+                          navigation.navigate('Menu', {
+                            selectedType: 'grocery'
+                          })
+                        }
+                      >
+                        <View>
+                          <TextDefault
+                            H4
+                            bolder
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemName}
+                          >
+                            {t('grocery')}
+                          </TextDefault>
+                          <TextDefault
+                            Normal
+                            textColor={currentTheme.fontThirdColor}
+                            style={styles().ItemDescription}
+                          >
+                            {t('essentialsDeliveredFast')}
+                          </TextDefault>
+                        </View>
+                        <Image
+                          source={require('../../assets/images/ItemsList/grocery-new.png')}
+                          style={styles().popularMenuImg}
+                          // resizeMode='contain'
+                        />
+                      </TouchableOpacity>
+                    </View>
                   <View>
                     <View>
                       {isLoggedIn &&

@@ -88,7 +88,7 @@ export const FILTER_VALUES = {
 
 function Menu({ route, props }) {
   const Analytics = analytics()
-  const { selectedType } = route.params
+  const selectedType = route.params?.selectedType
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
@@ -110,7 +110,7 @@ function Menu({ route, props }) {
       variables: {
         longitude: location.longitude || null,
         latitude: location.latitude || null,
-        shopType: selectedType || null,
+        shopType: selectedType ?? null,
         ip: null
       },
       onCompleted: data => {
@@ -517,7 +517,7 @@ function Menu({ route, props }) {
                   <Search
                     setSearch={setSearch}
                     search={search}
-                    newheaderColor={newheaderColor}
+                    newheaderColor={currentTheme.white}
                     placeHolder={searchPlaceholderText}
                   />
                   </View>

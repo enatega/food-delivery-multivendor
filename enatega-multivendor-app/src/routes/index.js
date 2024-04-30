@@ -2,18 +2,14 @@ import React, { useCallback, useContext, useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { createDrawerNavigator } from '@react-navigation/drawer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
-// import Login from '../screens/Login/Login'
 import Login from '../screens/Login/Login'
 import Register from '../screens/Register/Register'
 import ForgotPassword from '../screens/ForgotPassword/ForgotPassword'
 import SetYourPassword from '../screens/ForgotPassword/SetYourPassword'
-// import CreateAccount from '../screens/CreateAccount/CreateAccount'
 import CreateAccount from '../screens/CreateAccount/CreateAccount'
-import SideBar from '../components/Sidebar/Sidebar'
 import ItemDetail from '../screens/ItemDetail/ItemDetail'
 import MyOrders from '../screens/MyOrders/MyOrders'
 import Cart from '../screens/Cart/Cart'
@@ -45,7 +41,7 @@ import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
 import Favourite from '../screens/Favourite/Favourite'
 import ChatScreen from '../screens/ChatWithRider/ChatScreen'
-import { DarkBackButton } from '../components/Header/HeaderIcons/HeaderIcons'
+import { DarkBackButton, RightButton } from '../components/Header/HeaderIcons/HeaderIcons'
 import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
@@ -56,29 +52,15 @@ import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomeScreen from './HomeScreen'
 import SettingScreen from './SettingScreen'
-import { FontAwesome } from '@expo/vector-icons'
 import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
+import { useTranslation } from 'react-i18next'
 
 const NavigationStack = createStackNavigator()
-const MainStack = createStackNavigator()
-const SideDrawer = createDrawerNavigator()
 const Location = createStackNavigator()
 const Tab = createBottomTabNavigator();
 
-function Drawer() {
-  return (
-    <SideDrawer.Navigator drawerContent={props => <SideBar {...props} />}>
-      <SideDrawer.Screen
-        options={{ headerShown: false }}
-        name="NoDrawer"
-        component={NoDrawer}
-      />
-    </SideDrawer.Navigator>
-  )
-}
-function NoDrawer() {
+function MainNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
@@ -90,10 +72,11 @@ function NoDrawer() {
         lineColor: currentTheme.horizontalLine,
         textColor: currentTheme.headerText,
         iconColor: currentTheme.iconColorPink,
+        headerShown: false
       })}
       
       >
-      <NavigationStack.Screen name="Main" component={Main} />
+      <NavigationStack.Screen name="Main" component={BottomTabNavigator} options={{headerShown: false}} />
       <NavigationStack.Screen name="Menu" component={Menu} />
       <NavigationStack.Screen
         name="Restaurant"
@@ -188,10 +171,12 @@ function LocationStack() {
   )
 }
 
-function MyTabs() {
+function BottomTabNavigator() {
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
+  const { t } = useTranslation()
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
-     
       tabBarIcon: ({ focused, color, size }) => {
         // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
         return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
@@ -199,13 +184,17 @@ function MyTabs() {
       tabBarStyle:{paddingHorizontal: 15, paddingVertical: 10, height: 90},
       tabBarActiveTintColor: '#0EA5E9',
       tabBarInactiveTintColor: '#6B7280',
-      tabBarLabelStyle: {fontSize: 12}
-    })}>
-      <Tab.Screen name="Discovery" component={NoDrawer} options={{headerShown: false}} />
-      <Tab.Screen name="Restaurants" component={SettingScreen} />
+      tabBarLabelStyle: {fontSize: 12},
+      headerRight: () => (
+        <RightButton icon="cart" iconColor={currentTheme.iconColor} menuHeader={false} t={t}/>
+      )
+    })}
+    >
+      <Tab.Screen name="Discovery" component={Main} />
+      <Tab.Screen name="Restaurants" component={Menu} />
       <Tab.Screen name="Store" component={SettingScreen} />
       <Tab.Screen name="Search" component={SettingScreen} />
-      <Tab.Screen name="Profile" component={SettingScreen} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
@@ -253,18 +242,12 @@ function AppContainer() {
         ref={ref => {
           navigationService.setGlobalRef(ref)
         }}>
-        {/* {!location ? (
+        {!location ? (
           <LocationStack />
         ) : (
-          <MainStack.Navigator initialRouteName="Drawer">
-            <MainStack.Screen
-              options={{ headerShown: false }}
-              name="Drawer"
-              component={Drawer}
-            />
-          </MainStack.Navigator>
-        )} */}
-        <MyTabs />
+          <MainNavigator />
+        )}
+        {/* <MainNavigator /> */}
       </NavigationContainer>
     </SafeAreaProvider>
   )
