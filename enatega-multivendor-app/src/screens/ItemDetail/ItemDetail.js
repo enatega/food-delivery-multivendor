@@ -5,7 +5,8 @@ import {
   Alert,
   StatusBar,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Dimensions
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -28,7 +29,9 @@ import { useTranslation } from 'react-i18next'
 import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
 import { IMAGE_LINK } from '../../utils/constants'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-
+import Animated, { Extrapolation, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { scale } from '../../utils/scaling'
+const { height } = Dimensions.get('window')
 function ItemDetail(props) {
   const Analytics = analytics()
 
@@ -174,35 +177,35 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find((cartItem) => {
-          if (
-            cartItem._id === food._id &&
-            cartItem.variation._id === selectedVariation._id
-          ) {
-            if (cartItem?.addons?.length === addons.length) {
-              if (addons.length === 0) return true
-              const addonsResult = addons.every((newAddon) => {
-                const cartAddon = cartItem.addons.find(
-                  (ad) => ad._id === newAddon._id
+        if (
+          cartItem._id === food._id &&
+          cartItem.variation._id === selectedVariation._id
+        ) {
+          if (cartItem?.addons?.length === addons.length) {
+            if (addons.length === 0) return true
+            const addonsResult = addons.every((newAddon) => {
+              const cartAddon = cartItem.addons.find(
+                (ad) => ad._id === newAddon._id
+              )
+
+              if (!cartAddon) return false
+              const optionsResult = newAddon.options.every((newOption) => {
+                const cartOption = cartAddon.options.find(
+                  (op) => op._id === newOption._id
                 )
 
-                if (!cartAddon) return false
-                const optionsResult = newAddon.options.every((newOption) => {
-                  const cartOption = cartAddon.options.find(
-                    (op) => op._id === newOption._id
-                  )
-
-                  if (!cartOption) return false
-                  return true
-                })
-
-                return optionsResult
+                if (!cartOption) return false
+                return true
               })
 
-              return addonsResult
-            }
+              return optionsResult
+            })
+
+            return addonsResult
           }
-          return false
-        })
+        }
+        return false
+      })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -323,79 +326,123 @@ function ItemDetail(props) {
       )
     }
   }
+  const scrollY = useSharedValue(0)
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  })
+  const scrollAnimatedStyles = useAnimatedStyle(() => {
+    const translateY = interpolate(scrollY.value, [50, 160], [0, -160], Extrapolation.CLAMP)
+    return { transform: [{ translateY }] }
+  })
+
+  const animatedImageStyles = useAnimatedStyle(() => {
+    const scale = interpolate(
+      scrollY.value,
+      [0, 160],
+      [1, 0],
+      Extrapolation.CLAMP
+    )
+
+    return { transform: [{ scale }] }
+  })
+
+  const animatedImageOpacityStyles = useAnimatedStyle(() => {
+    const opacity = interpolate(scrollY.value, [0, 80, 160], [1, 0, 0])
+    return { opacity }
+  })
+
+  const animatedTitleStyle = (fadeIn) => useAnimatedStyle(() => {
+    const outputRange = fadeIn ? [0, 0, 1] : [1, 0, 0]
+    const opacity = interpolate(scrollY.value, [0, 50, 160], outputRange)
+    return { opacity }
+  })
 
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
+        <Animated.View style={[animatedTitleStyle(true), { backgroundColor: 'white', height: 100, zIndex: 99, position: 'absolute' }]}>
+          <HeadingComponent title={food.title} price={calculatePrice()} />
+        </Animated.View>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles().flex}
         >
-          {imageUrl && <ImageHeader image={imageUrl} />}
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            <View style={styles().subContainer}>
-              <HeadingComponent title={food.title} price={calculatePrice()} />
 
-              {food?.variations?.length > 1 && (
-                <View>
-                  <TitleComponent
-                    title={t('SelectVariation')}
-                    subTitle={t('SelectOne')}
-                    status={t('Required')}
-                  />
-                  <RadioComponent
-                    options={food.variations}
-                    selected={selectedVariation}
-                    onPress={onSelectVariation}
-                  />
-                </View>
-              )}
-              {selectedVariation.addons.map((addon) => (
-                <View key={addon._id}>
-                  <TitleComponent
-                    title={addon.title}
-                    subTitle={addon.description}
-                    error={addon.error}
-                    status={
-                      addon.quantityMinimum === 0
-                        ? t('optional')
-                        : `${addon.quantityMinimum} ${t('Required')}`
-                    }
-                  />
-                  {renderOption(addon)}
-                </View>
-              ))}
-            </View>
-            <View style={styles(currentTheme).line}></View>
-            <View style={styles(currentTheme).inputContainer}>
-              <TitleComponent
-                title={t('specialInstructions')}
-                subTitle={t('anySpecificPreferences')}
-                status={t('optional')}
+          {imageUrl &&
+            <Animated.View style={[animatedImageStyles, animatedImageOpacityStyles]}>
+              <ImageHeader image={imageUrl} />
+            </Animated.View>}
+          <Animated.View style={scrollAnimatedStyles}>
+            <Animated.ScrollView
+              onScroll={scrollHandler}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(height * 0.09) }}
+            >
+              <View style={styles().subContainer}>
+                <Animated.View style={[animatedTitleStyle(false)]}>
+                  <HeadingComponent title={food.title} price={calculatePrice()} />
+                </Animated.View>
+                {food?.variations?.length > 1 && (
+                  <View>
+                    <TitleComponent
+                      title={t('SelectVariation')}
+                      subTitle={t('SelectOne')}
+                      status={t('Required')}
+                    />
+                    <RadioComponent
+                      options={food.variations}
+                      selected={selectedVariation}
+                      onPress={onSelectVariation}
+                    />
+                  </View>
+                )}
+                {selectedVariation.addons.map((addon) => (
+                  <View key={addon._id}>
+                    <TitleComponent
+                      title={addon.title}
+                      subTitle={addon.description}
+                      error={addon.error}
+                      status={
+                        addon.quantityMinimum === 0
+                          ? t('optional')
+                          : `${addon.quantityMinimum} ${t('Required')}`
+                      }
+                    />
+                    {renderOption(addon)}
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles(currentTheme).line}></View>
+              <View style={styles(currentTheme).inputContainer}>
+                <TitleComponent
+                  title={t('specialInstructions')}
+                  subTitle={t('anySpecificPreferences')}
+                  status={t('optional')}
+                />
+                <TextField
+                  style={styles(currentTheme).input}
+                  placeholder={t('noMayo')}
+                  textAlignVertical='center'
+                  value={specialInstructions}
+                  onChangeText={setSpecialInstructions}
+                  maxLength={144}
+                  textColor={currentTheme.fontMainColor}
+                  baseColor={currentTheme.lightHorizontalLine}
+                  errorColor={currentTheme.textErrorColor}
+                  tintColor={currentTheme.themeBackground}
+                  placeholderTextColor={currentTheme.fontGrayNew}
+                />
+              </View>
+              {/** frequently bought together */}
+              <FrequentlyBoughtTogether
+                itemId={food._id}
+                restaurantId={restaurant}
               />
-              <TextField
-                style={styles(currentTheme).input}
-                placeholder={t('noMayo')}
-                textAlignVertical='center'
-                value={specialInstructions}
-                onChangeText={setSpecialInstructions}
-                maxLength={144}
-                textColor={currentTheme.fontMainColor}
-                baseColor={currentTheme.lightHorizontalLine}
-                errorColor={currentTheme.textErrorColor}
-                tintColor={currentTheme.themeBackground}
-                placeholderTextColor={currentTheme.fontGrayNew}
-              />
-            </View>
-            {/** frequently bought together */}
-            <FrequentlyBoughtTogether
-              itemId={food._id}
-              restaurantId={restaurant}
-            />
-          </ScrollView>
+            </Animated.ScrollView>
+          </Animated.View>
         </KeyboardAvoidingView>
       </View>
 
