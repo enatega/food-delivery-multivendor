@@ -28,7 +28,7 @@ const currentTheme = theme[themeContext.ThemeValue]
 
   return (
     <TouchableOpacity onPress={handleAddToCart}>
-      <View style={styles(currentTheme).card} colors={[currentTheme.gray100, currentTheme.white]}>
+      <LinearGradient style={styles(currentTheme).card} colors={[currentTheme.gray100, currentTheme.white]}>
       
         {tagCart(item._id)}
         <TextDefault
@@ -62,7 +62,7 @@ const currentTheme = theme[themeContext.ThemeValue]
             )}
           </View>
         </View>
-      </View>
+      </LinearGradient>
     </TouchableOpacity>
   )
 }
