@@ -35,7 +35,6 @@ function Item(props) {
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props.item._id) : false
   const item = props.item
-  const category = item?.categories?.map(category => category.title)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -49,7 +48,7 @@ function Item(props) {
     const day = date.getDay()
     const hours = date.getHours()
     const minutes = date.getMinutes()
-    const todaysTimings = openingTimes.find(o => o.day === DAYS[day])
+    const todaysTimings = openingTimes?.find(o => o.day === DAYS[day])
     if (todaysTimings === undefined) return false
     const times = todaysTimings.times.filter(
       t =>
@@ -149,26 +148,30 @@ function Item(props) {
                  bolder
                   style={{ marginLeft: scale(2), marginRight: scale(5)}}
                  >
-                  {item.reviewData.ratings}
+                  {item.reviewAverage}
                 </TextDefault>
                 <TextDefault
                    textColor={currentTheme.fontNewColor}
                   style={{ marginLeft: scale(2)}}
                  
                   H5>
-                  ({item.reviewData.reviews.length})
+                  ({item.reviewCount})
                 </TextDefault>
               </View>
             </View>
-            <TextDefault
-              style={styles().offerCategoty}
-              numberOfLines={1}
-            bold
-            Normal
-            textColor={currentTheme.fontNewColor}
-            >
-              {category.toString()}
-            </TextDefault>
+            {
+              item?.tags?.length>0 && (
+                <TextDefault
+                  style={styles().offerCategoty}
+                  numberOfLines={1}
+                bold
+                Normal
+                textColor={currentTheme.fontNewColor}
+                >
+                  {item?.tags?.join(',')}
+                </TextDefault>
+              )
+            }
             <View style={styles().priceRestaurant}>
               <View
                 style={{
