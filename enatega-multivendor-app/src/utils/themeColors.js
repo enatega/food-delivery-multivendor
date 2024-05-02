@@ -103,13 +103,11 @@ export const theme = {
     color7: '#374151',
     color8: '#f0f0f0',
     filtersBg: '#f0f0f0',
-    color9: 'gray',
-    iconStroke: '#0F172A',
-    color10: 'transparent',
-    newButtonBackground: '#F3FFEE',
-    newButtonText: '#63C43B',
-    color11: '#4B5563',
-    color12: '#94A3B8'
+   color9:'gray',
+    iconStroke:'#0F172A',
+    color10:'transparent',
+    newButtonBackground:'#F3FFEE',
+    newButtonText:'#63C43B'
   },
   Dark: {
     black: '#000',
@@ -208,11 +206,9 @@ export const theme = {
     gray: 'gray',
     color9: '#fff',
     hex: '#b0afbc',
-    iconStroke: '#b0afbc',
-    color10: '#fff',
-    newButtonBackground: '#F3FFEE',
-    newButtonText: '#63C43B',
-    color11: '#4B5563',
-    color12: '#94A3B8'
+    iconStroke:'#b0afbc',
+    color10:'#fff',
+    newButtonBackground:'#F3FFEE',
+    newButtonText:'#63C43B'
   }
 }

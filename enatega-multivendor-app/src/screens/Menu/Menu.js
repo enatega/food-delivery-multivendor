@@ -36,7 +36,6 @@ import { getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
-import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -54,16 +53,13 @@ import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 
-const RESTAURANTS = gql`
-  ${restaurantListPreview}
-`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
-
 const GET_CUISINES = gql`
   ${getCuisines}
 `
@@ -88,15 +84,15 @@ export const FILTER_VALUES = {
 
 function Menu({ route, props }) {
   const Analytics = analytics()
-  const { selectedType } = route.params
+  const { selectedType, queryType } = route.params
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
-  const [restaurantData, setRestaurantData] = useState([])
-  const [sectionData, setSectionData] = useState([])
+  // const [restaurantData, setRestaurantData] = useState([])
+  // const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -104,22 +100,18 @@ function Menu({ route, props }) {
   const { getCurrentLocation } = useLocation()
   const locationData = location
 
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null,
-        shopType: selectedType || null,
-        ip: null
-      },
-      onCompleted: data => {
-        setRestaurantData(data.nearByRestaurantsPreview.restaurants)
-        setSectionData(data.nearByRestaurantsPreview.sections)
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
+  const {
+    data,
+    refetch,
+    networkStatus,
+    loading,
+    error,
+    restaurantData,
+    setRestaurantData,
+    heading,
+    subHeading
+  } = useRestaurantQueries(queryType, location, selectedType)
+
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -168,12 +160,12 @@ function Menu({ route, props }) {
   }, [navigation, currentTheme])
 
   useEffect(() => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       Cuisines: {
         selected: [],
         type: FILTER_TYPE.CHECKBOX,
-        values: allCuisines?.cuisines?.map(item => item.name)
+        values: allCuisines?.cuisines?.map((item) => item.name)
       }
     }))
   }, [allCuisines])
@@ -196,7 +188,7 @@ function Menu({ route, props }) {
     Other: CustomOtherIcon
   }
 
-  const setAddressLocation = async address => {
+  const setAddressLocation = async (address) => {
     setLocation({
       _id: address._id,
       label: address.label,
@@ -215,8 +207,8 @@ function Menu({ route, props }) {
 
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
     fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.error) {
           console.log('Reverse geocoding request failed:', data.error)
         } else {
@@ -239,7 +231,7 @@ function Menu({ route, props }) {
           console.log(address)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching reverse geocoding data:', error)
       })
   }
@@ -301,10 +293,11 @@ function Menu({ route, props }) {
               modal?.close()
               navigation.navigate({ name: 'CreateAccount' })
             }
-          }}>
+          }}
+        >
           <View style={styles().addressSubContainer}>
             <AntDesign
-              name="pluscircleo"
+              name='pluscircleo'
               size={scale(20)}
               color={currentTheme.black}
             />
@@ -323,45 +316,48 @@ function Menu({ route, props }) {
         <View style={styles(currentTheme).searchbar}>
           <Search
             search={''}
-            setSearch={() => { }}
+            setSearch={() => {}}
             newheaderColor={newheaderColor}
             placeHolder={searchPlaceholderText}
           />
         </View>
 
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
@@ -373,7 +369,7 @@ function Menu({ route, props }) {
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  const searchRestaurants = searchText => {
+  const searchRestaurants = (searchText) => {
     const data = []
     const regex = new RegExp(searchText, 'i')
     restaurantData?.forEach(restaurant => {
@@ -387,18 +383,26 @@ function Menu({ route, props }) {
     return data
   }
 
+  // commented sections for now
   // Flatten the array. That is important for data sequence
-  const restaurantSections = sectionData?.map(sec => ({
-    ...sec,
-    restaurants: sec?.restaurants
-      ?.map(id => restaurantData?.filter(res => res._id === id))
-      .flat()
-  }))
+  // const restaurantSections = sectionData?.map((sec) => ({
+  //   ...sec,
+  //   restaurants: sec?.restaurants
+  //     ?.map((id) => restaurantData?.filter((res) => res._id === id))
+  //     .flat()
+  // }))
 
-  const extractRating = ratingString => parseInt(ratingString)
+  const extractRating = (ratingString) => parseInt(ratingString)
 
   const applyFilters = () => {
-    let filteredData = [...data.nearByRestaurantsPreview.restaurants]
+    let filteredData =
+      queryType === 'orderAgain'
+        ? [...data.recentOrderRestaurants]
+        : queryType === 'topPicks'
+          ? [...data.mostOrderedRestaurants]
+          : queryType === 'topBrands'
+            ? [...data.topRatedVendors]
+            : [...data.nearByRestaurants.restaurants]
 
     const ratings = filters.Rating
     const sort = filters.Sort
@@ -410,7 +414,7 @@ function Menu({ route, props }) {
     if (ratings?.selected?.length > 0) {
       const numericRatings = ratings.selected?.map(extractRating)
       filteredData = filteredData.filter(
-        item => item?.reviewData?.ratings >= Math.min(...numericRatings)
+        (item) => item?.reviewData?.ratings >= Math.min(...numericRatings)
       )
     }
 
@@ -429,17 +433,17 @@ function Menu({ route, props }) {
     // Offers filter
     if (offers?.selected?.length > 0) {
       if (offers.selected.includes('Free Delivery')) {
-        filteredData = filteredData.filter(item => item?.freeDelivery)
+        filteredData = filteredData.filter((item) => item?.freeDelivery)
       }
       if (offers.selected.includes('Accept Vouchers')) {
-        filteredData = filteredData.filter(item => item?.acceptVouchers)
+        filteredData = filteredData.filter((item) => item?.acceptVouchers)
       }
     }
 
     // Cuisine filter
     if (cuisines?.selected?.length > 0) {
-      filteredData = filteredData.filter(item =>
-        item.cuisines.some(cuisine => cuisines?.selected?.includes(cuisine))
+      filteredData = filteredData.filter((item) =>
+        item.cuisines.some((cuisine) => cuisines?.selected?.includes(cuisine))
       )
     }
 
@@ -451,7 +455,8 @@ function Menu({ route, props }) {
     <>
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
+        style={[styles().flex, { backgroundColor: 'black' }]}
+      >
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
@@ -466,10 +471,10 @@ function Menu({ route, props }) {
                   scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
                   showsVerticalScrollIndicator={false}
                   ListHeaderComponent={
-                    search || restaurantData.length === 0 ? null : (
+                    search || restaurantData?.length === 0 ? null : (
                       <ActiveOrdersAndSections
-                        sections={restaurantSections}
-                        menuPageHeading={menuPageHeading}
+                        menuPageHeading={heading}
+                        subHeading={subHeading}
                       />
                     )
                   }

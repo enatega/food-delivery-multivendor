@@ -48,7 +48,7 @@ function Item(props) {
     const day = date.getDay()
     const hours = date.getHours()
     const minutes = date.getMinutes()
-    const todaysTimings = openingTimes.find(o => o.day === DAYS[day])
+    const todaysTimings = openingTimes?.find(o => o.day === DAYS[day])
     if (todaysTimings === undefined) return false
     const times = todaysTimings.times.filter(
       t =>
@@ -159,15 +159,19 @@ function Item(props) {
                 </TextDefault>
               </View>
             </View>
-            <TextDefault
-              style={styles().offerCategoty}
-              numberOfLines={1}
-            bold
-            Normal
-            textColor={currentTheme.fontNewColor}
-            >
-              {item?.tags?.join(',')}
-            </TextDefault>
+            {
+              item?.tags?.length>0 && (
+                <TextDefault
+                  style={styles().offerCategoty}
+                  numberOfLines={1}
+                bold
+                Normal
+                textColor={currentTheme.fontNewColor}
+                >
+                  {item?.tags?.join(',')}
+                </TextDefault>
+              )
+            }
             <View style={styles().priceRestaurant}>
               <View
                 style={{

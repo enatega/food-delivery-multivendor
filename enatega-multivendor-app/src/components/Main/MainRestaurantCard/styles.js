@@ -13,7 +13,7 @@ const styles = (props = null) =>
       width: '100%'
     },
     ItemTitle: {
-      ...alignment.MRmedium
+      ...alignment.MRmedium,
     },
     ItemDescription: {
       fontWeight: '400',
@@ -48,6 +48,26 @@ const styles = (props = null) =>
     },
     height200: {
       height: scale(200)
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...alignment.MRmedium,
+      marginBottom: scale(8),
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    seeAllBtn: {
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
+      borderRadius: 4,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+      
     }
   })
 
