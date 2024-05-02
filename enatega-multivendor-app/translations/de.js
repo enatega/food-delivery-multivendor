@@ -566,6 +566,18 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
   asap: 'Zo snel mogelijk',
   selectOptionforAddon: 'Bitte wählen Sie eine Option für das Add-On aus',
   whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
+  openingHours: 'Öffnungszeiten',
+  deliveryInformation: 'Lieferinformationen',
+  contact: 'Kontakt',
+  viewWebsite: 'Website anzeigen',
+  website: 'Website',
+  restaurant: 'Restaurant',
+  deliveryCost: 'Lieferkosten',
+  restrictionsInstructions:
+    'Wenn Sie Allergien oder andere diätetische Einschränkungen haben, kontaktieren Sie bitte das Restaurant. Das Restaurant stellt auf Anfrage spezifische Informationen zum Essen bereit.',
+  preservationText:
+    'Die Authentizität des Geschmacks aller traditionellen Lebensmittel wird hier bewahrt.',
+    none: 'keiner',
   yourEmail:
     'Melden Sie sich einfach an, indem Sie Ihre E-Mail-Adresse eingeben!',
   yourEmailPassword:

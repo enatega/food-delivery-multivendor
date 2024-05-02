@@ -563,6 +563,18 @@ secureAccountWithPhone: 'Nous n’utiliserons votre numéro que si nous devons v
   asap: 'Dès que possible',
   selectOptionforAddon: "Veuillez sélectionner une option pour l'addon",
   whatsAppText: "Besoin de plus d'aide? Contactez-nous",
+  openingHours: "Heures d'ouverture",
+  deliveryInformation: 'Informations de livraison',
+  contact: 'Contact',
+  viewWebsite: 'Voir le site web',
+  website: 'Site web',
+  restaurant: 'Restaurant',
+  deliveryCost: 'Frais de livraison',
+  restrictionsInstructions:
+    "Si vous avez des allergies ou d'autres restrictions alimentaires, veuillez contacter le restaurant. Le restaurant fournira des informations spécifiques sur les aliments sur demande.",
+  preservationText:
+    'La préservation du goût authentique de tous les plats traditionnels est respectée ici.',
+    none: 'aucun',
   yourEmail: 'Connectez-vous facilement en entrant votre adresse e-mail!',
   yourEmailPassword:
     'Veuillez entrer votre mot de passe maintenant pour accéder!',

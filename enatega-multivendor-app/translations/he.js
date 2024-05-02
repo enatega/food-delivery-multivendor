@@ -536,6 +536,18 @@ secureAccountWithPhone: 'נשתמש במספר שלך רק אם נצטרך לי�
   asap: 'בהקדם האפשרי',
   selectOptionforAddon: 'בבקשה בחר אפשרות עבור התוסף',
   whatsAppText: 'צריך עזרה נוספת? צור קשר',
+  openingHours: 'שעות פתיחה',
+  deliveryInformation: 'מידע משלוחים',
+  contact: 'יצירת קשר',
+  viewWebsite: 'הצגת אתר',
+  website: 'אתר אינטרנט',
+  restaurant: 'מסעדה',
+  deliveryCost: 'עלות משלוח',
+  restrictionsInstructions:
+    'אם יש לך אלרגיות או הגבלות תזונתיות אחרות, נא ליצור קשר עם המסעדה. המסעדה תספק מידע ספציפי לכל מזון לפי בקשה.',
+  preservationText:
+    'השמירה על הטעם האותנטי של כל המאכלים המסורתיים מתורגשת כאן.',
+    none: 'אין',
   yourEmail: 'התחבר בקלות על ידי הזנת כתובת האימייל שלך!',
   yourEmailPassword: 'אנא הזן את הסיסמה שלך כעת כדי לקבל גישה!',
   brandName: 'אנאטגה',
