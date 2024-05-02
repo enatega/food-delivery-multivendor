@@ -169,7 +169,7 @@ export const zh = {
   passErr2:
     '无效的密码。密码必须至少为 8 个字符，且包含 1 个大写字母、1 个小写字母、1 个数字。',
   letsGetStarted: '让我们开始吧！',
-  createAccount: '创建您的Enatega帐户',
+  createAccountFirst: '创建您的Enatega帐户',
   firstnameErr1: '名字是必填项！',
   firstnameErr2: '无效的名字！',
   lastnameErr1: '姓氏是必填项！',
@@ -177,7 +177,7 @@ export const zh = {
   mobileErr1: '电话号码是必填项！',
   mobileErr2: '无效的电话号码',
   verifyEmail: '验证您的电子邮件？',
-  otpSentToEmail: '请输入我们发送到您的电子邮件的OTP。',
+  otpSentToEmail: "输入 OTP 以安全验证您的电子邮件。您的隐私至关重要；您的数据将保护得很好。",
   verifyPhone: '验证您的电话号码？',
   otpSentToPhone: '请输入我们发送到您的电话号码的OTP。',
   wrongOtp: '错误的OTP。请重试！',
@@ -187,8 +187,8 @@ export const zh = {
   setYourPassword: '设置您的密码',
   enterPass: '请键入您的密码',
   confirmPassRequired: '需要确认密码！',
-  yourPhoneNumber: '您的电话号码是多少？',
-  secureAccountWithPhone: '我们需要这样来保护您的帐户',
+  yourPhoneNumber: "输入手机号码",
+secureAccountWithPhone: '只有在需要与您联系有关您的订单时，我们才会使用您的号码。接下来，我们将通过短信向您发送一个代码，以确保我们获得了正确的号码。',
   Home: '首页',
   Work: '工作',
   Other: '其他',
@@ -433,7 +433,7 @@ export const zh = {
   enterEmailPassword: '输入您的电子邮件和密码',
   emailExists: '您的电子邮件已存在',
   retry: '重试后',
-  enterOtp: '输入发送到您手机的4位验证码',
+  enterOtp: '输入 OTP 以安全验证您的电话号码。您的隐私至关重要；您的数据将保护得很好。',
   createAccount: '创建账户',
   previousOrder: '前一笔订单',
   ItemsOrderAgain: '选择要重新订购的商品',
@@ -544,5 +544,14 @@ export const zh = {
   restrictionsInstructions:
     '如果您有过敏反应或其他饮食限制，请联系餐厅。 餐厅将根据要求提供食品特定信息。',
   preservationText: '这里保留了所有传统食物的真实口味。',
-  none: '没有'
+  none: '没有',
+  yourEmail: '输入您的电子邮件地址轻松登录！',
+  yourEmailPassword: '请输入您的密码以获取访问权限！',
+  brandName: '恩塔加',
+  welcomeText: '欢迎来到恩塔加',
+  createAccountDesc: '享受最好的餐厅或从附近的商店获得您需要的东西，随时送达！',
+  phoneNumber: '电话号码',
+textWithCodeBtn: "发送带有代码的短信",
+resendOtpBtn: '重新发送 OTP',
+getRegistered: '注册'
 }

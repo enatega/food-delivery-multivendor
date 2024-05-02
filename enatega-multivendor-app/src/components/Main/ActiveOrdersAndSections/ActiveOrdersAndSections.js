@@ -34,7 +34,7 @@ function ActiveOrdersAndSections(props) {
           marginTop: scale(5)
         }}
       >
-        {t('mostOrderedNow')}
+        {props?.subHeading}
       </TextDefault>
     </View>
   )

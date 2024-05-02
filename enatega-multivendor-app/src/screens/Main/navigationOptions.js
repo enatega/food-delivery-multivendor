@@ -26,6 +26,7 @@ const navigationOptions = props => ({
       {...headerProp}
       modalOn={() => props.open()}
       linkColor={props.fontMainColor}
+      navigation={props.navigation}
     />
   )
 })

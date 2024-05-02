@@ -175,7 +175,7 @@ export const he = {
   passErr2:
     'סיסמה לא תקינה. הסיסמה חייבת להכיל לפחות 8 תווים ולכלול אות גדולה אחת, אות קטנה אחת, ומספר אחד.',
   letsGetStarted: 'בוא נתחיל!',
-  createAccount: 'ראשית, בוא ניצור את החשבון שלך',
+  createAccountFirst: 'ראשית, בוא ניצור את החשבון שלך',
   firstnameErr1: 'נדרש שם פרטי!',
   firstnameErr2: 'שם פרטי לא תקין!',
   lastnameErr1: 'נדרש שם משפחה!',
@@ -183,7 +183,7 @@ export const he = {
   mobileErr1: 'נדרש מספר טלפון!',
   mobileErr2: 'מספר טלפון לא תקין',
   verifyEmail: 'אימות האימייל שלך?',
-  otpSentToEmail: 'אנא הזן את ה-OTP ששלחנו לאימייל שלך.',
+  otpSentToEmail: "הזן OTP כדי לאמת את כתובת האימייל שלך באופן מאובטח. הפרטיות שלך חשובה מאוד; הנתונים שלך נשמרים בצורה מוגנת.",
   verifyPhone: 'אימות מספר הטלפון שלך?',
   otpSentToPhone: 'אנא הזן את ה-OTP ששלחנו למספר הטלפון שלך.',
   wrongOtp: 'OTP שגוי. נסה שוב!',
@@ -193,8 +193,8 @@ export const he = {
   setYourPassword: 'הגדר את הסיסמה שלך',
   enterPass: 'נא להזין את הסיסמה שלך',
   confirmPassRequired: 'נדרש לאשר סיסמה!',
-  yourPhoneNumber: 'מה מספר הטלפון שלך?',
-  secureAccountWithPhone: 'אנו צריכים זאת לאימות ואבטחת החשבון שלך',
+  yourPhoneNumber: "הזן מספר טלפון",
+secureAccountWithPhone: 'נשתמש במספר שלך רק אם נצטרך ליצור עמך קשר לגבי ההזמנה שלך. לאחר מכן, נשלח לך קוד בהודעה טקסטית כדי לוודא שקיבלנו את המספר הנכון.',
   Home: 'בית',
   Work: 'עבודה',
   Other: 'אחר',
@@ -442,7 +442,7 @@ export const he = {
   enterEmailPassword: 'הזן את האימייל והסיסמה שלך',
   emailExists: 'האימייל שלך כבר קיים',
   retry: 'נסה שוב לאחר',
-  enterOtp: 'הזן קוד ברור המופעל לנייד שלך',
+  enterOtp: 'הזן את קוד ה-OTP כדי לאמת את מספר הטלפון שלך באופן מאובטח. פרטיותך חשובה מאוד; הנתונים שלך נשמרים בצורה מוגנת.',
   createAccount: 'צור חשבון',
   previousOrder: 'הזמנה קודמת',
   ItemsOrderAgain: 'בחר פריטים להזמנה שוב',
@@ -547,5 +547,15 @@ export const he = {
     'אם יש לך אלרגיות או הגבלות תזונתיות אחרות, נא ליצור קשר עם המסעדה. המסעדה תספק מידע ספציפי לכל מזון לפי בקשה.',
   preservationText:
     'השמירה על הטעם האותנטי של כל המאכלים המסורתיים מתורגשת כאן.',
-    none: 'אין'
+    none: 'אין',
+  yourEmail: 'התחבר בקלות על ידי הזנת כתובת האימייל שלך!',
+  yourEmailPassword: 'אנא הזן את הסיסמה שלך כעת כדי לקבל גישה!',
+  brandName: 'אנאטגה',
+  welcomeText: 'ברוך הבא לאנטגה',
+  createAccountDesc:
+    'תהנה מהמסעדות הטובות ביותר או קבל את מה שאתה צריך מהחנויות הקרובות, מוזמן!',
+    phoneNumber: 'מספר טלפון',
+textWithCodeBtn: "שלח טקסט עם קוד",
+resendOtpBtn: 'שלח מחדש קוד OTP',
+getRegistered: 'הירשם'
 }

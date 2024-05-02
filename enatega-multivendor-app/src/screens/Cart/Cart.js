@@ -11,14 +11,10 @@ import {
   TouchableOpacity,
   StatusBar,
   Platform,
-  Alert,
-  Image,
-  Text,
-  Dimensions
-} from 'react-native'
+  Alert} from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { AntDesign, EvilIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import CartItem from '../../components/CartItem/CartItem'
 import { getTipping } from '../../apollo/queries'
@@ -42,11 +38,8 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import WouldYouLikeToAddThese from './Section'
-import { Modalize } from 'react-native-modalize'
-import Pickup from '../../components/Pickup'
 import { SpecialInstructions } from '../../components/Cart/SpecialInstructions'
 
-const { height: HEIGHT } = Dimensions.get('window')
 // Constants
 const TIPPING = gql`
   ${getTipping}
@@ -460,51 +453,12 @@ function Cart(props) {
               showsVerticalScrollIndicator={false}
               style={[styles().flex, styles().cartItems]}
             >
-              <View
-                style={[
-                  styles(currentTheme).priceContainer,
-                  styles().pT10,
-                  styles().mB10
-                ]}
-              >
-                <View style={styles(currentTheme).imageContainer}>
-                  <View style={{ marginLeft: scale(15) }}>
-                    <View style={[styles(currentTheme).locationIcon]}>
-                      <EvilIcons name='calendar' size={scale(18)} />
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: scale(10)
-                    }}
-                  >
-                    <TextDefault H5 textColor={currentTheme.darkBgFont} bold>
-                      {isPickup ? t('pickupTime') : t('deliveryTime')}{' '}
-                    </TextDefault>
-                    <TextDefault textColor={currentTheme.darkBgFont} bolder H4>
-                      {t('asap')}({deliveryTime} {t('mins')})
-                    </TextDefault>
-                    <TouchableOpacity
-                      onPress={() => onModalOpen(modalRef)}
-                      style={styles(currentTheme).cartInnerContainer}
-                    >
-                      <TextDefault
-                        bold
-                        textColor={currentTheme.editProfileButton}
-                      >
-                        {t('change')}
-                      </TextDefault>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-
               <View style={{
                 ...alignment.PLsmall,
                 ...alignment.PRsmall,
                 marginTop: 10
               }}>
-                <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme}/>
+                <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme} />
               </View>
               <View
                 style={{
@@ -623,39 +577,6 @@ function Cart(props) {
           </>
         )}
       </View>
-      <Modalize
-        ref={modalRef}
-        modalStyle={styles(currentTheme).modal}
-        modalHeight={HEIGHT / 2}
-        overlayStyle={styles(currentTheme).overlay}
-        handleStyle={styles(currentTheme).handle}
-        handlePosition='inside'
-        openAnimationConfig={{
-          timing: { duration: 400 },
-          spring: { speed: 20, bounciness: 10 }
-        }}
-        closeAnimationConfig={{
-          timing: { duration: 400 },
-          spring: { speed: 20, bounciness: 10 }
-        }}
-      >
-        <Pickup
-          minimumTime={restaurant?.deliveryTime}
-          setOrderDate={setOrderDate}
-          isPickedUp={isPickup}
-          setIsPickedUp={setIsPickup}
-          orderDate={orderDate}
-          pickupTextColor={currentTheme.newFontcolor}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            modalRef.current.close()
-          }}
-          style={styles(currentTheme).pickupButton}
-        >
-          <Text style={styles(currentTheme).applyButton}>{t('apply')}</Text>
-        </TouchableOpacity>
-      </Modalize>
     </>
   )
 }

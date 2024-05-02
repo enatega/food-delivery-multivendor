@@ -110,8 +110,6 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.iconBackground : 'white'
     },
     horizontalLine2: {
-      borderWidth: 0.5,
-      borderColor: props !== null ? props.iconBackground : 'white',
       marginVertical: scale(11)
     },
     deliveryTime: {
@@ -415,16 +413,36 @@ const styles = (props = null) =>
       color: props !== null ? props.newFontcolor : '#f9f9f9'
     },
     labelContainer: {
-      flex: 1,
-      marginLeft: scale(5)
+      width: '80%',
     },
     iconContainer: {
+      flex: 1,
+      padding: scale(2)
+    },
+    icon: {
       backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
       width: scale(24),
       height: scale(24),
       borderRadius: scale(24),
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    pickupButton: {
+      backgroundColor: props !== null ? props.color3 : 'transparent',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      height: scale(40),
+      borderRadius: 40,
+      borderWidth: 1,
+      borderColor: props !== null ? props.borderColor : 'black',
+      width: '70%',
+      alignSelf: 'center'
+    },
+    applyButton: {
+      fontSize: 20,
+      fontWeight: '500',
+      color: props != null ? props.newFontcolor : '#E5E7EB'
     }
   })
 export default styles

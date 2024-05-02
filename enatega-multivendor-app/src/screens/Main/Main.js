@@ -15,7 +15,7 @@ import {
   Image,
   ScrollView,
   Animated,
-  RefreshControl
+  RefreshControl,
 } from 'react-native'
 import {
   MaterialIcons,
@@ -24,11 +24,10 @@ import {
 } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import UserContext from '../../context/User'
-import { restaurantList } from '../../apollo/queries'
+import { getBanners, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -52,16 +51,21 @@ import ErrorView from '../../components/ErrorView/ErrorView'
 import ActiveOrders from '../../components/Main/ActiveOrders/ActiveOrders'
 import MainLoadingUI from '../../components/Main/LoadingUI/MainLoadingUI'
 import TopBrandsLoadingUI from '../../components/Main/LoadingUI/TopBrandsLoadingUI'
+import Banner from '../../components/Main/Banner/Banner'
 import Spinner from '../../components/Spinner/Spinner'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 
 const RESTAURANTS = gql`
-  ${restaurantList}
+  ${restaurantListPreview}
 `
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
+const GET_BANNERS = gql`
+  ${getBanners}
+`
+
 function Main(props) {
   const Analytics = analytics()
 
@@ -89,14 +93,21 @@ function Main(props) {
       fetchPolicy: 'network-only'
     }
   )
+  const { data: banners } = useQuery(
+    GET_BANNERS,
+    {
+      fetchPolicy: 'network-only'
+    }
+  )
+  // console.log('banners => ', JSON.stringify(banners, null, 3))
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
-  const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
   const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
   const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
+  // console.log('mostOrderedRestaurantsVar => ', JSON.stringify(mostOrderedRestaurantsVar[0], null, 3))
   const newheaderColor = currentTheme.newheaderColor
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
@@ -107,7 +118,7 @@ function Main(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -121,7 +132,8 @@ function Main(props) {
         headerMenuBackground: currentTheme.newheaderColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
-        open: onOpen
+        open: onOpen,
+        navigation
       })
     )
   }, [navigation, currentTheme])
@@ -211,9 +223,9 @@ function Main(props) {
             {
               busy ? <Spinner size='small' /> : (
                 <>
-                <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
+                  <View style={styles().mL5p} />
+                  <TextDefault bold>{t('currentLocation')}</TextDefault>
                 </>
               )
             }
@@ -276,45 +288,24 @@ function Main(props) {
     </View>
   )
 
-  const restaurants = data?.nearByRestaurants?.restaurants
+  const restaurants = data?.nearByRestaurantsPreview?.restaurants
 
   const searchAllShops = (searchText) => {
     const data = []
     const regex = new RegExp(searchText, 'i')
     restaurants?.forEach((restaurant) => {
-      const resultName = restaurant.name.search(regex)
-      if (resultName < 0) {
-        const resultCatFoods = restaurant.categories.some((category) => {
-          const result = category.title.search(regex)
-          if (result < 0) {
-            const result = category.foods.some((food) => {
-              const result = food.title.search(regex)
-              return result > -1
-            })
-            return result
-          }
-          return true
-        })
-        if (!resultCatFoods) {
-          const resultOptions = restaurant.options.some((option) => {
-            const result = option.title.search(regex)
-            return result > -1
-          })
-          if (!resultOptions) {
-            const resultAddons = restaurant.addons.some((addon) => {
-              const result = addon.title.search(regex)
-              return result > -1
-            })
-            if (!resultAddons) return
-          }
-        }
-      }
-      data.push(restaurant)
+      const resultCatFoods = restaurant.keywords.some((keyword) => {
+        const result = keyword.search(regex)
+        return result > -1
+      })
+      if (resultCatFoods)
+        data.push(restaurant)
     })
     return data
   }
 
   if (error) return <ErrorView />
+
 
   return (
     <>
@@ -372,70 +363,7 @@ function Main(props) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                   >
-                    <View style={styles().mainItemsContainer}>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'restaurant'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('foodDelivery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('OrderfoodLove')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/menu-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles().mainItem}
-                        onPress={() =>
-                          navigation.navigate('Menu', {
-                            selectedType: 'grocery'
-                          })
-                        }
-                      >
-                        <View>
-                          <TextDefault
-                            H4
-                            bolder
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemName}
-                          >
-                            {t('grocery')}
-                          </TextDefault>
-                          <TextDefault
-                            Normal
-                            textColor={currentTheme.fontThirdColor}
-                            style={styles().ItemDescription}
-                          >
-                            {t('essentialsDeliveredFast')}
-                          </TextDefault>
-                        </View>
-                        <Image
-                          source={require('../../assets/images/ItemsList/grocery-new.png')}
-                          style={styles().popularMenuImg}
-                          // resizeMode='contain'
-                        />
-                      </TouchableOpacity>
-                    </View>
+                    <Banner banners={banners?.banners} />
                     <View>
                       <View>
                         {isLoggedIn &&
@@ -450,6 +378,7 @@ function Main(props) {
                                   loading={orderLoading}
                                   error={orderError}
                                   title={'Order it again'}
+                                  queryType='orderAgain'
                                 />
                               )}
                             </>
@@ -463,10 +392,55 @@ function Main(props) {
                             orders={mostOrderedRestaurantsVar}
                             loading={orderLoading}
                             error={orderError}
-                            title={'Top Picks for you'}
+                            title={'Popular right now'}
+                            queryType='topPicks'
+                            icon='trending'
                           />
                         )}
                       </View>
+                      <View>
+                        {loading ? (
+                          <MainLoadingUI />
+                        ) : (
+                          <MainRestaurantCard
+                            orders={data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant)=>restaurant.shopType === 'restaurant')}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Restaurants near you'}
+                            queryType='restaurant'
+                            icon='restaurant'
+                          />
+                        )}
+                      </View>
+                      <View>
+                        {loading ? (
+                          <MainLoadingUI />
+                        ) : (
+                          <MainRestaurantCard
+                            orders={data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant)=>restaurant.shopType === 'grocery')}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Grocery List'}
+                            queryType='grocery'
+                            icon='grocery'
+                          />
+                        )}
+                      </View>
+                      <View>
+                        {orderLoading ? (
+                          <MainLoadingUI />
+                        ) : (
+                          <MainRestaurantCard
+                            orders={mostOrderedRestaurantsVar?.filter((order)=>order.shopType === 'grocery')}
+                            loading={orderLoading}
+                            error={orderError}
+                            title={'Top grocery picks'}
+                            queryType='grocery'
+                            icon='store'
+                          />
+                        )}
+                      </View>
+                      
                     </View>
                     <View
                       style={
@@ -482,16 +456,16 @@ function Main(props) {
           </View>
           <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
 
-          <MainModalize 
-          modalRef={modalRef} 
-          currentTheme={currentTheme} 
-          isLoggedIn={isLoggedIn}
-          addressIcons={addressIcons}
-          modalHeader={modalHeader}
-          modalFooter={modalFooter}
-          setAddressLocation={setAddressLocation}
-          profile={profile}
-          location={location}
+          <MainModalize
+            modalRef={modalRef}
+            currentTheme={currentTheme}
+            isLoggedIn={isLoggedIn}
+            addressIcons={addressIcons}
+            modalHeader={modalHeader}
+            modalFooter={modalFooter}
+            setAddressLocation={setAddressLocation}
+            profile={profile}
+            location={location}
           />
 
         </View>
