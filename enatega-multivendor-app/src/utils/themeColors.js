@@ -113,7 +113,12 @@ export const theme = {
     newButtonBackground: '#F3FFEE',
     newButtonText: '#63C43B',
     color11: '#4B5563',
-    color12: '#94A3B8'
+    color12: '#94A3B8',
+   color9:'gray',
+    iconStroke:'#0F172A',
+    color10:'transparent',
+    newButtonBackground:'#F3FFEE',
+    newButtonText:'#63C43B'
   },
   Dark: {
     black: '#000',
@@ -221,6 +226,10 @@ export const theme = {
     newButtonBackground: '#F3FFEE',
     newButtonText: '#63C43B',
     color11: '#4B5563',
-    color12: '#94A3B8'
+    color12: '#94A3B8',
+    iconStroke:'#b0afbc',
+    color10:'#fff',
+    newButtonBackground:'#F3FFEE',
+    newButtonText:'#63C43B'
   }
 }
