@@ -45,7 +45,25 @@ const useStyles = makeStyles(theme => ({
     fontSize: '15px',
     fontWeight: '500',
     marginTop: '10px'
-  }
+  },
+  fileUpload: {
+    marginTop: 10,
+    backgroundColor: theme.palette.primary.main2,
+    display: 'inlineBlock',
+    padding: '3px 6px',
+    cursor: 'pointer',
+    color: theme.palette.common.white,
+    borderRadius: 10,
+    fontSize: 12
+  },
+  file: {
+    display: 'none'
+  },
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 30
+  },
 }))
 
 export default useStyles

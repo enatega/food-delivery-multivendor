@@ -9,8 +9,8 @@ const styles = (props = null) =>
       ...alignment.MLlarge
     },
     menuPageHeading:{
-      ...alignment.MLmedium,
-      ...alignment.MRmedium
+      // ...alignment.MLmedium,
+      // ...alignment.MRmedium
     },
     offerScroll: {
       height: scale(230),

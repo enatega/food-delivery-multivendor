@@ -613,6 +613,8 @@ export const createCuisine = `mutation CreateCuisine($cuisineInput:CuisineInput!
           _id
           name
           description
+          image
+        shopType
         }
       }`
 export const editCuisine = `mutation editCuisine($cuisineInput:CuisineInput!){
@@ -620,6 +622,8 @@ export const editCuisine = `mutation editCuisine($cuisineInput:CuisineInput!){
           _id
           name
           description
+          image
+      shopType
               }
             }`
 export const deleteCuisine = `mutation DeleteCuisine($id:String!){

@@ -735,6 +735,8 @@ export const getCuisines = `query Cuisines{
     _id
     name
     description
+    image
+    shopType
   }
 }`
 

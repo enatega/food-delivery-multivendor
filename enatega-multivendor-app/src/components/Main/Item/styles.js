@@ -7,6 +7,16 @@ const styles = (props = null) =>
     mainContainer: {
       width: '100%',
       alignItems: 'center',
+      backgroundColor: 'white',
+      shadowColor: "gray",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+
+      elevation: 5,
     
     },
     restaurantContainer: {
@@ -15,7 +25,7 @@ const styles = (props = null) =>
       borderWidth: scale(1),
       borderRadius: scale(8),
       height: scale(280),
-      width: '99%',
+      width: '100%',
 
 
       ...alignment.MBsmall

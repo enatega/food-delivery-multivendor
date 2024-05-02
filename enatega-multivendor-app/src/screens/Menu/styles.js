@@ -19,8 +19,9 @@ const styles = (props = null) =>
 
     mainContentContainer: {
       width: '100%',
-      height: '100%',
-      alignSelf: 'center'
+      height: '80%',
+      alignSelf: 'center',
+      // backgroundColor: 'red'
     },
 
     ML20: {
@@ -161,6 +162,26 @@ const styles = (props = null) =>
       fontWeight: '300',
       textAlign: 'justify',
       paddingLeft: scale(38)
+    },
+    collectionCard: {
+      backgroundColor: props !== null ? props.white : '#fff',
+      height: 130,
+      width: 100,
+      borderRadius: 8,
+      shadowColor: 'gray',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5
+    },
+    collectionImage: {
+      height: 80,
+      width: '100%',
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8
     }
   })
 export default styles

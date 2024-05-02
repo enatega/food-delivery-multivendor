@@ -192,7 +192,7 @@ function BottomTabNavigator() {
     >
       <Tab.Screen name="Discovery" component={Main} />
       <Tab.Screen name="Restaurants" component={Menu} />
-      <Tab.Screen name="Store" component={SettingScreen} />
+      <Tab.Screen name="Store" component={Menu} />
       <Tab.Screen name="Search" component={SettingScreen} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
