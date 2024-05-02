@@ -574,5 +574,6 @@ export const fr = {
   restrictionsInstructions:
     "Si vous avez des allergies ou d'autres restrictions alimentaires, veuillez contacter le restaurant. Le restaurant fournira des informations spécifiques sur les aliments sur demande.",
   preservationText:
-    'La préservation du goût authentique de tous les plats traditionnels est respectée ici.'
+    'La préservation du goût authentique de tous les plats traditionnels est respectée ici.',
+    none: 'aucun'
 }

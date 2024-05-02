@@ -577,5 +577,6 @@ export const de = {
   restrictionsInstructions:
     'Wenn Sie Allergien oder andere diätetische Einschränkungen haben, kontaktieren Sie bitte das Restaurant. Das Restaurant stellt auf Anfrage spezifische Informationen zum Essen bereit.',
   preservationText:
-    'Die Authentizität des Geschmacks aller traditionellen Lebensmittel wird hier bewahrt.'
+    'Die Authentizität des Geschmacks aller traditionellen Lebensmittel wird hier bewahrt.',
+    none: 'keiner'
 }

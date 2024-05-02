@@ -110,6 +110,8 @@ function ImageTextCenterHeader(props, ref) {
     reviews: props.restaurant ? props.restaurant.reviewData.reviews : '...',
     isAvailable: props.restaurant ? props.restaurant.isAvailable : true,
     openingTimes: props.restaurant ? props.restaurant.openingTimes : [],
+    phone: props.restaurant ? props.restaurant.phone : '',
+    restaurantUrl: props.restaurant ? props.restaurant.restaurantUrl : '',
     isOpen: () => {
       if (!props.restaurant) return true
       const date = new Date()

@@ -560,8 +560,9 @@ export const en = {
   contact: 'Contact',
   viewWebsite: 'View website',
   website: 'Website',
-  restaurant: 'Restaurannt',
+  restaurant: 'Restaurant',
   deliveryCost: 'Delivery cost',
   restrictionsInstructions: 'If you have allergies or other dietary restrictions, please contact the restaurant. The restaurant will provide food-specific information upon request.',
-  preservationText: 'Preservation of the authentic taste of all traditional foods is upheld here.'
+  preservationText: 'Preservation of the authentic taste of all traditional foods is upheld here.',
+  none: 'none'
 }

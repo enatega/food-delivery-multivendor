@@ -40,6 +40,8 @@ function About(props) {
     rating: restaurantObject.rating,
     average: restaurantObject.average,
     isOpen: restaurantObject.isOpen,
+    phone: restaurantObject.phone,
+    restaurantUrl: restaurantObject.restaurantUrl,
     map: {
       latitude: Number(restaurantObject.latitude),
       longitude: Number(restaurantObject.longitude),
@@ -141,7 +143,11 @@ function About(props) {
                     <AntDesign
                       name='clockcircle'
                       size={12}
-                      color={!todayOpeningTimes || !IsOpen ? currentTheme.red600 : currentTheme.main}
+                      color={
+                        !todayOpeningTimes || !IsOpen
+                          ? currentTheme.red600
+                          : currentTheme.main
+                      }
                     />
                   </View>
                   <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
@@ -280,39 +286,52 @@ function About(props) {
               </TextDefault>
             </View>
 
-            {/* Restaurant number and website ui */}
             <View style={[styles().subContainer, alignment.MTsmall]}>
               <View>
                 <TextDefault H5 bold>
                   {t('restaurant')}
                 </TextDefault>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  Linking.openURL('tel:+923041710575')
-                }}
-              >
+              {RestAbout?.phone ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(`tel:${RestAbout?.phone}`)
+                  }}
+                >
+                  <TextDefault H5 bold textColor={currentTheme.linkColor}>
+                    {RestAbout?.phone}
+                  </TextDefault>
+                </TouchableOpacity>
+              ) : (
                 <TextDefault H5 bold textColor={currentTheme.linkColor}>
-                  +923041710575
+                  {t('none')}
                 </TextDefault>
-              </TouchableOpacity>
+              )}
             </View>
+
             <View style={styles().line} />
+            
             <View style={[styles().subContainer, alignment.MTsmall]}>
               <View>
                 <TextDefault H5 bold>
                   {t('website')}
                 </TextDefault>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  Linking.openURL('https://enatega.com/')
-                }}
-              >
+              {RestAbout?.restaurantUrl ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(RestAbout?.restaurantUrl)
+                  }}
+                >
+                  <TextDefault H5 bold textColor={currentTheme.linkColor}>
+                    {t('viewWebsite')}
+                  </TextDefault>
+                </TouchableOpacity>
+              ) : (
                 <TextDefault H5 bold textColor={currentTheme.linkColor}>
-                  {t('viewWebsite')}
+                  {t('none')}
                 </TextDefault>
-              </TouchableOpacity>
+              )}
             </View>
           </View>
 

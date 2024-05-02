@@ -543,5 +543,6 @@ export const zh = {
   deliveryCost: '送货费用',
   restrictionsInstructions:
     '如果您有过敏反应或其他饮食限制，请联系餐厅。 餐厅将根据要求提供食品特定信息。',
-  preservationText: '这里保留了所有传统食物的真实口味。'
+  preservationText: '这里保留了所有传统食物的真实口味。',
+  none: '没有'
 }
