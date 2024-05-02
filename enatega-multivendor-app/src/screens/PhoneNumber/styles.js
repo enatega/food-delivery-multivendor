@@ -45,10 +45,13 @@ const styles = (props = null) =>
     textField: {
       borderColor: props !== null ? props.borderColor : '#efefef',
       borderWidth: scale(1),
-      borderRadius: scale(6),
+      borderRadius: scale(10),
       backgroundColor: props !== null ? props.themeBackground : 'white',
-      padding: scale(10),
-      justifyContent: 'center'
+      padding: scale(12),
+      justifyContent: 'center',
+      color: props !== null ? props.newFontcolor : 'red',
+      ...alignment.MBxSmall,
+      ...alignment.MTxSmall
     },
     btn: {
       width: '100%',
