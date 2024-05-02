@@ -28,19 +28,7 @@ const getStoredLanguage = async () => {
     resources: languageResources
   })
 }
-if (Platform.OS === 'android') {
   getStoredLanguage()
-}
-if (Platform.OS === 'ios') {
-  i18next.locale = Localization.locale
-  i18next.use(initReactI18next).init({
-    compatibilityJSON: 'v3',
-    lng: i18next.locale,
-    fallbackLng: 'en',
-    resources: languageResources
-  })
 
-  i18next.changeLanguage(i18next.locale)
-}
 
 export default i18next
