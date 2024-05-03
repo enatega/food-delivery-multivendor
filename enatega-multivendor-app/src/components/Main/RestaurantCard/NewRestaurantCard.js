@@ -42,6 +42,7 @@ function NewRestaurantCard(props) {
     onCompleted,
     refetchQueries: [{ query: PROFILE }]
   })
+  // console.log('PROPS => ', JSON.stringify(props, null, 3))
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
@@ -56,7 +57,7 @@ function NewRestaurantCard(props) {
 
   return (
     <TouchableOpacity
-      style={styles(currentTheme).offerContainer}
+      style={[styles(currentTheme).offerContainer, props?.fullWidth && {width: '100%'}]}
       activeOpacity={1}
       onPress={() => navigation.navigate('Restaurant', { ...props })}
     >
@@ -64,10 +65,10 @@ function NewRestaurantCard(props) {
         <Image
           resizeMode='cover'
           source={{ uri: props.image }}
-          style={styles().restaurantImage}
+          style={[styles().restaurantImage, props?.fullWidth && {width: '100%'}]}
         />
 
-        <View style={styles().overlayContainer}>
+        <View style={[styles().overlayContainer, props?.fullWidth && {width: '100%'}]}>
           <TouchableOpacity
             activeOpacity={0.7}
             disabled={loadingMutation}
@@ -101,6 +102,15 @@ function NewRestaurantCard(props) {
           >
             {props.name}
           </TextDefault>
+          {
+            props.fullWidth && (
+              <View style={styles(currentTheme).deliveryTimeNew}>
+                <TextDefault bolder Normal textColor={currentTheme.main}>
+                  {props.deliveryTime} mins
+                </TextDefault>
+              </View>
+            )
+          }
         </View>
         <TextDefault
           textColor={currentTheme.gray600}

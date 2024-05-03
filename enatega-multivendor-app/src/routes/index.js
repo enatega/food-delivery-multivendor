@@ -55,6 +55,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import SettingScreen from './SettingScreen'
 import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
 import { useTranslation } from 'react-i18next'
+import Collection from '../screens/Collection/Collection'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -153,6 +154,7 @@ function MainNavigator() {
       <NavigationStack.Screen name="SaveAddress" component={SaveAddress} />
       <NavigationStack.Screen name="Favourite" component={Favourite} />
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
+      <NavigationStack.Screen name="Collection" component={Collection} />
     </NavigationStack.Navigator>
   )
 }

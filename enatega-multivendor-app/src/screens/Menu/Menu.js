@@ -55,6 +55,7 @@ import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
+import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -198,7 +199,7 @@ function Menu({ route, props }) {
   const collectionData = useMemo(()=>{
     if(routeData?.name === 'Restaurants'){
       return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'restaurant')
-    } else if(routeData?.name === 'store'){
+    } else if(routeData?.name === 'Store'){
       return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'grocery')
     } else{
       return allCuisines?.cuisines
@@ -456,6 +457,26 @@ function Menu({ route, props }) {
     >
       <ScrollView style={styles().flex} showsVerticalScrollIndicator={false}>
         <View style={{ gap: 8 }}>
+          <View style={styles().header}>
+            <View>
+            <TextDefault bolder H2>Stores</TextDefault>
+            <TextDefault bold H5>Browse Categories</TextDefault>
+            </View>
+            <TouchableOpacity
+            style={styles(currentTheme).seeAllBtn}
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('Collection', {
+                collectionType: routeData?.name,
+                data: collectionData
+              })
+            }}
+          >
+            <TextDefault H5 bolder textColor={currentTheme.main}>
+              See All
+            </TextDefault>
+          </TouchableOpacity>
+          </View>
           <FlatList
             data={collectionData ?? []}
             renderItem={({ item }) => {
@@ -488,7 +509,8 @@ function Menu({ route, props }) {
             contentInset={{ top: containerPaddingTop }}
             contentContainerStyle={{
               paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-              padding: 15
+              padding: 15,
+              gap: 16
             }}
             contentOffset={{ y: -containerPaddingTop }}
             onScroll={onScroll}
@@ -517,7 +539,7 @@ function Menu({ route, props }) {
               />
             }
             data={restaurantData}
-            renderItem={({ item }) => <Item item={item} />}
+            renderItem={({ item }) => <NewRestaurantCard {...item} fullWidth />}
           />
         </View>
       </ScrollView>

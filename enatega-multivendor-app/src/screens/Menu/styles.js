@@ -182,6 +182,23 @@ const styles = (props = null) =>
       width: '100%',
       borderTopLeftRadius: 8,
       borderTopRightRadius: 8
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...alignment.MLmedium,
+      ...alignment.MRmedium,
+      ...alignment.MTsmall,
+      
+    },
+    seeAllBtn: {
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
+      borderRadius: 4,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
     }
   })
 export default styles
