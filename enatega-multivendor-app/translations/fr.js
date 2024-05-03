@@ -556,5 +556,13 @@ export const fr = {
   pickupTime: 'Heure de ramassage',
   asap: 'Dès que possible',
   selectOptionforAddon: "Veuillez sélectionner une option pour l'addon",
-  whatsAppText: "Besoin de plus d'aide? Contactez-nous"
+  whatsAppText: "Besoin de plus d'aide? Contactez-nous",
+  Hi: 'Bonjour',
+  YourFavourites: 'Vos favoris',
+  SeeAll: 'Voir tout',
+  QuickLinks: 'Liens rapides',
+  OrderAgain: 'Commander à nouveau',
+  CustomerSupport: 'Support client',
+  OrderHistory: 'Historique des commandes',
+  Account: 'Compte'
 }

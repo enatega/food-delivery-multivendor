@@ -528,5 +528,13 @@ export const he = {
   pickupTime: 'זמן איסוף',
   asap: 'בהקדם האפשרי',
   selectOptionforAddon: 'בבקשה בחר אפשרות עבור התוסף',
-  whatsAppText: 'צריך עזרה נוספת? צור קשר'
+  whatsAppText: 'צריך עזרה נוספת? צור קשר',
+  Hi: 'היי',
+  YourFavourites: 'המועדפים שלך',
+  SeeAll: 'ראה הכל',
+  QuickLinks: 'קישורים מהירים',
+  OrderAgain: 'הזמן שוב',
+  CustomerSupport: 'תמיכה לקוחות',
+  OrderHistory: 'היסטוריית ההזמנות',
+  Account: 'חשבון'
 }

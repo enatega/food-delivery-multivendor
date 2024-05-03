@@ -526,5 +526,13 @@ export const zh = {
   pickupTime: '取货时间',
   asap: '尽快',
   selectOptionforAddon: '请为附加组件选择一个选项',
-  whatsAppText: '需要更多帮助？联系我们'
+  whatsAppText: '需要更多帮助？联系我们',
+  Hi: '你好',
+  YourFavourites: '您的收藏',
+  SeeAll: '查看全部',
+  QuickLinks: '快速链接',
+  OrderAgain: '再次下单',
+  CustomerSupport: '客户支持',
+  OrderHistory: '订单历史记录',
+  Account: '帐户'
 }

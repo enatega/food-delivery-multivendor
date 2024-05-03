@@ -540,5 +540,13 @@ export const km = {
   pickupTime: 'ពេលវេលា​យកឡើង',
   asap: 'ដោយសារយោង',
   selectOptionforAddon: 'សូមជ្រើសរើស​ជម្រើសសម្រាប់​គ្រឿង​បន្ថែម',
-  whatsAppText: 'ត្រូវការជំនួយច្រើនទៀត? ទាក់ទង​មកយើង'
+  whatsAppText: 'ត្រូវការជំនួយច្រើនទៀត? ទាក់ទង​មកយើង',
+  Hi: 'សួស្ដី',
+  YourFavourites: 'អ្នកដែលលូតលាស់របស់អ្នក',
+  SeeAll: 'មើលទាំងអស់',
+  QuickLinks: 'តំណ​ភ្ជាប់​បន្ទាប់',
+  OrderAgain: 'បញ្ជាទិញម្តងទៀត',
+  CustomerSupport: 'ការគាំទ្រអតិថិជន',
+  OrderHistory: 'ប្រវត្តិការបញ្ជាទិញ',
+  Account: 'គណនី'
 }

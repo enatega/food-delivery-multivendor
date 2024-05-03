@@ -552,5 +552,15 @@ export const en = {
   salesTax: 'Sales Tax',
   minimumOrder: 'Minimum Order',
   selectOptionforAddon: 'Please select an option for addon',
-  whatsAppText: 'Need more help? Contact us'
+  whatsAppText: 'Need more help? Contact us',
+  Hi: 'Hi',
+  YourFavourites: 'Your Favourites',
+  SeeAll: 'See All',
+  QuickLinks: 'Quick links',
+  OrderAgain: 'Order Again',
+  CustomerSupport: 'Customer support',
+  OrderHistory: 'Order history',
+  Account: 'Account',
+  legal: 'Legal',
+  serviceTerms: 'Terms of Service'
 }
