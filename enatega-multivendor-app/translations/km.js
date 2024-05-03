@@ -570,4 +570,13 @@ secureAccountWithPhone: 'យើងនឹងប្រើលេខរៀងគ្�
 textWithCodeBtn: "ផ្ញើសារជាមួយកូដ",
 resendOtpBtn: 'ផ្ញើម្ដងទៀតកូដ OTP',
 getRegistered: 'ចុះឈ្មោះ'
+  whatsAppText: 'ត្រូវការជំនួយច្រើនទៀត? ទាក់ទង​មកយើង',
+  Hi: 'សួស្ដី',
+  YourFavourites: 'អ្នកដែលលូតលាស់របស់អ្នក',
+  SeeAll: 'មើលទាំងអស់',
+  QuickLinks: 'តំណ​ភ្ជាប់​បន្ទាប់',
+  OrderAgain: 'បញ្ជាទិញម្តងទៀត',
+  CustomerSupport: 'ការគាំទ្រអតិថិជន',
+  OrderHistory: 'ប្រវត្តិការបញ្ជាទិញ',
+  Account: 'គណនី'
 }

@@ -575,4 +575,15 @@ export const en = {
   textWithCodeBtn: "Send text with code",
   resendOtpBtn: 'Resend OTP',
   getRegistered: 'Get Registered'
+  whatsAppText: 'Need more help? Contact us',
+  Hi: 'Hi',
+  YourFavourites: 'Your Favourites',
+  SeeAll: 'See All',
+  QuickLinks: 'Quick links',
+  OrderAgain: 'Order Again',
+  CustomerSupport: 'Customer support',
+  OrderHistory: 'Order history',
+  Account: 'Account',
+  legal: 'Legal',
+  serviceTerms: 'Terms of Service'
 }

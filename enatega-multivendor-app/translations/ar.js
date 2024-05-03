@@ -571,4 +571,13 @@ secureAccountWithPhone: 'سنستخدم رقمك فقط إذا كنا بحاجة
 textWithCodeBtn: "إرسال نص مع الرمز",
 resendOtpBtn: 'إعادة إرسال رمز OTP',
 getRegistered: 'التسجيل'
+  whatsAppText: 'تحتاج مساعدة أكثر؟ اتصل بنا',
+  Hi: 'مرحبًا',
+  YourFavourites: 'مفضلاتك',
+  SeeAll: 'عرض الكل',
+  QuickLinks: 'روابط سريعة',
+  OrderAgain: 'أطلب مرة أخرى',
+  CustomerSupport: 'دعم العملاء',
+  OrderHistory: 'سجل الطلبات',
+  Account: 'الحساب'
 }

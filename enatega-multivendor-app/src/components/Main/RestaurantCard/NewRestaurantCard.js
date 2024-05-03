@@ -18,7 +18,7 @@ import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
-import { profile } from '../../../apollo/queries'
+import { profile, FavouriteRestaurant } from '../../../apollo/queries'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
@@ -28,6 +28,9 @@ const ADD_FAVOURITE = gql`
 `
 const PROFILE = gql`
   ${profile}
+`
+const FAVOURITERESTAURANTS = gql`
+  ${FavouriteRestaurant}
 `
 
 function NewRestaurantCard(props) {
@@ -40,7 +43,8 @@ function NewRestaurantCard(props) {
   const heart = profile ? profile.favourite.includes(props._id) : false
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
     onCompleted,
-    refetchQueries: [{ query: PROFILE }]
+    // refetchQueries: [{ query: PROFILE }]
+    refetchQueries: [PROFILE,FAVOURITERESTAURANTS ]
   })
 
   function onCompleted() {

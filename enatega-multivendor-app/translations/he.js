@@ -558,4 +558,13 @@ secureAccountWithPhone: 'נשתמש במספר שלך רק אם נצטרך לי�
 textWithCodeBtn: "שלח טקסט עם קוד",
 resendOtpBtn: 'שלח מחדש קוד OTP',
 getRegistered: 'הירשם'
+  whatsAppText: 'צריך עזרה נוספת? צור קשר',
+  Hi: 'היי',
+  YourFavourites: 'המועדפים שלך',
+  SeeAll: 'ראה הכל',
+  QuickLinks: 'קישורים מהירים',
+  OrderAgain: 'הזמן שוב',
+  CustomerSupport: 'תמיכה לקוחות',
+  OrderHistory: 'היסטוריית ההזמנות',
+  Account: 'חשבון'
 }

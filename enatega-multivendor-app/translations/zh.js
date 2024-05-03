@@ -554,4 +554,13 @@ secureAccountWithPhone: '只有在需要与您联系有关您的订单时，我�
 textWithCodeBtn: "发送带有代码的短信",
 resendOtpBtn: '重新发送 OTP',
 getRegistered: '注册'
+  whatsAppText: '需要更多帮助？联系我们',
+  Hi: '你好',
+  YourFavourites: '您的收藏',
+  SeeAll: '查看全部',
+  QuickLinks: '快速链接',
+  OrderAgain: '再次下单',
+  CustomerSupport: '客户支持',
+  OrderHistory: '订单历史记录',
+  Account: '帐户'
 }

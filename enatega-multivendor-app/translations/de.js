@@ -590,4 +590,13 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
 textWithCodeBtn: "Text mit Code senden",
 resendOtpBtn: 'OTP erneut senden',
 getRegistered: 'Registrieren'
+  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
+  Hi: 'Hallo',
+  YourFavourites: 'Ihre Favoriten',
+  SeeAll: 'Alle anzeigen',
+  QuickLinks: 'Schnellzugriff',
+  OrderAgain: 'Erneut bestellen',
+  CustomerSupport: 'Kundensupport',
+  OrderHistory: 'Bestellverlauf',
+  Account: 'Konto'
 }

@@ -52,7 +52,7 @@ const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) =
     fetchMoreOrdersFunc,
     networkStatusOrders
   } = useContext(OrdersContext)
-
+console.log("navigation",navigation);
   const renderItem = ({ item }) => (
     <Item
       item={item}

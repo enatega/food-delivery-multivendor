@@ -67,7 +67,7 @@ const RESTAURANTS = gql`
   ${FavouriteRestaurant}
 `
 
-function Profile(props) {
+function Account(props) {
   const Analytics = analytics()
   const navigation = useNavigation()
   const route = useRoute()
@@ -87,87 +87,87 @@ function Profile(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const backScreen = props.route.params ? props.route.params.backScreen : null
-  const [mutate, { loading: loadingMutation }] = useMutation(UPDATEUSER, {
-    onCompleted,
-    onError
-  })
-  const {
-    orders,
-  } = useContext(OrdersContext)
+  // const [mutate, { loading: loadingMutation }] = useMutation(UPDATEUSER, {
+  //   onCompleted,
+  //   onError
+  // })
+  // const {
+  //   orders,
+  // } = useContext(OrdersContext)
 
-  const activeOrders = useMemo(() => {
-    const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED'];
-    return orders.filter(o => orderStatusActive.includes(o.orderStatus));
-  }, [orders]);
+  // const activeOrders = useMemo(() => {
+  //   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED'];
+  //   return orders.filter(o => orderStatusActive.includes(o.orderStatus));
+  // }, [orders]);
 
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
-  const recentOrderRestaurants = useQuery(recentOrderRestaurantsQuery,
-    {
-      variables: { latitude: location.latitude, longitude: location.longitude },
-    }
-  )
+  // const { data, refetch, networkStatus, loading, error } = useQuery(
+  //   RESTAURANTS,
+  //   {
+  //     variables: {
+  //       longitude: location.longitude || null,
+  //       latitude: location.latitude || null
+  //     },
+  //     fetchPolicy: 'network-only'
+  //   }
+  // )
+  // const recentOrderRestaurants = useQuery(recentOrderRestaurantsQuery,
+  //   {
+  //     variables: { latitude: location.latitude, longitude: location.longitude },
+  //   }
+  // )
 
-  const recentOrderData = recentOrderRestaurants?.data?.recentOrderRestaurants
-  const recentOrderLoading = recentOrderRestaurants?.loading?.recentOrderRestaurants
+  // const recentOrderData = recentOrderRestaurants?.data?.recentOrderRestaurants
+  // const recentOrderLoading = recentOrderRestaurants?.loading?.recentOrderRestaurants
   
-  const onCompletedDeactivate = () => {
-    setDeleteModalVisible(false)
-    logout()
-    navigation.reset({
-      routes: [{ name: 'Main' }]
-    })
-    FlashMessage({ message: t('accountDeactivated'), duration: 5000 })
-  }
-  const onErrorDeactivate = (error) => {
-    if (error.graphQLErrors) {
-      FlashMessage({
-        message: error.graphQLErrors[0].message
-      })
-    } else if (error.networkError) {
-      FlashMessage({
-        message: error.networkError.result.errors[0].message
-      })
-    } else {
-      FlashMessage({
-        message: "Couldn't delete account. Please try again later"
-      })
-    }
-  }
+  // const onCompletedDeactivate = () => {
+  //   setDeleteModalVisible(false)
+  //   logout()
+  //   navigation.reset({
+  //     routes: [{ name: 'Main' }]
+  //   })
+  //   FlashMessage({ message: t('accountDeactivated'), duration: 5000 })
+  // }
+  // const onErrorDeactivate = (error) => {
+  //   if (error.graphQLErrors) {
+  //     FlashMessage({
+  //       message: error.graphQLErrors[0].message
+  //     })
+  //   } else if (error.networkError) {
+  //     FlashMessage({
+  //       message: error.networkError.result.errors[0].message
+  //     })
+  //   } else {
+  //     FlashMessage({
+  //       message: "Couldn't delete account. Please try again later"
+  //     })
+  //   }
+  // }
 
-  const [deactivated, { loading: deactivateLoading }] = useMutation(
-    DEACTIVATE,
-    {
-      onCompleted: onCompletedDeactivate,
-      onError: onErrorDeactivate
-    }
-  )
+  // const [deactivated, { loading: deactivateLoading }] = useMutation(
+  //   DEACTIVATE,
+  //   {
+  //     onCompleted: onCompletedDeactivate,
+  //     onError: onErrorDeactivate
+  //   }
+  // )
 
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
-    }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
-  })
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_PROFILE)
-    }
-    Track()
-  }, [])
+  // useFocusEffect(() => {
+  //   if (Platform.OS === 'android') {
+  //     StatusBar.setBackgroundColor(currentTheme.menuBar)
+  //   }
+  //   StatusBar.setBarStyle(
+  //     themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+  //   )
+  // })
+  // useEffect(() => {
+  //   async function Track() {
+  //     await Analytics.track(Analytics.events.NAVIGATE_TO_PROFILE)
+  //   }
+  //   Track()
+  // }, [])
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: t('titleProfile'),
+      title: t('Account'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
@@ -210,226 +210,226 @@ function Profile(props) {
     })
   }, [props.navigation, showPass, toggleView])
 
-  useEffect(() => {
-    if (backScreen) {
-      viewHideAndShowName()
-      viewHideAndShowEmail()
-    }
-  }, [backScreen])
+  // useEffect(() => {
+  //   if (backScreen) {
+  //     viewHideAndShowName()
+  //     viewHideAndShowEmail()
+  //   }
+  // }, [backScreen])
 
-  function viewHideAndShowName() {
-    setToggleNameView((prev) => !prev)
-  }
-  function viewHideAndShowEmail() {
-    setToggleEmailView((prev) => !prev)
-  }
+  // function viewHideAndShowName() {
+  //   setToggleNameView((prev) => !prev)
+  // }
+  // function viewHideAndShowEmail() {
+  //   setToggleEmailView((prev) => !prev)
+  // }
 
-  function onCompleted({ updateUser }) {
-    if (updateUser) {
-      FlashMessage({
-        message: t('userInfoUpdated')
-      })
-      if (backScreen) {
-        props.navigation.goBack()
-      }
-    }
-  }
+  // function onCompleted({ updateUser }) {
+  //   if (updateUser) {
+  //     FlashMessage({
+  //       message: t('userInfoUpdated')
+  //     })
+  //     if (backScreen) {
+  //       props.navigation.goBack()
+  //     }
+  //   }
+  // }
 
-  const validateName = async () => {
-    setNameError('')
+  // const validateName = async () => {
+  //   setNameError('')
 
-    const name = refName.current.value()
+  //   const name = refName.current.value()
 
-    if (name !== profile?.name) {
-      if (!name.trim()) {
-        refName.current.focus()
-        setNameError(t('nameError'))
-        return false
-      }
+  //   if (name !== profile?.name) {
+  //     if (!name.trim()) {
+  //       refName.current.focus()
+  //       setNameError(t('nameError'))
+  //       return false
+  //     }
 
-      try {
-        await mutate({
-          variables: {
-            name: name
-          }
-        })
-      } catch (error) {
-        return false
-      }
-    }
+  //     try {
+  //       await mutate({
+  //         variables: {
+  //           name: name
+  //         }
+  //       })
+  //     } catch (error) {
+  //       return false
+  //     }
+  //   }
 
-    return true
-  }
+  //   return true
+  // }
 
-  const updateName = async () => {
-    const isValid = await validateName()
-    if (isValid) {
-      await mutate({
-        variables: {
-          name: refName.current.value(),
-          phone: profile?.phone
-        }
-      })
-    }
-  }
+  // const updateName = async () => {
+  //   const isValid = await validateName()
+  //   if (isValid) {
+  //     await mutate({
+  //       variables: {
+  //         name: refName.current.value(),
+  //         phone: profile?.phone
+  //       }
+  //     })
+  //   }
+  // }
 
-  const handleNamePress = () => {
-    viewHideAndShowName()
-  }
-  const handleNamePressUpdate = async () => {
-    await updateName()
-    viewHideAndShowName()
-  }
+  // const handleNamePress = () => {
+  //   viewHideAndShowName()
+  // }
+  // const handleNamePressUpdate = async () => {
+  //   await updateName()
+  //   viewHideAndShowName()
+  // }
 
-  function onError(error) {
-    try {
-      if (error.graphQLErrors) {
-        FlashMessage({
-          message: error.graphQLErrors[0].message
-        })
-      } else if (error.networkError) {
-        FlashMessage({
-          message: error.networkError.result.errors[0].message
-        })
-      }
-    } catch (err) {}
-  }
+  // function onError(error) {
+  //   try {
+  //     if (error.graphQLErrors) {
+  //       FlashMessage({
+  //         message: error.graphQLErrors[0].message
+  //       })
+  //     } else if (error.networkError) {
+  //       FlashMessage({
+  //         message: error.networkError.result.errors[0].message
+  //       })
+  //     }
+  //   } catch (err) {}
+  // }
 
-  async function deactivatewithemail() {
-    try {
-      // setDeleteModalVisible(false)
-      // setDeleteConfirmationModalVisible(true)
-      await deactivated({
-        variables: { isActive: false, email: profile?.email }
-      })
-    } catch (error) {
-      console.error('Error during deactivation mutation:', error)
-    }
-  }
+  // async function deactivatewithemail() {
+  //   try {
+  //     // setDeleteModalVisible(false)
+  //     // setDeleteConfirmationModalVisible(true)
+  //     await deactivated({
+  //       variables: { isActive: false, email: profile?.email }
+  //     })
+  //   } catch (error) {
+  //     console.error('Error during deactivation mutation:', error)
+  //   }
+  // }
 
-  function changeNameTab() {
-    return (
-      <>
-        <View style={styles(currentTheme).containerInfo}>
-          <TextDefault
-            textColor={currentTheme.iconColor}
-            style={{ fontSize: scale(13) }}
-            bolder
-          >
-            {profile?.name}
-          </TextDefault>
-        </View>
-      </>
-    )
-  }
+  // function changeNameTab() {
+  //   return (
+  //     <>
+  //       <View style={styles(currentTheme).containerInfo}>
+  //         <TextDefault
+  //           textColor={currentTheme.iconColor}
+  //           style={{ fontSize: scale(13) }}
+  //           bolder
+  //         >
+  //           {profile?.name}
+  //         </TextDefault>
+  //       </View>
+  //     </>
+  //   )
+  // }
 
-  function changeEmailTab() {
-    return (
-      <>
-        <View style={styles(currentTheme).containerInfo}>
-          <View style={styles(currentTheme).flexRow}>
-            <TextDefault
-              style={{ fontSize: scale(13) }}
-              textColor={currentTheme.iconColor}
-              bolder
-            >
-              {profile?.email}
-            </TextDefault>
-          </View>
-          {profile?.email !== '' && (
-            <View
-              style={[
-                styles().verifiedButton,
-                {
-                  backgroundColor: profile?.emailIsVerified
-                    ? currentTheme.newheaderColor
-                    : currentTheme.buttonText
-                }
-              ]}
-            >
-              <TextDefault textColor={currentTheme.color4} bold>
-                {profile?.emailIsVerified ? t('verified') : t('unverified')}
-              </TextDefault>
-            </View>
-          )}
-        </View>
-      </>
-    )
-  }
+  // function changeEmailTab() {
+  //   return (
+  //     <>
+  //       <View style={styles(currentTheme).containerInfo}>
+  //         <View style={styles(currentTheme).flexRow}>
+  //           <TextDefault
+  //             style={{ fontSize: scale(13) }}
+  //             textColor={currentTheme.iconColor}
+  //             bolder
+  //           >
+  //             {profile?.email}
+  //           </TextDefault>
+  //         </View>
+  //         {profile?.email !== '' && (
+  //           <View
+  //             style={[
+  //               styles().verifiedButton,
+  //               {
+  //                 backgroundColor: profile?.emailIsVerified
+  //                   ? currentTheme.newheaderColor
+  //                   : currentTheme.buttonText
+  //               }
+  //             ]}
+  //           >
+  //             <TextDefault textColor={currentTheme.color4} bold>
+  //               {profile?.emailIsVerified ? t('verified') : t('unverified')}
+  //             </TextDefault>
+  //           </View>
+  //         )}
+  //       </View>
+  //     </>
+  //   )
+  // }
 
-  function changePasswordTab() {
-    return (
-      <>
-        <View style={styles(currentTheme).containerInfo}>
-          <TextDefault
-            textColor={currentTheme.iconColor}
-            style={{ fontSize: scale(13) }}
-            bolder
-          >
-            ***********
-          </TextDefault>
-        </View>
-      </>
-    )
-  }
+  // function changePasswordTab() {
+  //   return (
+  //     <>
+  //       <View style={styles(currentTheme).containerInfo}>
+  //         <TextDefault
+  //           textColor={currentTheme.iconColor}
+  //           style={{ fontSize: scale(13) }}
+  //           bolder
+  //         >
+  //           ***********
+  //         </TextDefault>
+  //       </View>
+  //     </>
+  //   )
+  // }
 
-  function changePhoneTab() {
-    return (
-      <>
-        <View style={styles(currentTheme).containerInfo}>
-          <View style={styles(currentTheme).flexRow}>
-            <TextDefault
-              style={{ fontSize: scale(13) }}
-              textColor={currentTheme.iconColor}
-              bolder
-            >
-              {profile?.phone}
-            </TextDefault>
-          </View>
-          {profile?.phone !== '' && (
-            <View
-              style={[
-                styles().verifiedButton,
-                {
-                  backgroundColor: profile?.phoneIsVerified
-                    ? currentTheme.main
-                    : currentTheme.fontFourthColor
-                }
-              ]}
-            >
-              <TextDefault
-                textColor={
-                  profile?.phoneIsVerified
-                    ? currentTheme.color4
-                    : currentTheme.white
-                }
-                bold
-              >
-                {profile?.phoneIsVerified ? t('verified') : t('unverified')}
-              </TextDefault>
-            </View>
-          )}
-        </View>
-      </>
-    )
-  }
+  // function changePhoneTab() {
+  //   return (
+  //     <>
+  //       <View style={styles(currentTheme).containerInfo}>
+  //         <View style={styles(currentTheme).flexRow}>
+  //           <TextDefault
+  //             style={{ fontSize: scale(13) }}
+  //             textColor={currentTheme.iconColor}
+  //             bolder
+  //           >
+  //             {profile?.phone}
+  //           </TextDefault>
+  //         </View>
+  //         {profile?.phone !== '' && (
+  //           <View
+  //             style={[
+  //               styles().verifiedButton,
+  //               {
+  //                 backgroundColor: profile?.phoneIsVerified
+  //                   ? currentTheme.main
+  //                   : currentTheme.fontFourthColor
+  //               }
+  //             ]}
+  //           >
+  //             <TextDefault
+  //               textColor={
+  //                 profile?.phoneIsVerified
+  //                   ? currentTheme.color4
+  //                   : currentTheme.white
+  //               }
+  //               bold
+  //             >
+  //               {profile?.phoneIsVerified ? t('verified') : t('unverified')}
+  //             </TextDefault>
+  //           </View>
+  //         )}
+  //       </View>
+  //     </>
+  //   )
+  // }
 
-  const showModal = () => {
-    setModalVisible(true)
-  }
+  // const showModal = () => {
+  //   setModalVisible(true)
+  // }
 
-  const buttonNavigation = () => {
-    navigation.navigate('Help')
-  }
+  // const buttonNavigation = () => {
+  //   navigation.navigate('Help')
+  // }
 
   return (
     <>
-      <ChangePassword
+      {/* <ChangePassword
         modalVisible={modelVisible}
         hideModal={() => {
           setModalVisible(false)
         }}
-      />
+      /> */}
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -703,182 +703,7 @@ function Profile(props) {
             </View>
           </View> */}
 
-            <View style={styles(currentTheme).mainContainer}>
-              <View>
-                <TextDefault H2 bolder textColor={currentTheme.fontThirdColor}>
-                  {t('Hi')} {(profile.name)}
-                </TextDefault>
-              </View>
-
-              <View style={[styles(currentTheme).nameView, styles().flexRow]}>
-                <View>
-                  <TextDefault H2 bold textColor={currentTheme.fontThirdColor}>
-                    {profile?.name}
-                  </TextDefault>
-                  <TextDefault H5 bold textColor={currentTheme.fontThirdColor}>
-                  {activeOrders?.length} {t('ActiveOrder')}
-                  </TextDefault>
-                </View>
-                <View>
-                  <TouchableOpacity
-                  // onPress={navigation.navigate('MyOrders')}
-                  onPress={() => navigation.navigate('MyOrders')}
-                  >
-                    <Entypo
-                      name='chevron-right'
-                      size={verticalScale(20)}
-                      color={currentTheme.darkBgFont}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles().line} />
-
-              {/* favourite section */}
-              {loading ? (
-                <Spinner
-                  size={'small'}
-                  backColor={currentTheme.themeBackground}
-                  spinnerColor={currentTheme.main}
-                />
-              ) : (
-                data?.userFavourite?.length >= 1 && (
-                  <View>
-                    <View
-                      style={[
-                        styles(currentTheme).flexRow,
-                        styles(currentTheme).favView
-                      ]}
-                    >
-                      <View>
-                        <TextDefault
-                          H2
-                          bold
-                          textColor={currentTheme.fontThirdColor}
-                        >
-                          {t('YourFavourites')}
-                        </TextDefault>
-                      </View>
-                      <View>
-                        <TouchableOpacity
-                          style={styles(currentTheme).seeAll}
-                          onPress={() => navigation.navigate('Favourite')}
-                        >
-                          <TextDefault
-                            H5
-                            bolder
-                            textColor={currentTheme.newButtonText}
-                          >
-                            {t('SeeAll')}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-
-                    <FlatList
-                      style={styles().offerScroll}
-                      contentContainerStyle={{
-                        flexGrow: 1,
-                        ...alignment.MTsmall
-                      }}
-                      showsVerticalScrollIndicator={false}
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      data={data?.userFavourite}
-                      keyExtractor={(item) => item._id}
-                      renderItem={({ item }) => {
-                        return <NewRestaurantCard {...item} />
-                      }}
-                    />
-                  </View>
-                )
-              )}
-
-              <View style={styles().quickLinkView}>
-                <TextDefault H2 bold textColor={currentTheme.fontThirdColor}>
-                  {t('QuickLinks')}
-                </TextDefault>
-
-                <ButtonContainer
-                  icon={'people-outline'}
-                  iconType={'Ionicons'}
-                  onPress={() => navigation.navigate('Help')}
-                  title={t('CustomerSupport')}
-                />
-                <ButtonContainer
-                  icon={'file-tray-stacked-outline'}
-                  iconType={'Ionicons'}
-                  onPress={() => navigation.navigate('MyOrders')}
-                  title={t('OrderHistory')}
-                />
-              </View>
-
-              {/* order again */}
-              {recentOrderLoading ? (
-                <Spinner
-                  size={'small'}
-                  backColor={currentTheme.themeBackground}
-                  spinnerColor={currentTheme.main}
-                />
-              ) : (
-                recentOrderData?.length >= 1 && (
-                  <View>
-                    <View
-                      style={[
-                        styles(currentTheme).flexRow,
-                        styles(currentTheme).orderAgainView
-                      ]}
-                    >
-                      <View>
-                        <TextDefault
-                          H2
-                          bold
-                          textColor={currentTheme.fontThirdColor}
-                        >
-                          {t('OrderAgain')}
-                        </TextDefault>
-                      </View>
-                    </View>
-
-                    <FlatList
-                      // style={styles().offerScroll}
-                      contentContainerStyle={{
-                        flexGrow: 1,
-                        ...alignment.MTsmall
-                      }}
-                      showsVerticalScrollIndicator={false}
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      data={recentOrderData}
-                      keyExtractor={(item) => item._id}
-                      renderItem={({ item }) => {
-                        return <OrderAgainCard {...item} />
-                      }}
-                    />
-                  </View>
-                )
-              )}
-
-              <View style={styles().settingView}>
-                <TextDefault H2 bold textColor={currentTheme.fontThirdColor}>
-                  {t('titleSettings')}
-                </TextDefault>
-
-                <ButtonContainer
-                  icon={'account-outline'}
-                  iconType={'MaterialCommunityIcons'}
-                  onPress={() => navigation.navigate('Account')}
-                  title={t('Account')}
-                />
-                <ButtonContainer
-                  icon={'location-outline'}
-                  iconType={'Ionicons'}
-                  onPress={() => navigation.navigate('Addresses')}
-                  title={t('myAddresses')}
-                />
-              </View>
-            </View>
+            
           </ScrollView>
 
           {/* <Modal
@@ -948,4 +773,4 @@ function Profile(props) {
   )
 }
 
-export default Profile
+export default Account

@@ -21,11 +21,7 @@ const styles = (props = null) =>
     },
     mainContainer: {
       flex: 1,
-      // flexDirection: 'column',
-      // justifyContent: 'space-between',
-      // ...alignment.MBlarge,
       ...alignment.Pmedium,
-      // backgroundColor: 'red'
     },
     formSubContainer: {
       borderRadius: scale(8),
@@ -200,12 +196,10 @@ const styles = (props = null) =>
       paddingLeft: 16,
       paddingRight: 16
     },
-    hiView: {
-      ...alignment.PLmedium
-    },
     nameView:{
-      // flex: 1,
       ...alignment.MTlarge,
+      ...alignment.MBlarge,
+      alignItems: 'center'
     },
     line: {
       width: '100%',
@@ -215,8 +209,10 @@ const styles = (props = null) =>
       ...alignment.MTsmall
     },
     favView: {
-      ...alignment.MTxSmall,
-      alignItems: 'center',
+      ...alignment.MTlarge,
+    },
+    orderAgainView: {
+      ...alignment.MTlarge,
     },
     offerScroll: {
       height: height * 0.4,
@@ -243,26 +239,24 @@ const styles = (props = null) =>
       borderRadius: 25
     },
     line: {
-      flex: 1,
       height: 1,
       backgroundColor: props !== null ? props.color6 : '#9B9A9A',
       paddingTop: scale(1)
     },
-    rightContainer: {
-      // flex: '1',
-      // height: '80%',
-      // width: '75%',
-      // justifyContent: 'center',
-    },
-    centerContainer: {
-      // flex: '1',
-      // height: '80%',
-      // width: '75%',
-      // justifyContent: 'center',
-    },
+
     drawerContainer: {
-      // alignSelf: 'flex-start',
       ...alignment.PLlarge
+    },
+    settingView: {
+      ...alignment.MTlarge,
+    },
+    quickLinkView: {
+      ...alignment.MTlarge,
+    },
+    seeAll: {
+      backgroundColor: props !== null ? props.newButtonBackground : '#F3FFEE',
+      ...alignment.Psmall,
+      borderRadius: scale(5),
     }
   })
 export default styles

@@ -7,6 +7,7 @@ const styles = (props = null) =>
     mainContainer: {
       width: scale(330),
       alignItems: 'center',
+      ...alignment.PTxSmall
     
     },
     restaurantContainer: {

@@ -586,4 +586,13 @@ secureAccountWithPhone: 'Nous n’utiliserons votre numéro que si nous devons v
 textWithCodeBtn: "Envoyer un texte avec le code",
 resendOtpBtn: 'Renvoyer le code OTP',
 getRegistered: "S'inscrire"
+  whatsAppText: "Besoin de plus d'aide? Contactez-nous",
+  Hi: 'Bonjour',
+  YourFavourites: 'Vos favoris',
+  SeeAll: 'Voir tout',
+  QuickLinks: 'Liens rapides',
+  OrderAgain: 'Commander à nouveau',
+  CustomerSupport: 'Support client',
+  OrderHistory: 'Historique des commandes',
+  Account: 'Compte'
 }
