@@ -11,7 +11,6 @@ const styles = (props = null) =>
       height: height * 0.376,
       ...alignment.MRsmall
     },
-
     overlayContainer: {
       position: 'absolute',
       top: 0,

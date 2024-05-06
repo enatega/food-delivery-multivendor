@@ -20,9 +20,7 @@ import {
 } from 'react-native'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
-import {
-  useCollapsibleSubHeader,
-} from 'react-navigation-collapsible'
+import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
@@ -86,12 +84,14 @@ function Menu({ route, props }) {
   const Analytics = analytics()
   const selectedType = route.params?.selectedType
   const queryType = route.params?.queryType
+  const collection = route.params?.collection
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
+  const [activeCollection, setActiveCollection] = useState()
   // const [restaurantData, setRestaurantData] = useState([])
   // const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
@@ -111,7 +111,8 @@ function Menu({ route, props }) {
     restaurantData,
     setRestaurantData,
     heading,
-    subHeading
+    subHeading,
+    allData
   } = useRestaurantQueries(queryType, location, selectedType)
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
@@ -123,7 +124,7 @@ function Menu({ route, props }) {
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */,
+    scrollIndicatorInsetTop /* number */
   } = useCollapsibleSubHeader()
 
   const emptyViewDesc =
@@ -165,6 +166,17 @@ function Menu({ route, props }) {
     }))
   }, [allCuisines])
 
+  useEffect(()=>{
+    if(collection && allData){
+      setActiveCollection(collection)
+      const tempData = [...allData]
+      const filteredData = tempData?.filter((item) =>
+        item?.cuisines?.includes(collection)
+      )
+      setRestaurantData(filteredData)
+    }
+  }, [collection, route, allData])
+
   const onOpen = () => {
     const modal = modalRef.current
     if (modal) {
@@ -196,15 +208,19 @@ function Menu({ route, props }) {
     modalRef.current.close()
   }
 
-  const collectionData = useMemo(()=>{
-    if(routeData?.name === 'Restaurants'){
-      return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'restaurant')
-    } else if(routeData?.name === 'Store'){
-      return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'grocery')
-    } else{
+  const collectionData = useMemo(() => {
+    if (routeData?.name === 'Restaurants') {
+      return allCuisines?.cuisines?.filter(
+        (cuisine) => cuisine?.shopType === 'restaurant'
+      )
+    } else if (routeData?.name === 'Store') {
+      return allCuisines?.cuisines?.filter(
+        (cuisine) => cuisine?.shopType === 'grocery'
+      )
+    } else {
       return allCuisines?.cuisines
     }
-  },[routeData, allCuisines])
+  }, [routeData, allCuisines])
 
   const setCurrentLocation = async () => {
     setBusy(true)
@@ -393,6 +409,15 @@ function Menu({ route, props }) {
 
   const extractRating = (ratingString) => parseInt(ratingString)
 
+  const onPressCollection = (collection) => {
+    setActiveCollection(collection.name)
+    const tempData = [...allData]
+    const filteredData = tempData?.filter((item) =>
+      item?.cuisines?.includes(collection.name)
+    )
+    setRestaurantData(filteredData)
+  }
+
   const applyFilters = () => {
     let filteredData =
       queryType === 'orderAgain'
@@ -459,29 +484,42 @@ function Menu({ route, props }) {
         <View style={{ gap: 8 }}>
           <View style={styles().header}>
             <View>
-            <TextDefault bolder H2>Stores</TextDefault>
-            <TextDefault bold H5>Browse Categories</TextDefault>
+              <TextDefault bolder H2>
+                {routeData?.name === 'Restaurants' ? 'Restaurants' : 'Stores'}
+              </TextDefault>
+              <TextDefault bold H5>
+                Browse Categories
+              </TextDefault>
             </View>
             <TouchableOpacity
-            style={styles(currentTheme).seeAllBtn}
-            activeOpacity={0.8}
-            onPress={() => {
-              navigation.navigate('Collection', {
-                collectionType: routeData?.name,
-                data: collectionData
-              })
-            }}
-          >
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              See All
-            </TextDefault>
-          </TouchableOpacity>
+              style={styles(currentTheme).seeAllBtn}
+              activeOpacity={0.8}
+              onPress={() => {
+                navigation.navigate('Collection', {
+                  collectionType: routeData?.name,
+                  data: collectionData
+                })
+              }}
+            >
+              <TextDefault H5 bolder textColor={currentTheme.main}>
+                See All
+              </TextDefault>
+            </TouchableOpacity>
           </View>
           <FlatList
             data={collectionData ?? []}
             renderItem={({ item }) => {
               return (
-                <View style={styles(currentTheme).collectionCard}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => onPressCollection(item)}
+                  style={[
+                    styles(currentTheme).collectionCard,
+                    activeCollection === item.name && {
+                      backgroundColor: currentTheme.newButtonBackground
+                    }
+                  ]}
+                >
                   <View style={styles().brandImgContainer}>
                     <Image
                       source={{ uri: item.image }}
@@ -489,10 +527,19 @@ function Menu({ route, props }) {
                       resizeMode='cover'
                     />
                   </View>
-                  <TextDefault Normal bold style={{ padding: 8 }}>
+                  <TextDefault
+                    Normal
+                    bolder
+                    style={{ padding: 8 }}
+                    textColor={
+                      activeCollection === item.name
+                        ? currentTheme.main
+                        : currentTheme.gray700
+                    }
+                  >
                     {item.name}
                   </TextDefault>
-                </View>
+                </TouchableOpacity>
               )
             }}
             keyExtractor={(item) => item?._id}
@@ -519,7 +566,15 @@ function Menu({ route, props }) {
             ListHeaderComponent={
               restaurantData?.length === 0 ? null : (
                 <ActiveOrdersAndSections
-                  menuPageHeading={heading ? heading : 'Restaurants'}
+                  menuPageHeading={
+                    heading
+                      ? heading
+                      : routeData?.name === 'Restaurants'
+                        ? 'Restaurants'
+                        : routeData?.name === 'Store'
+                          ? 'All Stores'
+                          : 'Restaurants'
+                  }
                   subHeading={subHeading ? subHeading : ''}
                 />
               )

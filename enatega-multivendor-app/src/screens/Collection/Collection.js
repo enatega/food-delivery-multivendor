@@ -7,19 +7,16 @@ import navigationOptions from './navigationOptions'
 import styles from './styles'
 
 const HEADING = {
-    Restaurants: 'I feel like eating',
-    Store: 'Lets shop for',
-    default: 'Collections'
+  Restaurants: 'I feel like eating',
+  Store: 'Lets shop for',
+  default: 'Collections'
 }
 
 const Collection = ({ navigation, route }) => {
-
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const data = route?.params?.data ?? []
   const collectionType = route?.params?.collectionType ?? 'default'
-  console.log('collectionType => ', collectionType)
-  console.log('DATA => ', JSON.stringify(data, null, 2))
 
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -31,34 +28,40 @@ const Collection = ({ navigation, route }) => {
   }, [navigation, currentTheme])
 
   return (
-    <View
-      style={styles(currentTheme).container}
-    >
-      <TextDefault bolder H2>{HEADING[collectionType]}</TextDefault>
+    <View style={styles(currentTheme).container}>
+      <TextDefault bolder H2>
+        {HEADING[collectionType]}
+      </TextDefault>
       <FlatList
-            data={data ?? []}
-            renderItem={({ item }) => {
-              return (
-                <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).collectionCard}>
-                  <View style={styles().brandImgContainer}>
-                    <Image
-                      source={{ uri: item.image }}
-                      style={styles().collectionImage}
-                      resizeMode='cover'
-                    />
-                  </View>
-                  <TextDefault Normal bold style={{ padding: 8 }}>
-                    {item.name}
-                  </TextDefault>
-                </TouchableOpacity>
-              )
-            }}
-            keyExtractor={(item) => item?._id}
-            contentContainerStyle={styles().contentContainerStyle}
-            showsVerticalScrollIndicator={false}
-            columnWrapperStyle={styles().columnWrapperStyle}
-            numColumns={2}
-          />
+        data={data ?? []}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles(currentTheme).collectionCard}
+              onPress={()=>{
+                navigation.navigate(collectionType ??  "Restaurants", { collection : item.name})
+              }}
+            >
+              <View style={styles().brandImgContainer}>
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles().collectionImage}
+                  resizeMode='cover'
+                />
+              </View>
+              <TextDefault Normal bold style={{ padding: 8 }}>
+                {item.name}
+              </TextDefault>
+            </TouchableOpacity>
+          )
+        }}
+        keyExtractor={(item) => item?._id}
+        contentContainerStyle={styles().contentContainerStyle}
+        showsVerticalScrollIndicator={false}
+        columnWrapperStyle={styles().columnWrapperStyle}
+        numColumns={2}
+      />
     </View>
   )
 }
