@@ -543,7 +543,7 @@ secureAccountWithPhone: 'נשתמש במספר שלך רק אם נצטרך לי�
   OrderAgain: 'הזמן שוב',
   CustomerSupport: 'תמיכה לקוחות',
   OrderHistory: 'היסטוריית ההזמנות',
-  Account: 'חשבון'
+  Account: 'חשבון',
   whatsAppText: 'צריך עזרה נוספת? צור קשר',
   openingHours: 'שעות פתיחה',
   deliveryInformation: 'מידע משלוחים',
@@ -566,7 +566,7 @@ secureAccountWithPhone: 'נשתמש במספר שלך רק אם נצטרך לי�
     phoneNumber: 'מספר טלפון',
 textWithCodeBtn: "שלח טקסט עם קוד",
 resendOtpBtn: 'שלח מחדש קוד OTP',
-getRegistered: 'הירשם'
+getRegistered: 'הירשם',
   whatsAppText: 'צריך עזרה נוספת? צור קשר',
   Hi: 'היי',
   YourFavourites: 'המועדפים שלך',

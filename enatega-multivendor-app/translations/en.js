@@ -585,7 +585,7 @@ export const en = {
   phoneNumber: 'Phone Number',
   textWithCodeBtn: "Send text with code",
   resendOtpBtn: 'Resend OTP',
-  getRegistered: 'Get Registered'
+  getRegistered: 'Get Registered',
   whatsAppText: 'Need more help? Contact us',
   Hi: 'Hi',
   YourFavourites: 'Your Favourites',

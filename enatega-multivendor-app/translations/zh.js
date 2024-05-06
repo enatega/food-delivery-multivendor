@@ -541,7 +541,7 @@ secureAccountWithPhone: '只有在需要与您联系有关您的订单时，我�
   OrderAgain: '再次下单',
   CustomerSupport: '客户支持',
   OrderHistory: '订单历史记录',
-  Account: '帐户'
+  Account: '帐户',
   whatsAppText: '需要更多帮助？联系我们',
   openingHours: '营业时间',
   deliveryInformation: '送货信息',
@@ -562,7 +562,7 @@ secureAccountWithPhone: '只有在需要与您联系有关您的订单时，我�
   phoneNumber: '电话号码',
 textWithCodeBtn: "发送带有代码的短信",
 resendOtpBtn: '重新发送 OTP',
-getRegistered: '注册'
+getRegistered: '注册',
   whatsAppText: '需要更多帮助？联系我们',
   Hi: '你好',
   YourFavourites: '您的收藏',

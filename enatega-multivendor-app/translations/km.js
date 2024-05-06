@@ -555,7 +555,7 @@ secureAccountWithPhone: 'យើងនឹងប្រើលេខរៀងគ្�
   OrderAgain: 'បញ្ជាទិញម្តងទៀត',
   CustomerSupport: 'ការគាំទ្រអតិថិជន',
   OrderHistory: 'ប្រវត្តិការបញ្ជាទិញ',
-  Account: 'គណនី'
+  Account: 'គណនី',
   whatsAppText: 'ត្រូវការជំនួយច្រើនទៀត? ទាក់ទង​មកយើង',
   openingHours: 'ម៉ោងបើកស្តេច',
   deliveryInformation: 'ព័ត៌មានសេវាដឹកជញ្ជូន',
@@ -578,7 +578,7 @@ secureAccountWithPhone: 'យើងនឹងប្រើលេខរៀងគ្�
     phoneNumber: 'លេខទូរស័ព្ទ',
 textWithCodeBtn: "ផ្ញើសារជាមួយកូដ",
 resendOtpBtn: 'ផ្ញើម្ដងទៀតកូដ OTP',
-getRegistered: 'ចុះឈ្មោះ'
+getRegistered: 'ចុះឈ្មោះ',
   whatsAppText: 'ត្រូវការជំនួយច្រើនទៀត? ទាក់ទង​មកយើង',
   Hi: 'សួស្ដី',
   YourFavourites: 'អ្នកដែលលូតលាស់របស់អ្នក',

@@ -573,7 +573,7 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
   OrderAgain: 'Erneut bestellen',
   CustomerSupport: 'Kundensupport',
   OrderHistory: 'Bestellverlauf',
-  Account: 'Konto'
+  Account: 'Konto',
   whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
   openingHours: 'Öffnungszeiten',
   deliveryInformation: 'Lieferinformationen',
@@ -598,7 +598,7 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
     phoneNumber: 'Telefonnummer',
 textWithCodeBtn: "Text mit Code senden",
 resendOtpBtn: 'OTP erneut senden',
-getRegistered: 'Registrieren'
+getRegistered: 'Registrieren',
   whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
   Hi: 'Hallo',
   YourFavourites: 'Ihre Favoriten',

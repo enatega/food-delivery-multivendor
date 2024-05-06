@@ -570,7 +570,7 @@ secureAccountWithPhone: 'Nous n’utiliserons votre numéro que si nous devons v
   OrderAgain: 'Commander à nouveau',
   CustomerSupport: 'Support client',
   OrderHistory: 'Historique des commandes',
-  Account: 'Compte'
+  Account: 'Compte',
   whatsAppText: "Besoin de plus d'aide? Contactez-nous",
   openingHours: "Heures d'ouverture",
   deliveryInformation: 'Informations de livraison',
@@ -594,7 +594,7 @@ secureAccountWithPhone: 'Nous n’utiliserons votre numéro que si nous devons v
     phoneNumber: 'Numéro de téléphone',
 textWithCodeBtn: "Envoyer un texte avec le code",
 resendOtpBtn: 'Renvoyer le code OTP',
-getRegistered: "S'inscrire"
+getRegistered: "S'inscrire",
   whatsAppText: "Besoin de plus d'aide? Contactez-nous",
   Hi: 'Bonjour',
   YourFavourites: 'Vos favoris',

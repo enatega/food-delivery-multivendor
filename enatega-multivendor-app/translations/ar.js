@@ -557,7 +557,7 @@ secureAccountWithPhone: 'سنستخدم رقمك فقط إذا كنا بحاجة
   OrderAgain: 'أطلب مرة أخرى',
   CustomerSupport: 'دعم العملاء',
   OrderHistory: 'سجل الطلبات',
-  Account: 'الحساب'
+  Account: 'الحساب',
   whatsAppText: 'تحتاج مساعدة أكثر؟ اتصل بنا',
   openingHours: 'ساعات العمل',
   deliveryInformation: 'معلومات التوصيل',
@@ -579,7 +579,7 @@ secureAccountWithPhone: 'سنستخدم رقمك فقط إذا كنا بحاجة
     phoneNumber: 'رقم الهاتف',
 textWithCodeBtn: "إرسال نص مع الرمز",
 resendOtpBtn: 'إعادة إرسال رمز OTP',
-getRegistered: 'التسجيل'
+getRegistered: 'التسجيل',
   whatsAppText: 'تحتاج مساعدة أكثر؟ اتصل بنا',
   Hi: 'مرحبًا',
   YourFavourites: 'مفضلاتك',
