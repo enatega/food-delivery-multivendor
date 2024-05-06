@@ -56,6 +56,7 @@ import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
 import Account from '../screens/Account/Account'
+import EditName from '../components/Account/EditName/EditName'
 
 const NavigationStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -164,6 +165,7 @@ function NoDrawer() {
       <NavigationStack.Screen name="Favourite" component={Favourite} />
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
       <NavigationStack.Screen name="Account" component={Account} />
+      <NavigationStack.Screen name="EditName" component={EditName} />
     </NavigationStack.Navigator>
   )
 }

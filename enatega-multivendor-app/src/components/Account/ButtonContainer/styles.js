@@ -8,24 +8,11 @@ const {height} = Dimensions.get('screen')
 const styles = (props = null) =>
   StyleSheet.create({
     leftContainer: {
-      // height: scale(35),
-      // width: scale(35),
-      // flexDirection: 1,
-      // justifyContent: 'center',
-      // alignItems: 'center',
-      // backgroundColor: props !== null ? props.gray100 : 'transparent',
-      // borderRadius: 25
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       gap: scale(5)
     },
-    // rightContainer: {
-    //   flex: '1',
-    //   height: '80%',
-    //   width: '75%',
-    //   justifyContent: 'center',
-    // },
     flexRow: {
       display: 'flex',
       flexDirection: 'row',
@@ -52,5 +39,8 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.color6 : '#9B9A9A',
       paddingTop: scale(1)
     },
+    verifyView: {
+      alignItems: 'flex-end'
+    }
   })
 export default styles

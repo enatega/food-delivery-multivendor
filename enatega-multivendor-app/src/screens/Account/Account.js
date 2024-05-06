@@ -66,6 +66,8 @@ import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import LogoutModal from '../../components/Sidebar/LogoutModal/LogoutModal'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
+import LanguageModal from '../../components/LanguageModalize/LanguageModal'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const PUSH_TOKEN = gql`
   ${pushToken}
@@ -102,9 +104,10 @@ function Account(props) {
   // const [modelVisible, setModalVisible] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
+  const [lngModalVisible, setLngModalVisible] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const { location } = useContext(LocationContext)
-
+  const [selectedLanguage, setselectedLanguage] = useState('')
   const { logout } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -118,7 +121,7 @@ function Account(props) {
   const [uploadToken] = useMutation(PUSH_TOKEN)
 
   const { profile, loadingProfile, errorProfile } = useContext(UserContext)
-
+console.log("profile", profile);
   const [mutate, { loading }] = useMutation(UPDATE_NOTIFICATION_TOKEN, {
     onCompleted,
     onError,
@@ -218,6 +221,19 @@ function Account(props) {
     AppState.addEventListener('change', _handleAppStateChange)
   }, [])
 
+  useEffect(() => {
+    fetchSelectedLanguage();
+  }, []);
+
+  const fetchSelectedLanguage = async () => {
+    const lang = await AsyncStorage.getItem('enatega-language');
+    if (lang) {
+      setselectedLanguage(lang);
+    } else {
+      setselectedLanguage('en');
+    }
+  };
+
   async function checkPermission() {
     const permission = await getPermission()
     if (permission !== 'granted') {
@@ -235,12 +251,10 @@ function Account(props) {
   }
 
   function toggleTheme() {
-    console.log('toggle before')
     if (themeContext.ThemeValue === 'Pink') {
       themeContext.dispatch({ type: 'Dark' })
     } else themeContext.dispatch({ type: 'Pink' })
     setDarkTheme(!darkTheme)
-    console.log('toggle after')
   }
 
   const onCompletedDeactivate = () => {
@@ -297,9 +311,6 @@ function Account(props) {
     }
   }
 
-  const handleTermsPress = () => {
-    Linking.openURL('https://enatega.com/')
-  }
 
   function onCompleted() {
     FlashMessage({
@@ -314,38 +325,6 @@ function Account(props) {
       })
     } catch (err) {}
   }
-
-  // async function updateNotificationStatus(notificationCheck) {
-  //   let orderNotify, offerNotify
-  //   if (!Device.isDevice) {
-  //     FlashMessage({
-  //       message: t('notificationNotWork')
-  //     })
-  //     return
-  //   }
-
-  //   const permission = await getPermission()
-  //   if (!profile.notificationToken || permission !== 'granted') {
-  //     Linking.openSettings()
-  //   }
-  //   if (notificationCheck === 'offer') {
-  //     offerNotificationSetter(!offerNotification)
-  //     orderNotify = orderNotification
-  //     offerNotify = !offerNotification
-  //   }
-
-  //   if (notificationCheck === 'order') {
-  //     orderNotificationSetter(!orderNotification)
-  //     orderNotify = !orderNotification
-  //     offerNotify = offerNotification
-  //   }
-  //   mutate({
-  //     variables: {
-  //       offerNotification: offerNotify,
-  //       orderNotification: orderNotify
-  //     }
-  //   })
-  // }
 
   async function updateNotificationStatus(notificationCheck) {
     console.log('Entering updateNotificationStatus')
@@ -407,12 +386,7 @@ function Account(props) {
 
   return (
     <>
-      {/* <ChangePassword
-        modalVisible={modelVisible}
-        hideModal={() => {
-          setModalVisible(false)
-        }}
-      /> */}
+
       <View style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -436,17 +410,28 @@ function Account(props) {
                   <ButtonContainer
                     title={t('email')}
                     detail={profile?.email}
+                    status={profile?.emailIsVerified ? 'none' : t('notVerified')}
                     onPress='none'
                   />
                   <ButtonContainer
                     title={t('phone')}
                     detail={profile?.phone}
-                    onPress='none'
+                    status={profile?.phoneIsVerified ? 'none' : t('notVerified')}
+                    // onPress='none'
+                    onPress={profile?.phoneIsVerified ? 'none' : () =>
+                      navigation.navigate('PhoneNumber', {
+                        prevScreen: 'Account'
+                      })
+                    }
                   />
                   <ButtonContainer
                     title={t('name')}
                     detail={profile?.name}
-                    onPress='none'
+                    status='none'
+                    onPress={() => navigation.navigate('EditName', {
+                      name: profile?.name,
+                      phone: profile?.phone
+                    })}
                   />
 
                   <View style={styles().legalView}>
@@ -458,17 +443,17 @@ function Account(props) {
                       {t('language')}
                     </TextDefault>
                     <ButtonContainer
-                      title={t('English')}
+                      title={selectedLanguage}
                       detail={t('edit')}
-                      onPress={() => {
-                        Linking.openURL('https://enatega.com/')
-                      }}
+                      status='none'
+                      onPress={() => { setLngModalVisible(true) }}
                     />
                   </View>
 
                   <ButtonContainer
                     title={t('DeleteAccount')}
                     detail={''}
+                    status='none'
                     onPress={() => setDeleteModalVisible(true)}
                   />
                 </View>
@@ -564,6 +549,7 @@ function Account(props) {
                       )}
                     </TouchableOpacity>
                   </View>
+                  
                   <View
                     style={[
                       styles(currentTheme).languageContainer,
@@ -606,8 +592,9 @@ function Account(props) {
                   <ButtonContainer
                     title={t('serviceTerms')}
                     detail={''}
+                    status='none'
                     onPress={() => {
-                      Linking.openURL('https://enatega.com/')
+                      Linking.openURL('https://enatega.com/terms-conditions/')
                     }}
                   />
                 </View>
@@ -621,10 +608,11 @@ function Account(props) {
                     {t('legal')}
                   </TextDefault>
                   <ButtonContainer
-                    title={t('serviceTerms')}
+                    title={t('privacyPolicy')}
                     detail={''}
+                    status='none'
                     onPress={() => {
-                      Linking.openURL('https://enatega.com/')
+                      Linking.openURL('https://enatega.com/privacy-policy/')
                     }}
                   />
                 </View>
@@ -714,6 +702,12 @@ function Account(props) {
             visible={modalVisible}
             onCancel={handleCancel}
             onLogout={handleLogout}
+          />
+          <LanguageModal 
+          currentTheme={currentTheme}
+          modalVisible={lngModalVisible}
+          setModalVisible={setLngModalVisible}
+          setselectedLanguage={setselectedLanguage}
           />
         </KeyboardAvoidingView>
       </View>
