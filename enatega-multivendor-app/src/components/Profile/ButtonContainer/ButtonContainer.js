@@ -8,7 +8,7 @@ import { EvilIcons, Ionicons, MaterialCommunityIcons, MaterialIcons  } from '@ex
 import { verticalScale } from '../../../utils/scaling.js'
 
 const ButtonContainer = (props) => {
-  console.log('Props', props)
+  // console.log('Props', props)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   // const IconComponent = props.iconType == 'Ionicons' ? Ionicons : EvilIcons

@@ -706,7 +706,7 @@ function Profile(props) {
             <View style={styles(currentTheme).mainContainer}>
               <View>
                 <TextDefault H2 bolder textColor={currentTheme.fontThirdColor}>
-                  {t('Hi')} {(profile.name)}
+                  {t('Hi')} {(profile?.name)}
                 </TextDefault>
               </View>
 

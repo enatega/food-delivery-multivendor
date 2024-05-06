@@ -113,9 +113,10 @@ const styles = (props = null) =>
     },
     mainContainer: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.PLxSmall,
-      ...alignment.PRxSmall,
-      ...alignment.PTmedium,
+      ...alignment.Pmedium,
+      // ...alignment.PLxSmall,
+      // ...alignment.PRxSmall,
+      // ...alignment.PTmedium,
     },
     languageContainer: {
       width: '100%',
@@ -158,7 +159,9 @@ const styles = (props = null) =>
       flexDirection: 'row',
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      ...alignment.MLxSmall,
+      ...alignment.MRsmall,
     },
 
     buttonContainer: {
@@ -216,7 +219,8 @@ const styles = (props = null) =>
       ...alignment.PBxSmall
     },
     checkboxSettings: {
-      marginBottom: scale(10)
+      marginBottom: scale(10),
+       alignItems: 'center'
     },
     legalView: {
       ...alignment.MTmedium
@@ -233,7 +237,9 @@ const styles = (props = null) =>
       ...alignment.MBmedium
     },
     addButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props.color3 : 'transparent',
+      borderWidth: 2,
+      borderColor: props !== null ? props.red600 : '#DC2626',
       width: '100%',
       height: scale(40),
       borderRadius: 50,
