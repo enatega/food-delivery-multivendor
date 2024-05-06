@@ -65,6 +65,7 @@ import { pushToken, updateNotificationStatus } from '../../apollo/mutations'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import LogoutModal from '../../components/Sidebar/LogoutModal/LogoutModal'
 import * as Notifications from 'expo-notifications'
+import * as Device from 'expo-device'
 
 const PUSH_TOKEN = gql`
   ${pushToken}
@@ -132,152 +133,7 @@ function Account(props) {
     }
   )
 
-  const onCompletedDeactivate = () => {
-    setDeleteModalVisible(false)
-    logout()
-    navigation.reset({
-      routes: [{ name: 'Main' }]
-    })
-    FlashMessage({ message: t('accountDeactivated'), duration: 5000 })
-  }
-  const onErrorDeactivate = (error) => {
-    if (error.graphQLErrors) {
-      FlashMessage({
-        message: error.graphQLErrors[0].message
-      })
-    } else if (error.networkError) {
-      FlashMessage({
-        message: error.networkError.result.errors[0].message
-      })
-    } else {
-      FlashMessage({
-        message: "Couldn't delete account. Please try again later"
-      })
-    }
-  }
-
-  function onCompleted() {
-    FlashMessage({
-      message: t('notificationStatusUpdated')
-    })
-  }
-
-  function onError(error) {
-    try {
-      FlashMessage({
-        message: error.networkError.result.errors[0].message
-      })
-    } catch (err) {}
-  }
-
-  const handleCancel = () => {
-    setModalVisible(false)
-  }
-  const handleLogout = async () => {
-    setModalVisible(false)
-    await Analytics.track(Analytics.events.USER_LOGGED_OUT)
-    await Analytics.identify(null, null)
-    logout()
-    navigation.closeDrawer()
-    FlashMessage({ message: t('logoutMessage') })
-  }
-  const logoutClick = () => {
-    setModalVisible(true)
-  }
-
-  async function updateNotificationStatus(notificationCheck) {
-    let orderNotify, offerNotify
-    if (!Device.isDevice) {
-      FlashMessage({
-        message: t('notificationNotWork')
-      })
-      return
-    }
-
-    const permission = await getPermission()
-    if (!profile.notificationToken || permission !== 'granted') {
-      Linking.openSettings()
-    }
-    if (notificationCheck === 'offer') {
-      offerNotificationSetter(!offerNotification)
-      orderNotify = orderNotification
-      offerNotify = !offerNotification
-    }
-
-    if (notificationCheck === 'order') {
-      orderNotificationSetter(!orderNotification)
-      orderNotify = !orderNotification
-      offerNotify = offerNotification
-    }
-    mutate({
-      variables: {
-        offerNotification: offerNotify,
-        orderNotification: orderNotify
-      }
-    })
-  }
-  if (errorProfile) {
-    FlashMessage({
-      message: t('errorInProfile')
-    })
-  }
-  if (loadingProfile)
-    return (
-      <Spinner
-        backColor={currentTheme.CustomLoadingBG}
-        spinnerColor={currentTheme.main}
-      />
-    )
-
-  const _handleAppStateChange = async (nextAppState) => {
-    if (nextAppState === 'active') {
-      let token = null
-      const permission = await getPermission()
-      if (permission === 'granted') {
-        if (!profile.notificationToken) {
-          token = await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig.extra.eas.projectId
-          })
-          uploadToken({ variables: { token: token.data } })
-        }
-        offerNotificationSetter(profile.isOfferNotification)
-        orderNotificationSetter(profile.isOrderNotification)
-      } else {
-        offerNotificationSetter(false)
-        orderNotificationSetter(false)
-      }
-    }
-    setAppState(nextAppState)
-  }
-
   useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange)
-  }, [])
-
-  async function checkPermission() {
-    const permission = await getPermission()
-    if (permission !== 'granted') {
-      offerNotificationSetter(false)
-      orderNotificationSetter(false)
-    } else {
-      offerNotificationSetter(profile.isOfferNotification)
-      orderNotificationSetter(profile.isOrderNotification)
-    }
-  }
-
-  async function getPermission() {
-    const { status } = await Notifications.getPermissionsAsync()
-    return status
-  }
-
-  function toggleTheme() {
-    if (themeContext.ThemeValue === 'Pink') {
-      themeContext.dispatch({ type: 'Dark' })
-    } else themeContext.dispatch({ type: 'Pink' })
-    setDarkTheme(!darkTheme)
-  }
-
-  useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
@@ -337,6 +193,98 @@ function Account(props) {
     checkPermission()
   }, [props.navigation, showPass, toggleView, themeContext.ThemeValue])
 
+  const _handleAppStateChange = async (nextAppState) => {
+    if (nextAppState === 'active') {
+      let token = null
+      const permission = await getPermission()
+      if (permission === 'granted') {
+        if (!profile.notificationToken) {
+          token = await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId
+          })
+          uploadToken({ variables: { token: token.data } })
+        }
+        offerNotificationSetter(profile?.isOfferNotification)
+        orderNotificationSetter(profile?.isOrderNotification)
+      } else {
+        offerNotificationSetter(false)
+        orderNotificationSetter(false)
+      }
+    }
+    setAppState(nextAppState)
+  }
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange)
+  }, [])
+
+  async function checkPermission() {
+    const permission = await getPermission()
+    if (permission !== 'granted') {
+      offerNotificationSetter(false)
+      orderNotificationSetter(false)
+    } else {
+      offerNotificationSetter(profile?.isOfferNotification)
+      orderNotificationSetter(profile?.isOrderNotification)
+    }
+  }
+
+  async function getPermission() {
+    const { status } = await Notifications.getPermissionsAsync()
+    return status
+  }
+
+  function toggleTheme() {
+    console.log('toggle before')
+    if (themeContext.ThemeValue === 'Pink') {
+      themeContext.dispatch({ type: 'Dark' })
+    } else themeContext.dispatch({ type: 'Pink' })
+    setDarkTheme(!darkTheme)
+    console.log('toggle after')
+  }
+
+  const onCompletedDeactivate = () => {
+    setDeleteModalVisible(false)
+    logout()
+    navigation.reset({
+      routes: [{ name: 'Main' }]
+    })
+    FlashMessage({ message: t('accountDeactivated'), duration: 5000 })
+  }
+  const onErrorDeactivate = (error) => {
+    if (error.graphQLErrors) {
+      FlashMessage({
+        message: error.graphQLErrors[0].message
+      })
+    } else if (error.networkError) {
+      FlashMessage({
+        message: error.networkError.result.errors[0].message
+      })
+    } else {
+      FlashMessage({
+        message: "Couldn't delete account. Please try again later"
+      })
+    }
+  }
+
+  const handleCancel = () => {
+    setModalVisible(false)
+  }
+  const handleLogout = async () => {
+    setModalVisible(false)
+    await Analytics.track(Analytics.events.USER_LOGGED_OUT)
+    await Analytics.identify(null, null)
+    logout()
+    navigation.reset({
+      routes: [{ name: 'Main' }]
+    })
+    // navigation.closeDrawer()
+    FlashMessage({ message: t('logoutMessage') })
+  }
+  const logoutClick = () => {
+    setModalVisible(true)
+  }
+
   async function deactivatewithemail() {
     try {
       setDeleteModalVisible(false)
@@ -352,6 +300,110 @@ function Account(props) {
   const handleTermsPress = () => {
     Linking.openURL('https://enatega.com/')
   }
+
+  function onCompleted() {
+    FlashMessage({
+      message: t('notificationStatusUpdated')
+    })
+  }
+
+  function onError(error) {
+    try {
+      FlashMessage({
+        message: error.networkError.result.errors[0].message
+      })
+    } catch (err) {}
+  }
+
+  // async function updateNotificationStatus(notificationCheck) {
+  //   let orderNotify, offerNotify
+  //   if (!Device.isDevice) {
+  //     FlashMessage({
+  //       message: t('notificationNotWork')
+  //     })
+  //     return
+  //   }
+
+  //   const permission = await getPermission()
+  //   if (!profile.notificationToken || permission !== 'granted') {
+  //     Linking.openSettings()
+  //   }
+  //   if (notificationCheck === 'offer') {
+  //     offerNotificationSetter(!offerNotification)
+  //     orderNotify = orderNotification
+  //     offerNotify = !offerNotification
+  //   }
+
+  //   if (notificationCheck === 'order') {
+  //     orderNotificationSetter(!orderNotification)
+  //     orderNotify = !orderNotification
+  //     offerNotify = offerNotification
+  //   }
+  //   mutate({
+  //     variables: {
+  //       offerNotification: offerNotify,
+  //       orderNotification: orderNotify
+  //     }
+  //   })
+  // }
+
+  async function updateNotificationStatus(notificationCheck) {
+    console.log('Entering updateNotificationStatus')
+    let orderNotify, offerNotify
+    if (!Device.isDevice) {
+      FlashMessage({
+        message: t('notificationNotWork')
+      })
+      console.log('Device is not available, returning early')
+      return
+    }
+
+    const permission = await getPermission()
+    if (!profile.notificationToken || permission !== 'granted') {
+      console.log(
+        'Permission not granted or notification token not available, opening settings'
+      )
+      Linking.openSettings()
+    }
+
+    if (notificationCheck === 'offer') {
+      console.log('Updating offer notification')
+      offerNotificationSetter(!offerNotification)
+      orderNotify = orderNotification
+      offerNotify = !offerNotification
+    }
+
+    if (notificationCheck === 'order') {
+      console.log('Updating order notification')
+      orderNotificationSetter(!orderNotification)
+      orderNotify = !orderNotification
+      offerNotify = offerNotification
+    }
+
+    console.log('Calling mutate with variables:', {
+      offerNotification: offerNotify,
+      orderNotification: orderNotify
+    })
+    mutate({
+      variables: {
+        offerNotification: offerNotify,
+        orderNotification: orderNotify
+      }
+    })
+  }
+
+  if (errorProfile) {
+    FlashMessage({
+      message: t('errorInProfile')
+    })
+  }
+  if (loadingProfile)
+    return (
+      <Spinner
+        backColor={currentTheme.CustomLoadingBG}
+        spinnerColor={currentTheme.main}
+      />
+    )
 
   return (
     <>
@@ -396,6 +448,24 @@ function Account(props) {
                     detail={profile?.name}
                     onPress='none'
                   />
+
+                  <View style={styles().legalView}>
+                    <TextDefault
+                      H5
+                      Bold
+                      textColor={currentTheme.fontThirdColor}
+                    >
+                      {t('language')}
+                    </TextDefault>
+                    <ButtonContainer
+                      title={t('English')}
+                      detail={t('edit')}
+                      onPress={() => {
+                        Linking.openURL('https://enatega.com/')
+                      }}
+                    />
+                  </View>
+
                   <ButtonContainer
                     title={t('DeleteAccount')}
                     detail={''}
@@ -428,7 +498,7 @@ function Account(props) {
                     >
                       <View style={styles().notificationChekboxContainer}>
                         <TextDefault
-                          numberOfLines={1}
+                          // numberOfLines={1}
                           textColor={currentTheme.darkBgFont}
                           style={alignment.MLsmall}
                         >
@@ -475,7 +545,7 @@ function Account(props) {
                         }
                       >
                         <TextDefault
-                          numberOfLines={1}
+                          // numberOfLines={1}
                           textColor={currentTheme.darkBgFont}
                           style={alignment.MLsmall}
                         >
@@ -560,24 +630,20 @@ function Account(props) {
                 </View>
 
                 {/* <View> */}
-                  <View style={styles(currentTheme).containerButton}>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      style={styles(currentTheme).addButton}
-                      onPress={logoutClick}
-                    >
-                      <View style={styles(currentTheme).contentContainer}>
-                        <TextDefault
-                          bold
-                          H5
-                        >
-                          {t('Logout')}
-                        </TextDefault>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                <View style={styles(currentTheme).containerButton}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={styles(currentTheme).addButton}
+                    onPress={logoutClick}
+                  >
+                    <View style={styles(currentTheme).contentContainer}>
+                      <TextDefault bold H5 textColor={currentTheme.red600}>
+                        {t('Logout')}
+                      </TextDefault>
+                    </View>
+                  </TouchableOpacity>
+                </View>
                 {/* </View> */}
-
               </View>
             </View>
           </ScrollView>

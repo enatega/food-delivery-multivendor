@@ -350,8 +350,8 @@ export const en = {
   ///
   selectLocation: ' Select Location',
   languageSetting: 'Language Setting',
-  receiveOfferByEmail: 'Receive offer by emails',
-  receivePushNotification: 'Receive push notification',
+  receiveOfferByEmail: 'I want to receive special offers and promotions from us via email',
+  receivePushNotification: 'I want to receive special offers and promotions from us via notifications',
   turnOnDarkTheme: 'Turn on Dark Theme',
   selectLanguage: 'Select Language',
   Select: 'Select',
@@ -562,5 +562,5 @@ export const en = {
   OrderHistory: 'Order history',
   Account: 'Account',
   legal: 'Legal',
-  serviceTerms: 'Terms of Service'
+  serviceTerms: 'Terms of Service',
 }
