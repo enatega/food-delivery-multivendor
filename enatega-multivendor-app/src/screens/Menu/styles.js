@@ -82,7 +82,7 @@ const styles = (props = null) =>
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       position: 'relative',
-      zIndex: 999,
+      zIndex: 9999999,
       shadowOpacity: 0,
       borderWidth: scale(1),
       borderColor: props != null ? props.color10 : '#FFF'
@@ -199,6 +199,16 @@ const styles = (props = null) =>
       paddingBottom: 8,
       paddingLeft: 16,
       paddingRight: 16,
+    },
+    modalContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      gap: 24,
+      ...alignment.Pmedium
+    },
+    closeBtn: {
+      marginLeft: 'auto'
     }
   })
 export default styles

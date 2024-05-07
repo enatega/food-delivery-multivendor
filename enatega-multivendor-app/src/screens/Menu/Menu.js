@@ -16,9 +16,10 @@ import {
   RefreshControl,
   FlatList,
   Image,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native'
-import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
+import { SimpleLineIcons, AntDesign, Feather } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
@@ -37,7 +38,7 @@ import {
 } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import navigationOptions from '../Main/navigationOptions'
+import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
@@ -54,6 +55,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
+import { Modalize } from 'react-native-modalize'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -79,7 +81,7 @@ export const FILTER_VALUES = {
     values: ['3+ Rating', '4+ Rating', '5 star Rating']
   }
 }
-
+const { height: HEIGHT } = Dimensions.get('window')
 function Menu({ route, props }) {
   const Analytics = analytics()
   const selectedType = route.params?.selectedType
@@ -95,6 +97,8 @@ function Menu({ route, props }) {
   // const [restaurantData, setRestaurantData] = useState([])
   // const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
+  const filtersModalRef = useRef()
+
   const navigation = useNavigation()
   const routeData = useRoute()
   const themeContext = useContext(ThemeContext)
@@ -150,7 +154,8 @@ function Menu({ route, props }) {
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen,
-        icon: 'back'
+        icon: 'back',
+        onPressFilter: () => filtersModalRef.current.open()
       })
     )
   }, [navigation, currentTheme])
@@ -166,8 +171,8 @@ function Menu({ route, props }) {
     }))
   }, [allCuisines])
 
-  useEffect(()=>{
-    if(collection && allData){
+  useEffect(() => {
+    if (collection && allData) {
       setActiveCollection(collection)
       const tempData = [...allData]
       const filteredData = tempData?.filter((item) =>
@@ -609,6 +614,82 @@ function Menu({ route, props }) {
         profile={profile}
         location={location}
       />
+      <Modalize
+        ref={filtersModalRef}
+        modalStyle={styles(currentTheme).modal}
+        modalHeight={HEIGHT / 2}
+        overlayStyle={styles(currentTheme).overlay}
+        handleStyle={styles(currentTheme).handle}
+        handlePosition='inside'
+        openAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+      >
+        <View style={styles().modalContainer}>
+          <Feather
+            name='x-circle'
+            size={24}
+            color={currentTheme.newIconColor}
+            style={styles().closeBtn}
+            onPress={() => filtersModalRef.current.close()}
+          />
+          <TextDefault bolder H3 textColor={currentTheme.fontFourthColor}>
+            Filters
+          </TextDefault>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            directionalLockEnabled={true}
+            alwaysBounceVertical={false}
+          >
+            <FlatList
+              contentContainerStyle={{
+                alignSelf: 'flex-start',
+                flexGrow: 1,
+                gap: 8
+              }}
+              numColumns={Math.ceil(collectionData.length / 3)}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              data={collectionData}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    // onPress={() => onPressCollection(item)}
+                    style={{
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: 50,
+                      borderColor: '#94A3B8',
+                      borderWidth: 1,
+                      marginRight: 8
+                    }}
+                  >
+                    <TextDefault
+                      Normal
+                      bolder
+                      textColor={
+                        activeCollection === item.name
+                          ? currentTheme.main
+                          : currentTheme.gray700
+                      }
+                    >
+                      {item.name}
+                    </TextDefault>
+                  </TouchableOpacity>
+                )
+              }}
+            />
+          </ScrollView>
+          <TextDefault bolder H5>Sort By</TextDefault>
+        </View>
+      </Modalize>
     </SafeAreaView>
   )
 }
