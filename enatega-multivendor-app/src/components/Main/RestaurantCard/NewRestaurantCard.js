@@ -44,7 +44,7 @@ function NewRestaurantCard(props) {
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
     onCompleted,
     // refetchQueries: [{ query: PROFILE }]
-    refetchQueries: [PROFILE,FAVOURITERESTAURANTS ]
+    refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
 
   function onCompleted() {
@@ -113,7 +113,13 @@ function NewRestaurantCard(props) {
           Normal
           style={styles().offerCategoty}
         >
-          {props?.tags?.join(',')}
+          {props.isCategories ? (
+            props.categories.map((category) => (
+              <Text key={category._id}>{category.title + ', '}</Text>
+            ))
+          ) : (
+            <Text>{props.tags?.join(',')}</Text>
+          )}
         </TextDefault>
         <View style={styles().border} />
         <View style={styles().deliveryInfo}>
@@ -138,7 +144,7 @@ function NewRestaurantCard(props) {
             <Bicycle />
 
             <TextDefault
-              textColor={currentTheme.color2}
+              textColor={currentTheme.fontThirdColor}
               numberOfLines={1}
               bold
               Normal
@@ -149,21 +155,11 @@ function NewRestaurantCard(props) {
           <View style={styles().aboutRestaurant}>
             <FontAwesome5 name='star' size={14} color={currentTheme.color2} />
 
-            <TextDefault
-              textColor={currentTheme.color2}
-              bold
-              Normal
-            >
+            <TextDefault textColor={currentTheme.color2} bold Normal>
               {props.reviewAverage}
             </TextDefault>
-            <TextDefault
-              textColor={currentTheme.color2}
-              bold
-              Normal
-            >
-              (
-              {props.reviewCount}
-              )
+            <TextDefault textColor={currentTheme.color2} bold Normal>
+              ({props.reviewCount})
             </TextDefault>
           </View>
         </View>

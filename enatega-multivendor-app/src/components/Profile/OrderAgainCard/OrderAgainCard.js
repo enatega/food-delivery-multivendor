@@ -50,7 +50,7 @@ function OrderAgainCard(props) {
             bold
             Normal
             style={styles().offerCategoty}>
-            {props?.categories.slice(0,2).map(category => category.title).toString()}
+            {props?.tags?.slice(0,2)?.join(', ')}
           </TextDefault>
           <View style={styles().deliveryInfo}>
             <View style={styles().deliveryTime}>
@@ -82,7 +82,7 @@ function OrderAgainCard(props) {
                 style={styles().restaurantRatingContainer}
                 bold
                 >
-                {props.reviewData.ratings}
+                {props.reviewAverage}
               </TextDefault>
             </View>
 

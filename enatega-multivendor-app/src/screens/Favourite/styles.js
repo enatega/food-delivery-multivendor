@@ -15,7 +15,8 @@ const styles = (props = null) =>
     },
     contentContainer: {
       flexGrow: 1,
-      ...alignment.PBsmall
+      ...alignment.PBsmall,
+      alignItems: "center"
     },
     subContainerImage: {
       flex: 1,

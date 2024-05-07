@@ -194,7 +194,7 @@ console.log("profile", profile);
       )
     })
     checkPermission()
-  }, [props.navigation, showPass, toggleView, themeContext.ThemeValue])
+  }, [props.navigation, showPass, toggleView, themeContext.ThemeValue, selectedLanguage])
 
   const _handleAppStateChange = async (nextAppState) => {
     if (nextAppState === 'active') {
@@ -410,13 +410,13 @@ console.log("profile", profile);
                   <ButtonContainer
                     title={t('email')}
                     detail={profile?.email}
-                    status={profile?.emailIsVerified ? 'none' : t('notVerified')}
+                    status={profile?.emailIsVerified ? t('verified') : t('notVerified')}
                     onPress='none'
                   />
                   <ButtonContainer
                     title={t('phone')}
                     detail={profile?.phone}
-                    status={profile?.phoneIsVerified ? 'none' : t('notVerified')}
+                    status={profile?.phoneIsVerified ? t('verified') : t('notVerified')}
                     // onPress='none'
                     onPress={profile?.phoneIsVerified ? 'none' : () =>
                       navigation.navigate('PhoneNumber', {
