@@ -565,7 +565,6 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
   pickupTime: 'Ophaaltijd',
   asap: 'Zo snel mogelijk',
   selectOptionforAddon: 'Bitte wählen Sie eine Option für das Add-On aus',
-  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
   Hi: 'Hallo',
   YourFavourites: 'Ihre Favoriten',
   SeeAll: 'Alle anzeigen',
@@ -599,13 +598,6 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
 textWithCodeBtn: "Text mit Code senden",
 resendOtpBtn: 'OTP erneut senden',
 getRegistered: 'Registrieren',
-  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
-  Hi: 'Hallo',
-  YourFavourites: 'Ihre Favoriten',
-  SeeAll: 'Alle anzeigen',
-  QuickLinks: 'Schnellzugriff',
-  OrderAgain: 'Erneut bestellen',
-  CustomerSupport: 'Kundensupport',
-  OrderHistory: 'Bestellverlauf',
-  Account: 'Konto'
+legal: "Rechtlich",
+serviceTerms: "Nutzungsbedingungen"
 }

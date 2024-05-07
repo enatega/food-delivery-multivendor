@@ -121,7 +121,6 @@ function Account(props) {
   const [uploadToken] = useMutation(PUSH_TOKEN)
 
   const { profile, loadingProfile, errorProfile } = useContext(UserContext)
-console.log("profile", profile);
   const [mutate, { loading }] = useMutation(UPDATE_NOTIFICATION_TOKEN, {
     onCompleted,
     onError,
@@ -220,6 +219,11 @@ console.log("profile", profile);
   useEffect(() => {
     AppState.addEventListener('change', _handleAppStateChange)
   }, [])
+
+  useEffect(() => {
+    orderNotificationSetter(profile?.isOrderNotification)
+    offerNotificationSetter(profile?.isOfferNotification)
+  }, [profile])
 
   useEffect(() => {
     fetchSelectedLanguage();
