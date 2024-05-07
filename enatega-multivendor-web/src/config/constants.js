@@ -4,7 +4,6 @@ import ConfigurationContext from "../../src/context/Configuration";
 
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext);
-  console.log("configuration", configuration);
   const SERVER_URL = "https://enatega-multivendor.up.railway.app/";
   const WS_SERVER_URL = "wss://enatega-multivendor.up.railway.app/";
   const GOOGLE_CLIENT_ID = configuration.webClientID;
