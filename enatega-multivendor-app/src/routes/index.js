@@ -57,6 +57,7 @@ import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
 import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
+import SearchScreen from '../screens/Search/SearchScreen'
 
 const NavigationStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -166,6 +167,7 @@ function NoDrawer() {
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
       <NavigationStack.Screen name="Account" component={Account} />
       <NavigationStack.Screen name="EditName" component={EditName} />
+      <NavigationStack.Screen name="SearchScreen" component={SearchScreen} />
     </NavigationStack.Navigator>
   )
 }

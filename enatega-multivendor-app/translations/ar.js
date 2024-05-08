@@ -580,5 +580,9 @@ textWithCodeBtn: "إرسال نص مع الرمز",
 resendOtpBtn: 'إعادة إرسال رمز OTP',
 getRegistered: 'التسجيل',
 legal: "قانوني",
-serviceTerms: "شروط الخدمة"
+serviceTerms: "شروط الخدمة",
+searchTitle: "البحث",
+noResults: "لم يتم العثور على نتائج",
+recentSearches: "عمليات البحث الأخيرة",
+clear: "مسح"
 }

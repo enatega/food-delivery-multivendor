@@ -579,5 +579,9 @@ textWithCodeBtn: "ផ្ញើសារជាមួយកូដ",
 resendOtpBtn: 'ផ្ញើម្ដងទៀតកូដ OTP',
 getRegistered: 'ចុះឈ្មោះ',
 legal: "តួនាទី​ប្រឹក្សា",
-serviceTerms: "គោលការណ៍សេវាកម្ម"
+serviceTerms: "គោលការណ៍សេវាកម្ម",
+searchTitle: "ស្វែងរក",
+noResults: "រកមិនឃើញលទ្ធផល",
+recentSearches: "ស្វែងរកថ្មីៗថ្ងៃមុន",
+clear: "សម្អាត"
 }

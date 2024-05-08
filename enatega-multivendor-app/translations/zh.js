@@ -563,5 +563,9 @@ textWithCodeBtn: "发送带有代码的短信",
 resendOtpBtn: '重新发送 OTP',
 getRegistered: '注册',
 legal: "法律",
-serviceTerms: "服务条款"
+serviceTerms: "服务条款",
+searchTitle: "搜索",
+noResults: "未找到结果",
+recentSearches: "最近搜索",
+clear: "清除"
 }
