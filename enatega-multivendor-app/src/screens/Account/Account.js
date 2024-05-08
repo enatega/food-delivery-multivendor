@@ -306,7 +306,7 @@ function Account(props) {
   async function deactivatewithemail() {
     try {
       await deactivated({
-        variables: { isActive: false, email: profile.email }
+        variables: { isActive: false, email: profile?.email }
       })
       setDeleteModalVisible(false)
       logout()
