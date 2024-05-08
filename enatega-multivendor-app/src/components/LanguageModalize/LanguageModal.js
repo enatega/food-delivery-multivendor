@@ -31,7 +31,8 @@ const LanguageModal = ({
   modalVisible,
   setModalVisible,
   currentTheme,
-  onLanguageClose
+  onLanguageClose,
+  setselectedLanguage
 }) => {
   const { t } = useTranslation()
   // const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
@@ -68,6 +69,7 @@ const LanguageModal = ({
         const defLang = languageTypes.findIndex((el) => el.code === lang)
         const langName = languageTypes[defLang].value
         languageNameSetter(langName)
+        setselectedLanguage(lang)
       }
       i18next.changeLanguage(lang)
       // modalVisibleSetter(false)

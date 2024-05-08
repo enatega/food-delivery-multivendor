@@ -5,8 +5,9 @@ import { StyleSheet } from 'react-native'
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      width: '100%',
+      width: scale(330),
       alignItems: 'center',
+      ...alignment.PTxSmall
     
     },
     restaurantContainer: {

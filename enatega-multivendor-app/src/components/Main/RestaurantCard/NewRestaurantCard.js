@@ -18,7 +18,7 @@ import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
-import { profile } from '../../../apollo/queries'
+import { profile, FavouriteRestaurant } from '../../../apollo/queries'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
@@ -28,6 +28,9 @@ const ADD_FAVOURITE = gql`
 `
 const PROFILE = gql`
   ${profile}
+`
+const FAVOURITERESTAURANTS = gql`
+  ${FavouriteRestaurant}
 `
 
 function NewRestaurantCard(props) {
@@ -40,7 +43,8 @@ function NewRestaurantCard(props) {
   const heart = profile ? profile.favourite.includes(props._id) : false
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
     onCompleted,
-    refetchQueries: [{ query: PROFILE }]
+    // refetchQueries: [{ query: PROFILE }]
+    refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
 
   function onCompleted() {
@@ -109,7 +113,13 @@ function NewRestaurantCard(props) {
           Normal
           style={styles().offerCategoty}
         >
-          {props?.tags?.join(',')}
+          {props.isCategories ? (
+            props.categories.map((category) => (
+              <Text key={category._id}>{category.title + ', '}</Text>
+            ))
+          ) : (
+            <Text>{props.tags?.join(',')}</Text>
+          )}
         </TextDefault>
         <View style={styles().border} />
         <View style={styles().deliveryInfo}>
@@ -134,7 +144,7 @@ function NewRestaurantCard(props) {
             <Bicycle />
 
             <TextDefault
-              textColor={currentTheme.color2}
+              textColor={currentTheme.fontThirdColor}
               numberOfLines={1}
               bold
               Normal
@@ -145,21 +155,11 @@ function NewRestaurantCard(props) {
           <View style={styles().aboutRestaurant}>
             <FontAwesome5 name='star' size={14} color={currentTheme.color2} />
 
-            <TextDefault
-              textColor={currentTheme.color2}
-              bold
-              Normal
-            >
+            <TextDefault textColor={currentTheme.color2} bold Normal>
               {props.reviewAverage}
             </TextDefault>
-            <TextDefault
-              textColor={currentTheme.color2}
-              bold
-              Normal
-            >
-              (
-              {props.reviewCount}
-              )
+            <TextDefault textColor={currentTheme.color2} bold Normal>
+              ({props.reviewCount})
             </TextDefault>
           </View>
         </View>
