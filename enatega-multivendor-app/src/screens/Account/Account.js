@@ -305,11 +305,15 @@ function Account(props) {
 
   async function deactivatewithemail() {
     try {
-      setDeleteModalVisible(false)
-      setDeleteConfirmationModalVisible(true)
       await deactivated({
         variables: { isActive: false, email: profile?.email }
       })
+      setDeleteModalVisible(false)
+      logout()
+      navigation.reset({
+        routes: [{ name: 'Main' }]
+      })
+      FlashMessage({ message: t('accountDeactivated') })
     } catch (error) {
       console.error('Error during deactivation mutation:', error)
     }
