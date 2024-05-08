@@ -30,8 +30,8 @@ const LOGIN = gql`
 const Login = props => {
   const [showPassword, setShowPassword] = useState(false)
   const [stateData, setStateData] = useState({
-    email: "",
-    password: "",
+    email: 'admin@gmail.com',
+    password: '123123',
     emailError: null,
     passwordError: null,
     error: null,
