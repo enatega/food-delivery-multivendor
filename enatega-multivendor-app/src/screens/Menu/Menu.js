@@ -19,13 +19,12 @@ import {
   ScrollView,
   Dimensions
 } from 'react-native'
-import { SimpleLineIcons, AntDesign, Feather } from '@expo/vector-icons'
+import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
-import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { getCuisines } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
@@ -56,6 +55,7 @@ import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import { Modalize } from 'react-native-modalize'
+import Filters from '../../components/Filter/FilterSlider'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -91,11 +91,8 @@ function Menu({ route, props }) {
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
-  const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
   const [activeCollection, setActiveCollection] = useState()
-  // const [restaurantData, setRestaurantData] = useState([])
-  // const [sectionData, setSectionData] = useState([])
   const modalRef = useRef(null)
   const filtersModalRef = useRef()
 
@@ -426,12 +423,12 @@ function Menu({ route, props }) {
   const applyFilters = () => {
     let filteredData =
       queryType === 'orderAgain'
-        ? [...data.recentOrderRestaurants]
+        ? [...data.recentOrderRestaurantsPreview]
         : queryType === 'topPicks'
-          ? [...data.mostOrderedRestaurants]
+          ? [...data.mostOrderedRestaurantsPreview]
           : queryType === 'topBrands'
-            ? [...data.topRatedVendors]
-            : [...data.nearByRestaurants.restaurants]
+            ? [...data.topRatedVendorsPreview]
+            : [...data.nearByRestaurantsPreview.restaurants]
 
     const ratings = filters.Rating
     const sort = filters.Sort
@@ -443,7 +440,7 @@ function Menu({ route, props }) {
     if (ratings?.selected?.length > 0) {
       const numericRatings = ratings.selected?.map(extractRating)
       filteredData = filteredData.filter(
-        (item) => item?.reviewData?.ratings >= Math.min(...numericRatings)
+        (item) => item?.reviewAverage >= Math.min(...numericRatings)
       )
     }
 
@@ -478,6 +475,7 @@ function Menu({ route, props }) {
 
     // Set filtered data
     setRestaurantData(filteredData)
+    filtersModalRef.current.close()
   }
 
   return (
@@ -601,6 +599,7 @@ function Menu({ route, props }) {
             data={restaurantData}
             renderItem={({ item }) => <NewRestaurantCard {...item} fullWidth />}
           />
+          
         </View>
       </ScrollView>
       <MainModalize
@@ -617,7 +616,7 @@ function Menu({ route, props }) {
       <Modalize
         ref={filtersModalRef}
         modalStyle={styles(currentTheme).modal}
-        modalHeight={HEIGHT / 2}
+        modalHeight={HEIGHT * 0.72}
         overlayStyle={styles(currentTheme).overlay}
         handleStyle={styles(currentTheme).handle}
         handlePosition='inside'
@@ -630,65 +629,12 @@ function Menu({ route, props }) {
           spring: { speed: 20, bounciness: 10 }
         }}
       >
-        <View style={styles().modalContainer}>
-          <Feather
-            name='x-circle'
-            size={24}
-            color={currentTheme.newIconColor}
-            style={styles().closeBtn}
-            onPress={() => filtersModalRef.current.close()}
-          />
-          <TextDefault bolder H3 textColor={currentTheme.fontFourthColor}>
-            Filters
-          </TextDefault>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            directionalLockEnabled={true}
-            alwaysBounceVertical={false}
-          >
-            <FlatList
-              contentContainerStyle={{
-                alignSelf: 'flex-start',
-                flexGrow: 1,
-                gap: 8
-              }}
-              numColumns={Math.ceil(collectionData.length / 3)}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              data={collectionData}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    // onPress={() => onPressCollection(item)}
-                    style={{
-                      paddingHorizontal: 16,
-                      paddingVertical: 8,
-                      borderRadius: 50,
-                      borderColor: '#94A3B8',
-                      borderWidth: 1,
-                      marginRight: 8
-                    }}
-                  >
-                    <TextDefault
-                      Normal
-                      bolder
-                      textColor={
-                        activeCollection === item.name
-                          ? currentTheme.main
-                          : currentTheme.gray700
-                      }
-                    >
-                      {item.name}
-                    </TextDefault>
-                  </TouchableOpacity>
-                )
-              }}
-            />
-          </ScrollView>
-          <TextDefault bolder H5>Sort By</TextDefault>
-        </View>
+        <Filters
+          filters={filters}
+          setFilters={setFilters}
+          applyFilters={applyFilters}
+          onClose={() => filtersModalRef.current.close()}
+        />
       </Modalize>
     </SafeAreaView>
   )

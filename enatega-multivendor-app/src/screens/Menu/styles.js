@@ -204,7 +204,7 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      gap: 24,
+      gap: 16,
       ...alignment.Pmedium
     },
     closeBtn: {

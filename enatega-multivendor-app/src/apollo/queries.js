@@ -612,6 +612,10 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       tags
       reviewCount
       reviewAverage
+      distanceWithCurrentLocation @client
+      freeDelivery @client
+      acceptVouchers @client
+      location{coordinates}
       openingTimes{
         day
         times {
