@@ -321,6 +321,9 @@ function Main(props) {
                     newheaderColor={newheaderColor}
                     placeHolder={t('searchRestaurant')}
                   />
+                  <TouchableOpacity onPress={()=> navigation.navigate('SearchScreen')}>
+                    <TextDefault>Search</TextDefault>
+                  </TouchableOpacity>
                 </View>
                 {search ? (
                   <View style={styles().searchList}>

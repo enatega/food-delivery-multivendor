@@ -24,6 +24,8 @@ import Spinner from '../../components/Spinner/Spinner'
 import { alignment } from '../../utils/alignment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
+import { storeSearch, getRecentSearches, clearRecentSearches } from '../../utils/recentSearch'
+import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -77,7 +79,7 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getRecentSearches().then((searches) => setRecentSearches(searches))
-  }, [])
+  }, [search])
 
   const {
     onScroll /* Event handler */,
@@ -97,7 +99,6 @@ const SearchScreen = () => {
       })
       if (resultCatFoods) data.push(restaurant)
     })
-    storeSearch(searchText)
     return data
   }
 
@@ -112,14 +113,9 @@ const SearchScreen = () => {
   const uniqueTags = getUniqueTags(restaurants)
 
   const emptyView = () => {
-    // if (loading || mutationLoading || loadingOrders) return <MainLoadingUI />
-    // else {
     return (
       <View style={styles(currentTheme).emptyViewContainer}>
         <View style={styles(currentTheme).emptyViewBox}>
-          {/* <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
-              {t('notAvailableinYourArea')}
-            </TextDefault> */}
           <TextDefault textColor={currentTheme.fontGrayNew} center>
             {t('noResults')}
           </TextDefault>
@@ -130,44 +126,18 @@ const SearchScreen = () => {
   }
 
   const handleTagPress = (tag) => {
-    setSearch(tag) // Set the search query to the selected tag
+    setSearch(tag)
   }
-
-  const storeSearch = async (searchTerm) => {
+  
+  const handleClearRecentSearches = async () => {
     try {
-      const searches = await AsyncStorage.getItem('searches')
-      let searchesArray = []
-      if (searches) {
-        searchesArray = JSON.parse(searches)
-      }
-      if (!searchesArray.includes(searchTerm)) {
-        searchesArray.push(searchTerm)
-        await AsyncStorage.setItem('searches', JSON.stringify(searchesArray))
-      }
+      await clearRecentSearches();
+      setRecentSearches([]); // Update state with empty array
     } catch (error) {
-      console.log('Error storing search:', error)
+      console.log('Error clearing searches:', error);
     }
-  }
-
-  const getRecentSearches = async () => {
-    try {
-      const searches = await AsyncStorage.getItem('searches')
-      return searches ? JSON.parse(searches) : []
-    } catch (error) {
-      console.log('Error retrieving searches:', error)
-      return []
-    }
-  }
-
-  const clearRecentSearches = async () => {
-    try {
-      await AsyncStorage.removeItem('searches')
-      setRecentSearches([])
-    } catch (error) {
-      console.log('Error clearing searches:', error)
-    }
-  }
-
+  };
+  
   const renderTagsOrSearches = () => {
     if (search) {
       return (
@@ -202,7 +172,14 @@ const SearchScreen = () => {
               />
             }
             data={searchAllShops(search)}
-            renderItem={({ item }) => <Item item={item} />}
+            renderItem={({ item }) => {
+              return (
+                <NewRestaurantCard
+                  {...item}
+                  isSearch={search}
+                />
+              )
+            }}
           />
         </View>
       )
@@ -222,7 +199,7 @@ const SearchScreen = () => {
               </TextDefault>
             </View>
             <View>
-              <TouchableOpacity onPress={clearRecentSearches}>
+              <TouchableOpacity onPress={() => handleClearRecentSearches()}>
                 <TextDefault
                   style={styles().drawerContainer}
                   textColor={currentTheme.fontMainColor}
@@ -239,7 +216,7 @@ const SearchScreen = () => {
 
           {/* recent seareches list */}
 
-          {recentSearches.map((recentSearch, index) => (
+          {recentSearches.slice(0, 10).map((recentSearch, index) => (
             <React.Fragment key={index}>
               <TouchableOpacity
                 onPress={() => handleTagPress(recentSearch)}
@@ -288,7 +265,7 @@ const SearchScreen = () => {
   }
 
   return (
-    <View style={styles().flex}>
+    <View style={styles(currentTheme).flex}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -304,7 +281,6 @@ const SearchScreen = () => {
         }
       >
         <View style={styles().searchbar}>
-          {/* <Search setSearch={setSearch} search={search} /> */}
           <Search
             setSearch={setSearch}
             search={search}
