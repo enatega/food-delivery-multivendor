@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import {
   View,
   TouchableOpacity,
@@ -11,7 +11,8 @@ import {
   AntDesign,
   EvilIcons,
   SimpleLineIcons,
-  MaterialIcons
+  MaterialIcons,
+  MaterialCommunityIcons
 } from '@expo/vector-icons'
 
 import gql from 'graphql-tag'
@@ -35,6 +36,7 @@ import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import { useTranslation } from 'react-i18next'
+import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
@@ -51,10 +53,11 @@ function Addresses() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
+  const [isEditMode, setIsEditMode] = useState(false);
 
-    function onCompleted() {
-      FlashMessage({ message: t('addressDeletedMessage') })
-    }
+  function onCompleted() {
+    FlashMessage({ message: t('addressDeletedMessage') })
+  }
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -70,10 +73,10 @@ function Addresses() {
     }
     Track()
   }, [])
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: t('myAddresses'),
-      headerRight: null,
+      title: t('savedAddresses'),
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.newFontcolor,
@@ -90,23 +93,45 @@ function Addresses() {
         backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
-      headerLeft: () => (
-        <HeaderBackButton
-          truncatedLabel=''
-         
-          backImage={() => (
-            <View>
-              <MaterialIcons name='arrow-back' size={30} color={currentTheme.newIconColor} />
-            
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
+      headerLeft: () => {
+        if (isEditMode) {
+          return (
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => {
+                // Handle delete action here
+              }}
+            >
+              <TextDefault>{t('delete')}</TextDefault>
+            </TouchableOpacity>
+          );
+        } else {
+          return (
+            <HeaderBackButton
+              truncatedLabel=''
+              backImage={() => (
+                <View>
+                  <MaterialIcons
+                    name='arrow-back'
+                    size={30}
+                    color={currentTheme.newIconColor}
+                  />
+                </View>
+              )}
+              onPress={() => navigationService.goBack()}
+            />
+          );
+        }
+      },
+      headerRight: () => (
+        <View style={{ ...alignment.MRmedium }}>
+          <TouchableOpacity onPress={() => setIsEditMode(prev => !prev)}>
+            <TextDefault>{isEditMode ? t('cancel') : t('edit')}</TextDefault>
+          </TouchableOpacity>
+        </View>
       )
-    })
-  }, [])
+    });
+  }, [navigation, isEditMode, t, currentTheme]);
 
   const addressIcons = {
     House: CustomHomeIcon,
@@ -147,7 +172,6 @@ function Addresses() {
         data={profile?.addresses}
         ListEmptyComponent={emptyView}
         keyExtractor={(item) => item._id}
-        
         ItemSeparatorComponent={() => (
           <View style={styles(currentTheme).line} />
         )}
@@ -157,27 +181,55 @@ function Addresses() {
             activeOpacity={0.7}
             style={[styles(currentTheme).containerSpace]}
           >
-            
             <View style={[styles().width100, styles().rowContainer]}>
-              <View style={[styles(currentTheme).homeIcon]}>
-                {addressIcons[address.label]
-                  ? React.createElement(addressIcons[address.label], {
-                      fill: currentTheme.darkBgFont
-                    })
-                  : React.createElement(addressIcons['Other'], {
-                      fill: currentTheme.darkBgFont
-                    })}
-               
+              <View style={styles().rowContainer}>
+                {isEditMode && 
+                <View style={styles().checkboxContainer}>
+                <CheckboxBtn />
               </View>
-              <View style={[styles().titleAddress]}>
-                <TextDefault
-                  textColor={currentTheme.darkBgFont}
-                  style={styles(currentTheme).labelStyle}
-                >
-                 
-                  {t(address.label)}
-                </TextDefault>
+                }
+                {/* location icon */}
+                <View style={[styles(currentTheme).homeIcon]}>
+                  {addressIcons[address.label]
+                    ? React.createElement(addressIcons[address.label], {
+                        fill: currentTheme.darkBgFont
+                      })
+                    : React.createElement(addressIcons['Other'], {
+                        fill: currentTheme.darkBgFont
+                      })}
+                </View>
+
+                {/* addresses */}
+                <View style={styles(currentTheme).actionButton}>
+                  {/* location title */}
+                  <View style={[styles().titleAddress]}>
+                    <TextDefault
+                      textColor={currentTheme.darkBgFont}
+                      style={styles(currentTheme).labelStyle}
+                      H5
+                      bolder
+                    >
+                      {t(address.label)}
+                    </TextDefault>
+                  </View>
+                  {/* location description */}
+                  <View style={styles().midContainer}>
+                    <View style={styles(currentTheme).addressDetail}>
+                      <TextDefault
+                        numberOfLines={2}
+                        textColor={currentTheme.darkBgFont}
+                        style={{ ...alignment.PBxSmall }}
+                      >
+                        {/* {address.deliveryAddress} */}
+                        {address.deliveryAddress.slice(0, 30) +
+                          (address.deliveryAddress.length > 30 ? '...' : '')}
+                      </TextDefault>
+                    </View>
+                  </View>
+                </View>
               </View>
+
+              {/* location edit and delete buttons */}
               <View style={styles().buttonsAddress}>
                 <TouchableOpacity
                   disabled={loadingMutation}
@@ -185,50 +237,36 @@ function Addresses() {
                   onPress={() => {
                     const [longitude, latitude] = address.location.coordinates
                     navigation.navigate('AddNewAddress', {
-                      id:address._id,
+                      id: address._id,
                       longitude: +longitude,
                       latitude: +latitude,
                       prevScreen: 'Addresses'
                     })
                   }}
                 >
-                  <SimpleLineIcons
-                    name='pencil'
-                   
-                    size={scale(20)}
+                  <MaterialCommunityIcons
+                    name='dots-horizontal-circle-outline'
+                    size={scale(24)}
                     color={currentTheme.darkBgFont}
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   activeOpacity={0.7}
                   disabled={loadingMutation}
                   onPress={() => {
                     mutate({ variables: { id: address._id } })
                   }}
                 >
-                  
                   <EvilIcons
                     name='trash'
-                   
                     size={scale(33)}
                     color={currentTheme.darkBgFont}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
-              <View style={{ ...alignment.MTxSmall }}></View>
-            </View>
-            <View style={styles().midContainer}>
-              <View style={styles(currentTheme).addressDetail}>
-                <TextDefault
-                  numberOfLines={2}
-                  textColor={currentTheme.darkBgFont}
-                  style={{ ...alignment.PBxSmall }}
-                >
-                  
-                  {address.deliveryAddress}
-                </TextDefault>
-              </View>
+
+              {/* <View style={{ ...alignment.MTxSmall }}></View> */}
             </View>
           </TouchableOpacity>
         )}
@@ -239,11 +277,12 @@ function Addresses() {
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles(currentTheme).addButton}
-            onPress={() => navigation.navigate('SelectLocation', {
-              prevScreen: 'Addresses'
-            })}
+            onPress={() =>
+              navigation.navigate('SelectLocation', {
+                prevScreen: 'Addresses'
+              })
+            }
           >
-            
             <TextDefault H5 bold>
               {t('addAddress')}
             </TextDefault>
