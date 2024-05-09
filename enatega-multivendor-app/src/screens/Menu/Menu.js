@@ -152,10 +152,11 @@ function Menu({ route, props }) {
         iconColorPink: currentTheme.black,
         open: onOpen,
         icon: 'back',
-        onPressFilter: () => filtersModalRef.current.open()
+        onPressFilter: () => filtersModalRef.current.open(),
+        onPressMap: ()=>navigation.navigate('MapSection', {location, restaurants: restaurantData})
       })
     )
-  }, [navigation, currentTheme])
+  }, [navigation, currentTheme, restaurantData])
 
   useEffect(() => {
     setFilters((prev) => ({

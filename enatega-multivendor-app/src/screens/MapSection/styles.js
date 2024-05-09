@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     map: {
       width: width,
-      height: height * 0.3,
+      height: height,
       marginTop: scale(-30)
     },
   })
