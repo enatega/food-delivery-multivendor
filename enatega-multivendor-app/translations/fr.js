@@ -595,5 +595,9 @@ textWithCodeBtn: "Envoyer un texte avec le code",
 resendOtpBtn: 'Renvoyer le code OTP',
 getRegistered: "S'inscrire",
 legal: "Légal",
-serviceTerms: "Conditions d'utilisation"
+serviceTerms: "Conditions d'utilisation",
+searchTitle: "Rechercher",
+noResults: "Aucun résultat trouvé",
+recentSearches: "Recherches récentes",
+clear: "Effacer"
 }

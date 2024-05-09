@@ -585,4 +585,8 @@ export const en = {
   getRegistered: 'Get Registered',
   legal: 'Legal',
   serviceTerms: 'Terms of Service',
+  searchTitle: 'Search',
+  noResults: 'No Results Found',
+  recentSearches: 'Recent Searches',
+  clear: 'Clear'
 }

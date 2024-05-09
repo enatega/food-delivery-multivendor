@@ -22,6 +22,7 @@ import { profile, FavouriteRestaurant } from '../../../apollo/queries'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
+import { storeSearch } from '../../../utils/recentSearch'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -58,11 +59,18 @@ function NewRestaurantCard(props) {
     }
   }
 
+  const handleRestaurantClick = () => { 
+    navigation.navigate('Restaurant', { ...props })
+    if (props?.isSearch) {
+      storeSearch(props?.isSearch)
+    }
+   }
+
   return (
     <TouchableOpacity
       style={styles(currentTheme).offerContainer}
       activeOpacity={1}
-      onPress={() => navigation.navigate('Restaurant', { ...props })}
+      onPress={() => handleRestaurantClick()}
     >
       <View style={styles().imageContainer}>
         <Image

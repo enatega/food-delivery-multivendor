@@ -567,5 +567,9 @@ textWithCodeBtn: "שלח טקסט עם קוד",
 resendOtpBtn: 'שלח מחדש קוד OTP',
 getRegistered: 'הירשם',
 legal: "משפטי",
-serviceTerms: "תנאי השימוש"
+serviceTerms: "תנאי השימוש",
+searchTitle: "חיפוש",
+noResults: "לא נמצאו תוצאות",
+recentSearches: "חיפושים אחרונים",
+clear: "נקה"
 }

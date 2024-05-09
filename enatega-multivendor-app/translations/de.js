@@ -599,5 +599,9 @@ textWithCodeBtn: "Text mit Code senden",
 resendOtpBtn: 'OTP erneut senden',
 getRegistered: 'Registrieren',
 legal: "Rechtlich",
-serviceTerms: "Nutzungsbedingungen"
+serviceTerms: "Nutzungsbedingungen",
+searchTitle: "Suche",
+noResults: "Keine Ergebnisse gefunden",
+recentSearches: "Letzte Suchanfragen",
+clear: "Löschen"
 }
