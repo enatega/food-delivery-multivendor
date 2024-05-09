@@ -216,7 +216,7 @@ const SearchScreen = () => {
 
           {/* recent seareches list */}
 
-          {recentSearches.slice(0, 10).map((recentSearch, index) => (
+          {recentSearches.map((recentSearch, index) => (
             <React.Fragment key={index}>
               <TouchableOpacity
                 onPress={() => handleTagPress(recentSearch)}
