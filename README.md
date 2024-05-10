@@ -18,7 +18,6 @@
 <br />
 </div>
 
-
 <div align="center">
 
 [![Static Badge](https://img.shields.io/badge/License-MIT-red)](https://github.com/Ninjas-Code-official/Enatega-Multivendor-Food-Delivery-Solution/blob/main/LICENSE)
@@ -51,6 +50,8 @@
   </a>
 
 </div>
+
+<br>
 
 The Enatega Multi vendor food delivery system is perfect for customers looking to deploy a readymade and easy to use food ordering platform for their own food delivery and logistics business. Just like foodpanda and ubereats, our food delivery system can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own online food ordering and order/delivery management system instantaneously.
 
