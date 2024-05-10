@@ -108,7 +108,8 @@ export const theme = {
     iconStroke:'#0F172A',
     color10:'transparent',
     newButtonBackground:'#F3FFEE',
-    newButtonText:'#63C43B'
+    newButtonText:'#63C43B',
+    subText: '#475569'
   },
   Dark: {
     black: '#000',
@@ -211,6 +212,7 @@ export const theme = {
     iconStroke:'#b0afbc',
     color10:'#fff',
     newButtonBackground:'#F3FFEE',
-    newButtonText:'#63C43B'
+    newButtonText:'#63C43B',
+    subText: '#475569'
   }
 }

@@ -1,38 +1,79 @@
-import React, { useContext } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react'
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 import { mapStyle } from '../../utils/mapStyle'
 import styles from './styles'
-import { Image, View, Text, FlatList } from 'react-native'
+import { Image, View, FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { scale } from '../../utils/scaling'
 import { useRoute } from '@react-navigation/native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import Bicycle from '../../assets/SVG/Bicycle'
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { AntDesign, FontAwesome5, Ionicons } from '@expo/vector-icons'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 
 export default function MapSection() {
+  const mapRef = useRef()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const route = useRoute()
   const navigation = useNavigation()
   const location = route?.params?.location
   const restaurants = route?.params?.restaurants
-  console.log('Location => ', JSON.stringify(route?.params, null, 3))
+  const [visibleMarkerIndex, setVisibleMarkerIndex] = useState(0)
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false
+    })
+  }, [navigation, currentTheme])
+
+  const handleMarkerAnimate = (coord) => {
+    mapRef.current.animateToRegion({
+      ...coord,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421
+    })
+  }
+
+  const onViewableItemsChanged = ({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setVisibleMarkerIndex(viewableItems[0].index)
+    }
+  }
+
+  useEffect(() => {
+    if (!restaurants || !visibleMarkerIndex) return
+    const rest = restaurants[visibleMarkerIndex]
+    const coord = {
+      latitude: parseFloat(rest.location.coordinates[1]),
+      longitude: parseFloat(rest.location.coordinates[0])
+    }
+    handleMarkerAnimate(coord)
+  }, [visibleMarkerIndex])
 
   return (
     <View>
       <MapView
+        ref={mapRef}
         style={styles().map}
+        customMapStyle={mapStyle}
         showsUserLocation
         zoomEnabled={true}
         zoomControlEnabled={true}
         rotateEnabled={false}
         initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: restaurants?.length
+            ? restaurants[0].location.coordinates[1]
+            : location.latitude,
+          longitude: restaurants?.length
+            ? restaurants[0].location.coordinates[0]
+            : location.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
         }}
@@ -53,83 +94,75 @@ export default function MapSection() {
                 onPress={() => {
                   navigation.navigate('Restaurant', { ...rest })
                 }}
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  alignItems: 'center'
-                }}
+                style={styles().markerContainer}
               >
-                <Image
-                  source={require('../../assets/images/res.png')}
-                  width={20}
-                />
                 <View
-                  style={{
-                    backgroundColor: 'white',
-                    padding: 10,
-                    borderRadius: scale(8)
-                  }}
-                >
-                  <Text>{rest.name}</Text>
-                </View>
+                  style={styles(currentTheme).greenDot}
+                />
+                <Image
+                  source={{uri: rest.image}}
+                  width={20}
+                  style={styles().markerImage}
+                />
+                
               </Marker>
             )
           })}
       </MapView>
       <View
-        style={{
-          position: 'absolute',
-          bottom: 100,
-          left: 0,
-          right: 0,
-          alignItems: 'center',
-          zIndex: 9999
-        }}
+        style={styles().restContainer}
       >
         <FlatList
           data={restaurants}
           renderItem={({ item }) => {
             return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: 310,
-                  backgroundColor: 'white',
-                  padding: 16,
-                  borderRadius: scale(8),
-                  gap: 16
+              <TouchableOpacity
+                style={styles(currentTheme).restCard}
+                onPress={() => {
+                  navigation.navigate('Restaurant', { ...item })
                 }}
+                activeOpacity={0.8}
               >
                 <Image
                   resizeMode='cover'
                   source={{ uri: item.image }}
-                  style={{
-                    height: 60,
-                    width: 60,
-                    borderRadius: scale(10),
-                    overflow: 'hidden'
-                  }}
+                  style={styles().restImg}
                 />
-                <View style={{ gap: 8 }}>
-                  <TextDefault H5 bolder>
+                <View style={{ gap: 3 }}>
+                  <TextDefault
+                    H5
+                    bolder
+                    textColor={currentTheme.fontFourthColor}
+                  >
                     {item.name}
                   </TextDefault>
-                  <TextDefault numberOfLines={1} bold Normal>
+                  <TextDefault
+                    numberOfLines={1}
+                    bold
+                    Normal
+                    textColor={currentTheme.subText}
+                  >
                     {item?.tags?.slice(0, 2)?.join(', ')}
                   </TextDefault>
                   <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: scale(18)
-                    }}
+                    style={styles().restInfo}
                   >
                     <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: scale(4)
-                      }}
+                      style={styles().deliveryTime}
+                    >
+                      <Bicycle />
+
+                      <TextDefault
+                        textColor={currentTheme.color2}
+                        numberOfLines={1}
+                        bold
+                        Small
+                      >
+                        ${item.tax}
+                      </TextDefault>
+                    </View>
+                    <View
+                      style={styles().deliveryTime}
                     >
                       <AntDesign
                         name='clockcircleo'
@@ -141,35 +174,13 @@ export default function MapSection() {
                         textColor={currentTheme.editProfileButton}
                         numberOfLines={1}
                         bold
-                        Normal
+                        Small
                       >
                         {item.deliveryTime + ' '} min
-                        {/* {t('min')} */}
-                      </TextDefault>
-                    </View>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: scale(4)
-                      }}>
-                      <Bicycle />
-
-                      <TextDefault
-                        textColor={currentTheme.color2}
-                        numberOfLines={1}
-                        bold
-                        Normal
-                      >
-                        ${item.tax}
                       </TextDefault>
                     </View>
                     <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: scale(2)
-                      }}
+                      style={styles().deliveryTime}
                     >
                       <FontAwesome5
                         name='star'
@@ -177,16 +188,13 @@ export default function MapSection() {
                         color={currentTheme.color2}
                       />
 
-                      <TextDefault bold Normal>
+                      <TextDefault bold Small>
                         {item.reviewAverage}
-                      </TextDefault>
-                      <TextDefault bold Normal>
-                        ({item.reviewCount})
                       </TextDefault>
                     </View>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             )
           }}
           keyExtractor={(item) => item?._id}
@@ -194,8 +202,26 @@ export default function MapSection() {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{ itemVisiblePercentThreshold: 60 }}
         />
       </View>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{
+          position: 'absolute',
+          top: 60,
+          left: 15,
+          backgroundColor: currentTheme.white,
+          borderRadius: 50,
+          height: 40,
+          width: 40,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Ionicons name='arrow-back' size={24} color='black' />
+      </TouchableOpacity>
     </View>
   )
 }
