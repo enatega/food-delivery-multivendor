@@ -46,7 +46,7 @@
 <div align="center">
 
   <a href="https://www.youtube.com/watch?v=00voqzkFpHU">
-    <img src="./assets/thumbnail.png" alt="Demo video" style="border-radius: 6px; width: auto;">
+    <img src="./assets/thumbnail.webp" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
 </div>
@@ -171,29 +171,29 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 ## :framed_picture: Screenshots: <a id="heading-6"></a>
 
-|          Rider App          |
-| :-------------------------: |
-| ![](./assets/rider-app.png) |
+|          Rider App           |
+| :--------------------------: |
+| ![](./assets/rider-app.webp) |
 
-|              Restaurant APP               |
-| :---------------------------------------: |
-| ![](./assets/restuarant-app-1-scaled.png) |
+|               Restaurant APP               |
+| :----------------------------------------: |
+| ![](./assets/restuarant-app-1-scaled.webp) |
 
-|          Customer App          |
-| :----------------------------: |
-| ![](./assets/Customer-app.png) |
+|          Customer App           |
+| :-----------------------------: |
+| ![](./assets/Customer-app.webp) |
 
-|           Customer Web           |
-| :------------------------------: |
-| ![](./assets/Web-app-scaled.png) |
-
-|             Dashboard             |
+|           Customer Web            |
 | :-------------------------------: |
-| ![](./assets/dasboard-scaled.png) |
+| ![](./assets/Web-app-scaled.webp) |
+
+|             Dashboard              |
+| :--------------------------------: |
+| ![](./assets/dasboard-scaled.webp) |
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
-![](./assets/high-level.png)
+![](./assets/high-level.webp)
 
 ## :book: Documentation <a id="heading-8"></a>
 
@@ -201,9 +201,9 @@ Find the link for the complete documentation of the Enatega Multi Vendor Solutio
 
 ## :tv: Demo Videos: <a id="heading-14"></a>
 
-|                                                            Admin Dashboard Demo                                                            |                                                              Mobile App Demo                                                               |
-| :----------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------: |
-| <a href="https://www.youtube.com/watch?v=18d_POMa8B4"><img src="https://img.youtube.com/vi/18d_POMa8B4/0.jpg" width="200" alt="Video"></a> | <a href="https://www.youtube.com/watch?v=2HdHS2I-p6g"><img src="https://img.youtube.com/vi/2HdHS2I-p6g/0.jpg" width="200" alt="Video"></a> |
+|                                               Admin Dashboard Demo                                               |                                                 Mobile App Demo                                                  |
+| :--------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------- |
+| <a href="https://www.youtube.com/watch?v=18d_POMa8B4"><img src="./assets/1111.webp" width="200" alt="Video"></a> | <a href="https://www.youtube.com/watch?v=ZOBW4kdCsD4"><img src="./assets/1111.webp" width="200" alt="Video"></a> | <a href="https://www.youtube.com/watch?v=ZOBW4kdCsD4"><img src="./assets/1111.webp" width="200" alt="Video"></a> |
 
 ## :iphone: Demos: <a id="heading-9"></a>
 
