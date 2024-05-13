@@ -29,6 +29,7 @@ import { useTranslation } from 'react-i18next'
 import navigationService from '../../routes/navigationService'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import EmptyView from '../../components/EmptyView/EmptyView'
+import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 
 const RESTAURANTS = gql`
   ${FavouriteRestaurant}
@@ -131,11 +132,23 @@ function Favourite() {
         showsVerticalScrollIndicator={false}
         refreshing={networkStatus === 4}
         onRefresh={() => networkStatus === 7 && refetch()}
-        style={[styles().flex, styles(currentTheme).container]}
+        // style={[styles().flex, styles(currentTheme).container]}
         contentContainerStyle={styles(currentTheme).contentContainer}
         ListEmptyComponent={emptyView()}
         ListHeaderComponent={null}
-        renderItem={({ item }) => <Item item={item} />}
+        renderItem={({ item }) => {
+          const averageRating = item?.reviewData?.ratings;
+          const numberOfReviews = item?.reviewData?.total;
+          return (
+            <NewRestaurantCard
+              {...item}
+              reviewAverage={averageRating}
+              reviewCount={numberOfReviews}
+              isCategories
+              fullWidth
+            />
+          )
+        }}
       />
     </SafeAreaView>
   )

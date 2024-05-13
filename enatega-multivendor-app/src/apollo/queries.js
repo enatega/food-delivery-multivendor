@@ -732,6 +732,8 @@ export const restaurant = `query Restaurant($id:String){
         endTime
       }
     }
+    phone
+    restaurantUrl
   }
 }`
 

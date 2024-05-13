@@ -7,6 +7,12 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    topMarginSmall: {
+      ...alignment.MTxSmall
+    },
+    topMarginLarge: {
+      ...alignment.MTsmall
+    },
     MB15: {
       padding: 10,
       ...alignment.MBmedium,
@@ -134,6 +140,11 @@ const styles = (props = null) =>
     // },
     timingRow: {
       flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(5),
+    },
+    timingRowMain: {
+      flexDirection: 'row',
       justifyContent: 'space-evenly',
       alignSelf: 'center',
       backgroundColor: '#F3F4F6',
@@ -167,9 +178,17 @@ const styles = (props = null) =>
       flex: 1,
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
-    // timingText: {
-    //   width: scale(140),
-    //   textAlign: 'left'
-    // }
+    subContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 4
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: props !== null ? props.color6 : '#9B9A9A',
+      marginTop: scale(10)
+    }
   })
 export default styles

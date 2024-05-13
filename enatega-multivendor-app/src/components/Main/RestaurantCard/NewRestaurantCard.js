@@ -18,16 +18,20 @@ import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
-import { profile } from '../../../apollo/queries'
+import { profile, FavouriteRestaurant } from '../../../apollo/queries'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
+import { storeSearch } from '../../../utils/recentSearch'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
 `
 const PROFILE = gql`
   ${profile}
+`
+const FAVOURITERESTAURANTS = gql`
+  ${FavouriteRestaurant}
 `
 
 function NewRestaurantCard(props) {
@@ -40,7 +44,8 @@ function NewRestaurantCard(props) {
   const heart = profile ? profile.favourite.includes(props._id) : false
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
     onCompleted,
-    refetchQueries: [{ query: PROFILE }]
+    // refetchQueries: [{ query: PROFILE }]
+    refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
   // console.log('PROPS => ', JSON.stringify(props, null, 3))
 
@@ -55,6 +60,13 @@ function NewRestaurantCard(props) {
     }
   }
 
+  const handleRestaurantClick = () => { 
+    navigation.navigate('Restaurant', { ...props })
+    if (props?.isSearch) {
+      storeSearch(props?.isSearch)
+    }
+   }
+
   return (
     <TouchableOpacity
       style={[
@@ -62,7 +74,7 @@ function NewRestaurantCard(props) {
         props?.fullWidth && { width: '100%' }
       ]}
       activeOpacity={1}
-      onPress={() => navigation.navigate('Restaurant', { ...props })}
+      onPress={() => handleRestaurantClick()}
     >
       <View style={styles().container}>
         <View style={styles().imageContainer}>
@@ -100,7 +112,7 @@ function NewRestaurantCard(props) {
             Normal
             style={styles().offerCategoty}
           >
-            {props?.tags?.join(',')}
+            {props?.categories ? props.categories.map((category) => category.title + ', ') : props?.tags?.join(',')}
           </TextDefault>
           <View style={styles().border} />
           <View style={styles().deliveryInfo}>

@@ -98,16 +98,20 @@ function ImageTextCenterHeader(props, ref) {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
     address: props.restaurant ? props.restaurant.address : '',
+    restaurantId: props.restaurantId,
     restaurantName: props.restaurantName,
     restaurantImage: props.restaurantImage,
     restaurantTax: props.tax,
     restaurantMinOrder: props.minimumOrder,
     deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
+    minimumOrder: props.restaurant ? props.restaurant.minimumOrder : '...',
     average: props.restaurant ? props.restaurant.reviewData.ratings : '...',
     total: props.restaurant ? props.restaurant.reviewData.total : '...',
     reviews: props.restaurant ? props.restaurant.reviewData.reviews : '...',
     isAvailable: props.restaurant ? props.restaurant.isAvailable : true,
     openingTimes: props.restaurant ? props.restaurant.openingTimes : [],
+    phone: props.restaurant ? props.restaurant.phone : '',
+    restaurantUrl: props.restaurant ? props.restaurant.restaurantUrl : '',
     isOpen: () => {
       if (!props.restaurant) return true
       const date = new Date()
@@ -314,7 +318,7 @@ function ImageTextCenterHeader(props, ref) {
                     ]}
                     onPress={() => {
                       navigation.navigate('About', {
-                        restaurantObject: { ...aboutObject, isOpen: null },
+                        restaurantObject: { ...aboutObject },
                         tab: false
                       })
                     }}

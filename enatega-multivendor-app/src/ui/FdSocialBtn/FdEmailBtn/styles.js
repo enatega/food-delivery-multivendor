@@ -8,7 +8,7 @@ const styles = (props = null) =>
     mainContainer: {
       width: '90%',
       alignSelf: 'center',
-      height: height * 0.08,
+      height: height * 0.07,
       flexDirection: 'row',
       alignItems: 'center',
       ...alignment.PRlarge,

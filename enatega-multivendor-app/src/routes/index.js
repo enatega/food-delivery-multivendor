@@ -57,6 +57,9 @@ import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
 import { useTranslation } from 'react-i18next'
 import Collection from '../screens/Collection/Collection'
 import MapSection from '../screens/MapSection'
+import Account from '../screens/Account/Account'
+import EditName from '../components/Account/EditName/EditName'
+import SearchScreen from '../screens/Search/SearchScreen'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -157,6 +160,9 @@ function MainNavigator() {
       <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
       <NavigationStack.Screen name="Collection" component={Collection} />
       <NavigationStack.Screen name="MapSection" component={MapSection} />
+      <NavigationStack.Screen name="Account" component={Account} />
+      <NavigationStack.Screen name="EditName" component={EditName} />
+      <NavigationStack.Screen name="SearchScreen" component={SearchScreen} />
     </NavigationStack.Navigator>
   )
 }
@@ -197,7 +203,7 @@ function BottomTabNavigator() {
       <Tab.Screen name="Discovery" component={Main} />
       <Tab.Screen name="Restaurants" component={Menu} />
       <Tab.Screen name="Store" component={Menu} />
-      <Tab.Screen name="Search" component={SettingScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
