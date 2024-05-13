@@ -3,10 +3,11 @@ import axios from 'axios'
 // Function to fetch address from coordinates using the Google Maps Geocoding API
 export async function fetchAddressFromCoordinates(latitude, longitude) {
   try {
-    const apiKey = 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA'
+    const apiKey = 'AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E'
     const response = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=en`
     )
+    console.log('RESPONSE: ' + JSON.stringify(response?.data?.results[0], null, 3));
 
     // Check if the response is successful and contains results
     if (
@@ -29,6 +30,7 @@ export async function fetchAddressFromCoordinates(latitude, longitude) {
       throw new Error('No address found for the given coordinates.')
     }
   } catch (error) {
+    console.log('JSON error: ', JSON.stringify(error, null, 2))
     console.error('Error fetching address:', error.message)
     throw error
   }
