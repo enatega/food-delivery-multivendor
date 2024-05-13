@@ -590,4 +590,6 @@ export const en = {
   recentSearches: 'Recent Searches',
   clear: 'Clear',
   savedAddresses: 'Saved Addresses',
+  cancel: 'Cancel',
+  delete: 'Delete'
 }

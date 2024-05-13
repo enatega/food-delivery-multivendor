@@ -53,7 +53,8 @@ function Addresses() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [selectedAddresses, setSelectedAddresses] = useState([])
 
   function onCompleted() {
     FlashMessage({ message: t('addressDeletedMessage') })
@@ -97,14 +98,15 @@ function Addresses() {
         if (isEditMode) {
           return (
             <TouchableOpacity
-              style={{ marginLeft: 10 }}
-              onPress={() => {
-                // Handle delete action here
-              }}
+              disabled={loadingMutation}
+              style={{ marginLeft: scale(10) }}
+              onPress={() => handleDeleteSelectedAddresses()}
             >
-              <TextDefault>{t('delete')}</TextDefault>
+              <TextDefault textColor={currentTheme.red600} H5 bolder>
+                {t('delete')}
+              </TextDefault>
             </TouchableOpacity>
-          );
+          )
         } else {
           return (
             <HeaderBackButton
@@ -120,18 +122,20 @@ function Addresses() {
               )}
               onPress={() => navigationService.goBack()}
             />
-          );
+          )
         }
       },
       headerRight: () => (
         <View style={{ ...alignment.MRmedium }}>
-          <TouchableOpacity onPress={() => setIsEditMode(prev => !prev)}>
-            <TextDefault>{isEditMode ? t('cancel') : t('edit')}</TextDefault>
+          <TouchableOpacity onPress={() => setIsEditMode((prev) => !prev)}>
+            <TextDefault textColor={currentTheme.linkColor} H5 bolder>
+              {isEditMode ? t('cancel') : t('edit')}
+            </TextDefault>
           </TouchableOpacity>
         </View>
       )
-    });
-  }, [navigation, isEditMode, t, currentTheme]);
+    })
+  }, [navigation, isEditMode, t, currentTheme])
 
   const addressIcons = {
     House: CustomHomeIcon,
@@ -164,6 +168,44 @@ function Addresses() {
     )
   }
 
+  // useEffect here with dependency array
+useEffect(() => {
+  console.log('Updated Selected Addresses in useEffect hook:', selectedAddresses);
+}, [selectedAddresses]);
+  
+
+
+  const handleDeleteSelectedAddresses = () => {
+    console.log('Selected Addresses in handleDeleteSelectedAddresses:', selectedAddresses);
+
+    // Iterate through selected addresses and delete them
+    selectedAddresses.forEach((addressId) => {
+      console.log('Deleting Address:', addressId);
+      mutate({ variables: { id: addressId } })
+        .then((response) => {
+          console.log('Mutation success:', response);
+        })
+        .catch((error) => {
+          console.log('Mutation error:', error);
+        });
+    });
+
+    // Clear the selected addresses state
+    setSelectedAddresses([]);
+  };
+
+  const handleAddressSelection = (addressId) => {
+    console.log('Selected Address in handleAddressSelection:', addressId);
+    console.log('Previous Selected Addresses:', selectedAddresses);
+
+    setSelectedAddresses((prevSelected) => {
+      const updatedAddresses = prevSelected.includes(addressId)
+        ? prevSelected.filter((id) => id !== addressId)
+        : [...prevSelected, addressId];
+      return updatedAddresses;
+    });
+  };
+
   return (
     <View style={styles(currentTheme).flex}>
       <FlatList
@@ -176,100 +218,114 @@ function Addresses() {
           <View style={styles(currentTheme).line} />
         )}
         ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
-        renderItem={({ item: address }) => (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[styles(currentTheme).containerSpace]}
-          >
-            <View style={[styles().width100, styles().rowContainer]}>
-              <View style={styles().rowContainer}>
-                {isEditMode && 
-                <View style={styles().checkboxContainer}>
-                <CheckboxBtn />
-              </View>
-                }
-                {/* location icon */}
-                <View style={[styles(currentTheme).homeIcon]}>
-                  {addressIcons[address.label]
-                    ? React.createElement(addressIcons[address.label], {
-                        fill: currentTheme.darkBgFont
-                      })
-                    : React.createElement(addressIcons['Other'], {
-                        fill: currentTheme.darkBgFont
-                      })}
-                </View>
+        renderItem={({ item: address }) => {
+          // console.log('Address:', address._id)
+          console.log(
+            'Checkbox Checked:',
+            selectedAddresses.includes(address._id)
+          )
 
-                {/* addresses */}
-                <View style={styles(currentTheme).actionButton}>
-                  {/* location title */}
-                  <View style={[styles().titleAddress]}>
-                    <TextDefault
-                      textColor={currentTheme.darkBgFont}
-                      style={styles(currentTheme).labelStyle}
-                      H5
-                      bolder
-                    >
-                      {t(address.label)}
-                    </TextDefault>
+          return (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[styles(currentTheme).containerSpace]}
+            >
+              <View style={[styles().width100, styles().rowContainer]}>
+                <View style={styles().rowContainer}>
+                  {isEditMode && (
+                    <View style={styles().checkboxContainer}>
+                      <CheckboxBtn
+                        checked={selectedAddresses.includes(address._id)}
+                        onPress={() => handleAddressSelection(address._id)}
+                      />
+                    </View>
+                  )}
+                  {/* location icon */}
+                  <View style={[styles(currentTheme).homeIcon]}>
+                    {addressIcons[address.label]
+                      ? React.createElement(addressIcons[address.label], {
+                          fill: currentTheme.darkBgFont
+                        })
+                      : React.createElement(addressIcons['Other'], {
+                          fill: currentTheme.darkBgFont
+                        })}
                   </View>
-                  {/* location description */}
-                  <View style={styles().midContainer}>
-                    <View style={styles(currentTheme).addressDetail}>
+
+                  {/* addresses */}
+                  <View style={styles(currentTheme).actionButton}>
+                    {/* location title */}
+                    <View style={[styles().titleAddress]}>
                       <TextDefault
-                        numberOfLines={2}
                         textColor={currentTheme.darkBgFont}
-                        style={{ ...alignment.PBxSmall }}
+                        style={styles(currentTheme).labelStyle}
+                        H5
+                        bolder
                       >
-                        {/* {address.deliveryAddress} */}
-                        {address.deliveryAddress.slice(0, 30) +
-                          (address.deliveryAddress.length > 30 ? '...' : '')}
+                        {t(address.label)}
                       </TextDefault>
+                    </View>
+                    {/* location description */}
+                    <View style={styles().midContainer}>
+                      <View style={styles(currentTheme).addressDetail}>
+                        <TextDefault
+                          numberOfLines={2}
+                          textColor={currentTheme.darkBgFont}
+                          style={{ ...alignment.PBxSmall }}
+                        >
+                          {/* {address.deliveryAddress} */}
+                          {address.deliveryAddress.slice(0, 30) +
+                            (address.deliveryAddress.length > 30 ? '...' : '')}
+                        </TextDefault>
+                      </View>
                     </View>
                   </View>
                 </View>
+
+                {!isEditMode && (
+                  //  location edit and delete buttons
+                  <View style={styles().buttonsAddress}>
+                    <TouchableOpacity
+                      disabled={loadingMutation}
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        const [longitude, latitude] =
+                          address.location.coordinates
+                        navigation.navigate('AddNewAddress', {
+                          id: address._id,
+                          longitude: +longitude,
+                          latitude: +latitude,
+                          prevScreen: 'Addresses'
+                        })
+                      }}
+                    >
+                      <MaterialCommunityIcons
+                        name='dots-horizontal-circle-outline'
+                        size={scale(24)}
+                        color={currentTheme.darkBgFont}
+                      />
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
+                      activeOpacity={0.7}
+                      disabled={loadingMutation}
+                      onPress={() => {
+                        mutate({ variables: { id: address._id } })
+                      }}
+                    >
+                      <EvilIcons
+                        name='trash'
+                        size={scale(33)}
+                        color={currentTheme.darkBgFont}
+                      />
+                    </TouchableOpacity> */}
+                  </View>
+                )}
+
+                {/* <View style={{ ...alignment.MTxSmall }}></View> */}
               </View>
-
-              {/* location edit and delete buttons */}
-              <View style={styles().buttonsAddress}>
-                <TouchableOpacity
-                  disabled={loadingMutation}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    const [longitude, latitude] = address.location.coordinates
-                    navigation.navigate('AddNewAddress', {
-                      id: address._id,
-                      longitude: +longitude,
-                      latitude: +latitude,
-                      prevScreen: 'Addresses'
-                    })
-                  }}
-                >
-                  <MaterialCommunityIcons
-                    name='dots-horizontal-circle-outline'
-                    size={scale(24)}
-                    color={currentTheme.darkBgFont}
-                  />
-                </TouchableOpacity>
-
-                {/* <TouchableOpacity
-                  activeOpacity={0.7}
-                  disabled={loadingMutation}
-                  onPress={() => {
-                    mutate({ variables: { id: address._id } })
-                  }}
-                >
-                  <EvilIcons
-                    name='trash'
-                    size={scale(33)}
-                    color={currentTheme.darkBgFont}
-                  />
-                </TouchableOpacity> */}
-              </View>
-
-              {/* <View style={{ ...alignment.MTxSmall }}></View> */}
-            </View>
-          </TouchableOpacity>
-        )}
+            </TouchableOpacity>
+          )
+        }}
       />
       {/* </ScrollView> */}
       <View>
