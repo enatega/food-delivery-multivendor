@@ -7,7 +7,6 @@ export async function fetchAddressFromCoordinates(latitude, longitude) {
     const response = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=en`
     )
-    console.log('RESPONSE: ' + JSON.stringify(response?.data?.results[0], null, 3));
 
     // Check if the response is successful and contains results
     if (
@@ -30,7 +29,6 @@ export async function fetchAddressFromCoordinates(latitude, longitude) {
       throw new Error('No address found for the given coordinates.')
     }
   } catch (error) {
-    console.log('JSON error: ', JSON.stringify(error, null, 2))
     console.error('Error fetching address:', error.message)
     throw error
   }
