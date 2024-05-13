@@ -20,13 +20,13 @@ import { useTranslation } from 'react-i18next'
 import SearchModal from '../../components/Address/SearchModal'
 import { Feather } from '@expo/vector-icons'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
-import { fetchAddressFromCoordinates } from '../../utils/geocoding'
 import { useNavigation } from '@react-navigation/native'
 import MapView from './MapView'
 import screenOptions from './screenOptions'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
 import { t } from 'i18n-js'
+import useGeocoding from '../../ui/hooks/useGeocoding'
 
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
@@ -35,7 +35,7 @@ const LONGITUDE_DELTA = 0.2
 
 export default function AddNewAddress(props) {
   const { isLoggedIn } = useContext(UserContext)
-
+  const {getAddress} = useGeocoding()
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
 
@@ -89,7 +89,7 @@ export default function AddNewAddress(props) {
   }
 
   const onRegionChangeComplete = useCallback(async (coordinates) => {
-    const response = await fetchAddressFromCoordinates(
+    const response = await getAddress(
       coordinates.latitude,
       coordinates.longitude
     )

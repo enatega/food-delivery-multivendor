@@ -3,7 +3,7 @@ import axios from 'axios'
 // Function to fetch address from coordinates using the Google Maps Geocoding API
 export async function fetchAddressFromCoordinates(latitude, longitude) {
   try {
-    const apiKey = 'AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E'
+    const apiKey = ''
     const response = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=en`
     )
