@@ -13,15 +13,18 @@ import {
   StatusBar,
   Platform,
   ScrollView,
+  FlatList,
+  Image
 } from 'react-native'
-import {
-  AntDesign,
-  SimpleLineIcons
-} from '@expo/vector-icons'
+import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
-import { getBanners, restaurantListPreview } from '../../apollo/queries'
+import {
+  getBanners,
+  getCuisines,
+  restaurantListPreview
+} from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -47,6 +50,7 @@ import Banner from '../../components/Main/Banner/Banner'
 import Spinner from '../../components/Spinner/Spinner'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
+import CollectionCard from '../../components/CollectionCard/CollectionCard'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -56,6 +60,9 @@ const SELECT_ADDRESS = gql`
 `
 const GET_BANNERS = gql`
   ${getBanners}
+`
+const GET_CUISINES = gql`
+  ${getCuisines}
 `
 
 function Main(props) {
@@ -72,24 +79,19 @@ function Main(props) {
   const { getCurrentLocation } = useLocation()
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
-  const { data, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null,
-        shopType: null,
-        ip: null
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
-  const { data: banners } = useQuery(
-    GET_BANNERS,
-    {
-      fetchPolicy: 'network-only'
-    }
-  )
+  const { data, loading, error } = useQuery(RESTAURANTS, {
+    variables: {
+      longitude: location.longitude || null,
+      latitude: location.latitude || null,
+      shopType: null,
+      ip: null
+    },
+    fetchPolicy: 'network-only'
+  })
+  const { data: banners } = useQuery(GET_BANNERS, {
+    fetchPolicy: 'network-only'
+  })
+  const { data: allCuisines } = useQuery(GET_CUISINES)
   // console.log('banners => ', JSON.stringify(banners, null, 3))
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
@@ -203,15 +205,19 @@ function Main(props) {
           disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            {
-              busy ? <Spinner size='small' /> : (
-                <>
-                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                  <View style={styles().mL5p} />
-                  <TextDefault bold>{t('currentLocation')}</TextDefault>
-                </>
-              )
-            }
+            {busy ? (
+              <Spinner size='small' />
+            ) : (
+              <>
+                <SimpleLineIcons
+                  name='target'
+                  size={scale(18)}
+                  color={currentTheme.black}
+                />
+                <View style={styles().mL5p} />
+                <TextDefault bold>{t('currentLocation')}</TextDefault>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -255,7 +261,6 @@ function Main(props) {
 
   if (error) return <ErrorView />
 
-
   return (
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
@@ -263,97 +268,166 @@ function Main(props) {
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
-                  <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    <Banner banners={banners?.banners} />
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  <Banner banners={banners?.banners} />
+                  <View style={{gap: 16}}>
                     <View>
-                      <View>
-                        {isLoggedIn &&
-                          recentOrderRestaurantsVar &&
-                          recentOrderRestaurantsVar.length > 0 && (
-                            <>
-                              {orderLoading ? (
-                                <MainLoadingUI />
-                              ) : (
-                                <MainRestaurantCard
-                                  orders={recentOrderRestaurantsVar}
-                                  loading={orderLoading}
-                                  error={orderError}
-                                  title={'Order it again'}
-                                  queryType='orderAgain'
-                                />
-                              )}
-                            </>
+                      {isLoggedIn &&
+                        recentOrderRestaurantsVar &&
+                        recentOrderRestaurantsVar.length > 0 && (
+                          <>
+                            {orderLoading ? (
+                              <MainLoadingUI />
+                            ) : (
+                              <MainRestaurantCard
+                                orders={recentOrderRestaurantsVar}
+                                loading={orderLoading}
+                                error={orderError}
+                                title={'Order it again'}
+                                queryType='orderAgain'
+                              />
+                            )}
+                          </>
+                        )}
+                    </View>
+                    <View>
+                      {orderLoading ? (
+                        <MainLoadingUI />
+                      ) : (
+                        <MainRestaurantCard
+                          orders={mostOrderedRestaurantsVar}
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Popular right now'}
+                          queryType='topPicks'
+                          icon='trending'
+                        />
+                      )}
+                    </View>
+                    <View style={{padding: 15, gap: scale(8)}}>
+                        <TextDefault bolder H4>I feel like eating...</TextDefault>
+                      <FlatList
+                        data={
+                          allCuisines?.cuisines?.filter(
+                            (cuisine) => cuisine?.shopType === 'restaurant'
+                          ) ?? []
+                        }
+                        renderItem={({ item }) => {
+                          return (
+                            <CollectionCard
+                              onPress={()=>{
+                                navigation.navigate("Restaurants", { collection : item.name})
+                              }
+                              }
+                              image={item.image}
+                              name={item.name}
+                            />
+                          )
+                        }}
+  
+                        keyExtractor={(item) => item?._id}
+                        contentContainerStyle={{
+                          flexGrow: 1,
+                          gap: 8,
+                          paddingBottom: 5
+                        }}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}
+                      />
+                    </View>
+                    <View>
+                      {loading ? (
+                        <MainLoadingUI />
+                      ) : (
+                        <MainRestaurantCard
+                          orders={data?.nearByRestaurantsPreview?.restaurants?.filter(
+                            (restaurant) => restaurant.shopType === 'restaurant'
                           )}
-                      </View>
-                      <View>
-                        {orderLoading ? (
-                          <MainLoadingUI />
-                        ) : (
-                          <MainRestaurantCard
-                            orders={mostOrderedRestaurantsVar}
-                            loading={orderLoading}
-                            error={orderError}
-                            title={'Popular right now'}
-                            queryType='topPicks'
-                            icon='trending'
-                          />
-                        )}
-                      </View>
-                      <View>
-                        {loading ? (
-                          <MainLoadingUI />
-                        ) : (
-                          <MainRestaurantCard
-                            orders={data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant)=>restaurant.shopType === 'restaurant')}
-                            loading={orderLoading}
-                            error={orderError}
-                            title={'Restaurants near you'}
-                            queryType='restaurant'
-                            icon='restaurant'
-                          />
-                        )}
-                      </View>
-                      <View>
-                        {loading ? (
-                          <MainLoadingUI />
-                        ) : (
-                          <MainRestaurantCard
-                            orders={data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant)=>restaurant.shopType === 'grocery')}
-                            loading={orderLoading}
-                            error={orderError}
-                            title={'Grocery List'}
-                            queryType='grocery'
-                            icon='grocery'
-                          />
-                        )}
-                      </View>
-                      <View>
-                        {orderLoading ? (
-                          <MainLoadingUI />
-                        ) : (
-                          <MainRestaurantCard
-                            orders={mostOrderedRestaurantsVar?.filter((order)=>order.shopType === 'grocery')}
-                            loading={orderLoading}
-                            error={orderError}
-                            title={'Top grocery picks'}
-                            queryType='grocery'
-                            icon='store'
-                          />
-                        )}
-                      </View>
-                      
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Restaurants near you'}
+                          queryType='restaurant'
+                          icon='restaurant'
+                        />
+                      )}
                     </View>
-                    <View
-                      style={
-                        styles(currentTheme, hasActiveOrders).topBrandsMargin
-                      }
-                    >
-                      {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
+                    <View style={{padding: 15, gap: scale(8)}}>
+                        <TextDefault bolder H4>Fresh finds await...</TextDefault>
+                      <FlatList
+                        data={
+                          allCuisines?.cuisines?.filter(
+                            (cuisine) => cuisine?.shopType === 'grocery'
+                          ) ?? []
+                        }
+                        renderItem={({ item }) => {
+                          return (
+                            <CollectionCard
+                              onPress={()=>{
+                                navigation.navigate("Store", { collection : item.name})
+                              }
+                              }
+                              image={item.image}
+                              name={item.name}
+                            />
+                          )
+                        }}
+  
+                        keyExtractor={(item) => item?._id}
+                        contentContainerStyle={{
+                          flexGrow: 1,
+                          gap: 8,
+                          paddingBottom: 5
+                        }}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}
+                      />
                     </View>
-                  </ScrollView>
+                    <View>
+                      {loading ? (
+                        <MainLoadingUI />
+                      ) : (
+                        <MainRestaurantCard
+                          orders={data?.nearByRestaurantsPreview?.restaurants?.filter(
+                            (restaurant) => restaurant.shopType === 'grocery'
+                          )}
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Grocery List'}
+                          queryType='grocery'
+                          icon='grocery'
+                        />
+                      )}
+                    </View>
+                    <View>
+                      {orderLoading ? (
+                        <MainLoadingUI />
+                      ) : (
+                        <MainRestaurantCard
+                          orders={mostOrderedRestaurantsVar?.filter(
+                            (order) => order.shopType === 'grocery'
+                          )}
+                          loading={orderLoading}
+                          error={orderError}
+                          title={'Top grocery picks'}
+                          queryType='grocery'
+                          icon='store'
+                        />
+                      )}
+                    </View>
+                  </View>
+                  <View
+                    style={
+                      styles(currentTheme, hasActiveOrders).topBrandsMargin
+                    }
+                  >
+                    {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
+                  </View>
+                </ScrollView>
               </View>
             </View>
           </View>
@@ -370,7 +444,6 @@ function Main(props) {
             profile={profile}
             location={location}
           />
-
         </View>
       </SafeAreaView>
     </>

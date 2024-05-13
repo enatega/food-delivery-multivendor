@@ -280,6 +280,7 @@ fragment RestaurantPreviewFields on RestaurantPreview{
   tags
   reviewCount
   reviewAverage
+  location{coordinates}
   openingTimes{
     day
     times {

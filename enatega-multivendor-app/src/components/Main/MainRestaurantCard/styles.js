@@ -22,7 +22,7 @@ const styles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginBottom: scale(30),
+      // marginBottom: scale(30),
       ...alignment.MLmedium
     },
     topPicksSec: {
@@ -54,7 +54,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       ...alignment.MRmedium,
-      marginBottom: scale(8),
+      // marginBottom: scale(8),
     },
     row: {
       flexDirection: 'row',

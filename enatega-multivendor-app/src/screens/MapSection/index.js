@@ -69,10 +69,10 @@ export default function MapSection() {
         rotateEnabled={false}
         initialRegion={{
           latitude: restaurants?.length
-            ? restaurants[0].location.coordinates[1]
+            ? restaurants[0].location?.coordinates[1]
             : location.latitude,
           longitude: restaurants?.length
-            ? restaurants[0].location.coordinates[0]
+            ? restaurants[0].location?.coordinates[0]
             : location.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421

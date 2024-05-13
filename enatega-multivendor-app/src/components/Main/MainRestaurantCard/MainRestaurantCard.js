@@ -10,6 +10,7 @@ import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
+import { scale } from '../../../utils/scaling'
 
 const ICONS = {
   grocery: 'local-grocery-store',
@@ -29,7 +30,7 @@ function MainRestaurantCard(props) {
 
   return (
     <View style={styles().orderAgainSec}>
-      <View>
+      <View style={{gap: scale(8)}}>
         <View style={styles().header}>
           <View style={styles().row}>
             <TextDefault

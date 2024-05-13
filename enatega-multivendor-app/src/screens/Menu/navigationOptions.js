@@ -4,7 +4,8 @@ import SelectedLocation from '../../components/Main/Location/Location'
 import { alignment } from '../../utils/alignment'
 import FiltersIcon from '../../assets/SVG/filter'
 import MapIcon from '../../assets/SVG/map'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 
 const navigationOptions = (props) => ({
   headerStyle: {
@@ -21,7 +22,14 @@ const navigationOptions = (props) => ({
   },
   headerTitleAlign: 'left',
   headerRight: () => (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, ...alignment.MRsmall }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 16,
+        ...alignment.MRsmall
+      }}
+    >
       <FiltersIcon onPress={props.onPressFilter} />
       <MapIcon onPress={props.onPressMap} />
     </View>
@@ -33,6 +41,11 @@ const navigationOptions = (props) => ({
       linkColor={props.fontMainColor}
       navigation={props.navigation}
     />
-  )
+  ),
+  headerLeft: props.haveBackBtn ? () => (
+    <TouchableOpacity onPress={props.onPressBack} style={{...alignment.MLsmall}}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+  ) : null
 })
 export default navigationOptions

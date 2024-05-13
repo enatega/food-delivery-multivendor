@@ -152,8 +152,10 @@ function Menu({ route, props }) {
         iconColorPink: currentTheme.black,
         open: onOpen,
         icon: 'back',
+        haveBackBtn: routeData?.name === 'Menu',
         onPressFilter: () => filtersModalRef.current.open(),
-        onPressMap: ()=>navigation.navigate('MapSection', {location, restaurants: restaurantData})
+        onPressMap: ()=>navigation.navigate('MapSection', {location, restaurants: restaurantData}),
+        onPressBack: ()=>navigation.goBack()
       })
     )
   }, [navigation, currentTheme, restaurantData])
