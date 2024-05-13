@@ -47,6 +47,7 @@ function NewRestaurantCard(props) {
     // refetchQueries: [{ query: PROFILE }]
     refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
+  // console.log('PROPS => ', JSON.stringify(props, null, 3))
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
@@ -68,109 +69,122 @@ function NewRestaurantCard(props) {
 
   return (
     <TouchableOpacity
-      style={styles(currentTheme).offerContainer}
+      style={[
+        styles(currentTheme).offerContainer,
+        props?.fullWidth && { width: '100%' }
+      ]}
       activeOpacity={1}
       onPress={() => handleRestaurantClick()}
     >
-      <View style={styles().imageContainer}>
-        <Image
-          resizeMode='cover'
-          source={{ uri: props.image }}
-          style={styles().restaurantImage}
-        />
-
-        <View style={styles().overlayContainer}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            disabled={loadingMutation}
-            onPress={handleAddToFavorites}
+      <View style={styles().container}>
+        <View style={styles().imageContainer}>
+          <Image
+            resizeMode='cover'
+            source={{ uri: props.image }}
+            style={[
+              styles().restaurantImage,
+              props?.fullWidth && { width: '100%' }
+            ]}
+          />
+        </View>
+        <View style={styles().descriptionContainer}>
+          <View style={styles().aboutRestaurant}>
+            <TextDefault
+              H4
+              numberOfLines={1}
+              textColor={currentTheme.fontThirdColor}
+              bolder
+            >
+              {props.name}
+            </TextDefault>
+            {props.fullWidth && (
+              <View style={styles(currentTheme).deliveryTimeNew}>
+                <TextDefault bolder Normal textColor={currentTheme.main}>
+                  {props.deliveryTime} mins
+                </TextDefault>
+              </View>
+            )}
+          </View>
+          <TextDefault
+            textColor={currentTheme.gray600}
+            numberOfLines={1}
+            bold
+            Normal
+            style={styles().offerCategoty}
           >
-            <View style={styles(currentTheme).favouriteOverlay}>
-              {loadingMutation ? (
-                <Spinner
-                  size={'small'}
-                  backColor={'transparent'}
-                  spinnerColor={currentTheme.iconColorDark}
-                />
-              ) : (
-                <AntDesign
-                  name={heart ? 'heart' : 'hearto'}
-                  size={scale(15)}
-                  color={currentTheme.iconColor}
-                />
-              )}
+            {props?.categories ? props.categories.map((category) => category.title + ', ') : props?.tags?.join(',')}
+          </TextDefault>
+          <View style={styles().border} />
+          <View style={styles().deliveryInfo}>
+            <View style={styles().deliveryTime}>
+              <AntDesign
+                name='clockcircleo'
+                size={14}
+                color={currentTheme.editProfileButton}
+              />
+
+              <TextDefault
+                textColor={currentTheme.editProfileButton}
+                numberOfLines={1}
+                bold
+                Normal
+              >
+                {props.deliveryTime + ' '}
+                {t('min')}
+              </TextDefault>
             </View>
-          </TouchableOpacity>
+            <View style={styles().deliveryTime}>
+              <Bicycle />
+
+              <TextDefault
+                textColor={currentTheme.color2}
+                numberOfLines={1}
+                bold
+                Normal
+              >
+                ${props.tax}
+              </TextDefault>
+            </View>
+            <View style={styles().aboutRestaurant}>
+              <FontAwesome5 name='star' size={14} color={currentTheme.color2} />
+
+              <TextDefault textColor={currentTheme.color2} bold Normal>
+                {props.reviewAverage}
+              </TextDefault>
+              <TextDefault textColor={currentTheme.color2} bold Normal>
+                ({props.reviewCount})
+              </TextDefault>
+            </View>
+          </View>
         </View>
       </View>
-      <View style={styles().descriptionContainer}>
-        <View style={styles().aboutRestaurant}>
-          <TextDefault
-            H4
-            numberOfLines={1}
-            textColor={currentTheme.fontThirdColor}
-            bolder
-          >
-            {props.name}
-          </TextDefault>
-        </View>
-        <TextDefault
-          textColor={currentTheme.gray600}
-          numberOfLines={1}
-          bold
-          Normal
-          style={styles().offerCategoty}
+      <View
+        style={[
+          styles().overlayContainer,
+          props?.fullWidth && { width: '100%' }
+        ]}
+      >
+        <TouchableOpacity
+          activeOpacity={0.7}
+          disabled={loadingMutation}
+          onPress={handleAddToFavorites}
         >
-          {props.isCategories ? (
-            props.categories.map((category) => (
-              <Text key={category._id}>{category.title + ', '}</Text>
-            ))
-          ) : (
-            <Text>{props.tags?.join(',')}</Text>
-          )}
-        </TextDefault>
-        <View style={styles().border} />
-        <View style={styles().deliveryInfo}>
-          <View style={styles().deliveryTime}>
-            <AntDesign
-              name='clockcircleo'
-              size={14}
-              color={currentTheme.editProfileButton}
-            />
-
-            <TextDefault
-              textColor={currentTheme.editProfileButton}
-              numberOfLines={1}
-              bold
-              Normal
-            >
-              {props.deliveryTime + ' '}
-              {t('min')}
-            </TextDefault>
+          <View style={styles(currentTheme).favouriteOverlay}>
+            {loadingMutation ? (
+              <Spinner
+                size={'small'}
+                backColor={'transparent'}
+                spinnerColor={currentTheme.iconColorDark}
+              />
+            ) : (
+              <AntDesign
+                name={heart ? 'heart' : 'hearto'}
+                size={scale(15)}
+                color={currentTheme.iconColor}
+              />
+            )}
           </View>
-          <View style={styles().deliveryTime}>
-            <Bicycle />
-
-            <TextDefault
-              textColor={currentTheme.fontThirdColor}
-              numberOfLines={1}
-              bold
-              Normal
-            >
-              ${props.tax}
-            </TextDefault>
-          </View>
-          <View style={styles().aboutRestaurant}>
-            <FontAwesome5 name='star' size={14} color={currentTheme.color2} />
-
-            <TextDefault textColor={currentTheme.color2} bold Normal>
-              {props.reviewAverage}
-            </TextDefault>
-            <TextDefault textColor={currentTheme.color2} bold Normal>
-              ({props.reviewCount})
-            </TextDefault>
-          </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   )

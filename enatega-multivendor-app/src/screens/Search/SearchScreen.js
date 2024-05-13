@@ -177,6 +177,7 @@ const SearchScreen = () => {
                 <NewRestaurantCard
                   {...item}
                   isSearch={search}
+                  fullWidth
                 />
               )
             }}

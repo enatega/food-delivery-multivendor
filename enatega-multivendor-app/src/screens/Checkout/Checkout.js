@@ -778,15 +778,18 @@ function Checkout(props) {
                 </View>
                 <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} />
                 <View style={[styles(currentTheme).headerContainer]}>
-                  <Location
-                    locationIcon={currentTheme.newIconColor}
-                    locationLabel={currentTheme.newFontcolor}
-                    location={currentTheme.newFontcolor}
-                    navigation={props.navigation}
-                    addresses={profile.addresses}
-                    forwardIcon={true}
-                    screenName={'checkout'}
-                  />
+                  <View style={alignment.PLsmall}>
+                    <Location
+                      locationIcon={currentTheme.newIconColor}
+                      locationLabel={currentTheme.newFontcolor}
+                      location={currentTheme.newFontcolor}
+                      navigation={props.navigation}
+                      addresses={profile.addresses}
+                      forwardIcon={true}
+                      screenName={'checkout'}
+                    />
+                  </View>
+                  
 
                   <View
                     style={[

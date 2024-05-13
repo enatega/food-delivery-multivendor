@@ -14,9 +14,11 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.newheaderBG : 'transparent'
     },
     contentContainer: {
+      backgroundColor: props !== null ? props.newheaderBG : 'white',
       flexGrow: 1,
       ...alignment.PBsmall,
-      alignItems: "center"
+      gap: 16,
+      ...alignment.Pmedium
     },
     subContainerImage: {
       flex: 1,

@@ -51,7 +51,7 @@ function Location({
       modalOn()
   }
   return (
-    <TouchableOpacity onPress={onLocationPress} style={{ marginHorizontal: scale(10) }}>
+    <TouchableOpacity onPress={onLocationPress} >
       <View style={styles(currentTheme).headerTitleContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: scale(10), gap: 5 }}>
           <View style={[styles().locationIcon, locationIconGray]}>

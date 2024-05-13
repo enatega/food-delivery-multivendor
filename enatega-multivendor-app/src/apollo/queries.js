@@ -280,6 +280,7 @@ fragment RestaurantPreviewFields on RestaurantPreview{
   tags
   reviewCount
   reviewAverage
+  location{coordinates}
   openingTimes{
     day
     times {
@@ -612,6 +613,10 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       tags
       reviewCount
       reviewAverage
+      distanceWithCurrentLocation @client
+      freeDelivery @client
+      acceptVouchers @client
+      location{coordinates}
       openingTimes{
         day
         times {
@@ -737,6 +742,8 @@ export const getCuisines = `query Cuisines{
     _id
     name
     description
+    image
+    shopType
   }
 }`
 

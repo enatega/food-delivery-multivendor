@@ -65,7 +65,7 @@ function Item(props) {
   }
   return (
     <TouchableOpacity
-      style={{ paddingHorizontal: scale(10) }}
+      // style={{ padding: scale(10), backgroundColor: 'green' }}
       activeOpacity={1}
       onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View key={item._id} style={styles().mainContainer}>

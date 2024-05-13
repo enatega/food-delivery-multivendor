@@ -7,10 +7,10 @@ const { height } = Dimensions.get('window')
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      gap: 20
+      gap: 16
     },
     topbrandsSec: {
-      gap: 5,
+      gap: scale(8),
       ...alignment.PLmedium
     },
     topbrandsHeading:{
@@ -27,7 +27,7 @@ const styles = (props = null) =>
     topbrandsContainer: {
       flexGrow: 1,
       width: scale(90),
-      marginTop: scale(7),
+      // marginTop: scale(7),
       ...alignment.MRmedium
     },
     brandImgContainer: {
@@ -65,7 +65,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       ...alignment.MRmedium,
-      marginBottom: scale(8),
+      // marginBottom: scale(8),
     },
     seeAllBtn: {
       backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',

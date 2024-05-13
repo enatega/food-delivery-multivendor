@@ -46,7 +46,8 @@ const styles = (props = null) =>
     },
     searchList: {
       marginBottom: 70,
-      ...alignment.MTsmall
+      ...alignment.MTsmall,
+      ...alignment.Pmedium
     },
     flexRow: {
       display: 'flex',

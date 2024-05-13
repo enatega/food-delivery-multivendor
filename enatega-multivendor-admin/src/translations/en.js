@@ -312,7 +312,8 @@ const en = {
     PICKED: 'PICKED',
     ASSIGNED: 'ASSIGNED',
     DELIVERED: 'DELIVERED',
-    REJECTED: 'REJECTED'
+    REJECTED: 'REJECTED',
+    shopType: 'Shop Type',
   }
 }
 

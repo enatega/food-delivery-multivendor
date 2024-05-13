@@ -70,6 +70,22 @@ const Cuisines = props => {
 
   const columns = [
     {
+      name: t('Image'),
+      cell: row => (
+        <>
+          <img
+            className="img-responsive"
+            style={{ width: 30, height: 30, borderRadius: 15 }}
+            src={
+              row.image ||
+              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+            }
+            alt=''
+          />
+        </>
+      )
+    },
+    {
       name: t('Name'),
       sortable: true,
       selector: 'name'
@@ -78,6 +94,11 @@ const Cuisines = props => {
       name: t('Description'),
       sortable: true,
       selector: 'description'
+    },
+    {
+      name: t('shopType'),
+      sortable: true,
+      selector: 'shopType'
     },
     {
       name: t('Action'),

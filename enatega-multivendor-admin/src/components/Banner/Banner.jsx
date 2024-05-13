@@ -39,9 +39,7 @@ function Banner(props) {
   const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_FOOD } = ConfigurableValues()
 
   const mutation = props.banner ? EDIT_BANNER : CREATE_BANNER
-  const {data: bannerActions, error} = useQuery(GET_BANNER_ACTIONS)
-  console.log('bannerActions => ', bannerActions)
-  console.log('bannerActions error => ', error)
+  const {data: bannerActions} = useQuery(GET_BANNER_ACTIONS)
 
   const [mainError, mainErrorSetter] = useState('')
   const [success, successSetter] = useState('')
@@ -314,24 +312,6 @@ function Banner(props) {
                 </Select>
 
                 )}
-                {/* <Input
-                  
-                  placeholder={
-                    t('Action') + ' (Action to perform i.e navigate)'
-                  }
-                  disabled
-                  type="text"
-                  defaultValue={data.action}
-                  onChange={(e)=>onDataChange('action', e.target.value)}
-                  disableUnderline
-                  className={[
-                    globalClasses.input,
-                    errors.action
-                      ? globalClasses.inputError
-                      : "",
-                      data.action && !errors.action && globalClasses.inputSuccess
-                  ]}
-                /> */}
               </Grid>
               <Grid item xs={12} sm={5}>
                 <Typography className={classes.labelText}>

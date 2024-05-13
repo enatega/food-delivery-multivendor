@@ -28,19 +28,23 @@ const getQuery = (queryType) => {
   }
 }
 
-const getResult = (queryType, data, setRestaurantData) => {
+const getResult = (queryType, data, setRestaurantData, setAllData) => {
   switch (queryType) {
     case 'orderAgain':
       setRestaurantData(data?.recentOrderRestaurantsPreview)
+      setAllData(data?.recentOrderRestaurantsPreview)
       break
     case 'topPicks':
       setRestaurantData(data?.mostOrderedRestaurantsPreview)
+      setAllData(data?.mostOrderedRestaurantsPreview)
       break
     case 'topBrands':
       setRestaurantData(data?.topRatedVendorsPreview)
+      setAllData(data?.topRatedVendorsPreview)
       break
     default:
       setRestaurantData(data?.nearByRestaurantsPreview?.restaurants)
+      setAllData(data?.nearByRestaurantsPreview?.restaurants)
   }
 }
 
@@ -62,6 +66,7 @@ const SUB_HEADING = {
 
 export const useRestaurantQueries = (queryType, location, selectedType) => {
   const [restaurantData, setRestaurantData] = useState(null)
+  const [allData, setAllData] = useState(null)
   const query = getQuery(queryType)
 
   const queryVariables = {
@@ -77,7 +82,7 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
   const { data, refetch, networkStatus, loading, error } = useQuery(query, {
     variables: queryVariables,
     onCompleted: (data) => {
-      getResult(queryType, data, setRestaurantData)
+      getResult(queryType, data, setRestaurantData, setAllData)
     },
     fetchPolicy: 'network-only'
   })
@@ -90,6 +95,7 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
     data,
     networkStatus,
     setRestaurantData,
+    allData,
     heading: HEADING[queryType],
     subHeading: SUB_HEADING[queryType]
   }

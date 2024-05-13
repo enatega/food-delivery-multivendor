@@ -434,6 +434,8 @@ export const getCoupons = `query Coupons{
       _id
       name
       description
+      image
+      shopType
     }
   }`
 

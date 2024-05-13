@@ -132,7 +132,7 @@ function Favourite() {
         showsVerticalScrollIndicator={false}
         refreshing={networkStatus === 4}
         onRefresh={() => networkStatus === 7 && refetch()}
-        style={[styles().flex, styles(currentTheme).container]}
+        // style={[styles().flex, styles(currentTheme).container]}
         contentContainerStyle={styles(currentTheme).contentContainer}
         ListEmptyComponent={emptyView()}
         ListHeaderComponent={null}
@@ -145,6 +145,7 @@ function Favourite() {
               reviewAverage={averageRating}
               reviewCount={numberOfReviews}
               isCategories
+              fullWidth
             />
           )
         }}
