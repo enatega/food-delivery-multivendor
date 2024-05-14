@@ -134,6 +134,68 @@ const styles = (props = null) =>
     // actionButton: {
     //   alignItems: 'center',
     //   justifyContent: 'center',
-    // }
+    // },
+    //Modal
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#000',
+      filter: 'blur(10)'
+    },
+    modalView: {
+      width: '90%',
+      alignItems: 'flex-start',
+      gap: 24,
+      margin: 20,
+      backgroundColor: props !== null ? props.themeBackground : 'white',
+      borderWidth: scale(1),
+      borderColor: props !== null ? props.color10 : 'white',
+      borderRadius: 20,
+      padding: 20,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    btn: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch',
+      height: scale(50),
+      borderRadius: 40
+    },
+    btnCancel: {
+      backgroundColor: props !== null ? props.white : 'white',
+      borderWidth: 1,
+      borderColor: props !== null ? props.black : 'black'
+    },
+    btnDelete: {
+      backgroundColor: props !== null ? props.red600 : '#DC2626'
+    },
+    modalInput: {
+      height: scale(40),
+      borderWidth: 1,
+      borderColor: props != null ? props.verticalLine : '#B8B8B8',
+      padding: 5,
+      borderRadius: 6,
+      color: props !== null ? props.newFontcolor : '#f9f9f9'
+    },
+    modal: {
+      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      borderTopEndRadius: scale(20),
+      borderTopStartRadius: scale(20),
+      shadowOpacity: 0,
+      paddingTop: 24,
+      paddingBottom: 24,
+      paddingLeft: 16,
+      paddingRight: 16
+    },
   })
 export default styles
