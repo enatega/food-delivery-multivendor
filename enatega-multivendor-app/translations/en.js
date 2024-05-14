@@ -588,5 +588,8 @@ export const en = {
   searchTitle: 'Search',
   noResults: 'No Results Found',
   recentSearches: 'Recent Searches',
-  clear: 'Clear'
+  clear: 'Clear',
+  savedAddresses: 'Saved Addresses',
+  cancel: 'Cancel',
+  delete: 'Delete'
 }
