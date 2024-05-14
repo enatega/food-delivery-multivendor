@@ -166,8 +166,9 @@ function Rider(props) {
         <Box ml={10} mt={1}>
           <label>{t('Available')}</label>
           <Switch
-            checked={riderAvailable}
-            onChange={() => setRiderAvailable(!riderAvailable)}
+            defaultChecked={riderAvailable}
+            value={riderAvailable}
+            onChange={e => setRiderAvailable(e.target.checked)}
             id="input-available"
             name="input-available"
             style={{ color: 'black' }}
@@ -294,7 +295,7 @@ function Rider(props) {
                 id="input-phone"
                 name="input-phone"
                 placeholder={t('PhoneNumber')}
-                type="tel"
+                type="number"
                 defaultValue={phone}
                 onBlur={event =>
                   onBlur(phoneErrorSetter, 'phone', event.target.value)
@@ -308,7 +309,6 @@ function Rider(props) {
                     ? globalClasses.inputSuccess
                     : ''
                 ]}
-                pattern="[0-9]*"
               />
               {/* </Box> */}
             </Grid>
