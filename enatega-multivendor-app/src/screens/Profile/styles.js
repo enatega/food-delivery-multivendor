@@ -21,7 +21,7 @@ const styles = (props = null) =>
     },
     mainContainer: {
       flex: 1,
-      ...alignment.Pmedium,
+      // ...alignment.Pmedium,
     },
     formSubContainer: {
       borderRadius: scale(8),
@@ -239,9 +239,8 @@ const styles = (props = null) =>
       borderRadius: 25
     },
     line: {
-      height: 1,
-      backgroundColor: props !== null ? props.color6 : '#9B9A9A',
-      paddingTop: scale(1)
+      height: 0.5,
+      backgroundColor: props !== null ? props.borderBottomColor : '#DAD6D6',
     },
 
     drawerContainer: {
@@ -257,6 +256,10 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.newButtonBackground : '#F3FFEE',
       ...alignment.Psmall,
       borderRadius: scale(5),
+    },
+    padding: {
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
     }
   })
 export default styles

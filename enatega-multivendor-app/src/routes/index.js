@@ -60,6 +60,7 @@ import MapSection from '../screens/MapSection'
 import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import SearchScreen from '../screens/Search/SearchScreen'
+import UserContext from '../context/User'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -185,6 +186,7 @@ function BottomTabNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
+  const {profile: userProfile} = useContext(UserContext)
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
@@ -204,7 +206,9 @@ function BottomTabNavigator() {
       <Tab.Screen name="Restaurants" component={Menu} />
       <Tab.Screen name="Store" component={Menu} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Profile" component={userProfile ? Profile : CreateAccount} />
+
+      
     </Tab.Navigator>
   );
 }

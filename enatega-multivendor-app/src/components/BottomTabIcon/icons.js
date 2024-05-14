@@ -99,5 +99,29 @@ export const Icons = {
         strokeLinejoin='round'
       />
     </Svg>
+  ),
+  login: ({ color, size }) => (
+    <Svg
+      width={size ?? 25}
+      height={size ?? 24}
+      viewBox='0 0 25 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <Path
+        d='M12.5 22c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10z'
+        stroke={color ?? '#0EA5E9'}
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <Path
+        d='M12.5 13a3 3 0 100-6 3 3 0 000 6zM7.5 20.662V19a2 2 0 012-2h6a2 2 0 012 2v1.662'
+        stroke={color ?? '#0EA5E9'}
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </Svg>
   )
 }
