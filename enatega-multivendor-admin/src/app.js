@@ -14,6 +14,7 @@ import { isFirebaseSupported, initialize } from './firebase.js'
 import { uploadToken } from './apollo'
 import { gql, useApolloClient } from '@apollo/client'
 import ConfigurableValues from './config/constants.js'
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react'
 
 require('./i18n')
 
@@ -115,6 +116,13 @@ const App = () => {
     : '/auth/login'
   return (
     <Sentry.ErrorBoundary>
+      <TawkMessengerReact
+        propertyId="5d0f4f6b36eab9721118c84e"
+        widgetId="1ftnb355n"
+        customStyle={{
+          color: 'red'
+        }}
+      />
       {GOOGLE_MAPS_KEY ? (
         <GoogleMapsLoader GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY}>
           <HashRouter basename="/">

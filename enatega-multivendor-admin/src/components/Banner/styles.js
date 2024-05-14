@@ -64,6 +64,7 @@ const useStyles = makeStyles(theme => ({
     height: 120,
     borderRadius: 30
   },
+  parametersHeading: {textAlign: 'left', marginTop: '15px', marginLeft: '8px', fontWeight: '500', fontSize: '16px'}
 }))
 
 export default useStyles
