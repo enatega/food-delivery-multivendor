@@ -40,7 +40,7 @@
     "@babel/plugin-transform-optional-catch-binding": "^7.23.4",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.21.0",
-    "@react-native-community/datetimepicker": "7.6.1",
+    "@react-native-community/datetimepicker": "^8.0.1",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/drawer": "^6.3.0",

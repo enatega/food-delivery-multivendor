@@ -90,14 +90,11 @@ function Profile(props) {
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: t('Hi') + " " + profile.name + "!",
       headerRight: null,
       headerLeft: null,
-      headerTitleAlign: 'left',
+      headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.newFontcolor,
-        fontSize: 35,
-        fontWeight: 700
       },
       headerStyle: {
         backgroundColor: currentTheme.newHeaderbg,
@@ -132,6 +129,7 @@ function Profile(props) {
             showsVerticalScrollIndicator={false}
             alwaysBounceVertical={false}
           >
+            <TextDefault bolder style={[{fontSize: scale(30) },styles().padding]}>{t('Hi') + " " + profile.name + "!"}</TextDefault>
             <View style={styles(currentTheme).mainContainer}>
               <TouchableOpacity
                 activeOpacity={0.8}

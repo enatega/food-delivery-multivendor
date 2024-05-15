@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, StatusBar, Linking, TouchableOpacity } from 'react-native'
+import { View, StatusBar, Linking, TouchableOpacity, Platform } from 'react-native'
 import {
   AntDesign,
   MaterialIcons,
@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
 import FavoriteButton from '../../components/FavButton/FavouriteButton'
 import { mapStyle } from '../../utils/mapStyle'
+import { customMapStyle } from '../../utils/customMapStyles'
 
 function About(props) {
   const Analytics = analytics()
@@ -102,7 +103,7 @@ function About(props) {
             rotateEnabled={false}
             cacheEnabled={false}
             initialRegion={RestAbout.map}
-            customMapStyle={mapStyle}
+            customMapStyle={customMapStyle}
             provider={PROVIDER_GOOGLE}
           ></MapView>
           <View style={styles().marker}>

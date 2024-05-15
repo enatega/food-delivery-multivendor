@@ -60,7 +60,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                         {
                           borderColor: filters[filter].selected.includes(item)
                             ? currentTheme.main
-                            : '#94A3B8',
+                            : currentTheme.subText,
 
                           backgroundColor: filters[filter].selected.includes(
                             item
@@ -76,7 +76,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                         textColor={
                           filters[filter].selected.includes(item)
                             ? currentTheme.white
-                            : currentTheme.gray700
+                            : currentTheme.subText
                         }
                       >
                         {item}
@@ -103,7 +103,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                       {
                         borderColor: filters[filter].selected.includes(item)
                           ? currentTheme.main
-                          : '#94A3B8',
+                          : currentTheme.subText,
 
                         backgroundColor: filters[filter].selected.includes(item)
                           ? currentTheme.main
@@ -117,7 +117,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                       textColor={
                         filters[filter].selected.includes(item)
                           ? currentTheme.white
-                          : currentTheme.gray700
+                          : currentTheme.subText
                       }
                     >
                       {item}
