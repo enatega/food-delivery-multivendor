@@ -1,7 +1,7 @@
 import { scale } from '../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-const { height } = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -16,7 +16,7 @@ const styles = (props = null) =>
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#f3f0eb'
+      backgroundColor: props != null ? props.themeBackground : '#FFF'
     },
     image: {
       // height: height * 0.4,
@@ -29,7 +29,9 @@ const styles = (props = null) =>
     },
     image1: {
       top: scale(-50),
-      overflow: 'hidden'
+      width,
+      overflow: 'hidden',
+      alignItems: 'center',
     },
     subContainer: {
       alignSelf: 'center',
@@ -86,7 +88,7 @@ const styles = (props = null) =>
     line: {
       flex: 1,
       height: 1,
-      backgroundColor: props !== null ? props.color6 : '#9B9A9A'
+      backgroundColor: props !== null ? props.borderBottomColor : '#9B9A9A'
     },
     guestButton: {
       width: '90%',
