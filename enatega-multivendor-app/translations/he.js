@@ -571,5 +571,10 @@ serviceTerms: "תנאי השימוש",
 searchTitle: "חיפוש",
 noResults: "לא נמצאו תוצאות",
 recentSearches: "חיפושים אחרונים",
-clear: "נקה"
+clear: "נקה",
+savedAddresses: 'כתובות שמורות',
+cancel: 'ביטול',
+delete: 'מחיקה',
+deleteAddressesTitle: 'האם אתה בטוח שברצונך למחוק את הכתובות שנבחרו?',
+notVerified: 'לא מאומת',
 }

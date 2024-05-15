@@ -567,5 +567,10 @@ serviceTerms: "服务条款",
 searchTitle: "搜索",
 noResults: "未找到结果",
 recentSearches: "最近搜索",
-clear: "清除"
+clear: "清除",
+savedAddresses: '已保存地址',
+cancel: '取消',
+delete: '删除',
+deleteAddressesTitle: '您确定要删除所选地址吗？',
+notVerified: '未验证',
 }

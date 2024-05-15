@@ -246,7 +246,7 @@ const styles = (props = null) =>
       alignItems: 'center',
     },
     line: {
-      height: 1,
+      height: 0.5,
       backgroundColor: props !== null ? props.borderBottomColor : '#f9f9f9',
     },
     padding: {

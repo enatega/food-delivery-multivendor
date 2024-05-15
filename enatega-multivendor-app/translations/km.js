@@ -583,5 +583,10 @@ serviceTerms: "គោលការណ៍សេវាកម្ម",
 searchTitle: "ស្វែងរក",
 noResults: "រកមិនឃើញលទ្ធផល",
 recentSearches: "ស្វែងរកថ្មីៗថ្ងៃមុន",
-clear: "សម្អាត"
+clear: "សម្អាត",
+savedAddresses: 'អាសយដ្ឋាន​រក្សា​ទុក',
+cancel: 'បោះបង់',
+delete: 'លុប',
+deleteAddressesTitle: 'តើ​អ្នក​ប្រាកដ​ថាអ្នក​ចង់​លុប​អាសយដ្ឋាន​ដែល​បាន​ជ្រើស​រួច​មែន​ឬ​ទេ?',
+notVerified: 'មិនបានផ្ទៀងផ្ទាត់',
 }
