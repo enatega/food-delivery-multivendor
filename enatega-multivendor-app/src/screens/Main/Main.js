@@ -120,7 +120,7 @@ function Main(props) {
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
-        headerMenuBackground: currentTheme.newheaderColor,
+        headerMenuBackground: currentTheme.themeBackground,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
         open: onOpen,

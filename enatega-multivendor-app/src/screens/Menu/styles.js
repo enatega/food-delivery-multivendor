@@ -168,7 +168,7 @@ const styles = (props = null) =>
       height: 130,
       width: 100,
       borderRadius: 8,
-      shadowColor: 'gray',
+      shadowColor: props !== null ? props.horizontalLine : 'gray',
       shadowOffset: {
         width: 0,
         height: 2

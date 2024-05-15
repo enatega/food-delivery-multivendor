@@ -108,7 +108,7 @@ function Profile(props) {
       modalSetter: setModalVisible,
       passwordButton: setShowPass
     })
-  }, [props.navigation, showPass, toggleView])
+  }, [props.navigation, showPass, toggleView, themeContext.ThemeValue])
 
   return (
     <>
