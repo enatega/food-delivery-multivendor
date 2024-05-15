@@ -2,9 +2,7 @@ import React, {
   useState,
   useRef,
   useContext,
-  useLayoutEffect,
-  useEffect,
-  useMemo
+  useEffect
 } from 'react'
 import {
   View,
@@ -13,22 +11,18 @@ import {
   Platform,
   StatusBar,
   Modal,
-  FlatList,
   ScrollView,
   AppState,
   Linking
 } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
-import { TextField, OutlinedTextField } from 'react-native-material-textfield'
-import { scale, verticalScale } from '../../utils/scaling'
-import { updateUser, login, Deactivate } from '../../apollo/mutations'
+import { scale } from '../../utils/scaling'
+import { Deactivate } from '../../apollo/mutations'
 import {
   FavouriteRestaurant,
-  recentOrderRestaurantsQuery,
   profile
 } from '../../apollo/queries'
-import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -37,30 +31,21 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import {
-  useFocusEffect,
   useNavigation,
   useRoute
 } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
 import {
   Feather,
-  Entypo,
   MaterialIcons,
-  Ionicons,
   EvilIcons
 } from '@expo/vector-icons'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import Spinner from '../../components/Spinner/Spinner'
-import MainRestaurantCard from '../../components/Main/MainRestaurantCard/MainRestaurantCard'
-import { useQuery } from '@apollo/client'
 import { LocationContext } from '../../context/Location'
-import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
-import Item from '../../components/Main/Item/Item'
 import ButtonContainer from '../../components/Account/ButtonContainer/ButtonContainer'
-import OrderAgainCard from '../../components/Profile/OrderAgainCard/OrderAgainCard'
-import OrdersContext from '../../context/Orders'
 import { pushToken, updateNotificationStatus } from '../../apollo/mutations'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import LogoutModal from '../../components/Sidebar/LogoutModal/LogoutModal'
@@ -76,16 +61,10 @@ const UPDATE_NOTIFICATION_TOKEN = gql`
   ${updateNotificationStatus}
 `
 
-const UPDATEUSER = gql`
-  ${updateUser}
-`
 const DEACTIVATE = gql`
   ${Deactivate}
 `
 
-const RESTAURANTS = gql`
-  ${FavouriteRestaurant}
-`
 const PROFILE = gql`
   ${profile}
 `
@@ -96,22 +75,15 @@ function Account(props) {
   const route = useRoute()
   const { params } = route
   const { t } = useTranslation()
-  const refName = useRef()
-  const [nameError, setNameError] = useState('')
-  const [toggleEmailView, setToggleEmailView] = useState(true)
-  const [toggleNameView, setToggleNameView] = useState(params?.editName)
   const [toggleView, setToggleView] = useState(true)
-  // const [modelVisible, setModalVisible] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [lngModalVisible, setLngModalVisible] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-  const { location } = useContext(LocationContext)
   const [selectedLanguage, setselectedLanguage] = useState('')
   const { logout } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const backScreen = props.route.params ? props.route.params.backScreen : null
 
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
@@ -230,7 +202,7 @@ function Account(props) {
   }, []);
 
   const fetchSelectedLanguage = async () => {
-    const lang = await AsyncStorage.getItem('enatega-language');
+    const lang = await AsyncStorage.getItem('enatega-language-name');
     if (lang) {
       setselectedLanguage(lang);
     } else {
@@ -331,7 +303,7 @@ function Account(props) {
       FlashMessage({
         message: error.networkError.result.errors[0].message
       })
-    } catch (err) {}
+    } catch (err) { }
   }
 
   async function updateNotificationStatus(notificationCheck) {
@@ -407,7 +379,7 @@ function Account(props) {
             alwaysBounceVertical={false}
           >
             <View style={styles(currentTheme).mainContainer}>
-              <View>
+              <View style={styles(currentTheme).padding}>
                 <TextDefault H2 bolder textColor={currentTheme.fontThirdColor}>
                   {t('Account')}
                 </TextDefault>
@@ -419,58 +391,90 @@ function Account(props) {
                     title={t('email')}
                     detail={profile?.email}
                     status={profile?.emailIsVerified ? t('verified') : t('notVerified')}
-                    onPress='none'
+                    onPress='null'
                   />
+                  <View style={styles(currentTheme).line} />
                   <ButtonContainer
                     title={t('phone')}
                     detail={profile?.phone}
                     status={profile?.phoneIsVerified ? t('verified') : t('notVerified')}
-                    // onPress='none'
-                    onPress={profile?.phoneIsVerified ? 'none' : () =>
+                    // onPress='null'
+                    onPress={profile?.phoneIsVerified ? 'null' : () =>
                       navigation.navigate('PhoneNumber', {
                         prevScreen: 'Account'
                       })
                     }
                   />
+                  <View style={styles(currentTheme).line} />
                   <ButtonContainer
                     title={t('name')}
                     detail={profile?.name}
-                    status='none'
+                    status='null'
                     onPress={() => navigation.navigate('EditName', {
                       name: profile?.name,
                       phone: profile?.phone
                     })}
                   />
+                  <View style={styles(currentTheme).line} />
 
-                  <View style={styles().legalView}>
+                  <View style={[styles().padding]}>
                     <TextDefault
                       H5
-                      Bold
+                      bolder
                       textColor={currentTheme.fontThirdColor}
                     >
                       {t('language')}
                     </TextDefault>
-                    <ButtonContainer
-                      title={selectedLanguage}
-                      detail={t('edit')}
-                      status='none'
+                    <TouchableOpacity
+                      style={[styles(currentTheme).linkContainer, styles().flexRow]}
                       onPress={() => { setLngModalVisible(true) }}
-                    />
+                    >
+                      <TextDefault
+                        style={styles().drawerContainer}
+                        textColor={currentTheme.fontMainColor}
+                        small
+                        H5
+                        bolder
+                      >
+                        {selectedLanguage}
+                      </TextDefault>
+
+                      <View style={[styles(currentTheme).leftContainer, styles().flexRow]}>
+                        <TextDefault
+                          style={styles().drawerContainer}
+                          textColor={currentTheme.linkColor}
+                          small
+                          H5
+                          bolder
+                        >
+                          {t('edit')}
+                        </TextDefault>
+                        <EvilIcons
+                          name='chevron-right'
+                          size={scale(30)}
+                          color={currentTheme.darkBgFont}
+                        />
+                      </View>
+                    </TouchableOpacity>
                   </View>
+                  <View style={styles(currentTheme).line} />
 
                   <ButtonContainer
                     title={t('DeleteAccount')}
                     detail={''}
-                    status='none'
+                    status='null'
                     onPress={() => setDeleteModalVisible(true)}
                   />
+                  <View style={styles(currentTheme).line} />
+
                 </View>
 
                 <View style={styles(currentTheme).mainContainerArea}>
                   <View
                     style={[
                       styles(currentTheme).languageContainer,
-                      styles().checkboxSettings
+                      styles().checkboxSettings,
+                      styles().padding
                     ]}
                   >
                     <View>
@@ -510,10 +514,12 @@ function Account(props) {
                       )}
                     </TouchableOpacity>
                   </View>
+
                   <View
                     style={[
                       styles(currentTheme).languageContainer,
-                      styles().checkboxSettings
+                      styles().checkboxSettings,
+                      styles().padding
                     ]}
                   >
                     <View>
@@ -557,11 +563,12 @@ function Account(props) {
                       )}
                     </TouchableOpacity>
                   </View>
-                  
+
                   <View
                     style={[
                       styles(currentTheme).languageContainer,
-                      styles().checkboxSettings
+                      styles().checkboxSettings,
+                      styles().padding
                     ]}
                   >
                     <View>
@@ -587,27 +594,37 @@ function Account(props) {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/* </View> */}
 
-                <View style={styles().legalView}>
+                <View>
                   <TextDefault
                     H2
                     bolder
                     textColor={currentTheme.fontThirdColor}
+                    style={styles().padding}
                   >
                     {t('legal')}
                   </TextDefault>
                   <ButtonContainer
                     title={t('serviceTerms')}
                     detail={''}
-                    status='none'
+                    status='null'
                     onPress={() => {
                       Linking.openURL('https://enatega.com/terms-conditions/')
                     }}
                   />
+                  <View style={styles(currentTheme).line} />
+
+                  <ButtonContainer
+                    title={t('privacyPolicy')}
+                    detail={''}
+                    status='null'
+                    onPress={() => {
+                      Linking.openURL('https://enatega.com/privacy-policy/')
+                    }}
+                  />
                 </View>
 
-                <View style={styles().legalView}>
+                {/* <View style={styles().padding}>
                   <TextDefault
                     H2
                     bolder
@@ -615,17 +632,8 @@ function Account(props) {
                   >
                     {t('legal')}
                   </TextDefault>
-                  <ButtonContainer
-                    title={t('privacyPolicy')}
-                    detail={''}
-                    status='none'
-                    onPress={() => {
-                      Linking.openURL('https://enatega.com/privacy-policy/')
-                    }}
-                  />
-                </View>
+                </View> */}
 
-                {/* <View> */}
                 <View style={styles(currentTheme).containerButton}>
                   <TouchableOpacity
                     activeOpacity={0.5}
@@ -639,7 +647,7 @@ function Account(props) {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {/* </View> */}
+
               </View>
             </View>
           </ScrollView>
@@ -710,12 +718,14 @@ function Account(props) {
             visible={modalVisible}
             onCancel={handleCancel}
             onLogout={handleLogout}
+            showCrossButton
           />
-          <LanguageModal 
-          currentTheme={currentTheme}
-          modalVisible={lngModalVisible}
-          setModalVisible={setLngModalVisible}
-          setselectedLanguage={setselectedLanguage}
+          <LanguageModal
+            currentTheme={currentTheme}
+            modalVisible={lngModalVisible}
+            setModalVisible={setLngModalVisible}
+            setselectedLanguage={setselectedLanguage}
+            showCrossButton
           />
         </KeyboardAvoidingView>
       </View>

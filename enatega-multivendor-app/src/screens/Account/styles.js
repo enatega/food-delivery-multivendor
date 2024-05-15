@@ -13,7 +13,7 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
     },
     containerInfo: {
       width: '100%',
@@ -21,7 +21,7 @@ const styles = (props = null) =>
     },
     mainContainer: {
       flex: 1,
-      ...alignment.Pmedium,
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
     },
     subContainer: {
       ...alignment.MTmedium
@@ -110,13 +110,6 @@ const styles = (props = null) =>
     },
     mainContainerArea: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-    },
-    mainContainer: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      ...alignment.Pmedium,
-      // ...alignment.PLxSmall,
-      // ...alignment.PRxSmall,
-      // ...alignment.PTmedium,
     },
     languageContainer: {
       width: '100%',
@@ -223,7 +216,7 @@ const styles = (props = null) =>
        alignItems: 'center'
     },
     legalView: {
-      ...alignment.MTmedium
+      ...alignment.MTmedium,
     },
     containerButton: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
@@ -234,7 +227,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       alignSelf: 'center',
       ...alignment.MTmedium,
-      ...alignment.MBmedium
+      ...alignment.PBlarge
     },
     addButton: {
       backgroundColor: props !== null ? props.color3 : 'transparent',
@@ -251,6 +244,32 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-    }
+    },
+    line: {
+      height: 1,
+      backgroundColor: props !== null ? props.borderBottomColor : '#f9f9f9',
+    },
+    padding: {
+      ...alignment.Pmedium
+    },
+    flexRow: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    linkContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      ...alignment.MTsmall
+    },
+    leftContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: scale(5),
+    },
   })
 export default styles

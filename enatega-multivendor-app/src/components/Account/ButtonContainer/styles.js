@@ -11,36 +11,31 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      gap: scale(5)
+      alignItems: 'center',
+      gap: scale(5),
     },
     flexRow: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginVertical: scale(10)
+      // marginVertical: scale(10)
     },
     linkContainer: {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      // ...alignment.MLxSmall
-      ...alignment.MTsmall,
-      ...alignment.MBsmall
+      alignItems: 'center'
     },
     mainLeftContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    line: {
-      flex: 1,
-      height: 1,
-      backgroundColor: props !== null ? props.color6 : '#9B9A9A',
-      paddingTop: scale(1)
-    },
     verifyView: {
       alignItems: 'flex-end'
+    },
+    padding: {
+      ...alignment.Pmedium
     }
   })
 export default styles
