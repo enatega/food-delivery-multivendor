@@ -356,7 +356,7 @@ function ItemDetail(props) {
   const animatedTitleStyle = (fadeIn) => useAnimatedStyle(() => {
     const outputRange = fadeIn ? [0, 0, 1] : [1, 0, 0]
     const opacity = interpolate(scrollY.value, [0, 50, 160], outputRange)
-    return { opacity }
+    return { opacity, paddingHorizontal: 15 }
   })
 
   return (
@@ -378,7 +378,7 @@ function ItemDetail(props) {
             <Animated.ScrollView
               onScroll={scrollHandler}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(height * 0.09) }}
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(height * 0.2) }}
             >
               <View style={styles().subContainer}>
                 <Animated.View style={[animatedTitleStyle(false)]}>
@@ -414,6 +414,7 @@ function ItemDetail(props) {
                   </View>
                 ))}
               </View>
+              
 
               <View style={styles(currentTheme).line}></View>
               <View style={styles(currentTheme).inputContainer}>

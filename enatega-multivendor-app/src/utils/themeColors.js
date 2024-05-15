@@ -229,7 +229,7 @@ export const theme = {
     newButtonBackground: '#F3FFEE',
     newButtonText: '#63C43B',
     color11: '#4B5563',
-    color12: '#94A3B8',
+    color12: '#000000',
     iconStroke:'#b0afbc',
     color10:'#fff',
     newButtonBackground:'#F3FFEE',

@@ -8,12 +8,12 @@ const styles = StyleSheet.create({
     ...alignment.MTsmall
   },
   titleContainer: {
-    width: '80%',
+    width: '70%',
     ...alignment.MTsmall,
     ...alignment.MBsmall
   },
   priceContainer: {
-    width: '20%',
+    width: '30%',
     flexDirection: 'row',
     justifyContent: 'flex-end',
     ...alignment.MTsmall,

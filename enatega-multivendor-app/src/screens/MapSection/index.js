@@ -62,11 +62,12 @@ export default function MapSection() {
       <MapView
         ref={mapRef}
         style={styles().map}
-        customMapStyle={mapStyle}
         showsUserLocation
         zoomEnabled={true}
         zoomControlEnabled={true}
         rotateEnabled={false}
+        provider={PROVIDER_GOOGLE}
+        customMapStyle={mapStyle}
         initialRegion={{
           latitude: restaurants?.length
             ? restaurants[0].location?.coordinates[1]

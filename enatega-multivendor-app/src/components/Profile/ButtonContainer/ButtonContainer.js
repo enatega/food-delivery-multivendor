@@ -19,7 +19,7 @@ const ButtonContainer = (props) => {
 
   return (
    <>
-    <View style={styles().flexRow}>
+    <View style={[styles().flexRow,styles().padding]}>
       <TouchableOpacity
         activeOpacity={1}
         style={styles().linkContainer}
@@ -29,7 +29,7 @@ const ButtonContainer = (props) => {
           <View style={styles(currentTheme).leftContainer}>
             <IconComponent
               name={props.icon}
-              size={verticalScale(15)}
+              size={verticalScale(12)}
               color={currentTheme.darkBgFont}
             />
           </View>
@@ -38,23 +38,23 @@ const ButtonContainer = (props) => {
             textColor={currentTheme.fontMainColor}
             small
             H4
-            bolder
+            bold
           >
             {props.title}
           </TextDefault>
         </View>
 
-        <View style={styles(currentTheme).leftContainer}>
+        {/* <View style={styles(currentTheme).leftContainer}> */}
           <EvilIcons
             name='chevron-right'
-            size={verticalScale(25)}
+            size={verticalScale(20)}
             color={currentTheme.darkBgFont}
           />
-        </View>
+        {/* </View> */}
       </TouchableOpacity>
 
     </View>
-      <View style={styles().line} />
+      {/* <View style={styles().line} /> */}
    </>
   )
 }
