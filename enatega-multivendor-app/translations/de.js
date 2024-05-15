@@ -603,5 +603,10 @@ serviceTerms: "Nutzungsbedingungen",
 searchTitle: "Suche",
 noResults: "Keine Ergebnisse gefunden",
 recentSearches: "Letzte Suchanfragen",
-clear: "Löschen"
+clear: "Löschen",
+savedAddresses: 'Gespeicherte Adressen',
+cancel: 'Abbrechen',
+delete: 'Löschen',
+deleteAddressesTitle: 'Möchten Sie die ausgewählten Adressen wirklich löschen?',
+notVerified: 'Nicht verifiziert',
 }

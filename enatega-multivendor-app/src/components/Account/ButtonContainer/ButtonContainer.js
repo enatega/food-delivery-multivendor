@@ -5,34 +5,33 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext.js'
 import { theme } from '../../../utils/themeColors.js'
 import TextDefault from '../../Text/TextDefault/TextDefault.js'
 import { EvilIcons } from '@expo/vector-icons'
-import { verticalScale } from '../../../utils/scaling.js'
+import { scale, verticalScale } from '../../../utils/scaling.js'
 
 const ButtonContainer = (props) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const isDisabled = props.onPress === 'none'
-  const isVerifyDisabled = props.status === 'none'
+  const isDisabled = props.onPress === 'null'
+  const isVerifyDisabled = props.status === 'null'
+  const statusColor = props.status === 'Verified' ? `${currentTheme.linkColor}` : `${currentTheme.red600}`
 
   return (
     <>
-      <View style={styles().flexRow}>
+      <View style={[styles().padding]}>
         <TouchableOpacity
           activeOpacity={isDisabled ? 1 : 0.7}
-          style={styles(currentTheme).linkContainer}
+          style={[styles(currentTheme).linkContainer, styles().flexRow]}
           onPress={isDisabled ? null : props.onPress}
         >
           <View style={styles(currentTheme).mainLeftContainer}>
-            {/* <View style={styles(currentTheme).leftContainer}> */}
             <TextDefault
               style={styles().drawerContainer}
               textColor={currentTheme.fontMainColor}
               small
               H5
-              Bold
+              bolder
             >
               {props.title}
             </TextDefault>
-            {/* </View> */}
           </View>
 
           <View style={styles(currentTheme).leftContainer}>
@@ -48,25 +47,23 @@ const ButtonContainer = (props) => {
             {!isDisabled && (
               <EvilIcons
                 name='chevron-right'
-                size={verticalScale(25)}
+                size={scale(30)}
                 color={currentTheme.darkBgFont}
               />
             )}
           </View>
         </TouchableOpacity>
-      </View>
       {!isVerifyDisabled && (
         <View style={styles(currentTheme).verifyView}>
           <TextDefault
-            style={styles().drawerContainer}
-            textColor={currentTheme.fontMainColor}
+            textColor={statusColor}
             small
           >
             {props.status}
           </TextDefault>
         </View>
       )}
-      <View style={styles().line} />
+      </View>
     </>
   )
 }

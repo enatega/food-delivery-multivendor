@@ -591,5 +591,7 @@ export const en = {
   clear: 'Clear',
   savedAddresses: 'Saved Addresses',
   cancel: 'Cancel',
-  delete: 'Delete'
+  delete: 'Delete',
+  deleteAddressesTitle: 'Are you sure you want to delete selected addresses?',
+  notVerified: 'not verifid'
 }

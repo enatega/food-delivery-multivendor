@@ -584,5 +584,10 @@ serviceTerms: "شروط الخدمة",
 searchTitle: "البحث",
 noResults: "لم يتم العثور على نتائج",
 recentSearches: "عمليات البحث الأخيرة",
-clear: "مسح"
+clear: "مسح",
+savedAddresses: 'العناوين المحفوظة',
+cancel: 'إلغاء',
+delete: 'حذف',
+deleteAddressesTitle: 'هل أنت متأكد أنك تريد حذف العناوين المحددة؟',
+notVerified: 'غير مُوثَّق',
 }

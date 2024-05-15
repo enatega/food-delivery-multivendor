@@ -3,7 +3,8 @@ import {
   Modal,
   Text,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  Pressable
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Modalize } from 'react-native-modalize'
@@ -16,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import i18next from '../../../i18next'
 import Spinner from '../Spinner/Spinner'
 import { scale } from '../../utils/scaling'
+import { Feather } from '@expo/vector-icons'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -31,6 +33,7 @@ const LanguageModal = ({
   modalVisible,
   setModalVisible,
   currentTheme,
+  showCrossButton
 }) => {
   const { t } = useTranslation()
   // const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
@@ -44,9 +47,9 @@ const LanguageModal = ({
 
   async function selectLanguage() {
     const lang = await AsyncStorage.getItem('enatega-language')
-    if (lang) {
+    const langName = await AsyncStorage.getItem('enatega-language-name')
+    if (lang && langName) {
       const defLang = languageTypes.findIndex((el) => el.code === lang)
-      const langName = languageTypes[defLang].value
       activeRadioSetter(defLang)
       languageNameSetter(langName)
     }
@@ -54,28 +57,22 @@ const LanguageModal = ({
 
   async function onSelectedLanguage() {
     try {
-      // Display loading indicator
       setLoadingLang(true)
       const languageInd = activeRadio
-      await AsyncStorage.setItem(
-        'enatega-language',
-        languageTypes[languageInd].code
-      )
+      const languageCode = languageTypes[languageInd].code
+      const languageVal = languageTypes[languageInd].value
 
-      var lang = await AsyncStorage.getItem('enatega-language')
-      if (lang) {
-        const defLang = languageTypes.findIndex((el) => el.code === lang)
-        const langName = languageTypes[defLang].value
-        languageNameSetter(langName)
-      }
-      i18next.changeLanguage(lang)
+      await AsyncStorage.setItem('enatega-language', languageCode)
+      await AsyncStorage.setItem('enatega-language-name', languageVal)
+
+      i18next.changeLanguage(languageCode)
+      languageNameSetter(languageVal)
     } catch (error) {
       console.error('Error during language selection:', error)
     } finally {
       setLoadingLang(false)
+      setModalVisible(!modalVisible)
     }
-    //   onLanguageClose()
-    setModalVisible(!modalVisible)
   }
 
   return (
@@ -89,65 +86,78 @@ const LanguageModal = ({
         setModalVisible(!modalVisible)
       }}
     >
-      <View style={styles(currentTheme).modalContainer}>
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          bolder
-          H3
-          style={alignment.MBsmall}
-        >
-          {t('selectLanguage')}
-        </TextDefault>
+      <View style={styles().layout}>
+        <Pressable style={styles().backdrop} onPress={() => setModalVisible(!modalVisible)} />
+        <View style={styles(currentTheme).modalContainer}>
+          <View style={styles(currentTheme).flexRow}>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              bolder
+              H3
+              style={alignment.MBsmall}
+            >
+              {t('selectLanguage')}
+            </TextDefault>
+            {showCrossButton && (
+              <Feather
+                name='x-circle'
+                size={24}
+                color={currentTheme.newFontcolor}
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+            )}
+          </View>
 
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          style={alignment.MBsmall}
-        >
-          {t('description0')}
-        </TextDefault>
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            style={alignment.MBsmall}
+          >
+            {t('description0')}
+          </TextDefault>
 
-        {languageTypes.map((item, index) => (
+          {languageTypes.map((item, index) => (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              key={index}
+              onPress={() => activeRadioSetter(item.index)}
+              style={[styles(currentTheme).radioContainer]}
+            >
+              <RadioButton
+                animation={'bounceIn'}
+                size={13}
+                outerColor={currentTheme.iconColorDark}
+                innerColor={currentTheme.main}
+                isSelected={activeRadio === item.index}
+                onPress={() => activeRadioSetter(item.index)}
+              />
+              <TextDefault
+                numberOfLines={1}
+                textColor={currentTheme.fontMainColor}
+                bold
+                style={alignment.MLsmall}
+              >
+                {item.value}
+              </TextDefault>
+            </TouchableOpacity>
+          ))}
           <TouchableOpacity
             activeOpacity={0.7}
-            key={index}
-            onPress={() => activeRadioSetter(item.index)}
-            style={[styles(currentTheme).radioContainer]}
+            style={styles(currentTheme).emptyButton}
+            onPress={() => onSelectedLanguage()}
           >
-            <RadioButton
-              animation={'bounceIn'}
-              size={13}
-              outerColor={currentTheme.iconColorDark}
-              innerColor={currentTheme.main}
-              isSelected={activeRadio === item.index}
-              onPress={() => activeRadioSetter(item.index)}
-            />
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontMainColor}
-              bold
-              style={alignment.MLsmall}
-            >
-              {item.value}
+            <TextDefault textColor={currentTheme.fontMainColor} center H5>
+              {loadinglang ? (
+                <Spinner
+                  size={'small'}
+                  backColor={'transparent'}
+                  spinnerColor={currentTheme.iconColorDark}
+                />
+              ) : (
+                t('continueBtn')
+              )}
             </TextDefault>
           </TouchableOpacity>
-        ))}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
-          onPress={() => onSelectedLanguage()}
-        >
-          <TextDefault textColor={currentTheme.fontMainColor} center H5>
-            {loadinglang ? (
-              <Spinner
-                size={'small'}
-                backColor={'transparent'}
-                spinnerColor={currentTheme.iconColorDark}
-              />
-            ) : (
-              t('continueBtn')
-            )}
-          </TextDefault>
-        </TouchableOpacity>
+        </View>
       </View>
     </Modal>
     // </View>

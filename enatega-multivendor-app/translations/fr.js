@@ -599,5 +599,10 @@ serviceTerms: "Conditions d'utilisation",
 searchTitle: "Rechercher",
 noResults: "Aucun résultat trouvé",
 recentSearches: "Recherches récentes",
-clear: "Effacer"
+clear: "Effacer",
+savedAddresses: 'Adresses enregistrées',
+cancel: 'Annuler',
+delete: 'Supprimer',
+deleteAddressesTitle: 'Êtes-vous sûr de vouloir supprimer les adresses sélectionnées ?',
+notVerified: 'Non vérifié',
 }

@@ -40,6 +40,7 @@ import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmen
 import { useTranslation } from 'react-i18next'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import Spinner from '../../components/Spinner/Spinner'
+import DeleteEditModal from '../../components/DeleteEditModal/DeleteEditModal'
 
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
@@ -60,6 +61,7 @@ function Addresses() {
   const [selectedAddresses, setSelectedAddresses] = useState([])
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [deleteAllModalVisible, setdeleteAllModalVisible] = useState(false)
 
   function onCompleted() {
     FlashMessage({ message: t('addressDeletedMessage') })
@@ -101,18 +103,22 @@ function Addresses() {
       },
       headerLeft: () => {
         if (isEditMode) {
+          const isDeleteDisabled = selectedAddresses.length < 1 || loadingAddressMutation;
           return (
             <TouchableOpacity
-              disabled={loadingAddressMutation}
-              style={{ marginLeft: scale(10) }}
-              onPress={() => handleDeleteSelectedAddresses()}
+              disabled={isDeleteDisabled}
+              style={[{ marginLeft: scale(10) }, { opacity: isDeleteDisabled ? 0.5 : 1 }]}
+              onPress={() => {
+                setdeleteAllModalVisible(true)
+                console.log("onselection address id", selectedAddressId);
+              }}
             >
               {loadingAddressMutation ? (
                 <Spinner backColor='transparent' size='small' />
-              ) : ( 
-              <TextDefault textColor={currentTheme.red600} H5 bolder>
-                {t('delete')}
-              </TextDefault>
+              ) : (
+                <TextDefault textColor={currentTheme.red600} H5 bolder>
+                  {t('delete')}
+                </TextDefault>
               )}
             </TouchableOpacity>
           )
@@ -134,20 +140,25 @@ function Addresses() {
           )
         }
       },
-      headerRight: () => (
-        <View style={{ ...alignment.MRmedium }}>
-          <TouchableOpacity onPress={() => {
-            setIsEditMode((prev) => !prev)
-            setSelectedAddresses([]);
-          }}>
-            <TextDefault textColor={currentTheme.linkColor} H5 bolder>
-              {isEditMode ? t('cancel') : t('edit')}
-            </TextDefault>
-          </TouchableOpacity>
-        </View>
-      )
+      headerRight: () => {
+        if (profile?.addresses?.length > 0) {
+          return (
+            <View style={{ ...alignment.MRmedium }}>
+              <TouchableOpacity onPress={() => {
+                setIsEditMode((prev) => !prev)
+                setSelectedAddresses([]);
+              }}>
+                <TextDefault textColor={currentTheme.linkColor} H5 bolder>
+                  {isEditMode ? t('cancel') : t('edit')}
+                </TextDefault>
+              </TouchableOpacity>
+            </View>
+          );
+        }
+        return null;
+      }
     })
-  }, [navigation, isEditMode, t, currentTheme, selectedAddresses])
+  }, [navigation, isEditMode, t, currentTheme, selectedAddresses, loadingAddressMutation, profile?.Addresses])
 
   const addressIcons = {
     House: CustomHomeIcon,
@@ -232,8 +243,8 @@ function Addresses() {
         console.log('Mutation error:', error);
         // Handle errors appropriately (optional)
       });
-      setSelectedAddressId(null)
-      setDeleteModalVisible(false)
+    setSelectedAddressId(null)
+    setDeleteModalVisible(false)
   };
 
 
@@ -374,81 +385,29 @@ function Addresses() {
         </View>
       </View>
 
+      <DeleteEditModal
+        modalVisible={deleteModalVisible}
+        setModalVisible={setDeleteModalVisible}
+        currentTheme={currentTheme}
+        selectedAddress={selectedAddressId}
+        loading={loadingAddressMutation}
+        onDelete={deleteMyAddress}
+        onEdit={editMyAddress}
+        t={t}
+        editButton
+      />
 
-      <Modal
-        onBackdropPress={() => setDeleteModalVisible(false)}
-        onBackButtonPress={() => setDeleteModalVisible(false)}
-        visible={deleteModalVisible}
-        onRequestClose={() => {
-          setDeleteModalVisible(false)
-        }}
-      >
-        <View style={styles().centeredView}>
-          <View style={styles(currentTheme).modalView}>
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 24,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: scale(10)
-              }}
-            >
-              <TextDefault bolder H3 textColor={currentTheme.newFontcolor}>
-                {selectedAddressId?.deliveryAddress}
-              </TextDefault>
-              <Feather
-                name='x-circle'
-                size={24}
-                color={currentTheme.newFontcolor}
-                onPress={() => setDeleteModalVisible(!deleteModalVisible)}
-              />
-            </View>
-            <TouchableOpacity
-              style={[
-                styles(currentTheme).btn,
-                styles().btnDelete,
-                { opacity: loadingAddressMutation ? 0.5 : 1 }
-              ]}
-              onPress={() => { deleteMyAddress(selectedAddressId._id) }}
-              disabled={loadingAddressMutation}
-            >
-              {loadingAddressMutation ? (
-                <Spinner spinnerColor={currentTheme.spinnerColor} backColor='transparent' size='small' />
-              ) : (
-                <TextDefault bolder H4 textColor={currentTheme.white}>
-                  {t('delete')}
-                </TextDefault>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles(currentTheme).btn,
-                styles().btnDelete,
-                { opacity: loadingAddressMutation ? 0.5 : 1 }
-              ]}
-              onPress={() => { editMyAddress(selectedAddressId) }}
-              disabled={loadingAddressMutation}
-            >
-              <TextDefault bolder H4 textColor={currentTheme.white}>
-                {t('edit')}
-              </TextDefault>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles(currentTheme).btn, styles().btnCancel]}
-              onPress={() => {
-                setDeleteModalVisible(false)
-                setSelectedAddressId(null)
-              }}
-              disabled={loadingAddressMutation}
-            >
-              <TextDefault bolder H4 textColor={currentTheme.black}>
-              {t('cancel')}
-              </TextDefault>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <DeleteEditModal
+        modalVisible={deleteAllModalVisible}
+        setModalVisible={setdeleteAllModalVisible}
+        currentTheme={currentTheme}
+        // selectedAddress={selectedAddressId}
+        loading={loadingAddressMutation}
+        onDelete={handleDeleteSelectedAddresses}
+        t={t}
+        deleteAllButton
+      />
+
     </View>
   )
 }
