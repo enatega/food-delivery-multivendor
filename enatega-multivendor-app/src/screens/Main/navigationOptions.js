@@ -6,7 +6,8 @@ import { alignment } from '../../utils/alignment'
 const navigationOptions = (props) => ({
   headerStyle: {
     shadowColor: 'transparent',
-    shadowRadius: 0
+    shadowRadius: 0,
+    backgroundColor:props.headerMenuBackground
   },
   headerTitleStyle: {
     color: props.fontMainColor,

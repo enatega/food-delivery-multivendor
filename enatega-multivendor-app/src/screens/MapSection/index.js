@@ -56,6 +56,7 @@ export default function MapSection() {
     }
     handleMarkerAnimate(coord)
   }, [visibleMarkerIndex])
+  console.log('restaurants[0].location?.coordinates[0] => ', typeof restaurants[0].location?.coordinates[0])
 
   return (
     <View>
@@ -70,10 +71,10 @@ export default function MapSection() {
         customMapStyle={mapStyle}
         initialRegion={{
           latitude: restaurants?.length
-            ? restaurants[0].location?.coordinates[1]
+            ? parseFloat(restaurants[0].location?.coordinates[1])
             : location.latitude,
           longitude: restaurants?.length
-            ? restaurants[0].location?.coordinates[0]
+            ? parseFloat(restaurants[0].location?.coordinates[0])
             : location.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421

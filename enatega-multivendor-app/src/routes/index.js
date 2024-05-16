@@ -193,9 +193,9 @@ function BottomTabNavigator() {
         // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
         return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
       },
-      tabBarStyle:{paddingHorizontal: 15, paddingVertical: 10, height: 90},
+      tabBarStyle:{paddingHorizontal: 15, paddingVertical: 10, height: 90, backgroundColor: currentTheme.themeBackground},
       tabBarActiveTintColor: '#0EA5E9',
-      tabBarInactiveTintColor: '#6B7280',
+      tabBarInactiveTintColor: currentTheme.fontNewColor,
       tabBarLabelStyle: {fontSize: 12},
       headerRight: () => (
         <RightButton icon="cart" iconColor={currentTheme.iconColor} menuHeader={false} t={t}/>

@@ -146,7 +146,7 @@ function Menu({ route, props }) {
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
-        headerMenuBackground: currentTheme.main,
+        headerMenuBackground: currentTheme.themeBackground,
         horizontalLine: currentTheme.headerColor,
         fontMainColor: currentTheme.darkBgFont,
         iconColorPink: currentTheme.black,
@@ -487,7 +487,7 @@ function Menu({ route, props }) {
       style={[styles().flex, { backgroundColor: 'white' }]}
     >
       <ScrollView style={styles().flex} showsVerticalScrollIndicator={false}>
-        <View style={{ gap: 8 }}>
+        <View style={{ gap: 8, backgroundColor: currentTheme.themeBackground }}>
           <View style={styles().header}>
             <View>
               <TextDefault bolder H2>
