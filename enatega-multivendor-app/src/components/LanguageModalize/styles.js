@@ -4,13 +4,10 @@ import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
 const { height } = Dimensions.get('window')
 
-const CONTAINER_HEIGHT = Math.floor(scale(height / 5)*2.4)
-const BACKDROP_HEIGHT = Math.floor(scale(height - CONTAINER_HEIGHT))
-
 const styles = (props = null) =>
   StyleSheet.create({
     backdrop: {
-      height: BACKDROP_HEIGHT
+      height: '80%'
   },
   layout: {
       flex: 1,
@@ -20,7 +17,7 @@ const styles = (props = null) =>
       position: 'absolute',
       bottom: 0,
       width: '100%',
-      height: CONTAINER_HEIGHT,
+      // height: 'auto',
       backgroundColor: props !== null ? props.themeBackground : '#FFF',
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20),
@@ -30,7 +27,7 @@ const styles = (props = null) =>
       borderWidth: scale(1),
       borderColor: props !== null ? props.gray200 : '#E5E7EB',
       justifyContent: 'center',
-      // flex: 1,
+      flex: 1,
       // ...alignment.Psmall,
     },
     subContainer: {

@@ -40,8 +40,6 @@ const styles = (props = null) =>
     },
     containerSpace: {
       width: '100%',
-      borderBottomWidth: 2,
-      borderBottomColor: props !== null ? props.gray200 : '#E5E7EB',
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -64,10 +62,8 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     line: {
-      width: '80%',
-      alignSelf: 'flex-end',
-      borderBottomColor: props !== null ? 'transparent' : 'transparent',
-      borderBottomWidth: StyleSheet.hairlineWidth
+      height: 0.5,
+      backgroundColor: props !== null ? props.borderBottomColor : '#f9f9f9',
     },
     buttonsAddress: {
       display: 'flex',

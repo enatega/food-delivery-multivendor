@@ -27,7 +27,7 @@ const DeleteEditModal = ({
         >
             <View style={styles().layout}>
                 <Pressable style={styles().backdrop} onPress={() => setModalVisible(false)} />
-                <View style={styles().modalContainer}>
+                <View style={styles(currentTheme).modalContainer}>
                     <View style={styles(currentTheme).modalView}>
                         <View style={[styles(currentTheme).modalHead]}>
                             <TextDefault Bold H4 textColor={currentTheme.fontMainColor}>
@@ -101,7 +101,7 @@ const DeleteEditModal = ({
                             }}
                             disabled={loading}
                         >
-                            <TextDefault bolder H4 textColor={currentTheme.black}>
+                            <TextDefault bolder H4 textColor={currentTheme.fontMainColor}>
                                 {t('cancel')}
                             </TextDefault>
                         </TouchableOpacity>
