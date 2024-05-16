@@ -54,7 +54,7 @@ const styles = (props = null) =>
       height: scale(40),
       borderRadius: 40,
       marginVertical: scale(5),
-      backgroundColor: props !== null ? props.transparent : '#00000000',
+      backgroundColor: props !== null ? props.color3 : 'transparent',
       borderWidth: 1,
     },
     btnCancel: {

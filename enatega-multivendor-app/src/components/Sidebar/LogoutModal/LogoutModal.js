@@ -43,19 +43,6 @@ const LogoutModal = ({ visible, onCancel, onLogout, showCrossButton }) => {
             {t('SeeYouAgainSoon')}
           </TextDefault>
 
-          {/* <View style={styles(currentTheme).modalButtonsContainer}>
-            <TouchableOpacity onPress={onCancel}>
-              <TextDefault textColor={currentTheme.tagColor} bolder>
-                {t('Cancel')}
-              </TextDefault>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onLogout}>
-              <TextDefault textColor={currentTheme.tagColor} bolder>
-                {t('Logout')}
-              </TextDefault>
-            </TouchableOpacity>
-          </View> */}
-
           <TouchableOpacity
             style={[
               styles(currentTheme).btn,
