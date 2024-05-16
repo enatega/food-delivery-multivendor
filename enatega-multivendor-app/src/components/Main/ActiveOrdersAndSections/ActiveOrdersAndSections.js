@@ -24,7 +24,7 @@ function ActiveOrdersAndSections(props) {
         bolder
         H4
       >
-        {props?.menuPageHeading}
+        {t(props?.menuPageHeading)}
       </TextDefault>
       <TextDefault
         Normal
@@ -34,7 +34,7 @@ function ActiveOrdersAndSections(props) {
           marginTop: scale(5)
         }}
       >
-        {props?.subHeading}
+        {t(props?.subHeading)}
       </TextDefault>
     </View>
   )

@@ -62,7 +62,7 @@ function MainRestaurantCard(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-              See All
+              {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>

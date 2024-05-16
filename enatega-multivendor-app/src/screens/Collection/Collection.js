@@ -5,6 +5,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import styles from './styles'
+import { useTranslation } from 'react-i18next'
 
 const HEADING = {
   Restaurants: 'I feel like eating',
@@ -17,12 +18,14 @@ const Collection = ({ navigation, route }) => {
   const currentTheme = theme[themeContext.ThemeValue]
   const data = route?.params?.data ?? []
   const collectionType = route?.params?.collectionType ?? 'default'
+  const { t } = useTranslation();
 
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
         navigation,
-        headerMenuBackground: currentTheme.headerMenuBackground
+        headerMenuBackground: currentTheme.headerMenuBackground,
+        backIconColor: currentTheme.newIconColor
       })
     )
   }, [navigation, currentTheme])
@@ -30,7 +33,7 @@ const Collection = ({ navigation, route }) => {
   return (
     <View style={styles(currentTheme).container}>
       <TextDefault bolder H2>
-        {HEADING[collectionType]}
+        {t(HEADING[collectionType])}
       </TextDefault>
       <FlatList
         data={data ?? []}

@@ -149,7 +149,7 @@ function Menu({ route, props }) {
         headerMenuBackground: currentTheme.themeBackground,
         horizontalLine: currentTheme.headerColor,
         fontMainColor: currentTheme.darkBgFont,
-        iconColorPink: currentTheme.black,
+        iconColorPink: currentTheme.iconColor,
         open: onOpen,
         icon: 'back',
         haveBackBtn: routeData?.name === 'Menu',
@@ -484,17 +484,17 @@ function Menu({ route, props }) {
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[styles().flex, { backgroundColor: 'white' }]}
+      style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
       <ScrollView style={styles().flex} showsVerticalScrollIndicator={false}>
         <View style={{ gap: 8, backgroundColor: currentTheme.themeBackground }}>
           <View style={styles().header}>
             <View>
               <TextDefault bolder H2>
-                {routeData?.name === 'Restaurants' ? 'Restaurants' : 'Stores'}
+                {t(routeData?.name === 'Restaurants' ? 'Restaurants' : 'Stores')}
               </TextDefault>
               <TextDefault bold H5>
-                Browse Categories
+                {t('BrowseCategories')}
               </TextDefault>
             </View>
             <TouchableOpacity
@@ -508,7 +508,7 @@ function Menu({ route, props }) {
               }}
             >
               <TextDefault H5 bolder textColor={currentTheme.main}>
-                See All
+              {t('SeeAll')}
               </TextDefault>
             </TouchableOpacity>
           </View>

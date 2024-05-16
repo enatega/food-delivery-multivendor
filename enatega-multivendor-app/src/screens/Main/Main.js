@@ -122,7 +122,7 @@ function Main(props) {
       navigationOptions({
         headerMenuBackground: currentTheme.themeBackground,
         fontMainColor: currentTheme.darkBgFont,
-        iconColorPink: currentTheme.black,
+        iconColorPink: currentTheme.iconColor,
         open: onOpen,
         navigation
       })
@@ -301,14 +301,14 @@ function Main(props) {
                           orders={mostOrderedRestaurantsVar}
                           loading={orderLoading}
                           error={orderError}
-                          title={'Popular right now'}
+                          title={t('Popular right now')}
                           queryType='topPicks'
                           icon='trending'
                         />
                       )}
                     </View>
                     <View style={{padding: 15, gap: scale(8)}}>
-                        <TextDefault bolder H4>I feel like eating...</TextDefault>
+                        <TextDefault bolder H4>{t('I feel like eating...')}</TextDefault>
                       <FlatList
                         data={
                           allCuisines?.cuisines?.filter(
@@ -349,14 +349,14 @@ function Main(props) {
                           )}
                           loading={orderLoading}
                           error={orderError}
-                          title={'Restaurants near you'}
+                          title={t('Restaurants near you')}
                           queryType='restaurant'
                           icon='restaurant'
                         />
                       )}
                     </View>
                     <View style={{padding: 15, gap: scale(8)}}>
-                        <TextDefault bolder H4>Fresh finds await...</TextDefault>
+                        <TextDefault bolder H4>{t('Fresh finds await...')}</TextDefault>
                       <FlatList
                         data={
                           allCuisines?.cuisines?.filter(
@@ -397,7 +397,7 @@ function Main(props) {
                           )}
                           loading={orderLoading}
                           error={orderError}
-                          title={'Grocery List'}
+                          title={t('Grocery List')}
                           queryType='grocery'
                           icon='grocery'
                         />
@@ -413,7 +413,7 @@ function Main(props) {
                           )}
                           loading={orderLoading}
                           error={orderError}
-                          title={'Top grocery picks'}
+                          title={t('Top grocery picks')}
                           queryType='grocery'
                           icon='store'
                         />
