@@ -38,7 +38,7 @@ const CreateAccount = (props) => {
   const { t } = useTranslation()
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false,
+      headerShown: '',
       headerRight: null,
       headerLeft: null,
       headerTransparent: true,

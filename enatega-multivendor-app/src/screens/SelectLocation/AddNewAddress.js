@@ -134,6 +134,8 @@ export default function AddNewAddress(props) {
           prevScreen: props.route.params.prevScreen ? props.route.params.prevScreen : null
         }
       })
+    } else{
+      navigation.navigate('Main')
     }
   }
 

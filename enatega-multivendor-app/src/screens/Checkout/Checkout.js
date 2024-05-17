@@ -410,7 +410,6 @@ function Checkout(props) {
   }
   function onError(error) {
     setLoadingOrder(false)
-    console.log('onError', error)
     if (error.graphQLErrors.length) {
       console.log('error', JSON.stringify(error))
       FlashMessage({
@@ -485,11 +484,11 @@ function Checkout(props) {
       return false
     }
     if (calculatePrice(deliveryCharges, true) < minimumOrder) {
-      // FlashMessage({
-      //   // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
-      //   message: `(${t(minAmount)}) (${configuration.currencySymbol
-      //     } ${minimumOrder}) (${t(forYourOrder)})`
-      // })
+      FlashMessage({
+        message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
+        // message: `(${t(minAmount)}) (${configuration.currencySymbol
+        //   } ${minimumOrder}) (${t(forYourOrder)})`
+      })
       return false
     }
     if (!location._id) {

@@ -41,7 +41,10 @@ import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
 import Favourite from '../screens/Favourite/Favourite'
 import ChatScreen from '../screens/ChatWithRider/ChatScreen'
-import { DarkBackButton, RightButton } from '../components/Header/HeaderIcons/HeaderIcons'
+import {
+  DarkBackButton,
+  RightButton
+} from '../components/Header/HeaderIcons/HeaderIcons'
 import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
@@ -52,7 +55,6 @@ import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import SettingScreen from './SettingScreen'
 import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
 import { useTranslation } from 'react-i18next'
 import Collection from '../screens/Collection/Collection'
@@ -61,10 +63,11 @@ import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import SearchScreen from '../screens/Search/SearchScreen'
 import UserContext from '../context/User'
+import { Platform } from 'react-native'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
@@ -80,27 +83,30 @@ function MainNavigator() {
         iconColor: currentTheme.iconColorPink,
         headerShown: false
       })}
-      
-      >
-      <NavigationStack.Screen name="Main" component={BottomTabNavigator} options={{headerShown: false}} />
-      <NavigationStack.Screen name="Menu" component={Menu} />
+    >
       <NavigationStack.Screen
-        name="Restaurant"
+        name='Main'
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <NavigationStack.Screen name='Menu' component={Menu} />
+      <NavigationStack.Screen
+        name='Restaurant'
         component={Restaurant}
         options={{ header: () => null }}
       />
-      {<NavigationStack.Screen name="ItemDetail" component={ItemDetail} />}
-      <NavigationStack.Screen name="Cart" component={Cart} />
-      <NavigationStack.Screen name="Checkout" component={Checkout} />
-      <NavigationStack.Screen name="Profile" component={Profile} />
-      <NavigationStack.Screen name="Addresses" component={Addresses} />
-      <NavigationStack.Screen name="NewAddress" component={NewAddress} />
-      <NavigationStack.Screen name="EditAddress" component={EditAddress} />
-      <NavigationStack.Screen name="FullMap" component={FullMap} />
-      <NavigationStack.Screen name="CartAddress" component={CartAddress} />
-      <NavigationStack.Screen name="Payment" component={Payment} />
+      {<NavigationStack.Screen name='ItemDetail' component={ItemDetail} />}
+      <NavigationStack.Screen name='Cart' component={Cart} />
+      <NavigationStack.Screen name='Checkout' component={Checkout} />
+      <NavigationStack.Screen name='Profile' component={Profile} />
+      <NavigationStack.Screen name='Addresses' component={Addresses} />
+      <NavigationStack.Screen name='NewAddress' component={NewAddress} />
+      <NavigationStack.Screen name='EditAddress' component={EditAddress} />
+      <NavigationStack.Screen name='FullMap' component={FullMap} />
+      <NavigationStack.Screen name='CartAddress' component={CartAddress} />
+      <NavigationStack.Screen name='Payment' component={Payment} />
       <NavigationStack.Screen
-        name="OrderDetail"
+        name='OrderDetail'
         component={OrderDetail}
         options={{
           // headerTransparent: true,
@@ -113,57 +119,57 @@ function MainNavigator() {
             })
         }}
       />
-      <NavigationStack.Screen name="Settings" component={Settings} />
-      <NavigationStack.Screen name="MyOrders" component={MyOrders} />
-      <NavigationStack.Screen name="Reorder" component={Reorder} />
-      <NavigationStack.Screen name="Help" component={Help} />
-      <NavigationStack.Screen name="HelpBrowser" component={HelpBrowser} />
+      <NavigationStack.Screen name='Settings' component={Settings} />
+      <NavigationStack.Screen name='MyOrders' component={MyOrders} />
+      <NavigationStack.Screen name='Reorder' component={Reorder} />
+      <NavigationStack.Screen name='Help' component={Help} />
+      <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen
-        name="About"
+        name='About'
         component={About}
         options={{ header: () => null }}
       />
-      <NavigationStack.Screen name="Reviews" component={Reviews} />
-      <NavigationStack.Screen name="Paypal" component={Paypal} />
-      <NavigationStack.Screen name="RateAndReview" component={RateAndReview} />
+      <NavigationStack.Screen name='Reviews' component={Reviews} />
+      <NavigationStack.Screen name='Paypal' component={Paypal} />
+      <NavigationStack.Screen name='RateAndReview' component={RateAndReview} />
 
       <NavigationStack.Screen
-        name="StripeCheckout"
+        name='StripeCheckout'
         component={StripeCheckout}
       />
 
       {/* Authentication Login */}
-      <NavigationStack.Screen name="CreateAccount" component={CreateAccount} />
-      <NavigationStack.Screen name="Login" component={Login} />
-      <NavigationStack.Screen name="Register" component={Register} />
-      <NavigationStack.Screen name="PhoneNumber" component={PhoneNumber} />
+      <NavigationStack.Screen name='CreateAccount' component={CreateAccount} />
+      <NavigationStack.Screen name='Login' component={Login} />
+      <NavigationStack.Screen name='Register' component={Register} />
+      <NavigationStack.Screen name='PhoneNumber' component={PhoneNumber} />
       <NavigationStack.Screen
-        name="ForgotPassword"
+        name='ForgotPassword'
         component={ForgotPassword}
       />
       <NavigationStack.Screen
-        name="SetYourPassword"
+        name='SetYourPassword'
         component={SetYourPassword}
       />
-      <NavigationStack.Screen name="EmailOtp" component={EmailOtp} />
-      <NavigationStack.Screen name="PhoneOtp" component={PhoneOtp} />
+      <NavigationStack.Screen name='EmailOtp' component={EmailOtp} />
+      <NavigationStack.Screen name='PhoneOtp' component={PhoneOtp} />
       <NavigationStack.Screen
-        name="ForgotPasswordOtp"
+        name='ForgotPasswordOtp'
         component={ForgotPasswordOtp}
       />
       <NavigationStack.Screen
-        name="SelectLocation"
+        name='SelectLocation'
         component={SelectLocation}
       />
-      <NavigationStack.Screen name="AddNewAddress" component={AddNewAddress} />
-      <NavigationStack.Screen name="SaveAddress" component={SaveAddress} />
-      <NavigationStack.Screen name="Favourite" component={Favourite} />
-      <NavigationStack.Screen name="ChatWithRider" component={ChatScreen} />
-      <NavigationStack.Screen name="Collection" component={Collection} />
-      <NavigationStack.Screen name="MapSection" component={MapSection} />
-      <NavigationStack.Screen name="Account" component={Account} />
-      <NavigationStack.Screen name="EditName" component={EditName} />
-      <NavigationStack.Screen name="SearchScreen" component={SearchScreen} />
+      <NavigationStack.Screen name='AddNewAddress' component={AddNewAddress} />
+      <NavigationStack.Screen name='SaveAddress' component={SaveAddress} />
+      <NavigationStack.Screen name='Favourite' component={Favourite} />
+      <NavigationStack.Screen name='ChatWithRider' component={ChatScreen} />
+      <NavigationStack.Screen name='Collection' component={Collection} />
+      <NavigationStack.Screen name='MapSection' component={MapSection} />
+      <NavigationStack.Screen name='Account' component={Account} />
+      <NavigationStack.Screen name='EditName' component={EditName} />
+      <NavigationStack.Screen name='SearchScreen' component={SearchScreen} />
     </NavigationStack.Navigator>
   )
 }
@@ -172,12 +178,17 @@ function LocationStack() {
   return (
     <Location.Navigator>
       <Location.Screen
-        name="CurrentLocation"
+        name='CurrentLocation'
         component={CurrentLocation}
         options={{ header: () => null }}
       />
-      <Location.Screen name="SelectLocation" component={SelectLocation} />
-      <Location.Screen name="AddNewAddress" component={AddNewAddress} />
+      <Location.Screen name='SelectLocation' component={SelectLocation} />
+      <Location.Screen name='AddNewAddress' component={AddNewAddress} />
+      <NavigationStack.Screen
+        name='Main'
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
     </Location.Navigator>
   )
 }
@@ -186,31 +197,77 @@ function BottomTabNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
-  const {profile: userProfile} = useContext(UserContext)
+  const { profile: userProfile } = useContext(UserContext)
   return (
-    <Tab.Navigator screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
-        return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
-      },
-      tabBarStyle:{paddingHorizontal: 15, paddingVertical: 10, height: 90, backgroundColor: currentTheme.themeBackground},
-      tabBarActiveTintColor: '#0EA5E9',
-      tabBarInactiveTintColor: currentTheme.fontNewColor,
-      tabBarLabelStyle: {fontSize: 12},
-      headerRight: () => (
-        <RightButton icon="cart" iconColor={currentTheme.iconColor} menuHeader={false} t={t}/>
-      )
-    })}
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
+          return (
+            <BottomTabIcon
+              name={route.name.toLowerCase()}
+              size={focused ? '28' : size}
+              color={color}
+            />
+          )
+        },
+        tabBarStyle: {
+          paddingHorizontal: 15,
+          paddingVertical: 10,
+          paddingBottom: Platform.OS === 'ios' ? 25 : 15,
+          height: Platform.OS === 'ios' ? 90 : 70,
+          backgroundColor: currentTheme.themeBackground
+        },
+        tabBarActiveTintColor: '#0EA5E9',
+        tabBarInactiveTintColor: currentTheme.fontNewColor,
+        tabBarLabelStyle: { fontSize: 12 },
+        headerRight: () => (
+          <RightButton
+            icon='cart'
+            iconColor={currentTheme.iconColor}
+            menuHeader={false}
+            t={t}
+          />
+        )
+      })}
     >
-      <Tab.Screen name="Discovery" component={Main} />
-      <Tab.Screen name="Restaurants" component={Menu} />
-      <Tab.Screen name="Store" component={Menu} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Profile" component={userProfile ? Profile : CreateAccount} />
-
-      
+      <Tab.Screen
+        name='Discovery'
+        component={Main}
+        options={{
+          tabBarLabel: 'Discovery'
+        }}
+      />
+      <Tab.Screen
+        name='Restaurants'
+        component={Menu}
+        options={{
+          tabBarLabel: 'Restaurants'
+        }}
+      />
+      <Tab.Screen
+        name='Store'
+        component={Menu}
+        options={{
+          tabBarLabel: 'Store'
+        }}
+      />
+      <Tab.Screen
+        name='Search'
+        component={SearchScreen}
+        options={{
+          tabBarLabel: 'Search'
+        }}
+      />
+      <Tab.Screen
+        name='Profile'
+        component={userProfile ? Profile : CreateAccount}
+        options={{
+          tabBarLabel: 'Profile'
+        }}
+      />
     </Tab.Navigator>
-  );
+  )
 }
 
 function AppContainer() {
@@ -218,7 +275,7 @@ function AppContainer() {
   const { location } = useContext(LocationContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
   const handleNotification = useCallback(
-    async response => {
+    async (response) => {
       const { _id } = response.notification.request.content.data
       const lastNotificationHandledId = await AsyncStorage.getItem(
         '@lastNotificationHandledId'
@@ -253,14 +310,11 @@ function AppContainer() {
   return (
     <SafeAreaProvider>
       <NavigationContainer
-        ref={ref => {
+        ref={(ref) => {
           navigationService.setGlobalRef(ref)
-        }}>
-        {!location ? (
-          <LocationStack />
-        ) : (
-          <MainNavigator />
-        )}
+        }}
+      >
+        {!location ? <LocationStack /> : <MainNavigator />}
         {/* <MainNavigator /> */}
       </NavigationContainer>
     </SafeAreaProvider>
