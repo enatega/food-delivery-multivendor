@@ -45,7 +45,7 @@ const navigationOptions = (props) => ({
   ),
   headerLeft: props.haveBackBtn ? () => (
     <TouchableOpacity onPress={props.onPressBack} style={{...alignment.MLsmall}}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" size={24} color={props.iconColorPink} />
         </TouchableOpacity>
   ) : null
 })

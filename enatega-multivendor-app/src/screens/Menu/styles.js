@@ -164,11 +164,11 @@ const styles = (props = null) =>
       paddingLeft: scale(38)
     },
     collectionCard: {
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       height: 130,
       width: 100,
       borderRadius: 8,
-      shadowColor: props !== null ? props.horizontalLine : 'gray',
+      shadowColor: props !== null ? props.iconColor : 'gray',
       shadowOffset: {
         width: 0,
         height: 2

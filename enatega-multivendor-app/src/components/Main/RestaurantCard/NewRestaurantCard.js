@@ -134,24 +134,24 @@ function NewRestaurantCard(props) {
               </TextDefault>
             </View>
             <View style={styles().deliveryTime}>
-              <Bicycle />
+              <Bicycle color={currentTheme.newFontcolor}/>
 
               <TextDefault
-                textColor={currentTheme.color2}
+                textColor={currentTheme.newFontcolor}
                 numberOfLines={1}
                 bold
                 Normal
               >
-                ${props.tax}
+                {configuration.currencySymbol}{props.tax}
               </TextDefault>
             </View>
             <View style={styles().aboutRestaurant}>
-              <FontAwesome5 name='star' size={14} color={currentTheme.color2} />
+              <FontAwesome5 name='star' size={14} color={currentTheme.newFontcolor} />
 
-              <TextDefault textColor={currentTheme.color2} bold Normal>
+              <TextDefault textColor={currentTheme.newFontcolor} bold Normal>
                 {props.reviewAverage}
               </TextDefault>
-              <TextDefault textColor={currentTheme.color2} bold Normal>
+              <TextDefault textColor={currentTheme.newFontcolor} bold Normal>
                 ({props.reviewCount})
               </TextDefault>
             </View>

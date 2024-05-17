@@ -8,7 +8,7 @@ const navigationOptions = props => ({
   title: null,
       headerLeft: () => (
         <TouchableOpacity onPress={() => props.navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" size={24} color={props.backIconColor} />
         </TouchableOpacity>
       ),
       headerRight: null,

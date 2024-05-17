@@ -78,7 +78,7 @@ function TopBrands(props) {
             bolder
             H4
           >
-            Our brands
+            {t('Our brands')}
           </TextDefault>
           <TouchableOpacity
             style={styles(currentTheme).seeAllBtn}
@@ -91,7 +91,7 @@ function TopBrands(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-              See All
+            {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -117,7 +117,7 @@ function TopBrands(props) {
             bolder
             H4
           >
-            Top Restaurant Brands
+            {t('Top Restaurant Brands')}
           </TextDefault>
           <TouchableOpacity
             style={styles(currentTheme).seeAllBtn}
@@ -130,7 +130,7 @@ function TopBrands(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-              See All
+            {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -158,7 +158,7 @@ function TopBrands(props) {
             bolder
             H4
           >
-            Top Grocery Brands
+            {t('Top Grocery Brands')}
           </TextDefault>
           <TouchableOpacity
             style={styles(currentTheme).seeAllBtn}
@@ -171,7 +171,7 @@ function TopBrands(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-              See All
+            {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>

@@ -3,11 +3,11 @@ import { StyleSheet } from 'react-native'
 const styles = (props = null) =>
   StyleSheet.create({
     collectionCard: {
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       height: 130,
       width: 100,
       borderRadius: 8,
-      shadowColor: 'gray',
+      shadowColor: props !== null ? props.iconColor : 'gray',
       shadowOffset: {
         width: 0,
         height: 2
