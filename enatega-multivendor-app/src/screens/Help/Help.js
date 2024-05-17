@@ -156,7 +156,7 @@ const Help = props => {
                   size={24}
                   color={currentTheme.black}
                 />
-                <TextDefault bold H5 style={styles(currentTheme).whatsAppText}>
+                <TextDefault textColor={currentTheme.black} bold H5 style={styles(currentTheme).whatsAppText}>
                   {t('whatsAppText')}
                 </TextDefault>
               </View>

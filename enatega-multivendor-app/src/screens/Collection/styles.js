@@ -9,11 +9,11 @@ const styles = (props = null) =>
       gap: 16
     },
     collectionCard: {
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props.themeBackground : '#fff',
       height: 150,
       width: '48%',
       borderRadius: 8,
-      shadowColor: 'gray',
+      shadowColor: props !== null ? props.iconColor : 'gray',
       shadowOffset: {
         width: 0,
         height: 2
