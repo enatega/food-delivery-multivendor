@@ -97,13 +97,6 @@ function NewRestaurantCard(props) {
             >
               {props.name}
             </TextDefault>
-            {props.fullWidth && (
-              <View style={styles(currentTheme).deliveryTimeNew}>
-                <TextDefault bolder Normal textColor={currentTheme.main}>
-                  {props.deliveryTime} mins
-                </TextDefault>
-              </View>
-            )}
           </View>
           <TextDefault
             textColor={currentTheme.gray600}

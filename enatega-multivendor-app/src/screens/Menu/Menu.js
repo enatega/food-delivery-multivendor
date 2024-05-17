@@ -282,7 +282,7 @@ function Menu({ route, props }) {
                   color={currentTheme.black}
                 />
                 <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                <TextDefault bold textColor={currentTheme.black}>{t('currentLocation')}</TextDefault>
               </>
             )}
           </View>
@@ -332,7 +332,7 @@ function Menu({ route, props }) {
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold>{t('addAddress')}</TextDefault>
+            <TextDefault bold textColor={currentTheme.black}>{t('addAddress')}</TextDefault>
           </View>
         </TouchableOpacity>
       </View>

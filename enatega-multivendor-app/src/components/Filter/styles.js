@@ -7,7 +7,11 @@ const styles = (props = null) =>
       flexDirection: 'column',
       gap: 24
     },
-    heading: { marginBottom: 10, paddingHorizontal: 15 },
+    heading: { 
+      marginBottom: 10, 
+      paddingHorizontal: 15,
+      textAlign: 'left' 
+    },
     flatlist: {
       alignSelf: 'flex-start',
       flexGrow: 1,
@@ -34,6 +38,6 @@ const styles = (props = null) =>
       top: 10,
       zIndex: 100
     }
-    
+
   })
 export default styles
