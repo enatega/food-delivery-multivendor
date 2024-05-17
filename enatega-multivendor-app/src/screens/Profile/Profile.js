@@ -12,7 +12,8 @@ import {
   Platform,
   StatusBar,
   FlatList,
-  ScrollView
+  ScrollView,
+  SafeAreaView
 } from 'react-native'
 import gql from 'graphql-tag'
 import { scale, verticalScale } from '../../utils/scaling'
@@ -99,7 +100,6 @@ function Profile(props) {
       headerStyle: {
         backgroundColor: currentTheme.newHeaderbg,
         elevation: 0,
-        shadow: 0,
         shadowOpacity: 0
       },
       passChecker: showPass,
@@ -111,7 +111,7 @@ function Profile(props) {
   }, [props.navigation, showPass, toggleView, themeContext.ThemeValue])
 
   return (
-    <>
+    <SafeAreaView style={{flex: 1, backgroundColor: currentTheme.themeBackground}}>
       <ChangePassword
         modalVisible={modelVisible}
         hideModal={() => {
@@ -329,7 +329,7 @@ function Profile(props) {
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
-    </>
+    </SafeAreaView>
   )
 }
 

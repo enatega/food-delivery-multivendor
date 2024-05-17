@@ -133,6 +133,19 @@ export const deleteAddress = `mutation DeleteAddress($id:ID!){
     }
   }`
 
+export const deleteBulkAddresses = `mutation DeleteBulkAddresses($ids:[ID!]!){
+  deleteBulkAddresses(ids:$ids){
+      _id
+      addresses{
+        _id
+        label
+        deliveryAddress
+        details
+        location{coordinates}
+      }
+    }
+  }`
+
 export const createAddress = `mutation CreateAddress($addressInput:AddressInput!){
     createAddress(addressInput:$addressInput){
       _id

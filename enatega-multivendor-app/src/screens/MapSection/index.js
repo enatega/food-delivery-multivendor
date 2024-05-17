@@ -5,8 +5,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
-import { mapStyle } from '../../utils/mapStyle'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import styles from './styles'
 import { Image, View, FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -48,15 +47,14 @@ export default function MapSection() {
   }
 
   useEffect(() => {
-    if (!restaurants || !visibleMarkerIndex) return
+    if (!restaurants?.length || !restaurants || !visibleMarkerIndex) return
     const rest = restaurants[visibleMarkerIndex]
     const coord = {
       latitude: parseFloat(rest.location.coordinates[1]),
       longitude: parseFloat(rest.location.coordinates[0])
     }
     handleMarkerAnimate(coord)
-  }, [visibleMarkerIndex])
-  console.log('restaurants[0].location?.coordinates[0] => ', typeof restaurants[0].location?.coordinates[0])
+}, [visibleMarkerIndex])
 
   return (
     <View>
@@ -68,7 +66,7 @@ export default function MapSection() {
         zoomControlEnabled={true}
         rotateEnabled={false}
         provider={PROVIDER_GOOGLE}
-        customMapStyle={mapStyle}
+        // customMapStyle={mapStyle}
         initialRegion={{
           latitude: restaurants?.length
             ? parseFloat(restaurants[0].location?.coordinates[1])
@@ -84,7 +82,7 @@ export default function MapSection() {
           <Image source={require('../../assets/images/user.png')} width={20} />
         </Marker>
         {restaurants &&
-          restaurants.map((rest, index) => {
+          restaurants?.map((rest, index) => {
             const coord = {
               latitude: parseFloat(rest.location.coordinates[1]),
               longitude: parseFloat(rest.location.coordinates[0])
@@ -200,7 +198,7 @@ export default function MapSection() {
             )
           }}
           keyExtractor={(item) => item?._id}
-          contentContainerStyle={{ flexGrow: 1, gap: 16, marginHorizontal: 15 }}
+          contentContainerStyle={{ flexGrow: 1, gap: 16, marginHorizontal: 15, paddingRight: 50 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}

@@ -20,7 +20,7 @@ import {
 import gql from 'graphql-tag'
 
 import { scale } from '../../utils/scaling'
-import { deleteAddress } from '../../apollo/mutations'
+import { deleteAddress, deleteBulkAddresses } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import UserContext from '../../context/User'
 import { theme } from '../../utils/themeColors'
@@ -45,12 +45,18 @@ import DeleteEditModal from '../../components/DeleteEditModal/DeleteEditModal'
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
 `
+const DELETE_BULK_ADDRESSES = gql`
+  ${deleteBulkAddresses}
+`
 
 function Addresses() {
   const Analytics = analytics()
 
   const navigation = useNavigation()
   const [mutate, { loading: loadingAddressMutation }] = useMutation(DELETE_ADDRESS, {
+    onCompleted
+  })
+  const [mutateBulkDelete, { loading: loadingDeleteBulk }] = useMutation(DELETE_BULK_ADDRESSES, {
     onCompleted
   })
   const { profile, refetchProfile, networkStatus } = useContext(UserContext)
@@ -64,6 +70,8 @@ function Addresses() {
   const [deleteAllModalVisible, setdeleteAllModalVisible] = useState(false)
 
   function onCompleted() {
+    setdeleteAllModalVisible(false)
+    setDeleteModalVisible(false)
     FlashMessage({ message: t('addressDeletedMessage') })
   }
 
@@ -203,16 +211,18 @@ function Addresses() {
 
   const handleDeleteSelectedAddresses = async () => {
     // Iterate through selected addresses and delete them
-    await Promise.all(selectedAddresses.forEach((address) => {
-      mutate({ variables: { id: address } })
-        .then((response) => {
-          console.log('Mutation success:', response);
-        })
-        .catch((error) => {
-          console.log('Mutation error:', error);
-        });
-    }))
-
+    // await Promise.all(selectedAddresses.forEach((address) => {
+    //   mutate({ variables: { id: address } })
+    //     .then((response) => {
+    //       console.log('Mutation success:', response);
+    //     })
+    //     .catch((error) => {
+    //       console.log('Mutation error:', error);
+    //     });
+    // }))
+    mutateBulkDelete({
+      variables: { ids: selectedAddresses }
+    })
     // Clear the selected addresses state
     setSelectedAddresses([]);
 
@@ -321,7 +331,7 @@ function Addresses() {
                   //  location edit and delete buttons
                   <View style={styles().buttonsAddress}>
                     <TouchableOpacity
-                      disabled={loadingAddressMutation}
+                      disabled={loadingAddressMutation || loadingDeleteBulk}
                       activeOpacity={0.7}
                       // onPress={() => {
                       //   const [longitude, latitude] =
@@ -402,7 +412,7 @@ function Addresses() {
         setModalVisible={setdeleteAllModalVisible}
         currentTheme={currentTheme}
         // selectedAddress={selectedAddressId}
-        loading={loadingAddressMutation}
+        loading={loadingDeleteBulk}
         onDelete={handleDeleteSelectedAddresses}
         t={t}
         deleteAllButton
