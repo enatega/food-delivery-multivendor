@@ -65,7 +65,7 @@ export default function MapSection() {
         zoomEnabled={true}
         zoomControlEnabled={true}
         rotateEnabled={false}
-        provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_GOOGLE}
         // customMapStyle={mapStyle}
         initialRegion={{
           latitude: restaurants?.length
