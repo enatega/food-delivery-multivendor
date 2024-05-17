@@ -598,5 +598,7 @@ Stores: "商店",
 "Top picked restaurants for you": "为您精选的热门餐厅",
 "Top brands in your area": "您所在地区的热门品牌",
 "Most ordered grocery stores": "最受欢迎的杂货店",
-"Most ordered restaurants": "最受欢迎的餐厅"
+"Most ordered restaurants": "最受欢迎的餐厅",
+Discovery: "发现",
+Store: "商店"
 }

@@ -621,4 +621,6 @@ export const en = {
   'Top brands in your area': 'Top brands in your area',
   'Most ordered grocery stores': 'Most ordered grocery stores',
   'Most ordered restaurants': 'Most ordered restaurants',
+  Discovery: 'Discovery',
+  Store: 'Store'
 }

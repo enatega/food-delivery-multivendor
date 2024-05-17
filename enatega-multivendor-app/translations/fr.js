@@ -630,5 +630,7 @@ Stores: "Magasins",
 "Top picked restaurants for you": "Les meilleurs restaurants sélectionnés pour vous",
 "Top brands in your area": "Meilleures marques dans votre région",
 "Most ordered grocery stores": "Magasins d'épicerie les plus commandés",
-"Most ordered restaurants": "Restaurants les plus commandés"
+"Most ordered restaurants": "Restaurants les plus commandés",
+Discovery: "Découverte",
+Store: "Magasin"
 }

@@ -94,6 +94,7 @@ function Profile(props) {
       headerRight: null,
       headerLeft: null,
       headerTitleAlign: 'center',
+      headerShown: false,
       headerTitleStyle: {
         color: currentTheme.newFontcolor,
       },
