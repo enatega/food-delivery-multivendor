@@ -215,7 +215,7 @@ function Main(props) {
                   color={currentTheme.black}
                 />
                 <View style={styles().mL5p} />
-                <TextDefault bold>{t('currentLocation')}</TextDefault>
+                <TextDefault bold textColor={currentTheme.black}>{t('currentLocation')}</TextDefault>
               </>
             )}
           </View>
@@ -250,7 +250,7 @@ function Main(props) {
               size={scale(20)}
               color={currentTheme.black}
             />
-            <View style={styles().mL5p} />
+            <View style={styles().mL5p} textColor={currentTheme.black}/>
             <TextDefault bold>{t('addAddress')}</TextDefault>
           </View>
         </TouchableOpacity>

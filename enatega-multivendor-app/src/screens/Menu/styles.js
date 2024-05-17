@@ -136,9 +136,6 @@ const styles = (props = null) =>
       padding: scale(15),
       marginTop: scale(30)
     },
-    mL5p: {
-      ...alignment.MLsmall
-    },
     homeIcon: {
       color: props !== null ? props.darkBgFont : '#000',
       width: '15%',
