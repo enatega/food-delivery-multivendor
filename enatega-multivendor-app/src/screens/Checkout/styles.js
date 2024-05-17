@@ -442,7 +442,7 @@ const styles = (props = null) =>
     applyButton: {
       fontSize: 20,
       fontWeight: '500',
-      color: props != null ? props.newFontcolor : '#E5E7EB'
+      color: props != null ? props.black : '#000000'
     }
   })
 export default styles

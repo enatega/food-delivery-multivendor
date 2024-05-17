@@ -6,10 +6,13 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { FILTER_TYPE } from '../../utils/enums'
 import styles from './styles'
+import { useTranslation } from 'react-i18next'
+
 
 const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { t } = useTranslation()
 
   const handleValueSelection = (filterTitle, filterValue) => {
     const selectedFilter = filters[filterTitle]
@@ -30,12 +33,12 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   return (
     <View style={styles().container}>
       <TextDefault H2 bolder style={styles().heading}>
-        Filters
+        {t('filters')}
       </TextDefault>
       {Object.keys(filters).map((filter, index) => (
         <View style={{ gap: 12 }}>
-          <TextDefault H4 bolder style={{ paddingHorizontal: 15 }}>
-            {filter}
+          <TextDefault H4 bolder style={{ paddingHorizontal: 15, textAlign: 'left' }}>
+            {t(filter)}
           </TextDefault>
           {filter === 'Cuisines' ? (
             <ScrollView
@@ -60,13 +63,11 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                         {
                           borderColor: filters[filter].selected.includes(item)
                             ? currentTheme.main
-                            : currentTheme.subText,
-
-                          backgroundColor: filters[filter].selected.includes(
-                            item
-                          )
+                            : currentTheme.color7,
+  
+                          backgroundColor: filters[filter].selected.includes(item)
                             ? currentTheme.main
-                            : currentTheme.white
+                            : currentTheme.color3
                         }
                       ]}
                     >
@@ -76,7 +77,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                         textColor={
                           filters[filter].selected.includes(item)
                             ? currentTheme.white
-                            : currentTheme.subText
+                            : currentTheme.fontMainColor
                         }
                       >
                         {item}
@@ -103,11 +104,11 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                       {
                         borderColor: filters[filter].selected.includes(item)
                           ? currentTheme.main
-                          : currentTheme.subText,
+                          : currentTheme.color7,
 
                         backgroundColor: filters[filter].selected.includes(item)
                           ? currentTheme.main
-                          : currentTheme.white
+                          : currentTheme.color3
                       }
                     ]}
                   >
@@ -117,7 +118,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                       textColor={
                         filters[filter].selected.includes(item)
                           ? currentTheme.white
-                          : currentTheme.subText
+                          : currentTheme.fontMainColor
                       }
                     >
                       {item}
@@ -135,8 +136,8 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
         activeOpacity={0.8}
         onPress={applyFilters}
       >
-        <TextDefault center bold H4>
-          Apply
+        <TextDefault center bold H4 textColor={currentTheme.black}>
+          {t('apply')}
         </TextDefault>
       </TouchableOpacity>
       <Feather

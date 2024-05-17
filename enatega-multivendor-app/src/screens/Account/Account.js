@@ -390,14 +390,14 @@ function Account(props) {
                   <ButtonContainer
                     title={t('email')}
                     detail={profile?.email}
-                    status={profile?.emailIsVerified ? t('verified') : t('notVerified')}
+                    status={profile?.emailIsVerified ? 'verified' : 'notVerified'}
                     onPress='null'
                   />
                   <View style={styles(currentTheme).line} />
                   <ButtonContainer
                     title={t('phone')}
                     detail={profile?.phone}
-                    status={profile?.phoneIsVerified ? t('verified') : t('notVerified')}
+                    status={profile?.phoneIsVerified ? 'verified' : 'notVerified'}
                     // onPress='null'
                     onPress={profile?.phoneIsVerified ? 'null' : () =>
                       navigation.navigate('PhoneNumber', {

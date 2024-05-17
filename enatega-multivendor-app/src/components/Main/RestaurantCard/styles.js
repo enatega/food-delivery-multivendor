@@ -6,7 +6,7 @@ const { height } = Dimensions.get('window')
 const styles = (props = null) =>
   StyleSheet.create({
     offerContainer: {
-      borderRadius: 25,
+      borderRadius: 15,
       width: scale(270),
       height: height * 0.376,
       ...alignment.MRsmall
@@ -96,14 +96,6 @@ const styles = (props = null) =>
       borderColor: props != null ? props.iconBackground : '#E5E7EB',
       borderStyle: 'dashed'
     },
-    deliveryTimeNew: {
-      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
-      borderRadius: 4,
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
-    }
   })
 
 export default styles

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
 import {
   View,
   ScrollView,
@@ -75,7 +75,7 @@ const SearchScreen = () => {
         elevation: 0
       }
     })
-  }, [navigation])
+  }, [navigation, currentTheme])
 
   useEffect(() => {
     getRecentSearches().then((searches) => setRecentSearches(searches))

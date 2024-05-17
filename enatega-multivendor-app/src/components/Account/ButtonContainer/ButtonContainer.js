@@ -5,14 +5,16 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext.js'
 import { theme } from '../../../utils/themeColors.js'
 import TextDefault from '../../Text/TextDefault/TextDefault.js'
 import { EvilIcons } from '@expo/vector-icons'
-import { scale, verticalScale } from '../../../utils/scaling.js'
+import { scale } from '../../../utils/scaling.js'
+import { useTranslation } from 'react-i18next'
 
 const ButtonContainer = (props) => {
+  const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const isDisabled = props.onPress === 'null'
   const isVerifyDisabled = props.status === 'null'
-  const statusColor = props.status === 'Verified' ? `${currentTheme.linkColor}` : `${currentTheme.red600}`
+  const statusColor = props.status === 'verified' ? `${currentTheme.linkColor}` : `${currentTheme.red600}`
 
   return (
     <>
@@ -59,7 +61,7 @@ const ButtonContainer = (props) => {
             textColor={statusColor}
             small
           >
-            {props.status}
+            {t(props.status)}
           </TextDefault>
         </View>
       )}
