@@ -573,7 +573,7 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
   CustomerSupport: 'Kundensupport',
   OrderHistory: 'Bestellverlauf',
   Account: 'Konto',
-  whatsAppText: 'Benötigen Sie weitere Hilfe? Kontaktieren Sie uns',
+  whatsAppText: 'Kontaktieren Sie uns',
   openingHours: 'Öffnungszeiten',
   deliveryInformation: 'Lieferinformationen',
   contact: 'Kontakt',
@@ -634,5 +634,7 @@ Stores: "Geschäfte",
 "Top picked restaurants for you": "Top-ausgewählte Restaurants für Sie",
 "Top brands in your area": "Top-Marken in Ihrer Region",
 "Most ordered grocery stores": "Am meisten bestellte Lebensmittelgeschäfte",
-"Most ordered restaurants": "Am meisten bestellte Restaurants"
+"Most ordered restaurants": "Am meisten bestellte Restaurants",
+Discovery: "Entdeckung",
+Store: "Geschäft"
 }

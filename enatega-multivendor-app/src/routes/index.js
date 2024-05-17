@@ -235,35 +235,35 @@ function BottomTabNavigator() {
         name='Discovery'
         component={Main}
         options={{
-          tabBarLabel: 'Discovery'
+          tabBarLabel: t('Discovery')
         }}
       />
       <Tab.Screen
         name='Restaurants'
         component={Menu}
         options={{
-          tabBarLabel: 'Restaurants'
+          tabBarLabel: t('Restaurants')
         }}
       />
       <Tab.Screen
         name='Store'
         component={Menu}
         options={{
-          tabBarLabel: 'Store'
+          tabBarLabel: t('Store')
         }}
       />
       <Tab.Screen
         name='Search'
         component={SearchScreen}
         options={{
-          tabBarLabel: 'Search'
+          tabBarLabel: t('search')
         }}
       />
       <Tab.Screen
         name='Profile'
         component={userProfile ? Profile : CreateAccount}
         options={{
-          tabBarLabel: 'Profile'
+          tabBarLabel: t('titleProfile')
         }}
       />
     </Tab.Navigator>

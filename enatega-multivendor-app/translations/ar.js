@@ -615,5 +615,7 @@ Stores: "متاجر",
 "Top picked restaurants for you": "أفضل المطاعم المختارة لك",
 "Top brands in your area": "أفضل العلامات التجارية في منطقتك",
 "Most ordered grocery stores": "أكثر المتاجر التي تباع فيها المواد الغذائية",
-"Most ordered restaurants": "أكثر المطاعم التي يتم طلبها"
+"Most ordered restaurants": "أكثر المطاعم التي يتم طلبها",
+Discovery: "اكتشاف",
+Store: "متجر"
 }

@@ -602,5 +602,7 @@ Stores: "חנויות",
 "Top picked restaurants for you": "מסעדות הכי מובחרות עבורך",
 "Top brands in your area": "מותגים מובילים באזור שלך",
 "Most ordered grocery stores": "חנויות מכולת הנפלאות ביותר",
-"Most ordered restaurants": "מסעדות הנפלאות ביותר"
+"Most ordered restaurants": "מסעדות הנפלאות ביותר",
+Discovery: "גילוי",
+Store: "חנות"
 }

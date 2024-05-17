@@ -614,5 +614,7 @@ Stores: "ហាង",
 "Top picked restaurants for you": "ភោជនីយដ្ឋាន​ដែលទទួលបានច្រើន​សម្រាប់អ្នក",
 "Top brands in your area": "ក្រុម​ដែលពេញនិយម​នៅក្នុងតំបន់​អ្នក",
 "Most ordered grocery stores": "ហាង​លក់​ទំនិញ​ដែលទិញ​ច្រើន​បំផុត",
-"Most ordered restaurants": "ភោជនីយដ្ឋាន​ដែលទិញ​ច្រើន​បំផុត"
+"Most ordered restaurants": "ភោជនីយដ្ឋាន​ដែលទិញ​ច្រើន​បំផុត",
+Discovery: "ការរកឃើញ",
+Store: "ហាង"
 }
