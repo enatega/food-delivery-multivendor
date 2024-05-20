@@ -150,7 +150,7 @@ export default function MapSection() {
                     <View
                       style={styles().deliveryTime}
                     >
-                      <Bicycle />
+                      <Bicycle color={currentTheme.color2} />
 
                       <TextDefault
                         textColor={currentTheme.color2}

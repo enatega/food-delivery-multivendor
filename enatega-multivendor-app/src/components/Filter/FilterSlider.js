@@ -36,7 +36,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
         {t('filters')}
       </TextDefault>
       {Object.keys(filters).map((filter, index) => (
-        <View style={{ gap: 12 }}>
+        <View style={{ gap: 12 }}key={'filters-'+filter+index} >
           <TextDefault H4 bolder style={{ paddingHorizontal: 15, textAlign: 'left' }}>
             {t(filter)}
           </TextDefault>

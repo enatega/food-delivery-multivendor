@@ -147,7 +147,9 @@ const SearchScreen = () => {
               top: containerPaddingTop
             }}
             contentContainerStyle={{
-              paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop
+              paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+              gap: 16,
+              ...alignment.PBlarge
             }}
             contentOffset={{
               y: -containerPaddingTop
@@ -267,7 +269,7 @@ const SearchScreen = () => {
 
   return (
     <View style={styles(currentTheme).flex}>
-      <ScrollView
+      <View
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -290,7 +292,7 @@ const SearchScreen = () => {
           />
         </View>
         {renderTagsOrSearches()}
-      </ScrollView>
+      </View>
     </View>
   )
 }

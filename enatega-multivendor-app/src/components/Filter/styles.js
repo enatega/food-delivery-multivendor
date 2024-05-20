@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native'
 import { verticalScale, scale } from '../../utils/scaling'
+import { alignment } from '../../utils/alignment'
 
 const styles = (props = null) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
-      gap: 24
+      gap: 24,
+      ...alignment.MBxLarge
     },
     heading: { 
       marginBottom: 10, 

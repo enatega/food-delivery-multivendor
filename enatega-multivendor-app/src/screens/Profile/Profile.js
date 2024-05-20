@@ -254,6 +254,7 @@ function Profile(props) {
                   onPress={() => navigation.navigate('MyOrders')}
                   title={t('OrderHistory')}
                 />
+                <View style={styles(currentTheme).line} />
               </View>
 
               {/* order again */}
