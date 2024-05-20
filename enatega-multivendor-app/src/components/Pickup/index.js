@@ -29,7 +29,8 @@ function PickUp(props) {
       if (date && new Date(date) >= new Date(currentDate)) {
         props.setOrderDate(date)
       }
-    }
+    },
+    textColor: props.pickupTextColor || currentTheme.newFontcolor,
   }
 
   useEffect(() => {

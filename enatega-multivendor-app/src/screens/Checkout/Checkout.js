@@ -788,7 +788,7 @@ function Checkout(props) {
                       screenName={'checkout'}
                     />
                   </View>
-                  
+
 
                   <View
                     style={[
@@ -1417,7 +1417,14 @@ function Checkout(props) {
           }}
           style={styles(currentTheme).pickupButton}
         >
-          <Text style={styles(currentTheme).applyButton}>{t('apply')}</Text>
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            style={styles().checkoutBtn}
+            bold
+            H4
+          >
+            {t('apply')}
+          </TextDefault>
         </TouchableOpacity>
       </Modalize>
     </>

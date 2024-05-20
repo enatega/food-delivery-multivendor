@@ -623,5 +623,8 @@ export const en = {
   'Most ordered restaurants': 'Most ordered restaurants',
   Discovery: 'Discovery',
   Store: 'Store',
-  loginRequired: 'Login Required'
+  loginRequired: 'Login Required',
+  'Restaurant Closed at the moment': 'Restaurant Closed at the moment',
+  'See Menu': 'See Menu',
+  'Go back to restaurants': 'Go back to restaurants',
 }

@@ -618,5 +618,8 @@ Stores: "متاجر",
 "Most ordered restaurants": "أكثر المطاعم التي يتم طلبها",
 Discovery: "اكتشاف",
 Store: "متجر",
-loginRequired: 'مطلوب تسجيل الدخول'
+loginRequired: 'مطلوب تسجيل الدخول',
+'Restaurant Closed at the moment': 'المطعم مغلق في الوقت الحالي',
+'See Menu': 'عرض القائمة',
+'Go back to restaurants': 'العودة إلى المطاعم'
 }

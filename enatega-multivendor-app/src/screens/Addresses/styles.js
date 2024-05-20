@@ -27,7 +27,8 @@ const styles = (props = null) =>
       bottom: verticalScale(0),
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'center'
+      alignSelf: 'center',
+      ...alignment.PBmedium
     },
     addButton: {
       backgroundColor: props !== null ? props.newheaderColor : 'transparent',

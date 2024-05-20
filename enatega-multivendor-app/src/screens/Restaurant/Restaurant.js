@@ -188,17 +188,17 @@ function Restaurant(props) {
     ) {
       Alert.alert(
         '',
-        'Restaurant Closed at the moment',
+        t('Restaurant Closed at the moment'),
         [
           {
-            text: 'Go back to restaurants',
+            text: t('Go back to restaurants'),
             onPress: () => {
               navigation.goBack()
             },
             style: 'cancel'
           },
           {
-            text: 'See Menu',
+            text: t('See Menu'),
             onPress: () => console.log('see menu')
           }
         ],

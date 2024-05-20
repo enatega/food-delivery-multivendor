@@ -617,5 +617,8 @@ Stores: "ហាង",
 "Most ordered restaurants": "ភោជនីយដ្ឋាន​ដែលទិញ​ច្រើន​បំផុត",
 Discovery: "ការរកឃើញ",
 Store: "ហាង",
-loginRequired: 'តម្រូវឲ្យចូល'
+loginRequired: 'តម្រូវឲ្យចូល',
+"restaurantClosedMessage": "ភោជនីយដ្ឋានបានបិទនៅពេលនេះ",
+"seeMenu": "មើលម៉ឺនុយ",
+"goBackToRestaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន"
 }

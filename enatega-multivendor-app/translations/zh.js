@@ -601,5 +601,8 @@ Stores: "商店",
 "Most ordered restaurants": "最受欢迎的餐厅",
 Discovery: "发现",
 Store: "商店",
-loginRequired: '需要登录'
+loginRequired: '需要登录',
+"restaurantClosedMessage": "餐厅暂时关闭",
+"seeMenu": "查看菜单",
+"goBackToRestaurants": "返回餐馆"
 }

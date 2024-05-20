@@ -275,6 +275,8 @@ function Addresses() {
             <TouchableOpacity
               activeOpacity={0.7}
               style={[styles(currentTheme).containerSpace]}
+              onPress={() => handleAddressSelection(address._id)}
+              disabled={!isEditMode}
             >
               <View style={[styles().width100, styles().rowContainer]}>
                 <View style={styles().rowContainer}>

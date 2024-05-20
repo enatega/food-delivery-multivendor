@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import styles from './styles'
-import { Image, View, FlatList, TouchableOpacity } from 'react-native'
+import { Image, View, FlatList, TouchableOpacity, Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useRoute } from '@react-navigation/native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -210,7 +210,7 @@ export default function MapSection() {
         onPress={() => navigation.goBack()}
         style={{
           position: 'absolute',
-          top: 60,
+          top: Platform.OS === 'ios' ? 60 : 15,
           left: 15,
           backgroundColor: currentTheme.white,
           borderRadius: 50,

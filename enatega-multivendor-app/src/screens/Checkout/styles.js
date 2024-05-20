@@ -84,6 +84,11 @@ const styles = (props = null) =>
       paddingBottom: 24,
       paddingLeft: 16,
       paddingRight: 16,
+      borderTopWidth: 1,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderColor: props !== null ? props.iconColor : '#717171',
+      justifyContent: 'space-between'
     },
     overlay: {
       backgroundColor: props !== null ? props.backgroundColor2 : 'transparent'
@@ -435,14 +440,9 @@ const styles = (props = null) =>
       height: scale(40),
       borderRadius: 40,
       borderWidth: 1,
-      borderColor: props !== null ? props.borderColor : 'black',
+      borderColor: props !== null ? props.iconColor : '#717171',
       width: '70%',
       alignSelf: 'center'
-    },
-    applyButton: {
-      fontSize: 20,
-      fontWeight: '500',
-      color: props != null ? props.black : '#000000'
     }
   })
 export default styles
