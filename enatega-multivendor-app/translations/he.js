@@ -605,5 +605,8 @@ Stores: "חנויות",
 "Most ordered restaurants": "מסעדות הנפלאות ביותר",
 Discovery: "גילוי",
 Store: "חנות",
-loginRequired: 'נדרש התחברות'
+loginRequired: 'נדרש התחברות',
+"restaurantClosedMessage": "המסעדה סגורה כרגע",
+"seeMenu": "הצג תפריט",
+"goBackToRestaurants": "חזור למסעדות"
 }

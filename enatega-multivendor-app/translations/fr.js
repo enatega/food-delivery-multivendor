@@ -633,5 +633,8 @@ Stores: "Magasins",
 "Most ordered restaurants": "Restaurants les plus commandés",
 Discovery: "Découverte",
 Store: "Magasin",
-loginRequired: 'Connexion requise'
+loginRequired: 'Connexion requise',
+"restaurantClosedMessage": "Restaurant fermé pour le moment",
+"seeMenu": "Voir le menu",
+"goBackToRestaurants": "Retourner aux restaurants"
 }
