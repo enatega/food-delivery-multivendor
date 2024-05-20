@@ -636,5 +636,6 @@ Stores: "Geschäfte",
 "Most ordered grocery stores": "Am meisten bestellte Lebensmittelgeschäfte",
 "Most ordered restaurants": "Am meisten bestellte Restaurants",
 Discovery: "Entdeckung",
-Store: "Geschäft"
+Store: "Geschäft",
+loginRequired: 'Anmeldung erforderlich'
 }

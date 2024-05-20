@@ -600,5 +600,6 @@ Stores: "商店",
 "Most ordered grocery stores": "最受欢迎的杂货店",
 "Most ordered restaurants": "最受欢迎的餐厅",
 Discovery: "发现",
-Store: "商店"
+Store: "商店",
+loginRequired: '需要登录'
 }

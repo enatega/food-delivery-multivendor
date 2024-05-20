@@ -91,6 +91,9 @@ function ImageTextCenterHeader(props, ref) {
   const handleAddToFavorites = () => {
     if (!loadingMutation && profile) {
       mutate({ variables: { id: props.restaurantId } })
+    } else if (!profile) {
+      FlashMessage({ message: t('loginRequired') }) 
+      navigation.navigate('CreateAccount') 
     }
   }
 

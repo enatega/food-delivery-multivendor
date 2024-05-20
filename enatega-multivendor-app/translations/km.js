@@ -616,5 +616,6 @@ Stores: "ហាង",
 "Most ordered grocery stores": "ហាង​លក់​ទំនិញ​ដែលទិញ​ច្រើន​បំផុត",
 "Most ordered restaurants": "ភោជនីយដ្ឋាន​ដែលទិញ​ច្រើន​បំផុត",
 Discovery: "ការរកឃើញ",
-Store: "ហាង"
+Store: "ហាង",
+loginRequired: 'តម្រូវឲ្យចូល'
 }

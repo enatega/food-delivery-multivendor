@@ -632,5 +632,6 @@ Stores: "Magasins",
 "Most ordered grocery stores": "Magasins d'épicerie les plus commandés",
 "Most ordered restaurants": "Restaurants les plus commandés",
 Discovery: "Découverte",
-Store: "Magasin"
+Store: "Magasin",
+loginRequired: 'Connexion requise'
 }

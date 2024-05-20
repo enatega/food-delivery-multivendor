@@ -622,5 +622,6 @@ export const en = {
   'Most ordered grocery stores': 'Most ordered grocery stores',
   'Most ordered restaurants': 'Most ordered restaurants',
   Discovery: 'Discovery',
-  Store: 'Store'
+  Store: 'Store',
+  loginRequired: 'Login Required'
 }

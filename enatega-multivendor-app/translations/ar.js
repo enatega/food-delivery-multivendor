@@ -617,5 +617,6 @@ Stores: "متاجر",
 "Most ordered grocery stores": "أكثر المتاجر التي تباع فيها المواد الغذائية",
 "Most ordered restaurants": "أكثر المطاعم التي يتم طلبها",
 Discovery: "اكتشاف",
-Store: "متجر"
+Store: "متجر",
+loginRequired: 'مطلوب تسجيل الدخول'
 }
