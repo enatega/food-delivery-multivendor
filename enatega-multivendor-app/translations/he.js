@@ -604,5 +604,6 @@ Stores: "חנויות",
 "Most ordered grocery stores": "חנויות מכולת הנפלאות ביותר",
 "Most ordered restaurants": "מסעדות הנפלאות ביותר",
 Discovery: "גילוי",
-Store: "חנות"
+Store: "חנות",
+loginRequired: 'נדרש התחברות'
 }

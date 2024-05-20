@@ -57,6 +57,9 @@ function NewRestaurantCard(props) {
   const handleAddToFavorites = () => {
     if (!loadingMutation && profile) {
       mutate({ variables: { id: props._id } })
+    } else if (!profile) {
+      FlashMessage({ message: t('loginRequired') }) 
+      navigation.navigate('Profile') 
     }
   }
 
