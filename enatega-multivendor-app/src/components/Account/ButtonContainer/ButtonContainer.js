@@ -37,15 +37,27 @@ const ButtonContainer = (props) => {
           </View>
 
           <View style={styles(currentTheme).leftContainer}>
-            <TextDefault
-              style={styles().drawerContainer}
-              textColor={currentTheme.fontMainColor}
-              small
-              H5
-              bolder
-            >
-              {props.detail}
-            </TextDefault>
+            <View>
+              <TextDefault
+                style={styles().drawerContainer}
+                textColor={currentTheme.fontMainColor}
+                small
+                H5
+                bolder
+              >
+                {props.detail}
+              </TextDefault>
+              {!isVerifyDisabled && (
+                <View style={styles(currentTheme).verifyView}>
+                  <TextDefault
+                    textColor={statusColor}
+                    small
+                  >
+                    {t(props.status)}
+                  </TextDefault>
+                </View>
+              )}
+            </View>
             {!isDisabled && (
               <EvilIcons
                 name='chevron-right'
@@ -55,16 +67,6 @@ const ButtonContainer = (props) => {
             )}
           </View>
         </TouchableOpacity>
-      {!isVerifyDisabled && (
-        <View style={styles(currentTheme).verifyView}>
-          <TextDefault
-            textColor={statusColor}
-            small
-          >
-            {t(props.status)}
-          </TextDefault>
-        </View>
-      )}
       </View>
     </>
   )

@@ -398,8 +398,7 @@ function Account(props) {
                     title={t('phone')}
                     detail={profile?.phone}
                     status={profile?.phoneIsVerified ? 'verified' : 'notVerified'}
-                    // onPress='null'
-                    onPress={profile?.phoneIsVerified ? 'null' : () =>
+                    onPress={() =>
                       navigation.navigate('PhoneNumber', {
                         prevScreen: 'Account'
                       })
