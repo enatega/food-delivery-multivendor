@@ -439,13 +439,13 @@ function Banner(props) {
               }
             />
             <label
-              htmlFor={props.food ? 'edit-food-image' : 'add-food-image'}
+              htmlFor={props.banner ? 'edit-banner-image' : 'add-banner-image'}
               className={classes.fileUpload}>
               {t('UploadAnImage')}
             </label>
             <input
               className={classes.file}
-              id={props.food ? 'edit-food-image' : 'add-food-image'}
+              id={props.banner ? 'edit-banner-image' : 'add-banner-image'}
               type="file"
               accept="image/*"
               onChange={event => {

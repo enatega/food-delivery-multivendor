@@ -8,7 +8,8 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: props != null ? props.themeBackground : '#fff'
+      backgroundColor: props != null ? props.themeBackground : '#fff',
+      paddingBottom: scale(150)
     },
     scrollViewContainer: {
       width: '100%',

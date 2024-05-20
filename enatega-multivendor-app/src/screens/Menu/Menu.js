@@ -154,8 +154,12 @@ function Menu({ route, props }) {
         icon: 'back',
         haveBackBtn: routeData?.name === 'Menu',
         onPressFilter: () => filtersModalRef.current.open(),
-        onPressMap: ()=>navigation.navigate('MapSection', {location, restaurants: restaurantData}),
-        onPressBack: ()=>navigation.goBack()
+        onPressMap: () =>
+          navigation.navigate('MapSection', {
+            location,
+            restaurants: restaurantData
+          }),
+        onPressBack: () => navigation.goBack()
       })
     )
   }, [navigation, currentTheme, restaurantData])
@@ -282,7 +286,9 @@ function Menu({ route, props }) {
                   color={currentTheme.black}
                 />
                 <View style={styles().mL5p} />
-                <TextDefault bold textColor={currentTheme.black}>{t('currentLocation')}</TextDefault>
+                <TextDefault bold textColor={currentTheme.black}>
+                  {t('currentLocation')}
+                </TextDefault>
               </>
             )}
           </View>
@@ -332,7 +338,9 @@ function Menu({ route, props }) {
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold textColor={currentTheme.black}>{t('addAddress')}</TextDefault>
+            <TextDefault bold textColor={currentTheme.black}>
+              {t('addAddress')}
+            </TextDefault>
           </View>
         </TouchableOpacity>
       </View>
@@ -486,78 +494,7 @@ function Menu({ route, props }) {
       edges={['bottom', 'left', 'right']}
       style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
-      <ScrollView style={styles().flex} showsVerticalScrollIndicator={false}>
-        <View style={{ gap: 8, backgroundColor: currentTheme.themeBackground }}>
-          <View style={styles().header}>
-            <View>
-              <TextDefault bolder H2>
-                {t(routeData?.name === 'Restaurants' ? 'Restaurants' : 'Stores')}
-              </TextDefault>
-              <TextDefault bold H5>
-                {t('BrowseCategories')}
-              </TextDefault>
-            </View>
-            <TouchableOpacity
-              style={styles(currentTheme).seeAllBtn}
-              activeOpacity={0.8}
-              onPress={() => {
-                navigation.navigate('Collection', {
-                  collectionType: routeData?.name,
-                  data: collectionData
-                })
-              }}
-            >
-              <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-              </TextDefault>
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            data={collectionData ?? []}
-            renderItem={({ item }) => {
-              return (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => onPressCollection(item)}
-                  style={[
-                    styles(currentTheme).collectionCard,
-                    activeCollection === item.name && {
-                      backgroundColor: currentTheme.newButtonBackground
-                    }
-                  ]}
-                >
-                  <View style={styles().brandImgContainer}>
-                    <Image
-                      source={{ uri: item.image }}
-                      style={styles().collectionImage}
-                      resizeMode='cover'
-                    />
-                  </View>
-                  <TextDefault
-                    Normal
-                    bolder
-                    style={{ padding: 8 }}
-                    textColor={
-                      activeCollection === item.name
-                        ? currentTheme.main
-                        : currentTheme.gray700
-                    }
-                  >
-                    {item.name}
-                  </TextDefault>
-                </TouchableOpacity>
-              )
-            }}
-            keyExtractor={(item) => item?._id}
-            contentContainerStyle={{
-              flexGrow: 1,
-              gap: 8,
-              padding: 15
-            }}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-          />
+        <View style={styles(currentTheme).container}>
           <Animated.FlatList
             contentInset={{ top: containerPaddingTop }}
             contentContainerStyle={{
@@ -569,22 +506,94 @@ function Menu({ route, props }) {
             onScroll={onScroll}
             scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={
-              restaurantData?.length === 0 ? null : (
-                <ActiveOrdersAndSections
-                  menuPageHeading={
-                    heading
-                      ? heading
-                      : routeData?.name === 'Restaurants'
-                        ? 'Restaurants'
-                        : routeData?.name === 'Store'
-                          ? 'All Stores'
-                          : 'Restaurants'
-                  }
-                  subHeading={subHeading ? subHeading : ''}
+            ListHeaderComponent={() => (
+              <>
+                <View style={styles().header}>
+                  <View>
+                    <TextDefault bolder H2>
+                      {t(
+                        routeData?.name === 'Restaurants'
+                          ? 'Restaurants'
+                          : 'Stores'
+                      )}
+                    </TextDefault>
+                    <TextDefault bold H5>
+                      {t('BrowseCategories')}
+                    </TextDefault>
+                  </View>
+                  <TouchableOpacity
+                    style={styles(currentTheme).seeAllBtn}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      navigation.navigate('Collection', {
+                        collectionType: routeData?.name,
+                        data: collectionData
+                      })
+                    }}
+                  >
+                    <TextDefault H5 bolder textColor={currentTheme.main}>
+                      {t('SeeAll')}
+                    </TextDefault>
+                  </TouchableOpacity>
+                </View>
+                <FlatList
+                  data={collectionData ?? []}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => onPressCollection(item)}
+                        style={[
+                          styles(currentTheme).collectionCard,
+                          activeCollection === item.name && {
+                            backgroundColor: currentTheme.newButtonBackground
+                          }
+                        ]}
+                      >
+                        <View style={styles().brandImgContainer}>
+                          <Image
+                            source={{ uri: item.image }}
+                            style={styles().collectionImage}
+                            resizeMode='cover'
+                          />
+                        </View>
+                        <TextDefault
+                          Normal
+                          bolder
+                          style={{ padding: 8 }}
+                          textColor={
+                            activeCollection === item.name
+                              ? currentTheme.main
+                              : currentTheme.gray700
+                          }
+                        >
+                          {item.name}
+                        </TextDefault>
+                      </TouchableOpacity>
+                    )
+                  }}
+                  keyExtractor={(item) => item?._id}
+                  contentContainerStyle={styles().collectionContainer}
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}
                 />
-              )
-            }
+                {restaurantData?.length === 0 ? null : (
+                  <ActiveOrdersAndSections
+                    menuPageHeading={
+                      heading
+                        ? heading
+                        : routeData?.name === 'Restaurants'
+                          ? 'Restaurants'
+                          : routeData?.name === 'Store'
+                            ? 'All Stores'
+                            : 'Restaurants'
+                    }
+                    subHeading={subHeading ? subHeading : ''}
+                  />
+                )}
+              </>
+            )}
             ListEmptyComponent={emptyView()}
             keyExtractor={(item, index) => index.toString()}
             refreshControl={
@@ -602,9 +611,7 @@ function Menu({ route, props }) {
             data={restaurantData}
             renderItem={({ item }) => <NewRestaurantCard {...item} fullWidth />}
           />
-          
         </View>
-      </ScrollView>
       <MainModalize
         modalRef={modalRef}
         currentTheme={currentTheme}

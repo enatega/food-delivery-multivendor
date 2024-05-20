@@ -8,6 +8,7 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    container: { flex: 1, gap: 8, backgroundColor: props != null ? props.themeBackground : '#FFF' },
     screenBackground: {
       backgroundColor: props != null ? props.themeBackground : '#FFF',
       ...alignment.PBlarge
@@ -184,8 +185,6 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      ...alignment.MLmedium,
-      ...alignment.MRmedium,
       ...alignment.MTsmall,
       
     },
@@ -206,6 +205,12 @@ const styles = (props = null) =>
     },
     closeBtn: {
       marginLeft: 'auto'
+    },
+    collectionContainer: {
+      flexGrow: 1,
+      gap: 8,
+      ...alignment.PTmedium,
+      ...alignment.PBmedium
     }
   })
 export default styles

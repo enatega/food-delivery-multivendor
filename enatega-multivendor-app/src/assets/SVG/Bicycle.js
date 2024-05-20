@@ -17,7 +17,7 @@ function Bicycle(props) {
       <Defs>
         <ClipPath id="clip0_2751_20635">
           <Path
-            fill="#fff"
+            fill={props.color ?? "#fff"}
             transform="translate(.125 .594)"
             d="M0 0H14.5V14.5H0z"
           />

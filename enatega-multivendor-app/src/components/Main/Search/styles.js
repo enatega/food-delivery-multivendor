@@ -16,14 +16,6 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       width: '100%',
       alignItems: 'center',     
       backgroundColor:newheaderColor,
-      shadowColor: props != null ? props.shadowColor : 'black',
-      shadowOffset: {
-        width: 0,
-        height: verticalScale(1)
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: verticalScale(1),
-      // ...alignment.MBmedium
     },
     mainContainer: {
       width: '90%',
