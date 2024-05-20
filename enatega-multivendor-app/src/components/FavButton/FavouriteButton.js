@@ -12,6 +12,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { scale } from '../../utils/scaling'
 import Spinner from '../Spinner/Spinner'
+import { useNavigation } from '@react-navigation/native'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -26,6 +27,8 @@ const FavoriteButton = ({ restaurantId, iconSize }) => {
   const { t } = useTranslation()
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(restaurantId) : false
+  const navigation = useNavigation()
+
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
     onCompleted: () => {
       FlashMessage({ message: t('favouritelistUpdated') })
@@ -36,6 +39,9 @@ const FavoriteButton = ({ restaurantId, iconSize }) => {
   const handleAddToFavorites = () => {
     if (!loadingMutation && profile) {
       mutate({ variables: { id: restaurantId } })
+    } else if (!profile) {
+      FlashMessage({ message: t('loginRequired') }) 
+      navigation.navigate('CreateAccount') 
     }
   }
 

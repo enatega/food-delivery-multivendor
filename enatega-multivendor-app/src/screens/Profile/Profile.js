@@ -130,7 +130,7 @@ function Profile(props) {
             showsVerticalScrollIndicator={false}
             alwaysBounceVertical={false}
           >
-            <TextDefault bolder style={[{fontSize: scale(30) },styles().padding]}>{t('Hi') + " " + profile.name + "!"}</TextDefault>
+            <TextDefault bolder style={[{fontSize: scale(30) },styles().padding]}>{t('Hi') + " " + profile?.name + "!"}</TextDefault>
             <View style={styles(currentTheme).mainContainer}>
               <TouchableOpacity
                 activeOpacity={0.8}
