@@ -618,7 +618,7 @@ Stores: "ហាង",
 Discovery: "ការរកឃើញ",
 Store: "ហាង",
 loginRequired: 'តម្រូវឲ្យចូល',
-"restaurantClosedMessage": "ភោជនីយដ្ឋានបានបិទនៅពេលនេះ",
-"seeMenu": "មើលម៉ឺនុយ",
-"goBackToRestaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន"
+"Restaurant Closed at the moment": "ភោជនីយដ្ឋានបានបិទនៅពេលនេះ",
+"See Menu": "មើលម៉ឺនុយ",
+"Go back to restaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន"
 }
