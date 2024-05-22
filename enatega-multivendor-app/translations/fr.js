@@ -634,7 +634,7 @@ Stores: "Magasins",
 Discovery: "Découverte",
 Store: "Magasin",
 loginRequired: 'Connexion requise',
-"restaurantClosedMessage": "Restaurant fermé pour le moment",
-"seeMenu": "Voir le menu",
-"goBackToRestaurants": "Retourner aux restaurants"
+"Restaurant Closed at the moment": "Restaurant fermé pour le moment",
+"See Menu": "Voir le menu",
+"Go back to restaurants": "Retourner aux restaurants"
 }

@@ -606,7 +606,7 @@ Stores: "חנויות",
 Discovery: "גילוי",
 Store: "חנות",
 loginRequired: 'נדרש התחברות',
-"restaurantClosedMessage": "המסעדה סגורה כרגע",
-"seeMenu": "הצג תפריט",
-"goBackToRestaurants": "חזור למסעדות"
+"Restaurant Closed at the moment": "המסעדה סגורה כרגע",
+"See Menu": "הצג תפריט",
+"Go back to restaurants": "חזור למסעדות"
 }
