@@ -14,7 +14,7 @@ const MYORDERS = gql`
   ${myOrders}
 `
 
-function StripeCheckout(props) {
+function HypCheckout(props) {
   const Analytics = analytics()
 
   const { SERVER_URL } = useEnvVars()
@@ -28,7 +28,7 @@ function StripeCheckout(props) {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: null,
-      title: t('stripeCheckout')
+      title: 'Hyp Checkout'
     })
   }, [props.navigation])
 
@@ -76,12 +76,12 @@ function StripeCheckout(props) {
           loadingSetter(false)
         }}
         source={{
-          uri: `${SERVER_URL}stripe/create-checkout-session?id=${_id}`
+          uri: `${SERVER_URL}hyp/create-hyp-api-sign?id=${_id}`
         }}
         scalesPageToFit={true}
-        onNavigationStateChange={data => {
-          handleResponse(data)
-        }}
+        // onNavigationStateChange={data => {
+        //   handleResponse(data)
+        // }}
       />
       {loading ? (
         <ActivityIndicator
@@ -92,4 +92,4 @@ function StripeCheckout(props) {
   )
 }
 
-export default StripeCheckout
+export default HypCheckout

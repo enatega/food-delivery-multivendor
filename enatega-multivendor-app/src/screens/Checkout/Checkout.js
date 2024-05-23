@@ -366,6 +366,7 @@ function Checkout(props) {
       console.log('update error', error)
     }
   }
+  console.log('paymentMode => ', paymentMode)
 
   async function onCompleted(data) {
     await Analytics.track(Analytics.events.ORDER_PLACED, {
@@ -401,6 +402,14 @@ function Checkout(props) {
       })
     } else if (paymentMode === 'STRIPE') {
       props.navigation.replace('StripeCheckout', {
+        _id: data.placeOrder.orderId,
+        amount: data.placeOrder.orderAmount,
+        email: data.placeOrder.user.email,
+        currency: configuration.currency
+      })
+    }
+    else if (paymentMode === 'HYP') {
+      props.navigation.replace('HypCheckout', {
         _id: data.placeOrder.orderId,
         amount: data.placeOrder.orderAmount,
         email: data.placeOrder.user.email,
@@ -846,6 +855,7 @@ function Checkout(props) {
                         <PaymentModeOption title={'Cash'} icon={'dollar'} selected={paymentMode === 'COD'} theme={currentTheme} onSelect={() => { setPaymentMode('COD') }} />
                         <PaymentModeOption title={'Card (Stripe)'} icon={'credit-card'} selected={paymentMode === 'STRIPE'} theme={currentTheme} onSelect={() => { setPaymentMode('STRIPE') }} />
                         <PaymentModeOption title={'Card (Paypal)'} icon={'credit-card'} selected={paymentMode === 'PAYPAL'} theme={currentTheme} onSelect={() => { setPaymentMode('PAYPAL') }} />
+                        <PaymentModeOption title={'HYP'} icon={'credit-card'} selected={paymentMode === 'HYP'} theme={currentTheme} onSelect={() => { setPaymentMode('HYP') }} />
                       </View>
                     </View>
                   </>

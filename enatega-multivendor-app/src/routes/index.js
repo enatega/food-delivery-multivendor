@@ -64,6 +64,7 @@ import EditName from '../components/Account/EditName/EditName'
 import SearchScreen from '../screens/Search/SearchScreen'
 import UserContext from '../context/User'
 import { Platform } from 'react-native'
+import HypCheckout from '../screens/Hyp/HypCheckout'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -170,6 +171,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='Account' component={Account} />
       <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen name='SearchScreen' component={SearchScreen} />
+      <NavigationStack.Screen name='HypCheckout' component={HypCheckout} />
     </NavigationStack.Navigator>
   )
 }
