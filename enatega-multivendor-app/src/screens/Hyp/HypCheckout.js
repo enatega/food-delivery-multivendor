@@ -44,12 +44,13 @@ function HypCheckout(props) {
   }, [])
 
   async function handleResponse(data) {
-    if (data.url.includes('stripe/success')) {
+    if (data.url.includes('hyp/success')) {
       const result = await client.query({
         query: MYORDERS,
         fetchPolicy: 'network-only'
       })
       const order = result.data.orders.find(order => order.orderId === _id)
+      console.log('ORDERS => ', JSON.stringify(order, null, 2))
       await clearCart()
       props.navigation.reset({
         routes: [
@@ -60,7 +61,8 @@ function HypCheckout(props) {
           }
         ]
       })
-    } else if (data.url.includes('stripe/cancel')) {
+    } else if (data.url.includes('hyp/cancel')) {
+      console.log('BACK')
       props.navigation.goBack()
       // goBack on Payment Screen
     }
@@ -79,9 +81,9 @@ function HypCheckout(props) {
           uri: `${SERVER_URL}hyp/create-hyp-api-sign?id=${_id}`
         }}
         scalesPageToFit={true}
-        // onNavigationStateChange={data => {
-        //   handleResponse(data)
-        // }}
+        onNavigationStateChange={data => {
+          handleResponse(data)
+        }}
       />
       {loading ? (
         <ActivityIndicator
