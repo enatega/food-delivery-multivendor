@@ -604,5 +604,6 @@ Store: "商店",
 loginRequired: '需要登录',
 "restaurantClosedMessage": "餐厅暂时关闭",
 "seeMenu": "查看菜单",
-"goBackToRestaurants": "返回餐馆"
+"goBackToRestaurants": "返回餐馆",
+'PaymentNotSuccessfull': '支付未成功',
 }

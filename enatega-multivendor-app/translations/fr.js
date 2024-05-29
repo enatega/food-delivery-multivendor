@@ -636,5 +636,6 @@ Store: "Magasin",
 loginRequired: 'Connexion requise',
 "restaurantClosedMessage": "Restaurant fermé pour le moment",
 "seeMenu": "Voir le menu",
-"goBackToRestaurants": "Retourner aux restaurants"
+"goBackToRestaurants": "Retourner aux restaurants",
+'PaymentNotSuccessfull': 'Paiement non réussi',
 }

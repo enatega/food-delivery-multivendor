@@ -620,5 +620,6 @@ Store: "ហាង",
 loginRequired: 'តម្រូវឲ្យចូល',
 "restaurantClosedMessage": "ភោជនីយដ្ឋានបានបិទនៅពេលនេះ",
 "seeMenu": "មើលម៉ឺនុយ",
-"goBackToRestaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន"
+"goBackToRestaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន",
+'PaymentNotSuccessfull': 'ការទូទាត់មិនបានជោគជ័យ',
 }

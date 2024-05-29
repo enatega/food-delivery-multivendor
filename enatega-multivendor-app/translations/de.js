@@ -639,5 +639,6 @@ Store: "Geschäft",
 loginRequired: 'Anmeldung erforderlich',
 "restaurantClosedMessage": "Restaurant momentan geschlossen",
 "seeMenu": "Speisekarte ansehen",
-"goBackToRestaurants": "Zurück zu den Restaurants"
+"goBackToRestaurants": "Zurück zu den Restaurants",
+'PaymentNotSuccessfull': 'Zahlung nicht erfolgreich',
 }

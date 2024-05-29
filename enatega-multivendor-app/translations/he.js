@@ -608,5 +608,6 @@ Store: "חנות",
 loginRequired: 'נדרש התחברות',
 "restaurantClosedMessage": "המסעדה סגורה כרגע",
 "seeMenu": "הצג תפריט",
-"goBackToRestaurants": "חזור למסעדות"
+"goBackToRestaurants": "חזור למסעדות",
+'PaymentNotSuccessfull': 'התשלום לא הצליח',
 }

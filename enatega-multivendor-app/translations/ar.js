@@ -621,5 +621,6 @@ Store: "متجر",
 loginRequired: 'مطلوب تسجيل الدخول',
 'Restaurant Closed at the moment': 'المطعم مغلق في الوقت الحالي',
 'See Menu': 'عرض القائمة',
-'Go back to restaurants': 'العودة إلى المطاعم'
+'Go back to restaurants': 'العودة إلى المطاعم',
+'PaymentNotSuccessfull': 'الدفع غير ناجح',
 }

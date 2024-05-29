@@ -366,7 +366,6 @@ function Checkout(props) {
       console.log('update error', error)
     }
   }
-  console.log('paymentMode => ', paymentMode)
 
   async function onCompleted(data) {
     await Analytics.track(Analytics.events.ORDER_PLACED, {

@@ -9,6 +9,7 @@ import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
 
 import { useTranslation } from 'react-i18next'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 
 const MYORDERS = gql`
   ${myOrders}
@@ -23,7 +24,6 @@ function HypCheckout(props) {
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
   const { _id } = props.route.params
-  console.log('_id => ', JSON.stringify(props.route, null, 3))
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -32,25 +32,24 @@ function HypCheckout(props) {
     })
   }, [props.navigation])
 
-  function onClose(flag) {
-    // showMessage here
-    props.navigation.goBack()
-  }
   useEffect(() => {
     async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_STRIPE)
+      await Analytics.track(Analytics.events.NAVIGATE_TO_HYP)
     }
     Track()
   }, [])
 
   async function handleResponse(data) {
+    console.log('DATA => ', JSON.stringify(data, null,3 ))
+    if(data.url.includes('hyp/success') || data.url.includes('hyp/cancel')){
+      loadingSetter(true)
+    } 
     if (data.url.includes('hyp/success')) {
       const result = await client.query({
         query: MYORDERS,
         fetchPolicy: 'network-only'
       })
       const order = result.data.orders.find(order => order.orderId === _id)
-      console.log('ORDERS => ', JSON.stringify(order, null, 2))
       await clearCart()
       props.navigation.reset({
         routes: [
@@ -62,9 +61,8 @@ function HypCheckout(props) {
         ]
       })
     } else if (data.url.includes('hyp/cancel')) {
-      console.log('BACK')
+      FlashMessage({ message: t('PaymentNotSuccessfull'), duration: 2000 })
       props.navigation.goBack()
-      // goBack on Payment Screen
     }
   }
 
@@ -88,8 +86,10 @@ function HypCheckout(props) {
       {loading ? (
         <ActivityIndicator
           style={{ position: 'absolute', bottom: '50%', left: '50%' }}
+          size='large'
+          color='#90E36D'
         />
-      ) : null}
+       ) : null}
     </View>
   )
 }
