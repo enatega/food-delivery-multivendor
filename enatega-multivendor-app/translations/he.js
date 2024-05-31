@@ -610,4 +610,7 @@ loginRequired: 'נדרש התחברות',
 "seeMenu": "הצג תפריט",
 "goBackToRestaurants": "חזור למסעדות",
 'PaymentNotSuccessfull': 'התשלום לא הצליח',
+"Restaurant Closed at the moment": "המסעדה סגורה כרגע",
+"See Menu": "הצג תפריט",
+"Go back to restaurants": "חזור למסעדות"
 }

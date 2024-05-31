@@ -641,4 +641,7 @@ loginRequired: 'Anmeldung erforderlich',
 "seeMenu": "Speisekarte ansehen",
 "goBackToRestaurants": "Zurück zu den Restaurants",
 'PaymentNotSuccessfull': 'Zahlung nicht erfolgreich',
+"Restaurant Closed at the moment": "Restaurant momentan geschlossen",
+"See Menu": "Speisekarte ansehen",
+"Go back to restaurants": "Zurück zu den Restaurants"
 }

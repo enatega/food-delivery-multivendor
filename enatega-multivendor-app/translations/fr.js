@@ -638,4 +638,7 @@ loginRequired: 'Connexion requise',
 "seeMenu": "Voir le menu",
 "goBackToRestaurants": "Retourner aux restaurants",
 'PaymentNotSuccessfull': 'Paiement non réussi',
+"Restaurant Closed at the moment": "Restaurant fermé pour le moment",
+"See Menu": "Voir le menu",
+"Go back to restaurants": "Retourner aux restaurants"
 }

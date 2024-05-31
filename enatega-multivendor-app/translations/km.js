@@ -622,4 +622,7 @@ loginRequired: 'តម្រូវឲ្យចូល',
 "seeMenu": "មើលម៉ឺនុយ",
 "goBackToRestaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន",
 'PaymentNotSuccessfull': 'ការទូទាត់មិនបានជោគជ័យ',
+"Restaurant Closed at the moment": "ភោជនីយដ្ឋានបានបិទនៅពេលនេះ",
+"See Menu": "មើលម៉ឺនុយ",
+"Go back to restaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន"
 }
