@@ -852,9 +852,7 @@ function Checkout(props) {
                       </TextDefault>
                       <View>
                         <PaymentModeOption title={'Cash'} icon={'dollar'} selected={paymentMode === 'COD'} theme={currentTheme} onSelect={() => { setPaymentMode('COD') }} />
-                        <PaymentModeOption title={'Card (Stripe)'} icon={'credit-card'} selected={paymentMode === 'STRIPE'} theme={currentTheme} onSelect={() => { setPaymentMode('STRIPE') }} />
-                        <PaymentModeOption title={'Card (Paypal)'} icon={'credit-card'} selected={paymentMode === 'PAYPAL'} theme={currentTheme} onSelect={() => { setPaymentMode('PAYPAL') }} />
-                        <PaymentModeOption title={'HYP'} icon={'credit-card'} selected={paymentMode === 'HYP'} theme={currentTheme} onSelect={() => { setPaymentMode('HYP') }} />
+                        <PaymentModeOption title={'Card'} icon={'credit-card'} selected={paymentMode === 'HYP'} theme={currentTheme} onSelect={() => { setPaymentMode('HYP') }} />
                       </View>
                     </View>
                   </>
