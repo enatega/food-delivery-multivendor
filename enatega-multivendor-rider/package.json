@@ -78,7 +78,7 @@
     "react-native-gesture-handler": "~2.14.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-loading-spinner-overlay": "^3.0.0",
-    "react-native-maps": "1.10.0",
+    "react-native-maps": "1.15.6",
     "react-native-maps-directions": "^1.8.0",
     "react-native-material-textfield": "^0.16.1",
     "react-native-modal": "^13.0.1",
