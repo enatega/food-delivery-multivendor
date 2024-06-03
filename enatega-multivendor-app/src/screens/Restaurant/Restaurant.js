@@ -60,7 +60,7 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.4
+const HEADER_MAX_HEIGHT = height * 0.67
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
@@ -504,7 +504,7 @@ function Restaurant(props) {
           searchPopupHandler={searchPopupHandler}
           translationY={translationY}
         />
-<View
+        <View
           style={[
             styles(currentTheme).navbarContainer,
             styles(currentTheme).flex,
@@ -549,14 +549,14 @@ function Restaurant(props) {
   const updatedDeals =
     dataList?.length > 0
       ? [
-          {
-            title: 'Popular',
-            id: new Date().getTime(),
-            data: dataList?.slice(0, 4),
-            index: 0
-          },
-          ...deals
-        ]
+        {
+          title: 'Popular',
+          id: new Date().getTime(),
+          data: dataList?.slice(0, 4),
+          index: 0
+        },
+        ...deals
+      ]
       : [...deals]
 
   return (
@@ -594,7 +594,8 @@ function Restaurant(props) {
             <ScrollView
               style={{
                 flexGrow: 1,
-                marginTop: TOP_BAR_HEIGHT,
+                marginTop: scale(36),
+                // marginTop: TOP_BAR_HEIGHT,
                 backgroundColor: currentTheme.themeBackground,
               }}
             >
@@ -723,17 +724,17 @@ function Restaurant(props) {
                   return (
                     <View style={styles(currentTheme).restaurantItems}>
                       <View style={styles().popularHeading}>
-                      <PopularIcon color={currentTheme.iconColorDark} />  
-                      <TextDefault
-                        style={styles(currentTheme).popularText}
-                        textColor={currentTheme.fontFourthColor}
-                        bolder>
-                        {title}
-                      </TextDefault>
+                        <PopularIcon color={currentTheme.iconColorDark} />
+                        <TextDefault
+                          style={styles(currentTheme).popularText}
+                          textColor={currentTheme.fontFourthColor}
+                          bolder>
+                          {title}
+                        </TextDefault>
                       </View>
                       <TextDefault
                         textColor={currentTheme.fontFourthColor}
-                        style={{                        
+                        style={{
                           ...alignment.PLmedium,
                           ...alignment.PRmedium,
                           fontSize: scale(12),

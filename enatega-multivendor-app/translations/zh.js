@@ -608,5 +608,6 @@ loginRequired: '需要登录',
 'PaymentNotSuccessfull': '支付未成功',
 "Restaurant Closed at the moment": "餐厅暂时关闭",
 "See Menu": "查看菜单",
-"Go back to restaurants": "返回餐馆"
+"Go back to restaurants": "返回餐馆",
+Open: '开放'
 }

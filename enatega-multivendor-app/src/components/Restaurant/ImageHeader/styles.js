@@ -12,8 +12,8 @@ const styles = (props = null) =>
     },
     mainContainer: {
       backgroundColor: props != null ? props.themeBackground : 'white',
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      // ...alignment.PLmedium,
+      // ...alignment.PRmedium,
       width: '100%',
       position: 'absolute',
       top: 0,
@@ -26,7 +26,8 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center',
-      width: scale(20)
+      width: scale(30),
+      height: scale(30),
     },
     favouriteOverlay: {
       position: 'absolute',
@@ -51,10 +52,14 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       // ...alignment.PTsmall,
-      height: height * 0.05,
-      zIndex: 1
+      // height: height * 0.05,
+      zIndex: 1,
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
     },
-
+    conditionalBG: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
+    },
     fixedIcons: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -62,12 +67,57 @@ const styles = (props = null) =>
       gap: 12
     },
     restaurantDetails: {
-      marginTop: scale(8)
+      marginTop: scale(8),
+      top: -scale(95),
     },
-
+    mainRestaurantImg: {
+      height: scale(200),
+      width: '100%',
+      position: 'relative', // Ensure parent has relative positioning
+      ...alignment.MBlarge
+    },
+    mainDetailsContainer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
+      // ...alignment.MBlarge,
+      paddingBottom: scale(22)
+    },
+    subDetailsContainer: {
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      width: '43%',
+      alignItems: 'center',
+      borderRadius: scale(50),
+      padding: scale(5),
+      marginVertical: scale(3),
+    },
+    subContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 4
+    },
+    timingRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(5),
+    },
+    timingRowMain: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      alignSelf: 'center',
+      backgroundColor: '#F3F4F6',
+      borderRadius: 10,
+      padding: 10,
+      marginBottom: 10,
+      width: '100%'
+    },
     restaurantImg: {
-      width: scale(80),
-      height: scale(80),
+      width: scale(60),
+      height: scale(60),
       borderRadius: 12
     },
     restaurantAbout: {
@@ -91,10 +141,20 @@ const styles = (props = null) =>
     },
     ratingBox: {
       flexDirection: 'row',
-      gap: scale(3),
+      gap: scale(10),
       alignItems: 'center',
+      ...alignment.PLmedium,
+      ...alignment.PRmedium,
     },
-
+    seeReviewsBtn: {
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
+      borderRadius: 4,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+      marginRight: 15
+    },
     flatListStyle: {
       height: '100%',
       width: '100%',
@@ -113,8 +173,8 @@ const styles = (props = null) =>
       ...alignment.PRlarge
     },
     activeHeader: {
-      borderBottomWidth: scale(3),
-      borderColor: '#90E36D'
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
+      borderRadius: scale(50),
     },
     heading: {
       fontWeight: 'bold'

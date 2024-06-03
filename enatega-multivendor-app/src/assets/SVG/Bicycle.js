@@ -2,10 +2,13 @@ import * as React from "react"
 import Svg, { G, Path, Defs, ClipPath } from "react-native-svg"
 
 function Bicycle(props) {
+  const { size } = props;
+  const iconSize = size ? size : 18;
+
   return (
     <Svg
-      width={18}
-      height={18}
+      width={iconSize}
+      height={iconSize}
       viewBox="0 0 15 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
