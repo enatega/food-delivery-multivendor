@@ -52,7 +52,6 @@ import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { ScrollView } from 'react-native-gesture-handler'
 import { IMAGE_LINK } from '../../utils/constants'
-import { LocationContext } from '../../context/Location'
 import PopularIcon from '../../assets/SVG/popular'
 
 const { height } = Dimensions.get('screen')
@@ -60,7 +59,7 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.67
+const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
@@ -479,7 +478,7 @@ function Restaurant(props) {
 
   if (loading) {
     return (
-      <View style={[styles().flex]}>
+      <View style={[styles(currentTheme).flex]}>
         <ImageHeader
           iconColor={iconColor}
           iconSize={iconSize}
@@ -594,8 +593,7 @@ function Restaurant(props) {
             <ScrollView
               style={{
                 flexGrow: 1,
-                marginTop: scale(36),
-                // marginTop: TOP_BAR_HEIGHT,
+                marginTop: TOP_BAR_HEIGHT,
                 backgroundColor: currentTheme.themeBackground,
               }}
             >
@@ -663,7 +661,7 @@ function Restaurant(props) {
                                 <TextDefault
                                   numberOfLines={1}
                                   textColor={currentTheme.fontSecondColor}
-                                  style={styles().priceText}
+                                  style={styles(currentTheme).priceText}
                                   small
                                   lineOver
                                 >
@@ -678,7 +676,7 @@ function Restaurant(props) {
                           </View>
                         </View>
                       </View>
-                      <View style={styles().addToCart}>
+                      <View style={styles(currentTheme).addToCart}>
                         <MaterialIcons
                           name='add'
                           size={scale(20)}
@@ -842,7 +840,7 @@ function Restaurant(props) {
                                 <TextDefault
                                   numberOfLines={1}
                                   textColor={currentTheme.fontSecondColor}
-                                  style={styles().priceText}
+                                  style={styles(currentTheme).priceText}
                                   small
                                   lineOver
                                 >

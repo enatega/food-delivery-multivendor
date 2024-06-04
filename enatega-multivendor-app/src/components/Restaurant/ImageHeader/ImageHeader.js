@@ -1,20 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   View,
   Dimensions,
   Text,
-  // TouchableOpacity,
   Image,
   FlatList,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard
+  Platform
 } from 'react-native'
 import {
-  MaterialIcons,
   Ionicons,
   Entypo,
-  AntDesign,
   SimpleLineIcons,
   MaterialCommunityIcons,
   FontAwesome5
@@ -26,7 +21,6 @@ import { theme } from '../../../utils/themeColors'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
 import {
-  BorderlessButton,
   RectButton,
   TouchableOpacity
 } from 'react-native-gesture-handler'
@@ -36,13 +30,6 @@ import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
 import { useTranslation } from 'react-i18next'
 import Search from '../../../components/Main/Search/Search'
-import { useMutation } from '@apollo/client'
-import gql from 'graphql-tag'
-import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import Spinner from '../../Spinner/Spinner'
-import UserContext from '../../../context/User'
-import { addFavouriteRestaurant } from '../../../apollo/mutations'
-import { profile } from '../../../apollo/queries'
 import { calculateDistance } from '../../../utils/customFunctions'
 import { LocationContext } from '../../../context/Location'
 import Animated, {
@@ -54,21 +41,13 @@ import FavoriteButton from '../../FavButton/FavouriteButton'
 import Bicycle from '../../../assets/SVG/Bicycle'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
-const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.67
+const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-
-const ADD_FAVOURITE = gql`
-  ${addFavouriteRestaurant}
-`
-const PROFILE = gql`
-  ${profile}
-`
 
 function ImageTextCenterHeader(props, ref) {
   const { translationY } = props
@@ -80,25 +59,6 @@ function ImageTextCenterHeader(props, ref) {
   const { t } = useTranslation()
   const newheaderColor = currentTheme.backgroundColor
   const cartContainer = currentTheme.gray500
-  const { profile } = useContext(UserContext)
-  const heart = profile ? profile.favourite.includes(props.restaurantId) : false
-  const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
-    onCompleted,
-    refetchQueries: [{ query: PROFILE }]
-  })
-
-  function onCompleted() {
-    FlashMessage({ message: t('favouritelistUpdated') })
-  }
-
-  const handleAddToFavorites = () => {
-    if (!loadingMutation && profile) {
-      mutate({ variables: { id: props.restaurantId } })
-    } else if (!profile) {
-      FlashMessage({ message: t('loginRequired') })
-      navigation.navigate('CreateAccount')
-    }
-  }
 
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
@@ -221,7 +181,7 @@ function ImageTextCenterHeader(props, ref) {
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
       <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
-          <View  style={[styles().fixedViewNavigation, props.searchOpen ? [styles(currentTheme).conditionalBG] : {}]}>
+          <View style={[styles().fixedViewNavigation]}>
             <View style={styles().backIcon}>
               {props.searchOpen ? (
                 <AnimatedTouchable
@@ -336,26 +296,22 @@ function ImageTextCenterHeader(props, ref) {
           {!props.search && !props.loading && (
             <Animated.View style={[styles().restaurantDetails, opacity]}>
               <Animated.View>
-                <View style={[styles().restImageContainer]}>
-                  <Image
-                    resizeMode='cover'
-                    source={{ uri: aboutObject?.restaurantImage }}
-                    style={[styles().mainRestaurantImg]}
-                  />
-                  <View style={styles(currentTheme).mainDetailsContainer}>
+                <Image
+                  resizeMode='cover'
+                  source={{ uri: aboutObject?.restaurantImage }}
+                  style={[styles().mainRestaurantImg, props.searchOpen ? {opacity: 0} : {}]}
+                />
+                <View style={styles(currentTheme).mainDetailsContainer}>
+                  <View style={styles(currentTheme).subDetailsContainer}>
+                    <TextDefault textColor={currentTheme.fontMainColor}>
+                      {t('deliveryCharges')} ${aboutObject?.restaurantTax}
+                    </TextDefault>
+                  </View>
 
-                    <View style={styles(currentTheme).subDetailsContainer}>
-                      <TextDefault textColor={currentTheme.fontMainColor}>
-                        {t('deliveryCharges')} ${aboutObject?.restaurantTax}
-                      </TextDefault>
-                    </View>
-
-                    <View style={styles(currentTheme).subDetailsContainer}>
-                      <TextDefault textColor={currentTheme.fontMainColor}>
-                        {t('minimumOrder')} ${aboutObject?.restaurantMinOrder}
-                      </TextDefault>
-                    </View>
-
+                  <View style={styles(currentTheme).subDetailsContainer}>
+                    <TextDefault textColor={currentTheme.fontMainColor}>
+                      {t('minimumOrder')} ${aboutObject?.restaurantMinOrder}
+                    </TextDefault>
                   </View>
                 </View>
               </Animated.View>
@@ -370,47 +326,32 @@ function ImageTextCenterHeader(props, ref) {
                   }
                 ]}
               >
-                <View style={[styles().restImageContainer]}>
-                  <Image
-                    resizeMode='cover'
-                    source={{ uri: aboutObject.restaurantImage }}
-                    style={[styles().restaurantImg]}
-                  />
-                </View>
-
-                <View style={styles().subContainer}>
-                  <TextDefault H2 bolder textColor={currentTheme.fontThirdColor}>
-                    {aboutObject?.restaurantName}
-                  </TextDefault>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 4
-                    }}
-                  >
+                <View style={[styles().subContainer]}>
+                  <View style={styles().titleContainer}>
+                    <Image
+                      resizeMode='cover'
+                      source={{ uri: aboutObject.restaurantImage }}
+                      style={[styles().restaurantImg]}
+                    />
+                    <TextDefault numberOfLines={2} H3 bolder textColor={currentTheme.fontThirdColor}>
+                      {aboutObject?.restaurantName}
+                    </TextDefault>
+                  </View>
                     <FavoriteButton
                       iconSize={scale(24)}
                       restaurantId={aboutObject.restaurantId}
                     />
-                  </View>
                 </View>
-
-                <View style={alignment.MTxSmall}>
                   <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
                     {t('preservationText')}
                   </TextDefault>
-                </View>
-
-
-
               </Animated.View>
 
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: scale(15)
+                  marginTop: scale(5)
                 }}
               >
                 <AnimatedTouchable
@@ -466,7 +407,7 @@ function ImageTextCenterHeader(props, ref) {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: scale(15)
+                  marginTop: scale(5)
                 }}
               >
                 <AnimatedTouchable
@@ -519,14 +460,14 @@ function ImageTextCenterHeader(props, ref) {
 
               </View>
 
-              <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-                
-              <Bicycle size={20} color={currentTheme.newFontcolor}/>
+              <View style={[styles().ratingBox, { marginTop: scale(5) }]}>
+
+                <Bicycle size={20} color={currentTheme.newFontcolor} />
 
                 <TextDefault
                   textColor={currentTheme.fontNewColor}
                   bold
-                    H5
+                  H5
                 >
                   {aboutObject.deliveryTime} {t('Min')}
                 </TextDefault>
