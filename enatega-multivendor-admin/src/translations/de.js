@@ -310,7 +310,8 @@ const de = {
     PICKED: 'GEKOZEN',
     ASSIGNED: 'TOEGEWEZEN',
     DELIVERED: 'BEZORGD',
-    REJECTED: 'AFGEWEZEN'
+    REJECTED: 'AFGEWEZEN',
+    UploadaLogo: 'Ein Logo hochladen'
   }
 }
 

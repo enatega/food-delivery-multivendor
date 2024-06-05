@@ -3,6 +3,7 @@ import { validateFunc } from '../../constraints/constraints'
 import { withTranslation } from 'react-i18next'
 import { useMutation, gql, useQuery } from '@apollo/client'
 import { createRestaurant, getCuisines, restaurantByOwner } from '../../apollo'
+import defaultLogo from '../../assets/img/defaultLogo.png'
 
 import {
   Box,
@@ -58,6 +59,7 @@ const CreateRestaurant = props => {
   const owner = props.owner
   const [showPassword, setShowPassword] = useState(false)
   const [imgUrl, setImgUrl] = useState('')
+  const [logoUrl, setLogoUrl] = useState('')
   const [nameError, setNameError] = useState(null)
   const [usernameError, setUsernameError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -123,9 +125,9 @@ const CreateRestaurant = props => {
 
   const formRef = useRef(null)
 
-  const selectImage = (event, state) => {
+  const handleFileSelect = (event, type) => {
     const result = filterImage(event)
-    if (result) imageToBase64(result)
+    if (result) imageToBase64(result, type)
   }
 
   const filterImage = event => {
@@ -136,19 +138,25 @@ const CreateRestaurant = props => {
     images = images.filter(image => image.name.match(/\.(jpg|jpeg|png|gif)$/))
     return images.length ? images[0] : undefined
   }
-  const imageToBase64 = imgUrl => {
+
+  const imageToBase64 = (imgUrl, type) => {
     const fileReader = new FileReader()
     fileReader.onloadend = () => {
-      setImgUrl(fileReader.result)
+      if (type === 'image') {
+        setImgUrl(fileReader.result)
+      } else if (type === 'logo') {
+        setLogoUrl(fileReader.result)
+      }
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async() => {
-    if (imgUrl === '') return imgUrl
+
+  const uploadImageToCloudinary = async(uploadType) => {
+    if (uploadType === '') return uploadType
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
     const data = {
-      file: imgUrl,
+      file: uploadType,
       upload_preset: CLOUDINARY_FOOD
     }
     try {
@@ -499,7 +507,9 @@ const CreateRestaurant = props => {
             </Grid>
           </Grid>
 
-          <Box
+          <Grid container spacing={2} >
+            <Grid item xs={12} sm={6}>
+            <Box
             mt={3}
             style={{ alignItems: 'center' }}
             className={globalClasses.flex}>
@@ -520,10 +530,39 @@ const CreateRestaurant = props => {
               type="file"
               accept="image/*"
               onChange={event => {
-                selectImage(event, 'image_url')
+                handleFileSelect(event, 'image')
               }}
             />
           </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+            <Box
+            mt={3}
+            style={{ alignItems: 'center' }}
+            className={globalClasses.flex}>
+            <img
+              className={classes.image}
+              alt="..."
+              src={
+                imgUrl || defaultLogo
+              }
+            />
+            <label htmlFor="logo-upload" className={classes.fileUpload}>
+              {t('UploadaLogo')}
+            </label>
+            <input
+              className={classes.file}
+              id="logo-upload"
+              type="file"
+              accept="image/*"
+              onChange={event => {
+                handleFileSelect(event, 'logo')
+              }}
+            />
+          </Box>
+            </Grid>
+          </Grid>
           <Box>
             <Button
               className={globalClasses.button}
@@ -531,7 +570,8 @@ const CreateRestaurant = props => {
               onClick={async e => {
                 e.preventDefault()
                 if (onSubmitValidaiton()) {
-                  const imgUpload = await uploadImageToCloudinary()
+                  const imgUpload = await uploadImageToCloudinary(imgUrl)
+                  const logoUpload = await uploadImageToCloudinary(logoUrl)
                   const form = formRef.current
                   const name = form.name.value
                   const address = form.address.value
@@ -550,6 +590,8 @@ const CreateRestaurant = props => {
                         image:
                           imgUpload ||
                           'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
+                        logo: 
+                        logoUpload || defaultLogo,
                         deliveryTime: Number(deliveryTime),
                         minimumOrder: Number(minimumOrder),
                         username,

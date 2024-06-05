@@ -309,7 +309,8 @@ const fr = {
     PICKED: 'CHOISI',
     ASSIGNED: 'ATTRIBUÉ',
     DELIVERED: 'LIVRÉ',
-    REJECTED: 'REJETÉ'
+    REJECTED: 'REJETÉ',
+    UploadaLogo: 'Télécharger un logo'
   }
 }
 
