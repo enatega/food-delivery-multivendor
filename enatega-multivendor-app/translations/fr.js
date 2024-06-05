@@ -641,5 +641,7 @@ loginRequired: 'Connexion requise',
 "Restaurant Closed at the moment": "Restaurant fermé pour le moment",
 "See Menu": "Voir le menu",
 "Go back to restaurants": "Retourner aux restaurants",
-Open: 'Ouvert'
+  Open: 'Ouvert',
+  Delivery: 'Livraison',
+  Pickup: 'Retrait'
 }

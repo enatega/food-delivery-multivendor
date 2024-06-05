@@ -613,5 +613,7 @@ loginRequired: 'נדרש התחברות',
 "Restaurant Closed at the moment": "המסעדה סגורה כרגע",
 "See Menu": "הצג תפריט",
 "Go back to restaurants": "חזור למסעדות",
-Open: 'פתוח'
+  Open: 'פתוח',
+  Delivery: 'משלוח',
+  Pickup: 'איסוף'
 }

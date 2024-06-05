@@ -609,5 +609,7 @@ loginRequired: '需要登录',
 "Restaurant Closed at the moment": "餐厅暂时关闭",
 "See Menu": "查看菜单",
 "Go back to restaurants": "返回餐馆",
-Open: '开放'
+  Open: '开放',
+  Delivery: '送货',
+  Pickup: '自提'
 }
