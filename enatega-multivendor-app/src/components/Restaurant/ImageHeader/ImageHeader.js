@@ -67,6 +67,7 @@ function ImageTextCenterHeader(props, ref) {
     restaurantId: props.restaurantId,
     restaurantName: props.restaurantName,
     restaurantImage: props.restaurantImage,
+    restaurantLogo: props.restaurant ? props.restaurant.logo : '',
     restaurantTax: props.tax,
     restaurantMinOrder: props.minimumOrder,
     deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
@@ -330,7 +331,11 @@ function ImageTextCenterHeader(props, ref) {
                   <View style={styles().titleContainer}>
                     <Image
                       resizeMode='cover'
-                      source={{ uri: aboutObject.restaurantImage }}
+                      source={
+                        aboutObject.restaurantLogo
+                          ? { uri: aboutObject.restaurantLogo }
+                          : require('../../../assets/images/defaultLogo.png')
+                      }
                       style={[styles().restaurantImg]}
                     />
                     <TextDefault numberOfLines={2} H3 bolder textColor={currentTheme.fontThirdColor}>
