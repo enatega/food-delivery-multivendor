@@ -127,7 +127,8 @@ const VendorProfile = () => {
   const formRef = useRef(null)
 
   const handleFileSelect = (event, type) => {
-    const result = filterImage(event)
+    let result;
+    result = filterImage(event);
     if (result) imageToBase64(result, type)
   }
 
@@ -143,9 +144,9 @@ const VendorProfile = () => {
   const imageToBase64 = (imgUrl, type) => {
     const fileReader = new FileReader()
     fileReader.onloadend = () => {
-      if (type === 'image') {
+      if (type === 'image' && fileReader.result) {
         setImgUrl(fileReader.result)
-      } else if (type === 'logo') {
+      } else if (type === 'logo' && fileReader.result) {
         setLogoUrl(fileReader.result)
       }
     }
@@ -153,7 +154,7 @@ const VendorProfile = () => {
   }
 
   const uploadImageToCloudinary = async(uploadType) => {
-    if (uploadType === '') return uploadType
+    if (!uploadType) return;
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
     const data = {

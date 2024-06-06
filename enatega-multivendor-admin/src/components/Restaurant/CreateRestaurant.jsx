@@ -126,7 +126,8 @@ const CreateRestaurant = props => {
   const formRef = useRef(null)
 
   const handleFileSelect = (event, type) => {
-    const result = filterImage(event)
+    let result;
+    result = filterImage(event);
     if (result) imageToBase64(result, type)
   }
 
@@ -142,9 +143,9 @@ const CreateRestaurant = props => {
   const imageToBase64 = (imgUrl, type) => {
     const fileReader = new FileReader()
     fileReader.onloadend = () => {
-      if (type === 'image') {
+      if (type === 'image' && fileReader.result) {
         setImgUrl(fileReader.result)
-      } else if (type === 'logo') {
+      } else if (type === 'logo' && fileReader.result) {
         setLogoUrl(fileReader.result)
       }
     }
@@ -152,7 +153,7 @@ const CreateRestaurant = props => {
   }
 
   const uploadImageToCloudinary = async(uploadType) => {
-    if (uploadType === '') return uploadType
+    if (!uploadType) return;
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
     const data = {
@@ -264,7 +265,7 @@ const CreateRestaurant = props => {
       typeof value === 'string' ? value.split(',') : value
     )
   }
-  
+
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
 
@@ -304,8 +305,8 @@ const CreateRestaurant = props => {
                     usernameError === false
                       ? globalClasses.inputError
                       : usernameError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                   onChange={event => {
                     event.target.value = event.target.value
@@ -333,8 +334,8 @@ const CreateRestaurant = props => {
                     passwordError === false
                       ? globalClasses.inputError
                       : passwordError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                   endAdornment={
                     <InputAdornment position="end">
@@ -368,8 +369,8 @@ const CreateRestaurant = props => {
                     nameError === false
                       ? globalClasses.inputError
                       : nameError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                 />
               </Box>
@@ -392,8 +393,8 @@ const CreateRestaurant = props => {
                     addressError === false
                       ? globalClasses.inputError
                       : addressError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                 />
               </Box>
@@ -415,8 +416,8 @@ const CreateRestaurant = props => {
                     deliveryTimeError === false
                       ? globalClasses.inputError
                       : deliveryTimeError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                 />
               </Box>
@@ -438,8 +439,8 @@ const CreateRestaurant = props => {
                     minimumOrderError === false
                       ? globalClasses.inputError
                       : minimumOrderError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                 />
               </Box>
@@ -461,8 +462,8 @@ const CreateRestaurant = props => {
                     salesTaxError === false
                       ? globalClasses.inputError
                       : salesTaxError === true
-                      ? globalClasses.inputSuccess
-                      : ''
+                        ? globalClasses.inputSuccess
+                        : ''
                   ]}
                 />
               </Box>
@@ -509,58 +510,58 @@ const CreateRestaurant = props => {
 
           <Grid container spacing={2} >
             <Grid item xs={12} sm={6}>
-            <Box
-            mt={3}
-            style={{ alignItems: 'center' }}
-            className={globalClasses.flex}>
-            <img
-              className={classes.image}
-              alt="..."
-              src={
-                imgUrl ||
-                'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
-              }
-            />
-            <label htmlFor="file-upload" className={classes.fileUpload}>
-              {t('UploadAnImage')}
-            </label>
-            <input
-              className={classes.file}
-              id="file-upload"
-              type="file"
-              accept="image/*"
-              onChange={event => {
-                handleFileSelect(event, 'image')
-              }}
-            />
-          </Box>
+              <Box
+                mt={3}
+                style={{ alignItems: 'center' }}
+                className={globalClasses.flex}>
+                <img
+                  className={classes.image}
+                  alt="..."
+                  src={
+                    imgUrl ||
+                    'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                  }
+                />
+                <label htmlFor="file-upload" className={classes.fileUpload}>
+                  {t('UploadAnImage')}
+                </label>
+                <input
+                  className={classes.file}
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={event => {
+                    handleFileSelect(event, 'image')
+                  }}
+                />
+              </Box>
             </Grid>
 
             <Grid item xs={12} sm={6}>
-            <Box
-            mt={3}
-            style={{ alignItems: 'center' }}
-            className={globalClasses.flex}>
-            <img
-              className={classes.image}
-              alt="..."
-              src={
-                logoUrl || defaultLogo
-              }
-            />
-            <label htmlFor="logo-upload" className={classes.fileUpload}>
-              {t('UploadaLogo')}
-            </label>
-            <input
-              className={classes.file}
-              id="logo-upload"
-              type="file"
-              accept="image/*"
-              onChange={event => {
-                handleFileSelect(event, 'logo')
-              }}
-            />
-          </Box>
+              <Box
+                mt={3}
+                style={{ alignItems: 'center' }}
+                className={globalClasses.flex}>
+                <img
+                  className={classes.image}
+                  alt="..."
+                  src={
+                    logoUrl || defaultLogo
+                  }
+                />
+                <label htmlFor="logo-upload" className={classes.fileUpload}>
+                  {t('UploadaLogo')}
+                </label>
+                <input
+                  className={classes.file}
+                  id="logo-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={event => {
+                    handleFileSelect(event, 'logo')
+                  }}
+                />
+              </Box>
             </Grid>
           </Grid>
           <Box>
@@ -590,8 +591,8 @@ const CreateRestaurant = props => {
                         image:
                           imgUpload ||
                           'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
-                        logo: 
-                        logoUpload || defaultLogo,
+                        logo:
+                          logoUpload || defaultLogo,
                         deliveryTime: Number(deliveryTime),
                         minimumOrder: Number(minimumOrder),
                         username,
