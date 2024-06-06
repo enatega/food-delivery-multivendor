@@ -623,4 +623,7 @@ loginRequired: 'مطلوب تسجيل الدخول',
 'See Menu': 'عرض القائمة',
 'Go back to restaurants': 'العودة إلى المطاعم',
 'PaymentNotSuccessfull': 'الدفع غير ناجح',
+  Open: 'مفتوح',
+  Delivery: 'التوصيل',
+  Pickup: 'الاستلام'
 }

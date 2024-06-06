@@ -612,5 +612,8 @@ loginRequired: 'נדרש התחברות',
 'PaymentNotSuccessfull': 'התשלום לא הצליח',
 "Restaurant Closed at the moment": "המסעדה סגורה כרגע",
 "See Menu": "הצג תפריט",
-"Go back to restaurants": "חזור למסעדות"
+"Go back to restaurants": "חזור למסעדות",
+  Open: 'פתוח',
+  Delivery: 'משלוח',
+  Pickup: 'איסוף'
 }

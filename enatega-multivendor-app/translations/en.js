@@ -628,4 +628,7 @@ export const en = {
   'See Menu': 'See Menu',
   'Go back to restaurants': 'Go back to restaurants',
   'PaymentNotSuccessfull': 'Payment Not Successfull',
+  Open: 'Open',
+  Delivery: 'Delivery',
+  Pickup: 'Pickup'
 }

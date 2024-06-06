@@ -52,7 +52,6 @@ import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { ScrollView } from 'react-native-gesture-handler'
 import { IMAGE_LINK } from '../../utils/constants'
-import { LocationContext } from '../../context/Location'
 import PopularIcon from '../../assets/SVG/popular'
 
 const { height } = Dimensions.get('screen')
@@ -60,7 +59,7 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.4
+const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
@@ -479,7 +478,7 @@ function Restaurant(props) {
 
   if (loading) {
     return (
-      <View style={[styles().flex]}>
+      <View style={[styles(currentTheme).flex]}>
         <ImageHeader
           iconColor={iconColor}
           iconSize={iconSize}
@@ -504,7 +503,7 @@ function Restaurant(props) {
           searchPopupHandler={searchPopupHandler}
           translationY={translationY}
         />
-<View
+        <View
           style={[
             styles(currentTheme).navbarContainer,
             styles(currentTheme).flex,
@@ -549,14 +548,14 @@ function Restaurant(props) {
   const updatedDeals =
     dataList?.length > 0
       ? [
-          {
-            title: 'Popular',
-            id: new Date().getTime(),
-            data: dataList?.slice(0, 4),
-            index: 0
-          },
-          ...deals
-        ]
+        {
+          title: 'Popular',
+          id: new Date().getTime(),
+          data: dataList?.slice(0, 4),
+          index: 0
+        },
+        ...deals
+      ]
       : [...deals]
 
   return (
@@ -662,7 +661,7 @@ function Restaurant(props) {
                                 <TextDefault
                                   numberOfLines={1}
                                   textColor={currentTheme.fontSecondColor}
-                                  style={styles().priceText}
+                                  style={styles(currentTheme).priceText}
                                   small
                                   lineOver
                                 >
@@ -677,7 +676,7 @@ function Restaurant(props) {
                           </View>
                         </View>
                       </View>
-                      <View style={styles().addToCart}>
+                      <View style={styles(currentTheme).addToCart}>
                         <MaterialIcons
                           name='add'
                           size={scale(20)}
@@ -723,17 +722,17 @@ function Restaurant(props) {
                   return (
                     <View style={styles(currentTheme).restaurantItems}>
                       <View style={styles().popularHeading}>
-                      <PopularIcon color={currentTheme.iconColorDark} />  
-                      <TextDefault
-                        style={styles(currentTheme).popularText}
-                        textColor={currentTheme.fontFourthColor}
-                        bolder>
-                        {title}
-                      </TextDefault>
+                        <PopularIcon color={currentTheme.iconColorDark} />
+                        <TextDefault
+                          style={styles(currentTheme).popularText}
+                          textColor={currentTheme.fontFourthColor}
+                          bolder>
+                          {title}
+                        </TextDefault>
                       </View>
                       <TextDefault
                         textColor={currentTheme.fontFourthColor}
-                        style={{                        
+                        style={{
                           ...alignment.PLmedium,
                           ...alignment.PRmedium,
                           fontSize: scale(12),
@@ -841,7 +840,7 @@ function Restaurant(props) {
                                 <TextDefault
                                   numberOfLines={1}
                                   textColor={currentTheme.fontSecondColor}
-                                  style={styles().priceText}
+                                  style={styles(currentTheme).priceText}
                                   small
                                   lineOver
                                 >
