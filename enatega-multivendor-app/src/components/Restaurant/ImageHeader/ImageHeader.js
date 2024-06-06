@@ -68,6 +68,7 @@ function ImageTextCenterHeader(props, ref) {
     restaurantName: props.restaurantName,
     restaurantImage: props.restaurantImage,
     restaurantLogo: props.restaurant ? props.restaurant.logo : '',
+    restaurantCuisines: props.restaurant ? props.restaurant.cuisines : '',
     restaurantTax: props.tax,
     restaurantMinOrder: props.minimumOrder,
     deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
@@ -348,7 +349,7 @@ function ImageTextCenterHeader(props, ref) {
                     />
                 </View>
                   <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
-                    {t('preservationText')}
+                  {aboutObject?.restaurantCuisines?.join(', ')}
                   </TextDefault>
               </Animated.View>
 
