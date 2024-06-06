@@ -620,5 +620,8 @@ Store: "ហាង",
 loginRequired: 'តម្រូវឲ្យចូល',
 "Restaurant Closed at the moment": "ភោជនីយដ្ឋានបានបិទនៅពេលនេះ",
 "See Menu": "មើលម៉ឺនុយ",
-"Go back to restaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន"
+  "Go back to restaurants": "ត្រឡប់ទៅភោជនីយដ្ឋាន",
+  Open: 'បើក',
+  Delivery: 'ដឹកជញ្ជូន',
+  Pickup: 'យក'
 }

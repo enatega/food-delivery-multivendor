@@ -639,5 +639,8 @@ Store: "Geschäft",
 loginRequired: 'Anmeldung erforderlich',
 "Restaurant Closed at the moment": "Restaurant momentan geschlossen",
 "See Menu": "Speisekarte ansehen",
-"Go back to restaurants": "Zurück zu den Restaurants"
+  "Go back to restaurants": "Zurück zu den Restaurants",
+  Open: 'Offen',
+  Delivery: 'Lieferung',
+  Pickup: 'Abholung'
 }

@@ -11,7 +11,7 @@ export const useStyles = theme => (StyleSheet.create({
         flex: 1,
         borderRadius: scale(40),
         marginHorizontal: scale(10),
-        marginVertical: scale(5),
+        marginVertical: scale(3),
         flexDirection: 'row',
     },
     ovalButton: {

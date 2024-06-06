@@ -627,4 +627,7 @@ export const en = {
   'Restaurant Closed at the moment': 'Restaurant Closed at the moment',
   'See Menu': 'See Menu',
   'Go back to restaurants': 'Go back to restaurants',
+  Open: 'Open',
+  Delivery: 'Delivery',
+  Pickup: 'Pickup'
 }
