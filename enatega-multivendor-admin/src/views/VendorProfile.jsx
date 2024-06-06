@@ -113,7 +113,11 @@ const VendorProfile = () => {
       variables: { id: restaurantId }
     }
   )
-  console.log('Rest data: ', data)
+
+
+  const restaurantImage = data?.restaurant?.image;
+  const restaurantLogo = data?.restaurant?.logo;
+
   const [mutate, { loading }] = useMutation(EDIT_RESTAURANT, {
     onError,
     onCompleted,
@@ -248,6 +252,11 @@ const VendorProfile = () => {
   useEffect(() => {
     setRestaurantCuisines(data?.restaurant?.cuisines)
   }, [data?.restaurant?.cuisines])
+
+  useEffect(() => {
+    if (restaurantImage) setImgUrl(restaurantImage);
+    if (restaurantLogo) setLogoUrl(restaurantLogo);
+  }, [restaurantImage, restaurantLogo]);
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
@@ -574,7 +583,7 @@ const VendorProfile = () => {
                         className={classes.image}
                         alt="..."
                         src={
-                          imgUrl || defaultLogo
+                          logoUrl || defaultLogo
                         }
                       />
                       <label htmlFor="logo-upload" className={classes.fileUpload}>

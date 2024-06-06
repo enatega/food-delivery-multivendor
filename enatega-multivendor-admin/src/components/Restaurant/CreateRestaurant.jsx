@@ -545,7 +545,7 @@ const CreateRestaurant = props => {
               className={classes.image}
               alt="..."
               src={
-                imgUrl || defaultLogo
+                logoUrl || defaultLogo
               }
             />
             <label htmlFor="logo-upload" className={classes.fileUpload}>
