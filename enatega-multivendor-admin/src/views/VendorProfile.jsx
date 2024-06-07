@@ -7,6 +7,7 @@ import { getRestaurantProfile, editRestaurant, getCuisines } from '../apollo'
 import ConfigurableValues from '../config/constants'
 import useStyles from '../components/Restaurant/styles'
 import useGlobalStyles from '../utils/globalStyles'
+import defaultLogo from '../assets/img/defaultLogo.png'
 import {
   Box,
   Alert,
@@ -57,6 +58,7 @@ const VendorProfile = () => {
   const restaurantId = localStorage.getItem('restaurantId')
   const [showPassword, setShowPassword] = useState(false)
   const [imgUrl, setImgUrl] = useState('')
+  const [logoUrl, setLogoUrl] = useState('')
   const [nameError, setNameError] = useState(null)
   const [usernameError, setUsernameError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -111,7 +113,11 @@ const VendorProfile = () => {
       variables: { id: restaurantId }
     }
   )
-  console.log('Rest data: ', data)
+
+
+  const restaurantImage = data?.restaurant?.image;
+  const restaurantLogo = data?.restaurant?.logo;
+
   const [mutate, { loading }] = useMutation(EDIT_RESTAURANT, {
     onError,
     onCompleted,
@@ -120,9 +126,10 @@ const VendorProfile = () => {
 
   const formRef = useRef(null)
 
-  const selectImage = (event, state) => {
-    const result = filterImage(event)
-    if (result) imageToBase64(result)
+  const handleFileSelect = (event, type) => {
+    let result;
+    result = filterImage(event);
+    if (result) imageToBase64(result, type)
   }
 
   const filterImage = event => {
@@ -133,19 +140,25 @@ const VendorProfile = () => {
     images = images.filter(image => image.name.match(/\.(jpg|jpeg|png|gif)$/))
     return images.length ? images[0] : undefined
   }
-  const imageToBase64 = imgUrl => {
+
+  const imageToBase64 = (imgUrl, type) => {
     const fileReader = new FileReader()
     fileReader.onloadend = () => {
-      setImgUrl(fileReader.result)
+      if (type === 'image' && fileReader.result) {
+        setImgUrl(fileReader.result)
+      } else if (type === 'logo' && fileReader.result) {
+        setLogoUrl(fileReader.result)
+      }
     }
     fileReader.readAsDataURL(imgUrl)
   }
-  const uploadImageToCloudinary = async() => {
-    if (imgUrl === '') return imgUrl
+
+  const uploadImageToCloudinary = async(uploadType) => {
+    if (!uploadType) return;
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
     const data = {
-      file: imgUrl,
+      file: uploadType,
       upload_preset: CLOUDINARY_FOOD
     }
     try {
@@ -237,9 +250,14 @@ const VendorProfile = () => {
     )
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setRestaurantCuisines(data?.restaurant?.cuisines)
-  },[data?.restaurant?.cuisines])
+  }, [data?.restaurant?.cuisines])
+
+  useEffect(() => {
+    if (restaurantImage) setImgUrl(restaurantImage);
+    if (restaurantLogo) setLogoUrl(restaurantLogo);
+  }, [restaurantImage, restaurantLogo]);
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
@@ -280,8 +298,8 @@ const VendorProfile = () => {
                           usernameError === false
                             ? globalClasses.inputError
                             : usernameError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                         onChange={event => {
                           if (event.target.value.includes(' ')) {
@@ -313,8 +331,8 @@ const VendorProfile = () => {
                           passwordError === false
                             ? globalClasses.inputError
                             : passwordError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                         endAdornment={
                           <InputAdornment position="end">
@@ -351,8 +369,8 @@ const VendorProfile = () => {
                           nameError === false
                             ? globalClasses.inputError
                             : nameError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>
@@ -375,8 +393,8 @@ const VendorProfile = () => {
                           addressError === false
                             ? globalClasses.inputError
                             : addressError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>
@@ -402,8 +420,8 @@ const VendorProfile = () => {
                           deliveryTimeError === false
                             ? globalClasses.inputError
                             : deliveryTimeError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>
@@ -426,8 +444,8 @@ const VendorProfile = () => {
                           minimumOrderError === false
                             ? globalClasses.inputError
                             : minimumOrderError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>
@@ -452,8 +470,8 @@ const VendorProfile = () => {
                           salesTaxError === false
                             ? globalClasses.inputError
                             : salesTaxError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>
@@ -476,8 +494,8 @@ const VendorProfile = () => {
                           prefixError === false
                             ? globalClasses.inputError
                             : prefixError === true
-                            ? globalClasses.inputSuccess
-                            : ''
+                              ? globalClasses.inputSuccess
+                              : ''
                         ]}
                       />
                     </Box>
@@ -527,32 +545,64 @@ const VendorProfile = () => {
                     </Box>
                   </Grid>
                 </Grid>
-                <Box
-                  mt={3}
-                  style={{ alignItems: 'center' }}
-                  className={globalClasses.flex}>
-                  <img
-                    className={classes.image}
-                    alt="..."
-                    src={
-                      imgUrl ||
-                      (data && data.restaurant.image) ||
-                      'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
-                    }
-                  />
-                  <label htmlFor="file-upload" className={classes.fileUpload}>
-                    {t('UploadAnImage')}
-                  </label>
-                  <input
-                    className={classes.file}
-                    id="file-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={event => {
-                      selectImage(event, 'image_url')
-                    }}
-                  />
-                </Box>
+
+                <Grid container spacing={2} >
+                  <Grid item xs={12} sm={6}>
+                    <Box
+                      mt={3}
+                      style={{ alignItems: 'center' }}
+                      className={globalClasses.flex}>
+                      <img
+                        className={classes.image}
+                        alt="..."
+                        src={
+                          imgUrl ||
+                          'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                        }
+                      />
+                      <label htmlFor="file-upload" className={classes.fileUpload}>
+                        {t('UploadAnImage')}
+                      </label>
+                      <input
+                        className={classes.file}
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={event => {
+                          handleFileSelect(event, 'image')
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <Box
+                      mt={3}
+                      style={{ alignItems: 'center' }}
+                      className={globalClasses.flex}>
+                      <img
+                        className={classes.image}
+                        alt="..."
+                        src={
+                          logoUrl || defaultLogo
+                        }
+                      />
+                      <label htmlFor="logo-upload" className={classes.fileUpload}>
+                        {t('UploadaLogo')}
+                      </label>
+                      <input
+                        className={classes.file}
+                        id="logo-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={event => {
+                          handleFileSelect(event, 'logo')
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+
                 <Box>
                   <Button
                     className={globalClasses.button}
@@ -560,7 +610,8 @@ const VendorProfile = () => {
                     onClick={async e => {
                       e.preventDefault()
                       if (onSubmitValidaiton()) {
-                        const imgUpload = await uploadImageToCloudinary()
+                        const imgUpload = await uploadImageToCloudinary(imgUrl)
+                        const logoUpload = await uploadImageToCloudinary(logoUrl)
                         const form = formRef.current
                         const name = form.name.value
                         const address = form.address.value
@@ -581,6 +632,8 @@ const VendorProfile = () => {
                                 imgUpload ||
                                 data.restaurant.image ||
                                 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
+                              logo:
+                                logoUpload || defaultLogo,
                               orderPrefix: prefix,
                               deliveryTime: Number(deliveryTime),
                               minimumOrder: Number(minimumOrder),

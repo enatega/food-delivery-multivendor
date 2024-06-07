@@ -550,6 +550,7 @@ export const getRestaurantProfile = `query Restaurant($id:String){
       slug
       name
       image
+      logo
       address
       location{coordinates}
       deliveryBounds{

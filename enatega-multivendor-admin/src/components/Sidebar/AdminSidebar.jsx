@@ -24,7 +24,6 @@ function AdminSidebar(props) {
   const location = useLocation()
   const classes = useStyles()
   const { window } = props
-  console.log('Admin Sidebarprops are here: ', props)
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
   const handleDrawerToggle = () => {
