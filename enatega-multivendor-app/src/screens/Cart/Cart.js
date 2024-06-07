@@ -492,6 +492,7 @@ function Cart(props) {
                           optionsTitle={food.optionsTitle}
                           itemImage={food.image}
                           itemAddons={food.addons}
+                          cartRestaurant= {cartRestaurant}
                           dealPrice={(
                             parseFloat(food.price) * food.quantity
                           ).toFixed(2)}
