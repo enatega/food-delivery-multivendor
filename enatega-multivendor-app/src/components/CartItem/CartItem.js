@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { IMAGE_LINK } from '../../utils/constants'
 
 const CartItem = props => {
+  const cartRestaurant = props.cartRestaurant
   const { t } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
@@ -26,9 +27,6 @@ const CartItem = props => {
     setIsDropdownOpen(!isDropdownOpen)
   }
   const navigation = useNavigation()
-  const navigateBack = () => {
-    navigation.goBack() // Navigate back function
-  }
 
   return (
     <View style={styles().itemContainer}>
@@ -109,7 +107,7 @@ const CartItem = props => {
               {parseFloat(props.dealPrice).toFixed(2)}
             </TextDefault>
             <View style={styles().divider} />
-            <TouchableOpacity onPress={navigateBack}>
+            <TouchableOpacity onPress={() => navigation.navigate('Restaurant', { _id: cartRestaurant })}>
               <TextDefault
                 textColor={currentTheme.fontFourthColor}
                 bolder

@@ -278,10 +278,6 @@ const styles = (props = null) =>
       ...alignment.PLsmall,
       ...alignment.PRsmall
     },
-    imageContainer: {
-      alignItems: 'center',
-      flexDirection: 'row'
-    },
     cartInnerContainer: {
       ...alignment.MTxSmall
     },
