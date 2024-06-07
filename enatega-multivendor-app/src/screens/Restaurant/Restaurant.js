@@ -680,7 +680,7 @@ function Restaurant(props) {
                         <MaterialIcons
                           name='add'
                           size={scale(20)}
-                          color={currentTheme.black}
+                          color={currentTheme.themeBackground}
                         />
                       </View>
                     </View>
