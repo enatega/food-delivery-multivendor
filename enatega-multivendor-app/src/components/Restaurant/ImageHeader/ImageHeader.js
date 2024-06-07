@@ -1,22 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   View,
   Dimensions,
   Text,
-  // TouchableOpacity,
   Image,
   FlatList,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard
+  Platform
 } from 'react-native'
 import {
-  MaterialIcons,
   Ionicons,
   Entypo,
-  AntDesign,
   SimpleLineIcons,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  FontAwesome5
 } from '@expo/vector-icons'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -25,7 +21,6 @@ import { theme } from '../../../utils/themeColors'
 import { useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../../utils/enums'
 import {
-  BorderlessButton,
   RectButton,
   TouchableOpacity
 } from 'react-native-gesture-handler'
@@ -35,13 +30,6 @@ import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
 import { useTranslation } from 'react-i18next'
 import Search from '../../../components/Main/Search/Search'
-import { useMutation } from '@apollo/client'
-import gql from 'graphql-tag'
-import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import Spinner from '../../Spinner/Spinner'
-import UserContext from '../../../context/User'
-import { addFavouriteRestaurant } from '../../../apollo/mutations'
-import { profile } from '../../../apollo/queries'
 import { calculateDistance } from '../../../utils/customFunctions'
 import { LocationContext } from '../../../context/Location'
 import Animated, {
@@ -49,23 +37,17 @@ import Animated, {
   interpolate,
   useAnimatedStyle
 } from 'react-native-reanimated'
+import FavoriteButton from '../../FavButton/FavouriteButton'
+import Bicycle from '../../../assets/SVG/Bicycle'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
-const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.4
+const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-
-const ADD_FAVOURITE = gql`
-  ${addFavouriteRestaurant}
-`
-const PROFILE = gql`
-  ${profile}
-`
 
 function ImageTextCenterHeader(props, ref) {
   const { translationY } = props
@@ -77,25 +59,6 @@ function ImageTextCenterHeader(props, ref) {
   const { t } = useTranslation()
   const newheaderColor = currentTheme.backgroundColor
   const cartContainer = currentTheme.gray500
-  const { profile } = useContext(UserContext)
-  const heart = profile ? profile.favourite.includes(props.restaurantId) : false
-  const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
-    onCompleted,
-    refetchQueries: [{ query: PROFILE }]
-  })
-
-  function onCompleted() {
-    FlashMessage({ message: t('favouritelistUpdated') })
-  }
-
-  const handleAddToFavorites = () => {
-    if (!loadingMutation && profile) {
-      mutate({ variables: { id: props.restaurantId } })
-    } else if (!profile) {
-      FlashMessage({ message: t('loginRequired') }) 
-      navigation.navigate('CreateAccount') 
-    }
-  }
 
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
@@ -104,6 +67,8 @@ function ImageTextCenterHeader(props, ref) {
     restaurantId: props.restaurantId,
     restaurantName: props.restaurantName,
     restaurantImage: props.restaurantImage,
+    restaurantLogo: props.restaurant ? props.restaurant.logo : '',
+    restaurantCuisines: props.restaurant ? props.restaurant.cuisines : '',
     restaurantTax: props.tax,
     restaurantMinOrder: props.minimumOrder,
     deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
@@ -135,6 +100,19 @@ function ImageTextCenterHeader(props, ref) {
       return times.length > 0
     }
   }
+
+  console.log("restaurantCuisines", aboutObject?.restaurantCuisines);
+  console.log("restaurantLogo", aboutObject?.restaurantLogo);
+
+  const currentDayShort = new Date()
+    .toLocaleString('en-US', { weekday: 'short' })
+    .toUpperCase()
+
+  const todayOpeningTimes = aboutObject?.openingTimes.find(
+    (opening) => opening.day === currentDayShort
+  )
+
+  const IsOpen = aboutObject?.isOpen()
 
   const minutesOpacity = useAnimatedStyle(() => {
     return {
@@ -208,15 +186,15 @@ function ImageTextCenterHeader(props, ref) {
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
       <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
-          <View style={styles().fixedViewNavigation}>
+          <View style={[styles().fixedViewNavigation]}>
             <View style={styles().backIcon}>
               {props.searchOpen ? (
-                <AnimatedBorderless
+                <AnimatedTouchable
                   activeOpacity={0.7}
                   style={[
-                    styles().touchArea,
+                    styles(currentTheme).touchArea,
                     {
-                      backgroundColor: props.themeBackground,
+                      // backgroundColor: props.themeBackground,
                       borderRadius: props.iconRadius,
                       height: props.iconTouchHeight
                     }
@@ -228,33 +206,26 @@ function ImageTextCenterHeader(props, ref) {
                     color={currentTheme.newIconColor}
                     size={scale(22)}
                   />
-                </AnimatedBorderless>
+                </AnimatedTouchable>
               ) : (
-                <AnimatedBorderless
+                <AnimatedTouchable
                   activeOpacity={0.7}
                   style={[
-                    styles().touchArea,
+                    styles(currentTheme).touchArea,
                     {
-                      backgroundColor: props.themeBackground,
+                      // backgroundColor: props.themeBackground,
                       borderRadius: props.iconRadius,
                       height: props.iconTouchHeight
                     }
                   ]}
                   onPress={() => navigation.goBack()}
                 >
-                  {/* <Ionicons
-                    name='ios-arrow-back'
-                    style={{
-                      color: props.black,
-                      fontSize: props.iconSize
-                    }}
-                  /> */}
                   <Ionicons
                     name='arrow-back'
                     color={currentTheme.newIconColor}
                     size={scale(22)}
                   />
-                </AnimatedBorderless>
+                </AnimatedTouchable>
               )}
             </View>
             <View style={styles().center}>
@@ -282,39 +253,10 @@ function ImageTextCenterHeader(props, ref) {
                 <>
                   <TouchableOpacity
                     activeOpacity={0.7}
-                    disabled={loadingMutation}
                     style={[
-                      styles().touchArea,
+                      styles(currentTheme).touchArea,
                       {
-                        backgroundColor: props.themeBackground,
-                        borderRadius: props.iconRadius,
-                        height: props.iconTouchHeight
-                      }
-                    ]}
-                    onPress={handleAddToFavorites}
-                  >
-                    <View>
-                      {loadingMutation ? (
-                        <Spinner
-                          size={'small'}
-                          backColor={'transparent'}
-                          spinnerColor={currentTheme.iconColorDark}
-                        />
-                      ) : (
-                        <AntDesign
-                          name={heart ? 'heart' : 'hearto'}
-                          size={scale(15)}
-                          color={currentTheme.newIconColor}
-                        />
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={[
-                      styles().touchArea,
-                      {
-                        backgroundColor: props.themeBackground,
+                        // backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -337,7 +279,7 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles(currentTheme).touchArea,
                       {
-                        backgroundColor: props.themeBackground,
+                        // backgroundColor: props.themeBackground,
                         borderRadius: props.iconRadius,
                         height: props.iconTouchHeight
                       }
@@ -358,89 +300,67 @@ function ImageTextCenterHeader(props, ref) {
           </View>
           {!props.search && !props.loading && (
             <Animated.View style={[styles().restaurantDetails, opacity]}>
+              <Animated.View>
+                <Image
+                  resizeMode='cover'
+                  source={{ uri: aboutObject?.restaurantImage }}
+                  style={[styles().mainRestaurantImg, props.searchOpen ? {opacity: 0} : {}]}
+                />
+                <View style={styles(currentTheme).mainDetailsContainer}>
+                  <View style={styles(currentTheme).subDetailsContainer}>
+                    <TextDefault textColor={currentTheme.fontMainColor}>
+                      {t('deliveryCharges')} ${aboutObject?.restaurantTax}
+                    </TextDefault>
+                  </View>
+
+                  <View style={styles(currentTheme).subDetailsContainer}>
+                    <TextDefault textColor={currentTheme.fontMainColor}>
+                      {t('minimumOrder')} ${aboutObject?.restaurantMinOrder}
+                    </TextDefault>
+                  </View>
+                </View>
+              </Animated.View>
               <Animated.View
                 style={[
                   {
                     display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: scale(15),
-                    marginBottom: scale(20)
+                    gap: scale(10),
+                    marginBottom: scale(10),
+                    ...alignment.PLmedium,
+                    ...alignment.PRmedium,
                   }
                 ]}
               >
-                <View style={[styles().restImageContainer]}>
-                  <Image
-                    resizeMode='cover'
-                    source={{ uri: aboutObject.restaurantImage }}
-                    style={[styles().restaurantImg]}
-                  />
+                <View style={[styles().subContainer]}>
+                  <View style={styles().titleContainer}>
+                    <Image
+                      resizeMode='cover'
+                      source={
+                        aboutObject.restaurantLogo
+                          ? { uri: aboutObject.restaurantLogo }
+                          : require('../../../assets/images/defaultLogo.png')
+                      }
+                      style={[styles().restaurantImg]}
+                    />
+                    <TextDefault numberOfLines={2} H3 bolder textColor={currentTheme.fontThirdColor}>
+                      {aboutObject?.restaurantName}
+                    </TextDefault>
+                  </View>
+                    <FavoriteButton
+                      iconSize={scale(24)}
+                      restaurantId={aboutObject.restaurantId}
+                    />
                 </View>
-                <View style={styles().restaurantTitle}>
-                  <TextDefault
-                    H4
-                    bolder
-                    Center
-                    textColor={currentTheme.fontMainColor}
-                    numberOfLines={1}
-                    ellipsizeMode='tail'
-                  >
-                    {aboutObject.restaurantName}
+                  <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
+                  {aboutObject?.restaurantCuisines?.join(', ')}
                   </TextDefault>
-                </View>
               </Animated.View>
-              <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  {distance.toFixed(2)}km {t('away')}
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  |
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  ${aboutObject.restaurantTax} {t('deliveryCharges')}
-                </TextDefault>
-              </View>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: 7,
-                  marginTop: scale(5)
-                }}
-              >
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  ${aboutObject.restaurantMinOrder} {t('minimum')}
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  |
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  {t('serviceFeeApply')}
-                </TextDefault>
-              </View>
+
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: scale(15)
+                  marginTop: scale(5)
                 }}
               >
                 <AnimatedTouchable
@@ -453,35 +373,30 @@ function ImageTextCenterHeader(props, ref) {
                     })
                   }}
                 >
-                  <MaterialIcons
-                    name='star-border'
+                  <FontAwesome5
+                    name='smile'
                     size={scale(20)}
                     color={currentTheme.newIconColor}
                   />
 
                   <TextDefault
                     textColor={currentTheme.fontNewColor}
-                    style={{
-                      fontWeight: '700',
-                      fontSize: scale(16)
-                    }}
+                    bold
+                    H5
                   >
-                    {aboutObject.average}
+                    {aboutObject?.average}
                   </TextDefault>
                   <TextDefault
                     textColor={currentTheme.fontNewColor}
-                    style={{
-                      fontWeight: '400',
-                      fontSize: scale(14),
-                      marginLeft: scale(5)
-                    }}
+                    bold
+                    H5
                   >
-                    ({aboutObject.total})
+                    ({aboutObject?.total})
                   </TextDefault>
                 </AnimatedTouchable>
                 <AnimatedTouchable
-                  activeOpacity={0.7}
-                  style={styles().ratingBox}
+                  style={styles(currentTheme).seeReviewsBtn}
+                  activeOpacity={0.8}
                   disabled={props.loading}
                   onPress={() => {
                     navigation.navigate('Reviews', {
@@ -490,30 +405,83 @@ function ImageTextCenterHeader(props, ref) {
                     })
                   }}
                 >
-                  <TextDefault
-                    textColor={currentTheme.editProfileButton}
-                    style={{
-                      fontSize: scale(14),
-                      fontWeight: '600'
-                    }}
-                  >
+                  <TextDefault bolder textColor={currentTheme.main}>
                     {t('seeReviews')}
                   </TextDefault>
                 </AnimatedTouchable>
+
               </View>
-              <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-                <MaterialCommunityIcons name="timer-outline" size={scale(20)}
-                  color={currentTheme.newIconColor} />
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: scale(5)
+                }}
+              >
+                <AnimatedTouchable
+                  activeOpacity={0.7}
+                  style={styles().ratingBox}
+                  onPress={() => {
+                    navigation.navigate('Reviews', {
+                      restaurantObject: { ...aboutObject, isOpen: null },
+                      tab: false
+                    })
+                  }}
+                >
+                  <MaterialCommunityIcons name="timer-outline" size={scale(20)}
+                    color={currentTheme.newIconColor} />
+
+                  {todayOpeningTimes && (
+                    <View style={styles(currentTheme).timingRow}>
+
+                      <TextDefault textColor={currentTheme.fontThirdColor} bold>
+                        {t(todayOpeningTimes?.day)}{' '}
+                      </TextDefault>
+                      {todayOpeningTimes?.times?.length < 1 ? (
+                        <TextDefault small bold center>
+                          {t('ClosedAllDay')}
+                        </TextDefault>
+                      ) : (
+                        todayOpeningTimes?.times?.map((timing, index) => (
+                          <TextDefault
+                            key={index}
+                            textColor={currentTheme.fontThirdColor}
+                            bold
+                          >
+                            {timing.startTime[0]}:{timing.startTime[1]} - {' '}
+                            {timing.endTime[0]}:{timing.endTime[1]}
+                          </TextDefault>
+                        ))
+                      )}
+                    </View>
+                  )}
+
+                </AnimatedTouchable>
+                <AnimatedTouchable
+                  style={styles(currentTheme).seeReviewsBtn}
+                  disabled={true}
+                >
+                  <TextDefault bolder textColor={currentTheme.main}>
+                    {!todayOpeningTimes || !IsOpen ? t('Closed') : t('Open')}
+                  </TextDefault>
+                </AnimatedTouchable>
+
+              </View>
+
+              <View style={[styles().ratingBox, { marginTop: scale(5) }]}>
+
+                <Bicycle size={20} color={currentTheme.newFontcolor} />
+
                 <TextDefault
                   textColor={currentTheme.fontNewColor}
-                  style={{
-                    fontWeight: '400',
-                    fontSize: scale(14)
-                  }}
+                  bold
+                  H5
                 >
                   {aboutObject.deliveryTime} {t('Min')}
                 </TextDefault>
               </View>
+
             </Animated.View>
           )}
         </Animated.View>
@@ -554,7 +522,7 @@ function ImageTextCenterHeader(props, ref) {
                         }
                         textColor={
                           props.selectedLabel === index
-                            ? currentTheme.fontFourthColor
+                            ? currentTheme.newButtonText
                             : currentTheme.gray500
                         }
                         center

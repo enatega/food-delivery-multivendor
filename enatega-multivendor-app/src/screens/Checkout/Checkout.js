@@ -775,7 +775,7 @@ function Checkout(props) {
                     ]}
                   />
                 </View>
-                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} />
+                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} t={t} />
                 <View style={[styles(currentTheme).headerContainer]}>
                   <View style={alignment.PLsmall}>
                     <Location
