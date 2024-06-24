@@ -87,7 +87,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.19.6",
-    "react-native-webview": "13.6.4",
+    "react-native-webview": "13.10.4",
     "sentry-expo": "~7.2.0",
     "subscriptions-transport-ws": "^0.9.19"
   },
