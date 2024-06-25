@@ -21,10 +21,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 const LOGIN = gql`
   ${login}
 `
-
 export const useCreateAccount = () => {
   const Analytics = analytics()
-
   const navigation = useNavigation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
@@ -102,7 +100,6 @@ export const useCreateAccount = () => {
       merge: true
     })
   }
-
   async function mutateLogin(user) {
     setLoading(true)
     let notificationToken = null
@@ -156,11 +153,9 @@ export const useCreateAccount = () => {
   useEffect(() => {
     checkIfSupportsAppleAuthentication()
   }, [])
-
   async function checkIfSupportsAppleAuthentication() {
     setEnableApple(await AppleAuthentication.isAvailableAsync())
   }
-
   async function onCompleted(data) {
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
@@ -203,7 +198,6 @@ export const useCreateAccount = () => {
       }
     }
   }
-
   function onError(error) {
     try {
       FlashMessage({
@@ -216,7 +210,6 @@ export const useCreateAccount = () => {
       setLoading(false)
     }
   }
-
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
