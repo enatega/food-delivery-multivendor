@@ -257,7 +257,7 @@ function BottomTabNavigator() {
         }}
         initialParams={{
           selectedType: 'grocery',
-          queryType: 'restaurant'
+          queryType: 'grocery'
         }}
       />
       <Tab.Screen
