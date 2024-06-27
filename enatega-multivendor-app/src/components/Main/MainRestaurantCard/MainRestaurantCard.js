@@ -56,7 +56,7 @@ function MainRestaurantCard(props) {
             activeOpacity={0.8}
             onPress={() => {
               navigation.navigate('Menu', {
-                selectedType: 'restaurant',
+                selectedType: props.selectedType ?? 'restaurant',
                 queryType: props.queryType ?? 'restaurant'
               })
             }}
