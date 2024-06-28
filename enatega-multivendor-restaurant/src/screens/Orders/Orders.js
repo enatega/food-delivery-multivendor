@@ -76,6 +76,7 @@ const Orders = props => {
                     ? data &&
                       data.restaurantOrders
                         .filter(order => order.orderStatus === 'PENDING')
+                        .reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
@@ -116,6 +117,7 @@ const Orders = props => {
                             order.orderStatus
                           )
                         )
+                        .reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
@@ -152,6 +154,7 @@ const Orders = props => {
                     ? data &&
                       data.restaurantOrders
                         .filter(order => order.orderStatus === 'DELIVERED')
+                        .reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails

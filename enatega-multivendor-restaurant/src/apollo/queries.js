@@ -63,6 +63,7 @@ export const orders = `query Orders{
       isActive
       createdAt
       orderDate
+      pickedAt
       deliveryCharges
       isPickedUp
       preparationTime
