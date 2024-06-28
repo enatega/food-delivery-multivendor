@@ -37,7 +37,7 @@ const DELETE_FOOD = gql`
 `
 const Food = props => {
   const { t } = props
-  const {PAID_VERSION} = ConfigurableValues()
+  const { PAID_VERSION } = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [food, setFood] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -151,14 +151,13 @@ const Food = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  if(PAID_VERSION)
-                  toggleModal(row)
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+                  if (PAID_VERSION) toggleModal(row)
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -169,20 +168,20 @@ const Food = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  if(PAID_VERSION)
-                  mutate({
-                    variables: {
-                      id: row._id,
-                      restaurant: restaurantId,
-                      categoryId: row.categoryId
-                    }
-                  })
-                  else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+                  if (PAID_VERSION)
+                    mutate({
+                      variables: {
+                        id: row._id,
+                        restaurant: restaurantId,
+                        categoryId: row.categoryId
+                      }
+                    })
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -228,10 +227,13 @@ const Food = props => {
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
 
+    const filteredFoods = foodsList(data && data.restaurant.categories)
+    .filter(food => !(food.category === "Default Category" || food.title === "Default Food"))
+
   const filtered =
     searchQuery.length < 3
-      ? foodsList(data && data.restaurant.categories)
-      : foodsList(data && data.restaurant.categories).filter(food => {
+      ? filteredFoods
+      : filteredFoods.filter(food => {
           return (
             food.title.toLowerCase().search(regex) > -1 ||
             food.description.toLowerCase().search(regex) > -1 ||

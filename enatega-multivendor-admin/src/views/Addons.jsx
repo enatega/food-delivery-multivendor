@@ -176,14 +176,15 @@ const Addon = props => {
 
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  const filtered =
+    const filtered =
     searchQuery.length < 3
-      ? data && data.restaurant.addons
+      ? data && data.restaurant.addons.filter(addon => addon.title !== 'Default Addon')
       : data &&
         data.restaurant.addons.filter(addon => {
           return (
-            addon.title.toLowerCase().search(regex) > -1 ||
-            addon.description.toLowerCase().search(regex) > -1
+            (addon.title.toLowerCase().search(regex) > -1 ||
+            addon.description.toLowerCase().search(regex) > -1) &&
+            addon.title !== 'Default Addon'
           )
         })
   const globalClasses = useGlobalStyles()

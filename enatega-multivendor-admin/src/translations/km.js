@@ -302,7 +302,13 @@ const km = {
     ASSIGNED: 'ត្រូវបានផ្ដល់បន្ថែម',
     DELIVERED: 'ត្រូវបានដឹកជញ្ជូន',
     REJECTED: 'ត្រូវបានបដិសេធចោល',
-    UploadaLogo: 'ផ្ទុកឡូកូឡូត'
+    UploadaLogo: 'ផ្ទុកឡូកូឡូត',
+    "Status updated to {{status}}": "הסטטוס עודכן ל{{status}}",
+    StatusUpdated: '!הסטטוס עודכן',
+    "Failed to update status!": "!נכשל בעדכון המצב",
+    UpdateSuccessful: "!עדכון הצליח",
+    UpdateError:'שגיאת עדכון',
+    "The value Should not be in the negative":" הערך לא צריך להיות שלילי"
   }
 }
 

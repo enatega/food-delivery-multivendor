@@ -311,7 +311,14 @@ const de = {
     ASSIGNED: 'TOEGEWEZEN',
     DELIVERED: 'BEZORGD',
     REJECTED: 'AFGEWEZEN',
-    UploadaLogo: 'Ein Logo hochladen'
+    UploadaLogo: 'Ein Logo hochladen',
+    "Status updated to {{status}}": "Status bijgewerkt naar {{status}}",
+    StatusUpdated: "Status bijgewerkt!",
+    "Failed to update status!": "Mislukt om status bij te werken!",
+    UpdateSuccessful: "Update succesvol!",
+    UpdateError: 'Updatefout',
+    "The value Should not be in the negative": "De waarde mag niet negatief zijn"
+    
   }
 }
 

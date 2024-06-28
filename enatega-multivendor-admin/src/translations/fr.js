@@ -310,7 +310,13 @@ const fr = {
     ASSIGNED: 'ATTRIBUÉ',
     DELIVERED: 'LIVRÉ',
     REJECTED: 'REJETÉ',
-    UploadaLogo: 'Télécharger un logo'
+    UploadaLogo: 'Télécharger un logo',
+    "Status updated to {{status}}": "Statut mis à jour à {{status}}",
+    StatusUpdated: 'Statut mis à jour !',
+    "Failed to update status!": "Échec de la mise à jour du statut !",
+    UpdateSuccessful: "Mise à jour réussie !",
+    UpdateError: 'Erreur de mise à jour',
+    "The value Should not be in the negative": "La valeur ne doit pas être négative"
   }
 }
 

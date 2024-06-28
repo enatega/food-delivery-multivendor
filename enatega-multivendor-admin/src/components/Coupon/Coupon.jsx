@@ -85,6 +85,11 @@ function Category(props) {
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
 
+  const handleDiscountInput = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, ''); // Remove any non-numeric characters
+    e.target.value = value;
+  };
+
   return (
     <Box container className={classes.container}>
       <Box className={classes.flexRow}>
@@ -148,6 +153,7 @@ function Category(props) {
                   name="input-discount"
                   placeholder={t('PHDiscount')}
                   type="number"
+                  onInput={handleDiscountInput}
                   defaultValue={discount}
                   onBlur={event => {
                     onBlur(discountErrorSetter, 'discount', event.target.value)

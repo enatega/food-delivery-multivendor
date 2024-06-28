@@ -264,6 +264,13 @@ function Option(props) {
               disabled={loading}
               onClick={() => {
                 if (validate()) {
+                  const invalidPrice = option.some(opt => opt.price <= 0)
+                  if (invalidPrice) {
+                    mainErrorSetter('Price must be greater than 0')
+                    successSetter('')
+                    setTimeout(hideAlert, 3000)
+                    return
+                  }
                   props.option
                     ? mutate({
                         variables: {

@@ -104,7 +104,15 @@ const Orders = props => {
 
   const statusFunc = row => {
     const handleStatusSuccessNotification = status => {
-      NotificationManager.success(status, 'Status Updated!', 3000)
+      NotificationManager.success(
+        t('Status updated to {{status}}', { status: t(status) }),
+        t('StatusUpdated'),
+        3000
+      )
+    }
+
+    const handleStatusErrorNotification = error => {
+      NotificationManager.error(t('Error'), t('Failed to update status!'), 3000)
     }
 
     return (
@@ -131,11 +139,7 @@ const Orders = props => {
                   },
                   onError: error => {
                     console.error('Mutation error:', error)
-                    NotificationManager.error(
-                      'Error',
-                      'Failed to update status!',
-                      3000
-                    )
+                    handleStatusErrorNotification('Error');
                   }
                 })
               }}>
@@ -159,11 +163,7 @@ const Orders = props => {
                   },
                   onError: error => {
                     console.error('Mutation error:', error)
-                    NotificationManager.error(
-                      'Error',
-                      'Failed to update status!',
-                      3000
-                    )
+                    handleStatusErrorNotification('Error');
                   }
                 })
               }}>
@@ -187,11 +187,7 @@ const Orders = props => {
                   },
                   onError: error => {
                     console.error('Mutation error:', error)
-                    NotificationManager.error(
-                      'Error',
-                      'Failed to update status!',
-                      3000
-                    )
+                    handleStatusErrorNotification('Error');
                   }
                 })
               }}>
