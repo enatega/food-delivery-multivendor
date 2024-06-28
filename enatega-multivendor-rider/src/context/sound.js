@@ -9,7 +9,7 @@ export const SoundContextProvider = ({ children }) => {
   const { assignedOrders } = useUserContext()
   useEffect(() => {
     if (assignedOrders) {
-      const shouldPlaySound = assignedOrders.some(o => o.isRiderRinged)
+      const shouldPlaySound = assignedOrders.some(o => o.isRiderRinged && !o.isPickedUp)
       if (shouldPlaySound) playSound()
       else stopSound()
     }
