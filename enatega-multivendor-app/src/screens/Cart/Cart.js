@@ -32,7 +32,7 @@ import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
 import { textStyles } from '../../utils/textStyles'
-import { calculateDistance } from '../../utils/customFunctions'
+import { calculateDistance, calculateAmount } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
@@ -115,9 +115,12 @@ function Cart(props) {
             latDest,
             longDest
           )
-          const amount = Math.ceil(distance) * configuration.deliveryRate
-          isSubscribed &&
-            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+          let costType = configuration.costType;
+          let amount = calculateAmount(costType, configuration.deliveryRate, distance)
+
+          if (isSubscribed) {
+            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate);
+          }
         }
       })()
     return () => {

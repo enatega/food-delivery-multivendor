@@ -65,10 +65,18 @@ function sortReviews(reviews, sortBy) {
     return reviews.sort((a, b) => a.rating - b.rating)
   }
 }
+
+function calculateAmount(costType, deliveryRate, distance) {
+
+  return costType === 'fixed' ? deliveryRate : Math.ceil(distance) * deliveryRate;
+
+}
+
 export {
   calculateDistance,
   calulateRemainingTime,
   calculateDaysAgo,
   groupAndCount,
-  sortReviews
+  sortReviews,
+  calculateAmount
 }
