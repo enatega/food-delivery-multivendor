@@ -12,7 +12,7 @@ export const ConfigurationProvider = props => {
   const { loading, data, error } = useQuery(GETCONFIGURATION)
   const configuration =
     loading || error || !data.configuration
-      ? { currency: '', currencySymbol: '', deliveryRate: 0 }
+      ? { currency: '', currencySymbol: '', deliveryRate: 0, costType:'perKM' }
       : data.configuration
 
   return (

@@ -148,7 +148,7 @@ function PersonalCard({ toggleModal, location }) {
                   paddingLeft: 10
                 }}
               >
-                {location?.deliveryAddress.split(",")[0] ?? ""}
+                {location?.deliveryAddress?.split(",")[0] ?? ""}
               </Typography>
             </Box>
             <Box display="flex" justifyContent="center">

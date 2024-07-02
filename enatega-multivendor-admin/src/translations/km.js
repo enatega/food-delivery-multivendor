@@ -302,7 +302,10 @@ const km = {
     ASSIGNED: 'ត្រូវបានផ្ដល់បន្ថែម',
     DELIVERED: 'ត្រូវបានដឹកជញ្ជូន',
     REJECTED: 'ត្រូវបានបដិសេធចោល',
-    UploadaLogo: 'ផ្ទុកឡូកូឡូត'
+    UploadaLogo: 'ផ្ទុកឡូកូឡូត',
+    "CostType": "ប្រភេទថ្លៃ",
+    "PerKM": "ក្នុងមួយគីឡូម៉ែត្រ",
+    "FixedCost": "ថ្លៃថេរ"
   }
 }
 
