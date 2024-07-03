@@ -68,13 +68,15 @@ function TopBrands(props) {
   if (loading) return <TopBrandsLoadingUI />
   if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
-  const restaurantBrands = data?.topRatedVendorsPreview?.filter(
-    (item) => item.shopType === 'restaurant'
-  )
+  const brandsData = {
+    restaurant: [],
+    grocery: [],
+  };
 
-  const groceryBrands = data?.topRatedVendorsPreview?.filter(
-    (item) => item.shopType === 'grocery'
-  )
+  data?.topRatedVendorsPreview?.forEach((item) => {
+      brandsData[item.shopType].push(item);
+  });
+
 
   return (
     <View style={styles().mainContainer}>
@@ -99,7 +101,7 @@ function TopBrands(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-            {t('SeeAll')}
+              {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -138,13 +140,13 @@ function TopBrands(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-            {t('SeeAll')}
+              {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>
         <View style={{ ...alignment.PRsmall }}>
           <FlatList
-            data={restaurantBrands}
+            data={brandsData.restaurant}
             renderItem={({ item }) => {
               return <NewRestaurantCard {...item} />
             }}
@@ -156,7 +158,7 @@ function TopBrands(props) {
           />
         </View>
       </View>
-      
+
       <View style={styles().topbrandsSec}>
         <View style={styles().header}>
           <TextDefault
@@ -178,13 +180,13 @@ function TopBrands(props) {
             }}
           >
             <TextDefault H5 bolder textColor={currentTheme.main}>
-            {t('SeeAll')}
+              {t('SeeAll')}
             </TextDefault>
           </TouchableOpacity>
         </View>
         <View style={{ ...alignment.PRsmall }}>
           <FlatList
-            data={groceryBrands}
+            data={brandsData.grocery}
             renderItem={({ item }) => {
               return <NewRestaurantCard {...item} />
             }}
