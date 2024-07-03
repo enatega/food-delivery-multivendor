@@ -95,7 +95,6 @@ function TopBrands(props) {
             activeOpacity={0.8}
             onPress={() => {
               navigation.navigate('Menu', {
-                selectedType: '',
                 queryType: 'topBrands'
               })
             }}
