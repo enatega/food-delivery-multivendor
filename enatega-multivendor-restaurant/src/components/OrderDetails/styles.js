@@ -43,6 +43,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingBottom: 5
   },
+  rowBottomBorder: {
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.fontSecondColor,
+  },
   itemRow: {
     flexDirection: 'row',
     justifyContent: 'space-between'

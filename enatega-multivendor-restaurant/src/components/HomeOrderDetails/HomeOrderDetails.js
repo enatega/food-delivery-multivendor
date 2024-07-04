@@ -21,7 +21,7 @@ function HomeOrderDetails(props) {
     _id,
     preparationTime,
     createdAt,
-    isRinged
+    isRinged,
   } = props?.order
   const timeNow = new Date()
     const {t} = useTranslation()
@@ -97,7 +97,7 @@ function HomeOrderDetails(props) {
           createdAt,
           MAX_TIME,
           acceptanceTime,
-          preparationTime
+          preparationTime,
         })
       }}>
       {activeBar === 0 ? (

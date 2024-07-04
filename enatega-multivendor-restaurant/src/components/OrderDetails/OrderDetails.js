@@ -7,7 +7,7 @@ import { Configuration } from '../../ui/context'
 import { useTranslation } from 'react-i18next'
 
 export default function OrderDetails({ orderData }) {
-  const { orderId, user, deliveryAddress } = orderData
+  const { orderId, user, deliveryAddress, instructions } = orderData
   const { t } = useTranslation()
   return (
     <View style={{ flex: 1 }}>
@@ -37,6 +37,16 @@ export default function OrderDetails({ orderData }) {
           </Text>
         </View>
       </View>
+
+      <View style={[styles.cardContainer, {marginTop:30, display: instructions ? "" :"none"}]}>
+        <View style={styles.itemColumn}>
+          <Text style={[styles.heading, {fontSize:20}]}>{t("orderInstructions")}</Text>
+          <Text style={styles.text} selectable>
+            {instructions}
+          </Text>
+        </View>
+    
+      </View>
       <OrderItems orderData={orderData} />
     </View>
   )
@@ -48,7 +58,8 @@ function OrderItems({ orderData }) {
     orderAmount,
     tipping,
     deliveryCharges,
-    taxationAmount
+    taxationAmount,
+    instructions
   } = orderData
   const configuration = useContext(Configuration.Context)
   let subTotal = 0
@@ -59,7 +70,6 @@ function OrderItems({ orderData }) {
         items.map((item, index) => {
           subTotal = subTotal + item.variation.price
 
-        
           return (
             <View>
               <View style={styles.itemRow} key={index}>
@@ -73,7 +83,7 @@ function OrderItems({ orderData }) {
 
               <View style={styles.itemColumn}>
                 <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  Variations
+                {t("variations")}
                 </TextDefault>
                 <View>
                   {item?.variation ? (
@@ -91,11 +101,11 @@ function OrderItems({ orderData }) {
                 </View>
               </View>
 
-              <View style={{marginBottom:5}}></View>
+              <View style={{ marginBottom: 5 }}></View>
 
               <View style={styles.itemColumn}>
                 <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  Add-ons
+                  {t("addOns")}
                 </TextDefault>
                 <View>
                   {item?.addons?.length > 0 ? (
@@ -103,7 +113,7 @@ function OrderItems({ orderData }) {
                       return (
                         <View style={styles.itemColumn}>
                           <TextDefault H7 textColor={colors.fontSecondColor}>
-                            {index + 1} - {addon.title} (Options)
+                            - {addon.title} (Options)
                           </TextDefault>
                           <View style={styles.itemColumn}>
                             {addon.options.map((option, addOnIndex) => (
@@ -112,7 +122,7 @@ function OrderItems({ orderData }) {
                                   key={index}
                                   textColor={colors.fontSecondColor}
                                   style={{ marginLeft: 22 }}>
-                                  {index + 1}.{addOnIndex + 1} - {option.title}
+                                  - {option.title}
                                 </TextDefault>
                                 <TextDefault H6>{`${
                                   configuration.currencySymbol
@@ -129,7 +139,16 @@ function OrderItems({ orderData }) {
                 </View>
               </View>
 
-              <View style={styles.itemRowBar}></View>
+              {item.specialInstructions && <View style={[styles.itemColumn, { marginTop: 8 }]}>
+                <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                  {t("specialInstructions")}
+                </TextDefault>
+                <TextDefault H7 textColor={colors.fontSecondColor}>
+                  {item.specialInstructions}
+                </TextDefault>
+              </View>}
+
+              <View style={styles.rowBottomBorder}></View>
             </View>
           )
         })}
@@ -194,6 +213,8 @@ function OrderItems({ orderData }) {
           {`${configuration.currencySymbol}${orderAmount}`}
         </TextDefault>
       </View>
+
+    
     </View>
   )
 }
