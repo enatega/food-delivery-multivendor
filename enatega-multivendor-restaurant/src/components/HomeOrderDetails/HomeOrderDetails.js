@@ -113,12 +113,21 @@ function HomeOrderDetails(props) {
         />
       ) : null}
 
+      
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading} H5 bolder>
           {t('orderId')}:
         </TextDefault>
         <TextDefault style={styles.text} H5 bolder>
           {orderId}
+        </TextDefault>
+      </View>
+      <View View style={styles.itemRowBar}>
+        <TextDefault style={styles.heading}>
+          {t('orderType')}:
+        </TextDefault>
+        <TextDefault style={styles.text}>
+          {props?.order.isPickedUp ? t("pickUp") : t("delivery")}
         </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
