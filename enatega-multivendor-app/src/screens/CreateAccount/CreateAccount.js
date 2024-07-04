@@ -101,7 +101,13 @@ const CreateAccount = (props) => {
           loginButtonSetter('Google')
         }}
         disabled={loading && loginButton === 'Google'}
-        onPress={signIn}
+        onPress={async () => {
+          try {
+            await signIn()
+          } catch (error) {
+            console.error('Google sign-in error:', error)
+          }
+        }}
       />
     )
   }
