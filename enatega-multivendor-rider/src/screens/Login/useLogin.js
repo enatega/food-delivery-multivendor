@@ -14,7 +14,9 @@ import Constants from 'expo-constants'
 const RIDER_LOGIN = gql`
   ${riderLogin}
 `
-const RIDER_CREDS = gql`${defaultRiderCreds}`
+const RIDER_CREDS = gql`
+  ${defaultRiderCreds}
+`
 
 const useLogin = () => {
   const { t } = useTranslation()
@@ -55,7 +57,11 @@ const useLogin = () => {
       FlashMessage({ message: t('loginFlashMsg') })
       await AsyncStorage.setItem('rider-id', riderLogin.userId)
       await setTokenAsync(riderLogin.token)
-    } else if (lastOrderCreds && lastOrderCreds.riderUsername && lastOrderCreds.riderPassword) {
+    } else if (
+      lastOrderCreds &&
+      lastOrderCreds.riderUsername &&
+      lastOrderCreds.riderPassword
+    ) {
       setUsername(lastOrderCreds.riderUsername)
       setPassword(lastOrderCreds.riderPassword)
     }
@@ -65,7 +71,7 @@ const useLogin = () => {
     let message = 'Check internet connection'
     try {
       message = error.message
-    } catch (error) { }
+    } catch (error) {}
     FlashMessage({ message: message })
   }
 
@@ -78,7 +84,8 @@ const useLogin = () => {
       // Request notification permissions if not granted or not provisional on iOS
       if (
         settings?.status !== 'granted' ||
-        settings.ios?.status !== Notifications.IosAuthorizationStatus.PROVISIONAL
+        settings.ios?.status !==
+          Notifications.IosAuthorizationStatus.PROVISIONAL
       ) {
         notificationPermissions = await Notifications.requestPermissionsAsync({
           ios: {
@@ -96,10 +103,14 @@ const useLogin = () => {
       if (
         (notificationPermissions?.status === 'granted' ||
           notificationPermissions.ios?.status ===
-          Notifications.IosAuthorizationStatus.PROVISIONAL) &&
+            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
-        notificationToken = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data
+        notificationToken = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId
+          })
+        ).data
       }
 
       // Perform mutation with the obtained data

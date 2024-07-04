@@ -47,6 +47,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  itemColumn: {
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  },
   itemHeading: {
     marginTop: 10
   },

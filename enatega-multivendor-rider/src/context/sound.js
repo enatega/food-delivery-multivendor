@@ -9,12 +9,14 @@ export const SoundContextProvider = ({ children }) => {
   const { assignedOrders } = useUserContext()
   useEffect(() => {
     if (assignedOrders) {
-      const shouldPlaySound = assignedOrders.some(o => o.isRiderRinged && !o.isPickedUp)
+      const shouldPlaySound = assignedOrders.some(
+        o => o.isRiderRinged && !o.isPickedUp
+      )
       if (shouldPlaySound) playSound()
       else stopSound()
     }
   }, [assignedOrders])
-  const playSound = async () => {
+  const playSound = async() => {
     if (active === 'NewOrders') {
       await stopSound()
       const { sound } = await Audio.Sound.createAsync(
@@ -34,7 +36,7 @@ export const SoundContextProvider = ({ children }) => {
       setSound(sound)
     }
   }
-  const stopSound = async () => {
+  const stopSound = async() => {
     await sound?.unloadAsync()
   }
   return (

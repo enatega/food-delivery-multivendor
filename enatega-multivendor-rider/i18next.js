@@ -18,7 +18,7 @@ export const languageResources = {
   ar: { translation: ar }
 }
 
-const getStoredLanguage = async () => {
+const getStoredLanguage = async() => {
   const lng = await AsyncStorage.getItem('enatega-language')
   console.log(lng)
   i18next.use(initReactI18next).init({

@@ -52,24 +52,84 @@ function OrderItems({ orderData }) {
   } = orderData
   const configuration = useContext(Configuration.Context)
   let subTotal = 0
+
   return (
     <View style={[styles.cardContainer, { marginTop: 30, marginBottom: 45 }]}>
       {items &&
         items.map((item, index) => {
           subTotal = subTotal + item.variation.price
+
+        
           return (
-            <View style={styles.itemRowBar} key={index}>
-              <TextDefault
-                H5
-                textColor={colors.fontSecondColor}
-                bold>{`${item.quantity}x ${item.title}`}</TextDefault>
-              <TextDefault
-                bold>{`${configuration.currencySymbol}${item.variation.price}`}</TextDefault>
-              {item.addons &&
-                item.addons.map((addon, index) => {
-                  ;<TextDefault
-                    H6>{`${configuration.currencySymbol}${addon.price}`}</TextDefault>
-                })}
+            <View>
+              <View style={styles.itemRow} key={index}>
+                <TextDefault
+                  H5
+                  textColor={colors.fontSecondColor}
+                  bold>{`${item.quantity}x ${item.title}`}</TextDefault>
+                <TextDefault
+                  bold>{`${configuration.currencySymbol}${item.variation.price}`}</TextDefault>
+              </View>
+
+              <View style={styles.itemColumn}>
+                <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                  Variations
+                </TextDefault>
+                <View>
+                  {item?.variation ? (
+                    <View style={styles.itemRow}>
+                      <TextDefault H6 textColor={colors.fontSecondColor}>
+                        - {item?.variation.title}
+                      </TextDefault>
+                      <TextDefault H6>{`${configuration.currencySymbol}${
+                        item?.variation.price ?? 0
+                      }`}</TextDefault>
+                    </View>
+                  ) : (
+                    <TextDefault>-</TextDefault>
+                  )}
+                </View>
+              </View>
+
+              <View style={{marginBottom:5}}></View>
+
+              <View style={styles.itemColumn}>
+                <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                  Add-ons
+                </TextDefault>
+                <View>
+                  {item?.addons?.length > 0 ? (
+                    item.addons.map((addon, index) => {
+                      return (
+                        <View style={styles.itemColumn}>
+                          <TextDefault H7 textColor={colors.fontSecondColor}>
+                            {index + 1} - {addon.title} (Options)
+                          </TextDefault>
+                          <View style={styles.itemColumn}>
+                            {addon.options.map((option, addOnIndex) => (
+                              <View style={styles.itemRow}>
+                                <TextDefault
+                                  key={index}
+                                  textColor={colors.fontSecondColor}
+                                  style={{ marginLeft: 22 }}>
+                                  {index + 1}.{addOnIndex + 1} - {option.title}
+                                </TextDefault>
+                                <TextDefault H6>{`${
+                                  configuration.currencySymbol
+                                }${option.price ?? 0}`}</TextDefault>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      )
+                    })
+                  ) : (
+                    <TextDefault>-</TextDefault>
+                  )}
+                </View>
+              </View>
+
+              <View style={styles.itemRowBar}></View>
             </View>
           )
         })}

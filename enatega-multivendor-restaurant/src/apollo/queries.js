@@ -69,6 +69,7 @@ export const orders = `query Orders{
       preparationTime
       acceptedAt
       isRinged
+      instructions
       rider{
         _id
         name

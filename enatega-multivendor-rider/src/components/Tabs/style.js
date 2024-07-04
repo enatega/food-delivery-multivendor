@@ -28,7 +28,7 @@ export default {
     ...alignment.PLsmall,
     ...alignment.PRsmall,
     ...alignment.PTsmall,
-    ...alignment.PBsmall,
+    ...alignment.PBsmall
   },
   badge: {
     width: 20,

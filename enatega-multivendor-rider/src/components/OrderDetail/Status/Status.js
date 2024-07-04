@@ -7,9 +7,9 @@ import Tick from '../../../assets/svg/tick.png'
 import Restaurant from '../../../assets/svg/restaurant.png'
 import DeliveryBoy from '../../../assets/svg/DeliveryBoy.png'
 import UserContext from '../../../context/user'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
-/*const STATUS_MESSAGES = {
+/* const STATUS_MESSAGES = {
   PICKED: {
     text: i18n.t('youPickedParcel'),
     subText: i18n.t('youPickedParcel')
@@ -31,12 +31,12 @@ import {useTranslation} from 'react-i18next'
   }
 }
 
-const STATUS_ORDER = ['ASSIGNED', 'PICKED', 'DELIVERED']*/
+const STATUS_ORDER = ['ASSIGNED', 'PICKED', 'DELIVERED'] */
 const formatTime = date =>
   new Date(date).toLocaleTimeString('en-US', { timeStyle: 'short' })
 
 const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const STATUS_MESSAGES = {
     PICKED: {
       text: t('youPickedParcel'),
@@ -58,7 +58,7 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
       subText: t('orderNotAvailableSubText')
     }
   }
-  
+
   const STATUS_ORDER = [t('ASSIGNED'), t('PICKED'), t('DELIVERED')]
   const { assignedOrders, loadingAssigned } = useContext(UserContext)
   const [order, setOrder] = useState(orderData)
@@ -88,8 +88,8 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
             order.orderStatus === 'ACCEPTED'
               ? Restaurant
               : ['PICKED', 'ASSIGNED'].includes(order.orderStatus)
-              ? DeliveryBoy
-              : Tick
+                ? DeliveryBoy
+                : Tick
           }
         />
         <StatusMessage
@@ -109,7 +109,9 @@ const Status = ({ orderData, itemId, pickedAt, deliveredAt, assignedAt }) => {
             styles.verticalLine,
             {
               backgroundColor:
-                t(order.orderStatus) === t('ASSIGNED') ? colors.primary : colors.white
+                t(order.orderStatus) === t('ASSIGNED')
+                  ? colors.primary
+                  : colors.white
             }
           ]}
         />

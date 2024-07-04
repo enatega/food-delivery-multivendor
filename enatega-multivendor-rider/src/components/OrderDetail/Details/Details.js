@@ -7,7 +7,7 @@ import Spinner from '../../Spinner/Spinner'
 import TextError from '../../Text/TextError/TextError'
 import CountDown from 'react-native-countdown-component'
 import useDetails from './useDetails'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const Details = ({ orderData, navigation, itemId, distance, duration }) => {
   const {
@@ -23,7 +23,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
     loadingAssignOrder,
     loadingOrderStatus
   } = useDetails(orderData)
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   if (!order) return null
 
   return (
@@ -99,11 +99,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                 activeOpacity={0.8}
                 style={[styles.btn, { backgroundColor: colors.black }]}>
                 <TextDefault center bold H5 textColor={colors.white}>
-                  {loadingOrderStatus ? (
-                    <Spinner size="small" />
-                  ) : (
-                    t('pick')
-                  )}
+                  {loadingOrderStatus ? <Spinner size="small" /> : t('pick')}
                 </TextDefault>
               </TouchableOpacity>
             </View>
@@ -117,11 +113,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                     variables: { id: itemId, status: 'DELIVERED' }
                   })
                 }}
-                style={[
-                  styles.btn,
-                  { backgroundColor: colors.primary },
-                  
-                ]}>
+                style={[styles.btn, { backgroundColor: colors.primary }]}>
                 <TextDefault center H5 bold textColor={colors.black}>
                   {loadingOrderStatus ? (
                     <Spinner size="small" color="transparent" />
@@ -152,7 +144,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
 }
 
 const OrderDetails = ({ order }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <View style={styles.orderDetails}>
       <View style={styles.rowDisplay}>
@@ -197,7 +189,7 @@ const OrderDetails = ({ order }) => {
 
 const ItemDetails = ({ order, dataConfig, loading, error }) => {
   let subTotal = 0
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   if (loading) return <Spinner />
   if (error) return <TextError text={t('errorText')} />
   return (
@@ -215,13 +207,13 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
               </TextDefault>
               {item.addons
                 ? item.addons.map(addon => (
-                    <TextDefault
-                      key={addon._id}
-                      textColor={colors.fontSecondColor}
-                      bold>
-                      {addon.title}
-                    </TextDefault>
-                  ))
+                  <TextDefault
+                    key={addon._id}
+                    textColor={colors.fontSecondColor}
+                    bold>
+                    {addon.title}
+                  </TextDefault>
+                ))
                 : null}
             </View>
             <TextDefault
@@ -327,8 +319,8 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
 }
 
 const ChatWithCustomerButton = ({ navigation, order }) => {
-  const { t } = useTranslation(); 
-  
+  const { t } = useTranslation()
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -343,6 +335,6 @@ const ChatWithCustomerButton = ({ navigation, order }) => {
         {t('chatWithCustomer')}
       </TextDefault>
     </TouchableOpacity>
-  );
+  )
 }
 export default Details

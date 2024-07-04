@@ -24,6 +24,8 @@ const Orders = props => {
     setActive
   } = useOrders()
 
+  console.log({orders: data?.restaurantOrders})
+
   const { loading: mutateLoading } = useAcceptOrder()
   const {t} = useTranslation()
   if (error) return <TextError text={error.message} />
