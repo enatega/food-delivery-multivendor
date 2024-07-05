@@ -39,4 +39,10 @@ function toRad(Value)
     return Value * Math.PI / 180;
 }
 
-export { isValidEmailAddress, cartItemQuantity, calculatePrice, calculateDistance };
+function calculateAmount(costType, deliveryRate, distance) {
+
+  return costType === 'fixed' ? deliveryRate : Math.ceil(distance) * deliveryRate;
+
+}
+
+export { isValidEmailAddress, cartItemQuantity, calculatePrice, calculateDistance, calculateAmount };

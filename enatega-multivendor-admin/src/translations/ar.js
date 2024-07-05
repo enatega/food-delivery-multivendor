@@ -300,6 +300,7 @@ const ar = {
     DELIVERED: 'تم التسليم',
     REJECTED: 'تم رفضه',
     UploadaLogo: 'تحميل الشعار',
+
     StatusUpdated: '!تم تحديث الحالة',
     "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
     "Failed to update status!": "!فشل تحديث الحالة",
@@ -308,7 +309,12 @@ const ar = {
     "Failed to update status!": "!فشل تحديث الحالة",
     UpdateSuccessful: "!تم التحديث بنجاح",
     UpdateError:' خطأ في التحديث',
-    "The value Should not be in the negative":" يجب أن لا يكون القيمة سالبة"
+    "The value Should not be in the negative":" يجب أن لا يكون القيمة سالبة",
+
+    "CostType": "نوع التكلفة",
+    "PerKM": "لكل كيلومتر",
+    "FixedCost": "تكلفة ثابتة"
+
   }
 }
 
