@@ -19,6 +19,7 @@ export const ConfigurationProvider = props => {
           currency: '',
           currencySymbol: '',
           deliveryRate: 0,
+          costType: 'perKM',
           expoClientID:
             '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
           androidClientID:

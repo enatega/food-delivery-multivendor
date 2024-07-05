@@ -261,6 +261,15 @@ function Main(props) {
 
   if (error) return <ErrorView />
 
+  const groceryorders = data?.nearByRestaurantsPreview?.restaurants?.filter(
+    (restaurant) => restaurant.shopType === 'grocery'
+  );
+
+  
+  const restaurantorders = data?.nearByRestaurantsPreview?.restaurants?.filter(
+    (restaurant) => restaurant.shopType === 'restaurant'
+  );
+
   return (
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
@@ -344,9 +353,7 @@ function Main(props) {
                         <MainLoadingUI />
                       ) : (
                         <MainRestaurantCard
-                          orders={data?.nearByRestaurantsPreview?.restaurants?.filter(
-                            (restaurant) => restaurant.shopType === 'restaurant'
-                          )}
+                          orders={restaurantorders}
                           loading={orderLoading}
                           error={orderError}
                           title={t('Restaurants near you')}
@@ -392,14 +399,13 @@ function Main(props) {
                         <MainLoadingUI />
                       ) : (
                         <MainRestaurantCard
-                          orders={data?.nearByRestaurantsPreview?.restaurants?.filter(
-                            (restaurant) => restaurant.shopType === 'grocery'
-                          )}
+                          orders={groceryorders}
                           loading={orderLoading}
                           error={orderError}
                           title={t('Grocery List')}
                           queryType='grocery'
                           icon='grocery'
+                          selectedType='grocery'  
                         />
                       )}
                     </View>
@@ -416,6 +422,7 @@ function Main(props) {
                           title={t('Top grocery picks')}
                           queryType='grocery'
                           icon='store'
+                          selectedType='grocery'
                         />
                       )}
                     </View>
