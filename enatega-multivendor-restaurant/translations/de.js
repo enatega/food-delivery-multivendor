@@ -59,6 +59,7 @@ export const de = {
   acceptAndPrint: 'Akzeptieren und Drucken',
   accept: 'Akzeptieren',
   language: 'Sprache',
-  notificationText: 'Muss ein physisches Gerät für Push-Benachrichtigungen verwenden'
+  notificationText: 'Muss ein physisches Gerät für Push-Benachrichtigungen verwenden',
+  deliveredToRider:"An Fahrer geliefert"
 
 }

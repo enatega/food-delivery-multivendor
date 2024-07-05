@@ -62,5 +62,6 @@ export const sv = {
   acceptAndPrint: 'Acceptera och Skriv ut',
   accept: 'Acceptera',
   language: 'Språk',
-  notificationText: 'Måste använda en fysisk enhet för push-meddelanden'
+  notificationText: 'Måste använda en fysisk enhet för push-meddelanden',
+  deliveredToRider:"Levereras till ryttare"
 }

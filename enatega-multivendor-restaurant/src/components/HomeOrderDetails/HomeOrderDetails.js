@@ -242,7 +242,7 @@ function HomeOrderDetails(props) {
               {activeBar === 0
                 ? t('pending')
                 : activeBar === 1
-                  ? t('reject')
+                  ? (props.order.orderStatus === "PICKED" ? t("deliveredToRider"): t('reject'))
                   : t('delivered')}
             </TextDefault>
           </Pressable>

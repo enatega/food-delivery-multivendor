@@ -58,5 +58,6 @@ export const km = {
   acceptAndPrint: 'ទទួលយក និង បោះពុម្ព',
   accept: 'ទទួលយក',
   language: 'ភាសា',
-  notificationText: 'ត្រូវតែប្រើឧបករណ៍សំបុត្រសម្រាប់ការជូនដំណឹងរហ័ស'
+  notificationText: 'ត្រូវតែប្រើឧបករណ៍សំបុត្រសម្រាប់ការជូនដំណឹងរហ័ស',
+  deliveredToRider:"ប្រគល់ជូនអ្នកជិះ"
 }

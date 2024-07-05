@@ -66,5 +66,6 @@ export const en = {
   acceptAndPrint: 'Accept & Print',
   accept: 'Accept',
   language: 'Language',
-  notificationText: 'Must use physical device for Push Notifications'
+  notificationText: 'Must use physical device for Push Notifications',
+  deliveredToRider:"Delivered To Rider"
 }

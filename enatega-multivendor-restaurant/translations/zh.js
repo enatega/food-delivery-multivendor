@@ -62,5 +62,6 @@ export const zh = {
   acceptAndPrint: '接受并打印',
   accept: '接受',
   language: '语言',
-  notificationText: '必须使用物理设备进行推送通知'
+  notificationText: '必须使用物理设备进行推送通知',
+  deliveredToRider:"交付给骑手"
 }
