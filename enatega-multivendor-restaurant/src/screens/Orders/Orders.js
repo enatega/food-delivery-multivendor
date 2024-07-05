@@ -118,7 +118,7 @@ const Orders = props => {
                             order.orderStatus
                           )
                         )
-                        .reverse()
+                        // .reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
@@ -159,7 +159,7 @@ const Orders = props => {
                             // order.orderStatus === 'PICKED' ||
                             order.orderStatus === 'DELIVERED'
                         )
-                        .reverse()
+                        //.reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
