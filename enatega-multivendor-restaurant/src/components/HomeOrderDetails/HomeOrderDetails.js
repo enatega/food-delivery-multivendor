@@ -236,7 +236,7 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? colors.green
                     : activeBar === 1
-                      ? colors.orderUncomplete
+                      ? (props?.order?.orderStatus !== "PICKED" ? colors.orderUncomplete : "black")
                       : 'black'
               }}>
               {activeBar === 0
