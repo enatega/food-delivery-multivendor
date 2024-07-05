@@ -11,7 +11,7 @@ import LottieView from 'lottie-react-native'
 import { useTranslation } from 'react-i18next'
 const { width, height } = Dimensions.get('window')
 import i18next from '../../../i18n'
-import { sortOrders } from '../../utilities/functions'
+
 const Orders = props => {
   const {
     loading,
