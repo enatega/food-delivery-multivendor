@@ -84,6 +84,7 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
               numberOfLines={2}
               style={styles(currentTheme).statusText}>
               {t(checkStatus(order.orderStatus).statusText)}
+              
             </TextDefault>
           </View>
         </View>

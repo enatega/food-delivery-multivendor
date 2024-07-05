@@ -38,14 +38,19 @@ export default function OrderDetails({ orderData }) {
         </View>
       </View>
 
-      <View style={[styles.cardContainer, {marginTop:30, display: instructions ? "" :"none"}]}>
+      <View
+        style={[
+          styles.cardContainer,
+          { marginTop: 30, display: instructions ? '' : 'none' }
+        ]}>
         <View style={styles.itemColumn}>
-          <Text style={[styles.heading, {fontSize:20}]}>{t("orderInstructions")}</Text>
+          <Text style={[styles.heading, { fontSize: 20 }]}>
+            {t('orderInstructions')}
+          </Text>
           <Text style={styles.text} selectable>
             {instructions}
           </Text>
         </View>
-    
       </View>
       <OrderItems orderData={orderData} />
     </View>
@@ -71,7 +76,7 @@ function OrderItems({ orderData }) {
           subTotal = subTotal + item.variation.price
 
           return (
-            <View>
+            <View key={`item-${index}`}>
               <View style={styles.itemRow} key={index}>
                 <TextDefault
                   H5
@@ -81,12 +86,12 @@ function OrderItems({ orderData }) {
                   bold>{`${configuration.currencySymbol}${item.variation.price}`}</TextDefault>
               </View>
 
-              <View style={styles.itemColumn}>
-                <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                {t("variations")}
-                </TextDefault>
-                <View>
-                  {item?.variation ? (
+              {item?.variation?.title && (
+                <View style={styles.itemColumn}>
+                  <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                    {t('variations')}
+                  </TextDefault>
+                  <View>
                     <View style={styles.itemRow}>
                       <TextDefault H6 textColor={colors.fontSecondColor}>
                         - {item?.variation.title}
@@ -95,29 +100,27 @@ function OrderItems({ orderData }) {
                         item?.variation.price ?? 0
                       }`}</TextDefault>
                     </View>
-                  ) : (
-                    <TextDefault>-</TextDefault>
-                  )}
+                  </View>
                 </View>
-              </View>
+              )}
 
               <View style={{ marginBottom: 5 }}></View>
 
-              <View style={styles.itemColumn}>
-                <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  {t("addOns")}
-                </TextDefault>
-                <View>
-                  {item?.addons?.length > 0 ? (
-                    item.addons.map((addon, index) => {
+              {item?.addons?.length > 0 && (
+                <View style={styles.itemColumn} >
+                  <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                    {t('addOns')}
+                  </TextDefault>
+                  <View>
+                    {item.addons.map((addon, itemAddon) => {
                       return (
-                        <View style={styles.itemColumn}>
+                        <View style={styles.itemColumn} key={`item-${index}-addon-${itemAddon}`}>
                           <TextDefault H7 textColor={colors.fontSecondColor}>
                             - {addon.title} (Options)
                           </TextDefault>
                           <View style={styles.itemColumn}>
-                            {addon.options.map((option, addOnIndex) => (
-                              <View style={styles.itemRow}>
+                            {addon.options.map((option, addOnOptionIndex) => (
+                              <View style={styles.itemRow} key={`item-${index}-addon-${itemAddon}-option-${addOnOptionIndex}`}>
                                 <TextDefault
                                   key={index}
                                   textColor={colors.fontSecondColor}
@@ -132,21 +135,21 @@ function OrderItems({ orderData }) {
                           </View>
                         </View>
                       )
-                    })
-                  ) : (
-                    <TextDefault>-</TextDefault>
-                  )}
+                    })}
+                  </View>
                 </View>
-              </View>
+              )}
 
-              {item.specialInstructions && <View style={[styles.itemColumn, { marginTop: 8 }]}>
-                <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  {t("specialInstructions")}
-                </TextDefault>
-                <TextDefault H7 textColor={colors.fontSecondColor}>
-                  {item.specialInstructions}
-                </TextDefault>
-              </View>}
+              {item.specialInstructions && (
+                <View style={[styles.itemColumn, { marginTop: 8 }]}>
+                  <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                    {t('specialInstructions')}
+                  </TextDefault>
+                  <TextDefault H7 textColor={colors.fontSecondColor}>
+                    {item.specialInstructions}
+                  </TextDefault>
+                </View>
+              )}
 
               <View style={styles.rowBottomBorder}></View>
             </View>
@@ -213,8 +216,6 @@ function OrderItems({ orderData }) {
           {`${configuration.currencySymbol}${orderAmount}`}
         </TextDefault>
       </View>
-
-    
     </View>
   )
 }

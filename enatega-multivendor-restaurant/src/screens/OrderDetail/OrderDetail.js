@@ -110,10 +110,10 @@ export default function OrderDetail({ navigation, route }) {
               </View>
               <View style={styles.textContainer}>
                 <TextDefault bolder H4>
-                  {activeBar === 2 ? t('prepared') : t('preparing')}
+                  {activeBar === 2 || order.orderStatus === "PICKED" ? t('prepared') : t('preparing')}
                 </TextDefault>
                 <TextDefault>
-                  {activeBar === 2 ? t('delivered') : t('accepted')}
+                  {activeBar === 1 && order.orderStatus === "PICKED" ? "Picked" : activeBar === 2 ? t('delivered') : t('accepted')}
                 </TextDefault>
               </View>
             </View>
@@ -203,7 +203,7 @@ export default function OrderDetail({ navigation, route }) {
                   />
                 </>
               )}
-              {activeBar === 1 && (
+              {activeBar === 1 && order.orderStatus !== "PICKED"  && (
                 <>
                   <Button
                     title={t('delivered')}
@@ -226,7 +226,7 @@ export default function OrderDetail({ navigation, route }) {
                   />
                 </>
               )}
-              {activeBar !== 2 && (
+              {activeBar !== 2 && order.orderStatus !== "PICKED" && (
                 <>
                   <Button
                     title={t('reject')}

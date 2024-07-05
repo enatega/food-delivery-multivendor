@@ -16,6 +16,8 @@ export default function useOrders() {
     data.restaurantOrders.filter(order =>
       ['ACCEPTED', 'ASSIGNED', 'PICKED'].includes(order.orderStatus)
     ).length
+
+
   const deliveredOrders =
     data &&
     data.restaurantOrders.filter(order => order.orderStatus === 'DELIVERED')
