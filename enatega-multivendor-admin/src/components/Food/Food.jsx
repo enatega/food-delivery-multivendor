@@ -213,9 +213,14 @@ function Food(props) {
     } else if (type === 'discounted') {
       // Enforce non-negative discounted price
       const newValue = Math.max(0, parseFloat(event.target.value))
-      variations[index][type] = newValue
-      variations[index][type + 'Error'] = newValue < 0 // Update error based on new value
-      variationSetter([...variations])
+      // variations[index][type] = newValue
+      if (newValue > 0)
+      {
+        variations[index][type] = newValue
+        variationSetter([...variations])
+      }
+      // variations[index][type + 'Error'] = newValue < 0 // Update error based on new value
+      // variationSetter([...variations])
     } else {
       variations[index][type] = event.target.value
       variationSetter([...variations])

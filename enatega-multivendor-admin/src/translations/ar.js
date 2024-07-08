@@ -300,8 +300,6 @@ const ar = {
     DELIVERED: 'تم التسليم',
     REJECTED: 'تم رفضه',
     UploadaLogo: 'تحميل الشعار',
-
-    StatusUpdated: '!تم تحديث الحالة',
     "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
     "Failed to update status!": "!فشل تحديث الحالة",
     StatusUpdated: '!تم تحديث الحالة',
