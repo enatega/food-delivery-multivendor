@@ -302,7 +302,6 @@ const ar = {
     UploadaLogo: 'تحميل الشعار',
     "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
     "Failed to update status!": "!فشل تحديث الحالة",
-    StatusUpdated: '!تم تحديث الحالة',
     "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
     "Failed to update status!": "!فشل تحديث الحالة",
     UpdateSuccessful: "!تم التحديث بنجاح",
