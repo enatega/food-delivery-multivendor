@@ -362,7 +362,7 @@ function ItemDetail(props) {
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <Animated.View style={[animatedTitleStyle(true), { backgroundColor: 'white', height: 100, zIndex: 99, position: 'absolute' }]}>
+        <Animated.View style={[animatedTitleStyle(true), { backgroundColor: currentTheme.themeBackground, height: 20, zIndex: 99, position: 'absolute' }]}>
           <HeadingComponent title={food.title} price={calculatePrice()} />
         </Animated.View>
         <KeyboardAvoidingView
@@ -378,7 +378,7 @@ function ItemDetail(props) {
             <Animated.ScrollView
               onScroll={scrollHandler}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(height * 0.2) }}
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(height * 0.13) }}
             >
               <View style={styles().subContainer}>
                 <Animated.View style={[animatedTitleStyle(false)]}>
