@@ -27,6 +27,10 @@ import { Ionicons } from '@expo/vector-icons'
 import { storeSearch, getRecentSearches, clearRecentSearches } from '../../utils/recentSearch'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 
+// Utils
+import {escapeRegExp} from '../../utils/regex'
+
+
 const RESTAURANTS = gql`
   ${restaurantListPreview}
 `
@@ -78,7 +82,7 @@ const SearchScreen = () => {
   }, [navigation, currentTheme])
 
   useEffect(() => {
-    getRecentSearches().then((searches) => setRecentSearches(searches))
+    getRecentSearches().then((searches) => setRecentSearches(searches)).catch((error) => console.error({searchError: error}))
   }, [search])
 
   const {
@@ -89,9 +93,15 @@ const SearchScreen = () => {
 
   const restaurants = data?.nearByRestaurantsPreview?.restaurants
 
+
+ 
+
   const searchAllShops = (searchText) => {
     const data = []
-    const regex = new RegExp(searchText, 'i')
+  //  const regex = new RegExp(searchText, 'i')
+    const escapedSearchText = escapeRegExp(searchText);
+    const regex = new RegExp(escapedSearchText, 'i');
+
     restaurants?.forEach((restaurant) => {
       const resultCatFoods = restaurant.keywords.some((keyword) => {
         const result = keyword.search(regex)
