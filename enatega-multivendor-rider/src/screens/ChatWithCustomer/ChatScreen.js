@@ -8,7 +8,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import colors from '../../utilities/colors'
 
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const ChatScreen = ({ navigation, route }) => {
   const {
@@ -21,7 +21,7 @@ const ChatScreen = ({ navigation, route }) => {
     profile
   } = useChatScreen({ navigation, route })
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const filterImages = src => {
     setImage(image.filter(item => item !== src))
   }

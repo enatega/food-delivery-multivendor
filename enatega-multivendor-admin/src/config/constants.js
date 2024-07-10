@@ -6,8 +6,8 @@ const ConfigurableValues = () => {
   console.log('configuration', configuration)
   const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
   const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
-  // const SERVER_URL = 'http://10.97.21.121:8001'
-  // const WS_SERVER_URL = 'wss://10.97.21.121:8001'
+  // const SERVER_URL = 'http://10.97.37.180:8001'
+  // const WS_SERVER_URL = 'wss://10.97.37.180:8001'
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
   const FIREBASE_KEY = configuration.firebaseKey
   const APP_ID = configuration.appId

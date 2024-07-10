@@ -8,9 +8,10 @@ import { Image } from 'react-native-elements/dist/image/Image'
 import { TabBars } from '../../components/TabBars'
 import { HomeOrderDetails } from '../../components/HomeOrderDetails'
 import LottieView from 'lottie-react-native'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 const { width, height } = Dimensions.get('window')
 import i18next from '../../../i18n'
+
 const Orders = props => {
   const {
     loading,
@@ -25,7 +26,7 @@ const Orders = props => {
   } = useOrders()
 
   const { loading: mutateLoading } = useAcceptOrder()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   if (error) return <TextError text={error.message} />
   return (
     <>
@@ -76,6 +77,7 @@ const Orders = props => {
                     ? data &&
                       data.restaurantOrders
                         .filter(order => order.orderStatus === 'PENDING')
+                       // .reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
@@ -116,6 +118,7 @@ const Orders = props => {
                             order.orderStatus
                           )
                         )
+                        // .reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
@@ -135,7 +138,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                          {t('unReadOrders')}
+                            {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{
@@ -151,7 +154,12 @@ const Orders = props => {
                   {active === 2 && deliveredOrders > 0
                     ? data &&
                       data.restaurantOrders
-                        .filter(order => order.orderStatus === 'DELIVERED')
+                        .filter(
+                          order =>
+                            // order.orderStatus === 'PICKED' ||
+                            order.orderStatus === 'DELIVERED'
+                        )
+                        //.reverse()
                         .map((order, index) => {
                           return (
                             <HomeOrderDetails
@@ -171,7 +179,7 @@ const Orders = props => {
                             alignItems: 'center'
                           }}>
                           <TextDefault H2 bold>
-                          {t('unReadOrders')}
+                            {t('unReadOrders')}
                           </TextDefault>
                           <LottieView
                             style={{

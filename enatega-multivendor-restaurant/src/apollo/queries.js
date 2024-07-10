@@ -63,11 +63,13 @@ export const orders = `query Orders{
       isActive
       createdAt
       orderDate
+      pickedAt
       deliveryCharges
       isPickedUp
       preparationTime
       acceptedAt
       isRinged
+      instructions
       rider{
         _id
         name

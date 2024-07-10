@@ -21,7 +21,7 @@ function HomeOrderDetails(props) {
     _id,
     preparationTime,
     createdAt,
-    isRinged
+    isRinged,
   } = props?.order
   const timeNow = new Date()
     const {t} = useTranslation()
@@ -97,7 +97,7 @@ function HomeOrderDetails(props) {
           createdAt,
           MAX_TIME,
           acceptanceTime,
-          preparationTime
+          preparationTime,
         })
       }}>
       {activeBar === 0 ? (
@@ -113,12 +113,21 @@ function HomeOrderDetails(props) {
         />
       ) : null}
 
+      
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading} H5 bolder>
           {t('orderId')}:
         </TextDefault>
         <TextDefault style={styles.text} H5 bolder>
           {orderId}
+        </TextDefault>
+      </View>
+      <View View style={styles.itemRowBar}>
+        <TextDefault style={styles.heading}>
+          {t('orderType')}:
+        </TextDefault>
+        <TextDefault style={styles.text}>
+          {props?.order.isPickedUp ? t("pickUp") : t("delivery")}
         </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
@@ -227,13 +236,13 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? colors.green
                     : activeBar === 1
-                      ? colors.orderUncomplete
+                      ? (props?.order?.orderStatus !== "PICKED" ? colors.orderUncomplete : "black")
                       : 'black'
               }}>
               {activeBar === 0
                 ? t('pending')
                 : activeBar === 1
-                  ? t('reject')
+                  ? (props.order.orderStatus === "PICKED" ? t("deliveredToRider"): t('reject'))
                   : t('delivered')}
             </TextDefault>
           </Pressable>

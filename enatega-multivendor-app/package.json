@@ -3,7 +3,7 @@
   "version": "5.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start --offline",
+    "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "eject": "expo eject",
@@ -55,6 +55,7 @@
     "expo": "~50.0.15",
     "expo-apple-authentication": "~6.3.0",
     "expo-application": "~5.8.3",
+    "expo-auth-session": "^5.5.2",
     "expo-constants": "~15.4.5",
     "expo-crypto": "~12.8.0",
     "expo-dev-client": "^3.3.8",

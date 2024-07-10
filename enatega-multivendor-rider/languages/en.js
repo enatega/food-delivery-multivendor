@@ -118,7 +118,7 @@ export const en = {
   available: 'Available',
   notAvailable: 'Not Available',
   myorders: 'My Orders',
-  ///////////////////
+  /// ////////////////
   updating: 'Please wait while app is updating',
   orderID: ' Order ID:',
   orderAmount: 'Order Amount',

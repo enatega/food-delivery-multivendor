@@ -19,7 +19,7 @@ const PRIVACY_URL = 'https://enatega.com/privacy-policy/'
 const ABOUT_URL = 'https://ninjascode.com/'
 
 // constants
-/*const datas = [
+/* const datas = [
   {
     title: 'Product Page',
     icon: 'product-hunt',
@@ -35,7 +35,7 @@ const ABOUT_URL = 'https://ninjascode.com/'
     icon: 'info-circle',
     navigateTo: ABOUT_URL
   }
-]*/
+] */
 
 const useSidebar = () => {
   const { t } = useTranslation()

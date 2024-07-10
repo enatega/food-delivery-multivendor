@@ -9,10 +9,10 @@ import UserContext from '../../context/user'
 import Spinner from '../../components/Spinner/Spinner'
 import { MIN_WITHDRAW_AMOUNT } from '../../utilities/constants'
 import ConfigurationContext from '../../context/configuration'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const Wallet = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const { loadingProfile, errorProfile, dataProfile } = useContext(UserContext)
   const configuration = useContext(ConfigurationContext)
