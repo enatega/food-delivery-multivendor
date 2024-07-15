@@ -24,7 +24,7 @@ const CreateAccount = (props) => {
     navigateToLogin,
     navigation,
     signIn,
-    user
+    //user
   } = useCreateAccount()
   const { t } = useTranslation()
   useLayoutEffect(() => {

@@ -56,6 +56,8 @@ import Spinner from '../../components/Spinner/Spinner'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 
+import { escapeRegExp } from '../../utils/regex'
+
 const RESTAURANTS = gql`
   ${restaurantListPreview}
 `
@@ -281,7 +283,8 @@ function Main(props) {
 
   const searchAllShops = (searchText) => {
     const data = []
-    const regex = new RegExp(searchText, 'i')
+    const escapedSearchText = escapeRegExp(searchText);
+    const regex = new RegExp(escapedSearchText, 'i');
     restaurants?.forEach((restaurant) => {
       const resultCatFoods = restaurant.keywords.some((keyword) => {
         const result = keyword.search(regex)

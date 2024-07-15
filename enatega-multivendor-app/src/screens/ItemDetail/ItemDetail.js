@@ -41,7 +41,7 @@ import Animated, {
 import { scale } from '../../utils/scaling'
 import { Card } from 'react-native-paper'
 const { height } = Dimensions.get('window')
-const TOP_BAR_HEIGHT = height * 0.05
+const TOP_BAR_HEIGHT = height * 0.08
 const HEADER_MAX_HEIGHT = height * 0.34
 const HEADER_MIN_HEIGHT = height * 0.05 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
