@@ -16,6 +16,8 @@ import {
   Select,
   useTheme
 } from '@mui/material'
+import profileImg from '../../assets/img/theme/team-4-800x800.jpg'
+
 
 function AdminNavbar(props) {
   const theme = useTheme()
@@ -89,7 +91,7 @@ function AdminNavbar(props) {
                 color="inherit">
                 <img
                   alt="..."
-                  src={require('../../assets/img/theme/team-4-800x800.jpg')}
+                  src={profileImg}
                   style={{
                     height: 35,
                     width: 35,
