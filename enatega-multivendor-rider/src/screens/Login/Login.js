@@ -32,6 +32,12 @@ export default function Login() {
   } = useLogin()
 
   const { t } = useTranslation()
+
+  // if (username == null || password == null) {
+  //    setPassword('')
+  //    setUsername('')
+  // }
+
   return (
     <SafeAreaView style={[styles.flex, styles.bgColor]}>
       <ScrollView

@@ -16,7 +16,29 @@ const styles = (props = null) =>
     },
     subContainer: {
       width: '90%',
+      backgroundColor: 'black',
       alignSelf: 'center'
+    },
+    scrollViewStyle: {
+      backgroundColor: 'black',
+    },
+    headerContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'black',
+      zIndex: 1,
+    },
+    titleContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'black',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 2,
     },
     line: {
       marginLeft: scale(10),
