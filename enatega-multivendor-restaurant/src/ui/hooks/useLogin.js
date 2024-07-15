@@ -21,17 +21,18 @@ export default function useLogin() {
   useQuery(gql`${defaultRestaurantCreds}`, { onCompleted, onError })
   function onCompleted({ restaurantLogin, lastOrderCreds }) {
     if (lastOrderCreds) {
-      if (lastOrderCreds.restaurantUsername && lastOrderCreds.restaurantPassword) {
-        setUserName(lastOrderCreds.restaurantUsername)
-        setPassword(lastOrderCreds.restaurantPassword)
+      if ((lastOrderCreds.restaurantUsername !== null || lastOrderCreds.restaurantUsername !== undefined) && lastOrderCreds.restaurantPassword) {
+        setUserName(lastOrderCreds.restaurantUsername || '')
+        setPassword(lastOrderCreds.restaurantPassword || '')
       }
     } else {
       login(restaurantLogin.token, restaurantLogin.restaurantId)
+      setUserName(lastOrderCreds.restaurantUsername || '')
     }
   }
 
   function onError(error) {
-    FlashMessage({ message: error ? error.message : null })
+    FlashMessage({ message: error ? 'Server Error' : 'Server Error' })
   }
 
   const isValid = async () => {

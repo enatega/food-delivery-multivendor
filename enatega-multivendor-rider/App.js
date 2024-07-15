@@ -35,7 +35,7 @@ LogBox.ignoreLogs([
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
 export default function App() {
- // const { t } = useTranslation();
+  // const { t } = useTranslation();
   const [appIsReady, setAppIsReady] = useState(false)
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -55,9 +55,9 @@ export default function App() {
   }, [SENTRY_DSN])
 
   useEffect(() => {
-    ;(async () => {
+    ;(async() => {
       await SplashScreen.preventAutoHideAsync()
-     
+
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans//MuseoSans500.ttf'),
@@ -73,7 +73,7 @@ export default function App() {
   useEffect(() => {
     // eslint-disable-next-line no-undef
     if (__DEV__) return
-    ;(async () => {
+    ;(async() => {
       const { isAvailable } = await Updates.checkForUpdateAsync()
       if (isAvailable) {
         try {

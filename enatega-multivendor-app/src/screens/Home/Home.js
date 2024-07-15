@@ -321,7 +321,9 @@ function Main(props) {
 
   const searchRestaurants = searchText => {
     const data = []
+
     const regex = new RegExp(searchText, 'i')
+    console.log("🚀 ~ searchRestaurants ~ regex:", regex)
     restaurants.forEach(restaurant => {
       const resultName = restaurant.name.search(regex)
       if (resultName < 0) {

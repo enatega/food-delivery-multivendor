@@ -147,6 +147,7 @@ function Restaurant(props) {
       setShowSearchResults(false)
     } else if (deals) {
       const regex = new RegExp(search, 'i')
+      console.log("🚀 ~ useEffect ~ regex:", regex)
       const filteredData = []
       deals.forEach((category) => {
         category.data.forEach((deals) => {

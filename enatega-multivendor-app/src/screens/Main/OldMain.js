@@ -313,7 +313,7 @@ import React, {
   
     const searchRestaurants = searchText => {
       const data = []
-      const regex = new RegExp(searchText, 'i')
+      const regex = new RegExp(searchText , 'i')
       restaurants.forEach(restaurant => {
         const resultName = restaurant.name.search(regex)
         if (resultName < 0) {

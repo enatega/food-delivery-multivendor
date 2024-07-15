@@ -376,6 +376,7 @@ function Menu({ route, props }) {
   const searchRestaurants = searchText => {
     const data = []
     const regex = new RegExp(searchText, 'i')
+    console.log("🚀 ~ searchRestaurants ~ regex:", regex)
     restaurantData?.forEach(restaurant => {
       const resultCatFoods = restaurant.keywords.some(keyword => {
         const result = keyword.search(regex)
