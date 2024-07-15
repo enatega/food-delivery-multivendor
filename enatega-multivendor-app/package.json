@@ -40,7 +40,7 @@
     "@babel/plugin-transform-optional-catch-binding": "^7.23.4",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.21.0",
-    "@react-native-community/datetimepicker": "7.6.1",
+    "@react-native-community/datetimepicker": "^8.2.0",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/drawer": "^6.3.0",
     "@react-navigation/elements": "^1.2.1",
@@ -54,6 +54,7 @@
     "expo": "~50.0.15",
     "expo-apple-authentication": "~6.3.0",
     "expo-application": "~5.8.3",
+    "expo-auth-session": "~5.4.0",
     "expo-constants": "~15.4.5",
     "expo-crypto": "~12.8.1",
     "expo-dev-client": "^3.3.8",
@@ -106,8 +107,7 @@
     "sentry-expo": "~7.2.0",
     "subscriptions-transport-ws": "^0.11.0",
     "uglify-js": "^3.17.4",
-    "uuid": "^9.0.1",
-    "expo-auth-session": "~5.4.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@expo/metro-config": "^0.17.3",
