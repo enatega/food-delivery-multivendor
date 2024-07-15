@@ -151,6 +151,12 @@ function Rider(props) {
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
+
+  const handlePhoneInput = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, ''); // Remove any non-numeric characters
+    e.target.value = value;
+  };
+
   return (
     <Box container className={classes.container}>
       <Box className={classes.flexRow}>
@@ -297,6 +303,7 @@ function Rider(props) {
                 placeholder={t('PhoneNumber')}
                 type="number"
                 defaultValue={phone}
+                onInput={handlePhoneInput}
                 onBlur={event =>
                   onBlur(phoneErrorSetter, 'phone', event.target.value)
                 }

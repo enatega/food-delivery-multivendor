@@ -4,6 +4,8 @@ import { withTranslation } from 'react-i18next'
 import { useMutation, gql, useQuery } from '@apollo/client'
 import { createRestaurant, getCuisines, restaurantByOwner } from '../../apollo'
 import defaultLogo from '../../assets/img/defaultLogo.png'
+import { IconButton } from '@mui/material';
+import Close from '@mui/icons-material/Close';
 
 import {
   Box,
@@ -175,6 +177,10 @@ const CreateRestaurant = props => {
     }
   }
 
+  const handleCloseModal = () => {
+    props.onClose() // Update state to close modal
+  };
+
   const onSubmitValidaiton = data => {
     const form = formRef.current
     const name = form.name.value
@@ -200,6 +206,15 @@ const CreateRestaurant = props => {
     const usernameError = !validateFunc({ name: username }, 'name')
     const passwordError = !validateFunc({ password }, 'password')
     const salesTaxError = !validateFunc({ salesTax }, 'salesTax')
+
+    if (deliveryTime < 0 || minimumOrder < 0 || salesTax < 0) {
+      setDeliveryTimeError(true);
+      setMinimumOrderError(true);
+      setSalesTaxError(true);
+      setErrors(t('Negative Values Not Allowed'));
+      return false;
+    }
+
     setNameError(nameError)
     setAddressError(addressError)
     setUsernameError(usernameError)
@@ -278,10 +293,13 @@ const CreateRestaurant = props => {
             {t('AddRestaurant')}
           </Typography>
         </Box>
-        <Box ml={30} mt={1}>
+        <Box ml={10} mt={1}>
           <label>{t('Available')}</label>
           <Switch defaultChecked style={{ color: 'black' }} />
         </Box>
+        <IconButton onClick={handleCloseModal} style={{ position: 'absolute', right: 5, top: 35 }}>
+          <Close />
+        </IconButton>
       </Box>
 
       <Box className={classes.form}>

@@ -162,13 +162,17 @@ const Category = props => {
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
 
-  const filtered =
+    const filtered =
     searchQuery.length < 3
-      ? data && data.restaurant.categories
+      ? data && data.restaurant.categories.filter(category => category.title !== 'Default Category')
       : data &&
         data.restaurant.categories.filter(category => {
-          return category.title.toLowerCase().search(regex) > -1
+          return (
+            category.title.toLowerCase().search(regex) > -1 &&
+            category.title !== 'Default Category'
+          )
         })
+  
   const globalClasses = useGlobalStyles()
   return (
     <>

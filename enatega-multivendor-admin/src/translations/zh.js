@@ -300,9 +300,18 @@ const zh = {
     DELIVERED: '已交付',
     REJECTED: '已拒绝',
     UploadaLogo: '上传徽标',
+
+    "Status updated to {{status}}": "状态更新为 {{status}}",
+    StatusUpdated: '状态已更新！',
+    "Failed to update status!": "更新状态失败！",
+    UpdateSuccessful: "更新成功！",
+    UpdateError: '更新错误',
+    "The value Should not be in the negative": "值不应为负数",
+
     "CostType": "费用类型",
     "PerKM": "每公里",
     "FixedCost": "固定费用"
+
   }
 }
 export default zh

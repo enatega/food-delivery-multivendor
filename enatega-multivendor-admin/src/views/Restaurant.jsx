@@ -91,13 +91,12 @@ const Restaurant = props => {
         </Box>
         <Modal
           open={isModalVisible}
-          onClose={toggleModal}
           style={{
             width: '65%',
             marginLeft: '18%',
             overflowY: 'auto'
           }}>
-          <CreateRestaurant owner={owner} />
+          <CreateRestaurant owner={owner} onClose = {toggleModal}/>
         </Modal>
       </Container>
     </>

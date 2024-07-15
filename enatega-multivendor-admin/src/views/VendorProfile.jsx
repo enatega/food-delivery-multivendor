@@ -114,9 +114,8 @@ const VendorProfile = () => {
     }
   )
 
-
-  const restaurantImage = data?.restaurant?.image;
-  const restaurantLogo = data?.restaurant?.logo;
+  const restaurantImage = data?.restaurant?.image
+  const restaurantLogo = data?.restaurant?.logo
 
   const [mutate, { loading }] = useMutation(EDIT_RESTAURANT, {
     onError,
@@ -127,8 +126,8 @@ const VendorProfile = () => {
   const formRef = useRef(null)
 
   const handleFileSelect = (event, type) => {
-    let result;
-    result = filterImage(event);
+    let result
+    result = filterImage(event)
     if (result) imageToBase64(result, type)
   }
 
@@ -153,8 +152,8 @@ const VendorProfile = () => {
     fileReader.readAsDataURL(imgUrl)
   }
 
-  const uploadImageToCloudinary = async(uploadType) => {
-    if (!uploadType) return;
+  const uploadImageToCloudinary = async uploadType => {
+    if (!uploadType) return
 
     const apiUrl = CLOUDINARY_UPLOAD_URL
     const data = {
@@ -187,6 +186,23 @@ const VendorProfile = () => {
     const deliveryTime = form.deliveryTime.value
     const minimumOrder = form.minimumOrder.value
     const salesTax = +form.salesTax.value
+
+    // Check if deliveryTime, minimumOrder, and salesTax are negative
+    if (deliveryTime < 0) {
+      setDeliveryTimeError(true)
+      setErrors(t('DeliveryTime cannot be negative'))
+      return false
+    }
+    if (minimumOrder < 0) {
+      setMinimumOrderError(true)
+      setErrors(t('Minimum Order cannot be negative'))
+      return false
+    }
+    if (salesTax < 0) {
+      setSalesTaxError(true)
+      setErrors(t('Sales Tax cannot be negative'))
+      return false
+    }
 
     const nameErrors = !validateFunc({ name }, 'name')
     const addressErrors = !validateFunc({ address }, 'address')
@@ -245,9 +261,7 @@ const VendorProfile = () => {
     const {
       target: { value }
     } = event
-    setRestaurantCuisines(
-      typeof value === 'string' ? value.split(',') : value
-    )
+    setRestaurantCuisines(typeof value === 'string' ? value.split(',') : value)
   }
 
   useEffect(() => {
@@ -255,9 +269,9 @@ const VendorProfile = () => {
   }, [data?.restaurant?.cuisines])
 
   useEffect(() => {
-    if (restaurantImage) setImgUrl(restaurantImage);
-    if (restaurantLogo) setLogoUrl(restaurantLogo);
-  }, [restaurantImage, restaurantLogo]);
+    if (restaurantImage) setImgUrl(restaurantImage)
+    if (restaurantLogo) setLogoUrl(restaurantLogo)
+  }, [restaurantImage, restaurantLogo])
 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
@@ -298,8 +312,8 @@ const VendorProfile = () => {
                           usernameError === false
                             ? globalClasses.inputError
                             : usernameError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                         onChange={event => {
                           if (event.target.value.includes(' ')) {
@@ -331,8 +345,8 @@ const VendorProfile = () => {
                           passwordError === false
                             ? globalClasses.inputError
                             : passwordError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                         endAdornment={
                           <InputAdornment position="end">
@@ -369,8 +383,8 @@ const VendorProfile = () => {
                           nameError === false
                             ? globalClasses.inputError
                             : nameError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -393,8 +407,8 @@ const VendorProfile = () => {
                           addressError === false
                             ? globalClasses.inputError
                             : addressError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -420,8 +434,8 @@ const VendorProfile = () => {
                           deliveryTimeError === false
                             ? globalClasses.inputError
                             : deliveryTimeError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -444,8 +458,8 @@ const VendorProfile = () => {
                           minimumOrderError === false
                             ? globalClasses.inputError
                             : minimumOrderError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -470,8 +484,8 @@ const VendorProfile = () => {
                           salesTaxError === false
                             ? globalClasses.inputError
                             : salesTaxError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -494,8 +508,8 @@ const VendorProfile = () => {
                           prefixError === false
                             ? globalClasses.inputError
                             : prefixError === true
-                              ? globalClasses.inputSuccess
-                              : ''
+                            ? globalClasses.inputSuccess
+                            : ''
                         ]}
                       />
                     </Box>
@@ -536,7 +550,9 @@ const VendorProfile = () => {
                               textTransform: 'capitalize'
                             }}>
                             <Checkbox
-                              checked={restaurantCuisines?.indexOf(cuisine) > -1}
+                              checked={
+                                restaurantCuisines?.indexOf(cuisine) > -1
+                              }
                             />
                             <ListItemText primary={cuisine} />
                           </MenuItem>
@@ -546,7 +562,7 @@ const VendorProfile = () => {
                   </Grid>
                 </Grid>
 
-                <Grid container spacing={2} >
+                <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Box
                       mt={3}
@@ -560,7 +576,9 @@ const VendorProfile = () => {
                           'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
                         }
                       />
-                      <label htmlFor="file-upload" className={classes.fileUpload}>
+                      <label
+                        htmlFor="file-upload"
+                        className={classes.fileUpload}>
                         {t('UploadAnImage')}
                       </label>
                       <input
@@ -583,11 +601,11 @@ const VendorProfile = () => {
                       <img
                         className={classes.image}
                         alt="..."
-                        src={
-                          logoUrl || defaultLogo
-                        }
+                        src={logoUrl || defaultLogo}
                       />
-                      <label htmlFor="logo-upload" className={classes.fileUpload}>
+                      <label
+                        htmlFor="logo-upload"
+                        className={classes.fileUpload}>
                         {t('UploadaLogo')}
                       </label>
                       <input
@@ -611,7 +629,9 @@ const VendorProfile = () => {
                       e.preventDefault()
                       if (onSubmitValidaiton()) {
                         const imgUpload = await uploadImageToCloudinary(imgUrl)
-                        const logoUpload = await uploadImageToCloudinary(logoUrl)
+                        const logoUpload = await uploadImageToCloudinary(
+                          logoUrl
+                        )
                         const form = formRef.current
                         const name = form.name.value
                         const address = form.address.value
@@ -632,8 +652,7 @@ const VendorProfile = () => {
                                 imgUpload ||
                                 data.restaurant.image ||
                                 'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
-                              logo:
-                                logoUpload || defaultLogo,
+                              logo: logoUpload || defaultLogo,
                               orderPrefix: prefix,
                               deliveryTime: Number(deliveryTime),
                               minimumOrder: Number(minimumOrder),
