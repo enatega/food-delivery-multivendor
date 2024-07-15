@@ -17,6 +17,8 @@ import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import * as Google from 'expo-auth-session/providers/google'
+
 
 const LOGIN = gql`
   ${login}
@@ -48,11 +50,74 @@ export const useCreateAccount = () => {
     })
   }
 
-  useEffect(() => {
-    configureGoogleSignin()
-  }, [])
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+    iosClientId: IOS_CLIENT_ID_GOOGLE
+  })
+
+
+  const getUserInfo = async (token) => {
+    //absent token
+    if (!token) return
+    //present token
+    try {
+      const response = await fetch(
+        'https://www.googleapis.com/userinfo/v2/me',
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+      return await response.json()
+     
+    } catch (error) {
+      console.error(
+        'Failed to fetch user data:',
+        response.status,
+        response.statusText
+      )
+    }
+  }
 
   const signIn = async () => {
+    try {
+      loginButtonSetter('Google')
+      await promptAsync()
+    } catch (err) {
+      console.log('Sign in with Google error', err)
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    try {
+  
+      if (response?.type === 'success') {
+
+        const google_user = await getUserInfo(response.authentication.accessToken)
+       
+        const userData = {
+          phone: '',
+          email: google_user.email,
+          password: '',
+          name: google_user.name,
+          picture: google_user.picture,
+          type: 'google'
+        }
+
+        await mutateLogin(userData)
+      } 
+    } catch (error) {
+      // Handle any errors that occur during AsyncStorage retrieval or other operations
+      console.error('Error retrieving user data from AsyncStorage:', error)
+    }
+  }
+
+  //add it to a useEffect with response as a dependency
+  useEffect(() => {
+    signInWithGoogle()
+  }, [response])
+  
+
+/*   const signIn = async () => {
     try {
       loginButtonSetter('Google')
       await GoogleSignin.hasPlayServices()
@@ -72,7 +137,7 @@ export const useCreateAccount = () => {
       console.log('🚀 ~ signIn ~ error:', error)
     }
   }
-
+ */
   const { t } = useTranslation()
   // const [googleRequest, googleResponse, googlePromptAsync] =
   //   Google.useAuthRequest({
