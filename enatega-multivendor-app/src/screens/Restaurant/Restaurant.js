@@ -54,6 +54,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { IMAGE_LINK } from '../../utils/constants'
 import { LocationContext } from '../../context/Location'
 import PopularIcon from '../../assets/SVG/popular'
+import {escapeRegExp} from '../../utils/regex'
 
 const { height } = Dimensions.get('screen')
 
@@ -146,7 +147,8 @@ function Restaurant(props) {
       setFilterData(filteredData)
       setShowSearchResults(false)
     } else if (deals) {
-      const regex = new RegExp(search, 'i')
+      const escapedSearchText = escapeRegExp(search);
+      const regex = new RegExp(escapedSearchText, 'i')
       const filteredData = []
       deals.forEach((category) => {
         category.data.forEach((deals) => {
