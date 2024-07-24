@@ -1,27 +1,27 @@
 import { test, expect } from '@playwright/test';
 
 
-test('[/burger-shop-east] Check if elements exist', async ({ page }) => {
+test('[/burger-shop-east] Check if main elements exist', async ({ page }) => {
     await page.goto('http://localhost:3000/#/restaurant/burger-shop-east'); 
 
     // Check for the parent container
-    const container = await page.locator('div.MuiBox-root.css-70qvj9');
-    await expect(container).toBeVisible();
+    const parentContainer = await page.locator('div.MuiBox-root.css-70qvj9');
+    await expect(parentContainer).toBeVisible();
   
     // Check for the child div
-    const childDiv = await container.locator('div.MuiBox-root.css-gmuwbf');
+    const childDiv = await parentContainer.locator('div.MuiBox-root.css-gmuwbf');
     await expect(childDiv).toBeVisible();
   
-    // image element
-    const image = await childDiv.locator('img[src^="data:image/png;base64"]');
-    await expect(image).toBeVisible();
+    // Check for the image element
+    const imageElement = await childDiv.locator('img[src^="data:image/png;base64"]');
+    await expect(imageElement).toBeVisible();
   
-    //'Your Cart' 
-    const cartText = await container.locator('p.MuiTypography-root.MuiTypography-body1');
+    // Check for 'Your Cart' text
+    const cartText = await parentContainer.locator('p.MuiTypography-root.MuiTypography-body1');
     await expect(cartText).toHaveText('Your Cart');
   
-    // 'Start adding items to your cart'
-    const startText = await container.locator('h6.MuiTypography-root.MuiTypography-h6');
+    // Check for 'Start adding items to your cart' text
+    const startText = await parentContainer.locator('h6.MuiTypography-root.MuiTypography-h6');
     await expect(startText).toHaveText('Start adding items to your cart');
   });
 
