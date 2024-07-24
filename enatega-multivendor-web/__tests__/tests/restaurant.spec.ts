@@ -26,40 +26,40 @@ test('[/burger-shop-east] Check if main elements exist', async ({ page }) => {
   });
 
 
-  test('[/burger-shop-east] Header elements', async ({ page }) => {
+  test('[/burger-shop-east] Check header elements', async ({ page }) => {
     await page.goto('http://localhost:3000/#/restaurant/burger-shop-east'); 
     
   // Wait for the image container
   const imageContainer = page.locator('div.makeStyles-imageContainer-6.MuiBox-root');
   await expect(imageContainer).toBeVisible({ timeout: 10000 });
 
-  // detail container
-  const restaurantDetail = imageContainer.locator('div.makeStyles-restaurantDetail-13.MuiBox-root');
-  await expect(restaurantDetail).toBeVisible({ timeout: 10000 });
+  // Check for the detail container
+  const detailContainer = imageContainer.locator('div.makeStyles-restaurantDetail-13.MuiBox-root');
+  await expect(detailContainer).toBeVisible({ timeout: 10000 });
 
-  // restaurant title 
-  const restaurantTitle = restaurantDetail.locator('text=Burger Shop-East');
+  // Check for the restaurant title 
+  const restaurantTitle = detailContainer.locator('text=Burger Shop-East');
   await expect(restaurantTitle).toBeVisible({ timeout: 10000 });
 
-  //  button inside the image container exists
-  const button = imageContainer.locator('button.MuiButtonBase-root');
-  await expect(button).toBeVisible({ timeout: 10000 });
+  // Check for the button inside the image container
+  const buttonElement = imageContainer.locator('button.MuiButtonBase-root');
+  await expect(buttonElement).toBeVisible({ timeout: 10000 });
 
-  //  new tag exists by its text content
-  const newTag = restaurantDetail.getByText('NEW');
-  await expect(newTag).toBeVisible({ timeout: 10000 });
+  // Check for the 'NEW' tag
+  const newTagElement = detailContainer.getByText('NEW');
+  await expect(newTagElement).toBeVisible({ timeout: 10000 });
 
-  // icon and text exist
-  const ratingIcon = restaurantDetail.locator('svg[data-testid="StarSharpIcon"]');
+  // Check for the rating icon and text
+  const ratingIcon = detailContainer.locator('svg[data-testid="StarSharpIcon"]');
   await expect(ratingIcon).toBeVisible({ timeout: 10000 });
-  const currentRatingText = restaurantDetail.getByText('3');
+  const currentRatingText = detailContainer.getByText('3');
   await expect(currentRatingText).toBeVisible({ timeout: 10000 });
-  const totalRatingText = restaurantDetail.getByText('/5');
+  const totalRatingText = detailContainer.getByText('/5');
   await expect(totalRatingText).toBeVisible({ timeout: 10000 });
 
-  // delivery time 
-  const deliveryTime = restaurantDetail.getByText('Delivery 1 Minute');
-  await expect(deliveryTime).toBeVisible({ timeout: 10000 });
+  // Check for the delivery time text
+  const deliveryTimeText = detailContainer.getByText('Delivery 1 Minute');
+  await expect(deliveryTimeText).toBeVisible({ timeout: 10000 });
   });
 
   
