@@ -3,8 +3,8 @@ import ConfigurationContext from '../context/Configuration'
 
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
-  const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
-  const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
+  const SERVER_URL = 'https://enatega-multivendor-api-production.up.railway.app'
+  const WS_SERVER_URL = 'wss://enatega-multivendor-api-production.up.railway.app'
   // const SERVER_URL = 'http://192.168.0.106:8001'
   // const WS_SERVER_URL = 'ws://192.168.0.106:8001'
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
@@ -19,7 +19,7 @@ const ConfigurableValues = () => {
   const CLOUDINARY_UPLOAD_URL = configuration.cloudinaryUploadUrl
   const CLOUDINARY_FOOD = configuration.cloudinaryApiKey
   const VAPID_KEY =
-    'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w'
+    'BGEoP7B1UbLoHtjwMTD2nuB15AkEHrKfpVRUMQiTvQrZ3D0jqvajddQ9flUPo6ZmCsoarRNDxmEhJnT1gdnV9i4'
   const PAID_VERSION = configuration.isPaidVersion
 
   return {

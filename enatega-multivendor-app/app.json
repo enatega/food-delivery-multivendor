@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Enatega Multi",
-    "scheme": "enategamultivendor",
-    "version": "1.0.56",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "slug": "enategamultivendor",
-    "owner": "ninjas_code",
+    "name": "Test Multi",
+    "scheme": "testmultivendor",
+    "version": "1.0",
+    "description": "Test is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "slug": "test-customer-app",
+    "owner": "kashifdev",
     "privacy": "public",
     "androidStatusBar": {
       "backgroundColor": "#000"
@@ -23,9 +23,9 @@
     "ios": {
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
-      "bundleIdentifier": "com.enatega.multivendor",
+      "bundleIdentifier": "com.customer.app",
       "config": {
-        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
+        "googleMapsApiKey": "AIzaSyD4XyToqJxdQ_sa2KAOLvYCT9AdL1KC-Ek"
       },
       "usesAppleSignIn": true,
       "infoPlist": {
@@ -35,7 +35,7 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah"
+              "com.googleusercontent.apps.67177543567-h5lmg0sjdf36ojtif7e97p0jp7bc4h1q"
             ]
           }
         ]
@@ -46,16 +46,16 @@
       "color": "#90E36D",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
-      "androidCollapsedTitle": "Enatega Multivendor"
+      "androidCollapsedTitle": "Test Multivendor"
     },
     "android": {
-      "versionCode": 56,
-      "package": "com.enatega.multivendor",
+      "versionCode": 1,
+      "package": "com.customer.app",
       "googleServicesFile": "./google-services.json",
       "userInterfaceStyle": "automatic",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
+          "apiKey": "AIzaSyD4XyToqJxdQ_sa2KAOLvYCT9AdL1KC-Ek"
         }
       },
       "permissions": [
@@ -71,7 +71,7 @@
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
             "organization": "ninjas-code",
-            "project": "enatega-multivendor-app",
+            "project": "Test-multivendor-app",
             "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
           }
         }
@@ -100,20 +100,20 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $Test Multivendor to use your location."
         }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+        "projectId": "356f5f5a-30d6-48c5-9e08-702ace48fd63"
       }
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+      "url": "https://u.expo.dev/356f5f5a-30d6-48c5-9e08-702ace48fd63"
     }
   }
 }

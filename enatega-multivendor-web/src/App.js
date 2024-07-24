@@ -49,7 +49,7 @@ const GoogleMapsLoader = ({ children, LIBRARIES, GOOGLE_MAPS_KEY }) => {
           .then(() => {
             getToken(messaging, {
               vapidKey:
-                "BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w",
+                "BGEoP7B1UbLoHtjwMTD2nuB15AkEHrKfpVRUMQiTvQrZ3D0jqvajddQ9flUPo6ZmCsoarRNDxmEhJnT1gdnV9i4",
             })
               .then((token) => {
                 localStorage.setItem("messaging-token", token);

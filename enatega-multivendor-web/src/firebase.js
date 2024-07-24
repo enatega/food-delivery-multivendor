@@ -7,13 +7,13 @@ import { getMessaging, isSupported } from "firebase/messaging";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDx_iSQ9LroTF7NMm20aRvw2wJqhwSnJ3U",
-  authDomain: "enatega-multivender-web.firebaseapp.com",
-  projectId: "enatega-multivender-web",
-  storageBucket: "enatega-multivender-web.appspot.com",
-  messagingSenderId: "438532750182",
-  appId: "1:438532750182:web:516b850eff4e0349f0a6a7",
-  measurementId: "G-KLBJSEHRYQ",
+  apiKey: "AIzaSyDGHOUQpCknGw_EkNiegrYGC49_XVKMJ60",
+  authDomain: "testapp2-8494f.firebaseapp.com",
+  projectId: "testapp2-8494f",
+  storageBucket: "testapp2-8494f.appspot.com",
+  messagingSenderId: "166344865071",
+  appId: "1:166344865071:web:aae144b35a437048bd9dda",
+  measurementId: "G-LHVN6RSW8Z"
 };
 
 export const initialize = () => {
