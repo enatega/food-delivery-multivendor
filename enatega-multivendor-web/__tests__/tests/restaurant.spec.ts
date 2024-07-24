@@ -63,11 +63,12 @@ test('[/burger-shop-east] Check if elements exist', async ({ page }) => {
   });
 
   
-  test('[/burger-shop-east] Navigation buttons', async ({ page }) => {
+  test('[/burger-shop-east] Check navigation buttons', async ({ page }) => {
     await page.goto('http://localhost:3000/#/restaurant/burger-shop-east');
 
-    const container = page.locator('div.MuiContainer-root.MuiContainer-maxWidthLg.css-1oqqzyl-MuiContainer-root');
-    await expect(container).toBeVisible({ timeout: 10000 });
+    // Wait for the container to be visible
+    const mainContainer = page.locator('div.MuiContainer-root.MuiContainer-maxWidthLg.css-1oqqzyl-MuiContainer-root');
+    await expect(mainContainer).toBeVisible({ timeout: 10000 });
   
     // Check visibility of each specific tab item by text
     await expect(page.locator('h5').filter({ hasText: 'Burgers' })).toBeVisible();
