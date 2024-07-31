@@ -93,3 +93,152 @@ test('check if the text exists in h6 elements within a list item', async ({ page
   await expect(intellectualPropertyText6).toBeVisible();
   });
   
+  test('Check if specific elements exist on the page', async ({ page }) => {
+    await page.goto('http://localhost:3000/#/terms');
+  
+    const termsOfUse = await page.getByRole('heading', { name: 'Orders', exact: true });
+    await expect(termsOfUse).toBeVisible();
+
+    const whenYouPlaceAnOrder = await page.locator('text=When you place an Order with enatega');
+    await expect(whenYouPlaceAnOrder).toBeVisible();
+  
+    const minimumOrderValue = await page.locator('text=Minimum Order Value');
+    await expect(minimumOrderValue).toBeVisible();
+  
+    const specialInstructions = await page.locator('text=Special Instructions');
+    await expect(specialInstructions).toBeVisible();
+  
+    const allergens = await page.locator('text=Allergens');
+    await expect(allergens).toBeVisible();
+  
+    const priorToPlacingOrder = await page.locator('text=Prior to placing the Order');
+    await expect(priorToPlacingOrder).toBeVisible();
+  
+    const placingOrder = await page.getByRole('heading', { name: 'Placing the Order', exact: true });
+    await expect(placingOrder).toBeVisible();
+  
+    const cancellingOrder = await page.locator('text=Cancelling an Order');
+    await expect(cancellingOrder).toBeVisible();
+  
+    const refunds = await page.getByRole('heading', { name: 'Refunds', exact: true });
+    await expect(refunds).toBeVisible();
+  
+    const onlinePaymentOrders = await page.locator('text=Online Payment Orders');
+    await expect(onlinePaymentOrders).toBeVisible();
+  
+    const cashOnDeliveryOrders = await page.locator('text=Cash-on-Delivery Orders');
+    await expect(cashOnDeliveryOrders).toBeVisible();
+  
+    const reservesRightToCancel = await page.locator('text=reserves the right to cancel any Order');
+    await expect(reservesRightToCancel).toBeVisible();
+  });
+
+  test('Check if specific elements exist on the Prices and Payments section', async ({ page }) => {
+    await page.goto('http://localhost:3000/#/terms');
+  
+    const pricesAndPaymentsHeading = await page.locator('text=Prices and Payments');
+    await expect(pricesAndPaymentsHeading).toBeVisible();
+
+    const pricesQuoted = await page.locator('text=Prices quoted on the Platform shall be displayed in the applicable country’s national currency');
+    await expect(pricesQuoted).toBeVisible();
+  
+    const includeTax = await page.locator('text=include TAX, VAT or such other equivalent tax');
+    await expect(includeTax).toBeVisible();
+  
+    const excludeTax = await page.locator('text=exclude TAX, VAT or such other equivalent tax');
+    await expect(excludeTax).toBeVisible();
+  
+    const breakdownOfPrices = await page.locator('text=A breakdown of the prices and additional charges are displayed before Checkout');
+    await expect(breakdownOfPrices).toBeVisible();
+  
+    const deliveryFeesChargeable = await page.locator('text=Delivery fees are chargeable on every Order unless');
+    await expect(deliveryFeesChargeable).toBeVisible();
+  
+    const optForPickUp = await page.locator('text=you opt to collect your Order directly from the Vendor');
+    await expect(optForPickUp).toBeVisible();
+  
+    const validPromotionalVoucher = await page.locator('text=you have a valid promotional or discount voucher and apply it at Checkout');
+    await expect(validPromotionalVoucher).toBeVisible();
+  
+    const pricesSubjectToChange = await page.locator('text=Prices indicated on the Platforms are as at the time of each Order and may be subject to change');
+    await expect(pricesSubjectToChange).toBeVisible();
+  
+    const paymentMethods = await page.locator('text=You can choose to pay for an Order using any of the different payment methods offered on the Platforms');
+    await expect(paymentMethods).toBeVisible();
+  
+    const paymentPartners = await page.locator('text=Our payment partners: Visa, Mastercard, American Express, Google Pay, PayPal, Apple Pay');
+    await expect(paymentPartners).toBeVisible();
+  
+    const cashOnDelivery = await page.getByRole('heading', { name: 'Cash-on-Delivery Orders' });
+    await expect(cashOnDelivery).toBeVisible();
+  
+    const suchOtherPaymentMethod = await page.locator('text=Such other payment method we offer from time to time');
+    await expect(suchOtherPaymentMethod).toBeVisible();
+  
+    const creditInAccount = await page.locator('text=If you have existing credit in your enatega account or valid promotional or discount vouchers');
+    await expect(creditInAccount).toBeVisible();
+  
+    const emailConfirmation = await page.locator('text=After an Order is successfully placed, you will receive an email confirmation from us with your Order receipt');
+    await expect(emailConfirmation).toBeVisible();
+  
+    const paymentMethodsHeading = await page.getByRole('heading', { name: 'Payment Methods', exact: true });
+    await expect(paymentMethodsHeading).toBeVisible();
+  
+    const enategaReservesRight = await page.locator('text=Enatega reserves the right to offer additional payment methods and/or remove existing payment methods');
+    await expect(enategaReservesRight).toBeVisible();
+  
+    const sufficientFunds = await page.locator('text=You must ensure that you have sufficient funds on your credit and debit card to fulfil payment of an Order');
+    await expect(sufficientFunds).toBeVisible();
+  });
+  
+
+test('Check essential elements in Delivery, Pick-Up and Vendor Delivery section', async ({ page }) => {
+    await page.goto('http://localhost:3000/#/terms');
+
+    const deliveryHeading = await page.locator('text=Delivery, Pick-Up and Vendor Delivery');
+    await expect(deliveryHeading).toBeVisible();
+
+    const deliveryAreas = await page.getByRole('heading', { name: 'Delivery Areas', exact: true });
+    await expect(deliveryAreas).toBeVisible();
+  
+    const deliveryTime = await page.getByRole('heading', { name: 'Delivery Time', exact: true });
+    await expect(deliveryTime).toBeVisible();
+  
+    const unsuccessfulDeliveries = await page.locator('text=Unsuccessful or Failed Deliveries');
+    await expect(unsuccessfulDeliveries).toBeVisible();
+  
+    const noShowCancellations = await page.locator('text=No-show Cancellations');
+    await expect(noShowCancellations).toBeVisible();
+  
+    const wrongOrder = await page.locator('text=Wrong Order, Missing Items, Defective Goods');
+    await expect(wrongOrder).toBeVisible();
+  
+    const orderPickUp = await page.locator('text=Order Pick-Up');
+    await expect(orderPickUp).toBeVisible();
+  
+    const vendorDelivery = await page.getByRole('heading', { name: 'Vendor Delivery', exact: true });
+    await expect(vendorDelivery).toBeVisible();
+  });
+
+  test('Check essential elements in Vouchers, Discounts and Promotions section', async ({ page }) => {
+    await page.goto('http://localhost:3000/#/terms');
+  
+    const vouchersHeading = await page.locator('text=Vouchers, Discounts and Promotions');
+    await expect(vouchersHeading).toBeVisible();
+  
+    const vouchersPromo = await page.locator('text=marketing and promotional campaigns which offer voucher codes, discounts, and other promotional offers');
+    await expect(vouchersPromo).toBeVisible();
+  
+    const platformUse = await page.locator('text=Vouchers can only be used on our Platforms');
+    await expect(platformUse).toBeVisible();
+  
+    const noCashExchange = await page.locator('text=Vouchers cannot be exchanged for cash');
+    await expect(noCashExchange).toBeVisible();
+  
+    const voidVoucher = await page.locator('text=void, discontinue or reject the use of any Voucher without prior notice');
+    await expect(voidVoucher).toBeVisible();
+  
+    const excludeVendors = await page.locator('text=exclude certain Vendors from the use of Vouchers at any time without prior notice');
+    await expect(excludeVendors).toBeVisible();
+  });
+  
