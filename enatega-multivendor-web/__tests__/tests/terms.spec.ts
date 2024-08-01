@@ -242,3 +242,112 @@ test('Check essential elements in Delivery, Pick-Up and Vendor Delivery section'
     await expect(excludeVendors).toBeVisible();
   });
   
+
+test('should check for specific text in the document', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/terms');
+
+ const mainHeading = await page.locator('text=Representations, Warranties and Limitation of Liabilities');
+ await expect(mainHeading).toBeVisible();
+
+ // Check for sub-heading texts
+ const representationsHeading = await page.locator('text=Representations and Warranties');
+ await expect(representationsHeading).toBeVisible();
+
+ const limitationHeading = await page.getByRole('heading', { name: 'Limitation of Liability', exact: true });
+ await expect(limitationHeading).toBeVisible();
+
+ const vendorsHeading = await page.locator('text=Vendor’s representations');
+ await expect(vendorsHeading).toBeVisible();
+
+ // Check for shorter snippets of text
+ const representationsTextSnippet = await page.locator('text=your use of or reliance upon the Platforms and any content');
+ await expect(representationsTextSnippet).toBeVisible();
+
+ const limitationTextSnippet = await page.locator('text=the enatega entities, their agents, representatives, and service providers');
+ await expect(limitationTextSnippet).toBeVisible();
+
+ const vendorsTextSnippet = await page.locator('text=actions or omissions of the Vendor');
+ await expect(vendorsTextSnippet).toBeVisible();
+
+ const vendorLiabilityHeading = await page.locator('text=Vendor Liability');
+  await expect(vendorLiabilityHeading).toBeVisible();
+
+  const vendorLiabilityText = await page.locator('text=Vendors are responsible for the preparation, condition and quality of Goods. In cases of Vendor Delivery, Vendors are responsible for delivery of the Goods and/or Orders. Enatega shall not be liable for any loss or damage arising from your contractual relationship with the Vendor.');
+  await expect(vendorLiabilityText).toBeVisible();
+
+  const personalDataHeading = await page.locator('text=Personal Data (Personal Information) Protection');
+  await expect(personalDataHeading).toBeVisible();
+
+  const personalDataText = await page.locator('text=You agree and consent to enatega and any of its affiliate companies collecting, using, processing and disclosing your Personal Data in accordance with these Terms and as further described in our Privacy Policy. Our Privacy Policy is available via the links on our Platforms, and shall form a part of these Terms.');
+  await expect(personalDataText).toBeVisible();
+
+  const indemnityHeading = await page.locator('text=Indemnity');
+  await expect(indemnityHeading).toBeVisible();
+
+  const indemnityText = await page.locator('text=You agree to indemnify, defend, hold harmless enatega, its directors, officers, employees, representatives, agents, and affiliates, from any and all third party claims, liability, damages and/or costs (including but not limited to, legal fees) arising from your use of the Platforms or your breach of these Terms.');
+  await expect(indemnityText).toBeVisible();
+
+  const ThirdParty = await page.getByRole('heading', { name: 'Third Party Links and Websites', exact: true });
+  await expect(ThirdParty).toBeVisible();
+  
+  const Termination = await page.getByRole('heading', { name: 'Termination', exact: true });
+  await expect(Termination).toBeVisible();
+    
+  const Amendments = await page.getByRole('heading', { name: 'Amendments', exact: true });
+  await expect(Amendments).toBeVisible();
+
+  const Severability = await page.getByRole('heading', { name: 'Severability', exact: true });
+  await expect(Severability).toBeVisible();
+
+  const GoverningLaw = await page.getByRole('heading', { name: 'Governing Law', exact: true });
+  await expect(GoverningLaw).toBeVisible();
+
+  const ContactUs = await page.getByRole('heading', { name: 'Contact Us', exact: true });
+  await expect(ContactUs).toBeVisible();
+
+  const PrevailingLanguage = await page.getByRole('heading', { name: 'Prevailing Language', exact: true });
+  await expect(PrevailingLanguage).toBeVisible();
+});
+
+test('should check for footer element existence', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/terms');
+
+  // Locate the footer element
+  const footer = await page.locator('div.MuiGrid-root.MuiGrid-container.css-1vam7s3-MuiGrid-root');
+  
+  // Check if the footer element is visible
+  await expect(footer).toBeVisible();
+
+  // Optional: Check for specific text within the footer
+  await expect(footer.locator('h4').filter({ hasText: /^Enatega$/ })).toBeVisible();
+  await expect(footer.locator('text=Enatega is an open-source delivery management platform for the future. We prioritize innovation, flexibility, and affordability, and offer a scalable, customizable solution that streamlines your delivery processes.')).toBeVisible();
+  await expect(footer.locator('text=Links')).toBeVisible();
+  await expect(footer.locator('text=Home')).toBeVisible();
+  await expect(footer.locator('text=Privacy Policy')).toBeVisible();
+  await expect(footer.locator('text=Terms and Conditions')).toBeVisible();
+  await expect(footer.getByText('Enatega – © 2022 All Rights').first()).toBeVisible();
+  await expect(footer.locator('text=Follow Us')).toBeVisible();
+});
+
+test('should redirect to the Home page when clicking the Home link', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/terms');
+
+  await Promise.all([
+    page.waitForNavigation(), // Wait for the navigation 
+    page.click('a[href="#/"]') 
+  ]);
+
+  await expect(page).toHaveURL('http://localhost:3000/#/');
+});
+
+test('should redirect to the Privacy Policy page when clicking the Privacy Policy link', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/terms');
+
+  await Promise.all([
+    page.waitForNavigation(), // Wait for the navigation
+    page.click('a[href="#/privacy"]') 
+  ]);
+
+  // Verify the URL after the redirection
+  await expect(page).toHaveURL('http://localhost:3000/#/privacy');
+});
