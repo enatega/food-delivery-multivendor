@@ -28,23 +28,23 @@ test('Check for All Restaurants', async ({ page }) => {
 
    
   // Check if the restaurant name exists
-  const Juiceheading = await page.locator('h6:has-text("Juice Bar-East")');
-  expect(Juiceheading).not.toBeNull();
+  const Juiceheading = page.locator('h6:has-text("Juice Bar-East")');
+  await expect(Juiceheading).toBeVisible();
 
-   const Chineseheading = await page.locator('h6:has-text("Chinese Food-East")');
-   expect(Chineseheading).not.toBeNull();
+  const Chineseheading = page.locator('h6:has-text("Chinese Food-East")');
+  await expect(Chineseheading).toBeVisible();
 
-   const IceCreameheading = await page.locator('h6:has-text("Ice-Cream Shop-East")');
-   expect(IceCreameheading).not.toBeNull();
+  const IceCreameheading = page.locator('h6:has-text("Ice-Cream Shop-East")');
+  await expect(IceCreameheading).toBeVisible();
 
-   const Italianheading = await page.locator('h6:has-text("Italian Food-East")');
-   expect(Italianheading).not.toBeNull(); 
+  const Italianheading = page.locator('h6:has-text("Italian Food-East")');
+  await expect(Italianheading).toBeVisible(); 
 
-   const Probaheading = await page.locator(':has-text("Proba")');
-   expect(Probaheading).not.toBeNull();
+  const Probaheading = page.locator(':has-text("Proba")');
+  await expect(Probaheading).toBeVisible();
 
-   const Popularheading = await page.locator(':has-text("Popular this week")');
-   expect(Popularheading).not.toBeNull();
+  const Popularheading = page.locator(':has-text("Popular this week")');
+  await expect(Popularheading).toBeVisible();
 
   });
 
