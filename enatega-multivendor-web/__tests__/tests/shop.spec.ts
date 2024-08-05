@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-
-
 test('check specific elements exist', async ({ page }) => {
     await page.goto('http://localhost:3000/#/restaurant/pizza-shop');
   
@@ -56,7 +54,7 @@ test('check specific elements exist', async ({ page }) => {
 //   await expect(page.locator(addButtonSelector).nth(4)).toBeVisible();
   });
 
-  test('Check existence of elementdds', async ({ page }) => {
+  test('Check existence of elements2', async ({ page }) => {
     await page.goto('http://localhost:3000/#/restaurant/pizza-shop');
   
     // Check for Fajita Chicken
@@ -108,7 +106,6 @@ test('check specific elements exist', async ({ page }) => {
     await expect(page.locator('text=Cheese and Pizza Sauce Base')).toBeVisible();
     await expect(page.locator('div:nth-child(7) > .MuiPaper-root > div > p').first()).toBeVisible();
     await expect(page.locator('div:nth-child(7) > .MuiPaper-root > div > p > .MuiTypography-root').first()).toBeVisible();
-  
   
     // Check for American Hot
     await expect(page.getByText('American Hot').first()).toBeVisible();
