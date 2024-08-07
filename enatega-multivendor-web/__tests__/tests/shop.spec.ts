@@ -113,3 +113,79 @@ test('check specific elements exist', async ({ page }) => {
     await expect(page.locator('text=$ 5.00')).toBeVisible();
   });
   
+
+
+test('check for italian food east', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/restaurant/italian-food-east');
+
+  // Check each pizza item
+  await expect(page.locator('text=Cheese Pizza')).toBeVisible();
+  await expect(page.getByText('Veggie Pizza', { exact: true })).toBeVisible();
+  await expect(page.locator('text=Pepperoni Pizza')).toBeVisible();
+  await expect(page.locator('text=Margherita Pizza')).toBeVisible();
+  await expect(page.locator('text=BBQ Chicken Pizza')).toBeVisible();
+  await expect(page.locator('text=Hawaiian Pizza')).toBeVisible();
+  await expect(page.locator('text=Buffalo Pizza')).toBeVisible();
+  await expect(page.locator('text=Pizza Capricciosa')).toBeVisible();
+  await expect(page.locator('text=Kale And Sausage Pizza')).toBeVisible();
+  await expect(page.locator('text=Deluxe Veggie Pizza')).toBeVisible();
+  await expect(page.locator('text=Mexican Green Wave Pizza')).toBeVisible();
+});
+
+
+test('check if specific pasta items exist', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/restaurant/italian-food-east');
+
+  // Check each pasta item
+  await expect(page.locator('p.MuiTypography-body1:has-text("Spaghetti")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Ravioli")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Penne Pasta")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Macaroni")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Lasagna")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Gnocchi")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Linguine")')).toBeVisible();
+  await expect(page.locator('p.MuiTypography-body1:has-text("Vermicelli")')).toBeVisible();
+});
+
+
+test('Verify elements and interact with them', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/restaurant/italian-food-east');
+
+  // Verify the "Add" button for Coke is present and click it
+  const cokeAddButton = page.locator('.makeStyles-imageContainer-6 > .MuiButtonBase-root');
+  await expect(cokeAddButton).toBeVisible();
+  await cokeAddButton.click();
+
+  // Verify the price of Sprite and assert it is correct
+  const spritePrice = page.getByText('$ 5.00', { exact: true });
+  await expect(spritePrice).toBeVisible();
+
+});
+
+test('check presence of footer elements', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/restaurant/italian-food-east');
+
+  // Check for the presence of "Enatega" header and description
+  const header = page.locator('h4:has-text("Enatega")');
+  const description = page.locator('p:has-text("Enatega is an open-source delivery management platform for the future.")');
+  
+  await expect(header).toBeVisible();
+  await expect(description).toBeVisible();
+
+  // Check for the presence of "Links" section
+  await expect(page.locator('p:has-text("Links")')).toBeVisible();
+  await expect(page.locator('a:has-text("Home")')).toBeVisible();
+  await expect(page.locator('a:has-text("Privacy Policy")')).toBeVisible();
+  await expect(page.locator('a:has-text("Terms and Conditions")')).toBeVisible();
+
+  // Check for the presence of social media icons in the "Follow Us" section
+  await expect(page.locator('svg[data-testid="FacebookIcon"]')).toBeVisible();
+  await expect(page.locator('svg[data-testid="TwitterIcon"]')).toBeVisible();
+  await expect(page.locator('svg[data-testid="InstagramIcon"]')).toBeVisible();
+  await expect(page.locator('svg[data-testid="LinkedInIcon"]')).toBeVisible();
+  await expect(page.locator('svg[data-testid="GitHubIcon"]')).toBeVisible();
+
+  // Check for the presence of "Powered By" section with "ninjascode"
+  await expect(page.locator('p:has-text("Powered By")')).toBeVisible();
+  await expect(page.locator('p:has-text("ninjascode")')).toBeVisible();
+});
