@@ -95,7 +95,7 @@ const GoogleMapsLoader = ({
       }
     };
     initializeFirebase();
-  }, [t, i18n]);
+  }, [t, i18n, VAPID_KEY]);
 
   const handleClose = () => {
     setMessage(null);
