@@ -22,6 +22,7 @@ function FirebaseConfiguration(props) {
   const [msgSenderId] = useState(props.msgSenderId || '')
   const [appId] = useState(props.appId || '')
   const [measurementId] = useState(props.measurementId || '')
+  const [vapidKey] = useState(props.vapidKey || '')
 
   const [firebaseKeyError, setFirebaseKeyError] = useState(null)
   const [authDomainError, setAuthDomainError] = useState(null)
@@ -30,6 +31,7 @@ function FirebaseConfiguration(props) {
   const [msgSenderIdError, setMsgSenderIdError] = useState(null)
   const [appIdError, setAppIdError] = useState(null)
   const [measurementIdError, setMeasurementIdError] = useState(null)
+  const [vapidKeyError, setVapidKeyError] = useState(null)
 
   const [mutate, { loading }] = useMutation(SAVE_FIREBASE_CONFIGURATION)
 
@@ -287,6 +289,29 @@ function FirebaseConfiguration(props) {
           </Box>
 
           <Box>
+            <Typography className={classes.labelText}>Vapid Key</Typography>
+            <Input
+              style={{ marginTop: -1 }}
+              id="input-vapidKey"
+              name="input-vapidKey"
+              placeholder="Vapid Key"
+              defaultValue={vapidKey}
+              onBlur={event =>
+                onBlur(setVapidKeyError, 'vapidKey', event.target.value)
+              }
+              disableUnderline
+              className={[
+                globalClasses.input,
+                vapidKeyError === false
+                  ? globalClasses.inputError
+                  : vapidKeyError === true
+                  ? globalClasses.inputSuccess
+                  : ''
+              ]}
+            />
+          </Box>
+
+          <Box>
             <Button
               className={globalClasses.button}
               disabled={loading}
@@ -304,7 +329,8 @@ function FirebaseConfiguration(props) {
                         msgSenderId: formRef.current['input-msgSenderId'].value,
                         appId: formRef.current['input-appId'].value,
                         measurementId:
-                          formRef.current['input-measurementId'].value
+                          formRef.current['input-measurementId'].value,
+                        vapidKey: formRef.current['input-vapidKey'].value ?? ''
                       }
                     }
                   })
