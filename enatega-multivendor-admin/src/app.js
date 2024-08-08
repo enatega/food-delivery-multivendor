@@ -33,7 +33,7 @@ const App = () => {
     MEASUREMENT_ID,
     GOOGLE_MAPS_KEY
   } = ConfigurableValues()
-  console.log('GOOGLE_MAPS_KEY_App', GOOGLE_MAPS_KEY)
+ 
   // const [mapsKey, setMapsKey] = useState(null)
   // useEffect(() => {
   //   if (GOOGLE_MAPS_KEY) {

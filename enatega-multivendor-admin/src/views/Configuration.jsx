@@ -161,6 +161,7 @@ const Configuration = props => {
               msgSenderId={data && data.configuration.msgSenderId}
               appId={data && data.configuration.appId}
               measurementId={data && data.configuration.measurementId}
+              vapidKey={data && data.configuration.vapidKey}
             />
           </Grid>
           <Grid item sx={12} md={12} lg={5}>

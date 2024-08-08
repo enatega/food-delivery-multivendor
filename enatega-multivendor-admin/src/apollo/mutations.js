@@ -210,6 +210,7 @@ export const saveFirebaseConfiguration = `
       msgSenderId
       appId
       measurementId
+      vapidKey
     }
   }
 `
