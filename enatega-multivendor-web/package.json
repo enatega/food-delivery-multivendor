@@ -21,6 +21,7 @@
     "env-cmd": "^10.1.0",
     "firebase": "^9.4.0",
     "flatlist-react": "^1.5.0",
+    "gapi-script": "^1.2.0",
     "graphql": "^15.4.0",
     "i18next": "^23.7.6",
     "lodash": "^4.17.21",
