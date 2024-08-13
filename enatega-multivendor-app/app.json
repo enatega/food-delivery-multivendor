@@ -25,7 +25,7 @@
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",
       "config": {
-        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
+        "googleMapsApiKey": "###### Key #######"
       },
       "usesAppleSignIn": true,
       "infoPlist": {
