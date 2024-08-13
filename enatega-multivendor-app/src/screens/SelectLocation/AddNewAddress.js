@@ -35,11 +35,11 @@ const LONGITUDE_DELTA = 0.2
 
 export default function AddNewAddress(props) {
   const { isLoggedIn } = useContext(UserContext)
-  const {getAddress} = useGeocoding()
+  const { getAddress } = useGeocoding()
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
 
-  const {  longitude, latitude, id } = props.route.params || {}
+  const { longitude, latitude, id } = props.route.params || {}
 
   const [selectedValue, setSelectedValue] = useState({
     city: '',
@@ -131,10 +131,12 @@ export default function AddNewAddress(props) {
           latitude: selectedValue.latitude,
           longitude: selectedValue.longitude,
           city: selectedValue.city,
-          prevScreen: props.route.params.prevScreen ? props.route.params.prevScreen : null
+          prevScreen: props.route.params.prevScreen
+            ? props.route.params.prevScreen
+            : null
         }
       })
-    } else{
+    } else {
       navigation.navigate('Main')
     }
   }
@@ -227,7 +229,6 @@ export default function AddNewAddress(props) {
 }
 
 const CityModal = React.memo(
-  
   function CityModal({
     theme,
     setCityModalVisible,
@@ -244,7 +245,9 @@ const CityModal = React.memo(
             setCityModalVisible(true)
           }}
         >
-          {selectedValue && <Text style={styles(theme).cityField}>{selectedValue}</Text>}
+          {selectedValue && (
+            <Text style={styles(theme).cityField}>{selectedValue}</Text>
+          )}
           {!selectedValue && (
             <Text style={styles(theme).cityField}>{t('selectCity')}</Text>
           )}
