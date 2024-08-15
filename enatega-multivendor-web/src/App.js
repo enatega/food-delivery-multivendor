@@ -36,6 +36,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
+import { fetchConfiguration } from "./utils/helper";
 
 const GoogleMapsLoader = ({
   children,
@@ -45,6 +46,26 @@ const GoogleMapsLoader = ({
 }) => {
   const [message, setMessage] = useState(null);
   const { t, i18n } = useTranslation();
+
+  //Handlers
+  const onWingdowUpdateAmplitude = async () => {
+    const { webAmplitudeApiKey } = await fetchConfiguration();
+
+    if (webAmplitudeApiKey) {
+      // Set the API key to a global variable
+      window.amplitudeApiKey = webAmplitudeApiKey;
+
+      // Now you can initialize Amplitude
+      if (window.amplitude) {
+        window.amplitude
+          .add(window.sessionReplay.plugin({ sampleRate: 1 }))
+          .promise.then(function () {
+            window.amplitude.add(window.amplitudeAutocapturePlugin.plugin());
+            window.amplitude.init(window.amplitudeApiKey);
+          });
+      }
+    }
+  };
 
   useEffect(() => {
     const initializeFirebase = async () => {
@@ -96,6 +117,10 @@ const GoogleMapsLoader = ({
     };
     initializeFirebase();
   }, [t, i18n, VAPID_KEY]);
+
+  useEffect(() => {
+    onWingdowUpdateAmplitude();
+  }, []);
 
   const handleClose = () => {
     setMessage(null);

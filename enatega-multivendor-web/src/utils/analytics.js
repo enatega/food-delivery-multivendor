@@ -1,10 +1,14 @@
 /* eslint-disable import/no-anonymous-default-export */
 import amplitude from "amplitude-js";
+
+import { fetchConfiguration } from "../utils/helper";
+
 //import ConfigurableValues from "../config/constants";
 let isInitialized = false;
-// const { AMPLITUDE_API_KEY } = ConfigurableValues();
-const { AMPLITUDE_API_KEY } = "2114f5db4c014dc7ad4ed2ad747341b5";
-const apiKey = AMPLITUDE_API_KEY;
+//const { AMPLITUDE_API_KEY } = ConfigurableValues();
+
+//const AMPLITUDE_API_KEY  = "2114f5db4c014dc7ad4ed2ad747341b5";
+let apiKey = "";
 
 export const events = {
   USER_LOGGED_IN: "USER_LOGGED_IN",
@@ -26,10 +30,12 @@ export const events = {
   NAVIGATE_TO_PAYPAL: "NAVIGATE_TO_PAYPAL",
 };
 export async function initialize() {
+  const { webAmplitudeApiKey } = await fetchConfiguration();
+
   if (isInitialized || !apiKey) {
     return;
   }
-
+  apiKey = webAmplitudeApiKey;
   await amplitude.getInstance().init(apiKey);
   isInitialized = true;
 }
