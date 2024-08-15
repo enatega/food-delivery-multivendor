@@ -1,10 +1,14 @@
 /* eslint-disable import/no-anonymous-default-export */
 import amplitude from "amplitude-js";
+
+import { fetchConfiguration } from "../utils/helper";
+
 //import ConfigurableValues from "../config/constants";
 let isInitialized = false;
-// const { AMPLITUDE_API_KEY } = ConfigurableValues();
-const { AMPLITUDE_API_KEY } = "2114f5db4c014dc7ad4ed2ad747341b5";
-const apiKey = AMPLITUDE_API_KEY;
+//const { AMPLITUDE_API_KEY } = ConfigurableValues();
+
+//const AMPLITUDE_API_KEY  = "2114f5db4c014dc7ad4ed2ad747341b5";
+let apiKey = "";
 
 export const events = {
   USER_LOGGED_IN: "USER_LOGGED_IN",
@@ -26,39 +30,45 @@ export const events = {
   NAVIGATE_TO_PAYPAL: "NAVIGATE_TO_PAYPAL",
 };
 export async function initialize() {
-  if (isInitialized || !apiKey) {
+  if (isInitialized) {
     return;
   }
 
-  await amplitude.getInstance().init(apiKey);
+  const { webAmplitudeApiKey } = await fetchConfiguration();
+  if (!webAmplitudeApiKey) {
+    return;
+  }
+
+  apiKey = webAmplitudeApiKey;
+  amplitude.getInstance().init(apiKey);
   isInitialized = true;
 }
 
 export async function identify(options, userId) {
-  initialize();
+  await initialize();
   // eslint-disable-next-line no-undef
   const properties = options;
 
   if (!apiKey) return;
   if (userId) {
-    await amplitude.setUserId(userId);
+    amplitude.setUserId(userId);
   }
   if (properties) {
-    await amplitude.getInstance().setUserProperties(properties);
+    amplitude.getInstance().setUserProperties(properties);
   } else {
-    await amplitude.getInstance().clearUserProperties();
+    amplitude.getInstance().clearUserProperties();
   }
 }
 export async function track(event, options) {
-  initialize();
+  await initialize();
   const properties = options;
 
   if (!apiKey) return;
 
   if (properties) {
-    await amplitude.getInstance().logEvent(event, properties);
+    amplitude.getInstance().logEvent(event, properties);
   } else {
-    await amplitude.getInstance().logEvent(event);
+    amplitude.getInstance().logEvent(event);
   }
 }
 
