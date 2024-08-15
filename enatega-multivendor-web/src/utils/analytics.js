@@ -32,11 +32,11 @@ export const events = {
 export async function initialize() {
   const { webAmplitudeApiKey } = await fetchConfiguration();
 
-  if (isInitialized || !apiKey) {
+  if (isInitialized || !webAmplitudeApiKey) {
     return;
   }
   apiKey = webAmplitudeApiKey;
-  await amplitude.getInstance().init(apiKey);
+  await amplitude.getInstance().init(webAmplitudeApiKey);
   isInitialized = true;
 }
 
