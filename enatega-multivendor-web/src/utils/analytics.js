@@ -30,13 +30,17 @@ export const events = {
   NAVIGATE_TO_PAYPAL: "NAVIGATE_TO_PAYPAL",
 };
 export async function initialize() {
-  const { webAmplitudeApiKey } = await fetchConfiguration();
-
-  if (isInitialized || !webAmplitudeApiKey) {
+  if (isInitialized) {
     return;
   }
+
+  const { webAmplitudeApiKey } = await fetchConfiguration();
+  if (!webAmplitudeApiKey) {
+    return;
+  }
+
   apiKey = webAmplitudeApiKey;
-  await amplitude.getInstance().init(webAmplitudeApiKey);
+  await amplitude.getInstance().init(apiKey);
   isInitialized = true;
 }
 
