@@ -40,7 +40,7 @@ export async function initialize() {
   }
 
   apiKey = webAmplitudeApiKey;
-  await amplitude.getInstance().init(apiKey);
+  amplitude.getInstance().init(apiKey);
   isInitialized = true;
 }
 
@@ -51,12 +51,12 @@ export async function identify(options, userId) {
 
   if (!apiKey) return;
   if (userId) {
-    await amplitude.setUserId(userId);
+    amplitude.setUserId(userId);
   }
   if (properties) {
-    await amplitude.getInstance().setUserProperties(properties);
+    amplitude.getInstance().setUserProperties(properties);
   } else {
-    await amplitude.getInstance().clearUserProperties();
+    amplitude.getInstance().clearUserProperties();
   }
 }
 export async function track(event, options) {
@@ -66,9 +66,9 @@ export async function track(event, options) {
   if (!apiKey) return;
 
   if (properties) {
-    await amplitude.getInstance().logEvent(event, properties);
+    amplitude.getInstance().logEvent(event, properties);
   } else {
-    await amplitude.getInstance().logEvent(event);
+    amplitude.getInstance().logEvent(event);
   }
 }
 

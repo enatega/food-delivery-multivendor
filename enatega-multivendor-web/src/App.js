@@ -48,7 +48,7 @@ const GoogleMapsLoader = ({
   const { t, i18n } = useTranslation();
 
   //Handlers
-  const onWingdowUpdateAmplitude = async () => {
+  const onWindowUpdateAmplitude = async () => {
     const { webAmplitudeApiKey } = await fetchConfiguration();
 
     if (webAmplitudeApiKey) {
@@ -119,7 +119,7 @@ const GoogleMapsLoader = ({
   }, [t, i18n, VAPID_KEY]);
 
   useEffect(() => {
-    onWingdowUpdateAmplitude();
+    onWindowUpdateAmplitude();
   }, []);
 
   const handleClose = () => {
