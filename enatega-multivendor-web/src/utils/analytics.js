@@ -45,7 +45,7 @@ export async function initialize() {
 }
 
 export async function identify(options, userId) {
-  initialize();
+  await initialize();
   // eslint-disable-next-line no-undef
   const properties = options;
 
@@ -60,7 +60,7 @@ export async function identify(options, userId) {
   }
 }
 export async function track(event, options) {
-  initialize();
+  await initialize();
   const properties = options;
 
   if (!apiKey) return;
