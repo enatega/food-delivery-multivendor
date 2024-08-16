@@ -36,10 +36,10 @@ import PrivateRoute from "./routes/PrivateRoute";
 import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
-import { fetchConfiguration } from "./utils/helper";
+//import { fetchConfiguration } from "./utils/helper";
 
 
-import { Integrations } from "@sentry/tracing";
+//import { Integrations } from "@sentry/tracing";
 
 const GoogleMapsLoader = ({
   children,
@@ -51,7 +51,7 @@ const GoogleMapsLoader = ({
   const { t, i18n } = useTranslation();
 
   //Handlers
-  const onWindowUpdateAmplitude = async () => {
+/*   const onWindowUpdateAmplitude = async () => {
     const { webAmplitudeApiKey } = await fetchConfiguration();
 
     if (webAmplitudeApiKey) {
@@ -68,7 +68,7 @@ const GoogleMapsLoader = ({
           });
       }
     }
-  };
+  }; */
 
   useEffect(() => {
     const initializeFirebase = async () => {
@@ -121,9 +121,7 @@ const GoogleMapsLoader = ({
     initializeFirebase();
   }, [t, i18n, VAPID_KEY]);
 
-  useEffect(() => {
-    //onWindowUpdateAmplitude();
-  }, []);
+  /* ß */
 
   const handleClose = () => {
     setMessage(null);

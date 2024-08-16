@@ -16,11 +16,11 @@ const ConfigurationContext = React.createContext({});
 export const ConfigurationProvider = ({ children }) => {
   const [configuration, setConfiguration] = useState({});
   // API
-  const [fetchConfiguratiopn, res] = useLazyQuery(GETCONFIGURATION);
+  const [fetchConfiguration, res] = useLazyQuery(GETCONFIGURATION);
 
   // Handlers
   const onFetchConfiguration = async () => {
-    const { loading, error, data } = await fetchConfiguratiopn();
+    const { loading, error, data } = await fetchConfiguration();
 
     let configuration =
       loading || error || !data.configuration ? {} : data.configuration;

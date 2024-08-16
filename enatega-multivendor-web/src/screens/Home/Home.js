@@ -42,11 +42,6 @@ function Home() {
   const { isLoggedIn } = useContext(UserContext);
   let check = false;
 
-  const data = {
-
-  }
-
-
 
   const handleClose = useCallback(() => {
     setOpen(false);
