@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   StatusBar,
   Platform,
-  Alert} from 'react-native'
+  Alert,
+  Button} from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { AntDesign } from '@expo/vector-icons'
@@ -196,6 +197,7 @@ function Cart(props) {
         showAvailablityMessage()
       }
     }
+    
   }, [data])
 
   const showAvailablityMessage = () => {
@@ -442,6 +444,8 @@ function Cart(props) {
   }
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
+
+
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -475,9 +479,11 @@ function Cart(props) {
                     style={styles().totalOrder}
                     H5
                     bolder
+                    
                   >
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
+                 
                   {cart?.map((cartItem, index) => {
                     const food = populateFood(cartItem)
                     if (!food) return null
