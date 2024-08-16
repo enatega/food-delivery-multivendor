@@ -42,6 +42,12 @@ function Home() {
   const { isLoggedIn } = useContext(UserContext);
   let check = false;
 
+  const data = {
+
+  }
+
+
+
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
@@ -55,6 +61,8 @@ function Home() {
       check = true;
     }
   }, [error]);
+
+  // return <button onClick={() => {throw new Error("Crashed")}}>Break the world</button>;
 
   return (
     <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>}>

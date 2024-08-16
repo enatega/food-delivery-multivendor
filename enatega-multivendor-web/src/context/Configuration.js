@@ -1,25 +1,45 @@
-import { gql, useQuery } from '@apollo/client'
-import React from 'react'
-import { getConfiguration } from '../apollo/server'
+
+
+// Core
+import React, { useEffect, useState } from "react";
+import { gql, useLazyQuery } from "@apollo/client";
+import { getConfiguration } from "../apollo/server";
+
+// API
 
 const GETCONFIGURATION = gql`
   ${getConfiguration}
-`
+`;
 
-const ConfigurationContext = React.createContext({})
+const ConfigurationContext = React.createContext({});
 
-export const ConfigurationProvider = props => {
-  const { loading, data, error } = useQuery(GETCONFIGURATION)
-  const configuration =
-    loading || error || !data.configuration
-      ? { currency: '', currencySymbol: '', deliveryRate: 0, costType:'perKM' }
-      : data.configuration
+export const ConfigurationProvider = ({ children }) => {
+  const [configuration, setConfiguration] = useState({});
+  // API
+  const [fetchConfiguratiopn, res] = useLazyQuery(GETCONFIGURATION);
+
+  // Handlers
+  const onFetchConfiguration = async () => {
+    const { loading, error, data } = await fetchConfiguratiopn();
+
+    let configuration =
+      loading || error || !data.configuration ? {} : data.configuration;
+
+    setConfiguration(configuration);
+  };
+
+  // Use Effect
+  useEffect(() => {
+    onFetchConfiguration();
+    // eslint-disable-next-line
+  }, [res.data]);
+
 
   return (
     <ConfigurationContext.Provider value={configuration}>
-      {props.children}
+      {children}
     </ConfigurationContext.Provider>
-  )
-}
-export const ConfigurationConsumer = ConfigurationContext.Consumer
-export default ConfigurationContext
+  );
+};
+export const ConfigurationConsumer = ConfigurationContext.Consumer;
+export default ConfigurationContext;
