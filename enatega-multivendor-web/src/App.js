@@ -122,7 +122,7 @@ const GoogleMapsLoader = ({
   }, [t, i18n, VAPID_KEY]);
 
   useEffect(() => {
-    onWindowUpdateAmplitude();
+    //onWindowUpdateAmplitude();
   }, []);
 
   const handleClose = () => {
