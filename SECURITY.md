@@ -17,7 +17,7 @@ If you discover a security vulnerability, please follow the steps below to repor
     - A detailed description of the vulnerability.
     - Steps to reproduce the vulnerability.
     - Any potential impact of the vulnerability.
-    - Suggested fixes, if any.
+    - Suggested fixes, if any
 
 2. **Acknowledgment**: You will receive an acknowledgment of your report within 48 hours. Our security team will work to verify the vulnerability and determine its impact.
 
