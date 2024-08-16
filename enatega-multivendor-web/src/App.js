@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect,useContext, useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { getToken, onMessage } from "firebase/messaging";
 import { initialize, isFirebaseSupported } from "./firebase";
@@ -37,6 +37,9 @@ import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
 import { fetchConfiguration } from "./utils/helper";
+
+
+import { Integrations } from "@sentry/tracing";
 
 const GoogleMapsLoader = ({
   children,
@@ -119,7 +122,7 @@ const GoogleMapsLoader = ({
   }, [t, i18n, VAPID_KEY]);
 
   useEffect(() => {
-    onWindowUpdateAmplitude();
+    //onWindowUpdateAmplitude();
   }, []);
 
   const handleClose = () => {
@@ -161,8 +164,24 @@ const GoogleMapsLoader = ({
 };
 
 function App() {
-  const { GOOGLE_MAPS_KEY, LIBRARIES, VAPID_KEY } = ConfigurableValues();
+  const { GOOGLE_MAPS_KEY, LIBRARIES, VAPID_KEY,SENTRY_DSN } = ConfigurableValues();
   const { isLoggedIn } = useContext(UserContext);
+
+  useEffect(() => {
+    console.log({SENTRY_DSN})
+    if (SENTRY_DSN) {
+      Sentry.init({
+        dsn: SENTRY_DSN,
+      //SENTRY_DSN  integrations: [new Integrations.BrowserTracing()],
+        environment: "development",
+        enableInExpoDevelopment: true,
+        debug: true,
+        tracesSampleRate: 1.0, // to be changed to 0.2 in production
+      });
+   
+    }
+
+  }, [SENTRY_DSN]);
 
   return GOOGLE_MAPS_KEY ? (
     <HashRouter>
