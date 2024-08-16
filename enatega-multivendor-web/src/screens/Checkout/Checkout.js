@@ -295,6 +295,7 @@ function Checkout() {
     const delivery = isPickUp ? 0 : deliveryCharges;
     const amount = +calculatePrice(delivery, true);
     const taxAmount = ((amount / 100) * tax).toFixed(2);
+    console.log("tax:", {taxAmount, deliveryCharges, tax, amount})
     return taxAmount;
   }
   async function onCompleted(data) {
@@ -327,12 +328,14 @@ function Checkout() {
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0;
     cart.forEach((cartItem) => {
+      console.log(cartItem)
       itemTotal += cartItem.price * cartItem.quantity;
     });
     if (withDiscount && coupon && coupon.discount) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
     }
     const deliveryAmount = delivery > 0 ? deliveryCharges : 0;
+    console.log("price:", {itemTotal, deliveryAmount})
     return (itemTotal + deliveryAmount).toFixed(2);
   }
 

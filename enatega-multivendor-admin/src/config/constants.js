@@ -21,7 +21,6 @@ const ConfigurableValues = () => {
   const VAPID_KEY = configuration.vapidKey
   const PAID_VERSION = configuration.isPaidVersion
 
-
   return {
     GOOGLE_MAPS_KEY,
     FIREBASE_KEY,

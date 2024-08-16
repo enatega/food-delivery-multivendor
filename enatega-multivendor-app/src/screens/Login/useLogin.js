@@ -27,7 +27,7 @@ export const useLogin = () => {
 
   const navigation = useNavigation()
   const emailRef = useRef('demo-customer@enatega.com')
-  const [password, setPassword] = useState('DemoCustomer55!')
+  const [password, setPassword] = useState('123123')
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -48,7 +48,7 @@ export const useLogin = () => {
   })
 
   // Debounce the setEmail function
-  const setEmail = (email)=>{
+  const setEmail = (email) => {
     emailRef.current = email
   }
   function validateCredentials() {
@@ -90,7 +90,7 @@ export const useLogin = () => {
           navigation.navigate({ name: 'Main', merge: true })
         }
       } else {
-        navigation.navigate('Register', { email:emailRef.current })
+        navigation.navigate('Register', { email: emailRef.current })
       }
     }
   }
@@ -149,14 +149,14 @@ export const useLogin = () => {
       if (validateCredentials()) {
         let notificationToken = null
         if (Device.isDevice) {
-          const {
-            status: existingStatus
-          } = await Notifications.getPermissionsAsync()
+          const { status: existingStatus } =
+            await Notifications.getPermissionsAsync()
           if (existingStatus === 'granted') {
-            notificationToken = (await Notifications.getExpoPushTokenAsync({
-              projectId: Constants.expoConfig.extra.eas.projectId 
-            }))
-              .data
+            notificationToken = (
+              await Notifications.getExpoPushTokenAsync({
+                projectId: Constants.expoConfig.extra.eas.projectId
+              })
+            ).data
           }
         }
         LoginMutation({
@@ -177,7 +177,7 @@ export const useLogin = () => {
   }
 
   function checkEmailExist() {
-    EmailEixst({ variables: { email:emailRef.current } })
+    EmailEixst({ variables: { email: emailRef.current } })
   }
 
   function onBackButtonPressAndroid() {

@@ -11,6 +11,8 @@ function Search(props) {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+
+
   return (
     <View style={styles(currentTheme, props.newheaderColor).mainContainerHolder}>
       <View style={styles(currentTheme, props.cartContainer).mainContainer}>

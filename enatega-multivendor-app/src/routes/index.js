@@ -176,6 +176,7 @@ function LocationStack() {
       />
       <Location.Screen name="SelectLocation" component={SelectLocation} />
       <Location.Screen name="AddNewAddress" component={AddNewAddress} />
+      <Location.Screen name= "Main" component = {Main} />
     </Location.Navigator>
   )
 }

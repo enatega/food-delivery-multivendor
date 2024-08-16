@@ -16,14 +16,15 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import * as Google from 'expo-auth-session/providers/google'
+
 
 const LOGIN = gql`
   ${login}
 `
-
 export const useCreateAccount = () => {
   const Analytics = analytics()
-
   const navigation = useNavigation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
@@ -34,11 +35,120 @@ export const useCreateAccount = () => {
   const [user, setUser] = useState('')
   const currentTheme = theme[themeContext.ThemeValue]
   const {
+    IOS_CLIENT_ID_GOOGLE,
+    ANDROID_CLIENT_ID_GOOGLE,
     TERMS_AND_CONDITIONS,
     PRIVACY_POLICY
   } = useEnvVars()
 
+  const configureGoogleSignin = () => {
+    GoogleSignin.configure({
+      iosClientId:
+        '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
+      androidClientId:
+        '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com'
+    })
+  }
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+    iosClientId: IOS_CLIENT_ID_GOOGLE
+  })
+
+
+  const getUserInfo = async (token) => {
+    //absent token
+    if (!token) return
+    //present token
+    try {
+      const response = await fetch(
+        'https://www.googleapis.com/userinfo/v2/me',
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+      return await response.json()
+     
+    } catch (error) {
+      console.error(
+        'Failed to fetch user data:',
+        response.status,
+        response.statusText
+      )
+    }
+  }
+
+  const signIn = async () => {
+    try {
+      loginButtonSetter('Google')
+      await promptAsync()
+    } catch (err) {
+      console.log('Sign in with Google error', err)
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    try {
+  
+      if (response?.type === 'success') {
+
+        const google_user = await getUserInfo(response.authentication.accessToken)
+       
+        const userData = {
+          phone: '',
+          email: google_user.email,
+          password: '',
+          name: google_user.name,
+          picture: google_user.picture,
+          type: 'google'
+        }
+
+        await mutateLogin(userData)
+      } 
+    } catch (error) {
+      // Handle any errors that occur during AsyncStorage retrieval or other operations
+      console.error('Error retrieving user data from AsyncStorage:', error)
+    }
+  }
+
+  //add it to a useEffect with response as a dependency
+  useEffect(() => {
+    signInWithGoogle()
+  }, [response])
+  
+
+/*   const signIn = async () => {
+    try {
+      loginButtonSetter('Google')
+      await GoogleSignin.hasPlayServices()
+      const user = await GoogleSignin.signIn()
+      const userData = {
+        phone: '',
+        email: user.user.email,
+        password: '',
+        name: user.user.name,
+        picture: user.user.photo,
+        type: 'google'
+      }
+      await mutateLogin(userData)
+
+      setUser(user)
+    } catch (error) {
+      console.log('🚀 ~ signIn ~ error:', error)
+    }
+  }
+ */
   const { t } = useTranslation()
+  // const [googleRequest, googleResponse, googlePromptAsync] =
+  //   Google.useAuthRequest({
+  //     expoClientId: EXPO_CLIENT_ID,
+  //     iosClientId: IOS_CLIENT_ID_GOOGLE,
+  //     iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
+  //     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+  //     androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
+  //     redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
+  //     scopes: ['profile', 'email']
+  //   })
 
   const navigateToLogin = () => {
     navigation.navigate('Login')
@@ -55,7 +165,6 @@ export const useCreateAccount = () => {
       merge: true
     })
   }
-
   async function mutateLogin(user) {
     setLoading(true)
     let notificationToken = null
@@ -78,14 +187,40 @@ export const useCreateAccount = () => {
     })
   }
 
+  // const googleSignUp = () => {
+  //   if (googleResponse?.type === 'success') {
+  //     const { authentication } = googleResponse
+  //     ;(async () => {
+  //       const userInfoResponse = await fetch(
+  //         'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+  //         {
+  //           headers: { Authorization: `Bearer ${authentication.accessToken}` }
+  //         }
+  //       )
+  //       const googleUser = await userInfoResponse.json()
+  //       const user = {
+  //         phone: '',
+  //         email: googleUser.email,
+  //         password: '',
+  //         name: googleUser.name,
+  //         picture: googleUser.picture,
+  //         type: 'google'
+  //       }
+  //       mutateLogin(user)
+  //     })()
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   googleSignUp()
+  // }, [googleResponse])
+
   useEffect(() => {
     checkIfSupportsAppleAuthentication()
   }, [])
-
   async function checkIfSupportsAppleAuthentication() {
     setEnableApple(await AppleAuthentication.isAvailableAsync())
   }
-
   async function onCompleted(data) {
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
@@ -128,7 +263,6 @@ export const useCreateAccount = () => {
       }
     }
   }
-
   function onError(error) {
     try {
       FlashMessage({
@@ -141,7 +275,6 @@ export const useCreateAccount = () => {
       setLoading(false)
     }
   }
-
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
@@ -150,18 +283,18 @@ export const useCreateAccount = () => {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
   })
-
   const openTerms = () => {
     Linking.openURL(TERMS_AND_CONDITIONS)
   }
   const openPrivacyPolicy = () => {
     Linking.openURL(PRIVACY_POLICY)
   }
-
   return {
     enableApple,
     loginButton,
     loginButtonSetter,
+    // googleRequest,
+    // googlePromptAsync,
     loading,
     setLoading,
     themeContext,
@@ -173,6 +306,7 @@ export const useCreateAccount = () => {
     openPrivacyPolicy,
     navigateToMain,
     navigation,
+    signIn,
     user
   }
 }
