@@ -65,10 +65,6 @@ const Location = createStackNavigator()
 
 function Drawer() {
 
-  // useEffect(() => {
-  // throw new Error('My first Sentry error 3 - again');
-
-  // },[])
  
   return (
     <SideDrawer.Navigator drawerContent={(props) => <SideBar {...props} />}>
