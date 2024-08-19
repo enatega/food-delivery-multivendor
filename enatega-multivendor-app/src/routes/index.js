@@ -64,7 +64,6 @@ const SideDrawer = createDrawerNavigator()
 const Location = createStackNavigator()
 
 function Drawer() {
-
  
   return (
     <SideDrawer.Navigator drawerContent={(props) => <SideBar {...props} />}>
@@ -226,7 +225,7 @@ function AppContainer() {
   }, [lastNotificationResponse])
 
   useEffect(() => {
-
+    console.log({SENTRY_DSN})
     if (SENTRY_DSN) {
       Sentry.init({
         dsn: SENTRY_DSN,

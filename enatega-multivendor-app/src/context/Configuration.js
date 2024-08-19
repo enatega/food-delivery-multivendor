@@ -12,7 +12,7 @@ const ConfigurationContext = React.createContext({})
 
 export const ConfigurationProvider = (props) => {
   const { loading, data, error } = useQuery(GETCONFIGURATION)
-
+  
   const configuration =
     loading || error || !data.configuration
       ? {
@@ -20,11 +20,11 @@ export const ConfigurationProvider = (props) => {
           currencySymbol: '',
           deliveryRate: 0,
           expoClientID:
-            '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
+            '',
           androidClientID:
-            '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com',
+            '',
           iOSClientID:
-            '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com'
+            ''
         }
       : data.configuration
   return (

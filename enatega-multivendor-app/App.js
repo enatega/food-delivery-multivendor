@@ -37,6 +37,8 @@ import ReviewModal from './src/components/Review'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { useColorScheme } from 'react-native'
 import useWatchLocation from './src/ui/hooks/useWatchLocation'
+import { initialize, LogLevel } from 'react-native-clarity';
+
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -68,6 +70,18 @@ export default function App() {
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   const [isUpdating, setIsUpdating] = useState(false)
   useWatchLocation()
+
+  // Handlers
+  const onInitClarity = () => {
+    
+    const clarityConfig = {
+      logLevel: LogLevel.Verbose,
+      allowMeteredNetworkUsage: true,
+      enableIOS_experimental: true
+    };
+    initialize("mcdyi6urgs",clarityConfig);
+  }
+
   useEffect(() => {
     const loadAppData = async () => {
       try {
@@ -126,9 +140,12 @@ export default function App() {
 
   useEffect(() => {
     requestTrackingPermissions()
+
+    onInitClarity()
+
   }, [])
 
-  const { SENTRY_DSN } = useEnvVars()
+
   const client = setupApolloClient()
   const shouldBeRTL = false;
   if (shouldBeRTL !== I18nManager.isRTL && Platform.OS !== 'web') {
@@ -136,16 +153,7 @@ export default function App() {
     I18nManager.forceRTL(shouldBeRTL);
     Updates.reloadAsync();
   }
-  // useEffect(() => {
-  //   if (SENTRY_DSN) {
-  //     Sentry.init({
-  //       dsn: SENTRY_DSN,
-  //       enableInExpoDevelopment: true,
-  //       debug: !isProduction,
-  //       tracesSampleRate: 1.0 // to be changed to 0.2 in production
-  //     })
-  //   }
-  // }, [SENTRY_DSN])
+
 
   useEffect(() => {
     // eslint-disable-next-line no-undef

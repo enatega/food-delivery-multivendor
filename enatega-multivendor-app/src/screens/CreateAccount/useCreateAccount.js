@@ -16,7 +16,6 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Google from 'expo-auth-session/providers/google'
 
 
@@ -41,14 +40,7 @@ export const useCreateAccount = () => {
     PRIVACY_POLICY
   } = useEnvVars()
 
-  const configureGoogleSignin = () => {
-    GoogleSignin.configure({
-      iosClientId:
-        '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
-      androidClientId:
-        '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com'
-    })
-  }
+
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
@@ -117,39 +109,8 @@ export const useCreateAccount = () => {
   }, [response])
   
 
-/*   const signIn = async () => {
-    try {
-      loginButtonSetter('Google')
-      await GoogleSignin.hasPlayServices()
-      const user = await GoogleSignin.signIn()
-      const userData = {
-        phone: '',
-        email: user.user.email,
-        password: '',
-        name: user.user.name,
-        picture: user.user.photo,
-        type: 'google'
-      }
-      await mutateLogin(userData)
-
-      setUser(user)
-    } catch (error) {
-      console.log('🚀 ~ signIn ~ error:', error)
-    }
-  }
- */
   const { t } = useTranslation()
-  // const [googleRequest, googleResponse, googlePromptAsync] =
-  //   Google.useAuthRequest({
-  //     expoClientId: EXPO_CLIENT_ID,
-  //     iosClientId: IOS_CLIENT_ID_GOOGLE,
-  //     iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
-  //     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-  //     androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
-  //     redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
-  //     scopes: ['profile', 'email']
-  //   })
-
+  
   const navigateToLogin = () => {
     navigation.navigate('Login')
   }
