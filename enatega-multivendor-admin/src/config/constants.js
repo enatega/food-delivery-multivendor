@@ -3,8 +3,8 @@ import ConfigurationContext from '../context/Configuration'
 
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
-  const SERVER_URL = 'https://enatega-multivendor-api-production.up.railway.app'
-  const WS_SERVER_URL = 'wss://enatega-multivendor-api-production.up.railway.app'
+  const SERVER_URL = 'https://multivendor-api-staging.up.railway.app'
+  const WS_SERVER_URL = 'wss://multivendor-api-staging.up.railway.app'
   // const SERVER_URL = 'http://192.168.0.106:8001'
   // const WS_SERVER_URL = 'ws://192.168.0.106:8001'
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
