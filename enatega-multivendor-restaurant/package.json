@@ -64,6 +64,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "^13.5.0",
     "react-native": "0.74.3",
+    "react-native-clarity": "^3.0.1",
     "react-native-countdown-component": "^2.7.1",
     "react-native-elements": "^3.4.2",
     "react-native-flash-message": "^0.1.21",

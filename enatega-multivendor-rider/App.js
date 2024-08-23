@@ -25,6 +25,7 @@ import { LocationProvider } from './src/context/location'
 import getEnvVars from './environment'
 import moment from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
+import { initialize, LogLevel } from 'react-native-clarity';
 
 moment.tz.setDefault('Asia/Karachi')
 LogBox.ignoreLogs([
@@ -43,6 +44,18 @@ export default function App() {
 
   const client = setupApolloClient()
   const { SENTRY_DSN } = getEnvVars()
+
+  const onInitClarity = () => {
+    
+    const clarityConfig = {
+      logLevel: LogLevel.Verbose,
+      allowMeteredNetworkUsage: true,
+      enableIOS_experimental: true
+    };
+   initialize("nq7dea7dt4",clarityConfig);
+  }
+
+
   useEffect(() => {
     if (SENTRY_DSN) {
       Sentry.init({

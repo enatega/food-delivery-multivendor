@@ -16,6 +16,9 @@ import * as Sentry from 'sentry-expo'
 import getEnvVars from './environment'
 import 'react-native-gesture-handler'
 import * as SecureStore from 'expo-secure-store'
+import { initialize, LogLevel } from 'react-native-clarity';
+
+
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -31,6 +34,17 @@ export default function App() {
 
   const { SENTRY_DSN } = getEnvVars()
   const client = setupApolloClient()
+
+  const onInitClarity = () => {
+    
+    const clarityConfig = {
+      logLevel: LogLevel.Verbose,
+      allowMeteredNetworkUsage: true,
+      enableIOS_experimental: true
+    };
+   initialize("nq7dea7dt4",clarityConfig);
+  }
+
 
   useEffect(() => {
     if (SENTRY_DSN) {
@@ -49,6 +63,9 @@ export default function App() {
       if (token) setToken(token)
       setIsAppReady(true)
     })()
+
+    onInitClarity()
+
   }, [])
 
   useEffect(() => {
