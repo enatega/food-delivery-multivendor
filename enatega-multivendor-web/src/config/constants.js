@@ -6,7 +6,7 @@ import { BACKEND_URLS } from "../utils/constantValues";
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext);
 
-  const SERVER_URL = BACKEND_URLS.LOCAL.SERVER_URL;
+  const SERVER_URL = BACKEND_URLS.LIVE.SERVER_URL;
   const WS_SERVER_URL = BACKEND_URLS.LIVE.WS_SERVER_URL;
 
   
