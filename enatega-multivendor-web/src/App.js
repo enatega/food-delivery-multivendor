@@ -37,6 +37,8 @@ import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
 
+require('./i18n')
+
 
 const GoogleMapsLoader = ({
   children,
@@ -68,6 +70,10 @@ const GoogleMapsLoader = ({
   }; */
 
   useEffect(() => {
+
+    console.log(i18n
+    )
+
     const initializeFirebase = async () => {
       if (await isFirebaseSupported()) {
         const messaging = initialize();

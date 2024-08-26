@@ -1,13 +1,16 @@
+import {APP_NAME} from '../utils/constantValues'
+import { toTitleCase } from '../utils/helper'
+
 const en = {
   translation: {
     selectLanguage: "Select Language",
     saveButton: "Save",
     footerText:
-      "Enatega is an open-source delivery management platform for the future. We prioritize innovation, flexibility, and affordability, and offer a scalable, customizable solution that streamlines your delivery processes.",
+      `${toTitleCase(APP_NAME)} is an open-source delivery management platform for the future. We prioritize innovation, flexibility, and affordability, and offer a scalable, customizable solution that streamlines your delivery processes.`,
     footerLinkHome: "Home",
     footerLinkPP: "Privacy Policy",
     footerLinkTC: "Terms and Conditions",
-    footerEndText: "Enatega – © 2022 All Rights Reserved",
+    footerEndText: `${toTitleCase(APP_NAME)} – © 2022 All Rights Reserved`,
     followUs: "Follow Us",
     poweredBy: "Powered By",
     linksTitle: "Links",
@@ -146,7 +149,7 @@ const en = {
     continue: "Continue",
     invalidEmail: "Invalid Email",
     letsGetStarted: "Let's get started!",
-    createAccount: "Create your Enatega Account",
+    createAccount: `Create your ${toTitleCase(APP_NAME)} Account`,
     firstnameErr1: "Firstname is required!",
     firstnameErr2: "Invalid First Name!",
     lastnameErr1: "Lastname is required!",
