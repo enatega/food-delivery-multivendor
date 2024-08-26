@@ -1,13 +1,13 @@
 import { useContext } from 'react'
 import ConfigurationContext from '../context/Configuration'
+import { BACKEND_URLS } from '../utils/constants'
 
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext)
 
-   const SERVER_URL = 'https://enatega-multivendor.up.railway.app'
-  const WS_SERVER_URL = 'wss://enatega-multivendor.up.railway.app'
- // const SERVER_URL = 'http://192.168.0.101:8001'
- // const WS_SERVER_URL = 'ws://192.168.0.101:8001'
+
+  const SERVER_URL = BACKEND_URLS.LIVE.SERVER_URL
+  const WS_SERVER_URL = BACKEND_URLS.LIVE.WS_SERVER_URL
   const GOOGLE_MAPS_KEY = configuration.googleApiKey
   const FIREBASE_KEY = configuration.firebaseKey
   const APP_ID = configuration.appId

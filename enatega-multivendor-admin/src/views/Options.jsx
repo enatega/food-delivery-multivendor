@@ -77,8 +77,7 @@ const Option = props => {
     return orderBy(rows, handleField, direction)
   }
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection)
+  const handleSort = (column, sortDirection) => {}
 
   const columns = [
     {

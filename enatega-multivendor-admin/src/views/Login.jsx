@@ -23,6 +23,7 @@ import LoginPageIcon from '../assets/img/LoginPageIcon.png'
 import InputAdornment from '@mui/material/InputAdornment'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { APP_NAME } from '../utils/constants'
 
 const LOGIN = gql`
   ${ownerLogin}
@@ -36,7 +37,7 @@ const Login = props => {
     passwordError: null,
     error: null,
     type: null, /// 0 for vendor
-    redirectToReferrer: !!localStorage.getItem('user-enatega')
+    redirectToReferrer: !!localStorage.getItem(`user-${APP_NAME}}`)
   })
   const formRef = useRef()
   const { t } = props
@@ -71,7 +72,7 @@ const Login = props => {
   }, [isLogged])
 
   const onCompleted = data => {
-    localStorage.setItem('user-enatega', JSON.stringify(data.ownerLogin))
+    localStorage.setItem(`user-${APP_NAME}`, JSON.stringify(data.ownerLogin))
     const userType = data.ownerLogin.userType
     if (userType === 'VENDOR') {
       setStateData({

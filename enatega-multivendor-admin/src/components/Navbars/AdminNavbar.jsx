@@ -17,6 +17,7 @@ import {
   useTheme
 } from '@mui/material'
 import profileImg from '../../assets/img/theme/team-4-800x800.jpg'
+import { APP_NAME } from '../../utils/constants'
 
 
 function AdminNavbar(props) {
@@ -24,7 +25,7 @@ function AdminNavbar(props) {
   const client = useApolloClient()
   const [modal, setModal] = useState(false)
   const [language, setLanguage] = useState(
-    localStorage.getItem('enatega-language') || 'en'
+    localStorage.getItem(`${APP_NAME}-language`) || 'en'
   )
   const [anchorEl, setAnchorEl] = useState(null) // Define anchorEl state
 
@@ -45,13 +46,13 @@ function AdminNavbar(props) {
   const handleChangeLanguage = event => {
     const newLanguage = event.target.value
     setLanguage(newLanguage)
-    localStorage.setItem('enatega-language', newLanguage)
+    localStorage.setItem(`${APP_NAME}-language`, newLanguage)
     i18n.changeLanguage(newLanguage)
     handleClose()
   }
 
-  const vendor = localStorage.getItem('user-enatega')
-    ? JSON.parse(localStorage.getItem('user-enatega')).userType === 'VENDOR'
+  const vendor = localStorage.getItem(`user-${APP_NAME}`)
+    ? JSON.parse(localStorage.getItem(`user-${APP_NAME}`)).userType === 'VENDOR'
     : false
 
   return (
@@ -180,7 +181,7 @@ function AdminNavbar(props) {
                 sx={{ color: theme.palette.common.black }}
                 onClick={e => {
                   e.preventDefault()
-                  localStorage.removeItem('user-enatega')
+                  localStorage.removeItem(`user-${APP_NAME}`)
                   localStorage.removeItem('restaurant_id')
                   client.clearStore()
                   props.history.push('/auth/login')

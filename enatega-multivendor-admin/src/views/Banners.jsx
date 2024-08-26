@@ -25,6 +25,7 @@ import {
 } from '@mui/material'
 import TableHeader from '../components/TableHeader'
 import BannerComponent from '../components/Banner/Banner'
+import { WEBSITE_URL } from '../utils/constants'
 
 const GET_BANNERS = gql`
   ${getBanners}
@@ -76,7 +77,7 @@ const Banners = props => {
             style={{ width: 30, height: 30, borderRadius: 15 }}
             src={
               row.file ||
-              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+              `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
             }
             alt=''
           />

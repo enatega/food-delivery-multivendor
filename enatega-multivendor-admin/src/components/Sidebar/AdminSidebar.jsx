@@ -16,6 +16,8 @@ import useStyles from './styles'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useLocation } from 'react-router-dom'
 import { useTranslation, withTranslation } from 'react-i18next'
+import { toTitleCase } from '../../utils/helper'
+import { APP_NAME } from '../../utils/constants'
 
 const drawerWidth = 240
 function AdminSidebar(props) {
@@ -38,12 +40,12 @@ function AdminSidebar(props) {
         <Typography
           variant="h2"
           className={[classes.headingText, classes.logoText]}>
-          ENATEGA
+          {toTitleCase(APP_NAME)}
         </Typography>
       </Toolbar>
       <Box className={classes.sidebarList}>
         {routes.map((prop, key) => {
-          console.log(key)
+        
           return prop.appearInSidebar && prop.admin ? (
             <>
               {key === 1 ? (

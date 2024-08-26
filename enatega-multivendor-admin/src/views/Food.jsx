@@ -28,6 +28,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
 import ConfigurableValues from '../config/constants'
+import { APP_NAME } from '../utils/constants'
 
 const GET_FOODS = gql`
   ${getRestaurantDetail}
@@ -108,7 +109,7 @@ const Food = props => {
             style={{ width: 30, height: 30, borderRadius: 15 }}
             src={
               row.image ||
-              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+              `${APP_NAME}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
             }
             alt={row.image ? 'img menu' : 'Default Image'}
           />

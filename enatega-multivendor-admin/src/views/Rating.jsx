@@ -81,8 +81,7 @@ const Ratings = props => {
     return orderBy(rows, handleField, direction)
   }
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection, column)
+  const handleSort = (column, sortDirection) => {}
 
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null

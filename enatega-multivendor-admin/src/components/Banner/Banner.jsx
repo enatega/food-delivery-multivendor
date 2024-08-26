@@ -19,6 +19,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import ConfigurableValues from '../../config/constants'
+import { WEBSITE_URL } from '../../utils/constants'
 
 const CREATE_BANNER = gql`
   ${createBanner}
@@ -111,7 +112,7 @@ function Banner(props) {
   }
 
   const onCompleted = data => {
-    console.log('Data => ', data)
+   
     const message = props.banner ? t('BannerUpdated') : t('BannerAdded')
     successSetter(message)
     mainErrorSetter('')
@@ -357,10 +358,7 @@ function Banner(props) {
                     }}
                     disableUnderline
                     className={[
-                      globalClasses.input,
-                      // optionItem.titleError === true
-                      //   ? globalClasses.inputError
-                      //   : ''
+                      globalClasses.input
                     ]}
                   />
                 </div>
@@ -382,9 +380,6 @@ function Banner(props) {
                     disableUnderline
                     className={[
                       globalClasses.input,
-                      // optionItem.descriptionError === true
-                      //   ? globalClasses.inputError
-                      //   : ''
                     ]}
                   />
                 </div>
@@ -435,7 +430,7 @@ function Banner(props) {
               alt="..."
               src={
                 file ||
-                'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
               }
             />
             <label
@@ -461,7 +456,7 @@ function Banner(props) {
               disabled={loading || fileLoading}
               onClick={async e => {
                 e.preventDefault()
-                console.log('onSubmitValidaiton => ', onSubmitValidaiton())
+             
                 if(onSubmitValidaiton()){
                   const inputData = {
                     title: data.title,
@@ -471,7 +466,7 @@ function Banner(props) {
                     file: await uploadImageToCloudinary(),
                     parameters: JSON.stringify(parameter)
                   }
-                  console.log('onSubmitValidaiton inputData => ', inputData)
+                  
                   mutate({
                     variables: {
                       bannerInput: {

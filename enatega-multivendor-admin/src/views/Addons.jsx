@@ -138,7 +138,7 @@ const Addon = props => {
                     setIsOpen(false)
                   }, 5000)
                 }
-                  console.log('PAID_VERSION', PAID_VERSION)
+                  
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>

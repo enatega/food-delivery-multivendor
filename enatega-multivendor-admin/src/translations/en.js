@@ -1,3 +1,6 @@
+import { APP_NAME } from "../utils/constants"
+import { toTitleCase } from "../utils/helper"
+
 const en = {
   translation: {
     'Sign in credentials': 'Sign in credentials',
@@ -75,7 +78,7 @@ const en = {
     'Delivery Rate': 'Delivery Rate',
     'Currency Symbol': 'Currency Symbol',
     enterYourDetailsBelow: 'Enter your details below',
-    LogintoEnatega: 'Login to Enatega',
+    LogintoEnatega: `Login to ${toTitleCase(APP_NAME)}`,
     RememberMe: 'Remember me',
     ForgotYourPassword: 'Forgot your password?',
     errorWhileSaving: 'An error occured while saving,Try again',
@@ -96,7 +99,7 @@ const en = {
     ChooseSymbol: 'Choose Symbol',
     PHMail: 'e.g something@email.com',
     EmailName: 'Email Name',
-    PHEnatega: 'e.g Enatega',
+    PHEnatega: `e.g ${toTitleCase(APP_NAME)}`,
     PHFood: 'e.g FOOD',
     ClientSecretKey: 'Client Secret Key',
     Stripe: 'Stripe',
@@ -119,9 +122,9 @@ const en = {
     LoadingDots: 'Loading ...',
     ErrorDots: 'Error ...',
     NewAddon: 'New Addon',
-    EnategaMultivendor: 'Enatega Multivendor',
+    EnategaMultivendor: `${toTitleCase(APP_NAME)} Multivendor`,
     ResetPassword: 'Reset Password',
-    EnategaDashboard: 'Enatega Dashboard',
+    EnategaDashboard: `${toTitleCase(APP_NAME)} Dashboard`,
     UpdateOption: 'Update Option',
     AddOption: 'Add Option',
     OrderStatusUpdated: 'Order status updated',

@@ -23,6 +23,7 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
+import { WEBSITE_URL } from '../../utils/constants'
 const CREATE_FOOD = gql`
   ${createFood}
 `
@@ -83,7 +84,6 @@ function Food(props) {
   const restaurantId = localStorage.getItem('restaurantId')
 
   const clearFields = () => {
-    // formRef.current.reset()
     variationSetter([
       {
         title: '',
@@ -433,7 +433,7 @@ function Food(props) {
                 alt="..."
                 src={
                   imgMenu ||
-                  'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                  `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
                 }
               />
               <label

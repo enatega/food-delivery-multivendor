@@ -132,7 +132,7 @@ const Dashboard = props => {
       restaurant: restaurantId
     }
   })
-  console.log('getOrdersByDateRange', data)
+ 
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
 

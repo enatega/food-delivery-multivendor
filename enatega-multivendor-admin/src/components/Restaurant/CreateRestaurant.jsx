@@ -32,6 +32,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { SHOP_TYPE } from '../../utils/enums'
 import Dropdown from '../Dropdown'
+import { WEBSITE_URL } from '../../utils/constants'
 
 const CREATE_RESTAURANT = gql`
   ${createRestaurant}
@@ -75,7 +76,7 @@ const CreateRestaurant = props => {
   const [errors, setErrors] = useState('')
   const [success, setSuccess] = useState('')
   const onCompleted = data => {
-    console.log('on complete here')
+ 
     setNameError(null)
     setAddressError(null)
     setUsernameError(null)
@@ -117,8 +118,7 @@ const CreateRestaurant = props => {
     () => cuisines?.cuisines?.map(item => item.name),
     [cuisines]
   )
-  console.log('cuisines => ', cuisinesInDropdown)
-
+  
   const [mutate, { loading }] = useMutation(CREATE_RESTAURANT, {
     onError,
     onCompleted,
@@ -537,7 +537,7 @@ const CreateRestaurant = props => {
                   alt="..."
                   src={
                     imgUrl ||
-                    'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                    `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
                   }
                 />
                 <label htmlFor="file-upload" className={classes.fileUpload}>
@@ -608,7 +608,7 @@ const CreateRestaurant = props => {
                         address,
                         image:
                           imgUpload ||
-                          'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
+                          `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`,
                         logo:
                           logoUpload || defaultLogo,
                         deliveryTime: Number(deliveryTime),

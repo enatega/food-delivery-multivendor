@@ -28,6 +28,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { SHOP_TYPE } from '../utils/enums'
 import Dropdown from '../components/Dropdown'
+import { WEBSITE_URL } from '../utils/constants'
 
 const GET_PROFILE = gql`
   ${getRestaurantProfile}
@@ -573,7 +574,7 @@ const VendorProfile = () => {
                         alt="..."
                         src={
                           imgUrl ||
-                          'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                          `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
                         }
                       />
                       <label
@@ -651,7 +652,7 @@ const VendorProfile = () => {
                               image:
                                 imgUpload ||
                                 data.restaurant.image ||
-                                'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp',
+                                `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`,
                               logo: logoUpload || defaultLogo,
                               orderPrefix: prefix,
                               deliveryTime: Number(deliveryTime),

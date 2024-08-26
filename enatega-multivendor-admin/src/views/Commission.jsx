@@ -27,7 +27,7 @@ const Commission = () => {
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_RESTAURANTS
   )
-  console.log(data)
+
   const globalClasses = useGlobalStyles()
   const classes = useStyles()
   const { t } = useTranslation()

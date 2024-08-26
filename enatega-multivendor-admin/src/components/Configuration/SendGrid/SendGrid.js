@@ -8,6 +8,8 @@ import { saveSendGridApiKey } from '../../../apollo'
 import useStyles from '../styles'
 import useGlobalStyles from '../../../utils/globalStyles'
 import { Box, Switch, Typography, Input, Button, Grid } from '@mui/material'
+import { toTitleCase } from '../../../utils/helper'
+import { APP_NAME } from '../../../utils/constants'
 
 const SAVE_SENDGRID_API_KEY = gql`
   ${saveSendGridApiKey}
@@ -166,7 +168,7 @@ function SendGridConfiguration(props) {
                 style={{ marginTop: -1 }}
                 id="input-sendGridEmailName"
                 name="input-sendGridEmailName"
-                placeholder="e.g Enatega"
+                placeholder={`e.g ${toTitleCase(APP_NAME)}`}
                 type="text"
                 defaultValue={sendGridEmailName}
                 onBlur={event =>

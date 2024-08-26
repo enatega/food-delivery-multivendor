@@ -71,7 +71,7 @@ function Sections(props) {
       variables: { id: restaurantId }
     }
   )
-  console.log(data)
+
 
   const customSort = (rows, field, direction) => {
     const handleField = row => {

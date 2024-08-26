@@ -28,6 +28,7 @@ import {
   Legend
 } from 'chart.js'
 import { withTranslation } from 'react-i18next'
+import { WEBSITE_URL } from '../utils/constants'
 
 // const { t } = useTranslation();
 
@@ -58,7 +59,7 @@ const GET_VENDORS = gql`
 const SuperAdminDashboard = props => {
   const { t } = props
   const theme = useTheme()
-  console.log('superadmin props: ', props)
+ 
   const globalClasses = useGlobalStyles()
   const { loading: loadingVendors, data: vendors } = useQuery(GET_VENDORS)
   const { data: restaurants, loading: loadingRest } = useQuery(
@@ -139,7 +140,7 @@ const SuperAdminDashboard = props => {
                   </Typography>
                   <ButtonBase
                     onClick={() =>
-                      (window.location.href = 'https://enatega.com')
+                      (window.location.href = WEBSITE_URL)
                     }
                     variant="contained"
                     sx={{ width: '30%' }}

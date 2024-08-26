@@ -73,9 +73,7 @@ const Users = props => {
     return orderBy(rows, handleField, direction)
   }
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection)
-
+  const handleSort = (column, sortDirection) =>{}
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
 

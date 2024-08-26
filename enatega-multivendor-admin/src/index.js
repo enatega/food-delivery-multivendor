@@ -22,6 +22,7 @@ import App from './app'
 import { RestProvider } from './context/Restaurant'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material'
 import theme from './utils/theme'
+import { APP_NAME } from './utils/constants'
 
 function Main() {
   const {
@@ -30,7 +31,7 @@ function Main() {
     SERVER_URL,
     WS_SERVER_URL
   } = ConfigurableValues()
-  console.log('GOOGLE_MAPS_KEY', GOOGLE_MAPS_KEY)
+
   useEffect(() => {
     Sentry.init({
       dsn: SENTRY_DSN,
@@ -50,7 +51,7 @@ function Main() {
     }
   })
   const request = async operation => {
-    const data = localStorage.getItem('user-enatega')
+    const data = localStorage.getItem(`user-${APP_NAME}`)
 
     let token = null
     if (data) {

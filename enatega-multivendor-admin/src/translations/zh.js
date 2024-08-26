@@ -1,3 +1,6 @@
+import {toTitleCase} from '../utils/helper'
+import {APP_NAME} from '../utils/constants'
+
 const zh = {
   translation: {
     'Sign in credentials': '登录凭据',
@@ -115,9 +118,9 @@ const zh = {
     LoadingDots: '加载中...',
     ErrorDots: '错误...',
     NewAddon: '新插件',
-    EnategaMultivendor: 'Enatega 多供应商',
+    EnategaMultivendor: `${toTitleCase(APP_NAME)} 多供应商`,
     ResetPassword: '重置密码',
-    EnategaDashboard: 'Enatega 仪表板',
+    EnategaDashboard: `${toTitleCase(APP_NAME)} 仪表板`,
     UpdateOption: '更新选项',
     AddOption: '添加选项',
     OrderStatusUpdated: '订单状态已更新',

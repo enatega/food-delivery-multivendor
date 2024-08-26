@@ -27,10 +27,8 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
     try {
-        console.log('onBackgroundMessage')
         // Customize notification here
         const { title, body } = payload.notification;
-        console.log('title', title, body)
         const notificationOptions = {
            body,
            icon: "/favicon.png",
@@ -38,6 +36,7 @@ messaging.onBackgroundMessage(function (payload) {
      
         // eslint-disable-next-line no-restricted-globals
         self.registration.showNotification(title, notificationOptions); 
+        console.log('onBackgroundMessage')
     } catch (error) {
         console.log('error', error)
     }

@@ -36,9 +36,11 @@ function Paypal(props) {
   const classes = useStyles()
   const globalClasses = useGlobalStyles()
   const [successMessage, setSuccessMessage] = useState('')
+
   const handleSuccess = message => {
     setSuccessMessage(message)
   }
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setSuccessMessage('')
@@ -46,6 +48,7 @@ function Paypal(props) {
 
     return () => clearTimeout(timeoutId)
   }, [successMessage, setSuccessMessage])
+  
   const [errorMessage, setErrorMessage] = useState('')
   const handleError = error => {
     setErrorMessage('An error occurred while saving configuration.')

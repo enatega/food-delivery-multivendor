@@ -202,7 +202,7 @@ const Orders = props => {
     const { data: dataSubscription } = useSubscription(SUBSCRIPTION_ORDER, {
       variables: { id: row._id }
     })
-    console.log(dataSubscription)
+   
     return (
       <div style={{ overflow: 'visible', whiteSpace: 'pre' }}>
         {row.orderId}

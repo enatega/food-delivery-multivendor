@@ -16,6 +16,7 @@ import {
   MenuItem
 } from '@mui/material'
 import ConfigurableValues from '../../config/constants'
+import { WEBSITE_URL } from '../../utils/constants'
 
 const CREATE_CUISINE = gql`
   ${createCuisine}
@@ -45,7 +46,7 @@ function Cuisine(props) {
     setter(!validateFunc({ [field]: state }, field))
   }
   const onCompleted = data => {
-    console.log('Data => ', data)
+   
     const message = props.cuisine ? t('CuisineUpdated') : t('CuisineAdded')
     successSetter(message)
     mainErrorSetter('')
@@ -105,7 +106,7 @@ function Cuisine(props) {
   }
 
   const selectImage = (event) => {
-    console.log('selectImage')
+   
     const result = filterImage(event)
     if (result) imageToBase64(result)
   }
@@ -254,7 +255,7 @@ function Cuisine(props) {
                     alt="..."
                     src={
                       file ||
-                      'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+                      `${WEBSITE_URL}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
                     }
                   />
                   <label
@@ -269,7 +270,6 @@ function Cuisine(props) {
                     accept="image/*"
                     onChange={event => {
                       selectImage(event)
-                      // console.log('Event => ', event)
                     }}
                   />
                 </Box>

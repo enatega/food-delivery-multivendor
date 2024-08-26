@@ -1,3 +1,6 @@
+import { APP_NAME } from "../utils/constants"
+import { toTitleCase } from "../utils/helper"
+
 const fr = {
   translation: {
     'Sign in credentials': 'Identifiez-vous',
@@ -80,7 +83,7 @@ const fr = {
     'Delivery Rate': 'Frais de livraison',
     'Currency Symbol': 'Symbole de devise',
     enterYourDetailsBelow: 'Entrez vos détails ci-dessous',
-    LogintoEnatega: 'Connectez-vous à Enatega',
+    LogintoEnatega: `Connectez-vous à ${toTitleCase(APP_NAME)}`,
     RememberMe: 'Souviens-toi de moi',
     ForgotYourPassword: 'Mot de passe oublié ?',
     errorWhileSaving:
@@ -102,7 +105,7 @@ const fr = {
     ChooseSymbol: 'Choisissez le symbole',
     PHMail: 'par exemple quelquechose@email.com',
     EmailName: "Nom de l'email",
-    PHEnatega: 'par exemple Enatega',
+    PHEnatega: `par exemple ${toTitleCase(APP_NAME)}`,
     PHFood: 'par exemple NOURRITURE',
     ClientSecretKey: 'Clé secrète du client',
     Stripe: 'Stripe',
@@ -121,9 +124,9 @@ const fr = {
     LoadingDots: 'Chargement...',
     ErrorDots: 'Erreur...',
     NewAddon: 'Nouveau module complémentaire',
-    EnategaMultivendor: 'Enatega Multivendor',
+    EnategaMultivendor: `${toTitleCase(APP_NAME)} Multivendor`,
     ResetPassword: 'Réinitialiser le mot de passe',
-    EnategaDashboard: 'Tableau de bord Enatega',
+    EnategaDashboard: `Tableau de bord ${toTitleCase(APP_NAME)}`,
     UpdateOption: "Mettre à jour l'option",
     AddOption: 'Ajouter une option',
     OrderStatusUpdated: 'Statut de la commande mis à jour',

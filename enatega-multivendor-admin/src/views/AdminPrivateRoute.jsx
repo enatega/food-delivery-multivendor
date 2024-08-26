@@ -1,11 +1,12 @@
 import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
+import { APP_NAME } from '../utils/constants'
 export const AdminPrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      localStorage.getItem('user-enatega') ? (
-        JSON.parse(localStorage.getItem('user-enatega')).userType ===
+      localStorage.getItem(`user-${APP_NAME}`) ? (
+        JSON.parse(localStorage.getItem(`user-${APP_NAME}`)).userType ===
         'ADMIN' ? (
           <Component {...props} />
         ) : (

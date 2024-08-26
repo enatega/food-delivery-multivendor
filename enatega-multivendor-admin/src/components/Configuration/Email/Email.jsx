@@ -33,7 +33,6 @@ function Email(props) {
   const [emailNameError, emailNameErrorSetter] = useState(null)
   const [enableEmail, setEnabaleEmail] = useState(!!props.enabled)
   const [showPassword, setShowPassword] = useState(false)
-  //const [isEndAdornmentEnabled, setIsEndAdornmentEnabled] = useState(false);
   const [mutate, { loading }] = useMutation(SAVE_EMAIL_CONFIGURATION)
 
   const onBlur = (setter, field, state) => {
@@ -110,7 +109,6 @@ function Email(props) {
       <Box className={classes.form}>
         <form ref={formRef}>
           <Grid container spacing={2}>
-            {/* First Row */}
             <Grid item xs={12} sm={6}>
               <Box>
                 <Typography className={classes.labelText}>

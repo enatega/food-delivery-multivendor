@@ -19,6 +19,7 @@ import routes from '../../routes'
 import useStyles from './styles'
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useLocation } from 'react-router-dom'
+import { APP_NAME } from '../../utils/constants'
 
 const drawerWidth = 240
 function Sidebar(props) {
@@ -30,7 +31,7 @@ function Sidebar(props) {
   const restaurantName = localStorage.getItem('restaurantName')
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const { window, t } = props
-  console.log('SideBar props are here: ', props)
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
@@ -44,7 +45,7 @@ function Sidebar(props) {
         <Typography
           variant="h2"
           className={[classes.headingText, classes.logoText]}>
-          ENATEGA
+          {APP_NAME}
         </Typography>
       </Toolbar>
       {restaurantName && restaurantImage ? (
@@ -67,9 +68,9 @@ function Sidebar(props) {
 
       <Box className={classes.sidebarList}>
         {routes.map((prop, key) => {
-          console.log(key, prop.name)
+      
           if (
-            JSON.parse(localStorage.getItem('user-enatega')).userType ===
+            JSON.parse(localStorage.getItem(`user-${APP_NAME}`)).userType ===
             'ADMIN'
           ) {
             return prop.appearInSidebar && !prop.admin ? (

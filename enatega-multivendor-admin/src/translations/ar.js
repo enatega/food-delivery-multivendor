@@ -1,3 +1,6 @@
+import { APP_NAME } from "../utils/constants"
+import { toTitleCase } from "../utils/helper"
+
 const ar = {
   translation: {
     'Sign in credentials': 'بيانات تسجيل الدخول',
@@ -75,7 +78,7 @@ const ar = {
     'Delivery Rate': 'سعر التوصيل',
     'Currency Symbol': 'رمز العملة',
     enterYourDetailsBelow: 'أدخل تفاصيلك أدناه',
-    LogintoEnatega: 'تسجيل الدخول إلى Enatega',
+    LogintoEnatega: `تسجيل الدخول إلى ${toTitleCase(APP_NAME)}`,
     RememberMe: 'تذكرني',
     ForgotYourPassword: 'نسيت كلمة المرور؟',
     errorWhileSaving: 'حدث خطأ أثناء الحفظ، حاول مرة أخرى',
@@ -96,7 +99,7 @@ const ar = {
     ChooseSymbol: 'اختيار الرمز',
     PHMail: 'على سبيل المثال، something@email.com',
     EmailName: 'اسم البريد الإلكتروني',
-    PHEnatega: 'على سبيل المثال، Enatega',
+    PHEnatega: `على سبيل المثال، ${toTitleCase(APP_NAME)}`,
     PHFood: 'على سبيل المثال، FOOD',
     ClientSecretKey: 'مفتاح العميل السري',
     Stripe: 'شريط',
@@ -115,9 +118,9 @@ const ar = {
     LoadingDots: 'جار التحميل ...',
     ErrorDots: 'خطأ ...',
     NewAddon: 'إضافة جديدة',
-    EnategaMultivendor: 'Enatega Multivendor',
+    EnategaMultivendor: `${toTitleCase(APP_NAME)} Multivendor`,
     ResetPassword: 'إعادة تعيين كلمة المرور',
-    EnategaDashboard: 'لوحة تحكم Enatega',
+    EnategaDashboard: `لوحة تحكم ${toTitleCase(APP_NAME)}`,
     UpdateOption: 'تحديث الخيار',
     AddOption: 'إضافة الخيار',
     OrderStatusUpdated: 'تم تحديث حالة الطلب',

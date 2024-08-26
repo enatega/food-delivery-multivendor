@@ -14,6 +14,8 @@ import { isFirebaseSupported, initialize } from './firebase.js'
 import { uploadToken } from './apollo'
 import { gql, useApolloClient } from '@apollo/client'
 import ConfigurableValues from './config/constants.js'
+import { ADMIN_UR, APP_NAME, MESSAGING_TOKEN } from './utils/constants.js'
+import { toTitleCase } from './utils/helper.js'
 
 require('./i18n')
 
@@ -34,16 +36,11 @@ const App = () => {
     GOOGLE_MAPS_KEY
   } = ConfigurableValues()
  
-  // const [mapsKey, setMapsKey] = useState(null)
-  // useEffect(() => {
-  //   if (GOOGLE_MAPS_KEY) {
-  //     setMapsKey(GOOGLE_MAPS_KEY)
-  //   }
-  // }, [GOOGLE_MAPS_KEY])
+  
   const client = useApolloClient()
-  const [user] = useState(localStorage.getItem('user-enatega'))
-  const userType = localStorage.getItem('user-enatega')
-    ? JSON.parse(localStorage.getItem('user-enatega')).userType
+  const [user] = useState(localStorage.getItem(`user-${APP_NAME}`))
+  const userType = localStorage.getItem(`user-${APP_NAME}`)
+    ? JSON.parse(localStorage.getItem(`user-${APP_NAME}`)).userType
     : null
   useEffect(() => {
     if (user) {
@@ -64,7 +61,7 @@ const App = () => {
                 vapidKey: VAPID_KEY
               })
                 .then(token => {
-                  localStorage.setItem('messaging-token', token)
+                  localStorage.setItem(MESSAGING_TOKEN, token)
                   client
                     .mutate({
                       mutation: UPLOAD_TOKEN,
@@ -87,19 +84,17 @@ const App = () => {
             .catch(console.log)
 
           onMessage(messaging, function(payload) {
-            console.log(payload)
             // Customize notification here
-            // const { title, body } = payload.notification
             // eslint-disable-next-line no-restricted-globals
-            var notificationTitle = 'New Order on Enatega Multivendor'
+            var notificationTitle = `New Order on ${toTitleCase(APP_NAME)} Multivendor`
             var notificationOptions = {
               body: payload.data.orderid,
-              icon: 'https://multivendor-admin.ninjascode.com/favicon.png'
+              icon: `${ADMIN_UR}/favicon.png`
             }
             const nt = new Notification(notificationTitle, notificationOptions)
             nt.onclick = function(event) {
               event.preventDefault() // prevent the browser from focusing the Notification's tab
-              window.open('https://multivendor-admin.ninjascode.com/dashboard')
+              window.open(`${ADMIN_UR}/dashboard`)
               nt.close()
             }
           })

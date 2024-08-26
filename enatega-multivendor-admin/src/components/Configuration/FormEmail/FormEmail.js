@@ -79,8 +79,8 @@ function EmailConfiguration(props) {
                     }
                   })
                     .then(response => {
-                      // Handle successful response
-                      console.log(response)
+                      // Handle successful response and show notification instead of console.
+                    
                     })
                     .catch(error => {
                       // Handle GraphQL errors

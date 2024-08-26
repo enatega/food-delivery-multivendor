@@ -8,6 +8,7 @@ import {
 } from '@mui/material'
 import useStyles from './styles'
 import { withTranslation } from 'react-i18next'
+import { CUSTOMER_URL, WEBSITE_URL } from '../../utils/constants'
 
 function AdminFooter(props) {
   const theme = useTheme()
@@ -34,7 +35,7 @@ function AdminFooter(props) {
 
         <Link
           className={classes.link}
-          href="https://multivendor.enatega.com/"
+          href={CUSTOMER_URL}
           target="_blank"
           underline="none">
           {t('EnategaMultivendor')}
@@ -48,7 +49,7 @@ function AdminFooter(props) {
         </Link>
         <Link
           className={classes.link}
-          href="https://enatega.com/blog/"
+          href={`${WEBSITE_URL}/blog/`}
           target="_blank"
           underline="none">
           {t('Blog')}

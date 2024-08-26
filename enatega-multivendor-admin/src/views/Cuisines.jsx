@@ -27,6 +27,7 @@ import {
 import { ReactComponent as CouponsIcon } from '../assets/svg/svg/Coupons.svg'
 import TableHeader from '../components/TableHeader'
 import CuisineComponent from '../components/Cuisine/Cuisine'
+import { APP_NAME } from '../utils/constants'
 
 const GET_CUISINES = gql`
   ${getCuisines}
@@ -78,7 +79,7 @@ const Cuisines = props => {
             style={{ width: 30, height: 30, borderRadius: 15 }}
             src={
               row.image ||
-              'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
+              `${APP_NAME}/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp`
             }
             alt=''
           />

@@ -30,7 +30,7 @@ function Vendor(props) {
   const [emailError, emailErrorSetter] = useState(null)
   const [passError, passErrorSetter] = useState(null)
   const { t } = props
-  console.log('vendor props: ', props)
+  
   const onCompleted = data => {
     if (!props.vendor) clearFields()
     const message = props.vendor

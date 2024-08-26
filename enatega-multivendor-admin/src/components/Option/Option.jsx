@@ -28,19 +28,17 @@ const EDIT_OPTION = gql`
 function Option(props) {
   const theme = useTheme()
   const { t } = props
-  const [option, optionSetter] = useState(
+  const [option, optionSetter] = useState([
     props.option
-      ? [{ ...props.option, titleError: false, priceError: false }]
-      : [
-          {
-            title: '',
-            description: '',
-            price: 0,
-            titleError: false,
-            priceError: false
-          }
-        ]
-  )
+      ? { ...props.option, titleError: false, priceError: false }
+      : {
+          title: '',
+          description: '',
+          price: 0,
+          titleError: false,
+          priceError: false
+        }
+  ])
   const [mainError, mainErrorSetter] = useState('')
   const [success, successSetter] = useState('')
   const mutation = props.option ? EDIT_OPTION : CREATE_OPTIONS

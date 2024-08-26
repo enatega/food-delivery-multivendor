@@ -27,8 +27,7 @@ function WithdrawRequest() {
     `
   )
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection)
+  const handleSort = (column, sortDirection) =>{}
 
   const columns = [
     {
