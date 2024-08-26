@@ -263,7 +263,6 @@ function Checkout() {
       navigate(`/paypal?id=${data.placeOrder._id}`, { replace: true });
     } else if (paymentMethod.payment === "STRIPE") {
       navigate(`/stripe?id=${data.placeOrder._id}`, { replace: true });
-      //window.location = `${SERVER_URL}stripe/create-checkout-session?id=${data.placeOrder.orderId}&platform=web`;
     }
   }
 

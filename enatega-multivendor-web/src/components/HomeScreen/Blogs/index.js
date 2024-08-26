@@ -11,6 +11,7 @@ import {
 import Blog1 from "../../../assets/images/blog1.png";
 import Blog2 from "../../../assets/images/blog2.png";
 import { useTranslation } from "react-i18next";
+import { MEDIUM_HANDLE } from "../../../utils/constantValues";
 
 export default function Blogs() {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export default function Blogs() {
             fontWeight: 700,
             borderRadius: 10,
           }}
-          onClick={() => window.open("https://medium.com/enatega", "_blank")}
+          onClick={() => window.open(`https://medium.com/${MEDIUM_HANDLE}`, "_blank")}
           variant="contained"
           disableElevation
         >
@@ -60,6 +61,8 @@ function BlogComponent({ title, desc }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("md"));
+
+  
 
   return (
     <Grid container>
@@ -140,7 +143,7 @@ function BlogComponent({ title, desc }) {
                 variant="contained"
                 disableElevation
                 onClick={() =>
-                  window.open("https://medium.com/enatega", "_blank")
+                  window.open(`https://medium.com/${MEDIUM_HANDLE}`, "_blank")
                 }
               >
                 {t("readMore")}

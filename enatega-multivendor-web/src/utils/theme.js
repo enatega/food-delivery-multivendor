@@ -14,8 +14,7 @@ const theme = createTheme({
     },
     MuiPickersCalendarHeader: {
       switchHeader: {
-        // backgroundColor: blue.A200,
-        // color: "white",
+   
       },
     },
     MuiPickersDay: {

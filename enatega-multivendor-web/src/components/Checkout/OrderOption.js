@@ -47,7 +47,6 @@ function OrderOption(props) {
   return (
     <>
       <Dialog
-        //fullScreen={extraSmall}
         onClose={() => setOrderOptionModal((prev) => !prev)}
         open={orderOptionModal}
         scroll="body"
@@ -221,7 +220,6 @@ function CalendarComponent({
   const classes = useStyle();
   return (
     <Dialog
-      //fullScreen={extraSmall}
       onClose={toggleCalModal}
       open={calModal}
       scroll="body"
@@ -323,7 +321,6 @@ function TimeComponent({
   };
   return (
     <Dialog
-      //fullScreen={extraSmall}
       onClose={toggleTimeModal}
       open={timeModal}
       scroll="body"

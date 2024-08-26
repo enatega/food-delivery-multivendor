@@ -105,7 +105,6 @@ function DetailedOrderCard(props) {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                //className={classes.status}
                 className={`${classes.textBold} ${classes.smallText}`}
                 style={{
                   backgroundColor: theme.palette.primary.main,
@@ -120,7 +119,7 @@ function DetailedOrderCard(props) {
                   color="black"
                   style={{ fontWeight: 600 }}
                 >
-                  {t(props.orderStatus)} {console.log(props?.orderStatus)}
+                  {t(props.orderStatus)}
                 </Typography>
               </Box>
             </Box>

@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
     background:
       "linear-gradient(180deg, theme.palette.common.whiteShade 0%, theme.palette.common.white 100%)",
     borderRadius: "0px",
-    // padding: "40px",
   },
   RightWrapper: {
     backgroundColor: theme.palette.primary.main,
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "90vh",
     display: "flex",
     marginLeft: "auto",
-    // padding: "10rem 0rem 10rem 0rem",
     borderTopLeftRadius: "5rem",
     borderBottomLeftRadius: "5rem",
   },

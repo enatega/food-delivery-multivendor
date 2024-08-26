@@ -43,9 +43,7 @@ function PricingView(props) {
         cart.forEach((cartItem) => {
           itemTotal += cartItem.price * cartItem.quantity;
         });
-        // if (withDiscount && coupon && coupon.discount) {
-        //   itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
-        // }
+     
         const deliveryAmount = amount > 0 ? deliveryCharges : 0;
         return (itemTotal + deliveryAmount).toFixed(2);
       },
@@ -74,40 +72,6 @@ function PricingView(props) {
     [deliveryCharges, cart]
   );
 
-  // function calculateDistance(){
-  //   const service = new window.google.maps.DistanceMatrixService();
-  // // build request
-  // const destinationObj = JSON.parse(localStorage.getItem('location'))
-  // console.log('destinationObj', destinationObj)
-  // const origin1 = { lat: Number(restaurantData.location.coordinates[1]), lng: Number(restaurantData.location.coordinates[0]) };
-  // const origin2 = restaurantData.address;
-  // const destinationA = destinationObj.deliveryAddress;
-  // const destinationB = { lat: Number(destinationObj.latitude), lng: Number(destinationObj.longitude) };
-
-  // const request = {
-  //   origins: [origin1, origin2],
-  //   destinations: [destinationA, destinationB],
-  //   travelMode: window.google.maps.TravelMode.DRIVING,
-  //   unitSystem: window.google.maps.UnitSystem.METRIC,
-  //   avoidHighways: false,
-  //   avoidTolls: false,
-  // };
-  // return service.getDistanceMatrix(request).then((response) => {
-
-  //     let distance = 0;
-  //     const originList = response.originAddresses;
-  //     distance = response.rows[0].elements[0].distance.value;
-  //     for (var i = 0; i < originList.length; i++) {
-  //       var results = response.rows[i].elements;
-  //       for (var j = 0; j < results.length; j++) {
-  //         if(response.rows[i].elements[j].distance.value < distance){
-  //           distance = response.rows[i].elements[j].distance.value
-  //         }
-  //       }
-  //     }
-  //     return distance
-  //   });
-  // }
 
   return (
     <Container

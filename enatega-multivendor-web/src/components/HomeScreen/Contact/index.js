@@ -51,10 +51,6 @@ export default function Contact() {
   }
 
   function onCompleted(data) {
-    console.log(
-      "Form Submission Successful Response:",
-      data.sendFormSubmission
-    );
     clearContactFields();
     setFormMessage(data.sendFormSubmission.message);
   }

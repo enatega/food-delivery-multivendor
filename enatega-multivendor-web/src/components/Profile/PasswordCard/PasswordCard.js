@@ -61,7 +61,6 @@ function PasswordCard() {
         const oldPassword = formRef.current["currentPassword"].value;
         const newPassword = formRef.current["newPassword"].value;
         
-        // Password validation requirements
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/; // At least 8 characters, one lowercase letter, one uppercase letter, one number
         if (!passwordRegex.test(newPassword)) {
             setConfirmError("Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number");

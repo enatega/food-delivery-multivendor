@@ -1,8 +1,13 @@
 import { Button, Card, CardContent, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import useStyle from "./styles";
+import { APP_NAME } from "../../../utils/constantValues";
+import { toTitleCase } from "../../../utils/helper";
 
 function InfoRestaurant() {
+
+
+
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('md'));
   const extraSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -26,7 +31,7 @@ function InfoRestaurant() {
           <Card className={classes.infoCard}>
             <CardContent>
               <Typography variant="h5" className={classes.infotTitle}>
-                List your restaurant on Enatega
+                List your restaurant on {toTitleCase(APP_NAME)}
               </Typography>
               <Typography className={classes.infoDescription}>
                 Would you like thousands of new customers to taste your amazing food? So would we!

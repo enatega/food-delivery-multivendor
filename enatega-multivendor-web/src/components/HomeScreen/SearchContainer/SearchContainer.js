@@ -169,7 +169,6 @@ function SearchContainer({
                 height: "100%",
                 width: "100%",
                 flex: 1,
-                //zIndex: 10
               }}
               zoom={10}
               center={{
@@ -609,31 +608,5 @@ function SearchContainer({
   );
 }
 
-// function CategorySmallCard({ image, title }) {
-//   const theme = useTheme();
-//   return (
-//     <Box flexDirection={"column"} justifyContent="center">
-//       <Box
-//         display="flex"
-//         justifyContent={"center"}
-//         alignItems="center"
-//         style={{
-//           minHeight: 65,
-//           width: 65,
-//           borderRadius: 27,
-//           backgroundColor: theme.palette.common.white,
-//         }}
-//       >
-//         <img src={image} alt="icon" />
-//       </Box>
-//       <Typography
-//         align="center"
-//         style={{ color: theme.palette.primary.main, marginTop: 3 }}
-//       >
-//         {title}
-//       </Typography>
-//     </Box>
-//   );
-// }
 
 export default React.memo(SearchContainer);

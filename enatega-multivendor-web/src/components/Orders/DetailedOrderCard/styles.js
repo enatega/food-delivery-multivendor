@@ -22,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
   card: {
     background: "White",
-    //padding: theme.spacing(2),
-    //marginBottom: theme.spacing(4),
     borderRadius: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
       width: "250px",

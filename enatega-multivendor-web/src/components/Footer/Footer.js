@@ -16,6 +16,8 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { useTranslation } from "react-i18next";
 
 import useStyles from "./styles";
+import { toTitleCase } from "../../utils/helper";
+import { APP_NAME, FACEBOOK_HANDLE, INSTAGRAM_HANDLE, LINKEDIN_URL, TWITTER_HANDLE } from "../../utils/constantValues";
 
 function Footer() {
   const { t } = useTranslation();
@@ -32,16 +34,14 @@ function Footer() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const handleButtonClick = () => {  
-    try {  
-      window.scrollTo({ top: 0, behavior: 'smooth' });  
-    } catch (error) {  
-      console.error("Smooth scroll failed", error);  
-      // Fallback to instant scroll  
-      window.scrollTo(0, 0);  
-    }  
-  };  
-
+  const handleButtonClick = () => {
+    try {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error("Smooth scroll failed", error);
+      window.scrollTo(0, 0);
+    }
+  };
 
   return (
     <Grid container alignItems="center">
@@ -62,7 +62,7 @@ function Footer() {
             }}
             align="center"
           >
-            Enatega
+            {toTitleCase(APP_NAME)}
           </Typography>
           <Typography
             variant="body2"
@@ -98,7 +98,11 @@ function Footer() {
               {t("footerLinkHome")}
             </Typography>
           </RouterLink>
-          <RouterLink to="/privacy" onClick={handleButtonClick} style={{ textDecoration: "none" }}>
+          <RouterLink
+            to="/privacy"
+            onClick={handleButtonClick}
+            style={{ textDecoration: "none" }}
+          >
             <Typography
               variant="body2"
               style={{ fontWeight: 700, marginTop: 10, color: "black" }}
@@ -106,7 +110,11 @@ function Footer() {
               {t("footerLinkPP")}
             </Typography>
           </RouterLink>
-          <RouterLink to="/terms" onClick={handleButtonClick} style={{ textDecoration: "none" }}>
+          <RouterLink
+            to="/terms"
+            onClick={handleButtonClick}
+            style={{ textDecoration: "none" }}
+          >
             <Typography
               variant="body2"
               style={{ fontWeight: 700, marginTop: 10, color: "black" }}
@@ -158,14 +166,14 @@ function Footer() {
         >
           <Box
             className={classes.iconContainer}
-            onClick={() => redirectHandler("https://www.facebook.com/enatega/")}
+            onClick={() => redirectHandler(`https://www.facebook.com/${FACEBOOK_HANDLE}/`)}
           >
             <FacebookIcon style={{ color: theme.palette.primary.main }} />
           </Box>
           <Box
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
-            onClick={() => redirectHandler("https://twitter.com/NinjasCode1")}
+            onClick={() => redirectHandler(`https://twitter.com/${TWITTER_HANDLE}`)}
           >
             <TwitterIcon style={{ color: theme.palette.primary.main }} />
           </Box>
@@ -173,7 +181,7 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("https://www.instagram.com/enatega.nb/")
+              redirectHandler(`https://www.instagram.com/${INSTAGRAM_HANDLE}/`)
             }
           >
             <InstagramIcon style={{ color: theme.palette.primary.main }} />
@@ -182,7 +190,7 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("https://www.linkedin.com/company/14583783")
+              redirectHandler(LINKEDIN_URL)
             }
           >
             <LinkedInIcon style={{ color: theme.palette.primary.main }} />

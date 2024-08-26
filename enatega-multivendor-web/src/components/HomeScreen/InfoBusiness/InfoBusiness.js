@@ -1,8 +1,12 @@
 import { Button, Card, CardContent, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import useStyle from "./styles";
+import { APP_NAME } from "../../../utils/constantValues";
+import { toTitleCase } from "../../../utils/helper";
 
 function InfoBusiness() {
+
+
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('md'));
   const extraSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -32,7 +36,7 @@ function InfoBusiness() {
           <Card className={classes.infoCard}>
             <CardContent>
               <Typography variant="h5" className={classes.infotTitle}>
-                Enatega for business
+              {toTitleCase(APP_NAME)} for business
               </Typography>
               <Typography className={classes.infoDescription}>
                 Order lunch, fuel for meetings or late-night deliveries to the office. Your favorite restaurants coming

@@ -6,6 +6,7 @@ import zh from "./translations/zh";
 import de from "./translations/de";
 import km from "./translations/km";
 import fr from "./translations/fr";
+import { APP_NAME } from "./utils/constantValues";
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -16,7 +17,7 @@ i18n.use(initReactI18next).init({
     fr: fr,
     km: km,
   },
-  lng: localStorage.getItem("enatega-language") || "en",
+  lng: localStorage.getItem(`${APP_NAME}-language`) || "en",
   fallbackLng: "en",
   debug: true,
   interpolation: {

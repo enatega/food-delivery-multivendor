@@ -1,6 +1,7 @@
 import { Typography, Box, Divider, Button, useTheme } from "@mui/material";
 import useStyle from "./styles";
 import { useTranslation } from "react-i18next";
+import { WEBSITE_URL } from "../../../utils/constantValues";
 
 export default function PriceCard({ price, offer, desc, center }) {
   const { t } = useTranslation();
@@ -101,7 +102,7 @@ export default function PriceCard({ price, offer, desc, center }) {
                 variant="contained"
                 disableElevation
                 onClick={() =>
-                  window.open("https://enatega.com/#contact", "_blank")
+                  window.open(WEBSITE_URL, "_blank")
                 }
               >
                 {t("getQuote")}

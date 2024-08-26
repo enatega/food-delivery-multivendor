@@ -14,6 +14,7 @@ import FlashMessage from "../../components/FlashMessage";
 import { LoginWrapper } from "../Wrapper";
 import useStyles from "./styles";
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_USER_EMAIL } from "../../utils/constantValues";
 
 function isValidEmailAddress(address) {
   return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(address);
@@ -114,7 +115,7 @@ function NewLogin() {
           error={Boolean(error)}
           helperText={error}
           variant="outlined"
-          defaultValue={"demo-customer@enatega.com"}
+          defaultValue={DEFAULT_USER_EMAIL}
           label="Email"
           type={"email"}
           fullWidth

@@ -55,7 +55,6 @@ const useStyle = makeStyles((theme) => ({
     overflow: "hidden",
     alignSelf: "center",
     justifyContent: (props) => (props.extraSmall ? "center" : "flex-end"),
-    // marginTop: (props) => (props.extraSmall ? "20px" : undefined),
   },
   linkDecoration: {
     textDecoration: "none",

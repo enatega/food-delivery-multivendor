@@ -36,10 +36,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
-//import { fetchConfiguration } from "./utils/helper";
 
-
-//import { Integrations } from "@sentry/tracing";
 
 const GoogleMapsLoader = ({
   children,
@@ -132,7 +129,7 @@ const GoogleMapsLoader = ({
     googleMapsApiKey: GOOGLE_MAPS_KEY,
     libraries: LIBRARIES,
   });
-  console.log("isLoaded ", isLoaded);
+
   if (!isLoaded) {
     return (
       <Box
@@ -166,11 +163,9 @@ function App() {
   const { isLoggedIn } = useContext(UserContext);
 
   useEffect(() => {
-    console.log({SENTRY_DSN})
     if (SENTRY_DSN) {
       Sentry.init({
         dsn: SENTRY_DSN,
-      //SENTRY_DSN  integrations: [new Integrations.BrowserTracing()],
         environment: "development",
         enableInExpoDevelopment: true,
         debug: true,

@@ -1,13 +1,16 @@
+import { APP_NAME } from "../utils/constantValues";
+import { toTitleCase } from "../utils/helper";
+
 const km = {
   translation: {
     selectLanguage: "ជ្រើសរើស​ភាសា",
     saveButton: "រក្សាទុក",
     footerText:
-      "Enatega គឺជាវេទិកាគ្រប់គ្រងការចែកចាយប្រភពបើកចំហសម្រាប់ អនាគត។ យើងផ្តល់អាទិភាពដល់ការច្នៃប្រឌិត ភាពបត់បែន និងតម្លៃសមរម្យ។ និងផ្តល់ជូននូវដំណោះស្រាយដែលអាចធ្វើមាត្រដ្ឋានបាន និងអាចប្ដូរតាមបំណងបាន ដែលសម្រួលដល់ដំណើរការរបស់អ្នក។ ដំណើរការចែកចាយ។",
+      `${toTitleCase(APP_NAME)} គឺជាវេទិកាគ្រប់គ្រងការចែកចាយប្រភពបើកចំហសម្រាប់ អនាគត។ យើងផ្តល់អាទិភាពដល់ការច្នៃប្រឌិត ភាពបត់បែន និងតម្លៃសមរម្យ។ និងផ្តល់ជូននូវដំណោះស្រាយដែលអាចធ្វើមាត្រដ្ឋានបាន និងអាចប្ដូរតាមបំណងបាន ដែលសម្រួលដល់ដំណើរការរបស់អ្នក។ ដំណើរការចែកចាយ។`,
     footerLinkHome: "ទំព័រដើម",
     footerLinkPP: "គោលគ្រឿងបទនិងលក្ខខណ្ឌ",
     footerLinkTC: "លក្ខខណ្ឌ និងលក្ខណៈ",
-    footerEndText: "Enatega - © 2022 រក្សាសិទ្ធិទាំងអស់",
+    footerEndText: `${toTitleCase(APP_NAME)} - © 2022 រក្សាសិទ្ធិទាំងអស់`,
     followUs: "តាមដានពួកយើង",
     poweredBy: "ដោនឡូតដោយ",
     linksTitle: "តំណ",
@@ -147,7 +150,7 @@ const km = {
     continue: "បន្ត",
     invalidEmail: "អ៊ីម៉ែលមិនត្រឹមត្រូវ",
     letsGetStarted: "តោះចាប់ផ្តើម!",
-    createAccount: "បង្កើតគណនីរបស់អ្នកនៅលើ Enatega",
+    createAccount: `បង្កើតគណនីរបស់អ្នកនៅលើ ${toTitleCase(APP_NAME)}`,
     firstnameErr1: "ទីតាំងគោលត្រាចាំបាច់!",
     firstnameErr2: "ឈ្មោះជានិច្ចរាយ!",
     lastnameErr1: "នាមត្រកូលត្រាចាំបាច់!",

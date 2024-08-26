@@ -5,6 +5,7 @@ import PlayStore from "../../../assets/icons/PlayStore";
 import useStyle from "./styles";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { ANDROID_STORE_URL, IOS_STORE_URL } from "../../../utils/constantValues";
 
 function StoreContainer() {
   const { t } = useTranslation()
@@ -40,7 +41,7 @@ function StoreContainer() {
             <Grid item>
               <RouterLink
                 to={{
-                  pathname: "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093",
+                  pathname: IOS_STORE_URL,
                 }}
                 target="_blank"
                 className={classes.linkDecoration}
@@ -57,7 +58,7 @@ function StoreContainer() {
               </RouterLink>
               <RouterLink
                 to={{
-                  pathname: "https://play.google.com/store/apps/details?id=com.enatega.multivendor&hl=en_US&gl=US",
+                  pathname: `${ANDROID_STORE_URL}&hl=en_US&gl=US`,
                 }}
                 target="_blank"
                 className={classes.linkDecoration}

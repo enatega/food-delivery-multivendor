@@ -16,6 +16,7 @@ import { isValidEmailAddress } from "../../utils/customFunction";
 import { LoginWrapper } from "../Wrapper";
 import useStyles from "./styles";
 import { Avatar } from "@mui/material";
+import { DEFAULT_USER_EMAIL } from "../../utils/constantValues";
 
 function LoginEmail() {
   const formRef = useRef();
@@ -119,7 +120,7 @@ function LoginEmail() {
         <Box mt={theme.spacing(2)} />
         <TextField
           name={"userEmail"}
-          defaultValue={state?.email ?? "demo-customer@enatega.com"}
+          defaultValue={state?.email ?? DEFAULT_USER_EMAIL}
           error={Boolean(emailError)}
           helperText={emailError}
           fullWidth

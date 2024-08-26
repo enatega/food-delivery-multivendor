@@ -267,7 +267,6 @@ const useStyle = makeStyles((theme) => ({
     padding: "20px",
     marginTop: "10px",
     marginBottom: "10px",
-    //marginRight: "50px",
     borderRadius: 20,
     flexDirection: "column",
   },

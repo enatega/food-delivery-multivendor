@@ -1,8 +1,10 @@
 import React from "react";
 import { useLocation } from "react-router";
 import LoginDesktopHeader from "./DesktopHeader";
+import { toTitleCase } from "../../../utils/helper";
+import { APP_NAME } from "../../../utils/constantValues";
 
-const TITLE = "Enatega";
+const TITLE = toTitleCase(APP_NAME);
 
 const REGISTRATION_PATH = [
   "/login",

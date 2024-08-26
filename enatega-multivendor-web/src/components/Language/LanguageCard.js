@@ -12,13 +12,12 @@ import React, { useCallback, useRef, useState } from "react";
 import { updateUser } from "../../apollo/server";
 import FlashMessage from "../FlashMessage";
 import useStyle from "./styles";
-//import { Link as RouterLink } from "react-router-dom";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
-console.log(i18n);
+import { APP_NAME } from "../../utils/constantValues";
+
 
 const UPDATEUSER = gql`
   ${updateUser}
@@ -42,7 +41,7 @@ function LanguageCard() {
     onCompleted,
     onError,
   });
-  console.log(mutate);
+
   function onError(error) {
     setError({ type: "error", message: error.message });
   }
@@ -57,17 +56,15 @@ function LanguageCard() {
     setError({});
   }, []);
 
-  const currentLang = localStorage.getItem("enatega-language");
+  const currentLang = localStorage.getItem(`${APP_NAME}-language`);
   const [selectedLanguage, setSelectedLanguage] = useState(
     currentLang ? currentLang : "en"
   );
-  console.log(selectedLanguage);
+ 
 
   const handleLanguageChange = (event) => {
     setSelectedLanguage(event.target.value);
-    localStorage.setItem("enatega-language", event.target.value);
-    const savedLanguage = localStorage.getItem("enatega-language");
-    console.log("Saved language in localStorage:", savedLanguage);
+    localStorage.setItem(`${APP_NAME}-language`, event.target.value);    
   };
 
   return (
@@ -109,7 +106,7 @@ function LanguageCard() {
                 value={lang.code}
                 control={<Radio color="primary" />}
                 label={lang.value}
-                checked={lang.code === localStorage.getItem("enatega-language")}
+                checked={lang.code === localStorage.getItem(`${APP_NAME}-language`)}
               />
             ))}
           </RadioGroup>

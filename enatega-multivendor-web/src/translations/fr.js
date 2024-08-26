@@ -1,13 +1,16 @@
+import { APP_NAME } from "../utils/constantValues";
+import { toTitleCase } from "../utils/helper";
+
 const fr = {
   translation: {
     selectLanguage: "Choisir la langue",
     saveButton: "sauvegarder",
     footerText:
-      "Enatega est une plateforme open source de gestion des livraisons pour le avenir. Nous accordons la priorité à l innovation, à la flexibilité et à l abordabilité, et offrez une solution évolutive et personnalisable qui rationalise votre processus de livraison.",
+      `${toTitleCase(APP_NAME)} est une plateforme open source de gestion des livraisons pour le avenir. Nous accordons la priorité à l innovation, à la flexibilité et à l abordabilité, et offrez une solution évolutive et personnalisable qui rationalise votre processus de livraison.`,
     footerLinkHome: "Accueil",
     footerLinkPP: "Politique de confidentialité",
     footerLinkTC: "Conditions générales",
-    footerEndText: "Enatega - © 2022 Tous droits réservés",
+    footerEndText: `${toTitleCase(APP_NAME)} - © 2022 Tous droits réservés`,
     followUs: "Suivez-nous",
     poweredBy: "Propulsé par",
     linksTitle: "Liens",
@@ -150,7 +153,7 @@ const fr = {
     continue: "Continuer",
     invalidEmail: "Adresse e-mail invalide",
     letsGetStarted: "Commençons !",
-    createAccount: "Créez votre compte Enatega",
+    createAccount: `Créez votre compte ${toTitleCase(APP_NAME)}`,
     firstnameErr1: "Le prénom est requis !",
     firstnameErr2: "Prénom invalide !",
     lastnameErr1: "Le nom de famille est requis !",

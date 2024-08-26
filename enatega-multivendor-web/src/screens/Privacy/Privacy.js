@@ -7,6 +7,7 @@ import { Header, LoginHeader } from "../../components/Header";
 import UserContext from "../../context/User";
 import useStyle from "./styles";
 import Analytics from "../../utils/analytics";
+import { APP_NAME, INFO_EMAIL, PRODUCT_PAGE_URL } from "../../utils/constantValues";
 
 function PrivacyPolicy() {
   useEffect(async () => {
@@ -36,9 +37,9 @@ function PrivacyPolicy() {
               variant="subtitle2"
               className={classes.MV3}
             >
-              This policy explains how we, enatega, a brand of
+              This policy explains how we, {APP_NAME}, a brand of
               <a
-                href="https://enatega.com"
+                href={PRODUCT_PAGE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={classes.linkDecoration}
@@ -48,7 +49,7 @@ function PrivacyPolicy() {
                   color="primary"
                   className={classes.link}
                 >
-                  {"https://enatega.com"}
+                  {PRODUCT_PAGE_URL}
                 </Typography>
               </a>
               , use your personal information which you provide to us when using
@@ -156,7 +157,7 @@ function PrivacyPolicy() {
                 color="primary"
                 className={classes.link}
               >
-                {" info@enatega.com"}
+                {INFO_EMAIL}
               </Typography>
             </Typography>
             <Typography variant="subtitle1" className={classes.boldText}>
@@ -171,7 +172,7 @@ function PrivacyPolicy() {
                 color="primary"
                 className={classes.link}
               >
-                {" info@enatega.com"}
+                {INFO_EMAIL}
               </Typography>
               . There will be a small charge for processing this request.
             </Typography>

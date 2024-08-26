@@ -133,14 +133,7 @@ function DeliveryCard({
   }, []);
 
   return (
-    <Box
-    // sx={{
-    //   overflow: 'auto',
-    //   overflowY: 'scroll',
-    //   height: '100%',
-    //  '-webkit-overflow-scrolling': 'touch', // For smoother scrolling on iOS
-    // }}
-    >
+    <Box>
       <FlashMessage
         open={Boolean(mainError.message)}
         severity={mainError.type}

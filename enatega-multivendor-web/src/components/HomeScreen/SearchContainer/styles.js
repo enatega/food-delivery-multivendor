@@ -72,7 +72,6 @@ const useStyle = makeStyles((theme) => ({
     position: "relative",
   },
   button: {
-    // margin: (props) => (props.extraSmall ? "10px 0px 0px" : "0px 10px"),
     height: "55px",
     color: theme.palette.common.black,
     fontWeight: 700,

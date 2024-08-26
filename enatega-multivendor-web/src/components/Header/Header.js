@@ -4,29 +4,13 @@ import UserContext from "../../context/User";
 import DHeader from "./desktop.header";
 import Analytics from "../../utils/analytics";
 import { useTranslation } from 'react-i18next';
+import { toTitleCase } from "../../utils/helper";
+import { APP_NAME } from "../../utils/constantValues";
 
-const TITLE = "Enatega";
+const TITLE = toTitleCase(APP_NAME);
 const NAME = "...";
-/*const NAVITEMS = [
-  {
-    title: "My orders",
-    link: "/orders",
-  },
-  {
-    title: "Profile",
-    link: "/profile",
-  },
-  {
-    title: "Logout",
-    link: "/login",
-  },
-  {
-    title: "Settings",
-    link: "/settings",
-  },
-];*/
-const savedLanguage = localStorage.getItem('enatega-language');
-    console.log('Saved language in localStorage:', savedLanguage);
+
+
 function Header() {
   const { t } = useTranslation();
   const NAVITEMS = [

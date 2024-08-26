@@ -1,13 +1,13 @@
 import { getConfigurationSpecific } from "../apollo/server";
-import { SERVER_URL } from "./global";
+import { BACKEND_URLS } from "./constantValues";
+
 
 export const fetchConfiguration = async () => {
   try {
-    const response = await fetch(`${SERVER_URL}graphql`, {
+    const response = await fetch(`${BACKEND_URLS.LIVE.SERVER_URL}graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Add any necessary authentication headers here
       },
       body: JSON.stringify({
         query: getConfigurationSpecific,
@@ -32,3 +32,12 @@ export const fetchConfiguration = async () => {
     };
   }
 };
+
+export const toTitleCase = (str) => {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+

@@ -33,7 +33,6 @@ function ProfileCard() {
   const formRef = useRef(null);
   const classes = useStyle();
   const [nameError, setNameError] = useState("");
-  // const [phoneError, setPhoneError] = useState("");
   const { profile } = useContext(UserContext);
   const [error, setError] = useState({});
   const [mutate, { loading }] = useMutation(UPDATEUSER, {
@@ -52,7 +51,6 @@ function ProfileCard() {
 
   const clearErrors = useCallback(() => {
     setNameError("");
-    // setPhoneError("");
     setError({});
   }, []);
 

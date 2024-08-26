@@ -48,15 +48,12 @@ function Registration() {
     onError,
   });
   const handleBackNavigation = () => {
-    // Use history.push to navigate to the desired route
     navigate("/new-login");
   };
 
   useEffect(() => {
-    // Add an event listener for the popstate event
     window.addEventListener("popstate", handleBackNavigation);
 
-    // Remove the event listener when the component unmounts
     return () => {
       window.removeEventListener("popstate", handleBackNavigation);
     };

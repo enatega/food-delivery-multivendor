@@ -38,7 +38,6 @@ function AddressModal({
   settingRegionDetail,
   setShowDetail,
 }) {
-  console.log(settingRegionDetail);
 
 
   const { GOOGLE_MAPS_KEY } = ConfigurableValues();
@@ -79,7 +78,7 @@ function AddressModal({
 
   useEffect(() => {
     if (regionDetail) {
-      console.log(regionDetail);
+    
       setRegion({
         lat: regionDetail.lat,
         lng: regionDetail.lng,

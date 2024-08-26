@@ -100,7 +100,6 @@ function Checkout() {
   } = useContext(UserContext);
 
   const { location, setLocation } = useLocationContext();
-  // const { getCurrentLocation } = useLocation();
   const theme = useTheme();
   const [minimumOrder, setMinimumOrder] = useState("");
   const [selectedTip, setSelectedTip] = useState();
@@ -251,7 +250,7 @@ function Checkout() {
   };
 
   function update(cache, { data: { placeOrder } }) {
-    console.log("update");
+  
     if (placeOrder && placeOrder.paymentMethod === "COD") {
       const data = cache.readQuery({ query: ORDERS });
       if (data) {
@@ -295,7 +294,6 @@ function Checkout() {
     const delivery = isPickUp ? 0 : deliveryCharges;
     const amount = +calculatePrice(delivery, true);
     const taxAmount = ((amount / 100) * tax).toFixed(2);
-    console.log("tax:", {taxAmount, deliveryCharges, tax, amount})
     return taxAmount;
   }
   async function onCompleted(data) {
@@ -328,14 +326,12 @@ function Checkout() {
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0;
     cart.forEach((cartItem) => {
-      console.log(cartItem)
       itemTotal += cartItem.price * cartItem.quantity;
     });
     if (withDiscount && coupon && coupon.discount) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
     }
     const deliveryAmount = delivery > 0 ? deliveryCharges : 0;
-    console.log("price:", {itemTotal, deliveryAmount})
     return (itemTotal + deliveryAmount).toFixed(2);
   }
 
@@ -413,7 +409,6 @@ function Checkout() {
       return;
     }
 
-    // Create an object for the selected address using the current location data
     const selectedAddress = {
       label: "Your Location",
       deliveryAddress: data.label,
@@ -422,7 +417,6 @@ function Checkout() {
       longitude: data.coords.longitude,
     };
 
-    // Update the selected address in state
     setSelectedAddress(selectedAddress);
     setAddressModal((prev) => !prev);
   };
@@ -440,7 +434,6 @@ function Checkout() {
         }
       );
     } else {
-      // Geolocation is not supported by the browser
       locationCallback(new Error("Geolocation is not supported."), null);
     }
   };
@@ -508,7 +501,7 @@ function Checkout() {
     }
     return true;
   }
-  // console.log("isPickUp", isPickUp, selectedDate);
+
   return (
     <Grid container className={classes.root}>
       <FlashMessage
@@ -710,7 +703,7 @@ function Checkout() {
                     </Box>
 
                     <Grid
-                      //container
+               
                       item
                       xs={12}
                       justifyContent="center"
@@ -735,7 +728,6 @@ function Checkout() {
                           alignItems="center"
                           onClick={(e) => {
                             e.preventDefault();
-                            console.log("clicked");
                             getCurrentLocation();
                           }}
                         >

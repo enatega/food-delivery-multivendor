@@ -28,10 +28,20 @@ import Fruits2 from "../../assets/images/fruits-2.png";
 import AppComponent from "../../components/HomeScreen/AppComponent";
 import Banner2 from "../../assets/images/banner-2.png";
 import Banner1 from "../../assets/images/banner-1.png";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import {
+  ADMIN_DASHBOARD_URL,
+  CUSTOMER_APP_ANDROID_URL,
+  CUSTOMER_APP_IOS_URL,
+  PRODUCT_PAGE_URL,
+  RESTAURANT_APP_ANDROID_URL,
+  RESTAURANT_APP_IOS_URL,
+  RIDER_APP_ANDROID_URL,
+  RIDER_APP_IOS_URL,
+} from "../../utils/constantValues";
 
 function Home() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("md"));
@@ -41,7 +51,6 @@ function Home() {
   const [open, setOpen] = useState(!!error);
   const { isLoggedIn } = useContext(UserContext);
   let check = false;
-
 
   const handleClose = useCallback(() => {
     setOpen(false);
@@ -56,8 +65,6 @@ function Home() {
       check = true;
     }
   }, [error]);
-
-  // return <button onClick={() => {throw new Error("Crashed")}}>Break the world</button>;
 
   return (
     <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>}>
@@ -127,15 +134,11 @@ function Home() {
                       title={"Rider App"}
                       image={RiderApp}
                       description={[
-                        "• "+t('findingAddress'),
-                        "• "+t('zonesFunctionality'),
+                        "• " + t("findingAddress"),
+                        "• " + t("zonesFunctionality"),
                       ]}
-                      android={
-                        "https://play.google.com/store/apps/details?id=com.enatega.multirider"
-                      }
-                      ios={
-                        "https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"
-                      }
+                      android={RIDER_APP_ANDROID_URL}
+                      ios={RIDER_APP_IOS_URL}
                       isMobile={true}
                     />
                   </Box>
@@ -150,15 +153,11 @@ function Home() {
                       title={"Restaurant App"}
                       image={RestaurantApp}
                       description={[
-                        "• "+t('multipleRestaurants'),
-                        "• "+t('realTimeOrder'),
+                        "• " + t("multipleRestaurants"),
+                        "• " + t("realTimeOrder"),
                       ]}
-                      android={
-                        "https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"
-                      }
-                      ios={
-                        "https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"
-                      }
+                      android={RESTAURANT_APP_ANDROID_URL}
+                      ios={RESTAURANT_APP_IOS_URL}
                       isMobile={true}
                     />
                   </Box>
@@ -174,15 +173,11 @@ function Home() {
                       title={"Customer App"}
                       image={CustApp}
                       description={[
-                        "• "+t('differentSections'),
-                        "• "+t('previousOrder'),
+                        "• " + t("differentSections"),
+                        "• " + t("previousOrder"),
                       ]}
-                      android={
-                        "https://play.google.com/store/apps/details?id=com.enatega.multivendor"
-                      }
-                      ios={
-                        "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
-                      }
+                      android={CUSTOMER_APP_ANDROID_URL}
+                      ios={CUSTOMER_APP_IOS_URL}
                       isMobile={true}
                     />
                   </Box>
@@ -194,11 +189,11 @@ function Home() {
                     title={"Admin Dashboard"}
                     image={Dashboard}
                     description={[
-                      "• "+t('findingAddress'),
-                      "• "+t('zonesFunctionality'),
+                      "• " + t("findingAddress"),
+                      "• " + t("zonesFunctionality"),
                     ]}
                     web={true}
-                    link={"https://multivendor-admin.enatega.com/"}
+                    link={ADMIN_DASHBOARD_URL}
                     isMobile={false}
                   />
                 </Grid>
@@ -209,11 +204,11 @@ function Home() {
                       title={"Product Page"}
                       image={WebApp}
                       description={[
-                        "• "+t('ourDelivery'),
-                        "• "+t('builtOnCommunity'),
+                        "• " + t("ourDelivery"),
+                        "• " + t("builtOnCommunity"),
                       ]}
                       web={true}
-                      link={"https://enatega.com/"}
+                      link={PRODUCT_PAGE_URL}
                       isMobile={false}
                     />
                   </Box>

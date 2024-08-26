@@ -48,7 +48,6 @@ function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const { SKIP_EMAIL_VERIFICATION } = ConfigurableValues()
   const handleBackNavigation = () => {
-    // Use history.push to navigate to the desired route
     navigate("/registration");
   };
 

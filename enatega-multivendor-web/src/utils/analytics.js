@@ -3,11 +3,8 @@ import amplitude from "amplitude-js";
 
 import { fetchConfiguration } from "../utils/helper";
 
-//import ConfigurableValues from "../config/constants";
 let isInitialized = false;
-//const { AMPLITUDE_API_KEY } = ConfigurableValues();
 
-//const AMPLITUDE_API_KEY  = "2114f5db4c014dc7ad4ed2ad747341b5";
 let apiKey = "";
 
 export const events = {

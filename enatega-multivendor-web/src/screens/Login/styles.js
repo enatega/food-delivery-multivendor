@@ -1,7 +1,5 @@
 import makeStyles from "@mui/styles/makeStyles";
-//import ConfigurableValues from "../../config/constants";
 
-// const { COLORS } = ConfigurableValues();
 const COLORS = "#dd4b39";
 const useStyles = makeStyles((theme) => ({
   font700: {

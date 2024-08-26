@@ -32,7 +32,6 @@ function Voucher({
 
   return (
     <Dialog
-      //fullScreen={extraSmall}
       onClose={toggleModal}
       open={isVisible}
       scroll="body"

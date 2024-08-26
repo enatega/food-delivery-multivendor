@@ -11,10 +11,14 @@ import AppStore from "../../../assets/images/app-store.png";
 import Banner2 from "../../../assets/images/banner-2.png";
 import Banner1 from "../../../assets/images/banner-1.png";
 import useStyles from "./styles";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import {
+  ANDROID_STORE_URL,
+  IOS_STORE_URL,
+} from "../../../utils/constantValues";
 
 export default function AppComponent() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("md"));
   const medium = useMediaQuery(theme.breakpoints.down("lg"));
@@ -46,10 +50,10 @@ export default function AppComponent() {
           variant="body2"
           style={{ fontWeight: 600, fontSize: "1.4rem" }}
         >
-          {t('putUsInYourPocket')}
+          {t("putUsInYourPocket")}
         </Typography>
         <Typography variant="body2" className={classes.fontContainer}>
-          {t('containerText')}
+          {t("containerText")}
         </Typography>
         {medium && (
           <Box display="flex" justifyContent="center">
@@ -65,9 +69,11 @@ export default function AppComponent() {
           display="flex"
           alignItems="center"
           justifyContent={"center"}
-          style={{ backgroundColor: "transparent", marginTop: small ? "0px" : "25px", marginBottom: medium ? "25px" : "0px"}}
-
-          //mt={5}
+          style={{
+            backgroundColor: "transparent",
+            marginTop: small ? "0px" : "25px",
+            marginBottom: medium ? "25px" : "0px",
+          }}
         >
           <Button
             className={classes.btn}
@@ -78,12 +84,7 @@ export default function AppComponent() {
             startIcon={<img src={PlayStore} alt="playstore" />}
             variant="contained"
             disableElevation
-            onClick={() =>
-              window.open(
-                "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093",
-                "_blank"
-              )
-            }
+            onClick={() => window.open(IOS_STORE_URL, "_blank")}
           >
             Ios Store
           </Button>
@@ -97,12 +98,7 @@ export default function AppComponent() {
             variant="contained"
             disableElevation
             startIcon={<img src={AppStore} alt="appstore" />}
-            onClick={() =>
-              window.open(
-                "https://play.google.com/store/apps/details?id=com.enatega.multivendor",
-                "_blank"
-              )
-            }
+            onClick={() => window.open(ANDROID_STORE_URL, "_blank")}
           >
             Play Store
           </Button>

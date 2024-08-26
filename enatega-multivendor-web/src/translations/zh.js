@@ -1,13 +1,16 @@
+import { APP_NAME } from "../utils/constantValues";
+import { toTitleCase } from "../utils/helper";
+
 const zh = {
   translation: {
     selectLanguage: "选择语言",
     saveButton: "节省",
     footerText:
-      "Enatega 是一个开源交付管理平台 未来。我们优先考虑创新、灵活性和可承受性，并提供可扩展、可定制的解决方案，简化您的 交付流程",
+      `${toTitleCase(APP_NAME)} 是一个开源交付管理平台 未来。我们优先考虑创新、灵活性和可承受性，并提供可扩展、可定制的解决方案，简化您的 交付流程`,
     footerLinkHome: "主页",
     footerLinkPP: "隐私政策",
     footerLinkTC: "条款和条件",
-    footerEndText: "Enatega - © 2022 版权所有",
+    footerEndText: `${toTitleCase(APP_NAME)} - © 2022 版权所有`,
     followUs: "关注我们",
     poweredBy: "由...提供动力",
     linksTitle: "链接",
@@ -142,7 +145,7 @@ const zh = {
     continue: "继续",
     invalidEmail: "无效的电子邮件",
     letsGetStarted: "让我们开始吧！",
-    createAccount: "创建您的 Enatega 账户",
+    createAccount: `创建您的 ${toTitleCase(APP_NAME)} 账户`,
     firstnameErr1: "名字是必填项！",
     firstnameErr2: "无效的名字！",
     lastnameErr1: "姓氏是必填项！",

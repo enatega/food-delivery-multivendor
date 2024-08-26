@@ -11,6 +11,7 @@ import React from "react";
 import AppStoreIcon from "../../assets/icons/AppStoreIcon";
 import PlayStoreIcon from "../../assets/icons/PlayStoreIcon";
 import useStyles from "./styles";
+import { ANDROID_STORE_URL, IOS_STORE_URL } from "../../utils/constantValues";
 
 export default function Promotion() {
   const theme = useTheme();
@@ -36,14 +37,14 @@ export default function Promotion() {
       </Hidden>
       <MaterialLink
         target="__blank"
-        href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
+        href={IOS_STORE_URL}
       >
         <AppStoreIcon />
       </MaterialLink>
       <Box pl={theme.spacing(2)} />
       <MaterialLink
         target="__blank"
-        href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"
+        href={ANDROID_STORE_URL}
       >
         <PlayStoreIcon />
       </MaterialLink>
