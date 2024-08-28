@@ -5,7 +5,7 @@ import * as Device from 'expo-device'
 import * as Font from 'expo-font'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import * as SplashScreen from 'expo-splash-screen'
-// import * as Sentry from 'sentry-expo'
+
 import {
   BackHandler,
   Platform,
@@ -128,7 +128,7 @@ export default function App() {
     requestTrackingPermissions()
   }, [])
 
-  const { SENTRY_DSN } = useEnvVars()
+
   const client = setupApolloClient()
   const shouldBeRTL = false;
   if (shouldBeRTL !== I18nManager.isRTL && Platform.OS !== 'web') {
@@ -136,17 +136,7 @@ export default function App() {
     I18nManager.forceRTL(shouldBeRTL);
     Updates.reloadAsync();
   }
-  // useEffect(() => {
-  //   if (SENTRY_DSN) {
-  //     Sentry.init({
-  //       dsn: SENTRY_DSN,
-  //       enableInExpoDevelopment: true,
-  //       debug: !isProduction,
-  //       tracesSampleRate: 1.0 // to be changed to 0.2 in production
-  //     })
-  //   }
-  // }, [SENTRY_DSN])
-
+ 
   useEffect(() => {
     // eslint-disable-next-line no-undef
     if (__DEV__) return
