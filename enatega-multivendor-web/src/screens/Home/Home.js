@@ -57,7 +57,6 @@ function Home() {
     }
   }, [error]);
 
-  // return <button onClick={() => {throw new Error("Crashed")}}>Break the world</button>;
 
   return (
     <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>}>

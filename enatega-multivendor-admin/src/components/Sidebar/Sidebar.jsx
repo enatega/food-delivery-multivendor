@@ -67,7 +67,7 @@ function Sidebar(props) {
 
       <Box className={classes.sidebarList}>
         {routes.map((prop, key) => {
-          console.log(key, prop.name)
+          
           if (
             JSON.parse(localStorage.getItem('user-enatega')).userType ===
             'ADMIN'

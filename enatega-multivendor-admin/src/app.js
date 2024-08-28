@@ -31,15 +31,12 @@ const App = () => {
     MSG_SENDER_ID,
     APP_ID,
     MEASUREMENT_ID,
-    GOOGLE_MAPS_KEY
+    GOOGLE_MAPS_KEY,
+    SENTRY_DSN
   } = ConfigurableValues()
  
-  // const [mapsKey, setMapsKey] = useState(null)
-  // useEffect(() => {
-  //   if (GOOGLE_MAPS_KEY) {
-  //     setMapsKey(GOOGLE_MAPS_KEY)
-  //   }
-  // }, [GOOGLE_MAPS_KEY])
+
+  
   const client = useApolloClient()
   const [user] = useState(localStorage.getItem('user-enatega'))
   const userType = localStorage.getItem('user-enatega')
@@ -108,11 +105,28 @@ const App = () => {
       initializeFirebase()
     }
   }, [user])
+
+  useEffect(() => {
+    if (SENTRY_DSN) {
+      Sentry.init({
+        dsn: SENTRY_DSN,
+        //SENTRY_DSN  integrations: [new Integrations.BrowserTracing()],
+        environment: 'development',
+        enableInExpoDevelopment: true,
+        debug: true,
+        tracesSampleRate: 1.0 // to be changed to 0.2 in production
+      })
+    }
+  }, [SENTRY_DSN])
+
+
+
   const route = userType
     ? userType === 'VENDOR'
       ? '/restaurant/list'
       : '/super_admin/vendors'
     : '/auth/login'
+
   return (
     <Sentry.ErrorBoundary>
       {GOOGLE_MAPS_KEY ? (

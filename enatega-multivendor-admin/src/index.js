@@ -14,8 +14,7 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import 'firebase/messaging'
-import * as Sentry from '@sentry/react'
-import { Integrations } from '@sentry/tracing'
+
 import ConfigurableValues from './config/constants'
 import { ConfigurationProvider } from './context/Configuration'
 import App from './app'
@@ -24,20 +23,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material'
 import theme from './utils/theme'
 
 function Main() {
-  const {
-    SENTRY_DSN,
-    GOOGLE_MAPS_KEY,
-    SERVER_URL,
-    WS_SERVER_URL
-  } = ConfigurableValues()
-  console.log('GOOGLE_MAPS_KEY', GOOGLE_MAPS_KEY)
-  useEffect(() => {
-    Sentry.init({
-      dsn: SENTRY_DSN,
-      integrations: [new Integrations.BrowserTracing()],
-      tracesSampleRate: 0.1
-    })
-  }, [])
+  const { SERVER_URL, WS_SERVER_URL } = ConfigurableValues()
 
   const cache = new InMemoryCache()
   const httpLink = createHttpLink({

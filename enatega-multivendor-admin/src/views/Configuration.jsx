@@ -32,7 +32,7 @@ const Configuration = props => {
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_CONFIGURATION
   )
-  console.log('configuration', data)
+
   const { t } = props
   
   return (

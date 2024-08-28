@@ -14,7 +14,7 @@ const GoogleMapsLoader = ({ children, GOOGLE_MAPS_KEY }) => {
       'visualization'
     ]
   })
-  console.log('isLoaded ', isLoaded)
+
   if (!isLoaded) {
     return (
       <Box

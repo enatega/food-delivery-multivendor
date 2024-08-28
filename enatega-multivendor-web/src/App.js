@@ -119,6 +119,9 @@ const GoogleMapsLoader = ({
       }
     };
     initializeFirebase();
+
+  
+
   }, [t, i18n, VAPID_KEY]);
 
   /* ß */
@@ -166,7 +169,7 @@ function App() {
   const { isLoggedIn } = useContext(UserContext);
 
   useEffect(() => {
-    console.log({SENTRY_DSN})
+  
     if (SENTRY_DSN) {
       Sentry.init({
         dsn: SENTRY_DSN,
