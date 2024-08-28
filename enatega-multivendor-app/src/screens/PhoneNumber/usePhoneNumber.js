@@ -28,7 +28,6 @@ const useRegister = () => {
   const [countryCode, setCountryCode] = useState('')
   const [currentCountry, setCurrentCountry] = useState(null)
   const [ipAddress, setIpAddress] = useState(null)
-  const [countryCallingCode, setCountryCallingCode] = useState(null)
   const [count, setCount] = useState(0)
 
   const retryCount = 3 // Number of retries

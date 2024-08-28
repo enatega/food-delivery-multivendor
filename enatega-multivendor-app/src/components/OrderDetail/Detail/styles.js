@@ -1,6 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native'
-import { fontStyles } from '../../../utils/fontStyles'
-import { scale, verticalScale } from '../../../utils/scaling'
+import { scale } from '../../../utils/scaling'
 const { width: WIDTH } = Dimensions.get('window')
 export default StyleSheet.create({
   container: theme => ({

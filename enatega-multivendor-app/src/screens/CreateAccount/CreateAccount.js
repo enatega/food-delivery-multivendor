@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Image, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -10,7 +10,6 @@ import { useCreateAccount } from './useCreateAccount'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
-const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
   const {
@@ -23,8 +22,7 @@ const CreateAccount = (props) => {
     mutateLogin,
     navigateToLogin,
     navigation,
-    signIn,
-    //user
+    signIn
   } = useCreateAccount()
   const { t } = useTranslation()
   useLayoutEffect(() => {

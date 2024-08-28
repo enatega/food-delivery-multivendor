@@ -19,12 +19,10 @@ import {
   EvilIcons,
   Feather,
   FontAwesome,
-  MaterialCommunityIcons,
-  Octicons
+  MaterialCommunityIcons
 } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
-import moment from 'moment'
 import { getTipping, orderFragment } from '../../apollo/queries'
 import { getCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
@@ -51,15 +49,13 @@ import { useTranslation } from 'react-i18next'
 import styles from './styles'
 import Location from '../../components/Main/Location/Location'
 import { customMapStyle } from '../../utils/customMapStyles'
-import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
-import { fontStyles } from '../../utils/fontStyles'
+
+
 import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
 import { Instructions } from '../../components/Checkout/Instructions'
-import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
 import PickUp from '../../components/Pickup'
-import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
 
 
@@ -110,7 +106,7 @@ function Checkout(props) {
   const [tipAmount, setTipAmount] = useState(null)
   const modalRef = useRef(null)
   const [paymentMode, setPaymentMode] = useState('COD')
-
+  
   const { loading, data } = useRestaurant(cartRestaurant)
   const [loadingOrder, setLoadingOrder] = useState(false)
   const latOrigin = data?.restaurant?.location?.coordinates[1]

@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, TouchableOpacity, StatusBar, Image } from 'react-native'
+import { View, TouchableOpacity, StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../styles'
 import Spinner from '../../../components/Spinner/Spinner'

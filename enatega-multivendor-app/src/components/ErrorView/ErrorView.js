@@ -1,8 +1,6 @@
 import { React, useContext } from 'react'
 import { View } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import { MaterialIcons } from '@expo/vector-icons'
-import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'

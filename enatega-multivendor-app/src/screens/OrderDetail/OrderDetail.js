@@ -1,5 +1,4 @@
-import { TouchableOpacity, View, ScrollView, Dimensions } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import { View, ScrollView, Dimensions } from 'react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
@@ -49,14 +48,12 @@ function OrderDetail(props) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
   const Analytics = analytics()
   const id = props.route.params ? props.route.params._id : null
-  const user = props.route.params ? props.route.params.user : null
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const navigation = useNavigation()
-  const headerRef = useRef(false)
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   const mapView = useRef(null)
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {

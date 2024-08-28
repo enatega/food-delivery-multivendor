@@ -13,13 +13,8 @@ export default function Detail({
   theme,
   from,
   orderNo,
-  deliveryAddress,
   items,
   currencySymbol,
-  subTotal,
-  tip,
-  tax,
-  deliveryCharges,
   total,
   navigation,
   id,
@@ -110,7 +105,7 @@ const ItemRow = ({
   currency,
   image
 }) => {
-  const { t } = useTranslation()
+ 
   return (
     <View style={styles.itemRow(theme)}>
       <View>

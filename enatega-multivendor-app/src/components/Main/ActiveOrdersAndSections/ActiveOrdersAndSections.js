@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { View } from 'react-native'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import { alignment } from '../../../utils/alignment'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'

@@ -1,3 +1,6 @@
+import { APP_NAME } from "../src/utils/constants";
+import { toTitleCase } from "../src/utils/helper";
+
 export const en = {
   title0: 'Selected Language',
   subtitle0: 'English',
@@ -17,8 +20,8 @@ export const en = {
     'Age does not diminish the extreme disappointment of having a scoop of ice cream fall from the cone',
   getStarted: 'Get Started!',
   welcome:
-    "Welcome to Enatega, sometimes all you need is love. But a little food now and then doesn't hurt.",
-  welcomeScreen: 'Welcome to Enatega',
+    `Welcome to ${toTitleCase(APP_NAME)}, sometimes all you need is love. But a little food now and then doesn't hurt.`,
+  welcomeScreen: `Welcome to ${toTitleCase(APP_NAME)}`,
   loginBtn: 'Login',
   registerBtn: 'Register',
   name: 'Name',

@@ -1,5 +1,4 @@
 import { useState, useContext, useRef } from 'react'
-import { Alert } from 'react-native'
 import _ from 'lodash' // Import lodash
 import * as Device from 'expo-device'
 import Constants from 'expo-constants'
@@ -14,6 +13,7 @@ import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { DEMO_CUSTOMER_EMAIL } from '../../utils/constants'
 
 const LOGIN = gql`
   ${login}
@@ -26,7 +26,7 @@ export const useLogin = () => {
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const emailRef = useRef('demo-customer@enatega.com')
+  const emailRef = useRef(DEMO_CUSTOMER_EMAIL)
   const [password, setPassword] = useState('123123')
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)

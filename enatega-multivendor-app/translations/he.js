@@ -1,3 +1,6 @@
+import { APP_NAME } from "../src/utils/constants";
+import { toTitleCase } from "../src/utils/helper";
+
 export const he = {
   title0: 'שפה נבחרת',
   subtitle0: 'אנגלית',
@@ -16,8 +19,8 @@ export const he = {
     'גיל אינו פוחת מן האכזבה הקיצונית שנגרמת כשגורל של גלידה נופל מהקרם.',
   getStarted: 'התחל!',
   welcome:
-    'ברוכים הבאים ל-Enatega, לפעמים כל מה שאתם צריכים זה אהבה. אבל מעט אוכל פעם בפעם גם לא פוגע.',
-  welcomeScreen: 'ברוכים הבאים ל-Enatega',
+    `ברוכים הבאים ל-${toTitleCase(APP_NAME)}, לפעמים כל מה שאתם צריכים זה אהבה. אבל מעט אוכל פעם בפעם גם לא פוגע.`,
+  welcomeScreen: `ברוכים הבאים ל-${toTitleCase(APP_NAME)}`,
   loginBtn: 'כניסה',
   registerBtn: 'הרשמה',
   name: 'שם',

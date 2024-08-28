@@ -1,3 +1,6 @@
+import { APP_NAME } from "../src/utils/constants";
+import { toTitleCase } from "../src/utils/helper";
+
 export const zh = {
   title0: '选择语言',
   subtitle0: '英语',
@@ -13,8 +16,8 @@ export const zh = {
   description3: '年龄不会减轻冰淇淋勺子从锥形杯中掉下时的极度失望。',
   getStarted: '开始吧！',
   welcome:
-    '欢迎来到Enatega，有时候你所需要的只是爱。但偶尔吃点食物也不会有害。',
-  welcomeScreen: '欢迎来到Enatega',
+    `欢迎来到 ${toTitleCase(APP_NAME)}，有时候你所需要的只是爱。但偶尔吃点食物也不会有害。`,
+  welcomeScreen: `欢迎来到 ${toTitleCase(APP_NAME)}`,
   loginBtn: '登录',
   registerBtn: '注册',
   name: '姓名',
@@ -169,7 +172,7 @@ export const zh = {
   passErr2:
     '无效的密码。密码必须至少为 8 个字符，且包含 1 个大写字母、1 个小写字母、1 个数字。',
   letsGetStarted: '让我们开始吧！',
-  createAccount: '创建您的Enatega帐户',
+  createAccount: `创建您的 ${toTitleCase(APP_NAME)} 帐户`,
   firstnameErr1: '名字是必填项！',
   firstnameErr2: '无效的名字！',
   lastnameErr1: '姓氏是必填项！',
@@ -271,7 +274,7 @@ export const zh = {
   useCurrentLocation: '使用当前位置',
   locationPermissionMessage:
     '点击此消息打开设置，然后允许应用程序使用位置权限。',
-  enategaUseYourLocationMessage: 'Enatega使用您的位置显示附近的餐馆！',
+  enategaUseYourLocationMessage: `${toTitleCase(APP_NAME)} 使用您的位置显示附近的餐馆！`,
   selectAnotherLocation: '选择其他位置',
   setLocation: '设置位置',
   cartIsEmpty: '购物车是空的',

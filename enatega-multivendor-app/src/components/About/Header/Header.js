@@ -1,18 +1,18 @@
 import React, { useContext } from 'react'
 import { View, TouchableOpacity, Image, StatusBar } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { MaterialIcons } from '@expo/vector-icons'
-import { scale } from '../../../utils/scaling'
+
+
 import styles from './styles'
 import { useNavigation } from '@react-navigation/native'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import Animated from 'react-native-reanimated'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { useTranslation } from 'react-i18next'
+
 const AnimatedIon = Animated.createAnimatedComponent(Ionicons)
 function ImageHeader(props) {
-  const { t } = useTranslation()
+
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const navigation = useNavigation()
@@ -24,6 +24,7 @@ function ImageHeader(props) {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     }
   />
+  
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles().topBar}>
         <TouchableOpacity

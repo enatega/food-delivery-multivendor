@@ -10,12 +10,9 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Animated,
   StatusBar,
   Platform,
-  RefreshControl,
   Image,
-  FlatList,
   ScrollView
 } from 'react-native'
 import { Modalize } from 'react-native-modalize'
@@ -28,13 +25,11 @@ import {
 import { useQuery, useMutation } from '@apollo/client'
 import {
   useCollapsibleSubHeader,
-  CollapsibleSubHeaderAnimator
 } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
-import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
 import { restaurantList } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
@@ -51,10 +46,10 @@ import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSe
 import { alignment } from '../../utils/alignment'
 import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
-import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
 
 import { escapeRegExp } from '../../utils/regex'
+import { WEBSITE_URL } from '../../utils/constants'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -404,7 +399,7 @@ function Main(props) {
                       <Image
                         source={{
                           uri:
-                            'https://enatega.com/wp-content/uploads/2024/02/pngimg-1.png'
+                            `${WEBSITE_URL}/wp-content/uploads/2024/02/pngimg-1.png`
                         }}
                         style={styles().popularMenuImg}
                         resizeMode="contain"
@@ -427,7 +422,7 @@ function Main(props) {
                       <Image
                         source={{
                           uri:
-                            'https://enatega.com/wp-content/uploads/2024/02/pngwing-4.png'
+                            `${WEBSITE_URL}/wp-content/uploads/2024/02/pngwing-4.png`
                         }}
                         style={styles().popularMenuImg}
                         resizeMode="contain"

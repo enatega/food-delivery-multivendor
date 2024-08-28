@@ -11,8 +11,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Platform,
-  Alert,
-  Button} from 'react-native'
+  Alert} from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { AntDesign } from '@expo/vector-icons'

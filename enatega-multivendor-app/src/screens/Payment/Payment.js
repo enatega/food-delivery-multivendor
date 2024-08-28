@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useLayoutEffect } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import {
   View,
-  Image,
   TouchableOpacity,
   StatusBar,
   Platform
@@ -11,7 +10,6 @@ import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
@@ -28,7 +26,7 @@ function Payment(props) {
 
   const { t } = useTranslation()
   const { paymentMethod, coupon } = props.route.params
-  const inset = useSafeAreaInsets()
+ 
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const iconArray = [

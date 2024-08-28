@@ -27,7 +27,7 @@ const ReviewCard = ({ theme, name, rating, description, date }) => {
 }
 
 const StarRating = ({ numberOfStars, rating }) => {
-  const { t } = useTranslation()
+
   const stars = Array.from({ length: numberOfStars }, (_, index) => index)
   return (
     <View style={styles.smallStarContainer}>

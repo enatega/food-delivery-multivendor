@@ -1,13 +1,11 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import {
   View,
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Image,
   TextInput,
-  Text
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Spinner from '../../components/Spinner/Spinner'

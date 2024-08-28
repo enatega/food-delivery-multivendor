@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Modal, Pressable, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
+import { View, Modal, Pressable, TouchableOpacity, TextInput } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { useStyles } from './styles'

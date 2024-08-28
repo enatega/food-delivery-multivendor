@@ -1,8 +1,8 @@
-import { verticalScale, scale } from '../../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
+import { scale } from '../../../utils/scaling'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
-const { height } = Dimensions.get('window')
+
+
 
 const styles = (props = null) =>
   StyleSheet.create({

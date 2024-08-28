@@ -1,7 +1,7 @@
-import React, { useContext, useRef } from 'react';
+import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Modalize } from 'react-native-modalize';
-import { MaterialIcons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons} from '@expo/vector-icons';
 import TextDefault from '../../Text/TextDefault/TextDefault';
 import { alignment } from '../../../utils/alignment';
 import { scale } from '../../../utils/scaling';

@@ -7,7 +7,6 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { EvilIcons, Feather } from '@expo/vector-icons'
-import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 
 function Location({

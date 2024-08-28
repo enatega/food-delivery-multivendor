@@ -1,7 +1,7 @@
-import { Dimensions, StyleSheet } from 'react-native'
+import {StyleSheet } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
-const { height } = Dimensions.get('window')
+
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
@@ -35,11 +35,6 @@ const styles = (props = null) =>
       left: scale(30)
     },
     overlayContainer: {},
-    // touchArea: {
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    //   width: scale(20)
-    // },
     deliveryBoxContainer: {
       ...alignment.PTsmall,
       ...alignment.PLxSmall

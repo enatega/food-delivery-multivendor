@@ -7,7 +7,6 @@ import {
   Platform,
   Image
 } from 'react-native'
-import { Entypo } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import ActiveOrders from '../../components/MyOrders/ActiveOrders'
 import Spinner from '../../components/Spinner/Spinner'
@@ -24,7 +23,6 @@ import SearchFood from '../../assets/SVG/imageComponents/SearchFood'
 import { scale } from '../../utils/scaling'
 import Analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
-import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']

@@ -77,7 +77,7 @@ export default function App() {
     const clarityConfig = {
       logLevel: LogLevel.Verbose,
       allowMeteredNetworkUsage: true,
-      enableIOS_experimental: true
+     // enableIOS_experimental: true
     };
     initialize("mcdyi6urgs",clarityConfig);
   }

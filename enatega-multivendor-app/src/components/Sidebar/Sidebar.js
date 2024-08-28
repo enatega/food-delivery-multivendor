@@ -14,7 +14,6 @@ import LogoutModal from './LogoutModal/LogoutModal'
 import analytics from '../../utils/analytics'
 
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
 
 const datas = [
   {
@@ -41,12 +40,7 @@ const datas = [
     navigateTo: 'MyOrders',
     isAuth: true
   },
-  // {
-  //   title: 'titleChat',
-  //   icon: 'bubble',
-  //   navigateTo: 'Chat',
-  //   isAuth: false
-  // },
+
   {
     title: 'titleSettings',
     icon: 'settings',

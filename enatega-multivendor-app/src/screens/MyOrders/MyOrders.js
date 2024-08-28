@@ -29,9 +29,6 @@ function MyOrders(props) {
     orders,
     loadingOrders,
     errorOrders,
-    reFetchOrders,
-    fetchMoreOrdersFunc,
-    networkStatusOrders
   } = useContext(OrdersContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]

@@ -40,6 +40,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import i18next from '../../../i18next'
 import { useTranslation } from 'react-i18next'
+import { APP_NAME } from '../../utils/constants'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -192,7 +193,7 @@ function Settings(props) {
   }
 
   async function selectLanguage() {
-    const lang = await AsyncStorage.getItem('enatega-language')
+    const lang = await AsyncStorage.getItem(`${APP_NAME}-language`)
     if (lang) {
       const defLang = languageTypes.findIndex((el) => el.code === lang)
       const langName = languageTypes[defLang].value
@@ -207,11 +208,11 @@ function Settings(props) {
       setLoadingLang(true)
       const languageInd = activeRadio
       await AsyncStorage.setItem(
-        'enatega-language',
+        `${APP_NAME}-language`,
         languageTypes[languageInd].code
       )
 
-      var lang = await AsyncStorage.getItem('enatega-language')
+      var lang = await AsyncStorage.getItem(`${APP_NAME}-language`)
       if (lang) {
         const defLang = languageTypes.findIndex((el) => el.code === lang)
         const langName = languageTypes[defLang].value

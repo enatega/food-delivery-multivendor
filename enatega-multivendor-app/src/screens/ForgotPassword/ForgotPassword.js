@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   StatusBar,
-  Image,
   TextInput
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -16,7 +15,6 @@ import analytics from '../../utils/analytics'
 import { useForgotPassword } from './useForgotPassword'
 import { useTranslation } from 'react-i18next'
 import { Feather } from '@expo/vector-icons'
-import { scale } from '../../utils/scaling'
 
 function ForgotPassword(props) {
   const Analytics = analytics()

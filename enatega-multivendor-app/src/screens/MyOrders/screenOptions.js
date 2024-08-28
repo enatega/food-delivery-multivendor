@@ -1,16 +1,10 @@
 import i18next from '../../../i18next'
-import { BackButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-import { StatusBar } from 'react-native'
-import { useFocusEffect } from '@react-navigation/native'
 import styles from './style'
-import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
-import { useContext } from 'react'
 
 const navigationOptions = headerText => ({
   headerTitle: i18next.t('titleOrders'),

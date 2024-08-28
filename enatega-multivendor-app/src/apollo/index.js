@@ -14,8 +14,6 @@ import {
 } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import useEnvVars from '../../environment'
-import { useContext } from 'react'
-import { LocationContext } from '../context/Location'
 import { calculateDistance } from '../utils/customFunctions'
 
 const setupApollo = () => {

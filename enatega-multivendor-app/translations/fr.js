@@ -1,3 +1,6 @@
+import { APP_NAME } from "../src/utils/constants";
+import { toTitleCase } from "../src/utils/helper";
+
 export const fr = {
   title0: 'Langue sélectionnée',
   subtitle0: 'Anglais',
@@ -17,8 +20,8 @@ export const fr = {
     "L'âge ne diminue pas la grande déception de voir une boule de glace tomber de la cornet.",
   getStarted: 'Commencer !',
   welcome:
-    "Bienvenue chez Enatega, parfois tout ce dont vous avez besoin, c'est de l'amour. Mais un peu de nourriture de temps en temps ne fait pas de mal.",
-  welcomeScreen: 'Bienvenue chez Enatega',
+    `Bienvenue chez ${toTitleCase(APP_NAME)}, parfois tout ce dont vous avez besoin, c'est de l'amour. Mais un peu de nourriture de temps en temps ne fait pas de mal.`,
+  welcomeScreen: `Bienvenue chez ${toTitleCase(APP_NAME)}`,
   loginBtn: 'Se connecter',
   registerBtn: "S'inscrire",
   name: 'Nom',
@@ -181,7 +184,7 @@ export const fr = {
   passErr2:
     'Mot de passe incorrect. Le mot de passe doit être dau moins 8 caractères et contenir 1 lettre majuscule, 1 lettre minuscule, 1 chiffre.',
   letsGetStarted: 'Commençons !',
-  createAccount: 'Créez votre compte Enatega',
+  createAccount: `Créez votre compte ${toTitleCase(APP_NAME)}`,
   firstnameErr1: 'Le prénom est requis !',
   firstnameErr2: 'Prénom non valide !',
   lastnameErr1: 'Le nom de famille est requis !',
@@ -288,7 +291,7 @@ export const fr = {
   locationPermissionMessage:
     "Appuyez sur ce message pour ouvrir les paramètres, puis autorisez l'application à utiliser l'emplacement depuis les autorisations.",
   enategaUseYourLocationMessage:
-    'Enatega utilise votre emplacement pour afficher les restaurants à proximité de chez vous !',
+    `${toTitleCase(APP_NAME)} utilise votre emplacement pour afficher les restaurants à proximité de chez vous !`,
   selectAnotherLocation: 'Sélectionner un autre emplacement',
   setLocation: "Définir l'emplacement",
   cartIsEmpty: 'Le panier est vide',

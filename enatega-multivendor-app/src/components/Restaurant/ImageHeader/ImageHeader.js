@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import {
   View,
   Dimensions,
   Text,
-  // TouchableOpacity,
   Image,
   FlatList,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard
 } from 'react-native'
 import {
   MaterialIcons,
@@ -30,7 +26,6 @@ import {
   TouchableOpacity
 } from 'react-native-gesture-handler'
 import { scale } from '../../../utils/scaling'
-import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
 import { useTranslation } from 'react-i18next'

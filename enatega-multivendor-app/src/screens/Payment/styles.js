@@ -1,7 +1,6 @@
-import { scale, verticalScale } from '../../utils/scaling'
+import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -9,7 +8,6 @@ const styles = (props = null) =>
       flex: 1
     },
     paymentMethod: {
-      // backgroundColor: theme.Pink.lightHorizontalLine,
       borderRadius: scale(20),
       paddingVertical: scale(10),
       flexDirection: 'row',

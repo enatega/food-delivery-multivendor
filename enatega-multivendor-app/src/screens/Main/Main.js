@@ -17,18 +17,13 @@ import {
   Animated,
   RefreshControl
 } from 'react-native'
-import {
-  MaterialIcons,
-  AntDesign,
-  SimpleLineIcons
-} from '@expo/vector-icons'
+import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { useLocation } from '../../ui/hooks'
 import Search from '../../components/Main/Search/Search'
 import UserContext from '../../context/User'
-import { restaurantList, restaurantListPreview } from '../../apollo/queries'
+import { restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -38,7 +33,7 @@ import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
-import { alignment } from '../../utils/alignment'
+
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import MainRestaurantCard from '../../components/Main/MainRestaurantCard/MainRestaurantCard'
@@ -92,7 +87,6 @@ function Main(props) {
     }
   )
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
-  const [selectedType, setSelectedType] = useState('restaurant')
 
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
@@ -211,15 +205,19 @@ function Main(props) {
           disabled={busy}
         >
           <View style={styles().addressSubContainer}>
-            {
-              busy ? <Spinner size='small' /> : (
-                <>
-                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                  <View style={styles().mL5p} />
-                  <TextDefault bold>{t('currentLocation')}</TextDefault>
-                </>
-              )
-            }
+            {busy ? (
+              <Spinner size='small' />
+            ) : (
+              <>
+                <SimpleLineIcons
+                  name='target'
+                  size={scale(18)}
+                  color={currentTheme.black}
+                />
+                <View style={styles().mL5p} />
+                <TextDefault bold>{t('currentLocation')}</TextDefault>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -283,15 +281,14 @@ function Main(props) {
 
   const searchAllShops = (searchText) => {
     const data = []
-    const escapedSearchText = escapeRegExp(searchText);
-    const regex = new RegExp(escapedSearchText, 'i');
+    const escapedSearchText = escapeRegExp(searchText)
+    const regex = new RegExp(escapedSearchText, 'i')
     restaurants?.forEach((restaurant) => {
       const resultCatFoods = restaurant.keywords.some((keyword) => {
         const result = keyword.search(regex)
         return result > -1
       })
-      if (resultCatFoods)
-        data.push(restaurant)
+      if (resultCatFoods) data.push(restaurant)
     })
     return data
   }
@@ -383,7 +380,7 @@ function Main(props) {
                         <Image
                           source={require('../../assets/images/ItemsList/menu-new.png')}
                           style={styles().popularMenuImg}
-                        // resizeMode='contain'
+                          // resizeMode='contain'
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -414,7 +411,7 @@ function Main(props) {
                         <Image
                           source={require('../../assets/images/ItemsList/grocery-new.png')}
                           style={styles().popularMenuImg}
-                        // resizeMode='contain'
+                          // resizeMode='contain'
                         />
                       </TouchableOpacity>
                     </View>
@@ -475,7 +472,6 @@ function Main(props) {
             profile={profile}
             location={location}
           />
-
         </View>
       </SafeAreaView>
     </>

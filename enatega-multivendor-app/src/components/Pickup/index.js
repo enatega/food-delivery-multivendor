@@ -1,23 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity, View, Platform } from 'react-native'
 import styles from './styles'
-import { theme } from '../../utils/themeColors'
 import DatePicker, {
   DateTimePickerAndroid
 } from '@react-native-community/datetimepicker'
-import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
 import { scale } from '../../utils/scaling'
-import { useTranslation } from 'react-i18next'
 import TextDefault from '../Text/TextDefault/TextDefault'
 
 function PickUp(props) {
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
   const [isPickUp, setIsPickup] = useState(props?.isPickedUp)
   const currentDate = new Date().getTime() + (props?.minimumTime * 60000 || 0)
-  const { t } = useTranslation()
+ 
 
   const datePickerOptions = {
     // Note that on Android, minimumDate only works for date mode because TimePicker does not support this.

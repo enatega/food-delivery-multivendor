@@ -1,9 +1,8 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
-import { TouchableOpacity, View, Image, Text } from 'react-native'
+import { TouchableOpacity, View, Image } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -31,7 +30,6 @@ const PROFILE = gql`
 
 function NewRestaurantCard(props) {
   const { t } = useTranslation()
-  const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -44,7 +42,6 @@ function NewRestaurantCard(props) {
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
-    // alert("favv list updated")
   }
 
   const handleAddToFavorites = () => {

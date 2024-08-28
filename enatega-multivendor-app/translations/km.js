@@ -1,3 +1,6 @@
+import { APP_NAME } from "../src/utils/constants";
+import { toTitleCase } from "../src/utils/helper";
+
 export const km = {
   title0: 'ភាសាដែលបានជ្រើសរើស',
   subtitle0: 'អង់គ្លេស',
@@ -16,8 +19,8 @@ export const km = {
     'អាយុ​មិន​មូន​ធ្វើ​ឡើង​បាន​កក់​តែ​ការ​បក​ពី​កមណ្ឌ​ចង់​ពរ​ពសកមណវ​ច។',
   getStarted: 'ចាប់ផ្តើម!',
   welcome:
-    'សូមស្វាគមន៍មកកាន់ Enatega, កន្លែងណា១ងតិះបន្ថរះគឺ​ក្រុមចេតះជា​លោង​េះ​អចចៀ​់ះ បើ​មងេ​កៅ​មាតិការ​ខាជា​ជំពខឺៃ',
-  welcomeScreen: 'សូមស្វាគមន៍មកកាន់ Enatega',
+    `សូមស្វាគមន៍មកកាន់ ${toTitleCase(APP_NAME)}, កន្លែងណា១ងតិះបន្ថរះគឺ​ក្រុមចេតះជា​លោង​េះ​អចចៀ​់ះ បើ​មងេ​កៅ​មាតិការ​ខាជា​ជំពខឺៃ`,
+  welcomeScreen: `សូមស្វាគមន៍មកកាន់ ${toTitleCase(APP_NAME)}`,
   loginBtn: 'ចុះបញ្ជី',
   registerBtn: 'ចុះបញ្ជី',
   name: 'ឈ្មោះ',
@@ -278,7 +281,7 @@ export const km = {
   locationPermissionMessage:
     'ចុចលើសារនេះដើម្បីបើកការកំណត់ប្រើទីតាំងរបស់អ្នក បន្ទាប់ពីនោះអនុញ្ញាតឱ្យកម្មវិធីប្រើទីតាំង។',
   enategaUseYourLocationMessage:
-    'Enatega ប្រើទីតាំងរបស់អ្នកដើម្បីបង្ហាញរបាយទីតាំងដែលនៅជិតអ្នក!',
+    `${toTitleCase(APP_NAME)} ប្រើទីតាំងរបស់អ្នកដើម្បីបង្ហាញរបាយទីតាំងដែលនៅជិតអ្នក!`,
   selectAnotherLocation: 'ជ្រើសរើសទីតាំងផ្សេងៗ',
   setLocation: 'កំណត់ទីតាំង',
   cartIsEmpty: 'កាតគឺទទេ',

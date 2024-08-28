@@ -9,11 +9,11 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
 import styles from './styles'
-import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { alignment } from '../../utils/alignment'
+
 import { aboutMapStyle } from '../../utils/aboutMapStyle'
 import CustomMarker from '../../assets/SVG/restaurant-marker'
 import analytics from '../../utils/analytics'
@@ -48,7 +48,7 @@ function About(props) {
     Track()
   }, [])
 
-  const inset = useSafeAreaInsets()
+ 
   return (
 <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
 <StatusBar
@@ -59,7 +59,8 @@ function About(props) {
   />
     <ScrollView
       style={[
-        // { marginTop: inset.top },
+       
+        
         styles().flex,
         { backgroundColor: currentTheme.headerMenuBackground }
       ]}

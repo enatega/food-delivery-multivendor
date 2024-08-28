@@ -11,8 +11,19 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
+import {
+  ABOUT_US,
+  BLOG_PATH,
+  ENATEGA_BLOGS,
+  MULTIVENDOR_DOC,
+  MULTIVENDOR_DOCUMENTATION,
+  MULTIVENDOR_PATH,
+  NINJASCODE_WEBSITE,
+  OPEN_SOURCE_PATH,
+  WEBSITE_URL
+} from '../../utils/constants'
 
-const Help = props => {
+const Help = (props) => {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -20,19 +31,19 @@ const Help = props => {
   const [links, setLinks] = useState([
     {
       title: t('titleProductPage'),
-      url: 'https://enatega.com/enatega-multi-vendor/'
+      url: `${WEBSITE_URL}/${MULTIVENDOR_PATH}`
     },
     {
       title: t('titleDocs'),
-      url: 'https://enatega.com/multi-vendor-doc/'
+      url: `${WEBSITE_URL}/${MULTIVENDOR_DOC}`
     },
     {
       title: t('titleBlog'),
-      url: 'https://enatega.com/blog/'
+      url: `${WEBSITE_URL}/${BLOG_PATH}`
     },
     {
       title: t('titleAboutUs'),
-      url: 'https://ninjascode.com/about-us/'
+      url: `${NINJASCODE_WEBSITE}/${ABOUT_US}`
     }
   ])
 
@@ -48,22 +59,20 @@ const Help = props => {
     setLinks([
       {
         title: t('titleProductPage'),
-        url:
-          'https://enatega.com/enatega-multivendor-open-source-food-delivery-solution/'
+        url: `${WEBSITE_URL}/${OPEN_SOURCE_PATH}`
       },
       {
         title: t('titleDocs'),
-        url: 'https://enatega.com/multivendor-documentation/'
+        url: `${WEBSITE_URL}/${MULTIVENDOR_DOCUMENTATION}`
       },
       {
         title: t('titleBlog'),
-        url:
-          'https://enatega.com/blogs-enatega-open-source-food-delivery-solutions/'
+        url: `${WEBSITE_URL}/${ENATEGA_BLOGS}`
       },
       {
         title: t('titleAboutUs'),
 
-        url: 'https://ninjascode.com/'
+        url: NINJASCODE_WEBSITE
       }
     ])
   }, [])
@@ -87,10 +96,10 @@ const Help = props => {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={styles(currentTheme).backImageContainer}>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
+              <MaterialIcons name='arrow-back' size={30} color='black' />
             </View>
           )}
           onPress={() => {
@@ -104,9 +113,10 @@ const Help = props => {
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
-      style={styles(currentTheme).flex}>
+      style={styles(currentTheme).flex}
+    >
       <StatusBar
-        barStyle="light-content"
+        barStyle='light-content'
         backgroundColor={currentTheme.themeBackground}
       />
       <View style={styles(currentTheme).flex}>
@@ -117,14 +127,15 @@ const Help = props => {
               onPress={() =>
                 props.navigation.navigate('HelpBrowser', { title, url })
               }
-              key={index}>
+              key={index}
+            >
               <View>
                 <TextDefault textColor={currentTheme.fontMainColor} bolder>
                   {title}{' '}
                 </TextDefault>
               </View>
               <MaterialIcons
-                name="arrow-forward"
+                name='arrow-forward'
                 size={20}
                 color={currentTheme.darkBgFont}
               />

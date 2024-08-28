@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Image,
   TextInput
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -17,7 +16,7 @@ import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
-import { scale } from '../../utils/scaling'
+import { DEMO_CUSTOMER_EMAIL } from '../../utils/constants'
 
 function Login(props) {
   const {
@@ -100,7 +99,7 @@ function Login(props) {
                       ]}
                       placeholderTextColor={currentTheme.fontSecondColor}
                       // value={email}
-                      defaultValue='demo-customer@enatega.com'
+                      defaultValue={DEMO_CUSTOMER_EMAIL}
                       onChangeText={e => setEmail(e.toLowerCase().trim())}
                     />
                     {emailError !== null && (

@@ -1,4 +1,4 @@
-import { verticalScale, scale } from '../../../utils/scaling'
+import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import { StyleSheet } from 'react-native'
 

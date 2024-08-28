@@ -16,10 +16,8 @@ import {
   RefreshControl
 } from 'react-native'
 import {
-  MaterialIcons,
   SimpleLineIcons,
   AntDesign,
-  MaterialCommunityIcons
 } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import {
@@ -36,7 +34,6 @@ import { getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
-import TextError from '../../components/Text/TextError/TextError'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -44,7 +41,6 @@ import navigationOptions from '../Main/navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
-import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import Filters from '../../components/Filter/FilterSlider'

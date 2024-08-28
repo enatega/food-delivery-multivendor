@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { useStyles } from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 

@@ -1,26 +1,18 @@
 import { useQuery } from '@apollo/client'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import gql from 'graphql-tag'
-import React, { useContext, useEffect, useLayoutEffect } from 'react'
-import {
-  FlatList,
-  Platform,
-  StatusBar,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { FlatList, Platform, StatusBar, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FavouriteRestaurant } from '../../apollo/queries'
-import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
+
 import Item from '../../components/Main/Item/Item'
 import Spinner from '../../components/Spinner/Spinner'
-import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import TextError from '../../components/Text/TextError/TextError'
+
 import { LocationContext } from '../../context/Location'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
-import screenOptions from './screenOptions'
 import styles from './styles'
 import Analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -73,7 +65,7 @@ function Favourite() {
       headerTitleAlign: 'center',
       headerRight: null,
       headerTitleStyle: {
-        color:currentTheme.newFontcolor,
+        color: currentTheme.newFontcolor,
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
@@ -91,10 +83,14 @@ function Favourite() {
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newFontcolor} />
+              <MaterialIcons
+                name='arrow-back'
+                size={25}
+                color={currentTheme.newFontcolor}
+              />
             </View>
           )}
           onPress={() => {

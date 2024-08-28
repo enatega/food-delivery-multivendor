@@ -1,14 +1,10 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
 import {
   View,
-  ScrollView,
   Alert,
   StatusBar,
   Platform,
-  KeyboardAvoidingView,
   Dimensions,
-  Keyboard, 
-  TouchableOpacity
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -39,7 +35,7 @@ import Animated, {
   useSharedValue
 } from 'react-native-reanimated'
 import { scale } from '../../utils/scaling'
-import { Card } from 'react-native-paper'
+
 const { height } = Dimensions.get('window')
 const TOP_BAR_HEIGHT = height * 0.08
 const HEADER_MAX_HEIGHT = height * 0.34

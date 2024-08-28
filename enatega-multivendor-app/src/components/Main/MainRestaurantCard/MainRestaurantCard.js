@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { View, FlatList, Text } from 'react-native'
-import UserContext from '../../../context/User'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'

@@ -16,7 +16,6 @@ import Animated, {
   useAnimatedStyle
 } from 'react-native-reanimated'
 import useEnvVars from '../../../environment'
-import CloseIcon from '../../assets/SVG/imageComponents/CloseIcon'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'

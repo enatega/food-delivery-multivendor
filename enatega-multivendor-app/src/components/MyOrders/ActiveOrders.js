@@ -123,7 +123,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
             style={{
               flex: 1,
               flexDirection: 'row',
-              //alignItems: 'center',
+             
               justifyContent: 'center',
               ...alignment.Mmedium,
               ...alignment.MTlarge,
@@ -156,7 +156,6 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
             </View>
             <View style={styles(currentTheme).subContainerRight}>
               <TextDefault
-                //numberOfLines={1}
                 textColor={currentTheme.fontMainColor}
                 bolder>
                 {configuration.currencySymbol}

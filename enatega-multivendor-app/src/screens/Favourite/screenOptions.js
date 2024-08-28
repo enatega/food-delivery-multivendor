@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { BackButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import { scale } from '../../utils/scaling'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { View } from 'react-native'
@@ -15,7 +14,6 @@ const navigationOptions = headerText => {
     headerTitleAlign: 'center',
     headerRight: null,
     headerTitleContainerStyle: {
-      // marginBottom: 10,
       paddingLeft: 20,
       paddingRight: 20,
       backgroundColor: 'black',

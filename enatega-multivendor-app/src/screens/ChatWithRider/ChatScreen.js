@@ -10,7 +10,7 @@ import {
 } from 'react-native-gifted-chat'
 import { useChatScreen } from './useChatScreen'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { Ionicons, Entypo } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'

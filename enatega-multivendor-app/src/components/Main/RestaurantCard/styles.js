@@ -1,19 +1,9 @@
-import { verticalScale, scale } from '../../../utils/scaling'
+import { scale } from '../../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
-const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
-    // ML20: {
-    //   ...alignment.MLlarge
-    // },
-    // offerScroll: {
-    //   height: scale(270),
-    //   width: '100%',
-    //   ...alignment.MLlarge,
-    // },
     offerContainer: {
       borderRadius: 25,
       width: scale(270),
@@ -41,27 +31,8 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderColor: props != null ? props.newBorderColor : '#F3F4F6'
     },
-    // featureOverlay: {
-    //   height: '90%',
-    //   position: 'absolute',
-    //   left: 0,
-    //   top: 10,
-    //   backgroundColor: 'rgba(0, 0, 0, 0)'
-    // },
-    // featureText: {
-    //   alignSelf: 'flex-start',
-    //   maxWidth: '100%',
-    //   fontSize: scale(9),
-    //   ...alignment.MTxSmall,
-    //   ...alignment.PLsmall,
-    //   ...alignment.PRsmall,
-    //   ...alignment.PTxSmall,
-    //   ...alignment.PBxSmall,
-    //   backgroundColor: props != null ? props.iconColorPink : 'red'
-    // },
+   
     descriptionContainer: {
-      // paddingTop: verticalScale(12),
-      // paddingBottom: verticalScale(12),
       paddingLeft: scale(10),
       paddingRight: scale(10),
       width: '100%',

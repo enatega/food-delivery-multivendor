@@ -1,3 +1,6 @@
+import { APP_NAME } from "../src/utils/constants";
+import { toTitleCase } from "../src/utils/helper";
+
 export const ar = {
   title0: 'اللغة المختارة',
   subtitle0: 'الإنجليزية',
@@ -16,8 +19,8 @@ export const ar = {
     'لا تقلل العمر من الإحباط الشديد لفقدان كرة الآيس كريم من الموزة.',
   getStarted: 'ابدأ الآن!',
   welcome:
-    'مرحبًا بك في Enatega، في بعض الأحيان كل ما تحتاجه هو الحب. ولكن القليل من الطعام بين الحين والآخر لا يضر.',
-  welcomeScreen: 'مرحبًا بك في Enatega',
+    `مرحبًا بك في ${toTitleCase(APP_NAME)}، في بعض الأحيان كل ما تحتاجه هو الحب. ولكن القليل من الطعام بين الحين والآخر لا يضر.`,
+  welcomeScreen: `مرحبًا بك في ${toTitleCase(APP_NAME)}`,
   loginBtn: 'تسجيل الدخول',
   registerBtn: 'التسجيل',
   name: 'الاسم',

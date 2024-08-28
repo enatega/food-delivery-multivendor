@@ -7,13 +7,11 @@ import { scale } from '../../../utils/scaling'
 import { useNavigation } from '@react-navigation/native'
 import TextError from '../../Text/TextError/TextError'
 import OrdersContext from '../../../context/Orders'
-import Spinner from '../../Spinner/Spinner'
 import { useTranslation } from 'react-i18next'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { Modalize } from 'react-native-modalize'
 import { ProgressBar, checkStatus } from './ProgressBar'
 import styles from './styles'
-import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 import { calulateRemainingTime } from '../../../utils/customFunctions'
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height
