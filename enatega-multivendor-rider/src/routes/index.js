@@ -31,6 +31,8 @@ import { SoundContextProvider } from '../context/sound'
 import { gql, useApolloClient } from '@apollo/client'
 import { riderOrders } from '../apollo/queries'
 import { useTranslation } from 'react-i18next'
+import * as Sentry from '@sentry/react-native'
+import ConfigurationContext from '../context/configuration'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -205,6 +207,7 @@ function NoDrawer() {
 
 function AppContainer() {
   const { token } = useContext(AuthContext)
+  const configuration = useContext(ConfigurationContext)
 
   // Register for push notifications.
   useEffect(() => {
@@ -235,6 +238,20 @@ function AppContainer() {
     registerForPushNotificationsAsync()
   }, [])
 
+  useEffect(() => {
+    const dsn = configuration?.riderAppSentryUrl
+  
+    if (dsn) {
+      Sentry.init({
+        dsn: dsn,
+        environment:"development",
+        enableInExpoDevelopment: true,
+        debug:  true,
+        tracesSampleRate: 1.0 // to be changed to 0.2 in production
+      })
+    }
+  }, [configuration?.riderAppSentryUrl])
+
   return (
     <SafeAreaProvider>
       <NavigationContainer
@@ -247,4 +264,4 @@ function AppContainer() {
   )
 }
 
-export default AppContainer
+export default Sentry.withProfiler(AppContainer)

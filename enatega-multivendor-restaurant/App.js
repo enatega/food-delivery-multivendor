@@ -12,8 +12,6 @@ import setupApolloClient from './src/apollo/client'
 import { Spinner, TextDefault } from './src/components'
 import { colors } from './src/utilities'
 import { ActivityIndicator, StyleSheet, View, LogBox } from 'react-native'
-import * as Sentry from 'sentry-expo'
-import getEnvVars from './environment'
 import 'react-native-gesture-handler'
 import * as SecureStore from 'expo-secure-store'
 
@@ -29,19 +27,10 @@ export default function App() {
   const [token, setToken] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const { SENTRY_DSN } = getEnvVars()
+
   const client = setupApolloClient()
 
-  useEffect(() => {
-    if (SENTRY_DSN) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-        enableInExpoDevelopment: true,
-        debug: true,
-        tracesSampleRate: 1.0 // to be changed to 0.2 in production
-      })
-    }
-  }, [SENTRY_DSN])
+
 
   useEffect(() => {
     ;(async () => {
