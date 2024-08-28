@@ -32,7 +32,6 @@ export const initialize = (
   const messaging = getMessaging(app)
   return messaging
 }
-
 export const isFirebaseSupported = async() => {
   return await isSupported()
 }
