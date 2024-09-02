@@ -4,7 +4,7 @@ import styles from './style'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import ConfigurationContext from '../../context/configuration'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const STATUS_COLORS = {
   CANCELLED: colors.orderUncomplete,
@@ -13,7 +13,7 @@ const STATUS_COLORS = {
 }
 
 const RequestCard = ({ item }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   return (
     <View style={[styles.container, styles.bgBlack]}>

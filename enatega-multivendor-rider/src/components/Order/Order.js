@@ -5,8 +5,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import useOrder from './useOrder'
 import Spinner from '../Spinner/Spinner'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
 
 const Order = ({ order, orderAmount }) => {
   const {
@@ -17,19 +16,19 @@ const Order = ({ order, orderAmount }) => {
     loadingAssignOrder
   } = useOrder(order)
 
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <>
       <View style={{ marginTop: 20 }}>
         {order?.orderStatus === 'ACCEPTED' ||
         order?.orderStatus === 'PICKED' ? (
-          <View
-            style={[
-              styles.badge,
-              active === 'MyOrders' ? styles.bgRed : styles.bgBlack
-            ]}
-          />
-        ) : null}
+            <View
+              style={[
+                styles.badge,
+                active === 'MyOrders' ? styles.bgRed : styles.bgBlack
+              ]}
+            />
+          ) : null}
 
         <TouchableOpacity
           activeOpacity={0.8}

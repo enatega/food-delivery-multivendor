@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 const ComingSoon = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <View style={styles.container}>
       <TextDefault center bold H5>

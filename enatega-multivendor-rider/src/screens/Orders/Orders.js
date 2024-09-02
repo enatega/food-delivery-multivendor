@@ -15,7 +15,6 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { useTranslation } from 'react-i18next'
 
-
 const { height, width } = Dimensions.get('window')
 const Orders = ({ navigation }) => {
   const { t } = useTranslation()
@@ -38,13 +37,13 @@ const Orders = ({ navigation }) => {
       setOrders(
         assignedOrders.length > 0
           ? assignedOrders.filter(
-              o =>
-                ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
-                  o.orderStatus
-                ) &&
+            o =>
+              ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
+                o.orderStatus
+              ) &&
                 o.rider &&
                 dataProfile.rider._id === o.rider._id
-            )
+          )
           : []
       )
     }

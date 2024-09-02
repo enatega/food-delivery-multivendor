@@ -71,7 +71,7 @@ const Withdraw = () => {
               <TextInput
                 placeholder="$0.00"
                 value={amount !== undefined ? amount : ''}
-                onChangeText={(text) => setAmount(parseFloat(text))}
+                onChangeText={text => setAmount(parseFloat(text))}
                 style={[styles.textInput, error && styles.errorInput]}
               />
               <TextDefault

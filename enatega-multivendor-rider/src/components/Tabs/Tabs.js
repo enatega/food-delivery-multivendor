@@ -5,10 +5,10 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { TabsContext } from '../../context/tabs'
 import UserContext from '../../context/user'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const Tabs = props => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { active } = useContext(TabsContext)
   const { assignedOrders } = useContext(UserContext)
   const [ordersLength, setOrderslength] = useState(
