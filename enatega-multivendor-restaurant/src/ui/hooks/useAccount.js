@@ -3,8 +3,8 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import { AuthContext } from '../context'
 import { restaurantInfo, toggleAvailability } from '../../apollo'
 import { Alert } from 'react-native'
-import { DAYS } from '../../utilities'
 import usePrintOrder from './usePrintOrder'
+import { DAYS } from '../../utilities'
 
 export default function useAccount() {
   const [isAvailable, setIsAvailable] = useState(false)

@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native'
 import i18next from '../../../i18n'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useTranslation } from 'react-i18next'
+import { APP_NAME } from '../../utilities'
 
 const { height } = Dimensions.get('window')
 export default function SelectLanguage() {
@@ -53,10 +54,8 @@ export default function SelectLanguage() {
     await i18next.reloadResources(language, null)
     i18next.changeLanguage(language)
 
-    await AsyncStorage.setItem('enatega-language', language)
+    await AsyncStorage.setItem(`${APP_NAME}-language`, language)
 
-    var lang = await AsyncStorage.getItem('enatega-language')
-    console.log(lang)
     setLoader(false)
   }
   return (
