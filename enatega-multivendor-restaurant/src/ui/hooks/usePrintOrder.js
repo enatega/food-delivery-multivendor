@@ -17,7 +17,7 @@ export default function usePrintOrder() {
         { ...order, currencySymbol },
         Platform.OS === 'ios' ? (printer ? printer.url : null) : null
       )
-      console.log('result', result)
+   
     }
   }
   const selectPrinter = async () => {
@@ -26,7 +26,7 @@ export default function usePrintOrder() {
       setPrinter(result)
       await AsyncStorage.setItem('printer', JSON.stringify(result))
     }
-    console.log('result', result)
+   
   }
   return { printOrder, printer, selectPrinter }
 }

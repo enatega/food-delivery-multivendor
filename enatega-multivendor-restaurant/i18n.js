@@ -41,7 +41,7 @@ if (Platform.OS === 'ios') {
     fallbackLng: 'en',
     resources: languageResources
   })
-  console.log('language:', Localization.locale)
+ 
   i18next.changeLanguage(i18next.locale)
 }
 

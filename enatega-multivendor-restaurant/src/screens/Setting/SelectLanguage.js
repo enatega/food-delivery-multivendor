@@ -49,7 +49,7 @@ export default function SelectLanguage() {
 
   const changeLanguage = async language => {
     setLoader(true)
-    console.log(language)
+  
     setSelectedLanguage(language)
     await i18next.reloadResources(language, null)
     i18next.changeLanguage(language)

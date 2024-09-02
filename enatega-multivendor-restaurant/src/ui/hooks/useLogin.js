@@ -39,7 +39,7 @@ export default function useLogin() {
     // const username = await usernameRef.current
     // const password = await passwordRef.current
     const errors = validateLogin({ username, password })
-    console.log(username + password)
+  
     setErrors(errors)
     if (errors) return false
     return true
