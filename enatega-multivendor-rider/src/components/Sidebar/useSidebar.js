@@ -5,6 +5,7 @@ import { toggleAvailablity } from '../../apollo/mutations'
 import UserContext from '../../context/user'
 import { profile } from '../../apollo/queries'
 import { useTranslation } from 'react-i18next'
+import { NINJASCODE_URL, WEBSITE_URL } from '../../utilities/constants'
 
 const TOGGLE_RIDER = gql`
   ${toggleAvailablity}
@@ -13,13 +14,13 @@ const PROFILE = gql`
   ${profile}
 `
 
-const PRODUCT_URL = 'https://enatega.com/enatega-multi-vendor/'
-const PRIVACY_URL = 'https://enatega.com/privacy-policy/'
+const PRODUCT_URL = `${WEBSITE_URL}/enatega-multi-vendor/`
+const PRIVACY_URL = `${WEBSITE_URL}/privacy-policy/`
 
-const ABOUT_URL = 'https://ninjascode.com/'
+const ABOUT_URL = NINJASCODE_URL
 
 // constants
-/*const datas = [
+/* const datas = [
   {
     title: 'Product Page',
     icon: 'product-hunt',
@@ -35,7 +36,7 @@ const ABOUT_URL = 'https://ninjascode.com/'
     icon: 'info-circle',
     navigateTo: ABOUT_URL
   }
-]*/
+] */
 
 const useSidebar = () => {
   const { t } = useTranslation()

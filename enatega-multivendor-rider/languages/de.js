@@ -1,3 +1,6 @@
+import { APP_NAME } from '../src/utilities/constants'
+import { toTitleCase } from '../src/utilities/helper'
+
 export const de = {
   title0: 'Ausgewählte Sprache',
   subtitle0: 'Deutsch',
@@ -16,8 +19,9 @@ export const de = {
   description3:
     'Das Alter mindert nicht die extreme Enttäuschung, wenn eine Kugel Eis vom Hörnchen fällt',
   getStarted: 'Los geht’s!',
-  welcome:
-    'Willkommen bei Enatega, manchmal braucht man nur Liebe. Aber ab und zu schadet auch ein wenig Essen nicht.',
+  welcome: `Willkommen bei ${toTitleCase(
+    APP_NAME
+  )}, manchmal braucht man nur Liebe. Aber ab und zu schadet auch ein wenig Essen nicht.`,
   loginBtn: 'Anmelden',
   registerBtn: 'Registrieren',
   name: 'Name',
@@ -183,29 +187,33 @@ export const de = {
   enteramount: 'Betrag eingeben',
   confirmWithdraw: 'Auszahlung bestätigen',
   selectLanguage: 'Sprache auswählen',
-edit: 'Bearbeiten',
-language: 'Sprache',
-cancel: 'Abbrechen',
-select: 'Auswählen',
-home: "Startseite",
-orders: "Meine Bestellungen",
-wallet: "Brieftasche",
-profile: "Profil",
-privacyPolicy: "Datenschutzrichtlinie",
-orderAssingnedFlash: "Bestellung erfolgreich zugewiesen",
-locationAccess: 'Standortzugriff',
-    locationAccessText: 'Standortberechtigungen sind erforderlich, um diese App zu verwenden. Bitte öffnen Sie die Einstellungen, um den Standortzugriff zu erlauben.',
-    allowLocation: 'Standort erlauben',
-    enategaLocationText: 'Enatega verwendet Ihren Standort für Funktionen wie das Finden von Bestellungen in der Nähe und das Verfolgen von Kundenbestellungen!',
-    emptyUsernameError: 'Benutzername ist erforderlich!',
-emptyPasswordError: 'Passwort ist erforderlich!',
-loginFlashMsg: 'Angemeldet',
-enategaCash: 'Enatega Bargeld',
-ASSIGNED: "ZUGEWIESEN",
-PICKED: "GEWÄHLT",
-contactCustomer: 'Kundenkontakt',
-orderMarkedAs: 'Bestellung markiert als ',
-withdrawAmountError: 'Abhebungsbetrag muss kleiner oder gleich dem Brieftaschenbetrag sein!',
-amountGreater: 'Betrag muss größer sein als',
-amountReq: 'Betrag ist erforderlich!'
+  edit: 'Bearbeiten',
+  language: 'Sprache',
+  cancel: 'Abbrechen',
+  select: 'Auswählen',
+  home: 'Startseite',
+  orders: 'Meine Bestellungen',
+  wallet: 'Brieftasche',
+  profile: 'Profil',
+  privacyPolicy: 'Datenschutzrichtlinie',
+  orderAssingnedFlash: 'Bestellung erfolgreich zugewiesen',
+  locationAccess: 'Standortzugriff',
+  locationAccessText:
+    'Standortberechtigungen sind erforderlich, um diese App zu verwenden. Bitte öffnen Sie die Einstellungen, um den Standortzugriff zu erlauben.',
+  allowLocation: 'Standort erlauben',
+  enategaLocationText: `${toTitleCase(
+    APP_NAME
+  )} verwendet Ihren Standort für Funktionen wie das Finden von Bestellungen in der Nähe und das Verfolgen von Kundenbestellungen!`,
+  emptyUsernameError: 'Benutzername ist erforderlich!',
+  emptyPasswordError: 'Passwort ist erforderlich!',
+  loginFlashMsg: 'Angemeldet',
+  enategaCash: `${toTitleCase(APP_NAME)} Bargeld`,
+  ASSIGNED: 'ZUGEWIESEN',
+  PICKED: 'GEWÄHLT',
+  contactCustomer: 'Kundenkontakt',
+  orderMarkedAs: 'Bestellung markiert als ',
+  withdrawAmountError:
+    'Abhebungsbetrag muss kleiner oder gleich dem Brieftaschenbetrag sein!',
+  amountGreater: 'Betrag muss größer sein als',
+  amountReq: 'Betrag ist erforderlich!'
 }

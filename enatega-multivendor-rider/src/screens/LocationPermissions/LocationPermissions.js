@@ -4,6 +4,8 @@ import * as Location from 'expo-location'
 import styles from './styles'
 import { useLocationContext } from '../../context/location'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { toTitleCase } from '../../utilities/helper'
+import { APP_NAME } from '../../utilities/constants'
 
 const LocationPermissions = ({ navigation }) => {
   const { setLocationPermission } = useLocationContext()
@@ -63,9 +65,9 @@ const LocationPermissions = ({ navigation }) => {
       <View style={[styles().flex]}>
         <View style={styles().descriptionEmpty}>
           <TextDefault H5 bolder center>
-            {
-              'Enatega uses your location for features like finding orders nearby and tracking customer orders!'
-            }
+            {`${toTitleCase(
+              APP_NAME
+            )} uses your location for features like finding orders nearby and tracking customer orders!`}
           </TextDefault>
         </View>
         <TouchableOpacity

@@ -234,7 +234,7 @@ function Menu({ route, props }) {
             })
             setBusy(false)
           }
-          console.log(address)
+         
         }
       })
       .catch(error => {

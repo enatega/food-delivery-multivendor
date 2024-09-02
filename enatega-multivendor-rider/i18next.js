@@ -9,6 +9,7 @@ import { km } from './languages/km'
 import { zh } from './languages/zh'
 import { ar } from './languages/ar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { APP_NAME } from './src/utilities/constants'
 export const languageResources = {
   en: { translation: en },
   zh: { translation: zh },
@@ -18,9 +19,9 @@ export const languageResources = {
   ar: { translation: ar }
 }
 
-const getStoredLanguage = async () => {
-  const lng = await AsyncStorage.getItem('enatega-language')
-  console.log(lng)
+const getStoredLanguage = async() => {
+  const lng = await AsyncStorage.getItem(`${APP_NAME}-language`)
+
   i18next.use(initReactI18next).init({
     compatibilityJSON: 'v3',
     lng: lng,
@@ -39,7 +40,7 @@ if (Platform.OS === 'ios') {
     fallbackLng: 'en',
     resources: languageResources
   })
-  console.log('language:', Localization.locale)
+
   i18next.changeLanguage(i18next.locale)
 }
 

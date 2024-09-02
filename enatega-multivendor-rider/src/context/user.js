@@ -98,11 +98,7 @@ export const UserProvider = props => {
     }
   }, [locationPermission])
 
-  function onCompleted({ rider, assignedOrders }) {
-    console.log(rider)
-    console.log(assignedOrders)
-    console.log('onCompleted context')
-  }
+  function onCompleted({ rider, assignedOrders }) {}
 
   function error1(error) {
     console.log('error on fetching context 1', JSON.stringify(error))

@@ -111,7 +111,6 @@ function LocationStack() {
 function Main() {
   const { locationPermission } = useLocationContext()
   const client = useApolloClient()
-  const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
   const handleNotification = useCallback(async response => {
     if (
@@ -170,7 +169,7 @@ function Main() {
           drawerPosition="right"
           drawerContent={props => <Sidebar {...props} />}
           screenOptions={{ headerShown: false }}>
-          {/*<Drawer.Screen name="SidebBar" component={Sidebar} />*/}
+          {/* <Drawer.Screen name="SidebBar" component={Sidebar} /> */}
 
           <Drawer.Screen name="noDrawer" component={NoDrawer} />
         </Drawer.Navigator>

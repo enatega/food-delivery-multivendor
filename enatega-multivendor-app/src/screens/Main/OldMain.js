@@ -179,7 +179,7 @@ import React, {
               })
               setBusy(false)
             }
-            console.log(address)
+      
           }
         })
         .catch(error => {

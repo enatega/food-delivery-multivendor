@@ -1,3 +1,6 @@
+import { APP_NAME } from '../src/utilities/constants'
+import { toTitleCase } from '../src/utilities/helper'
+
 export const zh = {
   title0: '选定的语言',
   subtitle0: 'English',
@@ -14,8 +17,9 @@ export const zh = {
   subtitle3: '冰淇淋',
   description3: '年龄不会减少从冰锥中舀出一勺冰淇淋的极度失望',
   getStarted: '开始吧！',
-  welcome:
-    '欢迎来到Enatega，有时您需要的只是爱。但是偶尔会有点食物不会受到伤害。',
+  welcome: `欢迎来到${toTitleCase(
+    APP_NAME
+  )}，有时您需要的只是爱。但是偶尔会有点食物不会受到伤害。`,
   loginBtn: '登录',
   registerBtn: '寄存器',
   name: '名称',
@@ -174,29 +178,32 @@ export const zh = {
   enteramount: '输入金额',
   confirmWithdraw: '确认提现',
   selectLanguage: '选择语言',
-edit: '编辑',
-language: '语言',
-cancel: '取消',
-select: '选择',
-home: "首页",
-orders: "我的订单",
-wallet: "钱包",
-profile: "个人资料",
-privacyPolicy: "隐私政策",
-orderAssingnedFlash: "成功分配订单",
-locationAccess: '位置访问',
-    locationAccessText: '需要位置权限才能使用此应用程序。请打开设置以允许位置访问。',
-    allowLocation: '允许位置',
-    enategaLocationText: 'Enatega 使用您的位置来进行诸如查找附近订单和跟踪客户订单等功能！',
-    emptyUsernameError: '需要用户名!',
-emptyPasswordError: '需要密码!',
-loginFlashMsg: '已登录',
-enategaCash: '恩特加现金',
-ASSIGNED: "已分配",
-PICKED: "已挑选",
-contactCustomer: '联系客户',
-orderMarkedAs: '订单标记为 ',
-withdrawAmountError: '提款金额必须小于或等于钱包金额！',
-amountGreater: '金额必须大于',
-amountReq: '金额是必需的！'
+  edit: '编辑',
+  language: '语言',
+  cancel: '取消',
+  select: '选择',
+  home: '首页',
+  orders: '我的订单',
+  wallet: '钱包',
+  profile: '个人资料',
+  privacyPolicy: '隐私政策',
+  orderAssingnedFlash: '成功分配订单',
+  locationAccess: '位置访问',
+  locationAccessText:
+    '需要位置权限才能使用此应用程序。请打开设置以允许位置访问。',
+  allowLocation: '允许位置',
+  enategaLocationText: `${toTitleCase(
+    APP_NAME
+  )} 使用您的位置来进行诸如查找附近订单和跟踪客户订单等功能！`,
+  emptyUsernameError: '需要用户名!',
+  emptyPasswordError: '需要密码!',
+  loginFlashMsg: '已登录',
+  enategaCash: '恩特加现金',
+  ASSIGNED: '已分配',
+  PICKED: '已挑选',
+  contactCustomer: '联系客户',
+  orderMarkedAs: '订单标记为 ',
+  withdrawAmountError: '提款金额必须小于或等于钱包金额！',
+  amountGreater: '金额必须大于',
+  amountReq: '金额是必需的！'
 }

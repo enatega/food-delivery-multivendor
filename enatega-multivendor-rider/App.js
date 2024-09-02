@@ -24,8 +24,7 @@ import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { LocationProvider } from './src/context/location'
 import getEnvVars from './environment'
 import moment from 'moment-timezone'
-import { useTranslation } from 'react-i18next'
-import { initialize, LogLevel } from 'react-native-clarity';
+import { initialize, LogLevel } from 'react-native-clarity'
 
 moment.tz.setDefault('Asia/Karachi')
 LogBox.ignoreLogs([
@@ -46,15 +45,13 @@ export default function App() {
   const { SENTRY_DSN } = getEnvVars()
 
   const onInitClarity = () => {
-    
     const clarityConfig = {
       logLevel: LogLevel.Verbose,
       allowMeteredNetworkUsage: true,
       enableIOS_experimental: true
-    };
-   initialize("nq7dea7dt4",clarityConfig);
+    }
+    initialize('nq7dea7dt4', clarityConfig)
   }
-
 
   useEffect(() => {
     if (SENTRY_DSN) {
@@ -81,6 +78,8 @@ export default function App() {
       setAppIsReady(true)
       await SplashScreen.hideAsync()
     })()
+
+    onInitClarity()
   }, [])
 
   useEffect(() => {
@@ -110,7 +109,7 @@ export default function App() {
     setToken(token)
   }
 
-  const logout = async () => {
+  const logout = async() => {
     try {
       client.clearStore()
       await AsyncStorage.removeItem('rider-token')

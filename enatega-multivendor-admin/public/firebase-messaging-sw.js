@@ -36,7 +36,7 @@ messaging.onBackgroundMessage(function (payload) {
      
         // eslint-disable-next-line no-restricted-globals
         self.registration.showNotification(title, notificationOptions); 
-        console.log('onBackgroundMessage')
+      
     } catch (error) {
         console.log('error', error)
     }

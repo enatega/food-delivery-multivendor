@@ -187,7 +187,7 @@ function Main(props) {
             })
             setBusy(false)
           }
-          console.log(address)
+   
         }
       })
       .catch((error) => {

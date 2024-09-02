@@ -24,7 +24,7 @@ function About(props) {
   const Analytics = analytics()
   const { t } = useTranslation()
   const { restaurantObject } = props.route.params
-  console.log('restaurant info', restaurantObject)
+  
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const configuration = useContext(ConfigurationContext)

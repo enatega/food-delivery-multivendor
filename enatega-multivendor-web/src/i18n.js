@@ -7,6 +7,10 @@ import km from './translations/km'
 import zh from './translations/zh'
 import ar from './translations/ar'
 import { APP_NAME } from './utils/constantValues'
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 i18n.use(initReactI18next).init({
   // we init with resources
   resources: {

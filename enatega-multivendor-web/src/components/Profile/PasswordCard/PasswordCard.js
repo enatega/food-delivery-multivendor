@@ -55,7 +55,7 @@ function PasswordCard() {
     }, []);
 
     const handleAction = () => {
-        console.log(passError + " " + confirmError);
+       
         clearErrors();
         let validate = true;
         const oldPassword = formRef.current["currentPassword"].value;

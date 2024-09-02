@@ -18,9 +18,7 @@ function Currency(props) {
   const [currencySymbol, currencySymbolSetter] = useState(
     props.currencySymbol || ''
   )
-  const onCompleted = data => {
-    console.log(data)
-  }
+  const onCompleted = data => {}
   const onError = error => {
     console.log(error)
   }

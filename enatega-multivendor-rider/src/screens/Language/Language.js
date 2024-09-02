@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { View, TouchableOpacity, Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as Updates from 'expo-updates'
 import * as Localization from 'expo-localization'
 import styles from './styles'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -12,7 +11,8 @@ import Modal from 'react-native-modal'
 import RadioButton from '../../components/FdRadioBtn/RadioBtn'
 import { useNavigation } from '@react-navigation/native'
 import i18next from '../../../i18next'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { APP_NAME } from '../../utilities/constants'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -25,7 +25,7 @@ const languageTypes = [
 
 function Language() {
   const navigation = useNavigation()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [modalVisible, modalVisibleSetter] = useState(false)
   const [activeRadio, setActiveRadio] = useState(languageTypes[0].index)
   const [languageName, languageNameSetter] = useState('English')
@@ -41,7 +41,7 @@ function Language() {
   }, [])
 
   async function selectedLanguageFunc() {
-    const lang = await AsyncStorage.getItem('enatega-language')
+    const lang = await AsyncStorage.getItem(`${APP_NAME}-language`)
     if (lang) {
       const defLang = languageTypes.findIndex(el => el.code === lang)
       const langName = languageTypes[defLang].value
@@ -54,12 +54,12 @@ function Language() {
     const languageInd = activeRadio
     const lang = languageTypes[languageInd].code
     i18next.changeLanguage(lang)
-    console.log(lang)
+
     if (Platform.OS === 'android') {
       const localization = await Localization.getLocalizationAsync()
       localization.locale = languageTypes[languageInd].code
       await AsyncStorage.setItem(
-        'enatega-language',
+        `${APP_NAME}-language`,
         languageTypes[languageInd].code
       )
     }
@@ -92,7 +92,7 @@ function Language() {
               textColor={colors.fontSecondColor}
               bold
               H5>
-             {t('language')}
+              {t('language')}
             </TextDefault>
           </View>
           <TouchableOpacity
@@ -100,7 +100,7 @@ function Language() {
             onPress={() => modalVisibleSetter(true)}
             style={styles.button}>
             <TextDefault textColor={colors.tagColor} bolder>
-             {t('edit')}
+              {t('edit')}
             </TextDefault>
           </TouchableOpacity>
         </View>
@@ -120,7 +120,7 @@ function Language() {
             bolder
             H5
             style={alignment.MBsmall}>
-           {t('selectLanguage')}
+            {t('selectLanguage')}
           </TextDefault>
 
           {languageTypes.map((item, index) => (

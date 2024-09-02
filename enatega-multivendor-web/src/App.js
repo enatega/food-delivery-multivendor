@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
-import React, { useEffect,useContext, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { getToken, onMessage } from "firebase/messaging";
 import { initialize, isFirebaseSupported } from "./firebase";
@@ -37,8 +37,7 @@ import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
 
-require('./i18n')
-
+require("./i18n");
 
 const GoogleMapsLoader = ({
   children,
@@ -50,7 +49,7 @@ const GoogleMapsLoader = ({
   const { t, i18n } = useTranslation();
 
   //Handlers
-/*   const onWindowUpdateAmplitude = async () => {
+  /*   const onWindowUpdateAmplitude = async () => {
     const { webAmplitudeApiKey } = await fetchConfiguration();
 
     if (webAmplitudeApiKey) {
@@ -70,10 +69,6 @@ const GoogleMapsLoader = ({
   }; */
 
   useEffect(() => {
-
-    console.log(i18n
-    )
-
     const initializeFirebase = async () => {
       if (await isFirebaseSupported()) {
         const messaging = initialize();
@@ -115,7 +110,7 @@ const GoogleMapsLoader = ({
             localizedBody = t("Order ID");
             setMessage(createMessage(orderNo, localizedTitle, localizedBody));
           } else {
-            console.log(localizedTitle, localizedBody);
+          
             setMessage(`${localizedTitle} ${localizedBody}`);
           }
         });
@@ -124,7 +119,7 @@ const GoogleMapsLoader = ({
     initializeFirebase();
   }, [t, i18n, VAPID_KEY]);
 
-  /* ß */
+
 
   const handleClose = () => {
     setMessage(null);
@@ -165,7 +160,8 @@ const GoogleMapsLoader = ({
 };
 
 function App() {
-  const { GOOGLE_MAPS_KEY, LIBRARIES, VAPID_KEY,SENTRY_DSN } = ConfigurableValues();
+  const { GOOGLE_MAPS_KEY, LIBRARIES, VAPID_KEY, SENTRY_DSN } =
+    ConfigurableValues();
   const { isLoggedIn } = useContext(UserContext);
 
   useEffect(() => {
@@ -177,9 +173,7 @@ function App() {
         debug: true,
         tracesSampleRate: 1.0, // to be changed to 0.2 in production
       });
-   
     }
-
   }, [SENTRY_DSN]);
 
   return GOOGLE_MAPS_KEY ? (

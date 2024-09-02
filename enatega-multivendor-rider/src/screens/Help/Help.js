@@ -5,28 +5,31 @@ import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { useNavigation } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
-
+import { useTranslation } from 'react-i18next'
+import {
+  BLOG,
+  DOCS,
+  NINJASCODE_URL,
+  PRODUCT_PAGE
+} from '../../utilities/constants'
 
 const links = [
   {
-    title: ('productPage'),
-    url:
-      'https://market.nativebase.io/view/enatega-multivendor-food-backend-app'
+    title: 'productPage',
+    url: PRODUCT_PAGE
   },
   {
-    title: ('docs'),
-    url: 'https://enatega-multi.gitbook.io/enatega-multivendor/'
+    title: 'docs',
+    url: DOCS
   },
   {
-    title: ('blog'),
-    url:
-      'https://blog.geekyants.com/enatega-multivendor-foodpanda-clone-v1-0-0-e4b4f21ba1c1'
+    title: 'blog',
+    url: BLOG
   },
-  { title: ('aboutUs'), url: 'https://ninjascode.com/pages/ourteam.html' }
+  { title: 'aboutUs', url: `${NINJASCODE_URL}/pages/ourteam.html` }
 ]
 function Help() {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const navigation = useNavigation()
   const inset = useSafeArea()
 

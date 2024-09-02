@@ -78,7 +78,7 @@ import {
     const circle = useValue(0)
     const themeContext = useContext(ThemeContext)
     const currentTheme = theme[themeContext.ThemeValue]
-    console.log(currentTheme)
+   
     const configuration = useContext(ConfigurationContext)
     const [selectedLabel, selectedLabelSetter] = useState(0)
     const [buttonClicked, buttonClickedSetter] = useState(false)
@@ -220,7 +220,7 @@ import {
       ) {
         await setCartRestaurant(food.restaurant)
         const result = checkItemCart(food._id)
-        console.log(result)
+      
         if (result.exist) await addQuantity(result.key)
         else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
         animate()

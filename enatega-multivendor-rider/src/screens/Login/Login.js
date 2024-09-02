@@ -86,7 +86,6 @@ export default function Login() {
               size={24}
               style={styles.eyeBtn}
             />
-            {console.log(username)}
           </View>
           {passwordError ? (
             <View>

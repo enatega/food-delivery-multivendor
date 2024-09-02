@@ -1,3 +1,6 @@
+import { APP_NAME } from '../src/utilities/constants'
+import { toTitleCase } from '../src/utilities/helper'
+
 export const en = {
   title0: 'Selected Language',
   subtitle0: 'English',
@@ -16,8 +19,9 @@ export const en = {
   description3:
     'Age does not diminish the extreme disappointment of having a scoop of ice cream fall from the cone',
   getStarted: 'Get Started!',
-  welcome:
-    "Welcome to Enatega, sometimes all you need is love. But a little food now and then doesn't hurt.",
+  welcome: `Welcome to ${toTitleCase(
+    APP_NAME
+  )}, sometimes all you need is love. But a little food now and then doesn't hurt.`,
   loginBtn: 'Login',
   registerBtn: 'Register',
   name: 'Name',
@@ -118,7 +122,7 @@ export const en = {
   available: 'Available',
   notAvailable: 'Not Available',
   myorders: 'My Orders',
-  ///////////////////
+  /// ////////////////
   updating: 'Please wait while app is updating',
   orderID: ' Order ID:',
   orderAmount: 'Order Amount',
@@ -195,12 +199,13 @@ export const en = {
   locationAccessText:
     'Location permissions are required to use this app. Kindly open settings to allow location access.',
   allowLocation: 'Allow Location',
-  enategaLocationText:
-    'Enatega uses your location for features like finding orders nearby and tracking customer orders!',
+  enategaLocationText: `${toTitleCase(
+    APP_NAME
+  )} uses your location for features like finding orders nearby and tracking customer orders!`,
   emptyUsernameError: 'Username is required!',
   emptyPasswordError: 'Password is required!',
   loginFlashMsg: 'Logged in',
-  enategaCash: 'Enatega Cash',
+  enategaCash: `${toTitleCase(APP_NAME)} Cash`,
   ASSIGNED: 'ASSIGNED',
   PICKED: 'PICKED',
   contactCustomer: 'Contact Customer',

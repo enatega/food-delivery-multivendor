@@ -120,7 +120,7 @@ export default function AddNewAddress(props) {
   const setCurrentLocation = async () => {
     // Check if longitude and latitude are available in props
     if (longitude && latitude) {
-      console.log('Inside setCurrentLocation', longitude, latitude)
+    
       // Set the current location coordinates on the map
       mapRef.fitToCoordinates([
         {
@@ -154,7 +154,7 @@ export default function AddNewAddress(props) {
   }
 
   const handleLocationWithoutCoords = async () => {
-    console.log('inside Else in current LOcation')
+ 
     // If no coordinates are available, use the logic to get the current location as before
     const { status, canAskAgain } = await getLocationPermission()
     if (status !== 'granted' && !canAskAgain) {
@@ -197,8 +197,6 @@ export default function AddNewAddress(props) {
         coords.longitude
       )
 
-      // Update the customAddress state with the current location address
-      console.log('fetch the city based on the obtained coordinates', city)
       setSelectedValue(city)
       setCustomAddress(formattedAddress)
     } catch (error) {
@@ -208,7 +206,7 @@ export default function AddNewAddress(props) {
   }
 
   const onSelectSearchAddress = (address, coordinates) => {
-    console.log('address', address)
+   
     mapRef.fitToCoordinates([
       {
         latitude: coordinates.lat,
@@ -218,18 +216,18 @@ export default function AddNewAddress(props) {
     setCustomAddress(address)
     setSelectedSearchAddress(address)
     setSearchModalVisible(false)
-    console.log('onSelectSearchAddress', coordinates, typeof mapRef)
+   
   }
 
   const onRegionChangeComplete = coordinates => {
-    console.log('onRegionChangeComplete')
+  
     setCoordinates({
       ...coordinates
     })
   }
 
   const onPanDrag = () => {
-    console.log('onPanDrag')
+  
     setLabel(t('selectedLocation'))
     setSearchModalVisible(false)
   }

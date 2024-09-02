@@ -52,7 +52,6 @@ const useLogin = () => {
   }
 
   async function onCompleted({ riderLogin, lastOrderCreds }) {
-    console.log('onCompleted data')
     if (riderLogin) {
       FlashMessage({ message: t('loginFlashMsg') })
       await AsyncStorage.setItem('rider-id', riderLogin.userId)
@@ -72,13 +71,12 @@ const useLogin = () => {
     }
   }
   function onError(error) {
-    let message = 'Check internet connection'
-    console.log("going in")
     try {
-      message = error.message
-    } catch (error) {}
-    setUsername('')
-    setPassword('')
+      const message = error.message
+      setUsername('')
+      setPassword('')
+      console.log({ useLoginMessage: message })
+    } catch (e) {}
   }
 
   async function onSubmit() {
