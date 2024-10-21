@@ -503,14 +503,14 @@ function Checkout(props) {
       return false
     }
     if (profile.phone.length < 1) {
-      props.navigation.navigate('Profile', { backScreen: 'Cart' })
+      props.navigation.navigate('PhoneNumber', { backScreen: 'Cart' })
       return false
     }
     if (profile.phone.length > 0 && !profile.phoneIsVerified) {
       FlashMessage({
-        message: t('numberVerificationAlert')
+        message: t('numberVerificationAlert') 
       })
-      props.navigation.navigate('Profile')
+      props.navigation.navigate('PhoneNumber')
       return false
     }
     return true

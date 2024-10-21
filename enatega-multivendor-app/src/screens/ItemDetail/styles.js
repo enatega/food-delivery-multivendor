@@ -27,7 +27,7 @@ const styles = (props = null) =>
       top: 0,
       left: 0,
       right: 0,
-      backgroundColor: 'black',
+      backgroundColor: props != null ? props.themeBackground : '#fff',
       zIndex: 1,
     },
     titleContainer: {
@@ -35,7 +35,7 @@ const styles = (props = null) =>
       top: 0,
       left: 0,
       right: 0,
-      backgroundColor: 'black',
+      backgroundColor: props != null ? props.themeBackground : '#fff',
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 2,
