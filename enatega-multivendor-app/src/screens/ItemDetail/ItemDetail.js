@@ -400,15 +400,15 @@ function ItemDetail(props) {
         </Animated.View>
         <Animated.ScrollView
           onScroll={scrollHandler} 
-          style={[styles().scrollViewStyle, { backgroundColor: 'black' }]}
+          style={[styles().scrollViewStyle, { backgroundColor: currentTheme.themeBackground }]}
           scrollEventThrottle={1}
           contentContainerStyle={{
             paddingTop: HEADER_MAX_HEIGHT,
             paddingBottom: scale(height * 0.09),
-            backgroundColor: 'black',
+            backgroundColor: currentTheme.themeBackground,
           }}
         >
-          <View style={[styles().subContainer, { backgroundColor: 'black'}]}>
+          <View style={[styles().subContainer, { backgroundColor: currentTheme.themeBackground}]}>
             <View>
               {food?.variations?.length > 1 && (
                 <View>
