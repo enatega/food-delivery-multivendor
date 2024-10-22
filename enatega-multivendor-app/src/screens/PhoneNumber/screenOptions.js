@@ -8,7 +8,7 @@ const navigationOptions = props => {
     // eslint-disable-next-line react/display-name
     headerRight: () => (
       <Ionicons
-        onPress={() => props.navigation.goBack()}
+        onPress={() => props.isCustomNavigation ? props.navigation.navigate('Main') : props.navigation.goBack()}
         name="close"
         size={24}
         color={props.iconColor}
@@ -18,7 +18,7 @@ const navigationOptions = props => {
     // eslint-disable-next-line react/display-name
     headerLeft: () => (
       <Ionicons
-        onPress={() => props.navigation.goBack()}
+        onPress={() => props.isCustomNavigation ? props.navigation.navigate('Main') : props.navigation.goBack()}
         name="chevron-back"
         size={24}
         color={props.iconColor}
