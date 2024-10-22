@@ -80,7 +80,6 @@ export const ConfigurationProvider = (props) => {
             '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com'
         }
       : data.configuration
-  console.log('🚀 ~ ConfigurationProvider ~ configuration:', configuration)
   return (
     <ConfigurationContext.Provider value={configuration}>
       {props.children}
