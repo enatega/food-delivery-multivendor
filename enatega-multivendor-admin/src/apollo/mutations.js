@@ -819,19 +819,36 @@ export const createRestaurant = `mutation CreateRestaurant($restaurant:Restauran
   }
 }`
 
-export const updateDeliveryBoundsAndLocation = `mutation UPDATE_DELIVERY_BOUNDS_AND_LOCATION($id:ID!,$bounds:[[[Float!]]],$location:CoordinatesInput!){
-  result :updateDeliveryBoundsAndLocation(id:$id,location:$location,bounds:$bounds){
-    success
-    message
-    data{
-      _id
-      deliveryBounds{
-        coordinates
+export const updateDeliveryBoundsAndLocation = `mutation UPDATE_DELIVERY_BOUNDS_AND_LOCATION( $id: ID!
+    $boundType: String!
+    $bounds: [[[Float!]]]
+    $circleBounds: CircleBoundsInput
+    $location: CoordinatesInput!
+    $address: String
+    $postCode: String
+    $city: String){
+
+    result: updateDeliveryBoundsAndLocation(
+      id: $id
+      boundType: $boundType
+      circleBounds: $circleBounds
+      bounds: $bounds
+      location: $location
+      address: $address
+      postCode: $postCode
+      city: $city
+    ) {
+      success
+      message
+      data {
+        _id
+        deliveryBounds {
+          coordinates
+        }
+        location {
+          coordinates
+        }
       }
-      location{
-        coordinates
-      }
-    }
   }
 }`
 
