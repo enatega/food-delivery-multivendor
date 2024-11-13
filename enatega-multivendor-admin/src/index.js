@@ -14,7 +14,6 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import 'firebase/messaging'
-
 import ConfigurableValues from './config/constants'
 import { ConfigurationProvider } from './context/Configuration'
 import App from './app'

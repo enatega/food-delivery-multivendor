@@ -12,6 +12,7 @@ import {
 } from '../../apollo'
 import useStyles from './styles'
 import useGlobalStyles from '../../utils/globalStyles'
+
 import {
   Box,
   Switch,
@@ -57,7 +58,8 @@ function Rider(props) {
   const [nameError, nameErrorSetter] = useState(null)
   const [usernameError, usernameErrorSetter] = useState(null)
   const [passwordError, passwordErrorSetter] = useState(null)
-  const [phoneError, phoneErrorSetter] = useState(null)
+  const [phoneError, phoneErrorSetter] = useState(null);
+  const [phoneErrorMessage, setPhoneErrorMessage] = useState(null);
   const [userNameErrorMessage, setUserNameErrorMessage] = useState('')
   const [zoneError, zoneErrorSetter] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
@@ -124,6 +126,7 @@ function Rider(props) {
     usernameErrorSetter(usernameError.isValid)
     setUserNameErrorMessage(usernameError.errorMessage)
     phoneErrorSetter(phoneError.isValid)
+    setPhoneErrorMessage(phoneError.errorMessage)
     passwordErrorSetter(passwordError.isValid)
     zoneErrorSetter(zoneError.isValid)
     return (
@@ -153,7 +156,7 @@ function Rider(props) {
   const globalClasses = useGlobalStyles()
 
   const handlePhoneInput = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, ''); // Remove any non-numeric characters
+    const value = e.target.value.replace(/[^0-9]/g, '');
     e.target.value = value;
   };
 
@@ -317,6 +320,20 @@ function Rider(props) {
                     : ''
                 ]}
               />
+              {phoneError === false && (
+                <Typography
+                  variant="p"
+                  style={{
+                    color: 'red',
+                    fontSize: '12px',
+                    float: 'left',
+                    marginTop: '5px',
+                    textAlign: 'left',
+                    marginLeft: '10px',
+                  }}>
+                  {(phoneErrorMessage)}
+                </Typography>
+              )}
               {/* </Box> */}
             </Grid>
           </Grid>
