@@ -14,7 +14,7 @@ export const ConfigurationProvider = props => {
     loading || error || !data.configuration
       ? { currency: '', currencySymbol: '', deliveryRate: 0 }
       : data.configuration
-
+      
   return (
     <ConfigurationContext.Provider value={configuration}>
       {props.children}

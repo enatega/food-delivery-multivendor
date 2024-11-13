@@ -193,7 +193,7 @@ export const saveSendGridApiKey = `mutation SaveSendGridApiKey($configurationInp
     sendGridEnabled
     sendGridEmail
     sendGridEmailName
-    sendGridPassword
+    sendGridPassword 
   }
 }`
 

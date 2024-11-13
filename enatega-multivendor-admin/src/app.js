@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getToken, onMessage } from 'firebase/messaging'
 import GoogleMapsLoader from './components/GoogleMapsLoader/GoogleMapsLoader.js'
-import { Box, CircularProgress } from '@mui/material'
+import { Box, Button, CircularProgress, Typography } from '@mui/material'
 import AdminLayout from './layouts/Admin.jsx'
 import RestaurantLayout from './layouts/Restaurant.jsx'
 import AuthLayout from './layouts/Auth.jsx'
@@ -14,13 +14,12 @@ import { isFirebaseSupported, initialize } from './firebase.js'
 import { uploadToken } from './apollo'
 import { gql, useApolloClient } from '@apollo/client'
 import ConfigurableValues from './config/constants.js'
-
+import useGlobalStyles from "./utils/globalStyles"
 require('./i18n')
 
 const UPLOAD_TOKEN = gql`
   ${uploadToken}
 `
-
 const App = () => {
   const {
     VAPID_KEY,
@@ -34,9 +33,25 @@ const App = () => {
     GOOGLE_MAPS_KEY,
     SENTRY_DSN
   } = ConfigurableValues()
- 
 
-  
+  const globalClasses = useGlobalStyles()
+  const [isOffline, setIsOffline] = useState(!navigator.onLine)  
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false)  
+    const handleOffline = () => setIsOffline(true)  
+
+    window.addEventListener('online', handleOnline)  
+    window.addEventListener('offline', handleOffline)  
+
+    return () => {
+      window.removeEventListener('online', handleOnline)  
+      window.removeEventListener('offline', handleOffline) 
+    }
+  }, [])
+  const handleRefresh = () => {
+    window.location.reload(); 
+  };
   const client = useApolloClient()
   const [user] = useState(localStorage.getItem('user-enatega'))
   const userType = localStorage.getItem('user-enatega')
@@ -106,6 +121,7 @@ const App = () => {
     }
   }, [user])
 
+  
   useEffect(() => {
     if (SENTRY_DSN) {
       Sentry.init({
@@ -119,8 +135,6 @@ const App = () => {
     }
   }, [SENTRY_DSN])
 
-
-
   const route = userType
     ? userType === 'VENDOR'
       ? '/restaurant/list'
@@ -129,6 +143,46 @@ const App = () => {
 
   return (
     <Sentry.ErrorBoundary>
+       {isOffline && (
+       <Box
+       component="div"
+       display="flex"
+       alignItems="center"
+       justifyContent="center"
+       flexDirection="column"
+       position="fixed"
+       top="0"            
+       left="0"          
+       width="100%"       
+       height="100vh"      
+       bgcolor="white"
+       color="black"
+       fontSize="20px"
+       zIndex={1000}
+     >
+      <Box
+      component="img"
+      sx={{
+        width: 100, 
+        height: 'auto',
+        maxWidth: { xs: '100px', sm: '200px', md: '300px' },
+      }}
+      alt="No internet"
+      src="./nointernet.svg"
+    />
+      <Typography variant="body" style={{ fontSize: '16px', marginTop:"5px" }}>OOPs! No internet.</Typography>
+      <Typography variant="body" style={{ fontSize: '16px', marginTop:"5px" }}>Try to refresh the page.</Typography>
+       <Button 
+        className={globalClasses.button}
+        onClick={handleRefresh}
+        style={{ marginTop: '16px' }}
+      >
+       Retry
+      </Button>
+     </Box>
+      )}
+      {!isOffline && (
+        <>
       {GOOGLE_MAPS_KEY ? (
         <GoogleMapsLoader GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY}>
           <HashRouter basename="/">
@@ -154,6 +208,7 @@ const App = () => {
           </HashRouter>
         </GoogleMapsLoader>
       ) : (
+        !isOffline && (
         <Box
           component="div"
           display="flex"
@@ -163,6 +218,9 @@ const App = () => {
           width="100vw">
           <CircularProgress color="primary" />
         </Box>
+        )
+      )}
+       </>
       )}
     </Sentry.ErrorBoundary>
   )

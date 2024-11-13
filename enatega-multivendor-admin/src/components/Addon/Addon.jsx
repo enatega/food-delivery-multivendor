@@ -34,6 +34,7 @@ const EDIT_ADDON = gql`
 function Addon(props) {
   const theme = useTheme()
   const { t } = props
+  console.log(props)
   const restaurantId = localStorage.getItem('restaurantId')
   const onCompleted = ({ createAddons, editAddon }) => {
     if (createAddons) {
