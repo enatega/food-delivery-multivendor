@@ -10,5 +10,6 @@ export default function useRestaurant(id, slug) {
     variables: { id, slug },
     fetchPolicy: "network-only",
   });
+  console.log(error)
   return { data, refetch, networkStatus, loading, error };
 }

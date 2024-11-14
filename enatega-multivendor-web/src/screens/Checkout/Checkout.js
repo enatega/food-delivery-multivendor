@@ -111,7 +111,7 @@ function Checkout() {
   const [selectedDate, handleDateChange] = useState(new Date());
   const [isPickUp, setIsPickUp] = useState(false);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
-
+ 
   let restCoordinates = {};
   const { loading, data, error } = useRestaurant(cartRestaurant);
   const extraSmall = useMediaQuery(theme.breakpoints.down("sm"));
