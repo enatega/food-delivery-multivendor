@@ -14,8 +14,8 @@ const CREATE_CATEGORY = gql`
 const EDIT_CATEGORY = gql`
   ${editCategory}
 `
-
 function Category(props) {
+  console.log("props",props);
   const mutation = props.category ? EDIT_CATEGORY : CREATE_CATEGORY
   const [mainError, mainErrorSetter] = useState('')
   const [success, successSetter] = useState('')
@@ -24,20 +24,24 @@ function Category(props) {
   )
   const restaurantId = localStorage.getItem('restaurantId')
   const onCompleted = data => {
+    console.log("category",props.category)
     const message = props.category
       ? t('CategoryUpdatedSuccessfully')
       : t('CategoryAddedSuccessfully')
     successSetter(message)
     mainErrorSetter('')
-    setCategory('')
+    setCategory('')  
     setTimeout(hideAlert, 3000)
   }
-  const onError = error => {
-    const message = `${t('ActionFailedTryAgain')} ${error}`
-    successSetter('')
-    mainErrorSetter(message)
-    setTimeout(hideAlert, 3000)
-  }
+  const onError = (error) => {
+    let message = t('ActionFailedTryAgain'); 
+    if (error.message.includes('Category already exists')) {
+      message = error.message; 
+    }
+    successSetter('');
+    mainErrorSetter(message);
+    setTimeout(hideAlert, 3000);
+  };
   const [mutate, { loading }] = useMutation(mutation, { onError, onCompleted })
   const hideAlert = () => {
     mainErrorSetter('')

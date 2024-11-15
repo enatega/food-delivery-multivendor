@@ -149,6 +149,7 @@ function Checkout() {
         let costType = configuration.costType;
         let amount = calculateAmount(costType, configuration.deliveryRate, distance);
         setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate);
+
       }
     })();
   }, [data, location]);
@@ -450,6 +451,7 @@ function Checkout() {
       toggleCloseModal();
       return;
     }
+   
     if (!cart.length) {
       showMessage({
         type: "error",
