@@ -168,7 +168,7 @@ const App = () => {
         maxWidth: { xs: '100px', sm: '200px', md: '300px' },
       }}
       alt="No internet"
-      src="./nointernet.svg"
+      src="/nointernet.svg"
     />
       <Typography variant="body" style={{ fontSize: '16px', marginTop:"5px" }}>OOPs! No internet.</Typography>
       <Typography variant="body" style={{ fontSize: '16px', marginTop:"5px" }}>Try to refresh the page.</Typography>
