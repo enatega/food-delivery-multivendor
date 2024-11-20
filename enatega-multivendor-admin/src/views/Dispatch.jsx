@@ -4,11 +4,11 @@ import { withTranslation } from 'react-i18next'
 import { useQuery, useMutation, useSubscription, gql } from '@apollo/client'
 import DataTable from 'react-data-table-component'
 import {
-  getActiveOrders,
   getRidersByZone,
   subscriptionOrder,
   updateStatus,
-  assignRider
+  assignRider, 
+  getActiveOrdersWithPagination
 } from '../apollo'
 import Header from '../components/Headers/Header'
 import CustomLoader from '../components/Loader/CustomLoader'
@@ -34,9 +34,11 @@ const ASSIGN_RIDER = gql`
 const GET_RIDERS_BY_ZONE = gql`
   ${getRidersByZone}
 `
-const GET_ACTIVE_ORDERS = gql`
-  ${getActiveOrders}
+const GET_ACTIVE_ORDERS_WITH_PAGINATION = gql`
+  ${getActiveOrdersWithPagination}
 `
+
+
 
 const Orders = props => {
   const theme = useTheme()
@@ -46,6 +48,8 @@ const Orders = props => {
   const [mutateUpdate] = useMutation(UPDATE_STATUS)
   const globalClasses = useGlobalStyles()
   const [mutateAssign] = useMutation(ASSIGN_RIDER)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
 
   const riderFunc = row => {
     const { data: dataZone } = useQuery(GET_RIDERS_BY_ZONE, {
@@ -95,12 +99,29 @@ const Orders = props => {
       </Select>
     )
   }
+
   const {
     data: dataOrders,
     error: errorOrders,
     loading: loadingOrders,
     refetch: refetchOrders
-  } = useQuery(GET_ACTIVE_ORDERS, { pollInterval: 3000 })
+  } = useQuery(GET_ACTIVE_ORDERS_WITH_PAGINATION, {
+    variables: {
+      page,
+      rowsPerPage,
+      search: searchQuery.length > 5 ? searchQuery : ''
+    },
+    pollInterval: 100000
+  })
+
+  const handlePageChange = (currentPage) => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
 
   const statusFunc = row => {
     const handleStatusSuccessNotification = status => {
@@ -139,7 +160,7 @@ const Orders = props => {
                   },
                   onError: error => {
                     console.error('Mutation error:', error)
-                    handleStatusErrorNotification('Error');
+                    handleStatusErrorNotification('Error')
                   }
                 })
               }}>
@@ -163,7 +184,7 @@ const Orders = props => {
                   },
                   onError: error => {
                     console.error('Mutation error:', error)
-                    handleStatusErrorNotification('Error');
+                    handleStatusErrorNotification('Error')
                   }
                 })
               }}>
@@ -187,7 +208,7 @@ const Orders = props => {
                   },
                   onError: error => {
                     console.error('Mutation error:', error)
-                    handleStatusErrorNotification('Error');
+                    handleStatusErrorNotification('Error')
                   }
                 })
               }}>
@@ -272,18 +293,17 @@ const Orders = props => {
 
   const filtered =
     searchQuery.length < 3
-      ? dataOrders && dataOrders.getActiveOrders
+      ? dataOrders && dataOrders.getActiveOrdersWithPagination.orders
       : dataOrders &&
-        dataOrders.getActiveOrders.filter(order => {
+        dataOrders.getActiveOrdersWithPagination.orders.filter(order => {
           return (
             order.restaurant.name.toLowerCase().search(regex) > -1 ||
             order.orderId.toLowerCase().search(regex) > -1 ||
             order.deliveryAddress.deliveryAddress.toLowerCase().search(regex) >
               -1 ||
-            order.orderId.toLowerCase().search(regex) > -1 ||
             order.paymentMethod.toLowerCase().search(regex) > -1 ||
             order.orderStatus.toLowerCase().search(regex) > -1 ||
-            (order.rider !== null
+            (order.rider
               ? order.rider.name.toLowerCase().search(regex) > -1
               : false)
           )
@@ -304,9 +324,9 @@ const Orders = props => {
             </td>
           </tr>
         ) : null}
-        {loadingOrders ? (
+        {/* {loadingOrders ? (
           <CustomLoader />
-        ) : (
+        ) : ( */}
           <DataTable
             subHeader={true}
             subHeaderComponent={
@@ -318,16 +338,22 @@ const Orders = props => {
             }
             title={<TableHeader title={t('Dispatch')} />}
             columns={columns}
-            data={filtered}
+            data={filtered || []}
+            pagination
+            paginationServer
+            paginationTotalRows={
+              dataOrders?.getActiveOrdersWithPagination?.orderCount || 0
+            }
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
             progressPending={loadingOrders}
             pointerOnHover
             progressComponent={<CustomLoader />}
-            pagination
             conditionalRowStyles={conditionalRowStyles}
             customStyles={customStyles}
             selectableRows
           />
-        )}
       </Container>
     </>
   )

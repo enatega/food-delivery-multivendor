@@ -347,6 +347,89 @@ export const getActiveOrders = `query GetActiveOrders($restaurantId:ID){
   }
 }`
 
+export const getActiveOrdersWithPagination = `query getActiveOrdersWithPagination( $page: Int, $rowsPerPage: Int, $search: String, $restaurantId: ID){
+  getActiveOrdersWithPagination( page: $page, rowsPerPage: $rowsPerPage, search: $search, restaurantId: $restaurantId)
+ {
+   orders 
+   {
+    _id
+    zone{
+      _id
+    }
+    orderId
+    restaurant{
+      _id
+      name
+      image
+      address
+      location{coordinates}
+    }
+    deliveryAddress{
+      location{coordinates}
+      deliveryAddress
+      details
+      label
+    }
+    items{
+      _id
+      title
+      description
+      image
+      quantity
+      variation{
+        _id
+        title
+        price
+        discounted
+      }
+      addons{
+        _id
+        options{
+          _id
+          title
+          description
+          price
+        }
+        description
+        title
+        quantityMinimum
+        quantityMaximum
+      }
+      specialInstructions
+      isActive
+      createdAt
+      updatedAt
+    }
+    user{
+      _id
+      name
+      phone
+      email
+    }
+    paymentMethod
+    paidAmount
+    orderAmount
+    orderStatus
+    isPickedUp
+    status
+    paymentStatus
+    reason
+    isActive
+    createdAt
+    deliveryCharges
+    rider{
+      _id
+      name
+      username
+      available
+    }
+   }
+    orderCount 
+    page
+    rowsPerPage
+  }
+}`
+
 export const getRidersByZone = `query RidersByZone($id:String!){
   ridersByZone(id:$id){
     _id
@@ -431,7 +514,7 @@ export const getCoupons = `query Coupons{
     }
   }`
 
-  export const getCuisines = `query Cuisines{
+export const getCuisines = `query Cuisines{
     cuisines {
       _id
       name
@@ -441,7 +524,7 @@ export const getCoupons = `query Coupons{
     }
   }`
 
-  export const getBanners = `query Banners{
+export const getBanners = `query Banners{
     banners {
       _id
       title
@@ -452,7 +535,7 @@ export const getCoupons = `query Coupons{
       parameters
     }
   }`
-  export const getBannerActions = `query BannerActions{
+export const getBannerActions = `query BannerActions{
     bannerActions
   }`
 
