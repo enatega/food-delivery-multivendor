@@ -111,7 +111,7 @@ function Checkout() {
   const [selectedDate, handleDateChange] = useState(new Date());
   const [isPickUp, setIsPickUp] = useState(false);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
-
+ 
   let restCoordinates = {};
   const { loading, data, error } = useRestaurant(cartRestaurant);
   const extraSmall = useMediaQuery(theme.breakpoints.down("sm"));
@@ -149,6 +149,7 @@ function Checkout() {
         let costType = configuration.costType;
         let amount = calculateAmount(costType, configuration.deliveryRate, distance);
         setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate);
+
       }
     })();
   }, [data, location]);
@@ -450,6 +451,7 @@ function Checkout() {
       toggleCloseModal();
       return;
     }
+   
     if (!cart.length) {
       showMessage({
         type: "error",

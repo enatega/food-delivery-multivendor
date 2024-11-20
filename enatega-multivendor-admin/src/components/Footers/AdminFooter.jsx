@@ -41,7 +41,7 @@ function AdminFooter(props) {
         </Link>
         <Link
           className={classes.link}
-          href="https://ninjascode.com/about-us/"
+          href="https://enatega.com/"
           target="_blank"
           underline="none">
           {t('About Us')}

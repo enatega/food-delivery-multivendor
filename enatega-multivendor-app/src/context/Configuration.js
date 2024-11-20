@@ -10,15 +10,68 @@ const GETCONFIGURATION = gql`
 
 const ConfigurationContext = React.createContext({})
 
+const initialConfig = {
+  _id: '',
+  email: '',
+  password: '',
+  emailName: '',
+  enableEmail: true,
+  clientId: '',
+  clientSecret: '',
+  sandbox: false,
+  publishableKey: '',
+  secretKey: '',
+  currency: '',
+  currencySymbol: '',
+  deliveryRate: 5,
+  twilioAccountSid: '',
+  twilioAuthToken: '',
+  twilioPhoneNumber: '',
+  twilioEnabled: false,
+  formEmail: '',
+  sendGridApiKey: '',
+  sendGridEnabled: false,
+  sendGridEmail: '',
+  sendGridEmailName: '',
+  sendGridPassword: '',
+  dashboardSentryUrl: '',
+  webSentryUrl: '',
+  apiSentryUrl: '',
+  customerAppSentryUrl: '',
+  restaurantAppSentryUrl: '',
+  riderAppSentryUrl: '',
+  googleApiKey: '',
+  cloudinaryUploadUrl: '',
+  cloudinaryApiKey: '',
+  webClientID: '',
+  androidClientID: '',
+  iOSClientID: '',
+  expoClientID: '',
+  googleMapLibraries: '',
+  googleColor: '',
+  termsAndConditions: '',
+  privacyPolicy: '',
+  testOtp: '',
+  firebaseKey: '',
+  authDomain: '',
+  projectId: '',
+  storageBucket: '',
+  msgSenderId: '',
+  appId: '',
+  measurementId: '',
+  isPaidVersion: false,
+  skipMobileVerification: false,
+  skipEmailVerification: false,
+  costType: '',
+  vapidKey: ''
+}
 export const ConfigurationProvider = (props) => {
   const { loading, data, error } = useQuery(GETCONFIGURATION)
 
   const configuration =
     loading || error || !data.configuration
       ? {
-          currency: '',
-          currencySymbol: '',
-          deliveryRate: 0,
+         ...initialConfig,
           expoClientID:
             '967541328677-d46sl62t52g5r3o5m0mnl2hpptr242nl.apps.googleusercontent.com',
           androidClientID:

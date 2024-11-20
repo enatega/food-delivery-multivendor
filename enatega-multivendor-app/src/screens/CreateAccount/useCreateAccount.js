@@ -157,7 +157,7 @@ export const useCreateAccount = () => {
     navigation.navigate('Register')
   }
   const navigateToPhone = () => {
-    navigation.navigate('PhoneNumber')
+    navigation.navigate('PhoneNumber', { backScreen: 'Main'})
   }
   const navigateToMain = () => {
     navigation.navigate({

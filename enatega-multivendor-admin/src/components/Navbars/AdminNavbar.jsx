@@ -72,6 +72,7 @@ function AdminNavbar(props) {
 
           <div>
             <Box
+              onClick={handleMenu}
               style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -87,7 +88,6 @@ function AdminNavbar(props) {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
                 color="inherit">
                 <img
                   alt="..."
@@ -102,7 +102,7 @@ function AdminNavbar(props) {
               </IconButton>
               <Typography
                 mt={1}
-                sx={{ fontWeight: 'bold' }}
+                sx={{ fontWeight: 'bold',cursor: 'pointer' }}
                 color="common.black">
                 Ninja
               </Typography>
@@ -159,11 +159,6 @@ function AdminNavbar(props) {
                     </MenuItem>
                   </Select>
                 </FormControl>
-              </MenuItem>
-              <MenuItem
-                sx={{ color: theme.palette.common.black }}
-                onClick={handleClose}>
-                {t('Welcome')}
               </MenuItem>
               <Divider />
               {vendor ? (
