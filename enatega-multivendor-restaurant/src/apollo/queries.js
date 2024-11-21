@@ -1,81 +1,90 @@
 export const orders = `query Orders{
-    restaurantOrders{
+  restaurantOrders{
+    _id
+    orderId
+    id
+    restaurant{
       _id
-      orderId
-      restaurant{
+      
+      name
+      image
+      address
+      location{coordinates}
+    }
+    deliveryAddress{
+      location{coordinates}
+      deliveryAddress
+      details
+      label
+    }
+    items{
+      _id
+      id
+      title
+      description
+      image
+      quantity
+      variation{
         _id
-        name
-        image
-        address
-        location{coordinates}
-      }
-      deliveryAddress{
-        location{coordinates}
-        deliveryAddress
-        details
-        label
-      }
-      items{
-        _id
+        id
         title
-        description
-        image
-        quantity
-        variation{
-          _id
-          title
-          price
-          discounted
-        }
-        addons{
-          _id
-          options{
-            _id
-            title
-            description
-            price
-          }
-          description
-          title
-          quantityMinimum
-          quantityMaximum
-        }
-        specialInstructions
-        isActive
-        createdAt
-        updatedAt
+        price
+        discounted
       }
-      user{
+      addons{
         _id
-        name
-        phone
-        email
+        id
+        options{
+          _id
+          id
+          title
+          description
+          price
+        }
+        description
+        title
+        quantityMinimum
+        quantityMaximum
       }
-      paymentMethod
-      paidAmount
-      orderAmount
-      orderStatus
-      tipping
-      taxationAmount
-      status
-      paymentStatus
-      reason
+      specialInstructions
       isActive
       createdAt
-      orderDate
-      deliveryCharges
-      isPickedUp
-      preparationTime
-      acceptedAt
-      isRinged
-      rider{
-        _id
-        name
-        username
-        available
-      }
+      updatedAt
     }
+    user{
+      _id
+      name
+      phone
+      email
+    }
+    paymentMethod
+    paidAmount
+    orderAmount
+    orderStatus
+    tipping
+    taxationAmount
+    status
+    paymentStatus
+    reason
+    isActive
+    createdAt
+    orderDate
+    pickedAt
+    deliveryCharges
+    isPickedUp
+    preparationTime
+    acceptedAt
+    isRinged
+    instructions
+    rider{
+      _id
+      name
+      username
+      available
+    }
+  }
 }`
+
 
 export const configuration = `query Configuration{
   configuration{
