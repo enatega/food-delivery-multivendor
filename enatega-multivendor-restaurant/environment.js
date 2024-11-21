@@ -20,8 +20,8 @@ const getEnvVars = (env = Updates.releaseChannel) => {
     }
   }
   return {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    GRAPHQL_URL: 'https://localhost:8000/graphql',
+    WS_GRAPHQL_URL: 'wss://localhost:8000/graphql',
     SENTRY_DSN: configuration.restaurantAppSentryUrl
     // SENTRY_DSN:
     //   'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933'
