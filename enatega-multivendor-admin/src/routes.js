@@ -54,7 +54,7 @@ import { ReactComponent as TimingIcon } from './assets/svg/timings.svg'
 import { ReactComponent as RestaurantSectionIcon } from './assets/svg/restSection.svg'
 import SuperAdminDashboard from './views/SuperAdminDashboard'
 import Cuisines from './views/Cuisines'
-import Banners from './views/Banners'
+// import Banners from './views/Banners'
 
 var routes = [
   {
@@ -138,15 +138,15 @@ var routes = [
     appearInSidebar: true,
     admin: true
   },
-  {
-    path: '/banner',
-    name: 'Banners',
-    icon: CouponsIcon,
-    component: Banners,
-    layout: '/super_admin',
-    appearInSidebar: true,
-    admin: true
-  },
+  // {
+  //   path: '/banner',
+  //   name: 'Banners',
+  //   icon: CouponsIcon,
+  //   component: Banners,
+  //   layout: '/super_admin',
+  //   appearInSidebar: true,
+  //   admin: true
+  // },
   {
     path: '/tipping',
     name: 'Tipping',
