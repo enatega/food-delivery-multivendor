@@ -16,9 +16,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Google from 'expo-auth-session/providers/google'
-
 
 const LOGIN = gql`
   ${login}
@@ -41,20 +39,10 @@ export const useCreateAccount = () => {
     PRIVACY_POLICY
   } = useEnvVars()
 
-  const configureGoogleSignin = () => {
-    GoogleSignin.configure({
-      iosClientId:
-        '967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah.apps.googleusercontent.com',
-      androidClientId:
-        '967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com'
-    })
-  }
-
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
     iosClientId: IOS_CLIENT_ID_GOOGLE
   })
-
 
   const getUserInfo = async (token) => {
     //absent token
@@ -68,7 +56,6 @@ export const useCreateAccount = () => {
         }
       )
       return await response.json()
-     
     } catch (error) {
       console.error(
         'Failed to fetch user data:',
@@ -89,11 +76,11 @@ export const useCreateAccount = () => {
 
   const signInWithGoogle = async () => {
     try {
-  
       if (response?.type === 'success') {
+        const google_user = await getUserInfo(
+          response.authentication.accessToken
+        )
 
-        const google_user = await getUserInfo(response.authentication.accessToken)
-       
         const userData = {
           phone: '',
           email: google_user.email,
@@ -104,7 +91,7 @@ export const useCreateAccount = () => {
         }
 
         await mutateLogin(userData)
-      } 
+      }
     } catch (error) {
       // Handle any errors that occur during AsyncStorage retrieval or other operations
       console.error('Error retrieving user data from AsyncStorage:', error)
@@ -115,9 +102,8 @@ export const useCreateAccount = () => {
   useEffect(() => {
     signInWithGoogle()
   }, [response])
-  
 
-/*   const signIn = async () => {
+  /*   const signIn = async () => {
     try {
       loginButtonSetter('Google')
       await GoogleSignin.hasPlayServices()
@@ -157,7 +143,7 @@ export const useCreateAccount = () => {
     navigation.navigate('Register')
   }
   const navigateToPhone = () => {
-    navigation.navigate('PhoneNumber', { backScreen: 'Main'})
+    navigation.navigate('PhoneNumber', { backScreen: 'Main' })
   }
   const navigateToMain = () => {
     navigation.navigate({
