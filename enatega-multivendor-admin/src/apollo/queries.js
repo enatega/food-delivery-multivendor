@@ -505,15 +505,19 @@ export const getTaxation = `query Taxes{
       }
     }`
 
-export const getCoupons = `query Coupons{
-    coupons {
-      _id
-      title
-      discount
-      enabled
+export const getCoupons = `
+  query Coupons($page: Int, $rowsPerPage: Int, $search: String) {
+    coupons(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      coupons {
+        _id
+        title
+        discount
+        enabled
+      }
+        totalCount
     }
-  }`
-
+    }
+  `
 export const getCuisines = `query Cuisines{
     cuisines {
       _id
@@ -804,3 +808,25 @@ export const withdrawRequestQuery = `query GetWithdrawRequests($offset:Int){
           }
       }
   }`
+
+  export const withdrawRequestQueryWithPagination = `query GetWithdrawRequests($offset:Int, $page: Int, $rowsPerPage: Int, $search: String){
+    getAllWithdrawRequests(offset:$offset, $page: Int, $rowsPerPage: Int, $search: String){
+        success
+        message
+        data{
+          _id
+          requestId
+          requestAmount
+          requestTime
+          rider{
+            _id
+            name
+            currentWalletAmount
+          }
+          status
+        }
+        pagination{
+          total
+        }
+    }
+}`

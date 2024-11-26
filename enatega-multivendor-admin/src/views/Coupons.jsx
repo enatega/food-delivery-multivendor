@@ -28,7 +28,8 @@ import {
 import { ReactComponent as CouponsIcon } from '../assets/svg/svg/Coupons.svg'
 import TableHeader from '../components/TableHeader'
 
-const GET_COUPONS = gql`
+
+const GET_COUPONS_WITH_PAGINATION = gql`
   ${getCoupons}
 `
 const EDIT_COUPON = gql`
@@ -45,16 +46,48 @@ const Coupon = props => {
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const [mutateEdit] = useMutation(EDIT_COUPON)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+
+
   const [mutateDelete] = useMutation(DELETE_COUPON, {
-    refetchQueries: [{ query: GET_COUPONS }]
+    refetchQueries: [{ query: GET_COUPONS_WITH_PAGINATION }]
   })
+
+
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
-    GET_COUPONS
+    GET_COUPONS_WITH_PAGINATION,
+    {
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: searchQuery.length > 2 ? searchQuery : null
+      },
+      fetchPolicy: 'network-only',
+    }
   )
+
+  console.log("🚀 ~ Coupon ~ data:", data)
+
+  const coupons = data?.coupons.coupons || []
+  console.log("🚀 ~ Coupon ~ coupons:", coupons)
+  const totalCount = data?.coupons.totalCount || 0
+  console.log("🚀 ~ Coupon ~ totalCount:", totalCount)
+
   const toggleModal = coupon => {
     setEditModal(!editModal)
     setCoupon(coupon)
   }
+
+  const handlePageChange = (currentPage) => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+
 
   const customSort = (rows, field, direction) => {
     const handleField = row => {
@@ -212,12 +245,19 @@ const Coupon = props => {
             }
             title={<TableHeader title={t('Coupons')} />}
             columns={columns}
-            data={filtered}
+            data={coupons}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            pointerOnHover
             progressPending={loadingQuery}
+            paginationTotalRows={totalCount}
             progressComponent={<CustomLoader />}
             sortFunction={customSort}
             defaultSortField="title"
+            paginationDefaultPage={page + 1}
             customStyles={customStyles}
           />
         )}
