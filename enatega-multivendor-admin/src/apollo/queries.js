@@ -759,20 +759,23 @@ export const getUsers = `query{
     }
   }`
 
-export const getRiders = `query{
-    riders{
-      _id
-      name
-      username
-      password
-      phone
-      available
-      zone{
+  export const getRiders = `query Riders($page: Int, $rowsPerPage: Int, $search: String) {
+    riders(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      riders {
         _id
-        title
+        name
+        username
+        password
+        phone
+        available
+        zone {
+          _id
+          title
+        }
       }
+      totalCount
     }
-  }`
+  }`;
 
 export const getAvailableRiders = `query{
     availableRiders{
