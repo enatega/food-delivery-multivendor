@@ -746,18 +746,25 @@ query PageCount($restaurant:String!){
   pageCount(restaurant:$restaurant)
 }
 `
-export const getUsers = `query{
-    users{
-      _id
-      name
-      email
-      phone
-      addresses{
-        location{coordinates}
-        deliveryAddress
+export const getUsers = `
+  query Users($page: Int, $rowsPerPage: Int, $search: String) {
+    users(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      users {
+        _id
+        name
+        email
+        phone
+        addresses {
+          location {
+            coordinates
+          }
+          deliveryAddress
+        }
       }
+      totalCount
     }
-  }`
+  }
+`;
 
 export const getRiders = `query Riders($page: Int, $rowsPerPage: Int, $search: String) {
     riders(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
