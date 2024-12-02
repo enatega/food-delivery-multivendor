@@ -27,6 +27,7 @@ import {
 } from '@mui/material'
 import { ReactComponent as CouponsIcon } from '../assets/svg/svg/Coupons.svg'
 import TableHeader from '../components/TableHeader'
+import { useDebounce } from '../utils/debounce'
 
 
 const GET_COUPONS_WITH_PAGINATION = gql`
@@ -44,6 +45,7 @@ const Coupon = props => {
   const [editModal, setEditModal] = useState(false)
   const [coupon, setCoupon] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const [mutateEdit] = useMutation(EDIT_COUPON)
   const [page, setPage] = useState(0)
@@ -61,7 +63,7 @@ const Coupon = props => {
       variables: {
         page: page,
         rowsPerPage,
-        search: searchQuery.length > 2 ? searchQuery : null
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
       },
       fetchPolicy: 'network-only',
     }
@@ -119,15 +121,6 @@ const Coupon = props => {
       cell: row => <>{actionButtons(row)}</>
     }
   ]
-  const regex =
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.coupons
-      : data &&
-        data.coupons.filter(coupon => {
-          return coupon.title.toLowerCase().search(regex) > -1
-        })
 
   const statusChanged = row => {
     return (
