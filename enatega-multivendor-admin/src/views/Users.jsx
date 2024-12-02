@@ -23,7 +23,7 @@ const Users = props => {
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const onChangeSearch = e => setSearchQuery(e.target.value)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
 
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
