@@ -608,27 +608,32 @@ export const restaurantList = `query RestaurantList{
   }
 }`
 
-export const restaurants = `query Restaurants{
-  restaurants{
-    _id
-    name
-    image
-    orderPrefix
-    slug
-    address
-    deliveryTime
-    minimumOrder
-    isActive
-    commissionRate
-    tax
-    owner{
-      _id
-      email
+export const restaurants = `
+  query Restaurants($page: Int, $rowsPerPage: Int, $search: String) {
+    restaurants(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      restaurants {
+        _id
+        name
+        image
+        orderPrefix
+        slug
+        address
+        deliveryTime
+        minimumOrder
+        isActive
+        commissionRate
+        tax
+        owner {
+          _id
+          email
+        }
+        shopType
+      }
+      totalCount
     }
-    shopType
   }
-}
-`
+`;
+
 
 export const getRestaurantProfile = `query Restaurant($id:String){
       restaurant(id:$id)
