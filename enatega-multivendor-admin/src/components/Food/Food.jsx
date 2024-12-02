@@ -298,11 +298,15 @@ function Food(props) {
     variationIndexSetter(index)
   }
   const onSelectAddon = (index, id) => {
-    const variations = variation
-    const addon = variations[index].addons.indexOf(id)
-    if (addon < 0) variations[index].addons.push(id)
-    else variations[index].addons.splice(addon, 1)
+    console.log({ variation, index, id })
+    let variations = JSON.parse(JSON.stringify(variation));
+    let addons = variations[index].addons;
+    const addon = addons.indexOf(id);
+    if(addon < 0) addons.push(id)
+    else addons.splice(addon, 1)
+    variations[index].addons = addons;
     variationSetter([...variations])
+    console.log("onSelectedAddon - Done - Food.jsx")
   }
 
   const uploadImageToCloudinary = async() => {
