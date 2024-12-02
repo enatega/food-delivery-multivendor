@@ -35,6 +35,7 @@ import { ReactComponent as RiderIcon } from '../assets/svg/svg/Rider.svg'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
 import ConfigurableValues from '../config/constants'
+import { useDebounce } from '../utils/debounce'
 
 const GET_RIDERS = gql`
   ${getRiders}
@@ -58,6 +59,7 @@ function Riders(props) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const onChangeSearch = e => setSearchQuery(e.target.value)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const [mutateToggle] = useMutation(TOGGLE_RIDER, {
     refetchQueries: [{ query: GET_RIDERS }, { query: GET_AVAILABLE_RIDERS }]
   })
@@ -70,7 +72,7 @@ function Riders(props) {
       variables: {
         page: page,
         rowsPerPage,
-        search: searchQuery.length > 2 ? searchQuery : null
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
       },
       fetchPolicy: 'network-only'
     }

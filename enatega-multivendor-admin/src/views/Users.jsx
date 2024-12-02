@@ -12,6 +12,7 @@ import useGlobalStyles from '../utils/globalStyles'
 import { Box, Container } from '@mui/material'
 import { ReactComponent as UserIcon } from '../assets/svg/svg/User.svg'
 import TableHeader from '../components/TableHeader'
+import { useDebounce } from '../utils/debounce'
 
 const GET_USERS = gql`
   ${getUsers}
@@ -20,6 +21,7 @@ const Users = props => {
   const { t } = props
 
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -30,7 +32,7 @@ const Users = props => {
     variables: {
       page: page,
       rowsPerPage,
-      search: searchQuery.length > 3 ? searchQuery : null
+      search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
     },
     fetchPolicy: 'network-only',
   }
