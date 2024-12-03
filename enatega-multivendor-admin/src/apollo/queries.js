@@ -526,15 +526,21 @@ export const getCoupons = `
     }
     }
   `
-export const getCuisines = `query Cuisines{
-    cuisines {
-      _id
-      name
-      description
-      image
-      shopType
+
+export const getCuisines = `
+  query Cuisines($page: Int, $rowsPerPage: Int, $search: String) {
+    cuisines(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      cuisines {
+        _id
+        name
+        description
+        image
+        shopType
+      }
+      totalCount
     }
-  }`
+  }
+`;
 
 export const getBanners = `query Banners{
     banners {

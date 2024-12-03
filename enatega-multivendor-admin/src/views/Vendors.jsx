@@ -87,14 +87,6 @@ const Vendors = props => {
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
 
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.vendors
-      : data &&
-        data.vendors.filter(vendor => {
-          return vendor.email.toLowerCase().search(regex) > -1
-        })
-
   const toggleModal = vendor => {
     setEditModal(!editModal)
     setVendor(vendor)

@@ -27,6 +27,7 @@ import {
 import { ReactComponent as CouponsIcon } from '../assets/svg/svg/Coupons.svg'
 import TableHeader from '../components/TableHeader'
 import CuisineComponent from '../components/Cuisine/Cuisine'
+import { useDebounce } from '../utils/debounce'
 
 const GET_CUISINES = gql`
   ${getCuisines}
@@ -44,16 +45,46 @@ const Cuisines = props => {
   const [cuisine, setCuisine] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const onChangeSearch = e => setSearchQuery(e.target.value)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [mutateEdit] = useMutation(EDIT_CUISINE)
   const [mutateDelete] = useMutation(DELETE_CUISINE, {
-    refetchQueries: [{ query: GET_CUISINES }]
+    refetchQueries: [
+      {
+        query: GET_CUISINES,
+        variables: {
+          page,
+          rowsPerPage,
+          search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+        }
+      }
+    ]
   })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
-    GET_CUISINES
+    GET_CUISINES,
+    {
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+      },
+      fetchPolicy: 'network-only'
+    }
   )
+
   const toggleModal = cuisine => {
     setEditModal(!editModal)
     setCuisine(cuisine)
+  }
+
+  const handlePageChange = currentPage => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
   }
 
   const customSort = (rows, field, direction) => {
@@ -80,7 +111,7 @@ const Cuisines = props => {
               row.image ||
               'https://enatega.com/wp-content/uploads/2023/11/man-suit-having-breakfast-kitchen-side-view.webp'
             }
-            alt=''
+            alt=""
           />
         </>
       )
@@ -105,15 +136,10 @@ const Cuisines = props => {
       cell: row => <>{actionButtons(row)}</>
     }
   ]
-  const regex =
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.cuisines
-      : data &&
-        data.cuisines.filter(cuisine => {
-          return cuisine.name.toLowerCase().search(regex) > -1
-        })
+ 
+  const CuisinesData = data?.cuisines?.cuisines
+
+  const totalCount = data?.cuisines?.totalCount
 
   const actionButtons = row => {
     const [anchorEl, setAnchorEl] = React.useState(null)
@@ -205,9 +231,16 @@ const Cuisines = props => {
             }
             title={<TableHeader title={t('Cuisines')} />}
             columns={columns}
-            data={filtered}
+            data={CuisinesData}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            pointerOnHover
+            paginationTotalRows={totalCount}
             progressPending={loadingQuery}
+            paginationDefaultPage={page + 1}
             progressComponent={<CustomLoader />}
             sortFunction={customSort}
             defaultSortField="name"
