@@ -68,28 +68,28 @@ function Addon(props) {
   const [addon, addonSetter] = useState(
     props.addon
       ? [
-          {
-            ...props.addon,
-            options: props.addon.options,
-            titleError: false,
-            optionsError: false,
-            quantityMinimumError: false,
-            quantityMaximumError: false
-          }
-        ]
+        {
+          ...props.addon,
+          options: props.addon.options,
+          titleError: false,
+          optionsError: false,
+          quantityMinimumError: false,
+          quantityMaximumError: false
+        }
+      ]
       : [
-          {
-            title: '',
-            description: '',
-            quantityMinimum: 0,
-            quantityMaximum: 1,
-            options: [],
-            titleError: false,
-            optionsError: false,
-            quantityMinimumError: false,
-            quantityMaximumError: false
-          }
-        ]
+        {
+          title: '',
+          description: '',
+          quantityMinimum: 0,
+          quantityMaximum: 1,
+          options: [],
+          titleError: false,
+          optionsError: false,
+          quantityMinimumError: false,
+          quantityMaximumError: false
+        }
+      ]
   )
   const [modal, modalSetter] = useState(false)
   const [addonIndex, addonIndexSetter] = useState(0)
@@ -142,11 +142,16 @@ function Addon(props) {
     addonSetter([...addons])
   }
   const onSelectOption = (index, id) => {
-    const addons = addon
-    const option = addons[index].options.indexOf(id)
-    if (option < 0) addons[index].options.push(id)
-    else addons[index].options.splice(option, 1)
-    addonSetter([...addons])
+    try {
+      const addons = addon
+      const option = addons[index].options.indexOf(id)
+      if (option < 0) addons[index].options.push(id)
+      else addons[index].options.splice(option, 1)
+      addonSetter([...addons])
+    }
+    catch (er) {
+      console.log(er)
+    }
   }
   const updateOptions = ids => {
     const addons = addon
@@ -383,42 +388,42 @@ function Addon(props) {
               if (validate()) {
                 props.addon
                   ? mutate({
-                      variables: {
-                        addonInput: {
-                          addons: {
-                            _id: props.addon._id,
-                            title: addon[0].title,
-                            description: addon[0].description,
-                            options: addon[0].options,
-                            quantityMinimum: +addon[0].quantityMinimum,
-                            quantityMaximum: +addon[0].quantityMaximum
-                          },
-                          restaurant: restaurantId
-                        }
+                    variables: {
+                      addonInput: {
+                        addons: {
+                          _id: props.addon._id,
+                          title: addon[0].title,
+                          description: addon[0].description,
+                          options: addon[0].options,
+                          quantityMinimum: +addon[0].quantityMinimum,
+                          quantityMaximum: +addon[0].quantityMaximum
+                        },
+                        restaurant: restaurantId
                       }
-                    })
+                    }
+                  })
                   : mutate({
-                      variables: {
-                        addonInput: {
-                          addons: addon.map(
-                            ({
-                              title,
-                              description,
-                              options,
-                              quantityMinimum,
-                              quantityMaximum
-                            }) => ({
-                              title,
-                              description,
-                              options,
-                              quantityMinimum: +quantityMinimum,
-                              quantityMaximum: +quantityMaximum
-                            })
-                          ),
-                          restaurant: restaurantId
-                        }
+                    variables: {
+                      addonInput: {
+                        addons: addon.map(
+                          ({
+                            title,
+                            description,
+                            options,
+                            quantityMinimum,
+                            quantityMaximum
+                          }) => ({
+                            title,
+                            description,
+                            options,
+                            quantityMinimum: +quantityMinimum,
+                            quantityMaximum: +quantityMaximum
+                          })
+                        ),
+                        restaurant: restaurantId
                       }
-                    })
+                    }
+                  })
                 // Close the modal after 3 seconds by calling the parent's onClose callback
                 setTimeout(() => {
                   props.onClose() // Close the modal
