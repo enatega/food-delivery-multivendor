@@ -15,6 +15,7 @@ import { customStyles } from '../utils/tableCustomStyles'
 import useGlobalStyles from '../utils/globalStyles'
 import { ReactComponent as RestIcon } from '../assets/svg/svg/Restaurant.svg'
 import TableHeader from '../components/TableHeader'
+import { useDebounce } from '../utils/debounce'
 
 const GET_RESTAURANTS = gql`
   ${restaurants}
@@ -26,24 +27,46 @@ const DELETE_RESTAURANT = gql`
 const Restaurants = props => {
   const { t } = props
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const [error, setError] = useState(null)
   const onChangeSearch = e => setSearchQuery(e.target.value)
+  const [page, setPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const globalClasses = useGlobalStyles()
 
   const [mutate, { loading }] = useMutation(DELETE_RESTAURANT, {
-    onError: (error)=> {
-      setError(error.graphQLErrors[0].message || 'Something went wrong') 
+    onError: error => {
+      setError(error.graphQLErrors[0].message || 'Something went wrong')
     }
   })
-  const {
-    data,
-    loading: loadingQuery,
-    refetch,
-    networkStatus
-  } = useQuery(GET_RESTAURANTS, { fetchPolicy: 'network-only' })
+
+  const { data, loading: loadingQuery, refetch, networkStatus } = useQuery(
+    GET_RESTAURANTS,
+    {
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+      },
+      fetchPolicy: 'network-only'
+    }
+  )
+
+  const handlePageChange = (currentPage) => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+
+   const totalCount = data?.restaurants?.totalCount 
+
   const onClickRefetch = cb => {
     cb()
   }
+
   const customSort = (rows, field, direction) => {
     const handleField = row => {
       if (row[field]) {
@@ -153,24 +176,46 @@ const Restaurants = props => {
     }
   ]
 
-  const regex = useMemo(()=>(
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  ),[searchQuery])
+  const regex = useMemo(
+    () =>
+      searchQuery.length > 2
+        ? new RegExp(searchQuery.toLowerCase(), 'g')
+        : null,
+    [searchQuery]
+  )
 
-  const filtered = useMemo(()=>(
-    searchQuery.length < 3
-      ? data && data.restaurants
-      : data &&
-        data.restaurants.filter(restaurant => {
-          return (
-            (restaurant.name && restaurant.name.toLowerCase().search(regex) > -1) ||
-            (restaurant.orderPrefix && restaurant.orderPrefix.toLowerCase().search(regex) > -1) ||
-            (restaurant.owner && restaurant.owner.email.toLowerCase().search(regex) > -1) ||
-            (restaurant.address && restaurant.address.toLowerCase().search(regex) > -1)
-          )
-        })
-  ), [searchQuery, data, regex])
-    
+
+  const restaurants = data?.restaurants?.restaurants;
+
+  // const filtered = useMemo(() => {
+  //   if (!data || !data.restaurants || !data.restaurants.restaurants) return []
+
+  //   const restaurantList = data.restaurants.restaurants
+
+  //   return searchQuery.length < 3
+  //     ? restaurantList
+  //     : restaurantList.filter(restaurant => {
+  //         return (
+  //           (restaurant.name &&
+  //             restaurant.name
+  //               .toLowerCase()
+  //               .includes(searchQuery.toLowerCase())) ||
+  //           (restaurant.orderPrefix &&
+  //             restaurant.orderPrefix
+  //               .toLowerCase()
+  //               .includes(searchQuery.toLowerCase())) ||
+  //           (restaurant.owner &&
+  //             restaurant.owner.email
+  //               .toLowerCase()
+  //               .includes(searchQuery.toLowerCase())) ||
+  //           (restaurant.address &&
+  //             restaurant.address
+  //               .toLowerCase()
+  //               .includes(searchQuery.toLowerCase()))
+  //         )
+  //       })
+  // }, [searchQuery, data])
+
   return (
     <>
       <Header />
@@ -193,11 +238,18 @@ const Restaurants = props => {
             }
             title={<TableHeader title={t('Restaurants')} />}
             columns={columns}
-            data={filtered}
+            data={restaurants}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
             progressPending={loading || networkStatus === 4}
             progressComponent={<CustomLoader />}
+            pointerOnHover
+            paginationTotalRows={totalCount}
             sortFunction={customSort}
+            paginationDefaultPage={page + 1}
             defaultSortField="name"
             onRowClicked={row => {
               localStorage.setItem('restaurantId', row._id)
@@ -212,7 +264,7 @@ const Restaurants = props => {
         <Snackbar
           open={error}
           autoHideDuration={5000}
-          onClose={()=>setError(null)}
+          onClose={() => setError(null)}
           message={error}
         />
       </Container>

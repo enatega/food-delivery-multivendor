@@ -35,6 +35,7 @@ import { ReactComponent as RiderIcon } from '../assets/svg/svg/Rider.svg'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
 import ConfigurableValues from '../config/constants'
+import { useDebounce } from '../utils/debounce'
 
 const GET_RIDERS = gql`
   ${getRiders}
@@ -50,12 +51,15 @@ const GET_AVAILABLE_RIDERS = gql`
 `
 
 function Riders(props) {
-  const {PAID_VERSION} = ConfigurableValues()
+  const { PAID_VERSION } = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [rider, setRider] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const onChangeSearch = e => setSearchQuery(e.target.value)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const [mutateToggle] = useMutation(TOGGLE_RIDER, {
     refetchQueries: [{ query: GET_RIDERS }, { query: GET_AVAILABLE_RIDERS }]
   })
@@ -63,13 +67,31 @@ function Riders(props) {
     refetchQueries: [{ query: GET_RIDERS }]
   })
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
-    GET_RIDERS
+    GET_RIDERS,
+    {
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+      },
+      fetchPolicy: 'network-only'
+    }
   )
 
   const toggleModal = rider => {
     setEditModal(!editModal)
     setRider(rider)
   }
+
+  const handlePageChange = currentPage => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+
 
   const closeEditModal = () => {
     setEditModal(false)
@@ -174,15 +196,14 @@ function Riders(props) {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  
-                  if(PAID_VERSION)
-                  toggleModal(row)
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+
+                  if (PAID_VERSION) toggleModal(row)
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -193,15 +214,14 @@ function Riders(props) {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  
-                  if(PAID_VERSION)
-                  mutateDelete({ variables: { id: row._id } })
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+
+                  if (PAID_VERSION) mutateDelete({ variables: { id: row._id } })
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -219,16 +239,17 @@ function Riders(props) {
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
   const filtered =
     searchQuery.length < 3
-      ? data && data.riders
-      : data &&
-        data.riders.filter(rider => {
+      ? data?.riders?.riders || [] // Use optional chaining and provide fallback
+      : (data?.riders?.riders || []).filter(rider => {
           return (
-            rider.name.toLowerCase().search(regex) > -1 ||
-            rider.username.toLowerCase().search(regex) > -1 ||
-            rider.phone.toLowerCase().search(regex) > -1 ||
-            rider.zone.title.toLowerCase().search(regex) > -1
+            rider.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            rider.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            rider.phone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            rider.zone?.title?.toLowerCase().includes(searchQuery.toLowerCase())
           )
         })
+      
+  const totalCount = data?.riders?.totalCount || 0
   const globalClasses = useGlobalStyles()
   return (
     <>
@@ -272,11 +293,17 @@ function Riders(props) {
             columns={columns}
             data={filtered}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            paginationTotalRows={totalCount}
             progressPending={loadingQuery}
             progressComponent={<CustomLoader />}
             onSort={handleSort}
             sortFunction={customSort}
             selectableRows
+            paginationDefaultPage={page + 1}
             customStyles={customStyles}
           />
         )}

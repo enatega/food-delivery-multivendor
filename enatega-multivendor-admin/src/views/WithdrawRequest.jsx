@@ -11,16 +11,41 @@ import SearchBar from '../components/TableHeader/SearchBar'
 import { ReactComponent as WithdrawIcon } from '../assets/svg/svg/Request.svg'
 import TableHeader from '../components/TableHeader'
 import { withTranslation, useTranslation } from 'react-i18next'
+import { useDebounce } from '../utils/debounce'
+
+const GET_ALL_WITHDRAW_REQUEST = gql`
+  ${withdrawRequestQuery}
+`
 
 function WithdrawRequest() {
   const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
+
+  const handlePageChange = (currentPage) => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const { loading, error, data } = useQuery(
-    gql`
-      ${withdrawRequestQuery}
-    `
+    GET_ALL_WITHDRAW_REQUEST,
+    {
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+      },
+      fetchPolicy: 'network-only',
+    }
   )
+
   const [updateStatus] = useMutation(
     gql`
       ${updateWithdrawReqStatus}
@@ -66,16 +91,17 @@ function WithdrawRequest() {
 
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  const filtered =
+    const filtered =
     searchQuery.length < 3
-      ? data && data.getAllWithdrawRequests.data
-      : data &&
-        data.getAllWithdrawRequests.data.filter(request => {
+      ? data?.withdrawRequests?.requests || []
+      : (data?.withdrawRequests?.requests || []).filter((request) => {
           return (
             request.requestId.toLowerCase().search(regex) > -1 ||
             request.rider.name.toLowerCase().search(regex) > -1
-          )
-        })
+          );
+        });
+
+    const totalCount = data?.withdrawRequests?.totalCount;
 
   const updateRequestStatus = row => {
     return (
@@ -167,10 +193,17 @@ function WithdrawRequest() {
             columns={columns}
             data={filtered}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            pointerOnHover
+            paginationTotalRows={totalCount}
             progressPending={loading}
             progressComponent={<CustomLoader />}
             onSort={handleSort}
             selectableRows
+            paginationDefaultPage={page + 1}
             customStyles={customStyles}
           />
         )}
