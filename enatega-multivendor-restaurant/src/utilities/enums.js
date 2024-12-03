@@ -4,5 +4,5 @@ export const PRODUCT_URL =
   'https://enatega.com/enatega-multi-vendor/'
 export const PRIVACY_URL =
   'https://enatega.com/privacy-policy/'
-export const ABOUT_URL = 'https://ninjascode.com/about-us/'
+export const ABOUT_URL = 'https://ninjascode.com/'
 export const MAX_TIME = 120
