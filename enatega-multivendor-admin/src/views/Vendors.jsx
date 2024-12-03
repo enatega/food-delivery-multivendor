@@ -30,6 +30,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
 import ConfigurableValues from '../config/constants'
+import { useDebounce } from '../utils/debounce'
 
 const GET_VENDORS = gql`
   ${getVendors}
@@ -39,40 +40,65 @@ const DELETE_VENDOR = gql`
 `
 const Vendors = props => {
   const theme = useTheme()
-  const {PAID_VERSION} = ConfigurableValues()
+  const { PAID_VERSION } = ConfigurableValues()
   const { t } = props
   const [editModal, setEditModal] = useState(false)
   const [vendors, setVendor] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const onChangeSearch = e => setSearchQuery(e.target.value)
   const golbalClasses = useGlobalStyles()
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
 
   const closeEditModal = () => {
     setEditModal(false)
   }
 
   const { loading: loadingQuery, error: errorQuery, data, refetch } = useQuery(
-    GET_VENDORS
+    GET_VENDORS,
+    {
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+      },
+      fetchPolicy: 'network-only'
+    }
   )
   const [mutate, { loading }] = useMutation(DELETE_VENDOR, {
-    refetchQueries: [{ query: GET_VENDORS }]
+    refetchQueries: [
+      {
+        query: GET_VENDORS,
+        variables: {
+          page,
+          rowsPerPage,
+          search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+        }
+      }
+    ]
   })
+
+  const vendorsData = data?.vendors?.vendors
+
+  const countTotal = data?.vendors?.totalCount
 
   const regex =
     searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
 
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.vendors
-      : data &&
-        data.vendors.filter(vendor => {
-          return vendor.email.toLowerCase().search(regex) > -1
-        })
-
   const toggleModal = vendor => {
     setEditModal(!editModal)
     setVendor(vendor)
+  }
+
+  const handlePageChange = currentPage => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
   }
 
   useEffect(() => {
@@ -163,14 +189,13 @@ const Vendors = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  if(PAID_VERSION)
-                  toggleModal(row);
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+                  if (PAID_VERSION) toggleModal(row)
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -181,14 +206,13 @@ const Vendors = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                 if(PAID_VERSION)
-                  mutate({ variables: { id: row._id } });
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+                  if (PAID_VERSION) mutate({ variables: { id: row._id } })
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -241,11 +265,18 @@ const Vendors = props => {
             }
             title={<TableHeader title={t('Vendors')} />}
             columns={columns}
-            data={filtered}
+            data={vendorsData}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            pointerOnHover
+            paginationTotalRows={countTotal}
             progressPending={loading}
             progressComponent={<CustomLoader />}
             sortFunction={customSort}
+            paginationDefaultPage={page + 1}
             defaultSortField="email"
             customStyles={customStyles}
             selectableRows

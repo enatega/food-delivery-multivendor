@@ -455,28 +455,36 @@ export const getZones = `query Zones{
     }
 }`
 
-export const getVendors = `query Vendors{
-    vendors{
-      _id
-      email
-      userType
-      restaurants{
+export const getVendors = `
+  query Vendors($page: Int, $rowsPerPage: Int, $search: String) {
+    vendors(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      vendors {
         _id
-        orderId
-        orderPrefix
-        slug
-        name
-        image
-        address
-        location{coordinates}
-        zone{
+        email
+        userType
+        restaurants {
           _id
-          title
+          orderId
+          orderPrefix
+          slug
+          name
+          image
+          address
+          location {
+            coordinates
+          }
+          zone {
+            _id
+            title
+          }
+          shopType
         }
-        shopType
       }
+      totalCount
     }
-}`
+  }
+`;
+
 
 export const getVendor = `query GetVendor($id:String!){
     getVendor(id:$id){
@@ -518,15 +526,21 @@ export const getCoupons = `
     }
     }
   `
-export const getCuisines = `query Cuisines{
-    cuisines {
-      _id
-      name
-      description
-      image
-      shopType
+
+export const getCuisines = `
+  query Cuisines($page: Int, $rowsPerPage: Int, $search: String) {
+    cuisines(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      cuisines {
+        _id
+        name
+        description
+        image
+        shopType
+      }
+      totalCount
     }
-  }`
+  }
+`;
 
 export const getBanners = `query Banners{
     banners {
