@@ -30,7 +30,7 @@ const Restaurants = props => {
   const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const [error, setError] = useState(null)
   const onChangeSearch = e => setSearchQuery(e.target.value)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const globalClasses = useGlobalStyles()
 
