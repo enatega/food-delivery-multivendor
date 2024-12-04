@@ -16,6 +16,8 @@ const getEnvVars = (env = Updates.releaseChannel) => {
     }
   }
   return {
+    // GRAPHQL_URL: 'http://192.168.0.109:8001/graphql',
+    //   WS_GRAPHQL_URL: 'ws://192.168.0.109:8001/graphql',
     GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     SENTRY_DSN: configuration.riderAppSentryUrl,

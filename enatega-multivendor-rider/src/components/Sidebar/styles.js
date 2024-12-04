@@ -47,7 +47,8 @@ const styles = {
   },
   opacity: {
     backgroundColor: colors.black,
-    opacity: 0.8
+    opacity: 0.8,
+    height: 60,
   }
 }
 
