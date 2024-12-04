@@ -108,6 +108,7 @@ export default function OrderDetail({ navigation, route }) {
                   style={{ width: 25, height: 25 }}
                 />
               </View>
+              
               <View style={styles.textContainer}>
                 <TextDefault bolder H4>
                   {activeBar === 2 ? t('prepared') : t('preparing')}
