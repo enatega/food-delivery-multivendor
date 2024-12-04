@@ -62,7 +62,7 @@ function SidebBar() {
             </View>
           ))}
         </View>
-        <View style={[styles.opacity, { flex: 2 }]}>
+        <View style={[styles.opacity,{ paddingBottom:20}]}>
           <NavItem
             onPress={() => logout()}
             icon="sign-out"

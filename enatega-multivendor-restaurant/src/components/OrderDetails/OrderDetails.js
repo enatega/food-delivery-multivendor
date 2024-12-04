@@ -42,7 +42,7 @@ export default function OrderDetails({ orderData }) {
   )
 }
 function OrderItems({ orderData }) {
-  console.log("OrderData",orderData)
+  // // console.log("OrderData",orderData)
   const { t } = useTranslation()
   const {
     instructions,
@@ -52,7 +52,7 @@ function OrderItems({ orderData }) {
     deliveryCharges,
     taxationAmount
   } = orderData
-  console.log("instructions",instructions)
+  // console.log("instructions",instructions)
   const configuration = useContext(Configuration.Context)
   let subTotal = 0
   return (
