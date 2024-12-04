@@ -76,7 +76,9 @@ function Sections(props) {
 
   const restaurantId = localStorage.getItem('restaurantId')
 
-  const [mutateEdit] = useMutation(EDIT_SECTION)
+  const [mutateEdit] = useMutation(EDIT_SECTION,{
+    refetchQueries: [{ query: GET_SECTIONS }]
+  })
 
   const [mutateDelete] = useMutation(DELETE_SECTION, {
     refetchQueries: [{ query: GET_SECTIONS }]
