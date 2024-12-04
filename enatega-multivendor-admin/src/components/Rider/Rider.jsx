@@ -363,7 +363,7 @@ function Rider(props) {
               </MenuItem>
             )}
             {data &&
-              data.zones.map(zone => (
+              data.zones.zones.map(zone => (
                 <MenuItem
                   style={{ color: 'black' }}
                   value={zone._id}
