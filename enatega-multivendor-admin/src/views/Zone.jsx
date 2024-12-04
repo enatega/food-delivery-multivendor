@@ -27,6 +27,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import TableHeader from '../components/TableHeader'
 import Alert from '../components/Alert'
 import ConfigurableValues from '../config/constants'
+import { useDebounce } from '../utils/debounce'
 
 const GET_ZONES = gql`
   ${getZones}
@@ -37,17 +38,46 @@ const DELETE_ZONE = gql`
 
 const Zones = props => {
   const { t } = props
-  const {PAID_VERSION} = ConfigurableValues()
+  const { PAID_VERSION } = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [zones, setZone] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const onChangeSearch = e => setSearchQuery(e.target.value)
 
   const [mutate, { error, loading }] = useMutation(DELETE_ZONE, {
-    refetchQueries: [{ query: GET_ZONES }]
+    refetchQueries: [
+      {
+        query: GET_ZONES,
+        variables: {
+          page,
+          rowsPerPage,
+          search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+        }
+      }
+    ]
   })
-  const { data, loading: loadingQuery, refetch } = useQuery(GET_ZONES)
+  const { data, loading: loadingQuery, refetch } = useQuery(GET_ZONES, {
+    variables: {
+      page: page,
+      rowsPerPage,
+      search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+    },
+    fetchPolicy: 'network-only'
+  })
+
+  const handlePageChange = currentPage => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+  
   const toggleModal = zone => {
     setEditModal(!editModal)
     setZone(zone)
@@ -72,6 +102,9 @@ const Zones = props => {
     return orderBy(rows, handleField, direction)
   }
 
+  const ZonesData = data?.zones?.zones
+
+  const TotalCount = data?.zones?.totalCount
   const columns = [
     {
       name: t('Title'),
@@ -119,14 +152,13 @@ const Zones = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  if(PAID_VERSION)
-                  toggleModal(row)
-                else{
-                  setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 5000)
-                }
+                  if (PAID_VERSION) toggleModal(row)
+                  else {
+                    setIsOpen(true)
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 5000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -137,14 +169,13 @@ const Zones = props => {
               <MenuItem
                 onClick={e => {
                   e.preventDefault()
-                  if(PAID_VERSION)
-                  mutate({ variables: { id: row._id } })
-                  else{
+                  if (PAID_VERSION) mutate({ variables: { id: row._id } })
+                  else {
                     setIsOpen(true)
-                  setTimeout(() => {
-                    setIsOpen(false)
-                  }, 2000)
-                }
+                    setTimeout(() => {
+                      setIsOpen(false)
+                    }, 2000)
+                  }
                 }}
                 style={{ height: 25 }}>
                 <ListItemIcon>
@@ -159,19 +190,6 @@ const Zones = props => {
     )
   }
 
-  const regex =
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.zones
-      : data &&
-        data.zones.filter(zone => {
-          return (
-            zone.title.toLowerCase().search(regex) > -1 ||
-            zone.description.toLowerCase().search(regex) > -1
-          )
-        })
 
   const globalClasses = useGlobalStyles()
 
@@ -198,9 +216,16 @@ const Zones = props => {
           }
           title={<TableHeader title={t('Zones')} />}
           columns={columns}
-          data={filtered}
+          data={ZonesData}
           pagination
+          paginationServer
+          paginationPerPage={rowsPerPage}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
+          pointerOnHover
+          paginationTotalRows={TotalCount}
           progressPending={loadingQuery}
+          paginationDefaultPage={page + 1}
           progressComponent={<CustomLoader />}
           sortFunction={customSort}
           defaultSortField="title"

@@ -445,19 +445,27 @@ export const getRidersByZone = `query RidersByZone($id:String!){
   }
 }`
 
-export const getZones = `query Zones{
-    zones{
-    _id
-    title
-    description
-    location{coordinates}
-    isActive
+export const getZones = `
+  query Zones($page: Int, $rowsPerPage: Int, $search: String) {
+    zones(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+      zones {
+        _id
+        title
+        description
+        location {
+          coordinates
+        }
+        isActive
+      }
+      totalCount
     }
-}`
+  }
+`;
+
 
 export const getVendors = `
   query Vendors($page: Int, $rowsPerPage: Int, $search: String) {
-    vendors(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+    vendors(page: $page, rowsPerPage: $rowsPerPage, search: $search){
       vendors {
         _id
         email
@@ -748,17 +756,21 @@ export const getOffers = `query Offers{
   }
 }`
 
-export const getSections = `query Sections{
-  sections{
-    _id
-    name
-    enabled
-    restaurants{
+export const getSections = `query Sections($page: Int,  $rowsPerPage: Int,  $search: String) {
+  sections(page: $page, rowsPerPage: $rowsPerPage, search: $search) {
+    sections {
       _id
       name
+      enabled
+      restaurants {
+        _id
+        name
+      }
     }
+    totalCount
   }
-}`
+}`;
+
 
 export const pageCount = `
 query PageCount($restaurant:String!){

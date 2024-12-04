@@ -32,6 +32,7 @@ import SearchBar from '../components/TableHeader/SearchBar'
 import { ReactComponent as SectionIcon } from '../assets/svg/svg/RestaurantSection.svg'
 import Alert from '../components/Alert'
 import ConfigurableValues from '../config/constants'
+import { useDebounce } from '../utils/debounce'
 
 const GET_SECTIONS = gql`
   ${getSections}
@@ -48,6 +49,11 @@ function Sections(props) {
   const {PAID_VERSION} = ConfigurableValues()
   const [editModal, setEditModal] = useState(false)
   const [sections, setSections] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const onChangeSearch = e => setSearchQuery(e.target.value)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const [isOpen, setIsOpen] = useState(false)
   const toggleModal = section => {
     setEditModal(!editModal)
@@ -59,16 +65,32 @@ function Sections(props) {
     setEditModal(false)
   }
 
+  const handlePageChange = currentPage => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+
   const restaurantId = localStorage.getItem('restaurantId')
 
   const [mutateEdit] = useMutation(EDIT_SECTION)
+
   const [mutateDelete] = useMutation(DELETE_SECTION, {
     refetchQueries: [{ query: GET_SECTIONS }]
   })
+
   const { data, error: errorQuery, loading: loadingQuery } = useQuery(
     GET_SECTIONS,
     {
-      variables: { id: restaurantId }
+      variables: {
+        page: page,
+        rowsPerPage,
+        search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+      },
+      fetchPolicy: 'network-only'
     }
   )
   console.log(data)
@@ -206,18 +228,10 @@ function Sections(props) {
     )
   }
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const onChangeSearch = e => setSearchQuery(e.target.value)
-  const regex =
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.sections
-      : data &&
-        data.sections.filter(section => {
-          return section.name.toLowerCase().search(regex) > -1
-        })
+  
+  const SectionsData = data?.sections?.sections
 
+  const totalCount = data?.sections?.totalCount
   const globalClasses = useGlobalStyles()
 
   return (
@@ -258,8 +272,15 @@ function Sections(props) {
               />
             }
             columns={columns}
-            data={filtered}
+            data={SectionsData}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            pointerOnHover
+            paginationTotalRows={totalCount}
+            paginationDefaultPage={page + 1}
             progressPending={loadingQuery}
             progressComponent={<CustomLoader />}
             sortFunction={customSort}
