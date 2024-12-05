@@ -15,6 +15,7 @@ export const orders = `query Orders{
         deliveryAddress
         details
         label
+        id
       }
       items{
         _id

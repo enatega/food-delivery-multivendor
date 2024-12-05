@@ -42,6 +42,9 @@ export default function OrderDetails({ orderData }) {
   )
 }
 function OrderItems({ orderData }) {
+
+  // console.log("orderData=>>", JSON.stringify(orderData, null, 2));
+  
   const { t } = useTranslation()
   const {
     items,
