@@ -42,7 +42,7 @@ export default function OrderDetails({ orderData }) {
   )
 }
 function OrderItems({ orderData }) {
-  // // console.log("OrderData",orderData)
+
   const { t } = useTranslation()
   const {
     instructions,

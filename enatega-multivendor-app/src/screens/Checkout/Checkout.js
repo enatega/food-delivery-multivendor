@@ -168,7 +168,7 @@ function Checkout(props) {
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
     fetchPolicy: 'network-only'
   })
-
+  
   const [mutateOrder] = useMutation(PLACEORDER, {
     onCompleted,
     onError,
@@ -348,6 +348,7 @@ function Checkout(props) {
   function update(cache, { data: { placeOrder } }) {
     try {
       if (placeOrder && placeOrder.paymentMethod === 'COD') {
+        // console.log(JSON.stringify(placeOrder, null, 2))
         cache.modify({
           fields: {
             orders(existingOrders = []) {
@@ -400,6 +401,7 @@ function Checkout(props) {
         currency: configuration.currency
       })
     } else if (paymentMode === 'STRIPE') {
+      console.log("stripe")
       props.navigation.replace('StripeCheckout', {
         _id: data.placeOrder.orderId,
         amount: data.placeOrder.orderAmount,
@@ -421,6 +423,7 @@ function Checkout(props) {
         message: error.message
       })
     }
+    console.log('Order placed successfully:', data);
   }
 
   function calculateTip() {
@@ -439,8 +442,9 @@ function Checkout(props) {
     } else {
       return 0
     }
+    
   }
-
+  
   function taxCalculation() {
     const tax = data.restaurant ? +data.restaurant.tax : 0
     if (tax === 0) {

@@ -20,6 +20,7 @@ export const placeOrder = `
     placeOrder(restaurant:$restaurant,orderInput: $orderInput,paymentMethod:$paymentMethod,couponCode:$couponCode,tipping:$tipping, taxationAmount: $taxationAmount, address:$address, orderDate: $orderDate,isPickedUp: $isPickedUp, deliveryCharges:$deliveryCharges, instructions: $instructions) {
       _id
       orderId
+      id
       restaurant{
         _id
         name
@@ -34,20 +35,24 @@ export const placeOrder = `
       }
       items{
         _id
+        id
         title
         food
         description
         quantity
         variation{
           _id
+          id
           title
           price
           discounted
         }
         addons{
           _id
+          id
           options{
             _id
+            id
             title
             description
             price
