@@ -76,6 +76,7 @@
     "react-native-countdown-component": "^2.7.1",
     "react-native-flash-message": "^0.1.21",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-get-random-values": "^1.11.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-loading-spinner-overlay": "^3.0.0",
     "react-native-maps": "1.14.0",

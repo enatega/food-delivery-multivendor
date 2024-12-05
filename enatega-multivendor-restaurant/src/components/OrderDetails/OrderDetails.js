@@ -43,19 +43,42 @@ export default function OrderDetails({ orderData }) {
 }
 function OrderItems({ orderData }) {
 
-  // console.log("orderData=>>", JSON.stringify(orderData, null, 2));
-  
   const { t } = useTranslation()
   const {
+    instructions,
     items,
     orderAmount,
     tipping,
     deliveryCharges,
     taxationAmount
   } = orderData
+  // console.log("instructions",instructions)
   const configuration = useContext(Configuration.Context)
   let subTotal = 0
   return (
+    <View>
+        {instructions && instructions.trim() !== "" && (
+        <View style={[styles.cardContainer, { marginTop: 30}]}>
+            <View style={styles.itemRowBar} >
+              <TextDefault
+                H5
+                bold>
+                 Special Order Instructions
+                </TextDefault>
+            </View>
+          
+        <View style={styles.itemRow}>
+          <TextDefault
+           H6
+           textColor={colors.fontSecondColor}
+           bold
+           style={styles.itemHeading}>
+           {instructions}
+         </TextDefault>
+       </View>
+    
+   </View>
+         )}
     <View style={[styles.cardContainer, { marginTop: 30, marginBottom: 45 }]}>
       {items &&
         items.map((item, index) => {
@@ -137,6 +160,7 @@ function OrderItems({ orderData }) {
           {`${configuration.currencySymbol}${orderAmount}`}
         </TextDefault>
       </View>
+    </View>
     </View>
   )
 }

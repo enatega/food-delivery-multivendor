@@ -12,6 +12,7 @@ import useGlobalStyles from '../utils/globalStyles'
 import { Box, Container } from '@mui/material'
 import { ReactComponent as UserIcon } from '../assets/svg/svg/User.svg'
 import TableHeader from '../components/TableHeader'
+import { useDebounce } from '../utils/debounce'
 
 const GET_USERS = gql`
   ${getUsers}
@@ -20,14 +21,34 @@ const Users = props => {
   const { t } = props
 
   const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 500) // Debounce search query
   const onChangeSearch = e => setSearchQuery(e.target.value)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+
   const { data, error: errorQuery, loading: loadingQuery, refetch } = useQuery(
     GET_USERS,
     {
-      variables: { page: 0 },
-      
-    }
+    variables: {
+      page: page,
+      rowsPerPage,
+      search: debouncedSearchQuery.length > 3 ? debouncedSearchQuery : null
+    },
+    fetchPolicy: 'network-only',
+  }
   )
+
+  console.log("🚀 ~ Users ~ data:", data?.users)
+
+  const handlePageChange = (currentPage) => {
+    setPage(currentPage - 1) // DataTable uses 1-based indexing
+  }
+
+  const handlePerRowsChange = (newPerPage, currentPage) => {
+    setRowsPerPage(newPerPage)
+    setPage(currentPage - 1)
+  }
+
   console.log("errorQuery",errorQuery);
   const columns = [
     {
@@ -78,22 +99,9 @@ const Users = props => {
   const handleSort = (column, sortDirection) =>
     console.log(column.selector, sortDirection)
 
-  const regex =
-    searchQuery.length > 2 ? new RegExp(searchQuery.toLowerCase(), 'g') : null
+    const userData = data?.users?.users
+    const totalCount = data?.users?.totalCount
 
-  const filtered =
-    searchQuery.length < 3
-      ? data && data.users
-      : data &&
-        data.users.filter(user => {
-          return (
-            user.name.toLowerCase().search(regex) > -1 ||
-            user.phone.toLowerCase().search(regex) > -1 ||
-            (user.email !== null
-              ? user.email.toLowerCase().search(regex) > -1
-              : false)
-          )
-        })
   const globalClasses = useGlobalStyles()
   return (
     <>
@@ -121,16 +129,21 @@ const Users = props => {
             }
             title={<TableHeader title={t('Users')} />}
             columns={columns}
-            data={filtered}
+            data={userData}
             pagination
+            paginationServer
+            paginationPerPage={rowsPerPage}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            pointerOnHover
             progressPending={loadingQuery}
+            paginationTotalRows={totalCount}
             progressComponent={<CustomLoader />}
             onSort={handleSort}
             sortFunction={customSort}
+            paginationDefaultPage={page + 1}
             customStyles={customStyles}
             selectableRows
-            paginationIconLastPage=""
-            paginationIconFirstPage=""
           />
         )}
       </Container>
