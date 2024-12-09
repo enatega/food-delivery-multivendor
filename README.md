@@ -118,7 +118,7 @@ To run the module, you need to have nodejs installed on your machine. Once nodej
 
 The required credentials and keys have been set already. You can setup your own keys and credentials
 
-The version of nodejs should be between 14.0 to 16.0
+The version of nodejs should be between 18 to 20 (with 16 as minor version and 0 as patch)
 
 [![Guide Badge](https://img.shields.io/badge/Do_with_guided_tutorial-blue?style=for-the-badge&logo=book-reader)](https://enatega.com/multi-vendor-doc/)
 
