@@ -11,7 +11,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import analytics from '../../utils/analytics'
 import Spinner from '../../components/Spinner/Spinner'
 import { useTranslation } from 'react-i18next'
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps'
 import { customMapStyle } from '../../utils/customMapStyles'
 export default function CurrentLocation() {
   const Analytics = analytics()
@@ -85,7 +85,7 @@ export default function CurrentLocation() {
           <View style={styles().mapView}>
             <MapView
               style={styles().flex}
-              provider={PROVIDER_GOOGLE}
+              provider={PROVIDER_DEFAULT}
               customMapStyle={customMapStyle}
               region={initialRegion}>
               <Marker coordinate={markerCoordinate} />

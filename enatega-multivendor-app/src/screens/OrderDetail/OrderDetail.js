@@ -6,7 +6,7 @@ import { alignment } from '../../utils/alignment'
 import styles from './styles'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -141,7 +141,7 @@ function OrderDetail(props) {
             zoomControlEnabled={true}
             rotateEnabled={false}
             customMapStyle={mapStyle}
-            provider={PROVIDER_GOOGLE}
+            provider={PROVIDER_DEFAULT}
           >
             <Marker
               coordinate={{

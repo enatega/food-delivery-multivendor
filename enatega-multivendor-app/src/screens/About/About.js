@@ -5,7 +5,7 @@ import {
   MaterialIcons,
   MaterialCommunityIcons
 } from '@expo/vector-icons'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ImageHeader from '../../components/About/Header'
 import styles from './styles'
@@ -87,7 +87,7 @@ function About(props) {
           cacheEnabled={false}
           initialRegion={RestAbout.map}
           customMapStyle={aboutMapStyle}
-          provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_DEFAULT}
         ></MapView>
         <View style={styles().marker}>
           <CustomMarker

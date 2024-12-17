@@ -1,5 +1,5 @@
 import React from 'react'
-import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT, Callout } from 'react-native-maps'
 import { mapStyle } from '../../utils/mapStyle'
 import styles from './styles'
 import { Image, View, Text } from 'react-native'
@@ -22,7 +22,7 @@ export default function MapSection({ location, restaurants }) {
         longitudeDelta: 0.0421
       }}
       customMapStyle={mapStyle}
-      provider={PROVIDER_GOOGLE}>
+      provider={PROVIDER_DEFAULT}>
       <Marker coordinate={location} title="Current Address">
         <Image source={require('../../assets/images/user.png')} width={20} />
       </Marker>

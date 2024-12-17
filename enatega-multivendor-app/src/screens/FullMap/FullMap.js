@@ -1,7 +1,7 @@
 import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
 import styles from './styles'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -74,7 +74,7 @@ export default function FullMap(props) {
           loadingEnabled={true}
           onRegionChangeComplete={setRegion}
           showsUserLocation={true}
-          provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_DEFAULT}
           customMapStyle={mapStyle}
           showsMyLocationButton
           onMapReady={setMargin}

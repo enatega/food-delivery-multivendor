@@ -16,7 +16,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
 // import { OutlinedTextField } from 'react-native-material-textfield'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
 import * as Location from 'expo-location'
 import gql from 'graphql-tag'
 import { scale } from '../../utils/scaling'
@@ -228,7 +228,7 @@ function NewAddress(props) {
                 longitudeDelta: LONGITUDE_DELTA
               }}
               region={region}
-              provider={PROVIDER_GOOGLE}
+              provider={PROVIDER_DEFAULT}
               onPress={() => {
                 props.navigation.navigate('FullMap', {
                   latitude: region.latitude,

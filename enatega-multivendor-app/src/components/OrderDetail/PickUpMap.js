@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import { View, Dimensions, Image } from 'react-native'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { linkToMapsApp } from '../../utils/links'
@@ -67,7 +67,7 @@ const PickUpMap = ({ deliveryAddress, pickupAddress }) => {
             pickupAddress.label
           )
         }}
-        provider={PROVIDER_GOOGLE}>
+        provider={PROVIDER_DEFAULT}>
         <Marker
           title={t('pickUpAddress')}
           coordinate={{
