@@ -8,7 +8,8 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   Keyboard, 
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -22,7 +23,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
-import { TextField } from 'react-native-material-textfield'
+// import { TextField } from 'react-native-material-textfield'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -453,7 +454,7 @@ function ItemDetail(props) {
                 subTitle={t('anySpecificPreferences')}
                 status={t('optional')}
               />
-              <TextField
+              {/* <TextField
                 style={styles(currentTheme).input}
                 placeholder={t('noMayo')}
                 textAlignVertical='center'
@@ -465,6 +466,17 @@ function ItemDetail(props) {
                 errorColor={currentTheme.textErrorColor}
                 tintColor={currentTheme.themeBackground}
                 placeholderTextColor={currentTheme.fontGrayNew}
+              /> */}
+              <TextInput
+              style={styles(currentTheme).input}
+              placeholder={t('noMayo')}
+              textAlignVertical="center"
+              value={specialInstructions}
+              onChangeText={setSpecialInstructions}
+                maxLength={144}
+              placeholderTextColor={currentTheme.fontGrayNew}
+              selectionColor={currentTheme.themeBackground} 
+              underlineColorAndroid={currentTheme.lightHorizontalLine}
               />
             </View>
             {/** frequently bought together */}

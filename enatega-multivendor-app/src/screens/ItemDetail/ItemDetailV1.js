@@ -19,7 +19,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
-import { TextField } from 'react-native-material-textfield'
+// import { TextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -360,7 +360,7 @@ function ItemDetail(props) {
                 subTitle={t('anySpecificPreferences')}
                 status={t('optional')}
               />
-              <TextField
+              {/* <TextField
                 style={styles(currentTheme).input}
                 placeholder={t('noMayo')}
                 textAlignVertical="center"
@@ -371,7 +371,7 @@ function ItemDetail(props) {
                 baseColor={currentTheme.lightHorizontalLine}
                 errorColor={currentTheme.textErrorColor}
                 tintColor={currentTheme.themeBackground}
-              />
+              /> */}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

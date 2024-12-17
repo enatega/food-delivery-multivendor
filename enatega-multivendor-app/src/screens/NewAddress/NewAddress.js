@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
-import { OutlinedTextField } from 'react-native-material-textfield'
+// import { OutlinedTextField } from 'react-native-material-textfield'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import * as Location from 'expo-location'
 import gql from 'graphql-tag'
@@ -255,7 +255,7 @@ function NewAddress(props) {
                 <View style={styles(currentTheme).addressContainer}>
                   <View style={styles(currentTheme).geoLocation}>
                     <View style={{ width: '100%' }}>
-                      <OutlinedTextField
+                      {/* <OutlinedTextField
                         placeholder={t('deliveryAddress')}
                         error={deliveryAddressError}
                         ref={addressRef}
@@ -293,11 +293,11 @@ function NewAddress(props) {
                               : null
                           )
                         }}
-                      />
+                      /> */}
                     </View>
                   </View>
                   <View style={{ ...alignment.MTlarge }}></View>
-                  <OutlinedTextField
+                  {/* <OutlinedTextField
                     placeholder={t('aptFloor')}
                     error={deliveryDetailsError}
                     label={t('deliveryDetails')}
@@ -328,7 +328,7 @@ function NewAddress(props) {
                           : null
                       )
                     }}
-                  />
+                  /> */}
                 </View>
 
                 <View style={styles().labelButtonContainer}>

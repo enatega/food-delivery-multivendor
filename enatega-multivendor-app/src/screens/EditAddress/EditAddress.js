@@ -10,11 +10,12 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
+  TextInput
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
-import { OutlinedTextField } from 'react-native-material-textfield'
+// import { OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import gql from 'graphql-tag'
 import { editAddress } from '../../apollo/mutations'
@@ -221,7 +222,7 @@ function EditAddress(props) {
                   </View>
                   <View style={styles(currentTheme).geoLocation}>
                     <View style={{ width: '100%' }}>
-                      <OutlinedTextField
+                      {/* <OutlinedTextField
                         placeholder={t('deliveryAddress')}
                         error={deliveryAddressError}
                         ref={addressRef}
@@ -261,11 +262,11 @@ function EditAddress(props) {
                               : null
                           )
                         }}
-                      />
+                      /> */}
                     </View>
                   </View>
                   <View style={{ ...alignment.MTlarge }}></View>
-                  <OutlinedTextField
+                  {/* <OutlinedTextField
                     placeholder={t('aptFloor')}
                     error={deliveryDetailsError}
                     label={t('deliveryDetails')}
@@ -296,7 +297,7 @@ function EditAddress(props) {
                           : null
                       )
                     }}
-                  />
+                  /> */}
                 </View>
 
                 <View style={styles().labelButtonContainer}>

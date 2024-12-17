@@ -20,8 +20,6 @@ import {
 
 
 
-
-
 const Reviews = ({ navigation, route }) => {
   const { t } = useTranslation()
 

@@ -17,7 +17,7 @@ import {
 } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
-import { TextField, OutlinedTextField } from 'react-native-material-textfield'
+// import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
 import { updateUser, login, Deactivate } from '../../apollo/mutations'
 import ChangePassword from './ChangePassword'
@@ -425,7 +425,7 @@ function Profile(props) {
                         </View>
                       </View>
                       <View style={{ marginTop: 10 }}>
-                        <OutlinedTextField
+                        {/* <OutlinedTextField
                           ref={refName}
                           defaultValue={profile?.name}
                           autoFocus={true}
@@ -437,7 +437,7 @@ function Profile(props) {
                             !nameError ? currentTheme.newFontcolor : 'red'
                           }
                           error={nameError}
-                        />
+                        /> */}
                       </View>
 
                       <TouchableOpacity

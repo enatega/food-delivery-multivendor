@@ -25,7 +25,7 @@
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",
       "config": {
-        "googleMapsApiKey": "###### Key #######"
+        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
       },
       "usesAppleSignIn": true,
       "infoPlist": {
@@ -113,6 +113,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/331d4e5b-b12a-434a-92ec-d6d283dc0e46"
-    }
+    },
+    "newArchEnabled": true
   }
 }

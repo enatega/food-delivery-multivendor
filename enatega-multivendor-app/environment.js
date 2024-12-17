@@ -12,8 +12,11 @@ const useEnvVars = (env = Updates.channel) => {
 
   if (env === 'production' || env === 'staging') {
     return {
-      GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+      GRAPHQL_URL: 'http://10.97.6.145:8001/graphql',
+      WS_GRAPHQL_URL: 'ws://10.97.6.145:8001/graphql',
+      SERVER_URL: 'http://10.97.6.145:8001:8001/',
+      // GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+      // WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
       SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
       IOS_CLIENT_ID_GOOGLE: configuration.iOSClientID,
       ANDROID_CLIENT_ID_GOOGLE: configuration.androidClientID,
