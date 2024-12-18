@@ -102,29 +102,34 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
             </TextDefault>
           </View>
 
-          <View style={{ justifyContent: 'flex-start', flexDirection: 'row',paddingRight:20,marginBottom:10 }}  >
-            <View style={{}}>
-          <TouchableOpacity onPress={() => navToActiveOrders()}>
-            <TextDefault bolder H5 Regular textColor={currentTheme.gray700}>
-              {t('ActiveOrders')}
-            </TextDefault>
-          </TouchableOpacity>
           <View
-          style={
-            styles(currentTheme.primary)
-              .absoluteContainer
-          }
-        >
-          <TextDefault
-            textColor={currentTheme.black}
-            style={{ fontSize: scale(12) }}
-            center
-            bolder
+            style={{
+              justifyContent: 'flex-start',
+              flexDirection: 'row',
+              paddingRight: 20,
+              marginBottom: 10
+            }}
           >
-            {activeOrders.length}
-          </TextDefault>
-        </View>
-          </View>
+            { activeOrders.length > 1 ?
+            (<View style={{}}>
+              <TouchableOpacity onPress={() => navToActiveOrders()}>
+                <TextDefault bolder H5 Regular textColor={currentTheme.gray700}>
+                  {t('ActiveOrders')}
+                </TextDefault>
+              </TouchableOpacity>
+              <View style={styles(currentTheme.primary).absoluteContainer}>
+                <TextDefault
+                  textColor={currentTheme.black}
+                  style={{ fontSize: scale(12) }}
+                  center
+                  bolder
+                >
+                  {activeOrders.length}
+                </TextDefault>
+              </View>
+            </View>
+            ) : ''
+            }      
           </View>
         </View>
       </View>
