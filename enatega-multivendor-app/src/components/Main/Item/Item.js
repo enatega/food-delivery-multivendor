@@ -204,7 +204,7 @@ function Item(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                  {configuration.currencySymbol + '' + item.minimumOrder}{' '}
+                  {configuration.currencySymbol + ' ' + item.tax}{' '}
                 </TextDefault>
               </View>
             </View>
