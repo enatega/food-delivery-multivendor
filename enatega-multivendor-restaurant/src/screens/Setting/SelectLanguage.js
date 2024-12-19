@@ -42,8 +42,8 @@ export default function SelectLanguage() {
     { value: 'ភាសាខ្មែរ', code: 'km', index: 2 },
     { value: '中文', code: 'zh', index: 3 },
     { value: 'Deutsche', code: 'de', index: 4 },
-    { value: 'arabic', code: 'ar', index: 5 },
-    { value: 'swedish', code: 'sv', index: 6 }
+    { value: 'العربية', code: 'ar', index: 5 },
+    { value: 'Swedish', code: 'sv', index: 6 }
   ]
 
   const changeLanguage = async language => {
