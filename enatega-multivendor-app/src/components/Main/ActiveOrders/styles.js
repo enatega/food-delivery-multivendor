@@ -115,7 +115,20 @@ const styles = (props = null) =>
       marginTop: scale(2),
       marginBottom: scale(2),
       paddingLeft: scale(40)
-    }
+    },
+    absoluteContainer: {
+      width: verticalScale(20),
+      height: verticalScale(20),
+      backgroundColor: '#90E36D',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: scale(15),
+      position: 'absolute',
+      padding:3,
+      right: scale(-25),
+      bottom: scale(2)
+    },
+  
   })
 
 export default styles

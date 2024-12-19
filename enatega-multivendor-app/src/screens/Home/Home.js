@@ -544,7 +544,7 @@ function Main(props) {
                         style={{ ...alignment.PLlarge }}
                         textColor={currentTheme.fontSecondColor}
                         small>
-                        {address.deliveryAddress}
+                        {address.deliveryAddress}                
                       </TextDefault>
                     </View>
                   </TouchableOpacity>
