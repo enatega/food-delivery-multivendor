@@ -5,11 +5,14 @@ const { height } = Dimensions.get('window')
 const Styles = {
   topContainer: {
     backgroundColor: colors.white,
+    // backgroundColor: 'black',
     flex: 0.3,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    
   },
   lowerContainer: {
+    position:'relative',
     backgroundColor: colors.white,
     shadowColor: colors.fontSecondColor,
     shadowOffset: {
@@ -21,7 +24,8 @@ const Styles = {
     elevation: 24,
     flex: 0.7,
     borderTopRightRadius: 30,
-    borderTopLeftRadius: 30
+    borderTopLeftRadius: 30,
+    marginTop: -1,
   },
   scrollView: {
     backgroundColor: 'transparent',
