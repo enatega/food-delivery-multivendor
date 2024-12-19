@@ -28,12 +28,12 @@ const Orders = props => {
   const {t} = useTranslation()
   if (error) return <TextError text={error.message} />
   return (
-    <>
+    <View style={{ flex: 1 }}>
       {mutateLoading ? (
         <Spinner />
       ) : (
-        <>
-          <View style={styles.topContainer}>
+        <View style={{ flex: 1,zIndex:10}}>
+          <View style={[styles.topContainer,{ zIndex:-10 }]}>
             <Image
               source={require('../../assets/orders.png')}
               PlaceholderContent={<ActivityIndicator />}
@@ -49,7 +49,7 @@ const Orders = props => {
                     ? colors.green
                     : active === 1
                     ? colors.white
-                    : colors.white
+                    : colors.white,
               }
             ]}>
             <TabBars
@@ -188,9 +188,9 @@ const Orders = props => {
               </ScrollView>
             )}
           </View>
-        </>
+        </View>
       )}
-    </>
+    </View>
   )
 }
 
