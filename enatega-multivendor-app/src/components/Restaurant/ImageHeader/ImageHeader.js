@@ -404,7 +404,7 @@ function ImageTextCenterHeader(props, ref) {
                   style={styles().restaurantAbout}
                   textColor={currentTheme.fontMainColor}
                 >
-                  {configuration.currencySymbol}{' '}{aboutObject.restaurantTax} {t('deliveryCharges')}
+                  {configuration.currencySymbol}{' '}{aboutObject.restaurantTax} {t('taxFee')}
                 </TextDefault>
               </View>
               <View

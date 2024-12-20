@@ -116,6 +116,7 @@ function Menu({ route, props }) {
         ip: null
       },
       onCompleted: data => {
+        
         setRestaurantData(data.nearByRestaurantsPreview.restaurants)
         setSectionData(data.nearByRestaurantsPreview.sections)
       },
@@ -413,9 +414,11 @@ function Menu({ route, props }) {
     if (ratings?.selected?.length > 0) {
       const numericRatings = ratings.selected?.map(extractRating)
       filteredData = filteredData.filter(
-        item => item?.reviewData?.ratings >= Math.min(...numericRatings)
+        item => item?.reviewAverage >= Math.min(...numericRatings)
       )
     }
+
+
 
     // Sort filter
     if (sort?.selected?.length > 0) {

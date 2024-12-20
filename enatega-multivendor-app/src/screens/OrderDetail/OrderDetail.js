@@ -59,8 +59,16 @@ function OrderDetail(props) {
   const headerRef = useRef(false)
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   const mapView = useRef(null)
+
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
+    onCompleted:(data)=>
+    {
+     if(data.abortOrder.orderStatus === 'CANCELLED')
+     {
+        navigation.navigate("Main")
+     }
+    },
     variables: { abortOrderId: id }
   })
 
@@ -77,6 +85,7 @@ function OrderDetail(props) {
     setCancelModalVisible(!cancelModalVisible)
   }
   function onError(error) {
+
     FlashMessage({
       message: error.message
     })
