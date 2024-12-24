@@ -122,7 +122,7 @@ const useLogin = () => {
       // Perform mutation with the obtained data
       mutate({
         variables: {
-          username: username.toLowerCase(),
+          username: username,
           password: password,
           notificationToken: notificationToken
         }
