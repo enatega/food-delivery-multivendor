@@ -58,6 +58,14 @@ export const OrdersProvider = ({ children }) => {
               ]
             }
           }
+          else if (subscriptionData.data.orderStatusChanged.origin === 'update') {
+            return {
+              orders: [
+                ...prev.orders.filter((order) => order._id !== subscriptionData.data.orderStatusChanged.order._id),
+                subscriptionData.data.orderStatusChanged.order
+              ]
+            }     
+          }
           return prev
         }
       })
