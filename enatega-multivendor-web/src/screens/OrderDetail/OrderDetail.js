@@ -288,11 +288,7 @@ function OrderDetail() {
         </Grid>
       </Background>
       <Promotion />
-      <Box className={classes.footerContainer}>
-          <Box className={classes.footerWrapper}>
-            <Footer />
-          </Box>
-        </Box>
+      <Footer />
 
       <Modal isOpen={isOpen} onRequestClose={closeModal}>
         <CloseIcon className={classes.closeButton} onClick={closeModal} />

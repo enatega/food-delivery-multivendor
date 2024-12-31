@@ -1,0 +1,16 @@
+/* 
+ * This CSS module uses :global selectors to target third-party checkbox components.
+ * The !important flag is used to ensure our styles override the default component styles.
+ */
+
+/* Rest of the CSS rules... */
+
+.filter :global(.p-checkbox.p-highlight .p-checkbox-box) {
+    background-color: black !important;
+    border-color: black !important; /* Apply black border when highlighted */
+  }
+  
+  .filter :global(.p-checkbox .p-checkbox-box) {
+    border: 1px solid black !important; /* Black border for normal state */
+  }
+  
