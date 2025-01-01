@@ -133,6 +133,8 @@ export default function RiderAddForm({
                 validationSchema={RiderSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
+                validateOnChange={false} // Disable validation on change
+                validateOnBlur={false} // Disable validation on blur
               >
                 {({
                   values,

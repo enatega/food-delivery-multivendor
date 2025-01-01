@@ -38,6 +38,14 @@ export default function CuisineForm({
   isEditing,
   visible,
 }: IAddCuisineProps) {
+
+  // Utility function to capitalize the first word of a string
+  const capitalizeFirstWord = (str: string): string => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+
   //Toast
   const { showToast } = useContext(ToastContext);
 
@@ -47,8 +55,8 @@ export default function CuisineForm({
     name: isEditing.bool ? isEditing?.data?.name : '',
     description: isEditing.bool ? isEditing?.data?.description : '',
     shopType: {
-      label: isEditing.bool ? isEditing?.data?.shopType : '',
-      code: isEditing.bool ? isEditing?.data?.shopType : '',
+      label: capitalizeFirstWord(isEditing?.data?.shopType ?? ''),
+      code: isEditing?.data?.shopType.toLocaleLowerCase() ?? '',
     },
     image: isEditing.bool ? isEditing.data.image : '',
   };
@@ -85,12 +93,6 @@ export default function CuisineForm({
     }
   );
 
-  // Cuisine options
-  // const shopTypeOptions = [
-  //   { label: 'Restaurant', code: 'restaurant' },
-  //   { label: 'Shop', code: 'shop' },
-  // ];
-
   // API Handlers
   function onError({ cause, networkError }: ApolloError) {
     showToast({
@@ -107,7 +109,20 @@ export default function CuisineForm({
   return (
     <Sidebar
       visible={visible}
-      onHide={() => setVisible(false)}
+      onHide={() => {
+        setIsEditing({
+          bool: false,
+          data: {
+            __typename: '',
+            _id: '',
+            description: '',
+            name: '',
+            shopType: '',
+            image: '',
+          },
+        });
+        setVisible(false);
+      }}
       position="right"
       className="w-full sm:w-[450px]"
     >
@@ -153,7 +168,6 @@ export default function CuisineForm({
             }
 
             setVisible(false);
-
             setSubmitting(false);
             setIsEditing({
               bool: false,
@@ -167,7 +181,8 @@ export default function CuisineForm({
               },
             });
           }}
-          validateOnChange
+          validateOnChange={false}
+          enableReinitialize
         >
           {({
             errors,

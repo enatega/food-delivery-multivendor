@@ -45,9 +45,9 @@ export default function ZoneAddForm({
     coordinates: zone?.location?.coordinates ?? [
       [
         [74.3587, 31.5497],
-        [74.4200, 31.5497], 
-        [74.4200, 31.6000],
-        [74.3587, 31.6000],
+        [74.42, 31.5497],
+        [74.42, 31.6],
+        [74.3587, 31.6],
         [74.3587, 31.5497],  
       ],
     ],
@@ -114,7 +114,7 @@ export default function ZoneAddForm({
       });
     }
   };
-  console.log(initialValues);
+
   return (
     <Sidebar
       visible={isAddZoneVisible}
@@ -135,6 +135,8 @@ export default function ZoneAddForm({
                 validationSchema={ZoneSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
+                validateOnChange={false} // Disable validation on change
+                validateOnBlur={false} // Disable validation on blur
               >
                 {({
                   values,

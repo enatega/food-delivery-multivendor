@@ -142,6 +142,8 @@ const BannersAddForm = ({
                 validationSchema={BannerSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
+                validateOnChange={false} // Disable validation on change
+                validateOnBlur={false} // Disable validation on blur
               >
                 {({
                   values,

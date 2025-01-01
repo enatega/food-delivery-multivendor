@@ -17,11 +17,8 @@ export const VariationSchema = Yup.object({
           .max(MAX_PRICE)
           .required('Required'),
         discounted: Yup.number().min(0).required('Required'),
-        addons: Yup.array()
-          .of(Yup.mixed<IDropdownSelectItem>())
-          .min(1, 'Addons field must have at least 1 items')
-          .required('Required'),
-          isOutOfStock:Yup.boolean()
+        addons: Yup.array().of(Yup.mixed<IDropdownSelectItem>()),
+        isOutOfStock: Yup.boolean(),
       })
     )
     .min(1)

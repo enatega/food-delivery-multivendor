@@ -80,6 +80,13 @@ export default function VendorAddForm({
       //  refetchQueries: [{ query: GET_VENDORS, fetchPolicy: 'network-only' }],
       onError,
       onCompleted: () => {
+        showToast({
+          type: 'success',
+          title: 'New Vendor',
+          message: `Vendor has been ${isEditingVendor ? 'edited' : 'added'} successfully`,
+          duration: 3000,
+        });
+        onSetVendorFormVisible(false);
         vendorResponse.refetch();
       },
     }
@@ -93,7 +100,6 @@ export default function VendorAddForm({
     fetchPolicy: 'network-only',
     debounceMs: 300,
   }) as ILazyQueryResult<IGetVendorResponseGraphQL | undefined, { id: string }>;
-  console.log(data);
 
   // Handlers
   const onVendorCreate = async (data: IVendorForm) => {
@@ -113,12 +119,6 @@ export default function VendorAddForm({
         },
       });
 
-      showToast({
-        type: 'success',
-        title: 'New Vendor',
-        message: `Vendor has been ${isEditingVendor ? 'edited' : 'added'} successfully`,
-        duration: 3000,
-      });
 
       onSetVendorFormVisible(false);
     } catch (error) {

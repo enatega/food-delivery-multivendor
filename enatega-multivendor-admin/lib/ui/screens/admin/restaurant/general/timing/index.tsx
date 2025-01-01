@@ -3,7 +3,7 @@ import TimingHeader from '@/lib/ui/screen-components/protected/restaurant/timing
 
 const TimingScreen = () => {
   return (
-    <div className="flex h-screen flex-col overflow-hidden p-3">
+    <div className="flex h-[100dvh] flex-col overflow-hidden p-3">
       <TimingHeader />
       <TimingAddForm />
     </div>

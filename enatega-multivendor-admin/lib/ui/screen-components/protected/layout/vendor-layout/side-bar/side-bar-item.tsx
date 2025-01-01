@@ -1,16 +1,22 @@
 // Core
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // Icons
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Interface & Types
-import { ISidebarMenuItem, SubMenuItemProps } from '@/lib/utils/interfaces';
+import {
+  ISidebarMenuItem,
+  LayoutContextProps,
+  SubMenuItemProps,
+} from '@/lib/utils/interfaces'
 
 // Styles
 import classes from './side-bar.module.css';
+import { LayoutContext } from '@/lib/context/global/layout.context';
+
 
 function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
   return (
@@ -43,6 +49,7 @@ export default function SidebarItem({
 }: ISidebarMenuItem) {
   // States
   const [expandSubMenu, setExpandSubMenu] = useState(false);
+  const { showVendorSidebar } = useContext<LayoutContextProps>(LayoutContext);
 
   // Hooks
   const pathname = usePathname();
@@ -82,6 +89,9 @@ export default function SidebarItem({
           onClick={() => {
             if (!isParent || isClickable) {
               router.push(route ?? '');
+              if (window.innerWidth < 650) {
+                showVendorSidebar(false);
+              }
               return;
             }
             setExpandSubMenu((curr) => expanded && !curr);

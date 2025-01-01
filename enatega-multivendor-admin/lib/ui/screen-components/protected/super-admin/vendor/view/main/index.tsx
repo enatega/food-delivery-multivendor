@@ -54,9 +54,9 @@ export default function VendorMain({
   return (
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       <div
-        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 ${activeTab === 'vendors' ? '' : 'hidden sm:block'
-          }`}
-          style={{ maxWidth: '325px' }}
+        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 ${
+          activeTab === 'vendors' ? '' : 'hidden sm:block'
+        }`}
       >
         {/* Mobile-only header for Vendors section */}
         <div className="mt-3 border-b p-3 sm:hidden">

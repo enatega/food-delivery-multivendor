@@ -29,7 +29,7 @@ const VendorLayout = ({ children }: IProvider) => {
           <VendorSidebar />
         </div>
         <div
-          className={`lg:ml-45 h-full w-full md:ml-${isVendorSidebarVisible ? 64 : 20}`}
+          className={`h-auto max-w-[100vw] w-full ${isVendorSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'}`}
         >
           {children}
         </div>
