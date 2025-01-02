@@ -140,7 +140,7 @@ function AdminNavbar(props) {
                     <MenuItem
                       sx={{ color: theme.palette.common.black }}
                       value="de">
-                      Deutsche
+                      Deutsch
                     </MenuItem>
                     <MenuItem
                       sx={{ color: theme.palette.common.black }}
@@ -155,7 +155,7 @@ function AdminNavbar(props) {
                     <MenuItem
                       sx={{ color: theme.palette.common.black }}
                       value="fr">
-                      français
+                      Français
                     </MenuItem>
                   </Select>
                 </FormControl>
