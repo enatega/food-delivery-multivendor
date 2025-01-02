@@ -37,5 +37,3 @@ next-env.d.ts
 
 *storybook.log
 
-#  useConfig 
-/lib/hooks/useConfiguration.tsx
