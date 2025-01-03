@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { GoogleLogin } from "react-google-login";
-import { gapi } from 'gapi-script';
+/* eslint-disable react-hooks/exhaustive-deps */
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import React, { useCallback, useEffect, useState } from "react";
+import GoogleLogin from "react-google-login";
 import ConfigurableValues from "../../config/constants";
 import { Link as RouterLink } from "react-router-dom";
 import { useLocation } from "react-router";
@@ -17,8 +17,11 @@ import useStyles from "./styles";
 import { useTranslation } from 'react-i18next';
 
 function Login() {
+
   const { GOOGLE_CLIENT_ID } = ConfigurableValues();
+
   const { t } = useTranslation();
+
   const theme = useTheme();
   const [mainError, setMainError] = useState({});
   const classes = useStyles();
@@ -31,11 +34,8 @@ function Login() {
     loginButtonSetter,
     loginError,
   } = useRegistration();
-  const location = useLocation();
 
-  const showMessage = useCallback((messageObj) => {
-    setMainError(messageObj);
-  }, []);
+  const location = useLocation();
 
   useEffect(() => {
     if (loginError) {
@@ -44,17 +44,7 @@ function Login() {
         message: loginError,
       });
     }
-  }, [loginError, showMessage]); // Added showMessage to the dependency array
-
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: GOOGLE_CLIENT_ID,
-        scope: 'email',
-      });
-    }
-    gapi.load('client:auth2', start);
-  }, [GOOGLE_CLIENT_ID]);
+  }, [loginError]);
 
   const callGoogle = useCallback(
     (clickAction) => {
@@ -64,8 +54,12 @@ function Login() {
         clickAction();
       }
     },
-    [loading, loginButtonSetter, setLoading] // Added loginButtonSetter and setLoading to the dependency array
+    [loading]
   );
+
+  const showMessage = useCallback((messageObj) => {
+    setMainError(messageObj);
+  }, []);
 
   const toggleSnackbar = useCallback(() => {
     setMainError({});
@@ -175,7 +169,6 @@ function Login() {
           </Typography>
         </Button>
       </RouterLink>
- 
       <Box
         display="flex"
         sx={{ justifyContent: "center", alignItems: "center" }}

@@ -130,8 +130,6 @@ function SearchContainer({
   }, [value, inputValue, fetch]);
 
   useEffect(() => {
-
-
     if (!location) return;
     if (fetchRef.current) return;
     const variables = {
@@ -162,7 +160,6 @@ function SearchContainer({
           handleClose={handleClose}
         />
         <Grid className={classes.temp}>
-          
           {map && (
             <GoogleMap
               mapContainerStyle={{
@@ -173,8 +170,8 @@ function SearchContainer({
               }}
               zoom={10}
               center={{
-                lat: parseFloat(location?.latitude) || 33.6844,
-                lng: parseFloat(location?.longitude) || 73.0479,
+                lat: parseFloat(location?.latitude) || 33.0416,
+                lng: parseFloat(location?.longitude) || 35.2243,
               }}
               options={{
                 styles: mapStyles,

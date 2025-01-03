@@ -40,9 +40,9 @@ function toRad(Value)
 }
 
 function calculateAmount(costType, deliveryRate, distance) {
-
+  
   return costType === 'fixed' ? deliveryRate : Math.ceil(distance) * deliveryRate;
-
+  
 }
 
 export { isValidEmailAddress, cartItemQuantity, calculatePrice, calculateDistance, calculateAmount };

@@ -9,7 +9,7 @@ import {
 import React, { useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import GitHubIcon from "@mui/icons-material/GitHub";
+// import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -62,7 +62,7 @@ function Footer() {
             }}
             align="center"
           >
-            Enatega
+            {t('Enatega')}
           </Typography>
           <Typography
             variant="body2"
@@ -158,14 +158,14 @@ function Footer() {
         >
           <Box
             className={classes.iconContainer}
-            onClick={() => redirectHandler("https://www.facebook.com/enatega/")}
+            onClick={() => redirectHandler("https://www.facebook.com/profile.php?id=61553673387883")}
           >
             <FacebookIcon style={{ color: theme.palette.primary.main }} />
           </Box>
           <Box
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
-            onClick={() => redirectHandler("https://twitter.com/NinjasCode1")}
+            onClick={() => redirectHandler("https://twitter.com/Yalla_delivery")}
           >
             <TwitterIcon style={{ color: theme.palette.primary.main }} />
           </Box>
@@ -173,7 +173,7 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("https://www.instagram.com/enatega.nb/")
+              redirectHandler("https://www.instagram.com/yalladelivery11/?next=%2F")
             }
           >
             <InstagramIcon style={{ color: theme.palette.primary.main }} />
@@ -182,12 +182,12 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("https://www.linkedin.com/company/14583783")
+              redirectHandler("http://www.linkedin.com/in/yalla-delivery-83b5a029b")
             }
           >
             <LinkedInIcon style={{ color: theme.palette.primary.main }} />
           </Box>
-          <Box
+          {/* <Box
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
@@ -197,9 +197,9 @@ function Footer() {
             }
           >
             <GitHubIcon style={{ color: theme.palette.primary.main }} />
-          </Box>
+          </Box> */}
         </Box>
-        <Typography
+        {/* <Typography
           variant="body2"
           style={{ fontWeight: 700, display: "inline" }}
         >
@@ -229,7 +229,7 @@ function Footer() {
           >
             ninjascode
           </Typography>
-        </Box>
+        </Box> */}
 
         <Divider
           style={{

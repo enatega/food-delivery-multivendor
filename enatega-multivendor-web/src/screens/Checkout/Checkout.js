@@ -46,7 +46,7 @@ import UserContext from "../../context/User";
 import { useRestaurant } from "../../hooks";
 import { DAYS } from "../../utils/constantValues";
 import { paypalCurrencies, stripeCurrencies } from "../../utils/currencies";
-import { calculateDistance, calculateAmount } from "../../utils/customFunction";
+import { calculateAmount, calculateDistance } from "../../utils/customFunction";
 import useStyle from "./styles";
 
 import Analytics from "../../utils/analytics";
@@ -111,7 +111,7 @@ function Checkout() {
   const [selectedDate, handleDateChange] = useState(new Date());
   const [isPickUp, setIsPickUp] = useState(false);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
- 
+
   let restCoordinates = {};
   const { loading, data, error } = useRestaurant(cartRestaurant);
   const extraSmall = useMediaQuery(theme.breakpoints.down("sm"));
@@ -146,10 +146,11 @@ function Checkout() {
           latDest,
           longDest
         );
+        
         let costType = configuration.costType;
         let amount = calculateAmount(costType, configuration.deliveryRate, distance);
+        
         setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate);
-
       }
     })();
   }, [data, location]);
@@ -296,7 +297,6 @@ function Checkout() {
     const delivery = isPickUp ? 0 : deliveryCharges;
     const amount = +calculatePrice(delivery, true);
     const taxAmount = ((amount / 100) * tax).toFixed(2);
-    console.log("tax:", {taxAmount, deliveryCharges, tax, amount})
     return taxAmount;
   }
   async function onCompleted(data) {
@@ -329,14 +329,12 @@ function Checkout() {
   function calculatePrice(delivery = 0, withDiscount) {
     let itemTotal = 0;
     cart.forEach((cartItem) => {
-      console.log(cartItem)
       itemTotal += cartItem.price * cartItem.quantity;
     });
     if (withDiscount && coupon && coupon.discount) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
     }
     const deliveryAmount = delivery > 0 ? deliveryCharges : 0;
-    console.log("price:", {itemTotal, deliveryAmount})
     return (itemTotal + deliveryAmount).toFixed(2);
   }
 
@@ -451,7 +449,6 @@ function Checkout() {
       toggleCloseModal();
       return;
     }
-   
     if (!cart.length) {
       showMessage({
         type: "error",
