@@ -52,6 +52,7 @@ import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmen
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import CollectionCard from '../../components/CollectionCard/CollectionCard'
 import { sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
+import { IMAGE_LINK } from '../../utils/constants'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -355,7 +356,7 @@ function Main(props) {
                                   collection: item.name
                                 })
                               }}
-                              image={item?.image}
+                              image={item?.image ? item?.image : IMAGE_LINK}
                               name={item.name}
                             />
                           )
