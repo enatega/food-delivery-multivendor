@@ -158,14 +158,14 @@ function Footer() {
         >
           <Box
             className={classes.iconContainer}
-            onClick={() => redirectHandler("https://www.facebook.com/profile.php?id=61553673387883")}
+            onClick={() => redirectHandler("https://www.facebook.com/enatega/")}
           >
             <FacebookIcon style={{ color: theme.palette.primary.main }} />
           </Box>
           <Box
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
-            onClick={() => redirectHandler("https://twitter.com/Yalla_delivery")}
+            onClick={() => redirectHandler("https://twitter.com/NinjasCode1")}
           >
             <TwitterIcon style={{ color: theme.palette.primary.main }} />
           </Box>
@@ -173,7 +173,7 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("https://www.instagram.com/yalladelivery11/?next=%2F")
+              redirectHandler("https://www.instagram.com/enatega.nb/")
             }
           >
             <InstagramIcon style={{ color: theme.palette.primary.main }} />
@@ -182,7 +182,7 @@ function Footer() {
             className={classes.iconContainer}
             style={{ marginLeft: 10 }}
             onClick={() =>
-              redirectHandler("http://www.linkedin.com/in/yalla-delivery-83b5a029b")
+              redirectHandler("https://www.linkedin.com/company/14583783")
             }
           >
             <LinkedInIcon style={{ color: theme.palette.primary.main }} />

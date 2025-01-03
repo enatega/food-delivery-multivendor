@@ -80,7 +80,7 @@ export default function AppComponent() {
             disableElevation
             onClick={() =>
               window.open(
-                "https://apps.apple.com/ca/app/yalla-customer/id6470450667",
+                "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093",
                 "_blank"
               )
             }

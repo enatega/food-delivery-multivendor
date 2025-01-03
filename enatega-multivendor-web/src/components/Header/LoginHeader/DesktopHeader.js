@@ -25,7 +25,7 @@ function LoginDesktopHeader({ title, showIcon, showCart = false }) {
           className={classes.linkDecoration}
         >
           {/* <LogoSvg height={50} width={50} /> */}
-          <img height={50} width={100} src={Logo} alt="Yalla"/>
+          <img height={50} width={100} src={Logo} alt="Enatega"/>
 
           {/* <Typography
             variant="h6"
