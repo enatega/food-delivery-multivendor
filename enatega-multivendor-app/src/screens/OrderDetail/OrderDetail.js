@@ -45,11 +45,12 @@ const CANCEL_ORDER = gql`
 `
 
 function OrderDetail(props) {
+  console.log("props=>>", props)
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
   //const Analytics = analytics()
   const { t, i18n } = useTranslation()
-  const id = props?.route.params ? props?.route.params?._id : null
-  const user = props?.route.params ? props?.route.params?.user : null
+  const id = props?.route?.params ? props?.route?.params?._id : null
+  const user = props?.route?.params ? props?.route?.params?.user : null
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
@@ -191,7 +192,7 @@ function OrderDetail(props) {
                 console.log('onerror', error)
               }}
             />
-            {order.rider && <TrackingRider id={order.rider._id} />}
+            {order?.rider && <TrackingRider id={order?.rider?._id} />}
           </MapView>
         )}
         <View

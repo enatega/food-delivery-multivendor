@@ -76,12 +76,12 @@ const MainModalize = ({
                     textColor={currentTheme.fontSecondColor}
                     small
                   >
-                    {address.deliveryAddress}
+                    {address?.deliveryAddress}
                   </TextDefault>
               </View>
             </TouchableOpacity>
             <View style={styles().addressTick}>
-              {address._id === location?._id &&
+              {address?._id === location?._id &&
                 ![t('currentLocation'), t('selectedLocation')].includes(
                   location.label
                 ) && (

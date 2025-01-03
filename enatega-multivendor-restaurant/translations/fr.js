@@ -65,5 +65,6 @@ export const fr = {
    notificationText: 'Doit utiliser un appareil physique pour les notifications push',
   deliveredToRider: "Livré au cavalier",
   name: 'Nom',
-  pullDownRefresh: 'Tirez vers le bas pour rafraîchir'
+  pullDownRefresh: 'Tirez vers le bas pour rafraîchir',
+  assigned: 'Assigné'
 }

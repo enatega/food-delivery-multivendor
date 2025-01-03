@@ -62,5 +62,6 @@ export const de = {
   notificationText: 'Muss ein physisches Gerät für Push-Benachrichtigungen verwenden',
   deliveredToRider: "An Fahrer geliefert",
   name: 'Name',
-  pullDownRefresh: 'Zum Aktualisieren nach unten ziehen'
+  pullDownRefresh: 'Zum Aktualisieren nach unten ziehen',
+  assigned: 'Zugewiesen'
 }

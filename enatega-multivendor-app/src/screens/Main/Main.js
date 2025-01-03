@@ -344,7 +344,7 @@ function Main(props) {
                       <FlatList
                         data={
                           allCuisines?.cuisines?.filter(
-                            (cuisine) => cuisine?.shopType === 'restaurant'
+                            (cuisine) => cuisine?.shopType === 'Restaurant'
                           ) ?? []
                         }
                         renderItem={({ item }) => {

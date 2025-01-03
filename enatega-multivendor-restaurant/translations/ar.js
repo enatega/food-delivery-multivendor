@@ -61,5 +61,6 @@ export const ar = {
   notificationText: 'يجب استخدام جهاز فيزيائي للإشعارات الفورية',
   dashboard: 'لوحة القيادة',
   name: 'الاسم',
-  pullDownRefresh: 'اسحب للأسفل للتحديث'
+  pullDownRefresh: 'اسحب للأسفل للتحديث',
+  assigned: 'مُخصص'
 }

@@ -65,5 +65,6 @@ export const zh = {
   notificationText: '必须使用物理设备进行推送通知',
   deliveredToRider: "交付给骑手",
   name: '名字',
-  pullDownRefresh: '下拉刷新'
+  pullDownRefresh: '下拉刷新',
+  assigned: '已分配'
 }

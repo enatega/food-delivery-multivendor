@@ -70,5 +70,6 @@ export const en = {
   dashboard: 'Dashboard',
   deliveredToRider: "Delivered To Rider",
   name: 'Name',
-  pullDownRefresh: 'Pull down to refresh'
+  pullDownRefresh: 'Pull down to refresh',
+  assigned: 'Assigned'
 }

@@ -77,7 +77,7 @@ export const OrdersProvider = ({ children }) => {
   const fetchMoreOrdersFunc = () => {
     if (networkStatusOrders === 7) {
       fetchMoreOrders({
-        variables: { offset: dataOrders.orders.length + 1 }
+        variables: { offset: dataOrders.orders?.length + 1 }
       })
     }
   }

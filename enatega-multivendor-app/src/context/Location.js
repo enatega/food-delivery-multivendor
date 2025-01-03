@@ -51,7 +51,7 @@ export const LocationProvider = ({ children }) => {
 
         const points = coordinates[0]; // Assuming the first array contains the coordinates
 
-        for (let i = 0; i < points.length - 1; i++) {
+        for (let i = 0; i < points?.length - 1; i++) {
           const x0 = points[i][0];
           const y0 = points[i][1];
           const x1 = points[i + 1][0];
@@ -81,8 +81,8 @@ export const LocationProvider = ({ children }) => {
       });
 
       // Calculate the average of the centroids to find the midpoint
-      const averageLatitude = centroids.reduce((sum, point) => sum + point.latitude, 0) / centroids.length;
-      const averageLongitude = centroids.reduce((sum, point) => sum + point.longitude, 0) / centroids.length;
+      const averageLatitude = centroids.reduce((sum, point) => sum + point.latitude, 0) / centroids?.length;
+      const averageLongitude = centroids.reduce((sum, point) => sum + point.longitude, 0) / centroids?.length;
 
       // Set this as the cities or the midpoint depending on your need
       setCities(centroids);

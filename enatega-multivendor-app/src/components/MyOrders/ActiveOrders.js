@@ -65,7 +65,7 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
 
 const getItems = items => {
   return items
-    .map(
+    ?.map(
       item =>
         `${item.quantity}x ${item.title}${
           item.variation.title ? `(${item.variation.title})` : ''
@@ -86,7 +86,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() => navigation.navigate('OrderDetail', { _id: item._id })}>
+      onPress={() => navigation.navigate('OrderDetail', { _id: item?._id })}>
       <View style={{ flex: 1 }}>
         <View style={styles(currentTheme).subContainer}>
           <View style={styles().orderDescriptionContainer}>
@@ -144,7 +144,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
                   numberOfLines={2}
                   style={styles(currentTheme).orderInfo}
                 isRTL>
-                  {item.restaurant.name}
+                  {item?.restaurant?.name}
                 </TextDefault>
                 <TextDefault
                   numberOfLines={2}

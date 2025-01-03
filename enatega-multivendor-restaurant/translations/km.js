@@ -61,5 +61,6 @@ export const km = {
   notificationText: 'ត្រូវតែប្រើឧបករណ៍សំបុត្រសម្រាប់ការជូនដំណឹងរហ័ស',
   deliveredToRider: "ប្រគល់ជូនអ្នកជិះ",
   name: 'ឈ្មោះ',
-  pullDownRefresh: 'ទាញចុះដើម្បីធ្វើឱ្យស្រស់'
+  pullDownRefresh: 'ទាញចុះដើម្បីធ្វើឱ្យស្រស់',
+  assigned: 'បានចាត់តាំង'
 }

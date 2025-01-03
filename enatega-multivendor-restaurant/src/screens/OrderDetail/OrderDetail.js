@@ -166,7 +166,7 @@ export default function OrderDetail({ navigation, route }) {
               </View>
               {activeBar === 0 && (
                 <>
-                  {/* <Button
+                  <Button
                     title={t('acceptAndPrint')}
                     buttonStyle={{
                       backgroundColor: colors.green,
@@ -178,7 +178,7 @@ export default function OrderDetail({ navigation, route }) {
                       width: 250
                     }}
                     onPress={togglePrintOverlay}
-                  /> */}
+                  />
 
                   <Button
                     title={t('accept')}
@@ -226,7 +226,7 @@ export default function OrderDetail({ navigation, route }) {
                   />
                 </>
               )}
-              {/* {activeBar !== 2 && orderData?.orderStatus !== 'PICKED' && orderData?.orderStatus !== 'DELIVERED' && (
+              {activeBar !== 2 && orderData?.orderStatus !== 'PICKED' && orderData?.orderStatus !== 'DELIVERED' && (
                 <>
                   <Button
                     title={t('reject')}
@@ -247,7 +247,7 @@ export default function OrderDetail({ navigation, route }) {
                     onPress={cancelOrderFunc}
                   />
                 </>
-              )} */}
+              )}
               {activeBar === 1 && orderData?.orderStatus === 'PICKED' && (
                 <>
                   <TextDefault H3 textColor={colors.darkgreen} bold>

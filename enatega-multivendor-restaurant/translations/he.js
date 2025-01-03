@@ -66,5 +66,6 @@ export const he = {
     notificationText: 'חייב להשתמש במכשיר פיזי עבור הודעות Push',
     deliveredToRider: "נמסר לרוכב",
     name: 'שם',
-    pullDownRefresh: 'משוך למטה לרענון'
+    pullDownRefresh: 'משוך למטה לרענון',
+    assigned: 'מוקצה'
 }

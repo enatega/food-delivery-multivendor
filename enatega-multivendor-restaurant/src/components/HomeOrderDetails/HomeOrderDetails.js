@@ -49,8 +49,8 @@ function HomeOrderDetails(props) {
   const decision = !isAcceptButtonVisible
     ? acceptanceTime
     : remainingTime > 0
-      ? remainingTime
-      : 0
+    ? remainingTime
+    : 0
   if (decision === acceptanceTime) {
     remainingTime = 0
   }
@@ -87,8 +87,8 @@ function HomeOrderDetails(props) {
             activeBar === 0
               ? colors.white
               : activeBar === 1
-                ? colors.white
-                : colors.darkgreen
+              ? colors.white
+              : colors.darkgreen
         }
       ]}
       onPress={() => {
@@ -125,19 +125,16 @@ function HomeOrderDetails(props) {
 
       </View>
       <View View style={styles.itemRowBar}>
-        <TextDefault style={styles.heading}>
-          {t('orderType')}:
-        </TextDefault>
+        <TextDefault style={styles.heading}>{t('orderType')}:</TextDefault>
         <TextDefault style={styles.text}>
-          {props?.order.isPickedUp ? t("pickUp") : t("delivery")}
+          {props?.order.isPickedUp ? t('pickUp') : t('delivery')}
         </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading}>{t('orderAmount')}:</TextDefault>
-        <TextDefault
-          style={
-            styles.text
-          }>{`${configuration.currencySymbol}${orderAmount}`}:</TextDefault>
+        <TextDefault style={styles.text}>
+          {`${configuration.currencySymbol}${orderAmount}`}:
+        </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading}>{t('paymentMethod')}</TextDefault>
@@ -169,10 +166,16 @@ function HomeOrderDetails(props) {
               size={20}
               timeToShow={['H', 'M', 'S']}
               digitStyle={{ backgroundColor: colors.white }}
-              digitTxtStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black, fontSize: 20 }}
+              digitTxtStyle={{
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                fontSize: 20
+              }}
               timeLabels={{ h: null, m: null, s: null }}
               showSeparator={true}
-              separatorStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black, marginTop: -5 }}
+              separatorStyle={{
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                marginTop: -5
+              }}
               onFinish={() => setIsOvertime(true)}
             />
           </View>
@@ -184,11 +187,16 @@ function HomeOrderDetails(props) {
               size={15}
               timeToShow={['H', 'M', 'S']}
               digitStyle={{ backgroundColor: colors.white }}
-              digitTxtStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black, fontSize: 20 }}
-
+              digitTxtStyle={{
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                fontSize: 20
+              }}
               timeLabels={{ h: null, m: null, s: null }}
               showSeparator={true}
-              separatorStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black, marginTop: -5 }}
+              separatorStyle={{
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                marginTop: -5
+              }}
               onFinish={() => setIsOvertime(true)}
             />
           </View>
@@ -202,8 +210,8 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? 'black'
                     : activeBar === 1
-                      ? colors.green
-                      : colors.white
+                    ? colors.green
+                    : colors.white
               }
             ]}
             onPress={() =>
@@ -225,15 +233,24 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? colors.green
                     : activeBar === 1
-                      ? (props?.order?.orderStatus !== "PICKED" ? colors.orderUncomplete : "black")
+                    ? props?.order?.orderStatus !== 'PICKED'
+                      ? colors.orderUncomplete
                       : 'black'
+                    : 'black'
               }}>
               {activeBar === 0
                 ? t('pending')
                 : activeBar === 1
-                  // ? (props.order.orderStatus === "PICKED" ? t("deliveredToRider") : t('reject'))
-                  ? (props.order.orderStatus === "PICKED" ? t("deliveredToRider") : t('delivered'))
-                  : t('delivered')}
+                ? props.order.orderStatus === 'PENDING'
+                  ? t('pending') // If it's pending, show "pending"
+                  : props.order.orderStatus === 'ACCEPTED'
+                  ? t('accepted') // Show accepted status if order is accepted
+                  : props.order.orderStatus === 'ASSIGNED'
+                  ? t('assigned') // Show assigned status if order is assigned
+                  : props.order.orderStatus === 'PICKED'
+                  ? t('deliveredToRider') // Show delivered to rider if it's picked
+                  : t('delivered') // Default to delivered if none of the above
+                : t('delivered')}
             </TextDefault>
           </Pressable>
         </View>

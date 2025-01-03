@@ -72,7 +72,7 @@ const Collection = ({ navigation, route }) => {
               style={styles(currentTheme).collectionCard}
               onPress={() => {
                 navigation.navigate(collectionType ?? 'Restaurants', {
-                  collection: item.name
+                  collection: item?.name
                 })
               }}
             >

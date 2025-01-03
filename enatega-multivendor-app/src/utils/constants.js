@@ -1,7 +1,7 @@
 import { Easing } from 'react-native-reanimated'
 
 export const IMAGE_LINK =
-  'https://res.cloudinary.com/dc6xw0lzg/image/upload/v1729069288/default_zfwkys.png'
+  'https://res.cloudinary.com/do1ia4vzf/image/upload/v1714636036/food/z3woendyhtelzarcmdcm.jpg'
 
 export const SLIDE_UP_RIGHT_ANIMATION = {
   cardStyleInterpolator: ({ current, layouts }) => {

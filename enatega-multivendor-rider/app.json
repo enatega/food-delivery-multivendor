@@ -37,7 +37,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.enatega.multirider",
       "config": {
-        "googleMapsApiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
+        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
       },
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!.",
@@ -57,7 +57,7 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA"
+          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
         }
       },
       "package": "com.enatega.multirider"

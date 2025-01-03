@@ -63,7 +63,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       ...alignment.PRmedium
     },
     addressContainer: {
-      width: '100%',
+      width: '90%',
       ...alignment.PTsmall,
       ...alignment.PBsmall
     },

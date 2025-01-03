@@ -65,5 +65,6 @@ export const sv = {
   notificationText: 'Måste använda en fysisk enhet för push-meddelanden',
   deliveredToRider: "Levereras till ryttare",
   name: 'Namn',
-  pullDownRefresh: 'Dra ner för att uppdatera'
+  pullDownRefresh: 'Dra ner för att uppdatera',
+  assigned: 'Tilldelad'
 }
