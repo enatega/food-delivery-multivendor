@@ -89,7 +89,7 @@ export default function CaseStudy() {
             </Typography>
           </Box>
 
-          <Button
+          {/* <Button
             style={{
               backgroundColor: "white",
               color: theme.palette.button.main,
@@ -108,9 +108,9 @@ export default function CaseStudy() {
             }
           >
             Read Case Study
-          </Button>
+          </Button> */}
         </Box>
-        <Box
+        {/* <Box
           style={{
             position: "absolute",
             top: mobile ? "-100px" : "-200px",
@@ -122,7 +122,7 @@ export default function CaseStudy() {
             alt="easy-eats"
             style={{ maxWidth: mobile ? "35%" : "80%", height: "auto" }}
           />
-        </Box>
+        </Box> */}
       </div>
     </Box>
   );

@@ -209,6 +209,7 @@ const km = {
     pickUp: "យកមកដល់",
     warning: "ប្រុងប្រយ័ត្ន",
     warningText: "មានមួយឬច្រើនធាតុមួយចំនួនមិនមានទេ",
+    Enatega: 'Enatega'
   },
 };
 export default km;

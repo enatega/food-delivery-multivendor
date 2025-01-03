@@ -199,6 +199,7 @@ const zh = {
     pickUp: "取件",
     warning: "警告",
     warningText: "一个或多个项目不可用",
+    Enatega: 'Enatega'
   },
 };
 export default zh;

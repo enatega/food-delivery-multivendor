@@ -127,6 +127,8 @@ function Card(props) {
     onCompleted,
     refetchQueries: [{ query: PROFILE }],
   });
+  
+
 
   function onCompleted() {
     props.showMessage({
@@ -256,7 +258,7 @@ function Card(props) {
                 justifyContent: props.isSmall ? "center" : "flex-end",
               }}
             >
-              <StarSharpIcon style={{ fontSize: "16px", color: "#448B7B" }} />
+              <StarSharpIcon style={{ fontSize: "16px", color: "#61d921" }} />
               <Typography
                 variant="caption"
                 color="textSecondary"
@@ -269,7 +271,7 @@ function Card(props) {
                     : "#5A5858",
                 }}
               >
-                {item.reviewData.ratings}
+                {item.reviewData?.ratings}
               </Typography>
               <Typography
                 variant="caption"
@@ -297,7 +299,7 @@ function Card(props) {
                   marginLeft: "3px",
                 }}
               >
-                ({item.reviewData.reviews.length})
+                ({item.reviewData?.reviews.length})
               </Typography>
             </Box>
           </Box>

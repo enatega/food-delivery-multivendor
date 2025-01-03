@@ -211,6 +211,7 @@ const fr = {
     pickUp: "Ramassage",
     warning: "Avertissement",
     warningText: "Un ou plusieurs éléments ne sont pas disponibles",
+    Enatega: 'Enatega'
   },
 };
 export default fr;

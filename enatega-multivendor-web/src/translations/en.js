@@ -204,6 +204,16 @@ const en = {
     pickUp: "Pickup",
     warning: "warning",
     warningText: "One or more item is not available",
+    "Rider App": 'Rider App',
+    FEATURES: 'FEATURES',
+    "Restaurant App": "Restaurant App",
+    "Customer App": 'Customer App',
+    "Admin Dashboard": 'Admin Dashboard',
+    "Product Page": "Product Page",
+    "PlayStore": 'Play Store',
+    "IosStore": "Ios Store",
+    APP: 'APP',
+    Enatega: 'Enatega'
   },
 };
 export default en;

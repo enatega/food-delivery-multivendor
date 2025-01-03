@@ -556,13 +556,6 @@ export const getConfiguration = `query Configuration{
     skipEmailVerification
     skipMobileVerification
     costType
-    vapidKey
-  }
-}`;
-
-export const getConfigurationSpecific = `query Configuration{
-  configuration{
-    webAmplitudeApiKey
   }
 }`;
 

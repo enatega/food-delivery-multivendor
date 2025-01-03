@@ -3,11 +3,11 @@ const de = {
     selectLanguage: "Sprache auswählen",
     saveButton: "speichern",
     footerText:
-      "Enatega ist eine Open-Source-Liefermanagementplattform für Zukunft. Wir legen Wert auf Innovation, Flexibilität und Erschwinglichkeit. und bieten Sie eine skalierbare, anpassbare Lösung, die Ihre Prozesse optimiert Lieferprozesse.",
+      "enatega ist eine Open-Source-Liefermanagementplattform für Zukunft. Wir legen Wert auf Innovation, Flexibilität und Erschwinglichkeit. und bieten Sie eine skalierbare, anpassbare Lösung, die Ihre Prozesse optimiert Lieferprozesse.",
     footerLinkHome: "Startseite",
     footerLinkPP: "Datenschutzbestimmungen",
     footerLinkTC: "Geschäftsbedingungen",
-    footerEndText: "Enatega - © 2022 Alle Rechte vorbehalten",
+    footerEndText: "enatega - © 2022 Alle Rechte vorbehalten",
     followUs: "Folge uns",
     poweredBy: "Angetrieben von",
     linksTitle: "Verknüpfungen",
@@ -148,7 +148,7 @@ const de = {
     continue: "Weiter",
     invalidEmail: "Ungültige E-Mail-Adresse",
     letsGetStarted: "Lass uns anfangen!",
-    createAccount: "Erstelle dein Enatega-Konto",
+    createAccount: "Erstelle dein enatega-Konto",
     firstnameErr1: "Vorname ist erforderlich!",
     firstnameErr2: "Ungültiger Vorname!",
     lastnameErr1: "Nachname ist erforderlich!",
@@ -209,6 +209,7 @@ const de = {
     pickUp: "Abholung",
     warning: "Warnung",
     warningText: "Ein oder mehrere Elemente sind nicht verfügbar",
+    Enatega: 'Enatega'
   },
 };
 export default de;

@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
-import React, { useEffect,useContext, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { getToken, onMessage } from "firebase/messaging";
 import { initialize, isFirebaseSupported } from "./firebase";
@@ -36,39 +36,10 @@ import PrivateRoute from "./routes/PrivateRoute";
 import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
 import { useTranslation } from "react-i18next";
-//import { fetchConfiguration } from "./utils/helper";
 
-
-//import { Integrations } from "@sentry/tracing";
-
-const GoogleMapsLoader = ({
-  children,
-  LIBRARIES,
-  GOOGLE_MAPS_KEY,
-  VAPID_KEY,
-}) => {
+const GoogleMapsLoader = ({ children, LIBRARIES, GOOGLE_MAPS_KEY }) => {
   const [message, setMessage] = useState(null);
   const { t, i18n } = useTranslation();
-
-  //Handlers
-/*   const onWindowUpdateAmplitude = async () => {
-    const { webAmplitudeApiKey } = await fetchConfiguration();
-
-    if (webAmplitudeApiKey) {
-      // Set the API key to a global variable
-      window.amplitudeApiKey = webAmplitudeApiKey;
-
-      // Now you can initialize Amplitude
-      if (window.amplitude) {
-        window.amplitude
-          .add(window.sessionReplay.plugin({ sampleRate: 1 }))
-          .promise.then(function () {
-            window.amplitude.add(window.amplitudeAutocapturePlugin.plugin());
-            window.amplitude.init(window.amplitudeApiKey);
-          });
-      }
-    }
-  }; */
 
   useEffect(() => {
     const initializeFirebase = async () => {
@@ -77,7 +48,8 @@ const GoogleMapsLoader = ({
         Notification.requestPermission()
           .then(() => {
             getToken(messaging, {
-              vapidKey: VAPID_KEY,
+              vapidKey:
+                "BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w",
             })
               .then((token) => {
                 localStorage.setItem("messaging-token", token);
@@ -119,12 +91,7 @@ const GoogleMapsLoader = ({
       }
     };
     initializeFirebase();
-
-  
-
-  }, [t, i18n, VAPID_KEY]);
-
-  /* ß */
+  }, [t, i18n]);
 
   const handleClose = () => {
     setMessage(null);
@@ -165,32 +132,12 @@ const GoogleMapsLoader = ({
 };
 
 function App() {
-  const { GOOGLE_MAPS_KEY, LIBRARIES, VAPID_KEY,SENTRY_DSN } = ConfigurableValues();
+  const { GOOGLE_MAPS_KEY, LIBRARIES } = ConfigurableValues();
   const { isLoggedIn } = useContext(UserContext);
-
-  useEffect(() => {
-  
-    if (SENTRY_DSN) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-      //SENTRY_DSN  integrations: [new Integrations.BrowserTracing()],
-        environment: "development",
-        enableInExpoDevelopment: true,
-        debug: true,
-        tracesSampleRate: 1.0, // to be changed to 0.2 in production
-      });
-   
-    }
-
-  }, [SENTRY_DSN]);
 
   return GOOGLE_MAPS_KEY ? (
     <HashRouter>
-      <GoogleMapsLoader
-        GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY}
-        LIBRARIES={LIBRARIES}
-        VAPID_KEY={VAPID_KEY}
-      >
+      <GoogleMapsLoader GOOGLE_MAPS_KEY={GOOGLE_MAPS_KEY} LIBRARIES={LIBRARIES}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/restaurant-list" element={<Restaurants />} />
