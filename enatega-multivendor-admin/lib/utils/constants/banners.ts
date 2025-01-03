@@ -21,9 +21,5 @@ export const SCREEN_NAMES = [
   {
     label: 'Top Brands',
     code: 'Top Brands',
-  },
-  {
-    label: 'Order it again',
-    code: 'Order it again',
-  },
+  }
 ];
