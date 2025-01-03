@@ -154,7 +154,7 @@ export const UserProvider = props => {
   }
 
   const checkItemCart = itemId => {
-    const cartIndex = cart.findIndex(c => c._id === itemId)
+    const cartIndex = cart.findIndex(c => c?._id === itemId)
     if (cartIndex < 0) {
       return {
         exist: false,

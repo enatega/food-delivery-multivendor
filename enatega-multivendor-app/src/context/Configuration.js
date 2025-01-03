@@ -14,7 +14,7 @@ export const ConfigurationProvider = props => {
   const { loading, data, error } = useQuery(GETCONFIGURATION)
 
   const configuration =
-    loading || error || !data.configuration
+    loading || error || !data?.configuration
       ? {
           currency: '',
           currencySymbol: '',
@@ -27,11 +27,11 @@ export const ConfigurationProvider = props => {
           iOSClientID:
             '139790486043-60c2ah0hd8v5cecnq8gqdtokhm2q35m1.apps.googleusercontent.com'
         }
-      : data.configuration
+      : data?.configuration
   
   return (
     <ConfigurationContext.Provider value={configuration}>
-      {props.children}
+      {props?.children}
     </ConfigurationContext.Provider>
   )
 }
