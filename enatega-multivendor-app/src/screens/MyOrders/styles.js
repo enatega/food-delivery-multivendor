@@ -9,11 +9,11 @@ const styles = (props = null) =>
     },
     safeAreaViewStyles: {
       flex: 1,
-      backgroundColor: props !== null ? props.headerBackground : 'transparent'
+      backgroundColor: props !== null ? props?.headerBackground : 'transparent'
     },
     container: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     contentContainer: {
       flexGrow: 1,
@@ -42,7 +42,7 @@ const styles = (props = null) =>
     emptyButton: {
       width: '85%',
       padding: scale(10),
-      backgroundColor: props !== null ? props.buttonBackground : 'grey',
+      backgroundColor: props !== null ? props?.buttonBackground : 'grey',
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
@@ -50,7 +50,7 @@ const styles = (props = null) =>
     },
     subContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      backgroundColor: props !== null ? props?.cartContainer : '#FFF',
       borderRadius: scale(10),
       elevation: 3,
       shadowColor: 'black',
@@ -90,7 +90,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     subContainerButton: {
-      backgroundColor: props !== null ? props.buttonBackground : 'grey',
+      backgroundColor: props !== null ? props?.buttonBackground : 'grey',
       ...alignment.MTxSmall,
       borderRadius: 10,
       width: scale(80),
@@ -99,7 +99,7 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     subContainerReviewButton: {
-      backgroundColor: props !== null ? props.secondaryBackground : 'grey',
+      backgroundColor: props !== null ? props?.secondaryBackground : 'grey',
       ...alignment.MTxSmall,
       borderRadius: 10,
       width: scale(80),
@@ -129,14 +129,14 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignSelf: 'center',
-      backgroundColor: props !== null ? props.newheaderBG : 'transparent'
+      backgroundColor: props !== null ? props?.newheaderBG : 'transparent'
     },
     activeTabStyles: {
       width: '45%',
       justifyContent: 'center',
       alignItems: 'center',
       borderBottomWidth: 3,
-      borderBottomColor: props !== null ? props.newheaderColor : 'transparent',
+      borderBottomColor: props !== null ? props?.newheaderColor : 'transparent',
     },
     inactiveTabStyles: {
       width: '45%',

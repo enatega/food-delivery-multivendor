@@ -24,7 +24,7 @@ function MyOrders(props) {
   const reviewModalRef = useRef()
   const [reviewInfo, setReviewInfo] = useState()
   const analytics = Analytics()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const {
     orders,
     loadingOrders,
@@ -34,7 +34,7 @@ function MyOrders(props) {
     networkStatusOrders
   } = useContext(OrdersContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const [selectedTab, setSelectedTab] = useState('current')
   const inset = useSafeAreaInsets()
   const activeOrders = useMemo(() => {
@@ -65,7 +65,7 @@ function MyOrders(props) {
     )
   })
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
@@ -98,7 +98,7 @@ function MyOrders(props) {
         elevation: 0
       }
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   const TabButton = ({ text, onPress, isSelected, currentTheme }) => {
     return (
@@ -145,7 +145,7 @@ function MyOrders(props) {
         </View>
         {selectedTab === 'current' && (
           <ActiveOrders
-            navigation={props.navigation}
+            navigation={props?.navigation}
             activeOrders={activeOrders}
             loading={loadingOrders}
             error={errorOrders}
@@ -153,7 +153,7 @@ function MyOrders(props) {
         )}
         {selectedTab === 'past' && (
           <PastOrders
-            navigation={props.navigation}
+            navigation={props?.navigation}
             pastOrders={pastOrders}
             loading={loadingOrders}
             error={errorOrders}

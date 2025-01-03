@@ -12,15 +12,18 @@ const useEnvVars = (env = Updates.channel) => {
 
   if (env === 'production' || env === 'staging') {
     return {
-      GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-      SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+      GRAPHQL_URL: 'https://new-enatega-api-staging.up.railway.app/graphql',
+      WS_GRAPHQL_URL: 'wss://new-enatega-api-staging.up.railway.app/graphql',
+      SERVER_URL: 'https://new-enatega-api-staging.up.railway.app/',
+
       IOS_CLIENT_ID_GOOGLE: configuration.iOSClientID,
       ANDROID_CLIENT_ID_GOOGLE: configuration.androidClientID,
       AMPLITUDE_API_KEY: configuration.appAmplitudeApiKey,
       GOOGLE_MAPS_KEY: configuration.googleApiKey,
-      EXPO_CLIENT_ID: configuration.expoClientId,
-      SENTRY_DSN: configuration.customerAppSentryUrl,
+      EXPO_CLIENT_ID: configuration.expoClientID,
+      SENTRY_DSN:
+        configuration.customerAppSentryUrl ??
+        'https://4160f777e00c18da9dcff59780b76cdb@o4506268211412992.ingest.us.sentry.io/4506274472919040',
       TERMS_AND_CONDITIONS: configuration.termsAndConditions,
       PRIVACY_POLICY: configuration.privacyPolicy,
       TEST_OTP: configuration.testOtp,
@@ -29,18 +32,21 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
-    // GRAPHQL_URL: 'http://192.168.0.109:8001/graphql',
-    // WS_GRAPHQL_URL: 'ws://192.168.0.109:8001/graphql',
-    // SERVER_URL: 'http://192.168.0.109:8001:8001/',
+    // GRAPHQL_URL: 'http://localhost:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
+    // SERVER_URL: 'http://localhost:8001/', 
+    GRAPHQL_URL: 'https://new-enatega-api-staging.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://new-enatega-api-staging.up.railway.app/graphql',
+    SERVER_URL: 'https://new-enatega-api-staging.up.railway.app/',
     IOS_CLIENT_ID_GOOGLE: configuration.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration.androidClientID,
     AMPLITUDE_API_KEY: configuration.appAmplitudeApiKey,
     GOOGLE_MAPS_KEY: configuration.googleApiKey,
     EXPO_CLIENT_ID: configuration.expoClientID,
-    SENTRY_DSN: configuration.customerAppSentryUrl,
+    SENTRY_DSN:
+      configuration.customerAppSentryUrl ??
+      //'https://4160f777e00c18da9dcff59780b76cdb@o4506268211412992.ingest.us.sentry.io/4506274472919040',
+      'https://66d65088ec7a6e53ef75e7f37addf25f@o4507787652694016.ingest.us.sentry.io/4508211757842432',
     TERMS_AND_CONDITIONS: configuration.termsAndConditions,
     PRIVACY_POLICY: configuration.privacyPolicy,
     TEST_OTP: configuration.testOtp,

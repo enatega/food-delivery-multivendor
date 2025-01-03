@@ -10,12 +10,12 @@ const styles = (props = null) =>
     safeAreaViewStyles: {
       flex: 1,
       backgroundColor:
-        props !== null ? props.headerBackgroundTwo : 'transparent'
+        props !== null ? props?.headerBackgroundTwo : 'transparent'
     },
     mainContainer: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       ...alignment.PTlarge
     },
     subContainer: {
@@ -37,7 +37,7 @@ const styles = (props = null) =>
     loginBtn: {
       width: '40%',
       backgroundColor:
-        props !== null ? props.buttonBackgroundPink : 'transparent',
+        props !== null ? props?.buttonBackgroundPink : 'transparent',
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -54,12 +54,12 @@ const styles = (props = null) =>
       ...alignment.MTlarge
     },
     textField: {
-      borderColor: props !== null ? props.borderColor : '#efefef',
+      borderColor: props !== null ? props?.borderColor : '#efefef',
       borderWidth: scale(1),
       borderRadius: scale(10),
-      backgroundColor: props !== null ? props.white : '#fff',
+      backgroundColor: props !== null ? props?.white : '#fff',
       padding: scale(14),
-      shadowColor: props !== null ? props.fontSecondColor : '#545454',
+      shadowColor: props !== null ? props?.fontSecondColor : '#545454',
       shadowOffset: {
         width: scale(0),
         height: scale(2)
@@ -70,8 +70,8 @@ const styles = (props = null) =>
       ...alignment.MTlarge
     },
     errorInput: {
-      backgroundColor: props !== null ? props.errorInputBack : '#F7E7E5',
-      borderColor: props !== null ? props.errorInputBorder : '#DB4A39'
+      backgroundColor: props !== null ? props?.errorInputBack : '#F7E7E5',
+      borderColor: props !== null ? props?.errorInputBorder : '#DB4A39'
     },
     error: {
       ...alignment.MTxSmall
@@ -93,7 +93,7 @@ const styles = (props = null) =>
       // marginTop: '55%',
       width: '70%',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props?.black : '#000',
       alignSelf: 'center',
       padding: scale(15),
       borderRadius: scale(10)

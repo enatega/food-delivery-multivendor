@@ -10,16 +10,16 @@ const ReviewCard = ({ theme, name, rating, description, date }) => {
   const { t } = useTranslation()
   return (
     <View style={styles.cardContainer(theme)}>
-      <TextDefault bold H5 textColor={theme.gray700}>
+      <TextDefault bold H5 textColor={theme.gray700} isRTL>
         {name}
       </TextDefault>
-      <View style={styles.reviewContainer}>
+      <View style={styles.reviewContainer(theme)}>
         <StarRating numberOfStars={5} rating={rating} />
-        <TextDefault textColor={theme.gray500}>
+        <TextDefault textColor={theme.gray500} isRTL>
           {date} {t('daysAgo')}
         </TextDefault>
       </View>
-      <TextDefault textColor={theme.gray500} numberOfLines={5}>
+      <TextDefault textColor={theme.gray500} numberOfLines={5} isRTL>
         {description}
       </TextDefault>
     </View>

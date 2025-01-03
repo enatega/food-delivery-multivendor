@@ -70,7 +70,7 @@ function NewAddress(props) {
   const addressRef = useRef()
   const inset = useSafeAreaInsets()
   const [modalVisible, setModalVisible] = useState(false)
-  const location = props.route.params ? props.route.params.location : null
+  const location = props?.route.params ? props?.route.params.location : null
   const { setLocation } = useContext(LocationContext)
   const [deliveryAddress, setDeliveryAddress] = useState('')
   const [deliveryDetails, setDeliveryDetails] = useState('')
@@ -84,7 +84,7 @@ function NewAddress(props) {
     longitudeDelta: LONGITUDE_DELTA
   })
 
-  const regionObj = props.route.params ? props.route.params.regionChange : null
+  const regionObj = props?.route.params ? props?.route.params.regionChange : null
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   useEffect(() => {
@@ -94,7 +94,7 @@ function NewAddress(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       title: t('addAddress'),
       headerTitleStyle: {
@@ -128,7 +128,7 @@ function NewAddress(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   useEffect(() => {
     if (!regionObj) return regionChange(region)
@@ -166,15 +166,15 @@ function NewAddress(props) {
       message: t('addressUpdated')
     })
     const address = data.createAddress.addresses.find((a) => a.selected)
-    const cartAddress = props.route.params?.backScreen || null
+    const cartAddress = props?.route.params?.backScreen || null
     setLocation({
       ...address,
       latitude: parseFloat(address.location.coordinates[1]),
       longitude: parseFloat(address.location.coordinates[0])
     })
     if (cartAddress === 'Cart') {
-      props.navigation.navigate('Cart')
-    } else props.navigation.goBack()
+      props?.navigation.navigate('Cart')
+    } else props?.navigation.goBack()
   }
 
   function onError(error) {
@@ -230,7 +230,7 @@ function NewAddress(props) {
               region={region}
               provider={PROVIDER_GOOGLE}
               onPress={() => {
-                props.navigation.navigate('FullMap', {
+                props?.navigation.navigate('FullMap', {
                   latitude: region.latitude,
                   longitude: region.longitude,
                   currentScreen: 'NewAddress'

@@ -10,13 +10,13 @@ const styles = (props = null) =>
     },
     safeAreaViewStyles: {
       flex: 1,
-      backgroundColor: props !== null ? props.headerBackground : 'transparent'
+      backgroundColor: props !== null ? props?.headerBackground : 'transparent'
     },
     mainContentContainer: {
       width: '100%',
       height: '100%',
       alignSelf: 'center',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     randomShapeContainer: {
       right: 0,
@@ -32,7 +32,7 @@ const styles = (props = null) =>
       borderRadius: scale(12),
       marginTop: verticalScale(10),
       elevation: 7,
-      shadowColor: props != null ? props.shadowColor : 'grey',
+      shadowColor: props != null ? props?.shadowColor : 'grey',
       shadowOffset: {
         width: 0,
         height: verticalScale(0)
@@ -56,12 +56,12 @@ const styles = (props = null) =>
       paddingRight: scale(15)
     },
     title: {
-      color: props !== null ? props.statusSecondColor : 'grey',
+      color: props !== null ? props?.statusSecondColor : 'grey',
       fontSize: verticalScale(15),
       fontFamily: fontStyles.MuseoSans500
     },
     description: {
-      color: props !== null ? props.fontMainColor : '#000',
+      color: props !== null ? props?.fontMainColor : '#000',
       fontSize: verticalScale(15),
       fontFamily: fontStyles.MuseoSans500,
       paddingLeft: scale(5),
@@ -70,7 +70,7 @@ const styles = (props = null) =>
     },
 
     statusText: {
-      color: props !== null ? props.statusSecondColor : 'grey',
+      color: props !== null ? props?.statusSecondColor : 'grey',
       fontSize: verticalScale(13),
       fontFamily: fontStyles.MuseoSans500,
       marginBottom: scale(10),
@@ -78,7 +78,7 @@ const styles = (props = null) =>
       fontWeight: '500'
     },
     timeText: {
-      color: props !== null ? props.iconColorPink : 'red',
+      color: props !== null ? props?.iconColorPink : 'red',
       fontSize: verticalScale(24),
       fontFamily: fontStyles.MuseoSans300,
       marginLeft: -10
@@ -115,20 +115,7 @@ const styles = (props = null) =>
       marginTop: scale(2),
       marginBottom: scale(2),
       paddingLeft: scale(40)
-    },
-    absoluteContainer: {
-      width: verticalScale(20),
-      height: verticalScale(20),
-      backgroundColor: '#90E36D',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: scale(15),
-      position: 'absolute',
-      padding:3,
-      right: scale(-25),
-      bottom: scale(2)
-    },
-  
+    }
   })
 
 export default styles

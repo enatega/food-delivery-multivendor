@@ -1,25 +1,17 @@
-import { verticalScale, scale } from '../../../utils/scaling'
+import { scale } from '../../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
 const { height } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
-    // ML20: {
-    //   ...alignment.MLlarge
-    // },
-    // offerScroll: {
-    //   height: scale(270),
-    //   width: '100%',
-    //   ...alignment.MLlarge,
-    // },
     offerContainer: {
-      borderRadius: 25,
+      borderRadius: 15,
       width: scale(270),
-      ...alignment.MRsmall
+      height: height * 0.376,
+      ...alignment.MRsmall,
+      backgroundColor: props != null ? props?.cardBackground : '#181818'
     },
-
     overlayContainer: {
       position: 'absolute',
       top: 0,
@@ -30,58 +22,38 @@ const styles = (props = null) =>
     favouriteOverlay: {
       position: 'absolute',
       top: 10,
-      right: 10,
+      ...props?.isRTL ? { left: 10 } : { right: 10 },
       width: scale(38),
       height: scale(28),
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 1,
       borderRadius: scale(16),
-      backgroundColor: props != null ? props.menuBar : 'white',
+      backgroundColor: props != null ? props?.cardBackground : '#181818',
       borderWidth: 1,
-      borderColor: props != null ? props.newBorderColor : '#F3F4F6'
+      borderColor: props != null ? props?.customBorder : '#F3F4F6'
     },
-    // featureOverlay: {
-    //   height: '90%',
-    //   position: 'absolute',
-    //   left: 0,
-    //   top: 10,
-    //   backgroundColor: 'rgba(0, 0, 0, 0)'
-    // },
-    // featureText: {
-    //   alignSelf: 'flex-start',
-    //   maxWidth: '100%',
-    //   fontSize: scale(9),
-    //   ...alignment.MTxSmall,
-    //   ...alignment.PLsmall,
-    //   ...alignment.PRsmall,
-    //   ...alignment.PTxSmall,
-    //   ...alignment.PBxSmall,
-    //   backgroundColor: props != null ? props.iconColorPink : 'red'
-    // },
     descriptionContainer: {
-      // paddingTop: verticalScale(12),
-      // paddingBottom: verticalScale(12),
       paddingLeft: scale(10),
       paddingRight: scale(10),
       width: '100%',
-      borderColor: props != null ? props.iconBackground : '#E5E7EB',
-      borderWidth: 1,
+      // borderColor: props != null ? props?.iconBackground : '#E5E7EB',
+      // borderWidth: 1,
       borderBottomLeftRadius: 8,
       borderBottomRightRadius: 8,
       height: '35%',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      gap: 10
     },
     aboutRestaurant: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       gap: scale(2)
     },
     offerCategoty: {
       width: '100%',
-      paddingBottom: scale(7),
-      paddingTop: scale(7)
+      textAlign: props?.isRTL ? 'right' : 'left'
     },
     mainContainer: {
       paddingTop: scale(15),
@@ -110,15 +82,32 @@ const styles = (props = null) =>
       fontSize: 15
     },
     deliveryInfo: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: scale(18)
     },
     deliveryTime: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: scale(4)
-    }
+    }, 
+    border: {
+      width: '100%',
+      height: 1,
+      borderWidth: 1,
+      borderColor: props != null ? props?.iconBackground : '#E5E7EB',
+      borderStyle: 'dashed'
+    },
+    closedOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(150, 150, 150, 0.7)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   })
 
 export default styles

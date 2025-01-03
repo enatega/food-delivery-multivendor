@@ -2,7 +2,7 @@ import { ScrollView, View, Image } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import styles from './styles'
 import colors from '../../utilities/colors'
@@ -49,7 +49,7 @@ const OrderDetail = () => {
                 longitudeDelta: 0.0421
               }}
               customMapStyle={MapStyles}
-              provider={PROVIDER_DEFAULT}>
+              provider={PROVIDER_GOOGLE}>
               {deliveryAddressPin && (
                 <Marker
                   coordinate={deliveryAddressPin.location}

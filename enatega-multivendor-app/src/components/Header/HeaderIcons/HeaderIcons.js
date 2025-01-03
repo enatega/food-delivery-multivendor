@@ -26,45 +26,53 @@ import UserContext from '../../../context/User'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
-  if (props.icon === 'leftArrow') {
+  const navigation = useNavigation()
+  if (props?.icon === 'leftArrow') {
     return (
       <Ionicons
         name='arrow-back'
-        size={18}
+        size={20}
         style={styles().leftIconPadding}
-        color={props.iconColor}
+        color={props?.iconColor}
+        onPress={() => {
+          if (props?.prevScreen) {
+            navigation.navigate(props?.prevScreen)
+          } else {
+            console.warn('No prevScreen prop provided')
+          }
+        }}
       />
     )
-  } else if (props.icon === 'menu') {
+  } else if (props?.icon === 'menu') {
     return (
       <SimpleLineIcons
         name='menu'
         size={20}
-        color={props.iconColorDark}
+        color={props?.iconColorDark}
         style={styles().leftIconPadding}
       />
     )
-  } else if (props.icon === 'dots') {
+  } else if (props?.icon === 'dots') {
     return (
       <MaterialCommunityIcons
         name='dots-vertical'
         size={25}
-        color={props.iconColor}
+        color={props?.iconColor}
       />
     )
-  } else if (props.icon === 'target') {
+  } else if (props?.icon === 'target') {
     return (
-      <MaterialIcons name='my-location' size={16} color={props.iconColor} />
+      <MaterialIcons name='my-location' size={16} color={props?.iconColor} />
     )
-  } else if (props.icon === 'fav') {
-    return <AntDesign name='hearto' size={20} color={props.iconColorDark} />
+  } else if (props?.icon === 'fav') {
+    return <AntDesign name='hearto' size={20} color={props?.iconColorDark} />
   } else {
     return (
       <EvilIcons
         name='close'
         size={16}
         style={styles().leftIconPadding}
-        color={props.newIconColor}
+        color={props?.newIconColor}
       />
     )
   }
@@ -72,26 +80,26 @@ function BackButton(props) {
 
 function LeftButton(props) {
   const navigation = useNavigation()
-  if (props.icon === 'back') {
+  if (props?.icon === 'back') {
     return (
       <HeaderBackButton
         truncatedLabel=''
         backImage={() =>
-          BackButton({ iconColor: props.newIconColor, icon: 'leftArrow' })
+          BackButton({ iconColor: props?.newIconColor, icon: 'leftArrow' })
         }
         onPress={() => {
           navigationService.goBack()
         }}
       />
     )
-  } else if (props.icon === 'close') {
+  } else if (props?.icon === 'close') {
     return (
       <HeaderBackButton
         truncatedLabel=''
         pressColorAndroid={rippleColor}
         labelVisible={false}
         backImage={() =>
-          BackButton({ iconColor: props.newIconColor, icon: 'close' })
+          BackButton({ iconColor: props?.newIconColor, icon: 'close' })
         }
         onPress={() => {
           navigation.dispatch((state) => {
@@ -105,21 +113,21 @@ function LeftButton(props) {
         }}
       />
     )
-  } else if (props.toggle) {
+  } else if (props?.toggle) {
     return (
       <HeaderBackButton
         truncatedLabel=''
         labelVisible={false}
         backImage={() =>
           BackButton({
-            iconColor: props.newIconColor,
-            icon: props.toggleValue ? 'leftArrow' : 'close'
+            iconColor: props?.newIconColor,
+            icon: props?.toggleValue ? 'leftArrow' : 'close'
           })
         }
         onPress={() =>
-          props.toggleValue
+          props?.toggleValue
             ? navigation.goBack()
-            : props.toggleView((prev) => !prev)
+            : props?.toggleView((prev) => !prev)
         }
       />
     )
@@ -130,7 +138,7 @@ function LeftButton(props) {
         pressColorAndroid={rippleColor}
         labelVisible={false}
         backImage={() =>
-          BackButton({ iconColor: props.newIconColor, icon: 'menu' })
+          BackButton({ iconColor: props?.newIconColor, icon: 'menu' })
         }
         onPress={() => navigation.toggleDrawer()}
       />
@@ -147,38 +155,38 @@ function RightButton(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { cartCount, isLoggedIn, profile } = useContext(UserContext)
   function showPasswordButton() {
-    props.titlePosition((prev) => !prev)
+    props?.titlePosition((prev) => !prev)
     setPassword((prev) => !prev)
   }
   function clickPasswordButton() {
-    props.titlePosition((prev) => !prev)
+    props?.titlePosition((prev) => !prev)
     setPassword((prev) => !prev)
-    props.modalVisible((prev) => !prev)
+    props?.modalVisible((prev) => !prev)
   }
 
   function cartIcon() {
     return (
       <View style={styles().rightContainer}>
-        <SimpleLineIcons
-          name='handbag'
-          size={24}
-          color={currentTheme.black}
-        />
-        <View
-          style={
-            styles(route.name === 'Main' ? 'black' : currentTheme.white)
-              .absoluteContainer
-          }
-        >
-          <TextDefault
-            textColor={currentTheme.white}
-            style={{ fontSize: scale(12) }}
-            center
-            bolder
-          >
-            {cartCount}
-          </TextDefault>
-        </View>
+        <MaterialCommunityIcons name="cart-outline" size={28} color={currentTheme.iconColor} />
+        {
+          cartCount > 0 && (
+            <View
+              style={
+                styles(route.name === 'Main' ? 'black' : currentTheme.white)
+                  .absoluteContainer
+              }
+            >
+              <TextDefault
+                textColor={currentTheme.white}
+                style={{ fontSize: scale(10) }}
+                center
+                bolder
+              >
+                {cartCount}
+              </TextDefault>
+            </View>
+          )
+        }
       </View>
     )
   }
@@ -192,7 +200,7 @@ function RightButton(props) {
       })
     }
   }
-  if (props.icon === 'dots') {
+  if (props?.icon === 'dots') {
     return (
       <View>
         {password ? (
@@ -217,7 +225,7 @@ function RightButton(props) {
             labelVisible={false}
             backImage={() => (
               <View style={styles().rightContainer}>
-                {BackButton({ iconColor: props.textColor, icon: 'dots' })}
+                {BackButton({ iconColor: props?.textColor, icon: 'dots' })}
               </View>
             )}
             onPress={showPasswordButton}
@@ -225,10 +233,10 @@ function RightButton(props) {
         )}
       </View>
     )
-  } else if (props.icon === 'cart') {
+  } else if (props?.icon === 'cart') {
     return (
       <View style={{ flexDirection: 'row' }}>
-        <HeaderBackButton
+        {/* <HeaderBackButton
           truncatedLabel=''
           pressColorAndroid={route.name === 'Main' && rippleColor}
           labelVisible={false}
@@ -243,7 +251,7 @@ function RightButton(props) {
               ? navigation.navigate('Favourite')
               : navigation.navigate('CreateAccount')
           }
-        />
+        /> */}
         {cartCount >= 0 && (
           <HeaderBackButton
             truncatedLabel=''
@@ -255,7 +263,7 @@ function RightButton(props) {
         )}
       </View>
     )
-  } else if (props.icon === 'target') {
+  } else if (props?.icon === 'target') {
     return (
       <HeaderBackButton
         truncatedLabel=''
@@ -263,10 +271,10 @@ function RightButton(props) {
         labelVisible={false}
         backImage={() => (
           <View style={[styles().rightContainer]}>
-            {BackButton({ iconColor: props.iconColor, icon: 'target' })}
+            {BackButton({ iconColor: props?.iconColor, icon: 'target' })}
           </View>
         )}
-        onPress={props.onPressRight}
+        onPress={props?.onPressRight}
       />
     )
   } else {
@@ -279,7 +287,7 @@ function DarkBackButton(props) {
   return (
     <View
       style={{
-        backgroundColor: props.themeBackground,
+        backgroundColor: props?.themeBackground,
         borderRadius: 5,
     
       }}
@@ -298,11 +306,11 @@ function HelpButton(props) {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: props.iconBackground,
+        backgroundColor: props?.iconBackground,
         borderRadius: scale(10),
         margin: scale(5)
       }}
-      onPress={() => props.navigation.navigate('Help')}
+      onPress={() => props?.navigation.navigate('Help')}
     >
       <TextDefault style={styles().rightButtonContainer} center small bold>
         {t('help')}

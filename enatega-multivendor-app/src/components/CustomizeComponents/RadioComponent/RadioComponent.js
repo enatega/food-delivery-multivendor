@@ -7,13 +7,18 @@ import { theme } from '../../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
+import { useTranslation } from 'react-i18next'
 
 function RadioComponent(props) {
-  const [selected, setSelected] = useState(props.selected || null)
-  const [options] = useState(props.options)
+  const { i18n } = useTranslation()
+  const [selected, setSelected] = useState(props?.selected || null)
+  const [options] = useState(props?.options)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
 
   function onPress(option) {
     setSelected(option)
@@ -22,13 +27,15 @@ function RadioComponent(props) {
 
   return (
     <View>
-      {options.map(option => (
+      {options.map((option) => (
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={onPress.bind(this, option)}
           key={option._id}
-          style={styles.mainContainer}>
-          <View style={styles.leftContainer}>
+          style={styles(currentTheme).mainContainer}
+          // disabled={option.isOutOfStock}
+        >
+          <View style={styles(currentTheme).leftContainer}>
             <RadioButton
               size={11}
               outerColor={currentTheme.iconColorDark}
@@ -39,15 +46,19 @@ function RadioComponent(props) {
             />
             <TextDefault
               textColor={currentTheme.fontMainColor}
-              style={alignment.MLsmall}
-              bolder>
+              style={styles(currentTheme).title}
+              bolder
+              isRTL
+            >
               {option.title}
             </TextDefault>
           </View>
-          <View style={styles.rightContainer}>
+          <View style={styles(currentTheme).rightContainer}>
             <TextDefault
               textColor={currentTheme.fontMainColor}
-              bolder>{`${configuration.currencySymbol}${option.price}`}</TextDefault>
+              bolder
+              isRTL
+            >{`${configuration.currencySymbol}${option.price}`}</TextDefault>
           </View>
         </TouchableOpacity>
       ))}

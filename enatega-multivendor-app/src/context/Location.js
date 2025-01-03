@@ -1,22 +1,19 @@
 import React, { createContext, useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios from 'axios'
-import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { cities } from '../apollo/queries'
+import { useQuery } from '@apollo/client'
+import { getZones } from '../apollo/queries'
 
-const GET_CITIES = gql`
-  ${cities}
-`
 
+const GET_ZONES = gql`
+  ${getZones}
+  `
 export const LocationContext = createContext()
 
 export const LocationProvider = ({ children }) => {
   const [location, setLocation] = useState(null)
-  const [country, setCountry] = useState('IL')
   const [cities, setCities] = useState([])
-  const [loadingCountry, setLoadingCountry] = useState(true)
-  const [errorCountry, setErrorCountry] = useState('')
+  const { loading, error, data } = useQuery(GET_ZONES)
 
   useEffect(() => {
     const getActiveLocation = async () => {
@@ -43,41 +40,65 @@ export const LocationProvider = ({ children }) => {
     }
   }, [location])
 
+  // show zones as cities
   useEffect(() => {
-    const fetchCountry = async () => {
-      try {
-        const response = await axios.get('https://api.ipify.org/?format=json')
-        const data = response.data
+    if (!loading && !error && data) {
+      const fetchedZones = data.zones || [];
 
-        const ipResponse = await axios.get(`https://ipinfo.io/${data.ip}/json`)
-        const countryName = ipResponse.data.country // missing 'US'
-        setCountry(countryName)
-      } catch (error) {
-        setErrorCountry(error.message)
-        console.error('Error fetching user location:', error)
-      } finally {
-        setLoadingCountry(false)
-      }
+      // Function to calculate centroid of a polygon
+      const calculateCentroid = (coordinates) => {
+        let x = 0, y = 0, area = 0;
+
+        const points = coordinates[0]; // Assuming the first array contains the coordinates
+
+        for (let i = 0; i < points.length - 1; i++) {
+          const x0 = points[i][0];
+          const y0 = points[i][1];
+          const x1 = points[i + 1][0];
+          const y1 = points[i + 1][1];
+          const a = x0 * y1 - x1 * y0;
+          area += a;
+          x += (x0 + x1) * a;
+          y += (y0 + y1) * a;
+        }
+
+        area /= 2;
+        x = x / (6 * area);
+        y = y / (6 * area);
+
+        return { latitude: y, longitude: x };
+      };
+
+      // Calculate centroids for each zone
+      const centroids = fetchedZones.map(zone => {
+        const centroid = calculateCentroid(zone.location.coordinates);
+        return {
+          id: zone._id,
+          name: zone.title,
+          ...centroid,
+          location: zone.location
+        };
+      });
+
+      // Calculate the average of the centroids to find the midpoint
+      const averageLatitude = centroids.reduce((sum, point) => sum + point.latitude, 0) / centroids.length;
+      const averageLongitude = centroids.reduce((sum, point) => sum + point.longitude, 0) / centroids.length;
+
+      // Set this as the cities or the midpoint depending on your need
+      setCities(centroids);
+
+      // Optionally, you can also save this midpoint as location
+      setLocation({ latitude: averageLatitude, longitude: averageLongitude });
     }
-    fetchCountry()
-  }, [])
+  }, [loading, error, data]);
 
-  const { loading, error, data } = useQuery(GET_CITIES, {
-    variables: { iso: country || 'US' },
-    skip: !country // Skip the query if country is not provided
-  })
-  //console.log('cities Data inside context', cities)
-  // useEffect(() => {
-  //   if (!loading && !error && data) {
-  //     setCities(data.getCountryByIso.cities || [])
-  //   }
-  // }, [loading, error, data])
   return (
     <LocationContext.Provider
       value={{
         location,
         setLocation,
-        cities: data?.getCountryByIso?.cities || []
+        cities,
+        loading
       }}>
       {children}
     </LocationContext.Provider>

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 
 export const FlashMessage = props => {
   showMessage({
-    message: props.message,
+    message: props?.message,
     hideOnPress: false,
-    onPress: props.onPress,
-    duration: props.duration ?? 1500
+    onPress: props?.onPress,
+    duration: props?.duration ?? 1500
   })
 }
 FlashMessage.propTypes = {

@@ -12,7 +12,7 @@ const styles = (props = null) =>
       borderBottomWidth: scale(8),
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      borderBottomColor: props !== null ? props.themeBackground : 'black'
+      borderBottomColor: props !== null ? props?.themeBackground : 'black'
     }
   })
 export default styles

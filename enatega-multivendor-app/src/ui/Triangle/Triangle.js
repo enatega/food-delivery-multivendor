@@ -7,7 +7,7 @@ import { theme } from '../../utils/themeColors'
 const Triangle = props => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  return <View style={[styles(currentTheme).triangle, props.style]} />
+  return <View style={[styles(currentTheme).triangle, props?.style]} />
 }
 
 export default Triangle

@@ -7,7 +7,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : '#FFF'
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -17,7 +17,7 @@ const styles = (props = null) =>
       borderTopRightRadius: 30,
       borderColor: 'grey',
       justifyContent: 'space-between',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       ...alignment.PTsmall
     },
     upperContainer: {
@@ -49,21 +49,22 @@ const styles = (props = null) =>
     },
     locationContainer: {
       borderWidth: 1,
-      borderColor: props !== null ? props.verticalLine : '#D1D5DB',
+      borderColor: props !== null ? props?.customBorder : '#D1D5DB',
       borderRadius: scale(10),
       ...alignment.MTmedium,
-      ...alignment.MBmedium
+      ...alignment.MBmedium,
+      backgroundColor: props !== null ? props?.cardBackground : '#D1D5DB',
     },
     locationRow: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'center',
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: props !== null ? props.verticalLine : '#D1D5DB'
+      borderBottomColor: props !== null ? props?.verticalLine : '#D1D5DB'
     },
     lastLocationRow: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'center'
     },
     locationIcon: {
@@ -121,7 +122,7 @@ const styles = (props = null) =>
       width: 60,
       height: 60,
       borderWidth: 1,
-      borderColor: props !== null ? props.tagColor : 'transparent',
+      borderColor: props !== null ? props?.tagColor : 'transparent',
       borderRadius: 8,
       justifyContent: 'center',
       ...alignment.PxSmall,
@@ -138,9 +139,9 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderRadius: 8,
       justifyContent: 'center',
-      color: props !== null ? props.tagColor : 'transparent',
-      borderColor: props !== null ? props.black : 'transparent',
-      backgroundColor: props !== null ? props.darkBgFont : 'transparent',
+      color: props !== null ? props?.tagColor : 'transparent',
+      borderColor: props !== null ? props?.black : 'transparent',
+      backgroundColor: props !== null ? props?.darkBgFont : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {
@@ -150,7 +151,7 @@ const styles = (props = null) =>
       borderRadius: 30,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
       alignSelf: 'center',
       marginTop: 20,
       marginBottom: 15

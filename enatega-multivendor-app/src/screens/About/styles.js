@@ -7,6 +7,12 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    topMarginSmall: {
+      ...alignment.MTxSmall
+    },
+    topMarginLarge: {
+      ...alignment.MTsmall
+    },
     MB15: {
       padding: 10,
       ...alignment.MBmedium,
@@ -38,7 +44,7 @@ const styles = (props = null) =>
     inlineFloat: {
       width: '100%',
       backgroundColor: props != null ? props.radioOuterColor : 'white',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center'
     },
     mapContainer: {
@@ -66,7 +72,7 @@ const styles = (props = null) =>
     },
     restaurantContainer: {
       width: '100%',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       backgroundColor: props != null ? props.themeBackground : 'white',
       ...alignment.Psmall
@@ -82,7 +88,7 @@ const styles = (props = null) =>
       borderBottomWidth: StyleSheet.hairlineWidth
     },
     reviewerContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       width: '100%'
     },
@@ -95,7 +101,7 @@ const styles = (props = null) =>
       borderRadius: 10
     },
     ratingContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       marginVertical: scale(8)
     },
@@ -113,7 +119,7 @@ const styles = (props = null) =>
       ...alignment.PBxSmall
     },
     // navigationContainer: {
-    //   flexDirection: 'row',
+    //   flexDirection: props?.isRTL ? 'row-reverse' : 'row',
     //   alignItems: 'flex-start',
     //   justifyContent: 'center',
     //   width: '100%',
@@ -133,10 +139,15 @@ const styles = (props = null) =>
     //   borderRadius: scale(10)
     // },
     timingRow: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: scale(5),
+    },
+    timingRowMain: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-evenly',
       alignSelf: 'center',
-      backgroundColor: '#F3F4F6',
+      backgroundColor: props != null ? props.cardBackground : '#181818',
       borderRadius: 10,
       padding: 10,
       marginBottom: 10,
@@ -167,9 +178,17 @@ const styles = (props = null) =>
       flex: 1,
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
-    // timingText: {
-    //   width: scale(140),
-    //   textAlign: 'left'
-    // }
+    subContainer: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 4
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: props !== null ? props.color6 : '#9B9A9A',
+      marginTop: scale(10)
+    }
   })
 export default styles

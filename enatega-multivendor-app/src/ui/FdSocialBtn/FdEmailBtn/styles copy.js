@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
       height: height * 0.07,
-      backgroundColor: props !== null ? props.buttonBackgroundPink : '#000000',
+      backgroundColor: props !== null ? props?.buttonBackgroundPink : '#000000',
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 10,

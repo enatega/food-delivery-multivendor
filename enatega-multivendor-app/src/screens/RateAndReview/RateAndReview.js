@@ -35,7 +35,7 @@ function RateAndReview(props) {
   const Analytics = analytics()
 
   const { t } = useTranslation()
-  const [id] = useState(props.route.params._id ?? null)
+  const [id] = useState(props?.route.params._id ?? null)
   const [rating, setRating] = useState(0)
   const [description, setDescription] = useState('')
   const themeContext = useContext(ThemeContext)
@@ -47,7 +47,7 @@ function RateAndReview(props) {
     onCompleted
   })
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerTitle: '',
       headerRight: null,
 
@@ -72,7 +72,7 @@ function RateAndReview(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_RATEANDREVIEW)
@@ -104,7 +104,7 @@ function RateAndReview(props) {
   }
 
   function onCompleted(data) {
-    props.navigation.goBack()
+    props?.navigation.goBack()
   }
 
   function onError(error) {
@@ -122,7 +122,7 @@ function RateAndReview(props) {
           { backgroundColor: currentTheme.themeBackground }
         ]}>
         <View style={{ display: 'flex' }}>
-          <ImageHeader image={props.route.params.restaurant.image} />
+          <ImageHeader image={props?.route.params.restaurant.image} />
           <View style={styles().mainView}>
             <TextDefault
               H4
@@ -133,7 +133,7 @@ function RateAndReview(props) {
               ellipsizeMode="tail">
               {t('RateYourOrder')}
             </TextDefault>
-            {!props.loading && (
+            {!props?.loading && (
               <View style={{ padding: scale(5) }}>
                 <TextDefault
                   textColor="white"
@@ -141,9 +141,9 @@ function RateAndReview(props) {
                   paddingLeft={scale(5)}
                   marginTop={scale(5)}
                   bold>
-                  {props.route.params.restaurant.name.length > 12
-                    ? `${props.route.params.restaurant.name.slice(0, 15)}...`
-                    : props.route.params.restaurant.name}
+                  {props?.route.params.restaurant.name.length > 12
+                    ? `${props?.route.params.restaurant.name.slice(0, 15)}...`
+                    : props?.route.params.restaurant.name}
                 </TextDefault>
               </View>
             )}

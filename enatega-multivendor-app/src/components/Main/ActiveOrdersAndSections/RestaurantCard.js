@@ -28,7 +28,7 @@ function RestaurantCard(props) {
         <View style={styles().imageContainer}>
           <Image
             resizeMode="cover"
-            source={{ uri: props.image }}
+            source={{ uri: props?.image }}
             style={styles().restaurantImage}
           />
           <View style={styles().overlayContainer}>
@@ -39,7 +39,7 @@ function RestaurantCard(props) {
                 smaller
                 bold
                 center>
-                {props.deliveryTime + ' '}
+                {props?.deliveryTime + ' '}
                 {t('min')}
               </TextDefault>
             </View>
@@ -52,7 +52,7 @@ function RestaurantCard(props) {
               numberOfLines={1}
               textColor={currentTheme.fontMainColor}
               bolder>
-              {props.name}
+              {props?.name}
             </TextDefault>
             <View style={[styles().aboutRestaurant, { width: '23%' }]}>
               <Ionicons
@@ -65,14 +65,14 @@ function RestaurantCard(props) {
                 style={styles().restaurantRatingContainer}
                 bold
                 smaller>
-                {props.reviewData.ratings}
+                {props?.reviewData.ratings}
               </TextDefault>
               <TextDefault
                 textColor={currentTheme.fontSecondColor}
                 style={styles().restaurantRatingContainer}
                 bold
                 smaller>
-                ({props.reviewData.reviews.length})
+                ({props?.reviewData.reviews.length})
               </TextDefault>
             </View>
           </View>
@@ -82,7 +82,7 @@ function RestaurantCard(props) {
             bold
             small
             style={styles().offerCategoty}>
-            {props.categories.map(category => category.title).toString()}
+            {props?.categories.map(category => category.title).toString()}
           </TextDefault>
           <TextDefault
             textColor={currentTheme.fontMainColor}
@@ -90,7 +90,7 @@ function RestaurantCard(props) {
             style={styles().restaurantPriceContainer}
             bold
             small>
-            {configuration.currencySymbol} {props.minimumOrder}
+            {configuration.currencySymbol} {props?.minimumOrder}
             <TextDefault textColor={currentTheme.fontSecondColor} small>
               {' '}
               {t('min')}

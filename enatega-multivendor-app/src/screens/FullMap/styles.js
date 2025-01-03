@@ -33,7 +33,7 @@ const styles = (props = null) =>
       bottom: scale(0),
       height: '8%',
       width: '100%',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent'
+      backgroundColor: props !== null ? props?.buttonBackground : 'transparent'
     },
     customMarkerContainer: {
       width: scale(50),

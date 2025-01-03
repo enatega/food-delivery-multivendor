@@ -13,6 +13,7 @@ import { useCancelOrder, useOrderPickedUp, useOrderRing } from '../../ui/hooks'
 import CountDown from 'react-native-countdown-component'
 import { useRestaurantContext } from '../../ui/context/restaurant'
 import { useTranslation } from 'react-i18next'
+import { getIsAcceptButtonVisible } from '../../utilities/customFunctions'
 
 export default function OrderDetail({ navigation, route }) {
   const { t } = useTranslation()
@@ -22,8 +23,9 @@ export default function OrderDetail({ navigation, route }) {
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp()
   const { muteRing } = useOrderRing()
   const [overlayVisible, setOverlayVisible] = useState(false)
-  const isAcceptButtonVisible = !moment().isBefore(orderDate)
+  const isAcceptButtonVisible = getIsAcceptButtonVisible(orderDate)
   const [print, setPrint] = useState(false)
+  const [isOvertime, setIsOvertime] = useState(false)
 
   const { data } = useRestaurantContext()
   // current
@@ -99,50 +101,50 @@ export default function OrderDetail({ navigation, route }) {
           />
         </View>
         <View style={styles.lowerContainer}>
-          <View style={styles.barContainer}>
-            <View style={styles.roundedBar}>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={imagePath}
-                  PlaceholderContent={<ActivityIndicator />}
-                  style={{ width: 25, height: 25 }}
-                />
-              </View>
-              
-              <View style={styles.textContainer}>
-                <TextDefault bolder H4>
-                  {activeBar === 2 ? t('prepared') : t('preparing')}
-                </TextDefault>
-                <TextDefault>
-                  {activeBar === 2 ? t('delivered') : t('accepted')}
-                </TextDefault>
+          {orderData?.orderStatus !== 'PENDING' && (
+            <View style={styles.barContainer}>
+              <View style={styles.roundedBar}>
+                <View style={styles.iconContainer}>
+                  <Image
+                    source={imagePath}
+                    PlaceholderContent={<ActivityIndicator />}
+                    style={{ width: 25, height: 25 }}
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <TextDefault bolder H4>
+                    {activeBar === 2 ||
+                      orderData?.orderStatus === 'DELIVERED' ||
+                      orderData?.orderStatus === 'PICKED'
+                      ? t('prepared') : t('preparing')}
+                  </TextDefault>
+                  <TextDefault>
+                    {activeBar === 2 ? t('delivered') : orderData?.orderStatus === 'PICKED' ? t('deliveredToRider') : t('accepted')}
+                  </TextDefault>
+                </View>
               </View>
             </View>
-          </View>
+          )}
           <ScrollView style={styles.scrollView}>
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <View style={{ marginBottom: 20 }}>
-                {!isAcceptButtonVisible && (
+                {/* {!isAcceptButtonVisible && (
                   <TextDefault>{t('acceptOrderText')} </TextDefault>
-                )}
+                )} */}
                 {activeBar === 0 && (
                   <CountDown
                     until={decision}
                     size={20}
                     timeToShow={['H', 'M', 'S']}
                     digitStyle={{ backgroundColor: colors.white }}
-                    digitTxtStyle={{
-                      color: 'black',
-                      fontSize: 35
-                    }}
+                    digitTxtStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black, fontSize: 35 }}
                     timeLabels={{ h: null, m: null, s: null }}
-                    showSeparator
-                    separatorStyle={{
-                      color: 'black'
-                    }}
+                    showSeparator={true}
+                    separatorStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black }}
+                    onFinish={() => setIsOvertime(true)}
                   />
                 )}
-                {activeBar === 1 && (
+                {activeBar === 1 && orderData?.orderStatus === 'PENDING' && (
                   <>
                     <TextDefault textColor="gray" bolder center>
                       {t('timeLeft')}
@@ -152,22 +154,19 @@ export default function OrderDetail({ navigation, route }) {
                       size={20}
                       timeToShow={['H', 'M', 'S']}
                       digitStyle={{ backgroundColor: colors.white }}
-                      digitTxtStyle={{
-                        color: 'black',
-                        fontSize: 35
-                      }}
+                      digitTxtStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black, fontSize: 35 }}
+
                       timeLabels={{ h: null, m: null, s: null }}
-                      showSeparator
-                      separatorStyle={{
-                        color: 'black'
-                      }}
+                      showSeparator={true}
+                      separatorStyle={{ color: isOvertime ? colors.orderUncomplete : colors.black }}
+                      onFinish={() => setIsOvertime(true)}
                     />
                   </>
                 )}
               </View>
-              {activeBar === 0 && isAcceptButtonVisible && (
+              {activeBar === 0 && (
                 <>
-                  <Button
+                  {/* <Button
                     title={t('acceptAndPrint')}
                     buttonStyle={{
                       backgroundColor: colors.green,
@@ -179,7 +178,7 @@ export default function OrderDetail({ navigation, route }) {
                       width: 250
                     }}
                     onPress={togglePrintOverlay}
-                  />
+                  /> */}
 
                   <Button
                     title={t('accept')}
@@ -204,7 +203,7 @@ export default function OrderDetail({ navigation, route }) {
                   />
                 </>
               )}
-              {activeBar === 1 && (
+              {activeBar === 1 && orderData?.orderStatus !== 'PICKED' && orderData?.orderStatus !== 'DELIVERED' && !(orderData?.orderStatus === 'ACCEPTED' && !orderData?.isPickedUp) && (
                 <>
                   <Button
                     title={t('delivered')}
@@ -227,7 +226,7 @@ export default function OrderDetail({ navigation, route }) {
                   />
                 </>
               )}
-              {activeBar !== 2 && (
+              {/* {activeBar !== 2 && orderData?.orderStatus !== 'PICKED' && orderData?.orderStatus !== 'DELIVERED' && (
                 <>
                   <Button
                     title={t('reject')}
@@ -247,6 +246,13 @@ export default function OrderDetail({ navigation, route }) {
                     }}
                     onPress={cancelOrderFunc}
                   />
+                </>
+              )} */}
+              {activeBar === 1 && orderData?.orderStatus === 'PICKED' && (
+                <>
+                  <TextDefault H3 textColor={colors.darkgreen} bold>
+                    {t('deliveredToRider')}
+                  </TextDefault>
                 </>
               )}
               {activeBar === 2 && (

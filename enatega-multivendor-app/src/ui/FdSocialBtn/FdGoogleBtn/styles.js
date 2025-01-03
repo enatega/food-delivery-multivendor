@@ -8,24 +8,17 @@ const styles = (props = null) =>
   StyleSheet.create({
   mainContainer: {
     width: '90%',
-
     alignSelf: 'center',
-    height: height * 0.08,
-    flexDirection: 'row',
+    height: height * 0.07,
+    flexDirection: props?.isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
-    ...alignment.PRlarge,
     backgroundColor: 'transparent',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     borderRadius: scale(28),
     borderWidth: scale(1),
-    borderColor: props !== null ? props.newIconColor : '#9B9A9A',
-    ...alignment.PLlarge
-  },
-
-  marginLeft10: {
-    ...alignment.MLmedium
-  },
-
+    borderColor: props !== null ? props?.newIconColor : '#9B9A9A',
+    gap: scale(15)
+  }
   })
 export default styles
 

@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   barContainer: {
-    marginTop:-30,
     display: 'flex',
     flexDirection: 'row',
     width: '90%',
@@ -23,8 +22,10 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84, 
-    elevation: 30,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+    marginTop: -30
   },
   barContent: {
     padding: 15,

@@ -7,7 +7,7 @@ import { Badge } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 
 export default function TabBars(props) {
-  const { setActiveBar, newAmount, processingAmount } = props
+  const { setActiveBar, newAmount, processingAmount, showButtonOnly } = props
   const handleProcess = async () => {
     setActiveBar(1)
   }
@@ -15,6 +15,16 @@ export default function TabBars(props) {
     setActiveBar(2)
   }
   const { t } = useTranslation()
+
+  if (showButtonOnly) {
+    return (
+      <View style={[styles.barContainer, { justifyContent: 'center' }]}>
+        <TextDefault center bold H4>
+          {t('pullDownRefresh')}
+        </TextDefault>
+      </View>
+    )
+  }
   return (
     <View style={styles.barContainer}>
       <Pressable

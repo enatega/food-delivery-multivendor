@@ -13,7 +13,7 @@ const FORGOT_PASSWORD = gql`
 `
 
 export const useForgotPasswordOtp = () => {
-  const {t} = useTranslation()
+  const {t, i18n} = useTranslation()
   const route = useRoute()
   const navigation = useNavigation()
   const [otp, setOtp] = useState('')
@@ -21,7 +21,7 @@ export const useForgotPasswordOtp = () => {
   const otpFrom = useRef(null)
   const [email] = useState(route?.params.email)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const [seconds, setSeconds] = useState(30)
 
   function onCompleted(data) {

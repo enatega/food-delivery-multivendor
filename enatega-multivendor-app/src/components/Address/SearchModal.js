@@ -120,10 +120,10 @@ export default function SearchModal({
           marginTop,
           borderTopLeftRadius,
           borderTopRightRadius,
-          {
-            borderWidth: 1,
-            borderColor: '#DAD6D6'
-          }
+          // {
+          //   borderWidth: 1,
+          //   borderColor: '#DAD6D6'
+          // }
         ]}
       >
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
@@ -171,14 +171,14 @@ export default function SearchModal({
               },
               description: {
                 fontWeight: 'bold',
-                color: currentTheme.black,
+                color: currentTheme.newFontcolor,
               },
               predefinedPlacesDescription: {
                 color: '#1faadb'
               },
               textInputContainer: {
                 borderWidth: 1,
-                borderColor: currentTheme.verticalLine,
+                borderColor: currentTheme.customBorder,
                 borderRadius: scale(6),
                 backgroundColor: currentTheme.themeBackground
               },
@@ -187,7 +187,13 @@ export default function SearchModal({
                 color: currentTheme.newFontcolor,
                 backgroundColor: currentTheme.themeBackground,
                 height: 38
-              }
+              },
+              row: {
+                backgroundColor: currentTheme.cardBackground,
+              },
+              poweredContainer: {
+                backgroundColor: 'transparent'
+              },
             }}
             nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
             GoogleReverseGeocodingQuery={

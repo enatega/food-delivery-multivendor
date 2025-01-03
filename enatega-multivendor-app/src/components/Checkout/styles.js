@@ -11,8 +11,8 @@ export const useStyles = theme => (StyleSheet.create({
         flex: 1,
         borderRadius: scale(40),
         marginHorizontal: scale(10),
-        marginVertical: scale(5),
-        flexDirection: 'row',
+        marginVertical: scale(3),
+        flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
     },
     ovalButton: {
         flex: 1,
@@ -25,7 +25,7 @@ export const useStyles = theme => (StyleSheet.create({
     },
     instructionContainer: {
         padding: scale(10),
-        flexDirection: 'row',
+        flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
         margin: scale(10),
         borderWidth: StyleSheet.hairlineWidth,
         borderRadius: scale(10),

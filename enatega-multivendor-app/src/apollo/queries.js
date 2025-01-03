@@ -26,6 +26,7 @@ export const restaurantFragment = gql`
         _id
         title
         description
+        subCategory
         variations {
           _id
           title
@@ -253,34 +254,45 @@ export const restaurantFragment = gql`
   }
 `
 export const restaurantPreviewFragment = gql`
-fragment RestaurantPreviewFields on RestaurantPreview{
-  _id
-  orderId
-  orderPrefix
-  name
-  image
-  address
-  username
-  password
-  deliveryTime
-  minimumOrder
-  sections
-  rating
-  isActive
-  isAvailable
-  slug
-  stripeDetailsSubmitted
-  commissionRate
-  tax
-  notificationToken
-  enableNotification
-  shopType
-  cuisines
-  keywords
-  tags
-  reviewCount
-  reviewAverage
-  }`
+  fragment RestaurantPreviewFields on RestaurantPreview {
+    _id
+    orderId
+    orderPrefix
+    name
+    image
+    address
+    username
+    password
+    deliveryTime
+    minimumOrder
+    sections
+    rating
+    isActive
+    isAvailable
+    slug
+    stripeDetailsSubmitted
+    commissionRate
+    tax
+    notificationToken
+    enableNotification
+    shopType
+    cuisines
+    keywords
+    tags
+    reviewCount
+    reviewAverage
+    location {
+      coordinates
+    }
+    openingTimes {
+      day
+      times {
+        startTime
+        endTime
+      }
+    }
+  }
+`
 export const profile = `
         query{
           profile{
@@ -379,7 +391,7 @@ export const myOrders = `query Orders($offset:Int){
   orders(offset:$offset){
     _id
     orderId
-    id
+      id
     restaurant{
       _id
       name
@@ -412,7 +424,7 @@ export const myOrders = `query Orders($offset:Int){
         id
         options{
           _id
-           id
+          id
           title
           description
           price
@@ -431,6 +443,7 @@ export const myOrders = `query Orders($offset:Int){
     rider{
       _id
       name
+      phone
     }
     review{
       _id
@@ -440,6 +453,7 @@ export const myOrders = `query Orders($offset:Int){
     paidAmount
     orderAmount
     orderStatus
+    paymentStatus
     tipping
     taxationAmount
     createdAt
@@ -473,10 +487,11 @@ export const getConfiguration = `query Configuration{
     expoClientID 
     customerAppSentryUrl 
     termsAndConditions 
-    privacyPolicy 
+    privacyPolicy
     testOtp 
     skipMobileVerification
     skipEmailVerification
+    costType
   }
 }`
 
@@ -504,6 +519,7 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       deliveryTime
       minimumOrder
       tax
+      shopType
       distanceWithCurrentLocation @client
       freeDelivery @client
       acceptVouchers @client
@@ -534,6 +550,7 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
           title
           image
           description
+          subCategory
           variations{
             _id
             title
@@ -609,6 +626,10 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       tags
       reviewCount
       reviewAverage
+      distanceWithCurrentLocation @client
+      freeDelivery @client
+      acceptVouchers @client
+      location{coordinates}
       openingTimes{
         day
         times {
@@ -620,10 +641,34 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
 }
 }`
 export const topRatedVendorsInfo = gql`
-${restaurantPreviewFragment}
-query TopRatedVendors($latitude: Float!, $longitude: Float!) {
-  topRatedVendorsPreview(latitude: $latitude, longitude: $longitude) {
-    ...RestaurantPreviewFields
+  ${restaurantPreviewFragment}
+  query TopRatedVendors($latitude: Float!, $longitude: Float!) {
+    topRatedVendorsPreview(latitude: $latitude, longitude: $longitude) {
+      ...RestaurantPreviewFields
+    }
+  }
+`
+
+export const topRatedVendorsInfoPreview = `query TopRatedVendors($latitude: Float!, $longitude: Float!) {
+  topRatedVendors(latitude: $latitude, longitude: $longitude) {
+    _id
+    name
+    image
+    deliveryTime
+    tax
+    shopType
+    reviewData{
+        total
+        ratings
+        reviews{
+          _id
+          rating
+        }
+    }
+    categories{
+      _id
+      title
+    }
   }
 }`
 
@@ -634,6 +679,7 @@ export const restaurant = `query Restaurant($id:String){
     orderPrefix
     name
     image
+    logo
     address
     location{coordinates}
     deliveryTime
@@ -663,13 +709,16 @@ export const restaurant = `query Restaurant($id:String){
         _id
         title
         image
+        subCategory
         description
+        isOutOfStock
         variations{
           _id
           title
           price
           discounted
           addons
+
         }
       }
     }
@@ -701,6 +750,9 @@ export const restaurant = `query Restaurant($id:String){
         endTime
       }
     }
+    phone
+    restaurantUrl
+    cuisines
   }
 }`
 
@@ -709,6 +761,8 @@ export const getCuisines = `query Cuisines{
     _id
     name
     description
+    image
+    shopType
   }
 }`
 
@@ -741,8 +795,6 @@ export const FavouriteRestaurant = `query UserFavourite ($latitude:Float,$longit
       orderId
       orderPrefix
       name
-      reviewCount
-      reviewAverage
       image
       address
       location{coordinates}
@@ -774,6 +826,7 @@ export const FavouriteRestaurant = `query UserFavourite ($latitude:Float,$longit
           title
           image
           description
+          subCategory
           variations{
             _id
             title
@@ -901,7 +954,32 @@ export const recentOrderRestaurantsQuery = gql`
       ...RestaurantPreviewFields
     }
   }
-`;
+`
+
+export const recentOrderRestaurantsPreviewQuery = gql`
+  query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
+    recentOrderRestaurants(latitude: $latitude, longitude: $longitude) {
+      _id
+      name
+      image
+      deliveryTime
+      tax
+      shopType
+      reviewData {
+        total
+        ratings
+        reviews {
+          _id
+          rating
+        }
+      }
+      categories {
+        _id
+        title
+      }
+    }
+  }
+`
 
 export const mostOrderedRestaurantsQuery = gql`
   ${restaurantPreviewFragment}
@@ -910,7 +988,32 @@ export const mostOrderedRestaurantsQuery = gql`
       ...RestaurantPreviewFields
     }
   }
-`;
+`
+
+export const mostOrderedRestaurantsPreviewQuery = gql`
+  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
+    mostOrderedRestaurants(latitude: $latitude, longitude: $longitude) {
+      _id
+      name
+      image
+      deliveryTime
+      tax
+      shopType
+      reviewData {
+        total
+        ratings
+        reviews {
+          _id
+          rating
+        }
+      }
+      categories {
+        _id
+        title
+      }
+    }
+  }
+`
 
 export const relatedItems = `query RelatedItems($itemId: String!, $restaurantId: String!) {
   relatedItems(itemId: $itemId, restaurantId: $restaurantId)
@@ -921,12 +1024,14 @@ export const food = `fragment FoodItem on Food{
   title
   image
   description
+  subCategory
   variations{
     _id
     title
     price
     discounted
     addons
+
   }
 }
 `
@@ -939,3 +1044,64 @@ export const popularItems = `query PopularItems($restaurantId: String!) {
 }
 `
 
+export const getBanners = `query Banners{
+  banners {
+    _id
+    title
+    description
+    action
+    screen
+    file
+    parameters
+  }
+}`
+
+export const getZones = `query Zones{
+  zones{
+  _id
+  title
+  description
+  location{coordinates}
+  isActive
+  }
+}`
+
+export const versions = `query {
+  getVersions {
+    customerAppVersion
+    riderAppVersion
+    restaurantAppVersion
+  }
+}`
+
+// Version
+export const getVersions = `
+query GetVersions {
+  getVersions {
+    customerAppVersion {
+        android
+        ios
+    }
+  }
+}
+`
+
+export const GET_SUB_CATEGORIES = gql`
+query subCategories{
+  subCategories{
+    _id
+    title
+    parentCategoryId
+  }
+}
+`
+
+export const GET_SUB_CATEGORIES_BY_PARENT_ID = gql`
+query subCategoriesByParentId($parentCategoryId:String!){
+  subCategoriesByParentId(parentCategoryId:$parentCategoryId){
+    _id
+    title
+    parentCategoryId
+  }
+}
+`

@@ -70,7 +70,7 @@ export default function MainStack() {
   React.useEffect(() => {
     if (
       lastNotificationResponse &&
-      lastNotificationResponse.notification.request.content.data.type ===
+      lastNotificationResponse?.notification?.request?.content?.data?.type ===
         'order' &&
       lastNotificationResponse.actionIdentifier ===
         Notifications.DEFAULT_ACTION_IDENTIFIER

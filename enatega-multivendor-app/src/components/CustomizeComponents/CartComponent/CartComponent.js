@@ -33,7 +33,7 @@ function CartComponent(props) {
           ]}
           onPress={onRemove}>
           <AntDesign
-            name={props.quantity < 2 ? 'delete' : 'minus'}
+            name={props?.quantity < 2 ? 'delete' : 'minus'}
             size={scale(18)}
             color={currentTheme.color4}
           />
@@ -56,9 +56,9 @@ function CartComponent(props) {
       </View>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={props.onPress.bind(this, quantity)}
+          onPress={props?.onPress.bind(this, quantity)}
           style={
-            !props.disabled
+            !props?.disabled
               ? styles(currentTheme).btnContainer
               : {
                 ...styles().btnContainer,

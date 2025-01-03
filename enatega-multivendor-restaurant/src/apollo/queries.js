@@ -5,6 +5,7 @@ export const orders = `query Orders{
       id
       restaurant{
         _id
+        
         name
         image
         address
@@ -15,7 +16,6 @@ export const orders = `query Orders{
         deliveryAddress
         details
         label
-        id
       }
       items{
         _id
@@ -36,7 +36,7 @@ export const orders = `query Orders{
           id
           options{
             _id
-             id
+            id
             title
             description
             price
@@ -69,6 +69,7 @@ export const orders = `query Orders{
       isActive
       createdAt
       orderDate
+      pickedAt
       deliveryCharges
       isPickedUp
       preparationTime

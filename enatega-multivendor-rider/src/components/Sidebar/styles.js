@@ -43,12 +43,11 @@ const styles = {
   },
   image: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   opacity: {
     backgroundColor: colors.black,
-    opacity: 0.8,
-    height: 60,
+    opacity: 0.8
   }
 }
 

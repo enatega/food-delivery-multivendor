@@ -8,16 +8,14 @@ import { scale } from '../../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 
 function Search(props) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-
-
+  const currentTheme = {isRTL: i18n.dir() == 'rtl', ...theme[themeContext.ThemeValue]}
   return (
-    <View style={styles(currentTheme, props.newheaderColor).mainContainerHolder}>
-      <View style={styles(currentTheme, props.cartContainer).mainContainer}>
-        <View style={styles().subContainer}>
-          <View style={styles().leftContainer}>
+    <View style={styles(currentTheme, props?.newheaderColor).mainContainerHolder}>
+      <View style={styles(currentTheme, props?.cartContainer).mainContainer}>
+        <View style={styles(currentTheme).subContainer}>
+          <View style={styles(currentTheme).leftContainer}>
             <View style={styles().searchContainer}>
               <Ionicons
                 name="search"
@@ -28,18 +26,18 @@ function Search(props) {
             <View style={styles().inputContainer}>
               <TextInput
                 style={styles(currentTheme).bodyStyleOne}
-                placeholder={props.placeHolder}
+                placeholder={props?.placeHolder}
                 placeholderTextColor={currentTheme.gray500}
-                onChangeText={text => props.setSearch(text)}
-                value={props.search}
+                onChangeText={text => props?.setSearch(text)}
+                value={props?.search}
               />
             </View>
           </View>
-          <View style={styles().filterContainer}>
-            {props.search ? (
+          <View style={styles(currentTheme).filterContainer}>
+            {props?.search ? (
               <TouchableOpacity
                 onPress={() => {
-                  props.setSearch('')
+                  props?.setSearch('')
                 }}>
                 <AntDesign
                   name="closecircleo"

@@ -18,7 +18,7 @@ const styles = (props = null) =>
       gap: scale(7)
     },
     mainContainer: {
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: props != null ? props?.themeBackground : 'white',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
     },
@@ -30,7 +30,7 @@ const styles = (props = null) =>
     },
     horizontalLine: {
       borderWidth: 0.5,
-      borderColor: props !== null ? props.iconBackground : 'white'
+      borderColor: props !== null ? props?.iconBackground : 'white'
     },
     radioGroup: {
       flexDirection: 'row',

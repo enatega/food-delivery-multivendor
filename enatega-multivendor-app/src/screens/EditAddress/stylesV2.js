@@ -7,7 +7,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : '#FFF'
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -17,7 +17,7 @@ const styles = (props = null) =>
       borderTopRightRadius: 30,
       borderColor: 'grey',
       justifyContent: 'space-between',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: 11,
       ...alignment.PTlarge
@@ -70,7 +70,7 @@ const styles = (props = null) =>
       width: 60,
       height: 60,
       borderWidth: 1,
-      borderColor: props !== null ? props.tagColor : 'transparent',
+      borderColor: props !== null ? props?.tagColor : 'transparent',
       borderRadius: 8,
       justifyContent: 'center',
       ...alignment.PxSmall,
@@ -87,9 +87,9 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderRadius: 8,
       justifyContent: 'center',
-      color: props !== null ? props.tagColor : 'transparent',
-      borderColor: props !== null ? props.black : 'transparent',
-      backgroundColor: props !== null ? props.darkBgFont : 'transparent',
+      color: props !== null ? props?.tagColor : 'transparent',
+      borderColor: props !== null ? props?.black : 'transparent',
+      backgroundColor: props !== null ? props?.darkBgFont : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {
@@ -98,7 +98,7 @@ const styles = (props = null) =>
       borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props?.buttonBackground : 'transparent',
       alignSelf: 'center',
       marginTop: 20,
       marginBottom: 20

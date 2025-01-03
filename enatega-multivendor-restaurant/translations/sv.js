@@ -23,6 +23,17 @@ export const sv = {
   password: 'Lösenord',
   login: 'Logga in',
   signIn: 'Logga in',
+  orderType:"Ordertyp",
+  orderInstructions:"Beställningsinstruktioner",
+  variations:"Variationer",
+  specialInstructions: 'speciella instruktioner',
+  addOns:"Tillägg",
+  pickUp:"Hämta",
+  delivery: "Leverans",
+  orderId: 'Beställnings-ID',
+  orderAmount: 'Beställningsmängd',
+  pickUp:"Plocka upp",
+  delivery: "Leverans",
   orderId: 'Beställnings-ID',
   orderAmount: 'Orderbelopp',
   paymentMethod: 'Betalningsmetod',
@@ -51,5 +62,8 @@ export const sv = {
   acceptAndPrint: 'Acceptera och Skriv ut',
   accept: 'Acceptera',
   language: 'Språk',
-  notificationText: 'Måste använda en fysisk enhet för push-meddelanden'
+  notificationText: 'Måste använda en fysisk enhet för push-meddelanden',
+  deliveredToRider: "Levereras till ryttare",
+  name: 'Namn',
+  pullDownRefresh: 'Dra ner för att uppdatera'
 }

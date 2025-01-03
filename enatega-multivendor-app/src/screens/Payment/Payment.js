@@ -27,7 +27,7 @@ function Payment(props) {
   const Analytics = analytics()
 
   const { t } = useTranslation()
-  const { paymentMethod, coupon } = props.route.params
+  const { paymentMethod, coupon } = props?.route.params
   const inset = useSafeAreaInsets()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -64,7 +64,7 @@ function Payment(props) {
   })
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerTitle: () => (
         <View style={{ alignItems: 'center', gap: scale(2) }}>
           <TextDefault
@@ -109,7 +109,7 @@ function Payment(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_PAYMENT)
@@ -117,7 +117,7 @@ function Payment(props) {
     Track()
   }, [])
   function onSelectPayment(paymentMethod) {
-    props.navigation.navigate('Checkout', { coupon, paymentMethod })
+    props?.navigation.navigate('Checkout', { coupon, paymentMethod })
   }
   return (
     <>

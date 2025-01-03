@@ -26,12 +26,13 @@ export default function Detail({
   rider,
   orderStatus
 }) {
+  const riderPhone = rider?.phone
   const { t } = useTranslation()
   return (
     <View style={styles.container(theme)}>
       {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
         <ChatButton
-          onPress={() => navigation.navigate('ChatWithRider', { id, orderNo, total })}
+          onPress={() => navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone })}
           title={t('chatWithRider')}
           description={t('askContactlessDelivery')}
           theme={theme}
@@ -42,15 +43,17 @@ export default function Detail({
         bolder
         H4
         style={{ ...alignment.MBsmall }}
+        isRTL
       >
         {from}
       </TextDefault>
-      <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+      <View style={{flexDirection: theme?.isRTL ? 'row-reverse' : 'row' , alignItems: 'center', gap: 4}}>
         <TextDefault
           textColor={theme.gray500}
           bolder
           H5
           style={{ ...alignment.MBmedium }}
+          isRTL
         >
           {t('yourOrder')}
         </TextDefault>
@@ -59,17 +62,19 @@ export default function Detail({
           bolder
           H4
           style={{ ...alignment.MBmedium }}
+          isRTL
         >
           #{orderNo.toLowerCase()}
         </TextDefault>
       </View>
       
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems:'center', ...alignment.MBsmall }}>
+      <View style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems:'center', ...alignment.MBsmall }}>
         <TextDefault
           textColor={theme.gray500}
           bolder
           H5
           bold
+          isRTL
         >
           {t('itemsAndQuantity')} ({items.length})
         </TextDefault>
@@ -78,6 +83,7 @@ export default function Detail({
           bolder
           H5
           bold
+          isRTL
         >
           {t('price')}
         </TextDefault>
@@ -94,7 +100,7 @@ export default function Detail({
             options={item.addons.map((addon) =>
               addon.options.map(({ title }) => title)
             )}
-            image={item.image}
+            image={item?.image}
           />
         ))}
       </View>
@@ -135,6 +141,7 @@ const ItemRow = ({
           H5
           bolder
           style={{ ...alignment.MBxSmall }}
+          isRTL
         >
           {title}
         </TextDefault>
@@ -145,12 +152,13 @@ const ItemRow = ({
             textColor={theme.gray600}
             left
             style={{ ...alignment.MBxSmall }}
+            isRTL
           >
             {options.join(',')}
           </TextDefault>
         )}
 
-        <TextDefault Regular left bolder textColor={theme.gray900}>
+        <TextDefault Regular left bolder textColor={theme.gray900} isRTL>
           x{quantity}
         </TextDefault>
       </View>
@@ -160,6 +168,7 @@ const ItemRow = ({
         bolder
         textColor={theme.gray900}
         H5
+        isRTL
       >
         {currency}
         {formatNumber(price)}

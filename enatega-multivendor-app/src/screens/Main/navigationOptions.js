@@ -1,18 +1,16 @@
 /* eslint-disable react/display-name */
-import React, { useContext, useEffect } from 'react'
-import { LeftButton } from '../../components/Header/HeaderIcons/HeaderIcons'
+import React from 'react'
 import SelectedLocation from '../../components/Main/Location/Location'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
 
-const navigationOptions = props => ({
+const navigationOptions = (props) => ({
   headerStyle: {
-    backgroundColor: props != null ? props.headerMenuBackground : 'white',
     shadowColor: 'transparent',
-    shadowRadius: 0
+    shadowRadius: 0,
+    backgroundColor:props?.headerMenuBackground
   },
   headerTitleStyle: {
-    color: props.fontMainColor,
+    color: props?.fontMainColor,
     ...alignment.PTlarge
   },
   headerTitleContainerStyle: {
@@ -20,13 +18,12 @@ const navigationOptions = props => ({
     ...alignment.MLxSmall
   },
   headerTitleAlign: 'left',
-  headerLeft: () => <LeftButton icon={props.icon} iconColor={props.fontMainColor} />,
-  headerTitle: headerProp => (
+  headerTitle: (headerProp) => (
     <SelectedLocation
       {...headerProp}
-      modalOn={() => props.open()}
-      linkColor={props.fontMainColor}
-      navigation={props.navigation}
+      modalOn={() => props?.open()}
+      linkColor={props?.fontMainColor}
+      navigation={props?.navigation}
     />
   )
 })

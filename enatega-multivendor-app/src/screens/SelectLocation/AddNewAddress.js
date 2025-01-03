@@ -6,10 +6,9 @@ import React, {
   useRef,
   useEffect
 } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { LocationContext } from '../../context/Location'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
@@ -27,20 +26,17 @@ import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
 import { t } from 'i18n-js'
 import useGeocoding from '../../ui/hooks/useGeocoding'
-
+import blackmarker from '../../assets/images/user.png'
 const LATITUDE = 33.699265
 const LONGITUDE = 72.974575
-const LATITUDE_DELTA = 0.2
-const LONGITUDE_DELTA = 0.2
-
+const LATITUDE_DELTA = 0.04
+const LONGITUDE_DELTA = 0.04
 export default function AddNewAddress(props) {
   const { isLoggedIn } = useContext(UserContext)
-  const { getAddress } = useGeocoding()
+  const {getAddress} = useGeocoding()
   const [searchModalVisible, setSearchModalVisible] = useState()
   const [cityModalVisible, setCityModalVisible] = useState(false)
-
-  const { longitude, latitude, id } = props.route.params || {}
-
+  const {  longitude, latitude, id, prevScreen } = props?.route.params || {}
   const [selectedValue, setSelectedValue] = useState({
     city: '',
     address: '',
@@ -49,14 +45,12 @@ export default function AddNewAddress(props) {
   })
   const { setLocation } = useContext(LocationContext)
   const mapRef = useRef()
-
+  const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = { isRTL: i18n.dir() === "rtl", ...theme[themeContext.ThemeValue] }
   const inset = useSafeAreaInsets()
   const navigation = useNavigation()
   const { getCurrentLocation } = useLocation()
-
-  const { t } = useTranslation()
   const setCurrentLocation = async () => {
     const { coords, error } = await getCurrentLocation()
     if (!error) {
@@ -66,7 +60,6 @@ export default function AddNewAddress(props) {
       })
     }
   }
-
   useLayoutEffect(() => {
     navigation.setOptions(
       screenOptions({
@@ -75,11 +68,11 @@ export default function AddNewAddress(props) {
         backColor: currentTheme.newheaderBG,
         iconColor: currentTheme.newIconColor,
         lineColor: currentTheme.newIconColor,
-        setCurrentLocation
+        setCurrentLocation,
+        locationPrevScreen : prevScreen
       })
     )
-  }, [])
-
+  }, [prevScreen])
   const onSelectCity = (item) => {
     setCoordinates({
       latitude: +item.latitude,
@@ -87,7 +80,6 @@ export default function AddNewAddress(props) {
     })
     setCityModalVisible(false)
   }
-
   const onRegionChangeComplete = useCallback(async (coordinates) => {
     const response = await getAddress(
       coordinates.latitude,
@@ -100,7 +92,6 @@ export default function AddNewAddress(props) {
       longitude: coordinates.longitude
     })
   })
-
   const setCoordinates = useCallback((location) => {
     mapRef.current.fitToCoordinates([
       {
@@ -109,11 +100,9 @@ export default function AddNewAddress(props) {
       }
     ])
   })
-
   useEffect(() => {
     onRegionChangeComplete({ longitude, latitude })
   }, [])
-
   const onSelectLocation = () => {
     setLocation({
       label: 'Location',
@@ -123,6 +112,7 @@ export default function AddNewAddress(props) {
       city: selectedValue.city
     })
     if (isLoggedIn) {
+      // console.log("props?.route.params.prevScreen=>", props?.route.params.prevScreen);
       navigation.navigate('SaveAddress', {
         locationData: {
           id,
@@ -131,16 +121,13 @@ export default function AddNewAddress(props) {
           latitude: selectedValue.latitude,
           longitude: selectedValue.longitude,
           city: selectedValue.city,
-          prevScreen: props.route.params.prevScreen
-            ? props.route.params.prevScreen
-            : null
+          prevScreen: props?.route.params.prevScreen ? props?.route.params.prevScreen : null
         }
       })
-    } else {
+    } else{
       navigation.navigate('Main')
     }
   }
-
   return (
     <>
       <View style={styles().flex}>
@@ -161,12 +148,13 @@ export default function AddNewAddress(props) {
             onRegionChangeComplete={onRegionChangeComplete}
           />
           <View style={styles().mainContainer}>
-            <CustomMarker
+            {/* <CustomMarker
               width={40}
               height={40}
               transform={[{ translateY: -20 }]}
               translateY={-20}
-            />
+            /> */}
+            <Image source={blackmarker} width={40} height={40}/>
           </View>
         </View>
         <View style={styles(currentTheme).container2}>
@@ -174,7 +162,7 @@ export default function AddNewAddress(props) {
             textColor={currentTheme.newFontcolor}
             H3
             bolder
-            Left
+            isRTL
             style={styles().addressHeading}
           >
             {t('addAddress')}
@@ -187,17 +175,19 @@ export default function AddNewAddress(props) {
             onSelect={onSelectCity}
             t={t}
           />
-
           <View style={[styles(currentTheme).textInput]}>
             <TouchableOpacity onPress={() => setSearchModalVisible(true)}>
-              <Text
+              {/* <Text
                 style={{
                   color: currentTheme.newFontcolor,
                   overflow: 'scroll'
                 }}
               >
                 {selectedValue.address || t('address')}
-              </Text>
+              </Text> */}
+              <TextDefault textColor={currentTheme.newFontcolor} isRTL>
+              {selectedValue.address || t('address')}
+              </TextDefault>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -227,7 +217,6 @@ export default function AddNewAddress(props) {
     </>
   )
 }
-
 const CityModal = React.memo(
   function CityModal({
     theme,
@@ -240,14 +229,12 @@ const CityModal = React.memo(
     return (
       <View style={styles().dropdownContainer}>
         <TouchableOpacity
-          style={styles().button1}
+          style={styles(theme).button1}
           onPress={() => {
             setCityModalVisible(true)
           }}
         >
-          {selectedValue && (
-            <Text style={styles(theme).cityField}>{selectedValue}</Text>
-          )}
+          {selectedValue && <Text style={styles(theme).cityField}>{selectedValue}</Text>}
           {!selectedValue && (
             <Text style={styles(theme).cityField}>{t('selectCity')}</Text>
           )}
@@ -269,10 +256,10 @@ const CityModal = React.memo(
       </View>
     )
   },
-  (prevProps, nextProps) => {
+  (prevprops, nextprops) => {
     return (
-      prevProps.cityModalVisible === nextProps.cityModalVisible &&
-      prevProps.selectedValue === nextProps.selectedValue
+      prevprops?.cityModalVisible === nextprops?.cityModalVisible &&
+      prevprops?.selectedValue === nextprops?.selectedValue
     )
   }
 )

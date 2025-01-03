@@ -3,9 +3,7 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "ios": {
-        "simulator": true
-      }
+      "channel": "development"
     },
     "staging": {
       "developmentClient": false,

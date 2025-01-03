@@ -9,7 +9,8 @@ export const useStyles = (theme) => StyleSheet.create({
     iconContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        ...theme?.isRTL ? { transform: [{ scaleX: -1 }] } : {}
     },
     backdrop: {
         height: BACKDROP_HEIGHT
@@ -20,7 +21,7 @@ export const useStyles = (theme) => StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: theme.white,
+        backgroundColor: theme.cardBackground,
         borderTopLeftRadius: scale(15),
         borderTopRightRadius: scale(15),
         ...alignment.Psmall,
@@ -28,7 +29,7 @@ export const useStyles = (theme) => StyleSheet.create({
     topContainer: {
         flex: 1,
         maxHeight: scale(40),
-        alignItems: 'flex-end'
+        alignItems: theme?.isRTL ? 'flex-start' : 'flex-end'
     },
     closeButton: {
         backgroundColor: theme.newButtonBackground,
@@ -49,7 +50,7 @@ export const useStyles = (theme) => StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: theme.verticalLine,
         borderRadius: scale(5),
-        flexDirection: 'row',
+        flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
         alignItems: 'center'
     }
 })

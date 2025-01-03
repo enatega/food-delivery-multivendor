@@ -5,7 +5,7 @@ import { scale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     itemContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent:'space-between',
       alignItems: 'center',
     gap:scale(4),

@@ -4,8 +4,11 @@ import * as Location from 'expo-location'
 import styles from './styles'
 import { useLocationContext } from '../../context/location'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { useTranslation } from 'react-i18next'
 
 const LocationPermissions = ({ navigation }) => {
+  const { t } = useTranslation()
+
   const { setLocationPermission } = useLocationContext()
 
   const getLocationPermission = async() => {
@@ -63,9 +66,7 @@ const LocationPermissions = ({ navigation }) => {
       <View style={[styles().flex]}>
         <View style={styles().descriptionEmpty}>
           <TextDefault H5 bolder center>
-            {
-              'Enatega uses your location for features like finding orders nearby and tracking customer orders!'
-            }
+            {t('enategaLocationText')}
           </TextDefault>
         </View>
         <TouchableOpacity
@@ -75,7 +76,7 @@ const LocationPermissions = ({ navigation }) => {
             askLocationPermission()
           }}>
           <TextDefault H4 bold center>
-            {'Allow Location'}
+            {t('continue')}
           </TextDefault>
         </TouchableOpacity>
       </View>

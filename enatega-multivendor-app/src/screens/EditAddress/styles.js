@@ -7,7 +7,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : '#FFF'
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -17,7 +17,7 @@ const styles = (props = null) =>
       borderTopRightRadius: 30,
       borderColor: 'grey',
       justifyContent: 'space-between',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: 11,
       ...alignment.PTsmall
@@ -43,7 +43,7 @@ const styles = (props = null) =>
       paddingTop: 0,
       width: '100%',
       //shadowOffset: { width: 0, height: scale(2) },
-      shadowColor: props !== null ? props.verticalLine : '#D1D5DB',
+      shadowColor: props !== null ? props?.verticalLine : '#D1D5DB',
       shadowOpacity: 0.3,
       shadowRadius: scale(1),
       elevation: 5
@@ -56,7 +56,7 @@ const styles = (props = null) =>
     },
     locationContainer: {
       borderWidth: 1,
-      borderColor: props !== null ? props.verticalLine : '#D1D5DB',
+      borderColor: props !== null ? props?.verticalLine : '#D1D5DB',
       borderRadius: scale(10),
       ...alignment.MTmedium,
       ...alignment.MBmedium
@@ -67,7 +67,7 @@ const styles = (props = null) =>
       flex: 1,
       flexDirection: 'row',
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: props !== null ? props.verticalLine : '#D1D5DB'
+      borderBottomColor: props !== null ? props?.verticalLine : '#D1D5DB'
     },
     locationIcon: {
       flex: 2,
@@ -115,7 +115,7 @@ const styles = (props = null) =>
       width: 60,
       height: 60,
       borderWidth: 1,
-      borderColor: props !== null ? props.tagColor : 'transparent',
+      borderColor: props !== null ? props?.tagColor : 'transparent',
       borderRadius: 8,
       justifyContent: 'center',
       ...alignment.PxSmall,
@@ -132,9 +132,9 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderRadius: 8,
       justifyContent: 'center',
-      color: props !== null ? props.tagColor : 'transparent',
-      borderColor: props !== null ? props.black : 'transparent',
-      backgroundColor: props !== null ? props.darkBgFont : 'transparent',
+      color: props !== null ? props?.tagColor : 'transparent',
+      borderColor: props !== null ? props?.black : 'transparent',
+      backgroundColor: props !== null ? props?.darkBgFont : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {
@@ -144,7 +144,7 @@ const styles = (props = null) =>
       borderRadius: 30,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
       alignSelf: 'center',
       marginTop: 20,
       marginBottom: 15

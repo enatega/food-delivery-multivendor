@@ -24,7 +24,7 @@ function Paypal(props) {
   const [loading, loadingSetter] = useState(true)
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
-  const [_id] = useState(props.route.params._id ?? null)
+  const [_id] = useState(props?.route.params._id ?? null)
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_PAYPAL)
@@ -32,11 +32,11 @@ function Paypal(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       title: t('paypalCheckout')
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   async function handleResponse(data) {
     if (data.url.includes(SERVER_URL + 'paypal/success')) {
@@ -46,7 +46,7 @@ function Paypal(props) {
       })
       const order = result.data.orders.find(order => order.orderId === _id)
       await clearCart()
-      props.navigation.reset({
+      props?.navigation.reset({
         routes: [
           { name: 'Main' },
           {
@@ -56,7 +56,7 @@ function Paypal(props) {
         ]
       })
     } else if (data.url.includes(SERVER_URL + 'paypal/cancel')) {
-      props.navigation.goBack()
+      props?.navigation.goBack()
       // goBack on Payment Screen
     }
   }

@@ -15,7 +15,6 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import { useTranslation } from 'react-i18next'
 
-
 const { height, width } = Dimensions.get('window')
 const Orders = ({ navigation }) => {
   const { t } = useTranslation()
@@ -33,18 +32,20 @@ const Orders = ({ navigation }) => {
   } = useContext(UserContext)
   const [orders, setOrders] = useState([])
 
+  const networkError = [t('errorText')]
+
   useEffect(() => {
     if (assignedOrders) {
       setOrders(
         assignedOrders.length > 0
           ? assignedOrders.filter(
-              o =>
-                ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
-                  o.orderStatus
-                ) &&
+            o =>
+              ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
+                o.orderStatus
+              ) &&
                 o.rider &&
                 dataProfile.rider._id === o.rider._id
-            )
+          )
           : []
       )
     }
@@ -60,14 +61,21 @@ const Orders = ({ navigation }) => {
         <View>
           <Tabs navigation={navigation} />
         </View>
-        {loadingProfile || loadingAssigned ? (
-          <View style={styles.margin500}>
-            <Spinner />
-          </View>
-        ) : errorProfile || errorAssigned ? (
-          <View style={styles.margin500}>
-            <TextError text={t('errorText')} />
-          </View>
+        {loadingProfile ||
+          (loadingAssigned && (
+            <View style={styles.margin500}>
+              <Spinner />
+            </View>
+          ))}
+        {errorProfile || errorAssigned ? (
+          <FlatList
+            data={networkError}
+            onRefresh={refetchAssigned}
+            refreshing={networkStatusAssigned === 4}
+            renderItem={({ item }) => (
+              <TextError backColor={colors.transparent} text={item} />
+            )}
+          />
         ) : orders.length > 0 ? (
           <FlatList
             style={styles.ordersContainer}

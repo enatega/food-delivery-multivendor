@@ -5,4 +5,5 @@ export const PRODUCT_URL =
 export const PRIVACY_URL =
   'https://enatega.com/privacy-policy/'
 export const ABOUT_URL = 'https://ninjascode.com/'
+export const ADMIN_URL = 'https://yalla-admin.netlify.app/'
 export const MAX_TIME = 120

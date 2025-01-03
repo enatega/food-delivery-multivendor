@@ -16,22 +16,29 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
+// import { GoogleSignin } from '@react-native-google-signin/google-signin'
+
 import * as Google from 'expo-auth-session/providers/google'
 
 const LOGIN = gql`
   ${login}
 `
+
 export const useCreateAccount = () => {
   const Analytics = analytics()
+
+
   const navigation = useNavigation()
+  const { t, i18n } = useTranslation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
   const [loginButton, loginButtonSetter] = useState(null)
   const [loading, setLoading] = useState(false)
   const { setTokenAsync } = useContext(AuthContext)
   const themeContext = useContext(ThemeContext)
-  const [user, setUser] = useState('')
-  const currentTheme = theme[themeContext.ThemeValue]
+  const [googleUser, setGoogleUser] = useState(null)
+ // const [user, setUser] = useState('')
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const {
     IOS_CLIENT_ID_GOOGLE,
     ANDROID_CLIENT_ID_GOOGLE,
@@ -39,11 +46,49 @@ export const useCreateAccount = () => {
     PRIVACY_POLICY
   } = useEnvVars()
 
+  // const configureGoogleSignin = () => {
+  //   GoogleSignin.configure({
+  //     iosClientId: IOS_CLIENT_ID_GOOGLE,
+  //     androidClientId: ANDROID_CLIENT_ID_GOOGLE
+  //   })
+  // }
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
     iosClientId: IOS_CLIENT_ID_GOOGLE
   })
 
+  // Handlers
+
+  /* const signIn = async () => {
+    try {
+      console.log('sign in')
+
+      const status = await GoogleSignin.hasPlayServices()
+
+      console.log('google playServices has been initialized')
+      const user = await GoogleSignin.signIn()
+      console.log('google  googlePlay signin called')
+      console.log({ user })
+      return
+      const userData = {
+        phone: '',
+        email: user.user.email,
+        password: '',
+        name: user.user.name,
+        picture: user.user.photo,
+        type: 'google'
+      }
+
+      await mutateLogin(userData)
+
+      setUser(user)
+    } catch (error) {
+      console.log('🚀 ~ signIn ~ error:', error)
+    }
+  } */
+
+ 
   const getUserInfo = async (token) => {
     //absent token
     if (!token) return
@@ -56,6 +101,7 @@ export const useCreateAccount = () => {
         }
       )
       return await response.json()
+     
     } catch (error) {
       console.error(
         'Failed to fetch user data:',
@@ -76,11 +122,11 @@ export const useCreateAccount = () => {
 
   const signInWithGoogle = async () => {
     try {
+  
       if (response?.type === 'success') {
-        const google_user = await getUserInfo(
-          response.authentication.accessToken
-        )
 
+        const google_user = await getUserInfo(response.authentication.accessToken)
+        setGoogleUser(google_user?.name)
         const userData = {
           phone: '',
           email: google_user.email,
@@ -91,7 +137,7 @@ export const useCreateAccount = () => {
         }
 
         await mutateLogin(userData)
-      }
+      } 
     } catch (error) {
       // Handle any errors that occur during AsyncStorage retrieval or other operations
       console.error('Error retrieving user data from AsyncStorage:', error)
@@ -103,28 +149,6 @@ export const useCreateAccount = () => {
     signInWithGoogle()
   }, [response])
 
-  /*   const signIn = async () => {
-    try {
-      loginButtonSetter('Google')
-      await GoogleSignin.hasPlayServices()
-      const user = await GoogleSignin.signIn()
-      const userData = {
-        phone: '',
-        email: user.user.email,
-        password: '',
-        name: user.user.name,
-        picture: user.user.photo,
-        type: 'google'
-      }
-      await mutateLogin(userData)
-
-      setUser(user)
-    } catch (error) {
-      console.log('🚀 ~ signIn ~ error:', error)
-    }
-  }
- */
-  const { t } = useTranslation()
   // const [googleRequest, googleResponse, googlePromptAsync] =
   //   Google.useAuthRequest({
   //     expoClientId: EXPO_CLIENT_ID,
@@ -143,7 +167,10 @@ export const useCreateAccount = () => {
     navigation.navigate('Register')
   }
   const navigateToPhone = () => {
-    navigation.navigate('PhoneNumber', { backScreen: 'Main' })
+    navigation.navigate('PhoneNumber', {
+      name: googleUser,
+      phone: ''
+    })
   }
   const navigateToMain = () => {
     navigation.navigate({
@@ -151,6 +178,7 @@ export const useCreateAccount = () => {
       merge: true
     })
   }
+
   async function mutateLogin(user) {
     setLoading(true)
     let notificationToken = null
@@ -204,9 +232,11 @@ export const useCreateAccount = () => {
   useEffect(() => {
     checkIfSupportsAppleAuthentication()
   }, [])
+
   async function checkIfSupportsAppleAuthentication() {
     setEnableApple(await AppleAuthentication.isAvailableAsync())
   }
+
   async function onCompleted(data) {
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
@@ -241,7 +271,7 @@ export const useCreateAccount = () => {
         setTokenAsync(data.login.token)
         FlashMessage({ message: 'Successfully logged in' })
         // eslint-disable-next-line no-unused-expressions
-        data.login?.phone === '' ? navigateToPhone() : navigateToMain()
+        data?.login?.phone === '' ? navigateToPhone() : navigateToMain()
       } catch (e) {
         console.log(e)
       } finally {
@@ -249,6 +279,7 @@ export const useCreateAccount = () => {
       }
     }
   }
+
   function onError(error) {
     try {
       FlashMessage({
@@ -261,9 +292,10 @@ export const useCreateAccount = () => {
       setLoading(false)
     }
   }
+
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
+      StatusBar.setBackgroundColor(currentTheme.main)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -293,6 +325,6 @@ export const useCreateAccount = () => {
     navigateToMain,
     navigation,
     signIn,
-    user
+    //user
   }
 }

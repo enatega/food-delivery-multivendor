@@ -23,7 +23,7 @@ import {
 
 
 const Reviews = ({ navigation, route }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const restaurant = route.params.restaurantObject
   const { reviews } = restaurant
@@ -35,7 +35,7 @@ const Reviews = ({ navigation, route }) => {
     lowest: t('LowestRating')
   }
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
@@ -71,21 +71,21 @@ const Reviews = ({ navigation, route }) => {
       )
     })
   }, [navigation])
-  const sorted = sortReviews([...reviews], sortBy)
+  const sorted = reviews&&reviews?.length ?sortReviews([...reviews], sortBy):[]
   return (
     <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
       <ScrollView style={[styles.container]}>
         <View>
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
               justifyContent: 'space-between',
               ...alignment.MTsmall,
               ...alignment.MBsmall
             }}
           >
             <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
-              {t('allRatings')} ({restaurant.total})
+              {t('allRatings')} ({restaurant.total??'0 Reviews'})
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <StarRating />
@@ -104,22 +104,21 @@ const Reviews = ({ navigation, route }) => {
                   <View
                     key={`${index}-rate`}
                     style={{
-                      flexDirection: 'row',
+                      flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
                       justifyContent: 'space-evenly',
                       alignItems: 'center',
                       marginVertical: scale(5)
                     }}
                   >
                     <View
-                      style={{ flexDirection: 'row', alignItems: 'flex-end' }}
-                    >
+                      style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row', alignItems: currentTheme?.isRTL ? 'flex-start' : 'flex-end' }}>
                       <TextDefault> {i} </TextDefault>
                       <StarRating isFilled={true} />
                     </View>
                     <View
                       style={{
                         flex: 1,
-                        flexDirection: 'row',
+                        flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
                         marginHorizontal: scale(10)
                       }}
                     >
@@ -138,7 +137,7 @@ const Reviews = ({ navigation, route }) => {
                         }}
                       />
                     </View>
-                    <View style={{ width: '10%', alignItems: 'flex-end' }}>
+                    <View style={{ width: '10%', alignItems: currentTheme?.isRTL ? 'flex-start' : 'flex-end' }}>
                       <TextDefault bolder textColor={currentTheme.gray700}>
                         {filled ? parseInt(filled) : 0}%
                       </TextDefault>
@@ -149,10 +148,10 @@ const Reviews = ({ navigation, route }) => {
           </View>
         </View>
         <View style={{ ...alignment.MTsmall }}>
-          <TextDefault textColor={currentTheme.gray900} H3 bold>
+          <TextDefault textColor={currentTheme.gray900} H3 bold isRTL>
             {t('titleReviews')}
           </TextDefault>
-          <View style={{ flexDirection: 'row', ...alignment.MTsmall }}>
+          <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' , ...alignment.MTsmall }}>
             {Object.keys(sortingParams).map((key) => (
               <Button
                 key={key}

@@ -39,12 +39,12 @@ const Section = ({ itemId, restaurantId }) => {
   const slicedItems =
     relatedItems.length > 3 ? relatedItems.slice(0, 3) : relatedItems
   return (
-    <View style={{ margin: 10 }}>
+    <View>
       <View style={{ marginBottom: scale(15) }}>
-        <TextDefault H4 bolder textColor={currentTheme.newFontcolor}>{t('frequentlyBoughtTogether')}</TextDefault>
+        <TextDefault H4 bolder textColor={currentTheme.newFontcolor} isRTL>{t('frequentlyBoughtTogether')}</TextDefault>
       </View>
       {slicedItems.map((id) => (
-        <Row key={id} id={id} restaurant={result.restaurant} />
+        <Row key={id} id={id} restaurant={result?.restaurant} />
       ))}
     </View>
   )

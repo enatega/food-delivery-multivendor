@@ -5,10 +5,10 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     backButton: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),
@@ -17,15 +17,15 @@ const styles = (props = null) =>
     mainContainer: {
       ...alignment.Msmall,
       marginTop: scale(5),
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       gap: scale(10)
     },
     itemContainer: {
       margin: scale(4),
       borderWidth: 1,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderColor: props !== null ? props?.gray200 : '#E5E7EB',
       borderRadius: scale(8),
-      backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
+      backgroundColor: props !== null ? props?.gray100 : '#F3F4F6',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -35,7 +35,7 @@ const styles = (props = null) =>
       ...alignment.PRlarge
     },
     backImageContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props?.white : 'white',
       borderRadius: scale(50),
       width: scale(40),
       alignItems: 'flex-start',
@@ -46,7 +46,7 @@ const styles = (props = null) =>
       marginTop: scale(10)
     },
     containerButton: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       width: '90%',
       height: scale(40),
       bottom: verticalScale(0),
@@ -55,7 +55,7 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     addButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
       width: '100%',
       height: scale(40),
       borderRadius: 50,
@@ -65,12 +65,13 @@ const styles = (props = null) =>
     },
     whatsAppText: {
       textAlign: 'center',
-      paddingLeft: scale(5),
+      // paddingLeft: scale(5),
     },
     contentContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      gap: scale(10)
     }
   })
 export default styles

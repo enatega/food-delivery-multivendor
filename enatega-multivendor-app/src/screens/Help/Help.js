@@ -1,5 +1,12 @@
 import React, { useContext, useEffect } from 'react'
-import { View, StatusBar, Platform, FlatList, Linking, TouchableOpacity } from 'react-native'
+import {
+  View,
+  StatusBar,
+  Platform,
+  FlatList,
+  Linking,
+  TouchableOpacity
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -53,13 +60,32 @@ const FAQs = [
   }
 ]
 
-const Help = props => {
-  const { t } = useTranslation()
+const Help = (props) => {
+  const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
 
-  const openWhatsAppChat = () => {
-    Linking.openURL('whatsapp://send?phone=15408006867')
+  const openWhatsAppChat = async () => {
+    const phoneNumber = '+972506727505'
+
+    if (Platform.OS === 'android') {
+      const androidUrl = `whatsapp://send?phone=${phoneNumber}`
+      Linking.openURL(androidUrl)
+    } else if (Platform.OS === 'ios') {
+      const iosUrl = `https://wa.me/${phoneNumber.replace('+', '')}`;
+      console.log('Attempting to open URL:', iosUrl)
+      try {
+        const supported = await Linking.canOpenURL(iosUrl)
+        console.log('Can open URL:', supported)
+        if (supported) {
+          await Linking.openURL(iosUrl)
+        } else {
+          console.log('WhatsApp is not installed on the device')
+        }
+      } catch (error) {
+        console.error('Error opening URL', error)
+      }
+    }
   }
 
   useFocusEffect(() => {
@@ -75,7 +101,7 @@ const Help = props => {
     async function Track() {
       try {
         await Analytics.track('NAVIGATE_TO_FAQS')
-      } catch(err){
+      } catch (err) {
         // console.log('ERORORORO =>', err)
       }
     }
@@ -83,7 +109,7 @@ const Help = props => {
   }, [])
 
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerTitle: t('titleFAQ'),
       headerTitleAlign: 'center',
       headerRight: null,
@@ -104,10 +130,14 @@ const Help = props => {
       },
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newIconColor} />
+              <MaterialIcons
+                name='arrow-back'
+                size={25}
+                color={currentTheme.newIconColor}
+              />
             </View>
           )}
           onPress={() => {
@@ -116,7 +146,7 @@ const Help = props => {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   return (
     <SafeAreaView
@@ -136,7 +166,7 @@ const Help = props => {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           renderItem={({ item }) => (
             <Accordion heading={t(item.heading)}>
-              <TextDefault textColor={currentTheme.newFontcolor}>
+              <TextDefault textColor={currentTheme.newFontcolor} isRTL>
                 {t(item.description)}
               </TextDefault>
             </Accordion>
@@ -156,7 +186,12 @@ const Help = props => {
                   size={24}
                   color={currentTheme.black}
                 />
-                <TextDefault bold H5 style={styles(currentTheme).whatsAppText}>
+                <TextDefault
+                  textColor={currentTheme.black}
+                  bold
+                  H5
+                  style={styles(currentTheme).whatsAppText}
+                >
                   {t('whatsAppText')}
                 </TextDefault>
               </View>

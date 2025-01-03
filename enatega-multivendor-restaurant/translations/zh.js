@@ -23,6 +23,17 @@ export const zh = {
   password: '密码',
   login: '登录',
   signIn: '登录',
+  orderType:"订单类型",
+  orderInstructions:"订购说明",
+  variations:"变化",
+  addOns:"附加组件",
+  specialInstructions: '特别说明',
+  pickUp:"��起",
+  delivery: "送货",
+  orderId: '订单号',
+  orderAmount: '订单金额',
+  pickUp:"捡起",
+  delivery: "送货",
   orderId: '订单号',
   orderAmount: '订单金额',
   paymentMethod: '付款方式',
@@ -51,5 +62,8 @@ export const zh = {
   acceptAndPrint: '接受并打印',
   accept: '接受',
   language: '语言',
-  notificationText: '必须使用物理设备进行推送通知'
+  notificationText: '必须使用物理设备进行推送通知',
+  deliveredToRider: "交付给骑手",
+  name: '名字',
+  pullDownRefresh: '下拉刷新'
 }

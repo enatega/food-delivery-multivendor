@@ -95,7 +95,7 @@ const styles = (props = null) =>
     },
     btnTouch: {
       flex: 1,
-      backgroundColor: props !== null ? props.buttonBackground : 'grey',
+      backgroundColor: props !== null ? props?.buttonBackground : 'grey',
       borderRadius: scale(10),
       justifyContent: 'center',
       alignItems: 'center'

@@ -10,6 +10,8 @@ import { zh } from './translations/zh'
 import { ar } from './translations/ar'
 import { he } from './translations/he'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Updates from 'expo-updates'
+import { I18nManager } from 'react-native'
 export const languageResources = {
   en: { translation: en },
   zh: { translation: zh },
@@ -20,27 +22,17 @@ export const languageResources = {
   he: { translation: he }
 }
 const getStoredLanguage = async () => {
-  const lng = await AsyncStorage.getItem('enatega-language')
+  const lng = await AsyncStorage.getItem('enatega-language') || 'en';
+  // Initialize i18next
   i18next.use(initReactI18next).init({
     compatibilityJSON: 'v3',
     lng: lng,
     fallbackLng: 'en',
     resources: languageResources
-  })
-}
-if (Platform.OS === 'android') {
-  getStoredLanguage()
-}
-if (Platform.OS === 'ios') {
-  i18next.locale = Localization.locale
-  i18next.use(initReactI18next).init({
-    compatibilityJSON: 'v3',
-    lng: i18next.locale,
-    fallbackLng: 'en',
-    resources: languageResources
-  })
+  });
 
-  i18next.changeLanguage(i18next.locale)
-}
+};
+getStoredLanguage()
+
 
 export default i18next

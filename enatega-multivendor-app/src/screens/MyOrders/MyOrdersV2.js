@@ -60,10 +60,10 @@ function MyOrders(props) {
   })
 
   useLayoutEffect(() => {
-    props.navigation.setOptions(
+    props?.navigation.setOptions(
       screenOptions([currentTheme.headerText, currentTheme.darkBgFont])
     )
-  }, [props.navigation])
+  }, [props?.navigation])
 
   const getItems = items => {
     return items
@@ -114,7 +114,7 @@ function MyOrders(props) {
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
             onPress={() =>
-              props.navigation.navigate({
+              props?.navigation.navigate({
                 name: 'Main',
                 merge: true
               })
@@ -156,7 +156,7 @@ function MyOrders(props) {
               orders.filter(o => orderStatusInactive.includes(o.orderStatus))
                 .length > 0
             }
-            navigation={props.navigation}
+            navigation={props?.navigation}
             activeOrders={orders.filter(o =>
               orderStatusActive.includes(o.orderStatus)
             )}
@@ -171,7 +171,7 @@ function MyOrders(props) {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() =>
-              props.navigation.navigate('OrderDetail', {
+              props?.navigation.navigate('OrderDetail', {
                 _id: item._id,
                 currencySymbol: configuration.currencySymbol,
                 restaurant: item.restaurant,
@@ -182,7 +182,7 @@ function MyOrders(props) {
               <Image
                 style={styles(currentTheme).restaurantImage}
                 resizeMode="cover"
-                source={{ uri: item.restaurant.image }}
+                source={{ uri: item?.restaurant?.image }}
               />
               <View style={styles(currentTheme).textContainer}>
                 <View style={styles().subContainerLeft}>
@@ -217,7 +217,7 @@ function MyOrders(props) {
                         activeOpacity={0.7}
                         style={styles(currentTheme).subContainerReviewButton}
                         onPress={() =>
-                          props.navigation.navigate('OrderDetail', {
+                          props?.navigation.navigate('OrderDetail', {
                             _id: item._id,
                             currencySymbol: configuration.currencySymbol,
                             restaurant: item.restaurant,
@@ -240,7 +240,7 @@ function MyOrders(props) {
                       activeOpacity={0.7}
                       style={styles(currentTheme).subContainerButton}
                       onPress={() =>
-                        props.navigation.navigate('Reorder', { item })
+                        props?.navigation.navigate('Reorder', { item })
                       }>
                       <TextDefault
                         textColor={currentTheme.black}

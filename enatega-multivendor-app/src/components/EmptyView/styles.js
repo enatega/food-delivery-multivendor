@@ -5,7 +5,7 @@ import { alignment } from '../../utils/alignment'
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainerEmpty: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       paddingTop: scale(100)
     },
     subContainerImage: {
@@ -24,7 +24,7 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
       width: '70%',
       height: scale(40),
       borderRadius: 50,

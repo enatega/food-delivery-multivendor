@@ -7,11 +7,10 @@ const styles = (props = null) => {
       flex: 1,
       height: '100%',
       width: '95%',
-      justifyContent: 'center',
-      paddingBottom: scale(8),
+      justifyContent: 'center'
     },
     locationIcon: {
-      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      backgroundColor: props != null ? props?.iconBackground : '#E5E7EB',
       width: scale(24),
       height: scale(24),
       borderRadius: scale(24),

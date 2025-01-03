@@ -1,23 +1,26 @@
-import React, { useContext, useEffect, useLayoutEffect } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import {
   View,
   TouchableOpacity,
   FlatList,
   StatusBar,
-  Platform
+  Platform,
+  Modal
 } from 'react-native'
 import { NetworkStatus, useMutation } from '@apollo/client'
 import {
   AntDesign,
   EvilIcons,
   SimpleLineIcons,
-  MaterialIcons
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Feather
 } from '@expo/vector-icons'
 
 import gql from 'graphql-tag'
 
 import { scale } from '../../utils/scaling'
-import { deleteAddress } from '../../apollo/mutations'
+import { deleteAddress, deleteBulkAddresses } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import UserContext from '../../context/User'
 import { theme } from '../../utils/themeColors'
@@ -35,26 +38,42 @@ import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import { useTranslation } from 'react-i18next'
+import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
+import Spinner from '../../components/Spinner/Spinner'
+import DeleteEditModal from '../../components/DeleteEditModal/DeleteEditModal'
 
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
 `
+const DELETE_BULK_ADDRESSES = gql`
+  ${deleteBulkAddresses}
+`
 
 function Addresses() {
+  const { t, i18n } = useTranslation()
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const [mutate, { loading: loadingMutation }] = useMutation(DELETE_ADDRESS, {
+  const [mutate, { loading: loadingAddressMutation }] = useMutation(DELETE_ADDRESS, {
+    onCompleted
+  })
+  const [mutateBulkDelete, { loading: loadingDeleteBulk }] = useMutation(DELETE_BULK_ADDRESSES, {
     onCompleted
   })
   const { profile, refetchProfile, networkStatus } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-  const { t } = useTranslation()
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [selectedAddresses, setSelectedAddresses] = useState([])
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [deleteAllModalVisible, setdeleteAllModalVisible] = useState(false)
 
-    function onCompleted() {
-      FlashMessage({ message: t('addressDeletedMessage') })
-    }
+  function onCompleted() {
+    setdeleteAllModalVisible(false)
+    setDeleteModalVisible(false)
+    FlashMessage({ message: t('addressDeletedMessage') })
+  }
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -70,10 +89,10 @@ function Addresses() {
     }
     Track()
   }, [])
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: t('myAddresses'),
-      headerRight: null,
+      title: t('savedAddresses'),
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.newFontcolor,
@@ -90,23 +109,64 @@ function Addresses() {
         backgroundColor: currentTheme.newheaderBG,
         elevation: 0
       },
-      headerLeft: () => (
-        <HeaderBackButton
-          truncatedLabel=''
-         
-          backImage={() => (
-            <View>
-              <MaterialIcons name='arrow-back' size={30} color={currentTheme.newIconColor} />
-            
+      headerLeft: () => {
+        if (isEditMode) {
+          const isDeleteDisabled = selectedAddresses.length < 1 || loadingAddressMutation;
+          return (
+            <TouchableOpacity
+              disabled={isDeleteDisabled}
+              style={[{ marginLeft: scale(10) }, { opacity: isDeleteDisabled ? 0.5 : 1 }]}
+              onPress={() => {
+                setdeleteAllModalVisible(true)
+                console.log("onselection address id", selectedAddressId);
+              }}
+            >
+              {loadingAddressMutation ? (
+                <Spinner backColor='transparent' size='small' />
+              ) : (
+                <TextDefault textColor={currentTheme.red600} H5 bolder>
+                  {t('delete')}
+                </TextDefault>
+              )}
+            </TouchableOpacity>
+          )
+        } else {
+          return (
+            <HeaderBackButton
+              truncatedLabel=''
+              backImage={() => (
+                <View>
+                  <MaterialIcons
+                    name='arrow-back'
+                    size={30}
+                    color={currentTheme.newIconColor}
+                  />
+                </View>
+              )}
+              onPress={() => navigation.navigate('Main')}
+            />
+          )
+        }
+      },
+      headerRight: () => {
+        if (profile?.addresses?.length > 0) {
+          return (
+            <View style={{ ...alignment.MRmedium }}>
+              <TouchableOpacity onPress={() => {
+                setIsEditMode((prev) => !prev)
+                setSelectedAddresses([]);
+              }}>
+                <TextDefault textColor={currentTheme.linkColor} H5 bolder>
+                  {isEditMode ? t('cancel') : t('edit')}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
-      )
+          );
+        }
+        return null;
+      }
     })
-  }, [])
+  }, [navigation, isEditMode, t, currentTheme, selectedAddresses, loadingAddressMutation, profile?.Addresses])
 
   const addressIcons = {
     House: CustomHomeIcon,
@@ -139,6 +199,65 @@ function Addresses() {
     )
   }
 
+  const handleAddressSelection = (addressId) => {
+
+    setSelectedAddresses((prevSelected) => {
+      const updatedAddresses = prevSelected.includes(addressId)
+        ? prevSelected.filter((id) => id !== addressId)
+        : [...prevSelected, addressId];
+      return updatedAddresses;
+    });
+  };
+
+  const handleDeleteSelectedAddresses = async () => {
+    // Iterate through selected addresses and delete them
+    // await Promise.all(selectedAddresses.forEach((address) => {
+    //   mutate({ variables: { id: address } })
+    //     .then((response) => {
+    //       console.log('Mutation success:', response);
+    //     })
+    //     .catch((error) => {
+    //       console.log('Mutation error:', error);
+    //     });
+    // }))
+    mutateBulkDelete({
+      variables: { ids: selectedAddresses }
+    })
+    // Clear the selected addresses state
+    setSelectedAddresses([]);
+
+  };
+
+
+  const editMyAddress = (address) => {
+    const [longitude, latitude] = address.location.coordinates;
+    setDeleteModalVisible(false)
+    navigation.navigate('AddNewAddress', {
+      id: address._id,
+      longitude: +longitude, // Convert string to number
+      latitude: +latitude,
+      prevScreen: 'Addresses'
+    });
+
+    // setSelectedAddressId(null)
+  };
+
+
+  const deleteMyAddress = async (addressId) => {
+    await mutate({ variables: { id: addressId } })
+      .then((response) => {
+        console.log('Mutation success:', response);
+        // Show success message after deletion (optional)
+      })
+      .catch((error) => {
+        console.log('Mutation error:', error);
+        // Handle errors appropriately (optional)
+      });
+    setSelectedAddressId(null)
+    setDeleteModalVisible(false)
+  };
+
+
   return (
     <View style={styles(currentTheme).flex}>
       <FlatList
@@ -147,109 +266,162 @@ function Addresses() {
         data={profile?.addresses}
         ListEmptyComponent={emptyView}
         keyExtractor={(item) => item._id}
-        
         ItemSeparatorComponent={() => (
           <View style={styles(currentTheme).line} />
         )}
         ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
-        renderItem={({ item: address }) => (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[styles(currentTheme).containerSpace]}
-          >
-            
-            <View style={[styles().width100, styles().rowContainer]}>
-              <View style={[styles(currentTheme).homeIcon]}>
-                {addressIcons[address.label]
-                  ? React.createElement(addressIcons[address.label], {
-                      fill: currentTheme.darkBgFont
-                    })
-                  : React.createElement(addressIcons['Other'], {
-                      fill: currentTheme.darkBgFont
-                    })}
-               
-              </View>
-              <View style={[styles().titleAddress]}>
-                <TextDefault
-                  textColor={currentTheme.darkBgFont}
-                  style={styles(currentTheme).labelStyle}
-                >
-                 
-                  {t(address.label)}
-                </TextDefault>
-              </View>
-              <View style={styles().buttonsAddress}>
-                <TouchableOpacity
-                  disabled={loadingMutation}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    const [longitude, latitude] = address.location.coordinates
-                    navigation.navigate('AddNewAddress', {
-                      id:address._id,
-                      longitude: +longitude,
-                      latitude: +latitude,
-                      prevScreen: 'Addresses'
-                    })
-                  }}
-                >
-                  <SimpleLineIcons
-                    name='pencil'
-                   
-                    size={scale(20)}
-                    color={currentTheme.darkBgFont}
-                  />
-                </TouchableOpacity>
+        renderItem={({ item: address }) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[styles(currentTheme).containerSpace]}
+              onPress={() => handleAddressSelection(address._id)}
+              disabled={!isEditMode}
+            >
+              <View style={[styles().width100, styles(currentTheme).rowContainer]}>
+                <View style={styles(currentTheme).rowContainer}>
+                  {isEditMode && (
+                    <View style={styles().checkboxContainer}>
+                      <CheckboxBtn
+                        checked={selectedAddresses.includes(address._id)}
+                        onPress={() => handleAddressSelection(address._id)}
+                      />
+                    </View>
+                  )}
+                  {/* location icon */}
+                  <View style={[styles(currentTheme).homeIcon]}>
+                    {addressIcons[address.label]
+                      ? React.createElement(addressIcons[address.label], {
+                        fill: currentTheme.darkBgFont
+                      })
+                      : React.createElement(addressIcons['Other'], {
+                        fill: currentTheme.darkBgFont
+                      })}
+                  </View>
 
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  disabled={loadingMutation}
-                  onPress={() => {
-                    mutate({ variables: { id: address._id } })
-                  }}
-                >
-                  
-                  <EvilIcons
-                    name='trash'
-                   
-                    size={scale(33)}
-                    color={currentTheme.darkBgFont}
-                  />
-                </TouchableOpacity>
+                  {/* addresses */}
+                  <View style={styles(currentTheme).actionButton}>
+                    {/* location title */}
+                    <View style={[styles().titleAddress]}>
+                      <TextDefault
+                        textColor={currentTheme.darkBgFont}
+                        style={styles(currentTheme).labelStyle}
+                        H5
+                        bolder
+                        isRTL
+                      >
+                        {t(address.label)}
+                      </TextDefault>
+                    </View>
+                    {/* location description */}
+                    <View style={styles(currentTheme).midContainer}>
+                      <View style={styles(currentTheme).addressDetail}>
+                        <TextDefault
+                          numberOfLines={1}
+                          textColor={currentTheme.darkBgFont}
+                          style={{ ...alignment.PBxSmall }}
+                          isRTL
+                        >
+                          {/* {address.deliveryAddress} */}
+                          {address.deliveryAddress.slice(0, 35) +
+                            (address.deliveryAddress.length > 35 ? '...' : '')}
+                        </TextDefault>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+
+                {!isEditMode && (
+                  //  location edit and delete buttons
+                  <View style={styles(currentTheme).buttonsAddress}>
+                    <TouchableOpacity
+                      disabled={loadingAddressMutation || loadingDeleteBulk}
+                      activeOpacity={0.7}
+                      // onPress={() => {
+                      //   const [longitude, latitude] =
+                      //     address.location.coordinates
+                      //   navigation.navigate('AddNewAddress', {
+                      //     id: address._id,
+                      //     longitude: +longitude,
+                      //     latitude: +latitude,
+                      //     prevScreen: 'Addresses'
+                      //   })
+                      // }}
+                      onPress={() => {
+                        setSelectedAddressId(address)
+                        setDeleteModalVisible(true)
+                        console.log("onselection address id", selectedAddressId, address._id);
+                      }}
+                    >
+                      <MaterialCommunityIcons
+                        name='dots-horizontal-circle-outline'
+                        size={scale(24)}
+                        color={currentTheme.darkBgFont}
+                      />
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
+                      activeOpacity={0.7}
+                      disabled={loadingAddressMutation}
+                      onPress={() => {
+                        mutate({ variables: { id: address._id } })
+                      }}
+                    >
+                      <EvilIcons
+                        name='trash'
+                        size={scale(33)}
+                        color={currentTheme.darkBgFont}
+                      />
+                    </TouchableOpacity> */}
+                  </View>
+                )}
+
               </View>
-              <View style={{ ...alignment.MTxSmall }}></View>
-            </View>
-            <View style={styles().midContainer}>
-              <View style={styles(currentTheme).addressDetail}>
-                <TextDefault
-                  numberOfLines={2}
-                  textColor={currentTheme.darkBgFont}
-                  style={{ ...alignment.PBxSmall }}
-                >
-                  
-                  {address.deliveryAddress}
-                </TextDefault>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+            </TouchableOpacity>
+          )
+        }}
       />
-      {/* </ScrollView> */}
       <View>
         <View style={styles(currentTheme).containerButton}>
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles(currentTheme).addButton}
-            onPress={() => navigation.navigate('SelectLocation', {
-              prevScreen: 'Addresses'
-            })}
+            onPress={() =>
+              navigation.navigate('SelectLocation', {
+                prevScreen: 'Addresses'
+              })
+            }
           >
-            
             <TextDefault H5 bold>
               {t('addAddress')}
             </TextDefault>
           </TouchableOpacity>
         </View>
       </View>
+
+      <DeleteEditModal
+        modalVisible={deleteModalVisible}
+        setModalVisible={setDeleteModalVisible}
+        currentTheme={currentTheme}
+        selectedAddress={selectedAddressId}
+        loading={loadingAddressMutation}
+        onDelete={deleteMyAddress}
+        onEdit={editMyAddress}
+        t={t}
+        editButton
+      />
+
+      <DeleteEditModal
+        modalVisible={deleteAllModalVisible}
+        setModalVisible={setdeleteAllModalVisible}
+        currentTheme={currentTheme}
+        // selectedAddress={selectedAddressId}
+        loading={loadingDeleteBulk}
+        onDelete={handleDeleteSelectedAddresses}
+        t={t}
+        deleteAllButton
+      />
+
     </View>
   )
 }

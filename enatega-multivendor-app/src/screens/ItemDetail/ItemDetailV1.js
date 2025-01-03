@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 function ItemDetail(props) {
   const Analytics = analytics()
 
-  const { food, addons, options, restaurant } = props.route.params
+  const { food, addons, options, restaurant } = props?.route.params
   const navigation = useNavigation()
   const { t } = useTranslation()
 

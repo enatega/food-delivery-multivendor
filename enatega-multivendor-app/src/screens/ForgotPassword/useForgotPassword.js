@@ -12,7 +12,7 @@ const FORGOT_PASSWORD = gql`
   ${forgotPassword}
 `
 export const useForgotPassword = () => {
-  const {t} = useTranslation()
+  const {t, i18n} = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [email, setEmail] = useState(route.params?.email || '')
@@ -25,7 +25,7 @@ export const useForgotPassword = () => {
   })
 
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
 
   function validateCredentials() {
     let result = true

@@ -1,55 +1,59 @@
-import React, { useState, useEffect, useReducer, useRef } from 'react'
-import AppContainer from './src/routes'
-import * as Notifications from 'expo-notifications'
-import * as Device from 'expo-device'
-import * as Font from 'expo-font'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import * as SplashScreen from 'expo-splash-screen'
-
-import {
-  BackHandler,
-  Platform,
-  StatusBar,
-  LogBox,
-  StyleSheet,
-  ActivityIndicator,
-  I18nManager
-} from 'react-native'
 import { ApolloProvider } from '@apollo/client'
-import { exitAlert } from './src/utils/androidBackButton'
-import FlashMessage from 'react-native-flash-message'
-import setupApolloClient from './src/apollo/index'
-import ThemeReducer from './src/ui/ThemeReducer/ThemeReducer'
-import ThemeContext from './src/ui/ThemeContext/ThemeContext'
-import { ConfigurationProvider } from './src/context/Configuration'
-import { UserProvider } from './src/context/User'
-import { AuthProvider } from './src/context/Auth'
-import { theme as Theme } from './src/utils/themeColors'
-import { LocationProvider } from './src/context/Location'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'expo-dev-client'
-import useEnvVars, { isProduction } from './environment'
-import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
-import { OrdersProvider } from './src/context/Orders'
-import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
+import * as Device from 'expo-device'
+import * as Font from 'expo-font'
+import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
+import {
+  ActivityIndicator,
+  BackHandler,
+  I18nManager,
+  LogBox,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View
+} from 'react-native'
+import FlashMessage from 'react-native-flash-message'
+import 'react-native-gesture-handler'
+import * as Sentry from 'sentry-expo'
+import useEnvVars, { isProduction } from './environment'
+import setupApolloClient from './src/apollo/index'
+import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
 import ReviewModal from './src/components/Review'
+import { AuthProvider } from './src/context/Auth'
+import { ConfigurationProvider } from './src/context/Configuration'
+import { LocationProvider } from './src/context/Location'
+import { OrdersProvider } from './src/context/Orders'
+import { UserProvider } from './src/context/User'
+import AppContainer from './src/routes'
+import ThemeContext from './src/ui/ThemeContext/ThemeContext'
+import ThemeReducer from './src/ui/ThemeReducer/ThemeReducer'
+import { exitAlert } from './src/utils/androidBackButton'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
-import { useColorScheme } from 'react-native'
+import { theme as Theme } from './src/utils/themeColors'
+import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
+// import { useColorScheme } from 'react-native'
+import { useKeepAwake } from 'expo-keep-awake'
+// import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import useWatchLocation from './src/ui/hooks/useWatchLocation'
+import './i18next'
 
 LogBox.ignoreLogs([
-  'Warning: ...',
-  'Sentry Logger ',
+  // 'Warning: ...',
+  // 'Sentry Logger ',
   'Constants.deviceYearClass'
 ]) // Ignore log notification by message
 LogBox.ignoreAllLogs() // Ignore all log notifications
 
-
 Notifications.setNotificationHandler({
-  handleNotification: async notification => {
+  handleNotification: async (notification) => {
     return {
-      shouldShowAlert: notification?.request?.content?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
+      shouldShowAlert:
+        notification?.request?.content?.data?.type !==
+        NOTIFICATION_TYPES.REVIEW_ORDER,
       shouldPlaySound: false,
       shouldSetBadge: false
     }
@@ -63,18 +67,36 @@ export default function App() {
   const notificationListener = useRef()
   const responseListener = useRef()
   const [orderId, setOrderId] = useState()
-  const systemTheme = useColorScheme()
-  // Theme Reducer
-  const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
+  // use default theme
+  const [theme, themeSetter] = useReducer(ThemeReducer, 'Dark') // Set a default theme
   const [isUpdating, setIsUpdating] = useState(false)
+  const { SENTRY_DSN } = useEnvVars()
+  const client = setupApolloClient()
+
+  useKeepAwake()
   useWatchLocation()
+
+  // uncommit to use system theme
+  // const systemTheme = useColorScheme()
+  // Theme Reducer
+  // const [theme, themeSetter] = useReducer(
+  //   ThemeReducer,
+  //   systemTheme === 'dark' ? 'Dark' : 'Pink'
+  // )
+
+  // use system theme
+  // useEffect(() => {
+  //   try {
+  //     themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
+  //   } catch (error) {
+  //     // Error retrieving data
+  //     console.log('Theme Error : ', error.message)
+  //   }
+  // }, [systemTheme])
+
+  // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
-      try {
-        await SplashScreen.preventAutoHideAsync()
-      } catch (e) {
-        console.warn(e)
-      }
       // await i18n.initAsync()
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
@@ -84,8 +106,8 @@ export default function App() {
       // await permissionForPushNotificationsAsync()
       await getActiveLocation()
       BackHandler.addEventListener('hardwareBackPress', exitAlert)
-
-      setAppIsReady(true)
+      // get stored theme
+      await getStoredTheme()
     }
 
     loadAppData()
@@ -95,68 +117,136 @@ export default function App() {
     }
   }, [])
 
-  useEffect(() => {
-    try {
-      themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
-    } catch (error) {
-      // Error retrieving data
-      console.log('Theme Error : ', error.message)
-    }
-  }, [systemTheme])
-
-  useEffect(() => {
-    if (!appIsReady) return
-
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync()
-    }
-
-    hideSplashScreen()
-  }, [appIsReady])
-
+  // For Location
   useEffect(() => {
     if (!location) return
-
     const saveLocation = async () => {
       await AsyncStorage.setItem('location', JSON.stringify(location))
     }
-
     saveLocation()
   }, [location])
 
+  // For Permission
   useEffect(() => {
     requestTrackingPermissions()
   }, [])
 
+  // For Sentry
+  useEffect(() => {
+    if (SENTRY_DSN) {
+      Sentry.init({
+        dsn: SENTRY_DSN,
+        enableInExpoDevelopment: !isProduction ? true : false,
+        environment: !isProduction ? 'development' : 'production',
+        debug: !isProduction,
+        tracesSampleRate: 1.0,
+        enableTracing: true
+      })
+    }
+  }, [SENTRY_DSN])
 
-  const client = setupApolloClient()
-  const shouldBeRTL = false;
-  if (shouldBeRTL !== I18nManager.isRTL && Platform.OS !== 'web') {
-    I18nManager.allowRTL(shouldBeRTL);
-    I18nManager.forceRTL(shouldBeRTL);
-    Updates.reloadAsync();
-  }
- 
+  // For App Update
   useEffect(() => {
     // eslint-disable-next-line no-undef
     if (__DEV__) return
-      ; (async () => {
-        const { isAvailable } = await Updates.checkForUpdateAsync()
-        if (isAvailable) {
-          try {
-            setIsUpdating(true)
-            const { isNew } = await Updates.fetchUpdateAsync()
-            if (isNew) {
-              await Updates.reloadAsync()
-            }
-          } catch (error) {
-            console.log('error while updating app', JSON.stringify(error))
-          } finally {
-            setIsUpdating(false)
+    ;(async () => {
+      const { isAvailable } = await Updates.checkForUpdateAsync()
+      if (isAvailable) {
+        try {
+          setIsUpdating(true)
+          const { isNew } = await Updates.fetchUpdateAsync()
+          if (isNew) {
+            await Updates.reloadAsync()
+          }
+        } catch (error) {
+          console.log('error while updating app', JSON.stringify(error))
+        } finally {
+          setIsUpdating(false)
+        }
+      }
+    })()
+  }, [])
+
+  // For Push Notification
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        if (
+          notification?.request?.content?.data?.type ===
+          NOTIFICATION_TYPES.REVIEW_ORDER
+        ) {
+          const id = notification?.request?.content?.data?._id
+          if (id) {
+            setOrderId(id)
+            reviewModalRef?.current?.open()
           }
         }
-      })()
+      })
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        if (
+          response?.notification?.request?.content?.data?.type ===
+          NOTIFICATION_TYPES.REVIEW_ORDER
+        ) {
+          const id = response?.notification?.request?.content?.data?._id
+          if (id) {
+            setOrderId(id)
+            reviewModalRef?.current?.open()
+          }
+        }
+      })
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current)
+      Notifications.removeNotificationSubscription(responseListener.current)
+    }
   }, [])
+
+  // Handlers
+  // get active location
+  async function getActiveLocation() {
+    try {
+      const locationStr = await AsyncStorage.getItem('location')
+      if (locationStr) {
+        setLocation(JSON.parse(locationStr))
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // get stored theme
+  const getStoredTheme = async () => {
+    try {
+      const storedTheme = await AsyncStorage.getItem('appTheme')
+      if (storedTheme) {
+        console.log('Retrieved theme from storage:', storedTheme)
+        themeSetter({ type: storedTheme })
+      } else {
+        console.log('No theme found in storage, using default.')
+        await AsyncStorage.setItem('appTheme', 'Dark') // Set default theme to Pink
+      }
+    } catch (error) {
+      console.log('Error retrieving theme from storage:', error)
+    }
+  }
+
+  // set stored theme
+  const setStoredTheme = async (newTheme) => {
+    try {
+      await AsyncStorage.setItem('appTheme', newTheme)
+      console.log('Theme stored in AsyncStorage:', newTheme)
+    } catch (error) {
+      console.log('Error storing theme in AsyncStorage:', error)
+    }
+  }
+
+  // set modal close
+  const onOverlayPress = () => {
+    reviewModalRef?.current?.close()
+  }
 
   if (isUpdating) {
     return (
@@ -175,79 +265,47 @@ export default function App() {
     )
   }
 
-  async function getActiveLocation() {
-    try {
-      const locationStr = await AsyncStorage.getItem('location')
-      if (locationStr) {
-        setLocation(JSON.parse(locationStr))
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  useEffect(() => {
-    registerForPushNotificationsAsync()
-
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = notification?.request?.content?.data?._id
-        if (id) {
-          setOrderId(id)
-          reviewModalRef?.current?.open()
-        }
-      }
-    })
-
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = response?.notification?.request?.content?.data?._id
-        if (id) {
-          setOrderId(id)
-          reviewModalRef?.current?.open()
-        }
-      }
-    })
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current)
-      Notifications.removeNotificationSubscription(responseListener.current)
-    }
-  }, [])
-
-  const onOverlayPress = () => {
-    reviewModalRef?.current?.close()
-  }
-
-  if (appIsReady) {
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ApolloProvider client={client}>
-          <ThemeContext.Provider
-            value={{ ThemeValue: theme, dispatch: themeSetter }}>
-            <StatusBar
-              backgroundColor={Theme[theme].menuBar}
-              barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
-            />
-            <LocationProvider>
-              <ConfigurationProvider>
-                <AuthProvider>
-                  <UserProvider>
-                    <OrdersProvider>
-                      <AppContainer />
-                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
-                    </OrdersProvider>
-                  </UserProvider>
-                </AuthProvider>
-              </ConfigurationProvider>
-            </LocationProvider>
-            <FlashMessage MessageComponent={MessageComponent} />
-          </ThemeContext.Provider>
-        </ApolloProvider>
-      </GestureHandlerRootView>
-    )
-  } else {
-    return null
-  }
+  return (
+    // <AnimatedSplashScreen>
+      <ApolloProvider client={client}>
+        <ThemeContext.Provider
+          // use default theme
+          // value={{ ThemeValue: theme, dispatch: themeSetter }}
+          // use stored theme
+          value={{
+            ThemeValue: theme,
+            dispatch: (action) => {
+              themeSetter(action)
+              setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
+            }
+          }}
+        >
+          <StatusBar
+            backgroundColor={Theme[theme].menuBar}
+            barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
+          />
+          <LocationProvider>
+            <ConfigurationProvider>
+              <AuthProvider>
+                <UserProvider>
+                  <OrdersProvider>
+                    <AppContainer />
+                    <ReviewModal
+                      ref={reviewModalRef}
+                      onOverlayPress={onOverlayPress}
+                      theme={Theme[theme]}
+                      orderId={orderId}
+                    />
+                  </OrdersProvider>
+                </UserProvider>
+              </AuthProvider>
+            </ConfigurationProvider>
+          </LocationProvider>
+          <FlashMessage MessageComponent={MessageComponent} />
+        </ThemeContext.Provider>
+      </ApolloProvider>
+    // </AnimatedSplashScreen>
+  )
 }
 
 const styles = StyleSheet.create({

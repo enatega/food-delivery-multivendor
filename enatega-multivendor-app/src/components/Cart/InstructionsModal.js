@@ -8,7 +8,7 @@ import { textStyles } from '../../utils/textStyles'
 import { alignment } from '../../utils/alignment'
 
 
-export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit, value, setValue }) => {    
+export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit, value, setValue, t }) => {    
     const styles = useStyles(theme)
 
     return (<Modal
@@ -22,16 +22,16 @@ export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit, value
                     <TouchableOpacity
                         onPress={onSubmit}
                         style={styles.closeButton}>
-                        <TextDefault bolder textColor={theme.newButtonText}>Done</TextDefault>
+                        <TextDefault bolder textColor={theme.newButtonText}>{t('Done')}</TextDefault>
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <TextDefault H2 bolder textColor={theme.color4}>Add message</TextDefault>
-                    <TextDefault H5 bold textColor={theme.fontThirdColor} style={styles.secondaryText}>Special requests, allergies, dietary restriction</TextDefault>
-                    <TextDefault numberOfLines={3} H5 smaller textColor={theme.secondaryText} style={styles.ternaryText}>Kindly be advised that your message could also be visible to the courier partner responsible for delivering your order to the venue.</TextDefault>
+                    <TextDefault H2 bolder textColor={theme.fontThirdColor} isRTL>{t('addMessage')}</TextDefault>
+                    <TextDefault H5 bold textColor={theme.fontThirdColor} isRTL style={styles.secondaryText}>{t('specialRequest')}</TextDefault>
+                    <TextDefault numberOfLines={3} H5 smaller isRTL textColor={theme.secondaryText} style={styles.ternaryText}>{t('kindlyBeAdvisedText')}</TextDefault>
                 </View>
                 <View style={styles.inputContainer}>
-                    <TextInput value={value} onChangeText={value => setValue(value)} autoFocus onSubmitEditing={onSubmit} placeholder='Type here' allowFontScaling style={{ padding: scale(10), ...textStyles.H3, flex: 1 }} maxLength={400} />
+                    <TextInput value={value} onChangeText={value => setValue(value)} autoFocus onSubmitEditing={onSubmit} placeholder={t('typeHere')} allowFontScaling style={{ padding: scale(10), ...textStyles.H3, flex: 1, color: theme.fontMainColor, textAlign: theme?.isRTL ? 'right' : 'left' }} maxLength={400} />
                     <TouchableOpacity style={alignment.MRxSmall} onPress={() => setValue('')}>
                         <Ionicons name='close-circle-outline' size={scale(18)} color={theme.fontNewColor} />
                     </TouchableOpacity>

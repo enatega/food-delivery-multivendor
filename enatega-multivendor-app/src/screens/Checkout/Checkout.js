@@ -43,7 +43,7 @@ import { LocationContext } from '../../context/Location'
 import { useFocusEffect } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
 import { textStyles } from '../../utils/textStyles'
-import { calculateDistance } from '../../utils/customFunctions'
+import { calculateAmount, calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
@@ -61,7 +61,8 @@ import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
 import PickUp from '../../components/Pickup'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
-
+import { isOpen } from '../../utils/customFunctions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Constants
 const PLACEORDER = gql`
@@ -93,8 +94,11 @@ function Checkout(props) {
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   const voucherModalRef = useRef(null)
   const tipModalRef = useRef(null)
   const [loadingData, setLoadingData] = useState(true)
@@ -107,7 +111,7 @@ function Checkout(props) {
   const [voucherCode, setVoucherCode] = useState('')
   const [coupon, setCoupon] = useState(null)
   const [tip, setTip] = useState(null)
-  const [tipAmount, setTipAmount] = useState(null)
+  const [tipAmount, setTipAmount] = useState('')
   const modalRef = useRef(null)
   const [paymentMode, setPaymentMode] = useState('COD')
 
@@ -146,10 +150,12 @@ function Checkout(props) {
         })
         setVoucherCode('')
         onModalClose(voucherModalRef)
+        setLoadingOrder(false);
       } else {
         FlashMessage({
           message: t('coupanFailed')
         })
+        setLoadingOrder(false);
       }
     }
   }
@@ -157,7 +163,8 @@ function Checkout(props) {
   function onCouponError() {
     FlashMessage({
       message: t('invalidCoupan')
-    })
+    });
+    setLoadingOrder(false);
   }
 
   const [mutateCoupon, { loading: couponLoading }] = useMutation(GET_COUPON, {
@@ -168,8 +175,8 @@ function Checkout(props) {
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
     fetchPolicy: 'network-only'
   })
-  
-  const [mutateOrder] = useMutation(PLACEORDER, {
+
+  const [mutateOrder,{loading:mutateOrderLoading}] = useMutation(PLACEORDER, {
     onCompleted,
     onError,
     update
@@ -179,12 +186,12 @@ function Checkout(props) {
     payment: 'COD',
     label: t('cod'),
     index: 2,
-    icon: 'dollar'
+    icon: 'shekel'
   }
 
   const paymentMethod =
-    props.route.params && props.route.params.paymentMethod
-      ? props.route.params.paymentMethod
+    props?.route.params && props?.route.params.paymentMethod
+      ? props?.route.params.paymentMethod
       : COD_PAYMENT
 
   const [selectedTip, setSelectedTip] = useState()
@@ -204,30 +211,40 @@ function Checkout(props) {
   useEffect(() => {
     if (tip) {
       setSelectedTip(null)
-    } else if (dataTip && !selectedTip) {
-      setSelectedTip(dataTip.tips.tipVariations[1])
     }
+    // uncomment it if you want to select the tip by default
+    // else if (dataTip && !selectedTip) {
+    //   setSelectedTip(dataTip.tips.tipVariations[1])
+    // }
   }, [tip, data])
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async () => {
-        if (data && !!data.restaurant) {
-          const latOrigin = Number(data.restaurant.location.coordinates[1])
-          const lonOrigin = Number(data.restaurant.location.coordinates[0])
-          const latDest = Number(location.latitude)
-          const longDest = Number(location.longitude)
-          const distance = await calculateDistance(
-            latOrigin,
-            lonOrigin,
-            latDest,
-            longDest
-          )
-          const amount = Math.ceil(distance) * configuration.deliveryRate
-          isSubscribed &&
-            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+    ;(async () => {
+      if (data && !!data.restaurant) {
+        const latOrigin = Number(data.restaurant.location.coordinates[1])
+        const lonOrigin = Number(data.restaurant.location.coordinates[0])
+        const latDest = Number(location.latitude)
+        const longDest = Number(location.longitude)
+        const distance = calculateDistance(
+          latOrigin,
+          lonOrigin,
+          latDest,
+          longDest
+        )
+
+        let costType = configuration.costType
+        let amount = calculateAmount(
+          costType,
+          configuration.deliveryRate,
+          distance
+        )
+
+        if (isSubscribed) {
+          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
         }
-      })()
+      }
+    })()
     return () => {
       isSubscribed = false
     }
@@ -243,7 +260,7 @@ function Checkout(props) {
   })
 
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerTitle: () => (
         <View style={{ alignItems: 'center', gap: scale(2) }}>
           <TextDefault
@@ -295,7 +312,7 @@ function Checkout(props) {
         />
       )
     })
-  }, [props.navigation, data])
+  }, [props?.navigation, data])
 
   useEffect(() => {
     if (!data) return
@@ -312,8 +329,8 @@ function Checkout(props) {
     if (cart && cartCount > 0) {
       if (
         data &&
-        data.restaurant &&
-        (!data.restaurant.isAvailable || !isOpen())
+        data?.restaurant &&
+        (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant))
       ) {
         showAvailablityMessage()
       }
@@ -328,7 +345,7 @@ function Checkout(props) {
         {
           text: 'Go back to restaurants',
           onPress: () => {
-            props.navigation.navigate({
+            props?.navigation.navigate({
               name: 'Main',
               merge: true
             })
@@ -336,8 +353,8 @@ function Checkout(props) {
           style: 'cancel'
         },
         {
-          text: 'Continue',
-          onPress: () => { },
+          text: 'close',
+          onPress: () => {},
           style: 'cancel'
         }
       ],
@@ -348,7 +365,6 @@ function Checkout(props) {
   function update(cache, { data: { placeOrder } }) {
     try {
       if (placeOrder && placeOrder.paymentMethod === 'COD') {
-        // console.log(JSON.stringify(placeOrder, null, 2))
         cache.modify({
           fields: {
             orders(existingOrders = []) {
@@ -385,7 +401,7 @@ function Checkout(props) {
       orderDate: data.placeOrder.orderDate
     })
     if (paymentMode === 'COD') {
-      props.navigation.reset({
+      props?.navigation.reset({
         routes: [
           { name: 'Main' },
           {
@@ -396,23 +412,39 @@ function Checkout(props) {
       })
       clearCart()
     } else if (paymentMode === 'PAYPAL') {
-      props.navigation.replace('Paypal', {
+      props?.navigation.replace('Paypal', {
         _id: data.placeOrder.orderId,
         currency: configuration.currency
       })
     } else if (paymentMode === 'STRIPE') {
-      console.log("stripe")
-      props.navigation.replace('StripeCheckout', {
+      props?.navigation.replace('StripeCheckout', {
         _id: data.placeOrder.orderId,
         amount: data.placeOrder.orderAmount,
         email: data.placeOrder.user.email,
         currency: configuration.currency
       })
-    }
+    } 
+    // else if (paymentMode === 'HYP') {
+    //   // const items = transformOrder(cart)
+
+    //   // await AsyncStorage.setItem(
+    //   //   'hyp-session-id',
+    //   //   Math.random().toString(36).substring(2, 15) +
+    //   //     Math.random().toString(36).substring(2, 15)
+    //   // )
+
+    //   // props?.navigation.replace('HypCheckout', {
+    //   //   _id: data.placeOrder.orderId,
+    //   //   restaurantId: cartRestaurant,
+    //   //   orderInput: items,
+    //   //   amount: data.placeOrder.orderAmount,
+    //   //   email: data.placeOrder.user.email,
+    //   //   currency: configuration.currency
+    //   // })
+    // }
   }
   function onError(error) {
     setLoadingOrder(false)
-    console.log('onError', error)
     if (error.graphQLErrors.length) {
       console.log('error', JSON.stringify(error))
       FlashMessage({
@@ -423,28 +455,21 @@ function Checkout(props) {
         message: error.message
       })
     }
-    console.log('Order placed successfully:', data);
   }
 
   function calculateTip() {
+    // if (paymentMode !== 'HYP') {
+    //   return 0 // Return 0 if payment mode is not 'COD'
+    // }
     if (tip) {
       return tip
     } else if (selectedTip) {
-      let total = 0
-      const delivery = isPickup ? 0 : deliveryCharges
-      total += +calculatePrice(delivery, true)
-      total += +taxCalculation()
-      const tipPercentage = (
-        (total / 100) *
-        parseFloat(selectedTip).toFixed(2)
-      ).toFixed(2)
-      return tipPercentage
+      return selectedTip
     } else {
       return 0
     }
-    
   }
-  
+
   function taxCalculation() {
     const tax = data.restaurant ? +data.restaurant.tax : 0
     if (tax === 0) {
@@ -478,7 +503,7 @@ function Checkout(props) {
   }
 
   function validateOrder() {
-    if (!data.restaurant.isAvailable || !isOpen()) {
+    if (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant)) {
       showAvailablityMessage()
       return
     }
@@ -489,15 +514,15 @@ function Checkout(props) {
       return false
     }
     if (calculatePrice(deliveryCharges, true) < minimumOrder) {
-      // FlashMessage({
-      //   // message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
-      //   message: `(${t(minAmount)}) (${configuration.currencySymbol
-      //     } ${minimumOrder}) (${t(forYourOrder)})`
-      // })
+      FlashMessage({
+        message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
+        // message: `(${t(minAmount)}) (${configuration.currencySymbol
+        //   } ${minimumOrder}) (${t(forYourOrder)})`
+      })
       return false
     }
-    if (!location._id) {
-      props.navigation.navigate('CartAddress')
+    if (!isPickup && !location._id) {
+      props?.navigation.navigate('CartAddress')
       return false
     }
     if (!paymentMode) {
@@ -507,14 +532,14 @@ function Checkout(props) {
       return false
     }
     if (profile.phone.length < 1) {
-      props.navigation.navigate('PhoneNumber', { backScreen: 'Cart' })
+      props?.navigation.navigate('PhoneNumber', { name: profile?.name })
       return false
     }
     if (profile.phone.length > 0 && !profile.phoneIsVerified) {
       FlashMessage({
-        message: t('numberVerificationAlert') 
+        message: t('numberVerificationAlert')
       })
-      props.navigation.navigate('PhoneNumber')
+      props?.navigation.navigate('PhoneNumber', { name: profile?.name })
       return false
     }
     return true
@@ -538,9 +563,9 @@ function Checkout(props) {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id)
-          }))
+              _id,
+              options: options.map(({ _id }) => _id)
+            }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -549,51 +574,48 @@ function Checkout(props) {
   async function onPayment() {
     if (checkPaymentMethod(configuration.currency)) {
       const items = transformOrder(cart)
-      mutateOrder({
-        variables: {
-          restaurant: cartRestaurant,
-          orderInput: items,
-          paymentMethod: paymentMode,
-          couponCode: coupon ? coupon.title : null,
-          tipping: +calculateTip(),
-          taxationAmount: +taxCalculation(),
-          orderDate: orderDate,
-          isPickedUp: isPickup,
-          deliveryCharges: isPickup ? 0 : deliveryCharges,
-          address: {
-            label: location.label,
-            deliveryAddress: location.deliveryAddress,
-            details: location.details,
-            longitude: '' + location.longitude,
-            latitude: '' + location.latitude
-          },
-          instructions
+      const orderVariables = {
+        restaurant: cartRestaurant,
+        orderInput: items,
+        paymentMethod: paymentMode,
+        couponCode: coupon ? coupon.title : null,
+        tipping: +calculateTip(),
+        taxationAmount: +taxCalculation(),
+        orderDate: orderDate,
+        isPickedUp: isPickup,
+        deliveryCharges: isPickup ? 0 : deliveryCharges,
+        instructions
+      }
+
+      if (isPickup) {
+        // For pickup, use the location from context
+        orderVariables.address = {
+          label: 'Current Location',
+          deliveryAddress: 'Pickup',
+          details: 'User will pick up the order',
+          longitude: '' + location.longitude,
+          latitude: '' + location.latitude
         }
-      })
+      } else {
+        // For delivery, use the selected address
+        orderVariables.address = {
+          label: location.label,
+          deliveryAddress: location.deliveryAddress,
+          details: location.details,
+          longitude: '' + location.longitude,
+          latitude: '' + location.latitude
+        }
+      }
+
+      await mutateOrder({ variables: orderVariables });
+      setLoadingOrder(false)
+      setIsPickup(false)
     } else {
       FlashMessage({
         message: t('paymentNotSupported')
       })
+      setLoadingOrder(false)
     }
-  }
-
-  const isOpen = () => {
-    const date = new Date()
-    const day = date.getDay()
-    const hours = date.getHours()
-    const minutes = date.getMinutes()
-    const todaysTimings = data.restaurant.openingTimes.find(
-      (o) => o.day === DAYS[day]
-    )
-    const times = todaysTimings.times.filter(
-      (t) =>
-        hours >= Number(t.startTime[0]) &&
-        minutes >= Number(t.startTime[1]) &&
-        hours <= Number(t.endTime[0]) &&
-        minutes <= Number(t.endTime[1])
-    )
-
-    return times.length > 0
   }
 
   async function didFocus() {
@@ -612,8 +634,9 @@ function Checkout(props) {
           )
           if (!variation) return null
 
-          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
-            }`
+          const title = `${food.title}${
+            variation.title ? `(${variation.title})` : ''
+          }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -636,7 +659,7 @@ function Checkout(props) {
           }
         })
 
-        if (props.navigation.isFocused()) {
+        if (props?.navigation.isFocused()) {
           const updatedItems = transformCart.filter((item) => item)
           if (updatedItems.length === 0) await clearCart()
           await updateCart(updatedItems)
@@ -648,7 +671,7 @@ function Checkout(props) {
           }
         }
       } else {
-        if (props.navigation.isFocused()) {
+        if (props?.navigation.isFocused()) {
           setLoadingData(false)
         }
       }
@@ -740,12 +763,9 @@ function Checkout(props) {
       </View>
     )
   }
-
-  if (loading || loadingData || loadingTip) return loadginScreen()
-
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
-
+  if (loading || loadingData || loadingTip || mutateOrderLoading || loadingOrder) return loadginScreen()
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -776,21 +796,30 @@ function Checkout(props) {
                   <View
                     style={[
                       styles(currentTheme).horizontalLine,
-                      styles().width100,
+                      styles().width100
                     ]}
                   />
                 </View>
-                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} />
+                <FulfillmentMode
+                  theme={currentTheme}
+                  setIsPickup={setIsPickup}
+                  isPickup={isPickup}
+                  t={t}
+                />
                 <View style={[styles(currentTheme).headerContainer]}>
-                  <Location
-                    locationIcon={currentTheme.newIconColor}
-                    locationLabel={currentTheme.newFontcolor}
-                    location={currentTheme.newFontcolor}
-                    navigation={props.navigation}
-                    addresses={profile.addresses}
-                    forwardIcon={true}
-                    screenName={'checkout'}
-                  />
+                  {!isPickup && (
+                    <View style={alignment.PLsmall}>
+                      <Location
+                        locationIcon={currentTheme.newIconColor}
+                        locationLabel={currentTheme.newFontcolor}
+                        location={currentTheme.newFontcolor}
+                        navigation={props?.navigation}
+                        addresses={profile.addresses}
+                        forwardIcon={true}
+                        screenName={'checkout'}
+                      />
+                    </View>
+                  )}
 
                   <View
                     style={[
@@ -798,39 +827,57 @@ function Checkout(props) {
                       styles().width100
                     ]}
                   />
-                  <TouchableOpacity onPress={() => { onModalOpen(modalRef) }} style={styles(currentTheme).deliveryTime}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      onModalOpen(modalRef)
+                    }}
+                    style={styles(currentTheme).deliveryTime}
+                  >
                     <View style={[styles().iconContainer]}>
                       <View style={styles().icon}>
                         <EvilIcons name='calendar' size={scale(20)} />
                       </View>
                     </View>
                     <View style={styles(currentTheme).labelContainer}>
-                      <View style={{ marginLeft: scale(5) }}>
+                      <View style={{ marginHorizontal: scale(5) }}>
                         <TextDefault
                           textColor={currentTheme.newFontcolor}
                           numberOfLines={1}
                           H5
                           bolder
+                          isRTL
                         >
-                          {t(isPickup ? 'pickUp' : 'delivery')}{' '}
-                          ({deliveryTime} {t('mins')})
+                          {t(isPickup ? 'pickUp' : 'delivery')} ({deliveryTime}{' '}
+                          {t('mins')})
                         </TextDefault>
                       </View>
                     </View>
-                    <View style={[styles().iconContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+                    <View
+                      style={[
+                        styles().iconContainer,
+                        { justifyContent: 'center', alignItems: 'center' }
+                      ]}
+                    >
                       <View style={[styles().icon, { backgroundColor: null }]}>
                         <Feather
-                          name='chevron-right'
+                          name={
+                            currentTheme?.isRTL
+                              ? 'chevron-left'
+                              : 'chevron-right'
+                          }
                           size={20}
                           color={currentTheme.secondaryText}
                         />
                       </View>
                     </View>
                   </TouchableOpacity>
-
                 </View>
                 <View>
-                  <Instructions theme={currentTheme} title={'Instruction for the courier'} message={instructions} />
+                  <Instructions
+                    theme={currentTheme}
+                    title={'Instruction for the courier'}
+                    message={instructions}
+                  />
                 </View>
 
                 {isLoggedIn && profile && (
@@ -841,13 +888,38 @@ function Checkout(props) {
                         H5
                         bolder
                         textColor={currentTheme.fontNewColor}
+                        isRTL
                       >
                         {t('titlePayment')}
                       </TextDefault>
                       <View>
-                        <PaymentModeOption title={'Cash'} icon={'dollar'} selected={paymentMode === 'COD'} theme={currentTheme} onSelect={() => { setPaymentMode('COD') }} />
-                        <PaymentModeOption title={'Card (Stripe)'} icon={'credit-card'} selected={paymentMode === 'STRIPE'} theme={currentTheme} onSelect={() => { setPaymentMode('STRIPE') }} />
-                        <PaymentModeOption title={'Card (Paypal)'} icon={'credit-card'} selected={paymentMode === 'PAYPAL'} theme={currentTheme} onSelect={() => { setPaymentMode('PAYPAL') }} />
+                        <PaymentModeOption
+                          title={t('cod')}
+                          icon={'shekel'}
+                          selected={paymentMode === 'COD'}
+                          theme={currentTheme}
+                          onSelect={() => {
+                            setPaymentMode('COD')
+                          }}
+                        />
+                        <PaymentModeOption
+                          title={t('paypal')}
+                          icon={'credit-card'}
+                          selected={paymentMode === 'PAYPAL'}
+                          theme={currentTheme}
+                          onSelect={() => {
+                            setPaymentMode('PAYPAL')
+                          }}
+                        />
+                        <PaymentModeOption
+                          title={t('Stripe')}
+                          icon={'credit-card'}
+                          selected={paymentMode === 'STRIPE'}
+                          theme={currentTheme}
+                          onSelect={() => {
+                            setPaymentMode('STRIPE')
+                          }}
+                        />
                       </View>
                     </View>
                   </>
@@ -863,7 +935,7 @@ function Checkout(props) {
                   {!coupon ? (
                     <TouchableOpacity
                       activeOpacity={0.7}
-                      style={styles().voucherSecInner}
+                      style={styles(currentTheme).voucherSecInner}
                       onPress={() => onModalOpen(voucherModalRef)}
                     >
                       <MaterialCommunityIcons
@@ -928,7 +1000,7 @@ function Checkout(props) {
                               -{configuration.currencySymbol}
                               {parseFloat(
                                 calculatePrice(0, false) -
-                                calculatePrice(0, true)
+                                  calculatePrice(0, true)
                               ).toFixed(2)}
                             </TextDefault>
                           </View>
@@ -952,49 +1024,73 @@ function Checkout(props) {
                     </>
                   )}
                 </View>
-                <View style={styles().tipSec}>
-                  <View style={[styles().tipRow]}>
-                    <TextDefault
-                      numberOfLines={1}
-                      H5
-                      bolder
-                      textColor={currentTheme.fontNewColor}
-                    >
-                      {t('AddTip')}
-                    </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      normal
-                      bolder
-                      uppercase
-                      textItalic
-                      textColor={currentTheme.fontNewColor}
-                    >
-                      {t('optional')}
-                    </TextDefault>
-                  </View>
-                  {dataTip && (
-                    <View style={styles().buttonInline}>
-                      {dataTip.tips.tipVariations.map((label, index) => (
+                {/* {paymentMode === 'HYP' && (
+                  <View style={styles().tipSec}>
+                    <View style={[styles(currentTheme).tipRow]}>
+                      <TextDefault
+                        numberOfLines={1}
+                        H5
+                        bolder
+                        textColor={currentTheme.fontNewColor}
+                      >
+                        {t('AddTip')}
+                      </TextDefault>
+                      <TextDefault
+                        numberOfLines={1}
+                        normal
+                        bolder
+                        uppercase
+                        textItalic
+                        textColor={currentTheme.fontNewColor}
+                      >
+                        {t('optional')}
+                      </TextDefault>
+                    </View>
+                    {dataTip && (
+                      <View style={styles(currentTheme).buttonInline}>
+                        {dataTip.tips.tipVariations.map((label, index) => (
+                          <TouchableOpacity
+                            activeOpacity={0.7}
+                            key={index}
+                            style={[
+                              selectedTip === label
+                                ? styles(currentTheme).activeLabel
+                                : styles(currentTheme).labelButton
+                            ]}
+                            onPress={() => {
+                              props?.navigation.setParams({ tipAmount: null })
+                              setTip(null)
+                              setSelectedTip((prevState) =>
+                                prevState === label ? null : label
+                              )
+                            }}
+                          >
+                            <TextDefault
+                              textColor={
+                                selectedTip === label
+                                  ? currentTheme.black
+                                  : currentTheme.fontFourthColor
+                              }
+                              normal
+                              bolder
+                              center
+                            >
+                              {configuration.currencySymbol} {label}
+                            </TextDefault>
+                          </TouchableOpacity>
+                        ))}
                         <TouchableOpacity
                           activeOpacity={0.7}
-                          key={index}
-                          style={[
-                            selectedTip === label
+                          style={
+                            tip
                               ? styles(currentTheme).activeLabel
                               : styles(currentTheme).labelButton
-                          ]}
-                          onPress={() => {
-                            props.navigation.setParams({ tipAmount: null })
-                            setTip(null)
-                            setSelectedTip((prevState) =>
-                              prevState === label ? null : label
-                            )
-                          }}
+                          }
+                          onPress={() => onModalOpen(tipModalRef)}
                         >
                           <TextDefault
                             textColor={
-                              selectedTip === label
+                              tip
                                 ? currentTheme.black
                                 : currentTheme.fontFourthColor
                             }
@@ -1002,35 +1098,14 @@ function Checkout(props) {
                             bolder
                             center
                           >
-                            {label}%
+                            {t('Other')}
                           </TextDefault>
                         </TouchableOpacity>
-                      ))}
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={
-                          tip
-                            ? styles(currentTheme).activeLabel
-                            : styles(currentTheme).labelButton
-                        }
-                        onPress={() => onModalOpen(tipModalRef)}
-                      >
-                        <TextDefault
-                          textColor={
-                            tip
-                              ? currentTheme.black
-                              : currentTheme.fontFourthColor
-                          }
-                          normal
-                          bolder
-                          center
-                        >
-                          {t('Other')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
+                      </View>
+                    )}
+                  </View>
+                )} */}
+
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault
                     numberOfLines={1}
@@ -1038,10 +1113,11 @@ function Checkout(props) {
                     bolder
                     textColor={currentTheme.fontNewColor}
                     style={{ ...alignment.MBmedium }}
+                    isRTL
                   >
                     {t('paymentSummary')}
                   </TextDefault>
-                  <View style={styles().billsec}>
+                  <View style={styles(currentTheme).billsec}>
                     <TextDefault
                       numberOfLines={1}
                       normal
@@ -1064,7 +1140,7 @@ function Checkout(props) {
 
                   {!isPickup && (
                     <>
-                      <View style={styles().billsec}>
+                      <View style={styles(currentTheme).billsec}>
                         <TextDefault
                           numberOfLines={1}
                           textColor={currentTheme.fontFourthColor}
@@ -1087,7 +1163,7 @@ function Checkout(props) {
                     </>
                   )}
 
-                  <View style={styles().billsec}>
+                  <View style={styles(currentTheme).billsec}>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
@@ -1106,30 +1182,34 @@ function Checkout(props) {
                       {taxCalculation()}
                     </TextDefault>
                   </View>
+
                   <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles().billsec}>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      normal
-                      bold
-                    >
-                      {t('tip')}
-                    </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      normal
-                      bold
-                    >
-                      {configuration.currencySymbol}
-                      {parseFloat(calculateTip()).toFixed(2)}
-                    </TextDefault>
-                  </View>
+                  {/* {paymentMode === 'HYP' && (
+                    <View style={styles(currentTheme).billsec}>
+                      <TextDefault
+                        numberOfLines={1}
+                        textColor={currentTheme.fontFourthColor}
+                        normal
+                        bold
+                      >
+                        {t('tip')}
+                      </TextDefault>
+                      <TextDefault
+                        numberOfLines={1}
+                        textColor={currentTheme.fontFourthColor}
+                        normal
+                        bold
+                      >
+                        {configuration.currencySymbol}
+                        {parseFloat(calculateTip()).toFixed(2)}
+                      </TextDefault>
+                    </View>
+                  )} */}
+
                   {coupon && (
                     <View>
                       <View style={styles(currentTheme).horizontalLine2} />
-                      <View style={styles().billsec}>
+                      <View style={styles(currentTheme).billsec}>
                         <TextDefault
                           numberOfLines={1}
                           textColor={currentTheme.fontFourthColor}
@@ -1153,7 +1233,7 @@ function Checkout(props) {
                     </View>
                   )}
                   <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles().billsec}>
+                  <View style={styles(currentTheme).billsec}>
                     <TextDefault
                       numberOfLines={1}
                       textColor={currentTheme.fontFourthColor}
@@ -1185,6 +1265,7 @@ function Checkout(props) {
                     textColor={currentTheme.fontMainColor}
                     style={alignment.MBsmall}
                     small
+                    isRTL
                   >
                     {t('condition1')}
                   </TextDefault>
@@ -1193,6 +1274,7 @@ function Checkout(props) {
                     style={alignment.MBsmall}
                     small
                     bold
+                    isRTL
                   >
                     {t('condition2')}
                   </TextDefault>
@@ -1250,8 +1332,11 @@ function Checkout(props) {
           }}
         >
           <View style={styles().modalContainer}>
-            <View style={styles().modalHeader}>
-              <View activeOpacity={0.7} style={styles().modalheading}>
+            <View style={styles(currentTheme).modalHeader}>
+              <View
+                activeOpacity={0.7}
+                style={styles(currentTheme).modalheading}
+              >
                 <FontAwesome
                   name={paymentMethod?.icon}
                   size={20}
@@ -1274,7 +1359,12 @@ function Checkout(props) {
               />
             </View>
             <View style={{ gap: 8 }}>
-              <TextDefault uppercase bold textColor={currentTheme.gray500}>
+              <TextDefault
+                uppercase
+                bold
+                textColor={currentTheme.gray500}
+                isRTL
+              >
                 {t('enterCode')}
               </TextDefault>
               <TextInput
@@ -1320,8 +1410,11 @@ function Checkout(props) {
           }}
         >
           <View style={styles().modalContainer}>
-            <View style={styles().modalHeader}>
-              <View activeOpacity={0.7} style={styles().modalheading}>
+            <View style={styles(currentTheme).modalHeader}>
+              <View
+                activeOpacity={0.7}
+                style={styles(currentTheme).modalheading}
+              >
                 <MaterialCommunityIcons
                   name='ticket-confirmation-outline'
                   size={24}
@@ -1344,7 +1437,12 @@ function Checkout(props) {
               />
             </View>
             <View style={{ gap: 8 }}>
-              <TextDefault uppercase bold textColor={currentTheme.gray500}>
+              <TextDefault
+                uppercase
+                bold
+                textColor={currentTheme.gray500}
+                isRTL
+              >
                 {t('enterCode')}
               </TextDefault>
               <TextInput
@@ -1419,7 +1517,14 @@ function Checkout(props) {
           }}
           style={styles(currentTheme).pickupButton}
         >
-          <Text style={styles(currentTheme).applyButton}>{t('apply')}</Text>
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            style={styles().checkoutBtn}
+            bold
+            H4
+          >
+            {t('apply')}
+          </TextDefault>
         </TouchableOpacity>
       </Modalize>
     </>

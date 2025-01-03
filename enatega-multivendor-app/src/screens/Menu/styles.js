@@ -8,19 +8,21 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    container: { flex: 1, gap: 8, backgroundColor: props != null ? props?.themeBackground : '#FFF' },
     screenBackground: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      backgroundColor: props != null ? props?.themeBackground : '#FFF',
       ...alignment.PBlarge
     },
     searchbar: {
       ...alignment.PBmedium,
-      backgroundColor: props != null ? props.main : '#FFF'
+      backgroundColor: props != null ? props?.white : '#FFF'
     },
 
     mainContentContainer: {
       width: '100%',
-      height: '100%',
-      alignSelf: 'center'
+      height: '80%',
+      alignSelf: 'center',
+      // backgroundColor: 'red'
     },
 
     ML20: {
@@ -33,7 +35,7 @@ const styles = (props = null) =>
       ...alignment.MLsmall
     },
     addressbtn: {
-      backgroundColor: props != null ? props.color8 : '#f0f0f0',
+      backgroundColor: props != null ? props?.color8 : '#f0f0f0',
       marginLeft: scale(10),
       marginRight: scale(10),
       marginBottom: scale(10),
@@ -45,7 +47,7 @@ const styles = (props = null) =>
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       borderWidth: scale(1),
-      borderColor: props != null ? props.color10 : '#FFF'
+      borderColor: props != null ? props?.color10 : '#FFF'
     },
     addNewAddressbtn: {
       padding: scale(5),
@@ -58,7 +60,7 @@ const styles = (props = null) =>
       ...alignment.PBsmall
     },
     addButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
       width: '100%',
       height: scale(40),
       borderRadius: 50,
@@ -69,22 +71,22 @@ const styles = (props = null) =>
     addressSubContainer: {
       width: '90%',
       alignSelf: 'center',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center'
     },
     content: {
       ...alignment.PTlarge
     },
     modal: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      backgroundColor: props != null ? props?.cardBackground : '#FFF',
       paddingTop: scale(10),
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       position: 'relative',
-      zIndex: 999,
+      zIndex: 9999999,
       shadowOpacity: 0,
       borderWidth: scale(1),
-      borderColor: props != null ? props.color10 : '#FFF'
+      borderColor: props != null ? props?.customBorder : '#FFF'
     },
     addressTextContainer: {
       display: 'flex',
@@ -98,17 +100,17 @@ const styles = (props = null) =>
     },
     overlay: {
       backgroundColor:
-        props != null ? props.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
+        props != null ? props?.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
       width: scale(150),
-      backgroundColor: props != null ? props.backgroundColor : 'transparent'
+      backgroundColor: props != null ? props?.backgroundColor : 'transparent'
     },
     relative: {
       position: 'relative'
     },
     placeHolderContainer: {
-      backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
+      backgroundColor: props != null ? props?.cartContainer : '#B8B8B8',
       borderRadius: scale(3),
       elevation: scale(3),
       marginBottom: scale(12),
@@ -118,7 +120,7 @@ const styles = (props = null) =>
       height: scale(200)
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.gray : '#B8B8B8'
+      backgroundColor: props != null ? props?.gray : '#B8B8B8'
     },
     emptyViewContainer: {
       flex: 1,
@@ -126,7 +128,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: props !== null ? props.color8 : '#000',
+      backgroundColor: props !== null ? props?.color8 : '#000',
       borderRadius: scale(10),
       width: '85%',
       height: verticalScale(130),
@@ -135,11 +137,8 @@ const styles = (props = null) =>
       padding: scale(15),
       marginTop: scale(30)
     },
-    mL5p: {
-      ...alignment.MLsmall
-    },
     homeIcon: {
-      color: props !== null ? props.darkBgFont : '#000',
+      color: props !== null ? props?.darkBgFont : '#000',
       width: '15%',
       display: 'flex',
       alignItems: 'center',
@@ -161,6 +160,57 @@ const styles = (props = null) =>
       fontWeight: '300',
       textAlign: 'justify',
       paddingLeft: scale(38)
+    },
+    collectionCard: {
+      backgroundColor: props !== null ? props?.cardBackground : '#181818',
+      height: 130,
+      width: 100,
+      borderRadius: 8,
+      shadowColor: props !== null ? props?.iconColor : 'gray',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5
+    },
+    collectionImage: {
+      height: 80,
+      width: '100%',
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8
+    },
+    header: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...alignment.MTsmall,
+      
+    },
+    seeAllBtn: {
+      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
+      borderRadius: 4,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    modalContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      gap: 16,
+      ...alignment.Pmedium
+    },
+    closeBtn: {
+      marginLeft: 'auto'
+    },
+    collectionContainer: {
+      flexGrow: 1,
+      gap: 8,
+      ...alignment.PTmedium,
+      ...alignment.PBmedium
     }
   })
 export default styles

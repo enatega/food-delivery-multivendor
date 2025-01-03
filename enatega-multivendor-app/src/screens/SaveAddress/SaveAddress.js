@@ -33,6 +33,7 @@ import { useMutation } from '@apollo/client'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../components/Spinner/Spinner'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
+// import UserContext from '../../context/User'
 
 const CREATE_ADDRESS = gql`
   ${createAddress}
@@ -43,37 +44,40 @@ const EDIT_ADDRESS = gql`
 
 function SaveAddress(props) {
   const navigation = useNavigation()
-  const { t } = useTranslation()
-  const { locationData } = props.route.params
+  const { t, i18n } = useTranslation()
+  const { locationData } = props?.route.params
   const { setLocation } = useContext(LocationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const [selectedLabel, setSelectedLabel] = useState('')
   const inset = useSafeAreaInsets()
+  // const [selectedLabelExist, setselectedLabelExist] = useState('')
+  // const { profile, refetchProfile, networkStatus } = useContext(UserContext)
 
 
   const [mutate, { loading }] = useMutation(locationData?.id ? EDIT_ADDRESS : CREATE_ADDRESS, {
     onCompleted,
     onError
   })
-  function onCompleted({createAddress, editAddress}) {
+  function onCompleted({ createAddress, editAddress }) {
     FlashMessage({
       message: t('addressUpdated')
     })
-    
-    const address = (createAddress||editAddress)?.addresses.find(a => a.selected) || 
-    setLocation({
-      _id: address._id,
-      label: selectedLabel,
-      deliveryAddress: locationData.deliveryAddress,
-      latitude: locationData.latitude,
-      longitude: locationData.longitude,
-      city: locationData.city
-    })
-    if(locationData.prevScreen){
+
+    const address = (createAddress || editAddress)?.addresses.find(a => a.selected) ||
+      setLocation({
+        _id: address._id,
+        label: selectedLabel,
+        deliveryAddress: locationData.deliveryAddress,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        city: locationData.city
+      })
+    if (locationData.prevScreen) {
       navigation.navigate(locationData.prevScreen)
-    } else{
-      navigation.dispatch(StackActions.popToTop())
+    } else {
+      navigation.navigate('Main')
+      // navigation.dispatch(StackActions.popToTop())
     }
   }
 
@@ -93,7 +97,7 @@ function SaveAddress(props) {
   })
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       title: t('saveAddress'),
       headerTitleStyle: {
@@ -133,6 +137,7 @@ function SaveAddress(props) {
       Alert.alert('Alert', t('alertLocation'))
       return
     }
+
     const addressInput = {
       longitude: `${locationData.longitude}`,
       latitude: `${locationData.latitude}`,
@@ -146,6 +151,7 @@ function SaveAddress(props) {
 
     mutate({ variables: { addressInput } })
   }
+
   const handleLabelSelection = (label) => {
     setSelectedLabel(label)
   }
@@ -171,6 +177,7 @@ function SaveAddress(props) {
                       H4
                       bolder
                       textColor={currentTheme.newFontcolor}
+                      isRTL
                     >
                       {t('address')}
                     </TextDefault>
@@ -181,12 +188,13 @@ function SaveAddress(props) {
                         H5
                         bold
                         textColor={currentTheme.newFontcolor}
+                        isRTL
                       >
                         {locationData.city}
                       </TextDefault>
                     </View>
                     <View style={styles().addressDetails}>
-                      <TextDefault bold textColor={currentTheme.gray600}>
+                      <TextDefault bold textColor={currentTheme.gray600} isRTL>
                         {locationData.deliveryAddress}
                       </TextDefault>
                     </View>
@@ -197,12 +205,13 @@ function SaveAddress(props) {
                         H5
                         bold
                         textColor={currentTheme.newFontcolor}
+                        isRTL
                       >
                         {t('locationType')}
                       </TextDefault>
                     </View>
                     <View style={styles().addressDetails}>
-                      <TextDefault bold textColor={currentTheme.gray600}>
+                      <TextDefault bold textColor={currentTheme.gray600} isRTL>
                         {t('locationTypeDetails')}
                       </TextDefault>
                     </View>
@@ -236,6 +245,7 @@ function SaveAddress(props) {
                                 ? currentTheme.newheaderColor
                                 : currentTheme.darkBgFont
                             }
+                            isRTL
                           >
                             {t('Apartment')}
                           </TextDefault>
@@ -270,6 +280,7 @@ function SaveAddress(props) {
                                 ? currentTheme.newheaderColor
                                 : currentTheme.darkBgFont
                             }
+                            isRTL
                           >
                             {t('House')}
                           </TextDefault>
@@ -304,13 +315,14 @@ function SaveAddress(props) {
                                 ? currentTheme.newheaderColor
                                 : currentTheme.darkBgFont
                             }
+                            isRTL
                           >
                             {t('Office')}
                           </TextDefault>
                         </TouchableOpacity>
                       </View>
                     </View>
-                    <View style={styles().lastLocationRow}>
+                    <View style={styles(currentTheme).lastLocationRow}>
                       <View style={styles().locationIcon}>
                         <TouchableOpacity
                           style={styles().locationIconStyles}
@@ -338,6 +350,7 @@ function SaveAddress(props) {
                                 ? currentTheme.newheaderColor
                                 : currentTheme.darkBgFont
                             }
+                            isRTL
                           >
                             {t('Other')}
                           </TextDefault>

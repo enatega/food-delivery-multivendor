@@ -32,7 +32,7 @@ const styles = (props = null) =>
       marginBottom:scale(5)
     },
     screenBackground: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      backgroundColor: props != null ? props?.themeBackground : '#FFF',
     },
     mainContentContainer: {
       width: '100%',
@@ -50,7 +50,7 @@ const styles = (props = null) =>
       ...alignment.MLsmall
     },
     addressbtn: {
-      backgroundColor: props != null ? props.lightHorizontalLine : '#f0f0f0',
+      backgroundColor: props != null ? props?.lightHorizontalLine : '#f0f0f0',
       marginLeft: scale(10),
       marginRight: scale(10),
       marginBottom: scale(10),
@@ -77,7 +77,7 @@ const styles = (props = null) =>
       ...alignment.PTlarge
     },
     modal: {
-      backgroundColor: props != null ? props.cartContainer : '#FFF',
+      backgroundColor: props != null ? props?.cartContainer : '#FFF',
       paddingTop: scale(10),
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
@@ -97,17 +97,17 @@ const styles = (props = null) =>
     },
     overlay: {
       backgroundColor:
-        props != null ? props.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
+        props != null ? props?.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
       width: scale(150),
-      backgroundColor: props != null ? props.backgroundColor : 'transparent'
+      backgroundColor: props != null ? props?.backgroundColor : 'transparent'
     },
     relative: {
       position: 'relative'
     },
     placeHolderContainer: {
-      backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
+      backgroundColor: props != null ? props?.cartContainer : '#B8B8B8',
       borderRadius: scale(3),
       elevation: scale(3),
       marginBottom: scale(12),
@@ -117,7 +117,7 @@ const styles = (props = null) =>
       height: scale(200)
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+      backgroundColor: props != null ? props?.fontSecondColor : '#B8B8B8'
     },
     emptyViewContainer: {
       width: '100%',

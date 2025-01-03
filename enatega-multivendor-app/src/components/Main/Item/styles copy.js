@@ -10,9 +10,9 @@ const styles = (props = null) =>
       ...alignment.MBxSmall
     },
     restaurantContainer: {
-      backgroundColor: props != null ? props.cartContainer : 'white',
+      backgroundColor: props != null ? props?.cartContainer : 'white',
       elevation: 3,
-      shadowColor: props != null ? props.shadowColor : 'grey',
+      shadowColor: props != null ? props?.shadowColor : 'grey',
       shadowOffset: {
         width: 0,
         height: verticalScale(0)
@@ -49,7 +49,7 @@ const styles = (props = null) =>
       width: scale(30),
       height: scale(30),
       borderRadius: scale(15),
-      backgroundColor: props != null ? props.white : 'white',
+      backgroundColor: props != null ? props?.white : 'white',
       zIndex: 1,
       justifyContent: 'center',
       alignItems: 'center'
@@ -61,7 +61,7 @@ const styles = (props = null) =>
       width: scale(45),
       height: scale(20),
       borderRadius: scale(10),
-      backgroundColor: props != null ? props.menuBar : 'white',
+      backgroundColor: props != null ? props?.menuBar : 'white',
       zIndex: 1,
       justifyContent: 'center',
       alignItems: 'center'
@@ -87,7 +87,7 @@ const styles = (props = null) =>
     verticalLine: {
       height: '60%',
       borderRightWidth: StyleSheet.hairlineWidth,
-      borderRightColor: props != null ? props.horizontalLine : 'black',
+      borderRightColor: props != null ? props?.horizontalLine : 'black',
       opacity: 0.6,
       ...alignment.MLxSmall,
       ...alignment.MRxSmall
@@ -102,7 +102,7 @@ const styles = (props = null) =>
     featureText: {
       alignSelf: 'flex-start',
       maxWidth: '100%',
-      backgroundColor: props != null ? props.tagColor : 'black'
+      backgroundColor: props != null ? props?.tagColor : 'black'
     }
   })
 export default styles

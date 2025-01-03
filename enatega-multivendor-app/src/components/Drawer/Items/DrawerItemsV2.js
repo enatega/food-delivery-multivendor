@@ -15,10 +15,10 @@ function DrawerItems(props) {
       <TouchableOpacity
         activeOpacity={1}
         style={styles.container}
-        onPress={props.onPress}>
+        onPress={props?.onPress}>
         <View style={styles.leftContainer}>
           <SimpleLineIcons
-            name={props.icon}
+            name={props?.icon}
             size={verticalScale(16)}
             color={currentTheme.darkBgFont}
           />
@@ -29,7 +29,7 @@ function DrawerItems(props) {
             textColor={currentTheme.fontMainColor}
             small
             bold>
-            {props.title}
+            {props?.title}
           </TextDefault>
         </View>
       </TouchableOpacity>

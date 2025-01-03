@@ -14,7 +14,7 @@ function HelpBrowser(props) {
 
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const { title, url } = props.route.params
+  const { title, url } = props?.route.params
   const [loading, loadingSetter] = useState(true)
   useEffect(() => {
     async function Track() {
@@ -23,7 +23,7 @@ function HelpBrowser(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       headerTitle: title,
       headerTitleAlign: 'center',
@@ -62,7 +62,7 @@ function HelpBrowser(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   return (
     <View style={{ flex: 1 }}>

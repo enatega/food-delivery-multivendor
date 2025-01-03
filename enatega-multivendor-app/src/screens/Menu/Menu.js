@@ -13,59 +13,58 @@ import {
   Animated,
   StatusBar,
   Platform,
-  RefreshControl
+  RefreshControl,
+  FlatList,
+  Image,
+  ScrollView,
+  Dimensions
 } from 'react-native'
-import {
-  MaterialIcons,
-  SimpleLineIcons,
-  AntDesign,
-  MaterialCommunityIcons
-} from '@expo/vector-icons'
+import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
-import {
-  useCollapsibleSubHeader,
-  CollapsibleSubHeaderAnimator
-} from 'react-navigation-collapsible'
+import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
-import Search from '../../components/Main/Search/Search'
-import Item from '../../components/Main/Item/Item'
 import UserContext from '../../context/User'
-import { getCuisines, restaurantListPreview } from '../../apollo/queries'
+import { getCuisines } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
-import TextError from '../../components/Text/TextError/TextError'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import {
+  useNavigation,
+  useFocusEffect,
+  useRoute
+} from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import navigationOptions from '../Main/navigationOptions'
+import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
 import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
-import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
-import Filters from '../../components/Filter/FilterSlider'
 import { FILTER_TYPE } from '../../utils/enums'
 import CustomHomeIcon from '../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomOtherIcon from '../../assets/SVG/imageComponents/CustomOtherIcon'
 import CustomWorkIcon from '../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
+import { useMemo } from 'react'
+import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
+import { Modalize } from 'react-native-modalize'
+import Filters from '../../components/Filter/FilterSlider'
+import {
+  isOpen,
+  sortRestaurantsByOpenStatus
+} from '../../utils/customFunctions'
+import Ripple from 'react-native-material-ripple'
 
-import { escapeRegExp } from '../../utils/regex'
-
-const RESTAURANTS = gql`
-  ${restaurantListPreview}
-`
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
-
 const GET_CUISINES = gql`
   ${getCuisines}
 `
@@ -87,61 +86,56 @@ export const FILTER_VALUES = {
     values: ['3+ Rating', '4+ Rating', '5 star Rating']
   }
 }
-
+const { height: HEIGHT } = Dimensions.get('window')
 function Menu({ route, props }) {
   const Analytics = analytics()
-  const { selectedType } = route.params
-  const { t } = useTranslation()
+  const selectedType = route.params?.selectedType
+  const queryType = route.params?.queryType
+  const collection = route.params?.collection
+  const { t, i18n } = useTranslation()
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
-  const [search, setSearch] = useState('')
   const [filters, setFilters] = useState(FILTER_VALUES)
-  const [restaurantData, setRestaurantData] = useState([])
-  const [sectionData, setSectionData] = useState([])
+  const [activeCollection, setActiveCollection] = useState()
   const modalRef = useRef(null)
+  const filtersModalRef = useRef()
+
   const navigation = useNavigation()
+  const routeData = useRoute()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   const { getCurrentLocation } = useLocation()
   const locationData = location
 
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null,
-        shopType: selectedType || null,
-        ip: null
-      },
-      onCompleted: data => {
-        
-        setRestaurantData(data.nearByRestaurantsPreview.restaurants)
-        setSectionData(data.nearByRestaurantsPreview.sections)
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
+  const {
+    data,
+    refetch,
+    networkStatus,
+    loading,
+    error,
+    restaurantData,
+    setRestaurantData,
+    heading,
+    subHeading,
+    allData
+  } = useRestaurantQueries(queryType, location, selectedType)
+
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
 
   const { data: allCuisines } = useQuery(GET_CUISINES)
 
-  const newheaderColor = currentTheme.newheaderColor
-
   const {
     onScroll /* Event handler */,
     containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */,
-    translateY
+    scrollIndicatorInsetTop /* number */
   } = useCollapsibleSubHeader()
 
-  const searchPlaceholderText =
-    selectedType === 'restaurant' ? t('searchRestaurant') : t('searchGrocery')
-  const menuPageHeading =
-    selectedType === 'restaurant' ? t('allRestaurant') : t('allGrocery')
   const emptyViewDesc =
     selectedType === 'restaurant' ? t('noRestaurant') : t('noGrocery')
 
@@ -160,26 +154,45 @@ function Menu({ route, props }) {
   useLayoutEffect(() => {
     navigation.setOptions(
       navigationOptions({
-        headerMenuBackground: currentTheme.main,
+        headerMenuBackground: currentTheme.themeBackground,
         horizontalLine: currentTheme.headerColor,
         fontMainColor: currentTheme.darkBgFont,
-        iconColorPink: currentTheme.black,
+        iconColorPink: currentTheme.iconColor,
         open: onOpen,
-        icon: 'back'
+        icon: 'back',
+        haveBackBtn: routeData?.name === 'Menu',
+        onPressFilter: () => filtersModalRef.current.open(),
+        onPressMap: () =>
+          navigation.navigate('MapSection', {
+            location,
+            restaurants: restaurantData
+          }),
+        onPressBack: () => navigation.goBack()
       })
     )
-  }, [navigation, currentTheme])
+  }, [navigation, currentTheme, restaurantData])
 
   useEffect(() => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       Cuisines: {
         selected: [],
         type: FILTER_TYPE.CHECKBOX,
-        values: allCuisines?.cuisines?.map(item => item.name)
+        values: allCuisines?.cuisines?.map((item) => item.name)
       }
     }))
   }, [allCuisines])
+
+  useEffect(() => {
+    if (collection && allData) {
+      setActiveCollection(collection)
+      const tempData = [...allData]
+      const filteredData = tempData?.filter((item) =>
+        item?.cuisines?.includes(collection)
+      )
+      setRestaurantData(filteredData)
+    }
+  }, [collection, route, allData])
 
   const onOpen = () => {
     const modal = modalRef.current
@@ -199,7 +212,7 @@ function Menu({ route, props }) {
     Other: CustomOtherIcon
   }
 
-  const setAddressLocation = async address => {
+  const setAddressLocation = async (address) => {
     setLocation({
       _id: address._id,
       label: address.label,
@@ -212,14 +225,28 @@ function Menu({ route, props }) {
     modalRef.current.close()
   }
 
+  const collectionData = useMemo(() => {
+    if (routeData?.name === 'Restaurants') {
+      return allCuisines?.cuisines?.filter(
+        (cuisine) => cuisine?.shopType === 'restaurant'
+      )
+    } else if (routeData?.name === 'Store') {
+      return allCuisines?.cuisines?.filter(
+        (cuisine) => cuisine?.shopType === 'grocery'
+      )
+    } else {
+      return allCuisines?.cuisines
+    }
+  }, [routeData, allCuisines])
+
   const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
 
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
     fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.error) {
           console.log('Reverse geocoding request failed:', data.error)
         } else {
@@ -242,7 +269,7 @@ function Menu({ route, props }) {
           console.log(address)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching reverse geocoding data:', error)
       })
   }
@@ -256,16 +283,22 @@ function Menu({ route, props }) {
           onPress={setCurrentLocation}
           disabled={busy}
         >
-          <View style={styles().addressSubContainer}>
-            {
-              busy ? <Spinner size='small' /> : (
-                <>
-                  <SimpleLineIcons name="target" size={scale(18)} color={currentTheme.black} />
-                  <View style={styles().mL5p} />
-                  <TextDefault bold>{t('currentLocation')}</TextDefault>
-                </>
-              )
-            }
+          <View style={styles(currentTheme).addressSubContainer}>
+            {busy ? (
+              <Spinner size='small' />
+            ) : (
+              <>
+                <SimpleLineIcons
+                  name='target'
+                  size={scale(18)}
+                  color={currentTheme.black}
+                />
+                <View style={styles().mL5p} />
+                <TextDefault bold textColor={currentTheme.black}>
+                  {t('currentLocation')}
+                </TextDefault>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -304,15 +337,18 @@ function Menu({ route, props }) {
               modal?.close()
               navigation.navigate({ name: 'CreateAccount' })
             }
-          }}>
-          <View style={styles().addressSubContainer}>
+          }}
+        >
+          <View style={styles(currentTheme).addressSubContainer}>
             <AntDesign
-              name="pluscircleo"
+              name='pluscircleo'
               size={scale(20)}
               color={currentTheme.black}
             />
             <View style={styles().mL5p} />
-            <TextDefault bold>{t('addAddress')}</TextDefault>
+            <TextDefault bold textColor={currentTheme.black}>
+              {t('addAddress')}
+            </TextDefault>
           </View>
         </TouchableOpacity>
       </View>
@@ -320,51 +356,46 @@ function Menu({ route, props }) {
     </View>
   )
 
+
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <View style={styles(currentTheme).searchbar}>
-          <Search
-            search={''}
-            setSearch={() => { }}
-            newheaderColor={newheaderColor}
-            placeHolder={searchPlaceholderText}
-          />
-        </View>
-
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
         <Placeholder
-          Animation={props => (
+          Animation={(props) => (
             <Fade
               {...props}
               style={styles(currentTheme).placeHolderFadeColor}
               duration={600}
             />
           )}
-          style={styles(currentTheme).placeHolderContainer}>
+          style={styles(currentTheme).placeHolderContainer}
+        >
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
@@ -376,33 +407,65 @@ function Menu({ route, props }) {
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
-  const searchRestaurants = searchText => {
-    const data = []
-    const escapedSearchText = escapeRegExp(searchText);
-    const regex = new RegExp(escapedSearchText, 'i');
-    restaurantData?.forEach(restaurant => {
-      const resultCatFoods = restaurant.keywords.some(keyword => {
-        const result = keyword.search(regex)
-        return result > -1
-      })
-      if (resultCatFoods)
-        data.push(restaurant)
-    })
-    return data
+  // const searchRestaurants = (searchText) => {
+  //   const data = []
+  //   const regex = new RegExp(searchText, 'i')
+  //   restaurantData?.forEach((restaurant) => {
+  //     const resultCatFoods = restaurant.keywords.some((keyword) => {
+  //       const result = keyword.search(regex)
+  //       return result > -1
+  //     })
+  //     if (resultCatFoods) data.push(restaurant)
+  //   })
+  //   return data
+  // }
+
+  // commented sections for now
+  // Flatten the array. That is important for data sequence
+  // const restaurantSections = sectionData?.map((sec) => ({
+  //   ...sec,
+  //   restaurants: sec?.restaurants
+  //     ?.map((id) => restaurantData?.filter((res) => res._id === id))
+  //     .flat()
+  // }))
+
+  const extractRating = (ratingString) => parseInt(ratingString)
+
+  // const onPressCollection = (collection) => {
+  //   setActiveCollection(collection.name)
+  //   const tempData = [...allData]
+  //   const filteredData = tempData?.filter((item) =>
+  //     item?.cuisines?.includes(collection.name)
+  //   )
+  //   setRestaurantData(filteredData)
+  //   // setActiveCollection(null)
+  // }
+
+  const onPressCollection = (collection) => {
+    if (activeCollection === collection.name) {
+      // If the same collection is clicked again, deselect it
+      setActiveCollection(null)
+      setRestaurantData(allData) // Reset to show all data
+    } else {
+      // Select the new collection
+      setActiveCollection(collection.name)
+      const tempData = [...allData]
+      const filteredData = tempData?.filter((item) =>
+        item?.cuisines?.includes(collection.name)
+      )
+      setRestaurantData(filteredData)
+    }
   }
 
-  // Flatten the array. That is important for data sequence
-  const restaurantSections = sectionData?.map(sec => ({
-    ...sec,
-    restaurants: sec?.restaurants
-      ?.map(id => restaurantData?.filter(res => res._id === id))
-      .flat()
-  }))
-
-  const extractRating = ratingString => parseInt(ratingString)
-
   const applyFilters = () => {
-    let filteredData = [...data.nearByRestaurantsPreview.restaurants]
+    let filteredData =
+      queryType === 'orderAgain'
+        ? [...data?.recentOrderRestaurantsPreview]
+        : queryType === 'topPicks'
+          ? [...data?.mostOrderedRestaurantsPreview]
+          : queryType === 'topBrands'
+            ? [...data?.topRatedVendorsPreview]
+            : [...data?.nearByRestaurantsPreview?.restaurants]
 
     const ratings = filters.Rating
     const sort = filters.Sort
@@ -414,11 +477,9 @@ function Menu({ route, props }) {
     if (ratings?.selected?.length > 0) {
       const numericRatings = ratings.selected?.map(extractRating)
       filteredData = filteredData.filter(
-        item => item?.reviewAverage >= Math.min(...numericRatings)
+        (item) => item?.reviewAverage >= Math.min(...numericRatings)
       )
     }
-
-
 
     // Sort filter
     if (sort?.selected?.length > 0) {
@@ -435,100 +496,196 @@ function Menu({ route, props }) {
     // Offers filter
     if (offers?.selected?.length > 0) {
       if (offers.selected.includes('Free Delivery')) {
-        filteredData = filteredData.filter(item => item?.freeDelivery)
+        filteredData = filteredData.filter((item) => item?.freeDelivery)
       }
       if (offers.selected.includes('Accept Vouchers')) {
-        filteredData = filteredData.filter(item => item?.acceptVouchers)
+        filteredData = filteredData.filter((item) => item?.acceptVouchers)
       }
     }
 
     // Cuisine filter
     if (cuisines?.selected?.length > 0) {
-      filteredData = filteredData.filter(item =>
-        item.cuisines.some(cuisine => cuisines?.selected?.includes(cuisine))
+      filteredData = filteredData.filter((item) =>
+        item.cuisines.some((cuisine) => cuisines?.selected?.includes(cuisine))
       )
     }
 
     // Set filtered data
     setRestaurantData(filteredData)
+    filtersModalRef.current.close()
   }
 
   return (
-    <>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}>
-        <View style={[styles().flex, styles(currentTheme).screenBackground]}>
-          <View style={styles().flex}>
-            <View style={styles().mainContentContainer}>
-              <View style={[styles().flex, styles().subContainer]}>
-                <Animated.FlatList
-                  contentInset={{ top: containerPaddingTop }}
-                  contentContainerStyle={{
-                    paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
+    >
+      <View style={styles(currentTheme).container}>
+        <Animated.FlatList
+          contentInset={{ top: containerPaddingTop }}
+          contentContainerStyle={{
+            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+            padding: 15,
+            gap: 16
+          }}
+          contentOffset={{ y: -containerPaddingTop }}
+          onScroll={onScroll}
+          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={() => (
+            <>
+              <View style={styles(currentTheme).header}>
+                <View>
+                  <TextDefault bolder H2 isRTL>
+                    {t(
+                      routeData?.name === 'Restaurants'
+                        ? 'Restaurants'
+                        : 'Stores'
+                    )}
+                  </TextDefault>
+                  <TextDefault bold H5 isRTL>
+                    {t('BrowseCategories')}
+                  </TextDefault>
+                </View>
+                <Ripple
+                  style={styles(currentTheme).seeAllBtn}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate('Collection', {
+                      collectionType: routeData?.name,
+                      data: collectionData
+                    })
                   }}
-                  contentOffset={{ y: -containerPaddingTop }}
-                  onScroll={onScroll}
-                  scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-                  showsVerticalScrollIndicator={false}
-                  ListHeaderComponent={
-                    search || restaurantData.length === 0 ? null : (
-                      <ActiveOrdersAndSections
-                        sections={restaurantSections}
-                        menuPageHeading={menuPageHeading}
-                      />
-                    )
-                  }
-                  ListEmptyComponent={emptyView()}
-                  keyExtractor={(item, index) => index.toString()}
-                  refreshControl={
-                    <RefreshControl
-                      progressViewOffset={containerPaddingTop}
-                      colors={[currentTheme.iconColorPink]}
-                      refreshing={networkStatus === 4}
-                      onRefresh={() => {
-                        if (networkStatus === 7) {
-                          refetch()
-                        }
-                      }}
-                    />
-                  }
-                  data={search ? searchRestaurants(search) : restaurantData}
-                  renderItem={({ item }) => <Item item={item} />}
-                />
-                <CollapsibleSubHeaderAnimator translateY={translateY}>
-                  <View style={styles(currentTheme).searchbar}>
-                    <Search
-                      setSearch={setSearch}
-                      search={search}
-                      newheaderColor={newheaderColor}
-                      placeHolder={searchPlaceholderText}
-                    />
-                  </View>
-                  <Filters
-                    filters={filters}
-                    setFilters={setFilters}
-                    applyFilters={applyFilters}
-                  />
-                </CollapsibleSubHeaderAnimator>
+                >
+                  <TextDefault H5 bolder textColor={currentTheme.main}>
+                    {t('SeeAll')}
+                  </TextDefault>
+                </Ripple>
               </View>
-            </View>
-          </View>
-
-          <MainModalize
-            modalRef={modalRef}
-            currentTheme={currentTheme}
-            isLoggedIn={isLoggedIn}
-            addressIcons={addressIcons}
-            modalHeader={modalHeader}
-            modalFooter={modalFooter}
-            setAddressLocation={setAddressLocation}
-            profile={profile}
-            location={location}
-          />
-        </View>
-      </SafeAreaView>
-    </>
+              <FlatList
+                data={collectionData ?? []}
+                renderItem={({ item, index }) => {
+                  return (
+                      <Ripple
+                        activeOpacity={0.8}
+                        onPress={() => onPressCollection(item)}
+                        style={[
+                          styles(currentTheme).collectionCard,
+                          activeCollection === item.name && {
+                            backgroundColor: currentTheme.newButtonBackground
+                          }
+                        ]}
+                      >
+                        <View style={styles().brandImgContainer}>
+                          <Image
+                            source={{ uri: item?.image }}
+                            style={styles().collectionImage}
+                            resizeMode='cover'
+                          />
+                        </View>
+                        <TextDefault
+                          Normal
+                          bolder
+                          style={{ padding: 8 }}
+                          textColor={
+                            activeCollection === item.name
+                              ? currentTheme.main
+                              : currentTheme.gray700
+                          }
+                          isRTL
+                        >
+                          {item.name}
+                        </TextDefault>
+                      </Ripple>
+                  )
+                }}
+                keyExtractor={(item) => item?._id}
+                contentContainerStyle={styles().collectionContainer}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                inverted={currentTheme?.isRTL ? true : false}
+              />
+              {restaurantData?.length === 0 ? null : (
+                <ActiveOrdersAndSections
+                  menuPageHeading={
+                    heading
+                      ? heading
+                      : routeData?.name === 'Restaurants'
+                        ? 'Restaurants'
+                        : routeData?.name === 'Store'
+                          ? 'All Stores'
+                          : 'Restaurants'
+                  }
+                  subHeading={subHeading ? subHeading : ''}
+                />
+              )}
+            </>
+          )}
+          ListEmptyComponent={emptyView()}
+          keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl
+              progressViewOffset={containerPaddingTop}
+              colors={[currentTheme.iconColorPink]}
+              refreshing={networkStatus === 4}
+              onRefresh={() => {
+                if (networkStatus === 7) {
+                  refetch()
+                }
+              }}
+            />
+          }
+          data={sortRestaurantsByOpenStatus(restaurantData || [])}
+          renderItem={({ item }) => {
+            if (item && item?.image && item?._id) {
+              const restaurantOpen = isOpen(item)
+              return (
+                <NewRestaurantCard
+                  {...item}
+                  fullWidth
+                  isOpen={restaurantOpen}
+                />
+              )
+            }
+          }}
+        />
+      </View>
+      <MainModalize
+        modalRef={modalRef}
+        currentTheme={currentTheme}
+        isLoggedIn={isLoggedIn}
+        addressIcons={addressIcons}
+        modalHeader={modalHeader}
+        modalFooter={modalFooter}
+        setAddressLocation={setAddressLocation}
+        profile={profile}
+        location={location}
+      />
+      <Modalize
+        ref={filtersModalRef}
+        modalStyle={styles(currentTheme).modal}
+        modalHeight={HEIGHT * 0.72}
+        overlayStyle={styles(currentTheme).overlay}
+        handleStyle={styles(currentTheme).handle}
+        handlePosition='inside'
+        openAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400 },
+          spring: { speed: 20, bounciness: 10 }
+        }}
+      >
+        <Filters
+          filters={filters}
+          setFilters={setFilters}
+          applyFilters={applyFilters}
+          onClose={() => filtersModalRef.current.close()}
+        />
+      </Modalize>
+    </SafeAreaView>
   )
 }
 

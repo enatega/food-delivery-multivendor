@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useContext} from 'react'
+import React, { useState, useEffect, useLayoutEffect, useContext } from 'react'
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
 import { callNumber } from '../../utilities/callNumber'
 import colors from '../../utilities/colors'
@@ -11,7 +11,7 @@ import UserContext from '../../context/user'
 import { useTranslation } from 'react-i18next'
 
 export const useChatScreen = ({ navigation, route }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { dataProfile } = useContext(UserContext)
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState(null)

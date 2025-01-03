@@ -1,136 +1,142 @@
+// Hooks
 import React, { useContext, useEffect, useState } from 'react'
-import {
-  View,
-  Dimensions,
-  Text,
-  // TouchableOpacity,
-  Image,
-  FlatList,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard
-} from 'react-native'
-import {
-  MaterialIcons,
-  Ionicons,
-  Entypo,
-  AntDesign,
-  SimpleLineIcons,
-  MaterialCommunityIcons
-} from '@expo/vector-icons'
-import styles from './styles'
-import TextDefault from '../../Text/TextDefault/TextDefault'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
-import { useNavigation } from '@react-navigation/native'
-import { DAYS } from '../../../utils/enums'
-import {
-  BorderlessButton,
-  RectButton,
-  TouchableOpacity
-} from 'react-native-gesture-handler'
-import { scale } from '../../../utils/scaling'
-import { alignment } from '../../../utils/alignment'
-import TextError from '../../Text/TextError/TextError'
-import { textStyles } from '../../../utils/textStyles'
 import { useTranslation } from 'react-i18next'
-import Search from '../../../components/Main/Search/Search'
-import { useMutation } from '@apollo/client'
-import gql from 'graphql-tag'
-import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import Spinner from '../../Spinner/Spinner'
-import UserContext from '../../../context/User'
-import { addFavouriteRestaurant } from '../../../apollo/mutations'
-import { profile } from '../../../apollo/queries'
-import { calculateDistance } from '../../../utils/customFunctions'
-import { LocationContext } from '../../../context/Location'
-import ConfigurationContext from '../../../context/Configuration'
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle
 } from 'react-native-reanimated'
+import { useNavigation } from '@react-navigation/native'
 
+// React Native
+import { View, Dimensions, Text, Image, FlatList, Platform } from 'react-native'
+import { RectButton, TouchableOpacity } from 'react-native-gesture-handler'
+
+
+// Icons
+import {
+  Ionicons,
+  Entypo,
+  SimpleLineIcons,
+  MaterialCommunityIcons,
+  FontAwesome5
+} from '@expo/vector-icons'
+import Bicycle from '../../../assets/SVG/Bicycle'
+
+// Styles
+import styles from './styles'
+
+// Utils
+import TextDefault from '../../Text/TextDefault/TextDefault'
+import { theme } from '../../../utils/themeColors'
+import { scale } from '../../../utils/scaling'
+import { alignment } from '../../../utils/alignment'
+import TextError from '../../Text/TextError/TextError'
+import { textStyles } from '../../../utils/textStyles'
+import { isOpen } from '../../../utils/customFunctions'
+
+// Components
+import Search from '../../../components/Main/Search/Search'
+import FavoriteButton from '../../FavButton/FavouriteButton'
+
+// Contexts
+import { LocationContext } from '../../../context/Location'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import ConfigurationContext from '../../../context/Configuration'
+import { useQuery } from '@apollo/client'
+import { GET_SUB_CATEGORIES } from '../../../apollo/queries'
+import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
+import { Icon, IconButton } from 'react-native-paper'
+// Animation
 const AnimatedText = Animated.createAnimatedComponent(Text)
-const AnimatedBorderless = Animated.createAnimatedComponent(BorderlessButton)
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
-const { height } = Dimensions.get('screen')
+// Screen Dimensions & Scroll Range
+const { height } = Dimensions.get('screen');
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT = height * 0.4
+const HEADER_MAX_HEIGHT =
+  Platform.OS === 'android' ? height * 0.65 : height * 0.61
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
-const ADD_FAVOURITE = gql`
-  ${addFavouriteRestaurant}
-`
-const PROFILE = gql`
-  ${profile}
-`
-
 function ImageTextCenterHeader(props, ref) {
-  const { translationY } = props
-  const flatListRef = ref
+  // Queries
+  const { data: subCategoriesData, loading: subCategoriesLoading } = useQuery(
+    GET_SUB_CATEGORIES,
+    {
+      onError: (error) => {
+        FlashMessage({
+          message:
+            error.message ||
+            error.clientErrors[0].message ||
+            error.cause.message ||
+            'Failed to fetch sub-categories'
+        })
+      }
+    }
+  )
+
+  // States
+  const [toggle, setToggle] = useState(false)
+
+  // Hooks
+  const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
   const { location } = useContext(LocationContext)
-  const { t } = useTranslation()
+  const configuration = useContext(ConfigurationContext)
+
+  // Contexts & Constants
+  const { translationY } = props
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   const newheaderColor = currentTheme.backgroundColor
   const cartContainer = currentTheme.gray500
-  const { profile } = useContext(UserContext)
-  const configuration = useContext(ConfigurationContext)
-  const heart = profile ? profile.favourite.includes(props.restaurantId) : false
-  const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
-    onCompleted,
-    refetchQueries: [{ query: PROFILE }]
-  })
 
-  function onCompleted() {
-    FlashMessage({ message: t('favouritelistUpdated') })
-  }
+  // Ref
+  const flatListRef = ref
 
-  const handleAddToFavorites = () => {
-    if (!loadingMutation && profile) {
-      mutate({ variables: { id: props.restaurantId } })
-    }
-  }
+
 
   const aboutObject = {
-    latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
-    longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
-    address: props.restaurant ? props.restaurant.address : '',
-    restaurantName: props.restaurantName,
-    restaurantImage: props.restaurantImage,
-    restaurantTax: props.tax,
-    restaurantMinOrder: props.minimumOrder,
-    deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
-    average: props.restaurant ? props.restaurant.reviewData.ratings : '...',
-    total: props.restaurant ? props.restaurant.reviewData.total : '...',
-    reviews: props.restaurant ? props.restaurant.reviewData.reviews : '...',
-    isAvailable: props.restaurant ? props.restaurant.isAvailable : true,
-    openingTimes: props.restaurant ? props.restaurant.openingTimes : [],
-    isOpen: () => {
-      if (!props.restaurant) return true
-      const date = new Date()
-      const day = date.getDay()
-      const hours = date.getHours()
-      const minutes = date.getMinutes()
-      const todaysTimings = props.restaurant.openingTimes.find(
-        (o) => o.day === DAYS[day]
-      )
-      const times = todaysTimings.times.filter(
-        (t) =>
-          hours >= Number(t.startTime[0]) &&
-          minutes >= Number(t.startTime[1]) &&
-          hours <= Number(t.endTime[0]) &&
-          minutes <= Number(t.endTime[1])
-      )
-
-      return times.length > 0
-    }
+    latitude: props?.restaurant
+      ? props?.restaurant.location.coordinates[1]
+      : '',
+    longitude: props?.restaurant
+      ? props?.restaurant.location.coordinates[0]
+      : '',
+    address: props?.restaurant ? props?.restaurant.address : '',
+    restaurantId: props?.restaurantId,
+    restaurantName: props?.restaurantName,
+    restaurantImage: props?.restaurantImage,
+    restaurantLogo: props?.restaurant ? props?.restaurant.logo : '',
+    restaurantCuisines: props?.restaurant ? props?.restaurant.cuisines : '',
+    restaurantTax: props?.tax,
+    restaurantMinOrder: props?.minimumOrder,
+    deliveryTime: props?.restaurant ? props?.restaurant.deliveryTime : '...',
+    minimumOrder: props?.restaurant ? props?.restaurant.minimumOrder : '...',
+    average: props?.restaurant ? props?.restaurant?.reviewData?.ratings : '...',
+    total: props?.restaurant ? props?.restaurant?.reviewData?.total : '...',
+    reviews: props?.restaurant ? props?.restaurant?.reviewData?.reviews : '...',
+    isAvailable: props?.restaurant ? props?.restaurant?.isAvailable : true,
+    openingTimes: props?.restaurant ? props?.restaurant?.openingTimes : [],
+    phone: props?.restaurant ? props?.restaurant?.phone : '',
+    restaurantUrl: props?.restaurant ? props?.restaurant?.restaurantUrl : '',
+    IsOpen: isOpen(props?.restaurant ? props?.restaurant : '')
   }
 
+  // Constants
+  const currentDayShort = new Date()
+    .toLocaleString('en-US', { weekday: 'short' })
+    .toUpperCase()
+
+  const todayOpeningTimes = aboutObject?.openingTimes.find(
+    (opening) => opening.day === currentDayShort
+  )
+
+  // Local Hooks
   const minutesOpacity = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
@@ -141,8 +147,6 @@ function ImageTextCenterHeader(props, ref) {
       )
     }
   })
-
-
 
   const headerHeight = useAnimatedStyle(() => {
     return {
@@ -169,7 +173,6 @@ function ImageTextCenterHeader(props, ref) {
     }
   })
 
-
   const opacity = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
@@ -179,15 +182,9 @@ function ImageTextCenterHeader(props, ref) {
         Extrapolation.CLAMP
       )
     }
-  })
+  });
 
-  const distance = calculateDistance(
-    aboutObject?.latitude,
-    aboutObject?.longitude,
-    location?.latitude,
-    location?.longitude
-  )
-
+  // Empty View
   const emptyView = () => {
     return (
       <View
@@ -202,75 +199,140 @@ function ImageTextCenterHeader(props, ref) {
     )
   }
 
+  function getSubCategoryFoodCount(topBarData) {
+    const subCategoryFoodMap = new Map();
+
+    topBarData.forEach((category) => {
+      if (category.foods) {
+        // filtering out the out of stock sub-categories
+        category.foods.filter((_food) => !_food.isOutOfStock).forEach((food) => {
+          const subCategoryId = food?.subCategory;
+          // Increment count for the subCategory in the map
+          if (subCategoryFoodMap.has(subCategoryId)) {
+            subCategoryFoodMap.set(subCategoryId, subCategoryFoodMap.get(subCategoryId) + 1);
+          } else {
+            subCategoryFoodMap.set(subCategoryId, 1);
+          }
+        });
+      }
+    });
+    return subCategoryFoodMap;
+  }
+
+
+  async function getRelatedSubCategories(parentCategoryId) {
+    try {
+      // First, get the food count map
+      const foodCountMap = getSubCategoryFoodCount(props?.topBarData);
+
+      // Filter subcategories based on two conditions:
+      // 1. Parent Category matches
+      // 2. Subcategory has food items (count > 0)
+      const filteredSubCategories = subCategoriesData?.subCategories.filter(
+        (sub_category) =>
+          sub_category.parentCategoryId === parentCategoryId &&
+          (foodCountMap.get(sub_category._id) || 0) > 0
+      );
+      props.setRelatedSubCategories(filteredSubCategories);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Handlers
+  /*1. Parent Category Button Click */
+  const handleParentCategoryButtonClick = async (item) => {
+    await props.setSelectedPrntCtg(item.title)
+    await getRelatedSubCategories(item._id)
+    await props.scrollElementById(item.title, 'parentCategory')
+    await props.buttonClickedSetter(true)
+    await props.setSelectedPrntCtg(item.title)
+  }
+  /* 2. Child Category Button Click */
+  const handleSubCategoryButtonClick = async (item) => {
+    await props?.setSelectedSubCtg(item.title)
+    await props.scrollElementById(item.title, 'subCategory')
+    await props.buttonClickedSetter(true)
+    await props?.setSelectedSubCtg(item.title)
+  }
+
+  // UseEffects
+  useEffect(() => {
+    if (props.selectedLabel !== null || props.selectedPrntCtg) {
+      const selectedItem = props?.topBarData[props.selectedLabel] || props?.topBarData?.find((prnt_ctg) => prnt_ctg._id === props.selectedPrntCtg)
+      const newItem = props?.topBarData?.find((prnt_ctg) => prnt_ctg.title === props.selectedPrntCtg)
+      if (selectedItem?._id) {
+        getRelatedSubCategories(selectedItem._id)
+      }
+      if (newItem?._id) {
+        getRelatedSubCategories(newItem?._id)
+      }
+    }
+  }, [props.selectedLabel, props.selectedPrntCtg, props.selectedSubCtg])
+
   return (
-    <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
+    <Animated.View style={[styles(currentTheme).mainContainer, headerHeight ]}>
       <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
-          <View style={styles().fixedViewNavigation}>
-            <View style={styles().backIcon}>
-              {props.searchOpen ? (
-                <AnimatedBorderless
+          <View style={[styles().fixedViewNavigation]}>
+            <View style={[styles().backIcon]}>
+              {props?.searchOpen ? (  
+                <AnimatedTouchable
                   activeOpacity={0.7}
                   style={[
-                    styles().touchArea,
+                    styles(currentTheme).touchArea,
                     {
-                      backgroundColor: props.themeBackground,
-                      borderRadius: props.iconRadius,
-                      height: props.iconTouchHeight
+                      // backgroundColor: props?.themeBackground,
+                      borderRadius: props?.iconRadius,
+                      height: props?.iconTouchHeight,
+                      marginTop:28
                     }
                   ]}
-                  onPress={props.searchPopupHandler}
+                  onPress={props?.searchPopupHandler}
                 >
                   <Entypo
                     name='cross'
                     color={currentTheme.newIconColor}
-                    size={scale(22)}
+                    size={scale(18)}
                   />
-                </AnimatedBorderless>
+                </AnimatedTouchable>
               ) : (
-                <AnimatedBorderless
+                <AnimatedTouchable
                   activeOpacity={0.7}
                   style={[
-                    styles().touchArea,
+                    styles(currentTheme).touchArea,
                     {
-                      backgroundColor: props.themeBackground,
-                      borderRadius: props.iconRadius,
-                      height: props.iconTouchHeight
+                      borderRadius: props?.iconRadius,
+                      height: props?.iconTouchHeight,
+                      marginTop:15.5
                     }
                   ]}
                   onPress={() => navigation.goBack()}
                 >
-                  {/* <Ionicons
-                    name='ios-arrow-back'
-                    style={{
-                      color: props.black,
-                      fontSize: props.iconSize
-                    }}
-                  /> */}
                   <Ionicons
                     name='arrow-back'
                     color={currentTheme.newIconColor}
-                    size={scale(22)}
+                    size={scale(17)}
                   />
-                </AnimatedBorderless>
+                </AnimatedTouchable>
               )}
             </View>
-            <View style={styles().center}>
-              {!props.searchOpen && (
+            <View style={[styles().center]}>
+              {!props?.searchOpen && (
                 <AnimatedText
                   numberOfLines={1}
-                  style={[styles(currentTheme).headerTitle, minutesOpacity]}
+                  style={[styles(currentTheme).headerTitle,minutesOpacity, {marginTop:12}]}
                 >
                   {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
                 </AnimatedText>
               )}
             </View>
-            <View style={styles().fixedIcons}>
-              {props.searchOpen ? (
+            <View style={[styles().fixedIcons, {}]}>
+              {props?.searchOpen ? (
                 <>
                   <Search
-                    setSearch={props.setSearch}
-                    search={props.search}
+                    setSearch={props?.setSearch}
+                    search={props?.search}
                     newheaderColor={newheaderColor}
                     cartContainer={cartContainer}
                     placeHolder={t('searchItems')}
@@ -280,46 +342,17 @@ function ImageTextCenterHeader(props, ref) {
                 <>
                   <TouchableOpacity
                     activeOpacity={0.7}
-                    disabled={loadingMutation}
                     style={[
-                      styles().touchArea,
+                      styles(currentTheme).touchArea,
                       {
-                        backgroundColor: props.themeBackground,
-                        borderRadius: props.iconRadius,
-                        height: props.iconTouchHeight
-                      }
-                    ]}
-                    onPress={handleAddToFavorites}
-                  >
-                    <View>
-                      {loadingMutation ? (
-                        <Spinner
-                          size={'small'}
-                          backColor={'transparent'}
-                          spinnerColor={currentTheme.iconColorDark}
-                        />
-                      ) : (
-                        <AntDesign
-                          name={heart ? 'heart' : 'hearto'}
-                          size={scale(15)}
-                          color={currentTheme.newIconColor}
-                        />
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={[
-                      styles().touchArea,
-                      {
-                        backgroundColor: props.themeBackground,
-                        borderRadius: props.iconRadius,
-                        height: props.iconTouchHeight
+                        // backgroundColor: props?.themeBackground,
+                        borderRadius: props?.iconRadius,
+                        height: props?.iconTouchHeight
                       }
                     ]}
                     onPress={() => {
                       navigation.navigate('About', {
-                        restaurantObject: { ...aboutObject, isOpen: null },
+                        restaurantObject: { ...aboutObject },
                         tab: false
                       })
                     }}
@@ -335,17 +368,16 @@ function ImageTextCenterHeader(props, ref) {
                     style={[
                       styles(currentTheme).touchArea,
                       {
-                        backgroundColor: props.themeBackground,
-                        borderRadius: props.iconRadius,
-                        height: props.iconTouchHeight
+                        borderRadius: props?.iconRadius,
+                        height: props?.iconTouchHeight
                       }
                     ]}
-                    onPress={props.searchHandler}
+                    onPress={props?.searchHandler}
                   >
                     <Ionicons
                       name='search-outline'
                       style={{
-                        fontSize: props.iconSize
+                        fontSize: 18
                       }}
                       color={currentTheme.newIconColor}
                     />
@@ -354,96 +386,94 @@ function ImageTextCenterHeader(props, ref) {
               )}
             </View>
           </View>
-          {!props.search && !props.loading && (
+          {!props?.search && !props?.loading && (
             <Animated.View style={[styles().restaurantDetails, opacity]}>
+              <Animated.View>
+                <Image
+                  resizeMode='cover'
+                  source={{ uri: aboutObject?.restaurantImage }}
+                  style={[
+                    styles().mainRestaurantImg,
+                    props?.searchOpen ? { opacity: 0 } : {}
+                  ]}
+                />
+                <View style={styles(currentTheme).mainDetailsContainer}>
+                  <View style={styles(currentTheme).subDetailsContainer}>
+                    <TextDefault textColor={currentTheme.fontMainColor}>
+                      {t('deliveryCharges')} {configuration.currencySymbol}
+                      {configuration?.deliveryRate}
+                    </TextDefault>
+                  </View>
+
+                  <View style={styles(currentTheme).subDetailsContainer}>
+                    <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+                      {t('minimumOrder')} {configuration.currencySymbol}{' '}
+                      {aboutObject?.restaurantMinOrder}
+                    </TextDefault>
+                  </View>
+                </View>
+              </Animated.View>
               <Animated.View
                 style={[
                   {
                     display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: scale(15),
-                    marginBottom: scale(20)
+                    gap: scale(10),
+                    marginBottom: scale(10),
+                    ...alignment.PLmedium,
+                    ...alignment.PRmedium
                   }
                 ]}
               >
-                <View style={[styles().restImageContainer]}>
-                  <Image
-                    resizeMode='cover'
-                    source={{ uri: aboutObject.restaurantImage }}
-                    style={[styles().restaurantImg]}
+                <View style={[styles(currentTheme).subContainer]}>
+                  <View style={styles(currentTheme).titleContainer}>
+                    <Image
+                      resizeMode='cover'
+                      source={
+                        aboutObject.restaurantLogo
+                          ? { uri: aboutObject?.restaurantLogo }
+                          : require('../../../assets/images/defaultLogo.png')
+                      }
+                      style={[styles().restaurantImg]}
+                    />
+                    <TextDefault
+                      numberOfLines={2}
+                      H3
+                      bolder
+                      textColor={currentTheme.fontThirdColor}
+                    >
+                      {aboutObject?.restaurantName}
+                    </TextDefault>
+                  </View>
+                  <FavoriteButton
+                    iconSize={scale(24)}
+                    restaurantId={aboutObject.restaurantId}
                   />
                 </View>
-                <View style={styles().restaurantTitle}>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', height: toggle ? 'auto' : 20, backgroundColor:'' }}>
                   <TextDefault
-                    H4
-                    bolder
-                    Center
-                    textColor={currentTheme.fontMainColor}
-                    numberOfLines={1}
-                    ellipsizeMode='tail'
+                    textColor={currentTheme.fontThirdColor}
+                    H5
+                    bold
+                    isRTL
                   >
-                    {aboutObject.restaurantName}
+                    {aboutObject?.restaurantCuisines?.length ?
+                      toggle ? aboutObject?.restaurantCuisines?.join(', ') : aboutObject?.restaurantCuisines?.join(', ').substring(0, 40) + '...' : ''}
                   </TextDefault>
+                  {aboutObject?.restaurantCuisines?.toString()?.length > 40 && <IconButton icon={toggle ? 'arrow-up' : 'arrow-down'} iconColor='gray' style={{ width: 25 }} onPress={() => setToggle((prev) => !prev)} />}
                 </View>
               </Animated.View>
-              <View style={{ display: 'flex', flexDirection: 'row', gap: 7 }}>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  {distance.toFixed(2)}km {t('away')}
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  |
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  {configuration.currencySymbol}{' '}{aboutObject.restaurantTax} {t('taxFee')}
-                </TextDefault>
-              </View>
+
               <View
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: 7,
-                  marginTop: scale(5)
-                }}
-              >
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  {configuration.currencySymbol}{' '}{aboutObject.restaurantMinOrder} {t('minimum')}
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  |
-                </TextDefault>
-                <TextDefault
-                  style={styles().restaurantAbout}
-                  textColor={currentTheme.fontMainColor}
-                >
-                  {t('serviceFeeApply')}
-                </TextDefault>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
+                  flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row',
                   justifyContent: 'space-between',
-                  marginTop: scale(15)
+                  marginTop: scale(5),
+                  alignItems: 'center'
                 }}
               >
                 <AnimatedTouchable
                   activeOpacity={0.7}
-                  style={styles().ratingBox}
+                  style={styles(currentTheme).ratingBox}
                   onPress={() => {
                     navigation.navigate('Reviews', {
                       restaurantObject: { ...aboutObject, isOpen: null },
@@ -451,36 +481,34 @@ function ImageTextCenterHeader(props, ref) {
                     })
                   }}
                 >
-                  <MaterialIcons
-                    name='star-border'
+                  <FontAwesome5
+                    name='smile'
                     size={scale(20)}
                     color={currentTheme.newIconColor}
                   />
 
                   <TextDefault
                     textColor={currentTheme.fontNewColor}
-                    style={{
-                      fontWeight: '700',
-                      fontSize: scale(16)
-                    }}
+                    bold
+                    H5
+                    isRTL
                   >
-                    {aboutObject.average}
+                    {aboutObject?.average}
                   </TextDefault>
                   <TextDefault
                     textColor={currentTheme.fontNewColor}
-                    style={{
-                      fontWeight: '400',
-                      fontSize: scale(14),
-                      marginLeft: scale(5)
-                    }}
+                    style={{ marginLeft: -10 }}
+                    bold
+                    H5
+                    isRTL
                   >
-                    ({aboutObject.total})
+                    ({aboutObject?.total ?? '0 reviews'})
                   </TextDefault>
                 </AnimatedTouchable>
                 <AnimatedTouchable
-                  activeOpacity={0.7}
-                  style={styles().ratingBox}
-                  disabled={props.loading}
+                  style={styles(currentTheme).seeReviewsBtn}
+                  activeOpacity={0.8}
+                  disabled={props?.loading}
                   onPress={() => {
                     navigation.navigate('Reviews', {
                       restaurantObject: { ...aboutObject, isOpen: null },
@@ -488,26 +516,81 @@ function ImageTextCenterHeader(props, ref) {
                     })
                   }}
                 >
-                  <TextDefault
-                    textColor={currentTheme.editProfileButton}
-                    style={{
-                      fontSize: scale(14),
-                      fontWeight: '600'
-                    }}
-                  >
+                  <TextDefault bolder textColor={currentTheme.main}>
                     {t('seeReviews')}
                   </TextDefault>
                 </AnimatedTouchable>
               </View>
-              <View style={[styles().ratingBox, { marginTop: scale(9) }]}>
-                <MaterialCommunityIcons name="timer-outline" size={scale(20)}
-                  color={currentTheme.newIconColor} />
+
+              <View
+                style={{
+                  flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
+                  justifyContent: 'space-between',
+                  marginTop: scale(5)
+                }}
+              >
+                <View
+                  activeOpacity={0.7}
+                  style={styles(currentTheme).ratingBox}
+                >
+                  <MaterialCommunityIcons
+                    name='timer-outline'
+                    size={scale(21)}
+                    color={currentTheme.newIconColor}
+                  />
+
+                  {todayOpeningTimes && (
+                    <View style={styles(currentTheme).timingRow}>
+                      <TextDefault
+                        textColor={currentTheme.fontThirdColor}
+                        bold
+                        isRTL
+                      >
+                        {t(todayOpeningTimes?.day)}{' '}
+                      </TextDefault>
+                      {todayOpeningTimes?.times?.length < 1 ? (
+                        <TextDefault small bold center isRTL>
+                          {t('ClosedAllDay')}
+                        </TextDefault>
+                      ) : (
+                        todayOpeningTimes?.times?.map((timing, index) => (
+                          <TextDefault
+                            key={index}
+                            textColor={currentTheme.fontThirdColor}
+                            bold
+                            isRTL
+                          >
+                            {timing.startTime[0]}:{timing.startTime[1]} -{' '}
+                            {timing.endTime[0]}:{timing.endTime[1]}
+                          </TextDefault>
+                        ))
+                      )}
+                    </View>
+                  )}
+                </View>
+                <AnimatedTouchable
+                  style={styles(currentTheme).seeReviewsBtn}
+                  disabled={true}
+                >
+                  <TextDefault bolder textColor={currentTheme.main}>
+                    {!aboutObject?.IsOpen ? t('Closed') : t('Open')}
+                  </TextDefault>
+                </AnimatedTouchable>
+              </View>
+
+              <View
+                style={[
+                  styles(currentTheme).ratingBox,
+                  { marginTop: scale(5)}
+                ]}
+              >
+                <Bicycle size={24} color={currentTheme.newFontcolor} />
+
                 <TextDefault
                   textColor={currentTheme.fontNewColor}
-                  style={{
-                    fontWeight: '400',
-                    fontSize: scale(14)
-                  }}
+                  bold
+                  H5
+                  isRTL
                 >
                   {aboutObject.deliveryTime} {t('Min')}
                 </TextDefault>
@@ -517,56 +600,121 @@ function ImageTextCenterHeader(props, ref) {
         </Animated.View>
       </Animated.View>
 
-      {!props.search && (
-        <>
-          {!props.loading && (
+      {/* Parent Categories  */}
+
+      {!props?.search && !props?.searchOpen && (
+        <View style={{  height: 100, marginTop: props?.relatedSubCategories?.length>0?-32:-36}}>
+          {!props?.loading && (
             <FlatList
               ref={flatListRef}
-              style={styles(currentTheme).flatListStyle}
-              contentContainerStyle={{ flexGrow: 1 }}
-              data={props.loading ? [] : [...props.topaBarData]}
+              style={[styles(currentTheme).flatListStyle,]}
+              contentContainerStyle={{ flexGrow: 1, top: 0 }}
+              data={props?.loading ? [] : [...props?.topBarData.filter((_item)=>!_item.foods.some((_food)=>_food?.isOutOfStock))]}
               horizontal={true}
               ListEmptyComponent={emptyView()}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <View
-                  style={
-                    props.selectedLabel === index
-                      ? styles(currentTheme).activeHeader
-                      : null
-                  }
-                >
-                  <RectButton
-                    rippleColor={currentTheme.rippleColor}
-                    onPress={() => props.changeIndex(index)}
-                    style={styles(currentTheme).headerContainer}
+              keyExtractor={(item, index) => {
+                index.toString() + Math.random()
+              }}
+              inverted={currentTheme.isRTL ? true : false}
+              renderItem={({ item, index }) => {
+                if(item.title){return (
+                  <View
+                    key={`category-${index}`}
+                    style={
+                      [props?.selectedPrntCtg === item.title
+                        ? styles(currentTheme).activeHeaderCtg
+                        : styles(currentTheme).nonActiveHeader
+                      ]
+                    }
                   >
-                    <View style={styles().navbarTextContainer}>
-                      <TextDefault
-                        style={
-                          props.selectedLabel === index
-                            ? textStyles.Bolder
-                            : textStyles.H5
-                        }
-                        textColor={
-                          props.selectedLabel === index
-                            ? currentTheme.fontFourthColor
-                            : currentTheme.gray500
-                        }
-                        center
-                        H5
-                      >
-                        {item.title}
-                      </TextDefault>
-                    </View>
-                  </RectButton>
-                </View>
-              )}
+                    <RectButton
+                      rippleColor={currentTheme.rippleColor}
+                      onPress={() => handleParentCategoryButtonClick(item)}
+                      style={styles(currentTheme).headerContainer}
+                    >
+                      <View style={styles().navbarTextContainer}>
+                        <TextDefault
+                          style={
+                            props?.selectedPrntCtg === item.title
+                              ? textStyles.Bolder
+                              : textStyles.H5
+                          }
+                          textColor={
+                            props?.selectedPrntCtg === item.title
+                              ? currentTheme.newButtonText
+                              : currentTheme.gray500
+                          }
+                          center
+                          H5
+                        >
+                          {t(item.title)}
+                        </TextDefault>
+                      </View>
+                    </RectButton>
+                  </View>
+                )}else {
+                  return;
+                }
+              }}
             />
           )}
-        </>
+          {/* SUB-CATEGORIES-LIST  */}
+          {(!subCategoriesLoading && props?.relatedSubCategories?.length> 0)  && (
+            <FlatList
+              data={props.relatedSubCategories}
+              style={[styles(currentTheme).SubCategoryflatListStyle]}
+              contentContainerStyle={{ flexGrow: 1, top: 0 }}
+              horizontal={true}
+              // ListEmptyComponent={emptyView()}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(sub_ctg) => sub_ctg._id}
+              inverted={currentTheme.isRTL ? true : false}
+              renderItem={({ item: sub_ctg, index }) => {
+               if(sub_ctg.title){ return (
+                  <View
+                    style={
+                      props.selectedSubCtg === sub_ctg.title
+                        ? styles(currentTheme).activeHeader
+                        : null
+                    }
+                  >
+                    <RectButton
+                      rippleColor={currentTheme.rippleColor}
+                      onPress={() => handleSubCategoryButtonClick(sub_ctg)}
+                      style={styles(currentTheme).headerContainer}
+                    >
+                      <View style={styles().navbarTextContainerSubCtg}>
+                        <TextDefault
+                          style={
+                            props.selectedSubCtg === sub_ctg.title
+                              ? textStyles.Bolder
+                              : textStyles.H5
+                          }
+                          textColor={
+                            props.selectedSubCtg === sub_ctg.title
+                              ? currentTheme.newButtonText
+                              : currentTheme.gray500
+                          }
+                          center
+                          H5
+                        >
+                          {t(sub_ctg.title)}
+                        </TextDefault>
+                      </View>
+                    </RectButton>
+                  </View>
+                )
+              }else{
+                return;
+              }
+              }}
+            
+            />
+          )}
+        </View>
       )}
     </Animated.View>
   )

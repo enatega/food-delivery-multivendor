@@ -7,7 +7,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 
 export const PaymentModeOption = ({ theme, icon, title, selected, onSelect }) => {
-    return (<Pressable onPress={onSelect} style={{ flexDirection: 'row', alignItems: 'center', marginVertical: scale(8) }}>
+    return (<Pressable onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginVertical: scale(8) }}>
         <View style={{ flex: 1 }}>
             <FontAwesome
                 name={icon}
@@ -17,8 +17,9 @@ export const PaymentModeOption = ({ theme, icon, title, selected, onSelect }) =>
         <View style={{ flex: 6 }}>
             <TextDefault
                 textColor={theme?.fontFourthColor}
-                style={alignment.MLsmall}
-                bold>
+                style={{ marginHorizontal : scale(10) }}
+                bold
+            isRTL>
                 {title}
             </TextDefault>
         </View>

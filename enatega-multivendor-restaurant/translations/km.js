@@ -23,6 +23,13 @@ export const km = {
   password: 'ពាក្យសម្ងាត់',
   login: 'ចូល',
   signIn: 'ចូល',
+  orderType:"ប្រភេទបញ្ជាទិញ",
+  orderInstructions:"បញ្ជាទិញសេចក្តីណែនាំ",
+  variations:"ការប្រែប្រួល",
+  addOns:"កម្មវិធីបន្ថែម",
+  specialInstructions: 'សេចក្តី​ណែនាំ​ពិសេស',
+  pickUp:"លើកឡើង",
+  delivery: "ការដឹកជញ្ជូន",
   orderId: 'លេខ​កម្មង់',
   orderAmount: 'ចំនួន​ទឹកប្រាក់​កម្មង់',
   paymentMethod: 'វិធី​សា​ស្រ្ត​បង់​ប្រាក់',
@@ -51,5 +58,8 @@ export const km = {
   acceptAndPrint: 'ទទួលយក និង បោះពុម្ព',
   accept: 'ទទួលយក',
   language: 'ភាសា',
-  notificationText: 'ត្រូវតែប្រើឧបករណ៍សំបុត្រសម្រាប់ការជូនដំណឹងរហ័ស'
+  notificationText: 'ត្រូវតែប្រើឧបករណ៍សំបុត្រសម្រាប់ការជូនដំណឹងរហ័ស',
+  deliveredToRider: "ប្រគល់ជូនអ្នកជិះ",
+  name: 'ឈ្មោះ',
+  pullDownRefresh: 'ទាញចុះដើម្បីធ្វើឱ្យស្រស់'
 }

@@ -6,7 +6,7 @@ const MESSAGE_TOP = HEIGHT / 2
 export const MessageComponent = props => (
   <View style={styles.flashMessage}>
     <TextDefault textColor={'#fff'} numberOfLines={3}>
-      {props.message.message}
+      {props?.message.message}
     </TextDefault>
   </View>
 )

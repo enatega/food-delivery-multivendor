@@ -1,19 +1,18 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import {
+  CardStyleInterpolators,
+  createStackNavigator
+} from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
-// import Login from '../screens/Login/Login'
 import Login from '../screens/Login/Login'
 import Register from '../screens/Register/Register'
 import ForgotPassword from '../screens/ForgotPassword/ForgotPassword'
 import SetYourPassword from '../screens/ForgotPassword/SetYourPassword'
-// import CreateAccount from '../screens/CreateAccount/CreateAccount'
 import CreateAccount from '../screens/CreateAccount/CreateAccount'
-import SideBar from '../components/Sidebar/Sidebar'
 import ItemDetail from '../screens/ItemDetail/ItemDetail'
 import MyOrders from '../screens/MyOrders/MyOrders'
 import Cart from '../screens/Cart/Cart'
@@ -45,7 +44,10 @@ import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
 import Favourite from '../screens/Favourite/Favourite'
 import ChatScreen from '../screens/ChatWithRider/ChatScreen'
-import { DarkBackButton } from '../components/Header/HeaderIcons/HeaderIcons'
+import {
+  DarkBackButton,
+  RightButton
+} from '../components/Header/HeaderIcons/HeaderIcons'
 import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
@@ -55,28 +57,28 @@ import { myOrders } from '../apollo/queries'
 import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
-import useEnvVars from '../../environment'
-import * as Sentry from '@sentry/react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
+import { useTranslation } from 'react-i18next'
+import Collection from '../screens/Collection/Collection'
+import MapSection from '../screens/MapSection'
+import Account from '../screens/Account/Account'
+import EditName from '../components/Account/EditName/EditName'
+import SearchScreen from '../screens/Search/SearchScreen'
+import UserContext from '../context/User'
+import { Easing, Platform } from 'react-native'
+// import HypCheckout from '../screens/Hyp/HypCheckout'
+import {
+  SLIDE_RIGHT_WITH_CURVE_ANIM,
+  SLIDE_UP_RIGHT_ANIMATION,
+  AIMATE_FROM_CENTER
+} from '../utils/constants'
 
 const NavigationStack = createStackNavigator()
-const MainStack = createStackNavigator()
-const SideDrawer = createDrawerNavigator()
 const Location = createStackNavigator()
+const Tab = createBottomTabNavigator()
 
-function Drawer() {
-
- 
-  return (
-    <SideDrawer.Navigator drawerContent={(props) => <SideBar {...props} />}>
-      <SideDrawer.Screen
-        options={{ headerShown: false }}
-        name='NoDrawer'
-        component={NoDrawer}
-      />
-    </SideDrawer.Navigator>
-  )
-}
-function NoDrawer() {
+function MainNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
@@ -87,25 +89,75 @@ function NoDrawer() {
         backColor: currentTheme.headerBackground,
         lineColor: currentTheme.horizontalLine,
         textColor: currentTheme.headerText,
-        iconColor: currentTheme.iconColorPink
+        iconColor: currentTheme.iconColorPink,
+        headerShown: false
       })}
     >
-      <NavigationStack.Screen name='Main' component={Main} />
-      <NavigationStack.Screen name='Menu' component={Menu} />
+      <NavigationStack.Screen
+        name='CurrentLocation'
+        component={CurrentLocation}
+        options={{ header: () => null }}
+      />
+      <NavigationStack.Screen
+        name='Main'
+        component={BottomTabNavigator}
+        options={{
+          headerShown: false,
+          gestureDirection: 'vertical-inverted',
+          cardStyleInterpolator:
+            CardStyleInterpolators.forScaleFromCenterAndroid
+        }}
+      />
+      <NavigationStack.Screen
+        name='Menu'
+        component={Menu}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen
         name='Restaurant'
         component={Restaurant}
-        options={{ header: () => null }}
+        options={{
+          header: () => null,
+          ...AIMATE_FROM_CENTER
+        }}
       />
-      {<NavigationStack.Screen name='ItemDetail' component={ItemDetail} />}
-      <NavigationStack.Screen name='Cart' component={Cart} />
-      <NavigationStack.Screen name='Checkout' component={Checkout} />
-      <NavigationStack.Screen name='Profile' component={Profile} />
-      <NavigationStack.Screen name='Addresses' component={Addresses} />
+      <NavigationStack.Screen
+        name='ItemDetail'
+        component={ItemDetail}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Cart'
+        component={Cart}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen
+        name='Checkout'
+        component={Checkout}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Profile'
+        component={Profile}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Addresses'
+        component={Addresses}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='NewAddress' component={NewAddress} />
       <NavigationStack.Screen name='EditAddress' component={EditAddress} />
-      <NavigationStack.Screen name='FullMap' component={FullMap} />
-      <NavigationStack.Screen name='CartAddress' component={CartAddress} />
+      <NavigationStack.Screen
+        name='FullMap'
+        component={FullMap}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen
+        name='CartAddress'
+        component={CartAddress}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='Payment' component={Payment} />
       <NavigationStack.Screen
         name='OrderDetail'
@@ -118,20 +170,33 @@ function NoDrawer() {
             DarkBackButton({
               iconColor: currentTheme.backIcon,
               iconBackground: currentTheme.backIconBackground
-            })
+            }),
+          ...SLIDE_RIGHT_WITH_CURVE_ANIM
         }}
       />
       <NavigationStack.Screen name='Settings' component={Settings} />
-      <NavigationStack.Screen name='MyOrders' component={MyOrders} />
+      <NavigationStack.Screen
+        name='MyOrders'
+        component={MyOrders}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
-      <NavigationStack.Screen name='Help' component={Help} />
+      <NavigationStack.Screen
+        name='Help'
+        component={Help}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen
         name='About'
         component={About}
-        options={{ header: () => null }}
+        options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}
       />
-      <NavigationStack.Screen name='Reviews' component={Reviews} />
+      <NavigationStack.Screen
+        name='Reviews'
+        component={Reviews}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='Paypal' component={Paypal} />
       <NavigationStack.Screen name='RateAndReview' component={RateAndReview} />
 
@@ -162,11 +227,34 @@ function NoDrawer() {
       <NavigationStack.Screen
         name='SelectLocation'
         component={SelectLocation}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
       />
       <NavigationStack.Screen name='AddNewAddress' component={AddNewAddress} />
       <NavigationStack.Screen name='SaveAddress' component={SaveAddress} />
-      <NavigationStack.Screen name='Favourite' component={Favourite} />
+      <NavigationStack.Screen
+        name='Favourite'
+        component={Favourite}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='ChatWithRider' component={ChatScreen} />
+      <NavigationStack.Screen
+        name='Collection'
+        component={Collection}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='MapSection'
+        component={MapSection}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen
+        name='Account'
+        component={Account}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen name='EditName' component={EditName} />
+      <NavigationStack.Screen name='SearchScreen' component={SearchScreen} />
+      {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
     </NavigationStack.Navigator>
   )
 }
@@ -180,16 +268,108 @@ function LocationStack() {
         options={{ header: () => null }}
       />
       <Location.Screen name='SelectLocation' component={SelectLocation} />
-      <Location.Screen name='AddNewAddress' component={AddNewAddress} />
-      <Location.Screen name='Main' component={Main} />
+      <Location.Screen
+        name='AddNewAddress'
+        component={AddNewAddress}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Main'
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
     </Location.Navigator>
+  )
+}
+
+function BottomTabNavigator() {
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
+  const { t } = useTranslation()
+  const { profile: userProfile } = useContext(UserContext)
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
+          return (
+            <BottomTabIcon
+              name={route.name.toLowerCase()}
+              size={focused ? '28' : size}
+              color={color}
+            />
+          )
+        },
+        tabBarStyle: {
+          paddingHorizontal: 15,
+          paddingVertical: 10,
+          paddingBottom: Platform.OS === 'ios' ? 25 : 15,
+          height: Platform.OS === 'ios' ? 90 : 70,
+          backgroundColor: currentTheme.cardBackground
+        },
+        tabBarActiveTintColor: '#0EA5E9',
+        tabBarInactiveTintColor: currentTheme.fontNewColor,
+        tabBarLabelStyle: { fontSize: 12 },
+        headerRight: () => (
+          <RightButton
+            icon='cart'
+            iconColor={currentTheme.iconColor}
+            menuHeader={false}
+            t={t}
+          />
+        )
+      })}
+    >
+      <Tab.Screen
+        name='Discovery'
+        component={Main}
+        options={{
+          tabBarLabel: t('Discovery')
+        }}
+      />
+      <Tab.Screen
+        name='Restaurants'
+        component={Menu}
+        options={{
+          tabBarLabel: t('Restaurants')
+        }}
+        initialParams={{
+          selectedType: 'restaurant',
+          queryType: 'restaurant'
+        }}
+      />
+      <Tab.Screen
+        name='Store'
+        component={Menu}
+        options={{
+          tabBarLabel: t('Store')
+        }}
+        initialParams={{
+          selectedType: 'grocery',
+          queryType: 'grocery'
+        }}
+      />
+      <Tab.Screen
+        name='Search'
+        component={SearchScreen}
+        options={{
+          tabBarLabel: t('search')
+        }}
+      />
+      <Tab.Screen
+        name='Profile'
+        component={userProfile ? Profile : CreateAccount}
+        options={{
+          tabBarLabel: t('titleProfile')
+        }}
+      />
+    </Tab.Navigator>
   )
 }
 
 function AppContainer() {
   const client = useApolloClient()
   const { location } = useContext(LocationContext)
-  const { SENTRY_DSN } = useEnvVars()
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
   const handleNotification = useCallback(
     async (response) => {
@@ -222,21 +402,7 @@ function AppContainer() {
     ) {
       handleNotification(lastNotificationResponse)
     }
-
   }, [lastNotificationResponse])
-
-  useEffect(() => {
-
-    if (SENTRY_DSN) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-        environment:"development",
-        enableInExpoDevelopment: true,
-        debug:  true,
-        tracesSampleRate: 1.0 // to be changed to 0.2 in production
-      })
-    }
-  }, [SENTRY_DSN])
 
   return (
     <SafeAreaProvider>
@@ -245,20 +411,14 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!location ? (
-          <LocationStack />
-        ) : (
-          <MainStack.Navigator initialRouteName='Drawer'>
-            <MainStack.Screen
-              options={{ headerShown: false }}
-              name='Drawer'
-              component={Drawer}
-            />
-          </MainStack.Navigator>
-        )}
+        {/* {!location ? <LocationStack /> : <MainNavigator />} */}
+
+        {/* {<LocationStack />} */}
+
+        <MainNavigator />
       </NavigationContainer>
     </SafeAreaProvider>
   )
 }
 
-export default Sentry.withProfiler(AppContainer)
+export default AppContainer

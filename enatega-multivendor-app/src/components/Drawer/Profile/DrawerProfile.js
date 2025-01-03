@@ -23,7 +23,7 @@ function DrawerProfile(props) {
           <TouchableOpacity
             style={{ ...alignment.PTxSmall, ...alignment.PBxSmall }}
             onPress={() => {
-              props.navigation.navigate({ name: 'CreateAccount' })
+              props?.navigation.navigate({ name: 'CreateAccount' })
             }}>
             <TextDefault
               style={styles(currentTheme).alignLeft}

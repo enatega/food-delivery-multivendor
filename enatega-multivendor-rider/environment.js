@@ -2,29 +2,28 @@ import * as Updates from 'expo-updates'
 import { useContext } from 'react'
 import ConfigurationContext from './src/context/configuration'
 
-const getEnvVars = (env = Updates.releaseChannel) => {
+const getEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
-
-  console.log('configuration', configuration)
 
   if (env === 'production' || env === 'staging') {
     return {
-      GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-      SENTRY_DSN: configuration.riderAppSentryUrl,
+      GRAPHQL_URL: 'https://new-enatega-api-staging.up.railway.app/graphql',
+      WS_GRAPHQL_URL: 'wss://new-enatega-api-staging.up.railway.app/graphql',
+      SENTRY_DSN:
+        configuration.riderAppSentryUrl ??
+        'https://4160f777e00c18da9dcff59780b76cdb@o4506268211412992.ingest.us.sentry.io/4506274472919040',
       GOOGLE_MAPS_KEY: configuration.googleApiKey
     }
   }
   return {
-      // GRAPHQL_URL: 'http://10.97.4.197:8001/graphql',
-      // WS_GRAPHQL_URL: 'ws://10.97.4.197:8001/graphql',
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SENTRY_DSN: configuration.riderAppSentryUrl,
+    // GRAPHQL_URL: 'http://localhost:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
+    GRAPHQL_URL: 'https://new-enatega-api-staging.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://new-enatega-api-staging.up.railway.app/graphql',
+    SENTRY_DSN:
+      configuration.riderAppSentryUrl ??
+      'https://4160f777e00c18da9dcff59780b76cdb@o4506268211412992.ingest.us.sentry.io/4506274472919040',
     GOOGLE_MAPS_KEY: configuration.googleApiKey
-    // SENTRY_DSN:
-    //   'https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/6135261', // [Add your own Sentry DSN link][example: https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/5135261]
-    // GOOGLE_MAPS_KEY: 'AIzaSyCzNP5qQql2a5y8lOoO-1yj1lj_tzjVImA'
   }
 }
 

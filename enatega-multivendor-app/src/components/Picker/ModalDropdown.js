@@ -12,21 +12,25 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { LocationContext } from '../../context/Location'
 import { useTranslation } from 'react-i18next'
+import Spinner from '../Spinner/Spinner'
 
 const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
-
   const { t } = useTranslation()
-  const { cities } = useContext(LocationContext)
+  const { cities, loading } = useContext(LocationContext)
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.item(theme)}
       onPress={() => {
-        onItemPress(item)
+        onItemPress({
+          name: item.name,
+          latitude: item.latitude,
+          longitude: item.longitude
+        })
       }}>
       <TextDefault H5 bold textColor={theme.color7}>
         {item.name}
       </TextDefault>
-      <Entypo name="chevron-right" size={24} color={theme.newIconColor} />
+      <Entypo name={theme.isRTL ? "chevron-left" : "chevron-right"} size={24} color={theme.newIconColor} />
     </TouchableOpacity>
   )
 
@@ -41,7 +45,7 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
         <View style={styles.overlay} />
       </TouchableWithoutFeedback>
       <View style={styles.modalContainer(theme)}>
-        <View style={styles.header}>
+        <View style={styles.header(theme)}>
           <TextDefault textColor={theme.gray900} H3 bolder>
             {t('exploreCities')}
           </TextDefault>
@@ -49,11 +53,15 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
             <Feather name="x-circle" size={30} color={theme.newIconColor} />
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={cities}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
-        />
+        {loading ? (
+            <Spinner backColor={theme.cardBackground} spinnerColor={theme.iconColor}  />
+        ):(
+          <FlatList
+            data={cities}
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()}
+          />
+        )}
       </View>
     </Modal>
   )
@@ -61,7 +69,7 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
 
 const styles = StyleSheet.create({
   overlay: {
-    height: '20%',
+    height: '60%',
     backgroundColor: 'rgba(0, 0, 0, 0.8)'
   },
   modalContainer: theme => ({
@@ -69,32 +77,32 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     borderTopLeftRadius: scale(24),
     borderTopRightRadius: scale(24),
-    backgroundColor: theme.newheaderBG,
-    borderColor: 'gray',
+    backgroundColor: theme.cardBackground,
+    borderColor: theme.customBorder,
     borderWidth: scale(1),
-    marginTop: scale(-20)
+    marginTop: scale(-22)
   }),
-  header: {
+  header: theme => ({
     display: 'flex',
     justifyContent: 'space-between',
-    flexDirection: 'row',
+    flexDirection: theme.isRTL ? 'row-reverse' : 'row',
     alignItems: 'center',
     marginTop: scale(20),
     marginLeft: scale(12),
     marginRight: scale(8),
     marginBottom: scale(16)
-  },
+  }),
   closeButton: {
     alignSelf: 'flex-end',
     margin: scale(10)
   },
   item: theme =>({
-    flexDirection: 'row',
+    flexDirection: theme.isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: theme.newheaderBG,
-    borderBottomWidth: scale(1),
+    backgroundColor: theme.cardBackground,
+    borderBottomWidth: scale(0.5),
     borderBottomColor: '#ccc'
   })
 })

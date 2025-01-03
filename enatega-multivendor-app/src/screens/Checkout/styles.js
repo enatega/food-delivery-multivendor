@@ -27,23 +27,23 @@ const styles = (props = null) =>
       width: '30%'
     },
     screenBackground: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF'
+      backgroundColor: props != null ? props?.themeBackground : '#FFF'
     },
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
       //...alignment.PTsmall
     },
     paymentSecInner: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       ...alignment.MTxSmall
     },
     totalOrder: {
-      color: props != null ? props.fontNewColor : '#6B7280',
+      color: props != null ? props?.fontNewColor : '#6B7280',
       marginBottom: scale(12)
     },
     termsContainer: {
@@ -56,27 +56,27 @@ const styles = (props = null) =>
       marginVertical: scale(22)
     },
     tipRow: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       marginBottom: scale(8)
     },
     itemContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
+      backgroundColor: props !== null ? props?.backgroundColor : 'transparent'
     },
     priceContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       borderRadius: scale(20),
       borderBottomColor:
-        props !== null ? props.lightHorizontalLine : 'transparent',
+        props !== null ? props?.lightHorizontalLine : 'transparent',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       marginVertical: scale(13)
     },
     modal: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF',
+      backgroundColor: props != null ? props?.cardBackground : '#FFF',
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       shadowOpacity: 0,
@@ -84,17 +84,22 @@ const styles = (props = null) =>
       paddingBottom: 24,
       paddingLeft: 16,
       paddingRight: 16,
+      borderTopWidth: 1,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderColor: props !== null ? props?.customBorder : '#717171',
+      justifyContent: 'space-between'
     },
     overlay: {
-      backgroundColor: props !== null ? props.backgroundColor2 : 'transparent'
+      backgroundColor: props !== null ? props?.backgroundColor2 : 'transparent'
     },
     handle: {
       width: 150,
-      backgroundColor: props !== null ? props.hex : '#b0afbc'
+      backgroundColor: props !== null ? props?.hex : '#b0afbc'
     },
     floatView: {
       width: '100%',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center'
     },
     floatLeft: {
@@ -107,13 +112,13 @@ const styles = (props = null) =>
     },
     horizontalLine: {
       borderWidth: 0.5,
-      borderColor: props !== null ? props.iconBackground : 'white'
+      borderColor: props !== null ? props?.iconBackground : 'white'
     },
     horizontalLine2: {
       marginVertical: scale(11)
     },
     deliveryTime: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       margin: scale(5),
       ...alignment.PLxSmall
@@ -167,7 +172,7 @@ const styles = (props = null) =>
       ...alignment.PBlarge
     },
     changeBtn: {
-      backgroundColor: props !== null ? props.main : 'gray',
+      backgroundColor: props !== null ? props?.main : 'gray',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(80),
@@ -176,22 +181,22 @@ const styles = (props = null) =>
     },
     changeBtnInner: {
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: 5
     },
     button: {
-      backgroundColor: props !== null ? props.main : 'gray',
+      backgroundColor: props !== null ? props?.main : 'gray',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       height: scale(50),
       borderRadius: 40
     },
     buttonDisabled: {
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props?.white : 'white',
       borderWidth: 1,
-      borderColor: props !== null ? props.black : 'black'
+      borderColor: props !== null ? props?.black : 'black'
     },
 
     // totalBill:{
@@ -203,7 +208,7 @@ const styles = (props = null) =>
     //   justifyContent: 'center'
     // },
     // buttonLeftCircle: {
-    //   backgroundColor: props != null ? props.black : 'black',
+    //   backgroundColor: props != null ? props?.black : 'black',
     //   justifyContent: 'center',
     //   alignItems: 'center',
     //   width: scale(18),
@@ -234,7 +239,7 @@ const styles = (props = null) =>
       ...alignment.Plarge
     },
     emptyButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
       width: '70%',
       height: scale(40),
       borderRadius: scale(20),
@@ -243,14 +248,14 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     placeHolderContainer: {
-      backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
+      backgroundColor: props != null ? props?.cartContainer : '#B8B8B8',
       borderRadius: 3,
       elevation: 3,
       marginBottom: 12,
       padding: 12
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.gray : '#B8B8B8'
+      backgroundColor: props != null ? props?.gray : '#B8B8B8'
     },
     height100: {
       height: 100
@@ -275,7 +280,7 @@ const styles = (props = null) =>
 
     buttonInline: {
       width: '100%',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between'
       // gap:scale(8),
     },
@@ -283,21 +288,21 @@ const styles = (props = null) =>
       borderRadius: scale(40),
       width: '23%',
       borderWidth: 1,
-      borderColor: props !== null ? props.iconBackground : 'transparent',
-      backgroundColor: props !== null ? props.color5 : 'transparent',
+      borderColor: props !== null ? props?.iconBackground : 'transparent',
+      backgroundColor: props !== null ? props?.color5 : 'transparent',
       justifyContent: 'center',
       height: scale(37)
     },
     activeLabel: {
       borderRadius: scale(40),
-      backgroundColor: props !== null ? props.main : 'transparent',
+      backgroundColor: props !== null ? props?.main : 'transparent',
       width: '23%',
       justifyContent: 'center',
-      borderColor: props !== null ? props.main : 'transparent',
+      borderColor: props !== null ? props?.main : 'transparent',
       height: scale(37)
     },
     headerContainer: {
-      backgroundColor: props !== null ? props.themeBackground : '#6FCF97'
+      backgroundColor: props !== null ? props?.themeBackground : '#6FCF97'
     },
     mapView: {
       height: scale(119)
@@ -321,7 +326,7 @@ const styles = (props = null) =>
     },
     voucherSecInner: {
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: scale(5),
       marginTop: scale(10),
@@ -336,28 +341,28 @@ const styles = (props = null) =>
     imageContainer: {
       display: 'flex',
       width: '100%',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'center',
       alignItems: 'center'
     },
     cartInnerContainer: {
       marginTop: 4,
       padding: 6,
-      backgroundColor: props != null ? props.black : '#B8B8B8',
+      backgroundColor: props != null ? props?.black : '#B8B8B8',
       width: '50%',
       borderRadius: 6
     },
     couponContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'flex-end'
     },
     tipContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'flex-end',
       alignItems: 'center'
     },
     billsec: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center'
     },
@@ -368,7 +373,7 @@ const styles = (props = null) =>
     },
     changeAddressBtn: {
       borderRadius: scale(10),
-      backgroundColor: props != null ? props.main : '#B8B8B8',
+      backgroundColor: props != null ? props?.main : '#B8B8B8',
       width: '40%',
       justifyContent: 'center',
       alignItems: 'center',
@@ -394,23 +399,24 @@ const styles = (props = null) =>
     },
     modalHeader: {
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between'
     },
     modalheading: {
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: 5
     },
     modalInput: {
       height: scale(40),
       borderWidth: 1,
-      borderColor: props != null ? props.verticalLine : '#B8B8B8',
+      borderColor: props != null ? props?.verticalLine : '#B8B8B8',
       padding: 10,
       borderRadius: 6,
-      color: props !== null ? props.newFontcolor : '#f9f9f9'
+      color: props !== null ? props?.newFontcolor : '#f9f9f9',
+      textAlign: props?.isRTL ? 'right' : 'left'
     },
     labelContainer: {
       width: '80%',
@@ -420,7 +426,7 @@ const styles = (props = null) =>
       padding: scale(2)
     },
     icon: {
-      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      backgroundColor: props != null ? props?.iconBackground : '#E5E7EB',
       width: scale(24),
       height: scale(24),
       borderRadius: scale(24),
@@ -428,21 +434,16 @@ const styles = (props = null) =>
       alignItems: 'center',
     },
     pickupButton: {
-      backgroundColor: props !== null ? props.color3 : 'transparent',
+      backgroundColor: props !== null ? props?.color3 : 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       height: scale(40),
       borderRadius: 40,
       borderWidth: 1,
-      borderColor: props !== null ? props.borderColor : 'black',
+      borderColor: props !== null ? props?.iconColor : '#717171',
       width: '70%',
       alignSelf: 'center'
-    },
-    applyButton: {
-      fontSize: 20,
-      fontWeight: '500',
-      color: props != null ? props.newFontcolor : '#E5E7EB'
     }
   })
 export default styles
