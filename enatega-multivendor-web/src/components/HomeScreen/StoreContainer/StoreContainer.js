@@ -40,7 +40,7 @@ function StoreContainer() {
             <Grid item>
               <RouterLink
                 to={{
-                  pathname: "https://apps.apple.com/ca/app/yalla-customer/id6470450667",
+                  pathname: "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093",
                 }}
                 target="_blank"
                 className={classes.linkDecoration}

@@ -128,10 +128,10 @@ function Home() {
                         "• "+t('zonesFunctionality'),
                       ]}
                       android={
-                        "https://play.google.com/store/apps/details?id=com.rami.multirider"
+                        "https://play.google.com/store/apps/details?id=com.enatega.multirider"
                       }
                       ios={
-                        "https://apps.apple.com/ca/app/rami-rider/id6470451144"
+                        "https://apps.apple.com/pk/app/enatega-mulitvendor-rider/id1526674511"
                       }
                       isMobile={true}
                     />
@@ -151,10 +151,10 @@ function Home() {
                         "• "+t('realTimeOrder'),
                       ]}
                       android={
-                        "https://play.google.com/store/apps/details?id=multivendor.rami.restaurant"
+                         "https://play.google.com/store/apps/details?id=multivendor.enatega.restaurant"
                       }
                       ios={
-                        "https://apps.apple.com/ca/app/yalla-store/id6470450987"
+                       "https://apps.apple.com/pk/app/enatega-multivendor-restaurant/id1526672537"
                       }
                       isMobile={true}
                     />
@@ -175,10 +175,11 @@ function Home() {
                         "• "+t('previousOrder'),
                       ]}
                       android={
-                        "https://play.google.com/store/apps/details?id=com.rami.multivendor"
+                       "https://play.google.com/store/apps/details?id=com.enatega.multivendor"                   
                       }
                       ios={
-                        "https://apps.apple.com/ca/app/yalla-customer/id6470450667"
+                        "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
+    
                       }
                       isMobile={true}
                     />
@@ -195,7 +196,7 @@ function Home() {
                       "• "+t('zonesFunctionality'),
                     ]}
                     web={true}
-                    link={"https://yalla-admin.netlify.app"}
+                    link={"https://multivendor-admin.enatega.com/"}
                     isMobile={false}
                   />
                 </Grid>
@@ -210,7 +211,7 @@ function Home() {
                         "• "+t('builtOnCommunity'),
                       ]}
                       web={true}
-                      link={"https://yalla-delivery.com/"}
+                      link={"https://enatega.com/"}
                       isMobile={false}
                     />
                   </Box>

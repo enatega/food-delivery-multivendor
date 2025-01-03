@@ -13,7 +13,7 @@ import { ReactComponent as PersonIcon } from "../../assets/icons/user.svg";
 import { ReactComponent as FavoriteBorderIcon } from "../../assets/icons/favourite.svg";
 import { ReactComponent as LocalMallIcon } from "../../assets/icons/cart.svg";
 
-import {ReactComponent as Logo}  from '../../assets/images/Logo.svg'
+import {ReactComponent as Logo}  from '../../assets/images/logo.svg'
 
 function DHeader({
   navitems,

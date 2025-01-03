@@ -36,7 +36,7 @@ export default function Promotion() {
       </Hidden>
       <MaterialLink
         target="__blank"
-        href="https://apps.apple.com/ca/app/yalla-customer/id6470450667"
+        href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093"
       >
         <AppStoreIcon />
       </MaterialLink>
