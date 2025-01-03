@@ -47,7 +47,7 @@ function DHeader({
           }
           className={classes.linkDecoration}
         >
-           <Logo  aria-label="Yalla Logo" />
+           <Logo  aria-label="Enatega Logo" />
 
           {/* <Typography
             variant="h6"
