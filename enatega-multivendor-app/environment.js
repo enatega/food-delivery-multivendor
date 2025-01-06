@@ -23,7 +23,7 @@ const useEnvVars = (env = Updates.channel) => {
       EXPO_CLIENT_ID: configuration.expoClientID,
       SENTRY_DSN:
         configuration.customerAppSentryUrl ??
-        'https://4160f777e00c18da9dcff59780b76cdb@o4506268211412992.ingest.us.sentry.io/4506274472919040',
+        'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
       TERMS_AND_CONDITIONS: configuration.termsAndConditions,
       PRIVACY_POLICY: configuration.privacyPolicy,
       TEST_OTP: configuration.testOtp,
@@ -45,8 +45,7 @@ const useEnvVars = (env = Updates.channel) => {
     EXPO_CLIENT_ID: configuration.expoClientID,
     SENTRY_DSN:
       configuration.customerAppSentryUrl ??
-      //'https://4160f777e00c18da9dcff59780b76cdb@o4506268211412992.ingest.us.sentry.io/4506274472919040',
-      'https://66d65088ec7a6e53ef75e7f37addf25f@o4507787652694016.ingest.us.sentry.io/4508211757842432',
+      'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933',
     TERMS_AND_CONDITIONS: configuration.termsAndConditions,
     PRIVACY_POLICY: configuration.privacyPolicy,
     TEST_OTP: configuration.testOtp,
