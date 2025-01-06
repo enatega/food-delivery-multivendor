@@ -9,7 +9,7 @@ import useStyle from "./styles";
 import { useTheme } from "@emotion/react";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import PersonIcon from "@mui/icons-material/Person";
-import Logo from '../../../assets/images/logo.png'
+import {ReactComponent as Logo}  from '../../../assets/images/logo.svg'
 import { useTranslation } from "react-i18next";
 
 function LoginDesktopHeader({ title, showIcon, showCart = false }) {
@@ -25,7 +25,7 @@ function LoginDesktopHeader({ title, showIcon, showCart = false }) {
           className={classes.linkDecoration}
         >
           {/* <LogoSvg height={50} width={50} /> */}
-          <img height={50} width={100} src={Logo} alt="Enatega"/>
+          <Logo  aria-label="Enatega Logo" />
 
           {/* <Typography
             variant="h6"
