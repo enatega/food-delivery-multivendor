@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
+import React, { useCallback, useEffect, useState } from "react";
+import { GoogleLogin } from "react-google-login";
+import { gapi } from 'gapi-script';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { useCallback, useEffect, useState } from "react";
-import GoogleLogin from "react-google-login";
 import ConfigurableValues from "../../config/constants";
 import { Link as RouterLink } from "react-router-dom";
 import { useLocation } from "react-router";
@@ -35,6 +37,7 @@ function Login() {
     loginError,
   } = useRegistration();
 
+
   const location = useLocation();
 
   useEffect(() => {
@@ -46,6 +49,18 @@ function Login() {
     }
   }, [loginError]);
 
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: GOOGLE_CLIENT_ID,
+        scope: 'email',
+      });
+    }
+    gapi.load('client:auth2', start);
+  }, [GOOGLE_CLIENT_ID]);
+
+
   const callGoogle = useCallback(
     (clickAction) => {
       if (!loading) {
@@ -54,7 +69,7 @@ function Login() {
         clickAction();
       }
     },
-    [loading]
+    [loading , loginButtonSetter, setLoading]
   );
 
   const showMessage = useCallback((messageObj) => {
