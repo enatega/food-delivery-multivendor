@@ -40,6 +40,7 @@ import { useKeepAwake } from 'expo-keep-awake'
 // import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import useWatchLocation from './src/ui/hooks/useWatchLocation'
 import './i18next'
+import * as SplashScreen from 'expo-splash-screen'
 
 LogBox.ignoreLogs([
   // 'Warning: ...',
@@ -97,8 +98,13 @@ export default function App() {
   // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
+      // try {
+      //   await SplashScreen.preventAutoHideAsync()
+      // } catch (e) {
+      //   console.warn(e)
+      // }
       // await i18n.initAsync()
-      await Font.loadAsync({
+      await Font.loadAsync (  {
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
@@ -107,7 +113,8 @@ export default function App() {
       await getActiveLocation()
       BackHandler.addEventListener('hardwareBackPress', exitAlert)
       // get stored theme
-      await getStoredTheme()
+      // await getStoredTheme()
+      setAppIsReady(true)
     }
 
     loadAppData()
@@ -116,6 +123,16 @@ export default function App() {
       BackHandler.removeEventListener('hardwareBackPress', exitAlert)
     }
   }, [])
+
+  useEffect(() => {
+    if (!appIsReady) return
+
+    const hideSplashScreen = async () => {
+      await SplashScreen.hideAsync()
+    }
+
+    hideSplashScreen()
+  }, [appIsReady])
 
   // For Location
   useEffect(() => {
@@ -218,20 +235,20 @@ export default function App() {
   }
 
   // get stored theme
-  const getStoredTheme = async () => {
-    try {
-      const storedTheme = await AsyncStorage.getItem('appTheme')
-      if (storedTheme) {
-        console.log('Retrieved theme from storage:', storedTheme)
-        themeSetter({ type: storedTheme })
-      } else {
-        console.log('No theme found in storage, using default.')
-        await AsyncStorage.setItem('appTheme', 'Dark') // Set default theme to Pink
-      }
-    } catch (error) {
-      console.log('Error retrieving theme from storage:', error)
-    }
-  }
+  // const getStoredTheme = async () => {
+  //   try {
+  //     const storedTheme = await AsyncStorage.getItem('appTheme')
+  //     if (storedTheme) {
+  //       console.log('Retrieved theme from storage:', storedTheme)
+  //       themeSetter({ type: storedTheme })
+  //     } else {
+  //       console.log('No theme found in storage, using default.')
+  //       await AsyncStorage.setItem('appTheme', 'Dark') // Set default theme to Pink
+  //     }
+  //   } catch (error) {
+  //     console.log('Error retrieving theme from storage:', error)
+  //   }
+  // }
 
   // set stored theme
   const setStoredTheme = async (newTheme) => {
