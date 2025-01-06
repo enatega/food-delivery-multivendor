@@ -575,8 +575,8 @@ export const en = {
   none: 'none',
   yourEmail: 'Log in easily by entering your email!',
   yourEmailPassword: 'Please enter your passwords now for access!',
-  brandName: 'Yalla',
-  welcomeText: 'Welcome to Yalla',
+  brandName: 'Enatega',
+  welcomeText: 'Welcome to Enatega',
   createAccountDesc:
     'Enjoy the best restaurants or get what you need from nearby stores, delivered',
   phoneNumber: 'Phone Number',

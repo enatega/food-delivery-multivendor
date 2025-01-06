@@ -557,8 +557,8 @@ secureAccountWithPhone: 'נשתמש במספר שלך רק אם נצטרך לי�
     none: 'אין',
   yourEmail: 'התחבר בקלות על ידי הזנת כתובת האימייל שלך!',
   yourEmailPassword: 'אנא הזן את הסיסמה שלך כעת כדי לקבל גישה!',
-  brandName: 'יאללה',
-  welcomeText: 'ברוכים הבאים ל-יאללה',
+  brandName: 'אנאטגה',
+  welcomeText: 'ברוכים הבאים לאנאטגה',  
   createAccountDesc:
     'תהנה מהמסעדות הטובות ביותר או קבל את מה שאתה צריך מהחנויות הקרובות, מוזמן!',
     phoneNumber: 'מספר טלפון',

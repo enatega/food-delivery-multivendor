@@ -37,7 +37,7 @@ import { theme as Theme } from './src/utils/themeColors'
 import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
 // import { useColorScheme } from 'react-native'
 import { useKeepAwake } from 'expo-keep-awake'
-// import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
+import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import useWatchLocation from './src/ui/hooks/useWatchLocation'
 import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
@@ -283,7 +283,7 @@ export default function App() {
   }
 
   return (
-    // <AnimatedSplashScreen>
+    <AnimatedSplashScreen>
       <ApolloProvider client={client}>
         <ThemeContext.Provider
           // use default theme
@@ -321,7 +321,7 @@ export default function App() {
           <FlashMessage MessageComponent={MessageComponent} />
         </ThemeContext.Provider>
       </ApolloProvider>
-    // </AnimatedSplashScreen>
+    </AnimatedSplashScreen>
   )
 }
 
