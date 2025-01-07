@@ -42,6 +42,7 @@ import { onUseLocalStorage } from '@/lib/utils/methods';
 
 // Dummy
 import { generateDummyRestaurants } from '@/lib/utils/dummy';
+import { DataTableRowClickEvent } from 'primereact/datatable';
 
 export default function RestaurantsMain() {
   // Context
@@ -203,6 +204,12 @@ export default function RestaurantsMain() {
         selectedData={selectedProducts}
         columns={RESTAURANT_TABLE_COLUMNS({ menuItems })}
         loading={loading}
+        handleRowClick={(event: DataTableRowClickEvent) => {
+          onUseLocalStorage('save', 'restaurantId', event.data._id);
+          const routeStack = ['Admin'];
+          onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
+          router.push(`/admin/restaurant/`);
+        }}
       />
 
       <CustomDialog
