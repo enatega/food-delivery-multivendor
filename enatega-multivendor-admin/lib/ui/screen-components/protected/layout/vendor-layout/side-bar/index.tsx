@@ -73,7 +73,7 @@ export default function MakeVendorSidebar() {
     },
     {
       text: 'Stores',
-      route: '/admin/vendor/restaurants',
+      route: '/admin/vendor/stores',
       isParent: true,
       icon: faStore,
       isClickable: true,

@@ -404,7 +404,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
     }
   }
   const handleDistanceChange = (val: number) => {
-    if (val === 0 || val > 100) {
+    if (val === 0 || val < 0) {
       return;
     }
     const newDistance = val || 0;
@@ -760,8 +760,9 @@ const CustomGoogleMapsLocationBounds: React.FC<
                 type="number"
                 name="radius"
                 placeholder="Radius"
-                maxLength={35}
+                maxLength={99999}
                 min={0}
+                max={9999999999999}
                 value={distance}
                 onChange={handleDistanceChange}
                 showLabel={true}

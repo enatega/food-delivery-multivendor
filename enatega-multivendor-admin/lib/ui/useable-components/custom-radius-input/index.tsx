@@ -18,6 +18,7 @@ export default function CustomRadiusInputField({
   value,
   loading = false,
   showLabel,
+  max,
   onChange,
   ...props
 }: ICustomRadiusInputFieldComponentProps) {
@@ -59,6 +60,7 @@ export default function CustomRadiusInputField({
           className={`${classes.numberInput} h-11 w-full border border-inherit px-8 text-center focus:shadow-none focus:outline-none ${className}`}
           name={name}
           value={value.toString()}
+          max={max}
           {...props}
           onChange={(e) => {
             onChange && onChange(+e.target.value);
