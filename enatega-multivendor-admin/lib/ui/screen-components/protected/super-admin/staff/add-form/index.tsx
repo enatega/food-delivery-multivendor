@@ -226,6 +226,15 @@ export default function StaffAddForm({
                                 : '',
                             }}
                           />
+                          {onErrorMessageMatcher(
+                            'confirmPassword',
+                            errors?.confirmPassword,
+                            StaffErrors
+                          ) && (
+                            <span className="text-red-500">
+                              {StaffErrors.confirmPassword}
+                            </span>
+                          )}
                         </div>
 
                         <div>
