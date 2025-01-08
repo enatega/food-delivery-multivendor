@@ -90,7 +90,7 @@ export default function VendorMain({
         </div>
 
         {/* Vendors content */}
-        <div className="pb-16">
+        <div className="pb-44">
           {vendorResponse?.loading ? (
             new Array(10)
               .fill(0)
