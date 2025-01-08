@@ -166,6 +166,7 @@ const AppTopbar = () => {
             className="cursor-pointer"
             icon={faBell}
             onClick={() => onRedirectToPage('/management/notifications')}
+            title='Notification'
           />
         )}
 
@@ -225,6 +226,7 @@ const AppTopbar = () => {
                 icon={faBell}
                 color="gray"
                 onClick={() => onRedirectToPage('/management/notifications')}
+                title='Notification'
               />
             )}
             {shouldShow('Zone') && (
