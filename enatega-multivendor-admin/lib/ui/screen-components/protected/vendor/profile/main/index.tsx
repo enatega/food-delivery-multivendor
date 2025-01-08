@@ -148,7 +148,6 @@ export default function VendorUpdateForms() {
                 isSubmitting,
                 setFieldValue,
               }) => {
-                console.log('errors', errors);
                 return (
                   <>
                     <div>
