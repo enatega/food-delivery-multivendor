@@ -28,7 +28,7 @@ export default function DispatchMain() {
   const [selectedData, setSelectedData] = useState<IActiveOrders[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Filters
   const filters = {
@@ -43,19 +43,23 @@ export default function DispatchMain() {
   const { data: active_orders_data, fetch: fetchActiveOrders } = useLazyQueryQL(
     GET_ACTIVE_ORDERS,
     {
-      onCompleted: () => setIsLoading(false),
+      fetchPolicy: 'network-only',
+      onCompleted: () => {
+        setIsLoading(false);
+      },
     }
   ) as ILazyQueryResult<IGetActiveOrders | undefined, undefined>;
 
   // UseEffects
   useEffect(() => {
-    setIsLoading(true);
     fetchActiveOrders();
+    setIsLoading(true);
   }, []);
+
   return (
     <div className="p-3">
       <Table
-        columns={DISPATCH_TABLE_COLUMNS()}
+        columns={DISPATCH_TABLE_COLUMNS(fetchActiveOrders)}
         data={
           active_orders_data?.getActiveOrders ||
           (isLoading ? generateDummyDispatchOrders() : [])
