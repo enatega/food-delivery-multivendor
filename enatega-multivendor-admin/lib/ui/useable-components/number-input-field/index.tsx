@@ -1,9 +1,12 @@
 // Interfaces
 import { INumberTextFieldProps } from '@/lib/utils/interfaces';
+
+// Prime React
 import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
 import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 
-// Prime React
+// Hooks
+import useToast from '@/lib/hooks/useToast';
 
 export default function CustomNumberField({
   className,
@@ -14,9 +17,15 @@ export default function CustomNumberField({
   onChangeFieldValue,
   isLoading = false,
   disabled = false,
+  min,
+  max,
   ...props
 }: INumberTextFieldProps) {
+  // Toast
+  const {showToast} = useToast();
+
   const onNumberChangeHandler = (e: InputNumberChangeEvent) => {
+
     if (onChange) {
       onChange(name, e.value);
     } else if (onChangeFieldValue) {
@@ -37,19 +46,24 @@ export default function CustomNumberField({
       <InputNumber
         className={`h-10 w-full rounded-lg border border-gray-300 bg-gray-300 text-sm focus:shadow-none focus:outline-none ${className}`}
         placeholder={placeholder}
+        min={min}
+        max={max}
         onKeyDown={(e) => {
           if (
-            props.max !== undefined &&
-            Number(e.currentTarget.value ?? 0) > props.max
+            max !== undefined &&
+            Number(e.currentTarget.value) > max
           ) {
             e.preventDefault();
+            return showToast({
+              type:'error',
+              title:'Coupon',
+              message:'As Discount is a %age field, please choose a value from 0 to 100.'
+            });
           }
         }}
         onChange={(e: InputNumberChangeEvent) => {
-          if (props.max !== undefined && Number(e.value ?? 0) > props.max) {
-            return;
-          }
-          onNumberChangeHandler(e);
+        
+            onNumberChangeHandler(e);
         }}
         {...props}
         disabled={disabled}

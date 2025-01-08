@@ -149,6 +149,15 @@ export default function CouponForm({
         initialValues={initialValues}
         validationSchema={CouponFormSchema}
         onSubmit={async (values, { setSubmitting }) => {
+          console.log('submitting', values.discount)
+          if (values.discount > 100) {
+            return showToast({
+              type: 'error',
+              title: 'Coupon',
+              message:
+                'As Discount is a %age field, please choose a value from 0 to 100.',
+            });
+          }
           setSubmitting(true);
           let formData;
           if (!isEditing.bool) {
