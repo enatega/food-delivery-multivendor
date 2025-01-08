@@ -8,6 +8,8 @@ export const VendorSchema = Yup.object().shape({
   //   .trim()
   //   .matches(/\S/, 'Name cannot be only spaces')
   //   .required('Required'),
+
+  // Why there are more than one name fields?, in some place its asking for only name and in some it is asking for both first and last names... (please choose one either 'name' or 'firstName & lastName')
   firstName: Yup.string()
     .max(35)
     .trim()
@@ -17,6 +19,22 @@ export const VendorSchema = Yup.object().shape({
     .max(35)
     .trim()
     .matches(/\S/, 'Last name cannot be only spaces')
+    .required('Required'),
+  email: Yup.string().email('Invalid email').required('Required'),
+  password: Yup.string().required('Required'),
+  confirmPassword: Yup.string()
+    .nullable()
+    .oneOf([Yup.ref('password'), null], 'Password must match')
+    .required('Required'),
+  image: Yup.string().url('Invalid image URL').required('Required'),
+});
+
+// Creating separate schema for store vendor form
+export const VendorSchemaForStoreForm = Yup.object().shape({
+  name: Yup.string()
+    .max(35)
+    .trim()
+    .matches(/\S/, 'Name cannot be only spaces')
     .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().required('Required'),
