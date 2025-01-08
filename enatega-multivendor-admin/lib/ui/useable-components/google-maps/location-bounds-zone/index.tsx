@@ -41,6 +41,9 @@ import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
 import CustomShape from '../shapes';
 import { DEFAULT_CENTER } from '@/lib/utils/constants';
 
+// CSS
+import '../index.css'
+
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
 } = { current: null };
@@ -56,10 +59,11 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
   const [deliveryZoneType, setDeliveryZoneType] = useState('polygon');
   const [center, setCenter] = useState(DEFAULT_CENTER);
   const [path, setPath] = useState<ILocationPoint[]>([]);
-  const [zoom, setZoom] = useState<number>(12)
+  const [zoom, setZoom] = useState<number>(12);
 
   // Auto complete
   const [options, setOptions] = useState<IPlaceSelectedOption[]>([]);
+
   const [inputValue, setInputValue] = useState<string>('');
   const [selectedPlaceObject, setSelectedPlaceObject] =
     useState<IPlaceSelectedOption | null>(null);
@@ -178,14 +182,12 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
     polygonRef.current = null;
   }, []);
 
-  
-
   // Use Effects
   useEffect(() => {
     if (!isMounted) return;
     onSetZoneCoordinates(transformPath(path ?? []));
     const zoomVal = calculateZoomBasedOnCoordinates(coordinates);
-    setZoom(zoomVal)
+    setZoom(zoomVal);
   }, [path]);
 
   useEffect(() => {
@@ -234,18 +236,13 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
                   disabled={false}
                   className={`p h-11 w-full border border-gray-300 px-2 text-sm focus:shadow-none focus:outline-none`}
                   value={inputValue}
-                  dropdownIcon={
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      style={{ fontSize: '1rem', color: 'gray' }}
-                    />
-                  }
                   completeMethod={(event) => {
                     setSearch(event.query);
                   }}
                   onChange={(e) => {
                     if (typeof e.value === 'string') handleInputChange(e.value);
                   }}
+                  dropdownIcon={()=><div className='hidden'></div>}
                   onSelect={onHandlerAutoCompleteSelectionChange}
                   suggestions={options}
                   forceSelection={false}
