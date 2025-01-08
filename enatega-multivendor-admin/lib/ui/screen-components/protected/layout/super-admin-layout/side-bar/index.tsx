@@ -80,7 +80,7 @@ export default function MakeSidebar() {
         },
         {
           text: 'Stores',
-          route: '/general/restaurants',
+          route: '/general/stores',
           isParent: false,
         },
         {
