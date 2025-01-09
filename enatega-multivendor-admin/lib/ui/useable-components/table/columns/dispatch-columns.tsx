@@ -290,11 +290,6 @@ export const DISPATCH_TABLE_COLUMNS = (
       propertyName: 'rider.name',
       headerName: 'Rider',
       body: (rowData: IActiveOrders) => {
-        const selectedRider: IDropdownSelectItem = {
-          label: rowData?.rider?.name.toString() ?? '',
-          code: rowData?.rider?.name.toString().toUpperCase() ?? '',
-          _id: rowData?.rider?._id.toString() ?? '',
-        };
         return (
           <div>
             <Dropdown

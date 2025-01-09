@@ -165,6 +165,7 @@ export const generateDummyRiders = (count: number = 10): IRiderResponse[] => {
       },
       available: Math.random() > 0.5,
       __typename: 'Rider',
+      assigned: [''],
     });
   }
 
@@ -421,6 +422,7 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
         name: `rider_${i + 1}`,
         username: `rider_${i + 1}`,
         available: true,
+        assigned:['']
       },
       createdAt: new Date().toDateString(),
       deliveryAddress: {

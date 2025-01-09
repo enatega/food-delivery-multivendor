@@ -30,7 +30,6 @@ import {
 // Third-party libraries
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronDown,
   faMapMarker,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
