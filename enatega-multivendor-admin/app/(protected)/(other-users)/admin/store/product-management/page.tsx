@@ -10,7 +10,7 @@ export default function FoodManagementPage() {
 
   // Effects
   useEffect(() => {
-    router.push('/admin/restaurant/food-management/food');
+    router.push('/admin/store/food-management/food');
   }, []);
 
   return <></>;

@@ -10,7 +10,7 @@ export default function GeneralPage() {
 
   // Effects
   useEffect(() => {
-    router.push('/admin/restaurant/general/timing');
+    router.push('/admin/store/general/timing');
   }, []);
 
   return <></>;

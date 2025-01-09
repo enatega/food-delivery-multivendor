@@ -10,7 +10,7 @@ export default function RestaurantPage() {
 
   // Effects
   useEffect(() => {
-    router.push('/admin/restaurant/dashboard');
+    router.push('/admin/store/dashboard');
   }, []);
 
   return <></>;
