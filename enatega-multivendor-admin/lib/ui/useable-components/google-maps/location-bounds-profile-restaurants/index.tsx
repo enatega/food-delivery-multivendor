@@ -546,8 +546,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
     setZoom(zoomVal);
   }, [distance, zoom]);
 
-
-
   return (
     <div>
       <div className="relative overflow-hidden">

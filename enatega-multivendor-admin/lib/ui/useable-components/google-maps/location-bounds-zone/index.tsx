@@ -42,7 +42,7 @@ import CustomShape from '../shapes';
 import { DEFAULT_CENTER } from '@/lib/utils/constants';
 
 // CSS
-import '../index.css'
+import '../index.css';
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -242,7 +242,7 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
                   onChange={(e) => {
                     if (typeof e.value === 'string') handleInputChange(e.value);
                   }}
-                  dropdownIcon={()=><div className='hidden'></div>}
+                  dropdownIcon={() => <div className="hidden"></div>}
                   onSelect={onHandlerAutoCompleteSelectionChange}
                   suggestions={options}
                   forceSelection={false}

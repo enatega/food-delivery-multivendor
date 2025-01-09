@@ -25,7 +25,6 @@ export default function ZoneScreen() {
   return (
     <>
       <div className="flex h-screen flex-col overflow-hidden p-3">
-
         <ZoneHeader onSetAddFormVisible={onSetAddFormVisible} />
         <div className="flex-grow overflow-y-auto">
           <ZoneMain

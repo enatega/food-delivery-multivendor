@@ -3,7 +3,6 @@
 // Interface and Types
 import { ICustomRadiusInputFieldComponentProps } from '@/lib/utils/interfaces';
 
-
 // Components
 import { InputText } from 'primereact/inputtext';
 
@@ -28,7 +27,7 @@ export default function CustomRadiusInputField({
   const handleIncrease = () => {
     const currentValue = value || 0;
     // if (currentValue < MAX_VALUE) {
-      onChange && onChange(currentValue + 1);
+    onChange && onChange(currentValue + 1);
     // }
   };
 

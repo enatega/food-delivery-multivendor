@@ -10,11 +10,17 @@ import SubCategoriesAddForm from '@/lib/ui/screen-components/protected/restauran
 // Contexts
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 
-
 export default function CategoryScreen() {
   // Contexts
-  const {isAddSubCategoriesVisible, setIsAddSubCategoriesVisible, category, setCategory, subCategories, setSubCategories} = useContext(RestaurantLayoutContext)
-  
+  const {
+    isAddSubCategoriesVisible,
+    setIsAddSubCategoriesVisible,
+    category,
+    setCategory,
+    subCategories,
+    setSubCategories,
+  } = useContext(RestaurantLayoutContext);
+
   // State
   const [isAddCategoryVisible, setIsAddCategoryVisible] = useState(false);
 
@@ -30,16 +36,16 @@ export default function CategoryScreen() {
       />
       {/* Sub Categories Form  */}
       <SubCategoriesAddForm
-      onHide={() => {
-        setIsAddSubCategoriesVisible({
-          bool:false,
-          parentCategoryId:''
-        });
-        setCategory(null);
-        setSubCategories([])
-      }}
-      isAddSubCategoriesVisible={isAddSubCategoriesVisible}
-      category={category}
+        onHide={() => {
+          setIsAddSubCategoriesVisible({
+            bool: false,
+            parentCategoryId: '',
+          });
+          setCategory(null);
+          setSubCategories([]);
+        }}
+        isAddSubCategoriesVisible={isAddSubCategoriesVisible}
+        category={category}
       />
       {/* Parent Categories Forms  */}
       <CategoryAddForm
@@ -48,7 +54,7 @@ export default function CategoryScreen() {
         onHide={() => {
           setIsAddCategoryVisible(false);
           setCategory(null);
-          setSubCategories([])
+          setSubCategories([]);
         }}
         isAddCategoryVisible={isAddCategoryVisible}
       />

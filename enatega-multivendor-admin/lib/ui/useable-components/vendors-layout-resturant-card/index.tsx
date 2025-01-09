@@ -65,9 +65,7 @@ export default function VendorsLayoutRestaurantCard({
   const configuration = useContext(ConfigurationContext);
 
   if (!configuration) {
-    throw new Error(
-      'Cannot get the value of configuration context'
-    );
+    throw new Error('Cannot get the value of configuration context');
   }
 
   const { deliveryRate } = configuration;

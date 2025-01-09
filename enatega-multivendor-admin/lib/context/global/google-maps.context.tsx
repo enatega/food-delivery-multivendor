@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 // Core
 import React, { createContext, useContext, useEffect } from 'react';
@@ -24,7 +24,6 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
   libraries,
   children,
 }) => {
-
   const { showToast } = useContext(ToastContext);
 
   const { isLoaded } = useJsApiLoader({
@@ -62,7 +61,7 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
     if (apiKey) {
       unloadGoogleMapsScript(); // Unload the previous script if any
       loadGoogleMapsScript(apiKey)
-        .then(() => { })
+        .then(() => {})
         .catch(() =>
           showToast({
             type: 'error',
@@ -74,8 +73,8 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
   }, [apiKey]);
 
   const value: IGoogleMapsContext = {
-    isLoaded
-  }
+    isLoaded,
+  };
 
   return (
     <GoogleMapsContext.Provider value={value}>

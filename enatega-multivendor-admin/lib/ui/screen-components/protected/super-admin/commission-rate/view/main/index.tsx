@@ -62,7 +62,7 @@ export default function CommissionRateMain() {
     const restaurant = restaurants.find((r) => r._id === restaurantId);
     // Validation
     if (parseFloat(String(restaurant?.commissionRate)) > 100) {
-     return showToast({
+      return showToast({
         type: 'error',
         title: 'Update Commission',
         message:

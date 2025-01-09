@@ -71,10 +71,10 @@ export const useConfiguration = () => {
   const CURRENCY_SYMBOL = configuration?.currency;
 
   return {
-    SERVER_URL: BACKEND_URL.LOCAL.SERVER_URL,
-    WS_SERVER_URL: BACKEND_URL.LOCAL.WS_SERVER_URL,
+    SERVER_URL: BACKEND_URL.LIVE.SERVER_URL,
+    WS_SERVER_URL: BACKEND_URL.LIVE.WS_SERVER_URL,
     COLORS,
- 
+
     // EMAIL CONFIG
     EMAIL_NAME,
     EMAIL,

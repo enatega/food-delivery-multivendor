@@ -51,7 +51,6 @@ export default function SidebarItem({
   const { showRestaurantSidebar } =
     useContext<LayoutContextProps>(LayoutContext);
 
-
   // Hooks
   const pathname = usePathname();
   const router = useRouter();

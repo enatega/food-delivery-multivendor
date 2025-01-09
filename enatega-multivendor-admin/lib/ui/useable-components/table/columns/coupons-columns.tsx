@@ -96,8 +96,8 @@ export const COUPONS_TABLE_COLUMNS = ({
         headerName: 'Discount',
         propertyName: 'discount',
         body: (rowData: ICoupon) => {
-          return <span>{rowData.discount}%</span>
-        }
+          return <span>{rowData.discount}%</span>;
+        },
       },
       {
         headerName: 'Status',

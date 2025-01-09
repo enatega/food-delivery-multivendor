@@ -119,7 +119,6 @@ export default function VendorAddForm({
         },
       });
 
-
       onSetVendorFormVisible(false);
     } catch (error) {
       console.log('error during add vendor ==> ', error);

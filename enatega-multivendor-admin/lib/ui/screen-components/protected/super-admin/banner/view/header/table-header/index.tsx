@@ -4,14 +4,10 @@ import CustomTextField from '@/lib/ui/useable-components/input-field';
 // Interfaces and Types
 import { IBannerTableHeaderProps } from '@/lib/utils/interfaces/banner.interface';
 
-
 export default function BannerTableHeader({
   globalFilterValue,
   onGlobalFilterChange,
 }: IBannerTableHeaderProps) {
-
-
-
   return (
     <div className="mb-4 flex flex-col gap-6">
       <div className="flex-colm:flex-row flex w-fit items-center gap-2">
@@ -26,7 +22,6 @@ export default function BannerTableHeader({
             placeholder="Keyword Search"
           />
         </div>
-
       </div>
     </div>
   );

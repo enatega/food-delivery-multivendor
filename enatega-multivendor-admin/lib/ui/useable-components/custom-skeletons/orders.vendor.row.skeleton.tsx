@@ -15,7 +15,9 @@ const createSkeletonRow = () => ({
   OrderdeliveryAddress: <Skeleton width="100%" height="1.5rem" />,
 });
 
-const OrderTableSkeleton = ({ rowCount }: OrderTableSkeletonProps) => 
-  Array(rowCount).fill(null).map(() => createSkeletonRow());
+const OrderTableSkeleton = ({ rowCount }: OrderTableSkeletonProps) =>
+  Array(rowCount)
+    .fill(null)
+    .map(() => createSkeletonRow());
 
 export default OrderTableSkeleton;

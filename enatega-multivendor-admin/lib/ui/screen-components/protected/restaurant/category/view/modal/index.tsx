@@ -46,19 +46,26 @@ export default function SubCategoriesPreiwModal({
         );
       }}
     >
-      <ol className='my-auto'>
-      {sub_categories_loading ? (
-        <InputSkeleton />
-      ) : !sub_categories_data?.subCategoriesByParentId?.length ? (
-        <li className='my-1 font-semibold text-red-600'>No sub-categories to show</li>
-      ) : (
-        sub_categories_data?.subCategoriesByParentId?.map((sub_ctg) => {
-          return (
-              <li key={sub_ctg._id} className='my-1 text-sm font-semibold text-green-500'>{sub_ctg.title}</li>
+      <ol className="my-auto">
+        {sub_categories_loading ? (
+          <InputSkeleton />
+        ) : !sub_categories_data?.subCategoriesByParentId?.length ? (
+          <li className="my-1 font-semibold text-red-600">
+            No sub-categories to show
+          </li>
+        ) : (
+          sub_categories_data?.subCategoriesByParentId?.map((sub_ctg) => {
+            return (
+              <li
+                key={sub_ctg._id}
+                className="my-1 text-sm font-semibold text-green-500"
+              >
+                {sub_ctg.title}
+              </li>
             );
           })
         )}
-        </ol>
+      </ol>
     </Dialog>
   );
 }

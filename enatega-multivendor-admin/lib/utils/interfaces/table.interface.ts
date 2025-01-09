@@ -27,7 +27,7 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   loading?: boolean;
   handleRowClick?: (event: DataTableRowClickEvent) => void;
   rowsPerPage?: number;
-  moduleName ?: string;
+  moduleName?: string;
 }
 
 export interface ITableExtends extends IGlobalComponentProps {

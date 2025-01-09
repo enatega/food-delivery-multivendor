@@ -11,22 +11,28 @@ import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaur
 import SubCategoriesAddForm from '@/lib/ui/screen-components/protected/restaurant/category/add-subcategories';
 
 export default function FoodScreen() {
-   // Contexts
-   const {isAddSubCategoriesVisible, setIsAddSubCategoriesVisible, category, setCategory, setSubCategories} = useContext(RestaurantLayoutContext)
+  // Contexts
+  const {
+    isAddSubCategoriesVisible,
+    setIsAddSubCategoriesVisible,
+    category,
+    setCategory,
+    setSubCategories,
+  } = useContext(RestaurantLayoutContext);
   return (
     <div className="screen-container">
       <FoodHeader />
       <SubCategoriesAddForm
-      onHide={() => {
-        setIsAddSubCategoriesVisible({
-          bool:false,
-          parentCategoryId:''
-        });
-        setCategory(null);
-        setSubCategories([])
-      }}
-      isAddSubCategoriesVisible={isAddSubCategoriesVisible}
-      category={category}
+        onHide={() => {
+          setIsAddSubCategoriesVisible({
+            bool: false,
+            parentCategoryId: '',
+          });
+          setCategory(null);
+          setSubCategories([]);
+        }}
+        isAddSubCategoriesVisible={isAddSubCategoriesVisible}
+        category={category}
       />
       <FoodsMain />
       <FoodForm />

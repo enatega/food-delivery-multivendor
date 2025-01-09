@@ -1,93 +1,93 @@
 /* Custom modal size and style */
 .custom-modal {
-    width: 600px; /* Fixed size for modal */
-    max-width: 600px; /* Ensure it doesn't expand beyond this width */
+  width: 600px; /* Fixed size for modal */
+  max-width: 600px; /* Ensure it doesn't expand beyond this width */
 }
 
 .order-details-container {
-    padding: 20px;
+  padding: 20px;
 }
 
 .order-section {
-    background: #f4fdf4;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+  background: #f4fdf4;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .section-header {
-    font-size: 18px;
-    font-weight: bold;
-    color: #2e8b57;
-    margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2e8b57;
+  margin-bottom: 10px;
 }
 
 .item-list {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .item-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .item-price {
-    font-weight: bold;
-    color: #000;
+  font-weight: bold;
+  color: #000;
 }
 
 .charges-table {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .charges-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .total-row {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Payment Method Section */
 .payment-section {
-    text-align: center; /* Center the payment method text */
-    margin-bottom: 20px; /* Add space between payment method and paid amount */
+  text-align: center; /* Center the payment method text */
+  margin-bottom: 20px; /* Add space between payment method and paid amount */
 }
 
 .payment-type {
-    font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 10px;
-    background-color: #000;
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 20px;
-    display: inline-block; /* Make the text box tighter */
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  background-color: #000;
+  color: #fff;
+  padding: 5px 15px;
+  border-radius: 20px;
+  display: inline-block; /* Make the text box tighter */
 }
 
 /* Paid Amount Section */
 .paid-amount {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-    padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 5px 0;
 }
 
 .paid-label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .paid-value {
-    font-weight: bold;
-    text-align: right;
-    flex-grow: 1;
+  font-weight: bold;
+  text-align: right;
+  flex-grow: 1;
 }
 
 /* Delivery Address Section */
 .delivery-address {
-    margin-top: 10px;
-    font-size: 16px;
+  margin-top: 10px;
+  font-size: 16px;
 }

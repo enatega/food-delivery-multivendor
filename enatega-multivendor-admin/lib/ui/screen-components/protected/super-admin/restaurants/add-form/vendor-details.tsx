@@ -30,7 +30,10 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Schema
-import { RestaurantsVendorDetails, VendorSchemaForStoreForm } from '@/lib/utils/schema';
+import {
+  RestaurantsVendorDetails,
+  VendorSchemaForStoreForm,
+} from '@/lib/utils/schema';
 
 // GraphQL
 import { CREATE_VENDOR, GET_VENDORS } from '@/lib/api/graphql';
@@ -50,7 +53,6 @@ export default function VendorDetails({
   stepperProps,
   vendorsDropdown,
 }: IRestaurantsVendorDetailsComponentProps) {
-  
   // Props
   const { onStepChange, order } = stepperProps ?? {
     onStepChange: () => {},
@@ -167,7 +169,9 @@ export default function VendorDetails({
             <Formik
               initialValues={formInitialValues}
               validationSchema={
-                showAddForm ? VendorSchemaForStoreForm : RestaurantsVendorDetails
+                showAddForm
+                  ? VendorSchemaForStoreForm
+                  : RestaurantsVendorDetails
               }
               enableReinitialize={true}
               onSubmit={async (values) => {
@@ -183,7 +187,7 @@ export default function VendorDetails({
                 isSubmitting,
                 setFieldValue,
               }) => {
-                console.log({errors})
+                console.log({ errors });
                 return (
                   <Form onSubmit={handleSubmit}>
                     <div className="space-y-3">

@@ -16,9 +16,8 @@ import { IDateFilter } from '@/lib/utils/interfaces';
 import { useContext, useState } from 'react';
 
 export default function AdminRestaurantDashboard() {
-  
   // Contexts
-  const {isSuperAdminSidebarVisible} = useContext(LayoutContext);
+  const { isSuperAdminSidebarVisible } = useContext(LayoutContext);
 
   // States
   const [dateFilter, setDateFilter] = useState<IDateFilter>({

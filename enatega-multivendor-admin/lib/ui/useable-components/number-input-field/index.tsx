@@ -22,10 +22,9 @@ export default function CustomNumberField({
   ...props
 }: INumberTextFieldProps) {
   // Toast
-  const {showToast} = useToast();
+  const { showToast } = useToast();
 
   const onNumberChangeHandler = (e: InputNumberChangeEvent) => {
-
     if (onChange) {
       onChange(name, e.value);
     } else if (onChangeFieldValue) {
@@ -49,21 +48,18 @@ export default function CustomNumberField({
         min={min}
         max={max}
         onKeyDown={(e) => {
-          if (
-            max !== undefined &&
-            Number(e.currentTarget.value) > max
-          ) {
+          if (max !== undefined && Number(e.currentTarget.value) > max) {
             e.preventDefault();
             return showToast({
-              type:'error',
-              title:'Coupon',
-              message:'As Discount is a %age field, please choose a value from 0 to 100.'
+              type: 'error',
+              title: 'Coupon',
+              message:
+                'As Discount is a %age field, please choose a value from 0 to 100.',
             });
           }
         }}
         onChange={(e: InputNumberChangeEvent) => {
-        
-            onNumberChangeHandler(e);
+          onNumberChangeHandler(e);
         }}
         {...props}
         disabled={disabled}

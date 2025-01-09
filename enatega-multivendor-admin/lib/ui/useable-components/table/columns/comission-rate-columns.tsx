@@ -30,8 +30,7 @@ export const COMMISSION_RATE_COLUMNS = ({
     body: (restaurant: IRestaurantResponse) => (
       <Formik
         initialValues={{
-          [`commissionRate-${restaurant._id}`]:
-            restaurant.commissionRate, 
+          [`commissionRate-${restaurant._id}`]: restaurant.commissionRate,
         }}
         onSubmit={() => {
           handleSave(restaurant._id);

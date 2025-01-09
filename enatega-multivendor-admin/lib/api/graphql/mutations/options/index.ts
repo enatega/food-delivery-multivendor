@@ -10,7 +10,7 @@ export const CREATE_OPTIONS = gql`
         description
         price
       }
-    } 
+    }
   }
 `;
 

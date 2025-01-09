@@ -46,9 +46,7 @@ export const VendorSchemaForStoreForm = Yup.object().shape({
 });
 
 export const VendorEditSchema = Yup.object().shape({
-  name: Yup.string()
-    .trim()
-    .matches(/\S/, 'Name cannot be only spaces'),
+  name: Yup.string().trim().matches(/\S/, 'Name cannot be only spaces'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
     .min(6, PasswordErrors[0])

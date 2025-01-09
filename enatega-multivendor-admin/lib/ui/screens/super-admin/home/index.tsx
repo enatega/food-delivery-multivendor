@@ -8,10 +8,12 @@ import UserStats from '@/lib/ui/screen-components/protected/super-admin/home/use
 import { useContext } from 'react';
 
 export default function Home() {
-  const {isSuperAdminSidebarVisible} = useContext(LayoutContext)
+  const { isSuperAdminSidebarVisible } = useContext(LayoutContext);
   return (
     <>
-      <div className={`flex flex-col ${isSuperAdminSidebarVisible?"w-[99%]":"w-[100%]"}  overflow-hidden p-3 `}>
+      <div
+        className={`flex flex-col ${isSuperAdminSidebarVisible ? 'w-[99%]' : 'w-[100%]'}  overflow-hidden p-3 `}
+      >
         <UserStats />
         <GrowthOverView />
         <StatesTable />

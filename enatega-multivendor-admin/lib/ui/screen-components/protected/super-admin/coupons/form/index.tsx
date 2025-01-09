@@ -149,7 +149,7 @@ export default function CouponForm({
         initialValues={initialValues}
         validationSchema={CouponFormSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log('submitting', values.discount)
+          console.log('submitting', values.discount);
           if (values.discount > 100) {
             return showToast({
               type: 'error',

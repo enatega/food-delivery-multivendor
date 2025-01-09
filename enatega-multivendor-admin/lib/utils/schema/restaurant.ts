@@ -18,8 +18,12 @@ export const RestaurantSchema = Yup.object().shape({
     .trim()
     .matches(/\S/, 'Name cannot be only spaces')
     .required('Required'),
-  deliveryTime: Yup.number().required('Required').min(1, 'The value must be greater than or equal to 1'),
-  minOrder: Yup.number().required('Required').min(1, 'The value must be greater than or equal to 1'),
+  deliveryTime: Yup.number()
+    .required('Required')
+    .min(1, 'The value must be greater than or equal to 1'),
+  minOrder: Yup.number()
+    .required('Required')
+    .min(1, 'The value must be greater than or equal to 1'),
   salesTax: Yup.number().required('Required'),
   shopType: Yup.mixed<IDropdownSelectItem>().required('Required'),
   cuisines: Yup.array()

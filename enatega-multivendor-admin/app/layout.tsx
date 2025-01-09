@@ -26,7 +26,6 @@ import './global.css';
 // Apollo
 import { useSetupApollo } from '@/lib/hooks/useSetApollo';
 
-
 export default function RootLayout({
   children,
 }: Readonly<{

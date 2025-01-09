@@ -59,8 +59,7 @@ export interface RestaurantLayoutContextProps {
   isSubCategoryModalOpen: boolean;
   setIsSubCategoryModalOpen: Dispatch<SetStateAction<boolean>>;
   subCategoryParentId: string;
-  setSubCategoryParentId:Dispatch<SetStateAction<string>>;
-
+  setSubCategoryParentId: Dispatch<SetStateAction<string>>;
 }
 
 export interface RestaurantLayoutContextData {

@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,9 +18,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "target": "ES2017"
   },
@@ -37,9 +31,5 @@
     ".next/types/app/(protected)/layout.tss",
     "lib/context/query-context.tsx"
   ],
-  "exclude": [
-    "cypress.config.ts",
-    "cypress",
-    "node_modules"
-  ]
+  "exclude": ["cypress.config.ts", "cypress", "node_modules"]
 }

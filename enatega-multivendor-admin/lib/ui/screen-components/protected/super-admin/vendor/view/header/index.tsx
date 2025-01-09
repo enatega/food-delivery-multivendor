@@ -9,10 +9,8 @@ import { VendorContext } from '@/lib/context/super-admin/vendor.context';
 import CustomTextField from '@/lib/ui/useable-components/input-field';
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 
-
 // Constants
 import HeaderText from '@/lib/ui/useable-components/header-text';
-
 
 export default function VendorHeader() {
   // Context

@@ -7,10 +7,10 @@ const CustomTab = ({
   selectedTab,
   setSelectedTab,
   dateFilter,
-  setDateFilter
+  setDateFilter,
 }: ICustomTabProps) => {
   return (
-    <div >
+    <div>
       <div className="flex h-10 w-fit space-x-2 rounded bg-gray-100 p-1">
         {options.map((option) => (
           <div
@@ -32,10 +32,10 @@ const CustomTab = ({
             dateFilter ?? {
               startDate: new Date().getDate().toString(),
               endDate: new Date().getDate().toString(),
-              dateKeyword:'Today'
+              dateKeyword: 'Today',
             }
           }
-          setDateFilter={setDateFilter??function(){}}
+          setDateFilter={setDateFilter ?? function () {}}
         />
       )}
     </div>

@@ -21,7 +21,7 @@ const Table = <T extends ITableExtends>({
   size = 'small',
   loading,
   isSelectable = false,
-  moduleName="Restaurant-Orders",
+  moduleName = 'Restaurant-Orders',
   handleRowClick,
   rowsPerPage = 10,
 }: IDataTableProps<T>) => {
@@ -31,18 +31,15 @@ const Table = <T extends ITableExtends>({
     setSelectedData(e.value);
   };
 
-  
-
   const rowClassName = (data: T) => {
-    let className = ""
-    switch(moduleName) {
-
-      case "Restaurant-Order":
+    let className = '';
+    switch (moduleName) {
+      case 'Restaurant-Order':
         className = data?.orderStatus === 'ASSIGNED' ? 'row-assigned' : '';
         break;
-        case "SuperAdmin-Order":
-          className = data?.orderStatus === 'ASSIGNED' ? 'row-assigned' : '';
-          break;
+      case 'SuperAdmin-Order':
+        className = data?.orderStatus === 'ASSIGNED' ? 'row-assigned' : '';
+        break;
       default:
         break;
     }
@@ -91,10 +88,8 @@ const Table = <T extends ITableExtends>({
           />
         ))}
       </DataTable>
-    </> 
+    </>
   );
 };
-
-
 
 export default Table;

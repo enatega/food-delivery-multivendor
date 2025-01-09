@@ -52,7 +52,7 @@ export default function SidebarItem({
   const pathname = usePathname();
   const router = useRouter();
   const { showSuperAdminSidebar } =
-  useContext<LayoutContextProps>(LayoutContext);
+    useContext<LayoutContextProps>(LayoutContext);
 
   useEffect(() => {
     if (!expanded) {
@@ -129,7 +129,7 @@ export default function SidebarItem({
                 : subMenu.map((item, index) => (
                     <HoveredSubMenuItem
                       key={index}
-                      isLastItem={((subMenu.length-1)===index)}
+                      isLastItem={subMenu.length - 1 === index}
                       text={item.text}
                       icon={item.icon}
                       active={isActive}
