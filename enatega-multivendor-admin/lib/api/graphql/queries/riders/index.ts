@@ -9,6 +9,7 @@ export const GET_RIDERS = gql`
       password
       phone
       available
+      assigned
       zone {
         _id
         title

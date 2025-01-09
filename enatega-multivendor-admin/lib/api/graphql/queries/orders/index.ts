@@ -35,6 +35,7 @@ export const GET_ACTIVE_ORDERS = gql`
         name
         username
         available
+        assigned
       }
     }
   }

@@ -1,8 +1,10 @@
+'use client';
 // Interfaces
 import { IActiveOrders } from '@/lib/utils/interfaces/dispatch.interface';
 import {
   IDropdownSelectItem,
   IQueryResult,
+  IRiderDropDownSelectItem,
   IRidersDataResponse,
 } from '@/lib/utils/interfaces';
 
@@ -109,7 +111,9 @@ export const DISPATCH_TABLE_COLUMNS = (
   const { showToast } = useContext(ToastContext);
 
   // States
-  const [riderOptions, setRiderOptions] = useState<IDropdownSelectItem[]>([]);
+  const [riderOptions, setRiderOptions] = useState<IRiderDropDownSelectItem[]>(
+    []
+  );
   const [isRiderLoading, setIsRiderLoading] = useState({
     _id: '',
     bool: false,
@@ -120,20 +124,22 @@ export const DISPATCH_TABLE_COLUMNS = (
   });
 
   // Query
-  const { data: ridersData } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
-    IRidersDataResponse | undefined,
-    undefined
-  >;
+  const { data: ridersData, loading: ridersLoading } = useQueryGQL(
+    GET_RIDERS,
+    {}
+  ) as IQueryResult<IRidersDataResponse | undefined, undefined>;
 
   // Side-Effects
   useEffect(() => {
     if (ridersData) {
-      console.log(ridersData);
-      const newRiderOptions = ridersData.riders.map((rider) => ({
-        label: rider.name,
-        code: rider.name.toUpperCase(),
-        _id: rider._id,
-      }));
+      const newRiderOptions = ridersData.riders
+        .filter((_rider) => _rider.available)
+        .map((rider) => ({
+          label: rider.name,
+          code: rider.name.toUpperCase(),
+          assignedOrders: rider.assigned,
+          _id: rider._id,
+        }));
       setRiderOptions(newRiderOptions); // Set the rider options
     }
   }, [ridersData]);
@@ -191,9 +197,17 @@ export const DISPATCH_TABLE_COLUMNS = (
 
   //Handlers
   const handleAssignRider = async (
-    item: IDropdownSelectItem,
+    item: IRiderDropDownSelectItem,
     rowData: IActiveOrders
   ) => {
+    if (item?.assignedOrders.length > 5) {
+      return showToast({
+        type: 'error',
+        title: 'Assign Rider',
+        message:
+          'This rider has already been assigned 5 orders, please choose a different one',
+      });
+    }
     if (item._id) {
       setIsRiderLoading({
         _id: item._id,
@@ -281,18 +295,27 @@ export const DISPATCH_TABLE_COLUMNS = (
           code: rowData?.rider?.name.toString().toUpperCase() ?? '',
           _id: rowData?.rider?._id.toString() ?? '',
         };
-
         return (
           <div>
             <Dropdown
               options={riderOptions}
               loading={
-                isRiderLoading.bool && isRiderLoading._id === rowData._id
+                (isRiderLoading.bool && isRiderLoading._id === rowData._id) ||
+                ridersLoading
               }
-              value={selectedRider}
+              value={{
+                label: rowData?.rider?.name.toString() ?? '',
+                code: rowData?.rider?.name.toString().toUpperCase() ?? '',
+                _id: rowData?.rider?._id.toString() ?? '',
+                assignedOrders: rowData.rider?.assigned,
+              }}
               placeholder="Select Rider"
               onChange={(e: DropdownChangeEvent) =>
                 handleAssignRider(e.value, rowData)
+              }
+              optionDisabled={(option) =>
+                option.assignedOrders.length > 5 &&
+                option._id !== rowData?.rider?._id
               }
               // filter={true}
               className="outline outline-1 min-w-[120px] outline-gray-300"

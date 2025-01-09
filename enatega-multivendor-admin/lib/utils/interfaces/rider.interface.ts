@@ -16,6 +16,7 @@ export interface IRiderResponse {
   password: string;
   phone: string;
   available: boolean;
+  assigned:string[];
   zone: IRiderResponseZone;
 }
 

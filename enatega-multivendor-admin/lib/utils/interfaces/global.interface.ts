@@ -15,7 +15,9 @@ export interface IDropdownSelectItem {
   code?: string;
   body?: () => void;
 }
-
+export interface IRiderDropDownSelectItem extends IDropdownSelectItem {
+  assignedOrders:string[];
+}
 export interface QueryState {
   data: [];
   loading: boolean;
