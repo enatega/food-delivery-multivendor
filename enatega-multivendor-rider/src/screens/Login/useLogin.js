@@ -52,13 +52,26 @@ const useLogin = () => {
     return result
   }
 
-  async function onCompleted({ riderLogin }) {
+  async function onCompleted({ riderLogin, lastOrderCreds }) {
     if (riderLogin) {
       FlashMessage({ message: t('loginFlashMsg') })
       await AsyncStorage.setItem('rider-id', riderLogin.userId)
       await setTokenAsync(riderLogin.token)
+    } else {
+      if (
+        lastOrderCreds &&
+        lastOrderCreds.riderUsername &&
+        lastOrderCreds.riderPassword
+      ) {
+        setUsername(lastOrderCreds.riderUsername || '')
+        setPassword(lastOrderCreds.riderPassword || '')
+      } else {
+        setUsername('')
+        setPassword('')
+      }
     }
   }
+
   function onError(error) {
     console.log('error', JSON.stringify(error))
     let message = 'Check internet connection'

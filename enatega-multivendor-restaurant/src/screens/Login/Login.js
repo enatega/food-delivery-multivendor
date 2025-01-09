@@ -68,7 +68,7 @@ export default function Login() {
                 autoCapitalize="none"
                 errorStyle={{ color: colors.textErrorColor }}
                 keyboardType="email-address"
-                // defaultValue={username}
+                defaultValue={username}
                 returnKeyType="next"
                 style={{ paddingLeft: 8 }}
               />
@@ -87,7 +87,7 @@ export default function Login() {
                 onBlur={isValid}
                 autoCapitalize="none"
                 errorStyle={{ color: colors.textErrorColor }}
-                // defaultValue={password}
+                defaultValue={password}
                 rightIcon={
                   <Icon
                     onPress={() => setShowPassword(!showPassword)}
