@@ -106,7 +106,7 @@ export const formatReceipt = order => {
     <center id="top">
       <div class="logo"></div>
       <div class="info"> 
-        <h2>Yalla</h2>
+        <h2>Enatega</h2>
       </div><!--End Info-->
     </center><!--End InvoiceTop-->
     

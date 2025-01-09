@@ -27,8 +27,8 @@ export const useLogin = () => {
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const emailRef = useRef()
-  const [password, setPassword] = useState()
+  const emailRef = useRef('demo-customer@enatega.com')
+  const [password, setPassword] = useState('123123')
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)

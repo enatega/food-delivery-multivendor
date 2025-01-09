@@ -66,7 +66,7 @@ const Help = (props) => {
   const currentTheme = {isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
 
   const openWhatsAppChat = async () => {
-    const phoneNumber = '+972506727505'
+    const phoneNumber = '+14232600408'
 
     if (Platform.OS === 'android') {
       const androidUrl = `whatsapp://send?phone=${phoneNumber}`
