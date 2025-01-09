@@ -48,7 +48,15 @@ function Language() {
       languageNameSetter(langName)
     }
   }
-  
+  const handleModalOpen = async () => {
+    modalVisibleSetter(true);
+    const lang = await AsyncStorage.getItem('enatega-language');
+    if (lang) {
+      const defLang = languageTypes.findIndex((el) => el.code === lang);
+      setActiveRadio(defLang); 
+    }
+  };
+
 
   async function onSelectedLanguage() {
     const languageInd = activeRadio
@@ -102,7 +110,7 @@ function Language() {
             </View>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => modalVisibleSetter(true)}
+              onPress={handleModalOpen}
               style={styles.button}>
               <TextDefault textColor={colors.tagColor} bolder>
                 {t('edit')}

@@ -98,8 +98,7 @@ function ImageTextCenterHeader(props, ref) {
   // Ref
   const flatListRef = ref
 
-
-
+  
   const aboutObject = {
     latitude: props?.restaurant
       ? props?.restaurant.location.coordinates[1]
@@ -120,12 +119,14 @@ function ImageTextCenterHeader(props, ref) {
     average: props?.restaurant ? props?.restaurant?.reviewData?.ratings : '...',
     total: props?.restaurant ? props?.restaurant?.reviewData?.total : '...',
     reviews: props?.restaurant ? props?.restaurant?.reviewData?.reviews : '...',
+    reviewsCount: props?.restaurant ? props?.restaurant?.reviewCount : '...',
     isAvailable: props?.restaurant ? props?.restaurant?.isAvailable : true,
     openingTimes: props?.restaurant ? props?.restaurant?.openingTimes : [],
     phone: props?.restaurant ? props?.restaurant?.phone : '',
     restaurantUrl: props?.restaurant ? props?.restaurant?.restaurantUrl : '',
     IsOpen: isOpen(props?.restaurant ? props?.restaurant : '')
   }
+  
 
   // Constants
   const currentDayShort = new Date()
@@ -502,7 +503,7 @@ function ImageTextCenterHeader(props, ref) {
                     H5
                     isRTL
                   >
-                    ({aboutObject?.total ?? '0 reviews'})
+                    ({aboutObject?.reviewsCount+ " reviews" ?? '0 reviews'})
                   </TextDefault>
                 </AnimatedTouchable>
                 <AnimatedTouchable
