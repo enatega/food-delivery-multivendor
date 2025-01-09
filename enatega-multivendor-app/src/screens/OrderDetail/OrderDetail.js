@@ -80,7 +80,7 @@ function OrderDetail(props) {
       message: error.message
     })
   }
-
+console.log('orderrrrrrrr',orders)
   const order = orders?.find(o => o?._id??order?.id === id)
 
  
@@ -129,7 +129,7 @@ function OrderDetail(props) {
         showsVerticalScrollIndicator={false}
         overScrollMode='never'
       >
-        {order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED && (
+        {order?.rider && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && (
           <MapView
             ref={(c) => (mapView.current = c)}
             style={{ flex: 1, height: HEIGHT * 0.6 }}
@@ -202,8 +202,8 @@ function OrderDetail(props) {
             ...alignment.Pmedium
           }}
         >
-          <OrderStatusImage status={order.orderStatus} />
-          {order.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
+          <OrderStatusImage status={order?.orderStatus} />
+          {order?.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
             <View
               style={{
                 ...alignment.MTxSmall,
@@ -214,7 +214,7 @@ function OrderDetail(props) {
               {![
                 ORDER_STATUS_ENUM.PENDING,
                 ORDER_STATUS_ENUM.CANCELLED
-              ].includes(order.orderStatus) && (
+              ].includes(order?.orderStatus) && (
                   <>
                     <TextDefault
                       style={{ ...alignment.MTxSmall }}
@@ -248,18 +248,18 @@ function OrderDetail(props) {
                 bold
               >
                 {' '}
-                {t(checkStatus(order.orderStatus).statusText)}
+                {t(checkStatus(order?.orderStatus).statusText)}
               </TextDefault>
             </View>
           )}
         </View>
-        <Instructions title={'Instructions'} theme={currentTheme} message={order.instructions} />
+        <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
         <Detail
           navigation={props?.navigation}
           currencySymbol={configuration.currencySymbol}
           items={items}
           from={restaurant.name}
-          orderNo={order.orderId}
+          orderNo={order?.orderId}
           deliveryAddress={deliveryAddress.deliveryAddress}
           subTotal={subTotal}
           tip={tip}
@@ -268,8 +268,8 @@ function OrderDetail(props) {
           total={total}
           theme={currentTheme}
           id={_id??orderId}
-          rider={order.rider}
-          orderStatus={order.orderStatus}
+          rider={order?.rider}
+          orderStatus={order?.orderStatus}
         />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
@@ -279,7 +279,7 @@ function OrderDetail(props) {
           currency={configuration.currencySymbol}
           price={total.toFixed(2)}
         />
-        {order.orderStatus === ORDER_STATUS_ENUM.PENDING && (
+        {order?.orderStatus === ORDER_STATUS_ENUM.PENDING && (
           <View style={{ margin: scale(20) }}>
             <Button
               text={t('cancelOrder')}
@@ -297,7 +297,7 @@ function OrderDetail(props) {
         setModalVisible={cancelModalToggle}
         cancelOrder={cancelOrder}
         loading={loadingCancel}
-        orderStatus={order.orderStatus}
+        orderStatus={order?.orderStatus}
       />
     </View>
   )

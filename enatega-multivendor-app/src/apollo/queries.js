@@ -685,6 +685,7 @@ export const restaurant = `query Restaurant($id:String){
     deliveryTime
     minimumOrder
     tax
+    reviewCount
     reviewData{
       total
       ratings
