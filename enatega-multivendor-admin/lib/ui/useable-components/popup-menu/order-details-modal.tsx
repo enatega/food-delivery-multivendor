@@ -72,7 +72,7 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
                 {(
                   restaurantData.orderAmount +
                   (restaurantData.deliveryCharges ?? 0) +
-                  (restaurantData.taxationAmount ?? 0 )+
+                  (restaurantData.taxationAmount ?? 0) +
                   (restaurantData.tipping ?? 0)
                 ).toFixed(2)}
               </strong>

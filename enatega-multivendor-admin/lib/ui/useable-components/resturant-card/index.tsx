@@ -49,14 +49,13 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
     unique_restaurant_id,
   } = restaurant;
 
-  const configuration = useContext(ConfigurationContext)
+  const configuration = useContext(ConfigurationContext);
 
   if (!configuration) {
-    throw new Error("Cannot get the value of the Configuration Context");
+    throw new Error('Cannot get the value of the Configuration Context');
   }
 
   const { deliveryRate } = configuration;
-
 
   // Hooks
   const { showToast } = useContext(ToastContext);
@@ -219,7 +218,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
             onUseLocalStorage('save', 'restaurantId', _id);
             const routeStack = ['Admin'];
             onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
-            router.push(`/admin/restaurant/`);
+            router.push(`/admin/store/`);
           }}
         />
       </div>

@@ -24,6 +24,7 @@ export interface IActiveOrders {
     name: string;
     username: string;
     available: boolean;
+    assigned: string[];
   };
 }
 
@@ -76,5 +77,3 @@ export interface IDispatchTableHeaderProps {
   selectedActions: string[];
   setSelectedActions: Dispatch<SetStateAction<string[]>>;
 }
-
-

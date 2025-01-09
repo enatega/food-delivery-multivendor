@@ -5,9 +5,9 @@ export interface IVariationForm {
   title: string;
   price: number;
   discounted: number;
-  addons: IDropdownSelectItem[] |null;
+  addons: IDropdownSelectItem[] | null;
   isOutOfStock: boolean;
-  __typename?:string
+  __typename?: string;
 }
 
 export interface IVariationErrors {
@@ -15,6 +15,6 @@ export interface IVariationErrors {
   title: string[];
   discounted: string[];
   price: string[];
-  addons:string[];
+  addons: string[];
   isOutOfStock: string[];
 }

@@ -80,7 +80,7 @@ export default function MakeSidebar() {
         },
         {
           text: 'Stores',
-          route: '/general/restaurants',
+          route: '/general/stores',
           isParent: false,
         },
         {
@@ -164,7 +164,7 @@ export default function MakeSidebar() {
   return (
     <>
       <SuperAdminSidebar>
-      <div className="h-[90vh] pb-4 overflow-y-auto overflow-x-hidden pr-2">
+        <div className="h-[90vh] pb-4 overflow-y-auto overflow-x-hidden pr-2">
           {navBarItems.map((item, index) =>
             item.shouldShow && !item.shouldShow() ? null : (
               <SidebarItem

@@ -10,13 +10,13 @@ export const GET_SUBCATEGORIES = gql`
   }
 `;
 export const GET_SUBCATEGORY = gql`
-query SubCategory($id: String) {
-  subCategory(_id: $id) {
-    _id
-    title
-    parentCategoryId
+  query SubCategory($id: String) {
+    subCategory(_id: $id) {
+      _id
+      title
+      parentCategoryId
+    }
   }
-}
 `;
 export const GET_SUBCATEGORIES_BY_PARENT_ID = gql`
   query GetSubCategoriesByParentId($parentCategoryId: String!) {

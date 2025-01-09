@@ -4,13 +4,13 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function FoodManagementPage() {
+export default function RestaurantPage() {
   // Hooks
   const router = useRouter();
 
   // Effects
   useEffect(() => {
-    router.push('/admin/restaurant/food-management/food');
+    router.push('/admin/store/dashboard');
   }, []);
 
   return <></>;

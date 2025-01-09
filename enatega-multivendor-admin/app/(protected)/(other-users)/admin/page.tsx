@@ -11,7 +11,7 @@ export default function AdminPage() {
   // Effects
   useEffect(() => {
     // If userType vendor -> redirect to vendor dashboard else restaurant dashboard
-    router.push('/admin/restaurant/dashboard');
+    router.push('/admin/store/dashboard');
   }, []);
 
   return <></>;

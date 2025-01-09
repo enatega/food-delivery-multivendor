@@ -7,7 +7,7 @@ import {
 import { ISeverityStyles } from '../interfaces/toast.interface';
 
 // Prices
-export const MIN_PRICE = 0.0000000;
+export const MIN_PRICE = 0.0;
 export const MAX_PRICE = 99999;
 
 // File Sizes

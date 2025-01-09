@@ -60,6 +60,15 @@ export default function CommissionRateMain() {
   // Handlers
   const handleSave = async (restaurantId: string) => {
     const restaurant = restaurants.find((r) => r._id === restaurantId);
+    // Validation
+    if (parseFloat(String(restaurant?.commissionRate)) > 100) {
+      return showToast({
+        type: 'error',
+        title: 'Update Commission',
+        message:
+          'As Commission Rate is a %age value, please enter a value in between 0 to 100',
+      });
+    }
     if (restaurant) {
       setLoadingRestaurant(restaurantId);
       try {

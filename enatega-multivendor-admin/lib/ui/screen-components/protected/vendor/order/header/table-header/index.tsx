@@ -4,10 +4,9 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { Checkbox } from 'primereact/checkbox';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import React, { useRef, useState } from 'react';
-import classes from './order-vendor.header.module.css'
+import classes from './order-vendor.header.module.css';
 import { IOrderVendorHeaderProps } from '@/lib/utils/interfaces/orders/order-vendor.interface';
 import { IMenuItem } from '@/lib/utils/interfaces/orders/order-vendor.interface';
-
 
 const OrderTableHeader: React.FC<IOrderVendorHeaderProps> = ({
   setSelectedActions,

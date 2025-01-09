@@ -360,7 +360,7 @@ export default function AddonAddForm({
                                                   value={value.description}
                                                   onChange={handleChange}
                                                   showLabel={true}
-                                                  maxLength= {40}
+                                                  maxLength={40}
                                                   style={{
                                                     borderColor:
                                                       onErrorMessageMatcher(

@@ -71,7 +71,10 @@ const RestaurantMain: React.FC = () => {
             label="Min Order"
             value={restaurant?.minimumOrder?.toString()}
           />
-          <InfoItem label="Service Charges" value={restaurant?.tax?.toString()} />
+          <InfoItem
+            label="Service Charges"
+            value={restaurant?.tax?.toString()}
+          />
           <InfoItem label="Order Prefix" value={restaurant?.orderPrefix} />
           <InfoItem label="Shop Category" value={restaurant?.shopType} />
         </div>

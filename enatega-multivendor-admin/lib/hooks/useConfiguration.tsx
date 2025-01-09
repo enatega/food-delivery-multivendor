@@ -74,7 +74,7 @@ export const useConfiguration = () => {
     SERVER_URL: BACKEND_URL.LIVE.SERVER_URL,
     WS_SERVER_URL: BACKEND_URL.LIVE.WS_SERVER_URL,
     COLORS,
- 
+
     // EMAIL CONFIG
     EMAIL_NAME,
     EMAIL,

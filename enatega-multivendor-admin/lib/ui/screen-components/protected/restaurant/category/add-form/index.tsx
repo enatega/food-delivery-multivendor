@@ -275,10 +275,11 @@ export default function CategoryAddForm({
                                               onClick={async () => {
                                                 if (value._id) {
                                                   remove(index);
-                                                  console.log(value._id)
+                                                  console.log(value._id);
                                                   await deleteSubCategory({
                                                     variables: {
-                                                      deleteSubCategoryId2: value._id,
+                                                      deleteSubCategoryId2:
+                                                        value._id,
                                                     },
                                                   });
                                                 }

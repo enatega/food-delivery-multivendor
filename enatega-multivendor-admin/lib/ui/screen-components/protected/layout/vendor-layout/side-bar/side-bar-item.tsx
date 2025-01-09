@@ -11,12 +11,11 @@ import {
   ISidebarMenuItem,
   LayoutContextProps,
   SubMenuItemProps,
-} from '@/lib/utils/interfaces'
+} from '@/lib/utils/interfaces';
 
 // Styles
 import classes from './side-bar.module.css';
 import { LayoutContext } from '@/lib/context/global/layout.context';
-
 
 function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
   return (

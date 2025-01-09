@@ -6,13 +6,17 @@ import { Form, Formik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
 
 // Prime React
+import CustomDropdownComponent from '@/lib/ui/useable-components/custom-dropdown';
+import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
 
 // Context
 import { ToastContext } from '@/lib/context/global/toast.context';
+import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.context';
 
 // Interface and Types
 import { ICreateVendorResponseGraphQL } from '@/lib/utils/interfaces';
 import { IRestauransVendorDetailsForm } from '@/lib/utils/interfaces/forms';
+import { IRestaurantsVendorDetailsComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 
 // Constants and Methods
 import { MAX_SQUARE_FILE_SIZE, VendorErrors } from '@/lib/utils/constants';
@@ -26,16 +30,15 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Schema
-import { RestaurantsVendorDetails, VendorSchema } from '@/lib/utils/schema';
+import {
+  RestaurantsVendorDetails,
+  VendorSchemaForStoreForm,
+} from '@/lib/utils/schema';
 
 // GraphQL
 import { CREATE_VENDOR, GET_VENDORS } from '@/lib/api/graphql';
 
 // Icons
-import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.context';
-import CustomDropdownComponent from '@/lib/ui/useable-components/custom-dropdown';
-import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
-import { IRestaurantsVendorDetailsComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 const initialValues: IRestauransVendorDetailsForm = {
@@ -56,8 +59,8 @@ export default function VendorDetails({
     type: '',
     order: -1,
   };
-  // Context
 
+  // Context
   const { showToast } = useContext(ToastContext);
   const { restaurantsContextData, onSetRestaurantsContextData } =
     useContext(RestaurantsContext);
@@ -69,9 +72,6 @@ export default function VendorDetails({
     });
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
-  // Constants
-
-  // API
   // Mutations
   const [createVendor] = useMutation(CREATE_VENDOR, {
     refetchQueries: [{ query: GET_VENDORS }],
@@ -169,7 +169,9 @@ export default function VendorDetails({
             <Formik
               initialValues={formInitialValues}
               validationSchema={
-                showAddForm ? VendorSchema : RestaurantsVendorDetails
+                showAddForm
+                  ? VendorSchemaForStoreForm
+                  : RestaurantsVendorDetails
               }
               enableReinitialize={true}
               onSubmit={async (values) => {
@@ -185,6 +187,7 @@ export default function VendorDetails({
                 isSubmitting,
                 setFieldValue,
               }) => {
+                console.log({ errors });
                 return (
                   <Form onSubmit={handleSubmit}>
                     <div className="space-y-3">

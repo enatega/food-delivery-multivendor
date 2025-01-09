@@ -162,7 +162,7 @@ export default function RestaurantsMain() {
           onUseLocalStorage('save', 'restaurantId', data?._id);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
-          router.push(`/admin/restaurant/`);
+          router.push(`/admin/store/`);
         }
       },
     },
@@ -208,7 +208,7 @@ export default function RestaurantsMain() {
           onUseLocalStorage('save', 'restaurantId', event.data._id);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
-          router.push(`/admin/restaurant/`);
+          router.push(`/admin/store/`);
         }}
       />
 

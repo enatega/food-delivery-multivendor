@@ -69,7 +69,8 @@ const initialValues: IRestaurantForm = {
   salesTax: 0.0,
   shopType: null,
   cuisines: [],
-  image: 'https://t4.ftcdn.net/jpg/04/76/57/27/240_F_476572792_zMwqHpmGal1fzh0tDJ3onkLo88IjgNbL.jpg',
+  image:
+    'https://t4.ftcdn.net/jpg/04/76/57/27/240_F_476572792_zMwqHpmGal1fzh0tDJ3onkLo88IjgNbL.jpg',
   logo: 'https://res.cloudinary.com/dc6xw0lzg/image/upload/v1735894342/dvi5fjbsgdlrzwip0whg.jpg',
 };
 
@@ -346,7 +347,7 @@ export default function RestaurantDetails({
                       <div>
                         <CustomNumberField
                           suffix="m"
-                          min={0}
+                          min={1}
                           max={500}
                           placeholder="Delivery Time"
                           name="deliveryTime"
@@ -363,6 +364,11 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
+                        {onErrorMessageMatcher(
+                          'deliveryTime',
+                          errors?.deliveryTime,
+                          RestaurantErrors
+                        ) && <span>{RestaurantErrors.deliveryTime}</span>}
                       </div>
 
                       <div>
@@ -374,6 +380,9 @@ export default function RestaurantDetails({
                           showLabel={true}
                           value={values.minOrder}
                           onChange={setFieldValue}
+                          className={`${
+                            errors?.minOrder && 'border border-red-700'
+                          }'`}
                           style={{
                             borderColor: onErrorMessageMatcher(
                               'minOrder',
@@ -384,6 +393,9 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
+                        {errors?.minOrder && (
+                          <span>{RestaurantErrors.minOrder}</span>
+                        )}
                       </div>
                       <div>
                         <CustomNumberField
@@ -407,6 +419,11 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
+                        {onErrorMessageMatcher(
+                          'salesTax',
+                          errors?.salesTax,
+                          RestaurantErrors
+                        ) && <span>{RestaurantErrors.salesTax}</span>}
                       </div>
                       <div>
                         <CustomDropdownComponent

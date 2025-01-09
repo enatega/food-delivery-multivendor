@@ -14,9 +14,7 @@ import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 
 // Utilities & Types
 import { RestaurantDeliveryErrors } from '@/lib/utils/constants';
-import {
-  IRestaurantDeliveryForm,
-} from '@/lib/utils/interfaces';
+import { IRestaurantDeliveryForm } from '@/lib/utils/interfaces';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { DeliverySchema } from '@/lib/utils/schema/delivery';
 
@@ -26,7 +24,7 @@ import { UPDATE_RESTAURANT_DELIVERY } from '@/lib/api/graphql';
 import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
 
 const DeliveryMain = () => {
-  const { isLoaded } = useContext(GoogleMapsContext)
+  const { isLoaded } = useContext(GoogleMapsContext);
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const { restaurantId } = restaurantLayoutContextData;
   const { restaurantProfileResponse, loading } = useContext(ProfileContext);
@@ -170,13 +168,17 @@ const DeliveryMain = () => {
                   }}
                 />
 
-                {isLoaded && <div className="col-span-2 flex flex-col gap-2 pt-1">
-                  <label className="text-sm font-[500]">Location Preview</label>
-                  <UpdateRestaurantLocationBounds
-                    height={'400px'}
-                    hideControls={true}
-                  />
-                </div>}
+                {isLoaded && (
+                  <div className="col-span-2 flex flex-col gap-2 pt-1">
+                    <label className="text-sm font-[500]">
+                      Location Preview
+                    </label>
+                    <UpdateRestaurantLocationBounds
+                      height={'400px'}
+                      hideControls={true}
+                    />
+                  </div>
+                )}
 
                 <div className="col-span-2 flex justify-end self-end">
                   <CustomButton

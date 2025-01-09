@@ -165,6 +165,7 @@ export const generateDummyRiders = (count: number = 10): IRiderResponse[] => {
       },
       available: Math.random() > 0.5,
       __typename: 'Rider',
+      assigned: [''],
     });
   }
 
@@ -421,6 +422,7 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
         name: `rider_${i + 1}`,
         username: `rider_${i + 1}`,
         available: true,
+        assigned:['']
       },
       createdAt: new Date().toDateString(),
       deliveryAddress: {
@@ -456,8 +458,8 @@ export const generateDummyFoods = (count: number = 10): IFoodNew[] => {
       description: `Description for Food ${i + 1}`,
       image: '',
       category: { label: `food_category_${i + 1}`, code: `${i + 1}` },
-      __typename:'Food',
-      isActive:true,
+      __typename: 'Food',
+      isActive: true,
       isOutOfStock: false,
       subCategory: {
         code: `sub-category-${i + 1}`,

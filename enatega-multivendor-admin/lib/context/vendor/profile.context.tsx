@@ -51,7 +51,6 @@ export const ProfileProvider: React.FC<IProfileProviderProps> = ({
     }
   ) as IQueryResult<ISingleVendorResponseGraphQL | undefined, undefined>;
 
-
   const handleUpdateProfile = () => {
     setIsUpdateProfileVisible(true);
   };

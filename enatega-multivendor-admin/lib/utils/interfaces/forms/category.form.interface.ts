@@ -1,9 +1,9 @@
-import { ISubCategory } from "../category.interface";
+import { ISubCategory } from '../category.interface';
 
 export interface ICategoryForm {
   _id?: string;
   title: string;
-  subCategories:ISubCategory[]
+  subCategories: ISubCategory[];
 }
 
 export interface ICategoryErrors {

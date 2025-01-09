@@ -130,14 +130,14 @@ export default function OptionMain({
           />
         }
         data={
-          data?.restaurant?.options.slice().reverse() || (loading ? generateDummyOptions() : [])
+          data?.restaurant?.options.slice().reverse() ||
+          (loading ? generateDummyOptions() : [])
         }
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
         columns={OPTION_TABLE_COLUMNS({ menuItems })}
-
       />
       <CustomDialog
         loading={mutationLoading}

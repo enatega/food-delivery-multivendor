@@ -146,7 +146,7 @@ export default function GrowthOverView() {
   }, [dashboardUsersByYear]);
 
   return (
-    <div className={`w-full p-3`}>
+    <div className={`w-auto p-3`}>
       <h2 className="text-lg font-semibold">Growth Overview</h2>
       <p className="text-gray-500">
         Tracking Stackholders Growth Over the Year

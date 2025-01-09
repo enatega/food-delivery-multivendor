@@ -1,4 +1,4 @@
-import HeaderText from "@/lib/ui/useable-components/header-text";
+import HeaderText from '@/lib/ui/useable-components/header-text';
 
 const OrdersVendorHeader = () => {
   return (

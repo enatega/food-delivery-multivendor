@@ -1,6 +1,6 @@
 // Hooks
 import useToast from '@/lib/hooks/useToast';
-import {  useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useContext } from 'react';
 
 // Components
@@ -47,10 +47,10 @@ export default function SubCategoriesAddForm({
   // Context
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
- 
-    // Toast
-    const { showToast } = useToast();
-    
+
+  // Toast
+  const { showToast } = useToast();
+
   // Initial Values
   const initialValues: { subCategories: ISubCategory[] } = {
     subCategories: [
@@ -143,8 +143,8 @@ export default function SubCategoriesAddForm({
         type: 'error',
         title: 'Create Sub-Categories',
         message:
-        subCategoriesError?.cause?.message ||
-        subCategoriesError?.graphQLErrors[0]?.message ||
+          subCategoriesError?.cause?.message ||
+          subCategoriesError?.graphQLErrors[0]?.message ||
           subCategoriesError?.clientErrors[0].message ||
           subCategoriesError?.networkError?.message ||
           'An error occured while adding the new sub-categories',

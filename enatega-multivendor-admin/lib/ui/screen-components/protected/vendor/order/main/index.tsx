@@ -47,8 +47,6 @@ export default function OrderVendorMain() {
     setIsModalOpen(true);
   };
 
-
-
   const tableData = useMemo(() => {
     if (!data?.ordersByRestIdWithoutPagination) return [];
 
@@ -101,7 +99,7 @@ export default function OrderVendorMain() {
         columns={ORDER_COLUMNS}
         loading={loading}
         handleRowClick={handleRowClick}
-        moduleName = 'Restaurant-Order'
+        moduleName="Restaurant-Order"
       />
       <OrderDetailModal
         visible={isModalOpen}

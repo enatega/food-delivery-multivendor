@@ -81,10 +81,10 @@ export interface IRestaurantsResponseGraphQL {
   getClonedRestaurants?: IRestaurantResponse[];
 }
 
-export interface IDeliveryInfo{
+export interface IDeliveryInfo {
   minDeliveryFee: number;
   deliveryFee: number;
-  deliveryDistance:number;
+  deliveryDistance: number;
 }
 
 export interface IRestaurantByOwner {

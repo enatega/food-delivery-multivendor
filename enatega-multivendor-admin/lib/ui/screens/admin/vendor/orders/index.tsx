@@ -1,6 +1,5 @@
-import OrdersVendorHeader from "@/lib/ui/screen-components/protected/vendor/order/header/screen-header";
-import OrderVendorMain from "@/lib/ui/screen-components/protected/vendor/order/main";
-
+import OrdersVendorHeader from '@/lib/ui/screen-components/protected/vendor/order/header/screen-header';
+import OrderVendorMain from '@/lib/ui/screen-components/protected/vendor/order/main';
 
 const OrderVendorScreen = () => {
   return (

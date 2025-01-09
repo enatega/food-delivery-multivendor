@@ -96,16 +96,16 @@ export default function FoodsMain() {
       enabled: !!restaurantId,
     }
   ) as IQueryResult<IAddonByRestaurantResponse | undefined, undefined>;
-  const [
-    fetchSubcategory,
-    { loading: subCategoriesLoading },
-  ] = useLazyQuery(GET_SUBCATEGORY, {
-    fetchPolicy: 'network-only',
-    refetchWritePolicy: 'overwrite',
-    onError(err) {
-      console.log({ err });
-    },
-  }) as LazyQueryResultTuple<
+  const [fetchSubcategory, { loading: subCategoriesLoading }] = useLazyQuery(
+    GET_SUBCATEGORY,
+    {
+      fetchPolicy: 'network-only',
+      refetchWritePolicy: 'overwrite',
+      onError(err) {
+        console.log({ err });
+      },
+    }
+  ) as LazyQueryResultTuple<
     ISubCategorySingleResponse | undefined,
     { id: string }
   >;
@@ -280,7 +280,7 @@ export default function FoodsMain() {
       <CustomDialog
         loading={mutationLoading}
         visible={!!deleteId?.id}
-        onHide={() => { 
+        onHide={() => {
           setDeleteId({ id: '', categoryId: '' });
         }}
         onConfirm={() => {

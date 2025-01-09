@@ -26,9 +26,7 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { Chip } from 'primereact/chip';
 import NoData from '@/lib/ui/useable-components/no-data';
 
-export default function VendorMain({
-  activeTab,
-}: IVendorMainComponentProps) {
+export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
   // Context
   const {
     onSetVendorFormVisible,
@@ -90,7 +88,7 @@ export default function VendorMain({
         </div>
 
         {/* Vendors content */}
-        <div className="pb-16">
+        <div className="pb-44">
           {vendorResponse?.loading ? (
             new Array(10)
               .fill(0)
@@ -115,8 +113,9 @@ export default function VendorMain({
       </div>
 
       <div
-        className={`flex-1 overflow-y-auto border-l border-gray-200 px-2 ${activeTab === 'restaurants' ? '' : 'hidden sm:block'
-          }`}
+        className={`flex-1 overflow-y-auto border-l border-gray-200 px-2 ${
+          activeTab === 'restaurants' ? '' : 'hidden sm:block'
+        }`}
       >
         {/* Header for Restaurants section */}
         <div className="border-b pb-2 pt-3">

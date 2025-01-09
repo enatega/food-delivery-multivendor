@@ -62,7 +62,7 @@ export default function MakeSidebar() {
   const navBarItems: ISidebarMenuItem[] = [
     {
       text: 'Dashboard',
-      route: '/admin/restaurant/dashboard',
+      route: '/admin/store/dashboard',
       isParent: true,
       icon: faHome,
       isClickable: true,
@@ -70,57 +70,57 @@ export default function MakeSidebar() {
 
     {
       text: 'Store',
-      route: '/admin/restaurant/general',
+      route: '/admin/store/general',
       isParent: true,
       icon: faStore,
       subMenu: [
         {
           text: 'Profile',
-          route: '/admin/restaurant/profile',
+          route: '/admin/store/profile',
           isParent: false,
         },
         {
           text: 'Timing',
-          route: '/admin/restaurant/general/timing',
+          route: '/admin/store/general/timing',
           isParent: false,
         },
         {
           text: 'Location',
-          route: '/admin/restaurant/general/location',
+          route: '/admin/store/general/location',
           isParent: false,
         },
         {
-          text:'Payment',
-          route:"/admin/restaurant/general/payment",
-          isParent:false,
-        }
+          text: 'Payment',
+          route: '/admin/store/general/payment',
+          isParent: false,
+        },
       ],
     },
 
     {
       text: 'Product Management',
-      route: '/admin/restaurant/food-management',
+      route: '/admin/store/product-management',
       isParent: true,
       icon: faCog,
       subMenu: [
         {
           text: 'Products',
-          route: '/admin/restaurant/food-management/food',
+          route: '/admin/store/product-management/food',
           isParent: false,
         },
         {
           text: 'Categories',
-          route: '/admin/restaurant/food-management/category',
+          route: '/admin/store/product-management/category',
           isParent: false,
         },
         {
           text: 'Options',
-          route: '/admin/restaurant/food-management/options',
+          route: '/admin/store/product-management/options',
           isParent: false,
         },
         {
           text: 'Addons',
-          route: '/admin/restaurant/food-management/add-ons',
+          route: '/admin/store/product-management/add-ons',
           isParent: false,
         },
       ],
@@ -128,24 +128,24 @@ export default function MakeSidebar() {
 
     {
       text: 'Orders',
-      route: '/admin/restaurant/orders',
+      route: '/admin/store/orders',
       isParent: true,
       icon: faRectangleList,
-      isClickable:true
+      isClickable: true,
     },
     {
       text: 'Marketing',
-      route: '/admin/restaurant/coupons',
+      route: '/admin/store/coupons',
       isParent: true,
       icon: faMoneyBillTrendUp,
-      isClickable:true
+      isClickable: true,
     },
     {
       text: 'Reviews',
-      route: '/admin/restaurant/ratings',
+      route: '/admin/store/ratings',
       isParent: true,
       icon: faStar,
-      isClickable:true
+      isClickable: true,
     },
     {
       text: lastRoute ? `Back to ${lastRoute}` : 'Back',

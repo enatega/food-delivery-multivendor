@@ -65,9 +65,7 @@ export default function VendorsLayoutRestaurantCard({
   const configuration = useContext(ConfigurationContext);
 
   if (!configuration) {
-    throw new Error(
-      'Cannot get the value of configuration context'
-    );
+    throw new Error('Cannot get the value of configuration context');
   }
 
   const { deliveryRate } = configuration;
@@ -254,7 +252,7 @@ export default function VendorsLayoutRestaurantCard({
               'routeStack',
               JSON.stringify(updatedRouteStack)
             );
-            router.push(`/admin/restaurant/`);
+            router.push(`/admin/store`);
           }}
         />
       </div>

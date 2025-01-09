@@ -52,7 +52,7 @@ export default function SidebarItem({
   const pathname = usePathname();
   const router = useRouter();
   const { showSuperAdminSidebar } =
-  useContext<LayoutContextProps>(LayoutContext);
+    useContext<LayoutContextProps>(LayoutContext);
 
   useEffect(() => {
     if (!expanded) {
@@ -61,7 +61,7 @@ export default function SidebarItem({
   }, [expanded]);
 
   const subMenuHeight = expandSubMenu
-    ? `${((subMenu?.length || 0) * 40 + (subMenu! && 15)).toString()}px`
+    ? `${((subMenu?.length || 0) * 42 + (subMenu! && 15)).toString()}px`
     : 0;
 
   const bg_color = pathname.includes(route ?? '')
@@ -87,7 +87,7 @@ export default function SidebarItem({
   };
 
   return (
-    <div className={`mt-[0.4rem] flex flex-col rounded-md`} onClick={onClick}>
+    <div className={`mt-[0.4rem] flex flex-col rounded-md `} onClick={onClick}>
       <div>
         <button
           className={`group relative flex w-full cursor-pointer items-center rounded-md px-3 py-2 transition-colors ${
@@ -129,6 +129,7 @@ export default function SidebarItem({
                 : subMenu.map((item, index) => (
                     <HoveredSubMenuItem
                       key={index}
+                      isLastItem={subMenu.length - 1 === index}
                       text={item.text}
                       icon={item.icon}
                       active={isActive}

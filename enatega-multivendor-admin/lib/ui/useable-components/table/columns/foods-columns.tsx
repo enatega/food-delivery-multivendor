@@ -103,22 +103,20 @@ export const FOODS_TABLE_COLUMNS = ({
       propertyName: 'isOutOfStock',
       body: (item: IFoodNew) => {
         return (
-        <CustomInputSwitch
-          loading={isFoodLoading === item._id}
-          isActive={item.isOutOfStock}
-          onChange={() =>
-            onUpdateFoodOutOfStock(item._id, item.category?.code ?? '')
-          }
-        />
-      )
-    },
+          <CustomInputSwitch
+            loading={isFoodLoading === item._id}
+            isActive={item.isOutOfStock}
+            onChange={() =>
+              onUpdateFoodOutOfStock(item._id, item.category?.code ?? '')
+            }
+          />
+        );
+      },
     },
     {
       propertyName: 'actions',
       body: (option: IFoodNew) => {
-        return (
-          <ActionMenu items={menuItems} data={option} />
-        )
+        return <ActionMenu items={menuItems} data={option} />;
       },
     },
   ];
