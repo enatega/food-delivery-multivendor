@@ -21,7 +21,6 @@ import { DELETE_RESTAURANT } from '@/lib/api/graphql';
 
 // Components
 import ActionMenu from '../../action-menu';
-import { useRouter } from 'next/navigation';
 
 export const RESTAURANT_TABLE_COLUMNS = ({
   menuItems,
@@ -30,9 +29,6 @@ export const RESTAURANT_TABLE_COLUMNS = ({
 }) => {
   // Context
   const { showToast } = useContext(ToastContext);
-
-  // Route
-  const router = useRouter();
 
   // State
   const [deletingRestaurant, setDeletingRestaurant] = useState<{

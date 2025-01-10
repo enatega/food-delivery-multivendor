@@ -1,4 +1,4 @@
-import { ChangeEvent, InputHTMLAttributes, MouseEventHandler } from 'react';
+import { ChangeEvent} from 'react';
 import { IGlobalComponentProps } from './global.interface';
 
 export interface ICustomInputSwitchComponentProps
