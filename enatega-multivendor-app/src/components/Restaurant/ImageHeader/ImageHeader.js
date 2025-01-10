@@ -97,19 +97,19 @@ function ImageTextCenterHeader(props, ref) {
   }
 
   const aboutObject = {
-    latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
-    longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
-    address: props.restaurant ? props.restaurant.address : '',
-    restaurantName: props.restaurantName,
-    restaurantImage: props.restaurantImage,
-    restaurantTax: props.tax,
-    restaurantMinOrder: props.minimumOrder,
-    deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
-    average: props.restaurant ? props.restaurant.reviewData.ratings : '...',
-    total: props.restaurant ? props.restaurant.reviewData.total : '...',
-    reviews: props.restaurant ? props.restaurant.reviewData.reviews : '...',
-    isAvailable: props.restaurant ? props.restaurant.isAvailable : true,
-    openingTimes: props.restaurant ? props.restaurant.openingTimes : [],
+    latitude: props?.restaurant ? props?.restaurant?.location?.coordinates[1] : '',
+    longitude: props?.restaurant ? props?.restaurant?.location?.coordinates[0] : '',
+    address: props?.restaurant ? props?.restaurant?.address : '',
+    restaurantName: props?.restaurantName,
+    restaurantImage: props?.restaurantImage,
+    restaurantTax: props?.tax,
+    restaurantMinOrder: props?.minimumOrder,
+    deliveryTime: props?.restaurant ? props?.restaurant?.deliveryTime : '...',
+    average: props?.restaurant ? props?.restaurant?.reviewData?.ratings : '...',
+    total: props?.restaurant ? props?.restaurant?.reviewData?.total : '...',
+    reviews: props?.restaurant ? props?.restaurant?.reviewData?.reviews : '...',
+    isAvailable: props?.restaurant ? props?.restaurant?.isAvailable : true,
+    openingTimes: props?.restaurant ? props?.restaurant?.openingTimes : [],
     isOpen: () => {
       if (!props.restaurant) return true
       const date = new Date()
