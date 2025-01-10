@@ -188,7 +188,7 @@ export default function RestaurantsMain() {
     currentTab === 'Actual' ? data?.restaurants : data?.getClonedRestaurants;
 
   return (
-    <div className="p-3">
+    <div className="p-3 z-[-10]">
       <Table
         header={
           <RestaurantsTableHeader
