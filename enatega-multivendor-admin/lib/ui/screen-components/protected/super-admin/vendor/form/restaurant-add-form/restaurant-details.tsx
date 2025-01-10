@@ -394,7 +394,9 @@ export default function RestaurantDetails({
                           }}
                         />
                         {errors?.minOrder && (
-                          <span>{RestaurantErrors.minOrder}</span>
+                          <span className="text-red-600">
+                            {RestaurantErrors.minOrder}
+                          </span>
                         )}
                       </div>
                       <div>

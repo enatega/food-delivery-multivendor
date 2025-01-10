@@ -232,7 +232,7 @@ export default function StaffAddForm({
                             StaffErrors
                           ) && (
                             <span className="text-red-500">
-                              {StaffErrors.confirmPassword}
+                              {errors.confirmPassword}
                             </span>
                           )}
                         </div>

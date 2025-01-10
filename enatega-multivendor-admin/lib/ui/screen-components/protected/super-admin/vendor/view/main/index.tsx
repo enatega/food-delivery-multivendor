@@ -88,13 +88,13 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
         </div>
 
         {/* Vendors content */}
-        <div className="pb-44">
+        <div className="pb-20">
           {vendorResponse?.loading ? (
             new Array(10)
               .fill(0)
               .map((_, i: number) => <CustomVendorSkeleton key={i} />)
           ) : (vendors?.length ?? 0) > 0 ? (
-            vendors?.map((vendor) => (
+            vendors?.map((vendor, index) => (
               <VendorCard
                 key={vendor._id}
                 _id={vendor._id}
@@ -104,6 +104,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
                 userType={vendor.userType}
                 totalRestaurants={vendor?.restaurants?.length ?? 0}
                 uniqueId={vendor.unique_id}
+                isLast={vendors.length - 1 === index}
               />
             ))
           ) : (

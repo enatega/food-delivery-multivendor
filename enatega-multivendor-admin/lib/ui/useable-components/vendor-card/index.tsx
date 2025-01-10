@@ -46,6 +46,7 @@ export default function VendorCard({
   totalRestaurants,
   name,
   image,
+  isLast,
 }: IVendorCardProps) {
   // Context
   const { vendorId, onSetVendorId, vendorResponse, onResetVendor } =
@@ -191,7 +192,9 @@ export default function VendorCard({
             />
           )}
           {isPopupOpen && (
-            <div className="absolute left-2 top-[1.2rem] z-10 mt-1 -translate-x-full">
+            <div
+              className={`absolute left-2 top-[1.2rem] z-10 ${isLast ? '-mt-36' : 'mt-1'} -translate-x-full`}
+            >
               <CustomPopupMenu
                 close={() => setPopupOpen(false)}
                 items={[
