@@ -23,7 +23,7 @@
       }
     },
     "android": {
-      "versionCode": 36,
+      "versionCode": 43,
       "package": "multivendor.enatega.restaurant",
       "googleServicesFile": "./google-services.json",
       "permissions": [
