@@ -21,7 +21,7 @@ export default function DashboardStatsTable({
           <h2 className="text-lg font-bold text-gray-800">{title}</h2>
           <i className="fas fa-arrow-down text-green-500"></i>
         </div>
-        <div className="p-4 max-h-40 overflow-y-auto ">
+        <div className="p-4 max-h-40 h-52">
           {data.map((item, index: number) => (
             <div
               key={index}
