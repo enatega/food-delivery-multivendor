@@ -125,9 +125,11 @@ export const RESTAURANT_TABLE_COLUMNS = ({
       body: (rowData: IRestaurantResponse) => {
         return (
           <CustomInputSwitch
+            // className="no-row-click2"
             loading={rowData?._id === deletingRestaurant?.id}
             isActive={rowData.isActive}
-            onChange={async () => {
+            onChange={async (e) => {
+              e.stopPropagation();
               await onHandleRestaurantStatusChange(
                 rowData.isActive,
                 rowData._id

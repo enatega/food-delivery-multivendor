@@ -7,13 +7,14 @@ export default function CustomInputSwitch({
   label,
   onChange,
   reverse = false,
+  className
 }: ICustomInputSwitchComponentProps) {
   return loading ? (
     <div className="ml-4">
       <CustomLoader size="14.7px" />
     </div>
   ) : (
-    <label className="ml-2 flex flex-shrink-0 cursor-pointer items-center">
+    <label className={`ml-2 flex flex-shrink-0 cursor-pointer items-center ${className}`} >
       <div className="relative">
         <div
           className={`flex items-center gap-2 ${reverse && 'flex-row-reverse'}`}
