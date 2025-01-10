@@ -29,6 +29,15 @@ import AppComponent from "../../components/HomeScreen/AppComponent";
 import Banner2 from "../../assets/images/banner-2.png";
 import Banner1 from "../../assets/images/banner-1.png";
 import { useTranslation } from 'react-i18next';
+import NewFooter from "../../components/Footer/newFooter/NewFooter";
+import Info from "../../components/HomeScreen/InfoComponent/Info";
+import JoinPlatform from "../../components/HomeScreen/JoinPlatform/JoinPlatform";
+import CardComponent from "../../components/HomeScreen/CardComponent/CardComponent";
+import PlatformFeatures from "../../components/HomeScreen/PlatFormFeatures/PlatformFeatures";
+import FAQ from "../../components/HomeScreen/FAQ/FAQ";
+import AppsInfo from "../../components/HomeScreen/AppsInfo/AppsInfo";
+import OrderFavorites from "../../components/HomeScreen/OrderFavorites/OrderFavorites";
+import Faq from "../../components/HomeScreen/Faqs/Faq";
 
 function Home() {
   const { t } = useTranslation()
@@ -73,6 +82,19 @@ function Home() {
           </Grid>
         </Box>
         {/* app container (2nd) */}
+       
+     <Info/>
+     <JoinPlatform/>
+     <CardComponent/>
+     <PlatformFeatures/>
+     <AppsInfo/>
+     <OrderFavorites/>
+     <Faq/>
+
+
+
+
+{/* 
         <Box className={classes.appContainer}>
           <Box
             className={classes.appWrapper}
@@ -104,7 +126,7 @@ function Home() {
             <AppComponent />
           </Box>
         </Box>
-        {/* card container (3rd) */}
+
         <Box className={classes.cardContainer}>
           <Box className={classes.cardWrapper}>
             <Typography
@@ -219,13 +241,21 @@ function Home() {
               </Grid>
             </Container>
           </Box>
-        </Box>
+        </Box> */}
 
-        <Box className={classes.footerContainer}>
+
+
+
+
+        
+
+        {/* <Box className={classes.footerContainer}>
           <Box className={classes.footerWrapper}>
             <Footer />
           </Box>
-        </Box>
+        </Box> */}
+
+        <NewFooter></NewFooter>
       </Box>
     </Sentry.ErrorBoundary>
   );

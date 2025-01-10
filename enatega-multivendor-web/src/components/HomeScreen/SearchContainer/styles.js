@@ -24,7 +24,7 @@ const useStyle = makeStyles((theme) => ({
     backgroundColor: "transparent",
   },
   temp: {
-    height: "80vh",
+    height: "60vh",
     width: "100%",
   },
   left: {
