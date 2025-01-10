@@ -17,7 +17,7 @@ export default function RestaurantsScreenHeader() {
   // Context
   const { onRestaurantsFormVisible } = useContext(RestaurantsContext);
   return (
-    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
+    <div className="sticky top-0 z-[9999] w-full flex-shrink-0 bg-white p-3 shadow-sm">
       <div className="flex w-full justify-between">
         <HeaderText text="Stores" />
         <TextIconClickable
