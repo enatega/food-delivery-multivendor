@@ -100,8 +100,12 @@ const AppsInfo = () => {
     <Box className={classes.mainContainer}>
 
      <Grid container md={10} xs={11} spacing={4} className={classes.container} alignItems={"center"}>
-      <Grid item xs={12} md={6}> <ImageComponent image={RiderSection}/></Grid>
-      <Grid item xs={12} md={6}> 
+      <Grid item xs={12} md={6} sx={{
+          order: { xs: 2, md: 1 }, 
+        }} > <ImageComponent image={RiderSection}/></Grid>
+      <Grid item xs={12} md={6} sx={{
+          order: { xs: 1, md: 2 }, 
+        }} > 
         <Card heading="Become a Rider and Start Earning Today!" ticksList={ticks} buttons={RiderButtons}/>
       </Grid>
      </Grid>
@@ -115,8 +119,16 @@ const AppsInfo = () => {
 
 
      <Grid container md={10} xs={12} spacing={4} className={classes.container} alignItems={"center"}>
-      <Grid item xs={12} md={6}> <ImageComponent image={OrderSection}/></Grid>
-      <Grid item xs={12} md={6}> 
+      <Grid item xs={12} md={6}
+      sx={{
+        order: { xs: 2, md: 1 }, 
+      }}
+      > <ImageComponent image={OrderSection}/></Grid>
+      <Grid item xs={12} md={6}
+      sx={{
+        order: { xs: 1, md: 2 }, 
+      }}
+      > 
         <Card heading="Become a Rider and Start Earning Today!" ticksList={orderTicks} buttons={OrderButtons}/>
       </Grid>
      </Grid>
