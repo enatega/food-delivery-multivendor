@@ -9,6 +9,7 @@ export interface IVendorCardProps extends IGlobalComponentProps {
   name?: string;
   image?: string;
   uniqueId?: string;
+  isLast?: boolean;
 }
 
 export interface IVendorAddFormComponentProps extends IGlobalComponentProps {

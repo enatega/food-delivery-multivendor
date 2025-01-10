@@ -29,10 +29,7 @@ import {
 
 // Third-party libraries
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faMapMarker,
-  faTimes,
-} from '@fortawesome/free-solid-svg-icons';
+import { faMapMarker, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 // Prime React
 import { AutoComplete, AutoCompleteSelectEvent } from 'primereact/autocomplete';

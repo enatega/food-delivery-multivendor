@@ -28,7 +28,7 @@ export default function AdminRestaurantDashboard() {
   return (
     <>
       <div
-        className={`flex flex-col ${isSuperAdminSidebarVisible ? 'w-[99%]' : 'w-[100%]'}  overflow-hidden p-3 `}
+        className={`flex flex-col ${isSuperAdminSidebarVisible ? 'w-[99%]' : 'w-[100%]'}  overflow-x-hidden h-full p-3 `}
       >
         <DashboardDateFilter
           dateFilter={dateFilter}

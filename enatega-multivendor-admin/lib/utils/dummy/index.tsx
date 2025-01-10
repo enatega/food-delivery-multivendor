@@ -422,7 +422,7 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
         name: `rider_${i + 1}`,
         username: `rider_${i + 1}`,
         available: true,
-        assigned:['']
+        assigned: [''],
       },
       createdAt: new Date().toDateString(),
       deliveryAddress: {
