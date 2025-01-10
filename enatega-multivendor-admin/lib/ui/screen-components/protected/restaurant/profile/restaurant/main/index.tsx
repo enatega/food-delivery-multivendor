@@ -32,7 +32,7 @@ const RestaurantMain: React.FC = () => {
         </div>
         <hr className="mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InfoItem label="User Name" value={restaurant?.username} />
+          <InfoItem label="Email" value={restaurant?.username} />
           <InfoItem label="Password" value={restaurant?.password} />
           <div className="md:row-span-4">
             <p className="text-xs text-gray-500 mb-4">Images</p>
