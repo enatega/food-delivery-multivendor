@@ -38,13 +38,13 @@ const Orders = ({ navigation }) => {
       setOrders(
         assignedOrders.length > 0
           ? assignedOrders.filter(
-              o =>
-                ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
-                  o.orderStatus
-                ) &&
-                o.rider &&
-                dataProfile.rider._id === o.rider._id
-            )
+            o =>
+              ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
+                o.orderStatus
+              ) &&
+              o.rider &&
+              dataProfile.rider._id === o.rider._id
+          )
           : []
       )
     }

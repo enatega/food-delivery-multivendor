@@ -1,24 +1,41 @@
+// Core
 import { View, FlatList, Dimensions } from 'react-native'
+
+// Hooks
 import React, { useContext, useState, useEffect } from 'react'
-import ScreenBackground from '../../components/ScreenBackground/ScreenBackground'
-import styles from './style'
-import Tabs from '../../components/Tabs/Tabs'
-import Order from '../../components/Order/Order'
-import { TabsContext } from '../../context/tabs'
 import { useFocusEffect } from '@react-navigation/native'
-import ConfigurationContext from '../../context/configuration'
-import UserContext from '../../context/user'
-import Spinner from '../../components/Spinner/Spinner'
-import TextError from '../../components/Text/TextError/TextError'
-import LottieView from 'lottie-react-native'
-import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import colors from '../../utilities/colors'
-import { NetworkStatus } from '@apollo/client'
-import i18next from '../../../i18next'
 import { useTranslation } from 'react-i18next'
 
+// Styles
+import styles from './style'
+
+// Components
+import ScreenBackground from '../../components/ScreenBackground/ScreenBackground'
+import Tabs from '../../components/Tabs/Tabs'
+import Order from '../../components/Order/Order'
+import Spinner from '../../components/Spinner/Spinner'
+import TextError from '../../components/Text/TextError/TextError'
+import TextDefault from '../../components/Text/TextDefault/TextDefault'
+
+// Lottie
+import LottieView from 'lottie-react-native'
+
+// Utils
+import colors from '../../utilities/colors'
+
+// Apollo
+import { NetworkStatus } from '@apollo/client'
+
+// Contexts
+import { TabsContext } from '../../context/tabs'
+import ConfigurationContext from '../../context/configuration'
+import UserContext from '../../context/user'
+
+// Screen Dimensions
 const { height, width } = Dimensions.get('window')
+
 const NewOrders = ({ navigation }) => {
+  // Hooks
   const { t } = useTranslation()
   const { setActive } = useContext(TabsContext)
   const configuration = useContext(ConfigurationContext)
@@ -30,8 +47,11 @@ const NewOrders = ({ navigation }) => {
     refetchAssigned,
     networkStatusAssigned
   } = useContext(UserContext)
+
+  // States
   const [orders, setOrders] = useState([])
 
+  // UseEffects
   useFocusEffect(() => {
     setActive('NewOrders')
   })
