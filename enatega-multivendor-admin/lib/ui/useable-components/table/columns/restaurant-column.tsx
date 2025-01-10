@@ -21,6 +21,7 @@ import { DELETE_RESTAURANT } from '@/lib/api/graphql';
 
 // Components
 import ActionMenu from '../../action-menu';
+import { useRouter } from 'next/navigation';
 
 export const RESTAURANT_TABLE_COLUMNS = ({
   menuItems,
@@ -29,6 +30,9 @@ export const RESTAURANT_TABLE_COLUMNS = ({
 }) => {
   // Context
   const { showToast } = useContext(ToastContext);
+
+  // Route
+  const router = useRouter();
 
   // State
   const [deletingRestaurant, setDeletingRestaurant] = useState<{
@@ -125,9 +129,11 @@ export const RESTAURANT_TABLE_COLUMNS = ({
       body: (rowData: IRestaurantResponse) => {
         return (
           <CustomInputSwitch
+            // className="no-row-click2"
             loading={rowData?._id === deletingRestaurant?.id}
             isActive={rowData.isActive}
-            onChange={async () => {
+            onChange={async (e) => {
+              e.stopPropagation();
               await onHandleRestaurantStatusChange(
                 rowData.isActive,
                 rowData._id

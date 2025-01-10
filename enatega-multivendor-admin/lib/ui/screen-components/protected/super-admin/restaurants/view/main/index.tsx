@@ -188,7 +188,7 @@ export default function RestaurantsMain() {
     currentTab === 'Actual' ? data?.restaurants : data?.getClonedRestaurants;
 
   return (
-    <div className="p-3 z-[-10]">
+    <div className="p-3">
       <Table
         header={
           <RestaurantsTableHeader
@@ -205,11 +205,16 @@ export default function RestaurantsMain() {
         columns={RESTAURANT_TABLE_COLUMNS({ menuItems })}
         loading={loading}
         handleRowClick={(event: DataTableRowClickEvent) => {
+          const target = event.originalEvent.target as HTMLElement;
+          if (target.closest('.no-row-click2')) {
+            return;
+          }
           onUseLocalStorage('save', 'restaurantId', event.data._id);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
           router.push(`/admin/store/`);
         }}
+        
       />
 
       <CustomDialog
