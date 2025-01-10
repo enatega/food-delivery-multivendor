@@ -12,7 +12,7 @@ import {
 const FooterBottom = () => {
   return (
     <Grid container
-    xs={11} md={10}
+    xs={11} md={12}
       style={{
         width: "100%",
         margin:"0 auto"
