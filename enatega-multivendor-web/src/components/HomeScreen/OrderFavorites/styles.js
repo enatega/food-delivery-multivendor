@@ -4,8 +4,7 @@ const useStyle = makeStyles((theme) => ({
   
     mainBox:
     {
-      backgroundColor:"#5AC12F", 
-      overflow:"none" 
+      backgroundColor:"#5AC12F",
     },
     head:
     {
@@ -23,9 +22,9 @@ const useStyle = makeStyles((theme) => ({
     container:
     {
         margin:"0 auto",
-        position:"relative",
-        paddingTop:"20px",
-        paddingBottom:"20px"
+        // position:"relative",
+        // paddingTop:"20px",
+        // paddingBottom:"20px"
     },
 
     phoneImg:

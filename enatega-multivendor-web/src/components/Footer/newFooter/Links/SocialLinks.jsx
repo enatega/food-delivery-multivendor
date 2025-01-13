@@ -46,7 +46,7 @@ const SocialLinks = () => {
           },
         }}
       >
-        {t("Let us help you")}
+        {t("letUsHelp")}
       </Typography>
 
       <Box

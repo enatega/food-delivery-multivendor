@@ -1,47 +1,40 @@
-import {
-  Box,
-  Divider,
-  Typography,
-  Grid,
-  useTheme,
-  useMediaQuery,
-  Button,
-} from "@mui/material";
+import { Box, Typography, Grid, Button } from "@mui/material";
 import React from "react";
 import useStyle from "./styles.js";
 import DoubleMobile from "../../../assets/images/DoubleMobile.png";
-import zIndex from "@mui/material/styles/zIndex.js";
+import { useTranslation } from "react-i18next";
 
 const OrderFavorites = () => {
+  const { t } = useTranslation();
   let classes = useStyle();
   return (
-    <Box className={classes.mainBox}>
+    <Box className={classes.mainBox}  sx={{
+
+      height:
+      {
+        md:"270px",
+        xs:"auto"
+      }
+    }}>
       <Grid
         container
         xs={11}
         md={10}
         className={classes.container}
-        alignItems={"center"}
+       
       >
         <Grid item xs={12} md={6}>
           <Box>
-            <Typography className={classes.head}>
-              Order Your Favorites Anytime, Anywhere
-            </Typography>
+            <Typography className={classes.head}>{t("orderText")}</Typography>
 
             <Typography className={classes.text}>
-              Experience the convenience of having all your favorite restaurant
-              meals and cuisines in one place, delivered straight to your
-              door—fast and fresh. Download the Enatega App today, and turn
-              every craving into a delicious reality.
+              {t("orderSubText1")}
             </Typography>
             <Typography className={classes.text}>
-              Explore a wide range of options, from local favorites and comfort
-              food to gourmet dishes, healthy eats, and more.
+              {t("orderSubText2")}
             </Typography>
             <Typography className={classes.text}>
-              Download the Enatega App today, and turn every craving into a
-              delicious reality.
+              {t("orderSubText3")}
             </Typography>
 
             <Box>
@@ -51,25 +44,25 @@ const OrderFavorites = () => {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6}  j>
           <Box
+            alignItems={"center"}
+            justifyContent={"center"}
             style={{
-              top: -105,
               zIndex: 2,
+
             }}
             sx={{
-              position: {
-                md: "absolute",
-                xs: "block",
-              },
               top: {
-                md: "-105",
+                // lg: -140,
+                md: "0",
                 xs: "0",
               },
               transform: {
-                md: "rotate(6.49deg)",
+                md: "rotate(6.49deg) translateY(-40px)",
                 xs: "rotate(0deg)",
               },
+              height: {},
             }}
           >
             <img
@@ -78,8 +71,8 @@ const OrderFavorites = () => {
               className={classes.phoneImg}
               style={{
                 objectFit: "cover",
-                width: "100%",
-                height: "100%",
+                width: "430px",
+                height: "420px",
               }}
             />
           </Box>

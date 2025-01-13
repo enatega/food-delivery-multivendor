@@ -1,12 +1,4 @@
-import {
-  Box,
-  Divider,
-  Typography,
-  Grid,
-  useTheme,
-  useMediaQuery,
-  Button,
-} from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
 import ImageComponent from "../ImageComponent/ImageComponent";
 import PlatformSection from "../../../assets/images/PlatformSection.png";

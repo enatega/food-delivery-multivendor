@@ -1,35 +1,33 @@
 import {
   Box,
-  Divider,
   Typography,
   Grid,
-  useTheme,
-  useMediaQuery,
-  Button,
 } from "@mui/material";
 import React from "react";
 import Tick from "../TickComponent/Tick";
 import useStyle from "./style.js";
+import { useTranslation } from "react-i18next";
 
 const PlatformFeatures = () => {
+  const {t} =useTranslation()
   let classess = useStyle();
 
   let ticksList = [
     {
-      heading: "List Real-Time Order Tracking: ",
-      text: " Know exactly where your food is. restaurant easily.",
+      heading: t("listReal"),
+      text: t("listRealText"),
     },
     {
-      heading: "Secure Payments :",
-      text: " For Riders, Restaurants, and Customers.",
+      heading: t("securePayment"),
+      text:t("securePaymentText"),
     },
     {
-      heading: "24/7 Support:",
-      text: " Always here to assist you.",
+      heading: t("twoFour"),
+      text: t("twoFourText"),
     },
     {
-      heading: "Customizable Menus:",
-      text: " Restaurants can manage offerings effortlessly.",
+      heading: t("custMenu"),
+      text: t("custMenuText"),
     },
   ];
 
@@ -45,11 +43,10 @@ const PlatformFeatures = () => {
       >
         <Grid item md={6} xs={12}>
           <Typography className={classess.header}>
-            Platform Features That Make Us Stand Out
+            {t("platformFeatureText")}
           </Typography>
           <Typography className={classess.text}>
-            We provide cutting-edge features to ensure your experience is smooth
-            and hassle-free:
+           {t("platformFeatureSubText")}
           </Typography>
         </Grid>
         <Grid item md={6} xs={12}>
