@@ -8,21 +8,16 @@ const OrderFavorites = () => {
   const { t } = useTranslation();
   let classes = useStyle();
   return (
-    <Box className={classes.mainBox}  sx={{
-
-      height:
-      {
-        md:"280px",
-        xs:"auto"
-      }
-    }}>
-      <Grid
-        container
-        xs={11}
-        md={10}
-        className={classes.container}
-       
-      >
+    <Box
+      className={classes.mainBox}
+      sx={{
+        height: {
+          md: "280px",
+          xs: "auto",
+        },
+      }}
+    >
+      <Grid container xs={11} md={10} className={classes.container}>
         <Grid item xs={12} md={6}>
           <Box>
             <Typography className={classes.head}>{t("orderText")}</Typography>

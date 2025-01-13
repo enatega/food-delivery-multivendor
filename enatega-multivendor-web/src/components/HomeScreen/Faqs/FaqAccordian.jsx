@@ -1,11 +1,4 @@
-import {
-  Box,
-  Divider,
-  Typography,
-  Grid,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import { React } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";

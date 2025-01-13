@@ -32,16 +32,15 @@ function Footer() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const handleButtonClick = () => {  
-    try {  
-      window.scrollTo({ top: 0, behavior: 'smooth' });  
-    } catch (error) {  
-      console.error("Smooth scroll failed", error);  
-      // Fallback to instant scroll  
-      window.scrollTo(0, 0);  
-    }  
-  };  
-
+  const handleButtonClick = () => {
+    try {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error("Smooth scroll failed", error);
+      // Fallback to instant scroll
+      window.scrollTo(0, 0);
+    }
+  };
 
   return (
     <Grid container alignItems="center">
@@ -62,7 +61,7 @@ function Footer() {
             }}
             align="center"
           >
-            {t('Enatega')}
+            {t("Enatega")}
           </Typography>
           <Typography
             variant="body2"
@@ -98,7 +97,11 @@ function Footer() {
               {t("footerLinkHome")}
             </Typography>
           </RouterLink>
-          <RouterLink to="/privacy" onClick={handleButtonClick} style={{ textDecoration: "none" }}>
+          <RouterLink
+            to="/privacy"
+            onClick={handleButtonClick}
+            style={{ textDecoration: "none" }}
+          >
             <Typography
               variant="body2"
               style={{ fontWeight: 700, marginTop: 10, color: "black" }}
@@ -106,7 +109,11 @@ function Footer() {
               {t("footerLinkPP")}
             </Typography>
           </RouterLink>
-          <RouterLink to="/terms" onClick={handleButtonClick} style={{ textDecoration: "none" }}>
+          <RouterLink
+            to="/terms"
+            onClick={handleButtonClick}
+            style={{ textDecoration: "none" }}
+          >
             <Typography
               variant="body2"
               style={{ fontWeight: 700, marginTop: 10, color: "black" }}

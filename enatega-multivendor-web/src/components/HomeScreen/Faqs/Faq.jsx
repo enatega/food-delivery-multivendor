@@ -1,11 +1,4 @@
-import {
-  Box,
-  Divider,
-  Typography,
-  Grid,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import { React } from "react";
 import FaqAccordian from "./FaqAccordian";
 import useStyle from "./styles";

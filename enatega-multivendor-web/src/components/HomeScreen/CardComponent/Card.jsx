@@ -1,11 +1,4 @@
-import {
-  Box,
-  Divider,
-  Typography,
-  Grid,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { React } from "react";
 import Tick from "../TickComponent/Tick";
 import useStyle from "./styles";
@@ -13,7 +6,7 @@ import useStyle from "./styles";
 const Card = ({ Icon, heading, ticksList }) => {
   let classes = useStyle();
   return (
-    <Box className={classes.mainCard} >
+    <Box className={classes.mainCard}>
       <Icon></Icon>
       <Typography className={classes.head}>{heading}</Typography>
 
