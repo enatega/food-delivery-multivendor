@@ -1,0 +1,29 @@
+.dropdown {
+  /* padding: 3px !important; */
+  width: 80px !important;
+}
+
+.dropdown > :global(.p-inputtext) {
+  padding: 0;
+}
+
+.dropdown > :global(.p-dropdown-trigger) {
+  width: fit-content;
+  border-radius: 0 !important;
+}
+
+.input-field {
+  height: 2.8rem;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+}
+
+.input-field:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: none;
+}

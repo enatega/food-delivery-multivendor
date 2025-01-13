@@ -192,19 +192,6 @@ const useStyles = makeStyles((theme, mobile) => ({
   backdrop: {
     backgroundColor: theme.palette.common.black,
   },
-  footerContainer: {
-    background: "white",
-    width: "100%",
-    marginTop: "60px",
-  },
-  footerWrapper: {
-    backgroundColor: theme.palette.primary.main,
-    width: "90%",
-    display: "flex",
-    marginLeft: "auto",
-    borderTopLeftRadius: "5rem",
-    borderBottomLeftRadius: "5rem",
-  },
   closeButton: {
     position: 'absolute',
     top: 30, // Adjust the top value as needed
