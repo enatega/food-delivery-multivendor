@@ -5,6 +5,7 @@ const useStyle = makeStyles((theme) => ({
     mainBox:
     {
       backgroundColor:"#5AC12F",
+      padding:"20px"
     },
     head:
     {
@@ -22,16 +23,8 @@ const useStyle = makeStyles((theme) => ({
     container:
     {
         margin:"0 auto",
-        // position:"relative",
-        // paddingTop:"20px",
-        // paddingBottom:"20px"
     },
 
-    phoneImg:
-    {
-        // transform:"rotate(6.49deg)"
-    }
-  
 }));
 
 export default useStyle;

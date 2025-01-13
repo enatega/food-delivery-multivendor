@@ -12,7 +12,7 @@ const OrderFavorites = () => {
 
       height:
       {
-        md:"270px",
+        md:"280px",
         xs:"auto"
       }
     }}>
@@ -44,22 +44,14 @@ const OrderFavorites = () => {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={6}  j>
+        <Grid item xs={12} md={6} justifyItems={"center"}>
           <Box
-            alignItems={"center"}
-            justifyContent={"center"}
             style={{
               zIndex: 2,
-
             }}
             sx={{
-              top: {
-                // lg: -140,
-                md: "0",
-                xs: "0",
-              },
               transform: {
-                md: "rotate(6.49deg) translateY(-40px)",
+                md: "rotate(6.49deg) translateY(-90px)",
                 xs: "rotate(0deg)",
               },
               height: {},
@@ -71,8 +63,8 @@ const OrderFavorites = () => {
               className={classes.phoneImg}
               style={{
                 objectFit: "cover",
-                width: "430px",
-                height: "420px",
+                width: "490px",
+                height: "480px",
               }}
             />
           </Box>
