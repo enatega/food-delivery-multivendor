@@ -11,6 +11,7 @@ const ImageComponent = ({ image }) => {
     >
       <img
         src={image}
+        alt=""
         style={{
           objectFit: "cover",
           width: "100%",
