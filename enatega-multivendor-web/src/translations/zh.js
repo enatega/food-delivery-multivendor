@@ -199,7 +199,10 @@ const zh = {
     pickUp: "取件",
     warning: "警告",
     warningText: "一个或多个项目不可用",
-    Enatega: 'Enatega'
+    Enatega: 'Enatega',
+    connectText:"连接骑手、餐厅和客户，实现无缝食品配送",
+    connectSubText:"加入一个为每个人提供便利、灵活性和成长的平台。无论您是想赚取收入的骑手、寻求扩展的餐厅，还是渴望美味佳肴的客户，我们都能满足您的需求！",
+    
   },
 };
 export default zh;
