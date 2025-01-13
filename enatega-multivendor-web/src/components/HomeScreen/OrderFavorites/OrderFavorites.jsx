@@ -54,7 +54,7 @@ const OrderFavorites = () => {
           >
             <img
               src={DoubleMobile}
-              alt="image"
+              alt="doublePhone"
               className={classes.phoneImg}
               style={{
                 objectFit: "cover",
