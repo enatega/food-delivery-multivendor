@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Divider,
-  Typography,
-  Grid,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import FacebookIcon from "@mui/icons-material/Facebook";
 import XIcon from "@mui/icons-material/X";
