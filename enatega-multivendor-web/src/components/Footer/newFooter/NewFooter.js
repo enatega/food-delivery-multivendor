@@ -1,10 +1,6 @@
 import {
   Box,
-  Divider,
-  Typography,
   Grid,
-  useTheme,
-  useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import AllLinks from "./Links/AllLinks";
@@ -17,12 +13,12 @@ const NewFooter = () => {
     { name: "footerLinkTC", link: "/terms" },
     { name: "about", link: "/" },
     { name: "footerLinkPP", link: "/privacy" },
-    { name: "Contact us", link: "/" },
+    { name: "contactUs", link: "/" },
   ];
 
   let helplinks = [
-    { name: "Vendors", link: "/" },
-    { name: "Drivers", link: "/" },
+    { name: "vendors", link: "/" },
+    { name: "drivers", link: "/" },
   ];
 
   return (
@@ -50,11 +46,11 @@ const NewFooter = () => {
           spacing={1}
         >
           <Grid xs={12} md={3}>
-            <AllLinks heading="Get to know us" links={getnewlinks} />
+            <AllLinks heading="getToKnow" links={getnewlinks} />
           </Grid>
 
           <Grid xs={12} md={3}>
-            <AllLinks heading="Let us help you" links={helplinks} />
+            <AllLinks heading="letUsHelp" links={helplinks} />
           </Grid>
           <Grid xs={12} md={3}>
             <SocialLinks />
