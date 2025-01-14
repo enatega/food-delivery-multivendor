@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Button } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import React from "react";
 import useStyle from "./styles.js";
 import DoublePhone from "../../../assets/images/DoublePhone.svg";

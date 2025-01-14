@@ -13,8 +13,10 @@ const useStyle = makeStyles((theme) => ({
     },
     mainText:
     {
-        fontWeight:"500",
-        marginBottom:"20px"
+        fontWeight:"400",
+        marginBottom:"20px",
+        textAlign:"center",
+        fontSize:"40px"
     },
     secondaryText:{
         fontSize:"20px",
@@ -25,14 +27,16 @@ const useStyle = makeStyles((theme) => ({
     greenButton:{
      backgroundColor:"#5AC12F",
      margin:"4px",
+    //  width:"240px",
      '&:hover' :{
       backgroundColor:"white",
       color:"black",
-      border:"1px solid #5AC12F"
+      border:"1px solid #5AC12F",
      }
     },
     yellowButton:{
     backgroundColor:"#FF9900",
+    // width:"240px",
     margin:"4px",
     '&:hover' :{
       backgroundColor:"white",
@@ -43,6 +47,7 @@ const useStyle = makeStyles((theme) => ({
     blueButton:{
         backgroundColor:"#007BFF",
         margin:"4px",
+        // width:"240px",
       '&:hover' :{
       backgroundColor:"white",
       color:"black",
