@@ -13,7 +13,6 @@ const useStyle = makeStyles((theme) => ({
     },
     mainText:
     {
-        // fontSize:"48px"
         fontWeight:"500",
         marginBottom:"20px"
     },
@@ -25,17 +24,32 @@ const useStyle = makeStyles((theme) => ({
     },
     greenButton:{
      backgroundColor:"#5AC12F",
-     margin:"4px"
+     margin:"4px",
+     '&:hover' :{
+      backgroundColor:"white",
+      color:"black",
+      border:"1px solid #5AC12F"
+     }
     },
     yellowButton:{
     backgroundColor:"#FF9900",
-    margin:"4px"
+    margin:"4px",
+    '&:hover' :{
+      backgroundColor:"white",
+      color:"black",
+      border:"1px solid #FF9900"
+     }
     },
     blueButton:{
         backgroundColor:"#007BFF",
-        margin:"4px"
+        margin:"4px",
+      '&:hover' :{
+      backgroundColor:"white",
+      color:"black",
+      border:"1px solid #007BFF"
+     }
 
-    }
+    },
 
 }));
 

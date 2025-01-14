@@ -19,12 +19,14 @@ const useStyle = makeStyles((theme) => ({
     border: "1px solid #CBD5E1",
     padding: "40px",
     borderRadius: "10px",
+    
 
   },
   head: {
     wieght: "400",
     fontSize: "32px",
-    lineHeight: "58px",
+    lineHeight: "40px",
+    height:"85px",
   },
 }));
 

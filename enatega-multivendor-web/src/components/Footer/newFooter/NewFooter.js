@@ -45,17 +45,17 @@ const NewFooter = () => {
           marginBottom={"40px"}
           spacing={1}
         >
-          <Grid xs={12} md={3}>
+          <Grid xs={12} md={6} lg={3} >
             <AllLinks heading="getToKnow" links={getnewlinks} />
           </Grid>
 
-          <Grid xs={12} md={3}>
+          <Grid xs={12} md={6} lg={3}>
             <AllLinks heading="letUsHelp" links={helplinks} />
           </Grid>
-          <Grid xs={12} md={3}>
+          <Grid xs={12} md={6} lg={3}>
             <SocialLinks />
           </Grid>
-          <Grid xs={12} md={3}>
+          <Grid xs={12} md={6} lg={3}>
             <Partner />
           </Grid>
         </Grid>

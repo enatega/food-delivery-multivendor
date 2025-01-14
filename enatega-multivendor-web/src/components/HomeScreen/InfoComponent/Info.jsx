@@ -25,7 +25,7 @@ const Info = () => {
       </Box>
 
       <Box>
-        <Button variant="filled" className={classes.greenButton}>
+        <Button variant="filled"  className={classes.greenButton}>
           {t("registerRestaurant")}
         </Button>
         <Button variant="filled" className={classes.yellowButton}>

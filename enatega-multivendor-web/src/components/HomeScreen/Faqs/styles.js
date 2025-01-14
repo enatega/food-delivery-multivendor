@@ -30,12 +30,12 @@ const useStyle = makeStyles((theme) => ({
   {
     border:"none",
     outline:"none",
-    // boxShadow:"none",
     marginBottom:"10px"
   },
   accordDetails:
   {
     backgroundColor:"white",
+    textAlign:"left"
 
 
   }

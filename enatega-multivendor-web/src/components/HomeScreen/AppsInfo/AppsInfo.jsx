@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material";
 import { React } from "react";
-import OrderSection from "../../../assets/images/OrderSection.png";
-import RiderSection from "../../../assets/images/RiderSection.png";
-import RestuarantSection from "../../../assets/images/RestuarantSection.png";
+import OrderSection from "../../../assets/images/OrderSection.svg";
+import RiderSection from "../../../assets/images/RiderSection.svg";
+import RestuarantSection from "../../../assets/images/RestuarantSection.svg";
 import useStyle from "./styles";
 import { useTranslation } from "react-i18next";
 

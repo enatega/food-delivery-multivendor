@@ -14,7 +14,7 @@ const Partner = () => {
     <Box>
       <Typography
         variant="h5"
-        style={{ color: "white", display: "flex" }}
+        style={{ color: "white", display: "flex", fontWeight: 900, }}
         sx={{
           justifyContent: {
             xs: "center",
@@ -39,7 +39,7 @@ const Partner = () => {
       >
         <Button
           variant="contained"
-          style={{ backgroundColor: "#5AC12F", width: "230px", color: "black" }}
+          style={{ backgroundColor: "#5AC12F", width: "230px", color: "black" ,textAlign:"left",}}
           sx={{
             margin: {
               xs: "10px auto",
@@ -49,7 +49,7 @@ const Partner = () => {
         >
           {t("becomeVendor")}
           <ArrowForwardIosIcon
-            style={{ width: "24px", height: "24px", color: "black" }}
+            style={{ width: "20px", height: "20px", color: "black" , }}
           />
         </Button>
         <Button
@@ -69,7 +69,7 @@ const Partner = () => {
         >
          {t("becomeRestaurant")}
           <ArrowForwardIosIcon
-            style={{ width: "24px", height: "24px", color: "black" }}
+            style={{ width: "20px", height: "20px", color: "black" }}
           />
         </Button>
       </Box>
