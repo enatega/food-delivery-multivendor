@@ -25,7 +25,8 @@ const useStyle = makeStyles((theme) => ({
   head: {
     wieght: "400",
     fontSize: "32px",
-    lineHeight: "58px",
+    lineHeight: "40px",
+    height:"85px",
   },
 }));
 

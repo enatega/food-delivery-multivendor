@@ -3,6 +3,8 @@ import React from "react";
 import useStyle from "./styles.js";
 import DoublePhone from "../../../assets/images/DoublePhone.svg";
 import { useTranslation } from "react-i18next";
+import appStore  from '../../../assets/images/appStore.svg'
+import playStore  from '../../../assets/images/playStore.svg'
 
 const OrderFavorites = () => {
   const { t } = useTranslation();
@@ -12,8 +14,9 @@ const OrderFavorites = () => {
       className={classes.mainBox}
       sx={{
         height: {
-          md: "280px",
+          lg: "360px",
           xs: "auto",
+          md:"400px"
         },
       }}
     >
@@ -33,8 +36,14 @@ const OrderFavorites = () => {
             </Typography>
 
             <Box>
-              <Button></Button>
-              <Button></Button>
+              <a href="" className={classes.stores}>
+              <img src={appStore} alt="playStore" > 
+              </img>
+              </a>
+              <a href="" className={classes.stores}>
+              <img src={playStore} alt="appStore"> 
+              </img>
+              </a>
             </Box>
           </Box>
         </Grid>
@@ -58,8 +67,8 @@ const OrderFavorites = () => {
               className={classes.phoneImg}
               style={{
                 objectFit: "cover",
-                width: "490px",
-                height: "480px",
+                width: "520px",
+                height: "500px",
               }}
             />
           </Box>

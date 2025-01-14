@@ -18,7 +18,7 @@ const useStyle = makeStyles((theme) => ({
     header:
     {
      fontWeight:"500",
-     fontSize:"58px",
+     fontSize:"52px",
      lineHeight:"68px",
      letterSpacing:"-1px"
     },
