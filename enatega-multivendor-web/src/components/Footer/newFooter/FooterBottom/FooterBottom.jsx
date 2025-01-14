@@ -15,6 +15,7 @@ const FooterBottom = () => {
       container
       xs={11}
       md={12}
+      alignItems={"end"}
       style={{
         width: "100%",
         margin: "0 auto",
@@ -53,7 +54,7 @@ const FooterBottom = () => {
           }}
         >
           <Typography
-            style={{ paddingLeft: "12px", display: "flex" }}
+            style={{  display: "flex" }}
             sx={{
               justifyContent: {
                 xs: "center",
@@ -63,17 +64,26 @@ const FooterBottom = () => {
           >
             Subscribe
           </Typography>
-          <Box style={{ border:"1px solid red"}}  >
+          <Box style={{ border:"1px solid #5AC12F",borderRadius:"5px", display:"flex",padding:"2px" }} alignItems={"center"} justifyContent={"center"}    >
           <TextField
-            variant="outlined"
+            variant="standard"
             style={{width:"250px"}}
+            disableUnderline={true}
             type={"email"}
             size="small"
+            InputProps={{ disableUnderline: true }}
             placeholder="Enter Your Email Address"
             sx={{
               "& .MuiInputBase-input::placeholder": {
-                color: "#787878", // Change placeholder text color to blue
+                color: "#787878", 
               },
+              "& .MuiInputBase-input:hover": {
+                border:"none"
+              },
+              "& .MuiInputBase-input:focus": {
+                border:"none"
+              },
+              boxShadow:"none"
             }}
           />
           <EmailSend />

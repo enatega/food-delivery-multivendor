@@ -13,7 +13,6 @@ const useStyle = makeStyles((theme) => ({
     },
     mainText:
     {
-        // fontSize:"48px"
         fontWeight:"500",
         marginBottom:"20px"
     },

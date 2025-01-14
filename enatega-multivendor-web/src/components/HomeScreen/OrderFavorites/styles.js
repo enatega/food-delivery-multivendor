@@ -24,6 +24,11 @@ const useStyle = makeStyles((theme) => ({
     {
         margin:"0 auto",
     },
+    stores:
+    {
+        marginRight:"20px",
+        marginTop:"10px"
+    }
 
 }));
 
