@@ -13,7 +13,13 @@ const Info = () => {
   return (
     <Box className={classes.mainContainer} alignItems={"center"}>
       <Box>
-        <Typography variant="h3" className={classes.mainText}>
+        <Typography className={classes.mainText} sx={{
+          fontSize:
+          {
+            sm:"32px",
+            md:"42px"
+          }
+        }}>
           {t("connectText")}
         </Typography>
       </Box>

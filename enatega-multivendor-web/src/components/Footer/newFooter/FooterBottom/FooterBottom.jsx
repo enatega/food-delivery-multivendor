@@ -73,9 +73,10 @@ const FooterBottom = () => {
             size="small"
             InputProps={{ disableUnderline: true }}
             placeholder="Enter Your Email Address"
-            sx={{
+            sx={{      
+              input: { color: "white" }, 
               "& .MuiInputBase-input::placeholder": {
-                color: "#787878", 
+                 color: "#787878", 
               },
               "& .MuiInputBase-input:hover": {
                 border:"none"
