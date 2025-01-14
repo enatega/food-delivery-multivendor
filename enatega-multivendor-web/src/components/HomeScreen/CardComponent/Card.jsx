@@ -6,7 +6,12 @@ import useStyle from "./styles";
 const Card = ({ Icon, heading, ticksList }) => {
   let classes = useStyle();
   return (
-    <Box className={classes.mainCard}>
+    <Box className={classes.mainCard} sx={{
+      height:{
+        xs:"auto",
+        md:"380px"
+      }
+    }}>
       <Icon></Icon>
       <Typography className={classes.head}>{heading}</Typography>
 
