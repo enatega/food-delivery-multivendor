@@ -17,8 +17,8 @@ const NewFooter = () => {
   ];
 
   let helplinks = [
-    { name: "vendors", link: "/becomeavendor" },
-    { name: "drivers", link: "/becomearider" },
+    { name: "vendors", link: "/" },
+    { name: "drivers", link: "/" },
   ];
 
   return (

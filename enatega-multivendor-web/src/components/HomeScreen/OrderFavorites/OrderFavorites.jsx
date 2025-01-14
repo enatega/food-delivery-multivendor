@@ -36,11 +36,11 @@ const OrderFavorites = () => {
             </Typography>
 
             <Box>
-              <a href="" className={classes.stores}>
+              <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor" className={classes.stores}>
               <img src={appStore} alt="playStore" > 
               </img>
               </a>
-              <a href="" className={classes.stores}>
+              <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093" className={classes.stores}>
               <img src={playStore} alt="appStore"> 
               </img>
               </a>
