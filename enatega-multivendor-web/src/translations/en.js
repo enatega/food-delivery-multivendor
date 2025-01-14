@@ -128,7 +128,7 @@ const en = {
     seeOtherRestaurants: "SEE OTHER RESTAURANTS",
     goToMenu: "Go To Menu",
     deliveryHours: "Delivery hours",
-    about: "ABOUT",
+    about: "About",
     reviews: "REVIEWS",
     closedAllDay: "Closed all day",
     minute: "Minute",

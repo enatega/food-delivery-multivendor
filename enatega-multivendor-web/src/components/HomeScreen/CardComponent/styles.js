@@ -19,6 +19,7 @@ const useStyle = makeStyles((theme) => ({
     border: "1px solid #CBD5E1",
     padding: "40px",
     borderRadius: "10px",
+    
 
   },
   head: {

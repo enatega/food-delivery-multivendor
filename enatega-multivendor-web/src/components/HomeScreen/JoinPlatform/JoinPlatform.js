@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import React from "react";
 import ImageComponent from "../ImageComponent/ImageComponent";
-import PlatformSection from "../../../assets/images/PlatformSection.png";
+import PlatformSection from "../../../assets/images/PlatformSection.svg";
 import JoinText from "./JoinText";
 import useStyle from "./styles.js";
 

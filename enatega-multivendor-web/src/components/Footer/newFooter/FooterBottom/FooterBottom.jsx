@@ -6,6 +6,9 @@ import {
   TextField,
 } from "@mui/material";
 
+import {ReactComponent as EmailSend} from "../../../../assets/images/EmailSend.svg"
+
+
 const FooterBottom = () => {
   return (
     <Grid
@@ -60,11 +63,12 @@ const FooterBottom = () => {
           >
             Subscribe
           </Typography>
+          <Box style={{ border:"1px solid red"}}  >
           <TextField
             variant="outlined"
+            style={{width:"250px"}}
             type={"email"}
             size="small"
-            fullWidth
             placeholder="Enter Your Email Address"
             sx={{
               "& .MuiInputBase-input::placeholder": {
@@ -72,6 +76,8 @@ const FooterBottom = () => {
               },
             }}
           />
+          <EmailSend />
+          </Box>
         </Box>
       </Grid>
     </Grid>

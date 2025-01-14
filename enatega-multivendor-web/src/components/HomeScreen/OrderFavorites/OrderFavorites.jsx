@@ -1,7 +1,7 @@
 import { Box, Typography, Grid, Button } from "@mui/material";
 import React from "react";
 import useStyle from "./styles.js";
-import DoubleMobile from "../../../assets/images/DoubleMobile.png";
+import DoublePhone from "../../../assets/images/DoublePhone.svg";
 import { useTranslation } from "react-i18next";
 
 const OrderFavorites = () => {
@@ -53,7 +53,7 @@ const OrderFavorites = () => {
             }}
           >
             <img
-              src={DoubleMobile}
+              src={DoublePhone}
               alt="doublePhone"
               className={classes.phoneImg}
               style={{

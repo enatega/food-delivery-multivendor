@@ -81,10 +81,11 @@ const CardComponent = () => {
         md={10}
         gap={1}
       
+      
       >
         {functionalityList.map((item) => {
           return (
-            <Grid item md={3.9} xs={12} style={{ margin: "0 auto" }}>
+            <Grid item md={3.9} xs={12} sm={6} style={{ margin: "0 auto" }} >
               <Card
                 Icon={item.icon}
                 heading={item.heading}

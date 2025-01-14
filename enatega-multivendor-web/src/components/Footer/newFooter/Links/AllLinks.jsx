@@ -8,7 +8,7 @@ const AllLinks = ({ heading, links }) => {
   const { t } = useTranslation();
 
   return (
-    <Box
+    <Box alignItems={"center"} justifyContent={"center"}
       sx={{
         marginBottom: {
           xs: "30px",
