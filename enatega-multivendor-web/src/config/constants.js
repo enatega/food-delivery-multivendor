@@ -6,6 +6,8 @@ const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext);
   const SERVER_URL = "https://new-enatega-api-staging.up.railway.app/";
   const WS_SERVER_URL = "wss://new-enatega-api-staging.up.railway.app/";
+  //   const SERVER_URL = 'http://localhost:8001/';
+  // const WS_SERVER_URL = 'http://localhost:8001/';
   const GOOGLE_CLIENT_ID = configuration.webClientID;
   const STRIPE_PUBLIC_KEY = configuration.publishableKey;
   const PAYPAL_KEY = configuration.clientId;

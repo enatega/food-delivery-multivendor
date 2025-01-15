@@ -160,7 +160,7 @@ const en = {
     generalErr: "Something is missing",
     verifyEmail: "Verify your email",
     enterOtp: "Please enter the OTP we sent to your updated email",
-    enterOtpPhone : "Please enter the OTP we sent to your updated Phone Number",
+    enterOtpPhone: "Please enter the OTP we sent to your updated Phone Number",
     invalidCode: " Invalid code, please check and enter again",
     resendCode: "Resend code",
     retryAfter: "Retry after",
@@ -204,32 +204,42 @@ const en = {
     pickUp: "Pickup",
     warning: "warning",
     warningText: "One or more item is not available",
-    "Rider App": 'Rider App',
-    FEATURES: 'FEATURES',
+    "Rider App": "Rider App",
+    FEATURES: "FEATURES",
     "Restaurant App": "Restaurant App",
-    "Customer App": 'Customer App',
-    "Admin Dashboard": 'Admin Dashboard',
+    "Customer App": "Customer App",
+    "Admin Dashboard": "Admin Dashboard",
     "Product Page": "Product Page",
-    "PlayStore": 'Play Store',
-    "IosStore": "Ios Store",
-    APP: 'APP',
-    Enatega: 'Enatega',
-    connectText:"Connecting Riders, Restaurants, and Customers for Seamless Food Delivery",
-    connectSubText:"Join the platform that delivers convenience, flexibility, and growth for everyone involved. Whether you’re a Rider looking to earn, a Restaurant aiming to expand, or a Customer craving delicious meals, we’ve got you covered!",
+    PlayStore: "Play Store",
+    IosStore: "Ios Store",
+    APP: "APP",
+    Enatega: "Enatega",
+    connectText:
+      "Connecting Riders, Restaurants, and Customers for Seamless Food Delivery",
+    connectSubText:
+      "Join the platform that delivers convenience, flexibility, and growth for everyone involved. Whether you’re a Rider looking to earn, a Restaurant aiming to expand, or a Customer craving delicious meals, we’ve got you covered!",
     PlatformText: "Why Join Our Platform?",
-    PlatformSubtext: "We’re not just a food delivery platform – we’re a community built to benefit everyone. Here’s why thousands of Riders, Restaurants, and Customers trust us:",
+    PlatformSubtext:
+      "We’re not just a food delivery platform – we’re a community built to benefit everyone. Here’s why thousands of Riders, Restaurants, and Customers trust us:",
     ForRider: "For Riders:",
-    platformRiderText: " Earn on your schedule, get quick payouts, and enjoy easy-to-use tools for managing deliveries.",
+    platformRiderText:
+      " Earn on your schedule, get quick payouts, and enjoy easy-to-use tools for managing deliveries.",
     ForRestaurant: "For Restaurants:",
-    platformRestaurantText: " Boost your reach, streamline order management, and grow your revenue with real-time analytics.",
+    platformRestaurantText:
+      " Boost your reach, streamline order management, and grow your revenue with real-time analytics.",
     ForCustomer: "For Customers:",
-    platformCustomerText: " Enjoy a wide range of restaurants, fast delivery, and a user-friendly app and website.",
+    platformCustomerText:
+      " Enjoy a wide range of restaurants, fast delivery, and a user-friendly app and website.",
     orderText: "Order Your Favorites Anytime, Anywhere",
-    orderSubText1: "Experience the convenience of having all your favorite restaurant meals and cuisines in one place, delivered straight to your door—fast and fresh. Download the Enatega App today, and turn every craving into a delicious reality.",
-    orderSubText2: "Explore a wide range of options, from local favorites and comfort food to gourmet dishes, healthy eats, and more.",
-    orderSubText3: "Download the Enatega App today, and turn every craving into a delicious reality.",
+    orderSubText1:
+      "Experience the convenience of having all your favorite restaurant meals and cuisines in one place, delivered straight to your door—fast and fresh. Download the Enatega App today, and turn every craving into a delicious reality.",
+    orderSubText2:
+      "Explore a wide range of options, from local favorites and comfort food to gourmet dishes, healthy eats, and more.",
+    orderSubText3:
+      "Download the Enatega App today, and turn every craving into a delicious reality.",
     platformFeatureText: "Platform Features That Make Us Stand Out.",
-    platformFeatureSubText: "We provide cutting-edge features to ensure your experience is smooth and hassle-free:",
+    platformFeatureSubText:
+      "We provide cutting-edge features to ensure your experience is smooth and hassle-free:",
     listReal: "Real-Time Order Tracking:",
     listRealText: " Know exactly where your food is.",
     securePayment: " Secure Payments:",
@@ -259,7 +269,6 @@ const en = {
     trackText: " See where your food is in real time.",
     mulPlat: "Multiple Platforms:",
     mulPlatText: " Order via mobile app or web app.",
-
     Register: "Register –",
     RegisterText: " List your restaurant easily.",
     recieveOrders: "Receive Orders –",
@@ -278,8 +287,6 @@ const en = {
     placeOrderText: " Enjoy fast delivery.",
     relax: "Relax –",
     relaxText: " Let us handle the rest!",
-
-
     contactUs: "Contact Us",
     vendors: "Vendors",
     drivers: "Drivers",
@@ -291,10 +298,44 @@ const en = {
     registerRestaurant: "Register Your Restaurant",
     signUpRider: "Sign Up for a Rider",
     orderFoodNow: "Order Food Now",
-    signupDelivering: "Sign Up to Start Delivering"
-    
-  
-   
+    signupDelivering: "Sign Up to Start Delivering",
+
+    riderHeading: "Ready when you are...",
+    riderDescription: "Better deliveries. Better customer experiences.",
+    vendorHeading: "A Delivery Solution Designed to Grow your Restaurant",
+    vendorDescription:
+      "Expand your reach, attract more customers, and build stronger connections in every neighborhood. Join Enatega as a vendor today!",
+    contactUsHeading: "How would you like to get help?",
+    contactUsDescription: "Choose the option that is convenient for you",
+    emailConfirmation: "Email Sent Successfully!",
+    welcomeText: "Welcome to Enatega",
+    emailConfirmationDescription:
+      "We are thrilled to have you join us as we aim to make delivery better for everyone. As a delivery/pickup partner, you get to work according to your schedule anywhere, anytime. Need Help? send us an email at enatega.nb@gmail.com",
+    getStarted: "Get Started",
+    thankyouPageHeading: "Your email has been sent successfully!",
+    thankyouPageDescription:
+      "A member of our team will reach out to you shortly to help you get set-up and answer any questions you might have. Need Help? send us an email at enatega.nb@gmail.com",
+    getStartedToday: "Get Started Today!",
+    termsRequired: "You must accept the terms and conditions.",
+    passNotMatch: "Passwords do not match.",
+    formSubmission: "Form Submitted Successfully",
+    notFormSubmission: "Form Not Submitted",
+    firstName: "First Name",
+    lastName: "Last Name",
+    emailAddress: "Email Address",
+    phoneNumber: "Enter your phone number",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    termsCheckBox: "I Agree To The Terms And Conditions And Privacy Policy",
+    viaPhone: "Via Phone",
+    vieEmail: "Via Email",
+    viaPhoneDesctiption: "Confirm your phone number and we'll give you a call",
+    viaEmailDesctiption: "Confirm your email address and we'll reply to you",
+    explainQuery: "Briefly explain your query...",
+    message: "message",
+    enterValidEmail: "Enter a valid email",
+    requiredEmail: 'Email is required',
+    enterValidPhone: 'Enter a valid phone number'
   },
 };
 export default en;

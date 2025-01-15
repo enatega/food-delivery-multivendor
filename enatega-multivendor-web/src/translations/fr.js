@@ -165,7 +165,8 @@ const fr = {
     verifyEmail: "Vérifiez votre e-mail",
     enterOtp:
       "Veuillez entrer le code OTP que nous avons envoyé à votre e-mail mis à jour",
-    enterOtpPhone : "Veuillez entrer le code OTP que nous avons envoyé à votre numéro de numéro mis à jour",
+    enterOtpPhone:
+      "Veuillez entrer le code OTP que nous avons envoyé à votre numéro de numéro mis à jour",
     invalidCode: "Code invalide, veuillez vérifier et entrer à nouveau",
     resendCode: "Renvoyer le code",
     retryAfter: "Réessayer après",
@@ -211,11 +212,15 @@ const fr = {
     pickUp: "Ramassage",
     warning: "Avertissement",
     warningText: "Un ou plusieurs éléments ne sont pas disponibles",
-    Enatega: 'Enatega',
-    connectText:"Connecter les livreurs, les restaurants et les clients pour une livraison de nourriture sans accroc",
-    connectSubText:"Rejoignez la plateforme qui offre commodité, flexibilité et croissance à tous. Que vous soyez un livreur cherchant à gagner, un restaurant visant à se développer ou un client en quête de délicieux repas, nous sommes là pour vous !",
-    platformFeatureText: "Fonctionnalités de la plateforme qui nous distinguent.",
-    platformFeatureSubText: "Nous proposons des fonctionnalités de pointe pour garantir que votre expérience soit fluide et sans tracas :",
+    Enatega: "Enatega",
+    connectText:
+      "Connecter les livreurs, les restaurants et les clients pour une livraison de nourriture sans accroc",
+    connectSubText:
+      "Rejoignez la plateforme qui offre commodité, flexibilité et croissance à tous. Que vous soyez un livreur cherchant à gagner, un restaurant visant à se développer ou un client en quête de délicieux repas, nous sommes là pour vous !",
+    platformFeatureText:
+      "Fonctionnalités de la plateforme qui nous distinguent.",
+    platformFeatureSubText:
+      "Nous proposons des fonctionnalités de pointe pour garantir que votre expérience soit fluide et sans tracas :",
     listReal: "Suivi des commandes en temps réel :",
     listRealText: "Sachez exactement où se trouve votre nourriture.",
     securePayment: "Paiements sécurisés :",
@@ -237,7 +242,8 @@ const fr = {
     easyOrder: "Gestion facile des commandes :",
     easyOrderText: "Gérez tout depuis un seul tableau de bord.",
     incrRevenue: "Augmentez vos revenus :",
-    incrRevenueText: "Attirez plus de commandes et développez votre entreprise.",
+    incrRevenueText:
+      "Attirez plus de commandes et développez votre entreprise.",
     OrderFood: "Commandez de la nourriture à tout moment et n'importe où !",
     expMenu: "Explorez les menus :",
     expMenuText: "Trouvez vos cuisines préférées.",
@@ -245,7 +251,6 @@ const fr = {
     trackText: "Voyez où se trouve votre nourriture en temps réel.",
     mulPlat: "Plateformes multiples :",
     mulPlatText: "Commandez via l'application mobile ou l'application web.",
-
 
     Register: "Inscrivez-vous –",
     RegisterText: "Ajoutez facilement votre restaurant.",
@@ -265,7 +270,6 @@ const fr = {
     placeOrderText: "Profitez d'une livraison rapide.",
     relax: "Détendez-vous –",
     relaxText: "Laissez-nous nous occuper du reste !",
-
     contactUs: "Contactez-nous",
     vendors: "Vendeurs",
     drivers: "Chauffeurs",
@@ -278,6 +282,47 @@ const fr = {
     signUpRider: "Inscrivez-vous en tant que livreur",
     orderFoodNow: "Commandez de la nourriture maintenant",
     signupDelivering: "Inscrivez-vous pour commencer à livrer",
+    riderHeading: "Prêt quand vous l’êtes...",
+    riderDescription:
+      "De meilleures livraisons. De meilleures expériences clients.",
+    vendorHeading:
+      "Une solution de livraison conçue pour développer votre restaurant",
+    vendorDescription:
+      "Étendez votre portée, attirez plus de clients et créez des liens plus forts dans chaque quartier. Rejoignez Enatega en tant que vendeur dès aujourd’hui!",
+    contactUsHeading: "Comment souhaitez-vous obtenir de l’aide?",
+    contactUsDescription: "Choisissez l’option qui vous convient",
+    emailConfirmation: "E-mail envoyé avec succès!",
+    welcomeText: "Bienvenue sur Enatega",
+    emailConfirmationDescription:
+      "Nous sommes ravis de vous accueillir parmi nous alors que nous visons à améliorer la livraison pour tout le monde. En tant que partenaire de livraison/ramassage, vous pouvez travailler selon votre emploi du temps, n’importe où, n’importe quand. Besoin d’aide ? Envoyez-nous un e-mail à enatega.nb@gmail.com",
+    getStarted: "Commencer",
+    thankyouPageHeading: "Votre e-mail a été envoyé avec succès!",
+    thankyouPageDescription:
+      "Un membre de notre équipe vous contactera sous peu pour vous aider à configurer votre compte et répondre à toutes vos questions. Besoin d’aide ? Envoyez-nous un e-mail à enatega.nb@gmail.com",
+    getStartedToday: "Commencez dès aujourd’hui!",
+    termsRequired: "Vous devez accepter les termes et conditions.",
+    passNotMatch: "Les mots de passe ne correspondent pas.",
+    formSubmission: "Formulaire soumis avec succès",
+    notFormSubmission: "Formulaire non soumis",
+    firstName: "Prénom",
+    lastName: "Nom de famille",
+    emailAddress: "Adresse e-mail",
+    phoneNumber: "Entrez votre numéro de téléphone",
+    password: "Mot de passe",
+    confirmPassword: "Confirmez le mot de passe",
+    termsCheckBox:
+      "J’accepte les termes et conditions ainsi que la politique de confidentialité",
+    viaPhone: "Par téléphone",
+    vieEmail: "Par e-mail",
+    viaPhoneDesctiption:
+      "Confirmez votre numéro de téléphone et nous vous appellerons",
+    viaEmailDesctiption:
+      "Confirmez votre adresse e-mail et nous vous répondrons",
+    explainQuery: "Expliquez brièvement votre demande...",
+    message: "Message",
+    enterValidEmail: "Entrez une adresse e-mail valide",
+    requiredEmail: "L'e-mail est requis",
+    enterValidPhone: "Entrez un numéro de téléphone valide",
   },
 };
 export default fr;

@@ -50,8 +50,11 @@ const OrderFavorites = () => {
 
         <Grid item xs={12} md={6} justifyItems={"center"}>
           <Box
+            alignItems={"center"}
+            justifyContent={"center"}
             style={{
               zIndex: 2,
+
             }}
             sx={{
               transform: {
