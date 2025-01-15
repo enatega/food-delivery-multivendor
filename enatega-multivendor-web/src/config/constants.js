@@ -4,18 +4,15 @@ import ConfigurationContext from "../../src/context/Configuration";
 
 const ConfigurableValues = () => {
   const configuration = useContext(ConfigurationContext);
-
-  const SERVER_URL = "https://enatega-multivendor.up.railway.app/";
-  const WS_SERVER_URL = "wss://enatega-multivendor.up.railway.app/";
-  //const SERVER_URL = 'http://192.168.100.15:8001/'
-  //const WS_SERVER_URL = 'ws://192.168.100.15:8001/'
-
-  
-  const GOOGLE_CLIENT_ID = configuration?.webClientID;
-  const STRIPE_PUBLIC_KEY = configuration?.publishableKey;
-  const PAYPAL_KEY = configuration?.clientId;
-  const GOOGLE_MAPS_KEY = configuration?.googleApiKey;
-  const AMPLITUDE_API_KEY = configuration?.webAmplitudeApiKey;
+  const SERVER_URL = "https://new-enatega-api-staging.up.railway.app/";
+  const WS_SERVER_URL = "wss://new-enatega-api-staging.up.railway.app/";
+  //   const SERVER_URL = 'http://localhost:8001/';
+  // const WS_SERVER_URL = 'http://localhost:8001/';
+  const GOOGLE_CLIENT_ID = configuration.webClientID;
+  const STRIPE_PUBLIC_KEY = configuration.publishableKey;
+  const PAYPAL_KEY = configuration.clientId;
+  const GOOGLE_MAPS_KEY = configuration.googleApiKey;
+  const AMPLITUDE_API_KEY = configuration.webAmplitudeApiKey;
   const LIBRARIES = "places,drawing,geometry,localContext,visualization".split(
     ","
   );

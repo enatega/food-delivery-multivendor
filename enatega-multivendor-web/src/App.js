@@ -35,11 +35,12 @@ import AuthRoute from "./routes/AuthRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 import VerifyPhone from "./screens/VerifyPhone/VerifyPhone";
 import UserContext from "./context/User";
+import BecomeAVendor from "./screens/BecomeAVendor";
+import BecomeARider from "./screens/BecomeARider";
 import { useTranslation } from "react-i18next";
-//import { fetchConfiguration } from "./utils/helper";
-
-
-//import { Integrations } from "@sentry/tracing";
+import ContactUs from "./screens/ContactUs/ContactUs";
+import DriverEmailConfirmation from "./screens/DriverEmailConfirmation/DriverEmailConfirmation";
+import ThankYou from "./screens/ThankYouConfirmation/ThankYouConfirmation";
 
 const GoogleMapsLoader = ({
   children,
@@ -346,6 +347,11 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/becomeavendor" element={<BecomeAVendor />} />
+          <Route path="/becomearider" element={<BecomeARider />} />
+          <Route path="/contact_us" element={<ContactUs />} />
+          <Route path={"/EmailConfirmation"} element={<DriverEmailConfirmation />} />
+          <Route path={"/ThankYouPage"} element ={<ThankYou/>} />
         </Routes>
       </GoogleMapsLoader>
     </HashRouter>
