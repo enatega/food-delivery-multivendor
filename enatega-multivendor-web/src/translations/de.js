@@ -163,7 +163,8 @@ const de = {
     verifyEmail: "Bestätigen Sie Ihre E-Mail",
     enterOtp:
       "Bitte geben Sie den OTP ein, den wir an Ihre aktualisierte E-Mail gesendet haben",
-    enterOtpPhone: "Bitte geben Sie den OTP ein, den wir an Ihre aktualisierte Telefonnummer gesendet haben",
+    enterOtpPhone:
+      "Bitte geben Sie den OTP ein, den wir an Ihre aktualisierte Telefonnummer gesendet haben",
     invalidCode: "Ungültiger Code, bitte überprüfen und erneut eingeben",
     resendCode: "Code erneut senden",
     retryAfter: "Erneuter Versuch nach",
@@ -209,11 +210,14 @@ const de = {
     pickUp: "Abholung",
     warning: "Warnung",
     warningText: "Ein oder mehrere Elemente sind nicht verfügbar",
-    Enatega: 'Enatega',
-    connectText:"Verbindung von Fahrern, Restaurants und Kunden für eine nahtlose Essenslieferung",
-    connectSubText:"Treten Sie der Plattform bei, die Komfort, Flexibilität und Wachstum für alle Beteiligten bietet. Egal, ob Sie ein Fahrer sind, der Geld verdienen möchte, ein Restaurant, das expandieren möchte, oder ein Kunde, der köstliche Mahlzeiten sucht – wir haben, was Sie brauchen!",
+    Enatega: "Enatega",
+    connectText:
+      "Verbindung von Fahrern, Restaurants und Kunden für eine nahtlose Essenslieferung",
+    connectSubText:
+      "Treten Sie der Plattform bei, die Komfort, Flexibilität und Wachstum für alle Beteiligten bietet. Egal, ob Sie ein Fahrer sind, der Geld verdienen möchte, ein Restaurant, das expandieren möchte, oder ein Kunde, der köstliche Mahlzeiten sucht – wir haben, was Sie brauchen!",
     platformFeatureText: "Plattformfunktionen, die uns auszeichnen.",
-    platformFeatureSubText: "Wir bieten fortschrittliche Funktionen, um sicherzustellen, dass Ihre Erfahrung reibungslos und stressfrei ist:",
+    platformFeatureSubText:
+      "Wir bieten fortschrittliche Funktionen, um sicherzustellen, dass Ihre Erfahrung reibungslos und stressfrei ist:",
     listReal: "Echtzeit-Bestellverfolgung:",
     listRealText: "Erfahren Sie genau, wo Ihr Essen ist.",
     securePayment: "Sichere Zahlungen:",
@@ -224,7 +228,8 @@ const de = {
     custMenuText: "Restaurants können ihre Angebote mühelos verwalten.",
     BecomeRider: "Werde Fahrer und beginne heute zu verdienen!",
     earnMore: "Verdiene mehr:",
-    earnMoreText: "Liefern Sie, wann Sie möchten, und verdienen Sie großartige Auszahlungen.",
+    earnMoreText:
+      "Liefern Sie, wann Sie möchten, und verdienen Sie großartige Auszahlungen.",
     flexible: "Flexible Arbeitszeiten:",
     flexibleText: "Arbeiten Sie nach Ihrem eigenen Zeitplan.",
     intsaPay: "Sofortige Zahlungen:",
@@ -235,7 +240,8 @@ const de = {
     easyOrder: "Einfache Bestellverwaltung:",
     easyOrderText: "Verwalten Sie alles in einem Dashboard.",
     incrRevenue: "Einnahmen steigern:",
-    incrRevenueText: "Ziehen Sie mehr Bestellungen an und erweitern Sie Ihr Geschäft.",
+    incrRevenueText:
+      "Ziehen Sie mehr Bestellungen an und erweitern Sie Ihr Geschäft.",
     OrderFood: "Bestellen Sie Essen jederzeit und überall!",
     expMenu: "Menüs durchsuchen:",
     expMenuText: "Finden Sie Ihre Lieblingsküchen.",
@@ -244,11 +250,11 @@ const de = {
     mulPlat: "Mehrere Plattformen:",
     mulPlatText: "Bestellen Sie über die mobile App oder die Web-App.",
 
-
     Register: "Registrieren –",
     RegisterText: "Fügen Sie Ihr Restaurant einfach hinzu.",
     recieveOrders: "Bestellungen erhalten –",
-    recieveOrdersText: "Verwalten Sie diese mit unserem benutzerfreundlichen Dashboard.",
+    recieveOrdersText:
+      "Verwalten Sie diese mit unserem benutzerfreundlichen Dashboard.",
     grow: "Wachsen –",
     growText: "Ziehen Sie mehr Kunden an und steigern Sie den Umsatz.",
     SignUp: "Anmelden –",
@@ -263,7 +269,6 @@ const de = {
     placeOrderText: "Genießen Sie eine schnelle Lieferung.",
     relax: "Entspannen –",
     relaxText: "Wir kümmern uns um den Rest!",
-
     contactUs: "Kontaktieren Sie uns",
     vendors: "Anbieter",
     drivers: "Fahrer",
@@ -276,6 +281,48 @@ const de = {
     signUpRider: "Melden Sie sich als Fahrer an",
     orderFoodNow: "Essen jetzt bestellen",
     signupDelivering: "Melden Sie sich an, um mit der Lieferung zu beginnen",
+    riderHeading: "Bereit, wenn du es bist...",
+    riderDescription: "Bessere Lieferungen. Bessere Kundenerfahrungen.",
+    vendorHeading:
+      "Eine Lieferlösung, die darauf ausgelegt ist, Ihr Restaurant wachsen zu lassen",
+    vendorDescription:
+      "Erweitern Sie Ihre Reichweite, gewinnen Sie mehr Kunden und bauen Sie stärkere Verbindungen in jedem Viertel auf. Werden Sie noch heute ein Enatega-Anbieter!",
+    contactUsHeading: "Wie möchten Sie Hilfe erhalten?",
+    contactUsDescription:
+      "Wählen Sie die Option, die für Sie am bequemsten ist",
+    emailConfirmation: "E-Mail erfolgreich gesendet!",
+    welcomeText: "Willkommen bei Enatega",
+    emailConfirmationDescription:
+      "Wir freuen uns, dass Sie sich uns anschließen, während wir darauf abzielen, den Lieferservice für alle zu verbessern. Als Liefer-/Abholpartner können Sie nach Ihrem eigenen Zeitplan überall und jederzeit arbeiten. Brauchen Sie Hilfe? Senden Sie uns eine E-Mail an enatega.nb@gmail.com",
+    getStarted: "Jetzt loslegen",
+    thankyouPageHeading: "Ihre E-Mail wurde erfolgreich gesendet!",
+    thankyouPageDescription:
+      "Ein Mitglied unseres Teams wird sich in Kürze bei Ihnen melden, um Ihnen bei der Einrichtung zu helfen und alle Fragen zu beantworten, die Sie haben könnten. Brauchen Sie Hilfe? Senden Sie uns eine E-Mail an enatega.nb@gmail.com",
+    getStartedToday: "Fangen Sie noch heute an!",
+    termsRequired:
+      "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren.",
+    passNotMatch: "Passwörter stimmen nicht überein.",
+    formSubmission: "Formular erfolgreich eingereicht",
+    notFormSubmission: "Formular nicht eingereicht",
+    firstName: "Vorname",
+    lastName: "Nachname",
+    emailAddress: "E-Mail-Adresse",
+    phoneNumber: "Geben Sie Ihre Telefonnummer ein",
+    password: "Passwort",
+    confirmPassword: "Passwort bestätigen",
+    termsCheckBox:
+      "Ich stimme den Allgemeinen Geschäftsbedingungen und der Datenschutzrichtlinie zu",
+    viaPhone: "Per Telefon",
+    vieEmail: "Per E-Mail",
+    viaPhoneDesctiption:
+      "Bestätigen Sie Ihre Telefonnummer und wir rufen Sie an",
+    viaEmailDesctiption:
+      "Bestätigen Sie Ihre E-Mail-Adresse und wir antworten Ihnen",
+    explainQuery: "Erklären Sie Ihre Anfrage kurz...",
+    message: "Nachricht",
+    enterValidEmail: "Geben Sie eine gültige E-Mail-Adresse ein",
+    requiredEmail: "E-Mail ist erforderlich",
+    enterValidPhone: "Geben Sie eine gültige Telefonnummer ein",
   },
 };
 export default de;
