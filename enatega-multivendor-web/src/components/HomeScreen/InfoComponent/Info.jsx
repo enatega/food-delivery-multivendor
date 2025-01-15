@@ -16,7 +16,7 @@ const Info = () => {
         <Typography className={classes.mainText} sx={{
           fontSize:
           {
-            sm:"32px",
+            xs:"26px",
             md:"42px"
           }
         }}>

@@ -22,7 +22,7 @@ const FooterBottom = () => {
       }}
     >
       <Grid item md={4} xs={12}>
-        <Typography color={"white"} align="center">
+        <Typography color={"white"} >
           <span style={{ color: "#5AC12F" }}>Enatega </span>- © 2025 All Rights
           Reserved
         </Typography>

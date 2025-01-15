@@ -26,6 +26,7 @@ const Card = ({ heading, ticksList, buttons }) => {
                   ? `1px solid ${button.textColor}`
                   : " ",
               }}
+              
             >
               <Typography>{button.text}</Typography>
             </RouterLink>

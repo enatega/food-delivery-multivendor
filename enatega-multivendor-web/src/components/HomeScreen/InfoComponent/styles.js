@@ -16,7 +16,7 @@ const useStyle = makeStyles((theme) => ({
         fontWeight:"400",
         marginBottom:"20px",
         textAlign:"center",
-        fontSize:"40px"
+        // fontSize:"40px"
     },
     secondaryText:{
         fontSize:"20px",
@@ -27,7 +27,7 @@ const useStyle = makeStyles((theme) => ({
     greenButton:{
      backgroundColor:"#5AC12F",
      margin:"4px",
-    //  width:"240px",
+     border:"1px solid #5AC12F",
      '&:hover' :{
       backgroundColor:"white",
       color:"black",
@@ -36,7 +36,7 @@ const useStyle = makeStyles((theme) => ({
     },
     yellowButton:{
     backgroundColor:"#FF9900",
-    // width:"240px",
+    border:"1px solid #FF9900",
     margin:"4px",
     '&:hover' :{
       backgroundColor:"white",
@@ -47,7 +47,7 @@ const useStyle = makeStyles((theme) => ({
     blueButton:{
         backgroundColor:"#007BFF",
         margin:"4px",
-        // width:"240px",
+        border:"1px solid #007BFF",
       '&:hover' :{
       backgroundColor:"white",
       color:"black",

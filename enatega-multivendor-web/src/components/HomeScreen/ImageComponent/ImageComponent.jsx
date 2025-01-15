@@ -5,8 +5,8 @@ const ImageComponent = ({ image }) => {
   return (
     <Box
       style={{
-        height: "100%",
-        width: "100%",
+        height: "90%",
+        width: "90%",
       }}
     >
       <img
