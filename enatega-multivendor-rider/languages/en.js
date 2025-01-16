@@ -196,7 +196,7 @@ export const en = {
     'Location permissions are required to use this app. Kindly open settings to allow location access.',
   allowLocation: 'Allow Location',
   enategaLocationText:
-    'Yalla uses your location for features like finding orders nearby and tracking customer orders!',
+    'Enatega uses your location for features like finding orders nearby and tracking customer orders!',
   emptyUsernameError: 'Username is required!',
   emptyPasswordError: 'Password is required!',
   loginFlashMsg: 'Logged in',
