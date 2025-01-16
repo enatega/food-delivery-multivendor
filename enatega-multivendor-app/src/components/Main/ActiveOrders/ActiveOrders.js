@@ -39,6 +39,7 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   const onPressDetails = (order) => {
     navigation.navigate('OrderDetail', {
       _id: order._id,
+      order: order,
       currencySymbol: configuration.currencySymbol
     })
   }

@@ -16,8 +16,8 @@ const getEnvVars = (env = Updates.channel) => {
     }
   }
   return {
-    // GRAPHQL_URL: 'http://localhost:8001/graphql',
-    // WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
+    // GRAPHQL_URL: 'http://10.97.0.172:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://10.97.0.172:8001/graphql',
     GRAPHQL_URL: 'https://new-enatega-api-staging.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://new-enatega-api-staging.up.railway.app/graphql',
     SENTRY_DSN:

@@ -97,7 +97,7 @@ function ImageTextCenterHeader(props, ref) {
 
   // Ref
   const flatListRef = ref
-
+//  console.log("c",props?.restaurant?.reviewData)
   
   const aboutObject = {
     latitude: props?.restaurant
@@ -119,7 +119,7 @@ function ImageTextCenterHeader(props, ref) {
     average: props?.restaurant ? props?.restaurant?.reviewData?.ratings : '...',
     total: props?.restaurant ? props?.restaurant?.reviewData?.total : '...',
     reviews: props?.restaurant ? props?.restaurant?.reviewData?.reviews : '...',
-    reviewsCount: props?.restaurant ? props?.restaurant?.reviewCount : '...',
+    reviewsCount: props?.restaurant ? props?.restaurant?.reviewCount: '...',
     isAvailable: props?.restaurant ? props?.restaurant?.isAvailable : true,
     openingTimes: props?.restaurant ? props?.restaurant?.openingTimes : [],
     phone: props?.restaurant ? props?.restaurant?.phone : '',
@@ -503,7 +503,7 @@ function ImageTextCenterHeader(props, ref) {
                     H5
                     isRTL
                   >
-                    ({aboutObject?.reviewsCount+ " reviews" ?? '0 reviews'})
+                    {aboutObject?.reviewsCount ?? 0} review(s)
                   </TextDefault>
                 </AnimatedTouchable>
                 <AnimatedTouchable

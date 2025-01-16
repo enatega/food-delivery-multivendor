@@ -72,7 +72,7 @@ function RestaurantCard(props) {
                 style={styles().restaurantRatingContainer}
                 bold
                 smaller>
-                ({props?.reviewData.reviews.length})
+                ({props?.reviewData.length})
               </TextDefault>
             </View>
           </View>

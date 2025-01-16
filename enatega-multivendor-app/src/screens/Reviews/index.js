@@ -26,7 +26,9 @@ const Reviews = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
 
   const restaurant = route.params.restaurantObject
-  const { reviews } = restaurant
+  const { reviews,reviewsCount,average } = restaurant
+
+
   const reviewGroups = groupAndCount(reviews, 'rating')
   const [sortBy, setSortBy] = useState('newest')
   const sortingParams = {
@@ -85,12 +87,12 @@ const Reviews = ({ navigation, route }) => {
             }}
           >
             <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
-              {t('allRatings')} ({restaurant.total??'0 Reviews'})
+              {t('allRatings')} ({reviewsCount ??'0 Reviews'})
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <StarRating />
               <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
-                {restaurant.average}
+                {average}
               </TextDefault>
             </View>
           </View>

@@ -73,13 +73,13 @@ export default StyleSheet.create({
     ...alignment.PBmedium
   },
   coll1: {
-    flex: 2
+    flex: 2,
   },
   coll2: {
     flex: 7,
     ...alignment.PBmedium
   },
   coll3: {
-    flex: 3
+    flex: 4,
   }
 })

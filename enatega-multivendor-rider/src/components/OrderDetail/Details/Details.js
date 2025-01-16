@@ -262,7 +262,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
                     key={addon._id}
                     textColor={colors.fontSecondColor}
                     bold>
-                    {addon.title}
+                     {addon.title}
                   </TextDefault>
                 ))
                 : null}
@@ -284,7 +284,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('subTotal')}
         </TextDefault>
         <TextDefault
@@ -293,7 +293,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.black}
           style={[styles.coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
-          {subTotal}
+         {subTotal} 
         </TextDefault>
       </View>
       <View style={styles.rowDisplay}>
@@ -301,7 +301,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('tip')}
         </TextDefault>
         <TextDefault
@@ -318,7 +318,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('taxCharges')}
         </TextDefault>
         <TextDefault
@@ -335,7 +335,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('delvieryCharges')}
         </TextDefault>
         <TextDefault
@@ -353,7 +353,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('total')}
         </TextDefault>
         <TextDefault

@@ -9,6 +9,7 @@ import {
   getFocusedRouteNameFromRoute,
   useRoute
 } from '@react-navigation/native'
+import { Platform } from 'react-native'
 
 const screenOptions = props => {
   const route = useRoute()
@@ -32,7 +33,7 @@ const tabIcon = route => ({
       iconName = 'language'
     }
     return (
-      <View style={{  paddingHorizontal:0 }}>
+      <View style={{  paddingHorizontal:scale(6)}}>
         <Ionicons name={iconName} size={size} color={color} />
       </View>
     )
@@ -57,7 +58,7 @@ const tabOptions = () => ({
     backgroundColor: '#2c2c2c',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    paddingBottom:scale(12) 
+    paddingBottom:Platform.OS=='ios'? scale(17) : scale(4) 
   }
 })
 
