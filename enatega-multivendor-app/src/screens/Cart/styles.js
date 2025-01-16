@@ -107,11 +107,12 @@ const styles = (props = null) =>
     },
     suggestItemContainer: {
       borderWidth: 1,
-      borderColor: '#D1D5DB',
+      borderColor: props != null ? props.customBorder : '#181818',
       borderRadius: 12,
       padding: scale(8),
       width: scale(120),
-      marginTop: scale(14)
+      marginTop: scale(14),
+      backgroundColor: props != null ? props.cardBackground : '#181818'
     },
     suggestItemImgContainer: {
       backgroundColor: '#F3F4F6',
@@ -145,7 +146,7 @@ const styles = (props = null) =>
       width: '50%'
     },
     buttonContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingTop: scale(28)
@@ -158,27 +159,6 @@ const styles = (props = null) =>
       height: scale(40),
       borderRadius: 40
     },
-
-    // totalBill:{
-    //   fontSize:scale(27)
-    // },
-    // buttontLeft: {
-    //   width: '35%',
-    //   height: '50%',
-    //   justifyContent: 'center'
-    // },
-    // buttonLeftCircle: {
-    //   backgroundColor: props != null ? props.black : 'black',
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    //   width: scale(18),
-    //   height: scale(18),
-    //   borderRadius: scale(9)
-    // },
-    // iconStyle: {
-    //   height: verticalScale(18),
-    //   width: verticalScale(18)
-    // },
     subContainerImage: {
       flex: 1,
       justifyContent: 'center',
@@ -238,7 +218,6 @@ const styles = (props = null) =>
       width: '20%'
     },
     tipRow: {
-      // justifyContent: 'space-between',
       alignItems: 'center',
       ...alignment.MBxSmall
     },
@@ -304,9 +283,6 @@ const styles = (props = null) =>
       height: scale(30)
     },
     addressAllignment: {
-      // display: 'flex',
-      // flexDirection: 'column',
-      // // justifyContent: 'flex-end',
       width: '100%',
       marginLeft: scale(15)
     },

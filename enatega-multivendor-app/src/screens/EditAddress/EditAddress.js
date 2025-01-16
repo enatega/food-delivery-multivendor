@@ -64,30 +64,30 @@ function EditAddress(props) {
   const { t } = useTranslation()
   const addressRef = useRef(null)
   const { location, setLocation } = useContext(LocationContext)
-  const [_id] = useState(props.route.params._id ?? null)
+  const [_id] = useState(props?.route.params._id ?? null)
   const [selectedLabel, setSelectedLabel] = useState(
-    props.route.params.label ?? labelValues[0].value
+    props?.route.params.label ?? labelValues[0].value
   )
   const [region, setRegion] = useState({
-    latitude: props.route.params.location
-      ? parseFloat(props.route.params.location.coordinates[1] ?? null)
-      : props.route.params.regionChange.latitude,
+    latitude: props?.route.params.location
+      ? parseFloat(props?.route.params.location.coordinates[1] ?? null)
+      : props?.route.params.regionChange.latitude,
     latitudeDelta: LATITUDE_DELTA,
-    longitude: props.route.params.location
-      ? parseFloat(props.route.params.location.coordinates[0] ?? '')
-      : props.route.params.regionChange.longitude,
+    longitude: props?.route.params.location
+      ? parseFloat(props?.route.params.location.coordinates[0] ?? '')
+      : props?.route.params.regionChange.longitude,
     longitudeDelta: LONGITUDE_DELTA
   })
   const [deliveryAddress, setDeliveryAddress] = useState(
-    props.route.params.deliveryAddress ?? ''
+    props?.route.params.deliveryAddress ?? ''
   )
   const [deliveryDetails, setDeliveryDetails] = useState(
-    props.route.params.details ?? ''
+    props?.route.params.details ?? ''
   )
   const [deliveryAddressError, setDeliveryAddressError] = useState('')
   const [deliveryDetailsError, setDeliveryDetailsError] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
-  const regionObj = props.route.params.regionChange ?? null
+  const regionObj = props?.route.params.regionChange ?? null
 
   const [mutate, { loading }] = useMutation(EDIT_ADDRESS, {
     onCompleted,
@@ -99,7 +99,7 @@ function EditAddress(props) {
   const inset = useSafeAreaInsets()
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       title: t('editAddress'),
       headerTitleStyle: {
@@ -132,7 +132,7 @@ function EditAddress(props) {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
   useEffect(() => {
     if (regionObj !== null) regionChange(regionObj)
   }, [regionObj])
@@ -172,7 +172,7 @@ function EditAddress(props) {
       message: t('addressUpdated')
     })
     // show message here
-    props.navigation.goBack()
+    props?.navigation.goBack()
   }
 
   function onError(error) {

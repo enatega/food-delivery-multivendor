@@ -9,15 +9,15 @@ const styles = (props = null) =>
       ...alignment.MLlarge
     },
     menuPageHeading:{
-      ...alignment.MLmedium,
-      ...alignment.MRmedium
+      // ...alignment.MLmedium,
+      // ...alignment.MRmedium
     },
     offerScroll: {
       height: scale(230),
       width: '100%'
     },
     offerContainer: {
-      backgroundColor: props != null ? props.cartContainer : 'white',
+      backgroundColor: props != null ? props?.cartContainer : 'white',
       elevation: 3,
       shadowColor: theme.Pink.white,
 
@@ -50,7 +50,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       zIndex: 1,
       borderRadius: scale(10),
-      backgroundColor: props != null ? props.menuBar : 'white'
+      backgroundColor: props != null ? props?.menuBar : 'white'
     },
     featureOverlay: {
       height: '90%',
@@ -68,7 +68,7 @@ const styles = (props = null) =>
       ...alignment.PRsmall,
       ...alignment.PTxSmall,
       ...alignment.PBxSmall,
-      backgroundColor: props != null ? props.iconColorPink : 'red'
+      backgroundColor: props != null ? props?.iconColorPink : 'red'
     },
     descriptionContainer: {
       paddingTop: verticalScale(10),

@@ -37,14 +37,14 @@ function Login(props) {
   } = useLogin()
     const {t} = useTranslation()
   useLayoutEffect(() => {
-    props.navigation.setOptions(
+    props?.navigation.setOptions(
       screenOptions({
         backColor: currentTheme.themeBackground,
         fontColor: currentTheme.fontMainColor,
-        navigation: props.navigation
+        navigation: props?.navigation
       })
     )
-  }, [props.navigation])
+  }, [props?.navigation])
 
   return (
     <SafeAreaView
@@ -158,7 +158,7 @@ function Login(props) {
                       style={alignment.MBxSmall}
                       activeOpacity={0.7}
                       onPress={() =>
-                        props.navigation.navigate('ForgotPassword', { email })
+                        props?.navigation.navigate('ForgotPassword', { email })
                       }>
                       <TextDefault
                         textColor={currentTheme.buttonBackgroundPink}

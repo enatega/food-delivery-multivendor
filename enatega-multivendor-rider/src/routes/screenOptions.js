@@ -2,13 +2,14 @@
 import React from 'react'
 import { View } from 'react-native'
 import { textStyles } from '../utilities/textStyles'
-import { scale } from '../utilities/scaling'
+import { scale, verticalScale } from '../utilities/scaling'
 import colors from '../utilities/colors'
 import { Ionicons } from '@expo/vector-icons'
 import {
   getFocusedRouteNameFromRoute,
   useRoute
 } from '@react-navigation/native'
+import { Platform } from 'react-native'
 
 const screenOptions = props => {
   const route = useRoute()
@@ -32,7 +33,7 @@ const tabIcon = route => ({
       iconName = 'language'
     }
     return (
-      <View style={{ paddingTop: scale(10), paddingHorizontal: scale(12) }}>
+      <View style={{  paddingHorizontal:scale(6)}}>
         <Ionicons name={iconName} size={size} color={color} />
       </View>
     )
@@ -46,7 +47,7 @@ const tabOptions = () => ({
   tabBarInactiveTintColor: colors.white,
   tabBarItemStyle: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   tabBarLabelStyle: {
     ...textStyles.Bold,
@@ -56,7 +57,8 @@ const tabOptions = () => ({
   tabBarStyle: {
     backgroundColor: '#2c2c2c',
     borderTopLeftRadius: 15,
-    borderTopRightRadius: 15
+    borderTopRightRadius: 15,
+    paddingBottom:Platform.OS=='ios'? scale(17) : scale(4) 
   }
 })
 

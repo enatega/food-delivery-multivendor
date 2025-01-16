@@ -34,7 +34,7 @@ const styles = (props = null) =>
     }),
 
     horizontalLine: {
-      borderBottomColor: props !== null ? props.horizontalLine : 'pink',
+      borderBottomColor: props !== null ? props?.horizontalLine : 'pink',
       borderBottomWidth: StyleSheet.hairlineWidth
     },
     review: {

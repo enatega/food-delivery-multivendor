@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent'
+      backgroundColor: props !== null ? props?.newheaderColor : 'transparent'
     },
     logInContainer: {
       width: '100%',
@@ -35,7 +35,7 @@ const styles = (props = null) =>
       borderRadius: scale(35),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.fontWhite : 'transparent',
+      backgroundColor: props !== null ? props?.fontWhite : 'transparent',
       ...alignment.MTlarge
     }
   })

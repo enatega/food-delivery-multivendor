@@ -43,16 +43,15 @@ function emptyViewPastOrders() {
 }
 
 const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) => {
-  const { t } = useTranslation()
+  const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const configuration = useContext(ConfigurationContext)
   const {
     reFetchOrders,
     fetchMoreOrdersFunc,
     networkStatusOrders
   } = useContext(OrdersContext)
-
   const renderItem = ({ item }) => (
     <Item
       item={item}
@@ -150,27 +149,28 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
         <View style={styles(currentTheme).subContainer}>
           <View
             style={{
-              flexDirection: 'row'
+              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
             }}>
             <Image
               style={styles(currentTheme).restaurantImage}
               resizeMode="cover"
-              source={{ uri: item.restaurant.image }}
+              source={{ uri: item?.restaurant?.image }}
             />
             <View style={styles(currentTheme).textContainer2}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' }}>
                 <View style={styles().subContainerLeft}>
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
                     uppercase
                     bolder
                     numberOfLines={2}
-                    style={styles(currentTheme).restaurantName}>
+                    style={styles(currentTheme).restaurantName}
+                  isRTL>
                     {item.restaurant.name}
                   </TextDefault>
                 </View>
                 <View style={styles(currentTheme).subContainerRight}>
-                  <TextDefault textColor={currentTheme.fontMainColor} bolder>
+                  <TextDefault textColor={currentTheme.fontMainColor} bolder isRTL>
                     {configuration.currencySymbol}
                     {parseFloat(item.orderAmount).toFixed(2)}
                   </TextDefault>
@@ -181,9 +181,10 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                   numberOfLines={1}
                   style={{
                     ...alignment.MTxSmall,
-                    width: '122%'
+                    // width: '122%'
                   }}
                   textColor={currentTheme.secondaryText}
+                  isRTL
                   >
                   {t('deliveredOn')} {formatDeliveredAt(item.deliveredAt)}
                 </TextDefault>
@@ -191,7 +192,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                   numberOfLines={1}
                   style={{ ...alignment.MTxSmall }}
                   textColor={currentTheme.secondaryText}
-                  
+                  isRTL
                   >
                   {getItems(item.items)}
                 </TextDefault>
@@ -211,7 +212,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
           </View>
           <View style={styles(currentTheme).starsContainer}>
             <View>
-              <TextDefault H5 bolder textColor={currentTheme.newFontcolor}>
+              <TextDefault H5 bolder textColor={currentTheme.newFontcolor} isRTL>
                 {t('tapToRate')}
               </TextDefault>
             </View>

@@ -7,7 +7,6 @@ import { Ionicons, Entypo } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
 import colors from '../../utilities/colors'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
 import { useTranslation } from 'react-i18next'
 
@@ -102,33 +101,29 @@ const ChatScreen = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <GiftedChat
-          messages={messages}
-          user={{
-            _id: profile.rider._id
-          }}
-          renderBubble={renderBubble}
-          renderSend={renderSend}
-          scrollToBottom
-          scrollToBottomComponent={scrollToBottomComponent}
-          renderAvatar={null}
-          renderUsernameOnMessage
-          renderChatEmpty={renderChatEmpty}
-          inverted={Platform.OS !== 'web' || messages.length === 0}
-          timeTextStyle={{
-            left: { color: colors.fontMainColor },
-            right: { color: colors.horizontalLine }
-          }}
-          placeholder={t('message')}
-          textInputStyle={{ paddingTop: 10 }}
-          renderAccessory={image.length > 0 ? renderAccessory : null}
-          text={inputMessage}
-          onInputTextChanged={m => setInputMessage(m)}
-        />
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <GiftedChat
+      messages={messages}
+      user={{
+        _id: profile.rider._id
+      }}
+      renderBubble={renderBubble}
+      renderSend={renderSend}
+      scrollToBottom
+      scrollToBottomComponent={scrollToBottomComponent}
+      renderAvatar={null}
+      renderUsernameOnMessage
+      renderChatEmpty={renderChatEmpty}
+      inverted={Platform.OS !== 'web' || messages.length === 0}
+      timeTextStyle={{
+        left: { color: colors.fontMainColor },
+        right: { color: colors.horizontalLine }
+      }}
+      placeholder={t('message')}
+      textInputStyle={{ paddingTop: 10 }}
+      renderAccessory={image.length > 0 ? renderAccessory : null}
+      text={inputMessage}
+      onInputTextChanged={m => setInputMessage(m)}
+    />
   )
 }
 

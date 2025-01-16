@@ -1,5 +1,4 @@
-import { TouchableOpacity, View, ScrollView, Dimensions } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import { View, ScrollView, Dimensions } from 'react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
@@ -11,7 +10,7 @@ import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import analytics from '../../utils/analytics'
+// import analytics from '../../utils/analytics'
 import Detail from '../../components/OrderDetail/Detail/Detail'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import CustomerMarker from '../../assets/SVG/customer-marker'
@@ -39,6 +38,7 @@ import { Instructions } from '../../components/Checkout/Instructions'
 import MapViewDirections from 'react-native-maps-directions'
 import useEnvVars from '../../../environment'
 import LottieView from 'lottie-react-native'
+import { clearLogEntriesAsync } from 'expo-updates'
 const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`
@@ -46,55 +46,49 @@ const CANCEL_ORDER = gql`
 `
 
 function OrderDetail(props) {
+  // console.log("propsdata",props?.route.params)
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
-  const Analytics = analytics()
-  const id = props.route.params ? props.route.params._id : null
-  const user = props.route.params ? props.route.params.user : null
+  //const Analytics = analytics()
+  const { t, i18n } = useTranslation()
+  const id = props?.route.params ? props?.route.params?._id : null
+  const orderData = props?.route.params ? props?.route.params?.order : null
+  // console.log('orderData',orderData)
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-  const { t } = useTranslation()
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const navigation = useNavigation()
-  const headerRef = useRef(false)
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   const mapView = useRef(null)
-
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
-    onCompleted:(data)=>
-    {
-     if(data.abortOrder.orderStatus === 'CANCELLED')
-     {
-        navigation.navigate("Main")
-     }
-    },
     variables: { abortOrderId: id }
   })
-
-  useEffect(() => {
-    async function Track() {
-      await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
-        orderId: id
-      })
-    }
-    Track()
-  }, [])
+  
+  // useEffect(() => {
+  //   /* async function Track() {
+  //     await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
+  //       orderId: id
+  //     })
+  //   }
+  //   Track() */
+  // }, [])
 
   const cancelModalToggle = () => {
     setCancelModalVisible(!cancelModalVisible)
   }
   function onError(error) {
-
     FlashMessage({
       message: error.message
     })
   }
 
-  const order = orders?.find(o => o?._id === id)
+const order = orders?.find(o => o?._id??order?.id === id) ?? orderData
+//  console.log("IDSSSS:  ", {orderids: orders?.map((o) => o?._id)})
+  // console.log({order, id})
 
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
       headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
       headerTitleStyle: { color: currentTheme.newFontcolor },
@@ -102,7 +96,7 @@ function OrderDetail(props) {
     })
   }, [orders])
 
-  if (loadingOrders || !order) {
+  if (loadingOrders) {
     return (
       <Spinner
         backColor={currentTheme.themeBackground}
@@ -110,11 +104,14 @@ function OrderDetail(props) {
       />
     )
   }
-  if (errorOrders) return <TextError text={JSON.stringify(errorOrders)} />
+  if (errorOrders) {
+    console.log({errorOrders})
+    return <TextError text={JSON.stringify(errorOrders)} />}
 
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,
+    id:orderId,
     restaurant,
     deliveryAddress,
     items,
@@ -123,7 +120,9 @@ function OrderDetail(props) {
     orderAmount: total,
     deliveryCharges
   } = order
-  const subTotal = total - tip - tax - deliveryCharges
+  
+
+  const subTotal = (total) - (tip) - tax - deliveryCharges
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -135,7 +134,7 @@ function OrderDetail(props) {
         showsVerticalScrollIndicator={false}
         overScrollMode='never'
       >
-        {order.rider && order.orderStatus === ORDER_STATUS_ENUM.PICKED && (
+        {order?.rider && (order?.orderStatus) === ORDER_STATUS_ENUM.PICKED && (
           <MapView
             ref={(c) => (mapView.current = c)}
             style={{ flex: 1, height: HEIGHT * 0.6 }}
@@ -198,7 +197,7 @@ function OrderDetail(props) {
                 console.log('onerror', error)
               }}
             />
-            {order.rider && <TrackingRider id={order.rider._id} />}
+            {order?.rider && <TrackingRider id={order?.rider?._id} />}
           </MapView>
         )}
         <View
@@ -208,8 +207,8 @@ function OrderDetail(props) {
             ...alignment.Pmedium
           }}
         >
-          <OrderStatusImage status={order.orderStatus} />
-          {order.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
+          <OrderStatusImage status={order?.orderStatus} />
+          {(order?.orderStatus) !== ORDER_STATUS_ENUM.DELIVERED && (
             <View
               style={{
                 ...alignment.MTxSmall,
@@ -220,7 +219,7 @@ function OrderDetail(props) {
               {![
                 ORDER_STATUS_ENUM.PENDING,
                 ORDER_STATUS_ENUM.CANCELLED
-              ].includes(order.orderStatus) && (
+              ].includes(order?.orderStatus) && (
                   <>
                     <TextDefault
                       style={{ ...alignment.MTxSmall }}
@@ -243,6 +242,7 @@ function OrderDetail(props) {
                       currentTheme={currentTheme}
                       item={order}
                       navigation={navigation}
+                      isPicked={order?.isPickedUp}
                     />
                   </>
                 )}
@@ -253,28 +253,28 @@ function OrderDetail(props) {
                 bold
               >
                 {' '}
-                {t(checkStatus(order.orderStatus).statusText)}
+                {t(checkStatus(order?.orderStatus)?.statusText)}
               </TextDefault>
             </View>
           )}
         </View>
-        <Instructions title={'Instructions'} theme={currentTheme} message={order.instructions} />
+        <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
         <Detail
-          navigation={props.navigation}
+          navigation={props?.navigation}
           currencySymbol={configuration.currencySymbol}
           items={items}
-          from={restaurant.name}
-          orderNo={order.orderId}
-          deliveryAddress={deliveryAddress.deliveryAddress}
+          from={restaurant?.name}
+          orderNo={order?.orderId}
+          deliveryAddress={deliveryAddress?.deliveryAddress}
           subTotal={subTotal}
           tip={tip}
           tax={tax}
           deliveryCharges={deliveryCharges}
           total={total}
           theme={currentTheme}
-          id={_id}
-          rider={order.rider}
-          orderStatus={order.orderStatus}
+          id={id}
+          rider={order?.rider}
+          orderStatus={order?.orderStatus}
         />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
@@ -284,7 +284,7 @@ function OrderDetail(props) {
           currency={configuration.currencySymbol}
           price={total.toFixed(2)}
         />
-        {order.orderStatus === ORDER_STATUS_ENUM.PENDING && (
+        {(order?.orderStatus) === ORDER_STATUS_ENUM.PENDING && (
           <View style={{ margin: scale(20) }}>
             <Button
               text={t('cancelOrder')}
@@ -302,7 +302,7 @@ function OrderDetail(props) {
         setModalVisible={cancelModalToggle}
         cancelOrder={cancelOrder}
         loading={loadingCancel}
-        orderStatus={order.orderStatus}
+        orderStatus={order?.orderStatus}
       />
     </View>
   )

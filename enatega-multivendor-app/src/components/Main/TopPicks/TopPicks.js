@@ -24,7 +24,7 @@ function TopPicks(props) {
         textColor={currentTheme.fontFourthColor}
         bolder
         H4>
-        {props.title}
+        {props?.title}
       </TextDefault>
       <TextDefault
         Normal

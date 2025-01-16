@@ -2,7 +2,7 @@
   "expo": {
     "name": "Enatega Multivendor Restaurant",
     "slug": "enatega-multivendor-restaurant",
-    "version": "1.0.33",
+    "version": "1.0.36",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -23,7 +23,7 @@
       }
     },
     "android": {
-      "versionCode": 42,
+      "versionCode": 43,
       "package": "multivendor.enatega.restaurant",
       "googleServicesFile": "./google-services.json",
       "permissions": [
@@ -56,7 +56,6 @@
       "expo-localization",
       "expo-secure-store",
       "sentry-expo"
-    ],
-    "newArchEnabled": true
+    ]
   }
 }

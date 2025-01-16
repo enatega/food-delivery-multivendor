@@ -18,8 +18,8 @@ const FdEmailBtn = props => {
     <TouchableOpacity
       activeOpacity={0.7}
       style={styles().mainContainer}
-      onPress={props.onPress}>
-      {props.loadingIcon ? (
+      onPress={props?.onPress}>
+      {props?.loadingIcon ? (
         <Spinner backColor="rgba(0,0,0,0.1)" spinnerColor={'#FFF'} />
       ) : (
         <>

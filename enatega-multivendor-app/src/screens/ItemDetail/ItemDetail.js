@@ -1,63 +1,73 @@
-import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
 import {
   View,
-  ScrollView,
   Alert,
   StatusBar,
   Platform,
-  KeyboardAvoidingView,
   Dimensions,
-  Keyboard, 
-  TouchableOpacity
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
 import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
-import CheckComponent from '../../components/CustomizeComponents/CheckComponent/CheckComponent'
 import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
 import CartComponent from '../../components/CustomizeComponents/CartComponent/CartComponent'
 import HeadingComponent from '../../components/CustomizeComponents/HeadingComponent/HeadingComponent'
 import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
-import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
+import Options from './Options'
 import { theme } from '../../utils/themeColors'
-import UserContext from '../../context/User'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
-import { TextField } from 'react-native-material-textfield'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import UserContext from '../../context/User'
+
+// Hooks
+import React, {
+  useState,
+  useContext,
+  useLayoutEffect,
+  useEffect,
+  useRef,
+  useCallback
+} from 'react'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
-import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
-import { IMAGE_LINK } from '../../utils/constants'
-import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useSharedValue
+  useSharedValue,
+  useAnimatedRef
 } from 'react-native-reanimated'
+import { IconButton } from 'react-native-paper'
+import { Text } from 'react-native'
 import { scale } from '../../utils/scaling'
-import { Card } from 'react-native-paper'
+import { TextField } from 'react-native-material-textfield'
+
 const { height } = Dimensions.get('window')
 const TOP_BAR_HEIGHT = height * 0.08
-const HEADER_MAX_HEIGHT = height * 0.34
+const HEADER_MAX_HEIGHT = height * 0.40
 const HEADER_MIN_HEIGHT = height * 0.05 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 function ItemDetail(props) {
+  // Analytics
   const Analytics = analytics()
-
-  const { food, addons, options, restaurant } = props.route.params
+  const { food, addons, options, restaurant } = props?.route?.params
   const navigation = useNavigation()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
+
+  // States
+  const [listZindex, setListZindex] = useState(0);
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState({
-    ...food.variations[0],
-    addons: food.variations[0].addons.map((fa) => {
-      const addon = addons.find((a) => a._id === fa)
-      const addonOptions = addon.options.map((ao) => {
-        return options.find((o) => o._id === ao)
+    ...food?.variations[0],
+    addons: food?.variations[0].addons?.map((fa) => {
+      const addon = addons?.find((a) => a._id === fa)
+      const addonOptions = addon.options?.map((ao) => {
+        return options?.find((o) => o._id === ao)
       })
       return {
         ...addon,
@@ -65,9 +75,6 @@ function ItemDetail(props) {
       }
     })
   })
-
-  const imageUrl =
-    food?.image && food?.image.trim() !== '' ? food.image : IMAGE_LINK
 
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')
@@ -79,8 +86,27 @@ function ItemDetail(props) {
     addCartItem
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const inset = useSafeAreaInsets()
+
+  const scrollViewRef = useAnimatedRef()
+  const addonRefs = useRef({})
+
+  function scrollToError(addonId, totalAddons) {
+    // Use `setTimeout` to ensure the scroll happens after layout updates
+    setTimeout(() => {
+      if (addonRefs.current[addonId] && scrollViewRef.current && totalAddons > 0) {
+        addonRefs.current[addonId].measure(
+          (x, y, width, height, pageX, pageY) => {
+            scrollViewRef.current.scrollTo({
+              y: Math.max(0, pageY - HEADER_MAX_HEIGHT), // Adjust the offset if needed
+              animated: true
+            })
+          }
+        )
+      }
+    }, 300)
+  }
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -90,21 +116,26 @@ function ItemDetail(props) {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
   })
+
   useEffect(() => {
     async function Track() {
-      await Analytics.track(Analytics.events.OPENED_RESTAURANT_ITEM, {
-        restaurantID: restaurant,
-        foodID: food._id,
-        foodName: food.title,
-        foodRestaurantName: food.restaurantName
-      })
+      try {
+        await Analytics.track(Analytics.events.OPENED_RESTAURANT_ITEM, {
+          restaurantID: restaurant,
+          foodID: food?._id,
+          foodName: food?.title,
+          foodRestaurantName: food?.restaurantName,
+        });
+      } catch (error) {
+        console.error('Analytics tracking failed:', error);
+      }
     }
     Track()
   })
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: food.restaurantName,
+      title: food?.restaurantName,
       headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: currentTheme.newheaderBG
@@ -136,14 +167,14 @@ function ItemDetail(props) {
   function validateButton() {
     if (!selectedVariation) return false
     const validatedAddons = []
-    selectedVariation.addons.forEach((addon) => {
-      const selected = selectedAddons.find((ad) => ad._id === addon._id)
-      if (!selected && addon.quantityMinimum === 0) {
+    selectedVariation?.addons?.forEach((addon) => {
+      const selected = selectedAddons?.find((ad) => ad._id === addon._id)
+      if (!selected && addon?.quantityMinimum === 0) {
         validatedAddons.push(false)
       } else if (
         selected &&
-        selected?.options?.length >= addon.quantityMinimum &&
-        selected.options.length <= addon.quantityMaximum
+        selected?.options?.length >= addon?.quantityMinimum &&
+        selected?.options?.length <= addon?.quantityMaximum
       ) {
         validatedAddons.push(false)
       } else validatedAddons.push(true)
@@ -152,15 +183,16 @@ function ItemDetail(props) {
   }
 
   async function onPressAddToCart(quantity) {
-    if (validateOrderItem()) {
+    const isValidOrder = validateOrderItem();
+    if (isValidOrder) {
       Analytics.track(Analytics.events.ADD_TO_CART, {
-        title: food.title,
-        restaurantName: food.restaurantName,
-        variations: food.variations
+        title: food?.title,
+        restaurantName: food?.restaurantName,
+        variations: food?.variations
       })
       if (!restaurantCart || restaurant === restaurantCart) {
         await addToCart(quantity, restaurant !== restaurantCart)
-      } else if (food.restaurant !== restaurantCart) {
+      } else if (food?.restaurant !== restaurantCart) {
         Alert.alert(
           '',
           t('cartClearWarning'),
@@ -183,10 +215,11 @@ function ItemDetail(props) {
     }
   }
 
+  // Add to cart
   const addToCart = async (quantity, clearFlag) => {
     const addons = selectedAddons.map((addon) => ({
       ...addon,
-      options: addon.options.map(({ _id }) => ({
+      options: addon?.options?.map(({ _id }) => ({
         _id
       }))
     }))
@@ -194,85 +227,89 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find((cartItem) => {
-          if (
-            cartItem._id === food._id &&
-            cartItem.variation._id === selectedVariation._id
-          ) {
-            if (cartItem?.addons?.length === addons.length) {
-              if (addons.length === 0) return true
-              const addonsResult = addons.every((newAddon) => {
-                const cartAddon = cartItem.addons.find(
-                  (ad) => ad._id === newAddon._id
+        if (
+          cartItem?._id === food?._id &&
+          cartItem?.variation?._id === selectedVariation?._id
+        ) {
+          if (cartItem?.addons?.length === addons?.length) {
+            if (addons?.length === 0) return true
+            const addonsResult = addons?.every((newAddon) => {
+              const cartAddon = cartItem.addons?.find(
+                (ad) => ad._id === newAddon._id
+              )
+
+              if (!cartAddon) return false
+              const optionsResult = newAddon?.options?.every((newOption) => {
+                const cartOption = cartAddon?.options?.find(
+                  (op) => op._id === newOption._id
                 )
 
-                if (!cartAddon) return false
-                const optionsResult = newAddon.options.every((newOption) => {
-                  const cartOption = cartAddon.options.find(
-                    (op) => op._id === newOption._id
-                  )
-
-                  if (!cartOption) return false
-                  return true
-                })
-
-                return optionsResult
+                if (!cartOption) return false
+                return true
               })
 
-              return addonsResult
-            }
+              return optionsResult
+            })
+
+            return addonsResult
           }
-          return false
-        })
+        }
+        return false
+      })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
       await addCartItem(
-        food._id,
-        selectedVariation._id,
+        food?._id,
+        selectedVariation?._id,
         quantity,
         addons,
         clearFlag,
         specialInstructions
       )
     } else {
-      await addQuantity(cartItem.key, quantity)
+      await addQuantity(cartItem?.key, quantity)
     }
     navigation.goBack()
   }
 
-  function onSelectVariation(variation) {
-    setSelectedVariation({
-      ...variation,
-      addons: variation.addons.map((fa) => {
-        const addon = addons.find((a) => a._id === fa)
-        const addonOptions = addon.options.map((ao) => {
-          return options.find((o) => o._id === ao)
+  const onSelectVariation = (variation) => {
+    console.log("🚀 ~ onSelectVariation ~ variation:", variation)
+
+    if (variation?._id) {
+      setSelectedVariation({
+        ...variation,
+        addons: variation?.addons?.map((fa) => {
+          const addon = addons?.find((a) => a._id === fa)
+          const addonOptions = addon?.options?.map((ao) => {
+            return options?.find((o) => o._id === ao)
+          })
+          return {
+            ...addon,
+            options: addonOptions
+          }
         })
-        return {
-          ...addon,
-          options: addonOptions
-        }
       })
-    })
+    }
   }
 
   async function onSelectOption(addon, option) {
-    const index = selectedAddons.findIndex((ad) => ad._id === addon._id)
+    const index = selectedAddons?.findIndex((ad) => ad._id === addon._id)
     if (index > -1) {
-      if (addon.quantityMinimum === 1 && addon.quantityMaximum === 1) {
+      if (addon?.quantityMinimum === 1 && addon?.quantityMaximum === 1) {
         selectedAddons[index].options = [option]
       } else {
-        const optionIndex = selectedAddons[index].options.findIndex(
+        const optionIndex = selectedAddons[index].options?.findIndex(
           (opt) => opt._id === option._id
         )
         if (optionIndex > -1) {
-          selectedAddons[index].options = selectedAddons[index].options.filter(
+          selectedAddons[index].options = selectedAddons[index].options?.filter(
             (opt) => opt._id !== option._id
           )
         } else {
-          selectedAddons[index].options.push(option)
+          selectedAddons[index].options?.push(option)
         }
-        if (!selectedAddons[index].options.length) {
+        if (!selectedAddons[index].options?.length) {
           selectedAddons.splice(index, 1)
         }
       }
@@ -282,71 +319,47 @@ function ItemDetail(props) {
     setSelectedAddons([...selectedAddons])
   }
 
-  function calculatePrice() {
+  const calculatePrice = useCallback(() => {
     const variation = selectedVariation.price
     let addons = 0
     selectedAddons.forEach((addon) => {
-      addons += addon.options.reduce((acc, option) => {
-        return acc + option.price
+      addons += addon?.options?.reduce((acc, option) => {
+        return acc + option?.price
       }, 0)
     })
     return (variation + addons).toFixed(2)
-  }
+  }, [selectedVariation, addons])
 
   function validateOrderItem() {
-    const validatedAddons = selectedVariation.addons.map((addon) => {
-      const selected = selectedAddons.find((ad) => ad._id === addon._id)
+    let hasError = false
+    const validatedAddons = selectedVariation?.addons?.map((addon) => {
+      const selected = selectedAddons?.find((ad) => ad._id === addon._id)
 
-      if (!selected && addon.quantityMinimum === 0) {
+      if (!selected && addon?.quantityMinimum === 0) {
         addon.error = false
       } else if (
         selected &&
-        selected.options.length >= addon.quantityMinimum &&
-        selected.options.length <= addon.quantityMaximum
+        selected?.options?.length >= addon?.quantityMinimum &&
+        selected?.options?.length <= addon?.quantityMaximum
       ) {
         addon.error = false
-      } else addon.error = true
+      } else {
+        addon.error = true
+        if (!hasError) {
+          hasError = true
+          scrollToError(addon._id, selectedVariation?.addons?.length)
+        }
+      }
       return addon
     })
     setSelectedVariation({ ...selectedVariation, addons: validatedAddons })
-    return validatedAddons.every((addon) => addon.error === false)
+    return !hasError
   }
 
-  function renderOption(addon) {
-    if (addon.quantityMinimum === 1 && addon.quantityMaximum === 1) {
-      return (
-        <View>
-          <RadioComponent
-            options={addon.options}
-            onPress={onSelectOption.bind(this, addon)}
-          />
-          {addon.error && (
-            <TextDefault small textColor={currentTheme.textErrorColor}>
-              {t('selectOptionforAddon')}
-            </TextDefault>
-          )}
-        </View>
-      )
-    } else {
-      return (
-        <View>
-          <CheckComponent
-            options={addon.options}
-            onPress={onSelectOption.bind(this, addon)}
-          />
-          {addon.error && (
-            <TextDefault small textColor={currentTheme.textErrorColor}>
-              {t('selectOptionforAddon')}
-            </TextDefault>
-          )}
-        </View>
-      )
-    }
-  }
   const scrollY = useSharedValue(0)
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
+      scrollY.value = event.contentOffset.y;
     }
   })
   const animatedHeaderStyle = useAnimatedStyle(() => {
@@ -358,24 +371,19 @@ function ItemDetail(props) {
     )
     return {
       height,
-      opacity: interpolate(
-        scrollY.value,
-        [0, 1],
-        [1, 0],
-        Extrapolation.CLAMP
-      )
+      opacity: 1
     }
   })
 
   const animatedTitleStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       scrollY.value,
-      [SCROLL_RANGE - 20, SCROLL_RANGE],
+      [SCROLL_RANGE - 10, SCROLL_RANGE],
       [0, 1],
       Extrapolation.CLAMP
     )
     return {
-      // opacity,
+      opacity,
       transform: [
         {
           translateY: interpolate(
@@ -388,32 +396,55 @@ function ItemDetail(props) {
       ]
     }
   })
-
+  console.log({ scrollY })
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-      <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} 
-        >
-        <Animated.View
-          style={[styles(currentTheme).headerContainer, animatedHeaderStyle]}
-        >
-          <ImageHeader image={imageUrl} />
-          {/* <HeadingComponent title={food.title} price={calculatePrice()} /> */}
-        </Animated.View>
+        {/* <Animated.View
+          style={[styles(currentTheme).headerContainer]}
+        > */}
+         
+          {/* <HeadingComponent title={food?.title} price={calculatePrice()} /> */}
+        {/* </Animated.View> */}
+
         <Animated.ScrollView
-          onScroll={scrollHandler} 
-          style={[styles().scrollViewStyle, { backgroundColor: currentTheme.themeBackground }]}
+          ref={scrollViewRef}
+          onScroll={scrollHandler}
+          style={[styles(currentTheme).scrollViewStyle, { zIndex: listZindex }]}
           scrollEventThrottle={1}
+          onScrollEndDrag={(e) => {
+            if (e.nativeEvent?.contentOffset?.y >= 70) { 
+              setListZindex(4)
+              calculatePrice()
+            }
+            else {
+              setListZindex(1)
+              calculatePrice()
+            }
+          }}
+          onMomentumScrollEnd={(e) => {
+            if (e.nativeEvent?.contentOffset?.y >= 70) { 
+              setListZindex(4) 
+              calculatePrice()
+            }
+            else {
+              setListZindex(1)
+              calculatePrice()
+            }
+          }}
           contentContainerStyle={{
-            paddingTop: HEADER_MAX_HEIGHT,
-            paddingBottom: scale(height * 0.001),
-            backgroundColor: currentTheme.themeBackground,
+            // paddingTop: HEADER_MAX_HEIGHT,
+            paddingBottom: scale(height * 0.09),
           }}
         >
-          <View style={[styles().subContainer, { backgroundColor: currentTheme.themeBackground}]}>
+          <View>
+          {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
+          <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}>
+            {food?.description}
+          </Text>
+          <HeadingComponent title={food?.title} price={calculatePrice()}  /> 
+          </View>
+          <View style={[styles(currentTheme).subContainer,]}>
             <View>
               {food?.variations?.length > 1 && (
                 <View>
@@ -423,31 +454,35 @@ function ItemDetail(props) {
                     status={t('Required')}
                   />
                   <RadioComponent
-                    options={food.variations}
+                    options={food?.variations}
                     selected={selectedVariation}
-                    onPress={onSelectVariation}
+                    onPress={(e) => {
+                      onSelectVariation(food?.variations.find((v) => v._id === e._id))
+                    }}
+                    setSelectedVariation={onSelectVariation}
+                    selectedVariation={selectedVariation}
                   />
                 </View>
               )}
-              {selectedVariation.addons.map((addon) => (
-                <View key={addon._id}>
+              {selectedVariation?.addons?.map((addon) => (
+                <View key={addon?._id}>
                   <TitleComponent
-                    title={addon.title}
-                    subTitle={addon.description}
+                    title={addon?.title}
+                    subTitle={addon?.description}
                     error={addon.error}
                     status={
-                      addon.quantityMinimum === 0
+                      addon?.quantityMinimum === 0
                         ? t('optional')
-                        : `${addon.quantityMinimum} ${t('Required')}`
+                        : `${addon?.quantityMinimum} ${t('Required')}`
                     }
                   />
-                  {renderOption(addon)}
+                  <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} />
                 </View>
               ))}
             </View>
 
             <View style={styles(currentTheme).line}></View>
-            <View style={styles(currentTheme).inputContainer} >
+            <View style={styles(currentTheme).inputContainer}>
               <TitleComponent
                 title={t('specialInstructions')}
                 subTitle={t('anySpecificPreferences')}
@@ -469,16 +504,16 @@ function ItemDetail(props) {
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether
-              itemId={food._id}
+              itemId={food?._id}
               restaurantId={restaurant}
             />
           </View>
         </Animated.ScrollView>
 
         <Animated.View
-          style={[styles(currentTheme).titleContainer, animatedTitleStyle]}
+style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding:2}, animatedTitleStyle]}
         >
-          <HeadingComponent title={food.title} price={calculatePrice()} />
+          <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>
         <View style={{ backgroundColor: currentTheme.themeBackground }}>
           <CartComponent
@@ -492,7 +527,6 @@ function ItemDetail(props) {
             backgroundColor: currentTheme.themeBackground
           }}
         />
-        </KeyboardAvoidingView>
       </View>
     </>
   )

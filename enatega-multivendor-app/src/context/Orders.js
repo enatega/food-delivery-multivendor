@@ -29,11 +29,12 @@ export const OrdersProvider = ({ children }) => {
   } = useQuery(ORDERS, {
     fetchPolicy: 'network-only',
     onError,
+    // pollInterval:2000,
     skip: !profile
   })
 
   function onError(error) {
-    console.log('error context orders', error.message)
+    console.log('error context orders', error?.message)
   }
 
   useEffect(() => {
@@ -45,40 +46,39 @@ export const OrdersProvider = ({ children }) => {
     try {
       const unsubscribeOrders = subscribeToMoreOrders({
         document: SUBSCRIPTION_ORDERS,
-        variables: { userId: profile._id },
+        variables: { userId: profile?._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev
-          const { _id } = subscriptionData.data.orderStatusChanged.order
-          if (subscriptionData.data.orderStatusChanged.origin === 'new') {
-            if (prev.orders.findIndex(o => o._id === _id) > -1) return prev
+          if (!subscriptionData?.data) return prev
+          const { _id } = subscriptionData?.data?.orderStatusChanged?.order
+          if (subscriptionData?.data?.orderStatusChanged?.origin === 'new') {
+            if (prev?.orders?.findIndex(o => o?._id === _id) > -1) return prev
             return {
               orders: [
-                subscriptionData.data.orderStatusChanged.order,
+                subscriptionData?.data?.orderStatusChanged?.order,
                 ...prev.orders
               ]
             }
-          }
-          else if (subscriptionData.data.orderStatusChanged.origin === 'update') {
+          } else if (subscriptionData?.data?.orderStatusChanged?.origin === 'update') {
             return {
               orders: [
-                ...prev.orders.filter((order) => order._id !== subscriptionData.data.orderStatusChanged.order._id),
-                subscriptionData.data.orderStatusChanged.order
+                ...prev.orders.filter((order) => order?._id !== subscriptionData?.data?.orderStatusChanged?.order?._id),
+                subscriptionData?.data?.orderStatusChanged?.order
               ]
-            }     
+            }
           }
           return prev
         }
       })
       client.onResetStore(unsubscribeOrders)
     } catch (error) {
-      console.log('error subscribing order', error.message)
+      console.log('error subscribing order', error?.message)
     }
   }
 
   const fetchMoreOrdersFunc = () => {
     if (networkStatusOrders === 7) {
       fetchMoreOrders({
-        variables: { offset: dataOrders.orders.length + 1 }
+        variables: { offset: dataOrders?.orders?.length + 1 }
       })
     }
   }
@@ -88,7 +88,7 @@ export const OrdersProvider = ({ children }) => {
       value={{
         loadingOrders: loadingOrders && calledOrders,
         errorOrders,
-        orders: dataOrders && dataOrders.orders ? dataOrders.orders : [],
+        orders: dataOrders && dataOrders?.orders ? dataOrders?.orders : [],
         reFetchOrders,
         fetchMoreOrdersFunc,
         networkStatusOrders

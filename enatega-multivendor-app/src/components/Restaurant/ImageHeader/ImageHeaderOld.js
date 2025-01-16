@@ -18,7 +18,7 @@ import {
 import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
@@ -30,19 +30,21 @@ function ImageTextCenterHeader(props, ref) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const aboutObject = {
     latitude: props.restaurant ? props.restaurant.location.coordinates[1] : '',
     longitude: props.restaurant ? props.restaurant.location.coordinates[0] : '',
     address: props.restaurant ? props.restaurant.address : '',
     restaurantName: props.restaurantName,
     restaurantImage: props.restaurantImage,
-    deliveryTime: props.restaurant ? props.restaurant.deliveryTime : '...',
-    average: props.restaurant ? props.restaurant.reviewData.ratings : '...',
-    total: props.restaurant ? props.restaurant.reviewData.total : '...',
-    reviews: props.restaurant ? props.restaurant.reviewData.reviews : '...',
-    isAvailable: props.restaurant ? props.restaurant.isAvailable : true,
-    openingTimes: props.restaurant ? props.restaurant.openingTimes : [],
+    deliveryTime: props.restaurant ? props.restaurant?.deliveryTime : '...',
+    average: props.restaurant ? props?.restaurant?.reviewData?.ratings : '...',
+    total: props.restaurant ? props?.restaurant?.reviewData?.total : '...',
+    reviews: props.restaurant
+      ? (props?.restaurant?.reviewData?.reviews ?? '...')
+      : '...',
+    isAvailable: props.restaurant ? props?.restaurant?.isAvailable : true,
+    openingTimes: props.restaurant ? props?.restaurant?.openingTimes : [],
     isOpen: () => {
       if (!props.restaurant) return true
       const date = new Date()
@@ -50,10 +52,10 @@ function ImageTextCenterHeader(props, ref) {
       const hours = date.getHours()
       const minutes = date.getMinutes()
       const todaysTimings = props.restaurant.openingTimes.find(
-        o => o.day === DAYS[day]
+        (o) => o.day === DAYS[day]
       )
       const times = todaysTimings.times.filter(
-        t =>
+        (t) =>
           hours >= Number(t.startTime[0]) &&
           minutes >= Number(t.startTime[1]) &&
           hours <= Number(t.endTime[0]) &&
@@ -72,7 +74,8 @@ function ImageTextCenterHeader(props, ref) {
           height: verticalScale(40),
           justifyContent: 'center',
           alignItems: 'center'
-        }}>
+        }}
+      >
         <TextError text={t('noItemsExists')} />
       </View>
     )
@@ -85,15 +88,17 @@ function ImageTextCenterHeader(props, ref) {
           height: props.height,
           backgroundColor: props.loading ? 'transparent' : 'null'
         }
-      ]}>
+      ]}
+    >
       <Animated.View
         style={{
           height: Animated.sub(props.height, TOP_BAR_HEIGHT),
           backgroundColor: 'white'
-        }}>
+        }}
+      >
         <Animated.Image
-          resizeMode="cover"
-          source={{ uri: aboutObject.restaurantImage }}
+          resizeMode='cover'
+          source={{ uri: aboutObject?.restaurantImage }}
           style={[
             styles().flex,
             {
@@ -118,9 +123,10 @@ function ImageTextCenterHeader(props, ref) {
                     width: scale(60)
                   }
                 ]}
-                onPress={() => navigation.goBack()}>
+                onPress={() => navigation.goBack()}
+              >
                 <AnimatedIon
-                  name="arrow-back"
+                  name='arrow-back'
                   style={{
                     color: props.black,
                     fontSize: props.iconSize
@@ -135,7 +141,8 @@ function ImageTextCenterHeader(props, ref) {
                     opacity: Animated.sub(1, props.opacity),
                     marginBottom: props.headerTextFlex
                   }
-                ]}>
+                ]}
+              >
                 {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
               </Animated.Text>
               {!props.loading && (
@@ -160,10 +167,11 @@ function ImageTextCenterHeader(props, ref) {
                         },
                         tab: true
                       })
-                    }}>
+                    }}
+                  >
                     {
                       <AnimatedIon
-                        name="ios-information-circle-outline"
+                        name='ios-information-circle-outline'
                         style={{
                           color: props.black,
                           fontSize: props.iconSize
@@ -176,7 +184,8 @@ function ImageTextCenterHeader(props, ref) {
             </View>
           </View>
           <Animated.View
-            style={[styles().fixedView, { opacity: props.opacity }]}>
+            style={[styles().fixedView, { opacity: props.opacity }]}
+          >
             <View style={styles().fixedText}>
               <TextDefault
                 H4
@@ -184,7 +193,8 @@ function ImageTextCenterHeader(props, ref) {
                 Center
                 textColor={currentTheme.fontWhite}
                 numberOfLines={1}
-                ellipsizeMode="tail">
+                ellipsizeMode='tail'
+              >
                 {aboutObject.restaurantName.length > 12
                   ? `${aboutObject.restaurantName.slice(0, 15)}...`
                   : aboutObject.restaurantName}
@@ -194,8 +204,9 @@ function ImageTextCenterHeader(props, ref) {
                 <View style={styles(currentTheme).deliveryBox}>
                   <TextDefault
                     style={[alignment.PRxSmall, alignment.PLxSmall]}
-                    textColor="white"
-                    bold>
+                    textColor='white'
+                    bold
+                  >
                     {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
                   </TextDefault>
                 </View>
@@ -209,16 +220,18 @@ function ImageTextCenterHeader(props, ref) {
                       restaurantObject: { ...aboutObject, isOpen: null },
                       tab: false
                     })
-                  }}>
+                  }}
+                >
                   <MaterialIcons
-                    name="star"
+                    name='star'
                     size={scale(15)}
                     color={currentTheme.white}
                   />
                   <TextDefault
                     style={[alignment.PRxSmall, alignment.PLxSmall]}
-                    textColor="white"
-                    bold>
+                    textColor='white'
+                    bold
+                  >
                     {aboutObject.average} ({aboutObject.total})
                   </TextDefault>
                 </TouchableOpacity>
@@ -244,12 +257,14 @@ function ImageTextCenterHeader(props, ref) {
                 props.selectedLabel === index
                   ? styles(currentTheme).activeHeader
                   : null
-              }>
+              }
+            >
               <RectButton
                 activeOpacity={0.05}
                 rippleColor={currentTheme.rippleColor}
                 onPress={() => props.changeIndex(index)}
-                style={styles(currentTheme).headerContainer}>
+                style={styles(currentTheme).headerContainer}
+              >
                 <View style={styles().navbarTextContainer}>
                   <TextDefault
                     style={
@@ -264,7 +279,8 @@ function ImageTextCenterHeader(props, ref) {
                     }
                     center
                     uppercase
-                    small>
+                    small
+                  >
                     {item.title}
                   </TextDefault>
                 </View>

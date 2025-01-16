@@ -11,7 +11,7 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     containerInfo: {
       width: '100%',
@@ -20,16 +20,16 @@ const styles = (props = null) =>
     formSubContainer: {
       borderRadius: scale(18),
       width: '95%',
-      backgroundColor: props !== null ? props.radioOuterColor : 'transparent',
+      backgroundColor: props !== null ? props?.radioOuterColor : 'transparent',
       alignSelf: 'center',
       shadowOffset: { width: 2, height: 4 },
-      shadowColor: props !== null ? props.shadowColor : 'transparent',
+      shadowColor: props !== null ? props?.shadowColor : 'transparent',
       shadowOpacity: 0.1,
       shadowRadius: 10,
       elevation: 15,
       borderWidth:
-        props !== null && props.themeBackground !== '#FAFAFA' ? 2 : 0,
-      borderColor: props !== null ? props.shadowColor : 'transparent',
+        props !== null && props?.themeBackground !== '#FAFAFA' ? 2 : 0,
+      borderColor: props !== null ? props?.shadowColor : 'transparent',
       ...alignment.MTsmall,
       ...alignment.Pmedium
     },
@@ -85,7 +85,7 @@ const styles = (props = null) =>
     },
     // Model for password changing
     modalContainer: {
-      backgroundColor: props !== null ? props.themeBackground : '#FFF',
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF',
       borderRadius: scale(14),
       justifyContent: 'center',
       alignItems: 'center',
@@ -99,7 +99,7 @@ const styles = (props = null) =>
       width: '100%',
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
-      backgroundColor: props !== null ? props.radioOuterColor : 'white'
+      backgroundColor: props !== null ? props?.radioOuterColor : 'white'
     },
     btnContainer: {
       width: '30%',
@@ -111,8 +111,8 @@ const styles = (props = null) =>
       ...alignment.PBxSmall
     },
     titleContainer: {
-      backgroundColor: props !== null ? props.themeBackground : 'white',
-      color: props !== null ? props.darkBgFont : 'white',
+      backgroundColor: props !== null ? props?.themeBackground : 'white',
+      color: props !== null ? props?.darkBgFont : 'white',
       padding: scale(25),
       fontSize: scale(20),
       fontWeight: '600'

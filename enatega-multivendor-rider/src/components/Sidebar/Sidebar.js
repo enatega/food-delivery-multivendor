@@ -7,11 +7,11 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import colors from '../../utilities/colors'
 import rider from '../../assets/rider.png'
 import useSidebar from './useSidebar'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function SidebBar() {
   const { logout, isEnabled, toggleSwitch, datas } = useSidebar()
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <ImageBackground
       source={rider}
@@ -62,7 +62,7 @@ function SidebBar() {
             </View>
           ))}
         </View>
-        <View style={[styles.opacity,{ paddingBottom:20}]}>
+        <View style={[styles.opacity, { flex: 2 }]}>
           <NavItem
             onPress={() => logout()}
             icon="sign-out"

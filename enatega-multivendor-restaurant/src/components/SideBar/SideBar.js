@@ -17,7 +17,7 @@ import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { useAccount } from '../../ui/hooks'
 import { Image } from 'react-native-elements'
 import useNotification from '../../ui/hooks/useNotification'
-import { PRODUCT_URL, ABOUT_URL } from '../../utilities'
+import { PRODUCT_URL, ABOUT_URL, ADMIN_URL, PRIVACY_URL } from '../../utilities'
 import { useTranslation } from 'react-i18next'
 import Constants from 'expo-constants'
 
@@ -185,6 +185,26 @@ export default function SideBar() {
             style={styles.logout}
             activeOpacity={0.8}
             onPress={() =>
+              Linking.canOpenURL(ADMIN_URL).then(() => {
+                Linking.openURL(ADMIN_URL)
+              })
+            }>
+            <View style={styles.icon}>
+              <Icon
+                type="font-awesome"
+                color="white"
+                name="dashboard"
+                size={26}
+              />
+            </View>
+            <TextDefault H4 bolder style={styles.text}>
+              {t('dashboard')}
+            </TextDefault>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.logout}
+            activeOpacity={0.8}
+            onPress={() =>
               Linking.canOpenURL(PRODUCT_URL).then(() => {
                 Linking.openURL(PRODUCT_URL)
               })
@@ -221,7 +241,7 @@ export default function SideBar() {
               {t('privacyPolicy')}
             </TextDefault>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.logout}
             activeOpacity={0.8}
             onPress={() =>
@@ -240,7 +260,7 @@ export default function SideBar() {
             <TextDefault H4 bolder style={styles.text}>
               {t('aboutUs')}
             </TextDefault>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
         </View>
         <View style={styles.lowerContainer}>

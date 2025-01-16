@@ -7,13 +7,13 @@ const navigationOptions = props => ({
   // eslint-disable-next-line react/display-name
   headerLeft: () => (
     // eslint-disable-next-line react/react-in-jsx-scope
-    <LeftButton iconColor={props.iconColor} icon="close" />
+    <LeftButton iconColor={props?.iconColor} icon="close" />
   ),
   headerStyle: {
     shadowOffset: {
       height: 0
     },
-    backgroundColor: props.backColor
+    backgroundColor: props?.backColor
   }
 })
 export default navigationOptions

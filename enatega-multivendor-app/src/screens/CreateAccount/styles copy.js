@@ -10,7 +10,7 @@ const styles = (props = null) =>
     },
     mainContainer: {
       alignItems: 'center',
-      backgroundColor: props !== null ? props.buttonText : 'transparent'
+      backgroundColor: props !== null ? props?.buttonText : 'transparent'
     },
     subContainer: {
       display: 'flex',
@@ -22,7 +22,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     whiteColor: {
-      backgroundColor: props !== null ? props.buttonText : 'transparent'
+      backgroundColor: props !== null ? props?.buttonText : 'transparent'
     },
     crossIcon: {
       width: scale(14),
@@ -44,7 +44,7 @@ const styles = (props = null) =>
     },
     buttonBackground: {
       width: '100%',
-      backgroundColor: props !== null ? props.black : '#000',
+      backgroundColor: props !== null ? props?.black : '#000',
       alignItems: 'center'
     },
     appleBtn: {
@@ -59,7 +59,7 @@ const styles = (props = null) =>
     line: {
       flex: 1,
       height: 1,
-      backgroundColor: props !== null ? props.horizontalLine : '#9B9A9A'
+      backgroundColor: props !== null ? props?.horizontalLine : '#9B9A9A'
     }
   })
 export default styles

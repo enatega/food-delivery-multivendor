@@ -33,8 +33,8 @@ function Item(props) {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const { profile } = useContext(UserContext)
-  const heart = profile ? profile.favourite.includes(props.item._id) : false
-  const item = props.item
+  const heart = profile ? profile.favourite.includes(props?.item._id) : false
+  const item = props?.item
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -48,7 +48,7 @@ function Item(props) {
     const day = date.getDay()
     const hours = date.getHours()
     const minutes = date.getMinutes()
-    const todaysTimings = openingTimes.find(o => o.day === DAYS[day])
+    const todaysTimings = openingTimes?.find(o => o.day === DAYS[day])
     if (todaysTimings === undefined) return false
     const times = todaysTimings.times.filter(
       t =>
@@ -65,7 +65,7 @@ function Item(props) {
   }
   return (
     <TouchableOpacity
-      style={{ padding: scale(10) }}
+      // style={{ padding: scale(10), backgroundColor: 'green' }}
       activeOpacity={1}
       onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View key={item._id} style={styles().mainContainer}>
@@ -73,7 +73,7 @@ function Item(props) {
           <View style={styles().imageContainer}>
             <Image
               resizeMode="cover"
-              source={{ uri: item.image }}
+              source={{ uri: item?.image }}
               style={styles().img}
             />
             <View style={styles().overlayRestaurantContainer}>
@@ -159,15 +159,19 @@ function Item(props) {
                 </TextDefault>
               </View>
             </View>
-            <TextDefault
-              style={styles().offerCategoty}
-              numberOfLines={1}
-            bold
-            Normal
-            textColor={currentTheme.fontNewColor}
-            >
-              {item?.tags?.join(',')}
-            </TextDefault>
+            {
+              item?.tags?.length>0 && (
+                <TextDefault
+                  style={styles().offerCategoty}
+                  numberOfLines={1}
+                bold
+                Normal
+                textColor={currentTheme.fontNewColor}
+                >
+                  {item?.tags?.join(',')}
+                </TextDefault>
+              )
+            }
             <View style={styles().priceRestaurant}>
               <View
                 style={{
@@ -204,7 +208,7 @@ function Item(props) {
                 numberOfLines={1}
                 bold
                 Normal>
-                  {configuration.currencySymbol + ' ' + item.tax}{' '}
+                  {configuration.currencySymbol + '' + item.minimumOrder}{' '}
                 </TextDefault>
               </View>
             </View>

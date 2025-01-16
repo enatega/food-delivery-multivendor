@@ -22,18 +22,19 @@ function StripeCheckout(props) {
   const [loading, loadingSetter] = useState(true)
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
-  const { _id } = props.route.params
+  const { _id } = props?.route.params
+  console.log('_id => ', JSON.stringify(props?.route, null, 3))
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       title: t('stripeCheckout')
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   function onClose(flag) {
     // showMessage here
-    props.navigation.goBack()
+    props?.navigation.goBack()
   }
   useEffect(() => {
     async function Track() {
@@ -50,7 +51,7 @@ function StripeCheckout(props) {
       })
       const order = result.data.orders.find(order => order.orderId === _id)
       await clearCart()
-      props.navigation.reset({
+      props?.navigation.reset({
         routes: [
           { name: 'Main' },
           {
@@ -60,7 +61,7 @@ function StripeCheckout(props) {
         ]
       })
     } else if (data.url.includes('stripe/cancel')) {
-      props.navigation.goBack()
+      props?.navigation.goBack()
       // goBack on Payment Screen
     }
   }

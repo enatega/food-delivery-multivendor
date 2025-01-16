@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import { View, TouchableOpacity, FlatList } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { EvilIcons, MaterialIcons } from '@expo/vector-icons'
@@ -25,14 +25,15 @@ const SELECT_ADDRESS = gql`
 
 function CartAddresses(props) {
   const Analytics = analytics()
-
+  const { t, i18n } = useTranslation()
   const inset = useSafeAreaInsets()
   const { location, setLocation } = useContext(LocationContext)
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-  const { t } = useTranslation()
+  const currentTheme = { isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [mutate] = useMutation(SELECT_ADDRESS, { onError })
+  const [selectedAddress, setSelectedAddress] = useState(null)
+
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -75,6 +76,25 @@ function CartAddresses(props) {
     }
     Track()
   }, [])
+
+  useEffect(() => {
+    if (profile?.addresses) {
+      // Find the last saved address
+      const lastSavedAddress = profile?.addresses?.slice().reverse().find(address => address.selected)
+      if (lastSavedAddress) {
+        setSelectedAddress(lastSavedAddress)
+        setLocation({
+          _id: lastSavedAddress._id,
+          label: lastSavedAddress.label,
+          latitude: Number(lastSavedAddress.location.coordinates[1]),
+          longitude: Number(lastSavedAddress.location.coordinates[0]),
+          deliveryAddress: lastSavedAddress.deliveryAddress,
+          details: lastSavedAddress.details
+        })
+      }
+    }
+  }, [profile, setLocation])
+
   function onError(error) {
     console.log(error)
   }
@@ -89,88 +109,17 @@ function CartAddresses(props) {
       details: address.details
     })
     mutate({ variables: { id: address._id } })
+    setSelectedAddress(address)
+    console.log("address._id=>>", address?._id)
     props.navigation.goBack()
   }
+
 
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).cartAddress]}>
-        {!location._id && (
-          <View
-            style={{
-              backgroundColor: currentTheme.themeBackground
-            }}
-          >
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles(currentTheme).containerSpace]}
-              onPress={() => {
-                const latitude = location.latitude
-                const longitude = location.longitude
-                props.navigation.navigate('AddNewAddress', {
-                  longitude: +longitude,
-                  latitude: +latitude
-                })
-              }}
-            >
-              <View style={styles(currentTheme).width100}>
-                <View style={[styles().titleAddress, styles().width100]}>
-                  <View style={[styles().homeIcon]}>
-                    <RadioButton
-                      size={13}
-                      outerColor={currentTheme.radioOuterColor}
-                      innerColor={currentTheme.radioColor}
-                      animation={'bounceIn'}
-                      isSelected={true}
-                    />
-                  </View>
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={{ width: '70%' }}
-                    H5
-                    bold
-                    left
-                  >
-                    {t(location.label)}
-                  </TextDefault>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={styles().width10}
-                    onPress={() =>{
-                        const latitude = location.latitude
-                        const longitude = location.longitude
-                        props.navigation.navigate('AddNewAddress', {
-                          longitude: +longitude,
-                          latitude: +latitude
-                        })
-                      }
-                    }
-                  >
-                    <TextDefault
-                      textColor={currentTheme.darkBgFont}
-                      small
-                      bolder
-                    >
-                      {t('save')}
-                    </TextDefault>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ ...alignment.MTxSmall }}></View>
-                <View style={[styles().addressDetail]}>
-                  <TextDefault
-                    line={4}
-                    textColor={currentTheme.fontSecondColor}
-                    bold
-                  >
-                    {location.deliveryAddress}
-                  </TextDefault>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
         <FlatList
-          data={profile?.addresses}
+          data={profile?.addresses?.slice().reverse()}
           keyExtractor={(item) => item._id}
           contentContainerStyle={{ flexGrow: 1 }}
           ItemSeparatorComponent={() => <View />}
@@ -185,7 +134,7 @@ function CartAddresses(props) {
                 }}
               >
                 <View style={styles().width100}>
-                  <View style={[styles().titleAddress, styles().width100]}>
+                  <View style={[styles(currentTheme).titleAddress, styles().width100]}>
                     <View style={[styles().homeIcon]}>
                       <RadioButton
                         size={13}
@@ -200,9 +149,10 @@ function CartAddresses(props) {
                     </View>
                     <TextDefault
                       textColor={currentTheme.fontMainColor}
-                      style={{ width: '70%', textAlign: 'left' }}
+                      style={{ width: '70%', textAlign: currentTheme?.isRTL ? 'right' : 'left' }}
                       H5
                       bold
+                      isRTL
                     >
                       {t(address.label)}
                     </TextDefault>
@@ -233,22 +183,46 @@ function CartAddresses(props) {
                       line={4}
                       textColor={currentTheme.fontSecondColor}
                       bold
+                      isRTL
                     >
                       {address.deliveryAddress}
                     </TextDefault>
-                    <TextDefault
+                    {/* <TextDefault
                       line={3}
                       textColor={currentTheme.fontSecondColor}
                       bold
                     >
                       {address.details}
-                    </TextDefault>
+                    </TextDefault> */}
                   </View>
                 </View>
               </TouchableOpacity>
             </View>
           )}
         />
+        {/* {!location._id && ( */}
+          <View>
+            <View style={styles(currentTheme).containerButton}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles(currentTheme).addButton}
+                onPress={() => {
+                  const latitude = location.latitude
+                  const longitude = location.longitude
+                  props.navigation.navigate('AddNewAddress', {
+                    longitude: +longitude,
+                    latitude: +latitude,
+                    prevScreen: 'CartAddress'
+                  })
+                }}
+              >
+                <TextDefault H5 bold>
+                  {t('addAddress')}
+                </TextDefault>
+              </TouchableOpacity>
+            </View>
+          </View>
+        {/* )} */}
       </View>
     </>
   )

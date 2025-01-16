@@ -108,7 +108,7 @@ function Settings(props) {
   }, [])
 
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
@@ -143,7 +143,7 @@ function Settings(props) {
     })
     selectLanguage()
     checkPermission()
-  }, [props.navigation, languageName, themeContext.ThemeValue])
+  }, [props?.navigation, languageName, themeContext.ThemeValue])
 
   const _handleAppStateChange = async nextAppState => {
     if (nextAppState === 'active') {

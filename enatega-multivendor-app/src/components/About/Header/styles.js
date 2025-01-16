@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
       width: '100%',
-      backgroundColor: props != null ? props.themeBackground : 'transparent',
+      backgroundColor: props != null ? props?.themeBackground : 'transparent',
       ...alignment.PLmedium,
       ...alignment.PRmedium,
       ...alignment.PTsmall
@@ -56,7 +56,7 @@ const styles = (props = null) =>
       gap: scale(3)
     },
     backArrow: {
-      color: props != null ? props.black : '#FFF',
+      color: props != null ? props?.black : '#FFF',
       fontSize: scale(20),
       backgroundColor: 'white',
       paddingLeft: scale(15),

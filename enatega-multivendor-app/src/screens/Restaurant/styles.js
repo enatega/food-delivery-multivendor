@@ -1,5 +1,5 @@
 import { scale, verticalScale } from '../../utils/scaling'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { textStyles } from '../../utils/textStyles'
 import { theme } from '../../utils/themeColors'
@@ -8,7 +8,9 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props?.themeBackground : 'white',
+      marginTop:Platform.OS==='android'?14:0,
+      // paddingTop:Platform.OS==='ios'?6:0
     },
     navbarContainer: {
       paddingBottom: 0,
@@ -21,20 +23,30 @@ const styles = (props = null) =>
       },
       shadowOpacity: 0.6,
       shadowRadius: verticalScale(2),
-      zIndex: 1
+      zIndex: 1,
     },
     sectionHeader:{
-      backgroundColor: props != null ? props.themeBackground : '#fff',
+      backgroundColor: props != null ? props?.themeBackground : '#fff',
+      marginBottom:5
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
       fontSize: scale(18),
       fontWeight: '600',
-      ...alignment.PLmedium,
       ...alignment.PTlarge,
+      paddingHorizontal: scale(15)
+    },
+    sectionSubHeaderText: {
+      textTransform: 'capitalize',
+      fontSize: scale(14),
+      marginLeft:20,
+      fontWeight: '400',
+      ...alignment.PTlarge,
+      paddingHorizontal: scale(10),
+      
     },
     restaurantItems:{
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props?.themeBackground : 'white'
 
     },
     popularItemCards: {
@@ -49,34 +61,36 @@ const styles = (props = null) =>
     dealSection:{
       ...alignment.PLsmall,
       ...alignment.PRsmall,
+      width:'100%', height:'auto',
+      backgroundColor:props?.themeBackground??'black',
     },
     deal: {
       width: '80%',
-      flexDirection: 'row',
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      backgroundColor: props != null ? props?.themeBackground : 'white',
       alignItems: 'center',
       gap: scale(5)
     },
     searchDealSection: {
       // position: 'relative',
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: props != null ? props?.themeBackground : 'white',
       paddingVertical: scale(10),
       ...alignment.PRmedium,
       ...alignment.PLsmall
     },
     dealDescription: {
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: props != null ? props?.themeBackground : 'white',
       ...alignment.PBsmall,
       ...alignment.PRxSmall
     },
     dealPrice: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       flexWrap: 'wrap',
       overflow: 'hidden'
     },
     priceText: {
-      color: props != null ? props.darkBgFont : 'white',
-      fontSize: 15,
+      color: props != null ? props?.darkBgFont : 'white',
+      fontSize: 13,
       paddingTop: scale(10),
       maxWidth: '100%',
       ...alignment.MRxSmall
@@ -87,13 +101,13 @@ const styles = (props = null) =>
       paddingTop: scale(5),
       maxWidth: '100%',
       ...alignment.MRxSmall,
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props?.themeBackground : 'white'
     },
     addToCart: {
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
+      backgroundColor: props !== null ? props?.newFontcolor :'#f0f0f0',
 
       justifyContent: 'center',
       alignItems: 'center',
@@ -103,17 +117,17 @@ const styles = (props = null) =>
     sectionSeparator: {
       width: '100%',
       height: scale(15),
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props != null ? props?.themeBackground : 'white'
     },
 
     buttonContainer: {
       width: '100%',
       height: '10%',
-      backgroundColor: props !== null ? props.themeBackground : 'black',
+      backgroundColor: props !== null ? props?.themeBackground : 'black',
       justifyContent: 'center',
       alignItems: 'center',
       elevation: 12,
-      shadowColor: props !== null ? props.shadowColor : 'black',
+      shadowColor: props !== null ? props?.shadowColor : 'black',
       shadowOffset: {
         width: 0,
         height: -verticalScale(3)
@@ -126,7 +140,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: scale(40),
-      backgroundColor: props !== null ? props.main : 'black',
+      backgroundColor: props !== null ? props?.main : 'black',
       height: '75%',
       width: '95%',
       ...alignment.PLsmall,
@@ -145,7 +159,7 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     buttonLeftCircle: {
-      backgroundColor: props != null ? props.black : 'black',
+      backgroundColor: props != null ? props?.black : 'black',
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -154,7 +168,7 @@ const styles = (props = null) =>
       ...textStyles.Center,
       ...textStyles.Smaller,
       backgroundColor: 'transparent',
-      color: props != null ? props.white : 'white'
+      color: props != null ? props?.white : 'white'
     },
     triangleCorner: {
       position: 'absolute',
@@ -167,7 +181,7 @@ const styles = (props = null) =>
       borderLeftWidth: scale(25),
       borderTopWidth: scale(20),
       borderLeftColor: 'transparent',
-      borderTopColor: props != null ? props.main : 'red'
+      borderTopColor: props != null ? props?.main : 'red'
     },
     tagText: {
       width: scale(15),
@@ -178,11 +192,11 @@ const styles = (props = null) =>
       textAlign: 'center'
     }, 
     popularHeading: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: 6,
       ...alignment.PTlarge,
-      ...alignment.PLmedium,
+      paddingHorizontal: scale(15)
     },
     popularText: {
       textTransform: 'capitalize',

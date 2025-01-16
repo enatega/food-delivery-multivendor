@@ -18,8 +18,8 @@ const styles = (props = null) =>
   
     modalContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : '#FAFAFA',
-      borderColor: props !== null ? props.tagColor : '#FAFFAA',
+      backgroundColor: props !== null ? props?.cardBackground : '#FAFAFA',
+      borderColor: props !== null ? props?.customBorder : 'transparent',
       ...alignment.PTmedium,
       ...alignment.PRlarge,
       ...alignment.PLlarge
@@ -31,7 +31,7 @@ const styles = (props = null) =>
       ...alignment.MTsmall
     },
     locationIcon:{
-      backgroundColor: props != null ? props.iconBackground : '#E5E7EB',
+      backgroundColor: props != null ? props?.themeBackground : '#E5E7EB',
       width: 28,
       height: 28,
       borderRadius: 30,

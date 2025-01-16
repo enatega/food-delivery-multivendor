@@ -17,7 +17,7 @@ export const en = {
     'Age does not diminish the extreme disappointment of having a scoop of ice cream fall from the cone',
   getStarted: 'Get Started!',
   welcome:
-    "Welcome to Enatega, sometimes all you need is love. But a little food now and then doesn't hurt.",
+    "Welcome to Yalla, sometimes all you need is love. But a little food now and then doesn't hurt.",
   loginBtn: 'Login',
   registerBtn: 'Register',
   name: 'Name',
@@ -118,7 +118,7 @@ export const en = {
   available: 'Available',
   notAvailable: 'Not Available',
   myorders: 'My Orders',
-  ///////////////////
+  /// ////////////////
   updating: 'Please wait while app is updating',
   orderID: ' Order ID:',
   orderAmount: 'Order Amount',
@@ -200,7 +200,7 @@ export const en = {
   emptyUsernameError: 'Username is required!',
   emptyPasswordError: 'Password is required!',
   loginFlashMsg: 'Logged in',
-  enategaCash: 'Enatega Cash',
+  enategaCash: 'Yalla Cash',
   ASSIGNED: 'ASSIGNED',
   PICKED: 'PICKED',
   contactCustomer: 'Contact Customer',
@@ -208,5 +208,8 @@ export const en = {
   withdrawAmountError:
     'Withdraw amount must be less than or equal to wallet amount!',
   amountGreater: 'Amount must be grater than',
-  amountReq: 'Amount is required!'
+  amountReq: 'Amount is required!',
+  CustomerPhoneNumber: 'Customer phone number',
+  CustomerName: 'Customer Name',
+  continue: 'Continue'
 }

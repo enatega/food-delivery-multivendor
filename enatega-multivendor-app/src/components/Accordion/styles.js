@@ -8,15 +8,15 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'column',
       borderWidth: 1,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderColor: props !== null ? props?.customBorder : '#E5E7EB',
       borderRadius: scale(8),
-      backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
+      backgroundColor: props !== null ? props?.cardBackground : '#F3F4F6',
       // ...alignment.Msmall,
       ...alignment.Psmall,
     },
     header: {
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       gap: 10
     },

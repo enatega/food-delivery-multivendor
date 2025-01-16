@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
-import {  Image, TouchableOpacity, View } from 'react-native'
-import {  Feather } from '@expo/vector-icons'
+import { Image, TouchableOpacity, View } from 'react-native'
+import { Feather } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
@@ -12,25 +12,25 @@ import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import { useTranslation } from 'react-i18next'
 
 const ReorderItem = props => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const imageUrl =
     props?.itemImage && props?.itemImage.trim() !== ''
-      ? props.itemImage
+      ? props?.itemImage
       : IMAGE_LINK
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
 
   return (
-    <TouchableOpacity style={styles().itemContainer} onPress={props.onPress} activeOpacity={0.7}>
+    <TouchableOpacity style={styles(currentTheme).itemContainer} onPress={props.onPress} activeOpacity={0.7}>
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
           justifyContent: 'flex-start',
           alignItems: 'center',
           gap: scale(7)
@@ -47,7 +47,8 @@ const ReorderItem = props => {
             numberOfLines={1}
             textColor={currentTheme.fontFourthColor}
             bolder
-            H5>
+            H5
+          isRTL>
             {props?.dealName?.length > 20
               ? props.dealName.substring(0, 17) + '...'
               : props.dealName}
@@ -59,11 +60,11 @@ const ReorderItem = props => {
                 <TouchableOpacity
                   onPress={toggleDropdown}
                   activeOpacity={1}
-                  style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center' }}>
                   <TextDefault
-                    style={{ marginRight: scale(5) }}
                     textColor={currentTheme.secondaryText}
-                    Normal>
+                    Normal
+                  isRTL>
 
                     {props?.optionsTitle?.slice(0, 3).length} {t('additionalItems')}
 
@@ -80,7 +81,8 @@ const ReorderItem = props => {
                       <TextDefault
                         key={index}
                         textColor={currentTheme.secondaryText}
-                        Normal>
+                        Normal
+                      isRTL>
                         {item}
                       </TextDefault>
                     ))}
@@ -92,7 +94,7 @@ const ReorderItem = props => {
 
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
               gap: scale(8),
               alignItems: 'center',
               marginTop: scale(4)
@@ -101,7 +103,8 @@ const ReorderItem = props => {
               numberOfLines={1}
               textColor={currentTheme.fontFourthColor}
               bolder
-              Normal>
+              Normal
+            isRTL>
               {configuration.currencySymbol}
               {parseFloat(props.dealPrice).toFixed(2)}
             </TextDefault>
@@ -111,7 +114,7 @@ const ReorderItem = props => {
       <CheckboxBtn
         checked={props.checked}
         onPress={props.onPress}
-        />
+      />
     </TouchableOpacity>
   )
 }

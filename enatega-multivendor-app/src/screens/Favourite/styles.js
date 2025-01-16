@@ -8,14 +8,17 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainerEmpty: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     container: {
-      backgroundColor: props !== null ? props.newheaderBG : 'transparent'
+      backgroundColor: props !== null ? props?.newheaderBG : 'transparent'
     },
     contentContainer: {
+      backgroundColor: props !== null ? props?.newheaderBG : 'white',
       flexGrow: 1,
-      ...alignment.PBsmall
+      ...alignment.PBsmall,
+      gap: 16,
+      ...alignment.Pmedium
     },
     subContainerImage: {
       flex: 1,
@@ -39,7 +42,7 @@ const styles = (props = null) =>
     emptyButton: {
       width: '60%',
       height: scale(40),
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props?.buttonBackground : 'transparent',
       borderRadius: scale(10),
       justifyContent: 'center',
       alignItems: 'center',

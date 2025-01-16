@@ -508,7 +508,7 @@ import {
               //   <View style={styles(currentTheme).listSeperator} />
               // )}
               // SectionSeparatorComponent={props => {
-              //   if (!props.leadingItem) return null
+              //   if (!props?.leadingItem) return null
               //   return <View style={styles(currentTheme).sectionSeparator} />
               // }}
               renderSectionHeader={({ section: { title } }) => {
@@ -563,7 +563,7 @@ import {
                               width: scale(60),
                               borderRadius: 30
                             }}
-                            source={{ uri: item.image }}
+                            source={{ uri: item?.image }}
                           />
                         ) : null}
                         <View style={styles(currentTheme).flex}>

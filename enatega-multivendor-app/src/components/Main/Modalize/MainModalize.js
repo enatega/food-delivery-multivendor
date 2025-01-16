@@ -50,7 +50,7 @@ const MainModalize = ({
               activeOpacity={0.7}
               onPress={() => setAddressLocation(address)}
             >
-              <View style={styles().addressSubContainer}>
+              <View style={styles(currentTheme).addressSubContainer}>
                 <View style={[styles(currentTheme).homeIcon]}>
                   {addressIcons[address.label]
                     ? React.createElement(addressIcons[address.label], {
@@ -69,20 +69,19 @@ const MainModalize = ({
                   </TextDefault>
                 </View>
               </View>
+              
               <View style={styles(currentTheme).addressTextContainer}>
-                <View style={styles(currentTheme).addressDetail}>
                   <TextDefault
-                    style={{ ...alignment.PLlarge }}
+                    // style={{ ...alignment.PLlarge }}
                     textColor={currentTheme.fontSecondColor}
                     small
                   >
-                    {address.deliveryAddress}
+                    {address?.deliveryAddress}
                   </TextDefault>
-                </View>
               </View>
             </TouchableOpacity>
             <View style={styles().addressTick}>
-              {address._id === location?._id &&
+              {address?._id === location?._id &&
                 ![t('currentLocation'), t('selectedLocation')].includes(
                   location.label
                 ) && (

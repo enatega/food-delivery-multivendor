@@ -9,21 +9,13 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
     bodyStyleOne: {
       fontFamily: fontStyles.MuseoSans500,
       fontSize: scale(14),
-      color: props != null ? props.fontMainColor : 'black'
+      color: props != null ? props?.fontMainColor : 'black'
     },
     mainContainerHolder: {
       zIndex: 333,
       width: '100%',
       alignItems: 'center',     
       backgroundColor:newheaderColor,
-      shadowColor: props != null ? props.shadowColor : 'black',
-      shadowOffset: {
-        width: 0,
-        height: verticalScale(1)
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: verticalScale(1),
-      // ...alignment.MBmedium
     },
     mainContainer: {
       width: '90%',
@@ -32,9 +24,9 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       alignItems: 'center',
       alignSelf: 'center',
       borderRadius: scale(40),
-      backgroundColor: props != null ? props.color1 : 'black',
+      backgroundColor: props != null ? props?.color1 : 'black',
 
-      shadowColor: props != null ? props.shadowColor : 'black',
+      shadowColor: props != null ? props?.shadowColor : 'black',
       shadowOffset: {
         width: 0,
         height: verticalScale(1)
@@ -48,17 +40,17 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       height: '60%',
       alignItems: 'center',
       justifyContent: 'space-between',
-      flexDirection: 'row'
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
     },
     leftContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       width: '90%',
+      gap: scale(15)
     },
     searchContainer: {
-      width: '10%',
+      width: '10%'
     },
     inputContainer: {
-      width: '100%',
       justifyContent: 'center',
       ...alignment.MLxSmall,
       ...alignment.MRxSmall
@@ -67,7 +59,8 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       width: '10%',
       height: '90%',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row'
     }
   })
 export default styles

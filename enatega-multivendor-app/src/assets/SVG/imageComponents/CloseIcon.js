@@ -8,7 +8,7 @@ function CloseIcon(props) {
       width={25}
       height={25}
       viewBox="0 0 25 25"
-      fill={props.fill}
+      fill={props?.fill}
       {...props}>
       <Path
         fillRule="evenodd"

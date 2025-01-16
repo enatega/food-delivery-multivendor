@@ -40,9 +40,9 @@ function OrderDetail(props) {
   const Analytics = analytics()
 
   const { t } = useTranslation()
-  const id = props.route.params ? props.route.params._id : null
-  const restaurant = props.route.params ? props.route.params.restaurant : null
-  const user = props.route.params ? props.route.params.user : null
+  const id = props?.route.params ? props?.route.params._id : null
+  const restaurant = props?.route.params ? props?.route.params.restaurant : null
+  const user = props?.route.params ? props?.route.params.user : null
   const inset = useSafeAreaInsets()
 
   const { loadingOrders, errorOrders, orders } = useContext(UserContext)
@@ -59,8 +59,8 @@ function OrderDetail(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions(screenOptions(currentTheme.headerText))
-  }, [props.navigation])
+    props?.navigation.setOptions(screenOptions(currentTheme.headerText))
+  }, [props?.navigation])
 
   let secTimer = null
   useEffect(() => {
@@ -408,7 +408,7 @@ function OrderDetail(props) {
               activeOpacity={0.7}
               style={[styles().floatView, { justifyContent: 'center' }]}
               onPress={() =>
-                props.navigation.navigate('RateAndReview', {
+                props?.navigation.navigate('RateAndReview', {
                   _id: order._id,
                   restaurant: restaurant,
                   user: user

@@ -23,11 +23,11 @@ import ReorderItem from '../../components/ReorderItem/ReorderItem'
 function Reorder(props) {
   const analytics = Analytics()
 
-  const { t } = useTranslation()
-  const order = props.route.params.item
+  const { t, i18n } = useTranslation()
+  const order = props?.route.params.item
   const themeContext = useContext(ThemeContext)
   const { setCartRestaurant, addCartItem } = useContext(UserContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const { data } = useRestaurant(order.restaurant._id)
 
   const inset = useSafeAreaInsets()
@@ -42,7 +42,7 @@ function Reorder(props) {
   const [selectedItems, setItems] = useState([])
 
   useFocusEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerTitle: () => (
         <View style={{ alignItems: 'center', gap: scale(2) }}>
           <TextDefault
@@ -121,7 +121,7 @@ function Reorder(props) {
         index === 0
       )
     })
-    props.navigation.reset({
+    props?.navigation.reset({
       routes: [{ name: 'Main' }, { name: 'Cart' }]
     })
   }
@@ -176,7 +176,7 @@ function Reorder(props) {
         contentContainerStyle={styles(currentTheme).scrollViewStyle}
       >
         <View style={styles(currentTheme).mainContainer}>
-          <TextDefault bolder H4 textColor={currentTheme.fontMainColor}>
+          <TextDefault bolder H4 textColor={currentTheme.fontMainColor} isRTL>
             {t('ItemsOrderAgain')}
           </TextDefault>
           {order.items.map((item, index) => {

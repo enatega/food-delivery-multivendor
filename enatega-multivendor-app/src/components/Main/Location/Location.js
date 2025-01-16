@@ -19,9 +19,9 @@ function Location({
   locationLabel,
   forwardIcon = false,
   screenName }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
   const { location } = useContext(LocationContext)
 
   let translatedLabel
@@ -38,8 +38,10 @@ function Location({
 
     if (screenName === 'checkout') {
       if (addresses && !addresses.length) {
-        navigation.navigate('NewAddress', {
-          backScreen: 'Cart'
+        navigation.navigate('AddNewAddress', {
+          prevScreen: 'Checkout',
+          latitude: location.latitude,
+          longitude: location.longitude
         })
       } else {
         navigation.navigate('CartAddress', {
@@ -51,9 +53,9 @@ function Location({
       modalOn()
   }
   return (
-    <TouchableOpacity onPress={onLocationPress} style={{ marginHorizontal: scale(10) }}>
+    <TouchableOpacity onPress={onLocationPress} >
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: scale(10), gap: 5 }}>
+        <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' , alignItems: 'center', justifyContent: 'center', marginHorizontal: scale(10), gap: 5 }}>
           <View style={[styles().locationIcon, locationIconGray]}>
             <EvilIcons
               name="location"
@@ -64,17 +66,17 @@ function Location({
           <View style={styles(currentTheme).headerContainer}>
             <View
               style={styles.textContainer}>
-              <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder>
+              <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder isRTL>
                 {translatedAddress?.slice(0, 40)}...
               </TextDefault>
             </View>
-            <TextDefault textColor={locationLabel} left>
+            <TextDefault textColor={locationLabel} left isRTL>
               {''}
               {t(translatedLabel)}
             </TextDefault>
           </View>
           {forwardIcon && <Feather
-            name='chevron-right'
+            name= {currentTheme?.isRTL ? 'chevron-left' : 'chevron-right'}
             size={20}
             color={currentTheme.secondaryText}
           />}

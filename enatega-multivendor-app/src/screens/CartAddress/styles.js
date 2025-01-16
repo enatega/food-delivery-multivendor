@@ -1,6 +1,7 @@
 import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
+import { verticalScale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -15,7 +16,7 @@ const styles = (props = null) =>
       width: '10%'
     },
     titleAddress: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
     },
     homeIcon: {
       width: '20%',
@@ -58,14 +59,35 @@ const styles = (props = null) =>
     },
     
     containerSpace: {
-      backgroundColor: props !== null ? props.gray100 : 'transparent',
+      backgroundColor: props !== null ? props.cardBackground : 'transparent',
       width: '92%',
       // margin: scale(10),
       padding: scale(5),
       borderRadius: scale(10),
       borderWidth: 1,
       alignSelf: 'center',
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
-    }
+      borderColor: props !== null ? props.customBorder : '#E5E7EB',
+    },
+
+    containerButton: {
+      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      width: '90%',
+      height: scale(55),
+      bottom: verticalScale(0),
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center',
+      ...alignment.PBmedium
+    },
+    addButton: {
+      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      width: '100%',
+      height: scale(40),
+      borderRadius: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center'
+    },
+
   })
 export default styles

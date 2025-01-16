@@ -105,7 +105,7 @@ function SidebBar(props) {
                   await Analytics.track(Analytics.events.USER_LOGGED_OUT)
                   await Analytics.identify(null, null)
 
-                  logout()
+                  await logout()
                   props.navigation.closeDrawer()
                 }}
                 icon={'logout'}

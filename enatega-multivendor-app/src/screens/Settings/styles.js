@@ -29,7 +29,7 @@ const styles = (props = null) =>
       marginLeft: scale(5)
     },
     mainContainerArea: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       borderRadius: scale(30),
       shadowOffset: { width: 0 },
       shadowColor: theme.Pink.black,
@@ -37,19 +37,19 @@ const styles = (props = null) =>
       marginTop: scale(20)
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       ...alignment.PLxSmall,
       ...alignment.PRxSmall,
       ...alignment.PTmedium,
     },
     languageContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.gray100 : '#FFF',
+      backgroundColor: props !== null ? props?.gray100 : '#FFF',
       borderRadius: scale(10),
       borderWidth: 1,
       flexDirection: 'row',
       alignSelf: 'center',
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderColor: props !== null ? props?.gray200 : '#E5E7EB',
       ...alignment.PRmedium,
       ...alignment.PTlarge,
       ...alignment.PBlarge,
@@ -111,17 +111,17 @@ const styles = (props = null) =>
     },
     modalContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : '#FFF',
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF',
       borderRadius: verticalScale(4),
       ...alignment.Plarge,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderColor: props !== null ? props?.gray200 : '#E5E7EB',
       borderWidth:scale(1),
       borderRadius:scale(10)
 
     },
     radioContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : '#FFF',
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF',
       flexDirection: 'row',
       alignItems: 'center',
       ...alignment.PTxSmall,

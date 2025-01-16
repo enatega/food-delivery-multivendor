@@ -2,15 +2,13 @@ import { StyleSheet } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import { theme } from '../../../utils/themeColors'
 
-const styles = StyleSheet.create({
+const styles = (props = null) =>
+  StyleSheet.create({
   mainContainer: {
     width: '100%',
-    flexDirection: 'row',
-    marginVertical: scale(10)
-  },
-  leftContainer: {
-    width: '75%',
-    alignItems: 'flex-start'
+    flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      marginVertical: scale(10),
+      justifyContent: 'space-between'
   },
   rightContainer: {
     justifyContent: 'center',

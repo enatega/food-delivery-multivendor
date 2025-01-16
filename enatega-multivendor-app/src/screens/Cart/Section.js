@@ -17,6 +17,7 @@ import { IMAGE_LINK } from '../../utils/constants'
 const RELATED_ITEMS = gql`${relatedItemsQuery}`
 const RESTAURANT = gql`${restaurantQuery}`
 const FOOD = gql`${food}`
+
 const Section = ({ itemId, restaurantId }) => {
   const { t } = useTranslation()
   const navigation = useNavigation()
@@ -34,7 +35,8 @@ const Section = ({ itemId, restaurantId }) => {
   const restaurant = result?.restaurant
   const renderItem = ({ item }) => {
     const food = client.readFragment({ id: `Food:${item}`, fragment: FOOD })
-    const imageUrl = food.image && food.image.trim() !== '' ? food.image : IMAGE_LINK;
+    const imageUrl = food?.image && food?.image.trim() !== '' ? food?.image : IMAGE_LINK;
+
     const onAdd = () => {
       navigation.push('ItemDetail', {
         food: {
@@ -47,7 +49,7 @@ const Section = ({ itemId, restaurantId }) => {
       })
     }
     return <View style={{ ...alignment.PRsmall }}>
-      <View style={styles().suggestItemContainer}>
+      <View style={styles(currentTheme).suggestItemContainer}>
         {imageUrl &&
           <View style={styles().suggestItemImgContainer}>
             <Image

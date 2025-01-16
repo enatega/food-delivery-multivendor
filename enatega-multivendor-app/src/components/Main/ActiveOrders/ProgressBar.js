@@ -51,7 +51,7 @@ export const checkStatus = status => {
   return obj[0]
 }
 
-export const ProgressBar = ({ currentTheme, item, customWidth }) => {
+export const ProgressBar = ({ currentTheme, item, customWidth, isPicked }) => {
   if (item.orderStatus === ORDER_STATUS_ENUM.CANCELLED) return null
   useSubscription(
     gql`
@@ -63,12 +63,22 @@ export const ProgressBar = ({ currentTheme, item, customWidth }) => {
   const defaultWidth = scale(50)
   const width = customWidth !== undefined ? customWidth : defaultWidth
 
+  // Filter statuses if isPicked is true
+  const filteredStatuses = isPicked
+    ? orderStatuses.filter((s) => s.key !== 'ASSIGNED' && s.key !== 'PICKED')
+    : orderStatuses;
+
+  const currentStatus = filteredStatuses.find((x) => x.key === item.orderStatus) || { status: 0 };
+
+  // Set the total number of filled bars based on the isPicked prop
+  const totalBars = isPicked ? 3 : 4;
+
   return (
     <View style={{ marginTop: scale(10) }}>
-      <View style={{ flexDirection: 'row' }}>
-        {Array(checkStatus(item.orderStatus).status)
+      <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' }}>
+        {Array(Math.min(currentStatus.status, totalBars)) // Active bars
           .fill(0)
-          .map((item, index) => (
+          .map((_, index) => (
             <View
               key={index}
               style={{
@@ -79,9 +89,9 @@ export const ProgressBar = ({ currentTheme, item, customWidth }) => {
               }}
             />
           ))}
-        {Array(4 - checkStatus(item.orderStatus).status)
+        {Array(totalBars - Math.min(currentStatus.status, totalBars)) // Inactive bars
           .fill(0)
-          .map((item, index) => (
+          .map((_, index) => (
             <View
               key={index}
               style={{

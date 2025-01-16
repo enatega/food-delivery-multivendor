@@ -15,7 +15,7 @@ import { alignment } from '../../utils/alignment'
 import { useFocusEffect } from '@react-navigation/native'
 
 export const useChatScreen = ({ navigation, route }) => {
-  const { id: orderId, orderNo, total } = route.params
+  const { id: orderId, orderNo, total, riderPhone } = route.params
 
   const { t } = useTranslation()
   const { profile } = useUserContext()
@@ -110,7 +110,7 @@ export const useChatScreen = ({ navigation, route }) => {
             name="call-outline"
             size={24}
             color={currentTheme.fontFourthColor}
-            onPress={() => callNumber('+923159499378')}
+            onPress={() => callNumber(riderPhone)}
           />
         </View>
       ),

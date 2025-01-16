@@ -19,8 +19,8 @@ const LONGITUDE_DELTA = 0.0021
 export default function FullMap(props) {
   const Analytics = analytics()
 
-  const latitude = props.route.params.latitude ?? LATITUDE
-  const longitude = props.route.params.longitude ?? LONGITUDE
+  const latitude = props?.route.params.latitude ?? LATITUDE
+  const longitude = props?.route.params.longitude ?? LONGITUDE
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -33,7 +33,7 @@ export default function FullMap(props) {
     longitude: longitude,
     longitudeDelta: LONGITUDE_DELTA
   })
-  const backScreen = props.route.params.currentScreen ?? null
+  const backScreen = props?.route.params.currentScreen ?? null
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_FORGOTPASSWORD)
@@ -41,11 +41,11 @@ export default function FullMap(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       title: t('addAddress')
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   function setMargin() {
     setMapMargin(0)
@@ -53,9 +53,9 @@ export default function FullMap(props) {
 
   function onSave() {
     if (backScreen === 'NewAddress') {
-      props.navigation.navigate('NewAddress', { regionChange: region })
+      props?.navigation.navigate('NewAddress', { regionChange: region })
     } else if (backScreen === 'EditAddress') {
-      props.navigation.navigate('EditAddress', { regionChange: region })
+      props?.navigation.navigate('EditAddress', { regionChange: region })
     }
   }
 

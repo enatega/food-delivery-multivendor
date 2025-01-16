@@ -27,7 +27,6 @@ export default function Login() {
     username,
     password
   } = useLogin()
-
   const [showPassword, setShowPassword] = useState(false)
   const {t} = useTranslation()
   return (
@@ -63,7 +62,7 @@ export default function Login() {
                 onChangeText={text => setUserName(text)}
                 inputContainerStyle={styles.inputStyle}
                 errorMessage={
-                  errors && errors.username ? errors.username.join(',') : ''
+                  errors && errors.username ? errors.username.join(',') : null
                 }
                 onBlur={isValid}
                 autoCapitalize="none"
@@ -83,7 +82,7 @@ export default function Login() {
                 secureTextEntry={!showPassword}
                 rightIconContainerStyle={{ marginRight: 10 }}
                 errorMessage={
-                  errors && errors.password ? errors.password.join(',') : ''
+                  errors && errors.password ? errors.password.join(',') : null
                 }
                 onBlur={isValid}
                 autoCapitalize="none"

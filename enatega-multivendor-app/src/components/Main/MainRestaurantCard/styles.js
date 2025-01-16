@@ -13,7 +13,7 @@ const styles = (props = null) =>
       width: '100%'
     },
     ItemTitle: {
-      ...alignment.MRmedium
+      ...alignment.MRmedium,
     },
     ItemDescription: {
       fontWeight: '400',
@@ -22,8 +22,9 @@ const styles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginBottom: scale(30),
-      ...alignment.MLmedium
+      marginHorizontal: scale(10),
+      // ...alignment.MLmedium,
+      // ...alignment.MRmedium
     },
     topPicksSec: {
       ...alignment.MLmedium,
@@ -34,13 +35,13 @@ const styles = (props = null) =>
       ...alignment.MBmedium
     },
     screenBackground: {
-      backgroundColor: props != null ? props.themeBackground : '#FFF'
+      backgroundColor: props != null ? props?.themeBackground : '#FFF'
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props.fontSecondColor : '#B8B8B8'
+      backgroundColor: props != null ? props?.fontSecondColor : '#B8B8B8'
     },
     placeHolderContainer: {
-      backgroundColor: props != null ? props.cartContainer : '#B8B8B8',
+      backgroundColor: props != null ? props?.cartContainer : '#B8B8B8',
       borderRadius: scale(3),
       elevation: scale(3),
       marginBottom: scale(12),
@@ -48,6 +49,27 @@ const styles = (props = null) =>
     },
     height200: {
       height: scale(200)
+    },
+    header: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      // ...alignment.MRmedium,
+      // marginBottom: scale(8),
+    },
+    row: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: 10
+    },
+    seeAllBtn: {
+      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
+      borderRadius: 4,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 16,
+      paddingRight: 16,
+      
     }
   })
 

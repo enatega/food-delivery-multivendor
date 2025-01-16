@@ -31,8 +31,8 @@ function Item(props) {
   const {t} = useTranslation()
   const navigation = useNavigation()
   const { profile } = useContext(UserContext)
-  const heart = profile ? profile.favourite.includes(props.item._id) : false
-  const item = props.item
+  const heart = profile ? profile.favourite.includes(props?.item._id) : false
+  const item = props?.item
   const category = item.categories.map(category => category.title)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
@@ -72,7 +72,7 @@ function Item(props) {
           <View style={styles().imageContainer}>
             <Image
               resizeMode="cover"
-              source={{ uri: item.image }}
+              source={{ uri: item?.image }}
               style={styles().img}
             />
             <View style={styles().overlayRestaurantContainer}>

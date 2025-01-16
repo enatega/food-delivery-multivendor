@@ -57,7 +57,7 @@ function ChangePassword(props) {
       FlashMessage({
         message: t('updatePassword')
       })
-      props.hideModal()
+      props?.hideModal()
     } else {
       Alert.alert('Error', t('invalidPassword'))
     }
@@ -65,9 +65,9 @@ function ChangePassword(props) {
 
   return (
     <Modal
-      onBackButtonPress={props.hideModal}
-      onBackdropPress={props.hideModal}
-      isVisible={props.modalVisible}
+      onBackButtonPress={props?.hideModal}
+      onBackdropPress={props?.hideModal}
+      isVisible={props?.modalVisible}
       animationType='slide'
       onModalHide={clearFields}
     >
@@ -82,7 +82,7 @@ function ChangePassword(props) {
             name='x-circle'
             size={24}
             color={currentTheme.newIconColor}
-            onPress={() => props.hideModal()}
+            onPress={() => props?.hideModal()}
           />
         </View>
 
@@ -154,7 +154,7 @@ function ChangePassword(props) {
           disabled={loading}
           onPress={() => {
             if (newPassword === '' || oldPassword === '') {
-              props.hideModal()
+              props?.hideModal()
             }
             const newPasswordError = newPassword === '' ? t('passErr1') : ''
             const oldPasswordError = oldPassword === '' ? t('passErr1') : ''

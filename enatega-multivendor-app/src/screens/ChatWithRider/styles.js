@@ -11,10 +11,10 @@ const styles = (props = null) =>
     chatSec: {
       flex: 1,
 
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     orderDetails: {
-      borderColor: props !== null ? props.verticalLine : 'transparent',
+      borderColor: props !== null ? props?.verticalLine : 'transparent',
       ...alignment.Pmedium,
       borderBottomWidth: 1,
       borderTopWidth: 1,
@@ -28,7 +28,7 @@ const styles = (props = null) =>
       gap: scale(4)
     },
     orderNo: {
-      backgroundColor: props !== null ? props.color5 : 'transparent',
+      backgroundColor: props !== null ? props?.color5 : 'transparent',
       borderWidth: 1,
       borderColor: '#E5E7EB',
       paddingVertical: scale(8),

@@ -5,7 +5,7 @@ import { scale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     itemContainer: {
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent:'space-between',
       alignItems: 'center',
     gap:scale(4),
@@ -26,17 +26,17 @@ const styles = (props = null) =>
     divider:{
       width:scale(1),
       height:scale(15),
-      backgroundColor: props !== null ? props.verticalLine : '#D1D5DB'
+      backgroundColor: props !== null ? props?.verticalLine : '#D1D5DB'
     },
     actionContainer: {
       width: '30%',
-      flexDirection: 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.newBorderColor : '#F3F4F6',
+      backgroundColor: props !== null ? props?.newBorderColor : '#F3F4F6',
       borderRadius:40,
       borderWidth:1,
-      borderColor:props !== null ? props.iconBackground: '#fcfcfc',
+      borderColor:props !== null ? props?.iconBackground: '#fcfcfc',
     },
     actionContainerBtns: {
       width: scale(30),

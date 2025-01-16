@@ -53,7 +53,7 @@ function Profile(props) {
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const backScreen = props.route.params ? props.route.params.backScreen : null
+  const backScreen = props?.route.params ? props?.route.params.backScreen : null
   const [mutate, { loading: loadingMutation }] = useMutation(UPDATEUSER, {
     onCompleted,
     onError
@@ -72,7 +72,7 @@ function Profile(props) {
     Track()
   }, [])
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       title: t('titleProfile'),
       headerRight: null,
       headerTitleAlign: 'center',
@@ -111,7 +111,7 @@ function Profile(props) {
         />
       )
     })
-  }, [props.navigation, showPass, toggleView])
+  }, [props?.navigation, showPass, toggleView])
 
   useEffect(() => {
     if (backScreen) {
@@ -133,7 +133,7 @@ function Profile(props) {
         message: t('userInfoUpdated')
       })
       if (backScreen) {
-        props.navigation.goBack()
+        props?.navigation.goBack()
       }
     }
   }
@@ -170,7 +170,7 @@ function Profile(props) {
       await mutate({
         variables: {
           name: refName.current.value(),
-          phone: profile.phone
+          phone: profile?.phone ?? ""
         }
       })
     }
@@ -453,7 +453,7 @@ function Profile(props) {
                       activeOpacity={0.3}
                       style={styles().headingButton}
                       onPress={() =>
-                        props.navigation.navigate('PhoneNumber', {
+                        props?.navigation.navigate('PhoneNumber', {
                           prevScreen: 'Profile'
                         })
                       }
@@ -497,7 +497,7 @@ function Profile(props) {
                       {(profile.phone === '' || !profile.phoneIsVerified) && (
                         <TouchableOpacity
                           onPress={() =>
-                            props.navigation.navigate(
+                            props?.navigation.navigate(
                               profile.phone === '' ? 'PhoneNumber' : 'PhoneOtp',
                               { prevScreen: 'Profile' }
                             )
@@ -529,7 +529,7 @@ function Profile(props) {
                           size={20}
                           color={currentTheme.black}
                           onPress={() =>
-                            props.navigation.navigate('PhoneNumber', {
+                            props?.navigation.navigate('PhoneNumber', {
                               prevScreen: 'Profile'
                             })
                           }

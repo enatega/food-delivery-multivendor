@@ -68,7 +68,7 @@ const Help = props => {
     ])
   }, [])
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerTitle: t('titleHelp'),
       headerTitleAlign: 'center',
       headerRight: null,
@@ -99,7 +99,7 @@ const Help = props => {
         />
       )
     })
-  }, [props.navigation])
+  }, [props?.navigation])
 
   return (
     <SafeAreaView
@@ -115,7 +115,7 @@ const Help = props => {
             <TouchableOpacity
               style={styles(currentTheme).itemContainer}
               onPress={() =>
-                props.navigation.navigate('HelpBrowser', { title, url })
+                props?.navigation.navigate('HelpBrowser', { title, url })
               }
               key={index}>
               <View>

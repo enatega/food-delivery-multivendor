@@ -8,10 +8,10 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainerEmpty: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     container: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
     contentContainer: {
       flexGrow: 1,
@@ -39,7 +39,7 @@ const styles = (props = null) =>
     emptyButton: {
       width: '60%',
       height: scale(40),
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props?.buttonBackground : 'transparent',
       borderRadius: scale(10),
       justifyContent: 'center',
       alignItems: 'center',

@@ -6,7 +6,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      backgroundColor: props !== null ? props?.cartContainer : '#FFF',
       borderRadius: scale(8),
       elevation: 3,
       shadowColor: 'black',
@@ -49,7 +49,7 @@ const styles = (props = null) =>
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'center',
-      backgroundColor: props !== null ? props.themeBackground : 'grey',
+      backgroundColor: props !== null ? props?.themeBackground : 'grey',
       alignItems: 'center',
       ...alignment.PTlarge,
       ...alignment.PBlarge,
@@ -57,11 +57,11 @@ const styles = (props = null) =>
     },
     line: {
       borderRightWidth: StyleSheet.hairlineWidth,
-      borderRightColor: props !== null ? props.horizontalLine : 'grey'
+      borderRightColor: props !== null ? props?.horizontalLine : 'grey'
     },
     headingLine: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: props !== null ? props.horizontalLine : 'grey'
+      borderBottomColor: props !== null ? props?.horizontalLine : 'grey'
     }
   })
 

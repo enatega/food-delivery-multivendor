@@ -1,5 +1,5 @@
 import { View, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './style'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import colors from '../../../utilities/colors'
@@ -7,7 +7,7 @@ import Spinner from '../../Spinner/Spinner'
 import TextError from '../../Text/TextError/TextError'
 import CountDown from 'react-native-countdown-component'
 import useDetails from './useDetails'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const Details = ({ orderData, navigation, itemId, distance, duration }) => {
   const {
@@ -23,7 +23,17 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
     loadingAssignOrder,
     loadingOrderStatus
   } = useDetails(orderData)
-    const {t} = useTranslation()
+  const { t } = useTranslation()
+  const [isOvertime, setIsOvertime] = useState(false)
+
+  const untilValue = preparationSeconds - currentSeconds
+
+  useEffect(() => {
+    if (untilValue <= 0) {
+      setIsOvertime(true)
+    }
+  }, [preparationSeconds, currentSeconds])
+
   if (!order) return null
 
   return (
@@ -40,15 +50,28 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
             <TextDefault center bold H5 textColor={colors.fontSecondColor}>
               {t('timeLeftForMeal')}
             </TextDefault>
+            {/* {untilValue > 0 ? ( */}
             <CountDown
-              until={preparationSeconds - currentSeconds}
+              until={untilValue}
               size={20}
               timeToShow={['H', 'M', 'S']}
               timeLabels={{ h: null, m: null, s: null }}
               digitStyle={{ backgroundColor: colors.white, width: 50 }}
-              digitTxtStyle={{ color: colors.black, fontSize: 30 }}
+              digitTxtStyle={{
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                fontSize: 30
+              }}
               showSeparator={true}
+              separatorStyle={{
+                color: isOvertime ? colors.orderUncomplete : colors.black
+              }}
+              onFinish={() => setIsOvertime(true)}
             />
+            {/* ) : (
+              <TextDefault center bold H5 textColor={colors.orderUncomplete}>
+                {t('timeUp')}
+              </TextDefault>
+            )} */}
           </View>
           {distance !== null ? (
             <View style={styles.timeContainer}>
@@ -87,9 +110,8 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                 </TextDefault>
               </TouchableOpacity>
             </View>
-          ) : order.orderStatus === 'ASSIGNED' ? (
+          ) : order.orderStatus === 'ASSIGNED' && isOvertime ? (
             <View style={styles.btnContainer}>
-              <ChatWithCustomerButton navigation={navigation} order={order} />
               <TouchableOpacity
                 onPress={() => {
                   mutateOrderStatus({
@@ -99,11 +121,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                 activeOpacity={0.8}
                 style={[styles.btn, { backgroundColor: colors.black }]}>
                 <TextDefault center bold H5 textColor={colors.white}>
-                  {loadingOrderStatus ? (
-                    <Spinner size="small" />
-                  ) : (
-                    t('pick')
-                  )}
+                  {loadingOrderStatus ? <Spinner size="small" /> : t('pick')}
                 </TextDefault>
               </TouchableOpacity>
             </View>
@@ -117,11 +135,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                     variables: { id: itemId, status: 'DELIVERED' }
                   })
                 }}
-                style={[
-                  styles.btn,
-                  { backgroundColor: colors.primary },
-                  
-                ]}>
+                style={[styles.btn, { backgroundColor: colors.primary }]}>
                 <TextDefault center H5 bold textColor={colors.black}>
                   {loadingOrderStatus ? (
                     <Spinner size="small" color="transparent" />
@@ -152,7 +166,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
 }
 
 const OrderDetails = ({ order }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <View style={styles.orderDetails}>
       <View style={styles.rowDisplay}>
@@ -191,13 +205,42 @@ const OrderDetails = ({ order }) => {
           {order.deliveryAddress.deliveryAddress}
         </TextDefault>
       </View>
+
+      {order.orderStatus === 'ASSIGNED' ? (
+        <>
+          <View style={styles.rowDisplay}>
+            <TextDefault
+              textColor={colors.fontSecondColor}
+              bold
+              H5
+              style={styles.col1}>
+              {t('CustomerName')}
+            </TextDefault>
+            <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
+              {order.user.name}
+            </TextDefault>
+          </View>
+          <View style={styles.rowDisplay}>
+            <TextDefault
+              textColor={colors.fontSecondColor}
+              bold
+              H5
+              style={styles.col1}>
+              {t('CustomerPhoneNumber')}
+            </TextDefault>
+            <TextDefault bolder H5 textColor={colors.black} style={styles.col2}>
+              {order.user.phone}
+            </TextDefault>
+          </View>
+        </>
+      ) : null}
     </View>
   )
 }
 
 const ItemDetails = ({ order, dataConfig, loading, error }) => {
   let subTotal = 0
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   if (loading) return <Spinner />
   if (error) return <TextError text={t('errorText')} />
   return (
@@ -215,13 +258,13 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
               </TextDefault>
               {item.addons
                 ? item.addons.map(addon => (
-                    <TextDefault
-                      key={addon._id}
-                      textColor={colors.fontSecondColor}
-                      bold>
-                      {addon.title}
-                    </TextDefault>
-                  ))
+                  <TextDefault
+                    key={addon._id}
+                    textColor={colors.fontSecondColor}
+                    bold>
+                     {addon.title}
+                  </TextDefault>
+                ))
                 : null}
             </View>
             <TextDefault
@@ -241,7 +284,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('subTotal')}
         </TextDefault>
         <TextDefault
@@ -250,7 +293,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.black}
           style={[styles.coll3, { flex: 3 }]}>
           {dataConfig.configuration.currencySymbol}
-          {subTotal}
+         {subTotal} 
         </TextDefault>
       </View>
       <View style={styles.rowDisplay}>
@@ -258,7 +301,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('tip')}
         </TextDefault>
         <TextDefault
@@ -275,7 +318,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('taxCharges')}
         </TextDefault>
         <TextDefault
@@ -292,7 +335,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('delvieryCharges')}
         </TextDefault>
         <TextDefault
@@ -310,7 +353,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
           textColor={colors.fontSecondColor}
           bold
           H5
-          style={[styles.coll2, { flex: 9 }]}>
+          style={styles.coll2}>
           {t('total')}
         </TextDefault>
         <TextDefault
@@ -327,8 +370,8 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
 }
 
 const ChatWithCustomerButton = ({ navigation, order }) => {
-  const { t } = useTranslation(); 
-  
+  const { t } = useTranslation()
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -343,6 +386,6 @@ const ChatWithCustomerButton = ({ navigation, order }) => {
         {t('chatWithCustomer')}
       </TextDefault>
     </TouchableOpacity>
-  );
+  )
 }
 export default Details

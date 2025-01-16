@@ -24,12 +24,13 @@ function PickUp(props) {
     minimumDate: new Date(currentDate),
     mode: 'time',
     display: 'spinner',
-    value: props.orderDate,
+    value: props?.orderDate,
     onChange: (event, date) => {
       if (date && new Date(date) >= new Date(currentDate)) {
-        props.setOrderDate(date)
+        props?.setOrderDate(date)
       }
-    }
+    },
+    textColor: props?.pickupTextColor || currentTheme.newFontcolor,
   }
 
   useEffect(() => {
@@ -56,19 +57,19 @@ function PickUp(props) {
           onPress={onEditPress}
         >
           <TextDefault
-            textColor={props.pickupTextColor}
+            textColor={props?.pickupTextColor}
             style={
               Platform.OS === 'android'
                 ? styles().androidDateFormat
                 : styles().iosDateFormat
             }
           >
-            {moment(props.orderDate).format('MM-D-YYYY, h:mm a')}{' '}
+            {moment(props?.orderDate).format('MM-D-YYYY, h:mm a')}{' '}
             {Platform.OS === 'android' && (
               <FontAwesome
                 name='edit'
                 size={25}
-                color={props.pickupTextColor}
+                color={props?.pickupTextColor}
               />
             )}
           </TextDefault>

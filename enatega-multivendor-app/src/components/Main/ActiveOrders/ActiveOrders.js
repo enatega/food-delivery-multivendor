@@ -22,25 +22,26 @@ const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 
 const ActiveOrders = ({ onActiveOrdersChange }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-  const activeOrders = orders.filter((o) =>
-    orderStatusActive.includes(o.orderStatus)
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+
+  const activeOrders = orders.filter(
+    (o) =>
+      orderStatusActive.includes(o.orderStatus) &&
+      (o?.paymentStatus === 'PAID' ||
+        o?.paymentMethod == 'COD')
   )
 
   const onPressDetails = (order) => {
     navigation.navigate('OrderDetail', {
       _id: order._id,
+      order: order,
       currencySymbol: configuration.currencySymbol
     })
-  }
-
-  const navToActiveOrders = () => {
-    navigation.navigate('MyOrders')
   }
 
   const [showAll, setShowAll] = useState(false)
@@ -59,7 +60,7 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   const remainingTime = calulateRemainingTime(order)
   const modalStyle = {
     borderWidth: StyleSheet.hairlineWidth,
-    backgroundColor: currentTheme.themeBackground
+    backgroundColor: currentTheme.cardBackground
   }
 
   return (
@@ -70,19 +71,18 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
       modalStyle={modalStyle}
     >
       <View style={{ marginTop: scale(20), marginHorizontal: scale(10) }}>
-        <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+        <View style={{ justifyContent: 'space-between', flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' }}>
           <TextDefault Regular textColor={currentTheme.fontGrayNew}>
             {t('estimatedDeliveryTime')}
           </TextDefault>
-
           <TouchableOpacity onPress={() => onPressDetails(order)}>
             <TextDefault textColor={currentTheme.gray700} bolder>
-              {t('details')}{' '}
+              {t('details')}
             </TextDefault>
           </TouchableOpacity>
         </View>
         <View style={{ marginTop: scale(10) }}>
-          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder>
+          <TextDefault Regular textColor={currentTheme.gray900} H1 bolder isRTL>
             {remainingTime}-{remainingTime + 5} {t('mins')}
           </TextDefault>
         </View>
@@ -92,44 +92,16 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
             currentTheme={currentTheme}
             item={order}
             navigation={navigation}
+            isPicked={order?.isPickedUp}
           />
           <View style={{ marginTop: scale(10) }}>
             <TextDefault
               numberOfLines={2}
               style={styles(currentTheme).statusText}
+              isRTL
             >
               {t(checkStatus(order.orderStatus).statusText)}
             </TextDefault>
-          </View>
-
-          <View
-            style={{
-              justifyContent: 'flex-start',
-              flexDirection: 'row',
-              paddingRight: 20,
-              marginBottom: 10
-            }}
-          >
-            { activeOrders.length > 1 ?
-            (<View style={{}}>
-              <TouchableOpacity onPress={() => navToActiveOrders()}>
-                <TextDefault bolder H5 Regular textColor={currentTheme.gray700}>
-                  {t('ActiveOrders')}
-                </TextDefault>
-              </TouchableOpacity>
-              <View style={styles(currentTheme.primary).absoluteContainer}>
-                <TextDefault
-                  textColor={currentTheme.black}
-                  style={{ fontSize: scale(12) }}
-                  center
-                  bolder
-                >
-                  {activeOrders.length}
-                </TextDefault>
-              </View>
-            </View>
-            ) : ''
-            }      
           </View>
         </View>
       </View>

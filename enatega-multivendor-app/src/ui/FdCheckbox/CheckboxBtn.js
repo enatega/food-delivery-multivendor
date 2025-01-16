@@ -12,14 +12,14 @@ function CheckboxBtn(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   return (
     <TouchableOpacity
-      onPress={props.onPress}
+      onPress={props?.onPress}
       style={[
         styles(currentTheme).mainContainer,
-        props.checked
+        props?.checked
           ? { backgroundColor: currentTheme.main, borderColor: 'transparent' }
           : { backgroundColor: currentTheme.themeBackground }
       ]}>
-      {props.checked ? (
+      {props?.checked ? (
         <FontAwesome
           name="check"
           size={scale(13)}

@@ -9,21 +9,21 @@ const navigationOptions = props => {
     headerRight: () => (
       <AntDesign
         onPress={() =>
-          props.navigation.navigate({
+          props?.navigation.navigate({
             name: 'Main',
             merge: true
           })
         }
         name='closecircleo'
         size={24}
-        color={props.fontColor}
+        color={props?.fontColor}
         style={styles().headerRightIcon}
       />
     ),
     // eslint-disable-next-line react/display-name
     headerLeft: null,
     headerStyle: {
-      backgroundColor: props.backColor
+      backgroundColor: props?.backColor
     }
   }
 }

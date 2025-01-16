@@ -5,17 +5,27 @@ import { StyleSheet } from 'react-native'
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      width: '100%',
+      width: scale(330),
       alignItems: 'center',
+      backgroundColor: 'white',
+      shadowColor: "gray",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+
+      elevation: 5,
     
     },
     restaurantContainer: {
-      backgroundColor: props != null ? props.newheaderBG : 'white',
-      borderColor: props != null ? props.borderColor : 'grey',
+      backgroundColor: props != null ? props?.newheaderBG : 'white',
+      borderColor: props != null ? props?.borderColor : 'grey',
       borderWidth: scale(1),
       borderRadius: scale(8),
       height: scale(280),
-      width: '99%',
+      width: '100%',
 
 
       ...alignment.MBsmall
@@ -49,7 +59,7 @@ const styles = (props = null) =>
       width: scale(30),
       height: scale(30),
       borderRadius: scale(15),
-      backgroundColor: props != null ? props.white : 'white',
+      backgroundColor: props != null ? props?.white : 'white',
       zIndex: 1,
       justifyContent: 'center',
       alignItems: 'center'
@@ -61,7 +71,7 @@ const styles = (props = null) =>
       width: scale(45),
       height: scale(20),
       borderRadius: scale(10),
-      backgroundColor: props != null ? props.menuBar : 'white',
+      backgroundColor: props != null ? props?.menuBar : 'white',
       zIndex: 1,
       justifyContent: 'center',
       alignItems: 'center'
@@ -86,7 +96,7 @@ const styles = (props = null) =>
     verticalLine: {
       height: '60%',
       borderRightWidth: StyleSheet.hairlineWidth,
-      borderRightColor: props != null ? props.horizontalLine : 'black',
+      borderRightColor: props != null ? props?.horizontalLine : 'black',
       opacity: 0.6,
       ...alignment.MLxSmall,
       ...alignment.MRxSmall
@@ -101,7 +111,7 @@ const styles = (props = null) =>
     featureText: {
       alignSelf: 'flex-start',
       maxWidth: '100%',
-      backgroundColor: props != null ? props.tagColor : 'black'
+      backgroundColor: props != null ? props?.tagColor : 'black'
     }
   })
 export default styles

@@ -120,7 +120,7 @@ function Settings(props) {
   }, [])
 
   useEffect(() => {
-    props.navigation.setOptions({
+    props?.navigation.setOptions({
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
@@ -154,14 +154,14 @@ function Settings(props) {
     })
     selectLanguage()
     checkPermission()
-  }, [props.navigation, languageName])
+  }, [props?.navigation, languageName])
 
   async function deactivatewithemail() {
     try {
       await deactivated({
         variables: { isActive: false, email: profile.email }
       })
-      logout()
+      await logout()
       navigation.reset({
         routes: [{ name: 'Main' }]
       })

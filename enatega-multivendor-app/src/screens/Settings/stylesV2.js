@@ -28,7 +28,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     mainContainerArea: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       borderRadius: scale(30),
       shadowOffset: { width: 0 },
       shadowColor: theme.Pink.black,
@@ -36,12 +36,12 @@ const styles = (props = null) =>
       marginTop: scale(20)
     },
     mainContainer: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       ...alignment.PxSmall
     },
     languageContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.cartContainer : '#FFF',
+      backgroundColor: props !== null ? props?.cartContainer : '#FFF',
       borderRadius: scale(12),
       ...alignment.PRmedium,
       ...alignment.PTlarge,

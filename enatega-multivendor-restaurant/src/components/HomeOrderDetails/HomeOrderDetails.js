@@ -9,7 +9,8 @@ import { useSubscription, gql } from '@apollo/client'
 import moment from 'moment'
 import { subscriptionOrder } from '../../apollo'
 import CountDown from 'react-native-countdown-component'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { getIsAcceptButtonVisible } from '../../utilities/customFunctions'
 
 function HomeOrderDetails(props) {
   const { activeBar, navigation } = props
@@ -24,7 +25,7 @@ function HomeOrderDetails(props) {
     isRinged
   } = props?.order
   const timeNow = new Date()
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   const date = new Date(orderDate)
   const acceptanceTime = moment(date).diff(timeNow, 'seconds')
   // current
@@ -33,6 +34,7 @@ function HomeOrderDetails(props) {
     .add(MAX_TIME, 'seconds')
     .diff(timeNow, 'seconds')
   const configuration = useContext(Configuration.Context)
+  const [isOvertime, setIsOvertime] = useState(false)
 
   // prepTime
   const prep = new Date(preparationTime)
@@ -41,14 +43,14 @@ function HomeOrderDetails(props) {
 
   // accept time
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
-    !moment().isBefore(date)
+    getIsAcceptButtonVisible(orderDate)
   )
   const timer = useRef()
   const decision = !isAcceptButtonVisible
     ? acceptanceTime
     : remainingTime > 0
-      ? remainingTime
-      : 0
+    ? remainingTime
+    : 0
   if (decision === acceptanceTime) {
     remainingTime = 0
   }
@@ -85,8 +87,8 @@ function HomeOrderDetails(props) {
             activeBar === 0
               ? colors.white
               : activeBar === 1
-                ? colors.white
-                : colors.darkgreen
+              ? colors.white
+              : colors.darkgreen
         }
       ]}
       onPress={() => {
@@ -120,13 +122,19 @@ function HomeOrderDetails(props) {
         <TextDefault style={styles.text} H5 bolder>
           {orderId}
         </TextDefault>
+
+      </View>
+      <View View style={styles.itemRowBar}>
+        <TextDefault style={styles.heading}>{t('orderType')}:</TextDefault>
+        <TextDefault style={styles.text}>
+          {props?.order.isPickedUp ? t('pickUp') : t('delivery')}
+        </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading}>{t('orderAmount')}:</TextDefault>
-        <TextDefault
-          style={
-            styles.text
-          }>{`${configuration.currencySymbol}${orderAmount}`}:</TextDefault>
+        <TextDefault style={styles.text}>
+          {`${configuration.currencySymbol}${orderAmount}`}:
+        </TextDefault>
       </View>
       <View style={styles.itemRowBar}>
         <TextDefault style={styles.heading}>{t('paymentMethod')}</TextDefault>
@@ -157,41 +165,39 @@ function HomeOrderDetails(props) {
               until={decision}
               size={20}
               timeToShow={['H', 'M', 'S']}
-              digitStyle={{
-                backgroundColor: colors.white
-              }}
+              digitStyle={{ backgroundColor: colors.white }}
               digitTxtStyle={{
-                color: 'black',
+                color: isOvertime ? colors.orderUncomplete : colors.black,
                 fontSize: 20
               }}
               timeLabels={{ h: null, m: null, s: null }}
-              showSeparator
+              showSeparator={true}
               separatorStyle={{
-                marginTop: -5,
-                color: 'black'
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                marginTop: -5
               }}
+              onFinish={() => setIsOvertime(true)}
             />
           </View>
         )}
-        {activeBar === 1 && (
+        {activeBar === 1 && props?.order?.orderStatus === "PENDING" && (
           <View>
             <CountDown
               until={totalPrep}
-              size={20}
+              size={15}
               timeToShow={['H', 'M', 'S']}
-              digitStyle={{
-                backgroundColor: colors.white
-              }}
+              digitStyle={{ backgroundColor: colors.white }}
               digitTxtStyle={{
-                color: 'black',
+                color: isOvertime ? colors.orderUncomplete : colors.black,
                 fontSize: 20
               }}
               timeLabels={{ h: null, m: null, s: null }}
-              showSeparator
+              showSeparator={true}
               separatorStyle={{
-                marginTop: -5,
-                color: 'black'
+                color: isOvertime ? colors.orderUncomplete : colors.black,
+                marginTop: -5
               }}
+              onFinish={() => setIsOvertime(true)}
             />
           </View>
         )}
@@ -204,8 +210,8 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? 'black'
                     : activeBar === 1
-                      ? colors.green
-                      : colors.white
+                    ? colors.green
+                    : colors.white
               }
             ]}
             onPress={() =>
@@ -227,14 +233,24 @@ function HomeOrderDetails(props) {
                   activeBar === 0
                     ? colors.green
                     : activeBar === 1
+                    ? props?.order?.orderStatus !== 'PICKED'
                       ? colors.orderUncomplete
                       : 'black'
+                    : 'black'
               }}>
               {activeBar === 0
                 ? t('pending')
                 : activeBar === 1
-                  ? t('reject')
-                  : t('delivered')}
+                ? props.order.orderStatus === 'PENDING'
+                  ? t('pending') // If it's pending, show "pending"
+                  : props.order.orderStatus === 'ACCEPTED'
+                  ? t('accepted') // Show accepted status if order is accepted
+                  : props.order.orderStatus === 'ASSIGNED'
+                  ? t('assigned') // Show assigned status if order is assigned
+                  : props.order.orderStatus === 'PICKED'
+                  ? t('deliveredToRider') // Show delivered to rider if it's picked
+                  : t('delivered') // Default to delivered if none of the above
+                : t('delivered')}
             </TextDefault>
           </Pressable>
         </View>

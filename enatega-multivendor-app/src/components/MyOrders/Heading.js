@@ -11,19 +11,19 @@ const Heading = props => {
   return (
     <View style={styles(currentTheme).headingContainer}>
       <View
-        style={[styles(currentTheme).headingLine, { width: props.lineWidth }]}
+        style={[styles(currentTheme).headingLine, { width: props?.lineWidth }]}
       />
       <TextDefault
         textColor={currentTheme.fontMainColor}
-        style={{ width: props.textWidth }}
+        style={{ width: props?.textWidth }}
         H5
         bolder
         B700
         uppercase>
-        {props.headerName}
+        {props?.headerName}
       </TextDefault>
       <View
-        style={[styles(currentTheme).headingLine, { width: props.lineWidth }]}
+        style={[styles(currentTheme).headingLine, { width: props?.lineWidth }]}
       />
     </View>
   )

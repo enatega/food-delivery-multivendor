@@ -14,7 +14,6 @@ import LogoutModal from './LogoutModal/LogoutModal'
 import analytics from '../../utils/analytics'
 
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
 
 const datas = [
   {
@@ -79,7 +78,7 @@ function SidebBar(props) {
     setModalVisible(false)
     await Analytics.track(Analytics.events.USER_LOGGED_OUT)
     await Analytics.identify(null, null)
-    logout()
+    await logout()
     props.navigation.closeDrawer()
     FlashMessage({ message: t('logoutMessage') })
   }
@@ -95,7 +94,6 @@ function SidebBar(props) {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
   })
-
 
   return (
     <View

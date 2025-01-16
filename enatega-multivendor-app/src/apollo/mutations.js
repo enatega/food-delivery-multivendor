@@ -20,7 +20,6 @@ export const placeOrder = `
     placeOrder(restaurant:$restaurant,orderInput: $orderInput,paymentMethod:$paymentMethod,couponCode:$couponCode,tipping:$tipping, taxationAmount: $taxationAmount, address:$address, orderDate: $orderDate,isPickedUp: $isPickedUp, deliveryCharges:$deliveryCharges, instructions: $instructions) {
       _id
       orderId
-      id
       restaurant{
         _id
         name
@@ -35,24 +34,20 @@ export const placeOrder = `
       }
       items{
         _id
-        id
         title
         food
         description
         quantity
         variation{
           _id
-          id
           title
           price
           discounted
         }
         addons{
           _id
-          id
           options{
             _id
-            id
             title
             description
             price
@@ -97,6 +92,7 @@ export const placeOrder = `
     }
   }`
 
+
 export const pushToken = `mutation PushToken($token:String){
     pushToken(token:$token){
       _id
@@ -127,6 +123,19 @@ export const getCoupon = `mutation Coupon($coupon:String!){
 
 export const deleteAddress = `mutation DeleteAddress($id:ID!){
     deleteAddress(id:$id){
+      _id
+      addresses{
+        _id
+        label
+        deliveryAddress
+        details
+        location{coordinates}
+      }
+    }
+  }`
+
+export const deleteBulkAddresses = `mutation DeleteBulkAddresses($ids:[ID!]!){
+  deleteBulkAddresses(ids:$ids){
       _id
       addresses{
         _id
@@ -354,7 +363,7 @@ export const createUser = `
       }`
 
 export const updateUser = `
-      mutation UpdateUser($name:String!,$phone:String!,$phoneIsVerified:Boolean,$emailIsVerified:Boolean){
+      mutation UpdateUser($name:String!,$phone:String,$phoneIsVerified:Boolean,$emailIsVerified:Boolean){
           updateUser(updateUserInput:{name:$name,phone:$phone,phoneIsVerified:$phoneIsVerified,emailIsVerified:$emailIsVerified}){
             _id
             name
@@ -381,3 +390,21 @@ export const cancelOrder = `
               orderStatus
             }
           }`
+
+export const createActivity = `
+   mutation createActivity(
+      $groupId: String!
+      $module: String!
+      $screenPath: String!
+      $type: String!
+      $details: String!
+    ) {
+        createActivity(
+          groupId:$groupId
+          module: $module
+          screenPath: $screenPath
+          type: $type
+          details: $details
+      )
+    }
+`

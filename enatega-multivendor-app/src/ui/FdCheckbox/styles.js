@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      borderColor: props !== null ? props.color9 : 'gray',
+      borderColor: props !== null ? props?.color9 : 'gray',
       borderWidth: scale(1),
       width: scale(20),
       height: scale(20),

@@ -7,7 +7,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex:1,
-      backgroundColor: props !== null ? props.radioOuterColor : '#FFF'
+      backgroundColor: props !== null ? props?.radioOuterColor : '#FFF'
     },
     subContainer: {
       flex: 1,
@@ -15,9 +15,9 @@ const styles = (props = null) =>
       alignItems: 'center',
       borderTopLeftRadius: scale(30),
       borderTopRightRadius: scale(30),
-      borderColor: props !== null ? props.gray : 'grey',
+      borderColor: props !== null ? props?.gray : 'grey',
       justifyContent: 'space-between',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       shadowColor: '#00000026',
       shadowRadius: scale(11),
 
@@ -71,11 +71,11 @@ const styles = (props = null) =>
       width: scale(60),
       height: scale(60),
       borderWidth: scale(1),
-      borderColor: props !== null ? props.tagColor : 'transparent',
+      borderColor: props !== null ? props?.tagColor : 'transparent',
       borderRadius: scale(8),
       justifyContent: 'center',
       ...alignment.PxSmall,
-      backgroundColor: props !== null ? props.tagColor : 'transparent',
+      backgroundColor: props !== null ? props?.tagColor : 'transparent',
     },
     textlabelButton: {
       justifyContent: 'center',
@@ -88,9 +88,9 @@ const styles = (props = null) =>
       borderWidth: scale(1),
       borderRadius: scale(8),
       justifyContent: 'center',
-      color: props !== null ? props.tagColor : 'transparent',
-      borderColor: props !== null ? props.black : 'transparent',
-      backgroundColor: props !== null ? props.darkBgFont : 'transparent',
+      color: props !== null ? props?.tagColor : 'transparent',
+      borderColor: props !== null ? props?.black : 'transparent',
+      backgroundColor: props !== null ? props?.darkBgFont : 'transparent',
       ...alignment.PxSmall
     },
     saveBtnContainer: {
@@ -99,7 +99,7 @@ const styles = (props = null) =>
       borderRadius: scale(20),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.buttonBackground : 'transparent',
+      backgroundColor: props !== null ? props?.buttonBackground : 'transparent',
       alignSelf: 'center',
       marginTop: scale(20),
       marginBottom: scale(20)
@@ -114,7 +114,7 @@ const styles = (props = null) =>
       marginTop: scale(-58),
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
+      backgroundColor: props !== null ? props?.backgroundColor : 'transparent'
     },
     marker: {
       height: scale(48),
@@ -122,13 +122,13 @@ const styles = (props = null) =>
     },
     mapContainer: {
       height: '40%',
-      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
+      backgroundColor: props !== null ? props?.backgroundColor : 'transparent'
     },
     geoLocation: {
       flexDirection: 'row'
     },
     headerBackBtnContainer: {
-      backgroundColor: props !== null ? props.white : 'white',
+      backgroundColor: props !== null ? props?.white : 'white',
       borderRadius: scale(50),
       marginLeft: scale(10),
       width: scale(55),

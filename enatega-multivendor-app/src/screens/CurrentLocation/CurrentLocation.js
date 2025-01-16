@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TouchableOpacity, Linking, Platform, StatusBar } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Linking,
+  Platform,
+  StatusBar,
+  Image
+} from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -9,19 +16,37 @@ import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import analytics from '../../utils/analytics'
-import Spinner from '../../components/Spinner/Spinner'
 import { useTranslation } from 'react-i18next'
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, Circle, Polygon, Marker } from 'react-native-maps'
 import { customMapStyle } from '../../utils/customMapStyles'
+import LanguageModal from '../../components/LanguageModalize/LanguageModal'
+import ModalDropdown from '../../components/Picker/ModalDropdown'
+import { LocationContext } from '../../context/Location'
+import markerIcon from '../../../assets/Group1000003768.png'
+import CustomMarkerWithLabel from '../../assets/SVG/imageComponents/CustomMarkerWithLabel'
+import useGeocoding from '../../ui/hooks/useGeocoding'
+import Spinner from '../../components/Spinner/Spinner'
+import ForceUpdate from '../../components/Update/ForceUpdate'
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Add this import
+
+
 export default function CurrentLocation() {
   const Analytics = analytics()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [loading, setLoading] = useState(false)
   const inset = useSafeAreaInsets()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const currentTheme = { isRTL: i18n.dir() === "rtl", ...theme[themeContext.ThemeValue] }
   const { getCurrentLocation, getLocationPermission } = useLocation()
+  const [modalVisible, setModalVisible] = useState(false)
+  const [citiesModalVisible, setCitiesModalVisible] = useState(false)
+  const [currentLocation, setCurrentLocation] = useState(null)
+  const { getAddress } = useGeocoding()
+
+
+  const { cities, setLocation } = useContext(LocationContext)
+
 
   useEffect(() => {
     async function Track() {
@@ -33,43 +58,71 @@ export default function CurrentLocation() {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.white)
     }
-    StatusBar.setBarStyle( 'dark-content')
+    StatusBar.setBarStyle('dark-content')
   })
-  const initialRegion = {
-    latitude: 36.7378,
-    longitude: -119.7871,
-    latitudeDelta: 0.3,
-    longitudeDelta: 0.3
-  }
-  const markerCoordinate = { latitude: 36.7378, longitude: -119.7871 }
 
-  const setCurrentLocation = async() => {
-    setLoading(true)
-    const { status, canAskAgain } = await getLocationPermission()
-    if (status !== 'granted' && !canAskAgain) {
-      FlashMessage({
-        message: t('locationPermissionMessage'),
-        onPress: async() => {
-          await Linking.openSettings()
-        }
-      })
+  useEffect(() => {
+    async function fetchLocation() {
+      setLoading(true)
+      const { status, canAskAgain } = await getLocationPermission()
+      if (status !== 'granted' && !canAskAgain) {
+        FlashMessage({
+          message: t('locationPermissionMessage'),
+          onPress: async () => {
+            await Linking.openSettings()
+          }
+        })
+        setLoading(false)
+        return
+      }
+      const { error, coords, message } = await getCurrentLocation()
+      if (error) {
+        console.log(message, error)
+        // FlashMessage({
+        //   message
+        // })   commenting out this message because server side messages must not be shown to the client (security)
+        setLoading(false)
+        return
+      }
+      setCurrentLocation({ latitude: coords.latitude, longitude: coords.longitude })
       setLoading(false)
-      return
     }
-    const { error, coords, message } = await getCurrentLocation()
-    if (error) {
-      FlashMessage({
-        message
-      })
-      setLoading(false)
-      return
-    }
-    setLoading(false)
-    navigation.navigate('AddNewAddress', {
-      latitude: coords.latitude,
-      longitude: coords.longitude
-    })
+    fetchLocation()
+  }, [])
+
+  const initialRegion = {
+    latitude: 33.342119,
+    longitude: 35.483114,
+    latitudeDelta: 1.1,
+    longitudeDelta: 1.1
   }
+
+
+  const handleMarkerPress = async (coordinates) => {
+    setCitiesModalVisible(false)
+    setLoading(true)
+    const response = await getAddress(coordinates.latitude, coordinates.longitude)
+    setLocation({
+      label: 'Location',
+      deliveryAddress: response.formattedAddress,
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+      city: response.city
+    })
+    setLoading(false)
+    navigation.navigate('Main')
+  }
+
+
+  useEffect(() => {
+    async function checkLanguage() {
+      const lang = await AsyncStorage.getItem('enatega-language');
+      if (!lang) {
+        setModalVisible(true);
+      }
+    }
+    checkLanguage();
+  }, []);
 
   return (
     <>
@@ -78,70 +131,101 @@ export default function CurrentLocation() {
           styles().flex,
           {
             backgroundColor: currentTheme.themeBackground,
-            paddingTop: inset.top
+            // paddingTop: inset.top
           }
-        ]}>
+        ]}
+      >
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().mapView}>
+
             <MapView
               style={styles().flex}
               provider={PROVIDER_GOOGLE}
               customMapStyle={customMapStyle}
-              region={initialRegion}>
-              <Marker coordinate={markerCoordinate} />
+              region={initialRegion}
+            >
+              {currentLocation && (
+                <Marker
+                  coordinate={currentLocation}
+                  onPress={() => handleMarkerPress(currentLocation)}
+                />
+              )}
+
+              {cities.map(city => (
+                <React.Fragment key={city.id}>
+                  <CustomMarkerWithLabel
+                    coordinate={{ latitude: city.latitude, longitude: city.longitude }}
+                    label={city.name}
+                    icon={markerIcon}
+                    currentTheme={currentTheme}
+                    onPress={() => handleMarkerPress({ latitude: city.latitude, longitude: city.longitude })}
+                  />
+
+                  {city?.location && city?.location.coordinates && city.location.coordinates[0] && (
+                    <Polygon
+                      coordinates={city.location.coordinates[0].map(coord => ({
+                        latitude: coord[1],
+                        longitude: coord[0]
+                      }))}
+                      strokeColor={currentTheme.orderComplete}
+                      fillColor={currentTheme.radiusFill}
+                      strokeWidth={2}
+                    />
+                  )}
+
+                </React.Fragment>
+              ))}
             </MapView>
+
           </View>
+
           <View style={styles(currentTheme).subContainerImage}>
+            {loading && <Spinner spinnerColor={currentTheme.spinnerColor} backColor={currentTheme.themeBackground} />}
             <TextDefault
               textColor={currentTheme.fontMainColor}
               center
               bolder
               H2
-              style={styles(currentTheme).welcomeHeading}>
+              style={styles(currentTheme).welcomeHeading}
+            >
               {t('welcomeScreen')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontMainColor}
               bold
               center
-              style={styles(currentTheme).descriptionEmpty}>
+              style={styles(currentTheme).descriptionEmpty}
+            >
               {t('enategaUseYourLocationMessage')}
             </TextDefault>
-            <View style={styles(currentTheme).line} />
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).emptyButton}
-              onPress={setCurrentLocation}>
-              <TextDefault
-                style={{ paddingLeft: loading ? 40 : 0 }}
-                textColor={currentTheme.buttonText}
-                center
-                H5>
-                {t('useCurrentLocation')}
-              </TextDefault>
-              {loading && (
-                <Spinner
-                  size={'small'}
-                  backColor={'trasnparent'}
-                  spinnerColor={currentTheme.white}
-                />
-              )}
-            </TouchableOpacity>
 
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles(currentTheme).linkButton}
-              onPress={() => {
-                navigation.navigate('SelectLocation')
-              }}>
+              onPress={() => setCitiesModalVisible(true)}
+            >
               <TextDefault textColor={currentTheme.fontMainColor} H5 center>
-                {t('selectAnotherLocation')}
+                {t('exploreYallaCities')}
               </TextDefault>
             </TouchableOpacity>
           </View>
         </View>
+        
+        {!modalVisible && <ForceUpdate />}
+
+        <LanguageModal
+          currentTheme={currentTheme}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          dontClose
+        />
+        <ModalDropdown
+          theme={currentTheme}
+          visible={citiesModalVisible}
+          onItemPress={handleMarkerPress}
+          onClose={() => setCitiesModalVisible(false)}
+        />
       </View>
-      <View style={{ paddingBottom: inset.bottom }} />
     </>
   )
 }
