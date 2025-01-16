@@ -229,7 +229,6 @@ const zh = {
     phoneNumber: "输入您的电话号码",
     password: "密码",
     confirmPassword: "确认密码",
-    termsCheckBox: "我同意条款和条件以及隐私政策",
     viaPhone: "通过电话",
     vieEmail: "通过电子邮件",
     viaPhoneDesctiption: "确认您的电话号码，我们将致电给您",
@@ -239,6 +238,7 @@ const zh = {
     enterValidEmail: "请输入有效的电子邮件",
     requiredEmail: "需要电子邮件",
     enterValidPhone: "请输入有效的电话号码",
+    'I agree to the': '我同意',
   },
 };
 export default zh;

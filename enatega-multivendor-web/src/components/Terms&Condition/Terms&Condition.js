@@ -4,14 +4,20 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
+  useMediaQuery,
+  useTheme
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Link as RouterLink } from "react-router-dom";
 
-const TermsAndConditions = ({ label, name, onChange, checked, error }) => {
+const TermsAndConditions = ({ name, onChange, checked, error }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const handleChange = (event) => {
     onChange(event);
   };
+
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // For small screens
 
   return (
     <FormControl component="fieldset" error={!!error}>
@@ -26,10 +32,37 @@ const TermsAndConditions = ({ label, name, onChange, checked, error }) => {
             }}
           />
         }
-        label={t(label)}
+
+        label={
+          <span>
+            {t('I agree to the')}{" "}
+            <RouterLink
+              to="/terms"
+              style={{
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              {t("footerLinkTC")}
+            </RouterLink>{" "}
+            {t("and")}{" "}
+            <RouterLink
+              to="/privacy"
+              style={{
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              {t("privacyPolicy")}
+            </RouterLink>
+          </span>
+        }
+
         sx={{
           "& .MuiFormControlLabel-label": {
-            fontSize: "12px", // Adjust this value to your desired font size
+            fontSize: isSmallScreen ? "8px" : "12px", // Adjust this value to your desired font size
             fontWeight: "400",
           },
         }}

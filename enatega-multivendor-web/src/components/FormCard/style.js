@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2)
   },
   description: {
-    fontSize: '12px',
+    fontSize: '15px',
     fontWeight: '400',
     color: '#787878',
   },

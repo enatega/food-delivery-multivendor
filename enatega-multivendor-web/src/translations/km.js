@@ -238,7 +238,6 @@ const km = {
     phoneNumber: "បញ្ចូលលេខទូរស័ព្ទរបស់អ្នក",
     password: "ពាក្យសម្ងាត់",
     confirmPassword: "បញ្ជាក់ពាក្យសម្ងាត់",
-    termsCheckBox: "ខ្ញុំយល់ព្រមនឹងលក្ខខណ្ឌ និងតម្រូវការ និងគោលការណ៍ភាពឯកជន",
     viaPhone: "តាមទូរស័ព្ទ",
     vieEmail: "តាមអ៊ីមែល",
     viaPhoneDesctiption: "បញ្ជាក់លេខទូរស័ព្ទរបស់អ្នក ហើយយើងនឹងហៅអ្នក",
@@ -248,7 +247,7 @@ const km = {
     enterValidEmail: "បញ្ចូលអ៊ីមែលត្រឹមត្រូវ",
     requiredEmail: "អ៊ីមែលត្រូវការបំពេញ",
     enterValidPhone: "បញ្ចូលលេខទូរស័ព្ទត្រឹមត្រូវ",
-
+    'I agree to the': 'ខ្ញុំយល់ព្រមនឹង',
   },
 };
 export default km;

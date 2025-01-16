@@ -66,7 +66,7 @@ const ContactUs = () => {
         return;
       }
 
-      const phoneRegex = /^[0-9]{7,15}$/; // Adjust based on desired format
+      const phoneRegex = /^\+?[0-9]{7,15}$/; // Adjust based on desired format
       if (!phoneRegex.test(formData.phoneNumber)) {
         setAlert({
           open: true,
@@ -158,7 +158,7 @@ const ContactUs = () => {
       >
         <img src={icon} alt={text} style={{ height: "100%", width: "100%" }} />
       </Box>
-      <Typography variant="h5">{t(text)}</Typography>
+      <Typography sx={{fontSize: '32px', fontWeight: '500'}}>{t(text)}</Typography>
     </Box>
   );
 

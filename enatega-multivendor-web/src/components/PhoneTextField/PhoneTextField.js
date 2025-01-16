@@ -15,7 +15,7 @@ const PhoneTextField = ({ value, onChange, placeholder, name }) => {
       placeholder={placeholder || "Enter phone number"}
       country={"au"} // Update country code as needed
       value={value}
-      onChange={(phone) => onChange({ target: { name, value: phone } })}
+      onChange={(phone) => onChange({ target: { name, value: phone?.startsWith("+") ? phone : `+${phone}` } })} 
       inputProps={{
         name: name,
       }}

@@ -322,7 +322,6 @@ const ar = {
     phoneNumber: "أدخل رقم هاتفك",
     password: "كلمة المرور",
     confirmPassword: "تأكيد كلمة المرور",
-    termsCheckBox: "أوافق على الشروط والأحكام وسياسة الخصوصية",
     viaPhone: "عبر الهاتف",
     vieEmail: "عبر البريد الإلكتروني",
     viaPhoneDesctiption: "قم بتأكيد رقم هاتفك وسنتصل بك",
@@ -332,6 +331,7 @@ const ar = {
     enterValidEmail: "أدخل بريدًا إلكترونيًا صالحًا",
     requiredEmail: "البريد الإلكتروني مطلوب",
     enterValidPhone: "أدخل رقم هاتف صالحًا",
+    'I agree to the': ' أوافق على',
   },
 };
 export default ar;

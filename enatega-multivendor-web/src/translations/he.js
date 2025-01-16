@@ -322,7 +322,6 @@ const he = {
     phoneNumber: "הזן את מספר הטלפון שלך",
     password: "סיסמה",
     confirmPassword: "אשר סיסמה",
-    termsCheckBox: "אני מסכים לתנאים ולהגבלות ולמדיניות הפרטיות",
     viaPhone: "בטלפון",
     vieEmail: 'בדוא"ל',
     viaPhoneDesctiption: "אשר את מספר הטלפון שלך ואנו נתקשר אליך",
@@ -332,6 +331,7 @@ const he = {
     enterValidEmail: "הזן כתובת אימייל תקינה",
     requiredEmail: "נדרש אימייל",
     enterValidPhone: "הזן מספר טלפון תקין",
+    'I agree to the': ' אני מסכים ל',
   },
 };
 export default he;

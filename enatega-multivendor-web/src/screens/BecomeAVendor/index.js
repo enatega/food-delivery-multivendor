@@ -83,8 +83,7 @@ const BecomeAVendor = () => {
       return;
     }
 
-
-    const phoneRegex = /^[0-9]{7,15}$/; // Adjust based on desired format
+    const phoneRegex = /^\+?[0-9]{7,15}$/; // Adjust based on desired format
     if (!phoneRegex.test(formData.phoneNumber)) {
       setAlert({
         open: true,
@@ -93,7 +92,6 @@ const BecomeAVendor = () => {
       });
       return;
     }
-    
 
     if (password !== confirmPassword) {
       setAlert({
@@ -103,7 +101,7 @@ const BecomeAVendor = () => {
       });
       return;
     }
-    
+
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -174,17 +172,17 @@ const BecomeAVendor = () => {
           onChange={handleChange}
           required
         />
-        <PhoneTextField
-          placeholder={t("phoneNumber")}
-          name="phoneNumber"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          required
-        />
         <SingleTextField
           placeholder={t("emailAddress")}
           name="email"
           value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <PhoneTextField
+          placeholder={t("phoneNumber")}
+          name="phoneNumber"
+          value={formData.phoneNumber}
           onChange={handleChange}
           required
         />
@@ -205,7 +203,6 @@ const BecomeAVendor = () => {
           required
         />
         <TermsAndConditions
-          label={t("termsCheckBox")}
           name="termsAccepted"
           checked={formData.termsAccepted} // Pass checkbox state
           required
