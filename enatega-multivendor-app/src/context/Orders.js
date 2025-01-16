@@ -29,6 +29,7 @@ export const OrdersProvider = ({ children }) => {
   } = useQuery(ORDERS, {
     fetchPolicy: 'network-only',
     onError,
+    // pollInterval:2000,
     skip: !profile
   })
 

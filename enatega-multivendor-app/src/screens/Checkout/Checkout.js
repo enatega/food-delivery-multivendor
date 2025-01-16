@@ -92,6 +92,7 @@ function Checkout(props) {
     setIsPickup,
     instructions
   } = useContext(UserContext)
+
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
@@ -106,6 +107,7 @@ function Checkout(props) {
   const [orderDate, setOrderDate] = useState(new Date())
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
+  const [tax, setTax] = useState(0)
   const [deliveryCharges, setDeliveryCharges] = useState(0)
   const [restaurantName, setrestaurantName] = useState('...')
   const [voucherCode, setVoucherCode] = useState('')
@@ -176,7 +178,7 @@ function Checkout(props) {
     fetchPolicy: 'network-only'
   })
 
-  const [mutateOrder,{loading:mutateOrderLoading}] = useMutation(PLACEORDER, {
+  const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(PLACEORDER, {
     onCompleted,
     onError,
     update
@@ -220,31 +222,31 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async () => {
-      if (data && !!data.restaurant) {
-        const latOrigin = Number(data.restaurant.location.coordinates[1])
-        const lonOrigin = Number(data.restaurant.location.coordinates[0])
-        const latDest = Number(location.latitude)
-        const longDest = Number(location.longitude)
-        const distance = calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
+      ; (async () => {
+        if (data && !!data.restaurant) {
+          const latOrigin = Number(data.restaurant.location.coordinates[1])
+          const lonOrigin = Number(data.restaurant.location.coordinates[0])
+          const latDest = Number(location.latitude)
+          const longDest = Number(location.longitude)
+          const distance = calculateDistance(
+            latOrigin,
+            lonOrigin,
+            latDest,
+            longDest
+          )
 
-        let costType = configuration.costType
-        let amount = calculateAmount(
-          costType,
-          configuration.deliveryRate,
-          distance
-        )
+          let costType = configuration.costType
+          let amount = calculateAmount(
+            costType,
+            configuration.deliveryRate,
+            distance
+          )
 
-        if (isSubscribed) {
-          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+          if (isSubscribed) {
+            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
+          }
         }
-      }
-    })()
+      })()
     return () => {
       isSubscribed = false
     }
@@ -354,7 +356,7 @@ function Checkout(props) {
         },
         {
           text: 'close',
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel'
         }
       ],
@@ -401,12 +403,16 @@ function Checkout(props) {
       orderDate: data.placeOrder.orderDate
     })
     if (paymentMode === 'COD') {
+      console.log("Redirecting to 'Main' and 'OrderDetail' with order ID:", data?.placeOrder?._id);
       props?.navigation.reset({
         routes: [
           { name: 'Main' },
           {
             name: 'OrderDetail',
-            params: { _id: data?.placeOrder?._id }
+            params: {
+              _id: data?.placeOrder?._id,
+              order: data?.placeOrder
+            }
           }
         ]
       })
@@ -423,7 +429,7 @@ function Checkout(props) {
         email: data.placeOrder.user.email,
         currency: configuration.currency
       })
-    } 
+    }
     // else if (paymentMode === 'HYP') {
     //   // const items = transformOrder(cart)
 
@@ -563,9 +569,9 @@ function Checkout(props) {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-              _id,
-              options: options.map(({ _id }) => _id)
-            }))
+            _id,
+            options: options.map(({ _id }) => _id)
+          }))
           : [],
         specialInstructions: food.specialInstructions
       }
@@ -634,9 +640,8 @@ function Checkout(props) {
           )
           if (!variation) return null
 
-          const title = `${food.title}${
-            variation.title ? `(${variation.title})` : ''
-          }`
+          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
+            }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -1000,7 +1005,7 @@ function Checkout(props) {
                               -{configuration.currencySymbol}
                               {parseFloat(
                                 calculatePrice(0, false) -
-                                  calculatePrice(0, true)
+                                calculatePrice(0, true)
                               ).toFixed(2)}
                             </TextDefault>
                           </View>

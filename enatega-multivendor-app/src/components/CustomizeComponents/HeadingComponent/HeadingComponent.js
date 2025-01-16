@@ -15,7 +15,7 @@ function HeadingComponent(props) {
   const currentTheme = {isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
 
   return (
-    <View>
+    <View style={{marginTop:15}}>
       <View style={styles(currentTheme).topContainer}>
         <View style={styles().titleContainer}>
           <TextDefault

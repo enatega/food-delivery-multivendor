@@ -38,6 +38,7 @@ import { Instructions } from '../../components/Checkout/Instructions'
 import MapViewDirections from 'react-native-maps-directions'
 import useEnvVars from '../../../environment'
 import LottieView from 'lottie-react-native'
+import { clearLogEntriesAsync } from 'expo-updates'
 const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`
@@ -45,12 +46,13 @@ const CANCEL_ORDER = gql`
 `
 
 function OrderDetail(props) {
-  console.log("props=>>", props)
+  // console.log("propsdata",props?.route.params)
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
   //const Analytics = analytics()
   const { t, i18n } = useTranslation()
-  const id = props?.route?.params ? props?.route?.params?._id : null
-  const user = props?.route?.params ? props?.route?.params?.user : null
+  const id = props?.route.params ? props?.route.params?._id : null
+  const orderData = props?.route.params ? props?.route.params?.order : null
+  // console.log('orderData',orderData)
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
@@ -62,7 +64,7 @@ function OrderDetail(props) {
     onError,
     variables: { abortOrderId: id }
   })
-
+  
   // useEffect(() => {
   //   /* async function Track() {
   //     await Analytics.track(Analytics.events.NAVIGATE_TO_ORDER_DETAIL, {
@@ -80,10 +82,11 @@ function OrderDetail(props) {
       message: error.message
     })
   }
-console.log('orderrrrrrrr',orders)
-  const order = orders?.find(o => o?._id??order?.id === id)
 
- 
+const order = orders?.find(o => o?._id??order?.id === id) ?? orderData
+//  console.log("IDSSSS:  ", {orderids: orders?.map((o) => o?._id)})
+  // console.log({order, id})
+
   useEffect(() => {
     props?.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
@@ -117,7 +120,9 @@ console.log('orderrrrrrrr',orders)
     orderAmount: total,
     deliveryCharges
   } = order
-  const subTotal = total - tip - tax - deliveryCharges
+  
+
+  const subTotal = (total) - (tip) - tax - deliveryCharges
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -129,7 +134,7 @@ console.log('orderrrrrrrr',orders)
         showsVerticalScrollIndicator={false}
         overScrollMode='never'
       >
-        {order?.rider && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && (
+        {order?.rider && (order?.orderStatus) === ORDER_STATUS_ENUM.PICKED && (
           <MapView
             ref={(c) => (mapView.current = c)}
             style={{ flex: 1, height: HEIGHT * 0.6 }}
@@ -203,7 +208,7 @@ console.log('orderrrrrrrr',orders)
           }}
         >
           <OrderStatusImage status={order?.orderStatus} />
-          {order?.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
+          {(order?.orderStatus) !== ORDER_STATUS_ENUM.DELIVERED && (
             <View
               style={{
                 ...alignment.MTxSmall,
@@ -248,7 +253,7 @@ console.log('orderrrrrrrr',orders)
                 bold
               >
                 {' '}
-                {t(checkStatus(order?.orderStatus).statusText)}
+                {t(checkStatus(order?.orderStatus)?.statusText)}
               </TextDefault>
             </View>
           )}
@@ -258,16 +263,16 @@ console.log('orderrrrrrrr',orders)
           navigation={props?.navigation}
           currencySymbol={configuration.currencySymbol}
           items={items}
-          from={restaurant.name}
+          from={restaurant?.name}
           orderNo={order?.orderId}
-          deliveryAddress={deliveryAddress.deliveryAddress}
+          deliveryAddress={deliveryAddress?.deliveryAddress}
           subTotal={subTotal}
           tip={tip}
           tax={tax}
           deliveryCharges={deliveryCharges}
           total={total}
           theme={currentTheme}
-          id={_id??orderId}
+          id={id}
           rider={order?.rider}
           orderStatus={order?.orderStatus}
         />
@@ -279,7 +284,7 @@ console.log('orderrrrrrrr',orders)
           currency={configuration.currencySymbol}
           price={total.toFixed(2)}
         />
-        {order?.orderStatus === ORDER_STATUS_ENUM.PENDING && (
+        {(order?.orderStatus) === ORDER_STATUS_ENUM.PENDING && (
           <View style={{ margin: scale(20) }}>
             <Button
               text={t('cancelOrder')}

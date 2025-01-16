@@ -32,9 +32,9 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    // GRAPHQL_URL: 'http://10.97.32.189:8001/graphql',
-    // WS_GRAPHQL_URL: 'ws://10.97.32.189:8001/graphql',
-    // SERVER_URL: 'http://10.97.32.189:8001/', 
+    // GRAPHQL_URL: 'http://10.97.0.172:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://10.97.0.172:8001/graphql',
+    // SERVER_URL: 'http://10.97.0.172:8001/', 
     GRAPHQL_URL: 'https://new-enatega-api-staging.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://new-enatega-api-staging.up.railway.app/graphql',
     SERVER_URL: 'https://new-enatega-api-staging.up.railway.app/',

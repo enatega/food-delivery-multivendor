@@ -371,7 +371,7 @@ function ItemDetail(props) {
     )
     return {
       height,
-      opacity: interpolate(scrollY.value, [0, 1], [1, 0], Extrapolation.CLAMP)
+      opacity: 1
     }
   })
 
@@ -400,20 +400,17 @@ function ItemDetail(props) {
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        <Animated.View
-          style={[styles(currentTheme).headerContainer, animatedHeaderStyle]}
-        >
-          {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
-          <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14, paddingHorizontal: scale(10) }}>
-            {food?.description}
-          </Text>
-          <HeadingComponent title={food?.title} price={calculatePrice()} />
-        </Animated.View>
+        {/* <Animated.View
+          style={[styles(currentTheme).headerContainer]}
+        > */}
+         
+          {/* <HeadingComponent title={food?.title} price={calculatePrice()} /> */}
+        {/* </Animated.View> */}
 
         <Animated.ScrollView
           ref={scrollViewRef}
           onScroll={scrollHandler}
-          style={[styles(currentTheme).scrollViewStyle,, { zIndex: listZindex }]}
+          style={[styles(currentTheme).scrollViewStyle, { zIndex: listZindex }]}
           scrollEventThrottle={1}
           onScrollEndDrag={(e) => {
             if (e.nativeEvent?.contentOffset?.y >= 70) { 
@@ -436,10 +433,17 @@ function ItemDetail(props) {
             }
           }}
           contentContainerStyle={{
-            paddingTop: HEADER_MAX_HEIGHT,
+            // paddingTop: HEADER_MAX_HEIGHT,
             paddingBottom: scale(height * 0.09),
           }}
         >
+          <View>
+          {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
+          <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}>
+            {food?.description}
+          </Text>
+          <HeadingComponent title={food?.title} price={calculatePrice()}  /> 
+          </View>
           <View style={[styles(currentTheme).subContainer,]}>
             <View>
               {food?.variations?.length > 1 && (

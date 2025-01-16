@@ -33,7 +33,7 @@ function Search(props) {
               />
             </View>
           </View>
-          <View style={styles(currentTheme).filterContainer}>
+          <View style={[styles(currentTheme).filterContainer]}>
             {props?.search ? (
               <TouchableOpacity
                 onPress={() => {
