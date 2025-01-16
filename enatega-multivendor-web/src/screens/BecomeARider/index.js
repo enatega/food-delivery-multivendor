@@ -73,7 +73,7 @@ const BecomeARider = () => {
       return;
     }
 
-    const phoneRegex = /^[0-9]{7,15}$/; // Adjust based on desired format
+    const phoneRegex = /^\+?[0-9]{7,15}$/; // Adjust based on desired format
     if (!phoneRegex.test(formData.phoneNumber)) {
       setAlert({
         open: true,
@@ -194,7 +194,6 @@ const BecomeARider = () => {
           required
         />
         <TermsAndConditions
-          label={t("termsCheckBox")}
           name="termsAccepted"
           checked={formData.termsAccepted} // Pass checkbox state
           required

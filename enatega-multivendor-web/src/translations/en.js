@@ -6,7 +6,7 @@ const en = {
       "Enatega is an open-source delivery management platform for the future. We prioritize innovation, flexibility, and affordability, and offer a scalable, customizable solution that streamlines your delivery processes.",
     footerLinkHome: "Home",
     footerLinkPP: "Privacy Policy",
-    footerLinkTC: "Terms and Conditions",
+    footerLinkTC: "Terms & Conditions",
     footerEndText: "Enatega – © 2022 All Rights Reserved",
     followUs: "Follow Us",
     poweredBy: "Powered By",
@@ -326,7 +326,6 @@ const en = {
     phoneNumber: "Enter your phone number",
     password: "Password",
     confirmPassword: "Confirm Password",
-    termsCheckBox: "I Agree To The Terms And Conditions And Privacy Policy",
     viaPhone: "Via Phone",
     vieEmail: "Via Email",
     viaPhoneDesctiption: "Confirm your phone number and we'll give you a call",
@@ -335,7 +334,8 @@ const en = {
     message: "message",
     enterValidEmail: "Enter a valid email",
     requiredEmail: 'Email is required',
-    enterValidPhone: 'Enter a valid phone number'
+    enterValidPhone: 'Enter a valid phone number',
+    'I agree to the': 'I agree to the ',
   },
 };
 export default en;

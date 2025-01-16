@@ -310,8 +310,6 @@ const fr = {
     phoneNumber: "Entrez votre numéro de téléphone",
     password: "Mot de passe",
     confirmPassword: "Confirmez le mot de passe",
-    termsCheckBox:
-      "J’accepte les termes et conditions ainsi que la politique de confidentialité",
     viaPhone: "Par téléphone",
     vieEmail: "Par e-mail",
     viaPhoneDesctiption:
@@ -323,6 +321,7 @@ const fr = {
     enterValidEmail: "Entrez une adresse e-mail valide",
     requiredEmail: "L'e-mail est requis",
     enterValidPhone: "Entrez un numéro de téléphone valide",
+    'I agree to the': "Je suis d accord avec ",
   },
 };
 export default fr;
