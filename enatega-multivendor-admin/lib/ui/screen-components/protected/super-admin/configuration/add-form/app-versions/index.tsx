@@ -2,7 +2,6 @@
 
 // Core
 import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
 
 // Components
 import ConfigCard from '../../view/card';
