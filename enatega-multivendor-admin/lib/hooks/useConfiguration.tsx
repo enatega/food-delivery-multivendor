@@ -69,6 +69,7 @@ export const useConfiguration = () => {
   const APP_TEST_OTP = configuration?.testOtp;
   const CURRENCY_CODE = configuration?.currency;
   const CURRENCY_SYMBOL = configuration?.currency;
+  const ISPAID_VERSION = configuration?.isPaidVersion;
 
   return {
     SERVER_URL: BACKEND_URL.LIVE.SERVER_URL,
@@ -149,5 +150,8 @@ export const useConfiguration = () => {
     // AMPLITUDE
     AMPLITUDE_API_KEY_WEB,
     AMPLITUDE_API_KEY_APP,
+
+    // IS PAID VERSION
+    ISPAID_VERSION
   };
 };
