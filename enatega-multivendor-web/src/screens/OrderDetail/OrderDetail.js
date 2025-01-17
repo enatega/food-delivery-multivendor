@@ -43,6 +43,7 @@ import { useMutation } from "@apollo/client";
 import FlashMessage from "../../components/FlashMessage";
 import ThreeDots from "../../components/ThreeDots/ThreeDots";
 import StarRatings from "react-star-ratings";
+import { useTranslation } from 'react-i18next';
 
 const REVIEWORDER = gql`
   ${reviewOrder}
@@ -53,6 +54,7 @@ function useQuery() {
 }
 
 function OrderDetail() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
@@ -261,7 +263,7 @@ function OrderDetail() {
                     color="common"
                     className={(classes.textBold, classes.smallText)}
                   >
-                    Review your order
+                    {t('ReviewYourOrder')}
                   </Typography>
                 </Box>
               )}
@@ -294,7 +296,7 @@ function OrderDetail() {
         <CloseIcon className={classes.closeButton} onClick={closeModal} />
         <div className={classes.modalContainer}>
           <div className={classes.title}>
-            <h2>Write a Review</h2>
+            <h2>{t('WriteaReview')}</h2>
           </div>
           <div className={classes.starContainer}>
             <div className={classes.starWrapper}>
@@ -312,19 +314,15 @@ function OrderDetail() {
               className={classes.input}
               placeholderTextColor={theme.palette.secondary.dark}
               onChange={(e) => onChangeText(e.target.value)}
-              placeholder="More detailed reviews get more visibility..."
+              placeholder={t('PHReview')}
             />
           </div>
           <div className={classes.submitContainer}>
             <div className={classes.submit}>
               {loadingMutation && <ThreeDots />}
               {!loadingMutation && (
-                <button
-                  onClick={onSubmit}
-                  className={classes.submitButton}
-                  disabled={rating < 2 || description.length < 1}
-                >
-                  Submit
+                <button onClick={onSubmit} className={classes.submitButton} disabled={rating < 2 || description.length < 1}>
+                  {t('submit')}
                 </button>
               )}
             </div>

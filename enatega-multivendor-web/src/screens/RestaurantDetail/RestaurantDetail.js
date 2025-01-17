@@ -66,8 +66,8 @@ function RestaurantDetail() {
   }));
   const headerData = {
     name: data?.restaurant?.name ?? "...",
-    averageReview: data?.restaurant?.reviewData.ratings ?? "...",
-    averageTotal: data?.restaurant?.reviewData.total ?? "...",
+    averageReview: data?.restaurant?.reviewData?.ratings ?? "...",
+    averageTotal: data?.restaurant?.reviewData?.total ?? "...",
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
     deals: deals,

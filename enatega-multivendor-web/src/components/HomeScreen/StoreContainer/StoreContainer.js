@@ -57,7 +57,7 @@ function StoreContainer() {
               </RouterLink>
               <RouterLink
                 to={{
-                  pathname: "https://play.google.com/store/apps/details?id=com.enatega.multivendor&hl=en_US&gl=US",
+                  pathname: "https://play.google.com/store/apps/details?id=com.rami.multivendor&hl=en_US&gl=US",
                 }}
                 target="_blank"
                 className={classes.linkDecoration}

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useCallback, useEffect, useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from 'gapi-script';
@@ -17,8 +19,11 @@ import useStyles from "./styles";
 import { useTranslation } from 'react-i18next';
 
 function Login() {
+
   const { GOOGLE_CLIENT_ID } = ConfigurableValues();
+
   const { t } = useTranslation();
+
   const theme = useTheme();
   const [mainError, setMainError] = useState({});
   const classes = useStyles();
@@ -31,11 +36,9 @@ function Login() {
     loginButtonSetter,
     loginError,
   } = useRegistration();
-  const location = useLocation();
 
-  const showMessage = useCallback((messageObj) => {
-    setMainError(messageObj);
-  }, []);
+
+  const location = useLocation();
 
   useEffect(() => {
     if (loginError) {
@@ -44,7 +47,8 @@ function Login() {
         message: loginError,
       });
     }
-  }, [loginError, showMessage]); // Added showMessage to the dependency array
+  }, [loginError]);
+
 
   useEffect(() => {
     function start() {
@@ -56,6 +60,7 @@ function Login() {
     gapi.load('client:auth2', start);
   }, [GOOGLE_CLIENT_ID]);
 
+
   const callGoogle = useCallback(
     (clickAction) => {
       if (!loading) {
@@ -64,8 +69,12 @@ function Login() {
         clickAction();
       }
     },
-    [loading, loginButtonSetter, setLoading] // Added loginButtonSetter and setLoading to the dependency array
+    [loading , loginButtonSetter, setLoading]
   );
+
+  const showMessage = useCallback((messageObj) => {
+    setMainError(messageObj);
+  }, []);
 
   const toggleSnackbar = useCallback(() => {
     setMainError({});
@@ -175,7 +184,6 @@ function Login() {
           </Typography>
         </Button>
       </RouterLink>
- 
       <Box
         display="flex"
         sx={{ justifyContent: "center", alignItems: "center" }}

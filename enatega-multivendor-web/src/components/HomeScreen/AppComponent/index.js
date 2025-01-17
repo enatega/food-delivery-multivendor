@@ -30,7 +30,7 @@ export default function AppComponent() {
       }}
     >
       <Typography className={small ? classes.bgTextSmall : classes.bgText}>
-        APP
+        {t('APP')}
       </Typography>
       <Box
         display="flex"
@@ -85,7 +85,7 @@ export default function AppComponent() {
               )
             }
           >
-            Ios Store
+            {t('IosStore')}
           </Button>
           <Button
             className={classes.btn}
@@ -99,12 +99,12 @@ export default function AppComponent() {
             startIcon={<img src={AppStore} alt="appstore" />}
             onClick={() =>
               window.open(
-                "https://play.google.com/store/apps/details?id=com.enatega.multivendor",
+                "https://play.google.com/store/apps/details?id=com.rami.multivendor",
                 "_blank"
               )
             }
           >
-            Play Store
+            {t('PlayStore')}
           </Button>
         </Box>{" "}
       </Box>

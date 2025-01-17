@@ -49,6 +49,8 @@ function Restaurants() {
     clearCart,
     restaurant: cartRestaurant,
   } = useContext(UserContext);
+
+
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const activeOrders = orders.filter((o) =>
@@ -94,6 +96,7 @@ function Restaurants() {
     skip: !location,
   });
 
+
   if (loading || error) {
     return (
       <Grid container>
@@ -121,6 +124,8 @@ function Restaurants() {
       .flat(),
   }));
 
+
+  console.log(data)
   const searchRestaurants = (searchText) => {
     const data = [];
     restaurants.forEach((restaurant) => {

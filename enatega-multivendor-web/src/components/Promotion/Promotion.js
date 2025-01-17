@@ -43,7 +43,7 @@ export default function Promotion() {
       <Box pl={theme.spacing(2)} />
       <MaterialLink
         target="__blank"
-        href="https://play.google.com/store/apps/details?id=com.enatega.multivendor"
+        href="https://play.google.com/store/apps/details?id=com.rami.multivendor"
       >
         <PlayStoreIcon />
       </MaterialLink>
