@@ -156,7 +156,7 @@ function PrivacyPolicy() {
                 color="primary"
                 className={classes.link}
               >
-                {" ramiabureeshyalla@gmail.com"}
+                {" info@enatega.com"}
               </Typography>
             </Typography>
             <Typography variant="subtitle1" className={classes.boldText}>
@@ -171,7 +171,7 @@ function PrivacyPolicy() {
                 color="primary"
                 className={classes.link}
               >
-                {" ramiabureeshyalla@gmail.com"}
+                {" info@enatega.com"}
               </Typography>
               . There will be a small charge for processing this request.
             </Typography>
