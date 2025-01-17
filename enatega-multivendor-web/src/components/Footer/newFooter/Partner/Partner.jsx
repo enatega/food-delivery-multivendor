@@ -7,9 +7,11 @@ import {
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import React from "react";
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 const Partner = () => {
   const {t} =useTranslation()
+  const navigate = useNavigate();
   return (
     <Box>
       <Typography
@@ -38,6 +40,7 @@ const Partner = () => {
         }}
       >
         <Button
+          
           variant="contained"
           style={{ backgroundColor: "#5AC12F", width: "230px", color: "black" ,textAlign:"left",}}
           sx={{
@@ -45,6 +48,9 @@ const Partner = () => {
               xs: "10px auto",
               md: "10px 0 5px 0",
             },
+          }}
+          onClick={()=>{
+            navigate("/becomeavendor")
           }}
         >
           {t("becomeVendor")}
@@ -65,6 +71,9 @@ const Partner = () => {
               xs: "10px auto",
               md: "5px 0 5px 0",
             },
+          }}
+          onClick={()=>{
+            navigate("/becomearider")
           }}
         >
          {t("becomeRestaurant")}

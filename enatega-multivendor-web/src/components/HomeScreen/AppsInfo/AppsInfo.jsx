@@ -61,7 +61,7 @@ const AppsInfo = () => {
     {
       text:t("signupDelivering"),
       color: "#FF9900",
-      link: "",
+      link: "/becomearider",
       textColor: "white",
     },
   ];
@@ -70,7 +70,7 @@ const AppsInfo = () => {
     {
       text:t("registerRestaurant"),
       color: "#5AC12F",
-      link: "",
+      link: "/becomeavendor",
       textColor: "white",
     },
   ];
@@ -79,13 +79,13 @@ const AppsInfo = () => {
     {
       text: "Order Online Now ",
       color: "#5AC12F",
-      link: "",
+      link: "/restaurant-list",
       textColor: "white",
     },
     {
       text: "Download Our App",
       color: "white",
-      link: "",
+      link: "https://play.google.com/store/apps/details?id=com.enatega.multivendor",
       textColor: "green",
       isOutline: true,
     },
