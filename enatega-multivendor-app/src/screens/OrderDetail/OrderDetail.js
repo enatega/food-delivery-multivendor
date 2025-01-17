@@ -81,10 +81,15 @@ function OrderDetail(props) {
       message: error.message
     })
   }
-const order=orders?.find((o)=>
+let order=orders?.find((o)=>
 {
   return o?._id === id
 })
+
+if(!order)
+{
+  order=orderData
+}
 
   useEffect(() => {
     props?.navigation.setOptions({
