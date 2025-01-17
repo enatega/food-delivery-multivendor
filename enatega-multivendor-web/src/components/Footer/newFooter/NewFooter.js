@@ -12,13 +12,13 @@ const NewFooter = () => {
   let getnewlinks = [
     { name: "footerLinkTC", link: "/terms" },
     { name: "about", link: "/" },
-    { name: "footerLinkPP", link: "/" },
-    { name: "contactUs", link: "/" },
+    { name: "footerLinkPP", link: "/privacy" },
+    { name: "contactUs", link: "/contact_us" },
   ];
 
   let helplinks = [
-    { name: "vendors", link: "/" },
-    { name: "drivers", link: "/" },
+    { name: "vendors", link: "/becomeavendor" },
+    { name: "drivers", link: "/becomearider" },
   ];
 
   return (

@@ -36,7 +36,7 @@ const AllLinks = ({ heading, links }) => {
       </Typography>
 
       {links.map((item) => {
-        return <SingleLink name={item.name} route={item.route} />;
+        return <SingleLink name={item.name} route={item.link} />;
       })}
     </Box>
   );
