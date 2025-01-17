@@ -6,8 +6,10 @@ import {
 import React from "react";
 import useStyle from "./styles.js";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const Info = () => {
+  const navigate = useNavigate();
   let { t } = useTranslation();
   const classes = useStyle();
   return (
@@ -31,13 +33,25 @@ const Info = () => {
       </Box>
 
       <Box>
-        <Button variant="filled"  className={classes.greenButton}>
+        <Button variant="filled"  className={classes.greenButton} onClick={()=>
+          {
+            navigate("/becomeavendor");
+          }
+        }>
           {t("registerRestaurant")}
         </Button>
-        <Button variant="filled" className={classes.yellowButton}>
+        <Button variant="filled" className={classes.yellowButton} onClick={()=>
+          {
+            navigate("/becomearider");
+          }
+        } >
           {t("signUpRider")}
         </Button>
-        <Button variant="filled" className={classes.blueButton}>
+        <Button variant="filled" className={classes.blueButton} onClick={()=>
+          {
+            navigate("/restaurant-list");
+          }
+        }>
           {t("orderFoodNow")}
         </Button>
       </Box>
