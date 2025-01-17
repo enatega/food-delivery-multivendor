@@ -13,6 +13,7 @@ import FirebaseAdminAddForm from '../../add-form/firebase-admin';
 import AppConfigAddForm from '../../add-form/app-config';
 import VerificationAddForm from '../../add-form/verification';
 import CurrencyAddForm from '../../add-form/currency';
+import AppVersionAddForm from '../../add-form/app-versions';
 
 const ConfigMain = () => {
   return (
@@ -31,6 +32,7 @@ const ConfigMain = () => {
       <FirebaseAdminAddForm />
       <AppConfigAddForm />
       <VerificationAddForm />
+      <AppVersionAddForm />
     </div>
   );
 };
