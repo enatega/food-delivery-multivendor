@@ -99,7 +99,7 @@ export default function AppComponent() {
             startIcon={<img src={AppStore} alt="appstore" />}
             onClick={() =>
               window.open(
-                "https://play.google.com/store/apps/details?id=com.rami.multivendor",
+                "https://play.google.com/store/apps/details?id=com.enatega.multivendor",
                 "_blank"
               )
             }
