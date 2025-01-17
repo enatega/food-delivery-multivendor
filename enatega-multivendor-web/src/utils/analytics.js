@@ -1,14 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import amplitude from "amplitude-js";
-
-import { fetchConfiguration } from "../utils/helper";
-
 //import ConfigurableValues from "../config/constants";
 let isInitialized = false;
-//const { AMPLITUDE_API_KEY } = ConfigurableValues();
-
-//const AMPLITUDE_API_KEY  = "2114f5db4c014dc7ad4ed2ad747341b5";
-let apiKey = "";
+const { AMPLITUDE_API_KEY } = "58e7a93e7efad88eff1c6264d19c24fa";
+const apiKey = AMPLITUDE_API_KEY;
 
 export const events = {
   USER_LOGGED_IN: "USER_LOGGED_IN",
@@ -30,45 +25,39 @@ export const events = {
   NAVIGATE_TO_PAYPAL: "NAVIGATE_TO_PAYPAL",
 };
 export async function initialize() {
-  if (isInitialized) {
+  if (isInitialized || !apiKey) {
     return;
   }
 
-  const { webAmplitudeApiKey } = await fetchConfiguration();
-  if (!webAmplitudeApiKey) {
-    return;
-  }
-
-  apiKey = webAmplitudeApiKey;
-  amplitude.getInstance().init(apiKey);
+  await amplitude.getInstance().init(apiKey);
   isInitialized = true;
 }
 
 export async function identify(options, userId) {
-  await initialize();
+  initialize();
   // eslint-disable-next-line no-undef
   const properties = options;
 
   if (!apiKey) return;
   if (userId) {
-    amplitude.setUserId(userId);
+    await amplitude.setUserId(userId);
   }
   if (properties) {
-    amplitude.getInstance().setUserProperties(properties);
+    await amplitude.getInstance().setUserProperties(properties);
   } else {
-    amplitude.getInstance().clearUserProperties();
+    await amplitude.getInstance().clearUserProperties();
   }
 }
 export async function track(event, options) {
-  await initialize();
+  initialize();
   const properties = options;
 
   if (!apiKey) return;
 
   if (properties) {
-    amplitude.getInstance().logEvent(event, properties);
+    await amplitude.getInstance().logEvent(event, properties);
   } else {
-    amplitude.getInstance().logEvent(event);
+    await amplitude.getInstance().logEvent(event);
   }
 }
 

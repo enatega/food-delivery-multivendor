@@ -114,7 +114,7 @@ function NewLogin() {
           error={Boolean(error)}
           helperText={error}
           variant="outlined"
-          defaultValue={"demo-customer@enatega.com"}
+          // defaultValue={"demo-customer@enatega.com"}
           label="Email"
           type={"email"}
           fullWidth
