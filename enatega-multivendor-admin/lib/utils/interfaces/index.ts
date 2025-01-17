@@ -41,3 +41,4 @@ export * from './dashboard.interface';
 export * from './ratings.interface';
 export * from './orders/order-vendor.interface';
 export * from './orders/order-superadmin.interface';
+export * from './app-versions.interface';
