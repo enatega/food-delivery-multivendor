@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -8,34 +8,21 @@ import {
   Dimensions,
   Platform
 } from 'react-native'
-import { TextDefault, Spinner } from '../../components'
-import { useLogin } from '../../ui/hooks'
+import { Spinner } from '../../components'
 import { colors } from '../../utilities'
 import styles from './styles'
-import { Image, Button, Input, Icon } from 'react-native-elements'
+import { Image } from 'react-native-elements'
 import { TouchableOpacity } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
 import i18next from '../../../i18n'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useTranslation } from 'react-i18next'
 
 const { height } = Dimensions.get('window')
 export default function SelectLanguage() {
-  const {
-    onLogin,
-    isValid,
-    loading,
-    errors,
-    setPassword,
-    setUserName,
-    username,
-    password
-  } = useLogin()
+
   const { t } = useTranslation()
   const [selectedLanguage, setSelectedLanguage] = useState('')
   const [loader, setLoader] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const navigation = useNavigation()
   const languageTypes = [
     { value: 'Arabic', code: 'ar', index: 0 },
     { value: 'English', code: 'en', index: 1 },

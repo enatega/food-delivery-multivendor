@@ -4,7 +4,7 @@ export const BACKEND_URL = {
     WS_SERVER_URL: 'ws://localhost:8001/', //wss://enatega-multivendor.up.railway.app/',
   },
   LIVE: {
-    SERVER_URL: 'https://new-enatega-api-staging.up.railway.app/',
-    WS_SERVER_URL: 'wss://new-enatega-api-staging.up.railway.app/',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+    WS_SERVER_URL: 'wss://enatega-multivendor.up.railway.app/',
   },
 };
