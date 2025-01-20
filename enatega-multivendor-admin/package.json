@@ -30,13 +30,14 @@
     "graphql-ws": "^5.16.0",
     "lodash": "^4.17.21",
     "next": "14.2.5",
+    "next-intl": "^3.26.3",
     "primereact": "10.8.3",
     "react": "^18",
     "react-dom": "^18",
     "react-geocode": "^0.2.2",
+    "react-international-phone": "^4.3.0",
     "tailwind-merge": "^2.5.2",
-    "yup": "^1.4.0",
-    "react-international-phone": "^4.3.0"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",

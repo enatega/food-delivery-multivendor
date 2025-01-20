@@ -15,6 +15,9 @@ export const MAX_LANSDCAPE_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 export const MAX_SQUARE_FILE_SIZE = 500 * 1000; // 500 KB
 export const MAX_VIDEO_FILE_SIZE = 8 * 1024 * 1024; // 8 MB
 
+// Default Locale
+export const DEFAULT_LOCALE: string = 'en';
+
 // Severity Styles
 export const SEVERITY_STYLES: ISeverityStyles = {
   error: {

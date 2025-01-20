@@ -78,3 +78,30 @@ export interface IRestaurantDuplicateDialogComponentProps
   visible: boolean;
   onHide: () => void;
 }
+
+
+export interface IRestaurantByIdResponse {
+  restaurant: {
+    _id: string;
+    unique_restaurant_id: string;
+    name: string;
+    image: string;
+    orderPrefix: string;
+    slug: string;
+    address: string;
+    deliveryTime: number;
+    minimumOrder: number;
+    isActive: boolean;
+    commissionRate: number;
+    tax: number;
+    username: string;
+    owner: {
+      _id: string;
+      email: string;
+      isActive: boolean;
+      __typename: string;
+    };
+    shopType: string;
+    __typename: string;
+  };
+}

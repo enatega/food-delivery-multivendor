@@ -3,7 +3,14 @@
 'use client';
 
 // Core
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -37,7 +44,10 @@ import { LayoutContext } from '@/lib/context/global/layout.context';
 import { useUserContext } from '@/lib/hooks/useUser';
 
 // Interface/Types
-import { LayoutContextProps } from '@/lib/utils/interfaces';
+import {
+  IRestaurantByIdResponse,
+  LayoutContextProps,
+} from '@/lib/utils/interfaces';
 
 // Constants
 import {
@@ -53,20 +63,47 @@ import { onUseLocalStorage } from '@/lib/utils/methods';
 // Styles
 import classes from './app-bar.module.css';
 import { AppLogo } from '@/lib/utils/assets/svgs/logo';
+import { useQuery } from '@apollo/client';
+import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
+import { useLocale, useTranslations } from 'next-intl';
+import { TLocale } from '@/lib/utils/types/locale';
+import { setUserLocale } from '@/lib/utils/methods/locale';
 
 const AppTopbar = () => {
+  // Hooks
+  const t = useTranslations();
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const currentLocale = useLocale();
+
+  // Local Storage
+  const restaurantId = onUseLocalStorage('get', 'restaurantId');
+
   // States
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false); // New state for the modal
+  const [restaurantName, setRestaurantName] = useState('');
+
+  // Queries
+  const { data: restaurantData } = useQuery<
+    IRestaurantByIdResponse | undefined,
+    { id: string }
+  >(GET_RESTAURANT_PROFILE, {
+    variables: {
+      id: restaurantId ?? '',
+    },
+  });
+
   // Ref
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<Menu>(null);
+  const languageMenuRef = useRef<Menu>(null);
+  
   // Context
   const { showRestaurantSidebar } =
-    useContext<LayoutContextProps>(LayoutContext);
+  useContext<LayoutContextProps>(LayoutContext);
   const { user, setUser } = useUserContext();
-  // Hooks
-  const router = useRouter();
+  
 
   // Handlers
   const onDevicePixelRatioChange = useCallback(() => {
@@ -94,6 +131,13 @@ const AppTopbar = () => {
     router.push('/authentication/login');
   };
 
+  function onLocaleChange(value: string) {
+    const locale = value as TLocale;
+    startTransition(() => {
+      setUserLocale(locale);
+    });
+  }
+
   // Use Effects
   useEffect(() => {
     // Listening to mouse down event
@@ -113,6 +157,11 @@ const AppTopbar = () => {
     router.push(_route);
   };
 
+  useEffect(() => {
+    if (restaurantData?.restaurant?.name) {
+      setRestaurantName(restaurantData?.restaurant?.name);
+    }
+  }, [restaurantData?.restaurant?.name]);
   return (
     <div className={`${classes['layout-topbar']}`}>
       <div className="flex items-center cursor-pointer">
@@ -125,32 +174,148 @@ const AppTopbar = () => {
           <AppLogo />
         </div>
       </div>
-      <div className="hidden items-center space-x-6 md:flex">
+      <div className="hidden items-center space-x-1 md:flex">
+        <div
+          className="flex items-center space-x-2 rounded-md p-2 hover:bg-[#d8d8d837]"
+          onClick={(event) => languageMenuRef.current?.toggle(event)}
+          aria-controls="popup_menu_right"
+          aria-haspopup
+        >
+          <FontAwesomeIcon icon={faGlobe} />
+
+          <Menu
+            model={[
+              {
+                label: 'ENGLISH',
+                template(item) {
+                  return (
+                    <div
+                      className={`${currentLocale === 'en' ? 'bg-green-300' : ''} p-2 `}
+                      onClick={()=>onLocaleChange('en')}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                },
+                command: () => {
+                  onLocaleChange('en');
+                },
+              },
+              {
+                label: 'ARABIC',
+                template(item) {
+                  return (
+                    <div
+                      className={`${currentLocale === 'ar' ? 'bg-green-300' : ''} p-2 `}
+                      onClick={()=>onLocaleChange('ar')}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                },
+                command: () => {
+                  onLocaleChange('ar');
+                },
+              },
+              {
+                label: 'FRENCH',
+                template(item) {
+                  return (
+                    <div
+                      className={`${currentLocale === 'fr' ? 'bg-green-300' : ''} p-2 `}
+                      onClick={()=>onLocaleChange('fr')}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                },
+                command: () => {
+                  onLocaleChange('fr');
+                },
+              },
+              {
+                label: 'KHMER',
+                template(item) {
+                  return (
+                    <div
+                      className={`${currentLocale === 'km' ? 'bg-green-300' : ''} p-2 `}
+                      onClick={()=>onLocaleChange('km')}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                },
+                command: () => {
+                  onLocaleChange('km');
+                },
+              },
+              {
+                label: 'CHINESE',
+                template(item) {
+                  return (
+                    <div
+                      className={`${currentLocale === 'zh' ? 'bg-green-300' : ''} p-2 `}
+                      onClick={()=>onLocaleChange('zh')}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                },
+                command: () => {
+                  onLocaleChange('zh');
+                },
+              },
+              {
+                label: 'HEBREW',
+                template(item) {
+                  return (
+                    <div
+                      className={`${currentLocale === 'he' ? 'bg-green-300' : ''} p-2 `}
+                      onClick={()=>onLocaleChange('he')}
+                    >
+                      {item.label}
+                    </div>
+                  );
+                },
+                command: () => {
+                  onLocaleChange('he');
+                },
+              },
+            ]}
+            popup
+            ref={languageMenuRef}
+            id="popup_menu_right"
+            popupAlignment="right"
+          />
+        </div>
         <div
           className="flex items-center space-x-2 rounded-md p-2 hover:bg-[#d8d8d837]"
           onClick={(event) => menuRef.current?.toggle(event)}
           aria-controls="popup_menu_right"
           aria-haspopup
         >
-          <span>{user?.name ?? ''}</span>
+          <span>
+            {user?.name ? user?.name : restaurantName ? restaurantName : ''}
+          </span>
 
           <Image
             src={
               user?.image
                 ? user.image
-                : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
+                : restaurantData?.restaurant?.image
+                  ? restaurantData?.restaurant?.image
+                  : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
             }
             alt="profile-img"
             height={32}
             width={32}
             className="h-8 w-8 select-none rounded-full"
           />
-
           <FontAwesomeIcon icon={faChevronDown} />
           <Menu
             model={[
               {
-                label: 'Logout',
+                label: t('Logout'),
                 command: () => {
                   setLogoutModalVisible(true);
                 },
@@ -190,7 +355,6 @@ const AppTopbar = () => {
             <TextIconClickable className="justify-between" icon={faTruck} />
             <TextIconClickable className="justify-between" icon={faCog} />
             <TextIconClickable className="justify-between" icon={faGlobe} />
-            <TextIconClickable className="justify-between" icon={faGlobe} />
             <TextIconClickable
               onClick={() => () => {
                 setLogoutModalVisible(true);
@@ -202,15 +366,15 @@ const AppTopbar = () => {
         </div>
       )}
       <CustomDialog
-        title="Logout Confirmation"
-        message="Are you sure you want to logout?"
+        title={t('Logout Confirmation')}
+        message={t('Are you sure you want to logout?')}
         visible={isLogoutModalVisible}
         onHide={() => setLogoutModalVisible(false)}
         onConfirm={onConfirmLogout}
         loading={false} // Set to true if you have a loading state for logout
         buttonConfig={{
-          primaryButtonProp: { label: 'Yes', icon: 'pi pi-check' },
-          secondaryButtonProp: { label: 'Cancel', icon: 'pi pi-times' },
+          primaryButtonProp: { label: t('Yes'), icon: 'pi pi-check' },
+          secondaryButtonProp: { label: t('Cancel'), icon: 'pi pi-times' },
         }}
       />
     </div>
