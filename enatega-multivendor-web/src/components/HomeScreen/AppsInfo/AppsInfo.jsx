@@ -59,7 +59,7 @@ const AppsInfo = () => {
 
   let RiderButtons = [
     {
-      text:t("signupDelivering"),
+      text: t("signupDelivering"),
       color: "#FF9900",
       link: "/becomearider",
       textColor: "white",
@@ -68,7 +68,7 @@ const AppsInfo = () => {
 
   let RestuarantButtons = [
     {
-      text:t("registerRestaurant"),
+      text: t("registerRestaurant"),
       color: "#5AC12F",
       link: "/becomeavendor",
       textColor: "white",

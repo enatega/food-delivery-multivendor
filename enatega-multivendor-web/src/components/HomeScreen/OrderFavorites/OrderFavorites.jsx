@@ -1,13 +1,15 @@
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid,Button } from "@mui/material";
 import React from "react";
 import useStyle from "./styles.js";
 import DoublePhone from "../../../assets/images/DoublePhone.svg";
 import { useTranslation } from "react-i18next";
-import appStore  from '../../../assets/images/appStore.svg'
-import playStore  from '../../../assets/images/playStore.svg'
+import  appStore   from '../../../assets/images/appStore.svg'
+import playStore from '../../../assets/images/playStore.svg'
+
 
 const OrderFavorites = () => {
   const { t } = useTranslation();
+
   let classes = useStyle();
   return (
     <Box
@@ -21,8 +23,8 @@ const OrderFavorites = () => {
       }}
     >
       <Grid container xs={11} md={10} className={classes.container}>
-        <Grid item xs={12} md={6}>
-          <Box>
+        <Grid item xs={12} md={6} >
+          <Box  > 
             <Typography className={classes.head}>{t("orderText")}</Typography>
 
             <Typography className={classes.text}>
@@ -36,14 +38,15 @@ const OrderFavorites = () => {
             </Typography>
 
             <Box>
-              <a href="https://play.google.com/store/apps/details?id=com.enatega.multivendor" className={classes.stores}>
+              <Button href="https://play.google.com/store/apps/details?id=com.enatega.multivendor" 
+              className={classes.stores}>
               <img src={appStore} alt="playStore" > 
               </img>
-              </a>
-              <a href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093" className={classes.stores}>
+              </Button>
+              <Button href="https://apps.apple.com/pk/app/enatega-multivendor/id1526488093" className={classes.stores}>
               <img src={playStore} alt="appStore"> 
               </img>
-              </a>
+              </Button>
             </Box>
           </Box>
         </Grid>
@@ -70,8 +73,7 @@ const OrderFavorites = () => {
               className={classes.phoneImg}
               style={{
                 objectFit: "cover",
-                width: "520px",
-                height: "500px",
+                
               }}
             />
           </Box>

@@ -27,7 +27,25 @@ const useStyle = makeStyles((theme) => ({
     stores:
     {
         marginRight:"20px",
-        marginTop:"10px"
+        marginTop:"10px",
+        backgroundColor:"white",
+        padding:0,
+        "&:hover":
+        {
+         backgroundColor:"white"
+        }
+    
+    },
+    phoneImg:
+    {
+        width: "520px",
+        height: "500px",
+
+        [theme.breakpoints.down("sm")]: {
+             width:"100%",
+             height:"auto",
+            
+        },
     }
 
 }));
