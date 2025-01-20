@@ -13,8 +13,8 @@ const PROFILE = gql`
   ${profile}
 `
 
-const PRODUCT_URL = 'https://enatega.com/enatega-multi-vendor/'
-const PRIVACY_URL = 'https://enatega.com/privacy-policy/'
+const PRODUCT_URL = 'https://enatega.com/'
+const PRIVACY_URL = 'https://multivendor.enatega.com/#/privacy'
 
 // const ABOUT_URL = 'https://ninjascode.com/'
 

@@ -41,6 +41,7 @@ import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import useWatchLocation from './src/ui/hooks/useWatchLocation'
 import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
+import TextDefault from './src/components/Text/TextDefault/TextDefault'
 
 LogBox.ignoreLogs([
   // 'Warning: ...',
