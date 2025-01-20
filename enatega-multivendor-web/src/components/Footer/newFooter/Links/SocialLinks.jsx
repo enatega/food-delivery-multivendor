@@ -6,10 +6,11 @@ import XIcon from "@mui/icons-material/X";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const SocialLinks = () => {
+  const navigate=useNavigate()
   let { t } = useTranslation();
   let socialLinks = [
     { name: "facebook", icon: FacebookIcon, url: "/" },
@@ -60,7 +61,15 @@ const SocialLinks = () => {
         }}
       >
         {socialLinks.map((item) => {
-          return <item.icon style={{ color: "#5AC12F" }} />;
+          return <Box key={item.name} onClick={
+            ()=>
+            {
+              navigate(item.url)
+            }
+          } >
+           <item.icon  style={{ color: "#5AC12F" , cursor:"pointer" }}  />;
+          </Box>
+          
         })}
       </Box>
     </Box>
