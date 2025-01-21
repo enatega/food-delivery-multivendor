@@ -8,6 +8,7 @@ import { ICouponTableHeaderProps } from '@/lib/utils/interfaces/coupons.interfac
 
 // Icons
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 // Prime react
 import { Checkbox } from 'primereact/checkbox';
@@ -20,6 +21,9 @@ export default function CouponTableHeader({
   selectedActions,
   setSelectedActions,
 }: ICouponTableHeaderProps) {
+  // Hooks
+  const t = useTranslations();
+
   //Ref
   const overlayPanelRef = useRef<OverlayPanel>(null);
 
@@ -36,15 +40,15 @@ export default function CouponTableHeader({
 
   const menuItems = [
     {
-      label: 'Enabled',
+      label: t('Enabled'),
       value: 'true',
     },
     {
-      label: 'Disabled',
+      label: t('Disabled'),
       value: 'false',
     },
     {
-      label: 'All',
+      label: t('All'),
       value: '',
     },
   ];
@@ -60,7 +64,7 @@ export default function CouponTableHeader({
             showLabel={false}
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            placeholder="Keyword Search"
+            placeholder={t('Keyword Search')}
           />
         </div>
         <div className="flex items-center">
@@ -70,7 +74,7 @@ export default function CouponTableHeader({
                 <CustomTextField
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Search"
+                  placeholder={t('Search')}
                   className="h-8 w-full"
                   type="text"
                   name="search"
@@ -109,7 +113,7 @@ export default function CouponTableHeader({
                 className="mt-3 text-center text-sm cursor-pointer"
                 onClick={() => setSelectedActions([])}
               >
-                Clear filters
+                {t('Clear filters')}
               </p>
             </div>
           </OverlayPanel>
@@ -118,7 +122,7 @@ export default function CouponTableHeader({
             className="w-20 rounded border border-dotted border-[#E4E4E7] text-black"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title={selectedActions.length > 0 ? 'Filter' : 'Action'}
+            title={selectedActions.length > 0 ? t('Filter') : t('Actions')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />
         </div>

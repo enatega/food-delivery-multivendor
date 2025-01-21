@@ -8,16 +8,21 @@ import Image from 'next/image';
 
 // Hooks
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 
 export const CUISINE_TABLE_COLUMNS = ({
   menuItems,
 }: {
   menuItems: IActionMenuProps<ICuisine>['items'];
 }) => {
+  // Hooks
+  const t = useTranslations();
+
+  // Cuisine Columns
   const cuisine_columns = useMemo(
     () => [
       {
-        headerName: 'Image',
+        headerName: t('Image'),
         propertyName: 'image',
         body: (data: ICuisine) => (
           <div className="flex h-8 w-8 items-center justify-start overflow-hidden rounded-md">
@@ -26,7 +31,7 @@ export const CUISINE_TABLE_COLUMNS = ({
                 data?.image ||
                 'https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
               }
-              alt={data?.description ?? 'cuisine'}
+              alt={data?.description ?? t('Cuisine')}
               width={100}
               height={100}
             />
@@ -34,19 +39,19 @@ export const CUISINE_TABLE_COLUMNS = ({
         ),
       },
       {
-        headerName: 'Name',
+        headerName: t('Name'),
         propertyName: 'name',
       },
       {
-        headerName: 'Description',
+        headerName: t('Description'),
         propertyName: 'description',
       },
       {
-        headerName: 'Shop Category',
+        headerName: t('Shop Category'),
         propertyName: 'shopType',
       },
       {
-        headerName: 'Action',
+        headerName: t('Actions'),
         propertyName: 'action',
         body: (rowData: ICuisine) => (
           <div className="three-dots">

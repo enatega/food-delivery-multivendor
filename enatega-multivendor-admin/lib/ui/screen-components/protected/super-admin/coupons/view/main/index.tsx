@@ -23,6 +23,7 @@ import { FilterMatchMode } from 'primereact/api';
 
 // Hooks
 import { useContext, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useMutation } from '@apollo/client';
 
 // Components
@@ -40,6 +41,9 @@ export default function CouponsMain({
   isEditing,
   setIsEditing,
 }: ICouponMainProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Toast
   const { showToast } = useContext(ToastContext);
 
@@ -86,17 +90,18 @@ export default function CouponsMain({
       refetchQueries: [{ query: GET_COUPONS }],
       onCompleted: () => {
         showToast({
-          title: 'Delete Coupon',
+          title: t('Delete Coupon'),
           type: 'success',
-          message: 'Coupon has been deleted successfully',
+          message: t('Coupon has been deleted successfully'),
           duration: 2000,
         });
       },
       onError: (err) => {
         showToast({
-          title: 'Delete Coupon',
+          title: t('Delete Coupon'),
           type: 'error',
-          message: err.message || 'An unknown error occured, please try again',
+          message:
+            err.message || t('An unknown error occured, please try again'),
           duration: 2000,
         });
       },
@@ -125,7 +130,7 @@ export default function CouponsMain({
   // Menu Items
   const menuItems: IActionMenuItem<ICoupon>[] = [
     {
-      label: 'Edit',
+      label: t('Edit'),
       command: (data?: ICoupon) => {
         if (data) {
           setIsEditing({
@@ -140,7 +145,7 @@ export default function CouponsMain({
       },
     },
     {
-      label: 'Delete',
+      label: t('Delete'),
       command: (data?: ICoupon) => {
         if (data) {
           setIsDeleting({
@@ -204,7 +209,7 @@ export default function CouponsMain({
         }
         visible={isDeleting.bool}
         loading={deleteCouponLoading}
-        message="Are you sure to delete the coupon?"
+        message={t('Are you sure to delete the coupon?')}
       />
     </div>
   );
