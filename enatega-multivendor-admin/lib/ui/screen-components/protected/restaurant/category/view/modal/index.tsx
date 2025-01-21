@@ -12,6 +12,7 @@ import {
 
 // Hooks
 import { QueryResult, useQuery } from '@apollo/client';
+import { useTranslations } from 'next-intl';
 
 // Prime React
 import { Dialog } from 'primereact/dialog';
@@ -21,6 +22,9 @@ export default function SubCategoriesPreiwModal({
   isSubCategoryModalOpen,
   setIsSubCategoryModalOpen,
 }: ISubCategoriesPreviewModalProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Queries
   const { data: sub_categories_data, loading: sub_categories_loading } =
     useQuery(GET_SUBCATEGORIES_BY_PARENT_ID, {
@@ -41,7 +45,7 @@ export default function SubCategoriesPreiwModal({
       header={() => {
         return (
           <div className="mx-auto font-bold text-gray-700">
-            Child Categories
+            {t('Child Categories')}
           </div>
         );
       }}
@@ -51,7 +55,7 @@ export default function SubCategoriesPreiwModal({
           <InputSkeleton />
         ) : !sub_categories_data?.subCategoriesByParentId?.length ? (
           <li className="my-1 font-semibold text-red-600">
-            No sub-categories to show
+            {t('No sub-categories to show')}
           </li>
         ) : (
           sub_categories_data?.subCategoriesByParentId?.map((sub_ctg) => {

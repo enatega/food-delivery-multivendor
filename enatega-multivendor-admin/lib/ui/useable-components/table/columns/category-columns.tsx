@@ -3,6 +3,7 @@ import ActionMenu from '../../action-menu';
 import { Dispatch, SetStateAction } from 'react';
 import TextIconClickable from '../../text-icon-clickable';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 export const CATEGORY_TABLE_COLUMNS = ({
   menuItems,
@@ -16,8 +17,11 @@ export const CATEGORY_TABLE_COLUMNS = ({
     }>
   >;
 }) => {
+  // Hooks
+  const t = useTranslations();
+
   return [
-    { headerName: 'Title', propertyName: 'title' },
+    { headerName: t('Title'), propertyName: 'title' },
 
     {
       propertyName: 'actions',
@@ -33,7 +37,7 @@ export const CATEGORY_TABLE_COLUMNS = ({
                     parentCategoryId: rider._id,
                   })
                 }
-                title="Add Sub-Category"
+                title={t('Add Sub-Category')}
                 className="border border-gray-400 border-dashed"
               />
             </div>

@@ -17,8 +17,12 @@ import { IFoodAddFormComponentProps } from '@/lib/utils/interfaces';
 // Components
 import FoodDetails from './food.index';
 import VariationAddForm from './variations';
+import { useTranslations } from 'next-intl';
 
 const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
+  // Hooks
+  const t = useTranslations();
+
   // Ref
   const stepperRef = useRef(null);
 
@@ -48,7 +52,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
     >
       <div ref={stepperRef}>
         <Stepper linear headerPosition="bottom" activeStep={activeIndex}>
-          <StepperPanel header="Add Product">
+          <StepperPanel header={t('Add Product')}>
             <FoodDetails
               stepperProps={{
                 onStepChange: onHandleStepChange,
@@ -57,7 +61,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
               isFoodFormVisible={isFoodFormVisible}
             />
           </StepperPanel>
-          <StepperPanel header="Add Variations">
+          <StepperPanel header={t('Add Variations')}>
             <VariationAddForm
               stepperProps={{
                 onStepChange: onHandleStepChange,

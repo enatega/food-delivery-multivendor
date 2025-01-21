@@ -36,6 +36,7 @@ import { useMutation } from '@apollo/client';
 import CategoryTableHeader from '../header/table-header';
 import { GET_SUBCATEGORIES } from '@/lib/api/graphql/queries/sub-categories';
 import SubCategoriesPreiwModal from '../modal';
+import { useTranslations } from 'next-intl';
 
 export default function CategoryMain({
   setIsAddCategoryVisible,
@@ -43,6 +44,9 @@ export default function CategoryMain({
   setCategory,
   setIsAddSubCategoriesVisible,
 }: ICategoryMainComponentsProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const {
     restaurantLayoutContextData,
@@ -82,11 +86,11 @@ export default function CategoryMain({
       onError: (error) => {
         showToast({
           type: 'error',
-          title: 'Sub-Categories',
+          title: t('Sub-Categories'),
           message:
             error.clientErrors[0].message ||
             error.graphQLErrors[0].message ||
-            'An error occured while fetching the sub-categories',
+            t('An error occured while fetching the sub-categories'),
         });
       },
     }) as IQueryResult<ISubCategoryResponse | undefined, undefined>;
@@ -127,8 +131,8 @@ export default function CategoryMain({
   function onErrorFetchCategoriesByRestaurant() {
     showToast({
       type: 'error',
-      title: 'Category Fetch',
-      message: 'Categories fetch failed',
+      title: t('Category Fetch'),
+      message: t('Categories fetch failed'),
       duration: 2500,
     });
   }
@@ -136,7 +140,7 @@ export default function CategoryMain({
   // Constants
   const menuItems: IActionMenuItem<ICategory>[] = [
     {
-      label: 'Edit',
+      label: t('Edit'),
       command: (data?: ICategory) => {
         if (data) {
           setIsAddCategoryVisible(true);
@@ -152,7 +156,7 @@ export default function CategoryMain({
       },
     },
     {
-      label: 'Delete',
+      label: t('Delete'),
       command: (data?: ICategory) => {
         if (data) {
           setDeleteId(data._id);
@@ -160,16 +164,17 @@ export default function CategoryMain({
       },
     },
     {
-      label: 'View Sub-Categories',
+      label: t('View Sub-Categories'),
       command: (data?: ICategory) => {
         if (data && data._id) {
           handleCategoryRowClick(data?._id);
         } else {
           showToast({
             type: 'error',
-            title: 'View Sub-Categories',
-            message:
-              'An error occured while previewing the related sub-categories',
+            title: t('View Sub-Categories'),
+            message: t(
+              'An error occured while previewing the related sub-categories'
+            ),
           });
         }
       },
@@ -215,8 +220,8 @@ export default function CategoryMain({
             onCompleted: () => {
               showToast({
                 type: 'success',
-                title: 'Delete Category',
-                message: 'Category has been deleted successfully.',
+                title: t('Delete Category'),
+                message: `${t('Category has been deleted successfully')}.`,
                 duration: 3000,
               });
               setDeleteId('');
@@ -224,17 +229,19 @@ export default function CategoryMain({
             onError: (err) => {
               showToast({
                 type: 'error',
-                title: 'Delete Category',
+                title: t('Delete Category'),
                 message:
                   err.message ||
                   err.clientErrors[0].message ||
                   err.networkError?.message ||
-                  'An error occured while deleteing the category, please try again later.',
+                  t(
+                    'An error occured while deleteing the category, please try again later'
+                  ),
               });
             },
           });
         }}
-        message="Are you sure you want to delete this category?"
+        message={t('Are you sure you want to delete this category?')}
       />
     </div>
   );
