@@ -31,12 +31,14 @@ import { DELETE_ZONE, GET_ZONES } from '@/lib/api/graphql';
 
 // Data
 import { generateDummyZones } from '@/lib/utils/dummy';
+import { useTranslations } from 'next-intl';
 
 export default function ZoneMain({
   setIsAddZoneVisible,
   setZone,
 }: IZoneMainComponentsProps) {
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   // State - Table
@@ -71,7 +73,7 @@ export default function ZoneMain({
 
   const menuItems: IActionMenuItem<IZoneResponse>[] = [
     {
-      label: 'Edit',
+      label: t('Edit'),
       command: (data?: IZoneResponse) => {
         if (data) {
           setIsAddZoneVisible(true);
@@ -80,7 +82,7 @@ export default function ZoneMain({
       },
     },
     {
-      label: 'Delete',
+      label: t('Delete'),
       command: (data?: IZoneResponse) => {
         if (data) {
           setDeleteId(data._id);
@@ -117,15 +119,15 @@ export default function ZoneMain({
             onCompleted: () => {
               showToast({
                 type: 'success',
-                title: 'Delete Zone',
-                message: 'Zone has been deleted successfully',
+                title: t('Delete Zone'),
+                message: t('Zone has been deleted successfully'),
                 duration: 3000,
               });
               setDeleteId('');
             },
           });
         }}
-        message="Are you sure you want to delete this item?"
+        message={t('Are you sure you want to delete this item?')}
       />
     </div>
   );
