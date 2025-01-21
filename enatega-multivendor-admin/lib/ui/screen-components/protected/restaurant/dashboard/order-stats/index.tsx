@@ -18,10 +18,14 @@ import {
 import { useContext, useMemo } from 'react';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import { useTranslations } from 'next-intl';
 
 export default function UserStats({
   dateFilter,
 }: IDashboardOrderStatsComponentsProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const {
     restaurantLayoutContextData: { restaurantId },
@@ -33,6 +37,7 @@ export default function UserStats({
     GET_DASHBOARD_RESTAURANT_ORDERS,
     {
       restaurant: restaurantId,
+      dateKeyword: dateFilter?.dateKeyword,
       starting_date: dateFilter?.startDate,
       ending_date: dateFilter?.endDate,
     },
@@ -60,10 +65,8 @@ export default function UserStats({
 
   return (
     <div className="p-3 grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {/* {dummyOrderStatsData.map(renderStatsCard)} */}
-
       <StatsCard
-        label="Total Orders"
+        label={t('Total Orders')}
         total={dashboardUsers?.totalOrders ?? 0}
         icon={faShoppingCart}
         route="/admin/restaurant/orders"
@@ -72,7 +75,7 @@ export default function UserStats({
       />
 
       <StatsCard
-        label="Total COD Orders"
+        label={t('Total COD Orders')}
         total={dashboardUsers?.totalCODOrders ?? 0}
         icon={faMoneyBillWave}
         route="/admin/restaurant/orders"
@@ -81,7 +84,7 @@ export default function UserStats({
       />
 
       <StatsCard
-        label="Total Card Orders"
+        label={t('Total Card Orders')}
         total={dashboardUsers?.totalCardOrders ?? 0}
         icon={faCreditCard}
         route="/admin/restaurant/orders"
@@ -90,7 +93,7 @@ export default function UserStats({
       />
 
       <StatsCard
-        label="Total Sales"
+        label={t('Total Sales')}
         total={dashboardUsers?.totalSales ?? 0}
         icon={faCashRegister}
         route="/admin/restaurant/orders"

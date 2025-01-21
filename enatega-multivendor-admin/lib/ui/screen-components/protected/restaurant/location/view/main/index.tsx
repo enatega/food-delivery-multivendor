@@ -1,5 +1,5 @@
 import React from 'react';
-import UpdateRestaurantLocation from '../../../profile/restaurant/add-form/update-restaurant-location';
+import UpdateRestaurantLocation from '../../../../../../../../../../../Yalla/yalla-admin-v2/lib/ui/screen-components/protected/restaurant/profile/restaurant/add-form/update-restaurant-location';
 
 const LocationMain = () => {
   return (

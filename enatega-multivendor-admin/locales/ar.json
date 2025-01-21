@@ -1017,5 +1017,6 @@
   "Store Earnings": "أرباح المتجر",
   "Total Drivers": "إجمالي السائقين",
   "Prefered dimensions": "الأبعاد المفضلة",
-  "Prefered File size": "حجم الملف المفضل"
+  "Prefered File size": "حجم الملف المفضل",
+  "Connect with Stripe for payments": "اتصل بـ Stripe للمدفوعات"
 }
