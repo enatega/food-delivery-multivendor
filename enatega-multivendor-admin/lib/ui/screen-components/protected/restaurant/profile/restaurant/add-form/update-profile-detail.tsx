@@ -15,7 +15,7 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
-import { ProfileErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, ProfileErrors, SHOP_TYPE } from '@/lib/utils/constants';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { EDIT_RESTAURANT, GET_CUISINES } from '@/lib/api/graphql';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
@@ -410,11 +410,11 @@ export default function UpdateRestaurantDetails({
                         key="logo"
                         name="logo"
                         title={t('Upload Profile Image')}
-                        // fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
-                        // maxFileHeight={1080}
-                        // maxFileWidth={1080}
-                        // maxFileSize={MAX_SQUARE_FILE_SIZE}
-                        // orientation="SQUARE"
+                        fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
+                        maxFileHeight={1080}
+                        maxFileWidth={1080}
+                        maxFileSize={MAX_SQUARE_FILE_SIZE}
+                        orientation="SQUARE"
                         onSetImageUrl={setFieldValue}
                         existingImageUrl={values.logo}
                         showExistingImage={true}
@@ -432,11 +432,11 @@ export default function UpdateRestaurantDetails({
                         key="image"
                         name="image"
                         title={t('Upload Image')}
-                        // fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
-                        // maxFileHeight={841}
-                        // maxFileWidth={1980}
-                        // maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
-                        // orientation="LANDSCAPE"
+                        fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
+                        maxFileHeight={841}
+                        maxFileWidth={1980}
+                        maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
+                        orientation="LANDSCAPE"
                         onSetImageUrl={setFieldValue}
                         existingImageUrl={values.image}
                         showExistingImage={true}

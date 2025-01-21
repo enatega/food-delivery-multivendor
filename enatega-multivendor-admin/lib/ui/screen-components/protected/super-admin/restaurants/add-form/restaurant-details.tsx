@@ -23,7 +23,7 @@ import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Constants
-import { RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
 
 // Interface
 import { IRestaurantForm } from '@/lib/utils/interfaces';
@@ -465,11 +465,11 @@ export default function RestaurantDetailsForm({
                               ? 'red'
                               : '',
                           }}
-                          // fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
-                          // maxFileHeight={1080}
-                          // maxFileWidth={1080}
-                          // maxFileSize={MAX_SQUARE_FILE_SIZE}
-                          // orientation="SQUARE"
+                          fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
+                          maxFileHeight={1080}
+                          maxFileWidth={1080}
+                          maxFileSize={MAX_SQUARE_FILE_SIZE}
+                          orientation="SQUARE"
                           existingImageUrl={values.logo}
                           showExistingImage={true}
                         />
@@ -489,11 +489,11 @@ export default function RestaurantDetailsForm({
                           }}
                           existingImageUrl={values.image}
                           showExistingImage={true}
-                          // fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
-                          // maxFileHeight={841}
-                          // maxFileWidth={1980}
-                          // maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
-                          // orientation="LANDSCAPE"
+                          fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
+                          maxFileHeight={841}
+                          maxFileWidth={1980}
+                          maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
+                          orientation="LANDSCAPE"
                         />
                       </div>
 

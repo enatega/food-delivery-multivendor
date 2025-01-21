@@ -26,7 +26,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { useContext } from 'react';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
-import { CuisineErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import { CuisineErrors, MAX_SQUARE_FILE_SIZE, SHOP_TYPE } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
 
 export default function CuisineForm({
@@ -258,11 +258,11 @@ export default function CuisineForm({
                     showExistingImage={
                       isEditing.bool && isEditing.data.image ? true : false
                     }
-                    // fileTypes={['image/jpeg', 'image/jpg', 'image/webp']}
-                    // maxFileHeight={1080}
-                    // maxFileWidth={1080}
-                    // maxFileSize={MAX_SQUARE_FILE_SIZE}
-                    // orientation="SQUARE"
+                    fileTypes={['image/jpeg', 'image/jpg', 'image/webp']}
+                    maxFileHeight={1080}
+                    maxFileWidth={1080}
+                    maxFileSize={MAX_SQUARE_FILE_SIZE}
+                    orientation="SQUARE"
                   />
 
                   <button

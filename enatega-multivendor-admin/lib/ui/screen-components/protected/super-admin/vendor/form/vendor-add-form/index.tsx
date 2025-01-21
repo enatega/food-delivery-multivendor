@@ -19,7 +19,7 @@ import {
 import { IVendorForm } from '@/lib/utils/interfaces/forms';
 
 // Constants and Methods
-import { VendorErrors } from '@/lib/utils/constants';
+import { MAX_SQUARE_FILE_SIZE, VendorErrors } from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 
 // Components
@@ -342,11 +342,11 @@ export default function VendorAddForm({
                           key="image"
                           name="image"
                           title={t('Upload Image')}
-                          // fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
-                          // maxFileHeight={1080}
-                          // maxFileWidth={1080}
-                          // maxFileSize={MAX_SQUARE_FILE_SIZE}
-                          // orientation="SQUARE"
+                          fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
+                          maxFileHeight={1080}
+                          maxFileWidth={1080}
+                          maxFileSize={MAX_SQUARE_FILE_SIZE}
+                          orientation="SQUARE"
                           onSetImageUrl={setFieldValue}
                           existingImageUrl={values.image}
                           showExistingImage={isEditingVendor ? true : false}

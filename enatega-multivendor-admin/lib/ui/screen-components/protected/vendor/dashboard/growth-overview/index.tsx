@@ -21,11 +21,11 @@ import {
 import DashboardUsersByYearStatsSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.user.year.stats.skeleton';
 import { VendorLayoutContext } from '@/lib/context/vendor/layout-vendor.context';
 import Table from '@/lib/ui/useable-components/table';
-import { VENDOR_STORE_DETAILS_COLUMN } from '@/lib/ui/useable-components/table/columns/store-details-by-vendor-columns';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 import { onUseLocalStorage } from '@/lib/utils/methods';
 import { generateVendorStoreDetails } from '@/lib/utils/dummy';
 import { useTranslations } from 'next-intl';
+import { VENDOR_STORE_DETAILS_COLUMN } from '@/lib/ui/useable-components/table/columns/store-details-by-vendor-columns';
 
 // Dummy
 
