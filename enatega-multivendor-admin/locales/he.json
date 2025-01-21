@@ -1015,5 +1015,7 @@
   "Total Drivers": "סה\"כ נהגים",
   "Prefered dimensions": "ממדים מועדפים",
   "Prefered File size": "גודל קובץ מועדף",
-  "Connect with Stripe for payments": "התחבר ל-Stripe לתשלומים"
+  "Connect with Stripe for payments": "התחבר ל-Stripe לתשלומים",
+  "Payment Required": "נדרש תשלום",
+  "Please complete your purchase to gain full access to the product": "אנא השלם את הרכישה שלך כדי לקבל גישה מלאה למוצר"
 }

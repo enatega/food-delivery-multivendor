@@ -8,25 +8,29 @@ import { IDispatchTableHeaderProps } from '@/lib/utils/interfaces/dispatch.inter
 
 // Icons
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 // Prime react
 import { Checkbox } from 'primereact/checkbox';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 export default function DispatchTableHeader({
-  globalFilterValue,
-  onGlobalFilterChange,
   selectedActions,
   setSelectedActions,
+  search,
+  setSearch,
 }: IDispatchTableHeaderProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Ref
   const overlayPanelRef = useRef<OverlayPanel>(null);
 
   // States
   const [searchValue, setSearchValue] = useState('');
 
-  // Handle checkbox toggle
+  // Checkbox toggle
   const toggleAction = (action: string) => {
     const updatedActions = selectedActions.includes(action)
       ? selectedActions.filter((a) => a !== action)
@@ -34,20 +38,39 @@ export default function DispatchTableHeader({
     setSelectedActions(updatedActions);
   };
 
+  // Actions
   const menuItems = [
     {
-      label: 'Pending',
+      label: t('Pending'),
       value: 'PENDING',
     },
     {
-      label: 'Assigned',
+      label: t('Assigned'),
       value: 'ASSIGNED',
     },
     {
-      label: 'Accepted',
+      label: t('Accepted'),
       value: 'ACCEPTED',
     },
+    {
+      label: t('Picked'),
+      value: 'PICKED',
+    },
+    {
+      label: t('Delivered'),
+      value: 'DELIVERED',
+    },
   ];
+
+  // Debounce Search Handler
+  const debounceSearch = useCallback((delay: number, val: string) => {
+    let timer: ReturnType<typeof setTimeout>;
+    setSearch(val);
+    return () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => setSearch(val), delay);
+    };
+  }, []);
 
   return (
     <div className="mb-4 flex flex-col gap-6">
@@ -58,9 +81,11 @@ export default function DispatchTableHeader({
             name="vendorFilter"
             maxLength={35}
             showLabel={false}
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder="Keyword Search"
+            value={search}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              debounceSearch(300, e.target.value)
+            }
+            placeholder={t('Keyword Search')}
           />
         </div>
         <div className="flex items-center">
@@ -70,7 +95,7 @@ export default function DispatchTableHeader({
                 <CustomTextField
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Search"
+                  placeholder={t('Search')}
                   className="h-8 w-full"
                   type="text"
                   name="search"
@@ -109,7 +134,7 @@ export default function DispatchTableHeader({
                 className="mt-3 text-center text-sm cursor-pointer"
                 onClick={() => setSelectedActions([])}
               >
-                Clear filters
+                {t('Clear filters')}
               </p>
             </div>
           </OverlayPanel>
@@ -118,7 +143,7 @@ export default function DispatchTableHeader({
             className="w-20 rounded border border-dotted border-[#E4E4E7] text-black"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title={selectedActions.length > 0 ? 'Filter' : 'Action'}
+            title={selectedActions.length > 0 ? t('Filter') : t('Actions')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />
         </div>

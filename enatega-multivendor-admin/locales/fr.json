@@ -1011,5 +1011,7 @@
   "Total Drivers": "Nombre total de conducteurs",
   "Prefered dimensions": "Dimensions préférées",
   "Prefered File size": "Taille de fichier préférée",
-  "Connect with Stripe for payments": "Connectez-vous à Stripe pour les paiements"
+  "Connect with Stripe for payments": "Connectez-vous à Stripe pour les paiements",
+   "Payment Required": "Paiement requis",
+    "Please complete your purchase to gain full access to the product": "Veuillez finaliser votre achat pour avoir un accès complet au produit"
 }
