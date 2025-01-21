@@ -24,3 +24,11 @@ export interface ICustomTabProps extends IGlobalComponentProps {
   dateFilter?: IDateFilter;
   setDateFilter?: Dispatch<SetStateAction<IDateFilter>>;
 }
+
+export interface IDateFilterCustomTabProps extends IGlobalComponentProps {
+  options: string[];
+  selectedTab: string | undefined;
+  setSelectedTab: (tab: string) => void;
+  dateFilter?: IDateFilter;
+  setDateFilter?: Dispatch<SetStateAction<IDateFilter>>;
+}
