@@ -59,7 +59,7 @@ export default function UsersMain() {
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
-        columns={USERS_TABLE_COLUMNS}
+        columns={USERS_TABLE_COLUMNS()}
       />
     </div>
   );

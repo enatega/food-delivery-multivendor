@@ -28,12 +28,14 @@ import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 import useToast from '@/lib/hooks/useToast';
 import { useMutation } from '@apollo/client';
 import { DELETE_STAFF } from '@/lib/api/graphql/mutations/staff';
+import { useTranslations } from 'next-intl';
 
 export default function StaffMain({
   setIsAddStaffVisible,
   setStaff,
 }: IStaffMainComponentsProps) {
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   // States (Data Table)
@@ -70,7 +72,7 @@ export default function StaffMain({
 
   const menuItems: IActionMenuItem<IStaffResponse>[] = [
     {
-      label: 'Edit',
+      label: t('Edit'),
       command: (data?: IStaffResponse) => {
         if (data) {
           setIsAddStaffVisible(true);
@@ -79,7 +81,7 @@ export default function StaffMain({
       },
     },
     {
-      label: 'Delete',
+      label: t('Delete'),
       command: (data?: IStaffResponse) => {
         if (data) {
           console.log(data);
@@ -118,8 +120,8 @@ export default function StaffMain({
               console.log('Delete Response:', res);
               showToast({
                 type: 'success',
-                title: 'Success!',
-                message: 'Staff Deleted',
+                title: t('Success'),
+                message: t('Staff Deleted'),
                 duration: 3000,
               });
               setDeleteId('');
@@ -128,14 +130,14 @@ export default function StaffMain({
               console.error('Delete Error:', e);
               showToast({
                 type: 'error',
-                title: 'Error!',
-                message: 'Failed to delete staff.',
+                title: t('Error'),
+                message: t('Failed to delete staff'),
                 duration: 3000,
               });
             },
           });
         }}
-        message="Are you sure you want to delete this item?"
+        message={t('Are you sure you want to delete this item?')}
       />
     </div>
   );

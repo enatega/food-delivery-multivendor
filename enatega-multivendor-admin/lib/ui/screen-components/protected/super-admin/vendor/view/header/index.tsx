@@ -11,8 +11,12 @@ import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 
 // Constants
 import HeaderText from '@/lib/ui/useable-components/header-text';
+import { useTranslations } from 'next-intl';
 
 export default function VendorHeader() {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { onSetVendorFormVisible, globalFilter, onSetGlobalFilter } =
     useContext(VendorContext);
@@ -20,13 +24,13 @@ export default function VendorHeader() {
   return (
     <div className="hidden w-full flex-shrink-0 border-b p-3 sm:block">
       <div className="mb-4 flex flex-col items-center justify-between sm:flex-row">
-        <HeaderText text="Vendors" />
+        <HeaderText text={t('Vendors')} />
 
         <TextIconClickable
           className="rounded border-gray-300 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
-          title="Add Vendor"
+          title={t('Add Vendor')}
           onClick={() => {
             onSetVendorFormVisible(true);
           }}
@@ -39,7 +43,7 @@ export default function VendorHeader() {
             type="text"
             name="vendorFilter"
             maxLength={35}
-            placeholder="Search Vendors"
+            placeholder={t('Keyword Search')}
             showLabel={false}
             value={globalFilter ?? ''}
             onChange={(e) => onSetGlobalFilter(e.target.value)}

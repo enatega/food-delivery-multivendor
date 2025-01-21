@@ -12,13 +12,15 @@ import { useMutation } from '@apollo/client';
 import { EDIT_STAFF } from '@/lib/api/graphql/mutations/staff';
 import { GET_STAFFS } from '@/lib/api/graphql/queries/staff';
 import useToast from '@/lib/hooks/useToast';
+import { useTranslations } from 'next-intl';
 
 export const STAFF_TABLE_COLUMNS = ({
   menuItems,
 }: {
   menuItems: IActionMenuProps<IStaffResponse>['items'];
 }) => {
-  //Toast
+  // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   // States
@@ -30,20 +32,20 @@ export const STAFF_TABLE_COLUMNS = ({
     awaitRefetchQueries: true,
     onCompleted: () => {
       showToast({
-        title: 'Toggle Staff Status',
+        title: t('Toggle Staff Status'),
         type: 'success',
-        message: 'The staff status has been updated successfully',
+        message: t('The staff status has been updated successfully'),
       });
     },
     onError: (error) => {
       showToast({
         type: 'error',
-        title: 'Toggle Staff Status',
+        title: t('Toggle Staff Status'),
         message:
           error.graphQLErrors[0].message ||
           error.clientErrors[0].message ||
           error.networkError?.message ||
-          'An error occured while updating the staff status',
+          t('An error occured while updating the staff status'),
       });
     },
   });
@@ -75,10 +77,10 @@ export const STAFF_TABLE_COLUMNS = ({
   };
 
   return [
-    { headerName: 'Name', propertyName: 'name' },
-    { headerName: 'Email', propertyName: 'email' },
-    { headerName: 'Password', propertyName: 'plainPassword' },
-    { headerName: 'Phone', propertyName: 'phone' },
+    { headerName: t('Name'), propertyName: 'name' },
+    { headerName: t('Email'), propertyName: 'email' },
+    { headerName: t('Password'), propertyName: 'plainPassword' },
+    { headerName: t('Phone'), propertyName: 'phone' },
     // ? Should this be added as it will make table overflow on normal screens
     // {
     //   headerName: 'Permissions',
@@ -88,7 +90,7 @@ export const STAFF_TABLE_COLUMNS = ({
     //   },
     // },
     {
-      headerName: 'Status',
+      headerName: t('Status'),
       propertyName: 'status',
       body: (staff: IStaffResponse) => {
         return (

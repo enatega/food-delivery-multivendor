@@ -31,6 +31,7 @@ import { CREATE_STAFF, EDIT_STAFF } from '@/lib/api/graphql/mutations/staff';
 import { GET_STAFFS } from '@/lib/api/graphql/queries/staff';
 import { useMutation } from '@apollo/client';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useTranslations } from 'next-intl';
 
 export default function StaffAddForm({
   onHide,
@@ -38,6 +39,9 @@ export default function StaffAddForm({
   position = 'right',
   isAddStaffVisible,
 }: IStaffAddFormComponentProps) {
+  // Hooks
+  const t = useTranslations();
+
   // States
   const initialValues: IStaffForm = {
     name: '',
@@ -86,8 +90,8 @@ export default function StaffAddForm({
         onCompleted: () => {
           showToast({
             type: 'success',
-            title: 'Success!',
-            message: staff ? 'Staff updated' : 'Staff added',
+            title: t('Success'),
+            message: staff ? t('Staff updated') : t('Staff added'),
             duration: 3000,
           });
           resetForm();
@@ -96,11 +100,11 @@ export default function StaffAddForm({
         onError: (error) => {
           showToast({
             type: 'error',
-            title: `Staff ${staff ? 'Update' : 'Add'}`,
+            title: `${t('Staff')} ${staff ? t('Update') : t('Add')}`,
             message:
               error.graphQLErrors[0].message ??
               error.networkError?.message ??
-              `Failed to ${staff ? 'update' : 'add'} staff`,
+              `${t('Failed to')} ${staff ? t('update') : t('Add')} ${t('staff')}`,
             duration: 3000,
           });
         },
@@ -108,8 +112,8 @@ export default function StaffAddForm({
     } catch (e) {
       showToast({
         type: 'error',
-        title: `Staff ${staff ? 'Update' : 'Add'}`,
-        message: 'Something went wrong',
+        title: `${t('Staff')} ${staff ? t('Update') : t('Add')}`,
+        message: t('Something went wrong'),
       });
     }
   };
@@ -125,7 +129,9 @@ export default function StaffAddForm({
         <div className="h-full w-full">
           <div className="flex flex-col gap-2">
             <div className="mb-2 flex flex-col">
-              <span className="text-lg">{staff ? 'Edit' : 'Add'} Staff</span>
+              <span className="text-lg">
+                {staff ? t('Edit') : t('Add')} {t('Staff')}
+              </span>
             </div>
 
             <div>
@@ -150,7 +156,7 @@ export default function StaffAddForm({
                           <CustomTextField
                             type="text"
                             name="name"
-                            placeholder="Name"
+                            placeholder={t('Name')}
                             maxLength={35}
                             value={values.name}
                             onChange={handleChange}
@@ -170,7 +176,7 @@ export default function StaffAddForm({
                           <CustomTextField
                             type="text"
                             name="email"
-                            placeholder="Email"
+                            placeholder={t('Email')}
                             maxLength={35}
                             value={values.email}
                             onChange={handleChange}
@@ -189,7 +195,7 @@ export default function StaffAddForm({
 
                         <div>
                           <CustomPasswordTextField
-                            placeholder="Password"
+                            placeholder={t('Password')}
                             name="password"
                             maxLength={20}
                             value={values.password}
@@ -209,7 +215,7 @@ export default function StaffAddForm({
 
                         <div>
                           <CustomPasswordTextField
-                            placeholder="Confirm Password"
+                            placeholder={t('Confirm Password')}
                             name="confirmPassword"
                             maxLength={20}
                             showLabel={true}
@@ -226,15 +232,6 @@ export default function StaffAddForm({
                                 : '',
                             }}
                           />
-                          {onErrorMessageMatcher(
-                            'confirmPassword',
-                            errors?.confirmPassword,
-                            StaffErrors
-                          ) && (
-                            <span className="text-red-500">
-                              {errors.confirmPassword}
-                            </span>
-                          )}
                         </div>
 
                         <div>
@@ -242,7 +239,7 @@ export default function StaffAddForm({
                             mask="999-999-9999"
                             name="phone"
                             type="text"
-                            placeholder="phone Number"
+                            placeholder={t('Phone Number')}
                             showLabel={true}
                             value={values.phone?.toString()}
                             onChange={(code: string) => {
@@ -293,7 +290,7 @@ export default function StaffAddForm({
                               }
                             }}
                             name="permissions"
-                            placeholder="Permissions"
+                            placeholder={t('Permissions')}
                             options={PERMISSIONS}
                             selectedItems={values.permissions}
                             setSelectedItems={setFieldValue}
@@ -317,14 +314,14 @@ export default function StaffAddForm({
                               setFieldValue('isActive', !values.isActive);
                             }}
                             showLabel
-                            placeholder="Status"
+                            placeholder={t('Status')}
                           />
                         </div>
 
                         <div className="flex justify-end py-4">
                           <CustomButton
                             className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                            label={staff ? 'Update' : 'Add'}
+                            label={staff ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}
                           />

@@ -19,7 +19,7 @@ import {
 import { IVendorForm } from '@/lib/utils/interfaces/forms';
 
 // Constants and Methods
-import { MAX_SQUARE_FILE_SIZE, VendorErrors } from '@/lib/utils/constants';
+import { VendorErrors } from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 
 // Components
@@ -43,6 +43,7 @@ import {
 import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useTranslations } from 'next-intl';
 
 const initialValues: IVendorForm = {
   // name: '',
@@ -58,6 +59,9 @@ const initialValues: IVendorForm = {
 export default function VendorAddForm({
   position = 'right',
 }: IVendorAddFormComponentProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const {
     vendorFormVisible,
@@ -67,12 +71,12 @@ export default function VendorAddForm({
     vendorResponse,
   } = useContext(VendorContext);
   const { showToast } = useContext(ToastContext);
+
   // States
   const [formInitialValues, setFormValues] = useState<IVendorForm>({
     ...initialValues,
   });
 
-  // API
   // Mutations
   const [createVendor] = useMutation(
     isEditingVendor && vendorId ? EDIT_VENDOR : CREATE_VENDOR,
@@ -82,10 +86,11 @@ export default function VendorAddForm({
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: 'New Vendor',
-          message: `Vendor has been ${isEditingVendor ? 'edited' : 'added'} successfully`,
+          title: t('New Vendor'),
+          message: `${t('Vendor has been')} ${isEditingVendor ? t('edited') : t('added')} ${t('successfully')}`,
           duration: 3000,
         });
+
         onSetVendorFormVisible(false);
         vendorResponse.refetch();
       },
@@ -118,14 +123,12 @@ export default function VendorAddForm({
           },
         },
       });
-
-      onSetVendorFormVisible(false);
     } catch (error) {
       console.log('error during add vendor ==> ', error);
       showToast({
         type: 'error',
-        title: `${isEditingVendor ? 'Edit' : 'Create'} Vendor`,
-        message: `Vendor ${isEditingVendor ? 'Edit' : 'Create'} Failed`,
+        title: `${isEditingVendor ? t('Edit') : t('Create')} ${t('Vendor')}`,
+        message: `${t('Vendor')} ${isEditingVendor ? t('Edit') : t('Create')} ${t('Failed')}`,
         duration: 2500,
       });
     }
@@ -134,11 +137,11 @@ export default function VendorAddForm({
   function onError({ graphQLErrors, networkError }: ApolloError) {
     showToast({
       type: 'error',
-      title: `${isEditingVendor ? 'Edit' : 'Create'} Vendor`,
+      title: `${isEditingVendor ? t('Edit') : t('Create')} ${t('Vendor')}`,
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Vendor ${isEditingVendor ? 'Edit' : 'Create'} Failed`,
+        `${t('Vendor')} ${isEditingVendor ? t('Edit') : t('Create')} ${t('Failed')}`,
       duration: 2500,
     });
   }
@@ -182,7 +185,7 @@ export default function VendorAddForm({
           <div className="flex flex-col gap-2">
             <div className="mb-2 flex flex-col">
               <span className="text-lg">
-                {isEditingVendor ? 'Edit' : 'Add'} Vendor
+                {isEditingVendor ? t('Edit') : t('Add')} {t('Vendor')}
               </span>
             </div>
 
@@ -212,7 +215,7 @@ export default function VendorAddForm({
                         <CustomTextField
                           type="text"
                           name="firstName"
-                          placeholder="First Name"
+                          placeholder={t('First Name')}
                           maxLength={35}
                           value={values.firstName}
                           onChange={handleChange}
@@ -231,7 +234,7 @@ export default function VendorAddForm({
                         <CustomTextField
                           type="text"
                           name="lastName"
-                          placeholder="Last Name"
+                          placeholder={t('Last Name')}
                           maxLength={35}
                           value={values.lastName}
                           onChange={handleChange}
@@ -250,7 +253,7 @@ export default function VendorAddForm({
                         <CustomIconTextField
                           type="email"
                           name="email"
-                          placeholder="Email"
+                          placeholder={t('Email')}
                           maxLength={35}
                           showLabel={true}
                           iconProperties={{
@@ -277,7 +280,7 @@ export default function VendorAddForm({
                           name="phoneNumber"
                           showLabel={true}
                           isLoading={loading}
-                          placeholder="Phone Number"
+                          placeholder={t('Phone Number')}
                           value={values.phoneNumber}
                           onChange={(e) => {
                             setFieldValue('phoneNumber', e);
@@ -297,7 +300,7 @@ export default function VendorAddForm({
 
                         <CustomPasswordTextField
                           autoComplete="new-password"
-                          placeholder="Password"
+                          placeholder={t('Password')}
                           name="password"
                           maxLength={20}
                           value={values.password}
@@ -317,7 +320,7 @@ export default function VendorAddForm({
 
                         <CustomPasswordTextField
                           autoComplete="new-password"
-                          placeholder="Confirm Password"
+                          placeholder={t('Confirm Password')}
                           name="confirmPassword"
                           maxLength={20}
                           showLabel={true}
@@ -338,12 +341,12 @@ export default function VendorAddForm({
                         <CustomUploadImageComponent
                           key="image"
                           name="image"
-                          title="Upload Image"
-                          fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
-                          maxFileHeight={1080}
-                          maxFileWidth={1080}
-                          maxFileSize={MAX_SQUARE_FILE_SIZE}
-                          orientation="SQUARE"
+                          title={t('Upload Image')}
+                          // fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
+                          // maxFileHeight={1080}
+                          // maxFileWidth={1080}
+                          // maxFileSize={MAX_SQUARE_FILE_SIZE}
+                          // orientation="SQUARE"
                           onSetImageUrl={setFieldValue}
                           existingImageUrl={values.image}
                           showExistingImage={isEditingVendor ? true : false}
@@ -361,7 +364,7 @@ export default function VendorAddForm({
                         <div className="mt-4 flex justify-end">
                           <CustomButton
                             className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                            label={isEditingVendor ? 'Update' : 'Add'}
+                            label={isEditingVendor ? t('Update') : t('Add')}
                             type="submit"
                             loading={isSubmitting}
                           />
