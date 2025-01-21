@@ -11,8 +11,13 @@ import { IOrder, IOrdersData, IExtendedOrder } from '@/lib/utils/interfaces';
 import { TOrderRowData } from '@/lib/utils/types';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 import OrderDetailModal from '@/lib/ui/useable-components/popup-menu/order-details-modal';
+import { useTranslations } from 'next-intl';
 
 export default function OrderVendorMain() {
+  // Hooks
+  const t = useTranslations();
+
+  // States
   const [selectedData, setSelectedData] = useState<IExtendedOrder[]>([]);
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,9 +26,6 @@ export default function OrderVendorMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<IExtendedOrder | null>(null);
-  // Remove page and rows state
-  // const [page, setPage] = useState(0);
-  // const [rows, setRows] = useState(10);
 
   const { data, error, loading } = useQueryGQL(
     GET_ORDER_BY_RESTAURANT_WITHOUT_PAGINATION,
@@ -96,7 +98,7 @@ export default function OrderVendorMain() {
         data={displayData as IExtendedOrder[]}
         setSelectedData={setSelectedData}
         selectedData={selectedData}
-        columns={ORDER_COLUMNS}
+        columns={ORDER_COLUMNS()}
         loading={loading}
         handleRowClick={handleRowClick}
         moduleName="Restaurant-Order"
@@ -106,7 +108,11 @@ export default function OrderVendorMain() {
         onHide={() => setIsModalOpen(false)}
         restaurantData={selectedRestaurant}
       />
-      {error && <p className="text-red-500">Error: {error.message}</p>}
+      {error && (
+        <p className="text-red-500">
+          {t('Error')}: {error.message}
+        </p>
+      )}
     </div>
   );
 }
