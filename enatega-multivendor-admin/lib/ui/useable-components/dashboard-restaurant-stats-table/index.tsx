@@ -6,6 +6,7 @@ import {
   formatNumberWithCurrency,
 } from '@/lib/utils/methods/currency';
 import { DASHBOARD_PAYMENT_METHOD_SUB_TITLE } from '@/lib/utils/constants';
+import { useTranslations } from 'next-intl';
 
 export default function DashboardRestaurantStatsTable({
   loading,
@@ -13,6 +14,9 @@ export default function DashboardRestaurantStatsTable({
   data,
   amountConfig,
 }: IDashboardRestaurantStatsTableComponentsProps) {
+  // Hooks
+  const t = useTranslations();
+
   if (loading) return <DashboardStatsTableSkeleton />;
 
   const {
@@ -23,28 +27,28 @@ export default function DashboardRestaurantStatsTable({
   } = data;
 
   return (
-    <div className="w-full mx-auto">
-      <div className="bg-white shadow-md rounded-lg border border-gray-300">
+    <div className="w-full h-auto mx-auto">
+      <div className="bg-white h-full shadow-md rounded-lg border border-gray-300">
         <div className="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg">
           <h2 className="text-lg font-bold text-gray-800">
-            {
+            {t(
               DASHBOARD_PAYMENT_METHOD_SUB_TITLE[
                 title as keyof typeof DASHBOARD_PAYMENT_METHOD_SUB_TITLE
-              ]
-            }
+              ].toString()
+            )}
           </h2>
           <i className="fas fa-arrow-down text-green-500"></i>
         </div>
         <div className="p-4 max-h-50 overflow-auto ">
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">Total Orders</span>
+            <span className="text-gray-800">{t('Total Orders')}</span>
             <span className="text-gray-800">
               {amountConfig ? formatNumber(total_orders) : total_orders}
             </span>
           </div>
 
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">Total Sales</span>
+            <span className="text-gray-800">{t('Total Sales')}</span>
             <span className="text-gray-800">
               {amountConfig
                 ? formatNumberWithCurrency(total_sales, amountConfig.currency)
@@ -53,7 +57,9 @@ export default function DashboardRestaurantStatsTable({
           </div>
 
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">Total Sales Without Delivery</span>
+            <span className="text-gray-800">
+              {t('Total Sales Without Delivery')}
+            </span>
             <span className="text-gray-800">
               {amountConfig
                 ? formatNumberWithCurrency(
@@ -65,7 +71,7 @@ export default function DashboardRestaurantStatsTable({
           </div>
 
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">Total Delivery Fee</span>
+            <span className="text-gray-800">{t('Total Delivery Fee')}</span>
             <span className="text-gray-800">
               {amountConfig
                 ? formatNumberWithCurrency(
