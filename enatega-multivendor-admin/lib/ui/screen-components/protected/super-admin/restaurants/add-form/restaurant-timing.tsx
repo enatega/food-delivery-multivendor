@@ -1,7 +1,10 @@
 'use client';
 // Core
 import { ErrorMessage, Form, Formik, FormikErrors } from 'formik';
+
+// Hooks
 import { useContext } from 'react';
+import { useTranslations } from 'next-intl';
 
 // Interface and Types
 import { TWeekDays } from '@/lib/utils/types/days';
@@ -42,6 +45,9 @@ const RestaurantTiming = ({
   const { onStepChange } = stepperProps ?? {
     onStepChange: () => {},
   };
+
+  // Hooks
+  const t = useTranslations();
 
   // Context
   const {
@@ -107,8 +113,8 @@ const RestaurantTiming = ({
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: 'Add Timings',
-          message: 'Timings have been added successfully',
+          title: t('Add Timings'),
+          message: t('Timings have been added successfully'),
           duration: 3000,
         });
 
@@ -121,11 +127,11 @@ const RestaurantTiming = ({
         try {
           message = error.graphQLErrors[0]?.message;
         } catch (err) {
-          message = 'ActionFailedTryAgain';
+          message = t('ActionFailedTryAgain');
         }
         showToast({
           type: 'error',
-          title: 'Error!',
+          title: t('Error'),
           message,
           duration: 3000,
         });
@@ -136,7 +142,7 @@ const RestaurantTiming = ({
   return (
     <div className="flex flex-col gap-2 rounded">
       <div className="mb-2 flex flex-col">
-        <span className="text-lg">Store Timing</span>
+        <span className="text-lg">{t('Store Timing')}</span>
       </div>
       <Formik
         initialValues={initialValues}
@@ -191,7 +197,7 @@ const RestaurantTiming = ({
                                     );
                                   }}
                                   isLoading={loading}
-                                  placeholder="Start Time"
+                                  placeholder={t('Start Time')}
                                   style={{
                                     borderColor:
                                       (
@@ -230,7 +236,7 @@ const RestaurantTiming = ({
                                     );
                                   }}
                                   isLoading={loading}
-                                  placeholder="End Time"
+                                  placeholder={t('End Time')}
                                   style={{
                                     borderColor:
                                       (
@@ -289,7 +295,7 @@ const RestaurantTiming = ({
                   ) : (
                     <div className="flex min-h-10 flex-1 items-center justify-start">
                       <span className="select-none rounded-full bg-black px-3 py-1 text-xs text-white">
-                        Closed all Day
+                        {t('Closed all Day')}
                       </span>
                     </div>
                   )}
@@ -299,7 +305,7 @@ const RestaurantTiming = ({
 
             <CustomButton
               className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border-gray-300 bg-[black] px-10 text-white"
-              label={'Save'}
+              label={t('Save')}
               rounded={false}
               disabled={loading}
               type="submit"

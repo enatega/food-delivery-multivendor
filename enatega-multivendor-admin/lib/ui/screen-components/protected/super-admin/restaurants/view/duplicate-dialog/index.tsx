@@ -29,12 +29,16 @@ import {
   IVendorReponse,
   IVendorResponseGraphQL,
 } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
 
 const RestaurantDuplicateDialog = ({
   restaurantId,
   visible,
   onHide,
 }: IRestaurantDuplicateDialogComponentProps) => {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { showToast } = useContext(ToastContext);
 
@@ -66,8 +70,8 @@ const RestaurantDuplicateDialog = ({
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: 'Store duplicate ',
-          message: `Store has been duplicated successfully.`,
+          title: t('Store duplicate'),
+          message: t(`Store has been duplicated successfully`),
           duration: 2000,
         });
         setSelectedVendor({ label: '', code: '' });
@@ -76,11 +80,11 @@ const RestaurantDuplicateDialog = ({
       onError: ({ networkError, graphQLErrors }: ApolloError) => {
         showToast({
           type: 'error',
-          title: 'Store duplicate ',
+          title: t('Store duplicate'),
           message:
             graphQLErrors[0]?.message ??
             networkError?.message ??
-            `Store duplicate  failed`,
+            t(`Store duplicate  failed`),
           duration: 2500,
         });
         setSelectedVendor({ label: '', code: '' });
@@ -104,8 +108,8 @@ const RestaurantDuplicateDialog = ({
       if (!vendor.code) {
         showToast({
           type: 'warn',
-          title: 'Store duplicate ',
-          message: `Please select a vendor`,
+          title: t('Store duplicate'),
+          message: t(`Please select a vendor`),
         });
         return;
       }
@@ -116,8 +120,8 @@ const RestaurantDuplicateDialog = ({
     } catch (err) {
       showToast({
         type: 'error',
-        title: 'Store duplicate ',
-        message: `Store duplicate  failed.`,
+        title: t('Store duplicate'),
+        message: t(`Store duplicate  failed`),
       });
       setSelectedVendor({ label: '', code: '' });
       onHide();
@@ -127,14 +131,14 @@ const RestaurantDuplicateDialog = ({
   const footer = (
     <div className="space-x-2">
       <CustomButton
-        label="Cancel"
+        label={t('Cancel')}
         icon="pi pi-times"
         onClick={onHide}
         className="h-9 rounded border border-gray-300 bg-transparent px-5 text-black"
       />
       <CustomButton
         loading={loading}
-        label="Duplicate"
+        label={t('Duplicate')}
         className="h-9 rounded border-gray-300 bg-red-500 px-4 text-white"
         icon="pi pi-check"
         onClick={handleDuplicate}
@@ -147,14 +151,14 @@ const RestaurantDuplicateDialog = ({
       visible={visible}
       style={{ width: '32rem' }}
       breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-      header="Duplicate Store"
+      header={t('Duplicate Store')}
       modal
       footer={footer}
       onHide={onHide}
     >
       <CustomDropdownComponent
         name="vendor"
-        placeholder="Select Vendor"
+        placeholder={t('Select Vendor')}
         showLabel={true}
         selectedItem={vendor}
         setSelectedItem={(key: string, item: IDropdownSelectItem) =>

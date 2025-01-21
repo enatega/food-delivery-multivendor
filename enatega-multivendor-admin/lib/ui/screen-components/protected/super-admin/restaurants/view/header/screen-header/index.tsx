@@ -12,19 +12,23 @@ import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 
 // Icon imports
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 export default function RestaurantsScreenHeader() {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { onRestaurantsFormVisible } = useContext(RestaurantsContext);
   return (
     <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
       <div className="flex w-full justify-between">
-        <HeaderText text="Stores" />
+        <HeaderText text={t('Stores')} />
         <TextIconClickable
           className="rounded border-gray-300 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
-          title="Add Store"
+          title={t('Add Store')}
           onClick={() => onRestaurantsFormVisible(true)}
         />
       </div>

@@ -36,6 +36,7 @@ import {
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { useMutation } from '@apollo/client';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useTranslations } from 'next-intl';
 
 export default function RiderAddForm({
   onHide,
@@ -54,6 +55,7 @@ export default function RiderAddForm({
   };
 
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   // Query
@@ -88,8 +90,8 @@ export default function RiderAddForm({
         onCompleted: () => {
           showToast({
             type: 'success',
-            title: 'Success!',
-            message: rider ? 'Rider updated' : 'Rider added',
+            title: t('Success'),
+            message: rider ? t('Rider updated') : t('Rider added'),
             duration: 3000,
           });
           resetForm();
@@ -100,11 +102,11 @@ export default function RiderAddForm({
           try {
             message = error.graphQLErrors[0]?.message;
           } catch (err) {
-            message = 'ActionFailedTryAgain';
+            message = t('ActionFailedTryAgain');
           }
           showToast({
             type: 'error',
-            title: 'Error!',
+            title: t('Error'),
             message,
             duration: 3000,
           });
@@ -124,7 +126,9 @@ export default function RiderAddForm({
         <div className="h-full w-full">
           <div className="flex flex-col gap-2">
             <div className="mb-2 flex flex-col">
-              <span className="text-lg">{rider ? 'Edit' : 'Add'} Rider</span>
+              <span className="text-lg">
+                {rider ? t('Edit') : t('Add')} {t('Rider')}
+              </span>
             </div>
 
             <div>
@@ -150,7 +154,7 @@ export default function RiderAddForm({
                         <CustomTextField
                           type="text"
                           name="name"
-                          placeholder="Name"
+                          placeholder={t('Name')}
                           maxLength={35}
                           value={values.name}
                           onChange={handleChange}
@@ -169,7 +173,7 @@ export default function RiderAddForm({
                         <CustomTextField
                           type="text"
                           name="username"
-                          placeholder="Username"
+                          placeholder={t('Username')}
                           maxLength={35}
                           value={values.username}
                           onChange={handleChange}
@@ -186,7 +190,7 @@ export default function RiderAddForm({
                         />
 
                         <CustomPasswordTextField
-                          placeholder="Password"
+                          placeholder={t('Password')}
                           name="password"
                           maxLength={20}
                           value={values.password}
@@ -204,7 +208,7 @@ export default function RiderAddForm({
                         />
 
                         <CustomPasswordTextField
-                          placeholder="Confirm Password"
+                          placeholder={t('Confirm Password')}
                           name="confirmPassword"
                           maxLength={20}
                           showLabel={true}
@@ -223,7 +227,7 @@ export default function RiderAddForm({
                         />
 
                         <CustomDropdownComponent
-                          placeholder="Zone"
+                          placeholder={t('Zone')}
                           options={
                             data?.zones.map((val) => {
                               return { label: val.title, code: val._id };
@@ -244,28 +248,10 @@ export default function RiderAddForm({
                           }}
                         />
 
-                        {/* <CustomNumberField
-                          min={0}
-                          placeholder="Phone Number"
-                          name="phone"
-                          showLabel={true}
-                          value={values.phone}
-                          useGrouping={false}
-                          onChange={setFieldValue}
-                          style={{
-                            borderColor: onErrorMessageMatcher(
-                              'phone',
-                              errors?.phone,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
-                          }}
-                        /> */}
                         <CustomPhoneTextField
                           type="text"
                           mask="999-999-9999"
-                          placeholder="Phone Number"
+                          placeholder={t('Phone Number')}
                           name="phone"
                           showLabel={true}
                           value={values?.phone?.toString()}
@@ -286,7 +272,7 @@ export default function RiderAddForm({
                         <div className="mt-4 flex justify-end">
                           <CustomButton
                             className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                            label={rider ? 'Update' : 'Add'}
+                            label={rider ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}
                           />

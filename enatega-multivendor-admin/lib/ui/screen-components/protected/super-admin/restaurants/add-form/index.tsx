@@ -31,10 +31,14 @@ import RestaurantDetailsForm from './restaurant-details';
 import RestaurantLocation from './restaurant-location';
 import VendorDetails from './vendor-details';
 import RestaurantTiming from './restaurant-timing';
+import { useTranslations } from 'next-intl';
 
 const RestaurantsForm = ({
   position = 'right',
 }: IRestaurantsAddFormComponentProps) => {
+  // Hooks
+  const t = useTranslations();
+
   // Ref
   const stepperRef = useRef(null);
 
@@ -87,7 +91,7 @@ const RestaurantsForm = ({
     >
       <div ref={stepperRef}>
         <Stepper linear headerPosition="bottom" activeStep={activeIndex}>
-          <StepperPanel header="Set Vendor">
+          <StepperPanel header={t('Set Vendor')}>
             <VendorDetails
               vendorsDropdown={vendorsDropdown ?? []}
               stepperProps={{
@@ -96,7 +100,7 @@ const RestaurantsForm = ({
               }}
             />
           </StepperPanel>
-          <StepperPanel header="Add Details">
+          <StepperPanel header={t('Add Details')}>
             <RestaurantDetailsForm
               stepperProps={{
                 onStepChange: onHandleStepChange,
@@ -104,7 +108,7 @@ const RestaurantsForm = ({
               }}
             />
           </StepperPanel>
-          <StepperPanel header="Location">
+          <StepperPanel header={t('Location')}>
             <RestaurantLocation
               stepperProps={{
                 onStepChange: onHandleStepChange,
@@ -113,7 +117,7 @@ const RestaurantsForm = ({
               }}
             />
           </StepperPanel>
-          <StepperPanel header="Timing">
+          <StepperPanel header={t('Timing')}>
             <RestaurantTiming
               stepperProps={{
                 onStepChange: onHandleStepChange,
