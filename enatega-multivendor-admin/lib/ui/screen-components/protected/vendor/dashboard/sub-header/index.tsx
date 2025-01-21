@@ -1,6 +1,7 @@
 import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
-import VendorCustomTab from '@/lib/ui/useable-components/vendor-custom-tab';
+import DateFilterCustomTab from '@/lib/ui/useable-components/date-filter-custom-tab';
 import { IDashboardSubHeaderComponentsProps } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
 
 export default function DashboardSubHeader({
   isStoreView,
@@ -8,32 +9,37 @@ export default function DashboardSubHeader({
   dateFilter,
   handleDateFilter,
 }: IDashboardSubHeaderComponentsProps) {
+  // Hooks
+  const t = useTranslations();
+
   return (
     <div className="flex flex-row items-center justify-between px-4 py-3 bg-white rounded-lg ">
       <div className="flex items-center space-x-4">
         <h2 className="text-xl font-semibold text-gray-800">
-          Business Overview
+          {t('Business Overview')}
         </h2>
         <div className="flex items-center space-x-2">
           <span
             className={`text-sm leading-5 font-medium font-inter ${!isStoreView ? 'text-black' : 'text-[#71717A]'}`}
           >
-            Graph View
+            {t('Graph View')}
           </span>
-          <CustomInputSwitch
-            isActive={isStoreView}
-            onChange={handleViewChange}
-          />
+          {handleViewChange && (
+            <CustomInputSwitch
+              isActive={isStoreView ?? false}
+              onChange={handleViewChange}
+            />
+          )}
           <span
             className={`text-sm leading-5 font-medium font-inter ${isStoreView ? 'text-black' : 'text-[#71717A]'}`}
           >
-            Store View
+            {t('Store View')}
           </span>
         </div>
       </div>
-      <VendorCustomTab
+      <DateFilterCustomTab
         options={['All', 'Today', 'Week', 'Month', 'Year', 'Custom']}
-        selectedTab={dateFilter.dateKeyword}
+        selectedTab={dateFilter?.dateKeyword ?? ''}
         setSelectedTab={(tab: string) =>
           handleDateFilter({ ...dateFilter, dateKeyword: tab })
         }
