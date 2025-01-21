@@ -1018,5 +1018,7 @@
   "Total Drivers": "إجمالي السائقين",
   "Prefered dimensions": "الأبعاد المفضلة",
   "Prefered File size": "حجم الملف المفضل",
-  "Connect with Stripe for payments": "اتصل بـ Stripe للمدفوعات"
+  "Connect with Stripe for payments": "اتصل بـ Stripe للمدفوعات",
+  "Payment Required": "الدفع مطلوب",
+  "Please complete your purchase to gain full access to the product": "يرجى إتمام عملية الشراء للحصول على وصول كامل إلى المنتج"
 }

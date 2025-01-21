@@ -1015,5 +1015,7 @@
   "Total Drivers": "Gesamtanzahl der Fahrer",
   "Prefered dimensions": "Bevorzugte Abmessungen",
   "Prefered File size": "Bevorzugte Dateigröße",
-  "Connect with Stripe for payments": "Mit Stripe für Zahlungen verbinden"
+  "Connect with Stripe for payments": "Mit Stripe für Zahlungen verbinden",
+   "Payment Required": "Zahlung erforderlich",
+    "Please complete your purchase to gain full access to the product": "Bitte schließen Sie Ihren Kauf ab, um vollen Zugriff auf das Produkt zu erhalten"
 }

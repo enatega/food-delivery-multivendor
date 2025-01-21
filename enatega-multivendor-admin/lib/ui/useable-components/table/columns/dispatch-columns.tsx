@@ -31,6 +31,7 @@ import { ToastContext } from '@/lib/context/global/toast.context';
 // CSS
 import classes from '@/lib/ui/screen-components/protected/super-admin/dispatch/view/main/index.module.css';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
+import { useTranslations } from 'next-intl';
 
 // Status options
 const actionStatusOptions = [
@@ -107,6 +108,9 @@ function severityChecker(status: string | undefined) {
 export const DISPATCH_TABLE_COLUMNS = (
   fetchActiveOrders: (variables?: undefined) => void
 ) => {
+  // Hooks
+  const t = useTranslations();
+
   // Toast
   const { showToast } = useContext(ToastContext);
 
@@ -166,10 +170,10 @@ export const DISPATCH_TABLE_COLUMNS = (
     onError: (error) => {
       showToast({
         type: 'error',
-        title: 'Assign Rider',
+        title: t('Assign Rider'),
         message:
           error.cause?.message ||
-          'An error occured while assigning the job to rider',
+          t('An error occured while assigning the job to rider'),
       });
     },
     refetchQueries: [{ query: GET_ACTIVE_ORDERS }],
@@ -181,15 +185,15 @@ export const DISPATCH_TABLE_COLUMNS = (
       showToast({
         type: 'error',
         message:
-          err.cause?.message || 'An error occured while updating the status',
-        title: 'Edit Order Status',
+          err.cause?.message || t('An error occured while updating the status'),
+        title: t('Edit Order Status'),
       });
     },
     onCompleted: () => {
       showToast({
         type: 'success',
-        title: 'Order Status',
-        message: 'Order status has been updated successfully',
+        title: t('Order Status'),
+        message: t('Order status has been updated successfully'),
       });
     },
     refetchQueries: [{ query: GET_ACTIVE_ORDERS }],
@@ -203,9 +207,10 @@ export const DISPATCH_TABLE_COLUMNS = (
     if (item?.assignedOrders.length > 5) {
       return showToast({
         type: 'error',
-        title: 'Assign Rider',
-        message:
-          'This rider has already been assigned 5 orders, please choose a different one',
+        title: t('Assign Rider'),
+        message: t(
+          'This rider has already been assigned 5 orders, please choose a different one'
+        ),
       });
     }
     if (item._id) {
@@ -223,8 +228,8 @@ export const DISPATCH_TABLE_COLUMNS = (
       if (data) {
         showToast({
           type: 'success',
-          title: 'Assign Rider',
-          message: `The order ${rowData.orderId} has been successfully assigned to rider ${item.label}`,
+          title: t('Assign Rider'),
+          message: `${t('The order')} ${rowData.orderId} ${t('has been successfully assigned to rider')} ${item.label}`,
         });
       }
     }
@@ -256,8 +261,8 @@ export const DISPATCH_TABLE_COLUMNS = (
       // Handle error
       showToast({
         type: 'error',
-        title: 'Order Status',
-        message: 'Something went wrong',
+        title: t('Order Status'),
+        message: t('Something went wrong'),
       });
     } finally {
       // Set the loader to false after the mutation
@@ -271,24 +276,24 @@ export const DISPATCH_TABLE_COLUMNS = (
   return [
     {
       propertyName: 'orderId',
-      headerName: 'Order Id',
+      headerName: t('Order Id'),
     },
     {
       propertyName: 'deliveryAddress.deliveryAddress',
-      headerName: 'Order Information',
+      headerName: t('Order Information'),
       body: (rowData: IActiveOrders) => <OrderSubscription rowData={rowData} />,
     },
     {
       propertyName: 'restaurant.name',
-      headerName: 'Store',
+      headerName: t('Store'),
     },
     {
       propertyName: 'paymentMethod',
-      headerName: 'Payment',
+      headerName: t('Payment'),
     },
     {
       propertyName: 'rider.name',
-      headerName: 'Rider',
+      headerName: t('Rider'),
       body: (rowData: IActiveOrders) => {
         return (
           <div>
@@ -304,7 +309,7 @@ export const DISPATCH_TABLE_COLUMNS = (
                 _id: rowData?.rider?._id.toString() ?? '',
                 assignedOrders: rowData.rider?.assigned,
               }}
-              placeholder="Select Rider"
+              placeholder={'Select Rider'}
               onChange={(e: DropdownChangeEvent) =>
                 handleAssignRider(e.value, rowData)
               }
@@ -321,7 +326,7 @@ export const DISPATCH_TABLE_COLUMNS = (
     },
     {
       propertyName: 'createdAt',
-      headerName: 'Order Time',
+      headerName: t('Order Time'),
       body: (rowData: IActiveOrders) => (
         <span>
           {new Date(rowData.createdAt)
@@ -332,7 +337,7 @@ export const DISPATCH_TABLE_COLUMNS = (
     },
     {
       propertyName: 'orderStatus',
-      headerName: 'Status',
+      headerName: t('Status'),
 
       body: (rowData: IActiveOrders) => {
         const currentStatus = actionStatusOptions.find(
