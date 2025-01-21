@@ -79,16 +79,9 @@ export const LocationProvider = ({ children }) => {
           location: zone.location
         };
       });
-
-      // Calculate the average of the centroids to find the midpoint
-      const averageLatitude = centroids.reduce((sum, point) => sum + point.latitude, 0) / centroids?.length;
-      const averageLongitude = centroids.reduce((sum, point) => sum + point.longitude, 0) / centroids?.length;
-
-      // Set this as the cities or the midpoint depending on your need
+      
+      // Set this as the cities or the midpoint
       setCities(centroids);
-
-      // Optionally, you can also save this midpoint as location
-      setLocation({ latitude: averageLatitude, longitude: averageLongitude });
     }
   }, [loading, error, data]);
 
