@@ -1,26 +1,30 @@
 // Interfaces and Types
 import { IVendorStoreDetails } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
 
 export const VENDOR_STORE_DETAILS_COLUMN = () => {
+  // Hooks
+  const t = useTranslations();
+
   return [
-    { headerName: 'Store Name', propertyName: 'restaurantName' },
+    { headerName: t('Store Name'), propertyName: 'restaurantName' },
     {
-      headerName: 'Total Orders',
+      headerName: t('Total Orders'),
       propertyName: 'totalOrders',
       body: (store: IVendorStoreDetails) => store.totalOrders.toLocaleString(),
     },
     {
-      headerName: 'Total Sales',
+      headerName: t('Total Sales'),
       propertyName: 'totalSales',
       body: (store: IVendorStoreDetails) => `$${store.totalSales.toFixed(2)}`,
     },
     {
-      headerName: 'Pickup Orders',
+      headerName: t('Pickup Orders'),
       propertyName: 'pickUpCount',
       body: (store: IVendorStoreDetails) => store.pickUpCount.toLocaleString(),
     },
     {
-      headerName: 'Delivery Orders',
+      headerName: t('Delivery Orders'),
       propertyName: 'deliveryCount',
       body: (store: IVendorStoreDetails) =>
         store.deliveryCount.toLocaleString(),

@@ -29,16 +29,18 @@ import {
 
 // Third-party libraries
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarker, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faMapMarker,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons';
 
 // Prime React
 import { AutoComplete, AutoCompleteSelectEvent } from 'primereact/autocomplete';
 import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
 import CustomShape from '../shapes';
 import { DEFAULT_CENTER } from '@/lib/utils/constants';
-
-// CSS
-import '../index.css';
+import { useTranslations } from 'next-intl';
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -47,6 +49,9 @@ const autocompleteService: {
 const CustomGoogleMapsLocationZoneBounds: React.FC<
   IZoneCustomGoogleMapsBoundComponentProps
 > = ({ _path, onSetZoneCoordinates, coordinates }) => {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const googleMapsContext = useContext(GoogleMapsContext);
 
@@ -59,7 +64,6 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
 
   // Auto complete
   const [options, setOptions] = useState<IPlaceSelectedOption[]>([]);
-
   const [inputValue, setInputValue] = useState<string>('');
   const [selectedPlaceObject, setSelectedPlaceObject] =
     useState<IPlaceSelectedOption | null>(null);
@@ -232,20 +236,25 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
                   disabled={false}
                   className={`p h-11 w-full border border-gray-300 px-2 text-sm focus:shadow-none focus:outline-none`}
                   value={inputValue}
+                  dropdownIcon={
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      style={{ fontSize: '1rem', color: 'gray' }}
+                    />
+                  }
                   completeMethod={(event) => {
                     setSearch(event.query);
                   }}
                   onChange={(e) => {
                     if (typeof e.value === 'string') handleInputChange(e.value);
                   }}
-                  dropdownIcon={() => <div className="hidden"></div>}
                   onSelect={onHandlerAutoCompleteSelectionChange}
                   suggestions={options}
                   forceSelection={false}
                   dropdown={true}
                   multiple={false}
                   loadingIcon={null}
-                  placeholder="Enter your full address"
+                  placeholder={t('Enter your full address')}
                   style={{ width: '100%' }}
                   itemTemplate={(item) => {
                     const matches =
