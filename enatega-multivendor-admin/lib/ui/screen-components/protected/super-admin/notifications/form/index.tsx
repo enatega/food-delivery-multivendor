@@ -16,6 +16,7 @@ import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { NotificationSchema } from '@/lib/utils/schema/notification';
 import { useMutation } from '@apollo/client';
 import { Form, Formik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { Sidebar } from 'primereact/sidebar';
 import { ChangeEvent, useContext } from 'react';
 
@@ -23,6 +24,9 @@ export default function NotificationForm({
   setVisible,
   visible,
 }: INotificationFormProps) {
+  // Hooks
+  const t = useTranslations();
+
   //Toast
   const { showToast } = useContext(ToastContext);
 
@@ -37,17 +41,17 @@ export default function NotificationForm({
     refetchQueries: [{ query: GET_NOTIFICATIONS }],
     onCompleted: () => {
       showToast({
-        title: 'New Notification',
+        title: t('New Notification'),
         type: 'success',
-        message: 'Notification has been sent successfully',
+        message: t('Notification has been sent successfully'),
         duration: 2500,
       });
     },
     onError: (err) => {
       showToast({
-        title: 'Error Notification',
+        title: t('Error Notification'),
         type: 'error',
-        message: err.cause?.message || 'Something went wrong',
+        message: err.cause?.message || t('Something went wrong'),
         duration: 2500,
       });
     },
@@ -82,7 +86,7 @@ export default function NotificationForm({
             <Form onSubmit={handleSubmit}>
               <div className="mb-2 flex flex-col">
                 <h2 className='className="mb-3 text-xl font-bold'>
-                  Send Notification
+                  {t('Send Notification')}
                 </h2>
               </div>
               <div className="space-y-4">
@@ -93,7 +97,7 @@ export default function NotificationForm({
                   }
                   name="title"
                   showLabel={true}
-                  placeholder="Title"
+                  placeholder={t('Title')}
                   type="text"
                   className={`${
                     onErrorMessageMatcher(
@@ -111,9 +115,9 @@ export default function NotificationForm({
                     setFieldValue('body', e.target.value)
                   }
                   showLabel={true}
-                  label="Description"
+                  label={t('Description')}
                   name="body"
-                  placeholder="Add description here"
+                  placeholder={t('Add description here')}
                   className={`${
                     onErrorMessageMatcher(
                       'body',
@@ -129,7 +133,7 @@ export default function NotificationForm({
                 <div className="mt-4 flex justify-end">
                   <CustomButton
                     className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                    label={'Send'}
+                    label={t('Send')}
                     type="submit"
                     loading={isSubmitting}
                   />
