@@ -39,6 +39,7 @@ import { faAdd, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fieldset } from 'primereact/fieldset';
 import { useContext } from 'react';
+import { useTranslations } from 'next-intl';
 
 // State
 const initialFormValuesTemplate: IOptionForm = {
@@ -60,7 +61,9 @@ export default function OptionAddForm({
   isAddOptionsVisible,
 }: IOptionsAddFormComponentProps) {
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
+
   // Context
   const { CURRENT_SYMBOL } = useConfiguration();
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
@@ -89,8 +92,8 @@ export default function OptionAddForm({
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: 'New Option(s)',
-          message: `Option(s) have been ${option ? 'edited' : 'added'} successfully.`,
+          title: t('New Option'),
+          message: `${t('Option have been')} ${option ? t('edited') : t('added')} ${t('successfully')}.`,
         });
 
         onHide();
@@ -100,11 +103,11 @@ export default function OptionAddForm({
         try {
           message = error.graphQLErrors[0]?.message;
         } catch (err) {
-          message = 'Something went wrong.';
+          message = t('Something went wrong');
         }
         showToast({
           type: 'error',
-          title: 'New Option(s)',
+          title: t('New Option'),
           message,
         });
       },
@@ -136,7 +139,9 @@ export default function OptionAddForm({
         <div className="h-full w-full">
           <div className="flex flex-col gap-2">
             <div className="mb-2 flex flex-col">
-              <span className="text-lg">{option ? 'Edit' : 'Add'} Option</span>
+              <span className="text-lg">
+                {option ? t('Edit') : t('Add')} {t('Option')}
+              </span>
             </div>
 
             <div className="mb-2">
@@ -184,7 +189,7 @@ export default function OptionAddForm({
                                             </button>
                                           )}
                                           <Fieldset
-                                            legend={`Option ${index + 1} ${value.title ? `(${value.title})` : ''}`}
+                                            legend={`${t('Option')} ${index + 1} ${value.title ? `(${value.title})` : ''}`}
                                             toggleable
                                           >
                                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -192,7 +197,7 @@ export default function OptionAddForm({
                                                 <CustomTextField
                                                   type="text"
                                                   name={`options[${index}].title]`}
-                                                  placeholder="Title"
+                                                  placeholder={t('Title')}
                                                   maxLength={35}
                                                   value={value.title}
                                                   onChange={(e) =>
@@ -222,7 +227,7 @@ export default function OptionAddForm({
                                                   max={99999}
                                                   minFractionDigits={0}
                                                   maxFractionDigits={2}
-                                                  placeholder="Price"
+                                                  placeholder={t('Price')}
                                                   showLabel={true}
                                                   value={value.price}
                                                   onChangeFieldValue={
@@ -243,7 +248,7 @@ export default function OptionAddForm({
                                               <div className="col-span-1 sm:col-span-2">
                                                 <CustomTextAreaField
                                                   name={`[options[${index}].description]`}
-                                                  placeholder="Description"
+                                                  placeholder={t('Description')}
                                                   value={value.description}
                                                   onChange={handleChange}
                                                   showLabel={true}
@@ -274,7 +279,7 @@ export default function OptionAddForm({
                                     className="w-full rounded border border-black bg-transparent text-black"
                                     icon={faAdd}
                                     iconStyles={{ color: 'black' }}
-                                    title="Add New Option"
+                                    title={t('Add New Option')}
                                     onClick={() =>
                                       push(initialFormValuesTemplate)
                                     }
@@ -288,7 +293,7 @@ export default function OptionAddForm({
                         <div className="mt-4 flex justify-end">
                           <CustomButton
                             className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                            label={option ? 'Update' : 'Add'}
+                            label={option ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}
                           />

@@ -30,6 +30,7 @@ import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaur
 import { generateDummyOptions } from '@/lib/utils/dummy';
 import { useMutation } from '@apollo/client';
 import CategoryTableHeader from '../header/table-header';
+import { useTranslations } from 'next-intl';
 
 export default function OptionMain({
   setIsAddOptionsVisible,
@@ -40,6 +41,7 @@ export default function OptionMain({
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   // State - Table
@@ -93,8 +95,8 @@ export default function OptionMain({
   function onErrorFetchCategoriesByRestaurant() {
     showToast({
       type: 'error',
-      title: 'Option Fetch',
-      message: 'Categories fetch failed',
+      title: t('Option Fetch'),
+      message: t('Categories fetch failed'),
       duration: 2500,
     });
   }
@@ -102,7 +104,7 @@ export default function OptionMain({
   // Constants
   const menuItems: IActionMenuItem<IOptions>[] = [
     {
-      label: 'Edit',
+      label: t('Edit'),
       command: (data?: IOptions) => {
         if (data) {
           setIsAddOptionsVisible(true);
@@ -111,7 +113,7 @@ export default function OptionMain({
       },
     },
     {
-      label: 'Delete',
+      label: t('Delete'),
       command: (data?: IOptions) => {
         if (data) {
           setDeleteId(data._id);
@@ -151,15 +153,15 @@ export default function OptionMain({
             onCompleted: () => {
               showToast({
                 type: 'success',
-                title: 'Delete Option',
-                message: 'Option has been deleted successfully.',
+                title: t('Delete Option'),
+                message: t('Option has been deleted successfully'),
                 duration: 3000,
               });
               setDeleteId('');
             },
           });
         }}
-        message="Are you sure you want to delete this option?"
+        message={t('Are you sure you want to delete this option?')}
       />
     </div>
   );
