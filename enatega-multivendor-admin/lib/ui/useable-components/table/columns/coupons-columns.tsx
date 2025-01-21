@@ -15,14 +15,17 @@ import { EDIT_COUPON, GET_COUPONS } from '@/lib/api/graphql';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
+import { useTranslations } from 'next-intl';
 
 export const COUPONS_TABLE_COLUMNS = ({
   menuItems,
 }: {
   menuItems: IActionMenuProps<ICoupon>['items'];
 }) => {
-  // Toast
+  // Hooks
   const { showToast } = useContext(ToastContext);
+  // Hooks
+  const t = useTranslations();
 
   // States
   const [editCouponLoading, setEditCouponLoading] = useState({
@@ -35,9 +38,9 @@ export const COUPONS_TABLE_COLUMNS = ({
     refetchQueries: [{ query: GET_COUPONS }],
     onCompleted: () => {
       showToast({
-        title: 'Edit Coupon',
+        title: t('Edit Coupon'),
         type: 'success',
-        message: 'Coupon Status has been edited successfully',
+        message: t('Coupon Status has been edited successfully'),
         duration: 2500,
       });
       setEditCouponLoading({
@@ -47,12 +50,12 @@ export const COUPONS_TABLE_COLUMNS = ({
     },
     onError: (err) => {
       showToast({
-        title: 'Edit Coupon',
+        title: t('Edit Coupon'),
         type: 'error',
         message:
           err.message ||
           err?.cause?.message ||
-          'Something went wrong please try again',
+          t('Something went wrong, please try again'),
         duration: 2500,
       });
       setEditCouponLoading({
@@ -85,22 +88,22 @@ export const COUPONS_TABLE_COLUMNS = ({
   const coupon_columns = useMemo(
     () => [
       {
-        headerName: 'Name',
+        headerName: t('Name'),
         propertyName: '__typename',
       },
       {
-        headerName: 'Code',
+        headerName: t('Code'),
         propertyName: 'title',
       },
       {
-        headerName: 'Discount',
+        headerName: t('Discount'),
         propertyName: 'discount',
         body: (rowData: ICoupon) => {
           return <span>{rowData.discount}%</span>;
         },
       },
       {
-        headerName: 'Status',
+        headerName: t('Status'),
         propertyName: 'enabled',
         body: (rowData: ICoupon) => {
           return (
