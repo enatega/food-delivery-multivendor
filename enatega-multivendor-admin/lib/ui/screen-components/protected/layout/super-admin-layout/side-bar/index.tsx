@@ -26,8 +26,10 @@ import useCheckAllowedRoutes from '@/lib/hooks/useCheckAllowedRoutes';
 
 // Components
 import SidebarItem from './side-bar-item';
+import { useTranslations } from 'next-intl';
 
 function SuperAdminSidebar({ children }: IGlobalComponentProps) {
+  // Contexts
   const { isSuperAdminSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
 
@@ -48,12 +50,16 @@ function SuperAdminSidebar({ children }: IGlobalComponentProps) {
 }
 
 export default function MakeSidebar() {
+  // Hooks
+  const t = useTranslations();
+
+  // Contexts
   const { isSuperAdminSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
 
   const navBarItems: ISidebarMenuItem[] = [
     {
-      text: 'My Website',
+      text: t('My Website'),
       route: 'https://multivendor.enatega.com/',
       isParent: true,
       icon: faUpRightFromSquare,
@@ -61,40 +67,40 @@ export default function MakeSidebar() {
       shouldOpenInNewTab: true,
     },
     {
-      text: 'Home',
+      text: t('Home'),
       route: '/home',
       isParent: true,
       icon: faHome,
       isClickable: true,
     },
     {
-      text: 'General',
+      text: t('General'),
       route: '/general',
       isParent: true,
       icon: faCog,
       subMenu: useCheckAllowedRoutes([
         {
-          text: 'Vendors',
+          text: t('Vendors'),
           route: '/general/vendors',
           isParent: false,
         },
         {
-          text: 'Stores',
+          text: t('Stores'),
           route: '/general/stores',
           isParent: false,
         },
         {
-          text: 'Riders',
+          text: t('Riders'),
           route: '/general/riders',
           isParent: false,
         },
         {
-          text: 'Users',
+          text: t('Users'),
           route: '/general/users',
           isParent: false,
         },
         {
-          text: 'Staff',
+          text: t('Staff'),
           route: '/general/staff',
           isParent: false,
         },
@@ -104,53 +110,53 @@ export default function MakeSidebar() {
       },
     },
     {
-      text: 'Management',
+      text: t('Management'),
       route: '/management',
       isParent: true,
       icon: faSliders,
       subMenu: useCheckAllowedRoutes([
         {
-          text: 'Configuration',
+          text: t('Configuration'),
           route: '/management/configurations',
           isParent: false,
         },
         {
-          text: 'Orders',
+          text: t('Orders'),
           route: '/management/orders',
           isParent: false,
         },
         {
-          text: 'Coupons',
+          text: t('Coupons'),
           route: '/management/coupons',
           isParent: false,
         },
         {
-          text: 'Cuisine',
+          text: t('Cuisine'),
           route: '/management/cuisines',
           isParent: false,
         },
         {
-          text: 'Banners',
+          text: t('Banners'),
           route: '/management/banners',
           isParent: false,
         },
         {
-          text: 'Tipping',
+          text: t('Tipping'),
           route: '/management/tippings',
           isParent: false,
         },
         {
-          text: 'Commission Rate',
+          text: t('Commission Rate'),
           route: '/management/commission-rates',
           isParent: false,
         },
         {
-          text: 'Withdraw Request',
+          text: t('Withdraw Request'),
           route: '/management/withdraw-requests',
           isParent: false,
         },
         {
-          text: 'Notification',
+          text: t('Notification'),
           route: '/management/notifications',
           isParent: false,
         },
