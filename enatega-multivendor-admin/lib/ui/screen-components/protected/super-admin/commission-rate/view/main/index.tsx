@@ -26,12 +26,16 @@ import { COMMISSION_RATE_COLUMNS } from '@/lib/ui/useable-components/table/colum
 import { COMMISSION_RATE_ACTIONS } from '@/lib/utils/constants';
 
 import CommissionRateHeader from '../header/table-header';
+import { useTranslations } from 'next-intl';
 
 interface RestaurantsData {
   restaurants: IRestaurantResponse[];
 }
 
 export default function CommissionRateMain() {
+  //Hooks
+  const t = useTranslations();
+
   // States
   const [restaurants, setRestaurants] = useState<IRestaurantResponse[]>([]);
   const [editingRestaurantIds, setEditingRestaurantIds] = useState<Set<string>>(
@@ -60,15 +64,6 @@ export default function CommissionRateMain() {
   // Handlers
   const handleSave = async (restaurantId: string) => {
     const restaurant = restaurants.find((r) => r._id === restaurantId);
-    // Validation
-    if (parseFloat(String(restaurant?.commissionRate)) > 100) {
-      return showToast({
-        type: 'error',
-        title: 'Update Commission',
-        message:
-          'As Commission Rate is a %age value, please enter a value in between 0 to 100',
-      });
-    }
     if (restaurant) {
       setLoadingRestaurant(restaurantId);
       try {
@@ -80,8 +75,8 @@ export default function CommissionRateMain() {
         });
         showToast({
           type: 'success',
-          title: 'Commission Updated',
-          message: `Commission rate updated for ${restaurant.name}`,
+          title: t('Commission Updated'),
+          message: `${t('Commission rate updated for')} ${restaurant.name}`,
           duration: 2000,
         });
         setEditingRestaurantIds((prev) => {
@@ -93,8 +88,8 @@ export default function CommissionRateMain() {
       } catch (error) {
         showToast({
           type: 'error',
-          title: 'Error',
-          message: `Error updating commission rate for ${restaurant.name}`,
+          title: t('Error'),
+          message: `${t('Error updating commission rate for')} ${restaurant.name}`,
           duration: 2000,
         });
       } finally {
@@ -169,9 +164,10 @@ export default function CommissionRateMain() {
     } else if (error) {
       showToast({
         type: 'error',
-        title: 'Error Fetching Restaurants',
-        message:
-          'An error occurred while fetching restaurants. Please try again later.',
+        title: t('Error Fetching Restaurants'),
+        message: t(
+          'An error occurred while fetching restaurants. Please try again later.'
+        ),
         duration: 2000,
       });
     }
