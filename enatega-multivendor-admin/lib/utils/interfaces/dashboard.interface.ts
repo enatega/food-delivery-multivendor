@@ -24,12 +24,12 @@ export interface IDashboardDateFilterComponentsProps {
 }
 
 export interface IDashboardOrderStatsComponentsProps {
-  dateFilter: { startDate: string; endDate: string; dateKeyword?: string };
+  dateFilter: IDateFilter;
 }
 
 export interface IDashboardGrowthOverviewComponentsProps {
   isStoreView: boolean;
-  dateFilter: { startDate: string; endDate: string };
+  dateFilter: IDateFilter
 }
 
 export interface IDateFilter {

@@ -32,7 +32,7 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Constants and Utils
-import { RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import { toTextCase } from '@/lib/utils/methods';
 
@@ -460,11 +460,11 @@ export default function RestaurantDetails({
                               ? 'red'
                               : '',
                           }}
-                          // fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
-                          // maxFileHeight={1080}
-                          // maxFileWidth={1080}
-                          // maxFileSize={MAX_SQUARE_FILE_SIZE}
-                          // orientation="SQUARE"
+                          fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
+                          maxFileHeight={1080}
+                          maxFileWidth={1080}
+                          maxFileSize={MAX_SQUARE_FILE_SIZE}
+                          orientation="SQUARE"
                           existingImageUrl={values.logo}
                           showExistingImage={true}
                         />
@@ -482,11 +482,11 @@ export default function RestaurantDetails({
                               ? 'red'
                               : '',
                           }}
-                          // fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
-                          // maxFileHeight={841}
-                          // maxFileWidth={1980}
-                          // maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
-                          // orientation="LANDSCAPE"
+                          fileTypes={['image/webp', 'image/jpg', 'image/jpeg']}
+                          maxFileHeight={841}
+                          maxFileWidth={1980}
+                          maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
+                          orientation="LANDSCAPE"
                           existingImageUrl={values.image}
                           showExistingImage={true}
                         />
