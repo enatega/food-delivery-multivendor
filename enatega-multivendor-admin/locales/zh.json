@@ -1013,5 +1013,6 @@
   "Store Earnings": "商店收益",
   "Total Drivers": "总司机数",
   "Prefered dimensions": "首选尺寸",
-  "Prefered File size": "首选文件大小"
+  "Prefered File size": "首选文件大小",
+  "Connect with Stripe for payments": "连接 Stripe 以进行付款"
 }

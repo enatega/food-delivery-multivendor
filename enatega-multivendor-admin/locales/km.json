@@ -1013,5 +1013,6 @@
   "Store Earnings": "ចំណូលហាង",
   "Total Drivers": "អ្នកបើកបរសរុប",
   "Prefered dimensions": "វិមាត្រដែលចូលចិត្ត",
-  "Prefered File size": "ទំហំឯកសារដែលចូលចិត្ត"
+  "Prefered File size": "ទំហំឯកសារដែលចូលចិត្ត",
+  "Connect with Stripe for payments": "ភ្ជាប់ជាមួយ Stripe សម្រាប់ការទូទាត់"
 }

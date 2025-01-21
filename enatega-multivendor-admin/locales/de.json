@@ -1014,5 +1014,6 @@
   "Store Earnings": "Einnahmen des Geschäfts",
   "Total Drivers": "Gesamtanzahl der Fahrer",
   "Prefered dimensions": "Bevorzugte Abmessungen",
-  "Prefered File size": "Bevorzugte Dateigröße"
+  "Prefered File size": "Bevorzugte Dateigröße",
+  "Connect with Stripe for payments": "Mit Stripe für Zahlungen verbinden"
 }

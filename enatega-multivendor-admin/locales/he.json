@@ -1014,5 +1014,6 @@
   "Store Earnings": "רווחי החנות",
   "Total Drivers": "סה\"כ נהגים",
   "Prefered dimensions": "ממדים מועדפים",
-  "Prefered File size": "גודל קובץ מועדף"
+  "Prefered File size": "גודל קובץ מועדף",
+  "Connect with Stripe for payments": "התחבר ל-Stripe לתשלומים"
 }

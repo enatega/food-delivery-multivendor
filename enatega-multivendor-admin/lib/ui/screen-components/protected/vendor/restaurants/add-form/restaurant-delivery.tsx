@@ -38,6 +38,7 @@ import {
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
 import CustomGoogleMapsLocationBoundsVendorLayoutRestaurant from '@/lib/ui/useable-components/google-maps/location-bounds-restaurant(vendor-layout)';
 import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
+import { useTranslations } from 'next-intl';
 
 const initialValues: IRestaurantDeliveryForm = {
   minDeliveryFee: null,
@@ -54,6 +55,9 @@ export default function RestaurantDelivery({
     order: -1,
   };
 
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { isLoaded } = useContext(GoogleMapsContext);
   const { showToast } = useContext(ToastContext);
@@ -69,8 +73,8 @@ export default function RestaurantDelivery({
     onCompleted: () => {
       showToast({
         type: 'success',
-        title: 'Store Delivery Info',
-        message: `Store delivery info has been added successfully`,
+        title: t('Store Delivery Info'),
+        message: t(`Store delivery info has been added successfully`),
         duration: 3000,
       });
 
@@ -93,8 +97,8 @@ export default function RestaurantDelivery({
     } catch (error) {
       showToast({
         type: 'error',
-        title: `Failed to add Store delivery info`,
-        message: `Store Create Failed`,
+        title: t(`Failed to add Store delivery info`),
+        message: t(`Store Create Failed`),
         duration: 2500,
       });
     }
@@ -103,11 +107,11 @@ export default function RestaurantDelivery({
   function onError({ graphQLErrors, networkError }: ApolloError) {
     showToast({
       type: 'error',
-      title: 'Store delivery info',
+      title: t('Store delivery info'),
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Store Create Failed`,
+        t(`Store Create Failed`),
       duration: 2500,
     });
   }
@@ -143,7 +147,7 @@ export default function RestaurantDelivery({
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
-            <span className="text-lg">Store Delivery</span>
+            <span className="text-lg">{t('Store Delivery')}</span>
           </div>
 
           <div>
@@ -169,7 +173,7 @@ export default function RestaurantDelivery({
                         <CustomNumberField
                           min={1}
                           max={99999}
-                          placeholder="Min Delivery Fee"
+                          placeholder={t('Min Delivery Fee')}
                           name="minDeliveryFee"
                           useGrouping={false}
                           showLabel={true}
@@ -191,7 +195,7 @@ export default function RestaurantDelivery({
                         <CustomNumberField
                           min={1}
                           max={99999}
-                          placeholder="Delivery Distance (In Km's)"
+                          placeholder={t("Delivery Distance (In Km's)")}
                           name="deliveryDistance"
                           showLabel={true}
                           useGrouping={false}
@@ -213,7 +217,9 @@ export default function RestaurantDelivery({
                         <CustomNumberField
                           min={1}
                           max={99999}
-                          placeholder="Delivery Fee (per Km's) when delivery distance exceeded"
+                          placeholder={t(
+                            "Delivery Fee (per Km's) when delivery distance exceeded"
+                          )}
                           name="deliveryFee"
                           showLabel={true}
                           value={values.deliveryFee}
@@ -243,7 +249,7 @@ export default function RestaurantDelivery({
                       <div className="flex justify-end">
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                          label="Add"
+                          label={t('Add')}
                           type="submit"
                           loading={isSubmitting}
                         />

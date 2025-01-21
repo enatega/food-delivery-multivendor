@@ -19,11 +19,16 @@ import HeaderText from '@/lib/ui/useable-components/header-text';
 // Constants
 import { DASHBOARD_PAYMENT_METHOD } from '@/lib/utils/constants';
 import DashboardStatsTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/dashboard.stats.table.skeleton';
+
+// Hooks
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import { useTranslations } from 'next-intl';
 
 export default function RestaurantStatesTable({
   dateFilter,
 }: IDashboardRestaurantStatesTableComponentsProps) {
+  // Hooks
+  const t = useTranslations();
   const { CURRENCY_CODE } = useConfiguration();
 
   // Context
@@ -34,6 +39,7 @@ export default function RestaurantStatesTable({
     GET_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD,
     {
       restaurant: restaurantLayoutContextData?.restaurantId ?? '',
+      dateKeyword: dateFilter?.dateKeyword,
       starting_date: dateFilter.startDate,
       ending_date: dateFilter.endDate,
     },
@@ -73,7 +79,7 @@ export default function RestaurantStatesTable({
         return (
           <>
             <div className="flex flex-col space-y-2">
-              <HeaderText text={DASHBOARD_PAYMENT_METHOD[key]} />
+              <HeaderText text={t(DASHBOARD_PAYMENT_METHOD[key])} />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                 {salesDetailsLoading ? (
                   <div className="flex justify-center items-center">

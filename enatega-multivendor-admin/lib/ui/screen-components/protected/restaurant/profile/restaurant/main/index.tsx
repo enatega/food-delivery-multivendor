@@ -5,6 +5,7 @@ import { Avatar } from 'primereact/avatar';
 import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 import RestaurantProfileSkeleton from '@/lib/ui/useable-components/custom-skeletons/restaurant.profile.skeleton';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => (
   <div>
@@ -14,6 +15,9 @@ const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => (
 );
 
 const RestaurantMain: React.FC = () => {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { restaurantProfileResponse } = useContext(ProfileContext);
   const restaurant = restaurantProfileResponse?.data?.restaurant;
@@ -26,21 +30,21 @@ const RestaurantMain: React.FC = () => {
         <div className="flex items-center mb-6">
           <ProfileLogoSVG width="55" height="55" strokeColor="#1E1E1E" />
           <div className="ml-2">
-            <h1 className="text-xs text-gray-500">Store Name</h1>
+            <h1 className="text-xs text-gray-500">{t('Store Name')}</h1>
             <h2 className="text-2xl font-bold">{restaurant?.name || 'N/A'}</h2>
           </div>
         </div>
         <hr className="mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InfoItem label="Email" value={restaurant?.username} />
-          <InfoItem label="Password" value={restaurant?.password} />
+          <InfoItem label={t('Email')} value={restaurant?.username} />
+          <InfoItem label={t('Password')} value={restaurant?.password} />
           <div className="md:row-span-4">
-            <p className="text-xs text-gray-500 mb-4">Images</p>
+            <p className="text-xs text-gray-500 mb-4">{t('Images')}</p>
             <div className="flex space-x-2">
               {restaurant?.image ? (
                 <Image
                   src={restaurant?.image}
-                  alt="Store logo"
+                  alt={t('Store logo')}
                   className="object-cover rounded"
                   width={96}
                   height={96}
@@ -51,7 +55,7 @@ const RestaurantMain: React.FC = () => {
               {restaurant?.logo ? (
                 <Image
                   src={restaurant?.logo}
-                  alt="Store logo"
+                  alt={t('Store logo')}
                   className="object-cover rounded"
                   width={96}
                   height={96}
@@ -61,22 +65,22 @@ const RestaurantMain: React.FC = () => {
               )}
             </div>
           </div>
-          <InfoItem label="Name" value={restaurant?.name} />
-          <InfoItem label="Address" value={restaurant?.address} />
+          <InfoItem label={t('Name')} value={restaurant?.name} />
+          <InfoItem label={t('Address')} value={restaurant?.address} />
           <InfoItem
-            label="Delivery Time"
+            label={t('Delivery Time')}
             value={restaurant?.deliveryTime?.toString()}
           />
           <InfoItem
-            label="Min Order"
+            label={t('Min Order')}
             value={restaurant?.minimumOrder?.toString()}
           />
           <InfoItem
-            label="Service Charges"
+            label={t('Service Charges')}
             value={restaurant?.tax?.toString()}
           />
-          <InfoItem label="Order Prefix" value={restaurant?.orderPrefix} />
-          <InfoItem label="Shop Category" value={restaurant?.shopType} />
+          <InfoItem label={t('Order Prefix')} value={restaurant?.orderPrefix} />
+          <InfoItem label={t('Shop Category')} value={restaurant?.shopType} />
         </div>
       </div>
     </div>

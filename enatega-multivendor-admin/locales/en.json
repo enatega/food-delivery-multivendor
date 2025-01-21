@@ -1014,5 +1014,7 @@
   "Store Earnings":"Store Earnings",
   "Total Drivers":"Total Drivers",
   "Prefered dimensions":"Prefered dimensions",
-  "Prefered File size":"Prefered File size"
+  "Prefered File size":"Prefered File size",
+  "Connect with Stripe for payments":"Connect with Stripe for payments"
+  
 }

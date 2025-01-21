@@ -4,8 +4,13 @@ import HeaderText from '@/lib/ui/useable-components/header-text';
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 import { faWrench } from '@fortawesome/free-solid-svg-icons';
 import { ProfileContext } from '@/lib/context/restaurant/profile.context';
+import { useTranslations } from 'next-intl';
 
 const ProfileHeader: React.FC = () => {
+  // Hooks
+  const t = useTranslations();
+
+  // Contexts
   const profileContext = useContext(ProfileContext);
 
   const onUpdateProfileClick = () => {
@@ -15,12 +20,12 @@ const ProfileHeader: React.FC = () => {
   return (
     <div className="w-full flex-shrink-0 top-0 bg-white z-10 shadow-sm p-3">
       <div className="flex w-full justify-between">
-        <HeaderText className="heading" text="Profile" />
+        <HeaderText className="heading" text={t('Profile')} />
         <TextIconClickable
           className="sm:w-auto bg-black text-white border-gray-300 rounded"
           icon={faWrench}
           iconStyles={{ color: 'white' }}
-          title="Update Profile"
+          title={t('Update Profile')}
           onClick={onUpdateProfileClick}
         />
       </div>

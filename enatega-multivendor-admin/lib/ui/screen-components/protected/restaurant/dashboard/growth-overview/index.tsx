@@ -11,10 +11,14 @@ import {
 } from '@/lib/utils/interfaces';
 import DashboardUsersByYearStatsSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.user.year.stats.skeleton';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
+import { useTranslations } from 'next-intl';
 
 // Dummy
 
 export default function GrowthOverView() {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const {
     restaurantLayoutContextData: { restaurantId },
@@ -63,22 +67,22 @@ export default function GrowthOverView() {
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
     const data = {
       labels: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+        t('January'),
+        t('February'),
+        t('March'),
+        t('April'),
+        t('May'),
+        t('June'),
+        t('July'),
+        t('August'),
+        t('September'),
+        t('October'),
+        t('November'),
+        t('December'),
       ],
       datasets: [
         {
-          label: 'Sales Amount',
+          label: t('Sales Amount'),
           data: dashboardSalesOrderCountDetailsByYear?.salesAmount ?? [],
           fill: false,
           borderColor: documentStyle.getPropertyValue('--pink-500'),
@@ -86,7 +90,7 @@ export default function GrowthOverView() {
           tension: 0.5,
         },
         {
-          label: 'Orders Count',
+          label: t('Orders Count'),
           data: dashboardSalesOrderCountDetailsByYear?.ordersCount ?? [],
           fill: false,
           borderColor: documentStyle.getPropertyValue('--blue-500'),
@@ -140,8 +144,10 @@ export default function GrowthOverView() {
 
   return (
     <div className={`w-full p-3`}>
-      <h2 className="text-lg font-semibold">Growth Overview</h2>
-      <p className="text-gray-500">Tracking Store Growth Over the Year</p>
+      <h2 className="text-lg font-semibold">{t('Growth Overview')}</h2>
+      <p className="text-gray-500">
+        {t('Tracking Store Growth Over the Year')}
+      </p>
       <div className="mt-4">
         {loading ? (
           <DashboardUsersByYearStatsSkeleton />
