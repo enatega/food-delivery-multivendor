@@ -28,9 +28,11 @@ export default function Detail({
 }) {
   const riderPhone = rider?.phone
   const { t } = useTranslation()
+  console.log(orderStatus)
+
   return (
     <View style={styles.container(theme)}>
-      {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
+      {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && orderStatus !== ORDER_STATUS_ENUM.CANCELLED && (
         <ChatButton
           onPress={() => navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone })}
           title={t('chatWithRider')}
@@ -173,6 +175,8 @@ const ItemRow = ({
         {currency}
         {formatNumber(price)}
       </TextDefault>
+      
+
     </View>
   )
 }

@@ -39,6 +39,7 @@ import MapViewDirections from 'react-native-maps-directions'
 import useEnvVars from '../../../environment'
 import LottieView from 'lottie-react-native'
 import { clearLogEntriesAsync } from 'expo-updates'
+import Taxes from './Taxes'
 const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 const CANCEL_ORDER = gql`
@@ -62,6 +63,10 @@ function OrderDetail(props) {
   const mapView = useRef(null)
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
+    onCompleted:(data)=>
+    {
+      navigation.navigate("Main")
+    },
     variables: { abortOrderId: id }
   })
   // useEffect(() => {
@@ -280,6 +285,7 @@ if(!order)
           rider={order?.rider}
           orderStatus={order?.orderStatus}
         />
+     <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol}/>
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         <PriceRow
@@ -343,8 +349,6 @@ export const OrderStatusImage = ({ status }) => {
     autoPlay
     loop
   />
-
-
 }
 
 export default OrderDetail
