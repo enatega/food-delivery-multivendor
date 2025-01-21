@@ -1,47 +1,62 @@
 import { IExtendedOrder } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  hour12: true,
+};
 
-export const ORDER_SUPER_ADMIN_COLUMNS = [
-  {
-    headerName: 'Order ID',
-    propertyName: 'orderId',
-  },
-  {
-    propertyName: 'itemsTitle',
-    headerName: 'Items',
-  },
-  {
-    headerName: 'Payment',
-    propertyName: 'paymentMethod',
-  },
-  {
-    headerName: 'Order Status',
-    propertyName: 'orderStatus',
-  },
-  {
-    headerName: 'Reason',
-    propertyName: 'reason',
-    body: (rowData: IExtendedOrder) => {
-      if (!rowData.reason) {
-        return <span>-</span>;
-      }
-      return <span>{rowData.reason}</span>;
+export const ORDER_SUPER_ADMIN_COLUMNS = () => {
+  // Hooks
+  const t = useTranslations();
+  return [
+    {
+      headerName: t('Order ID'),
+      propertyName: 'orderId',
     },
-  },
-  {
-    headerName: 'Created At',
-    propertyName: 'DateCreated',
-    body: (rowData: IExtendedOrder) => {
-      let date: string | number | Date =
-        parseInt(rowData.DateCreated ? rowData.DateCreated : '1725455473000') *
-        1000;
-      if (date) {
-        const newDate = new Date(date).toDateString();
-        return <span className="text-center">{newDate}</span>;
-      }
+    {
+      headerName: t('Items'),
+      propertyName: 'itemsTitle',
     },
-  },
-  {
-    headerName: 'Delivery Address',
-    propertyName: 'OrderdeliveryAddress',
-  },
-];
+    {
+      headerName: t('Payment'),
+      propertyName: 'paymentMethod',
+    },
+    {
+      headerName: t('Order Status'),
+      propertyName: 'orderStatus',
+    },
+    {
+      headerName: t('Reason'),
+      propertyName: 'reason',
+      body: (rowData: IExtendedOrder) => {
+        if (!rowData.reason) {
+          return <span>-</span>;
+        }
+        return <span>{rowData.reason}</span>;
+      },
+    },
+    {
+      headerName: t('Created At'),
+      propertyName: 'DateCreated',
+      body: (rowData: IExtendedOrder) => {
+        let date: string | number | Date = Number(rowData?.createdAt || null);
+        if (date) {
+          const newDate = new Date(date).toLocaleDateString(
+            'en-US',
+            dateOptions
+          );
+          return <span className="text-center">{newDate}</span>;
+        }
+      },
+    },
+    {
+      headerName: t('Delivery Address'),
+      propertyName: 'OrderdeliveryAddress',
+    },
+  ];
+};

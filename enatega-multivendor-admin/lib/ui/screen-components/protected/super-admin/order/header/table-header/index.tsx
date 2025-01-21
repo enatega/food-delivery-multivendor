@@ -7,7 +7,9 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import React, { useRef } from 'react';
 import classes from './order-superadmin.header.module.css';
 import { IMenuItem } from '@/lib/utils/interfaces/orders/order-vendor.interface';
-import VendorCustomTab from '@/lib/ui/useable-components/vendor-custom-tab';
+
+import { useTranslations } from 'next-intl';
+import DateFilterCustomTab from '@/lib/ui/useable-components/date-filter-custom-tab';
 
 const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
   setSelectedActions,
@@ -17,6 +19,10 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
   dateFilter,
   handleDateFilter,
 }) => {
+  // Hooks
+  const t = useTranslations();
+
+  // Refs
   const overlayPanelRef = useRef<OverlayPanel>(null);
 
   const toggleAction = (action: string) => {
@@ -28,12 +34,12 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
   };
 
   const menuItems: IMenuItem[] = [
-    { label: 'PENDING', value: 'PENDING' },
-    { label: 'ACCEPTED', value: 'ACCEPTED' },
-    { label: 'ASSIGNED', value: 'ASSIGNED' },
-    { label: 'PICKED', value: 'PICKED' },
-    { label: 'DELIVERED', value: 'DELIVERED' },
-    { label: 'CANCELLED', value: 'CANCELLED' },
+    { label: t('PENDING'), value: 'PENDING' },
+    { label: t('ACCEPTED'), value: 'ACCEPTED' },
+    { label: t('ASSIGNED'), value: 'ASSIGNED' },
+    { label: t('PICKED'), value: 'PICKED' },
+    { label: t('DELIVERED'), value: 'DELIVERED' },
+    { label: t('CANCELLED'), value: 'CANCELLED' },
   ];
 
   return (
@@ -57,7 +63,7 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
             showLabel={false}
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            placeholder="Search Orders"
+            placeholder={t('Search Orders')}
           />
         </div>
 
@@ -66,12 +72,12 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
             className="w-44 rounded border border-dotted border-[#E4E4E7] text-black"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title="Orders Status.."
+            title={t('Orders Status')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />
         </div>
 
-        <VendorCustomTab
+        <DateFilterCustomTab
           options={['All', 'Today', 'Week', 'Month', 'Year', 'Custom']}
           selectedTab={dateFilter.dateKeyword}
           setSelectedTab={(tab: string) =>
@@ -108,7 +114,7 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
               className="mt-3 cursor-pointer text-center text-sm"
               onClick={() => setSelectedActions([])}
             >
-              Clear filters
+              {t('Clear filters')}
             </p>
           </div>
         </OverlayPanel>
