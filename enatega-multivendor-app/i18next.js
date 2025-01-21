@@ -1,5 +1,6 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import * as Localization from 'expo-localization'
 import { en } from './translations/en'
 import { de } from './translations/de'
 import { fr } from './translations/fr'
@@ -8,6 +9,7 @@ import { zh } from './translations/zh'
 import { ar } from './translations/ar'
 import { he } from './translations/he'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
 export const languageResources = {
   en: { translation: en },
   zh: { translation: zh },
@@ -17,17 +19,25 @@ export const languageResources = {
   ar: { translation: ar },
   he: { translation: he }
 }
+
 const getStoredLanguage = async () => {
-  const lng = await AsyncStorage.getItem('enatega-language') || 'en';
+  const storedLanguage = await AsyncStorage.getItem('enatega-language') || 'en';
+
+  const systemLanguage = Localization.locale.split('-')[0]; // Extract the language code
+  const availableLanguages = Object.keys(languageResources);
+
+  // Check if system language is available in translations
+  const languageToUse = availableLanguages.includes(systemLanguage) ? systemLanguage : storedLanguage;
+
   // Initialize i18next
   i18next.use(initReactI18next).init({
     compatibilityJSON: 'v3',
-    lng: lng,
+    lng: languageToUse, // Use system language if available, otherwise use stored language
     fallbackLng: 'en',
     resources: languageResources
   });
-
 };
+
 getStoredLanguage()
 
 

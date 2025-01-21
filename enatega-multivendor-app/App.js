@@ -14,7 +14,8 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
-  View
+  View,
+  useColorScheme
 } from 'react-native'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
@@ -35,7 +36,6 @@ import { exitAlert } from './src/utils/androidBackButton'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { theme as Theme } from './src/utils/themeColors'
 import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
-// import { useColorScheme } from 'react-native'
 import { useKeepAwake } from 'expo-keep-awake'
 import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import useWatchLocation from './src/ui/hooks/useWatchLocation'
@@ -69,8 +69,6 @@ export default function App() {
   const notificationListener = useRef()
   const responseListener = useRef()
   const [orderId, setOrderId] = useState()
-  // use default theme
-  const [theme, themeSetter] = useReducer(ThemeReducer, 'Dark') // Set a default theme
   const [isUpdating, setIsUpdating] = useState(false)
   const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()
@@ -78,23 +76,21 @@ export default function App() {
   useKeepAwake()
   useWatchLocation()
 
-  // uncommit to use system theme
-  // const systemTheme = useColorScheme()
-  // Theme Reducer
-  // const [theme, themeSetter] = useReducer(
-  //   ThemeReducer,
-  //   systemTheme === 'dark' ? 'Dark' : 'Pink'
-  // )
+  // Use system theme
+  const systemTheme = useColorScheme()
+  const [theme, themeSetter] = useReducer(
+    ThemeReducer,
+    systemTheme === 'dark' ? 'Dark' : 'Pink'
+  )
+  useEffect(() => {
+    try {
+      themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
+    } catch (error) {
+      // Error retrieving data
+      console.log('Theme Error : ', error.message)
+    }
+  }, [systemTheme])
 
-  // use system theme
-  // useEffect(() => {
-  //   try {
-  //     themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
-  //   } catch (error) {
-  //     // Error retrieving data
-  //     console.log('Theme Error : ', error.message)
-  //   }
-  // }, [systemTheme])
 
   // For Fonts, etc
   useEffect(() => {
@@ -288,15 +284,15 @@ export default function App() {
       <ApolloProvider client={client}>
         <ThemeContext.Provider
           // use default theme
-          // value={{ ThemeValue: theme, dispatch: themeSetter }}
+          value={{ ThemeValue: theme, dispatch: themeSetter }}
           // use stored theme
-          value={{
-            ThemeValue: theme,
-            dispatch: (action) => {
-              themeSetter(action)
-              setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
-            }
-          }}
+          // value={{
+          //   ThemeValue: theme,
+          //   dispatch: (action) => {
+          //     themeSetter(action)
+          //     setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
+          //   }
+          // }}
         >
           <StatusBar
             backgroundColor={Theme[theme].menuBar}
