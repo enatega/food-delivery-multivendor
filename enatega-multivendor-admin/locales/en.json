@@ -871,7 +871,7 @@
   "Customers enter this code at checkout": "Customers enter this code at checkout",
   "Video size must be": "Video size must be",
   "Video dimensions must follow the guidelines": "Video dimensions must follow the guidelines",
-  "Orientation": "Orientation",
+  "orientation": "orientation",
   "The image should be in": "The image should be in",
   "The file width exceeds the limit of": "The file width exceeds the limit of",
   "File width should be": "File width should be",

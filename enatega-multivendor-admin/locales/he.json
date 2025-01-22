@@ -871,7 +871,7 @@
   "Customers enter this code at checkout": "לקוחות מזינים קוד זה בקופה",
   "Video size must be": "גודל הווידאו חייב להיות",
   "Video dimensions must follow the guidelines": "מידות הווידאו חייבות לעמוד בהנחיות",
-  "Orientation": "אוריינטציה",
+  "orientation": "אוריינטציה",
   "The image should be in": "התמונה צריכה להיות בפורמט",
   "The file width exceeds the limit of": "רוחב הקובץ חורג מהמגבלה של",
   "File width should be": "רוחב הקובץ צריך להיות",
