@@ -871,7 +871,7 @@
   "Customers enter this code at checkout": "Kunden geben diesen Code an der Kasse ein",
   "Video size must be": "Die Videogröße muss sein",
   "Video dimensions must follow the guidelines": "Die Videodimensionen müssen den Richtlinien entsprechen",
-  "Orientation": "Orientierung",
+  "orientation": "Orientierung",
   "The image should be in": "Das Bild sollte im Format sein",
   "The file width exceeds the limit of": "Die Dateibreite überschreitet das Limit von",
   "File width should be": "Die Dateibreite sollte sein",

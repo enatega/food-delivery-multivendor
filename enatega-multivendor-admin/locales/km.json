@@ -870,7 +870,7 @@
   "Customers enter this code at checkout": "អតិថិជនបញ្ចូលលេខកូដនេះនៅលើបញ្ជីសាច់ប្រាក់",
   "Video size must be": "ទំហំវីដេអូត្រូវតែ",
   "Video dimensions must follow the guidelines": "វិមាត្រវីដេអូត្រូវតែអនុលោមតាមការណែនាំ",
-  "Orientation": "ទិសដៅ",
+  "orientation": "ទិសដៅ",
   "The image should be in": "រូបភាពគួរតែមានក្នុង",
   "The file width exceeds the limit of": "ទទឹងឯកសារលើសពីកំណត់",
   "File width should be": "ទទឹងឯកសារគួរតែមាន",

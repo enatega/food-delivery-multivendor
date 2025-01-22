@@ -874,7 +874,7 @@
   "Customers enter this code at checkout": "يدخل العملاء هذا الرمز عند الدفع",
   "Video size must be": "يجب أن يكون حجم الفيديو",
   "Video dimensions must follow the guidelines": "يجب أن تتبع أبعاد الفيديو الإرشادات",
-  "Orientation": "الاتجاه",
+  "orientation": "الاتجاه",
   "The image should be in": "يجب أن تكون الصورة بتنسيق",
   "The file width exceeds the limit of": "تجاوز عرض الملف الحد",
   "File width should be": "يجب أن يكون عرض الملف",

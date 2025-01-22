@@ -870,7 +870,7 @@
   "Customers enter this code at checkout": "客户在结账时输入此代码",
   "Video size must be": "视频大小必须为",
   "Video dimensions must follow the guidelines": "视频尺寸必须符合指南",
-  "Orientation": "方向",
+  "orientation": "方向",
   "The image should be in": "图片应为",
   "The file width exceeds the limit of": "文件宽度超过限制",
   "File width should be": "文件宽度应为",
