@@ -65,7 +65,7 @@ export default function UserStats() {
         total={dashboardUsers?.restaurantsCount ?? 0}
         description={t('6.1% down from yesterday')}
         icon={faUtensils}
-        route="/general/restaurants"
+        route="/general/stores"
         loading={loading}
       />
       <StatsCard
