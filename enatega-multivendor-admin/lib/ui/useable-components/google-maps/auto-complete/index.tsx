@@ -3,6 +3,7 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslations } from 'next-intl';
 import {
   AutoComplete,
   AutoCompleteChangeEvent,
@@ -39,6 +40,10 @@ const CountryService: Country[] = [
 ];
 
 export default function TemplateDemo() {
+  // Hooks
+  const t = useTranslations();
+
+  // States
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
@@ -101,7 +106,7 @@ export default function TemplateDemo() {
           suggestions={filteredCountries}
           completeMethod={search}
           onChange={(e: AutoCompleteChangeEvent) => setSelectedCountry(e.value)}
-          placeholder="Select Location"
+          placeholder={t('Select Location')}
         />
 
         {selectedCountry && (

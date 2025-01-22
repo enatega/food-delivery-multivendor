@@ -1,6 +1,7 @@
 // Interface
 import { ICustomTabProps } from '@/lib/utils/interfaces';
 import OrdersDashboardDateFilter from '../orders-date-filter';
+import { useTranslations } from 'next-intl';
 
 const CustomTab = ({
   options,
@@ -9,6 +10,8 @@ const CustomTab = ({
   dateFilter,
   setDateFilter,
 }: ICustomTabProps) => {
+  // Hooks
+  const t = useTranslations();
   return (
     <div>
       <div className="flex h-10 w-fit space-x-2 rounded bg-gray-100 p-1">
@@ -22,7 +25,7 @@ const CustomTab = ({
             }`}
             onClick={() => setSelectedTab(option)}
           >
-            {option}
+            {t(option)}
           </div>
         ))}
       </div>

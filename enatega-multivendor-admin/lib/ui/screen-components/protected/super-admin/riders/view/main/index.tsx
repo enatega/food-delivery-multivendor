@@ -31,12 +31,14 @@ import { IQueryResult } from '@/lib/utils/interfaces';
 
 // Data
 import { generateDummyRiders } from '@/lib/utils/dummy';
+import { useTranslations } from 'next-intl';
 
 export default function RidersMain({
   setIsAddRiderVisible,
   setRider,
 }: IRidersMainComponentsProps) {
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   // State - Table
@@ -74,7 +76,7 @@ export default function RidersMain({
 
   const menuItems: IActionMenuItem<IRiderResponse>[] = [
     {
-      label: 'Edit',
+      label: t('Edit'),
       command: (data?: IRiderResponse) => {
         if (data) {
           setIsAddRiderVisible(true);
@@ -83,7 +85,7 @@ export default function RidersMain({
       },
     },
     {
-      label: 'Delete',
+      label: t('Delete'),
       command: (data?: IRiderResponse) => {
         if (data) {
           setDeleteId(data._id);
@@ -120,15 +122,15 @@ export default function RidersMain({
             onCompleted: () => {
               showToast({
                 type: 'success',
-                title: 'Success!',
-                message: 'Rider Deleted',
+                title: t('Success'),
+                message: t('Rider Deleted'),
                 duration: 3000,
               });
               setDeleteId('');
             },
           });
         }}
-        message="Are you sure you want to delete this item?"
+        message={t('Are you sure you want to delete this item?')}
       />
     </div>
   );

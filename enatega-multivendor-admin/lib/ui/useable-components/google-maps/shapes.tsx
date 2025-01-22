@@ -2,12 +2,16 @@ import { CircleSVG } from '@/lib/utils/assets/svgs/circle';
 import { PointLineSVG } from '@/lib/utils/assets/svgs/point-line';
 import { PolygonSVG } from '@/lib/utils/assets/svgs/polygon';
 import { ICustomShapeComponentProps } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
 
 export default function CustomShape({
   selected,
   onClick,
   hidenNames = [],
 }: ICustomShapeComponentProps) {
+  // Hooks
+  const t = useTranslations();
+
   const items = [
     {
       value: 'point',
@@ -16,7 +20,7 @@ export default function CustomShape({
           <PointLineSVG
             strokeColor={selected === 'point' ? 'white' : 'black'}
           />
-          <p className="mt-2 text-center">Point</p>
+          <p className="mt-2 text-center">{t('Point')}</p>
         </>
       ),
     },
@@ -25,7 +29,7 @@ export default function CustomShape({
       child: (
         <>
           <CircleSVG strokeColor={selected === 'radius' ? 'white' : 'black'} />
-          <p className="mt-2 text-center">Circle</p>
+          <p className="mt-2 text-center">{t('Circle')}</p>
         </>
       ),
     },
@@ -36,7 +40,7 @@ export default function CustomShape({
           <PolygonSVG
             strokeColor={selected === 'polygon' ? 'white' : 'black'}
           />
-          <p className="mt-2 text-center">Polygon</p>
+          <p className="mt-2 text-center">{t('Polygon')}</p>
         </>
       ),
     },

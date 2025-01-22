@@ -6,17 +6,13 @@ import { Form, Formik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
 
 // Prime React
-import CustomDropdownComponent from '@/lib/ui/useable-components/custom-dropdown';
-import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
 
 // Context
 import { ToastContext } from '@/lib/context/global/toast.context';
-import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.context';
 
 // Interface and Types
 import { ICreateVendorResponseGraphQL } from '@/lib/utils/interfaces';
 import { IRestauransVendorDetailsForm } from '@/lib/utils/interfaces/forms';
-import { IRestaurantsVendorDetailsComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 
 // Constants and Methods
 import { MAX_SQUARE_FILE_SIZE, VendorErrors } from '@/lib/utils/constants';
@@ -30,16 +26,18 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Schema
-import {
-  RestaurantsVendorDetails,
-  VendorSchemaForStoreForm,
-} from '@/lib/utils/schema';
+import { RestaurantsVendorDetails, VendorSchema } from '@/lib/utils/schema';
 
 // GraphQL
 import { CREATE_VENDOR, GET_VENDORS } from '@/lib/api/graphql';
 
 // Icons
+import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.context';
+import CustomDropdownComponent from '@/lib/ui/useable-components/custom-dropdown';
+import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
+import { IRestaurantsVendorDetailsComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 const initialValues: IRestauransVendorDetailsForm = {
   _id: null,
@@ -60,6 +58,9 @@ export default function VendorDetails({
     order: -1,
   };
 
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { showToast } = useContext(ToastContext);
   const { restaurantsContextData, onSetRestaurantsContextData } =
@@ -72,6 +73,9 @@ export default function VendorDetails({
     });
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
+  // Constants
+
+  // API
   // Mutations
   const [createVendor] = useMutation(CREATE_VENDOR, {
     refetchQueries: [{ query: GET_VENDORS }],
@@ -79,8 +83,8 @@ export default function VendorDetails({
     onCompleted: (data: ICreateVendorResponseGraphQL) => {
       showToast({
         type: 'success',
-        title: 'New Vendor',
-        message: `Vendor has been ${!showAddForm ? 'selected' : 'added'} successfully`,
+        title: t('New Vendor'),
+        message: `${t('Vendor has been')} ${!showAddForm ? t('selected') : t('added')} ${t('successfully')}`,
         duration: 3000,
       });
 
@@ -125,8 +129,8 @@ export default function VendorDetails({
     } catch (error) {
       showToast({
         type: 'error',
-        title: `${!showAddForm ? 'Select' : 'Create'} Vendor`,
-        message: `Vendor ${!showAddForm ? 'Selection' : 'Create'} Failed`,
+        title: `${!showAddForm ? t('Select') : t('Create')} ${t('Vendor')}`,
+        message: `${t('Vendor')} ${!showAddForm ? t('Selection') : t('Create')} ${t('Failed')}`,
         duration: 2500,
       });
     }
@@ -136,11 +140,11 @@ export default function VendorDetails({
     if (!graphQLErrors && !networkError) return;
     showToast({
       type: 'error',
-      title: `${!showAddForm ? 'Select' : 'Create'} Vendor`,
+      title: `${!showAddForm ? t('Select') : t('Create')} ${t('Vendor')}`,
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Vendor ${!showAddForm ? 'Selection' : 'Create'} Failed`,
+        `${t('Vendor')} ${!showAddForm ? t('Selection') : t('Create')} ${t('Failed')}`,
       duration: 2500,
     });
   }
@@ -169,9 +173,7 @@ export default function VendorDetails({
             <Formik
               initialValues={formInitialValues}
               validationSchema={
-                showAddForm
-                  ? VendorSchemaForStoreForm
-                  : RestaurantsVendorDetails
+                showAddForm ? VendorSchema : RestaurantsVendorDetails
               }
               enableReinitialize={true}
               onSubmit={async (values) => {
@@ -187,14 +189,13 @@ export default function VendorDetails({
                 isSubmitting,
                 setFieldValue,
               }) => {
-                console.log({ errors });
                 return (
                   <Form onSubmit={handleSubmit}>
                     <div className="space-y-3">
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:items-center">
                         <div className="flex flex-shrink-0 items-center justify-end">
                           <CustomInputSwitch
-                            label="Add Vendor"
+                            label={t('Add Vendor')}
                             isActive={showAddForm}
                             onChange={() => {
                               if (!showAddForm) {
@@ -209,7 +210,7 @@ export default function VendorDetails({
                         <div>
                           <CustomDropdownComponent
                             name="_id"
-                            placeholder="Select Vendor"
+                            placeholder={t('Select Vendor')}
                             showLabel={true}
                             selectedItem={values._id}
                             setSelectedItem={setFieldValue}
@@ -231,7 +232,7 @@ export default function VendorDetails({
                             <CustomTextField
                               type="text"
                               name="name"
-                              placeholder="Name"
+                              placeholder={t('Name')}
                               maxLength={35}
                               value={values.name}
                               onChange={handleChange}
@@ -251,7 +252,7 @@ export default function VendorDetails({
                             <CustomIconTextField
                               type="email"
                               name="email"
-                              placeholder="Email"
+                              placeholder={t('Email')}
                               maxLength={35}
                               showLabel={true}
                               iconProperties={{
@@ -275,7 +276,7 @@ export default function VendorDetails({
 
                           <div>
                             <CustomPasswordTextField
-                              placeholder="Password"
+                              placeholder={t('Password')}
                               name="password"
                               maxLength={20}
                               value={values.password}
@@ -295,7 +296,7 @@ export default function VendorDetails({
 
                           <div>
                             <CustomPasswordTextField
-                              placeholder="Confirm Password"
+                              placeholder={t('Confirm Password')}
                               name="confirmPassword"
                               maxLength={20}
                               showLabel={true}
@@ -318,7 +319,7 @@ export default function VendorDetails({
                             <CustomUploadImageComponent
                               key="image"
                               name="image"
-                              title="Upload Profile Image"
+                              title={t('Upload Profile Image')}
                               fileTypes={[
                                 'image/jpg',
                                 'image/webp',
@@ -347,7 +348,7 @@ export default function VendorDetails({
                       <div className="mt-4 flex justify-end">
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                          label="Save & Next"
+                          label={t('Save & Next')}
                           type="submit"
                           loading={isSubmitting}
                         />

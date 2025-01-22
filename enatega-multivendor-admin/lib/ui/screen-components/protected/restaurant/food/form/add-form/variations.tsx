@@ -50,6 +50,7 @@ import { faAdd, faTimes } from '@fortawesome/free-solid-svg-icons';
 // Apollo
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { useMutation } from '@apollo/client';
+import { useTranslations } from 'next-intl';
 
 const initialFormValuesTemplate: IVariationForm = {
   title: '',
@@ -68,6 +69,8 @@ export default function VariationAddForm({
     type: '',
     order: -1,
   };
+  // Hooks
+  const t = useTranslations();
 
   // State
   const [isAddAddonVisible, setIsAddAddonVisible] = useState(false);
@@ -118,8 +121,8 @@ export default function VariationAddForm({
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: `${foodContextData?.isEditing ? 'Edit' : 'New'} Food`,
-          message: `Food has been ${foodContextData?.isEditing ? 'edited' : 'added'} successfully.`,
+          title: `${foodContextData?.isEditing ? t('Edit') : t('New')} ${t('Food')}`,
+          message: `${t('Food has been')} ${foodContextData?.isEditing ? t('edited') : t('added')} ${t('successfully')}.`,
         });
 
         onClearFoodData();
@@ -129,11 +132,11 @@ export default function VariationAddForm({
         try {
           message = error.graphQLErrors[0]?.message;
         } catch (err) {
-          message = 'Something went wrong.';
+          message = t('Something went wrong');
         }
         showToast({
           type: 'error',
-          title: 'New Food',
+          title: t('New Food'),
           message,
         });
       },
@@ -154,8 +157,8 @@ export default function VariationAddForm({
   function onErrorFetchAddonsByRestaurant() {
     showToast({
       type: 'error',
-      title: 'Addons Fetch',
-      message: 'Addons fetch failed',
+      title: t('Addons Fetch'),
+      message: t('Addons fetch failed'),
       duration: 2500,
     });
   }
@@ -201,8 +204,8 @@ export default function VariationAddForm({
     } catch (err) {
       showToast({
         type: 'error',
-        title: `${foodContextData?.isEditing ? 'Edit' : 'New'} Food`,
-        message: `Food ${foodContextData?.isEditing ? 'edit' : 'creation'} failed`,
+        title: `${foodContextData?.isEditing ? t('Edit') : t('New')} ${t('Food')}`,
+        message: `${t('Food')} ${foodContextData?.isEditing ? t('edit') : t('creation')} ${t('failed')}`,
         duration: 2500,
       });
     }
@@ -227,7 +230,7 @@ export default function VariationAddForm({
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
-            <span className="text-lg">Add Variation</span>
+            <span className="text-lg">{t('Add Variation')}</span>
           </div>
 
           <div className="mb-2">
@@ -276,7 +279,7 @@ export default function VariationAddForm({
                                           </button>
                                         )}
                                         <Fieldset
-                                          legend={`Variation ${index + 1} ${value.title ? `(${value.title})` : ''}`}
+                                          legend={`${t('Variation')} ${index + 1} ${value.title ? `(${value.title})` : ''}`}
                                           toggleable
                                         >
                                           <div className="grid grid-cols-12 gap-4">
@@ -284,7 +287,7 @@ export default function VariationAddForm({
                                               <CustomTextField
                                                 type="text"
                                                 name={`variations[${index}].title`}
-                                                placeholder="Title"
+                                                placeholder={t('Title')}
                                                 maxLength={35}
                                                 value={value.title}
                                                 onChange={(e) =>
@@ -314,7 +317,7 @@ export default function VariationAddForm({
                                                 max={MAX_PRICE}
                                                 minFractionDigits={0}
                                                 maxFractionDigits={2}
-                                                placeholder="Price"
+                                                placeholder={t('Price')}
                                                 showLabel={true}
                                                 value={value.price}
                                                 onChangeFieldValue={
@@ -334,7 +337,8 @@ export default function VariationAddForm({
                                               {value.discounted > 0 && (
                                                 <div className="absolute bottom-[-15px] left-[2px] font-semibold text-[10px] flex gap-2">
                                                   <p>
-                                                    Actual Price&nbsp;: &nbsp;
+                                                    {t('Actual Price')}&nbsp;:
+                                                    &nbsp;
                                                     <span className="line-through">
                                                       {value.price +
                                                         value.discounted}
@@ -342,8 +346,8 @@ export default function VariationAddForm({
                                                   </p>
                                                   ,
                                                   <p>
-                                                    Discounted Price&nbsp;:
-                                                    &nbsp;
+                                                    {t('Discounted Price')}
+                                                    &nbsp;: &nbsp;
                                                     <span>{value.price}</span>
                                                   </p>
                                                 </div>
@@ -354,7 +358,9 @@ export default function VariationAddForm({
                                               <CustomNumberField
                                                 name={`variations[${index}].discounted`}
                                                 min={0}
-                                                placeholder="Discount Price"
+                                                placeholder={t(
+                                                  'Discount Price'
+                                                )}
                                                 showLabel={true}
                                                 value={value.discounted}
                                                 onChangeFieldValue={
@@ -377,7 +383,7 @@ export default function VariationAddForm({
                                             <div className="col-span-12 sm:col-span-12">
                                               <CustomMultiSelectComponent
                                                 name={`variations[${index}].addons`}
-                                                placeholder="Addons"
+                                                placeholder={t('Addons')}
                                                 options={addonsDropdown ?? []}
                                                 selectedItems={
                                                   value.addons ?? [
@@ -387,7 +393,7 @@ export default function VariationAddForm({
                                                 setSelectedItems={setFieldValue}
                                                 showLabel={true}
                                                 extraFooterButton={{
-                                                  title: 'Add New Addon',
+                                                  title: t('Add New Addon'),
                                                   onChange: () =>
                                                     setIsAddAddonVisible(true),
                                                 }}
@@ -407,7 +413,7 @@ export default function VariationAddForm({
 
                                               <div className="col-span-12 mt-4 flex justify-end sm:col-span-12">
                                                 <CustomInputSwitch
-                                                  label="Out of Stock"
+                                                  label={t('Out of Stock')}
                                                   loading={false}
                                                   isActive={value.isOutOfStock}
                                                   onChange={() => {
@@ -431,7 +437,7 @@ export default function VariationAddForm({
                                 className="w-full rounded border border-black bg-transparent text-black"
                                 icon={faAdd}
                                 iconStyles={{ color: 'black' }}
-                                title="Add New Variation"
+                                title={t('Add New Variation')}
                                 onClick={() => push(initialFormValuesTemplate)}
                               />
                             </div>
@@ -442,7 +448,7 @@ export default function VariationAddForm({
                       <div className="mt-4 flex justify-between">
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                          label={'Back'}
+                          label={t('Back')}
                           type="button"
                           onClick={() => {
                             onBackClickHandler(values);
@@ -450,7 +456,9 @@ export default function VariationAddForm({
                         />
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                          label={foodContextData?.isEditing ? 'Update' : 'Add'}
+                          label={
+                            foodContextData?.isEditing ? t('Update') : t('Add')
+                          }
                           type="submit"
                           loading={isSubmitting}
                         />

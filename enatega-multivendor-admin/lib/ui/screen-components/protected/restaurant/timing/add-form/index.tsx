@@ -31,6 +31,7 @@ import useToast from '@/lib/hooks/useToast';
 import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 import { UPDATE_TIMINGS } from '@/lib/api/graphql/mutations/timing';
 import { useMutation, useQuery } from '@apollo/client';
+import { useTranslations } from 'next-intl';
 
 const TimingAddForm = () => {
   // Context
@@ -38,6 +39,7 @@ const TimingAddForm = () => {
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
 
   const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
@@ -95,8 +97,8 @@ const TimingAddForm = () => {
         refetch({ id: restaurantId });
         showToast({
           type: 'success',
-          title: 'Success!',
-          message: 'Timing updated',
+          title: t('Success'),
+          message: t('Timing updated'),
           duration: 3000,
         });
       },
@@ -105,11 +107,11 @@ const TimingAddForm = () => {
         try {
           message = error.graphQLErrors[0]?.message;
         } catch (err) {
-          message = 'ActionFailedTryAgain';
+          message = t('ActionFailedTryAgain');
         }
         showToast({
           type: 'error',
-          title: 'Error!',
+          title: t('Error'),
           message,
           duration: 3000,
         });
@@ -172,7 +174,7 @@ const TimingAddForm = () => {
                                     );
                                   }}
                                   isLoading={loading}
-                                  placeholder="Start Time"
+                                  placeholder={t('Start Time')}
                                   style={{
                                     borderColor:
                                       (
@@ -211,7 +213,7 @@ const TimingAddForm = () => {
                                     );
                                   }}
                                   isLoading={loading}
-                                  placeholder="End Time"
+                                  placeholder={t('End Time')}
                                   style={{
                                     borderColor:
                                       (
@@ -270,7 +272,7 @@ const TimingAddForm = () => {
                   ) : (
                     <div className="flex min-h-10 flex-1 items-center justify-start">
                       <span className="select-none rounded-full bg-black px-3 py-1 text-xs text-white">
-                        Closed all Day
+                        {t('Closed all Day')}
                       </span>
                     </div>
                   )}
@@ -280,7 +282,7 @@ const TimingAddForm = () => {
 
             <CustomButton
               className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border-gray-300 bg-[black] px-10 text-white"
-              label={'Save'}
+              label={t('Save')}
               rounded={false}
               disabled={loading}
               type="submit"

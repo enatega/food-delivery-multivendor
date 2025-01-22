@@ -29,12 +29,7 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Constants
-import {
-  MAX_LANSDCAPE_FILE_SIZE,
-  MAX_SQUARE_FILE_SIZE,
-  RestaurantErrors,
-  SHOP_TYPE,
-} from '@/lib/utils/constants';
+import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
 
 // Interface
 import { IRestaurantForm } from '@/lib/utils/interfaces';
@@ -57,6 +52,7 @@ import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { toTextCase } from '@/lib/utils/methods';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
+import { useTranslations } from 'next-intl';
 
 const initialValues: IRestaurantForm = {
   name: '',
@@ -83,6 +79,9 @@ export default function RestaurantDetails({
     order: -1,
   };
 
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { showToast } = useContext(ToastContext);
   const { vendorId, onSetRestaurantContextData } =
@@ -99,8 +98,8 @@ export default function RestaurantDetails({
     }) => {
       showToast({
         type: 'success',
-        title: 'New Store',
-        message: `Store has been added successfully`,
+        title: t('New Store'),
+        message: t(`Store has been added successfully`),
         duration: 3000,
       });
 
@@ -133,8 +132,8 @@ export default function RestaurantDetails({
       if (!vendorId) {
         showToast({
           type: 'error',
-          title: `${vendorId ? 'Edit' : 'Create'} Vendor`,
-          message: `Store Create Failed - Please select a vendor.`,
+          title: `${vendorId ? t('Edit') : t('Create')} ${t('Vendor')}`,
+          message: t(`Store Creation Failed, Please select a vendor`),
           duration: 2500,
         });
         return;
@@ -163,8 +162,8 @@ export default function RestaurantDetails({
     } catch (error) {
       showToast({
         type: 'error',
-        title: `${vendorId ? 'Edit' : 'Create'} Vendor`,
-        message: `Store Create Failed`,
+        title: `${vendorId ? t('Edit') : t('Create')} ${t('Vendor')}`,
+        message: t(`Store Create Failed`),
         duration: 2500,
       });
     }
@@ -173,11 +172,11 @@ export default function RestaurantDetails({
   function onError({ graphQLErrors, networkError }: ApolloError) {
     showToast({
       type: 'error',
-      title: 'Create Store',
+      title: t('Create Store'),
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Store Create Failed`,
+        t(`Store Create Failed`),
       duration: 2500,
     });
   }
@@ -212,7 +211,7 @@ export default function RestaurantDetails({
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
-            <span className="text-lg">Add Store</span>
+            <span className="text-lg">{t('Add Store')}</span>
           </div>
 
           <div>
@@ -239,7 +238,7 @@ export default function RestaurantDetails({
                         <CustomTextField
                           type="text"
                           name="name"
-                          placeholder="Name"
+                          placeholder={t('Name')}
                           maxLength={35}
                           value={values.name}
                           onChange={handleChange}
@@ -260,7 +259,7 @@ export default function RestaurantDetails({
                         <CustomIconTextField
                           type="email"
                           name="username"
-                          placeholder="Email"
+                          placeholder={t('Email')}
                           maxLength={35}
                           showLabel={true}
                           iconProperties={{
@@ -284,7 +283,7 @@ export default function RestaurantDetails({
 
                       <div>
                         <CustomPasswordTextField
-                          placeholder="Password"
+                          placeholder={t('Password')}
                           name="password"
                           maxLength={20}
                           value={values.password}
@@ -304,7 +303,7 @@ export default function RestaurantDetails({
 
                       <div>
                         <CustomPasswordTextField
-                          placeholder="Confirm Password"
+                          placeholder={t('Confirm Password')}
                           name="confirmPassword"
                           maxLength={20}
                           showLabel={true}
@@ -325,7 +324,7 @@ export default function RestaurantDetails({
 
                       <div>
                         <CustomTextField
-                          placeholder="Address"
+                          placeholder={t('Address')}
                           name="address"
                           type="text"
                           maxLength={100}
@@ -347,9 +346,9 @@ export default function RestaurantDetails({
                       <div>
                         <CustomNumberField
                           suffix="m"
-                          min={1}
+                          min={0}
                           max={500}
-                          placeholder="Delivery Time"
+                          placeholder={t('Delivery Time')}
                           name="deliveryTime"
                           showLabel={true}
                           value={values.deliveryTime}
@@ -364,25 +363,17 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
-                        {onErrorMessageMatcher(
-                          'deliveryTime',
-                          errors?.deliveryTime,
-                          RestaurantErrors
-                        ) && <span>{RestaurantErrors.deliveryTime}</span>}
                       </div>
 
                       <div>
                         <CustomNumberField
                           min={1}
                           max={99999}
-                          placeholder="Min Order"
+                          placeholder={t('Min Order')}
                           name="minOrder"
                           showLabel={true}
                           value={values.minOrder}
                           onChange={setFieldValue}
-                          className={`${
-                            errors?.minOrder && 'border border-red-700'
-                          }'`}
                           style={{
                             borderColor: onErrorMessageMatcher(
                               'minOrder',
@@ -393,18 +384,13 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
-                        {errors?.minOrder && (
-                          <span className="text-red-600">
-                            {RestaurantErrors.minOrder}
-                          </span>
-                        )}
                       </div>
                       <div>
                         <CustomNumberField
                           prefix="%"
                           min={0}
                           max={100}
-                          placeholder="Sales Tax"
+                          placeholder={t('Sales Tax')}
                           minFractionDigits={2}
                           maxFractionDigits={2}
                           name="salesTax"
@@ -421,16 +407,11 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
-                        {onErrorMessageMatcher(
-                          'salesTax',
-                          errors?.salesTax,
-                          RestaurantErrors
-                        ) && <span>{RestaurantErrors.salesTax}</span>}
                       </div>
                       <div>
                         <CustomDropdownComponent
                           name="shopType"
-                          placeholder="Shop Category"
+                          placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
                           setSelectedItem={setFieldValue}
                           options={SHOP_TYPE}
@@ -450,7 +431,7 @@ export default function RestaurantDetails({
                       <div>
                         <CustomMultiSelectComponent
                           name="cuisines"
-                          placeholder="Cuisines"
+                          placeholder={t('Cuisines')}
                           options={cuisinesDropdown ?? []}
                           selectedItems={values.cuisines}
                           setSelectedItems={setFieldValue}
@@ -470,7 +451,7 @@ export default function RestaurantDetails({
                         <CustomUploadImageComponent
                           key="logo"
                           name="logo"
-                          title="Upload Profile Image"
+                          title={t('Upload Profile Image')}
                           fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
                           maxFileHeight={1080}
                           maxFileWidth={1080}
@@ -492,7 +473,7 @@ export default function RestaurantDetails({
                         <CustomUploadImageComponent
                           key={'image'}
                           name="image"
-                          title="Upload Image"
+                          title={t('Upload Image')}
                           fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
                           maxFileHeight={841}
                           maxFileWidth={1980}
@@ -516,7 +497,7 @@ export default function RestaurantDetails({
                       <div className="mt-4 flex justify-end">
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                          label="Add"
+                          label={t('Add')}
                           type="submit"
                           loading={isSubmitting}
                         />

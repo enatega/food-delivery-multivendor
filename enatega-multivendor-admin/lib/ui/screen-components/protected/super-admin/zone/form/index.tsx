@@ -30,6 +30,7 @@ import { IZoneForm } from '@/lib/utils/interfaces/forms/zone.form.interface';
 import CustomTextAreaField from '@/lib/ui/useable-components/custom-text-area-field';
 import CustomGoogleMapsLocationZoneBounds from '@/lib/ui/useable-components/google-maps/location-bounds-zone';
 import { TPolygonPoints } from '@/lib/utils/types';
+import { useTranslations } from 'next-intl';
 
 export default function ZoneAddForm({
   onHide,
@@ -37,6 +38,9 @@ export default function ZoneAddForm({
   position = 'right',
   isAddZoneVisible,
 }: IZoneAddFormComponentProps) {
+  // Hooks
+  const t = useTranslations();
+
   // State
   const initialValues: IZoneForm = {
     _id: zone?._id ?? '',
@@ -93,8 +97,8 @@ export default function ZoneAddForm({
         onCompleted: () => {
           showToast({
             type: 'success',
-            title: `${zone ? 'New' : 'Edit'} Zone`,
-            message: `Zone has been ${zone ? 'updated' : 'added'} successfully`,
+            title: `${zone ? t('New') : t('Edit')} ${t('Zone')}`,
+            message: `${t('Zone has been')} ${zone ? t('Updated') : t('Added')} ${t('successfully')}`,
           });
           resetForm();
           onHide();
@@ -103,18 +107,17 @@ export default function ZoneAddForm({
           const message =
             graphQLErrors[0]?.message ??
             networkError?.message ??
-            'Something went wrong. Please try again';
+            t('Something went wrong. Please try again');
 
           showToast({
             type: 'error',
-            title: `${zone ? 'New' : 'Edit'} Zone`,
+            title: `${zone ? t('New') : t('Edit')} ${t('Zone')}`,
             message,
           });
         },
       });
     }
   };
-
   return (
     <Sidebar
       visible={isAddZoneVisible}
@@ -126,7 +129,9 @@ export default function ZoneAddForm({
         <div className="h-full w-full">
           <div className="flex flex-col gap-2">
             <div className="mb-2 flex flex-col">
-              <span className="text-lg">{zone ? 'Edit' : 'Add'} Zone</span>
+              <span className="text-lg">
+                {zone ? t('Edit') : t('Add')} {t('Zone')}
+              </span>
             </div>
 
             <div>
@@ -152,7 +157,7 @@ export default function ZoneAddForm({
                           <CustomTextField
                             type="text"
                             name="title"
-                            placeholder="Title"
+                            placeholder={t('Title')}
                             maxLength={35}
                             value={values.title}
                             onChange={handleChange}
@@ -171,7 +176,7 @@ export default function ZoneAddForm({
                         <div>
                           <CustomTextAreaField
                             name="description"
-                            placeholder="Description"
+                            placeholder={t('Description')}
                             value={values.description}
                             onChange={handleChange}
                             showLabel={true}
@@ -200,7 +205,7 @@ export default function ZoneAddForm({
                         <div className="mt-4 flex justify-end">
                           <CustomButton
                             className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                            label={zone ? 'Update' : 'Add'}
+                            label={zone ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}
                           />

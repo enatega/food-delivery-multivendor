@@ -27,9 +27,11 @@ import {
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { Tag } from 'primereact/tag';
+import { useTranslations } from 'next-intl';
 
 export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
-  // Toast
+  // Hooks
+  const t = useTranslations();
   const { showToast } = useContext(ToastContext);
 
   // States
@@ -44,8 +46,8 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
       onError: (err) => {
         showToast({
           type: 'error',
-          title: 'Update Withdraw Request',
-          message: err?.cause?.message || 'Failed to update the request',
+          title: t('Update Withdraw Request'),
+          message: err?.cause?.message || t('Failed to update the request'),
         });
         setIsChangingStatus({
           _id: '',
@@ -55,8 +57,8 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: 'Update Withdraw Request',
-          message: 'The withdraw request has been updated successfully',
+          title: t('Update Withdraw Request'),
+          message: t('The withdraw request has been updated successfully'),
         });
         setIsChangingStatus({
           _id: '',
@@ -120,18 +122,18 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
     () => [
       {
         code: 'REQUESTED',
-        label: 'Requested',
-        body: () => <Tag value="Requested" severity="info" rounded />,
+        label: t('Requested'),
+        body: () => <Tag value={t('Requested')} severity="info" rounded />,
       },
       {
         code: 'TRANSFERRED',
-        label: 'Transferred',
-        body: () => <Tag value="Transferred" severity="success" rounded />,
+        label: t('Transferred'),
+        body: () => <Tag value={t('Transferred')} severity="success" rounded />,
       },
       {
         code: 'CANCELLED',
-        label: 'Cancelled',
-        body: () => <Tag value="Cancelled" severity="danger" rounded />,
+        label: t('Cancelled'),
+        body: () => <Tag value={t('Cancelled')} severity="danger" rounded />,
       },
     ],
     []
@@ -154,19 +156,19 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
   const withdraw_requests_columns = useMemo(
     () => [
       {
-        headerName: 'Request Id',
+        headerName: t('Request Id'),
         propertyName: 'requestId',
       },
       {
-        headerName: 'Rider',
+        headerName: t('Rider'),
         propertyName: 'rider.name',
       },
       {
-        headerName: 'Amount',
+        headerName: t('Amount'),
         propertyName: 'requestAmount',
       },
       {
-        headerName: 'Date',
+        headerName: t('Date'),
         propertyName: 'requestTime',
         body: (rowData: IWithDrawRequest) => {
           return (
@@ -175,7 +177,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
         },
       },
       {
-        headerName: 'Status',
+        headerName: t('Status'),
         propertyName: 'status',
         body: (rowData: IWithDrawRequest) => (
           <Dropdown

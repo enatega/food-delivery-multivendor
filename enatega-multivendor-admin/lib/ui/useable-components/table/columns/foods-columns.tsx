@@ -14,12 +14,16 @@ import { useContext, useState } from 'react';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import CustomInputSwitch from '../../custom-input-switch';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
+import { useTranslations } from 'next-intl';
 
 export const FOODS_TABLE_COLUMNS = ({
   menuItems,
 }: {
   menuItems: IActionMenuProps<IFoodNew>['items'];
 }) => {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { showToast } = useContext(ToastContext);
   const {
@@ -40,19 +44,19 @@ export const FOODS_TABLE_COLUMNS = ({
     onCompleted: () => {
       showToast({
         type: 'success',
-        title: 'Food Stock',
-        message: `Food stock status has been changed.`,
+        title: t('Food Stock'),
+        message: t(`Food stock status has been changed`),
       });
       setIsFoodLoading('');
     },
     onError: ({ networkError, graphQLErrors }: ApolloError) => {
       showToast({
         type: 'error',
-        title: 'Food Stock',
+        title: t('Food Stock'),
         message:
           networkError?.message ??
           graphQLErrors[0]?.message ??
-          'Food Stock status failed.',
+          t('Food Stock status failed'),
       });
       setIsFoodLoading('');
     },
@@ -73,23 +77,23 @@ export const FOODS_TABLE_COLUMNS = ({
     } catch (err) {
       showToast({
         type: 'error',
-        title: 'Food Stock',
-        message: 'Food Stock status failed.',
+        title: t('Food Stock'),
+        message: t('Food Stock status failed'),
       });
       setIsFoodLoading('');
     }
   };
 
   return [
-    { headerName: 'Title', propertyName: 'title' },
-    { headerName: 'Description', propertyName: 'description' },
+    { headerName: t('Title'), propertyName: 'title' },
+    { headerName: t('Description'), propertyName: 'description' },
     {
-      headerName: 'Category',
+      headerName: t('Category'),
       propertyName: 'category.label',
       body: (item: IFoodNew) => <div>{item?.category?.label ?? ''}</div>,
     },
     {
-      headerName: 'Image',
+      headerName: t('Image'),
       propertyName: 'image',
       body: (item: IFoodNew) =>
         item.image ? (
@@ -99,7 +103,7 @@ export const FOODS_TABLE_COLUMNS = ({
         ),
     },
     {
-      headerName: 'Out of Stock',
+      headerName: t('Out of Stock'),
       propertyName: 'isOutOfStock',
       body: (item: IFoodNew) => {
         return (

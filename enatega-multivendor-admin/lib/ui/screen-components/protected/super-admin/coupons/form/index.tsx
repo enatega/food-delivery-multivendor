@@ -28,6 +28,7 @@ import { ChangeEvent, useContext } from 'react';
 import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { CouponErrors } from '@/lib/utils/constants';
+import { useTranslations } from 'next-intl';
 
 export default function CouponForm({
   setVisible,
@@ -35,8 +36,9 @@ export default function CouponForm({
   visible,
   setIsEditing,
 }: IAddCouponProps) {
-  // Toast
+  // Hooks
   const { showToast } = useContext(ToastContext);
+  const t = useTranslations();
 
   // Initial values
   const initialValues = {
@@ -53,9 +55,9 @@ export default function CouponForm({
       refetchQueries: [{ query: GET_COUPONS }],
       onCompleted: () => {
         showToast({
-          title: `${isEditing.bool ? 'Edit' : 'New'} Coupon`,
+          title: `${isEditing.bool ? t('Edit') : t('New')} ${t('Coupon')}`,
           type: 'success',
-          message: 'Coupon has been added successfully',
+          message: t('Coupon has been added successfully'),
           duration: 2000,
         });
         setIsEditing({
@@ -71,11 +73,11 @@ export default function CouponForm({
       },
       onError: (err) => {
         showToast({
-          title: `${isEditing.bool ? 'Edit' : 'New'} Coupon`,
+          title: `${isEditing.bool ? t('Edit') : t('New')} ${t('Coupon')}`,
           type: 'error',
           message:
             err.message ||
-            `Coupon ${isEditing.bool ? 'Edition' : 'Creation'} Failed`,
+            `${t('Coupon')} ${isEditing.bool ? t('Edition') : t('Creation')} ${t('Failed')}`,
           duration: 2000,
         });
         setIsEditing({
@@ -97,9 +99,9 @@ export default function CouponForm({
       refetchQueries: [{ query: GET_COUPONS }],
       onCompleted: () => {
         showToast({
-          title: `${isEditing.bool ? 'Edit' : 'New'} Coupon`,
+          title: `${isEditing.bool ? t('Edit') : t('New')} ${t('Coupon')}`,
           type: 'success',
-          message: `Coupon has been ${isEditing.bool ? 'edited' : 'added'}  successfully`,
+          message: `${t('Coupon has been')} ${isEditing.bool ? t('Edited') : t('Added')}  ${t('Successfully')}`,
           duration: 2000,
         });
         setIsEditing({
@@ -115,11 +117,11 @@ export default function CouponForm({
       },
       onError: (err) => {
         showToast({
-          title: `${isEditing.bool ? 'Edit' : 'New'} Coupon`,
+          title: `${isEditing.bool ? t('Edit') : t('New')} ${t('Coupon')}`,
           type: 'error',
           message:
             err.message ||
-            `Coupon ${isEditing.bool ? 'Edition' : 'Creation'} Failed`,
+            `${t('Coupon')} ${isEditing.bool ? t('Edition') : t('Creation')} ${t('Failed')}`,
           duration: 2000,
         });
         setIsEditing({
@@ -149,15 +151,6 @@ export default function CouponForm({
         initialValues={initialValues}
         validationSchema={CouponFormSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log('submitting', values.discount);
-          if (values.discount > 100) {
-            return showToast({
-              type: 'error',
-              title: 'Coupon',
-              message:
-                'As Discount is a %age field, please choose a value from 0 to 100.',
-            });
-          }
           setSubmitting(true);
           let formData;
           if (!isEditing.bool) {
@@ -210,10 +203,10 @@ export default function CouponForm({
               <div className="space-y-4">
                 <div className="flex gap-4">
                   <h2 className='className="mb-3 text-xl font-bold'>
-                    {isEditing.bool ? 'Edit' : 'Add'} Coupon
+                    {isEditing.bool ? t('Edit') : t('Add')} {t('Coupon')}
                   </h2>
                   <div className="flex items-center gap-x-1">
-                    {values.enabled ? 'Enabled' : 'Disabled'}
+                    {values.enabled ? t('Enabled') : t('Disabled')}
                     <CustomInputSwitch
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setFieldValue('enabled', e.target.checked)
@@ -227,7 +220,7 @@ export default function CouponForm({
                   value={values.title}
                   name="title"
                   showLabel={true}
-                  placeholder={'Title'}
+                  placeholder={t('Title')}
                   type="text"
                   onChange={(e) => setFieldValue('title', e.target.value)}
                   style={{
@@ -248,7 +241,7 @@ export default function CouponForm({
                   maxFractionDigits={2}
                   showLabel={true}
                   suffix="%"
-                  placeholder={'Discount'}
+                  placeholder={t('Discount')}
                   onChange={setFieldValue}
                   min={0}
                   max={100}
@@ -278,9 +271,9 @@ export default function CouponForm({
                       color="white"
                     />
                   ) : isEditing.bool ? (
-                    'Update'
+                    t('Update')
                   ) : (
-                    'Add'
+                    t('Add')
                   )}
                 </button>
               </div>

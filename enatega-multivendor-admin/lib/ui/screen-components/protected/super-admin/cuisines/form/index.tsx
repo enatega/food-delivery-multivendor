@@ -26,11 +26,8 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { useContext } from 'react';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
-import {
-  CuisineErrors,
-  MAX_SQUARE_FILE_SIZE,
-  SHOP_TYPE,
-} from '@/lib/utils/constants';
+import { CuisineErrors, MAX_SQUARE_FILE_SIZE, SHOP_TYPE } from '@/lib/utils/constants';
+import { useTranslations } from 'next-intl';
 
 export default function CuisineForm({
   setVisible,
@@ -44,7 +41,8 @@ export default function CuisineForm({
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  //Toast
+  // Hooks
+  const t = useTranslations();
   const { showToast } = useContext(ToastContext);
 
   // Initial values
@@ -66,24 +64,26 @@ export default function CuisineForm({
       onError,
       onCompleted: () => {
         showToast({
-          title: `${!isEditing.bool ? 'New' : 'Edit'} Cuisine`,
+          title: `${!isEditing.bool ? t('New') : t('Edit')} ${t('Cuisine')}`,
           type: 'success',
-          message: `Cuisine has been ${!isEditing.bool ? 'created' : 'edited'} successfully`,
+          message: `${t('Cuisine has been')} ${!isEditing.bool ? t('Created') : t('edited')} ${t('successfully')}`,
           duration: 2000,
         });
       },
       refetchQueries: [{ query: GET_CUISINES }],
     }
   );
+  console.log(isEditing.data);
+
   const [editCuisine, { loading: editCuisineLoading }] = useMutation(
     EDIT_CUISINE,
     {
       onError,
       onCompleted: () => {
         showToast({
-          title: `${!isEditing.bool ? 'New' : 'Edit'} Cuisine`,
+          title: `${!isEditing.bool ? t('New') : t('Edit')} ${t('Cuisine')}`,
           type: 'success',
-          message: `Cuisine has been ${!isEditing.bool ? 'created' : 'edited'} successfully`,
+          message: `${t('Cuisine has been')} ${!isEditing.bool ? t('Created') : t('edited')} ${t('successfully')}`,
           duration: 2000,
         });
       },
@@ -95,11 +95,11 @@ export default function CuisineForm({
   function onError({ cause, networkError }: ApolloError) {
     showToast({
       type: 'error',
-      title: `${isEditing.bool ? 'Edit' : 'New'}Cuisine`,
+      title: `${isEditing.bool ? t('Edit') : t('New')}  ${t('Cuisine')}`,
       message:
         cause?.message ??
         networkError?.message ??
-        `Cuisine ${isEditing.bool ? 'Editio' : 'Creation'}  Failed`,
+        ` ${t('Cuisine')} ${isEditing.bool ? t('Edition') : t('Creation')}  ${t('Failed')}`,
       duration: 2500,
     });
   }
@@ -126,7 +126,7 @@ export default function CuisineForm({
     >
       <div className="flex flex-col gap-4">
         <h2 className="mb-3 text-xl font-bold">
-          {isEditing.bool ? 'Edit' : 'Add'} Cuisine
+          {isEditing.bool ? t('Edit') : t('Add')} {t('Cuisine')}
         </h2>
         <Formik
           initialValues={initialValues}
@@ -199,7 +199,7 @@ export default function CuisineForm({
                     onChange={handleChange}
                     value={values.name}
                     type="text"
-                    placeholder="Name"
+                    placeholder={t('Name')}
                     style={{
                       borderColor: onErrorMessageMatcher(
                         'name',
@@ -213,11 +213,11 @@ export default function CuisineForm({
 
                   <CustomTextAreaField
                     showLabel={true}
-                    label="Description"
+                    label={t('Description')}
                     name="description"
                     onChange={handleChange}
                     value={values.description}
-                    placeholder="Description"
+                    placeholder={t('Description')}
                     rows={5}
                     style={{
                       borderColor: onErrorMessageMatcher(
@@ -235,7 +235,7 @@ export default function CuisineForm({
                     options={SHOP_TYPE}
                     selectedItem={values.shopType}
                     setSelectedItem={setFieldValue}
-                    placeholder="Shop Category"
+                    placeholder={t('Shop Category')}
                     showLabel={true}
                     style={{
                       borderColor: onErrorMessageMatcher(
@@ -251,7 +251,7 @@ export default function CuisineForm({
                   <CustomUploadImageComponent
                     name="image"
                     onSetImageUrl={setFieldValue}
-                    title="Upload Image"
+                    title={t('Upload Image')}
                     existingImageUrl={
                       isEditing.bool ? isEditing.data.image : ''
                     }
@@ -282,9 +282,9 @@ export default function CuisineForm({
                         color="white"
                       />
                     ) : isEditing.bool ? (
-                      'Update'
+                      t('Update')
                     ) : (
-                      'Add'
+                      t('Add')
                     )}
                   </button>
                 </div>

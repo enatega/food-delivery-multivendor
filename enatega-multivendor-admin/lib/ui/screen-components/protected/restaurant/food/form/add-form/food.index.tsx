@@ -10,6 +10,7 @@ import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaur
 
 // Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
+import { useTranslations } from 'next-intl';
 
 // Interface and Types
 import {
@@ -64,6 +65,9 @@ const initialValues: IFoodDetailsForm = {
 export default function FoodDetails({
   stepperProps,
 }: IFoodDetailsComponentProps) {
+  // Hooks
+  const t = useTranslations();
+
   // Props
   const { onStepChange, order } = stepperProps ?? {
     onStepChange: () => {},
@@ -244,12 +248,12 @@ export default function FoodDetails({
                           htmlFor="category"
                           className="text-sm font-[500]"
                         >
-                          Category
+                          {t('Category')}
                         </label>
                         <Dropdown
                           name="category"
                           value={values.category}
-                          placeholder="Select Category"
+                          placeholder={t('Select Category')}
                           className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
                           panelClassName="border-gray-200 border-2"
                           onChange={(e: DropdownChangeEvent) => {
@@ -265,7 +269,7 @@ export default function FoodDetails({
                                   className="w-full h-fit rounded  text-black"
                                   icon={faAdd}
                                   iconStyles={{ color: 'black' }}
-                                  title={'Add New Category'}
+                                  title={t('Add New Category')}
                                   onClick={() => setIsAddCategoryVisible(true)}
                                 />
                               </div>
@@ -287,7 +291,7 @@ export default function FoodDetails({
                         {!subCategoriesLoading ? (
                           <CustomDropdownComponent
                             name="subCategory"
-                            placeholder="Select Sub-Category"
+                            placeholder={t('Select Sub-Category')}
                             showLabel={true}
                             extraFooterButton={{
                               onChange: () => {
@@ -303,7 +307,7 @@ export default function FoodDetails({
                                     '',
                                 });
                               },
-                              title: 'Add Sub-Category',
+                              title: t('Add Sub-Category'),
                             }}
                             selectedItem={values.subCategory}
                             setSelectedItem={setFieldValue}
@@ -332,7 +336,7 @@ export default function FoodDetails({
                         <CustomTextField
                           type="text"
                           name="title"
-                          placeholder="Title"
+                          placeholder={t('Title')}
                           maxLength={35}
                           value={values.title}
                           onChange={handleChange}
@@ -351,8 +355,8 @@ export default function FoodDetails({
                       <div>
                         <CustomTextAreaField
                           name="description"
-                          label="Description"
-                          placeholder="Description"
+                          label={t('Description')}
+                          placeholder={t('Description')}
                           value={values.description}
                           onChange={handleChange}
                           showLabel={true}
@@ -373,7 +377,7 @@ export default function FoodDetails({
                         <CustomUploadImageComponent
                           key="image"
                           name="image"
-                          title="Upload Image"
+                          title={t('Upload Image')}
                           fileTypes={['image/jpg', 'image/webp', 'image/jpeg']}
                           maxFileHeight={841}
                           maxFileWidth={1980}
@@ -400,7 +404,7 @@ export default function FoodDetails({
                     <div className="flex justify-end mt-4">
                       <CustomButton
                         className="w-fit h-10 bg-black text-white border-gray-300 px-8"
-                        label="Next"
+                        label={t('Next')}
                         type="submit"
                         loading={isSubmitting}
                       />

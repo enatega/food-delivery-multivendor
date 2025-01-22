@@ -29,6 +29,7 @@ import { EDIT_VENDOR } from '@/lib/api/graphql';
 
 // Icons
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useTranslations } from 'next-intl';
 
 const initialValues: IVendorForm = {
   name: '',
@@ -42,6 +43,9 @@ const initialValues: IVendorForm = {
 };
 
 export default function VendorUpdateForms() {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const { showToast } = useContext(ToastContext);
   const { vendorProfileResponse } = useContext(ProfileContext);
@@ -81,8 +85,8 @@ export default function VendorUpdateForms() {
 
       showToast({
         type: 'success',
-        title: 'Edit Vendor',
-        message: `Vendor has been edited successfully`,
+        title: t('Edit Vendor'),
+        message: t(`Vendor has been edited successfully`),
         duration: 3000,
       });
       // setIsUpdateProfileVisible(false);
@@ -91,8 +95,8 @@ export default function VendorUpdateForms() {
 
       showToast({
         type: 'error',
-        title: `Edit Vendor`,
-        message: `Vendor Edit Failed`,
+        title: t(`Edit Vendor`),
+        message: t(`Vendor Edit Failed`),
         duration: 2500,
       });
     }
@@ -100,11 +104,11 @@ export default function VendorUpdateForms() {
   function onError({ graphQLErrors, networkError }: ApolloError) {
     showToast({
       type: 'error',
-      title: `Edit Vendor`,
+      title: t(`Edit Vendor`),
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Vendor Edit Failed`,
+        t(`Vendor Edit Failed`),
       duration: 2500,
     });
   }
@@ -148,6 +152,7 @@ export default function VendorUpdateForms() {
                 isSubmitting,
                 setFieldValue,
               }) => {
+                console.log('errors', errors);
                 return (
                   <>
                     <div>
@@ -160,7 +165,7 @@ export default function VendorUpdateForms() {
                                   profileImage ||
                                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWpobWs-3hvPvk690kT3zKFY7BVXScJfLomw&s'
                                 }
-                                alt="profile"
+                                alt={t('profile')}
                                 className="h-full w-full object-cover"
                                 width={120}
                                 height={120}
@@ -179,23 +184,23 @@ export default function VendorUpdateForms() {
                                 maxFileHeight={512}
                                 maxFileWidth={512}
                                 maxFileSize={MAX_SQUARE_FILE_SIZE}
+                                orientation={'SQUARE'}
                                 onSetImageUrl={setFieldValue}
                                 showExistingImage={false}
-                                orientation={'SQUARE'}
                               />
                             </div>
                           </div>
                           <div className="border-t border-[#E4E4E7] pt-[32px] max-[991px]:pt-[20px]">
                             <div>
                               <h3 className="pb-[32px] text-[20px] font-semibold text-[#18181B] max-[991px]:pb-[8px]">
-                                Personal Information
+                                {t('Personal Information')}
                               </h3>
                             </div>
                           </div>
                           <div className="!mb-8 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
                             <div>
                               <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                                First Name
+                                {t('First Name')}
                               </label>
                               <CustomTextField
                                 type="text"
@@ -220,7 +225,7 @@ export default function VendorUpdateForms() {
 
                             <div>
                               <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                                Last Name
+                                {t('Last Name')}
                               </label>
                               <CustomTextField
                                 type="text"
@@ -235,7 +240,7 @@ export default function VendorUpdateForms() {
                             </div>
                             <div>
                               <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                                Email
+                                {t('Email')}
                               </label>
                               <CustomTextField
                                 type="email"
@@ -260,7 +265,7 @@ export default function VendorUpdateForms() {
 
                             <div>
                               <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                                Phone
+                                {t('Phone')}
                               </label>
                               <CustomPhoneTextField
                                 mask="999-999-9999"
@@ -293,7 +298,7 @@ export default function VendorUpdateForms() {
                           <div className="border-t border-[#E4E4E7] pt-[32px] max-[991px]:pt-[20px]">
                             <div>
                               <h3 className="pb-[32px] text-[20px] font-semibold text-[#18181B] max-[991px]:pb-[20px]">
-                                Change Password
+                                {t('Change Password')}
                               </h3>
                             </div>
                           </div>
@@ -301,7 +306,7 @@ export default function VendorUpdateForms() {
                           <div className="!mt-0 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
                             <div>
                               <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                                Current Password
+                                {t('Current Password')}
                               </label>
                               <CustomPasswordTextField
                                 autoComplete="new-password"
@@ -327,7 +332,7 @@ export default function VendorUpdateForms() {
                             <div>
                               <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
                                 {' '}
-                                New Password
+                                {t('New Password')}
                               </label>
                               <CustomPasswordTextField
                                 autoComplete="new-password"
@@ -353,7 +358,7 @@ export default function VendorUpdateForms() {
                           <div className="mt-4 flex justify-end">
                             <CustomButton
                               className="h-10 w-[65px] border-gray-300 bg-[#18181B] text-center text-[#FAFAFA]"
-                              label={'Save'}
+                              label={t('Save')}
                               type="submit"
                               loading={isSubmitting}
                             />

@@ -1,19 +1,33 @@
-import React, { useState, useMemo } from 'react';
-import Table from '@/lib/ui/useable-components/table';
+// Hooks
+import { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
+
+// Interfaces & Types
 import { IDateFilter, IQueryResult } from '@/lib/utils/interfaces';
-import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
 import { IOrder, IExtendedOrder } from '@/lib/utils/interfaces';
 import { TOrderRowData } from '@/lib/utils/types';
+
+// GraphQL
 import { GET_ORDERS_WITHOUT_PAGINATION } from '@/lib/api/graphql';
+
+// Components
 import OrderSuperAdminTableHeader from '../header/table-header';
+import Table from '@/lib/ui/useable-components/table';
+import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
 import { ORDER_SUPER_ADMIN_COLUMNS } from '@/lib/ui/useable-components/table/columns/order-superadmin-columns';
-import { DataTableRowClickEvent } from 'primereact/datatable';
 import OrderDetailModal from '@/lib/ui/useable-components/popup-menu/order-details-modal';
-import { FilterMatchMode } from 'primereact/api';
 import DashboardDateFilter from '@/lib/ui/useable-components/date-filter';
 
+// Prime React
+import { FilterMatchMode } from 'primereact/api';
+import { DataTableRowClickEvent } from 'primereact/datatable';
+
 export default function OrderSuperAdminMain() {
+  // Hooks
+  const t = useTranslations();
+
+  // States
   const [selectedData, setSelectedData] = useState<IExtendedOrder[]>([]);
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,9 +42,8 @@ export default function OrderSuperAdminMain() {
 
   const handleDateFilter = (dateFilter: IDateFilter) => {
     setDateFilter({
+      ...dateFilter,
       dateKeyword: dateFilter.dateKeyword ?? '',
-      endDate: dateFilter.endDate ?? new Date().getDate(),
-      startDate: dateFilter.startDate ?? new Date().getDate(),
     });
   };
 
@@ -134,11 +147,11 @@ export default function OrderSuperAdminMain() {
         data={displayData as IExtendedOrder[]}
         setSelectedData={setSelectedData}
         selectedData={selectedData}
-        columns={ORDER_SUPER_ADMIN_COLUMNS}
+        columns={ORDER_SUPER_ADMIN_COLUMNS()}
         loading={loading}
         filters={filters}
         handleRowClick={handleRowClick}
-        moduleName="SuperAdmin-Order"
+        moduleName={'SuperAdmin-Order'}
       />
       <OrderDetailModal
         visible={isModalOpen}
@@ -146,7 +159,11 @@ export default function OrderSuperAdminMain() {
         restaurantData={selectedRestaurant}
       />
 
-      {error && <p className="text-red-500">Error: {error.message}</p>}
+      {error && (
+        <p className="text-red-500">
+          {t('Error')}: {error.message}
+        </p>
+      )}
     </div>
   );
 }

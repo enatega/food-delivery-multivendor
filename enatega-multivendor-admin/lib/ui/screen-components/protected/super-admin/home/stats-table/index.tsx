@@ -10,10 +10,14 @@ import {
   IDashboardSalesByTypeResponseGraphQL,
   IQueryResult,
 } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
 import React, { useMemo } from 'react';
 
 export default function StatesTable() {
-  // COntext
+  // Hooks
+  const t = useTranslations();
+
+  // Context
   const { CURRENCY_CODE } = useConfiguration();
 
   const { data, loading } = useQueryGQL(GET_DASHBOARD_ORDERS_BY_TYPE, {
@@ -50,13 +54,13 @@ export default function StatesTable() {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 p-3">
       <DashboardStatsTable
         loading={loading}
-        title="Orders"
+        title={t('Orders')}
         data={dashboardOrdersByType ?? []}
         amountConfig={{ format: 'number', currency: CURRENCY_CODE ?? 'USD' }}
       />
       <DashboardStatsTable
         loading={salesLoading}
-        title="Sales"
+        title={t('Sales')}
         data={dashboardSalesByType ?? []}
         amountConfig={{ format: 'currency', currency: CURRENCY_CODE ?? 'USD' }}
       />

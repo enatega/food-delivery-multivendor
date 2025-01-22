@@ -21,14 +21,18 @@ import {
 import DashboardUsersByYearStatsSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.user.year.stats.skeleton';
 import { VendorLayoutContext } from '@/lib/context/vendor/layout-vendor.context';
 import Table from '@/lib/ui/useable-components/table';
-import { VENDOR_STORE_DETAILS_COLUMN } from '@/lib/ui/useable-components/table/columns/store-details-by-vendor-columns';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 import { onUseLocalStorage } from '@/lib/utils/methods';
 import { generateVendorStoreDetails } from '@/lib/utils/dummy';
+import { useTranslations } from 'next-intl';
+import { VENDOR_STORE_DETAILS_COLUMN } from '@/lib/ui/useable-components/table/columns/store-details-by-vendor-columns';
 
 // Dummy
 
 const VendorGrowthOverViewGraph = () => {
+  // Hooks
+  const t = useTranslations();
+
   // Context
   const {
     vendorLayoutContextData: { vendorId },
@@ -75,22 +79,22 @@ const VendorGrowthOverViewGraph = () => {
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
     const data = {
       labels: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+        t('January'),
+        t('February'),
+        t('March'),
+        t('April'),
+        t('May'),
+        t('June'),
+        t('July'),
+        t('August'),
+        t('September'),
+        t('October'),
+        t('November'),
+        t('December'),
       ],
       datasets: [
         {
-          label: 'Restaurants',
+          label: t('Stores'),
           data: dashboardVendorDetailsByYear?.totalRestaurants ?? [],
           fill: false,
           borderColor: documentStyle.getPropertyValue('--pink-500'),
@@ -98,7 +102,7 @@ const VendorGrowthOverViewGraph = () => {
           tension: 0.5,
         },
         {
-          label: 'Orders',
+          label: t('Orders'),
           data: dashboardVendorDetailsByYear?.totalOrders ?? [],
           fill: false,
           borderColor: documentStyle.getPropertyValue('--blue-500'),
@@ -106,7 +110,7 @@ const VendorGrowthOverViewGraph = () => {
           tension: 0.5,
         },
         {
-          label: 'Sales',
+          label: t('Sales'),
           data: dashboardVendorDetailsByYear?.totalSales ?? [],
           fill: false,
           borderColor: documentStyle.getPropertyValue('--yellow-500'),
@@ -160,9 +164,9 @@ const VendorGrowthOverViewGraph = () => {
 
   return (
     <div className={`w-full p-3`}>
-      <h2 className="text-lg font-semibold">Growth Overview</h2>
+      <h2 className="text-lg font-semibold">{t('Growth Overview')}</h2>
       <p className="text-gray-500">
-        Tracking Vendor Growth Over the Year ({new Date().getFullYear()})
+        {t('Tracking Vendor Growth Over the Year')} ({new Date().getFullYear()})
       </p>
       <div className="mt-4">
         {loading ? (
@@ -203,7 +207,7 @@ const VendorGrowthOverViewTabular = ({
   const handleRowClick = (event: DataTableRowClickEvent) => {
     const details = event.data as IVendorStoreDetails;
     onUseLocalStorage('save', 'restaurantId', details._id);
-    router.push(`/admin/store/`);
+    router.push(`/admin/restaurant/`);
   };
 
   return (

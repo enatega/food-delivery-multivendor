@@ -6,8 +6,13 @@ import RatingsHeaderDataView from '../header/table-header';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import RatingSkeleton from '@/lib/ui/useable-components/custom-skeletons/rating.card.skeleton';
 import { IItem, IReview } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl';
 
 const RatingMain: React.FC = () => {
+  // Hooks
+  const t = useTranslations();
+
+  // States
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [filteredReviews, setFilteredReviews] = useState<IReview[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -69,13 +74,18 @@ const RatingMain: React.FC = () => {
   };
 
   if (loading) return <RatingSkeleton />;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error)
+    return (
+      <p>
+        {t('Error')}: {error.message}
+      </p>
+    );
 
   return (
     <div className="p-3">
       {!data || !data.reviews || data.reviews.length === 0 ? (
         <div className="text-center">
-          <p className="mt-8 text-gray-600">No records found</p>
+          <p className="mt-8 text-gray-600">{t('No records found')}</p>
         </div>
       ) : (
         <CustomDataView

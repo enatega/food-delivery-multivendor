@@ -19,8 +19,8 @@ export default function VendorDashboardScreen() {
   const handleDateFilter = (dateFilter: IDateFilter) => {
     setDateFilter({
       dateKeyword: dateFilter.dateKeyword ?? '',
-      endDate: dateFilter.endDate ?? new Date().getDate(),
-      startDate: dateFilter.startDate ?? new Date().getDate(),
+      endDate: dateFilter.endDate ?? new Date().toDateString(),
+      startDate: dateFilter.startDate ?? new Date().toDateString(),
     });
   };
 
