@@ -22,11 +22,11 @@ import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 
 // Table column definitions
-import { COMMISSION_RATE_COLUMNS } from '@/lib/ui/useable-components/table/columns/comission-rate-columns';
 import { COMMISSION_RATE_ACTIONS } from '@/lib/utils/constants';
 
 import CommissionRateHeader from '../header/table-header';
 import { useTranslations } from 'next-intl';
+import { COMMISSION_RATE_COLUMNS } from '@/lib/ui/useable-components/table/columns/comission-rate-columns';
 
 interface RestaurantsData {
   restaurants: IRestaurantResponse[];
@@ -66,6 +66,14 @@ export default function CommissionRateMain() {
     const restaurant = restaurants.find((r) => r._id === restaurantId);
     if (restaurant) {
       setLoadingRestaurant(restaurantId);
+      if(restaurant?.commissionRate>100){
+        setLoadingRestaurant(null);
+        return showToast({
+          type:"error",
+          title:t('Commission Updated'),
+          message:t('As commission rate is a %age value so it cannot exceed a max value of 100')
+        })
+      }
       try {
         await updateCommissionMutation({
           variables: {
