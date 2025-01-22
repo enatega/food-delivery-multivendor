@@ -207,7 +207,7 @@ const VendorGrowthOverViewTabular = ({
   const handleRowClick = (event: DataTableRowClickEvent) => {
     const details = event.data as IVendorStoreDetails;
     onUseLocalStorage('save', 'restaurantId', details._id);
-    router.push(`/admin/restaurant/`);
+    router.push(`/admin/store/`);
   };
 
   return (

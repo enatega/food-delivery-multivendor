@@ -20,7 +20,6 @@ import RestaurantDuplicateDialog from '../duplicate-dialog';
 import RestaurantsTableHeader from '../header/table-header';
 import Table from '@/lib/ui/useable-components/table';
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
-import { RESTAURANT_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/restaurant-column';
 
 // Constants and Interfaces
 import {
@@ -44,6 +43,7 @@ import { onUseLocalStorage } from '@/lib/utils/methods';
 import { generateDummyRestaurants } from '@/lib/utils/dummy';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 import { useTranslations } from 'next-intl';
+import { RESTAURANT_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/restaurant-column';
 
 export default function RestaurantsMain() {
   // Hooks
@@ -166,7 +166,7 @@ export default function RestaurantsMain() {
           onUseLocalStorage('save', 'restaurantId', data?._id);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
-          router.push(`/admin/restaurant/`);
+          router.push(`/admin/store/`);
         }
       },
     },
@@ -218,7 +218,7 @@ export default function RestaurantsMain() {
           onUseLocalStorage('save', 'restaurantId', event.data._id);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
-          router.push(`/admin/restaurant/`);
+          router.push(`/admin/store/`);
         }}
       />
 
