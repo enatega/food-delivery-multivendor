@@ -172,7 +172,6 @@ export default function VendorUpdateForms() {
                                 objectFit="cover"
                               />
                             </div>
-                            ;
                             <div className="sm:pl-[50px] remove-gap">
                               <CustomUploadImageComponent
                                 key="image"

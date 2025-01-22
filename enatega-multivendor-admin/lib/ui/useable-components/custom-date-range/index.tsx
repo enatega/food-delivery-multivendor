@@ -3,12 +3,16 @@ import CustomDateInput from '@/lib/ui/useable-components/date-input';
 import { IDashboardDateFilterComponentsProps } from '@/lib/utils/interfaces/dashboard.interface';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 export default function CustomDateRange({
   dateFilter,
   setDateFilter,
 }: IDashboardDateFilterComponentsProps) {
+  // Hooks
+  const t = useTranslations();
+
   // State
   const [localDateFilter, setLocalDateFilter] = useState({
     startDate: dateFilter.startDate,
@@ -31,11 +35,11 @@ export default function CustomDateRange({
     <div className="flex items-center justify-center p-3">
       <div className="w-full rounded-lg bg-white shadow-lg">
         <div className="rounded-t-lg bg-primary-color py-2 text-center text-white">
-          <h2 className="text-lg font-semibold">Graph Filter</h2>
+          <h2 className="text-lg font-semibold">{t("Graph Filter")}</h2>
         </div>
         <div className="flex flex-col items-center justify-between space-y-4 p-4 md:flex-row md:space-x-4 md:space-y-0">
           <div className="flex w-full flex-col">
-            <label className="mb-2 font-semibold">Start Date</label>
+            <label className="mb-2 font-semibold">{t("Start Date")}</label>
             <div className="relative">
               <CustomDateInput
                 value={localDateFilter?.startDate ?? ''}
@@ -50,7 +54,7 @@ export default function CustomDateRange({
             </div>
           </div>
           <div className="flex w-full flex-col">
-            <label className="mb-2 font-semibold">End Date</label>
+            <label className="mb-2 font-semibold">{t("End Date")}</label>
             <div className="relative">
               <CustomDateInput
                 value={localDateFilter?.endDate ?? ''}
@@ -74,7 +78,7 @@ export default function CustomDateRange({
                 className="mt-8 w-full rounded-full bg-black px-6 py-2 font-semibold text-white"
                 onClick={onApply}
               >
-                APPLY
+                {t("APPLY")}
               </button>
             )}
           </div>
