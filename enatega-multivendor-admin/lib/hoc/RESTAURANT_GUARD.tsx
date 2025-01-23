@@ -26,7 +26,7 @@ const RESTAURANT_GUARD = <T extends object>(
 
       // For STAFF => Check if VENDOR permission is given to STAFF
       if (user && user.userType === 'STAFF') {
-        const allowed = user?.permissions?.includes('Restaurants');
+        const allowed = user?.permissions?.includes('Restaurants') || user?.permissions?.includes('Stores');
 
         if (!allowed) {
           router.replace('/forbidden');
