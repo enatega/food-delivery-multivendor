@@ -631,5 +631,7 @@ loginRequired: 'נדרש התחברות',
   'Instruction for the courier': 'تعليمات للمندوب',
   'Instructions': 'التعليمات',
   Popular: 'פופולרי',
-  Reloading: '...טוען מחדש'
+  Reloading: '...טוען מחדש',
+  "Sorry! we can't deliver to your address.": ".מצטערים! לא ניתן לבצע משלוח לכתובת שלכם",
+
 }
