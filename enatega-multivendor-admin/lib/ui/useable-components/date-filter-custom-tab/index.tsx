@@ -21,7 +21,7 @@ const DateFilterCustomTab = ({
           }`}
           onClick={() => setSelectedTab(option)}
         >
-          {t(option)}
+         {t(option)}
         </div>
       ))}
     </div>
