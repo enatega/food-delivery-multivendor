@@ -870,7 +870,7 @@
   "Customers enter this code at checkout": "អតិថិជនបញ្ចូលលេខកូដនេះនៅលើបញ្ជីសាច់ប្រាក់",
   "Video size must be": "ទំហំវីដេអូត្រូវតែ",
   "Video dimensions must follow the guidelines": "វិមាត្រវីដេអូត្រូវតែអនុលោមតាមការណែនាំ",
-  "Orientation": "ទិសដៅ",
+  "orientation": "ទិសដៅ",
   "The image should be in": "រូបភាពគួរតែមានក្នុង",
   "The file width exceeds the limit of": "ទទឹងឯកសារលើសពីកំណត់",
   "File width should be": "ទទឹងឯកសារគួរតែមាន",
@@ -1016,5 +1016,6 @@
   "Prefered File size": "ទំហំឯកសារដែលចូលចិត្ត",
   "Connect with Stripe for payments": "ភ្ជាប់ជាមួយ Stripe សម្រាប់ការទូទាត់",
   "Payment Required": "ត្រូវការបង់ប្រាក់",
-  "Please complete your purchase to gain full access to the product": "សូមបញ្ចប់ការទិញរបស់អ្នកដើម្បីទទួលបានការចូលប្រើផលិតផលបានពេញលេញ"
+  "Please complete your purchase to gain full access to the product": "សូមបញ្ចប់ការទិញរបស់អ្នកដើម្បីទទួលបានការចូលប្រើផលិតផលបានពេញលេញ",
+   "As commission rate is a %age value so it cannot exceed a max value of 100": "ព្រោះអត្រាកម្រៃជើងសារជា% តម្លៃដូច្នេះវាមិនអាចលើសពីតម្លៃអតិបរមា 100 បានទេ"
 }

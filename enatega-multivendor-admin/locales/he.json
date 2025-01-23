@@ -871,7 +871,7 @@
   "Customers enter this code at checkout": "לקוחות מזינים קוד זה בקופה",
   "Video size must be": "גודל הווידאו חייב להיות",
   "Video dimensions must follow the guidelines": "מידות הווידאו חייבות לעמוד בהנחיות",
-  "Orientation": "אוריינטציה",
+  "orientation": "אוריינטציה",
   "The image should be in": "התמונה צריכה להיות בפורמט",
   "The file width exceeds the limit of": "רוחב הקובץ חורג מהמגבלה של",
   "File width should be": "רוחב הקובץ צריך להיות",
@@ -1017,5 +1017,6 @@
   "Prefered File size": "גודל קובץ מועדף",
   "Connect with Stripe for payments": "התחבר ל-Stripe לתשלומים",
   "Payment Required": "נדרש תשלום",
-  "Please complete your purchase to gain full access to the product": "אנא השלם את הרכישה שלך כדי לקבל גישה מלאה למוצר"
+  "Please complete your purchase to gain full access to the product": "אנא השלם את הרכישה שלך כדי לקבל גישה מלאה למוצר",
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "מכיוון ששיעור העמלה הוא ערך באחוזים, הוא אינו יכול לעלות על ערך מקסימלי של 100"
 }

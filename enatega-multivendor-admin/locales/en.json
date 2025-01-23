@@ -871,7 +871,7 @@
   "Customers enter this code at checkout": "Customers enter this code at checkout",
   "Video size must be": "Video size must be",
   "Video dimensions must follow the guidelines": "Video dimensions must follow the guidelines",
-  "Orientation": "Orientation",
+  "orientation": "orientation",
   "The image should be in": "The image should be in",
   "The file width exceeds the limit of": "The file width exceeds the limit of",
   "File width should be": "File width should be",
@@ -1017,5 +1017,6 @@
   "Prefered File size": "Prefered File size",
   "Connect with Stripe for payments": "Connect with Stripe for payments",
   "Payment Required": "Payment Required",
-  "Please complete your purchase to gain full access to the product": "Please complete your purchase to gain full access to the product"
+  "Please complete your purchase to gain full access to the product": "Please complete your purchase to gain full access to the product",
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "As commission rate is a %age value so it cannot exceed a max value of 100"
 }

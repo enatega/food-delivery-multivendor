@@ -69,7 +69,7 @@ export default function UserStats({
         label={t('Total Orders')}
         total={dashboardUsers?.totalOrders ?? 0}
         icon={faShoppingCart}
-        route="/admin/restaurant/orders"
+        route="/admin/store/orders"
         loading={loading}
         amountConfig={{ format: 'number', currency: 'USD' }}
       />
@@ -78,7 +78,7 @@ export default function UserStats({
         label={t('Total COD Orders')}
         total={dashboardUsers?.totalCODOrders ?? 0}
         icon={faMoneyBillWave}
-        route="/admin/restaurant/orders"
+        route="/admin/store/orders"
         loading={loading}
         amountConfig={{ format: 'number', currency: 'USD' }}
       />
@@ -87,7 +87,7 @@ export default function UserStats({
         label={t('Total Card Orders')}
         total={dashboardUsers?.totalCardOrders ?? 0}
         icon={faCreditCard}
-        route="/admin/restaurant/orders"
+        route="/admin/store/orders"
         loading={loading}
         amountConfig={{ format: 'number', currency: 'USD' }}
       />
@@ -96,7 +96,7 @@ export default function UserStats({
         label={t('Total Sales')}
         total={dashboardUsers?.totalSales ?? 0}
         icon={faCashRegister}
-        route="/admin/restaurant/orders"
+        route="/admin/store/orders"
         loading={loading}
         amountConfig={{ format: 'currency', currency: CURRENCY_CODE ?? 'USD' }}
       />

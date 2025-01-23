@@ -49,7 +49,7 @@ export const dummyStatsData: IStatsCardProps[] = [
     total: 20689,
     description: '6.1% down from yesterday',
     icon: faUtensils,
-    route: '/general/restaurants',
+    route: '/general/stores',
   },
   {
     label: 'Total Riders',

@@ -874,7 +874,7 @@
   "Customers enter this code at checkout": "يدخل العملاء هذا الرمز عند الدفع",
   "Video size must be": "يجب أن يكون حجم الفيديو",
   "Video dimensions must follow the guidelines": "يجب أن تتبع أبعاد الفيديو الإرشادات",
-  "Orientation": "الاتجاه",
+  "orientation": "الاتجاه",
   "The image should be in": "يجب أن تكون الصورة بتنسيق",
   "The file width exceeds the limit of": "تجاوز عرض الملف الحد",
   "File width should be": "يجب أن يكون عرض الملف",
@@ -1020,5 +1020,6 @@
   "Prefered File size": "حجم الملف المفضل",
   "Connect with Stripe for payments": "اتصل بـ Stripe للمدفوعات",
   "Payment Required": "الدفع مطلوب",
-  "Please complete your purchase to gain full access to the product": "يرجى إتمام عملية الشراء للحصول على وصول كامل إلى المنتج"
+  "Please complete your purchase to gain full access to the product": "يرجى إتمام عملية الشراء للحصول على وصول كامل إلى المنتج",
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "نظرًا لأن معدل العمولة هو قيمة مئوية، فلا يمكن أن يتجاوز القيمة القصوى 100"
 }

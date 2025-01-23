@@ -256,7 +256,7 @@ export default function VendorsLayoutRestaurantCard({
               'routeStack',
               JSON.stringify(updatedRouteStack)
             );
-            router.push(`/admin/restaurant/`);
+            router.push(`/admin/store/`);
           }}
         />
       </div>

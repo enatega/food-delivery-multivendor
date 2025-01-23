@@ -867,7 +867,7 @@
   "Customers enter this code at checkout": "Les clients saisissent ce code à la caisse",
   "Video size must be": "Les dimensions vidéo doivent respecter les directives",
   "Video dimensions must follow the guidelines": "Video dimensions must follow the guidelines",
-  "Orientation": "Orientation",
+  "orientation": "orientation",
   "The image should be in": "L'image doit être au format",
   "The file width exceeds the limit of": "La largeur du fichier dépasse la limite de",
   "File width should be": "La largeur du fichier doit être",
@@ -1012,6 +1012,7 @@
   "Prefered dimensions": "Dimensions préférées",
   "Prefered File size": "Taille de fichier préférée",
   "Connect with Stripe for payments": "Connectez-vous à Stripe pour les paiements",
-   "Payment Required": "Paiement requis",
-    "Please complete your purchase to gain full access to the product": "Veuillez finaliser votre achat pour avoir un accès complet au produit"
+  "Payment Required": "Paiement requis",
+  "Please complete your purchase to gain full access to the product": "Veuillez finaliser votre achat pour avoir un accès complet au produit",
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Étant donné que le taux de commission est une valeur en %, il ne peut pas dépasser une valeur maximale de 100"
 }
