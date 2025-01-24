@@ -27,7 +27,7 @@ export const WrongAddressModal = ({
             </View>
             <View>
               <TextDefault H5 textColor={theme.gray500}>
-                {t('Currently Restaurant is not delivering to your selected address.')}
+                {t('Currently Restaurant is not delivering to your selected address')}
               </TextDefault>
             </View>
 
