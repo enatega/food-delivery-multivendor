@@ -619,5 +619,6 @@ welcomeText: '欢迎来到Enatega',
   "kindlyBeAdvisedText": "请注意，您的留言可能也会对负责将您的订单送达场地的快递合作伙伴可见。",
   exploreYallaCities: '探索Yalla城市',
   Card: '卡',
+  OrderPriceValidation:"您的订单金额低于餐厅的最低订单要求。请添加更多商品到购物车中。"
 
 }
