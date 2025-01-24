@@ -260,6 +260,7 @@ export const restaurantPreviewFragment = gql`
     orderPrefix
     name
     image
+    logo
     address
     username
     password
