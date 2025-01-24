@@ -1,0 +1,33 @@
+.table :global(.p-checkbox-box) {
+  border: 1px solid !important;
+}
+
+.table tbody {
+  border: 1px solid #ededed;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #ededed;
+}
+
+.table .p-paginator-bottom {
+  border: 1px solid #ededed !important;
+}
+
+.table :global(tr.p-highlight) {
+  background-color: black !important;
+  color: white;
+}
+
+.table :global(.p-checkbox.p-highlight .p-checkbox-box) {
+  background-color: #5ac12f !important;
+  border-color: #5ac12f !important;
+}
+
+.dialog {
+  height: 100vh;
+}
+
+.row-assigned {
+  background-color: lightyellow !important;
+}

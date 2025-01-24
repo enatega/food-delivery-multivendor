@@ -26,6 +26,7 @@ import useStyles from "./styles";
 import CartItem from "../RestaurantDetailComponent/RestaurantCart/CartItem";
 import Voucher from "./Voucher";
 import { useTranslation } from "react-i18next";
+
 const TIPPING = gql`
   ${getTipping}
 `;
@@ -143,7 +144,7 @@ function CartItemsCard({
                 addQuantity={() => {
                   addQuantity(foodItem.key);
                 }}
-                removeQuantity={() => { 
+                removeQuantity={() => {
                   if (foodItem.quantity > 1) {
                     removeQuantity(foodItem.key);
                   }

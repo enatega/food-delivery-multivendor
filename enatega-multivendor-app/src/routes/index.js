@@ -73,6 +73,7 @@ import {
   SLIDE_UP_RIGHT_ANIMATION,
   AIMATE_FROM_CENTER
 } from '../utils/constants'
+import { useLocation } from '../ui/hooks'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -81,6 +82,7 @@ const Tab = createBottomTabNavigator()
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  
   return (
     <NavigationStack.Navigator
       screenOptions={screenOptions({
@@ -93,11 +95,6 @@ function MainNavigator() {
         headerShown: false
       })}
     >
-      <NavigationStack.Screen
-        name='CurrentLocation'
-        component={CurrentLocation}
-        options={{ header: () => null }}
-      />
       <NavigationStack.Screen
         name='Main'
         component={BottomTabNavigator}
@@ -276,7 +273,12 @@ function LocationStack() {
       <NavigationStack.Screen
         name='Main'
         component={BottomTabNavigator}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          gestureDirection: 'vertical-inverted',
+          cardStyleInterpolator:
+            CardStyleInterpolators.forScaleFromCenterAndroid
+        }}
       />
     </Location.Navigator>
   )
@@ -411,11 +413,11 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {/* {!location ? <LocationStack /> : <MainNavigator />} */}
+        {!location ? <LocationStack /> : <MainNavigator />}
 
         {/* {<LocationStack />} */}
 
-        <MainNavigator />
+        {/* <MainNavigator /> */}
       </NavigationContainer>
     </SafeAreaProvider>
   )

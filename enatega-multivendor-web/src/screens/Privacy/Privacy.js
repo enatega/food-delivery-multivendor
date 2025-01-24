@@ -36,9 +36,9 @@ function PrivacyPolicy() {
               variant="subtitle2"
               className={classes.MV3}
             >
-              This policy explains how we, enatega, a brand of
+              This policy explains how we, Enatega, a brand of
               <a
-                href="https://enatega.com"
+                href="https://enatega.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={classes.linkDecoration}
@@ -48,7 +48,7 @@ function PrivacyPolicy() {
                   color="primary"
                   className={classes.link}
                 >
-                  {"https://enatega.com"}
+                  {"https://enatega.com/"}
                 </Typography>
               </a>
               , use your personal information which you provide to us when using

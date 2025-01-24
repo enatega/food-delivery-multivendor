@@ -654,4 +654,9 @@ loginRequired: 'Anmeldung erforderlich',
   "kindlyBeAdvisedText": "Bitte beachten Sie, dass Ihre Nachricht auch für den Kurierpartner sichtbar sein könnte, der für die Lieferung Ihrer Bestellung an den Ort verantwortlich ist.",
   exploreYallaCities: 'Entdecke Yalla Städte',
   Card: 'Karte',
+  OrderPriceValidation:"Ihr Bestellbetrag liegt unter dem Mindestbestellwert des Restaurants. Bitte fügen Sie weitere Artikel zu Ihrem Warenkorb hinzu.",
+  "Sorry! we can't deliver to your address.": "Entschuldigung! Wir können nicht an Ihre Adresse liefern.",
+  "Can't delivery to this address": "Kann nicht an diese Adresse geliefert werden",
+  "Currently Restaurant is not delivering to your selected address": "Das Restaurant liefert derzeit nicht an die ausgewählte Adresse",
+  "Select another one": "Wählen Sie eine andere Adresse"
 }

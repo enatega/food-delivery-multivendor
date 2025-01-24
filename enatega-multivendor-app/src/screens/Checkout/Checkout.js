@@ -7,7 +7,6 @@ import {
   StatusBar,
   Platform,
   Alert,
-  Text,
   TextInput,
   Dimensions
 } from 'react-native'
@@ -19,12 +18,10 @@ import {
   EvilIcons,
   Feather,
   FontAwesome,
-  MaterialCommunityIcons,
-  Octicons
+  MaterialCommunityIcons
 } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
-import moment from 'moment'
 import { getTipping, orderFragment } from '../../apollo/queries'
 import { getCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
@@ -41,7 +38,6 @@ import { alignment } from '../../utils/alignment'
 import { useRestaurant } from '../../ui/hooks'
 import { LocationContext } from '../../context/Location'
 import { useFocusEffect } from '@react-navigation/native'
-import { DAYS } from '../../utils/enums'
 import { textStyles } from '../../utils/textStyles'
 import { calculateAmount, calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
@@ -51,18 +47,14 @@ import { useTranslation } from 'react-i18next'
 import styles from './styles'
 import Location from '../../components/Main/Location/Location'
 import { customMapStyle } from '../../utils/customMapStyles'
-import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
-import { fontStyles } from '../../utils/fontStyles'
 import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
 import { Instructions } from '../../components/Checkout/Instructions'
-import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
 import PickUp from '../../components/Pickup'
-import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
 import { isOpen } from '../../utils/customFunctions'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
 
 // Constants
 const PLACEORDER = gql`
@@ -127,6 +119,7 @@ function Checkout(props) {
     latitudeDelta: 0.4,
     longitudeDelta: 0.5
   }
+  const [isModalVisible, setisModalVisible] = useState(false)
 
   const restaurant = data?.restaurant
 
@@ -143,6 +136,12 @@ function Checkout(props) {
     }
   }
 
+
+  const handleCartNavigation = async() => {
+    setisModalVisible(false)
+    props?.navigation.navigate('CartAddress')
+  }
+  
   function onCouponCompleted(data) {
     if (data?.coupon) {
       if (data?.coupon.enabled) {
@@ -152,12 +151,12 @@ function Checkout(props) {
         })
         setVoucherCode('')
         onModalClose(voucherModalRef)
-        setLoadingOrder(false);
+        setLoadingOrder(false)
       } else {
         FlashMessage({
           message: t('coupanFailed')
         })
-        setLoadingOrder(false);
+        setLoadingOrder(false)
       }
     }
   }
@@ -165,8 +164,8 @@ function Checkout(props) {
   function onCouponError() {
     FlashMessage({
       message: t('invalidCoupan')
-    });
-    setLoadingOrder(false);
+    })
+    setLoadingOrder(false)
   }
 
   const [mutateCoupon, { loading: couponLoading }] = useMutation(GET_COUPON, {
@@ -178,17 +177,20 @@ function Checkout(props) {
     fetchPolicy: 'network-only'
   })
 
-  const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(PLACEORDER, {
-    onCompleted,
-    onError,
-    update
-  })
+  const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(
+    PLACEORDER,
+    {
+      onCompleted,
+      onError,
+      update
+    }
+  )
 
   const COD_PAYMENT = {
     payment: 'COD',
     label: t('cod'),
     index: 2,
-    icon: 'shekel'
+    icon: 'dollar'
   }
 
   const paymentMethod =
@@ -222,31 +224,31 @@ function Checkout(props) {
 
   useEffect(() => {
     let isSubscribed = true
-      ; (async () => {
-        if (data && !!data.restaurant) {
-          const latOrigin = Number(data.restaurant.location.coordinates[1])
-          const lonOrigin = Number(data.restaurant.location.coordinates[0])
-          const latDest = Number(location.latitude)
-          const longDest = Number(location.longitude)
-          const distance = calculateDistance(
-            latOrigin,
-            lonOrigin,
-            latDest,
-            longDest
-          )
+    ;(async () => {
+      if (data && !!data?.restaurant) {
+        const latOrigin = Number(data?.restaurant.location.coordinates[1])
+        const lonOrigin = Number(data?.restaurant.location.coordinates[0])
+        const latDest = Number(location.latitude)
+        const longDest = Number(location.longitude)
+        const distance = calculateDistance(
+          latOrigin,
+          lonOrigin,
+          latDest,
+          longDest
+        )
 
-          let costType = configuration.costType
-          let amount = calculateAmount(
-            costType,
-            configuration.deliveryRate,
-            distance
-          )
+        let costType = configuration.costType
+        let amount = calculateAmount(
+          costType,
+          configuration.deliveryRate,
+          distance
+        )
 
-          if (isSubscribed) {
-            setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-          }
+        if (isSubscribed) {
+          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
         }
-      })()
+      }
+    })()
     return () => {
       isSubscribed = false
     }
@@ -277,9 +279,9 @@ function Checkout(props) {
           <TextDefault
             style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}
           >
-            {data && data.restaurant.name && data.restaurant.address && (
+            {data && data?.restaurant.name && data?.restaurant.address && (
               <>
-                {data.restaurant.name} {' - '} {data.restaurant.address}
+                {data?.restaurant.name} {' - '} {data?.restaurant.address}
               </>
             )}
           </TextDefault>
@@ -319,7 +321,7 @@ function Checkout(props) {
   useEffect(() => {
     if (!data) return
     didFocus()
-    setrestaurantName(`${data.restaurant.name} - ${data.restaurant.address}`)
+    setrestaurantName(`${data?.restaurant.name} - ${data?.restaurant.address}`)
   }, [data])
   useEffect(() => {
     async function Track() {
@@ -342,7 +344,7 @@ function Checkout(props) {
   const showAvailablityMessage = () => {
     Alert.alert(
       '',
-      `${data.restaurant.name} closed at the moment`,
+      `${data?.restaurant.name} closed at the moment`,
       [
         {
           text: 'Go back to restaurants',
@@ -356,7 +358,7 @@ function Checkout(props) {
         },
         {
           text: 'close',
-          onPress: () => { },
+          onPress: () => {},
           style: 'cancel'
         }
       ],
@@ -388,23 +390,22 @@ function Checkout(props) {
 
   async function onCompleted(data) {
     await Analytics.track(Analytics.events.ORDER_PLACED, {
-      userId: data.placeOrder.user._id,
-      orderId: data.placeOrder.orderId,
-      name: data.placeOrder.user.name,
-      email: data.placeOrder.user.email,
-      restaurantName: data.placeOrder.restaurant.name,
-      restaurantAddress: data.placeOrder.restaurant.address,
-      orderPaymentMethod: data.placeOrder.paymentMethod,
-      orderItems: data.placeOrder.items,
-      orderAmount: data.placeOrder.orderAmount,
-      orderPaidAmount: data.placeOrder.paidAmount,
-      tipping: data.placeOrder.tipping,
-      orderStatus: data.placeOrder.orderStatus,
-      orderDate: data.placeOrder.orderDate
+      userId: data?.placeOrder.user._id,
+      orderId: data?.placeOrder.orderId,
+      name: data?.placeOrder.user.name,
+      email: data?.placeOrder.user.email,
+      restaurantName: data?.placeOrder.restaurant.name,
+      restaurantAddress: data?.placeOrder.restaurant.address,
+      orderPaymentMethod: data?.placeOrder.paymentMethod,
+      orderItems: data?.placeOrder.items,
+      orderAmount: data?.placeOrder.orderAmount,
+      orderPaidAmount: data?.placeOrder.paidAmount,
+      tipping: data?.placeOrder.tipping,
+      orderStatus: data?.placeOrder.orderStatus,
+      orderDate: data?.placeOrder.orderDate
     })
     if (paymentMode === 'COD') {
-      console.log("Redirecting to 'Main' and 'OrderDetail' with order ID:", data?.placeOrder?._id);
-      props?.navigation.reset({
+      props.navigation.reset({
         routes: [
           { name: 'Main' },
           {
@@ -419,14 +420,14 @@ function Checkout(props) {
       clearCart()
     } else if (paymentMode === 'PAYPAL') {
       props?.navigation.replace('Paypal', {
-        _id: data.placeOrder.orderId,
+        _id: data?.placeOrder.orderId,
         currency: configuration.currency
       })
     } else if (paymentMode === 'STRIPE') {
       props?.navigation.replace('StripeCheckout', {
-        _id: data.placeOrder.orderId,
-        amount: data.placeOrder.orderAmount,
-        email: data.placeOrder.user.email,
+        _id: data?.placeOrder.orderId,
+        amount: data?.placeOrder.orderAmount,
+        email: data?.placeOrder.user.email,
         currency: configuration.currency
       })
     }
@@ -452,10 +453,9 @@ function Checkout(props) {
   function onError(error) {
     setLoadingOrder(false)
     if (error.graphQLErrors.length) {
-      console.log('error', JSON.stringify(error))
-      FlashMessage({
-        message: error.graphQLErrors[0].message
-      })
+      if (error.graphQLErrors[0].message === "Sorry! we can't deliver to your address.") {
+        setisModalVisible(true);
+      }
     } else {
       FlashMessage({
         message: error.message
@@ -477,7 +477,7 @@ function Checkout(props) {
   }
 
   function taxCalculation() {
-    const tax = data.restaurant ? +data.restaurant.tax : 0
+    const tax = data?.restaurant ? +data?.restaurant.tax : 0
     if (tax === 0) {
       return tax.toFixed(2)
     }
@@ -562,18 +562,18 @@ function Checkout(props) {
   }
 
   function transformOrder(cartData) {
-    return cartData.map((food) => {
+    return cartData?.map((food) => {
       return {
-        food: food._id,
-        quantity: food.quantity,
-        variation: food.variation._id,
-        addons: food.addons
-          ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id)
-          }))
+        food: food?._id,
+        quantity: food?.quantity,
+        variation: food?.variation._id,
+        addons: food?.addons
+          ? food?.addons.map(({ _id, options }) => ({
+              _id,
+              options: options.map(({ _id }) => _id)
+            }))
           : [],
-        specialInstructions: food.specialInstructions
+        specialInstructions: food?.specialInstructions
       }
     })
   }
@@ -613,7 +613,7 @@ function Checkout(props) {
         }
       }
 
-      await mutateOrder({ variables: orderVariables });
+      await mutateOrder({ variables: orderVariables })
       setLoadingOrder(false)
       setIsPickup(false)
     } else {
@@ -633,15 +633,16 @@ function Checkout(props) {
     try {
       if (cartCount && cart) {
         const transformCart = cart.map((cartItem) => {
-          const food = foods.find((food) => food._id === cartItem._id)
+          const food = foods.find((food) => food?._id === cartItem._id)
           if (!food) return null
-          const variation = food.variations.find(
+          const variation = food?.variations.find(
             (variation) => variation._id === cartItem.variation._id
           )
           if (!variation) return null
 
-          const title = `${food.title}${variation.title ? `(${variation.title})` : ''
-            }`
+          const title = `${food?.title}${
+            variation.title ? `(${variation.title})` : ''
+          }`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -770,7 +771,14 @@ function Checkout(props) {
   }
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
-  if (loading || loadingData || loadingTip || mutateOrderLoading || loadingOrder) return loadginScreen()
+  if (
+    loading ||
+    loadingData ||
+    loadingTip ||
+    mutateOrderLoading ||
+    loadingOrder
+  )
+    return loadginScreen()
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
@@ -819,7 +827,7 @@ function Checkout(props) {
                         locationLabel={currentTheme.newFontcolor}
                         location={currentTheme.newFontcolor}
                         navigation={props?.navigation}
-                        addresses={profile.addresses}
+                        addresses={profile?.addresses}
                         forwardIcon={true}
                         screenName={'checkout'}
                       />
@@ -1005,7 +1013,7 @@ function Checkout(props) {
                               -{configuration.currencySymbol}
                               {parseFloat(
                                 calculatePrice(0, false) -
-                                calculatePrice(0, true)
+                                  calculatePrice(0, true)
                               ).toFixed(2)}
                             </TextDefault>
                           </View>
@@ -1532,6 +1540,12 @@ function Checkout(props) {
           </TextDefault>
         </TouchableOpacity>
       </Modalize>
+      <WrongAddressModal
+        theme={currentTheme}
+        modalVisible={isModalVisible}
+        setModalVisible={()=> setisModalVisible(!isModalVisible)}
+        handleNavigation={handleCartNavigation}
+      />
     </>
   )
 }

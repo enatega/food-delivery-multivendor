@@ -413,7 +413,7 @@ function ItemDetail(props) {
           style={[styles(currentTheme).scrollViewStyle, { zIndex: listZindex }]}
           scrollEventThrottle={1}
           onScrollEndDrag={(e) => {
-            if (e.nativeEvent?.contentOffset?.y >= 70) { 
+            if (e?.nativeEvent?.contentOffset?.y >= 70) { 
               setListZindex(4)
               calculatePrice()
             }
@@ -423,7 +423,7 @@ function ItemDetail(props) {
             }
           }}
           onMomentumScrollEnd={(e) => {
-            if (e.nativeEvent?.contentOffset?.y >= 70) { 
+            if (e?.nativeEvent?.contentOffset?.y >= 70) { 
               setListZindex(4) 
               calculatePrice()
             }
