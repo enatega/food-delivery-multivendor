@@ -97,7 +97,7 @@ function Main(props) {
   })
 
   let filteredCuisines
-  const { data: banners } = useQuery(GET_BANNERS, {
+  const { data: banners ,refetch:refetchBanners} = useQuery(GET_BANNERS, {
     fetchPolicy: 'network-only'
   })
   const { data: allCuisines } = useQuery(GET_CUISINES)
