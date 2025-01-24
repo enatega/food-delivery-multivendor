@@ -119,7 +119,7 @@ function BlogComponent({ title, desc }) {
               </Typography>
             </Box>
 
-            <Box
+            {/* <Box
               display="flex"
               alignItems="center"
               justifyContent={small ? "flex-start" : "center"}
@@ -145,7 +145,7 @@ function BlogComponent({ title, desc }) {
               >
                 {t("readMore")}
               </Button>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </Grid>

@@ -17,7 +17,7 @@ import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { useAccount } from '../../ui/hooks'
 import { Image } from 'react-native-elements'
 import useNotification from '../../ui/hooks/useNotification'
-import { PRODUCT_URL, ABOUT_URL, ADMIN_URL, PRIVACY_URL } from '../../utilities'
+import { PRODUCT_URL, ADMIN_URL } from '../../utilities'
 import { useTranslation } from 'react-i18next'
 import Constants from 'expo-constants'
 

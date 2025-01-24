@@ -126,6 +126,7 @@ function PhoneNumber(props) {
                         placeholder={t('phoneNumber')}
                         placeholderTextColor={currentTheme.color6}
                         value={phone}
+                        maxLength={16}
                         onChangeText={e => {
                           if (e >= 0 || e <= 9) {
                             setPhone(e)

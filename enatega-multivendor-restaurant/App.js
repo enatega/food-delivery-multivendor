@@ -17,6 +17,7 @@ import getEnvVars, {isProduction} from './environment'
 import 'react-native-gesture-handler'
 import * as SecureStore from 'expo-secure-store'
 import { useKeepAwake } from 'expo-keep-awake';
+import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 
 LogBox.ignoreLogs([
   'Warning: ...',
@@ -152,6 +153,7 @@ export default function App() {
   
   if (fontLoaded && isAppReady) {
     return (
+      <AnimatedSplashScreen>
       <ApolloProvider client={client}>
         <StatusBar style="dark" backgroundColor={colors.headerBackground} />
         <Configuration.Provider>
@@ -163,6 +165,7 @@ export default function App() {
         </Configuration.Provider>
         <FlashMessage />
       </ApolloProvider>
+      </AnimatedSplashScreen>
     )
   } else {
     return <Spinner />

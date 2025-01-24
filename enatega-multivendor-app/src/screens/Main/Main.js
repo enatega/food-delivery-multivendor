@@ -95,11 +95,14 @@ function Main(props) {
     },
     fetchPolicy: 'network-only'
   })
-  const { data: banners,refetch: refetchBanners } = useQuery(GET_BANNERS, {
+
+  let filteredCuisines
+  const { data: banners } = useQuery(GET_BANNERS, {
     fetchPolicy: 'network-only'
   })
   const { data: allCuisines } = useQuery(GET_CUISINES)
-  // console.log('banners => ', JSON.stringify(banners, null, 3))
+
+  const cus = new Set()
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
   const [mutate] = useMutation(SELECT_ADDRESS, {
@@ -294,6 +297,19 @@ function Main(props) {
     )
   }
 
+  const filterCusinies = () => {
+    if (data !== undefined) {
+      for (let cui of data?.nearByRestaurantsPreview?.restaurants) {
+        for (let cuisine of cui.cuisines) {
+          cus.add(cuisine)
+        }
+      }
+      return allCuisines?.cuisines?.filter((cuisine) => {
+        return cus.has(cuisine.name)
+      })
+    }
+  }
+
   return (
     <>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
@@ -357,8 +373,8 @@ function Main(props) {
                       </TextDefault>
                       <FlatList
                         data={
-                          allCuisines?.cuisines?.filter(
-                            (cuisine) => cuisine?.shopType === 'Restaurant'
+                          filterCusinies()?.filter(
+                            (cuisine) => cuisine.shopType === 'Restaurant'
                           ) ?? []
                         }
                         renderItem={({ item }) => {
@@ -411,8 +427,9 @@ function Main(props) {
                       </TextDefault>
                       <FlatList
                         data={
-                          allCuisines?.cuisines?.filter(
-                            (cuisine) => cuisine?.shopType === 'grocery'
+                          filterCusinies()?.filter(
+                            (cuisine) =>
+                              cuisine?.shopType.toLowerCase() === 'grocery'
                           ) ?? []
                         }
                         renderItem={({ item }) => {

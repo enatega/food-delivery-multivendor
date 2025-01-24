@@ -218,6 +218,25 @@ function CartAddresses(props) {
                   {t('addAddress')}
                 </TextDefault>
               </TouchableOpacity>
+          </View>
+          <View style={styles(currentTheme).containerButton}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles(currentTheme).addButton}
+                onPress={() => {
+                  const latitude = location.latitude
+                  const longitude = location.longitude
+                  props.navigation.navigate('Checkout', {
+                    longitude: +longitude,
+                    latitude: +latitude,
+                    prevScreen: 'CartAddress'
+                  })
+                }}
+              >
+                <TextDefault H5 bold>
+                  {t('Done')}
+                </TextDefault>
+              </TouchableOpacity>
             </View>
           </View>
         {/* )} */}

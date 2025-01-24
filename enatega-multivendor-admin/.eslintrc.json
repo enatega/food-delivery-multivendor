@@ -1,27 +1,61 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "extends": [
-        "plugin:react/recommended"
-    ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 10,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "space-before-function-paren": ["error", "never"],
-        "react/prop-types": 0
+  "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
+  "globals": {
+    "cy": "readonly",
+    "it": "readonly",
+    "React": "readonly",
+    "google": "readonly",
+    "GeolocationPosition": "readonly",
+    "GeolocationPositionError": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2023,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "tsx": true
     }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "unused-imports" // Added plugin for unused imports
+  ],
+  "rules": {
+    // Allow .tsx and .jsx extensions for JSX files
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
+
+    // Remove unused variables
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+    ],
+
+    // Remove unused imports automatically
+    "unused-imports/no-unused-imports": "error",
+
+    // Remove unused variables but allow unused arguments prefixed with _
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+
+    // Prettier-related rules
+    // "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
+
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "react-hooks/exhaustive-deps": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }

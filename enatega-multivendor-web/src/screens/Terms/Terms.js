@@ -20,7 +20,7 @@ function Terms() {
       <Grid container className={classes.mainContainer}>
         <Box className={classes.imageContainer}>
           <Typography variant="h4" color="textPrimary" align="center" className={classes.title}>
-            TERMS AND CONDITIONS | ENATEGA
+            TERMS AND CONDITIONS | Enatega
           </Typography>
         </Box>
         <Grid container item xs={12} className={classes.mainContainer}>

@@ -642,6 +642,11 @@ loginRequired: 'مطلوب تسجيل الدخول',
   'Instruction for the courier': 'تعليمات للمندوب',
   'Instructions': 'التعليمات',
   Popular: 'شائع',
-  Reloading: '...جارٍ إعادة التحميل'
+  Reloading: '...جارٍ إعادة التحميل',
+  "Sorry! we can't deliver to your address.": ".عذرًا! لا يمكننا التوصيل إلى عنوانك",
+  OrderPriceValidation: "قيمة طلبك أقل من الحد الأدنى للطلب الخاص بالمطعم. يرجى إضافة المزيد من العناصر إلى سلة التسوق.",
+  "Can't delivery to this address": "لا يمكن التوصيل إلى هذا العنوان",
+  "Currently Restaurant is not delivering to your selected address": "المطعم لا يقدم خدمة التوصيل إلى العنوان الذي اخترته حاليًا",
+  "Select another one": "اختر عنوانًا آخر"
 
 }

@@ -30,7 +30,7 @@ export default function AppComponent() {
       }}
     >
       <Typography className={small ? classes.bgTextSmall : classes.bgText}>
-        APP
+        {t('APP')}
       </Typography>
       <Box
         display="flex"
@@ -85,7 +85,7 @@ export default function AppComponent() {
               )
             }
           >
-            Ios Store
+            {t('IosStore')}
           </Button>
           <Button
             className={classes.btn}
@@ -104,7 +104,7 @@ export default function AppComponent() {
               )
             }
           >
-            Play Store
+            {t('PlayStore')}
           </Button>
         </Box>{" "}
       </Box>

@@ -13,9 +13,13 @@ const CustomMapView = React.memo(
         style={{ flex: 1 }}
         provider={PROVIDER_GOOGLE}
         showsTraffic={false}
-        maxZoomLevel={15}
+        maxZoomLevel={16}
         customMapStyle={customMapStyle}
         onRegionChangeComplete={onRegionChangeComplete}
+        showsBuildings={true}
+        showsScale={true}
+        showsPointsOfInterest={true}
+        showsIndoor={true}
       />
     )
   }),

@@ -1,0 +1,7 @@
+.p-inputswitch-slider {
+  background-color: #4b4b4b85; /* Default background color */
+}
+
+.p-inputswitch-checked .p-inputswitch-slider {
+  background-color: #5ac12f; /* Background color when checked */
+}

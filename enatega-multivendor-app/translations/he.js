@@ -631,5 +631,10 @@ loginRequired: 'נדרש התחברות',
   'Instruction for the courier': 'تعليمات للمندوب',
   'Instructions': 'التعليمات',
   Popular: 'פופולרי',
-  Reloading: '...טוען מחדש'
+  Reloading: '...טוען מחדש',
+  "Sorry! we can't deliver to your address.": ".מצטערים! לא ניתן לבצע משלוח לכתובת שלכם",
+  OrderPriceValidation: "סכום ההזמנה שלך נמוך מהמינימום הנדרש על ידי המסעדה. אנא הוסף פריטים נוספים לעגלת הקניות שלך.",
+  "Can't delivery to this address": "לא ניתן לשלוח לכתובת זו",
+    "Currently Restaurant is not delivering to your selected address": "המסעדה אינה מבצעת משלוחים לכתובת שנבחרה כרגע",
+    "Select another one": "בחר כתובת אחרת"
 }
