@@ -14,7 +14,8 @@ import {
   Platform,
   ScrollView,
   FlatList,
-  Image
+  Image,
+  RefreshControl
 } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
@@ -74,6 +75,7 @@ function Main(props) {
   const [busy, setBusy] = useState(false)
   const { isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const modalRef = useRef(null)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -84,7 +86,7 @@ function Main(props) {
   const { getCurrentLocation } = useLocation()
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
-  const { data, loading, error } = useQuery(RESTAURANTS, {
+  const { data, loading, error} = useQuery(RESTAURANTS, {
     variables: {
       longitude: location.longitude || null,
       latitude: location.latitude || null,
@@ -112,7 +114,11 @@ function Main(props) {
   const handleActiveOrdersChange = (activeOrdersExist) => {
     setHasActiveOrders(activeOrdersExist)
   }
-
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    await refetch()
+    setIsRefreshing(false)
+  }
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
@@ -235,8 +241,8 @@ function Main(props) {
   )
 
   const modalFooter = () => (
-    <View style={styles().addNewAddressbtn}>
-      <View style={styles(currentTheme).addressContainer}>
+    <View style={[styles().addNewAddressbtn]}>
+      <View style={[styles(currentTheme).addressContainer]}>
         <TouchableOpacity
           activeOpacity={0.5}
           style={styles(currentTheme).addButton}
@@ -313,6 +319,12 @@ function Main(props) {
                 <ScrollView
                   showsVerticalScrollIndicator={false}
                   showsHorizontalScrollIndicator={false}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={isRefreshing}
+                      onRefresh={handleRefresh}
+                    />
+                  }
                 >
                   <Banner banners={banners?.banners} />
                   <View style={{ gap: 16 }}>
@@ -387,6 +399,9 @@ function Main(props) {
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         inverted={currentTheme?.isRTL ? true : false}
+                        maintainVisibleContentPosition={{
+                          minIndexForVisible: 0,
+                        }}
                       />
                     </View>
                     <View>
@@ -439,6 +454,7 @@ function Main(props) {
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         inverted={currentTheme?.isRTL ? true : false}
+                        
                       />
                     </View>
                     <View>

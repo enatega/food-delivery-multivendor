@@ -8,21 +8,19 @@ import usePrintOrder from './usePrintOrder'
 
 export default function useAccount() {
   const [isAvailable, setIsAvailable] = useState(false)
-
-  const toggleSwitch = () => {
-    toggle()
-    setIsAvailable(previousState => !previousState)
-  }
+  const [isToggling, setIsToggling] = useState(false); 
   const { loading, error, data, refetch, networkStatus } = useQuery(
-    gql`
+    gql `
       ${restaurantInfo}
-    `,
+      `
+    ,
     { fetchPolicy: 'network-only' }
   )
   const [toggle, { loading: loadingToggle }] = useMutation(
-    gql`
+    gql `
       ${toggleAvailability}
-    `,
+      `
+    ,
     { onError, onCompleted }
   )
   useEffect(() => {
@@ -30,6 +28,25 @@ export default function useAccount() {
     setIsAvailable(data.restaurant.isAvailable)
   }, [data])
 
+  const toggleSwitch = async () => {
+    if (data && data?.restaurant) {
+      const restaurantId = data?.restaurant._id;
+      try {
+        setIsToggling(true);
+        await toggle({
+          variables: { restaurantId },
+        });
+        setIsAvailable((prevState) => !prevState);
+      } catch (error) {
+        console.error("Error toggling availability:", error);
+        return;
+      }
+      finally {
+        setIsToggling(false); 
+      }
+    }
+  };
+  
   function onCompleted({ toggleAvailability }) {
     console.log(toggleAvailability)
     if (toggleAvailability) {
@@ -65,6 +82,7 @@ export default function useAccount() {
   const { logout } = useContext(AuthContext)
   const { printer, selectPrinter } = usePrintOrder()
   return {
+    isToggling,
     logout,
     loading,
     error,
@@ -78,4 +96,4 @@ export default function useAccount() {
     printer,
     selectPrinter
   }
-}
+} 

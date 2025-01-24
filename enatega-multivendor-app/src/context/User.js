@@ -82,7 +82,7 @@ export const UserProvider = props => {
     console.log('error context user', error.message)
   }
   async function onCompleted(data) {
-    const { _id: userId, name, email, phone } = data.profile
+    const { _id: userId, name, email, phone } = data?.profile
     await Analytics.identify(
       {
         userId,
@@ -93,7 +93,7 @@ export const UserProvider = props => {
       userId
     )
     await Analytics.track(Analytics.events.USER_RECONNECTED, {
-      userId: data.profile._id
+      userId: data?.profile?._id
     })
   }
 
@@ -110,7 +110,7 @@ export const UserProvider = props => {
         })
       }
       client.cache.evict({
-        id: `${dataProfile.profile.__typename}:${dataProfile.profile._id}`
+        id: `${dataProfile?.profile?.__typename}:${dataProfile?.profile?._id}`
       })
       await client.resetStore()
     } catch (error) {
@@ -213,11 +213,11 @@ export const UserProvider = props => {
   return (
     <UserContext.Provider
       value={{
-        isLoggedIn: !!token && dataProfile && !!dataProfile.profile,
+        isLoggedIn: !!token && dataProfile && !!dataProfile?.profile,
         loadingProfile: loadingProfile && calledProfile,
         errorProfile,
         profile:
-          dataProfile && dataProfile.profile ? dataProfile.profile : null,
+          dataProfile && dataProfile?.profile ? dataProfile?.profile : null,
         logout,
         cart,
         cartCount: numberOfCartItems(),

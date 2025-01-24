@@ -64,10 +64,10 @@ function Location({
             />
           </View>
           <View style={styles(currentTheme).headerContainer}>
-            <View
-              style={styles.textContainer}>
+            <View>
               <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder isRTL>
-                {translatedAddress?.slice(0, 40)}...
+                {translatedAddress?.slice(0, 40)}
+                ...
               </TextDefault>
             </View>
             <TextDefault textColor={locationLabel} left isRTL>

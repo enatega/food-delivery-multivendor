@@ -37,14 +37,14 @@ const Orders = ({ navigation }) => {
   useEffect(() => {
     if (assignedOrders) {
       setOrders(
-        assignedOrders.length > 0
+        assignedOrders?.length > 0
           ? assignedOrders.filter(
             o =>
               ['PICKED', 'ACCEPTED', 'DELIVERED', 'ASSIGNED'].includes(
                 o.orderStatus
               ) &&
                 o.rider &&
-                dataProfile.rider._id === o.rider._id
+                dataProfile?.rider?._id === o?.rider?._id
           )
           : []
       )
