@@ -7,6 +7,7 @@ import { alignment } from '../../utils/alignment'
 import { useTranslation } from 'react-i18next'
 
 const ReviewCard = ({ theme, name, rating, description, date }) => {
+  console.log("date",date)
   const { t } = useTranslation()
   return (
     <View style={styles.cardContainer(theme)}>

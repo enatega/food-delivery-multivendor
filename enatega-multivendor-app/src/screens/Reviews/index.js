@@ -12,24 +12,34 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import StarRating from '../../assets/SVG/small-star-icon'
 import Button from '../../components/Button/Button'
 import ReviewCard from '../../components/Review/ReviewCard'
+import { GET_REVIEWS_BY_RESTAURANT } from '../../apollo/queries'
+import { useQuery ,gql} from '@apollo/client'
+
 import {
   calculateDaysAgo,
   groupAndCount,
   sortReviews
 } from '../../utils/customFunctions'
 
-
-
-
+const Review = gql `${GET_REVIEWS_BY_RESTAURANT}`
 
 const Reviews = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
 
   const restaurant = route.params.restaurantObject
-  const { reviews,reviewsCount,average } = restaurant
-
-
-  const reviewGroups = groupAndCount(reviews, 'rating')
+  const { restaurantId } = restaurant
+  console.log("restaurant in review page",restaurantId);
+  const { loading,error,data:reviewsdata } = useQuery(Review, {
+  variables: { restaurant: restaurantId }, 
+});
+const rating=reviewsdata?.reviewsByRestaurant.ratings
+const total=reviewsdata?.reviewsByRestaurant.total
+const reviews=reviewsdata?.reviewsByRestaurant.reviews
+console.log("Review:",JSON.stringify(reviewsdata?.reviewsByRestaurant,null,2),"restaurantId",restaurantId)
+// console.log("Reviews Data:", reviews?.reviewsByRestaurant);
+  // const reviewGroups = groupAndCount(reviews, 'rating')
+  const reviewGroups = groupAndCount(reviewsdata?.reviewsByRestaurant.reviews, 'rating')
+  console.log("reviewGroups",reviewGroups)
   const [sortBy, setSortBy] = useState('newest')
   const sortingParams = {
     newest: t('Newest'),
@@ -87,12 +97,12 @@ const Reviews = ({ navigation, route }) => {
             }}
           >
             <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
-              {t('allRatings')} ({reviewsCount ??'0 Reviews'})
+              {t('allRatings')} ({total ??'0 Reviews'})
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <StarRating />
               <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
-                {average}
+                {rating}
               </TextDefault>
             </View>
           </View>
@@ -100,7 +110,7 @@ const Reviews = ({ navigation, route }) => {
             {Object.keys(reviewGroups)
               .sort((a, b) => b - a)
               .map((i, index) => {
-                const filled = (reviewGroups[i] / restaurant.total) * 100
+                const filled = (reviewGroups[i] / total) * 100
                 const unfilled = filled ? 100 - filled : 100
                 return (
                   <View

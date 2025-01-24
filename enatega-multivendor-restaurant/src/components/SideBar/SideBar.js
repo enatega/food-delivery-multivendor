@@ -25,7 +25,8 @@ export default function SideBar() {
   const { t } = useTranslation()
   const notificationRef = useRef(true)
   const openSettingsRef = useRef(false)
-  const { logout, data, toggleSwitch, isAvailable } = useAccount()
+  const { logout, data, toggleSwitch,loadingToggle, isAvailable ,isToggling} = useAccount()
+  console.log("isAvailable",isAvailable)
   const [notificationStatus, setNotificationStatus] = useState(false)
   const appState = useRef(AppState.currentState)
 
@@ -36,14 +37,14 @@ export default function SideBar() {
     requestPermission,
     sendTokenToBackend
   } = useNotification()
-
+console.log(restaurantData?.restaurant)
   useEffect(() => {
     const checkToken = async () => {
       if (restaurantData) {
-        setNotificationStatus(restaurantData.restaurant.enableNotification)
+        setNotificationStatus(restaurantData?.restaurant?.enableNotification)
         if (
-          restaurantData.restaurant.enableNotification &&
-          notificationRef.current
+          restaurantData?.restaurant?.enableNotification &&
+          notificationRef?.current
         ) {
           const permissionStatus = await getPermission()
           if (permissionStatus.granted) {
@@ -143,7 +144,7 @@ export default function SideBar() {
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextDefault textColor="white" style={{ marginRight: 5 }}>
-                {isAvailable ? t('online') : t('closed')}
+                {isAvailable && !loadingToggle ? t('online') : t('closed')}
               </TextDefault>
               <Switch
                 trackColor={{
@@ -152,8 +153,8 @@ export default function SideBar() {
                 }}
                 thumbColor={isAvailable ? colors.headerBackground : '#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isAvailable}
+                onValueChange={!loadingToggle && !isToggling ? toggleSwitch : null} // Disable while toggling
+                value={isToggling ? !isAvailable : isAvailable}
                 style={{ marginTop: Platform.OS === 'android' ? -15 : -5 }}
               />
             </View>

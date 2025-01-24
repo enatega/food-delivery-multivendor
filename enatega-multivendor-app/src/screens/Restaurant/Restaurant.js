@@ -80,12 +80,12 @@ const FOOD = gql`
   ${food}
 `
 
+
 function Restaurant(props) {
   // Params & Analytics
   const { _id: restaurantId } = props?.route.params
   const Analytics = analytics()
-
-  // Refs
+ 
   const scrollRef = useRef(null)
   const flatListRef = useRef(null)
 
@@ -111,14 +111,17 @@ function Restaurant(props) {
   const { data, refetch, networkStatus, loading, error } = useRestaurant(
     propsData._id
   )
+  console.log("restaurantdata",data)
 
   // Queries
   const fetchFoodDetails = (itemId) => {
     return client.readFragment({ id: `Food:${itemId}`, fragment: FOOD })
   }
+  
   const { data: popularItems } = useQuery(POPULAR_ITEMS, {
     variables: { restaurantId }
   })
+  
   const { data: subCategoriesData, loading: subCategoriesLoading } = useQuery(
     GET_SUB_CATEGORIES,
 
@@ -439,6 +442,7 @@ function Restaurant(props) {
     )
   if (error) return <TextError text={JSON.stringify(error)} />
   const restaurant = data.restaurant
+  
   const allDeals = restaurant?.categories.filter((cat) => cat?.foods?.length)
 
   // Sorting food items with respect to their parent and sub categories

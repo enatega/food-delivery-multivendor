@@ -99,6 +99,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
           <TextInput
             label={t('review')}
             placeholder={t('typeHere')}
+            placeholderTextColor="#fff"
             value={description}
             onChangeText={(text) => setDescription(text)}
             style={styles.modalInput(theme)}

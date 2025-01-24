@@ -110,10 +110,8 @@ function CartAddresses(props) {
     })
     mutate({ variables: { id: address._id } })
     setSelectedAddress(address)
-    console.log("address._id=>>", address?._id)
     props.navigation.goBack()
   }
-
 
   return (
     <>

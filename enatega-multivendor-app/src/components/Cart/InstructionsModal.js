@@ -31,7 +31,7 @@ export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit, value
                     <TextDefault numberOfLines={3} H5 smaller isRTL textColor={theme.secondaryText} style={styles.ternaryText}>{t('kindlyBeAdvisedText')}</TextDefault>
                 </View>
                 <View style={styles.inputContainer}>
-                    <TextInput value={value} onChangeText={value => setValue(value)} autoFocus onSubmitEditing={onSubmit} placeholder={t('typeHere')} allowFontScaling style={{ padding: scale(10), ...textStyles.H3, flex: 1, color: theme.fontMainColor, textAlign: theme?.isRTL ? 'right' : 'left' }} maxLength={400} />
+                    <TextInput value={value} onChangeText={value => setValue(value)} autoFocus onSubmitEditing={onSubmit} placeholderTextColor="#fff" placeholder={t('typeHere')} allowFontScaling style={{ padding: scale(10), ...textStyles.H3, flex: 1, color: theme.fontMainColor, textAlign: theme?.isRTL ? 'right' : 'left' }} maxLength={400} />
                     <TouchableOpacity style={alignment.MRxSmall} onPress={() => setValue('')}>
                         <Ionicons name='close-circle-outline' size={scale(18)} color={theme.fontNewColor} />
                     </TouchableOpacity>

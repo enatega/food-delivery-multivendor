@@ -8,6 +8,35 @@ query Users {
  }
 }`
 
+
+export const GET_REVIEWS_BY_RESTAURANT = gql`
+  query GetReviewsByRestaurant($restaurant: String!) {
+    reviewsByRestaurant(restaurant: $restaurant) {
+      reviews {
+        _id
+        rating
+        description
+        isActive
+        createdAt
+        updatedAt
+        order {
+          _id
+          user {
+            _id
+            name
+            email
+          }
+        }
+        restaurant {
+          _id
+          name
+        }
+      }
+      ratings
+      total
+    }
+  }
+`;
 export const restaurantFragment = gql`
   fragment RestaurantFields on Restaurant {
     _id
@@ -736,6 +765,7 @@ export const restaurant = `query Restaurant($id:String){
       description
       quantityMinimum
       quantityMaximum
+      
     }
     zone{
       _id

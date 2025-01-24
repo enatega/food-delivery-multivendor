@@ -35,6 +35,7 @@ const FAVOURITERESTAURANTS = gql`
 `
 
 function NewRestaurantCard(props) {
+
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
@@ -49,11 +50,11 @@ function NewRestaurantCard(props) {
     onCompleted,
     refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
-  const isRestaurantOpen = props?.isOpen
+  // const isRestaurantOpen = props?.isOpen
   const isAvailable = props?.isAvailable
 
-  const isRestaurantClosed = !isRestaurantOpen || !isAvailable;
-
+  const isRestaurantClosed = !isAvailable;
+// console.log("isAvailable--->>",isAvailable)
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
   }
