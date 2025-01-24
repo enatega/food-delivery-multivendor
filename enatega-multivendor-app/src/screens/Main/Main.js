@@ -86,7 +86,7 @@ function Main(props) {
   const { getCurrentLocation } = useLocation()
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
-  const { data, loading, error} = useQuery(RESTAURANTS, {
+  const { data, loading, error,refetch: refetchRestaurants} = useQuery(RESTAURANTS, {
     variables: {
       longitude: location.longitude || null,
       latitude: location.latitude || null,
@@ -116,7 +116,8 @@ function Main(props) {
   }
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    await refetch()
+    const { data: newBanners } = await refetchBanners();
+  const { data: newRestaurants } = await refetchRestaurants();
     setIsRefreshing(false)
   }
   useFocusEffect(() => {
@@ -326,14 +327,14 @@ function Main(props) {
                     />
                   }
                 >
-                  <Banner banners={banners?.banners} />
+                  <Banner banners={banners?.banners}  />
                   <View style={{ gap: 16 }}>
                     <View>
                       {isLoggedIn &&
                         recentOrderRestaurantsVar &&
                         recentOrderRestaurantsVar.length > 0 && (
                           <>
-                            {orderLoading ? (
+                            {orderLoading || isRefreshing ? (
                               <MainLoadingUI />
                             ) : (
                               <MainRestaurantCard
@@ -351,7 +352,7 @@ function Main(props) {
                     </View>
 
                     <View>
-                      {orderLoading ? (
+                      {orderLoading || isRefreshing ? (
                         <MainLoadingUI />
                       ) : (
                         <MainRestaurantCard
@@ -405,7 +406,7 @@ function Main(props) {
                       />
                     </View>
                     <View>
-                      {loading ? (
+                      {loading || isRefreshing ? (
                         <MainLoadingUI />
                       ) : (
                         <MainRestaurantCard
