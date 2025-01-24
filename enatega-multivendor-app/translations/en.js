@@ -647,5 +647,6 @@ export const en = {
   'Instruction for the courier': 'Instruction for the courier',
   'Instructions': 'Instructions',
   Popular: 'Popular',
-  Reloading: 'Reloading...'
+  Reloading: 'Reloading...',
+  OrderPriceValidation:"Your order amount is below the restaurant's minimum order requirement. Please add more items to your cart."
 }
