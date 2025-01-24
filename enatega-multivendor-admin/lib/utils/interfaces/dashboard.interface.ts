@@ -127,9 +127,9 @@ export interface IDashboardOrderSalesDetailsByPaymentMethodResponseGraphQL {
 
 //  Vendor
 export interface IDashboardSubHeaderComponentsProps {
-  isStoreView: boolean;
+  isStoreView?: boolean;
   dateFilter: IDateFilter;
-  handleViewChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleViewChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDateFilter: (dateFilter: IDateFilter) => void;
 }
 

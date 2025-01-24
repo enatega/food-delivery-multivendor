@@ -64,15 +64,24 @@ export default function CommissionRateMain() {
   // Handlers
   const handleSave = async (restaurantId: string) => {
     const restaurant = restaurants.find((r) => r._id === restaurantId);
+    if (!restaurant?.commissionRate) {
+      return showToast({
+        type: 'error',
+        title: t('Commission Updated'),
+        message: `${t('Commission')} ${t('Update')} ${t('failed')}`,
+      });
+    }
     if (restaurant) {
       setLoadingRestaurant(restaurantId);
-      if(restaurant?.commissionRate>100){
+      if (restaurant?.commissionRate > 100) {
         setLoadingRestaurant(null);
         return showToast({
-          type:"error",
-          title:t('Commission Updated'),
-          message:t('As commission rate is a %age value so it cannot exceed a max value of 100')
-        })
+          type: 'error',
+          title: t('Commission Updated'),
+          message: t(
+            'As commission rate is a %age value so it cannot exceed a max value of 100'
+          ),
+        });
       }
       try {
         await updateCommissionMutation({
