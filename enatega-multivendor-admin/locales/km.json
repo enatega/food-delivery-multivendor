@@ -612,7 +612,7 @@
   "Commission rate updated for": "កម្រិតគណនីត្រូវបានអាប់ដេតសម្រាប់",
   "Error updating commission rate for": "បញ្ហាក្នុងការអាប់ដេតកម្រិតគណនីសម្រាប់",
   "Error Fetching Restaurants": "បញ្ហាក្នុងការទាញយកភោជនីយដ្ឋាន",
-  "An error occurred while fetching restaurants. Please try again later.": "មានបញ្ហាក្នុងការទាញយកភោជនីយដ្ឋាន។ សូមព្យាយាមម្តងទៀតក្រោយនេះ។",
+  "An error occurred while fetching restaurants, Please try again later.": "មានបញ្ហាក្នុងការទាញយកភោជនីយដ្ឋាន។ សូមព្យាយាមម្តងទៀតក្រោយនេះ។",
   "Set Commission Rate": "កំណត់កម្រិតគណនី",
   "Amplitude Configuration Updated": "ការកំណត់ Amplitude ត្រូវបានអាប់ដេត",
   "Web Amplitude API Key": "កូនសោ Web Amplitude API",
