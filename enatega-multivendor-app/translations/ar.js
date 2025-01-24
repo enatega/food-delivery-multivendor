@@ -643,6 +643,7 @@ loginRequired: 'مطلوب تسجيل الدخول',
   'Instructions': 'التعليمات',
   Popular: 'شائع',
   Reloading: '...جارٍ إعادة التحميل',
-  "Sorry! we can't deliver to your address.": ".عذرًا! لا يمكننا التوصيل إلى عنوانك",
+  "Sorry! we can't deliver to your address.": ".عذرًا! لا يمكننا التوصيل إلى عنوانك",,
+  OrderPriceValidation:"قيمة طلبك أقل من الحد الأدنى للطلب الخاص بالمطعم. يرجى إضافة المزيد من العناصر إلى سلة التسوق."
 
 }

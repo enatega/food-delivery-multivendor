@@ -651,5 +651,6 @@ loginRequired: 'Connexion requise',
   "kindlyBeAdvisedText": "Veuillez noter que votre message pourrait également être visible pour le partenaire de livraison responsable de la livraison de votre commande sur le site.",
   exploreYallaCities: 'Découvrir les villes Yalla',
   Card: 'Carte',
+  OrderPriceValidation:"Le montant de votre commande est inférieur au montant minimum requis par le restaurant. Veuillez ajouter d'autres articles à votre panier.",
   "Sorry! we can't deliver to your address.": "Désolé ! Nous ne pouvons pas livrer à votre adresse.",
 }

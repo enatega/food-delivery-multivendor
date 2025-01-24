@@ -224,20 +224,41 @@ function Menu({ route, props }) {
     mutate({ variables: { id: address._id } })
     modalRef.current.close()
   }
+ 
+  const cus = new Set()
+  const filterCusinies = () => {
+    if (restaurantData) {
+      for (let cui of restaurantData) {
+        if(cui.cuisine)
+        {
+        for (let cuisine of cui.cuisines) {
+          cus.add(cuisine)
+        }
+      }
+      }
+      let allfilter=allCuisines?.cuisines?.filter((cuisine) => {
+        return cus.has(cuisine.name)
+      })
+      return allfilter;
+    }
+  }
 
   const collectionData = useMemo(() => {
     if (routeData?.name === 'Restaurants') {
       return allCuisines?.cuisines?.filter(
-        (cuisine) => cuisine?.shopType === 'restaurant'
+        (cuisine) => cuisine?.shopType === 'Restaurant'
       )
     } else if (routeData?.name === 'Store') {
-      return allCuisines?.cuisines?.filter(
-        (cuisine) => cuisine?.shopType === 'grocery'
+      let rtc= allCuisines?.cuisines?.filter(
+        (cuisine) => cuisine?.shopType === 'Grocery'
       )
+      console.log(rtc)
+      return rtc
     } else {
-      return allCuisines?.cuisines
+      return filterCusinies() ?? []
     }
   }, [routeData, allCuisines])
+  console.log("route name : ",routeData?.name)
 
   const setCurrentLocation = async () => {
     setBusy(true)
@@ -551,6 +572,7 @@ function Menu({ route, props }) {
                   style={styles(currentTheme).seeAllBtn}
                   activeOpacity={0.8}
                   onPress={() => {
+                    console.log("route name :", routeData?.name)
                     navigation.navigate('Collection', {
                       collectionType: routeData?.name,
                       data: collectionData
