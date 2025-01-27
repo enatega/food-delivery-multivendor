@@ -658,5 +658,7 @@ loginRequired: 'Anmeldung erforderlich',
   "Sorry! we can't deliver to your address.": "Entschuldigung! Wir können nicht an Ihre Adresse liefern.",
   "Can't delivery to this address": "Kann nicht an diese Adresse geliefert werden",
   "Currently Restaurant is not delivering to your selected address": "Das Restaurant liefert derzeit nicht an die ausgewählte Adresse",
-  "Select another one": "Wählen Sie eine andere Adresse"
+  "Select another one": "Wählen Sie eine andere Adresse",
+  isRTL: false,
+
 }

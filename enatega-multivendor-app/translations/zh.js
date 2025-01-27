@@ -623,6 +623,7 @@ welcomeText: '欢迎来到Enatega',
   "Sorry! we can't deliver to your address.": "抱歉！我们无法配送到您的地址。",
   "Can't delivery to this address": "无法配送到该地址",
     "Currently Restaurant is not delivering to your selected address": "餐厅当前无法配送到您选择的地址",
-    "Select another one": "选择其他地址"
+  "Select another one": "选择其他地址",
+  isRTL: false,
 
 }

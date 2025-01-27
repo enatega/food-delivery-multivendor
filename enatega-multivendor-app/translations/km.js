@@ -639,6 +639,7 @@ loginRequired: 'តម្រូវឲ្យចូល',
   "Sorry! we can't deliver to your address.": "សូមទោស! យើងមិនអាចដឹកជញ្ជូនទៅអាសយដ្ឋានរបស់អ្នកបានទេ។",
   "Can't delivery to this address": "មិនអាចដឹកជញ្ជូនទៅអាសយដ្ឋាននេះបានទេ",
     "Currently Restaurant is not delivering to your selected address": "បច្ចុប្បន្នភោជនីយដ្ឋានមិនបានដឹកជញ្ជូនទៅអាសយដ្ឋានដែលបានជ្រើសរើស",
-    "Select another one": "ជ្រើសរើសមួយផ្សេងទៀត"
+  "Select another one": "ជ្រើសរើសមួយផ្សេងទៀត",
+  isRTL: false,
 
 }
