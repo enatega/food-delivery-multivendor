@@ -111,7 +111,7 @@ function Restaurant(props) {
   const { data, refetch, networkStatus, loading, error } = useRestaurant(
     propsData._id
   )
-  console.log("restaurantdata",data)
+  // console.log("restaurantdata",data)
 
   // Queries
   const fetchFoodDetails = (itemId) => {
@@ -721,8 +721,8 @@ function Restaurant(props) {
                 title: {
                   id: index,
                   key: index,
-                  subCategoryTitle: sub_ctg?.foods.length > 0 ? sub_ctg?.subCategoryTitle : '',
-                  parentCategoryTitle: sub_ctg?.foods.length > 0 ? sub_ctg?.parentCategoryTitle : ''
+                  subCategoryTitle: sub_ctg?.foods?.length > 0 ? sub_ctg?.subCategoryTitle : '',
+                  parentCategoryTitle: sub_ctg?.foods?.length > 0 ? sub_ctg?.parentCategoryTitle : ''
                 },
                 data: sub_ctg?.foods || []
               })) || []

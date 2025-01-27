@@ -21,11 +21,12 @@ export default function useHomeRestaurants() {
   })
 
   const orderLoading =
-    recentOrderRestaurants.loading || mostOrderedRestaurants.loading
+    recentOrderRestaurants?.loading || mostOrderedRestaurants?.loading
 
   const orderError =
-    recentOrderRestaurants.error || mostOrderedRestaurants.error
+    recentOrderRestaurants?.error || mostOrderedRestaurants?.error
 
+// console.log("recentOrderRestaurants?.data?.recentOrderRestaurantsPreview",JSON.stringify(recentOrderRestaurants?.data?.recentOrderRestaurantsPreview,null,2))
   return {
     orderLoading,
     orderError,
