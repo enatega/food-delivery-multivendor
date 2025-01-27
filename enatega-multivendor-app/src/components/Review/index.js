@@ -23,12 +23,13 @@ const REVIEWORDER = gql`
 `
 
 function Review({ onOverlayPress, theme, orderId, rating }, ref) {
+
   const { t } = useTranslation()
 
   const ratingRef = useRef()
   const [description, setDescription] = useState('')
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
-
+ 
   function onCompleted() {
     setDescription('')
     ref?.current?.close()
@@ -99,7 +100,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
           <TextInput
             label={t('review')}
             placeholder={t('typeHere')}
-            placeholderTextColor="#fff"
+            placeholderTextColor={theme.placeholderColor}
             value={description}
             onChangeText={(text) => setDescription(text)}
             style={styles.modalInput(theme)}

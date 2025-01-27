@@ -1,5 +1,7 @@
 export const theme = {
   Pink: {
+    placeholderColor:'#000000',
+    placeholderColorMsg:'#000000',
     black: '#000',
     CustomLoadingBG: '#FFF',
     white: '#FFF',
@@ -127,6 +129,9 @@ export const theme = {
     radiusFill: 'rgba(0, 255, 0, 0.2)'
   },
   Dark: {
+    
+    placeholderColor:'#fff',
+    placeholderColorMsg:'#fff',
     black: '#000',
     primaryBlue: '#0EA5E9',
     CustomLoadingBG: '#000',

@@ -126,7 +126,7 @@ function ImageTextCenterHeader(props, ref) {
     restaurantUrl: props?.restaurant ? props?.restaurant?.restaurantUrl : '',
     IsOpen: isOpen(props?.restaurant ? props?.restaurant : '')
   }
-  console.log("aboutObject",aboutObject)
+  // console.log("aboutObject",aboutObject)
 
   // Constants
   const currentDayShort = new Date()
