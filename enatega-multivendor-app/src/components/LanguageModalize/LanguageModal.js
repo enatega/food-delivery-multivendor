@@ -50,15 +50,12 @@ const LanguageModal = ({
     try {
       // First, check for stored language
       const storedLanguageCode = await AsyncStorage.getItem('enatega-language')
-      console.log("🚀 ~ determineInitialLanguage ~ storedLanguageCode:", storedLanguageCode)
       
       // Get system language
       const systemLanguageCode = Localization.locale.split('-')[0]
-      console.log("🚀 ~ determineInitialLanguage ~ systemLanguageCode:", systemLanguageCode)
       
       // Available language codes
       const availableLanguageCodes = languageTypes.map(lang => lang.code)
-      console.log("🚀 ~ determineInitialLanguage ~ availableLanguageCodes:", availableLanguageCodes)
 
       // Determine which language to use
       let languageToUse = 'en' // Default to English
