@@ -71,7 +71,7 @@ const GET_CUISINES = gql`
 
 export const FILTER_VALUES = {
   Sort: {
-    type: FILTER_TYPE.RADIO,
+    type: FILTER_TYPE.CHECKBOX,
     values: ['Relevance (Default)', 'Fast Delivery', 'Distance'],
     selected: []
   },

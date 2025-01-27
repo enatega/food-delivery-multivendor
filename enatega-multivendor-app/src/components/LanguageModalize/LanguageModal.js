@@ -1,23 +1,23 @@
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Modal,
   TouchableOpacity,
   Pressable
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import * as Localization from 'expo-localization'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
+import { Feather } from '@expo/vector-icons'
+
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { useTranslation } from 'react-i18next'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import i18next from 'i18next'
 import Spinner from '../Spinner/Spinner'
-import { Feather } from '@expo/vector-icons'
-import * as Updates from 'expo-updates'
-import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 
-const languageTypes = [
+export const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
   { value: 'العربية', code: 'ar', index: 1 },
   { value: 'français', code: 'fr', index: 2 },
@@ -35,55 +35,83 @@ const LanguageModal = ({
   dontClose
 }) => {
   const { t } = useTranslation()
-  // const [activeRadio, activeRadioSetter] = useState(languageTypes[0].index)
   const [activeRadio, activeRadioSetter] = useState(0)
   const [loadinglang, setLoadingLang] = useState(false)
   const [languageName, languageNameSetter] = useState('English')
 
   useEffect(() => {
-    selectLanguage()
-  }, [])
+    if (modalVisible) {
+      determineInitialLanguage()
+      console.log("🚀 ~ useEffect ~ modalVisible:", modalVisible)
+    }
+  }, [modalVisible])
 
-  async function selectLanguage() {
-    const lang = await AsyncStorage.getItem('enatega-language')
-    const langName = await AsyncStorage.getItem('enatega-language-name')
-    if (lang && langName) {
-      const defLang = languageTypes.findIndex((el) => el.code === lang)
-      activeRadioSetter(defLang)
-      languageNameSetter(langName)
+  async function determineInitialLanguage() {
+    try {
+      // First, check for stored language
+      const storedLanguageCode = await AsyncStorage.getItem('enatega-language')
+      console.log("🚀 ~ determineInitialLanguage ~ storedLanguageCode:", storedLanguageCode)
+      
+      // Get system language
+      const systemLanguageCode = Localization.locale.split('-')[0]
+      console.log("🚀 ~ determineInitialLanguage ~ systemLanguageCode:", systemLanguageCode)
+      
+      // Available language codes
+      const availableLanguageCodes = languageTypes.map(lang => lang.code)
+      console.log("🚀 ~ determineInitialLanguage ~ availableLanguageCodes:", availableLanguageCodes)
+
+      // Determine which language to use
+      let languageToUse = 'en' // Default to English
+      
+      if (storedLanguageCode) {
+        // Use stored language if it's valid
+        languageToUse = storedLanguageCode
+      } else if (availableLanguageCodes.includes(systemLanguageCode)) {
+        // Use system language if it's available
+        languageToUse = systemLanguageCode
+      }
+
+      // Find the index and name of the language
+      const selectedLanguage = languageTypes.find(lang => lang.code === languageToUse)
+      
+      if (selectedLanguage) {
+        activeRadioSetter(selectedLanguage.index)
+        languageNameSetter(selectedLanguage.value)
+      }
+    } catch (error) {
+      console.error('Error determining initial language:', error)
     }
   }
 
   async function onSelectedLanguage() {
     try {
-      setLoadingLang(true);
-      const languageInd = activeRadio;
-      const languageCode = languageTypes[languageInd].code;
-      const languageVal = languageTypes[languageInd].value;
-      await AsyncStorage.setItem('enatega-language', languageCode);
-      await AsyncStorage.setItem('enatega-language-name', languageVal);
+      setLoadingLang(true)
+      const languageInd = activeRadio
+      const languageCode = languageTypes[languageInd].code
+      const languageVal = languageTypes[languageInd].value
 
-      i18next.changeLanguage(languageCode);
-      languageNameSetter(languageVal);
-      FlashMessage({message: t('Reloading')})
-      setTimeout(() => {
-        Updates.reloadAsync();
-      }, 1000);
+      // Save language preferences
+      await AsyncStorage.setItem('enatega-language', languageCode)
+      await AsyncStorage.setItem('enatega-language-name', languageVal)
+
+      // Change app language
+      i18next.changeLanguage(languageCode)
+      languageNameSetter(languageVal)
     } catch (error) {
-      console.error('Error during language selection:', error);
+      console.error('Error during language selection:', error)
     } finally {
-      setLoadingLang(false);
+      setLoadingLang(false)
       setModalVisible(!modalVisible)
     }
   }
 
   const handleClose = () => {
     if (!dontClose) {
-      setModalVisible(false);
+      setModalVisible(false)
     }
-  };
+  }
+
   return (
-    // <View style={styles(currentTheme).modalContainer}>
     <Modal
       animationType='slide'
       transparent={true}
@@ -140,7 +168,6 @@ const LanguageModal = ({
                 numberOfLines={1}
                 textColor={currentTheme.fontMainColor}
                 bold
-              // style={alignment.MLsmall}
               >
                 {item.value}
               </TextDefault>
@@ -149,7 +176,7 @@ const LanguageModal = ({
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles(currentTheme).emptyButton}
-            onPress={() => onSelectedLanguage()}
+            onPress={onSelectedLanguage}
           >
             <TextDefault textColor={currentTheme.fontMainColor} center H5>
               {loadinglang ? (
@@ -166,7 +193,6 @@ const LanguageModal = ({
         </View>
       </View>
     </Modal>
-    // </View>
   )
 }
 
