@@ -109,7 +109,7 @@ const AppTopbar = () => {
   // Subscriptions
   useSubscription(RIDER_UPDATED_SUBSCRIPTION, {
     fetchPolicy: 'network-only',
-    onData: async ({ data }) => {
+    onData: async () => {
       const result = await refetch();
       setNotifications(result?.data?.webNotifications);
     },
