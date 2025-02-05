@@ -41,6 +41,11 @@ export const orderStatuses = [
     key: 'CANCELLED',
     status: 6,
     statusText: 'cancelledOrder'
+  },
+  {
+    key:'CANCELLEDBYREST',
+    status:7,
+    statusText:'cancelledOrder'
   }
 ]
 

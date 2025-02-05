@@ -16,7 +16,11 @@ import Spinner from '../Spinner/Spinner'
 
 const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
   const { t } = useTranslation()
-  const { cities, loading } = useContext(LocationContext)
+  const { cities, loading, isOffline,refetch,isConnected,refresh } = useContext(LocationContext)
+  const handleTryAgain = () => {
+    // Refresh the internet connection status
+    refresh(); // This triggers the refresh of the internet connection check
+  }
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.item(theme)}
@@ -53,7 +57,12 @@ const ModalDropdown = ({ theme, visible, onItemPress, onClose }) => {
             <Feather name="x-circle" size={30} color={theme.newIconColor} />
           </TouchableOpacity>
         </View>
-        {loading ? (
+        {!isConnected ? (
+           <View>
+           <TextDefault textColor={theme.gray900}>You are offline. Please check your internet connection.</TextDefault>
+           </View>
+        ):
+         loading ? (
             <Spinner backColor={theme.cardBackground} spinnerColor={theme.iconColor}  />
         ):(
           <FlatList

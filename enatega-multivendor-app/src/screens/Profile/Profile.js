@@ -230,7 +230,7 @@ function Profile(props) {
                       keyExtractor={(item) => item._id}
                       renderItem={({ item }) => {
 
-                        console.log("item",item)
+                        // console.log("item",item)
                         const averageRating = item?.reviewData?.ratings
                         const numberOfReviews = item?.reviewData?.total
 

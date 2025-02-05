@@ -18,7 +18,7 @@ const useGeocoding = () => {
       ) {
         // Extract the formatted address from the first result
         const formattedAddress = response.data.results[0].formatted_address
-
+        console.log("formattedAddress-->",formattedAddress)
         // Extract the city from the address components
         const cityComponent = response.data.results[0].address_components.find(
           (component) =>

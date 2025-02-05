@@ -88,8 +88,8 @@ function Main(props) {
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const { data, loading, error,refetch: refetchRestaurants} = useQuery(RESTAURANTS, {
     variables: {
-      longitude: location.longitude || null,
-      latitude: location.latitude || null,
+      longitude: location?.longitude || null,
+      latitude: location?.latitude || null,
       shopType: null,
       ip: null
     },
@@ -178,7 +178,13 @@ function Main(props) {
   const setCurrentLocation = async () => {
     setBusy(true)
     const { error, coords } = await getCurrentLocation()
-
+    console.log("coords",coords)
+    console.log("coords",coords.latitude)
+    console.log("coords",coords.longitude)
+    if (!coords || !coords.latitude || !coords.longitude) {
+      console.error("Invalid coordinates:", coords);
+      return;
+    }
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
     fetch(apiUrl)
       .then((response) => response.json())
@@ -186,7 +192,10 @@ function Main(props) {
         if (data.error) {
           console.log('Reverse geocoding request failed:', data.error)
         } else {
+          console.log('data->>>>',data)
+          setBusy(false)
           let address = data.display_name
+          console.log('address=>>', address)
           if (address.length > 21) {
             address = address.substring(0, 21) + '...'
           }
