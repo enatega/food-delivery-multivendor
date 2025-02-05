@@ -25,8 +25,8 @@ export default function SideBar() {
   const { t } = useTranslation()
   const notificationRef = useRef(true)
   const openSettingsRef = useRef(false)
-  const { logout, data, toggleSwitch,loadingToggle, isAvailable ,isToggling} = useAccount()
-  console.log("isAvailable",isAvailable)
+  const { logout, data, toggleSwitch, isToggling, isAvailable } = useAccount()
+  // console.log("isAvailable",isAvailable)
   const [notificationStatus, setNotificationStatus] = useState(false)
   const appState = useRef(AppState.currentState)
 
@@ -37,7 +37,7 @@ export default function SideBar() {
     requestPermission,
     sendTokenToBackend
   } = useNotification()
-console.log(restaurantData?.restaurant)
+// console.log(restaurantData?.restaurant)
   useEffect(() => {
     const checkToken = async () => {
       if (restaurantData) {
@@ -144,7 +144,7 @@ console.log(restaurantData?.restaurant)
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextDefault textColor="white" style={{ marginRight: 5 }}>
-                {isAvailable && !loadingToggle ? t('online') : t('closed')}
+                {isAvailable ? t('online') : t('closed')}
               </TextDefault>
               <Switch
                 trackColor={{
@@ -153,9 +153,10 @@ console.log(restaurantData?.restaurant)
                 }}
                 thumbColor={isAvailable ? colors.headerBackground : '#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={!loadingToggle && !isToggling ? toggleSwitch : null} // Disable while toggling
-                value={isToggling ? !isAvailable : isAvailable}
+                onValueChange={toggleSwitch} 
+                value={isAvailable}
                 style={{ marginTop: Platform.OS === 'android' ? -15 : -5 }}
+                disabled={isToggling}
               />
             </View>
           </View>

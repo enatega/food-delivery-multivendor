@@ -157,6 +157,7 @@ export const CuisineErrors: ICuisineErrors = {
   name: ['Required', 'Name cannot be only spaces'],
   description: ['Required', 'Name cannot be only spaces'],
   shopType: ['Required'],
+  image:['Required']
 };
 
 export const CouponErrors: ICouponErrors = {

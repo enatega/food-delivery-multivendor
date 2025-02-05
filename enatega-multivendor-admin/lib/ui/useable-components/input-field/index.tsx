@@ -10,6 +10,7 @@ export default function CustomTextField({
   placeholder,
   showLabel,
   isLoading = false,
+  error,
   ...props
 }: ITextFieldProps) {
   return !isLoading ? (
@@ -21,10 +22,11 @@ export default function CustomTextField({
       )}
 
       <InputText
-        className={`h-10 w-full rounded-lg border border-gray-300 px-2 text-sm focus:shadow-none focus:outline-none ${className}`}
+        className={`h-10 w-full rounded-lg border ${error? 'border-red-500': 'border-gray-300'}  px-2 text-sm focus:shadow-none focus:outline-none ${className}`}
         placeholder={placeholder}
         {...props}
       />
+      {error && <p className="text-sm text-red-500">{error}</p>} 
     </div>
   ) : (
     <InputSkeleton />

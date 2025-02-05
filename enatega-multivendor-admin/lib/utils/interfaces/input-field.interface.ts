@@ -23,6 +23,7 @@ interface IIconProperties {
 // Fields
 export interface ITextFieldProps extends IGlobalTextFieldProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?:string;
 }
 export interface IIconTextFieldProps extends IGlobalTextFieldProps {
   iconProperties: IIconProperties;

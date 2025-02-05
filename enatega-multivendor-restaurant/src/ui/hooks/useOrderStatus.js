@@ -39,7 +39,7 @@ export default function useOrderStatus(_id) {
       variables: { orderStatus: 'DELIVERED' }
     })
 
-    if (order.orderStatus === 'CANCELLED') {
+    if (order.orderStatus === 'CANCELLEDBYREST') {
       client.writeQuery({
         query: gql`
           ${orders}
