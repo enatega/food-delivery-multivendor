@@ -46,6 +46,11 @@ export default function CurrentLocation() {
 
   const { cities, setLocation } = useContext(LocationContext)
 
+  const filterCities = () => {
+    let newCities = cities?.filter((city) => !isNaN(city.latitude) && !isNaN(city.longitude))
+    return newCities
+  }
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
@@ -100,7 +105,7 @@ export default function CurrentLocation() {
 
       setIsCheckingZone(true)
 
-      const matchingCity = checkLocationInCities(currentLocation, cities)
+      const matchingCity = checkLocationInCities(currentLocation, filterCities())
 
       if (matchingCity) {
         try {
@@ -161,16 +166,6 @@ export default function CurrentLocation() {
     }, 100)
   }
 
-  useEffect(() => {
-    async function checkLanguage() {
-      const lang = await AsyncStorage.getItem('enatega-language')
-      if (!lang) {
-        setModalVisible(true)
-      }
-    }
-    checkLanguage()
-  }, [])
-
   return (
     <>
       <View
@@ -196,29 +191,29 @@ export default function CurrentLocation() {
                 />
               )}
 
-              {cities.map((city) => (
-                <React.Fragment key={city.id}>
+              {filterCities()?.map((city) => (
+                <React.Fragment key={city?.id}>
                   <CustomMarkerWithLabel
                     coordinate={{
-                      latitude: city.latitude,
-                      longitude: city.longitude
+                      latitude: city?.latitude,
+                      longitude: city?.longitude
                     }}
-                    label={city.name}
+                    label={city?.name}
                     icon={markerIcon}
                     currentTheme={currentTheme}
                     onPress={() =>
                       handleMarkerPress({
-                        latitude: city.latitude,
-                        longitude: city.longitude
+                        latitude: city?.latitude,
+                        longitude: city?.longitude
                       })
                     }
                   />
 
                   {city?.location &&
-                    city?.location.coordinates &&
-                    city.location.coordinates[0] && (
+                    city?.location?.coordinates &&
+                    city?.location?.coordinates[0] && (
                       <Polygon
-                        coordinates={city.location.coordinates[0].map(
+                        coordinates={city?.location?.coordinates[0].map(
                           (coord) => ({
                             latitude: coord[1],
                             longitude: coord[0]
