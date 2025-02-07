@@ -28,18 +28,18 @@ const Reviews = ({ navigation, route }) => {
 
   const restaurant = route.params.restaurantObject
   const { restaurantId } = restaurant
-  console.log("restaurant in review page",restaurantId);
+  // console.log("restaurant in review page",restaurantId);
   const { loading,error,data:reviewsdata } = useQuery(Review, {
   variables: { restaurant: restaurantId }, 
 });
 const rating=reviewsdata?.reviewsByRestaurant.ratings
 const total=reviewsdata?.reviewsByRestaurant.total
 const reviews=reviewsdata?.reviewsByRestaurant.reviews
-console.log("Review:",JSON.stringify(reviewsdata?.reviewsByRestaurant,null,2),"restaurantId",restaurantId)
+// console.log("Review:",JSON.stringify(reviewsdata?.reviewsByRestaurant,null,2),"restaurantId",restaurantId)
 // console.log("Reviews Data:", reviews?.reviewsByRestaurant);
   // const reviewGroups = groupAndCount(reviews, 'rating')
   const reviewGroups = groupAndCount(reviewsdata?.reviewsByRestaurant.reviews, 'rating')
-  console.log("reviewGroups",reviewGroups)
+  // console.log("reviewGroups",reviewGroups)
   const [sortBy, setSortBy] = useState('newest')
   const sortingParams = {
     newest: t('Newest'),

@@ -16,6 +16,9 @@
     "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "ios": {
+        "entitlements": {
+          "com.apple.developer.networking.wifi-info": true
+        },
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",

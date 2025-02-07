@@ -37,7 +37,7 @@
     "react-geocode": "^0.2.2",
     "react-international-phone": "^4.3.0",
     "tailwind-merge": "^2.5.2",
-    "yup": "^1.4.0"
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",

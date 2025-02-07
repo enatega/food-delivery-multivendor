@@ -141,7 +141,7 @@ function Favourite() {
         ListHeaderComponent={null}
         renderItem={({ item }) => {
           const restaurantOpen = isOpen(item);
-         console.log(item)
+        //  console.log(item)
           return (
             <NewRestaurantCard
               {...item}

@@ -16,48 +16,45 @@ export default function useAccount() {
     ,
     { fetchPolicy: 'network-only' }
   )
-  const [toggle, { loading: loadingToggle }] = useMutation(
-    gql `
-      ${toggleAvailability}
-      `
-    ,
-    { onError, onCompleted }
+
+
+const [toggle, { loading: loadingToggle }] = useMutation(
+    gql`${toggleAvailability}`,
+    {
+      onCompleted: (res) => {
+        setIsAvailable(res.toggleAvailability.isAvailable)
+        setIsToggling(false)
+      },
+      onError: () => {
+        Alert.alert('Error', 'Failed to update availability. Please try again.')
+        setIsToggling(false)
+      }
+    }
   )
+
   useEffect(() => {
-    if (!data) return
-    setIsAvailable(data.restaurant.isAvailable)
+    if (data?.restaurant) {
+      setIsAvailable(data.restaurant.isAvailable)
+    }
   }, [data])
 
   const toggleSwitch = async () => {
-    if (data && data?.restaurant) {
-      const restaurantId = data?.restaurant._id;
-      try {
-        setIsToggling(true);
-        await toggle({
-          variables: { restaurantId },
-        });
-        setIsAvailable((prevState) => !prevState);
-      } catch (error) {
-        console.error("Error toggling availability:", error);
-        return;
-      }
-      finally {
-        setIsToggling(false); 
-      }
-    }
-  };
-  
-  function onCompleted({ toggleAvailability }) {
-    console.log(toggleAvailability)
-    if (toggleAvailability) {
-      setIsAvailable(
-        toggleAvailability.isAvailable)
+    if (!data?.restaurant || loadingToggle) return
+
+    const restaurantId = data.restaurant._id
+    
+    // Optimistic UI update
+    setIsAvailable((prev) => !prev)
+    setIsToggling(true)
+    try {
+      await toggle({ variables: { restaurantId } })
+    } catch {
+      // Revert UI state if mutation fails
+      setIsAvailable((prev) => !prev)
+      setIsToggling(false)
     }
   }
 
-  function onError() {
-    Alert.alert('Error', 'Please try again later')
-  }
 
   const isOpenTimings = () => {
     if (!data) return true
@@ -82,7 +79,6 @@ export default function useAccount() {
   const { logout } = useContext(AuthContext)
   const { printer, selectPrinter } = usePrintOrder()
   return {
-    isToggling,
     logout,
     loading,
     error,
@@ -94,6 +90,7 @@ export default function useAccount() {
     loadingToggle,
     isOpenTimings,
     printer,
+    isToggling,
     selectPrinter
   }
 } 

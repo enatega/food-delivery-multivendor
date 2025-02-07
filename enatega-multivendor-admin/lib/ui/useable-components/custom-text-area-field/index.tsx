@@ -8,6 +8,7 @@ export default function CustomTextAreaField({
   showLabel,
   value,
   name,
+  error,
   onChange,
   rows = 0,
   maxLength,
@@ -22,7 +23,7 @@ export default function CustomTextAreaField({
       )}
       <InputTextarea
         value={value}
-        className={`min-h-20 w-full rounded-lg border border-gray-300 px-2 pt-1 text-sm focus:shadow-none focus:outline-none ${className ?? ''}`}
+        className={`min-h-20 w-full rounded-lg border ${error? 'border-red-500': 'border-gray-300'} px-2 pt-1 text-sm focus:shadow-none focus:outline-none ${className ?? ''}`}
         id={name}
         placeholder={placeholder}
         onChange={onChange}
@@ -31,6 +32,7 @@ export default function CustomTextAreaField({
         rows={rows}
         {...props}
       />
+      {error && <p className="text-sm text-red-500">{error}</p>} 
     </div>
   );
 }

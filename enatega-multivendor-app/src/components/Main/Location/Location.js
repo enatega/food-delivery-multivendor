@@ -25,15 +25,15 @@ function Location({
   const { location } = useContext(LocationContext)
 
   let translatedLabel
-  if (location.label === 'Current Location') {
+  if (location?.label === 'Current Location') {
     translatedLabel = t('currentLocation')
   } else {
-    translatedLabel = t(location.label)
+    translatedLabel = t(location?.label)
   }
   const translatedAddress =
-    location.deliveryAddress === 'Current Location'
+    location?.deliveryAddress === 'Current Location'
       ? t('currentLocation')
-      : location.deliveryAddress
+      : location?.deliveryAddress
   const onLocationPress = (event) => {
 
     if (screenName === 'checkout') {

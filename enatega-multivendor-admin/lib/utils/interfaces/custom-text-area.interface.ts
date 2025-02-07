@@ -10,5 +10,6 @@ export interface ICustomTextAreaField {
   name?: string;
   style?: CSSProperties;
   maxLength?: number;
+  error?:string;
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 }

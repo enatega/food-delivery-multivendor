@@ -28,4 +28,5 @@ export interface IImageUploadComponentProps extends IGlobalComponentProps {
   fileTypes: FileTypes[];
   orientation?: ImageOrientation;
   maxVideoSize?: number;
+  error?:string;
 }

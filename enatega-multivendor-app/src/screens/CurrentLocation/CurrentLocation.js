@@ -42,6 +42,7 @@ export default function CurrentLocation() {
   const { getCurrentLocation, getLocationPermission } = useLocation()
   const [citiesModalVisible, setCitiesModalVisible] = useState(false)
   const [currentLocation, setCurrentLocation] = useState(null)
+ 
   const { getAddress } = useGeocoding()
 
   const { cities, setLocation } = useContext(LocationContext)
@@ -82,17 +83,18 @@ export default function CurrentLocation() {
 
       const { error, coords, message } = await getCurrentLocation()
       if (error) {
-        console.log(message, error)
+        // console.log("Location error:",message, error)
         setLoading(false)
         return
       }
-
+      // console.log("Fetched Location:", coords);
       const userLocation = {
         latitude: coords.latitude,
         longitude: coords.longitude
       }
 
       setCurrentLocation(userLocation)
+      // console.log("Current Location before rendering Marker:", currentLocation);
       setLoading(false)
     }
 
@@ -102,18 +104,19 @@ export default function CurrentLocation() {
   useEffect(() => {
     async function checkCityMatch() {
       if (!currentLocation || !cities.length) return
-
+      // console.log("Checking city match for location:", currentLocation);
+      // console.log("Cities list:", cities);
+  
       setIsCheckingZone(true)
 
       const matchingCity = checkLocationInCities(currentLocation, filterCities())
-
       if (matchingCity) {
         try {
           const response = await getAddress(
             currentLocation.latitude,
             currentLocation.longitude
           )
-
+          // console.log("Fetched Address Data:", response);
           const locationData = {
             label: 'Location',
             deliveryAddress: response.formattedAddress,
@@ -128,10 +131,11 @@ export default function CurrentLocation() {
             navigation.navigate('Main')
           }, 100)
         } catch (error) {
-          console.error('Error getting address:', error)
+          // console.error('Error getting address:', error)
           setIsCheckingZone(false)
         }
       } else {
+        // console.warn("No matching city found for this location.");
         setIsCheckingZone(false)
       }
     }
@@ -191,6 +195,7 @@ export default function CurrentLocation() {
                 />
               )}
 
+
               {filterCities()?.map((city) => (
                 <React.Fragment key={city?.id}>
                   <CustomMarkerWithLabel
@@ -208,7 +213,7 @@ export default function CurrentLocation() {
                       })
                     }
                   />
-
+            
                   {city?.location &&
                     city?.location?.coordinates &&
                     city?.location?.coordinates[0] && (
@@ -225,7 +230,9 @@ export default function CurrentLocation() {
                       />
                     )}
                 </React.Fragment>
-              ))}
+              );
+            })}
+            
             </MapView>
           </View>
 

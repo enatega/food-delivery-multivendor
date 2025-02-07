@@ -81,6 +81,7 @@ const Banner = ({ banners }) => {
       autoplayLoop
       showPagination
       data={banners ?? []}
+      
       paginationStyle={styles().pagination}
       paginationActiveColor={currentTheme.main}
       paginationDefaultColor={currentTheme.hex}

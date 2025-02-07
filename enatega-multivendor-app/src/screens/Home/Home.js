@@ -53,6 +53,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import analytics from '../../utils/analytics'
 import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
+import useGeocoding from '../../ui/hooks/useGeocoding'
 
 const RESTAURANTS = gql`
   ${restaurantList}
@@ -74,7 +75,7 @@ function Main(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
-
+  const { getAddress } = useGeocoding();
   const { data, refetch, networkStatus, loading, error } = useQuery(
     RESTAURANTS,
     {
@@ -152,41 +153,90 @@ function Main(props) {
     mutate({ variables: { id: address._id } })
     modalRef.current.close()
   }
-
   const setCurrentLocation = async () => {
-    setBusy(true)
-    const { error, coords } = await getCurrentLocation()
+    console.log("Fetching current location...");
+    setBusy(true);
+    
+    const { error, coords } = await getCurrentLocation();
+    console.log("getCurrentLocation result:", { error, coords });
+    console.log("coords", coords);
+    console.log("coords", coords.latitude);
+    console.log("coords", coords.longitude);
 
-    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
-    fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          console.log('Reverse geocoding request failed:', data.error)
-        } else {
-          let address = data.display_name
-          if (address.length > 21) {
-            address = address.substring(0, 21) + '...'
-          }
+    if (!coords || !coords.latitude || !coords.longitude) {
+      console.error("Invalid coordinates:", coords);
+      setBusy(false);
+      return;
+    }
 
-          if (error) navigation.navigate('SelectLocation')
-          else {
-            modalRef.current.close()
-            setLocation({
-              label: 'currentLocation',
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              deliveryAddress: address
-            })
-            setBusy(false)
-          }
-          console.log(address)
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching reverse geocoding data:', error)
-      })
-  }
+    console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
+    
+     // Get the address function from the hook
+
+    try {
+      // Fetch the address using the geocoding hook
+      const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude);
+
+      console.log('Formatted address:', formattedAddress);
+      console.log('City:', city);
+
+      let address = formattedAddress || 'Unknown Address';
+
+      if (address.length > 21) {
+        address = address.substring(0, 21) + '...';
+      }
+
+      if (error) {
+        navigation.navigate('SelectLocation');
+      } else {
+        modalRef.current?.close();
+        setLocation({
+          label: 'currentLocation',
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          deliveryAddress: address
+        });
+        setBusy(false);
+      }
+    } catch (fetchError) {
+      console.error('Error fetching address using Google Maps API:', fetchError.message);
+    }
+  };
+
+  // const setCurrentLocation = async () => {
+  //   setBusy(true)
+  //   const { error, coords } = await getCurrentLocation()
+
+  //   const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
+  //   fetch(apiUrl)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.error) {
+  //         console.log('Reverse geocoding request failed:', data.error)
+  //       } else {
+  //         let address = data.display_name
+  //         if (address.length > 21) {
+  //           address = address.substring(0, 21) + '...'
+  //         }
+
+  //         if (error) navigation.navigate('SelectLocation')
+  //         else {
+  //           modalRef.current.close()
+  //           setLocation({
+  //             label: 'currentLocation',
+  //             latitude: coords.latitude,
+  //             longitude: coords.longitude,
+  //             deliveryAddress: address
+  //           })
+  //           setBusy(false)
+  //         }
+  //         console.log(address)
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching reverse geocoding data:', error)
+  //     })
+  // }
 
   const modalHeader = () => (
     <View style={[styles().addressbtn]}>

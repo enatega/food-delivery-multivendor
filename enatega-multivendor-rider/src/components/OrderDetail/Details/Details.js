@@ -246,7 +246,7 @@ const ItemDetails = ({ order, dataConfig, loading, error }) => {
   return (
     <View style={styles.orderDetails}>
       {order.items.map(item => {
-        subTotal = subTotal + item.variation.price
+        subTotal = subTotal + item.variation.price*item.quantity
         return (
           <View key={item._id} style={styles.rowDisplay}>
             <TextDefault bolder H4 style={styles.coll1}>

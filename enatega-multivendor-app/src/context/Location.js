@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { getZones } from '../apollo/queries'
-
+import NetInfo from '@react-native-community/netinfo';
+// import * as Network from 'expo-network';
 
 const GET_ZONES = gql`
   ${getZones}
@@ -13,7 +14,8 @@ export const LocationContext = createContext()
 export const LocationProvider = ({ children }) => {
   const [location, setLocation] = useState(null)
   const [cities, setCities] = useState([])
-  const { loading, error, data } = useQuery(GET_ZONES)
+  const [isConnected, setIsConnected] = useState(false)
+  const { loading, error, data, refetch  } = useQuery(GET_ZONES)
 
   useEffect(() => {
     const getActiveLocation = async () => {
@@ -39,7 +41,15 @@ export const LocationProvider = ({ children }) => {
       saveLocation()
     }
   }, [location])
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected) // Update connectivity status
+    })
 
+    return () => unsubscribe() // Clean up the listener
+  }, [])
+
+  
   // show zones as cities
   useEffect(() => {
     if (!loading && !error && data) {
@@ -84,16 +94,22 @@ export const LocationProvider = ({ children }) => {
       setCities(centroids);
     }
   }, [loading, error, data]);
-
+  useEffect(() => {
+    if (isConnected) {
+      refetch() // Refetch the data when the internet is back
+    }
+  }, [isConnected, refetch])
   return (
     <LocationContext.Provider
       value={{
         location,
         setLocation,
         cities,
-        loading
+        loading,
+        isConnected,
       }}>
       {children}
     </LocationContext.Provider>
   )
 }
+
