@@ -208,9 +208,28 @@ export default function VendorAddForm({
                   handleSubmit,
                   isSubmitting,
                   setFieldValue,
+                  validateForm,
+                  
                 }) => {
                   return (
-                    <Form onSubmit={handleSubmit}>
+                    <Form  onSubmit={async (e) => {
+                      e.preventDefault();
+                      const formErrors = await validateForm();
+                      if (Object.keys(formErrors).length > 0) {
+                        // Get the first error field name
+                        const firstErrorField = Object.keys(formErrors)[0];
+          
+                        // Find the input field by name and scroll into view
+                        const errorElement = document.getElementsByName(firstErrorField)[0];
+                        if (errorElement) {
+                          errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                          errorElement.focus();
+                        }
+                      }
+                      else{
+                        handleSubmit()
+                      }
+                    }}>
                       <div className="space-y-3">
                         <CustomTextField
                           type="text"
