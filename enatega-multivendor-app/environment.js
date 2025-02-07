@@ -9,7 +9,7 @@ import * as Updates from 'expo-updates'
 
 const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
-
+// console.log("configuration?.googleApiKey=>>", configuration?.googleApiKey)
   if (env === 'production' || env === 'staging') {
     return {
       GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',

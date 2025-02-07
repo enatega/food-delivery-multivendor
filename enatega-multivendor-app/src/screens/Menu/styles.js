@@ -11,7 +11,8 @@ const styles = (props = null) =>
     container: { flex: 1, gap: 8, backgroundColor: props != null ? props?.themeBackground : '#FFF' },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
-      ...alignment.PBlarge
+      ...alignment.PBlarge,
+      
     },
     searchbar: {
       ...alignment.PBmedium,
@@ -182,6 +183,7 @@ const styles = (props = null) =>
       borderTopRightRadius: 8
     },
     header: {
+      
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',

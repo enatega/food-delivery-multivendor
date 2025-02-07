@@ -55,6 +55,7 @@ import PickUp from '../../components/Pickup'
 import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
 import { isOpen } from '../../utils/customFunctions'
 import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
+import { useCallback } from "react";
 
 // Constants
 const PLACEORDER = gql`
@@ -70,6 +71,11 @@ const { height: HEIGHT } = Dimensions.get('window')
 
 function Checkout(props) {
   const Analytics = analytics()
+  useFocusEffect(
+    useCallback(() => {
+      Alert.alert( "Server is currently unavailable. Please try again later.");
+    }, []))
+
 
   const configuration = useContext(ConfigurationContext)
   const {
@@ -129,6 +135,9 @@ function Checkout(props) {
       modal.open()
     }
   }
+
+
+
   const onModalClose = (modalRef) => {
     const modal = modalRef.current
     if (modal) {
@@ -460,6 +469,15 @@ function Checkout(props) {
       FlashMessage({
         message: error.message
       })
+    }
+    if (error?.networkError) {
+      // console.log(`Network Error: ${networkError.message}`);
+      if (error?.networkError.statusCode === 502) {
+        FlashMessage({
+          message: "Server is currently unavailable. Please try again later."
+        })
+        
+      }
     }
   }
 

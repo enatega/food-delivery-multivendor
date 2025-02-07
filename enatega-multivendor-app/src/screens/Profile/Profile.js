@@ -3,7 +3,8 @@ import React, {
   useContext,
   useLayoutEffect,
   useEffect,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react'
 import {
   View,
@@ -15,6 +16,7 @@ import {
   ScrollView,
   SafeAreaView
 } from 'react-native'
+
 import gql from 'graphql-tag'
 import { scale, verticalScale } from '../../utils/scaling'
 import { FavouriteRestaurant } from '../../apollo/queries'
@@ -65,7 +67,7 @@ function Profile(props) {
     return orders.filter((o) => orderStatusActive.includes(o.orderStatus))
   }, [orders])
 
-  const { data, loading } = useQuery(RESTAURANTS, {
+  const { data, loading, refetch } = useQuery(RESTAURANTS, {
     variables: {
       longitude: location.longitude || null,
       latitude: location.latitude || null
@@ -75,6 +77,12 @@ function Profile(props) {
   const { orderLoading, orderData } = useHomeRestaurants()
 
   const recentOrderRestaurantsData = orderData?.recentOrderRestaurants ?? []
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {

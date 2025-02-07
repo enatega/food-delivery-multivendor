@@ -54,6 +54,9 @@ import MainModalize from '../../components/Main/Modalize/MainModalize'
 import CollectionCard from '../../components/CollectionCard/CollectionCard'
 import { sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import { IMAGE_LINK } from '../../utils/constants'
+import useGeocoding from '../../ui/hooks/useGeocoding'
+
+
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -69,6 +72,7 @@ const GET_CUISINES = gql`
 `
 
 function Main(props) {
+
   const Analytics = analytics()
 
   const { t, i18n } = useTranslation()
@@ -84,6 +88,7 @@ function Main(props) {
     ...theme[themeContext.ThemeValue]
   }
   const { getCurrentLocation } = useLocation()
+  const { getAddress } = useGeocoding();
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const { data, loading, error,refetch: refetchRestaurants} = useQuery(RESTAURANTS, {
@@ -175,49 +180,105 @@ function Main(props) {
     modalRef.current.close()
   }
 
-  const setCurrentLocation = async () => {
-    setBusy(true)
-    const { error, coords } = await getCurrentLocation()
-    console.log("coords",coords)
-    console.log("coords",coords.latitude)
-    console.log("coords",coords.longitude)
-    if (!coords || !coords.latitude || !coords.longitude) {
-      console.error("Invalid coordinates:", coords);
-      return;
-    }
-    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          console.log('Reverse geocoding request failed:', data.error)
-        } else {
-          console.log('data->>>>',data)
-          setBusy(false)
-          let address = data.display_name
-          console.log('address=>>', address)
-          if (address.length > 21) {
-            address = address.substring(0, 21) + '...'
-          }
+  // const setCurrentLocation = async () => {
+  //   onsole.log("Fetching current location...");
+  //   setBusy(true)
+  //   const { error, coords } = await getCurrentLocation()
+  //   console.log("getCurrentLocation result:", { error, coords });
+  //   console.log("coords",coords)
+  //   console.log("coords",coords.latitude)
+  //   console.log("coords",coords.longitude)
+  //   if (!coords || !coords.latitude || !coords.longitude) {
+  //     console.error("Invalid coordinates:", coords);
+  //     setBusy(false);
+  //     return;
+  //   }
+  //   console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
+  //   // const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_KEY}&language=en`
 
-          if (error) navigation.navigate('SelectLocation')
-          else {
-            modalRef.current.close()
-            setLocation({
-              label: 'currentLocation',
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              deliveryAddress: address
-            })
-            setBusy(false)
-          }
-          console.log(address)
+  //   const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
+  //   fetch(apiUrl)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data.error) {
+  //         console.log('Reverse geocoding request failed:', data.error)
+  //       } else {
+  //         console.log('data->>>>',data)
+  //         setBusy(false)
+  //         let address = data.display_name
+  //         console.log('address=>>', address)
+  //         if (address.length > 21) {
+  //           address = address.substring(0, 21) + '...'
+  //         }
+
+  //         if (error) navigation.navigate('SelectLocation')
+  //         else {
+  //           modalRef.current.close()
+  //           setLocation({
+  //             label: 'currentLocation',
+  //             latitude: coords.latitude,
+  //             longitude: coords.longitude,
+  //             deliveryAddress: address
+  //           })
+  //           setBusy(false)
+  //         }
+  //         console.log(address)
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching reverse geocoding data:', error)
+  //     })
+  // }
+  const setCurrentLocation = async () => {
+      console.log("Fetching current location...");
+      setBusy(true);
+      
+      const { error, coords } = await getCurrentLocation();
+      console.log("getCurrentLocation result:", { error, coords });
+      console.log("coords", coords);
+      console.log("coords", coords.latitude);
+      console.log("coords", coords.longitude);
+  
+      if (!coords || !coords.latitude || !coords.longitude) {
+        console.error("Invalid coordinates:", coords);
+        setBusy(false);
+        return;
+      }
+  
+      console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
+      
+       // Get the address function from the hook
+  
+      try {
+        // Fetch the address using the geocoding hook
+        const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude);
+  
+        console.log('Formatted address:', formattedAddress);
+        console.log('City:', city);
+  
+        let address = formattedAddress || 'Unknown Address';
+  
+        if (address.length > 21) {
+          address = address.substring(0, 21) + '...';
         }
-      })
-      .catch((error) => {
-        console.error('Error fetching reverse geocoding data:', error)
-      })
-  }
+  
+        if (error) {
+          navigation.navigate('SelectLocation');
+        } else {
+          modalRef.current?.close();
+          setLocation({
+            label: 'currentLocation',
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            deliveryAddress: address
+          });
+          setBusy(false);
+        }
+      } catch (fetchError) {
+        console.error('Error fetching address using Google Maps API:', fetchError.message);
+      }
+    };
+  
 
   const modalHeader = () => (
     <View style={[styles().addNewAddressbtn]}>

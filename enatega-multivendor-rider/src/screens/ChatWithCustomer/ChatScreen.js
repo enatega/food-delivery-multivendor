@@ -62,7 +62,7 @@ const ChatScreen = ({ navigation, route }) => {
 
   const renderChatEmpty = props => {
     return (
-      <View>
+      <View >
         <TextDefault
           style={styles.emptyChat}
           textColor={colors.fontSecondColor}
