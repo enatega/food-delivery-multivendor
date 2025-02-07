@@ -36,6 +36,10 @@ const getStoredLanguage = async () => {
     fallbackLng: 'en',
     resources: languageResources
   });
+
+  // Remove AsyncStorage details so that languageModal show the system selected language
+  AsyncStorage.removeItem('enatega-language');
+  AsyncStorage.removeItem('enatega-language-name');
 };
 
 getStoredLanguage()

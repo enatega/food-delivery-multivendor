@@ -652,5 +652,7 @@ export const en = {
   OrderPriceValidation: "Your order amount is below the restaurant's minimum order requirement. Please add more items to your cart.",
   "Can't delivery to this address": "Can't delivery to this address",
   "Currently Restaurant is not delivering to your selected address": "Currently Restaurant is not delivering to your selected address",
-  "Select another one": "Select another one"
+  "Select another one": "Select another one",
+  "noMatchingResults": "No matching results",
+  "noMatchingResultsDesc": "Try adjusting your filters or explore other options to find what you're looking for.",
 }

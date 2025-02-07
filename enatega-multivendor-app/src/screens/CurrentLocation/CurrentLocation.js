@@ -47,6 +47,11 @@ export default function CurrentLocation() {
 
   const { cities, setLocation } = useContext(LocationContext)
 
+  const filterCities = () => {
+    let newCities = cities?.filter((city) => !isNaN(city.latitude) && !isNaN(city.longitude))
+    return newCities
+  }
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
@@ -104,8 +109,7 @@ export default function CurrentLocation() {
   
       setIsCheckingZone(true)
 
-      const matchingCity = checkLocationInCities(currentLocation, cities)
-      // console.log("Matching City:", matchingCity);
+      const matchingCity = checkLocationInCities(currentLocation, filterCities())
       if (matchingCity) {
         try {
           const response = await getAddress(
@@ -166,16 +170,6 @@ export default function CurrentLocation() {
     }, 100)
   }
 
-  useEffect(() => {
-    async function checkLanguage() {
-      const lang = await AsyncStorage.getItem('enatega-language')
-      if (!lang) {
-        setModalVisible(true)
-      }
-    }
-    checkLanguage()
-  }, [])
-
   return (
     <>
       <View
@@ -201,41 +195,35 @@ export default function CurrentLocation() {
                 />
               )}
 
-            {cities.map((city) => {
-              const latitude = parseFloat(city.latitude);
-              const longitude = parseFloat(city.longitude);
-            
-              if (isNaN(latitude) || isNaN(longitude)) {
-                // console.warn(`Skipping marker for city: ${city.name} due to invalid coordinates`);
-                return null; 
-              }
-            
-              return (
-                <React.Fragment key={city.id}>
+
+              {filterCities()?.map((city) => (
+                <React.Fragment key={city?.id}>
                   <CustomMarkerWithLabel
                     coordinate={{
-                      latitude: latitude,
-                      longitude: longitude,
+                      latitude: city?.latitude,
+                      longitude: city?.longitude
                     }}
-                    label={city.name}
+                    label={city?.name}
                     icon={markerIcon}
                     currentTheme={currentTheme}
                     onPress={() =>
                       handleMarkerPress({
-                        latitude: latitude,
-                        longitude: longitude,
+                        latitude: city?.latitude,
+                        longitude: city?.longitude
                       })
                     }
                   />
             
                   {city?.location &&
-                    city?.location.coordinates &&
-                    city.location.coordinates[0] && (
+                    city?.location?.coordinates &&
+                    city?.location?.coordinates[0] && (
                       <Polygon
-                        coordinates={city.location.coordinates[0].map((coord) => ({
-                          latitude: coord[1],
-                          longitude: coord[0],
-                        }))}
+                        coordinates={city?.location?.coordinates[0].map(
+                          (coord) => ({
+                            latitude: coord[1],
+                            longitude: coord[0]
+                          })
+                        )}
                         strokeColor={currentTheme.orderComplete}
                         fillColor={currentTheme.radiusFill}
                         strokeWidth={2}

@@ -36,7 +36,7 @@ export const ROUTES = [
     route: '/general/vendors',
   },
   {
-    text: 'Restaurants',
+    text: 'Stores',
     route: '/general/stores',
   },
   {

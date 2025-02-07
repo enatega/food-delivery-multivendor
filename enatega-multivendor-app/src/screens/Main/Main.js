@@ -55,7 +55,7 @@ import CollectionCard from '../../components/CollectionCard/CollectionCard'
 import { sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import { IMAGE_LINK } from '../../utils/constants'
 import useGeocoding from '../../ui/hooks/useGeocoding'
-
+import ForceUpdate from '../../components/Update/ForceUpdate'
 
 
 const RESTAURANTS = gql`
@@ -575,6 +575,8 @@ function Main(props) {
                   </View>
                 </ScrollView>
               </View>
+        <ForceUpdate />
+
             </View>
           </View>
           <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
