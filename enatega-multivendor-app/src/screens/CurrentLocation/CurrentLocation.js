@@ -230,8 +230,8 @@ export default function CurrentLocation() {
                       />
                     )}
                 </React.Fragment>
-              );
-            })}
+              )
+            )}
             
             </MapView>
           </View>
