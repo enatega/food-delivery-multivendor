@@ -647,6 +647,9 @@ loginRequired: 'مطلوب تسجيل الدخول',
   OrderPriceValidation: "قيمة طلبك أقل من الحد الأدنى للطلب الخاص بالمطعم. يرجى إضافة المزيد من العناصر إلى سلة التسوق.",
   "Can't delivery to this address": "لا يمكن التوصيل إلى هذا العنوان",
   "Currently Restaurant is not delivering to your selected address": "المطعم لا يقدم خدمة التوصيل إلى العنوان الذي اخترته حاليًا",
-  "Select another one": "اختر عنوانًا آخر"
+  "Select another one": "اختر عنوانًا آخر",
+  "noMatchingResults": "لا توجد نتائج مطابقة",
+  "noMatchingResultsDesc": "حاول تعديل عوامل التصفية أو استكشاف خيارات أخرى للعثور على ما تبحث عنه."
+
 
 }

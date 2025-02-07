@@ -625,5 +625,7 @@ welcomeText: '欢迎来到Enatega',
     "Currently Restaurant is not delivering to your selected address": "餐厅当前无法配送到您选择的地址",
   "Select another one": "选择其他地址",
   isRTL: false,
+  "noMatchingResults": "没有匹配的结果",
+  "noMatchingResultsDesc": "尝试调整筛选条件或探索其他选项，以找到您要寻找的内容。"
 
 }
