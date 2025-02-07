@@ -3,12 +3,13 @@ import { Dimensions, View, Platform } from 'react-native'
 import { textStyles, scale, colors } from '../utilities'
 import { Icon } from 'react-native-elements'
 import {useTranslation} from 'react-i18next'
+import { color } from 'react-native-elements/dist/helpers'
 
 const { height } = Dimensions.get('window')
 const screenOptions = props => ({
   headerShown: false
 })
-const tabIcon = route => ({
+const tabIcon = (route, drawerStatus) => ({
   headerShown: false,
   keyboardHidesTabBar: true,
   tabBarActiveTintColor: colors.green,
@@ -21,7 +22,8 @@ const tabIcon = route => ({
     paddingBottom: Platform.OS === 'android' ? 8 : 8,
     ...textStyles.Bold,
     ...textStyles.Center,
-    ...textStyles.Small
+    ...textStyles.Small,
+    color: (drawerStatus === 'open' && route.name === "Profile") ? colors.green : colors.white
   },
   tabBarStyle: {
     position: 'absolute',
@@ -29,19 +31,27 @@ const tabIcon = route => ({
     backgroundColor: '#2c2c2c',
     borderColor: 'black',
     borderTopLeftRadius: 15,
-    borderTopRightRadius: 15
+    borderTopRightRadius: 15,
   },
-  tabBarIcon: ({ color, size }) => {
+  tabBarIcon: ({ color, size, focused}) => {
     let iconName
+
     const {t} = useTranslation()
     if (route.name === t('titleHome')) {
       iconName = 'home'
+      // make the home icon white when the profile drawer is open or it's not in focus
+      color = (drawerStatus == 'open' || !focused) ? colors.white : colors.green; 
     } else if (route.name === t('titleProfile')) {
       iconName = 'user'
+      // make the profile icon green when the profile drawer is open, otherwise white
+      color = drawerStatus === 'open' ? colors.green : colors.white;
     }
     else if (route.name === 'Language') {
       iconName = 'language'
+      // make the language icon white when the profile drawer is open or it's not in focus
+      color = (drawerStatus == 'open' || !focused) ? colors.white : colors.green;
     }
+
     return (
       <View style={{ paddingTop: scale(10), paddingHorizontal: scale(12) }}>
         <Icon type="font-awesome" color={color} name={iconName} size={30} />
@@ -49,6 +59,8 @@ const tabIcon = route => ({
     )
   }
 })
+
+
 const tabOptions = () => ({
   keyboardHidesTabBar: true,
   activeTintColor: colors.iconPink,

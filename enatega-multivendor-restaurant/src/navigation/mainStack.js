@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import * as Notifications from 'expo-notifications'
 import { Restaurant, SoundContextProvider } from '../ui/context'
 import { OrderDetailScreen } from '../screens/OrderDetail'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createDrawerNavigator, useDrawerStatus } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { OrdersScreen } from '../screens/Orders'
@@ -12,7 +12,7 @@ import { screenOptions, tabIcon } from './screenOptions'
 import { colors } from '../utilities/colors'
 import { gql, useApolloClient } from '@apollo/client'
 import { orders } from '../apollo'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, DrawerActions } from '@react-navigation/native'
 import { SelectLanguage } from '../screens/Setting'
 import moment from 'moment'
 import {useTranslation} from 'react-i18next'
@@ -100,28 +100,51 @@ function DrawerNavigator() {
         }
       }}
       drawerContent={props => <SideBar {...props} />}>
-      <Drawer.Screen name="ProfileDrawer" component={TabNavigator} />
+      <Drawer.Screen
+        name="ProfileDrawer"
+        component={TabNavigator}
+      />
     </Drawer.Navigator>
   )
 }
-function TabNavigator() {
+
+function TabNavigator({route}) {
   const {t} = useTranslation()
+  const navigation = useNavigation();
+  const drawerStatus = useDrawerStatus();
+   
+
+  // toggleDrawer function
+  const toggleDrawer = () => {
+    if (drawerStatus == 'open') {
+      navigation.closeDrawer();
+    } else {
+      navigation.openDrawer();
+    }
+  };
+  
+  // Add event listeners to track drawer state changes for debugging purposes
+  useEffect(() => {
+    console.log("DRAWER STATE AFTER UPDATE: ", drawerStatus);
+  });  
+
   return (
     <Tabs.Navigator
       initialRouteName={t('titleHome')}
-      screenOptions={({ route }) => tabIcon(route)}
-      tabBarLabelStyle={{
-        color: colors.green 
+      screenOptions={({ route }) => {
+        return tabIcon(route, drawerStatus);
       }}>
       <Tabs.Screen
         name={t('titleProfile')}
         component={SideBar}
         listeners={({ navigation }) => ({
           tabPress: e => {
-            e.preventDefault()
-
-            navigation.openDrawer()
-          }
+            e.preventDefault(); // Prevent tab switch to open the drawer
+            // Toggle the drawer on "Profile" tab press
+            toggleDrawer();
+            
+          },
+          
         })}
       />
       <Tabs.Screen name={t('titleHome')} component={StackNavigator} />
@@ -133,6 +156,8 @@ function TabNavigator() {
     </Tabs.Navigator>
   )
 }
+
+
 function StackNavigator() {
   return (
     <Stack.Navigator initialRouteName="Orders" screenOptions={screenOptions()}>
