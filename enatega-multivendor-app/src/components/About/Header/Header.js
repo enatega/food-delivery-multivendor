@@ -39,7 +39,7 @@ function ImageHeader(props) {
         </TouchableOpacity>
         <View>
           <TextDefault
-            H4
+            H5
             bolder
             Center
             textColor={currentTheme.fontThirdColor}
