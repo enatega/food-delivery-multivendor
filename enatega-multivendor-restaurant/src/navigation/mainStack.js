@@ -139,8 +139,9 @@ function TabNavigator({route}) {
         component={SideBar}
         listeners={({ navigation }) => ({
           tabPress: e => {
-            e.preventDefault(); // Prevent tab switch to open the drawer
+            e.preventDefault(); // Prevents tab switch to open the drawer
             // Toggle the drawer on "Profile" tab press
+            // open the tab without actually opening it
             toggleDrawer();
             
           },

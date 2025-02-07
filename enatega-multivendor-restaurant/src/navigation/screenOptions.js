@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, View, Platform } from 'react-native'
+import { Dimensions, View, Platform, Text } from 'react-native'
 import { textStyles, scale, colors } from '../utilities'
 import { Icon } from 'react-native-elements'
 import {useTranslation} from 'react-i18next'
@@ -18,12 +18,28 @@ const tabIcon = (route, drawerStatus) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  tabBarLabel: ({ focused, color }) => {
+    // Dynamically set the label color based on drawerStatus and route name
+    const labelColor = (drawerStatus === 'open' && (route.name === "Profile"))
+      ? colors.green
+      : focused
+      ? colors.green
+      : colors.white;
+
+    return (
+      <Text style={{ color: labelColor, fontSize: 12, paddingBottom: Platform.OS === 'android' ? 8 : 8,
+        ...textStyles.Bold,
+        ...textStyles.Center,
+        ...textStyles.Small,}}>
+        {route.name}
+      </Text>
+    );
+  },
   tabBarLabelStyle: {
     paddingBottom: Platform.OS === 'android' ? 8 : 8,
     ...textStyles.Bold,
     ...textStyles.Center,
-    ...textStyles.Small,
-    color: (drawerStatus === 'open' && route.name === "Profile") ? colors.green : colors.white
+    ...textStyles.Small
   },
   tabBarStyle: {
     position: 'absolute',
