@@ -657,4 +657,7 @@ loginRequired: 'Connexion requise',
     "Currently Restaurant is not delivering to your selected address": "Le restaurant ne livre pas actuellement à l'adresse sélectionnée",
   "Select another one": "Sélectionnez une autre",
   isRTL: false,
+  "noMatchingResults": "Aucun résultat correspondant",
+  "noMatchingResultsDesc": "Essayez d'ajuster vos filtres ou d'explorer d'autres options pour trouver ce que vous recherchez."
+
 }

@@ -112,6 +112,7 @@ function Menu({ route, props }) {
   }
   const { getCurrentLocation } = useLocation()
   const locationData = location
+  const [filterApplied, setfilterApplied] = useState(false)
 
   const {
     data,
@@ -193,6 +194,7 @@ function Menu({ route, props }) {
         item?.cuisines?.includes(collection)
       )
       setRestaurantData(filteredData)
+      setfilterApplied(true)
     }
   }, [collection, route, allData])
 
@@ -260,7 +262,6 @@ function Menu({ route, props }) {
       return filterCusinies() ?? []
     }
   }, [routeData, allCuisines])
-  console.log("route name : ",routeData?.name)
 
   const setCurrentLocation = async () => {
     setBusy(true)
@@ -335,10 +336,10 @@ function Menu({ route, props }) {
         <View style={styles().emptyViewContainer}>
           <View style={styles(currentTheme).emptyViewBox}>
             <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
-              {t('notAvailableinYourArea')}
+              {!filterApplied ? t('notAvailableinYourArea') : t('noMatchingResults')}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontMainColor} center>
-              {emptyViewDesc}
+              {!filterApplied ? emptyViewDesc : t('noMatchingResultsDesc') }
             </TextDefault>
           </View>
         </View>
@@ -484,6 +485,7 @@ const onPressCollection = (collection, index) => {
     // If the same collection is clicked again, deselect it
     setActiveCollection(null);
     setRestaurantData(allData); // Reset to show all data
+    setfilterApplied(false);
   } else {
    
     setActiveCollection(collection.name);
@@ -493,6 +495,7 @@ const onPressCollection = (collection, index) => {
       item?.cuisines?.includes(collection.name)
     );
     setRestaurantData(filteredData);
+    setfilterApplied(true)
     
     flatListRef.current.scrollToIndex({
       index: currentIndex,
@@ -587,6 +590,16 @@ const onPressCollection = (collection, index) => {
     // Set filtered data
     setRestaurantData(filteredData)
     filtersModalRef.current.close()
+
+    // **Check if any filters are applied**
+  const anyFilterSelected =
+  ratings?.selected?.length > 0 ||
+  sort?.selected?.length > 0 ||
+  offers?.selected?.length > 0 ||
+  cuisines?.selected?.length > 0
+
+    setfilterApplied(anyFilterSelected);
+    
   }
 
   return (

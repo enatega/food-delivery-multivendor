@@ -660,5 +660,7 @@ loginRequired: 'Anmeldung erforderlich',
   "Currently Restaurant is not delivering to your selected address": "Das Restaurant liefert derzeit nicht an die ausgewählte Adresse",
   "Select another one": "Wählen Sie eine andere Adresse",
   isRTL: false,
+  "noMatchingResults": "Keine passenden Ergebnisse",
+  "noMatchingResultsDesc": "Versuche, deine Filter anzupassen oder andere Optionen zu erkunden, um das zu finden, was du suchst."
 
 }

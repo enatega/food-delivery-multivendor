@@ -54,6 +54,7 @@ import MainModalize from '../../components/Main/Modalize/MainModalize'
 import CollectionCard from '../../components/CollectionCard/CollectionCard'
 import { sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import { IMAGE_LINK } from '../../utils/constants'
+import ForceUpdate from '../../components/Update/ForceUpdate'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -505,6 +506,8 @@ function Main(props) {
                   </View>
                 </ScrollView>
               </View>
+        <ForceUpdate />
+
             </View>
           </View>
           <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />

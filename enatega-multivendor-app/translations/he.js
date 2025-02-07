@@ -636,5 +636,8 @@ loginRequired: 'נדרש התחברות',
   OrderPriceValidation: "סכום ההזמנה שלך נמוך מהמינימום הנדרש על ידי המסעדה. אנא הוסף פריטים נוספים לעגלת הקניות שלך.",
   "Can't delivery to this address": "לא ניתן לשלוח לכתובת זו",
     "Currently Restaurant is not delivering to your selected address": "המסעדה אינה מבצעת משלוחים לכתובת שנבחרה כרגע",
-    "Select another one": "בחר כתובת אחרת"
+  "Select another one": "בחר כתובת אחרת",
+  "noMatchingResults": "אין תוצאות תואמות",
+  "noMatchingResultsDesc": "נסה להתאים את המסננים שלך או לחפש אפשרויות נוספות כדי למצוא את מה שאתה מחפש."
+
 }
