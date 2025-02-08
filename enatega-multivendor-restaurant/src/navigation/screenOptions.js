@@ -20,8 +20,13 @@ const tabIcon = (route, drawerStatus) => ({
   },
   tabBarLabel: ({ focused, color }) => {
     // Dynamically set the label color based on drawerStatus and route name
-    const labelColor = (drawerStatus === 'open' && (route.name === "Profile"))
+    const {t} = useTranslation()
+    console.log('Route Name:', route.name); // Check the actual route name
+  console.log('Language Translation:', t('language'));
+    const labelColor = (drawerStatus === 'open' && (route.name === 'Profile'))
       ? colors.green
+      : (drawerStatus === 'open' && (route.name === 'Home' || route.name === 'Language'))
+      ? colors.white 
       : focused
       ? colors.green
       : colors.white;
