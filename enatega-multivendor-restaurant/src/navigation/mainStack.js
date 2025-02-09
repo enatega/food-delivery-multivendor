@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import * as Notifications from 'expo-notifications'
 import { Restaurant, SoundContextProvider } from '../ui/context'
 import { OrderDetailScreen } from '../screens/OrderDetail'
@@ -123,11 +123,6 @@ function TabNavigator({route}) {
     }
   };
   
-  // Add event listeners to track drawer state changes for debugging purposes
-  useEffect(() => {
-    console.log("DRAWER STATE AFTER UPDATE: ", drawerStatus);
-  });  
-
   return (
     <Tabs.Navigator
       initialRouteName={t('titleHome')}
@@ -139,7 +134,8 @@ function TabNavigator({route}) {
         component={SideBar}
         listeners={({ navigation }) => ({
           tabPress: e => {
-            e.preventDefault(); // Prevent tab switch to open the drawer
+            e.preventDefault(); // This prevents tab functionalities
+
             // Toggle the drawer on "Profile" tab press
             toggleDrawer();
             
