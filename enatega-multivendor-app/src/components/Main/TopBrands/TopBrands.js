@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, FlatList, Text, Image } from 'react-native'
+import { View, FlatList, Text, Image, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -7,7 +7,6 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { topRatedVendorsInfo } from '../../../apollo/queries'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
@@ -15,7 +14,7 @@ import { useNavigation } from '@react-navigation/native'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFunctions'
-
+import ButtonSeeAll from '../../Button/ButtonSeeAll'
 
 function TopBrands(props) {
   const { t, i18n } = useTranslation()
@@ -30,8 +29,6 @@ function TopBrands(props) {
       longitude: location?.longitude
     }
   })
-  // console.log('GROCERY => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'grocery')?.length)
-  // console.log('RESTAURANTS => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'restaurant')?.length)
 
   const RenderItem = ({ item }) => (
     <TouchableOpacity
@@ -78,7 +75,6 @@ function TopBrands(props) {
     (item) => item.shopType === 'grocery'
   )
 
-
   return (
     <View style={styles().mainContainer}>
 
@@ -93,20 +89,14 @@ function TopBrands(props) {
             >
               {t('Our brands')}
             </TextDefault>
-            <TouchableOpacity
-              style={styles(currentTheme).seeAllBtn}
-              activeOpacity={0.8}
+            <ButtonSeeAll
               onPress={() => {
                 navigation.navigate('Menu', {
                   selectedType: '',
                   queryType: 'topBrands'
                 })
               }}
-            >
-              <TextDefault H5 bolder textColor={currentTheme.main}>
-                {t('SeeAll')}
-              </TextDefault>
-            </TouchableOpacity>
+            />
           </View>
           <View style={{ ...alignment.PRsmall }}>
             <FlatList
@@ -136,20 +126,14 @@ function TopBrands(props) {
             >
               {t('Top Restaurant Brands')}
             </TextDefault>
-            <TouchableOpacity
-              style={styles(currentTheme).seeAllBtn}
-              activeOpacity={0.8}
+            <ButtonSeeAll
               onPress={() => {
                 navigation.navigate('Menu', {
                   selectedType: 'restaurant',
                   queryType: 'topBrands'
                 })
               }}
-            >
-              <TextDefault H5 bolder textColor={currentTheme.main}>
-                {t('SeeAll')}
-              </TextDefault>
-            </TouchableOpacity>
+            />
           </View>
           <View style={{ ...alignment.PRsmall }}>
             <FlatList
@@ -180,20 +164,14 @@ function TopBrands(props) {
             >
               {t('Top Grocery Brands')}
             </TextDefault>
-            <TouchableOpacity
-              style={styles(currentTheme).seeAllBtn}
-              activeOpacity={0.8}
+            <ButtonSeeAll
               onPress={() => {
                 navigation.navigate('Menu', {
                   selectedType: 'grocery',
                   queryType: 'topBrands'
                 })
               }}
-            >
-              <TextDefault H5 bolder textColor={currentTheme.main}>
-                {t('SeeAll')}
-              </TextDefault>
-            </TouchableOpacity>
+            />
           </View>
           <View style={{ ...alignment.PRsmall }}>
             <FlatList

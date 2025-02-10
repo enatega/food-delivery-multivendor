@@ -13,6 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { isOpen } from '../../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
+import ButtonSeeAll from '../../Button/ButtonSeeAll'
 
 const ICONS = {
   grocery: 'local-grocery-store',
@@ -55,20 +56,14 @@ function MainRestaurantCard(props) {
               />
             )}
           </View>
-          <Ripple
-            style={styles(currentTheme).seeAllBtn}
-            activeOpacity={0.8}
+          <ButtonSeeAll
             onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: props?.selectedType ?? 'restaurant',
                 queryType: props?.queryType ?? 'restaurant'
               })
             }}
-          >
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-            </TextDefault>
-          </Ripple>
+          />
         </View>
         <FlatList
           style={styles().offerScroll}

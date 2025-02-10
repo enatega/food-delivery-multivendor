@@ -16,6 +16,7 @@ import {
   SafeAreaView
 } from 'react-native'
 import gql from 'graphql-tag'
+import ButtonSeeAll from '../../components/Button/ButtonSeeAll'
 import { scale, verticalScale } from '../../utils/scaling'
 import { FavouriteRestaurant } from '../../apollo/queries'
 import ChangePassword from './ChangePassword'
@@ -201,19 +202,10 @@ function Profile(props) {
                           {t('YourFavourites')}
                         </TextDefault>
                       </View>
-                      <View>
-                        <TouchableOpacity
-                          style={styles(currentTheme).seeAll}
-                          onPress={() => navigation.navigate('Favourite')}
-                        >
-                          <TextDefault
-                            H5
-                            bolder
-                            textColor={currentTheme.newButtonText}
-                          >
-                            {t('SeeAll')}
-                          </TextDefault>
-                        </TouchableOpacity>
+                        <View>
+                          <ButtonSeeAll
+                            onPress={() => navigation.navigate('Favourite')}
+                          />
                       </View>
                     </View>
 

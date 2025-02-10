@@ -19,6 +19,7 @@ import {
   ScrollView,
   Dimensions
 } from 'react-native'
+import ButtonSeeAll from '../../components/Button/ButtonSeeAll'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
@@ -621,21 +622,15 @@ const onPressCollection = (collection, index) => {
                     {t('BrowseCategories')}
                   </TextDefault>
                 </View>
-                <Ripple
-                  style={styles(currentTheme).seeAllBtn}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    console.log("route name :", routeData?.name)
-                    navigation.navigate('Collection', {
-                      collectionType: routeData?.name,
-                      data: collectionData
-                    })
-                  }}
-                >
-                  <TextDefault H5 bolder textColor={currentTheme.main}>
-                    {t('SeeAll')}
-                  </TextDefault>
-                </Ripple>
+                <ButtonSeeAll
+                onPress={() => {
+                  console.log("route name :", routeData?.name)
+                  navigation.navigate('Collection', {
+                    collectionType: routeData?.name,
+                    data: collectionData
+                  })
+                }}
+              />
               </View>
               <FlatList ref={flatListRef} 
                 data={collectionData ?? []}
