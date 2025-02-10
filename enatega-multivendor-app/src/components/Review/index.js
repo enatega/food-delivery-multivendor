@@ -39,6 +39,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   }
   const client = useApolloClient()
   const [showSection, setShowSection] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState()
   const onSelectRating = (rating) => {
     if (!showSection) { setShowSection(true) }
@@ -53,9 +54,20 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
     fetchOrder()
   }, [orderId])
 
-  const onSubmit = () => {
-    mutate({variables: { order: orderId, description, rating: ratingRef.current }})
-  }
+  const onSubmit = async () => {
+    if (loading) return; 
+    setLoading(true); 
+  
+    try {
+      await mutate({
+        variables: { order: orderId, description, rating: ratingRef.current }
+      });
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    } finally {
+      setLoading(false); 
+    }
+  };
   return (
     <Modalize snapPoint={SNAP_HEIGHT} handlePosition='inside' ref={ref} withHandle={false} adjustToContentHeight modalStyle={{ borderWidth: StyleSheet.hairlineWidth }} onOverlayPress={onOverlayPress}>
       <View style={styles.container(theme)}>
@@ -106,8 +118,8 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
             style={styles.modalInput(theme)}
           />
           <Button text={t('submit')}
-            buttonProps={{ onPress: onSubmit }}
-            buttonStyles={{ borderRadius: 15, backgroundColor: theme.primary, margin: 10 }} textStyles={{ margin: 10, alignSelf: 'center' }}
+            buttonProps={{ onPress: onSubmit,disabled: loading }}
+            buttonStyles={{ borderRadius: 15, backgroundColor: theme.primary, margin: 10, opacity: loading ? 0.6 : 1, }} textStyles={{ margin: 10, alignSelf: 'center' }}
             textProps={{ H4: true, bold: true, textColor: theme.black }}/>
         </View>}
       </View>

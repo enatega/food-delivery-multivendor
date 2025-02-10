@@ -147,10 +147,28 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
           })
         }>
         <View style={styles(currentTheme).subContainer}>
+       
+          {(item.orderStatus =='CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') &&
+                 <View style={ {display:'flex',paddingBottom:10}}>
+                 <View style={{borderRadius:14,alignSelf: 'flex-end',backgroundColor:currentTheme.statusBgColor,color:'black',padding:8}}>       
+                   <TextDefault
+                    textColor='black'
+                    uppercase
+                    bolder
+                    numberOfLines={2}
+                    style={[styles(currentTheme).restaurantName]}
+                  isRTL>
+                    {item.orderStatus}
+                  </TextDefault>
+                  </View>
+                  </View>
+                  }
+         
           <View
             style={{
               flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
             }}>
+              
             <Image
               style={styles(currentTheme).restaurantImage}
               resizeMode="cover"
@@ -210,12 +228,14 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
               </TextDefault>
             </TouchableOpacity>
           </View>
+          {!(item.orderStatus === 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') && 
           <View style={styles(currentTheme).starsContainer}>
-            <View>
+            <View> 
               <TextDefault H5 bolder textColor={currentTheme.newFontcolor} isRTL>
                 {t('tapToRate')}
               </TextDefault>
             </View>
+             
             <View style={{ flexDirection: 'row', gap: 10 }}>
                 {[1, 2, 3, 4, 5].map(index => (
                   <StarIcon
@@ -227,6 +247,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                 ))}
             </View>
           </View>
+          }
         </View>
       </TouchableOpacity>
     </View>

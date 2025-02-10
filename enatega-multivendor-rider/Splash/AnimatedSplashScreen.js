@@ -45,6 +45,7 @@ export default function AnimatedSplashScreen({ children }) {
       // Load stuff
       await Promise.all([])
     } catch (e) {
+      console.error("Error hiding splash screen:", e);
       // Handle errors
     } finally {
       setAppReady(true)

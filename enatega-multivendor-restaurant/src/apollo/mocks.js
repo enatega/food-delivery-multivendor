@@ -57,7 +57,7 @@ export const mocks = [
         cancelOrder: {
           _id: '2',
           orderId: 'o-2',
-          orderStatus: 'CANCELLED',
+          orderStatus: 'CANCELLEDBYREST',
           rider: null
         }
       }

@@ -641,5 +641,7 @@ loginRequired: 'តម្រូវឲ្យចូល',
     "Currently Restaurant is not delivering to your selected address": "បច្ចុប្បន្នភោជនីយដ្ឋានមិនបានដឹកជញ្ជូនទៅអាសយដ្ឋានដែលបានជ្រើសរើស",
   "Select another one": "ជ្រើសរើសមួយផ្សេងទៀត",
   isRTL: false,
+  "noMatchingResults": "មិនមានលទ្ធផលដែលផ្គូផ្គង",
+  "noMatchingResultsDesc": "សូមព្យាយាមកែសម្រួលតម្រងរបស់អ្នក ឬរកមើលជម្រើសផ្សេងទៀត ដើម្បីរកអ្វីដែលអ្នកកំពុងស្វែងរក។"
 
 }

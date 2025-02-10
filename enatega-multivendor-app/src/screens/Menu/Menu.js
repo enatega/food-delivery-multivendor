@@ -56,12 +56,13 @@ import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import { Modalize } from 'react-native-modalize'
 import Filters from '../../components/Filter/FilterSlider'
+import NetInfo from "@react-native-community/netinfo";
 import {
   isOpen,
   sortRestaurantsByOpenStatus
 } from '../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
-
+import useGeocoding from '../../ui/hooks/useGeocoding'
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
@@ -93,12 +94,14 @@ function Menu({ route, props }) {
   const queryType = route.params?.queryType
   const collection = route.params?.collection
   const { t, i18n } = useTranslation()
+  const { getAddress } = useGeocoding();
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [filters, setFilters] = useState(FILTER_VALUES)
   const [activeCollection, setActiveCollection] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isConnected, setIsConnected] = useState(false);
   const modalRef = useRef(null)
   const filtersModalRef = useRef()
   const flatListRef = useRef(null);
@@ -106,12 +109,28 @@ function Menu({ route, props }) {
   const navigation = useNavigation()
   const routeData = useRoute()
   const themeContext = useContext(ThemeContext)
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      console.log(state.isConnected);
+      setIsConnected(state.isConnected);
+      if (state.isConnected) {
+        refetch();          
+        refetchCuisines();  
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
   const { getCurrentLocation } = useLocation()
+  
   const locationData = location
+  const [filterApplied, setfilterApplied] = useState(false)
 
   const {
     data,
@@ -125,12 +144,11 @@ function Menu({ route, props }) {
     subHeading,
     allData
   } = useRestaurantQueries(queryType, location, selectedType)
-
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
 
-  const { data: allCuisines } = useQuery(GET_CUISINES)
+  const { data: allCuisines ,refetch:refetchCuisines} = useQuery(GET_CUISINES)
 
   const {
     onScroll /* Event handler */,
@@ -145,7 +163,7 @@ function Menu({ route, props }) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle('dark-content') 
   })
   useEffect(() => {
     async function Track() {
@@ -193,6 +211,7 @@ function Menu({ route, props }) {
         item?.cuisines?.includes(collection)
       )
       setRestaurantData(filteredData)
+      setfilterApplied(true)
     }
   }, [collection, route, allData])
 
@@ -260,42 +279,90 @@ function Menu({ route, props }) {
       return filterCusinies() ?? []
     }
   }, [routeData, allCuisines])
-  console.log("route name : ",routeData?.name)
 
   const setCurrentLocation = async () => {
-    setBusy(true)
-    const { error, coords } = await getCurrentLocation()
+    console.log("Fetching current location...");
+    setBusy(true);
+    
+    const { error, coords } = await getCurrentLocation();
+    console.log("getCurrentLocation result:", { error, coords });
+    console.log("coords", coords);
+    console.log("coords", coords.latitude);
+    console.log("coords", coords.longitude);
 
-    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          console.log('Reverse geocoding request failed:', data.error)
-        } else {
-          let address = data.display_name
-          if (address.length > 21) {
-            address = address.substring(0, 21) + '...'
-          }
+    if (!coords || !coords.latitude || !coords.longitude) {
+      console.error("Invalid coordinates:", coords);
+      setBusy(false);
+      return;
+    }
 
-          if (error) navigation.navigate('SelectLocation')
-          else {
-            modalRef.current.close()
-            setLocation({
-              label: 'currentLocation',
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              deliveryAddress: address
-            })
-            setBusy(false)
-          }
-          console.log(address)
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching reverse geocoding data:', error)
-      })
-  }
+    console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
+    
+     // Get the address function from the hook
+
+    try {
+      // Fetch the address using the geocoding hook
+      const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude);
+
+      console.log('Formatted address:', formattedAddress);
+      console.log('City:', city);
+
+      let address = formattedAddress || 'Unknown Address';
+
+      if (address.length > 21) {
+        address = address.substring(0, 21) + '...';
+      }
+
+      if (error) {
+        navigation.navigate('SelectLocation');
+      } else {
+        modalRef.current?.close();
+        setLocation({
+          label: 'currentLocation',
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          deliveryAddress: address
+        });
+        setBusy(false);
+      }
+    } catch (fetchError) {
+      console.error('Error fetching address using Google Maps API:', fetchError.message);
+    }
+  };
+  // const setCurrentLocation = async () => {
+  //   setBusy(true)
+  //   const { error, coords } = await getCurrentLocation()
+
+  //   const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
+  //   fetch(apiUrl)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data.error) {
+  //         console.log('Reverse geocoding request failed:', data.error)
+  //       } else {
+  //         let address = data.display_name
+  //         if (address.length > 21) {
+  //           address = address.substring(0, 21) + '...'
+  //         }
+
+  //         if (error) navigation.navigate('SelectLocation')
+  //         else {
+  //           modalRef.current.close()
+  //           setLocation({
+  //             label: 'currentLocation',
+  //             latitude: coords.latitude,
+  //             longitude: coords.longitude,
+  //             deliveryAddress: address
+  //           })
+  //           setBusy(false)
+  //         }
+  //         console.log(address)
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       // console.error('Error fetching reverse geocoding data:', error)
+  //     })
+  // }
 
   const modalHeader = () => (
     <View style={[styles().addNewAddressbtn]}>
@@ -335,10 +402,10 @@ function Menu({ route, props }) {
         <View style={styles().emptyViewContainer}>
           <View style={styles(currentTheme).emptyViewBox}>
             <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
-              {t('notAvailableinYourArea')}
+              {!filterApplied ? t('notAvailableinYourArea') : t('noMatchingResults')}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontMainColor} center>
-              {emptyViewDesc}
+              {!filterApplied ? emptyViewDesc : t('noMatchingResultsDesc') }
             </TextDefault>
           </View>
         </View>
@@ -426,7 +493,9 @@ function Menu({ route, props }) {
     )
   }
 
-  if (error) return <ErrorView />
+  if (!isConnected) return <ErrorView />
+  if (error ) return <ErrorView />
+ 
 
   if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
@@ -454,16 +523,7 @@ function Menu({ route, props }) {
 
   const extractRating = (ratingString) => parseInt(ratingString)
 
-  // const onPressCollection = (collection) => {
-  //   setActiveCollection(collection.name)
-  //   const tempData = [...allData]
-  //   const filteredData = tempData?.filter((item) =>
-  //     item?.cuisines?.includes(collection.name)
-  //   )
-  //   setRestaurantData(filteredData)
-  //   // setActiveCollection(null)
-  // }
-// });
+
 // const onPressCollection = (collection) => {
 //   if (activeCollection === collection.name) {
 //     // If the same collection is clicked again, deselect it
@@ -480,10 +540,16 @@ function Menu({ route, props }) {
 //   }
 // }
 const onPressCollection = (collection, index) => {
+  flatListRef.current.scrollToIndex({
+    index: index,
+     animated:true,
+     
+  });
   if (activeCollection === collection.name) {
     // If the same collection is clicked again, deselect it
     setActiveCollection(null);
     setRestaurantData(allData); // Reset to show all data
+    setfilterApplied(false);
   } else {
    
     setActiveCollection(collection.name);
@@ -493,12 +559,9 @@ const onPressCollection = (collection, index) => {
       item?.cuisines?.includes(collection.name)
     );
     setRestaurantData(filteredData);
+    setfilterApplied(true)
     
-    flatListRef.current.scrollToIndex({
-      index: currentIndex,
-       animated:true,
-       viewPosition:0.5
-    });
+    
   }
 };
 
@@ -511,26 +574,11 @@ const onPressCollection = (collection, index) => {
 
 
   const getItemLayout = (data, index) => ({
-    length: 99, 
-    offset: 99 * index,
+    length: 108, 
+    offset: 108 * index,
     index:currentIndex
   });
-  // const onPressCollection = (collection) => {
-  //   if (activeCollection === collection.name) {
-  //     // If the same collection is clicked again, deselect it
-  //     setActiveCollection(null)
-  //     setRestaurantData(allData) // Reset to show all data
-  //   } else {
-  //     // Select the new collection
-  //     setActiveCollection(collection.name)
-  //     const tempData = [...allData]
-  //     const filteredData = tempData?.filter((item) =>
-  //       item?.cuisines?.includes(collection.name)
-  //     )
-  //     setRestaurantData(filteredData)
-  //   }
-  // }
-
+ 
   const applyFilters = () => {
     let filteredData =
       queryType === 'orderAgain'
@@ -587,6 +635,16 @@ const onPressCollection = (collection, index) => {
     // Set filtered data
     setRestaurantData(filteredData)
     filtersModalRef.current.close()
+
+    // **Check if any filters are applied**
+  const anyFilterSelected =
+  ratings?.selected?.length > 0 ||
+  sort?.selected?.length > 0 ||
+  offers?.selected?.length > 0 ||
+  cuisines?.selected?.length > 0
+
+    setfilterApplied(anyFilterSelected);
+    
   }
 
   return (
@@ -594,21 +652,8 @@ const onPressCollection = (collection, index) => {
       edges={['bottom', 'left', 'right']}
       style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
-      <View style={styles(currentTheme).container}>
-        <Animated.FlatList
-          contentInset={{ top: containerPaddingTop }}
-          contentContainerStyle={{
-            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-            padding: 15,
-            gap: 16
-          }}
-          contentOffset={{ y: -containerPaddingTop }}
-          onScroll={onScroll}
-          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => (
-            <>
-              <View style={styles(currentTheme).header}>
+      <View style={[styles(currentTheme).container]}>
+      <View style={[styles(currentTheme).header,{padding: 10}]}>
                 <View>
                   <TextDefault bolder H2 isRTL>
                     {t(
@@ -637,6 +682,7 @@ const onPressCollection = (collection, index) => {
                   </TextDefault>
                 </Ripple>
               </View>
+              <View  style={{paddingLeft: 10,paddingRight:10}}>
               <FlatList ref={flatListRef} 
                 data={collectionData ?? []}
                 renderItem={({ item, index }) => {
@@ -648,11 +694,12 @@ const onPressCollection = (collection, index) => {
                         style={[
                           styles(currentTheme).collectionCard,
                           activeCollection === item.name && {
-                            backgroundColor: currentTheme.newButtonBackground
+                            backgroundColor: currentTheme.newButtonBackground,
+                            
                           }
                         ]}
                       >
-                        <View style={styles().brandImgContainer} >
+                        <View style={[styles().brandImgContainer]} >
                           <Image
                             source={{ uri: item?.image }}
                             style={styles().collectionImage}
@@ -684,6 +731,20 @@ const onPressCollection = (collection, index) => {
                 inverted={currentTheme?.isRTL ? true : false}
                 getItemLayout={getItemLayout} 
               />
+              </View>
+          <Animated.FlatList
+            contentInset={{ top: containerPaddingTop }}
+            contentContainerStyle={{
+            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+            padding: 15,
+            gap: 16
+          }}
+          contentOffset={{ y: -containerPaddingTop }}
+          onScroll={onScroll}
+          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={() => (
+            <>
               {restaurantData?.length === 0 ? null : (
                 <ActiveOrdersAndSections
                   menuPageHeading={

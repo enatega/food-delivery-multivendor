@@ -27,13 +27,25 @@ const calulateRemainingTime = (order) => {
   return remainingTime > 0 ? remainingTime : 0
 }
 
-function calculateDaysAgo(targetDate) {
-  const currentDate = new Date()
-  const timeDifference = currentDate - targetDate
-  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24))
+const calculateDaysAgo = (timestamp) => {
+  const currentDate = new Date();
+  const pastDate = new Date(Number(timestamp)); // Convert timestamp to Date
+  const timeDifference = currentDate - pastDate;
 
-  return daysDifference
-}
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  if (seconds < 60) return "Just now";
+  if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`;
+  if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+  return `${years} year${years > 1 ? "s" : ""} ago`;
+};
 
 function groupAndCount(array = [], key) {
   const result = {

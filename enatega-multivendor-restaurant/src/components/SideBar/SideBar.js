@@ -25,9 +25,10 @@ export default function SideBar() {
   const { t } = useTranslation()
   const notificationRef = useRef(true)
   const openSettingsRef = useRef(false)
-  const { logout, data, toggleSwitch,loadingToggle, isAvailable ,isToggling} = useAccount()
-  console.log("isAvailable",isAvailable)
-  const [notificationStatus, setNotificationStatus] = useState(false)
+  const { logout, data, toggleSwitch, isToggling, isAvailable } = useAccount()
+  // console.log("isAvailable",isAvailable)
+  const [notificationStatus, setNotificationStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
   const appState = useRef(AppState.currentState)
 
   const {
@@ -37,7 +38,7 @@ export default function SideBar() {
     requestPermission,
     sendTokenToBackend
   } = useNotification()
-console.log(restaurantData?.restaurant)
+// console.log(restaurantData?.restaurant)
   useEffect(() => {
     const checkToken = async () => {
       if (restaurantData) {
@@ -86,32 +87,64 @@ console.log(restaurantData?.restaurant)
     }
   }, [])
 
+  // const handleClick = async () => {
+
+  //   if (notificationStatus === false) {
+  //     const permissionStatus = await getPermission()
+  //     if (permissionStatus.granted) {
+  //       setNotificationStatus(true)
+  //       const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
+  //       sendTokenToBackend({ variables: { token, isEnabled: true } })
+  //     } else if (permissionStatus.canAskAgain) {
+  //       const result = await requestPermission()
+  //       if (result.granted) {
+  //         setNotificationStatus(true)
+  //         const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
+  //         sendTokenToBackend({ variables: { token, isEnabled: true } })
+  //       }
+  //     } else {
+  //       openSettingsRef.current = true
+  //       Platform.OS === 'ios'
+  //         ? Linking.openURL('app-settings:')
+  //         : Linking.openSettings()
+  //     }
+  //   } else {
+  //     setNotificationStatus(false)
+  //     sendTokenToBackend({ variables: { token: null, isEnabled: false } })
+  //   }
+  // }
   const handleClick = async () => {
-    if (notificationStatus === false) {
-      const permissionStatus = await getPermission()
-      if (permissionStatus.granted) {
-        setNotificationStatus(true)
-        const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
-        sendTokenToBackend({ variables: { token, isEnabled: true } })
-      } else if (permissionStatus.canAskAgain) {
-        const result = await requestPermission()
-        if (result.granted) {
-          setNotificationStatus(true)
-          const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data
-          sendTokenToBackend({ variables: { token, isEnabled: true } })
+    if (loading) return; 
+    setLoading(true); 
+  
+    try {
+      if (!notificationStatus) {
+        const permissionStatus = await getPermission();
+        if (permissionStatus.granted) {
+          setNotificationStatus(true);
+          const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
+          await sendTokenToBackend({ variables: { token, isEnabled: true } });
+        } else if (permissionStatus.canAskAgain) {
+          const result = await requestPermission();
+          if (result.granted) {
+            setNotificationStatus(true);
+            const token = (await getExpoPushToken({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
+            await sendTokenToBackend({ variables: { token, isEnabled: true } });
+          }
+        } else {
+          openSettingsRef.current = true;
+          Platform.OS === "ios" ? Linking.openURL("app-settings:") : Linking.openSettings();
         }
       } else {
-        openSettingsRef.current = true
-        Platform.OS === 'ios'
-          ? Linking.openURL('app-settings:')
-          : Linking.openSettings()
+        setNotificationStatus(false);
+        await sendTokenToBackend({ variables: { token: null, isEnabled: false } });
       }
-    } else {
-      setNotificationStatus(false)
-      sendTokenToBackend({ variables: { token: null, isEnabled: false } })
+    } catch (error) {
+      console.error("Error toggling notification:", error);
+    } finally {
+      setLoading(false); 
     }
-  }
-
+  };
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground source={bg} resizeMode="cover" style={styles.image}>
@@ -144,7 +177,7 @@ console.log(restaurantData?.restaurant)
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextDefault textColor="white" style={{ marginRight: 5 }}>
-                {isAvailable && !loadingToggle ? t('online') : t('closed')}
+                {isAvailable ? t('online') : t('closed')}
               </TextDefault>
               <Switch
                 trackColor={{
@@ -153,9 +186,10 @@ console.log(restaurantData?.restaurant)
                 }}
                 thumbColor={isAvailable ? colors.headerBackground : '#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={!loadingToggle && !isToggling ? toggleSwitch : null} // Disable while toggling
-                value={isToggling ? !isAvailable : isAvailable}
+                onValueChange={toggleSwitch} 
+                value={isAvailable}
                 style={{ marginTop: Platform.OS === 'android' ? -15 : -5 }}
+                disabled={isToggling}
               />
             </View>
           </View>
@@ -178,6 +212,7 @@ console.log(restaurantData?.restaurant)
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={handleClick}
                 value={notificationStatus}
+                disabled={loading}
                 style={{ marginTop: Platform.OS === 'android' ? -15 : -5 }}
               />
             </View>

@@ -12,12 +12,12 @@ export default function useHomeRestaurants() {
   const { isLoggedIn } = useContext(UserContext)
 
   const recentOrderRestaurants = useQuery(recentOrderRestaurantsQuery, {
-    variables: { latitude: location.latitude, longitude: location.longitude },
+    variables: { latitude: location?.latitude, longitude: location?.longitude },
     skip: !isLoggedIn
   })
 
   const mostOrderedRestaurants = useQuery(mostOrderedRestaurantsQuery, {
-    variables: { latitude: location.latitude, longitude: location.longitude }
+    variables: { latitude: location?.latitude, longitude: location?.longitude }
   })
 
   const orderLoading =

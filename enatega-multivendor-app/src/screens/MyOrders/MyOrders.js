@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import ReviewModal from '../../components/Review'
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
-const orderStatusInactive = ['DELIVERED', 'COMPLETED']
+const orderStatusInactive = ['DELIVERED', 'COMPLETED','CANCELLED','CANCELLEDBYREST']
 
 function MyOrders(props) {
   const reviewModalRef = useRef()
