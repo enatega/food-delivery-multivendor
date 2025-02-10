@@ -624,7 +624,6 @@ const onPressCollection = (collection, index) => {
                 </View>
                 <ButtonSeeAll
                 onPress={() => {
-                  console.log("route name :", routeData?.name)
                   navigation.navigate('Collection', {
                     collectionType: routeData?.name,
                     data: collectionData
