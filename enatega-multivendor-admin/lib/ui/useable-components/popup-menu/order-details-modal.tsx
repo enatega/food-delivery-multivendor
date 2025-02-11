@@ -16,6 +16,18 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
 }) => {
   if (!restaurantData) return null;
 
+  const subTotal =
+    restaurantData.items?.reduce(
+      (sum, item) => sum + (item.variation?.price ?? 0),
+      0
+    ) ?? 0;
+
+  const total =
+    subTotal +
+    (restaurantData.deliveryCharges ?? 0) +
+    (restaurantData.taxationAmount ?? 0) +
+    (restaurantData.tipping ?? 0);
+
   return (
     <Dialog
       visible={visible}
@@ -51,7 +63,7 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
           <div className="charges-table">
             <div className="charges-row">
               <span>Subtotal</span>
-              <span>${restaurantData?.orderAmount?.toFixed(2)}</span>
+              <span>${subTotal.toFixed(2)}</span>
             </div>
             <div className="charges-row">
               <span>Delivery Fee</span>
@@ -67,15 +79,7 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
             </div>
             <div className="charges-row total-row">
               <strong>Total</strong>
-              <strong>
-                $
-                {(
-                  restaurantData.orderAmount +
-                  (restaurantData.deliveryCharges ?? 0) +
-                  (restaurantData.taxationAmount ?? 0) +
-                  (restaurantData.tipping ?? 0)
-                ).toFixed(2)}
-              </strong>
+              <strong>${total.toFixed(2)}</strong>
             </div>
           </div>
         </div>
