@@ -28,11 +28,11 @@ function Language() {
   const [languageName, languageNameSetter] = useState('English')
   const [loader, setLoader] = useState(false)
   const inset = useSafeAreaInsets()
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: t('titleLanguage')
-    })
-  }, [navigation, languageName])
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     title: t('titleLanguage')
+  //   })
+  // }, [navigation, languageName])
 
   useEffect(() => {
     selectedLanguageFunc()

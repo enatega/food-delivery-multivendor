@@ -73,7 +73,8 @@ function Checkout(props) {
   const Analytics = analytics()
   useFocusEffect(
     useCallback(() => {
-      Alert.alert( "Server is currently unavailable. Please try again later.");
+      // Alert.alert( "Server is currently unavailable. Please try again later.");
+      console.log("Server is currently unavailable. Please try again later.")
     }, []))
 
 
@@ -473,9 +474,10 @@ function Checkout(props) {
     if (error?.networkError) {
       // console.log(`Network Error: ${networkError.message}`);
       if (error?.networkError.statusCode === 502) {
-        FlashMessage({
-          message: "Server is currently unavailable. Please try again later."
-        })
+        // FlashMessage({
+        //   message: "Server is currently unavailable. Please try again later."
+        // })
+        console.log("Server is currently unavailable. Please try again later.")
         
       }
     }

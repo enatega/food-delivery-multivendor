@@ -1,3 +1,5 @@
+// Details.js
+
 import { View, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './style'
@@ -10,6 +12,7 @@ import useDetails from './useDetails'
 import { useTranslation } from 'react-i18next'
 
 const Details = ({ orderData, navigation, itemId, distance, duration }) => {
+
   const {
     active,
     order,
@@ -21,8 +24,10 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
     mutateAssignOrder,
     mutateOrderStatus,
     loadingAssignOrder,
-    loadingOrderStatus
+    loadingOrderStatus,dataProfile
   } = useDetails(orderData)
+
+
   const { t } = useTranslation()
   const [isOvertime, setIsOvertime] = useState(false)
 
@@ -35,7 +40,7 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
   }, [preparationSeconds, currentSeconds])
 
   if (!order) return null
-
+// console.log("order.orderStatus",order.orderStatus)
   return (
     <View style={styles.container}>
       {order.orderStatus !== 'DELIVERED' ? (
@@ -130,19 +135,20 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
               <ChatWithCustomerButton navigation={navigation} order={order} />
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => {
-                  mutateOrderStatus({
+                onPress={() => { 
+                  mutateOrderStatus({               
                     variables: { id: itemId, status: 'DELIVERED' }
                   })
+                  console.log("mutateOrderStatus",JSON.stringify(mutateOrderStatus,null,2));
                 }}
                 style={[styles.btn, { backgroundColor: colors.primary }]}>
-                <TextDefault center H5 bold textColor={colors.black}>
-                  {loadingOrderStatus ? (
+                {loadingOrderStatus ? (
                     <Spinner size="small" color="transparent" />
                   ) : (
-                    t('markAsDelivered')
-                  )}
+                <TextDefault center H5 bold textColor={colors.black}>   
+                    {t('markAsDelivered')}
                 </TextDefault>
+                 )}
               </TouchableOpacity>
             </View>
           ) : null}

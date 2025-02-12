@@ -22,8 +22,10 @@ const UPDATE_ORDER_STATUS = gql`
 `
 
 const useDetails = orderData => {
+
   const { active, setActive } = useContext(TabsContext)
-  const { assignedOrders, loadingAssigned } = useContext(UserContext)
+  const { assignedOrders, loadingAssigned,dataProfile} = useContext(UserContext)
+
   const [order, setOrder] = useState(orderData)
   const { t } = useTranslation()
   useEffect(() => {
@@ -67,71 +69,100 @@ const useDetails = orderData => {
   const [mutateAssignOrder, { loading: loadingAssignOrder }] = useMutation(
     ASSIGN_ORDER,
     {
-      onCompleted,
-      onError,
-      update
+      onCompleted: onCompleteAssign,
+      onError: onErrorAssign,
+      update: onUpdateAssign
     }
   )
 
   const [
     mutateOrderStatus,
     { loading: loadingOrderStatus }
-  ] = useMutation(UPDATE_ORDER_STATUS, { onCompleted, onError, update })
+  ] = useMutation(UPDATE_ORDER_STATUS, { onCompleted: onCompletedStatus, onError: onErrorStatus, update: onUpdateStatus })
 
-  async function onCompleted(result) {
-    if (result.updateOrderStatusRider) {
+  async function onCompletedStatus(result) {
+    console.log("result---",result)
+    if (result?.updateOrderStatusRider) {
       FlashMessage({
         message: `${t('orderMarkedAs')} ${t(
-          result.updateOrderStatusRider.orderStatus
+          result?.updateOrderStatusRider?.orderStatus
         )}`
       })
     }
-    if (result.assignOrder) {
+    if (result?.assignOrder) {
       FlashMessage({
         message: t('orderAssingnedFlash')
       })
       setActive('MyOrders')
     }
   }
+  async function onCompleteAssign(result) {
+    console.log("onCompleteAssign")
+    
+  }
+  async function onErrorAssign(result) {
+    console.log("onErrorAssign")
+    
+  }
 
-  function onError({ graphQLErrors, networkError }) {
-    let message = t('errorOccured')
+  async function onUpdateAssign(result) {
+    console.log("onUpdateAssign")
+    
+  }
+  function onErrorStatus({ graphQLErrors, networkError }) {
+    console.log('graphQLErrors=>>', graphQLErrors)
+    let message = t('errorOccured') 
+    console.log("message",message)
     if (networkError) message = 'Internal Server Error'
+    console.log("message",message)
     if (graphQLErrors) message = graphQLErrors.map(o => o.message).join(', ')
-
+      console.log("message",message)
     FlashMessage({ message: message })
   }
 
-  async function update(cache, { data: result }) {
-    if (result.assignOrder) {
+  async function onUpdateStatus(cache, { data: result }) {
+    console.log("update status",result?.assignOrder)
+    if (result?.assignOrder) {
       const data = cache.readQuery({ query: ORDERS })
+      console.log("data-->>",data)
       if (data) {
-        const index = data.riderOrders.findIndex(
+        const index = data?.riderOrders?.findIndex(
           o => o._id === result.assignOrder._id
         )
+        console.log("index-->>",index)
         if (index > -1) {
-          data.riderOrders[index].rider = result.assignOrder.rider
-          data.riderOrders[index].orderStatus = result.assignOrder.orderStatus
+          data.riderOrders[index].rider = result?.assignOrder?.rider
+          console.log("ridersOrder-rider->>",data.riderOrders[index].rider)
+          data.riderOrders[index].orderStatus = result?.assignOrder?.orderStatus
+          console.log("ridersOrder-orderstatus->>",data.riderOrders[index].orderStatus)
           cache.writeQuery({
             query: ORDERS,
             data: { riderOrders: [...data.riderOrders] }
           })
+          console.log("Initial writeQuery executed with data:", data.riderOrders);
         }
       }
     }
-    if (result.updateOrderStatusRider) {
+    if (result?.updateOrderStatusRider) {
+      console.log("updateOrderStatusRider exists:", result?.updateOrderStatusRider);
       const data = cache.readQuery({ query: ORDERS })
+      console.log("Read data from cache:", data);
       if (data) {
-        const index = data.riderOrders.findIndex(
-          o => o._id === result.updateOrderStatusRider._id
+        const index = data?.riderOrders?.findIndex(
+          o => o._id === result?.updateOrderStatusRider?._id   
         )
+        console.log("Found index of updated order:", index);
+        
         if (index > -1) {
+          console.log("Before updating order status:", data?.riderOrders[index]);
           data.riderOrders[index].orderStatus =
-            result.updateOrderStatusRider.orderStatus
+            result?.updateOrderStatusRider?.orderStatus
+            console.log("After updating order status:", data?.riderOrders[index]);
           cache.writeQuery({
             query: ORDERS,
-            data: { riderOrders: [...data.riderOrders] }
+            data: { riderOrders: [...data?.riderOrders] }
           })
+          console.log("Updated cache with new order status:", data.riderOrders);
         }
       }
     }
@@ -147,7 +178,8 @@ const useDetails = orderData => {
     mutateAssignOrder,
     mutateOrderStatus,
     loadingAssignOrder,
-    loadingOrderStatus
+    loadingOrderStatus,
+    dataProfile
   }
 }
 
