@@ -27,7 +27,7 @@
     "chart.js": "^4.4.4",
     "formik": "^2.4.6",
     "graphql": "^16.9.0",
-    "graphql-ws": "^5.16.0",
+    "graphql-ws": "^6.0.3",
     "lodash": "^4.17.21",
     "next": "14.2.5",
     "next-intl": "^3.26.3",
