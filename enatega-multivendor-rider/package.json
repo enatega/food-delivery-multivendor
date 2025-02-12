@@ -65,7 +65,7 @@
     "graphql": "^15.8.0",
     "i18n-js": "^3.7.1",
     "i18next": "^23.7.6",
-    "lottie-react-native": "6.5.1",
+    "lottie-react-native": "7.2.2",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
     "patch-package": "^6.2.2",
