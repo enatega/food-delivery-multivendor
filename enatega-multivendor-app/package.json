@@ -66,7 +66,7 @@
     "expo-image-picker": "~14.7.1",
     "expo-keep-awake": "~12.8.2",
     "expo-linear-gradient": "^12.7.2",
-    "expo-linking": "~6.2.2",
+    "expo-linking": "~7.0.5",
     "expo-localization": "~14.8.3",
     "expo-location": "~16.5.2",
     "expo-network": "~5.8.0",
