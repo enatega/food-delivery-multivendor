@@ -48,7 +48,7 @@
     "expo-av": "~13.10.5",
     "expo-constants": "~15.4.5",
     "expo-dev-client": "~3.3.12",
-    "expo-device": "~5.9.3",
+    "expo-device": "~7.0.2",
     "expo-keep-awake": "~12.8.2",
     "expo-localization": "~14.8.3",
     "expo-notifications": "~0.27.6",
