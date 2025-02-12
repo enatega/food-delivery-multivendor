@@ -58,7 +58,7 @@
     "expo-application": "~5.8.3",
     "expo-auth-session": "~5.4.0",
     "expo-av": "~13.10.6",
-    "expo-constants": "~15.4.5",
+    "expo-constants": "~17.0.5",
     "expo-crypto": "~12.8.1",
     "expo-dev-client": "^3.3.8",
     "expo-device": "~5.9.3",
