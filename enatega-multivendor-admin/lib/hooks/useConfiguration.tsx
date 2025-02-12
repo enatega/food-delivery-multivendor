@@ -72,9 +72,8 @@ export const useConfiguration = () => {
   const ISPAID_VERSION = configuration?.isPaidVersion;
 
   return {
-    
-    SERVER_URL: BACKEND_URL.LIVE.SERVER_URL,
-    WS_SERVER_URL: BACKEND_URL.LIVE.WS_SERVER_URL,
+    SERVER_URL: BACKEND_URL.LOCAL.SERVER_URL,
+    WS_SERVER_URL: BACKEND_URL.LOCAL.WS_SERVER_URL,
     COLORS,
 
     // EMAIL CONFIG
@@ -153,6 +152,6 @@ export const useConfiguration = () => {
     AMPLITUDE_API_KEY_APP,
 
     // IS PAID VERSION
-    ISPAID_VERSION
+    ISPAID_VERSION,
   };
 };

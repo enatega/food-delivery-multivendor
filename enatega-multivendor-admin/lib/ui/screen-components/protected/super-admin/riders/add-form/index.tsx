@@ -19,7 +19,7 @@ import CustomTextField from '@/lib/ui/useable-components/input-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Utilities and Constants
-import { RiderErrors } from '@/lib/utils/constants';
+import { RiderErrors, VEHICLE_TYPE } from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import { RiderSchema } from '@/lib/utils/schema/rider';
 
@@ -49,6 +49,9 @@ export default function RiderAddForm({
     username: '',
     password: '',
     ...rider,
+    vehicleType: rider
+      ? VEHICLE_TYPE.find((vt) => vt?.code === rider?.vehicleType) || null
+      : null,
     confirmPassword: rider?.password ?? '',
     phone: rider ? +rider.phone : null,
     zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
@@ -84,6 +87,7 @@ export default function RiderAddForm({
             password: values.password,
             phone: values.phone?.toString(),
             zone: values.zone?.code,
+            vehicleType: values.vehicleType?.code,
             available: rider ? rider.available : true,
           },
         },
@@ -147,7 +151,6 @@ export default function RiderAddForm({
                   handleSubmit,
                   setFieldValue,
                 }) => {
-                  console.log({ errors });
                   return (
                     <Form onSubmit={handleSubmit}>
                       <div className="space-y-4">
@@ -219,6 +222,24 @@ export default function RiderAddForm({
                             borderColor: onErrorMessageMatcher(
                               'confirmPassword',
                               errors?.confirmPassword,
+                              RiderErrors
+                            )
+                              ? 'red'
+                              : '',
+                          }}
+                        />
+
+                        <CustomDropdownComponent
+                          placeholder={'Vehicle Type'}
+                          options={VEHICLE_TYPE}
+                          showLabel={true}
+                          name="vehicleType"
+                          selectedItem={values.vehicleType}
+                          setSelectedItem={setFieldValue}
+                          style={{
+                            borderColor: onErrorMessageMatcher(
+                              'vehicleType',
+                              errors?.vehicleType,
                               RiderErrors
                             )
                               ? 'red'
