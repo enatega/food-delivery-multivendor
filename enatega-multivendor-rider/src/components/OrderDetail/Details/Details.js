@@ -139,7 +139,6 @@ const Details = ({ orderData, navigation, itemId, distance, duration }) => {
                   mutateOrderStatus({               
                     variables: { id: itemId, status: 'DELIVERED' }
                   })
-                  console.log("mutateOrderStatus",JSON.stringify(mutateOrderStatus,null,2));
                 }}
                 style={[styles.btn, { backgroundColor: colors.primary }]}>
                 {loadingOrderStatus ? (
