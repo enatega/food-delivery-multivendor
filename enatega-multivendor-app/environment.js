@@ -9,12 +9,15 @@ import * as Updates from 'expo-updates'
 
 const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
-// console.log("configuration?.googleApiKey=>>", configuration?.googleApiKey)
+  // console.log("configuration?.googleApiKey=>>", configuration?.googleApiKey)
   if (env === 'production' || env === 'staging') {
     return {
-      GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-      SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+      GRAPHQL_URL: 'https://localhost:8001/graphql',
+      WS_GRAPHQL_URL: 'wss://localhost:8001/graphql',
+      SERVER_URL: 'https://localhost:8001/graphql',
+      // GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+      // WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+      // SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
 
       IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
       ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
@@ -32,9 +35,9 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    GRAPHQL_URL: 'http://192.168.1.5:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://192.168.1.5:8001/graphql',
-    SERVER_URL: 'http://192.168.1.5:8001/', 
+    GRAPHQL_URL: 'http://localhost:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
+    SERVER_URL: 'http://localhost:8001/',
     // GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
     // WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
     // SERVER_URL: 'https://enatega-multivendor.up.railway.app/',

@@ -2,7 +2,7 @@
 'use client';
 
 // Core
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 // Context
 import { LayoutContext } from '@/lib/context/global/layout.context';
@@ -14,9 +14,86 @@ import SuperAdminSidebar from '@/lib/ui/screen-components/protected/layout/super
 // Interface
 import { IProvider, LayoutContextProps } from '@/lib/utils/interfaces';
 
+import { getToken, onMessage } from 'firebase/messaging';
+import { useApolloClient } from '@apollo/client';
+import { initialize, isFirebaseSupported } from '@/firebase';
+import { UPLOAD_TOKEN } from '@/lib/api/graphql/queries/token';
+import { useUserContext } from '@/lib/hooks/useUser';
+
 const Layout = ({ children }: IProvider) => {
   const { isSuperAdminSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
+  const client = useApolloClient();
+  const { user } = useUserContext();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const initializeFirebase = async () => {
+      if (await isFirebaseSupported()) {
+        const messaging = initialize();
+
+        // Request Notification Permission
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          console.warn('🚨 Notification permission denied!');
+          return;
+        }
+        // Retrieve the token
+        getToken(messaging, {
+          vapidKey:
+            'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w',
+        })
+          .then((token) => {
+            if (!token) {
+              console.warn('🚨 No push token received');
+              return;
+            }
+
+            console.log('✅ Push Token:', token);
+            localStorage.setItem('messaging-token', token);
+
+            client
+              .mutate({
+                mutation: UPLOAD_TOKEN,
+                variables: { id: user?.userId, pushToken: token },
+              })
+              .then(() => console.log('📡 Token uploaded successfully'))
+              .catch((error) => console.error('🔥 Upload token error:', error));
+          })
+          .catch((err) => console.error('❌ getToken error:', err));
+
+        // Handle foreground notifications
+        onMessage(messaging, (payload) => {
+          console.log('📩 Foreground Notification:', payload);
+          if (!payload.notification) return;
+          const { title, body } = payload.notification;
+
+          const notification = new Notification(title ?? '', {
+            body,
+          });
+
+          notification.onclick = () => {
+            window.open('https://multivendor-admin.ninjascode.com/dashboard');
+          };
+        });
+      }
+    };
+
+    initializeFirebase();
+  }, [user]);
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('✅ Service Worker Registered:', registration);
+        })
+        .catch((err) => console.error('❌ Service Worker Error:', err));
+    }
+  }, []);
+
   return (
     <div className="layout-main">
       <div className="layout-top-container">
