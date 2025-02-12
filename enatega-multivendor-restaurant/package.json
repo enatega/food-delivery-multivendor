@@ -84,7 +84,7 @@
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
+    "@babel/core": "^7.26.8",
     "@expo/metro-config": "~0.17.1",
     "babel-preset-expo": "^10.0.0",
     "eslint": "^7.1.0",
