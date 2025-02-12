@@ -9,7 +9,7 @@
     "@mui/icons-material": "^5.0.1",
     "@mui/lab": "^5.0.0-alpha.48",
     "@mui/material": "^5.0.1",
-    "@mui/styles": "^5.0.1",
+    "@mui/styles": "^6.4.4",
     "@react-google-maps/api": "^2.0.2",
     "@sentry/react": "^6.16.1",
     "@sentry/tracing": "^6.16.1",
