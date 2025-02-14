@@ -27,7 +27,7 @@ const LicenseDetails = ({ loading, rider }: IRiderDetailsProps) => {
               {loading ? (
                 <Skeleton height="1.5rem" />
               ) : (
-                (rider?.licenseDetails.number ?? '-')
+                (rider?.licenseDetails?.number ?? '-')
               )}
             </span>
           </div>
@@ -36,8 +36,8 @@ const LicenseDetails = ({ loading, rider }: IRiderDetailsProps) => {
             <span className="font-medium">
               {loading ? (
                 <Skeleton height="1.5rem" />
-              ) : rider?.licenseDetails.expiryDate ? (
-                new Date(rider.licenseDetails.expiryDate).toLocaleDateString()
+              ) : rider?.licenseDetails?.expiryDate ? (
+                new Date(rider.licenseDetails?.expiryDate).toLocaleDateString()
               ) : (
                 '-'
               )}

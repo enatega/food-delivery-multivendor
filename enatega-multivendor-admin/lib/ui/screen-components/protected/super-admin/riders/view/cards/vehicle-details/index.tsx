@@ -27,7 +27,7 @@ const VehicleDetails = ({ loading, rider }: IRiderDetailsProps) => {
               {loading ? (
                 <Skeleton height="1.5rem" />
               ) : (
-                (rider?.vehicleDetails.number ?? '-')
+                (rider?.vehicleDetails?.number ?? '-')
               )}
             </span>
           </div>
@@ -39,13 +39,13 @@ const VehicleDetails = ({ loading, rider }: IRiderDetailsProps) => {
             <div className="pl-5 h-full flex items-center">
               <Skeleton width="100%" height="100%" />
             </div>
-          ) : rider?.licenseDetails?.image ? (
+          ) : rider?.vehicleDetails?.image ? (
             <div className="relative aspect-video">
               <Image
                 fill
                 src={
                   rider?.licenseDetails?.image?.startsWith('http') // Check if it's an absolute URL
-                    ? rider?.licenseDetails?.image
+                    ? rider?.vehicleDetails?.image
                     : `https://static.vecteezy.com/system/resources/previews/031/602/489/large_2x/blank-license-plate-icon-design-templates-free-vector.jpg` // Add the base URL if it's a relative path
                 }
                 alt="license image"
