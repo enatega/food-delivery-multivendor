@@ -1,24 +1,29 @@
 // Import the functions you need from the SDKs you need
-import * as firebase from 'firebase/app';
-import { getMessaging, isSupported } from 'firebase/messaging';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getMessaging, Messaging, isSupported } from 'firebase/messaging';
+import { IFirebaseConfig } from './lib/utils/interfaces';
 
-export const initialize = () => {
-  const firebaseConfig = {
-    apiKey: 'AIzaSyDx_iSQ9LroTF7NMm20aRvw2wJqhwSnJ3U',
-    authDomain: 'enatega-multivender-web.firebaseapp.com',
-    projectId: 'enatega-multivender-web',
-    storageBucket: 'enatega-multivender-web.firebasestorage.app',
-    messagingSenderId: '438532750182',
-    appId: '1:438532750182:web:516b850eff4e0349f0a6a7',
-    measurementId: 'G-KLBJSEHRYQ',
-  };
+export const initialize = (config: IFirebaseConfig): Messaging | null => {
+  try {
+    const firebaseConfig = {
+      apiKey: config.FIREBASE_KEY,
+      authDomain: config.FIREBASE_AUTH_DOMAIN,
+      projectId: config.FIREBASE_PROJECT_ID,
+      storageBucket: config.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: config.FIREBASE_MSG_SENDER_ID,
+      appId: config.FIREBASE_APP_ID,
+      measurementId: config.FIREBASE_MEASUREMENT_ID,
+    };
 
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
-  return messaging;
+    // Initialize Firebase
+    const app: FirebaseApp = initializeApp(firebaseConfig);
+    return getMessaging(app);
+  } catch (error) {
+    console.error('Firebase initialization failed:', error);
+    return null;
+  }
 };
 
-export const isFirebaseSupported = async () => {
+export const isFirebaseSupported = async (): Promise<boolean> => {
   return await isSupported();
 };

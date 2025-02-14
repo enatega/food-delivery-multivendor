@@ -3,6 +3,8 @@
 
 // Core
 import { useContext, useEffect } from 'react';
+import { initialize, isFirebaseSupported } from '@/firebase';
+import { getToken, onMessage } from 'firebase/messaging';
 
 // Context
 import { LayoutContext } from '@/lib/context/global/layout.context';
@@ -14,24 +16,53 @@ import SuperAdminSidebar from '@/lib/ui/screen-components/protected/layout/super
 // Interface
 import { IProvider, LayoutContextProps } from '@/lib/utils/interfaces';
 
-import { getToken, onMessage } from 'firebase/messaging';
-import { useApolloClient } from '@apollo/client';
-import { initialize, isFirebaseSupported } from '@/firebase';
-import { UPLOAD_TOKEN } from '@/lib/api/graphql/queries/token';
+// Hooks
 import { useUserContext } from '@/lib/hooks/useUser';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
+
+// GraphQl
+import { UPLOAD_TOKEN } from '@/lib/api/graphql/queries/token';
+import { useApolloClient } from '@apollo/client';
 
 const Layout = ({ children }: IProvider) => {
+  // Context
   const { isSuperAdminSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
+
+  // Hooks
   const client = useApolloClient();
   const { user } = useUserContext();
+  const {
+    FIREBASE_AUTH_DOMAIN,
+    FIREBASE_KEY,
+    FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MSG_SENDER_ID,
+    FIREBASE_APP_ID,
+    FIREBASE_MEASUREMENT_ID,
+    FIREBASE_VAPID_KEY,
+  } = useConfiguration();
 
+  // Side Effects
   useEffect(() => {
     if (!user) return;
 
     const initializeFirebase = async () => {
       if (await isFirebaseSupported()) {
-        const messaging = initialize();
+        const messaging = initialize({
+          FIREBASE_AUTH_DOMAIN,
+          FIREBASE_KEY,
+          FIREBASE_PROJECT_ID,
+          FIREBASE_STORAGE_BUCKET,
+          FIREBASE_MSG_SENDER_ID,
+          FIREBASE_APP_ID,
+          FIREBASE_MEASUREMENT_ID,
+        });
+
+        if (!messaging) {
+          console.error('🔥 Firebase Messaging failed to initialize.');
+          return;
+        }
 
         // Request Notification Permission
         const permission = await Notification.requestPermission();
@@ -39,11 +70,9 @@ const Layout = ({ children }: IProvider) => {
           console.warn('🚨 Notification permission denied!');
           return;
         }
+
         // Retrieve the token
-        getToken(messaging, {
-          vapidKey:
-            'BOpVOtmawD0hzOR0F5NQTz_7oTlNVwgKX_EgElDnFuILsaE_jWYPIExAMIIGS-nYmy1lhf2QWFHQnDEFWNG_Z5w',
-        })
+        getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY })
           .then((token) => {
             if (!token) {
               console.warn('🚨 No push token received');
