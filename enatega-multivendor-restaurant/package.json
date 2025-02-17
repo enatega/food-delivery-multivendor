@@ -52,7 +52,7 @@
     "expo-keep-awake": "~12.8.2",
     "expo-localization": "~14.8.3",
     "expo-notifications": "~0.27.6",
-    "expo-print": "~12.8.1",
+    "expo-print": "~14.0.3",
     "expo-secure-store": "~12.8.1",
     "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
