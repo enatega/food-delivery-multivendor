@@ -29,7 +29,7 @@
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",
     "lodash": "^4.17.21",
-    "next": "14.2.5",
+    "next": "14.2.24",
     "next-intl": "^3.26.3",
     "primereact": "10.8.3",
     "react": "^18",
