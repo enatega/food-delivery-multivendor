@@ -51,7 +51,7 @@
     "expo-camera": "~14.0.5",
     "expo-constants": "~15.4.5",
     "expo-dev-client": "~3.3.8",
-    "expo-device": "~5.9.3",
+    "expo-device": "~7.0.2",
     "expo-font": "~11.10.3",
     "expo-image-picker": "~14.7.1",
     "expo-keep-awake": "~12.8.2",
