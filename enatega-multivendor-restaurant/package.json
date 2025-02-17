@@ -80,7 +80,7 @@
     "react-native-tab-view": "^2.16.0",
     "react-native-web": "~0.19.6",
     "sentry-expo": "~7.2.0",
-    "subscriptions-transport-ws": "^0.9.16",
+    "subscriptions-transport-ws": "^0.11.0",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
