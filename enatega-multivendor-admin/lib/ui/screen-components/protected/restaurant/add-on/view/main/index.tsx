@@ -43,6 +43,9 @@ export default function OptionMain({
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
+  // Debugging - Check if component runs
+  console.log("📡 Fetching Addons for Restaurant ID:", restaurantId);
+
   // Hooks
   const t = useTranslations();
   const { showToast } = useToast();
@@ -56,18 +59,37 @@ export default function OptionMain({
   });
 
   // Query
-  const { data, loading } = useQueryGQL(
+  const { data, loading, error } = useQueryGQL(
     GET_ADDONS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'network-only', // fresh data is loaded
       enabled: !!restaurantId,
-      onCompleted: onFetchAddonsByRestaurantCompleted,
-      onError: onErrorFetchAddonsByRestaurant,
+      onCompleted: () => {
+        console.log("Query completed successfully!");
+      },
+      onError: (err) => {
+        console.error("GraphQL Error:", err);
+      },
     }
   ) as IQueryResult<IAddonByRestaurantResponse | undefined, undefined>;
 
-  //Mutation
+  // debugging
+  if (data) {
+    console.log("🚀 Raw API Response:", JSON.stringify(data, null, 2));
+  }
+
+  // fulter out default addon
+  const filteredAddons =
+    data?.restaurant?.addons
+      ?.filter((addon) => addon.title !== 'Default Addon') // Remove unwanted addon
+      .slice()
+      .reverse() || (loading ? generateDummyAddons() : []);
+
+  // debugging
+  console.log("✅ Filtered Addons:", filteredAddons);
+
+  // Mutation
   const [deleteCategory, { loading: mutationLoading }] = useMutation(
     DELETE_ADDON,
     {
@@ -112,7 +134,6 @@ export default function OptionMain({
       command: (data?: IAddon) => {
         if (data) {
           setIsAddAddonVisible(true);
-
           setAddon(data);
         }
       },
@@ -136,10 +157,7 @@ export default function OptionMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={
-          data?.restaurant?.addons.slice().reverse() ||
-          (loading ? generateDummyAddons() : [])
-        }
+        data={filteredAddons} // get filtered data
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}

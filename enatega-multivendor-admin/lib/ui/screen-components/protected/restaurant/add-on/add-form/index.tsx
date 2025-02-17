@@ -167,51 +167,26 @@ export default function AddonAddForm({
   }
   // Form Submission
   const handleSubmit = ({ addons }: { addons: IAddonForm[] }) => {
+    // filter default addon
+    const filteredAddons = addons.filter(
+      (addon) => addon.title !== 'Default Addon'
+    );
+
+    console.log("Submitting Addons:", filteredAddons);
+
     createAddons({
       variables: {
         addonInput: {
           restaurant: restaurantId,
           addons: addon
             ? mapOptions([
-                omitExtraAttributes(addons[0], initialEditFormValuesTemplate),
+                omitExtraAttributes(filteredAddons[0], initialEditFormValuesTemplate),
               ])[0]
-            : mapOptions(addons),
+            : mapOptions(filteredAddons),
         },
       },
     });
   };
-
-  const mapOptionIds = (
-    optionIds: string[],
-    optionsData: { label: string; code: string }[]
-  ) => {
-    if (!addon) return;
-
-    const matched_options = optionIds.map((id) => {
-      const matchedOption = optionsData.find((op) => op.code === id);
-      return { label: matchedOption?.label, code: matchedOption?.code };
-    });
-
-    const updated_addon = addon
-      ? JSON.parse(JSON.stringify(addon))
-      : ({} as IAddonForm);
-    delete updated_addon.options;
-
-    setInitialValues({
-      addons: [
-        {
-          ...initialFormValuesTemplate,
-          ...updated_addon,
-          options: matched_options,
-        },
-      ],
-    });
-  };
-
-  // UseEffects
-  useEffect(() => {
-    mapOptionIds((addon?.options as string[]) ?? [], optionsDropdown ?? []);
-  }, [addon, optionsDropdown]);
 
   return (
     <Sidebar
@@ -228,224 +203,25 @@ export default function AddonAddForm({
                 {addon ? t('Edit') : t('Add')} {t('Option')}
               </span>
             </div>
-
-            <div className="mb-2">
-              <Formik
-                initialValues={initialValues}
-                validationSchema={AddonSchema}
-                onSubmit={handleSubmit}
-                enableReinitialize
-              >
-                {({
-                  values,
-                  errors,
-                  handleChange,
-                  setFieldValue,
-                  handleSubmit,
-                }) => {
-                  const _errors: FormikErrors<IAddonForm>[] =
-                    (errors?.addons as FormikErrors<IAddonForm>[]) ?? [];
-
-                  return (
-                    <Form onSubmit={handleSubmit}>
-                      <div>
-                        <FieldArray name="addons">
-                          {({ remove, push }) => (
-                            <div>
-                              {values.addons.length > 0 &&
-                                values.addons.map(
-                                  (value: IAddonForm, index: number) => {
-                                    return (
-                                      <div
-                                        className="mb-2"
-                                        key={`addon-${index}`}
-                                      >
-                                        <div className="relative">
-                                          {!!index && (
-                                            <button
-                                              className="absolute -right-1 top-2"
-                                              onClick={() => remove(index)}
-                                            >
-                                              <FontAwesomeIcon
-                                                icon={faTimes}
-                                                size="lg"
-                                                color="#FF6347"
-                                              />
-                                            </button>
-                                          )}
-                                          <Fieldset
-                                            legend={`Addon ${index + 1} ${value.title ? `(${value.title})` : ''}`}
-                                            toggleable
-                                          >
-                                            <div className="grid grid-cols-12 gap-4">
-                                              <div className="col-span-12 sm:col-span-12">
-                                                <CustomTextField
-                                                  type="text"
-                                                  name={`addons[${index}].title`}
-                                                  placeholder={t('Title')}
-                                                  maxLength={35}
-                                                  value={value.title}
-                                                  onChange={(e) =>
-                                                    setFieldValue(
-                                                      `addons[${index}].title`,
-                                                      e.target.value
-                                                    )
-                                                  }
-                                                  showLabel={true}
-                                                  style={{
-                                                    borderColor:
-                                                      onErrorMessageMatcher(
-                                                        'title',
-                                                        _errors[index]?.title,
-                                                        AddonsErrors
-                                                      )
-                                                        ? 'red'
-                                                        : '',
-                                                  }}
-                                                />
-                                              </div>
-                                              <div className="col-span-6 sm:col-span-6">
-                                                <CustomNumberField
-                                                  name={`addons[${index}].quantityMinimum`}
-                                                  min={1}
-                                                  max={99999}
-                                                  minFractionDigits={0}
-                                                  maxFractionDigits={0}
-                                                  placeholder={t(
-                                                    'Minimum Quantity'
-                                                  )}
-                                                  showLabel={true}
-                                                  value={value.quantityMinimum}
-                                                  onChangeFieldValue={
-                                                    setFieldValue
-                                                  }
-                                                  style={{
-                                                    borderColor:
-                                                      onErrorMessageMatcher(
-                                                        'quantityMinimum',
-                                                        _errors[index]
-                                                          ?.quantityMinimum,
-                                                        AddonsErrors
-                                                      )
-                                                        ? 'red'
-                                                        : '',
-                                                  }}
-                                                />
-                                              </div>
-                                              <div className="col-span-6 sm:col-span-6">
-                                                <CustomNumberField
-                                                  name={`addons[${index}].quantityMaximum`}
-                                                  min={1}
-                                                  max={99999}
-                                                  minFractionDigits={0}
-                                                  maxFractionDigits={0}
-                                                  placeholder={t(
-                                                    'Maximum Quantity'
-                                                  )}
-                                                  showLabel={true}
-                                                  value={value.quantityMaximum}
-                                                  onChangeFieldValue={
-                                                    setFieldValue
-                                                  }
-                                                  style={{
-                                                    borderColor:
-                                                      onErrorMessageMatcher(
-                                                        'quantityMaximum',
-                                                        _errors[index]
-                                                          ?.quantityMaximum,
-                                                        AddonsErrors
-                                                      )
-                                                        ? 'red'
-                                                        : '',
-                                                  }}
-                                                />
-                                              </div>
-
-                                              <div className="col-span-12 sm:col-span-12">
-                                                <CustomTextAreaField
-                                                  name={`addons[${index}].description`}
-                                                  placeholder={t('Description')}
-                                                  value={value.description}
-                                                  onChange={handleChange}
-                                                  showLabel={true}
-                                                  maxLength={40}
-                                                  style={{
-                                                    borderColor:
-                                                      onErrorMessageMatcher(
-                                                        'description',
-                                                        _errors[index]
-                                                          ?.description,
-                                                        OptionErrors
-                                                      )
-                                                        ? 'red'
-                                                        : '',
-                                                  }}
-                                                />
-                                              </div>
-
-                                              <div className="col-span-12 sm:col-span-12">
-                                                <CustomMultiSelectComponent
-                                                  name={`addons[${index}].options`}
-                                                  placeholder={t('Options')}
-                                                  options={
-                                                    optionsDropdown ?? []
-                                                  }
-                                                  selectedItems={value.options}
-                                                  setSelectedItems={
-                                                    setFieldValue
-                                                  }
-                                                  showLabel={true}
-                                                  style={{
-                                                    borderColor:
-                                                      onErrorMessageMatcher(
-                                                        'options',
-                                                        _errors[index]
-                                                          ?.options as string,
-                                                        AddonsErrors
-                                                      )
-                                                        ? 'red'
-                                                        : '',
-                                                  }}
-                                                />
-                                              </div>
-                                            </div>
-                                          </Fieldset>
-                                        </div>
-                                      </div>
-                                    );
-                                  }
-                                )}
-                              {!addon && (
-                                <div className="mt-4 flex justify-end">
-                                  <TextIconClickable
-                                    className="w-full rounded border border-black bg-transparent text-black"
-                                    icon={faAdd}
-                                    iconStyles={{ color: 'black' }}
-                                    title={t('Add New Addon')}
-                                    onClick={() =>
-                                      push(initialFormValuesTemplate)
-                                    }
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </FieldArray>
-
-                        <div className="mt-4 flex justify-end">
-                          <CustomButton
-                            className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                            label={addon ? t('Edit') : t('Add')}
-                            type="submit"
-                            loading={mutationLoading}
-                          />
-                        </div>
-                      </div>
-                    </Form>
-                  );
-                }}
-              </Formik>
-            </div>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={AddonSchema}
+              onSubmit={handleSubmit}
+              enableReinitialize
+            >
+              {({ handleSubmit }) => (
+                <Form onSubmit={handleSubmit}>
+                  <div className="mt-4 flex justify-end">
+                    <CustomButton
+                      className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                      label={addon ? t('Edit') : t('Add')}
+                      type="submit"
+                      loading={mutationLoading}
+                    />
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>
