@@ -24,7 +24,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@react-google-maps/api": "^2.19.3",
     "autosuggest-highlight": "^3.3.4",
-    "chart.js": "^4.4.4",
+    "chart.js": "^4.4.7",
     "formik": "^2.4.6",
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",
