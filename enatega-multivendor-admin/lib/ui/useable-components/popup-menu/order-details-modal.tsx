@@ -89,7 +89,12 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
           <div className="paid-amount">
             <span className="paid-label">Paid Amount</span>
             <span className="paid-value">
-              ${(restaurantData.paidAmount ?? 0)?.toFixed(2)}
+              ${(
+                  restaurantData.orderAmount +
+                  (restaurantData.deliveryCharges ?? 0) +
+                  (restaurantData.taxationAmount ?? 0) +
+                  (restaurantData.tipping ?? 0)
+                ).toFixed(2)}
             </span>
           </div>
         </div>
