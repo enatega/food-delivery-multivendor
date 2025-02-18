@@ -66,7 +66,7 @@ const useOrder = order => {
 
   async function onCompleted(result) {
     if (result.assignOrder) {
-      console.log(result.assignOrder)
+      // console.log(result.assignOrder)
     }
   }
 

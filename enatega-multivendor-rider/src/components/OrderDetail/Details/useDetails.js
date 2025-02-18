@@ -22,8 +22,10 @@ const UPDATE_ORDER_STATUS = gql`
 `
 
 const useDetails = orderData => {
+
   const { active, setActive } = useContext(TabsContext)
-  const { assignedOrders, loadingAssigned } = useContext(UserContext)
+  const { assignedOrders, loadingAssigned,dataProfile} = useContext(UserContext)
+
   const [order, setOrder] = useState(orderData)
   const { t } = useTranslation()
   useEffect(() => {
@@ -79,39 +81,37 @@ const useDetails = orderData => {
   ] = useMutation(UPDATE_ORDER_STATUS, { onCompleted, onError, update })
 
   async function onCompleted(result) {
-    if (result.updateOrderStatusRider) {
+    if (result?.updateOrderStatusRider) {
       FlashMessage({
         message: `${t('orderMarkedAs')} ${t(
-          result.updateOrderStatusRider.orderStatus
+          result?.updateOrderStatusRider?.orderStatus
         )}`
       })
     }
-    if (result.assignOrder) {
+    if (result?.assignOrder) {
       FlashMessage({
         message: t('orderAssingnedFlash')
       })
       setActive('MyOrders')
     }
   }
-
   function onError({ graphQLErrors, networkError }) {
-    let message = t('errorOccured')
+    let message = t('errorOccured') 
     if (networkError) message = 'Internal Server Error'
     if (graphQLErrors) message = graphQLErrors.map(o => o.message).join(', ')
-
     FlashMessage({ message: message })
   }
 
   async function update(cache, { data: result }) {
-    if (result.assignOrder) {
+    if (result?.assignOrder) {
       const data = cache.readQuery({ query: ORDERS })
       if (data) {
-        const index = data.riderOrders.findIndex(
+        const index = data?.riderOrders?.findIndex(
           o => o._id === result.assignOrder._id
         )
         if (index > -1) {
-          data.riderOrders[index].rider = result.assignOrder.rider
-          data.riderOrders[index].orderStatus = result.assignOrder.orderStatus
+          data.riderOrders[index].rider = result?.assignOrder?.rider
+          data.riderOrders[index].orderStatus = result?.assignOrder?.orderStatus
           cache.writeQuery({
             query: ORDERS,
             data: { riderOrders: [...data.riderOrders] }
@@ -119,18 +119,18 @@ const useDetails = orderData => {
         }
       }
     }
-    if (result.updateOrderStatusRider) {
+    if (result?.updateOrderStatusRider) {
       const data = cache.readQuery({ query: ORDERS })
       if (data) {
-        const index = data.riderOrders.findIndex(
-          o => o._id === result.updateOrderStatusRider._id
+        const index = data?.riderOrders?.findIndex(
+          o => o._id === result?.updateOrderStatusRider?._id   
         )
         if (index > -1) {
           data.riderOrders[index].orderStatus =
-            result.updateOrderStatusRider.orderStatus
+            result?.updateOrderStatusRider?.orderStatus
           cache.writeQuery({
             query: ORDERS,
-            data: { riderOrders: [...data.riderOrders] }
+            data: { riderOrders: [...data?.riderOrders] }
           })
         }
       }
@@ -147,7 +147,8 @@ const useDetails = orderData => {
     mutateAssignOrder,
     mutateOrderStatus,
     loadingAssignOrder,
-    loadingOrderStatus
+    loadingOrderStatus,
+    dataProfile
   }
 }
 

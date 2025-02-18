@@ -70,7 +70,7 @@ export default function Detail({
         </TextDefault>
       </View>
       
-      <View style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems:'center', ...alignment.MBsmall }}>
+      <View style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between',alignItems:'center', ...alignment.MBsmall,paddingRight:15 }}>
         <TextDefault
           textColor={theme.gray500}
           bolder
@@ -90,6 +90,7 @@ export default function Detail({
           {t('price')}
         </TextDefault>
       </View>
+
       <View style={styles.itemsContainer}>
         {items.map((item) => (
           <ItemRow
@@ -166,7 +167,7 @@ const ItemRow = ({
       </View>
       <TextDefault
         right
-        style={{ width: '20%' }}
+        style={{ width: '15%' }}
         bolder
         textColor={theme.gray900}
         H5

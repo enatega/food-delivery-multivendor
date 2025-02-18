@@ -31,6 +31,8 @@ import CustomTextAreaField from '@/lib/ui/useable-components/custom-text-area-fi
 import CustomGoogleMapsLocationZoneBounds from '@/lib/ui/useable-components/google-maps/location-bounds-zone';
 import { TPolygonPoints } from '@/lib/utils/types';
 import { useTranslations } from 'next-intl';
+import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
+import { useContext } from 'react';
 
 export default function ZoneAddForm({
   onHide,
@@ -38,27 +40,20 @@ export default function ZoneAddForm({
   position = 'right',
   isAddZoneVisible,
 }: IZoneAddFormComponentProps) {
-  // Hooks
-  const t = useTranslations();
-
   // State
   const initialValues: IZoneForm = {
     _id: zone?._id ?? '',
     title: zone?.title || '',
     description: zone?.description || '',
-    coordinates: zone?.location?.coordinates ?? [
-      [
-        [74.3587, 31.5497],
-        [74.42, 31.5497],
-        [74.42, 31.6],
-        [74.3587, 31.6],
-        [74.3587, 31.5497],
-      ],
-    ],
+    coordinates: zone?.location?.coordinates ?? [[[]]],
   };
 
   // Hooks
+  const t = useTranslations();
   const { showToast } = useToast();
+
+  // Context
+  const { isLoaded } = useContext(GoogleMapsContext);
 
   // Query
   const { data } = useQueryGQL(GET_ZONES, {
@@ -78,6 +73,13 @@ export default function ZoneAddForm({
     values: IZoneForm,
     { resetForm }: FormikHelpers<IZoneForm>
   ) => {
+    if (values.coordinates[0].length < 2) {
+      return showToast({
+        type: 'error',
+        title: 'Zone not selected',
+        message: 'Please provide a valid zone',
+      });
+    }
     if (data) {
       createZone({
         variables: {
@@ -98,7 +100,7 @@ export default function ZoneAddForm({
           showToast({
             type: 'success',
             title: `${zone ? t('New') : t('Edit')} ${t('Zone')}`,
-            message: `${t('Zone has been')} ${zone ? t('Updated') : t('Added')} ${t('successfully')}`,
+            message: `${t('Zone has been')} ${zone ? t('updated') : t('added')} ${t('successfully')}`,
           });
           resetForm();
           onHide();
@@ -107,7 +109,7 @@ export default function ZoneAddForm({
           const message =
             graphQLErrors[0]?.message ??
             networkError?.message ??
-            t('Something went wrong. Please try again');
+            t('Something went wrong, Please try again');
 
           showToast({
             type: 'error',
@@ -118,6 +120,7 @@ export default function ZoneAddForm({
       });
     }
   };
+
   return (
     <Sidebar
       visible={isAddZoneVisible}
@@ -140,8 +143,7 @@ export default function ZoneAddForm({
                 validationSchema={ZoneSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
-                validateOnChange={false} // Disable validation on change
-                validateOnBlur={false} // Disable validation on blur
+                validateOnChange={false}
               >
                 {({
                   values,
@@ -192,15 +194,16 @@ export default function ZoneAddForm({
                           />
                         </div>
 
-                        <CustomGoogleMapsLocationZoneBounds
-                          key={values?._id}
-                          _id={values?._id ?? ''}
-                          _path={values?.coordinates}
-                          coordinates={values?.coordinates}
-                          onSetZoneCoordinates={(path: TPolygonPoints) =>
-                            setFieldValue('coordinates', path)
-                          }
-                        />
+                        {isLoaded && (
+                          <CustomGoogleMapsLocationZoneBounds
+                            key={values?._id}
+                            _id={values?._id ?? ''}
+                            _path={values?.coordinates}
+                            onSetZoneCoordinates={(path: TPolygonPoints) =>
+                              setFieldValue('coordinates', path)
+                            }
+                          />
+                        )}
 
                         <div className="mt-4 flex justify-end">
                           <CustomButton

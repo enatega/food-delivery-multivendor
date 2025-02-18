@@ -5,7 +5,7 @@ export const riderLogin = `mutation RiderLogin($username:String,$password:String
   }
 }`
 
-export const updateOrderStatusRider = `mutation UpdateOrderStatusRider($id:String!,$status:String!){
+export const updateOrderStatusRider = `mutation UpdateOrderStatusRider($id:String!, $status:String!){
   updateOrderStatusRider(id:$id,status:$status){
     _id
     orderStatus

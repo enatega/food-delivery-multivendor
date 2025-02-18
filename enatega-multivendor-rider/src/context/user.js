@@ -99,9 +99,9 @@ export const UserProvider = props => {
   }, [locationPermission])
 
   function onCompleted({ rider, assignedOrders }) {
-    console.log(rider)
-    console.log(assignedOrders)
-    console.log('onCompleted context')
+    // console.log(rider)
+    // console.log(assignedOrders)
+    // console.log('onCompleted context')
   }
 
   function error1(error) {
