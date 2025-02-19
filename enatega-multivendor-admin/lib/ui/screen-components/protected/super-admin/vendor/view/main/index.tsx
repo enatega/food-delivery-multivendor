@@ -48,7 +48,9 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
     onSetRestaurantContextData,
   } = useContext(RestaurantContext);
 
-  const vendors = globalFilter ? filtered : vendorResponse?.data?.vendors;
+  const vendors = (filtered && filtered.length > 0) || globalFilter ? filtered : vendorResponse?.data?.vendors;
+
+
   const restaurants = restaurantContextData.globalFilter
     ? restaurantContextData?.filtered
     : restaurantByOwnerResponse?.data?.restaurantByOwner?.restaurants;
