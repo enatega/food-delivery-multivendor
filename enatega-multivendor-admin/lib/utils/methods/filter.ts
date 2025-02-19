@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const onFilterObjects = <T>(
   list: T[],
   searchString: string,
@@ -16,7 +17,14 @@ export const onFilterObjects = <T>(
       })
     )
     .sort((a: any, b: any) => {
-      // Sorting by `_id` (MongoDB default sorting mechanism)
-      return parseInt(b._id.substring(0, 8), 16) - parseInt(a._id.substring(0, 8), 16);
+      try {
+        if (typeof a._id !== 'string' || typeof b._id !== 'string') return 0;
+        if (a._id.length < 8 || b._id.length < 8) return 0;
+        return parseInt(b._id.substring(0, 8), 16) - parseInt(a._id.substring(0, 8), 16);
+      } catch (error) {
+        console.error('Error sorting by _id:', error);
+        return 0;
+      }
     });
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */

@@ -119,9 +119,7 @@ export const VendorProvider = ({ children }: IProvider) => {
     } 
   }, [vendorResponse?.data?.vendors, globalFilter]);
 
-  useEffect(() => {
-    
-  }, [filtered]);
+ 
 
   useEffect(() => {
     onVendorReponseFetchCompleted();
