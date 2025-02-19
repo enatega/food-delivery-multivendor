@@ -33,12 +33,13 @@ export const VendorProvider = ({ children }: IProvider) => {
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [isEditingVendor, setIsEditing] = useState<boolean>(false);
   const [isReset, setIsReset] = useState<boolean>(false);
-
+  
   // API
+
   const vendorResponse = useQueryGQL(
     GET_VENDORS,
-    {},
     {
+     
       debounceMs: 300,
       onCompleted: (data: unknown) => {
         const _data = data as IVendorResponseGraphQL;
@@ -48,9 +49,16 @@ export const VendorProvider = ({ children }: IProvider) => {
           SELECTED_VENDOR_EMAIL,
           _data?.vendors[0]?.email
         );
+        setFiltered(_data.vendors);
+         // Ensure filtered list updates
+         
       },
+      
     }
   ) as IQueryResult<IVendorResponseGraphQL | undefined, undefined>;
+  
+
+
 
   // State Handler
   const onSetVendorFormVisible = (status: boolean, isEdit?: boolean) => {
@@ -83,9 +91,13 @@ export const VendorProvider = ({ children }: IProvider) => {
       globalFilter,
       ['email', 'userType', 'unique_id']
     );
-
+  
     setFiltered(_filtered);
+    
   };
+  
+
+
 
   const onVendorReponseFetchCompleted = useCallback(() => {
     // Only when record is deleted.
@@ -101,8 +113,13 @@ export const VendorProvider = ({ children }: IProvider) => {
 
   // Use Effect
   useEffect(() => {
-    onHandlerFilterData();
-  }, [globalFilter]);
+    if (vendorResponse?.data?.vendors && vendorResponse?.data?.vendors.length > 0) {
+     
+      onHandlerFilterData();
+    } 
+  }, [vendorResponse?.data?.vendors, globalFilter]);
+
+ 
 
   useEffect(() => {
     onVendorReponseFetchCompleted();
