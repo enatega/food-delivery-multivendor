@@ -27,7 +27,6 @@ import {
 // GraphQL
 import { DELETE_OPTION, GET_OPTIONS_BY_RESTAURANT_ID } from '@/lib/api/graphql';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
-import { generateDummyOptions } from '@/lib/utils/dummy';
 import { useMutation } from '@apollo/client';
 import CategoryTableHeader from '../header/table-header';
 import { useTranslations } from 'next-intl';
@@ -132,8 +131,10 @@ export default function OptionMain({
           />
         }
         data={
-          data?.restaurant?.options.slice().reverse() ||
-          (loading ? generateDummyOptions() : [])
+          (data?.restaurant?.options || [])
+            .filter(option => option.title !== '7up' && option.title !== 'Pepsi') // Filter out default options cpming from the backend
+            .slice()
+            .reverse()|| []
         }
         filters={filters}
         setSelectedData={setSelectedProducts}
