@@ -98,7 +98,7 @@ export default function GrowthOverView() {
         {
           label: t('Users'),
           data: dashboardUsersByYear?.usersCount ?? [],
-          fill: true,
+          fill: false,
 
           borderColor: 'rgba(90, 193, 47, 1)',
           backgroundColor: 'rgba(201, 232, 189, 0.2)',
