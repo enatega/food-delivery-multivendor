@@ -35,7 +35,6 @@ const FAVOURITERESTAURANTS = gql`
 `
 
 function NewRestaurantCard(props) {
-
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
@@ -50,11 +49,9 @@ function NewRestaurantCard(props) {
     onCompleted,
     refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
-  // const isRestaurantOpen = props?.isOpen
   const isAvailable = props?.isAvailable
+  const isRestaurantClosed = !isAvailable
 
-  const isRestaurantClosed = !isAvailable;
-// console.log("isAvailable--->>",isAvailable)
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
   }
@@ -114,10 +111,28 @@ function NewRestaurantCard(props) {
               props?.fullWidth && { width: '100%' }
             ]}
           />
+          {/* Resturant Availability Status Label */}
+          <View style={{
+            position: 'absolute',
+            top: 12,
+            left: 12,
+            backgroundColor: 'rgba(128, 128, 128, 0.9)',
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: 4
+          }}>
+            <TextDefault
+              H5
+              bold
+              textColor={currentTheme.white}
+            >
+              {isRestaurantClosed ? t('Closed') : t('Open')}
+            </TextDefault>
+          </View>
           {isRestaurantClosed && (
             <View style={styles(currentTheme).closedOverlay}>
               <TextDefault H4 textColor={currentTheme.white} bold>
-                Closed
+                {t('Closed')}
               </TextDefault>
             </View>
           )}

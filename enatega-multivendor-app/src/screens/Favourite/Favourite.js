@@ -150,7 +150,7 @@ function Favourite() {
               isCategories
               fullWidth
               isOpen={true}
-              isAvailable={item.isAvailable ||  true}
+              isAvailable={item.isAvailable ||  false}
             />
           )
         }}

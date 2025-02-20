@@ -250,7 +250,7 @@ function Profile(props) {
                             reviewCount={item.reviewCount}
                             isCategories
                             isOpen={true}
-                            isAvailable={item.isAvailable || true}
+                            isAvailable={item.isAvailable || false}
                             
                           />
                         )
