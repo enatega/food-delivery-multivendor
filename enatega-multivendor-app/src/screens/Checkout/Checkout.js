@@ -226,10 +226,9 @@ function Checkout(props) {
     if (tip) {
       setSelectedTip(null)
     }
-    // uncomment it if you want to select the tip by default
-    // else if (dataTip && !selectedTip) {
-    //   setSelectedTip(dataTip.tips.tipVariations[1])
-    // }
+    else if (dataTip && !selectedTip) {
+      setSelectedTip(dataTip.tips.tipVariations[1])
+    }
   }, [tip, data])
 
   useEffect(() => {
@@ -1057,7 +1056,7 @@ function Checkout(props) {
                     </>
                   )}
                 </View>
-                {/* {paymentMode === 'HYP' && (
+                {paymentMode === 'COD' && (
                   <View style={styles().tipSec}>
                     <View style={[styles(currentTheme).tipRow]}>
                       <TextDefault
@@ -1137,7 +1136,7 @@ function Checkout(props) {
                       </View>
                     )}
                   </View>
-                )} */}
+                )}
 
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault
@@ -1217,7 +1216,7 @@ function Checkout(props) {
                   </View>
 
                   <View style={styles(currentTheme).horizontalLine2} />
-                  {/* {paymentMode === 'HYP' && (
+                  {paymentMode === 'COD' && (
                     <View style={styles(currentTheme).billsec}>
                       <TextDefault
                         numberOfLines={1}
@@ -1237,7 +1236,7 @@ function Checkout(props) {
                         {parseFloat(calculateTip()).toFixed(2)}
                       </TextDefault>
                     </View>
-                  )} */}
+                  )}
 
                   {coupon && (
                     <View>
