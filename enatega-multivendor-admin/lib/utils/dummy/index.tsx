@@ -166,6 +166,7 @@ export const generateDummyRiders = (count: number = 10): IRiderResponse[] => {
       available: Math.random() > 0.5,
       __typename: 'Rider',
       assigned: [''],
+      vehicleType: '',
     });
   }
 

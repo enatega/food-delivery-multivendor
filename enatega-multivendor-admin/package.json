@@ -25,6 +25,7 @@
     "@react-google-maps/api": "^2.19.3",
     "autosuggest-highlight": "^3.3.4",
     "chart.js": "^4.4.4",
+    "firebase": "^11.3.0",
     "formik": "^2.4.6",
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",
@@ -36,6 +37,7 @@
     "react-dom": "^18",
     "react-geocode": "^0.2.2",
     "react-international-phone": "^4.3.0",
+    "subscriptions-transport-ws": "^0.11.0",
     "tailwind-merge": "^2.5.2",
     "yup": "^1.6.1"
   },

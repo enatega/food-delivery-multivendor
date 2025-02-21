@@ -14,6 +14,7 @@ import { GET_RIDERS, TOGGLE_RIDER } from '@/lib/api/graphql';
 import { useMutation } from '@apollo/client';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
+import { toTextCase } from '@/lib/utils/methods';
 
 export const RIDER_TABLE_COLUMNS = ({
   menuItems,
@@ -64,10 +65,17 @@ export const RIDER_TABLE_COLUMNS = ({
     { headerName: t('Name'), propertyName: 'name' },
     { headerName: t('Username'), propertyName: 'username' },
     { headerName: t('Phone'), propertyName: 'phone' },
+    { headerName: t('Phone'), propertyName: 'phone' },
     {
       headerName: t('Zone'),
       propertyName: 'zone',
       body: (rider: IRiderResponse) => rider.zone.title,
+    },
+    {
+      headerName: 'Vehicle Type',
+      propertyName: 'vehicleType',
+      body: (rider: IRiderResponse) =>
+        toTextCase(rider.vehicleType.replaceAll('_', ' '), 'title'),
     },
     {
       headerName: t('Available'),

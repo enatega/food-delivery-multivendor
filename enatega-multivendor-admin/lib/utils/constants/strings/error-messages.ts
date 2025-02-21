@@ -95,6 +95,7 @@ export const RiderErrors: IRiderErrors = {
   confirmPassword: ['Required', 'Password must match'],
   zone: ['Required'],
   phone: ['Required'],
+  vehicleType: ['Required'],
 };
 
 export const BannersErrors: IBannersErrors = {
@@ -157,7 +158,7 @@ export const CuisineErrors: ICuisineErrors = {
   name: ['Required', 'Name cannot be only spaces'],
   description: ['Required', 'Name cannot be only spaces'],
   shopType: ['Required'],
-  image:['Required']
+  image: ['Required'],
 };
 
 export const CouponErrors: ICouponErrors = {

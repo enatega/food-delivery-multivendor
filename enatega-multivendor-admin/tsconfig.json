@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     ".next/types/app/(unprotected)/layout.tss",
     ".next/types/app/(protected)/layout.tss",
-    "lib/context/query-context.tsx"
+    "lib/context/query-context.tsx",
+    "public/firebase-messaging-sw.js"
   ],
   "exclude": ["cypress.config.ts", "cypress", "node_modules"]
 }
