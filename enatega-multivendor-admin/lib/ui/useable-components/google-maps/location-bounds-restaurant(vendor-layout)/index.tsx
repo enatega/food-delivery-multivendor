@@ -762,7 +762,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
                 placeholder={t('Radius')}
                 maxLength={35}
                 min={0}
-                max={100}
                 value={distance}
                 onChange={handleDistanceChange}
                 showLabel={true}

@@ -120,6 +120,7 @@ export const DISPATCH_TABLE_COLUMNS = (
   );
   const [isRiderLoading, setIsRiderLoading] = useState({
     _id: '',
+    orderId: '',
     bool: false,
   });
   const [isStatusUpdating, setIsStatusUpdating] = useState({
@@ -128,10 +129,10 @@ export const DISPATCH_TABLE_COLUMNS = (
   });
 
   // Query
-  const { data: ridersData, loading: ridersLoading } = useQueryGQL(
-    GET_RIDERS,
-    {}
-  ) as IQueryResult<IRidersDataResponse | undefined, undefined>;
+  const { data: ridersData } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
+    IRidersDataResponse | undefined,
+    undefined
+  >;
 
   // Side-Effects
   useEffect(() => {
@@ -176,6 +177,14 @@ export const DISPATCH_TABLE_COLUMNS = (
           t('An error occured while assigning the job to rider'),
       });
     },
+
+    onCompleted: () => {
+      setIsRiderLoading({
+        _id: '',
+        orderId: '',
+        bool: false,
+      });
+    },
     refetchQueries: [{ query: GET_ACTIVE_ORDERS }],
   });
 
@@ -201,22 +210,14 @@ export const DISPATCH_TABLE_COLUMNS = (
 
   //Handlers
   const handleAssignRider = async (
-    item: IRiderDropDownSelectItem,
+    item: IDropdownSelectItem,
     rowData: IActiveOrders
   ) => {
-    if (item?.assignedOrders.length > 5) {
-      return showToast({
-        type: 'error',
-        title: t('Assign Rider'),
-        message: t(
-          'This rider has already been assigned 5 orders, please choose a different one'
-        ),
-      });
-    }
     if (item._id) {
       setIsRiderLoading({
         _id: item._id,
         bool: true,
+        orderId: rowData._id,
       });
 
       const { data } = await assignRider({
@@ -233,17 +234,14 @@ export const DISPATCH_TABLE_COLUMNS = (
         });
       }
     }
-    setIsRiderLoading({
-      _id: '',
-      bool: false,
-    });
   };
 
   const handleStatusDropDownChange = async (
     e: DropdownChangeEvent,
     rowData: IActiveOrders
   ) => {
-    // Set the loader to true for the specific row
+    console.log(rowData);
+    // // Set the loader to true for the specific row
     setIsStatusUpdating({
       _id: rowData._id,
       bool: true,
@@ -259,6 +257,7 @@ export const DISPATCH_TABLE_COLUMNS = (
       });
     } catch (error) {
       // Handle error
+      console.log(error);
       showToast({
         type: 'error',
         title: t('Order Status'),
@@ -295,33 +294,59 @@ export const DISPATCH_TABLE_COLUMNS = (
       propertyName: 'rider.name',
       headerName: t('Rider'),
       body: (rowData: IActiveOrders) => {
-        return (
-          <div>
-            <Dropdown
-              options={riderOptions}
-              loading={
-                (isRiderLoading.bool && isRiderLoading._id === rowData._id) ||
-                ridersLoading
-              }
-              value={{
-                label: rowData?.rider?.name.toString() ?? '',
-                code: rowData?.rider?.name.toString().toUpperCase() ?? '',
-                _id: rowData?.rider?._id.toString() ?? '',
-                assignedOrders: rowData.rider?.assigned,
-              }}
-              placeholder={'Select Rider'}
-              onChange={(e: DropdownChangeEvent) =>
-                handleAssignRider(e.value, rowData)
-              }
-              optionDisabled={(option) =>
-                option.assignedOrders.length > 5 &&
-                option._id !== rowData?.rider?._id
-              }
-              // filter={true}
-              className="outline outline-1 min-w-[120px] outline-gray-300"
-            />
-          </div>
-        );
+        const selectedRider: IDropdownSelectItem = {
+          label: rowData?.rider?.name.toString() ?? '',
+          code: rowData?.rider?.name.toString().toUpperCase() ?? '',
+          _id: rowData?.rider?._id.toString() ?? '',
+        };
+        if (rowData._id && !rowData.isPickedUp) {
+          return (
+            <div>
+              <Dropdown
+                options={riderOptions}
+                loading={
+                  isRiderLoading._id === selectedRider._id &&
+                  isRiderLoading.bool === true &&
+                  isRiderLoading.orderId === rowData._id
+                }
+                value={selectedRider}
+                placeholder={t('Select Rider')}
+                onChange={(e: DropdownChangeEvent) =>
+                  handleAssignRider(e.value, rowData)
+                }
+                // filter={true}
+                className="min-w-[120px] outline outline-1 outline-gray-300"
+              />
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <Dropdown
+                options={[
+                  {
+                    code: 'Pickup',
+                    label: t('Pickup'),
+                  },
+                ]}
+                loading={
+                  isRiderLoading.bool && isRiderLoading._id === rowData._id
+                }
+                value={{
+                  code: 'Pickup',
+                  label: t('Pickup'),
+                }}
+                dropdownIcon={() => <></>}
+                disabled={true}
+                // onChange={(e: DropdownChangeEvent) =>
+                //   handleAssignRider(e.value, rowData)
+                // }
+                // filter={true}
+                className="min-w-[150px] outline outline-1 outline-gray-300"
+              />
+            </div>
+          );
+        }
       },
     },
     {

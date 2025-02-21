@@ -2,6 +2,7 @@ import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 export interface IActiveOrders {
   _id: string;
+  isPickedUp: boolean;
   zone: {
     _id: string;
   };
@@ -24,7 +25,6 @@ export interface IActiveOrders {
     name: string;
     username: string;
     available: boolean;
-    assigned: string[];
   };
 }
 
