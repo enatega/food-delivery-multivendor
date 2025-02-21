@@ -12,17 +12,25 @@ export interface IMenuItem extends IGlobalComponentProps {
   value: string;
 }
 
+export interface Items {
+  variation: {
+    price: number;
+  };
+  addons?: Array<{
+    options: Array<{
+      price: number;
+      title: string;
+    }>;
+  }>;
+  description: ReactNode;
+  title: string;
+  quantity: number;
+}
+
 export interface IOrder extends IGlobalComponentProps {
   _id: string;
   orderId: string;
-  items: Array<{
-    variation: {
-      price: number;
-    };
-    description: ReactNode;
-    title: string;
-    quantity: number;
-  }>;
+  items: Items[];
   paymentStatus: string;
   createdAt: string;
   deliveryAddress: {
