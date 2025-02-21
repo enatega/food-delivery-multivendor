@@ -1,6 +1,6 @@
 import { FilterMatchMode } from 'primereact/api';
 import { IGlobalComponentProps } from './global.interface';
-import { DataTableRowClickEvent } from 'primereact/datatable';
+import { DataTableRowClickEvent, DataTableStateEvent, SortOrder } from 'primereact/datatable';
 
 export interface IFilterType {
   [key: string]: {
@@ -28,6 +28,14 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   handleRowClick?: (event: DataTableRowClickEvent) => void;
   rowsPerPage?: number;
   moduleName?: string;
+  totalRecords?: number;
+  onPageChange?: (page: number, rows: number) => void;
+  currentPage?: number;
+  onPage?: (e: DataTableStateEvent) => void;
+  scrollable?: boolean;
+  scrollHeight?: string;
+  sortField?:string;
+  sortOrder?:SortOrder
 }
 
 export interface ITableExtends extends IGlobalComponentProps {

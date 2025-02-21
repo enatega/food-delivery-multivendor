@@ -2,6 +2,7 @@ import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 export interface IActiveOrders {
   _id: string;
+  isPickedUp: boolean;
   zone: {
     _id: string;
   };
@@ -24,7 +25,6 @@ export interface IActiveOrders {
     name: string;
     username: string;
     available: boolean;
-    assigned: string[];
   };
 }
 
@@ -39,7 +39,7 @@ export interface GeolocationCoordinates {
 }
 
 export interface IGetActiveOrders {
-  getActiveOrders: IActiveOrders[];
+  getActiveOrders: { totalCount: number; orders: IActiveOrders[] };
 }
 
 export interface IRidersByZone {
@@ -76,4 +76,7 @@ export interface IDispatchTableHeaderProps {
   onGlobalFilterChange: (e: ChangeEvent<HTMLInputElement>) => void;
   selectedActions: string[];
   setSelectedActions: Dispatch<SetStateAction<string[]>>;
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 }
+

@@ -82,6 +82,8 @@ export default function VariationAddForm({
     useContext(FoodsContext);
   const {
     restaurantLayoutContextData: { restaurantId },
+    option,
+    setOption
   } = useContext(RestaurantLayoutContext);
 
   // Constants
@@ -471,15 +473,21 @@ export default function VariationAddForm({
           </div>
         </div>
       </div>
-
-      <AddonAddForm
-        addon={addon}
-        onHide={() => {
-          setIsAddAddonVisible(false);
-          setAddon(null);
-        }}
-        isAddAddonVisible={isAddAddonVisible}
-      />
+      <div>
+        <AddonAddForm
+        className='z-[999]'
+          isAddOptionsVisible={isAddAddonVisible}
+          setIsAddOptionsVisible={setIsAddAddonVisible}
+          option={option}
+          setOption={setOption}
+          addon={addon}
+          onHide={() => {
+            setIsAddAddonVisible(false);
+            setAddon(null);
+          }}
+          isAddAddonVisible={isAddAddonVisible}
+        />
+      </div>
     </div>
   );
 }

@@ -29,28 +29,26 @@ import {
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import { MAX_VIDEO_FILE_SIZE } from '@/lib/utils/constants';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from 'use-intl';
+// import { MAX_VIDEO_FILE_SIZE } from '@/lib/utils/constants';
 
 function CustomUploadImageComponent({
   name,
   title,
   page,
-  error,
   // onChange,
   onSetImageUrl,
   existingImageUrl,
   style,
-  maxFileSize,
-  maxFileWidth,
-  maxFileHeight,
-  fileTypes = ['image/webp', 'video/webm', 'video/mp4'],
-  orientation,
-  maxVideoSize = MAX_VIDEO_FILE_SIZE,
+  fileTypes = [
+    'image/webp',
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'video/webm',
+    'video/mp4',
+  ],
 }: IImageUploadComponentProps) {
-  // Hoooks
-  const t = useTranslations();
-
   // Context
   const configuration: IConfiguration | undefined =
     useContext(ConfigurationContext);
@@ -65,214 +63,28 @@ function CustomUploadImageComponent({
     msg: '',
   });
 
-  // Validate Video
-  const validateVideo = useCallback(
-    async (file: File): Promise<boolean> => {
-      return new Promise((resolve) => {
-        const videoSize = file.size / (1024 * 1024);
-        const video = document.createElement('video');
-        video.preload = 'metadata';
-
-        video.onloadedmetadata = () => {
-          const isInvalidVideo =
-            (orientation === 'LANDSCAPE' &&
-              video.videoWidth <= video.videoHeight) ||
-            (orientation === 'SQUARE' &&
-              video.videoWidth !== video.videoHeight) ||
-            video.videoHeight > video.videoWidth;
-          if (videoSize > maxVideoSize) {
-            showToast({
-              type: 'error',
-              title: t('Upload Video'),
-              message: `${t('Video size must be')} < ${maxVideoSize}`,
-            });
-            setImageValidationErr({
-              bool: true,
-              msg: `${t('Video size must be')} < ${maxVideoSize}`,
-            });
-            resolve(false);
-            return false;
-          } else if (video.videoWidth > maxFileWidth) {
-            showToast({
-              type: 'error',
-              title: t('Upload Video'),
-              message: `${t('Video width must be')} < ${maxFileWidth}`,
-            });
-            setImageValidationErr({
-              bool: true,
-              msg: `${t('Video width must be')} < ${maxFileWidth}`,
-            });
-            resolve(false);
-            return false;
-          } else if (video.videoHeight > maxFileHeight) {
-            showToast({
-              type: 'error',
-              title: t('Upload Video'),
-              message: `${t('Video height must be')} < ${maxFileHeight}`,
-            });
-            setImageValidationErr({
-              bool: true,
-              msg: `${t('Video height must be')} < ${maxFileHeight}`,
-            });
-            resolve(false);
-            return false;
-          } else if (isInvalidVideo) {
-            showToast({
-              type: 'error',
-              title: t('Upload Video'),
-              message: t(`Video dimensions must follow the guidelines`),
-            });
-            setImageValidationErr({
-              bool: true,
-              msg: t(`Video dimensions must follow the guidelines`),
-            });
-            resolve(false);
-            return false;
-          } else {
-            setImageValidationErr({
-              bool: false,
-              msg: ``,
-            });
-            resolve(true);
-            return true;
-          }
-        };
-        // Set the video source
-        video.src = URL.createObjectURL(file);
-      });
-    },
-
-    [maxFileHeight, maxFileWidth, orientation, showToast, maxVideoSize]
-  );
-
-  // Validate Image
-  const validateImage = useCallback(
-    async (file: File) => {
-      let img = new window.Image();
-      let fileReader = new FileReader();
-
-      const { isValid } = await new Promise<{
-        imgSrc: string;
-        isValid: boolean;
-      }>((resolve) => {
-        try {
-          fileReader.onload = (e: ProgressEvent<FileReader>) => {
-            const result = e.target?.result as string;
-            img.src = result;
-
-            img.onload = () => {
-              // Validate orientation
-              const invalidOrientation =
-                (orientation === 'LANDSCAPE' && img.width <= img.height) ||
-                (orientation === 'SQUARE' && img.width !== img.height) ||
-                img.height > img.width;
-
-              if (invalidOrientation) {
-                showToast({
-                  type: 'error',
-                  title: t('Image Upload'),
-                  message: `${t('The image should be in')} ${orientation} ${t('orientation')}.`,
-                });
-                setImageValidationErr({
-                  bool: true,
-                  msg: `${t('The image should be in')} ${orientation} ${t('orientation')}.`,
-                });
-                setImageFile('');
-                return resolve({ imgSrc: '', isValid: false });
-              }
-
-              // Validate width
-              if (img.width > maxFileWidth) {
-                showToast({
-                  type: 'error',
-                  title: t('Image Upload'),
-                  message: `${t('The file width exceeds the limit of')} ${maxFileWidth}.`,
-                });
-                setImageValidationErr({
-                  bool: true,
-                  msg: `File width should be < ${maxFileWidth}`,
-                });
-                setImageFile('');
-                return resolve({ imgSrc: '', isValid: false });
-              }
-
-              // Validate height
-              if (img.height > maxFileHeight) {
-                showToast({
-                  type: 'error',
-                  title: t('Image Upload'),
-                  message: `${t('The file height exceeds the limit of')} ${maxFileHeight}.`,
-                });
-                setImageValidationErr({
-                  bool: true,
-                  msg: `${t('File height should be')} < ${maxFileHeight}`,
-                });
-                setImageFile('');
-                return resolve({ imgSrc: '', isValid: false });
-              }
-
-              // If all checks pass, set the image and resolve as valid
-              setImageValidationErr({ bool: false, msg: '' });
-              setImageFile(result);
-              resolve({ imgSrc: result, isValid: true });
-            };
-
-            img.onerror = () => {
-              showToast({
-                type: 'error',
-                title: t('Image Upload'),
-                message: t('An error occurred while loading the image'),
-              });
-              setImageValidationErr({
-                bool: true,
-                msg: t('Error during image load'),
-              });
-              setImageFile('');
-              resolve({ imgSrc: '', isValid: false });
-            };
-          };
-
-          fileReader.readAsDataURL(file);
-        } catch (error) {
-          console.error(error);
-          showToast({
-            type: 'error',
-            title: t('Image Upload'),
-            message: t('An unexpected error occurred, Please try again'),
-          });
-          setImageValidationErr({
-            bool: true,
-            msg: t('Unexpected error occurred'),
-          });
-          setImageFile('');
-          resolve({ imgSrc: '', isValid: false });
-        }
-      });
-
-      return isValid; // This should now reflect the correct validation state
-    },
-    [maxFileHeight, maxFileWidth, orientation, showToast]
-  );
+  // Hooks
+  const t = useTranslations();
 
   // Filter Files
   const filterFiles = (event: FileUploadSelectEvent): File | undefined => {
     const files = Array.from(event.files || []);
     const extracted_files = files.filter((file) =>
-      file.name.match(/\.(jpg|jpeg|png|gif|webp|mp4|webm)$/)
+      file.name.match(/\.(jpg|jpeg|png|gif|webp|avif|mp4|webm)$/)
     );
-    return extracted_files.length ? extracted_files[0] : undefined;
+    return extracted_files.length ? extracted_files[0] : files[0];
   };
 
   // Convert to Base64
   const imageToBase64 = useCallback(
     async (file: File): Promise<void> => {
-      var isValid = false;
+      var isValid = true;
       setIsUploading(true);
-      if (file?.type.startsWith('video/')) {
-        isValid = await validateVideo(file);
-      } else {
-        isValid = await validateImage(file);
-      }
+      // if (file?.type.startsWith('video/')) {
+      //   isValid = await validateVideo(file);
+      // } else {
+      //   isValid = await validateImage(file);
+      // }
       if (!isValid) {
         setIsUploading(false);
         return;
@@ -290,12 +102,28 @@ function CustomUploadImageComponent({
               configuration?.cloudinaryApiKey ?? ''
             )
               .then((url) => {
+                console.log(':rocket: ~ .then ~ url:', url);
                 isValid = false;
+                console.log(':rocket: ~ Valid url idk about the response');
                 onSetImageUrl(name, url);
+                if (!url) {
+                  showToast({
+                    type: 'error',
+                    title: title,
+                    message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+                    duration: 2500,
+                  });
+                  setImageValidationErr({
+                    bool: true,
+                    msg: 'Cloudinary Url Invalid',
+                  });
+                  setImageFile('');
+                  return;
+                }
                 showToast({
                   type: 'info',
                   title: title,
-                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t("has been uploaded successfully")}.`,
+                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
                   duration: 2500,
                 });
               })
@@ -304,9 +132,10 @@ function CustomUploadImageComponent({
                 showToast({
                   type: 'error',
                   title: title,
-                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t("Upload Failed")}`,
+                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
                   duration: 2500,
                 });
+
                 console.log('errrror=====>', err);
               })
               .finally(() => {
@@ -324,7 +153,7 @@ function CustomUploadImageComponent({
       configuration?.cloudinaryUploadUrl,
       showToast,
       title,
-      validateImage,
+      // validateImage,
       fileTypes,
     ]
   );
@@ -357,13 +186,13 @@ function CustomUploadImageComponent({
   };
   return (
     <div className="flex flex-col items-center justify-center gap-3">
-      <span className="mx-auto self-start text-sm font-[600]">{t(title)}</span>
+      <span className="mx-auto self-start text-sm font-[600]">{title}</span>
       <div
         style={style}
         className={
           page && page === 'vendor-profile-edit'
             ? `bg-transparnt`
-            : `mx-auto flex h-48 w-48 flex-col items-center justify-start border-2 border-dashed ${imageValidationErr.bool || error ? 'border-red-500'  :'border-gray-300'}`
+            : `mx-auto flex h-48 w-48 flex-col items-center justify-start border-2 border-dashed ${imageValidationErr.bool ? 'border-red-900' : 'border-gray-300'}`
         }
         // className="bg-transparnt"
       >
@@ -391,12 +220,22 @@ function CustomUploadImageComponent({
                     <div className="flex w-12 flex-col items-center justify-center">
                       <div className="relative my-2 h-12 w-12 overflow-hidden rounded-md">
                         {existingImageUrl ? (
-                          <Image
-                            alt="User avatar"
-                            src={existingImageUrl}
-                            width={100}
-                            height={100}
-                          />
+                          existingImageUrl.includes('video/') ? (
+                            <video
+                              src={existingImageUrl}
+                              width={100}
+                              height={100}
+                              autoPlay
+                              muted
+                            />
+                          ) : (
+                            <Image
+                              alt="User avatar"
+                              src={existingImageUrl}
+                              width={100}
+                              height={100}
+                            />
+                          )
                         ) : imageFile ? (
                           <Image
                             alt="User avatar"
@@ -429,11 +268,11 @@ function CustomUploadImageComponent({
               </button>
             );
           }}
-          chooseLabel={t("Upload Image")}
+          chooseLabel={t('Upload Image')}
           chooseOptions={
             page === 'vendor-profile-edit'
               ? {
-                  className: `z-50 bg-white max-[500px]:ml-[-20px] ${!imageFile ? 'text-gray-700' : imageValidationErr.bool && !imageFile ? 'text-[#E4E4E7]' : 'text-[#E4E4E7]'} border border-[c] rounded-md items-center justify-center relative left-[20%] translate-y-[45px] w-[173px] h-[40px] text-[14px] gap-[5px] font-medium`,
+                  className: `z-50 bg-white max-[500px]:ml-[-20px] ${!imageFile ? 'text-gray-700' : imageValidationErr.bool && !imageFile ? 'text-[#E4E4E7]' : 'text-[#E4E4E7]'} border border-[#E4E4E7] rounded-md items-center justify-center relative left-[20%] translate-y-[45px] w-[173px] h-[40px] text-[14px] gap-[5px] font-medium`,
                   label: t('Upload Image'),
                   icon: () => <FontAwesomeIcon icon={faArrowUpFromBracket} />,
                 }
@@ -475,6 +314,7 @@ function CustomUploadImageComponent({
                           width={100}
                           height={100}
                           autoPlay
+                          muted
                         />
                       ) : (
                         <Image
@@ -495,58 +335,6 @@ function CustomUploadImageComponent({
       <div className="mx-auto text-[10px] font-[600] text-red-800">
         {imageValidationErr.msg}
       </div>
-      <div
-        className={
-          page && page === 'vendor-profile-edit'
-            ? 'mx-auto sm:w-44'
-            : 'mx-auto w-44'
-        }
-      >
-        {/* Error Messages Container  */}
-
-        {/* Rules  */}
-        {page === 'vendor-profile-edit' ? (
-          <pre className="w-full text-gray-600 text-[14px] text-[#71717A] font-medium mt-[10px] xl:ml-[31px] whitespace-normal lg:whitespace-nowrap">
-            <strong>{t('Recommended Size')}</strong>: {maxFileWidth} x{' '}
-            {maxFileHeight} pixel{' '}
-            <span className="ml-2 text-[14px] text-[#71717A] font-medium">
-              <strong>{t('Upload File Type')}:</strong>{' '}
-              <span className="text-[14px] text-[#71717A] font-normal">
-                {t('PNG or JPG')}
-              </span>{' '}
-            </span>
-            {/* {fileTypes?.map((type, index) => {
-            return (
-              <pre className="w-full text-xs text-gray-600" key={index}>
-                {type.split('')}
-              </pre>
-            );
-          })} */}
-          </pre>
-          
-        ) : (
-          <>
-            <pre className="w-full text-xs text-gray-600">
-              {`${t('Prefered dimensions')} ${maxFileWidth} x ${maxFileHeight}`}{' '}
-              <span className="text-red-600">*</span>
-            </pre>
-            <pre className="w-full text-xs text-gray-600">
-              {`${t('Prefered File size')} < ${maxFileSize === 2097152 ? '2MB' : '500KB'}`}
-              <span className="text-red-600">*</span>
-            </pre>
-            <pre className="max-auto flex w-full flex-wrap items-center text-wrap text-xs">
-              <strong>{t('Allowed file types')}:</strong>
-              {fileTypes?.map((type, index) => {
-                return (
-                  <pre className="w-full text-xs text-gray-600" key={index}>
-                    {type.split('')}
-                  </pre>
-                );
-              })}
-            </pre>
-          </>
-        )}
-      </div>{error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

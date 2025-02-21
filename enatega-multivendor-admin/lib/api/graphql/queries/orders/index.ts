@@ -1,41 +1,58 @@
 import { gql } from '@apollo/client';
 
 export const GET_ACTIVE_ORDERS = gql`
-  query GetActiveOrders($restaurantId: ID) {
-    getActiveOrders(restaurantId: $restaurantId) {
-      _id
-      zone {
+  query GetActiveOrders(
+    $restaurantId: ID
+    $page: Int
+    $rowsPerPage: Int
+    $actions: [String]
+    $search: String
+  ) {
+    getActiveOrders(
+      restaurantId: $restaurantId
+      page: $page
+      rowsPerPage: $rowsPerPage
+      actions: $actions
+      search: $search
+    ) {
+      totalCount
+      orders {
         _id
-      }
-      orderId
-      restaurant {
-        _id
-        name
-        image
-        address
-        location {
-          coordinates
+        zone {
+          _id
         }
-      }
-      deliveryAddress {
-        location {
-          coordinates
+        orderId
+        restaurant {
+          _id
+          name
+          image
+          address
+          location {
+            coordinates
+          }
         }
-        deliveryAddress
-      }
-
-      paymentMethod
-      orderStatus
-      isPickedUp
-      status
-      isActive
-      createdAt
-      rider {
-        _id
-        name
-        username
-        available
-        assigned
+        deliveryAddress {
+          location {
+            coordinates
+          }
+          deliveryAddress
+        }
+        user {
+          name
+          phone
+        }
+        paymentMethod
+        orderStatus
+        isPickedUp
+        status
+        isActive
+        createdAt
+        rider {
+          _id
+          name
+          username
+          available
+        }
       }
     }
   }

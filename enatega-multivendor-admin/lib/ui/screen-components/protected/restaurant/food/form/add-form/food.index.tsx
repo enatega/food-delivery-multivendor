@@ -107,7 +107,7 @@ export default function FoodDetails({
     GET_CATEGORY_BY_RESTAURANT_ID,
     { id: restaurantId ?? '' },
     {
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'no-cache',
       enabled: !!restaurantId,
     }
   ) as IQueryResult<ICategoryByRestaurantResponse | undefined, undefined>;
@@ -136,7 +136,7 @@ export default function FoodDetails({
       data?.restaurant?.categories.map((category: ICategory) => {
         return { label: category.title, code: category._id };
       }),
-    []
+    [data?.restaurant?.categories]
   );
 
   const subCategoriesDropdown = useMemo(
@@ -425,6 +425,7 @@ export default function FoodDetails({
         }}
         isAddCategoryVisible={isAddCategoryVisible}
         subCategories={subCategories}
+        refetchCategories = {refetchCategories}
       />
     </div>
   );

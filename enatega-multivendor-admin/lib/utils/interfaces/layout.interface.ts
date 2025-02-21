@@ -6,6 +6,7 @@ import React, {
 
 import { IGlobalProps } from './global.interface';
 import { ICategory, ISubCategory } from './category.interface';
+import { IOptions } from './options.interface';
 
 // Layout
 export interface IProvider extends IGlobalProps {}
@@ -60,6 +61,10 @@ export interface RestaurantLayoutContextProps {
   setIsSubCategoryModalOpen: Dispatch<SetStateAction<boolean>>;
   subCategoryParentId: string;
   setSubCategoryParentId: Dispatch<SetStateAction<string>>;
+  isAddOptionsVisible: boolean;
+  setIsAddOptionsVisible: Dispatch<SetStateAction<boolean>>;
+  option: IOptions | null;
+  setOption: Dispatch<SetStateAction<IOptions | null>>;
 }
 
 export interface RestaurantLayoutContextData {

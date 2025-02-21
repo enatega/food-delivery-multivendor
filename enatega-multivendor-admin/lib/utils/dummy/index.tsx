@@ -423,7 +423,6 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
         name: `rider_${i + 1}`,
         username: `rider_${i + 1}`,
         available: true,
-        assigned: [''],
       },
       createdAt: new Date().toDateString(),
       deliveryAddress: {
@@ -444,6 +443,7 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
       zone: {
         _id: `active_order_${i + 1}`,
       },
+      isPickedUp: false
     });
   }
   return dispatchActiveOrders;

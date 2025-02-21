@@ -181,7 +181,7 @@ function Menu({ route, props }) {
         open: onOpen,
         icon: 'back',
         haveBackBtn: routeData?.name === 'Menu',
-        onPressFilter: () => filtersModalRef.current.open(),
+        onPressFilter: () => filtersModalRef?.current?.open(),
         onPressMap: () =>
           navigation.navigate('MapSection', {
             location,
