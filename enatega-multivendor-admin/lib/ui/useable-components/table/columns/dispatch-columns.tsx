@@ -116,7 +116,6 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   const [isRiderLoading, setIsRiderLoading] = useState({
     _id: '',
     orderId: '',
-    orderId: '',
     bool: false,
   });
   const [isStatusUpdating, setIsStatusUpdating] = useState({
@@ -125,10 +124,6 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   });
 
   // Query
-  const { data: ridersData } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
-    IRidersDataResponse | undefined,
-    undefined
-  >;
   const { data: ridersData } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
     IRidersDataResponse | undefined,
     undefined
@@ -182,15 +177,6 @@ export const DISPATCH_TABLE_COLUMNS = () => {
           t('An error occured while assigning the job to rider'),
       });
     },
-
-    onCompleted: () => {
-      setIsRiderLoading({
-        _id: '',
-        orderId: '',
-        bool: false,
-      });
-    },
-
     onCompleted: () => {
       setIsRiderLoading({
         _id: '',
@@ -224,14 +210,12 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   //Handlers
   const handleAssignRider = async (
     item: IDropdownSelectItem,
-    item: IDropdownSelectItem,
     rowData: IActiveOrders
   ) => {
     if (item._id) {
       setIsRiderLoading({
         _id: item._id,
         bool: true,
-        orderId: rowData._id,
         orderId: rowData._id,
       });
 
