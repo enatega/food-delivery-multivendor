@@ -100,7 +100,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
 
   const itemTemplate = (option: IDropdownSelectItem) => {
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-2 justify-center items-center">
         <FontAwesomeIcon
           icon={
             option.code === 'CANCELLED'

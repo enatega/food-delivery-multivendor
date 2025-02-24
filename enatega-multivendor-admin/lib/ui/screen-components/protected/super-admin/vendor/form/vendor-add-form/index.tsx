@@ -231,6 +231,12 @@ export default function VendorAddForm({
                               : '',
                           }}
                         />
+                        { errors?.firstName ?
+                        <p 
+                        style={{color:'red'}}
+                        >{errors?.firstName}</p>:" "
+                        }
+            
                         <CustomTextField
                           type="text"
                           name="lastName"
@@ -250,6 +256,11 @@ export default function VendorAddForm({
                               : '',
                           }}
                         />
+                        { errors?.lastName ?
+                        <p
+                        style={{color:'red'}}
+                        >{errors?.lastName}</p>:" "
+                        }
                         <CustomIconTextField
                           type="email"
                           name="email"
@@ -275,6 +286,12 @@ export default function VendorAddForm({
                           }}
                         />
 
+                        { errors?.email ?
+                        <p
+                        style={{color:'red'}}
+                        >{errors?.email}</p>:" "
+                        }
+
                         <CustomPhoneTextField
                           mask="999-999-9999"
                           name="phoneNumber"
@@ -297,6 +314,11 @@ export default function VendorAddForm({
                               : '',
                           }}
                         />
+                        { errors?.phoneNumber ?
+                        <p
+                        style={{color:'red'}} 
+                        >{errors?.phoneNumber}</p>:" "
+                        }
 
                         <CustomPasswordTextField
                           autoComplete="new-password"
@@ -317,6 +339,11 @@ export default function VendorAddForm({
                               : '',
                           }}
                         />
+                        { errors?.password ?
+                        <p
+                        style={{color:'red'}}
+                        >{errors?.password}</p>:" "
+                        }
 
                         <CustomPasswordTextField
                           autoComplete="new-password"
@@ -338,6 +365,11 @@ export default function VendorAddForm({
                               : '',
                           }}
                         />
+                         { errors?.confirmPassword?
+                        <p
+                        style={{color:'red'}}
+                        >{errors?.confirmPassword}</p>:" "
+                        }
                         <CustomUploadImageComponent
                           key="image"
                           name="image"
