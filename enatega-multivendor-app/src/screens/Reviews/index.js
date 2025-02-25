@@ -13,7 +13,7 @@ import StarRating from '../../assets/SVG/small-star-icon'
 import Button from '../../components/Button/Button'
 import ReviewCard from '../../components/Review/ReviewCard'
 import { GET_REVIEWS_BY_RESTAURANT } from '../../apollo/queries'
-import { useQuery ,gql} from '@apollo/client'
+import { useQuery, gql } from '@apollo/client'
 
 import {
   calculateDaysAgo,
@@ -21,7 +21,9 @@ import {
   sortReviews
 } from '../../utils/customFunctions'
 
-const Review = gql `${GET_REVIEWS_BY_RESTAURANT}`
+const Review = gql`
+  ${GET_REVIEWS_BY_RESTAURANT}
+`
 
 const Reviews = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
@@ -29,16 +31,20 @@ const Reviews = ({ navigation, route }) => {
   const restaurant = route.params.restaurantObject
   const { restaurantId } = restaurant
   // console.log("restaurant in review page",restaurantId);
-  const { loading,error,data:reviewsdata } = useQuery(Review, {
-  variables: { restaurant: restaurantId }, 
-});
-const rating=reviewsdata?.reviewsByRestaurant.ratings
-const total=reviewsdata?.reviewsByRestaurant.total
-const reviews=reviewsdata?.reviewsByRestaurant.reviews
-// console.log("Review:",JSON.stringify(reviewsdata?.reviewsByRestaurant,null,2),"restaurantId",restaurantId)
-// console.log("Reviews Data:", reviews?.reviewsByRestaurant);
-  // const reviewGroups = groupAndCount(reviews, 'rating')
-  const reviewGroups = groupAndCount(reviewsdata?.reviewsByRestaurant.reviews, 'rating')
+  const {
+    loading,
+    error,
+    data: reviewsdata
+  } = useQuery(Review, {
+    variables: { restaurant: restaurantId }
+  })
+  const rating = reviewsdata?.reviewsByRestaurant.ratings
+  const total = reviewsdata?.reviewsByRestaurant.total
+  const reviews = reviewsdata?.reviewsByRestaurant.reviews
+  const reviewGroups = groupAndCount(
+    reviewsdata?.reviewsByRestaurant.reviews,
+    'rating'
+  )
   // console.log("reviewGroups",reviewGroups)
   const [sortBy, setSortBy] = useState('newest')
   const sortingParams = {
@@ -47,7 +53,10 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
     lowest: t('LowestRating')
   }
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
@@ -55,7 +64,11 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
           <TextDefault H4 bold textColor={currentTheme.newFontcolor}>
             {t('ratingAndreviews')}
           </TextDefault>
-          <TextDefault H5 style={{ ...alignment.MTxSmall }} textColor={currentTheme.newFontcolor}>
+          <TextDefault
+            H5
+            style={{ ...alignment.MTxSmall }}
+            textColor={currentTheme.newFontcolor}
+          >
             {restaurant.restaurantName}
           </TextDefault>
         </View>
@@ -83,7 +96,52 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
       )
     })
   }, [navigation])
-  const sorted = reviews&&reviews?.length ?sortReviews([...reviews], sortBy):[]
+  const sorted = reviews && reviews?.length ? sortReviews([...reviews], sortBy) : []
+
+
+  const calculatePercentages = (groups, total) => {
+    // Calculate raw percentages
+    const rawPercentages = {}
+    let totalInteger = 0
+
+    Object.keys(groups).forEach((key) => {
+      const rawValue = (groups[key] / total) * 100
+      // Store the raw value and its integer part
+      rawPercentages[key] = {
+        raw: rawValue,
+        integer: Math.floor(rawValue),
+        remainder: rawValue - Math.floor(rawValue)
+      }
+      totalInteger += Math.floor(rawValue)
+    })
+
+    // Determine how many points we need to distribute to reach 100%
+    const remaining = 100 - totalInteger
+
+    // Sort keys by remainder in descending order to allocate extra points
+    const sortedKeys = Object.keys(rawPercentages).sort(
+      (a, b) => rawPercentages[b].remainder - rawPercentages[a].remainder
+    )
+
+    // Distribute the remaining points to items with largest remainders
+    for (let i = 0; i < remaining; i++) {
+      if (i < sortedKeys.length) {
+        rawPercentages[sortedKeys[i]].integer += 1
+      }
+    }
+
+    // Create final percentage object
+    const finalPercentages = {}
+    Object.keys(rawPercentages).forEach((key) => {
+      finalPercentages[key] = rawPercentages[key].integer
+    })
+
+    return finalPercentages
+  }
+
+  // Calculate percentages once before rendering
+  const percentages = calculatePercentages(reviewGroups, total)
+
   return (
     <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
       <ScrollView style={[styles.container]}>
@@ -97,7 +155,7 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
             }}
           >
             <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
-              {t('allRatings')} ({total ??'0 Reviews'})
+              {t('allRatings')} ({total ?? '0 Reviews'})
             </TextDefault>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <StarRating />
@@ -110,27 +168,39 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
             {Object.keys(reviewGroups)
               .sort((a, b) => b - a)
               .map((i, index) => {
-                const filled = (reviewGroups[i] / total) * 100
-                const unfilled = filled ? 100 - filled : 100
+                const filled = percentages[i]
+                const unfilled = 100 - filled
                 return (
                   <View
                     key={`${index}-rate`}
                     style={{
-                      flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
+                      flexDirection: currentTheme?.isRTL
+                        ? 'row-reverse'
+                        : 'row',
                       justifyContent: 'space-evenly',
                       alignItems: 'center',
                       marginVertical: scale(5)
                     }}
                   >
                     <View
-                      style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row', alignItems: currentTheme?.isRTL ? 'flex-start' : 'flex-end' }}>
+                      style={{
+                        flexDirection: currentTheme?.isRTL
+                          ? 'row-reverse'
+                          : 'row',
+                        alignItems: currentTheme?.isRTL
+                          ? 'flex-start'
+                          : 'flex-end'
+                      }}
+                    >
                       <TextDefault> {i} </TextDefault>
                       <StarRating isFilled={true} />
                     </View>
                     <View
                       style={{
                         flex: 1,
-                        flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
+                        flexDirection: currentTheme?.isRTL
+                          ? 'row-reverse'
+                          : 'row',
                         marginHorizontal: scale(10)
                       }}
                     >
@@ -149,7 +219,14 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
                         }}
                       />
                     </View>
-                    <View style={{ width: '10%', alignItems: currentTheme?.isRTL ? 'flex-start' : 'flex-end' }}>
+                    <View
+                      style={{
+                        width: '10%',
+                        alignItems: currentTheme?.isRTL
+                          ? 'flex-start'
+                          : 'flex-end'
+                      }}
+                    >
                       <TextDefault bolder textColor={currentTheme.gray700}>
                         {filled ? parseInt(filled) : 0}%
                       </TextDefault>
@@ -163,7 +240,12 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
           <TextDefault textColor={currentTheme.gray900} H3 bold isRTL>
             {t('titleReviews')}
           </TextDefault>
-          <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' , ...alignment.MTsmall }}>
+          <View
+            style={{
+              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
+              ...alignment.MTsmall
+            }}
+          >
             {Object.keys(sortingParams).map((key) => (
               <Button
                 key={key}
@@ -196,7 +278,9 @@ const reviews=reviewsdata?.reviewsByRestaurant.reviews
           </View>
           <View style={{ ...alignment.MTlarge }}>
             {sorted.length === 0 ? (
-              <TextDefault center H4 bold>{t('unReadReviews')}</TextDefault>
+              <TextDefault center H4 bold>
+                {t('unReadReviews')}
+              </TextDefault>
             ) : null}
           </View>
         </View>

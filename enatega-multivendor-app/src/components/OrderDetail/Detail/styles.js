@@ -45,7 +45,7 @@ export default StyleSheet.create({
     marginVertical: scale(5),
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: theme.gray100,
-    borderRadius:scale(10)
+    borderRadius: scale(10)
   }),
   priceRow: {
     flexDirection: 'row',

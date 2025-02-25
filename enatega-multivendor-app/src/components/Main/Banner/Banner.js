@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, ImageBackground, TouchableOpacity } from 'react-native'
+import { View, ImageBackground, TouchableOpacity, Dimensions,Image } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -8,6 +8,7 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist'
 import { useNavigation } from '@react-navigation/native'
 import VideoBanner from './VideoBanner'
 import { BANNER_PARAMETERS } from '../../../utils/banner-routes'
+import { scale } from '../../../utils/scaling'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
@@ -20,6 +21,7 @@ const Banner = ({ banners }) => {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { width } = Dimensions.get('window');
 
   const onPressBanner = (banner) => {
     let _selectedType = ''
@@ -64,11 +66,11 @@ const Banner = ({ banners }) => {
         H3
         bolder
         textColor='#fff'
-        style={{ textTransform: 'capitalize' }}
+        style={{ textTransform: 'capitalize', marginHorizontal: scale(5)}}
       >
         {item?.title}
       </TextDefault>
-      <TextDefault bolder textColor='#fff'>
+      <TextDefault bolder textColor='#fff' style={{marginHorizontal: scale(5), marginBottom: scale(5)}}>
         {item?.description}
       </TextDefault>
     </View>
@@ -81,7 +83,8 @@ const Banner = ({ banners }) => {
       autoplayLoop
       showPagination
       data={banners ?? []}
-      
+      snapToInterval={width} // Ensures only one image is visible at a time
+      snapToAlignment="center"
       paginationStyle={styles().pagination}
       paginationActiveColor={currentTheme.main}
       paginationDefaultColor={currentTheme.hex}
@@ -92,7 +95,7 @@ const Banner = ({ banners }) => {
 
         return (
           <TouchableOpacity
-            style={styles(currentTheme).banner}
+            style={[styles(currentTheme).banner, {width}]}
             activeOpacity={0.9}
             onPress={() => {
               onPressBanner(item)
@@ -103,13 +106,15 @@ const Banner = ({ banners }) => {
                 {renderBannerContent(item)}
               </VideoBanner>
             ) : (
+                <View style={styles().csd}>
               <ImageBackground
                 source={{ uri: item?.file }}
-                resizeMode='cover'
-                style={styles().image}
+                    style={styles().imgs1}
+                    resizeMode='cover'
               >
                 {renderBannerContent(item)}
-              </ImageBackground>
+                  </ImageBackground>
+                  </View>
             )}
           </TouchableOpacity>
         )

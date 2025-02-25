@@ -21,7 +21,7 @@ function toRad(Value) {
 }
 
 const calulateRemainingTime = (order) => {
-  const expectedTime = [ORDER_STATUS_ENUM.ACCEPTED, ORDER_STATUS_ENUM.ASSIGNED].includes(order?.orderStatus)
+  const expectedTime = [ORDER_STATUS_ENUM.PENDING].includes(order?.orderStatus)
     ? order?.preparationTime : order?.completionTime
   const remainingTime = Math.floor((new Date(expectedTime) - Date.now()) / 1000 / 60)
   return remainingTime > 0 ? remainingTime : 0
