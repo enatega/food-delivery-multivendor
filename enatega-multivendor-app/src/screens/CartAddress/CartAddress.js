@@ -33,7 +33,8 @@ function CartAddresses(props) {
   const currentTheme = { isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [mutate] = useMutation(SELECT_ADDRESS, { onError })
   const [selectedAddress, setSelectedAddress] = useState(null)
-
+  const [defaultAddress, setDefaultAddress] = useState(null)
+  const [isAddressChanged, setIsAddressChanged] = useState(false)
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -83,6 +84,7 @@ function CartAddresses(props) {
       const lastSavedAddress = profile?.addresses?.slice().reverse().find(address => address.selected)
       if (lastSavedAddress) {
         setSelectedAddress(lastSavedAddress)
+        setDefaultAddress(lastSavedAddress)
         setLocation({
           _id: lastSavedAddress._id,
           label: lastSavedAddress.label,
@@ -110,7 +112,7 @@ function CartAddresses(props) {
     })
     mutate({ variables: { id: address._id } })
     setSelectedAddress(address)
-    props.navigation.goBack()
+    setIsAddressChanged(address._id !== defaultAddress._id)
   }
 
   return (
@@ -198,28 +200,29 @@ function CartAddresses(props) {
             </View>
           )}
         />
-        {/* {!location._id && ( */}
-          <View>
-            <View style={styles(currentTheme).containerButton}>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={styles(currentTheme).addButton}
-                onPress={() => {
-                  const latitude = location.latitude
-                  const longitude = location.longitude
-                  props.navigation.navigate('AddNewAddress', {
-                    longitude: +longitude,
-                    latitude: +latitude,
-                    prevScreen: 'CartAddress'
-                  })
-                }}
-              >
-                <TextDefault H5 bold>
-                  {t('addAddress')}
-                </TextDefault>
-              </TouchableOpacity>
-          </View>
+        <View>
           <View style={styles(currentTheme).containerButton}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles(currentTheme).addButton}
+              onPress={() => {
+                const latitude = location.latitude
+                const longitude = location.longitude
+                props.navigation.navigate('AddNewAddress', {
+                  longitude: +longitude,
+                  latitude: +latitude,
+                  prevScreen: 'CartAddress'
+                })
+                setIsAddressChanged(true)
+              }}
+            >
+              <TextDefault H5 bold>
+                {t('addAddress')}
+              </TextDefault>
+            </TouchableOpacity>
+          </View>
+          {isAddressChanged && (
+            <View style={styles(currentTheme).containerButton}>
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles(currentTheme).addButton}
@@ -238,8 +241,8 @@ function CartAddresses(props) {
                 </TextDefault>
               </TouchableOpacity>
             </View>
-          </View>
-        {/* )} */}
+          )}
+        </View>
       </View>
     </>
   )
