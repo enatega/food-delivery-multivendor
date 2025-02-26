@@ -113,7 +113,7 @@ function Checkout(props) {
   const [coupon, setCoupon] = useState(null)
   const [tip, setTip] = useState(null)
   const [tipAmount, setTipAmount] = useState('')
-  const modalRef = useRef(null)
+  const calenderModalRef = useRef(null)
   const [paymentMode, setPaymentMode] = useState('COD')
 
   const { loading, data } = useRestaurant(cartRestaurant)
@@ -557,15 +557,15 @@ function Checkout(props) {
       })
       return false
     }
-    if (profile.phone.length < 1) {
-      props?.navigation.navigate('PhoneNumber', { name: profile?.name })
+    if (profile?.phone?.length < 1) {
+      props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen:'Checkout' })
       return false
     }
     if (profile.phone.length > 0 && !profile.phoneIsVerified) {
       FlashMessage({
         message: t('numberVerificationAlert')
       })
-      props?.navigation.navigate('PhoneNumber', { name: profile?.name })
+      props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen:'Checkout' })
       return false
     }
     return true
@@ -862,7 +862,7 @@ function Checkout(props) {
                   />
                   <TouchableOpacity
                     onPress={() => {
-                      onModalOpen(modalRef)
+                      onModalOpen(calenderModalRef)
                     }}
                     style={styles(currentTheme).deliveryTime}
                   >
@@ -1057,7 +1057,6 @@ function Checkout(props) {
                     </>
                   )}
                 </View>
-                {/* {paymentMode === 'HYP' && (
                   <View style={styles().tipSec}>
                     <View style={[styles(currentTheme).tipRow]}>
                       <TextDefault
@@ -1137,7 +1136,6 @@ function Checkout(props) {
                       </View>
                     )}
                   </View>
-                )} */}
 
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault
@@ -1217,7 +1215,6 @@ function Checkout(props) {
                   </View>
 
                   <View style={styles(currentTheme).horizontalLine2} />
-                  {/* {paymentMode === 'HYP' && (
                     <View style={styles(currentTheme).billsec}>
                       <TextDefault
                         numberOfLines={1}
@@ -1237,7 +1234,6 @@ function Checkout(props) {
                         {parseFloat(calculateTip()).toFixed(2)}
                       </TextDefault>
                     </View>
-                  )} */}
 
                   {coupon && (
                     <View>
@@ -1398,11 +1394,12 @@ function Checkout(props) {
                 textColor={currentTheme.gray500}
                 isRTL
               >
-                {t('enterCode')}
+                {t('enterAmount')}
               </TextDefault>
               <TextInput
                 keyboardType='numeric'
-                placeholder={t('enterAmount')}
+                placeholder={'25'}
+                placeholderTextColor={currentTheme.gray500}
                 value={tipAmount}
                 onChangeText={(text) => setTipAmount(text)}
                 style={styles(currentTheme).modalInput}
@@ -1521,7 +1518,7 @@ function Checkout(props) {
         }}
       />
       <Modalize
-        ref={modalRef}
+        ref={calenderModalRef}
         modalStyle={styles(currentTheme).modal}
         modalHeight={HEIGHT / 2}
         overlayStyle={styles(currentTheme).overlay}
@@ -1546,7 +1543,7 @@ function Checkout(props) {
         />
         <TouchableOpacity
           onPress={() => {
-            modalRef.current.close()
+            calenderModalRef.current.close()
           }}
           style={styles(currentTheme).pickupButton}
         >

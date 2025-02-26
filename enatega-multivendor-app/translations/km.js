@@ -642,6 +642,9 @@ loginRequired: 'តម្រូវឲ្យចូល',
   "Select another one": "ជ្រើសរើសមួយផ្សេងទៀត",
   isRTL: false,
   "noMatchingResults": "មិនមានលទ្ធផលដែលផ្គូផ្គង",
-  "noMatchingResultsDesc": "សូមព្យាយាមកែសម្រួលតម្រងរបស់អ្នក ឬរកមើលជម្រើសផ្សេងទៀត ដើម្បីរកអ្វីដែលអ្នកកំពុងស្វែងរក។"
+  "noMatchingResultsDesc": "សូមព្យាយាមកែសម្រួលតម្រងរបស់អ្នក ឬរកមើលជម្រើសផ្សេងទៀត ដើម្បីរកអ្វីដែលអ្នកកំពុងស្វែងរក។",
+  "Applied Filters": "តម្រងត្រូវបានអនុវត្ត",
+  "WhatsApp is not installed on the device": "WhatsApp មិនបានដំឡើងលើឧបករណ៍ទេ",
+  "Install it": "ដំឡើងវា",
 
 }

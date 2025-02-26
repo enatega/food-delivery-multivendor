@@ -33,7 +33,7 @@ const usePhoneOtp = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone} = route?.params
+  const { name, phone, screen} = route?.params || {}
 
   function onError(error) {
     if (error.networkError) {
@@ -69,7 +69,10 @@ const usePhoneOtp = () => {
     FlashMessage({
       message: t('numberVerified')
     })
-    if (!profile?.name) navigation.navigate('Profile', { editName: true })
+    if (!profile?.name) { navigation.navigate('Profile', { editName: true }) }
+    else if (screen === 'Checkout') {
+      navigation.navigate('Checkout');
+    }
     else {
       route.params?.prevScreen
       ? navigation.navigate(route.params.prevScreen)

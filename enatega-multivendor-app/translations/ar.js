@@ -649,7 +649,10 @@ loginRequired: 'مطلوب تسجيل الدخول',
   "Currently Restaurant is not delivering to your selected address": "المطعم لا يقدم خدمة التوصيل إلى العنوان الذي اخترته حاليًا",
   "Select another one": "اختر عنوانًا آخر",
   "noMatchingResults": "لا توجد نتائج مطابقة",
-  "noMatchingResultsDesc": "حاول تعديل عوامل التصفية أو استكشاف خيارات أخرى للعثور على ما تبحث عنه."
+  "noMatchingResultsDesc": "حاول تعديل عوامل التصفية أو استكشاف خيارات أخرى للعثور على ما تبحث عنه.",
+  "Applied Filters": "تم تطبيق الفلاتر",
+  "WhatsApp is not installed on the device": "لم يتم تثبيت واتساب على الجهاز",
+  "Install it": "قم بتثبيته",
 
 
 }

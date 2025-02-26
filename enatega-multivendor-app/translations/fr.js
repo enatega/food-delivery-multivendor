@@ -658,6 +658,9 @@ loginRequired: 'Connexion requise',
   "Select another one": "Sélectionnez une autre",
   isRTL: false,
   "noMatchingResults": "Aucun résultat correspondant",
-  "noMatchingResultsDesc": "Essayez d'ajuster vos filtres ou d'explorer d'autres options pour trouver ce que vous recherchez."
-
+  "noMatchingResultsDesc": "Essayez d'ajuster vos filtres ou d'explorer d'autres options pour trouver ce que vous recherchez.",
+  "Applied Filters": "Filtres appliqués",
+  "WhatsApp is not installed on the device": "WhatsApp n'est pas installé sur l'appareil",
+  "Install it": "Installez-le",
+  
 }
