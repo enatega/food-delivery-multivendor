@@ -112,7 +112,7 @@ function CartAddresses(props) {
     })
     mutate({ variables: { id: address._id } })
     setSelectedAddress(address)
-    setIsAddressChanged(address._id !== defaultAddress._id)
+    setIsAddressChanged(defaultAddress ? address._id !== defaultAddress._id : true)
   }
 
   return (
