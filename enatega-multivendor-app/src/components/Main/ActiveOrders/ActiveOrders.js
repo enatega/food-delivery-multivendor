@@ -45,7 +45,6 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   }
 
   const [showAll, setShowAll] = useState(false)
-  const [remainingTime, setRemainingTime] = useState(0);
 
   const displayOrders = showAll ? activeOrders : activeOrders.slice(0, 2)
 
@@ -54,31 +53,11 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
     onActiveOrdersChange(hasActiveOrders)
   }, [displayOrders, onActiveOrdersChange])
 
-    // Update remaining time every minute
-    useEffect(() => {
-      if (displayOrders.length > 0) {
-        const order = displayOrders[0];
-        const updateRemainingTime = () => {
-          const newRemainingTime = calulateRemainingTime(order);
-          setRemainingTime(newRemainingTime);
-        };
-  
-        // Update immediately
-        updateRemainingTime();
-  
-        // Update every minute
-        const interval = setInterval(updateRemainingTime, 60000);
-  
-        // Cleanup interval on unmount
-        return () => clearInterval(interval);
-      }
-    }, [displayOrders]);
-
   if (loadingOrders) return null
   if (errorOrders && !orders) return <TextError text={errorOrders.message} />
   if (!displayOrders.length) return null
   const order = displayOrders[0]
-  // const remainingTime = calulateRemainingTime(order)
+  const remainingTime = calulateRemainingTime(order)
   const modalStyle = {
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: currentTheme.cardBackground
