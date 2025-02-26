@@ -33,7 +33,7 @@ const usePhoneOtp = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone, screen} = route?.params
+  const { name, phone, screen} = route?.params || {}
 
   function onError(error) {
     if (error.networkError) {

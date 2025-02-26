@@ -18,7 +18,7 @@ export const WhatsAppNotInstalledModal = ({
   return (
     <Modal animationType="slide" visible={modalVisible} transparent={true}>
       {/* <View style={styles.layout}> */}
-      <Pressable style={styles.backdrop} onPress={setModalVisible}>
+      <Pressable style={styles.backdrop} onPress={() => setModalVisible()}>
           <View style={styles.modalContainer}>
             <View style={{ ...alignment.MBsmall }}>
               <TextDefault H4 bolder textColor={theme.gray900}>
@@ -43,7 +43,7 @@ export const WhatsAppNotInstalledModal = ({
                 <View style={{ ...alignment.MTsmall }}>
                   <Button
                     text={t('close')}
-                    buttonProps={{ onPress: setModalVisible }}
+                    buttonProps={{ onPress: () => setModalVisible() }}
                     buttonStyles={styles.dismissButtonContainer}
                     textStyles={{ ...alignment.Psmall, color: theme.newIconColor }}
                   />
