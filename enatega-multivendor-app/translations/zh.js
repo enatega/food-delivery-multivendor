@@ -626,6 +626,9 @@ welcomeText: '欢迎来到Enatega',
   "Select another one": "选择其他地址",
   isRTL: false,
   "noMatchingResults": "没有匹配的结果",
-  "noMatchingResultsDesc": "尝试调整筛选条件或探索其他选项，以找到您要寻找的内容。"
+  "noMatchingResultsDesc": "尝试调整筛选条件或探索其他选项，以找到您要寻找的内容。",
+  "Applied Filters": "已应用筛选器",
+  "WhatsApp is not installed on the device": "设备上未安装 WhatsApp",
+  "Install it": "安装它",
 
 }

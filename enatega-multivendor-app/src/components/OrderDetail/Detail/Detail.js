@@ -70,7 +70,7 @@ export default function Detail({
         </TextDefault>
       </View>
       
-      <View style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between',alignItems:'center', ...alignment.MBsmall,paddingRight:15 }}>
+      <View style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between',alignItems:'center', ...alignment.MBsmall, paddingRight:10}}>
         <TextDefault
           textColor={theme.gray500}
           bolder
@@ -136,7 +136,7 @@ const ItemRow = ({
           }
         ></Image>
       </View>
-      <View style={{ width: '60%', justifyContent: 'center' }}>
+      <View style={{ width: '60%', justifyContent: 'center'}}>
         <TextDefault
           left
           numberOfLines={1}
@@ -164,10 +164,9 @@ const ItemRow = ({
         <TextDefault Regular left bolder textColor={theme.gray900} isRTL>
           x{quantity}
         </TextDefault>
-      </View>
+      </View>        
       <TextDefault
-        right
-        style={{ width: '15%' }}
+        style={{ width: '20%', textAlign: 'right', paddingRight: 10}}
         bolder
         textColor={theme.gray900}
         H5

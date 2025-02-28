@@ -56,6 +56,7 @@ import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import { Modalize } from 'react-native-modalize'
 import Filters from '../../components/Filter/FilterSlider'
+import AppliedFilters from '../../components/Filter/AppliedFilters'
 import NetInfo from "@react-native-community/netinfo";
 import {
   isOpen,
@@ -99,6 +100,8 @@ function Menu({ route, props }) {
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [filters, setFilters] = useState(FILTER_VALUES)
+  const [filterSectionApplied, setfilterSectionApplied] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState(FILTER_VALUES);
   const [activeCollection, setActiveCollection] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isConnected, setIsConnected] = useState(false);
@@ -264,19 +267,33 @@ function Menu({ route, props }) {
     }
   }
 
+  // const collectionData = useMemo(() => {
+  //   if (routeData?.name === 'Restaurants') {
+  //     return allCuisines?.cuisines?.filter(
+  //       (cuisine) => cuisine?.shopType === 'Restaurant'
+  //     )
+  //   } else if (routeData?.name === 'Store') {
+  //     let rtc= allCuisines?.cuisines?.filter(
+  //       (cuisine) => cuisine?.shopType === 'Grocery'
+  //     )
+  //     console.log(rtc)
+  //     return rtc
+  //   } else {
+  //     return filterCusinies() ?? []
+  //   }
+  // }, [routeData, allCuisines])
+
   const collectionData = useMemo(() => {
     if (routeData?.name === 'Restaurants') {
       return allCuisines?.cuisines?.filter(
         (cuisine) => cuisine?.shopType === 'Restaurant'
       )
     } else if (routeData?.name === 'Store') {
-      let rtc= allCuisines?.cuisines?.filter(
+      return allCuisines?.cuisines?.filter(
         (cuisine) => cuisine?.shopType === 'Grocery'
       )
-      console.log(rtc)
-      return rtc
     } else {
-      return filterCusinies() ?? []
+      return allCuisines?.cuisines
     }
   }, [routeData, allCuisines])
 
@@ -636,6 +653,9 @@ const onPressCollection = (collection, index) => {
     setRestaurantData(filteredData)
     filtersModalRef.current.close()
 
+    // Update applied filters state
+    setAppliedFilters(filters);
+
     // **Check if any filters are applied**
   const anyFilterSelected =
   ratings?.selected?.length > 0 ||
@@ -644,8 +664,13 @@ const onPressCollection = (collection, index) => {
   cuisines?.selected?.length > 0
 
     setfilterApplied(anyFilterSelected);
+    setfilterSectionApplied(anyFilterSelected)
     
   }
+
+  const resetFilters = () => {
+    setFilters(appliedFilters); // Reset filters to the last applied state
+  };
 
   return (
     <SafeAreaView
@@ -653,7 +678,7 @@ const onPressCollection = (collection, index) => {
       style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
       <View style={[styles(currentTheme).container]}>
-      <View style={[styles(currentTheme).header,{padding: 10}]}>
+      <View style={[styles(currentTheme).header,{paddingHorizontal: 10, paddingVertical: 6}]}>
                 <View>
                   <TextDefault bolder H2 isRTL>
                     {t(
@@ -681,14 +706,14 @@ const onPressCollection = (collection, index) => {
                     {t('SeeAll')}
                   </TextDefault>
                 </Ripple>
-              </View>
-              <View  style={{paddingLeft: 10,paddingRight:10}}>
+        </View>
+              <View  style={{paddingLeft: 10,paddingRight:10, paddingHorizontal: '5'}}>
               <FlatList ref={flatListRef} 
                 data={collectionData ?? []}
                 renderItem={({ item, index }) => {
                   setCurrentIndex(index)
                   return (
-                      <Ripple   
+                     <Ripple   
                         activeOpacity={0.8}
                         onPress={() => onPressCollection(item, index)}
                         style={[
@@ -719,7 +744,7 @@ const onPressCollection = (collection, index) => {
                         >
                           {item.name}
                         </TextDefault>
-                      </Ripple>
+                    </Ripple>
                   )
                 }}
                 initialScrollIndex={currentIndex}
@@ -730,8 +755,9 @@ const onPressCollection = (collection, index) => {
                 horizontal={true}
                 inverted={currentTheme?.isRTL ? true : false}
                 getItemLayout={getItemLayout} 
-              />
+          />          
               </View>
+        {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
           <Animated.FlatList
             contentInset={{ top: containerPaddingTop }}
             contentContainerStyle={{
@@ -821,7 +847,10 @@ const onPressCollection = (collection, index) => {
           filters={filters}
           setFilters={setFilters}
           applyFilters={applyFilters}
-          onClose={() => filtersModalRef.current.close()}
+          onClose={() => {
+            resetFilters(); // Reset filters when modal is closed
+            filtersModalRef.current.close();
+          }}
         />
       </Modalize>
     </SafeAreaView>
