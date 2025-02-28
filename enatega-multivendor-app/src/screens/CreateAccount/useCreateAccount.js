@@ -169,7 +169,8 @@ export const useCreateAccount = () => {
   const navigateToPhone = () => {
     navigation.navigate('PhoneNumber', {
       name: googleUser,
-      phone: ''
+      phone: '',
+      screen: 'Main'
     })
   }
   const navigateToMain = () => {

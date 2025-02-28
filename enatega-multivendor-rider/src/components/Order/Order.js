@@ -1,3 +1,5 @@
+// Order.js
+
 import { View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import styles from './style'
@@ -36,11 +38,13 @@ const Order = ({ order, orderAmount }) => {
             styles.container,
             active === 'NewOrders' ? styles.bgPrimary : styles.bgWhite
           ]}
-          onPress={() =>
+          onPress={() =>{
+            console.log("order--->",JSON.stringify(order,null,2));
             navigation.navigate('OrderDetail', {
               itemId: order?._id,
               order
             })
+          }
           }>
           <View style={styles.row}>
             <TextDefault style={styles.rowItem1} bolder H4>

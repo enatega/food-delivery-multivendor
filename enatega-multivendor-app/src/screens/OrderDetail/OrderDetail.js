@@ -149,8 +149,8 @@ if(!order)
             style={{ flex: 1, height: HEIGHT * 0.6 }}
             showsUserLocation={false}
             initialRegion={{
-              latitude: +deliveryAddress.location.coordinates[1],
-              longitude: +deliveryAddress.location.coordinates[0],
+              latitude: +deliveryAddress?.location?.coordinates[1],
+              longitude: +deliveryAddress?.location?.coordinates[0],
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421
             }}
@@ -162,28 +162,28 @@ if(!order)
           >
             <Marker
               coordinate={{
-                longitude: +restaurant.location.coordinates[0],
-                latitude: +restaurant.location.coordinates[1]
+                longitude: +restaurant?.location?.coordinates[0],
+                latitude: +restaurant?.location?.coordinates[1]
               }}
             >
               <RestaurantMarker />
             </Marker>
             <Marker
               coordinate={{
-                latitude: +deliveryAddress.location.coordinates[1],
-                longitude: +deliveryAddress.location.coordinates[0]
+                latitude: +deliveryAddress?.location?.coordinates[1],
+                longitude: +deliveryAddress?.location?.coordinates[0]
               }}
             >
               <CustomerMarker />
             </Marker>
             <MapViewDirections
               origin={{
-                longitude: +restaurant.location.coordinates[0],
-                latitude: +restaurant.location.coordinates[1]
+                longitude: +restaurant?.location?.coordinates[0],
+                latitude: +restaurant?.location?.coordinates[1]
               }}
               destination={{
-                latitude: +deliveryAddress.location.coordinates[1],
-                longitude: +deliveryAddress.location.coordinates[0]
+                latitude: +deliveryAddress?.location?.coordinates[1],
+                longitude: +deliveryAddress?.location?.coordinates[0]
               }}
               apikey={GOOGLE_MAPS_KEY}
               strokeWidth={6}
@@ -258,9 +258,10 @@ if(!order)
                 )}
               <TextDefault
                 H5
-                style={{ ...alignment.Mmedium, textAlign: 'center' }}
+                style={{ ...alignment.Mmedium }}
                 textColor={currentTheme.gray600}
                 bold
+                center
               >
                 {' '}
                 {t(checkStatus(order?.orderStatus)?.statusText)}

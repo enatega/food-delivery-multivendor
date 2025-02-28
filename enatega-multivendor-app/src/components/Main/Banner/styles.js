@@ -9,23 +9,18 @@ const styles = (props = null) =>
     banner: {
       flex: 1,
       height: scale(200),
-      width: width - 15 * 2.5, // 15 is the medium margin
-      backgroundColor: props !== null ? props?.shadow : '#707070',
       shadowColor: props !== null ? props?.shadow : '#707070',
       shadowOffset: {
         width: 0,
         height: 3
       },
-      shadowOpacity: 0.43,
-      shadowRadius: 9.51,
-      elevation: 15,
+      margin:0,
       borderRadius: 8,
-      ...alignment.MLmedium,
-      ...alignment.MRmedium,
-      ...alignment.MTmedium
     },
     image: {
-      width: '100%',
+      width: '90%',
+      alignSelf:"center",
+      resizeMode: 'cover',
       flex: 1,
       justifyContent: 'center',
       overflow: 'hidden',
@@ -37,8 +32,6 @@ const styles = (props = null) =>
       backgroundColor: 'rgba(0,0,0,0.3)',
       alignItems: props?.isRTL ? 'flex-end' : 'flex-start',
       justifyContent: 'flex-end',
-      gap: 8,
-      ...alignment.Psmall
     },
     pagination: {
       position: 'relative',
@@ -47,6 +40,26 @@ const styles = (props = null) =>
     paginationItem: {
       height: 10,
       width: 10
+    },
+    imgs1:
+    {
+      overflow:"hidden",
+      resizeMode: "cover",
+      alignSelf: 'center',
+      width: "100%",
+      height:"100%",
+      borderRadius: 8,
+    
+    },
+    csd:
+    {
+
+    flex: 1,
+    justifyContent: 'center', // Centers vertically
+    alignItems: 'center', // Centers horizontally
+    width: '100%',
+      height: "100%",
+    paddingHorizontal:'5%',
     }
   })
 export default styles

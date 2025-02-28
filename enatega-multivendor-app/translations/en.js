@@ -655,4 +655,8 @@ export const en = {
   "Select another one": "Select another one",
   "noMatchingResults": "No matching results",
   "noMatchingResultsDesc": "Try adjusting your filters or explore other options to find what you're looking for.",
+  "Applied Filters": 'Applied Filters',
+  "WhatsApp is not installed on the device": "WhatsApp is not installed on the device",
+  "Install it": "Install it",
+  
 }
