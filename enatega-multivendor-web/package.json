@@ -11,7 +11,7 @@
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
     "@react-google-maps/api": "^2.0.2",
-    "@sentry/react": "^6.16.1",
+    "@sentry/react": "^9.3.0",
     "@sentry/tracing": "^6.16.1",
     "@types/react": "^17.0.24",
     "amplitude-js": "^8.14.1",
