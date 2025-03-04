@@ -51,6 +51,7 @@ function HomeOrderDetails(props) {
     : remainingTime > 0
     ? remainingTime
     : 0
+    
   if (decision === acceptanceTime) {
     remainingTime = 0
   }
