@@ -7,7 +7,7 @@ export interface IRiderForm {
   confirmPassword: string;
   zone: IDropdownSelectItem | null;
   phone: number | null;
-  vehicleType: IDropdownSelectItem | null;
+  // vehicleType: IDropdownSelectItem | null;
 }
 
 export interface IRiderErrors {
@@ -17,5 +17,5 @@ export interface IRiderErrors {
   confirmPassword: string[];
   zone: string[];
   phone: string[];
-  vehicleType: string[];
+  // vehicleType: string[];
 }
