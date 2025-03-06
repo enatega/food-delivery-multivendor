@@ -166,7 +166,6 @@ export const generateDummyRiders = (count: number = 10): IRiderResponse[] => {
       available: Math.random() > 0.5,
       __typename: 'Rider',
       assigned: [''],
-      vehicleType: '',
     });
   }
 
@@ -443,7 +442,7 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
       zone: {
         _id: `active_order_${i + 1}`,
       },
-      isPickedUp: false
+      isPickedUp: false,
     });
   }
   return dispatchActiveOrders;
