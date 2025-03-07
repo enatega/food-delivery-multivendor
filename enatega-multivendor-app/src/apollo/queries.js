@@ -827,6 +827,7 @@ export const FavouriteRestaurant = `query UserFavourite ($latitude:Float,$longit
       orderId
       orderPrefix
       name
+      isActive
       image
       address
       location{coordinates}

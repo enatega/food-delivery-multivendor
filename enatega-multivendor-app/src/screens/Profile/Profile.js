@@ -238,7 +238,7 @@ function Profile(props) {
                       keyExtractor={(item) => item._id}
                       renderItem={({ item }) => {
 
-                        // console.log("item",item)
+                        
                         const averageRating = item?.reviewData?.ratings
                         const numberOfReviews = item?.reviewData?.total
 
@@ -249,7 +249,7 @@ function Profile(props) {
                             reviewAverage={item.reviewAverage}
                             reviewCount={item.reviewCount}
                             isCategories
-                            isOpen={true}
+                            isOpen={restaurantOpen}
                             isAvailable={item.isAvailable || true}
                             
                           />

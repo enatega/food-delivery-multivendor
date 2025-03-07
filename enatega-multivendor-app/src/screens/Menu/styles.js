@@ -213,6 +213,11 @@ const styles = (props = null) =>
       gap: 8,
       // ...alignment.PTsmall,
       ...alignment.PBsmall
+    },
+    all:
+    {
+      padding:3,
+      backgroundColor:"red"
     }
   })
 export default styles
