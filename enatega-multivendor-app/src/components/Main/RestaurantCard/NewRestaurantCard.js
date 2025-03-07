@@ -53,7 +53,7 @@ function NewRestaurantCard(props) {
   // const isRestaurantOpen = props?.isOpen
   const isAvailable = props?.isAvailable
 
-  const isRestaurantClosed = !isAvailable;
+  const isRestaurantClosed = !isAvailable || !props?.isOpen;
 // console.log("isAvailable--->>",isAvailable)
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })

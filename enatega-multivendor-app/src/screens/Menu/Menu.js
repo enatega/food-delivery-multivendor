@@ -677,7 +677,8 @@ const onPressCollection = (collection, index) => {
       edges={['bottom', 'left', 'right']}
       style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
     >
-      <View style={[styles(currentTheme).container]}>
+      <ScrollView style={[styles(currentTheme).container]}
+      stickyHeaderIndices={[2]} >
       <View style={[styles(currentTheme).header,{paddingHorizontal: 10, paddingVertical: 6}]}>
                 <View>
                   <TextDefault bolder H2 isRTL>
@@ -755,22 +756,10 @@ const onPressCollection = (collection, index) => {
                 horizontal={true}
                 inverted={currentTheme?.isRTL ? true : false}
                 getItemLayout={getItemLayout} 
-          />          
+          />         
               </View>
-        {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
-          <Animated.FlatList
-            contentInset={{ top: containerPaddingTop }}
-            contentContainerStyle={{
-            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-            padding: 15,
-            gap: 16
-          }}
-          contentOffset={{ y: -containerPaddingTop }}
-          onScroll={onScroll}
-          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => (
-            <>
+
+              <View >
               {restaurantData?.length === 0 ? null : (
                 <ActiveOrdersAndSections
                   menuPageHeading={
@@ -785,8 +774,39 @@ const onPressCollection = (collection, index) => {
                   subHeading={subHeading ? subHeading : ''}
                 />
               )}
-            </>
-          )}
+            </View> 
+
+
+        {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
+          <Animated.FlatList
+            contentInset={{ top: containerPaddingTop }}
+            contentContainerStyle={{
+            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+            padding: 15,
+            gap: 16
+          }}
+          contentOffset={{ y: -containerPaddingTop }}
+          onScroll={onScroll}
+          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+          showsVerticalScrollIndicator={false}
+          // ListHeaderComponent={() => (
+          //   <>
+          //     {restaurantData?.length === 0 ? null : (
+          //       <ActiveOrdersAndSections
+          //         menuPageHeading={
+          //           heading
+          //             ? heading
+          //             : routeData?.name === 'Restaurants'
+          //               ? 'Restaurants'
+          //               : routeData?.name === 'Store'
+          //                 ? 'All Stores'
+          //                 : 'Restaurants'
+          //         }
+          //         subHeading={subHeading ? subHeading : ''}
+          //       />
+          //     )}
+          //   </>
+          // )}
           ListEmptyComponent={emptyView()}
           keyExtractor={(item, index) => index.toString()}
           refreshControl={
@@ -815,7 +835,7 @@ const onPressCollection = (collection, index) => {
             }
           }}
         />
-      </View>
+      </ScrollView>
       <MainModalize
         modalRef={modalRef}
         currentTheme={currentTheme}

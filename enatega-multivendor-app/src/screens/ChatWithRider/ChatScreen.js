@@ -212,7 +212,7 @@ const ChatScreen = ({ navigation, route }) => {
       <GiftedChat
         messages={messages}
         user={{
-          _id: profile._id
+          _id: profile?._id
         }}
         alwaysShowSend={true}
         renderBubble={renderBubble}

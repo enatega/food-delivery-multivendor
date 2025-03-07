@@ -908,7 +908,7 @@ function Checkout(props) {
                 <View>
                   <Instructions
                     theme={currentTheme}
-                    title={'Instruction for the courier'}
+                    title={'Instruction for the restaurant'}
                     message={instructions}
                   />
                 </View>
