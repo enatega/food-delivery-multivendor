@@ -59,13 +59,18 @@ function NewRestaurantCard(props) {
     FlashMessage({ message: t('favouritelistUpdated') })
   }
 
-  const handleAddToFavorites = () => {
+  const handleAddToFavorites = (e) => {
+     // Prevent the ripple/card click event
+    e.preventDefault();
+    e.stopPropagation();
     if (!loadingMutation && profile) {
       mutate({ variables: { id: props?._id } })
     } else if (!profile) {
       FlashMessage({ message: t('loginRequired') })
       navigation.navigate('Profile')
     }
+     // Return false to ensure the event doesn't bubble up
+     return false;
   }
 
   const handleRestaurantClick = () => {
@@ -95,12 +100,11 @@ function NewRestaurantCard(props) {
   }
 
   return (
+    <View style={[styles(currentTheme).offerContainer, props?.fullWidth && { width: '100%' }]}>
+    {/* Main Card with Ripple Effect */}
     <Ripple
       rippleColor={'#F5F5F5'}
-      style={[
-        styles(currentTheme).offerContainer,
-        props?.fullWidth && { width: '100%' }
-      ]}
+      style={{ width: '100%', height: '100%' }}
       activeOpacity={1}
       onPress={handleRestaurantClick}
     >
@@ -189,35 +193,39 @@ function NewRestaurantCard(props) {
           </View>
         </View>
       </View>
-      <View
-        style={[
-          styles().overlayContainer,
-          props?.fullWidth && { width: '100%' }
-        ]}
-      >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          disabled={loadingMutation}
-          onPress={handleAddToFavorites}
-        >
-          <View style={styles(currentTheme).favouriteOverlay}>
-            {loadingMutation ? (
-              <Spinner
-                size={'small'}
-                backColor={'transparent'}
-                spinnerColor={currentTheme.iconColorDark}
-              />
-            ) : (
-              <AntDesign
-                name={heart ? 'heart' : 'hearto'}
-                size={scale(15)}
-                color={currentTheme.iconColor}
-              />
-            )}
-          </View>
-        </TouchableOpacity>
-      </View>
     </Ripple>
+    {/* Place it outside Ripple otherwise fav icon will not work on pressing */}
+     <View
+     style={[
+       styles().overlayContainer,
+       props?.fullWidth && { width: '100%' },
+      ]}
+      // pointerEvents="box-none"--> This would prevent the underlying Ripple component from receiving touch events
+      pointerEvents="box-none"
+   >
+     <TouchableOpacity
+       activeOpacity={0.7}
+       disabled={loadingMutation}
+       onPress={handleAddToFavorites}
+     >
+       <View style={styles(currentTheme).favouriteOverlay}>
+         {loadingMutation ? (
+           <Spinner
+             size={'small'}
+             backColor={'transparent'}
+             spinnerColor={currentTheme.iconColorDark}
+           />
+         ) : (
+           <AntDesign
+             name={heart ? 'heart' : 'hearto'}
+             size={scale(15)}
+             color={currentTheme.iconColor}
+           />
+         )}
+       </View>
+     </TouchableOpacity>
+   </View>
+   </View>
   )
 }
 
