@@ -3,6 +3,9 @@ import { IProvider } from '../layout.interface';
 import { IQueryResult } from '@/lib/utils/interfaces';
 
 import { IStepperFormProps } from '../global.interface';
+import {
+  IconProp,
+} from '@fortawesome/fontawesome-svg-core'
 
 export interface IUpdateProfileProps extends IGlobalComponentProps {
   stepperProps?: IStepperFormProps;
@@ -19,6 +22,7 @@ export interface IRestaurantData extends IGlobalComponentProps {
   restaurantName: string;
   username: string;
   password: string;
+  phone?: string;
   image: string;
   logo: string;
   name: string;
@@ -49,7 +53,9 @@ export interface IRestaurantProfileProps extends IGlobalComponentProps {
 export interface IInfoItemProps extends IGlobalComponentProps {
   label?: string;
   value?: string;
+  icon?: IconProp
 }
+
 
 export interface IProfileContextData extends IGlobalComponentProps {
   restaurantId?: string | null;

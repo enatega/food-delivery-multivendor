@@ -6,11 +6,15 @@ import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 import RestaurantProfileSkeleton from '@/lib/ui/useable-components/custom-skeletons/restaurant.profile.skeleton';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { faDollar, faClock } from '@fortawesome/free-solid-svg-icons';
+// Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => (
+const InfoItem: React.FC<IInfoItemProps> = ({ label, value,icon=undefined }) => (
   <div>
     <p className="text-xs text-gray-500 mb-2">{label}</p>
-    <p className="font-medium">{value || 'N/A'}</p>
+   <p className="font-medium"><FontAwesomeIcon icon={icon}/> { value || 'N/A'}</p>
+   
   </div>
 );
 
@@ -70,14 +74,17 @@ const RestaurantMain: React.FC = () => {
           <InfoItem
             label={t('Delivery Time')}
             value={restaurant?.deliveryTime?.toString()}
+            icon={faClock}
           />
           <InfoItem
             label={t('Min Order')}
             value={restaurant?.minimumOrder?.toString()}
+            icon={faDollar}
           />
           <InfoItem
             label={t('Service Charges')}
             value={restaurant?.tax?.toString()}
+            icon={faDollar}
           />
           <InfoItem label={t('Order Prefix')} value={restaurant?.orderPrefix} />
           <InfoItem label={t('Shop Category')} value={restaurant?.shopType} />

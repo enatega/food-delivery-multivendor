@@ -112,7 +112,8 @@ const RestaurantTiming = ({
         showToast({
           type: 'success',
           title: t('Success'),
-          message: t('Timing updated'),
+          // message: t('Timing updated'),
+          message: t('Store has been created Successfully'),
           duration: 3000,
         });
 

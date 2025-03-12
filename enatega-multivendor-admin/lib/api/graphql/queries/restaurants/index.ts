@@ -132,6 +132,7 @@ export const GET_RESTAURANT_PROFILE = gql`
       slug
       name
       image
+      phone
       logo
       address
       location {

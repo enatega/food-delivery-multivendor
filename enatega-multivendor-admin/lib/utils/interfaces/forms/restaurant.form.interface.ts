@@ -20,6 +20,7 @@ export interface IRestaurantForm {
   name: string;
   username: string;
   password: string;
+  phoneNumber?:string;
   confirmPassword: string;
   address: string;
   deliveryTime: number;
