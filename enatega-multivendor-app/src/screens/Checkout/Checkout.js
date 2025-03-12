@@ -291,7 +291,8 @@ function Checkout(props) {
           >
             {data && data?.restaurant.name && data?.restaurant.address && (
               <>
-                {data?.restaurant.name} {' - '} {data?.restaurant.address}
+                {data?.restaurant.name} {' - '} 
+                {data.restaurant.address.length > 12 ? data.restaurant.address.slice(0, 12) + '...' : data.restaurant.address}
               </>
             )}
           </TextDefault>

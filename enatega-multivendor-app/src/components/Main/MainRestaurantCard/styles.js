@@ -9,7 +9,7 @@ const styles = (props = null) =>
     //   ...alignment.MLlarge
     // },
     offerScroll: {
-      height: height * 0.376,
+      height: height * 0.386,
       width: '100%'
     },
     ItemTitle: {

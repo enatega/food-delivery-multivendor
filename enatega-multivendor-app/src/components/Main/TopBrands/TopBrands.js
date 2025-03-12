@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, FlatList, Text, Image } from 'react-native'
+import { View, FlatList, Text, Image, Dimensions } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -16,7 +16,7 @@ import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFunctions'
 
-
+const { height } = Dimensions.get('window')
 function TopBrands(props) {
   const { t, i18n } = useTranslation()
   const { location } = useContext(LocationContext)
@@ -151,7 +151,7 @@ function TopBrands(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-          <View style={{ ...alignment.PRsmall }}>
+          <View style={{ ...alignment.PRsmall, height:height*0.384 }}>
             <FlatList
               data={sortRestaurantsByOpenStatus(restaurantBrands || [])}
               renderItem={({ item }) => {
