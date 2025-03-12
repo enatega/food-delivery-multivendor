@@ -59,7 +59,7 @@ import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
 const initialValues: IRestaurantForm = {
-  name: 'g',
+  name: '',
   username: '',
   password: '',
   phoneNumber: '',
