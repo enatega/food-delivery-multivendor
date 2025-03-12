@@ -62,7 +62,7 @@ export const RestaurantErrors: IRestaurantFormErrors = {
   password: ['Required', ...PasswordErrors],
   confirmPassword: ['Required', 'Password must match'],
   address: ['Required', 'Name cannot be only spaces'],
-  deliveryTime: ['Required'],
+  deliveryTime: ['Required','The value must be greater than or equal to 1'],
   minOrder: ['Required'],
   salesTax: ['Required'],
   shopType: ['Required'],

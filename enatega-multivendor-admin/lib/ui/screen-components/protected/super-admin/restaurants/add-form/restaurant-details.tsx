@@ -59,14 +59,14 @@ import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
 const initialValues: IRestaurantForm = {
-  name: '',
+  name: 'g',
   username: '',
   password: '',
   phoneNumber: '',
   confirmPassword: '',
   address: '',
-  deliveryTime: 0,
-  minOrder: 0,
+  deliveryTime: 1,
+  minOrder: 1,
   salesTax: 0.0,
   shopType: null,
   cuisines: [],
@@ -378,7 +378,7 @@ export default function RestaurantDetailsForm({
                       <div>
                         <CustomNumberField
                           suffix="m"
-                          min={0}
+                          min={1}
                           max={500}
                           placeholder={t('Delivery Time')}
                           name="deliveryTime"
