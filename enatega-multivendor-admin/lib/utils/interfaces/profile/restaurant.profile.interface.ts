@@ -3,9 +3,7 @@ import { IProvider } from '../layout.interface';
 import { IQueryResult } from '@/lib/utils/interfaces';
 
 import { IStepperFormProps } from '../global.interface';
-import {
-  IconProp,
-} from '@fortawesome/fontawesome-svg-core'
+
 
 export interface IUpdateProfileProps extends IGlobalComponentProps {
   stepperProps?: IStepperFormProps;
@@ -53,7 +51,6 @@ export interface IRestaurantProfileProps extends IGlobalComponentProps {
 export interface IInfoItemProps extends IGlobalComponentProps {
   label?: string;
   value?: string;
-  icon?: IconProp | undefined;
 }
 
 
