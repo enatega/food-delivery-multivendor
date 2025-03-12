@@ -1399,7 +1399,7 @@ function Checkout(props) {
               <TextInput
                 keyboardType='numeric'
                 placeholder={'25'}
-                placeholderTextColor={currentTheme.gray500}
+                placeholderTextColor={currentTheme.inputPlaceHolder}
                 value={tipAmount}
                 onChangeText={(text) => setTipAmount(text)}
                 style={styles(currentTheme).modalInput}
@@ -1478,6 +1478,7 @@ function Checkout(props) {
               <TextInput
                 label={t('inputCode')}
                 placeholder={t('inputCode')}
+                placeholderTextColor={currentTheme.inputPlaceHolder}
                 value={voucherCode}
                 onChangeText={(text) => setVoucherCode(text)}
                 style={styles(currentTheme).modalInput}
