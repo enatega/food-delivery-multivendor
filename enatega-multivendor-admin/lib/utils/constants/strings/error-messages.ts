@@ -163,7 +163,7 @@ export const CuisineErrors: ICuisineErrors = {
 
 export const CouponErrors: ICouponErrors = {
   title: ['Required', 'Name cannot be only spaces', 'You have reached the maximum limit!', 'Title is a required field'],
-  discount: ['Required', 'Discount is a required field', 'The minimum starting value is zero', 'You cannot exceed from 100 as this is a %age field'],
+  discount: ['Required', 'Discount is a required field', 'The minimum starting value is one', 'You cannot exceed from 100 as this is a %age field'],
   enabled: ['Required', 'Please choose one'],
 };
 
