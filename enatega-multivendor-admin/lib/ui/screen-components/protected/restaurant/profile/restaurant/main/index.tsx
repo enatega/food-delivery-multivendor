@@ -10,7 +10,7 @@ import { faDollar, faClock } from '@fortawesome/free-solid-svg-icons';
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const InfoItem: React.FC<IInfoItemProps> = ({ label, value,icon=undefined }) => (
+const InfoItem: React.FC<IInfoItemProps> = ({ label, value, icon=undefined }) => (
   <div>
     <p className="text-xs text-gray-500 mb-2">{label}</p>
    <p className="font-medium"><FontAwesomeIcon icon={icon}/> { value || 'N/A'}</p>

@@ -53,7 +53,7 @@ export interface IRestaurantProfileProps extends IGlobalComponentProps {
 export interface IInfoItemProps extends IGlobalComponentProps {
   label?: string;
   value?: string;
-  icon?: IconProp
+  icon?: IconProp | undefined;
 }
 
 
