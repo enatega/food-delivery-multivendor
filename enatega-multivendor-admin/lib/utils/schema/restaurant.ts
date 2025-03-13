@@ -8,7 +8,13 @@ export const RestaurantSchema = Yup.object().shape({
     .matches(/\S/, 'Name cannot be only spaces')
     .required('Required'),
   username: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().required('Required'),
+  password: Yup.string()
+  .required('Required')
+  .min(6, 'At least 6 characters')
+  .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
+  .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
+  .matches(/[0-9]/, 'At least one number (0-9)')
+  .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, 'At least one special character'),
   confirmPassword: Yup.string()
     .nullable()
     .oneOf([Yup.ref('password'), null], 'Password must match')
