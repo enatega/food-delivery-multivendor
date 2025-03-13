@@ -100,7 +100,13 @@ function NewRestaurantCard(props) {
   }
 
   return (
-    <View style={[styles(currentTheme).offerContainer, props?.fullWidth && { width: '100%' }]}>
+    <View style={[styles(currentTheme).offerContainer, props?.fullWidth && { width: '100%' },{
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5, // For Android
+    }]}>
     {/* Main Card with Ripple Effect */}
     <Ripple
       rippleColor={'#F5F5F5'}
@@ -194,6 +200,7 @@ function NewRestaurantCard(props) {
         </View>
       </View>
     </Ripple>
+    
     {/* Place it outside Ripple otherwise fav icon will not work on pressing */}
      <View
      style={[

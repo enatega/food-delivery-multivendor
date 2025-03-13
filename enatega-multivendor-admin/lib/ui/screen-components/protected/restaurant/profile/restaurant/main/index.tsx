@@ -12,9 +12,9 @@ import { faClock, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => {
   // Conditionally render icons based on label
   let icon = null;
-  if (label === 'Delivery Time' || label === 'Min Order') {
+  if (label === 'Delivery Time') {
     icon = <FontAwesomeIcon icon={faClock} className="mr-1" />;
-  } else if (label === 'Service Charges') {
+  } else if (label === 'Service Charges' || label === 'Min Order') {
     icon = <FontAwesomeIcon icon={faDollarSign} className="mr-1" />;
   }
   return (

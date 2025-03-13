@@ -26,7 +26,7 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Schema
-import { RestaurantsVendorDetails, VendorSchema } from '@/lib/utils/schema';
+import { RestaurantsVendorDetails, VendorSchemaOnStoreCreate } from '@/lib/utils/schema';
 
 // GraphQL
 import { CREATE_VENDOR, GET_VENDORS } from '@/lib/api/graphql';
@@ -173,10 +173,11 @@ export default function VendorDetails({
             <Formik
               initialValues={formInitialValues}
               validationSchema={
-                showAddForm ? VendorSchema : RestaurantsVendorDetails
+                showAddForm ? VendorSchemaOnStoreCreate : RestaurantsVendorDetails
               }
               enableReinitialize={true}
               onSubmit={async (values) => {
+                console.log(values, "values")
                 await onVendorSubmitHandler(values);
               }}
               validateOnChange={false}

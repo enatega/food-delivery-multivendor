@@ -34,6 +34,7 @@ import {
   IGetCuisinesData,
 } from '@/lib/utils/interfaces/cuisine.interface';
 import { useTranslations } from 'next-intl';
+import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
 export default function UpdateRestaurantDetails({
   stepperProps,
@@ -100,6 +101,7 @@ export default function UpdateRestaurantDetails({
       username: restaurantData?.username ?? '',
       password: restaurantData?.password ?? '',
       confirmPassword: restaurantData?.password ?? '',
+      phoneNumber: restaurantData?.phone ?? '',
       address: restaurantData?.address ?? '',
       deliveryTime: restaurantData?.deliveryTime ?? 0,
       minOrder: restaurantData?.minimumOrder ?? 0,
@@ -137,6 +139,7 @@ export default function UpdateRestaurantDetails({
           restaurantInput: {
             _id: restaurantId,
             name: data.name,
+            phone: data.phoneNumber,
             address: data.address,
             image: data.image,
             logo: data.logo,
@@ -191,7 +194,7 @@ export default function UpdateRestaurantDetails({
                     <CustomIconTextField
                       type="email"
                       name="username"
-                      placeholder={t('Email')}
+                      placeholder={t('Email')+'*'}
                       maxLength={35}
                       showLabel={true}
                       iconProperties={{
@@ -213,7 +216,7 @@ export default function UpdateRestaurantDetails({
                     />
 
                     <CustomPasswordTextField
-                      placeholder={t('Password')}
+                      placeholder={t('Password')+'*'}
                       name="password"
                       maxLength={20}
                       value={values.password}
@@ -232,7 +235,7 @@ export default function UpdateRestaurantDetails({
 
                     <div>
                       <CustomPasswordTextField
-                        placeholder={t('Confirm Password')}
+                        placeholder={t('Confirm Password')+'*'}
                         name="confirmPassword"
                         maxLength={20}
                         showLabel={true}
@@ -254,7 +257,7 @@ export default function UpdateRestaurantDetails({
                     <CustomTextField
                       type="text"
                       name="name"
-                      placeholder={t('Name')}
+                      placeholder={t('Name')+'*'}
                       maxLength={35}
                       value={values.name}
                       onChange={handleChange}
@@ -269,9 +272,30 @@ export default function UpdateRestaurantDetails({
                           : '',
                       }}
                     />
+                    <div>
+                      
+                       <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                         {t('Phone')}
+                       </label>
+                       <CustomPhoneTextField
+                         mask="999-999-9999"
+                         name="phoneNumber"
+                         showLabel={true}
+                         // placeholder="Phone Number"
+                         onChange={(e) => {
+                           // console.log("phone number format ==> ", e, code);
+                           setFieldValue('phoneNumber', e);
+                           // setCountryCode(code);
+                         }}
+                         value={values.phoneNumber}
+                         // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
+                         type="text"
+                         className="rounded-[6px] border-[#D1D5DB]"
+                       />
+                     </div>
 
                     <CustomTextField
-                      placeholder={t('Address')}
+                      placeholder={t('Address')+'*'}
                       name="address"
                       type="text"
                       maxLength={100}
@@ -293,7 +317,7 @@ export default function UpdateRestaurantDetails({
                       suffix=" m"
                       min={0}
                       max={500}
-                      placeholder={t('Delivery Time')}
+                      placeholder={t('Delivery Time')+'*'}
                       name="deliveryTime"
                       showLabel={true}
                       value={values.deliveryTime}
@@ -312,7 +336,7 @@ export default function UpdateRestaurantDetails({
                     <CustomNumberField
                       min={1}
                       max={99999}
-                      placeholder={t('Min Order')}
+                      placeholder={t('Min Order')+'*'}
                       name="minOrder"
                       showLabel={true}
                       value={values.minOrder}
@@ -332,7 +356,7 @@ export default function UpdateRestaurantDetails({
                       suffix=" %"
                       min={0}
                       max={100}
-                      placeholder={t('Service Charges')}
+                      placeholder={t('Service Charges')+'*'}
                       minFractionDigits={2}
                       maxFractionDigits={2}
                       name="salesTax"
@@ -371,7 +395,7 @@ export default function UpdateRestaurantDetails({
 
                     <CustomDropdownComponent
                       name="shopType"
-                      placeholder={t('Shop Category')}
+                      placeholder={t('Shop Category')+'*'}
                       selectedItem={values.shopType}
                       setSelectedItem={setFieldValue}
                       options={SHOP_TYPE}
@@ -389,7 +413,7 @@ export default function UpdateRestaurantDetails({
 
                     <CustomMultiSelectComponent
                       name="cuisines"
-                      placeholder={t('Cuisines')}
+                      placeholder={t('Cuisines')+'*'}
                       options={cuisinesDropdown ?? []}
                       selectedItems={values.cuisines}
                       setSelectedItems={setFieldValue}

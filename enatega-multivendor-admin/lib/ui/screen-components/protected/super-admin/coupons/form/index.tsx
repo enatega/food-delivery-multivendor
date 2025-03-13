@@ -195,7 +195,7 @@ export default function CouponForm({
 
           setSubmitting(false);
         }}
-        validateOnChange={false}
+        validateOnChange={true}
       >
         {({ errors, handleSubmit, values, isSubmitting, setFieldValue }) => {
           return (

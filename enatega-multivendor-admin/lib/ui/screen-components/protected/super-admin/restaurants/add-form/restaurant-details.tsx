@@ -23,7 +23,12 @@ import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Constants
-import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import {
+  MAX_LANSDCAPE_FILE_SIZE,
+  MAX_SQUARE_FILE_SIZE,
+  RestaurantErrors,
+  SHOP_TYPE,
+} from '@/lib/utils/constants';
 
 // Interface
 import { IRestaurantForm } from '@/lib/utils/interfaces';
@@ -51,15 +56,17 @@ import { toTextCase } from '@/lib/utils/methods';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
+import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
 const initialValues: IRestaurantForm = {
   name: '',
   username: '',
   password: '',
+  phoneNumber: '',
   confirmPassword: '',
   address: '',
-  deliveryTime: 0,
-  minOrder: 0,
+  deliveryTime: 1,
+  minOrder: 1,
   salesTax: 0.0,
   shopType: null,
   cuisines: [],
@@ -151,6 +158,7 @@ export default function RestaurantDetailsForm({
           restaurant: {
             name: data.name,
             address: data.address,
+            phone: data.phoneNumber,
             image: data.image,
             logo: data.logo,
             deliveryTime: data.deliveryTime,
@@ -326,6 +334,27 @@ export default function RestaurantDetailsForm({
                       </div>
 
                       <div>
+                        <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                          {t('Phone')}
+                        </label>
+                        <CustomPhoneTextField
+                          mask="999-999-9999"
+                          name="phoneNumber"
+                          showLabel={true}
+                          // placeholder="Phone Number"
+                          onChange={(e) => {
+                            // console.log("phone number format ==> ", e, code);
+                            setFieldValue('phoneNumber', e);
+                            // setCountryCode(code);
+                          }}
+                          value={values.phoneNumber}
+                          // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
+                          type="text"
+                          className="rounded-[6px] border-[#D1D5DB]"
+                        />
+                      </div>
+
+                      <div>
                         <CustomTextField
                           placeholder={t('Address')}
                           name="address"
@@ -349,7 +378,7 @@ export default function RestaurantDetailsForm({
                       <div>
                         <CustomNumberField
                           suffix="m"
-                          min={0}
+                          min={1}
                           max={500}
                           placeholder={t('Delivery Time')}
                           name="deliveryTime"
