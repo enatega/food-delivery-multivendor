@@ -91,7 +91,7 @@ const RestaurantMain: React.FC = () => {
           />
           <InfoItem
             label={t('Service Charges')}
-            value={restaurant?.tax?.toString()}
+             value={restaurant?.tax ? `${restaurant.tax.toString()}%` : ""} // 'value = "5%"'  old: value={restaurant?.tax?.toString()}
           />
           <InfoItem label={t('Order Prefix')} value={restaurant?.orderPrefix} />
           <InfoItem label={t('Shop Category')} value={restaurant?.shopType} />
