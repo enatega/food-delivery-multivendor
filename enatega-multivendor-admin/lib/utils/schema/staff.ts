@@ -19,7 +19,7 @@ export const StaffSchema = Yup.object().shape({
     .nullable()
     .oneOf([Yup.ref('password'), null], 'Password must match')
     .required('Required'),
-  phone: Yup.string().required('Required'),
+  phone: Yup.string().required('Required').min(5,"Minimum 5 Numbers are Required"),
   permissions: Yup.array()
     .of(Yup.mixed<IDropdownSelectItem>())
     .min(1, 'Permissions field must have at least 1 items')
