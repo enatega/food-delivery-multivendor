@@ -26,6 +26,7 @@ export const RIDER_TABLE_COLUMNS = ({
   const t = useTranslations();
 
   // States
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedRider, setSelectedRider] = useState<{
     id: string;
     isActive: boolean;
@@ -37,7 +38,16 @@ export const RIDER_TABLE_COLUMNS = ({
   const [mutateToggle, { loading }] = useMutation(TOGGLE_RIDER, {
     refetchQueries: [{ query: GET_RIDERS }],
     awaitRefetchQueries: true,
+    onCompleted: () => {
+      setIsLoading(false);
+      showToast({
+        type: 'success',
+        title: t('Banner Status'),
+        message: t('Status Changed Successfully'),
+      });
+    },
     onError: () => {
+      setIsLoading(false);
       showToast({
         type: 'error',
         title: t('Banner Status'),
@@ -49,6 +59,7 @@ export const RIDER_TABLE_COLUMNS = ({
   // Handle availability toggle
   const onHandleBannerStatusChange = async (isActive: boolean, id: string) => {
     try {
+      setIsLoading(true);
       setSelectedRider({ id, isActive });
       await mutateToggle({ variables: { id } });
     } catch (error) {
@@ -59,6 +70,7 @@ export const RIDER_TABLE_COLUMNS = ({
       });
     } finally {
       setSelectedRider({ id: '', isActive: false });
+      setIsLoading(false);
     }
   };
 
@@ -83,9 +95,10 @@ export const RIDER_TABLE_COLUMNS = ({
       propertyName: 'available',
       body: (rider: IRiderResponse) => (
         <CustomInputSwitch
-          loading={rider._id === selectedRider.id && loading}
+          loading={rider._id === selectedRider.id && (loading || isLoading)}
           isActive={rider.available}
           onChange={async () => {
+            if (loading || isLoading) return;
             await onHandleBannerStatusChange(!rider.available, rider._id);
           }}
         />
