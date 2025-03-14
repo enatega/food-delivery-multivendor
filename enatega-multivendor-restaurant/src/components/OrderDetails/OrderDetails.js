@@ -82,84 +82,88 @@ function OrderItems({ orderData }) {
           subTotal = subTotal + item.variation.price
           return (
             <View key={`item-${index}`}>
-            <View style={styles.itemRow} key={index}>
-              <TextDefault
-                H5
-                textColor={colors.fontSecondColor}
-                bold>{`${item.quantity}x ${item.title}`}</TextDefault>
-              <TextDefault
-                bold>{`${configuration.currencySymbol}${item.variation.price}`}</TextDefault>
-            </View>
+              <View style={styles.itemRow} key={index}>
+                <TextDefault
+                  H5
+                  textColor={colors.fontSecondColor}
+                  bold>{`${item.quantity}x ${item.title}`}</TextDefault>
+                <TextDefault
+                  bold>{`${configuration.currencySymbol}${item.variation.price * item.quantity}`}</TextDefault>
+              </View>
 
-            {item?.variation?.title && (
-              <View style={styles.itemColumn}>
-                <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  {t('variations')}
-                </TextDefault>
-                <View>
-                  <View style={styles.itemRow}>
-                    <TextDefault H6 textColor={colors.fontSecondColor}>
-                      - {item?.variation.title}
-                    </TextDefault>
-                    <TextDefault H6>{`${configuration.currencySymbol}${
-                      item?.variation.price ?? 0
-                    }`}</TextDefault>
+              {item?.variation?.title && (
+                <View style={styles.itemColumn}>
+                  <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                    {t('variations')}
+                  </TextDefault>
+                  <View>
+                    <View style={styles.itemRow}>
+                      <TextDefault H6 textColor={colors.fontSecondColor}>
+                        - {item?.variation.title}
+                      </TextDefault>
+                      <TextDefault H6>{`${configuration.currencySymbol}${
+                        item?.variation.price ?? 0
+                      }`}</TextDefault>
+                    </View>
                   </View>
                 </View>
-              </View>
-            )}
+              )}
 
-            <View style={{ marginBottom: 5 }}></View>
+              <View style={{ marginBottom: 5 }}></View>
 
-            {item?.addons?.length > 0 && (
-              <View style={styles.itemColumn} >
-                <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  {t('addOns')}
-                </TextDefault>
-                <View>
-                  {item.addons.map((addon, itemAddon) => {
-                    return (
-                      <View style={styles.itemColumn} key={`item-${index}-addon-${itemAddon}`}>
-                        <TextDefault H7 textColor={colors.fontSecondColor}>
-                          - {addon.title} (Options)
-                        </TextDefault>
-                        <View style={styles.itemColumn}>
-                          {addon.options.map((option, addOnOptionIndex) => (
-                            <View style={styles.itemRow} key={`item-${index}-addon-${itemAddon}-option-${addOnOptionIndex}`}>
-                              <TextDefault
-                                key={index}
-                                textColor={colors.fontSecondColor}
-                                style={{ marginLeft: 22 }}>
-                                - {option.title}
-                              </TextDefault>
-                              <TextDefault H6>{`${
-                                configuration.currencySymbol
-                              }${option.price ?? 0}`}</TextDefault>
-                            </View>
-                          ))}
+              {item?.addons?.length > 0 && (
+                <View style={styles.itemColumn}>
+                  <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                    {t('addOns')}
+                  </TextDefault>
+                  <View>
+                    {item.addons.map((addon, itemAddon) => {
+                      return (
+                        <View
+                          style={styles.itemColumn}
+                          key={`item-${index}-addon-${itemAddon}`}>
+                          <TextDefault H7 textColor={colors.fontSecondColor}>
+                            - {addon.title} (Options)
+                          </TextDefault>
+                          <View style={styles.itemColumn}>
+                            {addon.options.map((option, addOnOptionIndex) => (
+                              <View
+                                style={styles.itemRow}
+                                key={`item-${index}-addon-${itemAddon}-option-${addOnOptionIndex}`}>
+                                <TextDefault
+                                  key={index}
+                                  textColor={colors.fontSecondColor}
+                                  style={{ marginLeft: 22 }}>
+                                  - {option.title}
+                                </TextDefault>
+                                <TextDefault H6>{`${
+                                  configuration.currencySymbol
+                                }${option.price ?? 0}`}</TextDefault>
+                              </View>
+                            ))}
+                          </View>
                         </View>
-                      </View>
-                    )
-                  })}
+                      )
+                    })}
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
 
-            {item.specialInstructions && (
-              <View style={[styles.itemColumn, { marginTop: 8 }]}>
-                <TextDefault H6 textColor={colors.fontSecondColor} bold>
-                  {t('specialInstructions')}
-                </TextDefault>
-                <TextDefault H7 textColor={colors.fontSecondColor}>
-                  {item.specialInstructions}
-                </TextDefault>
-              </View>
-            )}
+              {item.specialInstructions && (
+                <View style={[styles.itemColumn, { marginTop: 8 }]}>
+                  <TextDefault H6 textColor={colors.fontSecondColor} bold>
+                    {t('specialInstructions')}
+                  </TextDefault>
+                  <TextDefault H7 textColor={colors.fontSecondColor}>
+                    {item.specialInstructions}
+                  </TextDefault>
+                </View>
+              )}
 
-            <View style={styles.rowBottomBorder}></View>
-          </View>
-        )
-      })}
+              <View style={styles.rowBottomBorder}></View>
+            </View>
+          )
+        })}
       <View style={styles.itemRow}>
         <TextDefault
           H6

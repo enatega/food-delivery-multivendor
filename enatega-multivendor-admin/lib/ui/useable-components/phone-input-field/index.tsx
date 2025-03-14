@@ -39,10 +39,25 @@ export default function CustomPhoneTextField({
   const inputStyle =
     page === 'vendor-profile-edit' ? { width: '100%' } : { width: '100%' };
 
+  // const MaininputStyle =
+  //   page === 'vendor-profile-edit'
+  //     ? { width: '100%', borderRadius: '0 5px 5px 0', height: '40px' }
+  //     : { width: '100%', borderRadius: '0 5px 5px 0', height: '40px' };
+
   const MaininputStyle =
     page === 'vendor-profile-edit'
-      ? { width: '100%', borderRadius: '0 5px 5px 0', height: '40px' }
-      : { width: '100%', borderRadius: '0 5px 5px 0', height: '40px' };
+      ? {
+          width: '100%',
+          borderRadius: '0 5px 5px 0',
+          height: '40px',
+          borderColor: style?.borderColor || '',
+        }
+      : {
+          width: '100%',
+          borderRadius: '0 5px 5px 0',
+          height: '40px',
+          borderColor: style?.borderColor || '',
+        };
 
   return !isLoading ? (
     <div className="relative flex w-full flex-col justify-center gap-y-1">
@@ -51,13 +66,20 @@ export default function CustomPhoneTextField({
           {placeholder}
         </label>
       )}
-      <div style={style} className={`flex items-center ${className}`}>
+      {/* <div style={style} className={`flex items-center ${className}`}> */}
+      <div
+        style={style}
+        className={`flex items-center ${className} ${style?.borderColor === 'red' ? 'phone-error' : ''}`}
+      >
         <PhoneInput
           defaultCountry="au"
           value={value ?? ''}
           onChange={handlePhoneInputChange}
           style={inputStyle}
-          inputStyle={MaininputStyle}
+          inputStyle={{
+            ...MaininputStyle,
+            borderColor: style?.borderColor || MaininputStyle.borderColor,
+          }}
         />
       </div>
     </div>

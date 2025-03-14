@@ -725,7 +725,8 @@ const onPressCollection = (collection, index) => {
                           }
                         ]}
                       >
-                        <View style={[styles().brandImgContainer]} >
+                        <View style={[styles().brandImgContainer]}>
+                        <View  >
                           <Image
                             source={{ uri: item?.image }}
                             style={styles().collectionImage}
@@ -735,7 +736,8 @@ const onPressCollection = (collection, index) => {
                         <TextDefault
                           Normal
                           bolder
-                          style={{ padding: 8 }}
+                    
+                          style={{ padding: 4 }}
                           textColor={
                             activeCollection === item.name
                               ? currentTheme.main
@@ -745,6 +747,8 @@ const onPressCollection = (collection, index) => {
                         >
                           {item.name}
                         </TextDefault>
+                        </View>
+
                     </Ripple>
                   )
                 }}
@@ -759,7 +763,7 @@ const onPressCollection = (collection, index) => {
           />         
               </View>
 
-              <View >
+              <View style={{backgroundColor:currentTheme.themeBackground}}>
               {restaurantData?.length === 0 ? null : (
                 <ActiveOrdersAndSections
                   menuPageHeading={
