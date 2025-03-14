@@ -152,6 +152,8 @@ export default function RiderAddForm({
                   handleChange,
                   handleSubmit,
                   setFieldValue,
+                  setFieldTouched ,
+                  touched
                 }) => {
                   return (
                     <Form onSubmit={handleSubmit}>
@@ -278,17 +280,19 @@ export default function RiderAddForm({
                           name="phone"
                           showLabel={true}
                           value={values?.phone?.toString()}
+                          // onChange={(code: string) => {
+                          //   setFieldValue('phone', code);
+                          // }}
                           onChange={(code: string) => {
                             setFieldValue('phone', code);
+                            setFieldTouched('phone', true, false); // Mark as touched immediately
                           }}
                           style={{
                             borderColor: onErrorMessageMatcher(
                               'phone',
                               errors?.phone,
                               RiderErrors
-                            )
-                              ? 'red'
-                              : '',
+                            ) && touched?.phone ? 'red' : '',
                           }}
                         />
 
