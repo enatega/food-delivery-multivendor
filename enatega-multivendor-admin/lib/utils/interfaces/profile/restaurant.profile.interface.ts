@@ -1,9 +1,11 @@
-import { IGlobalComponentProps } from '../global.interface';
+import {
+  IDropdownSelectItem,
+  IGlobalComponentProps,
+} from '../global.interface';
 import { IProvider } from '../layout.interface';
 import { IQueryResult } from '@/lib/utils/interfaces';
 
 import { IStepperFormProps } from '../global.interface';
-
 
 export interface IUpdateProfileProps extends IGlobalComponentProps {
   stepperProps?: IStepperFormProps;
@@ -42,6 +44,21 @@ export interface IRestaurantData extends IGlobalComponentProps {
   deliveryBounds: {
     coordinates: [[number]];
   };
+
+  bussinessDetails?: {
+    bankName: string;
+    accountName: string;
+    accountCode: string;
+    accountNumber: number;
+    bussinessType: IDropdownSelectItem;
+    bussinessRegNo: number;
+    companyRegNo: number;
+    taxRate: number;
+  };
+
+  currentWalletAmount: number;
+  totalWalletAmount: number;
+  withdrawnWalletAmount: number;
 }
 
 export interface IRestaurantProfileProps extends IGlobalComponentProps {
@@ -52,7 +69,6 @@ export interface IInfoItemProps extends IGlobalComponentProps {
   label?: string;
   value?: string;
 }
-
 
 export interface IProfileContextData extends IGlobalComponentProps {
   restaurantId?: string | null;
@@ -105,4 +121,14 @@ export interface IEditRestaurantResponse {
   data?: {
     editRestaurant?: IEditRestaurant;
   };
+}
+
+export interface IUpdateBussinessDetailsForm {
+  bankName: string;
+  accountName: string;
+  accountCode: string;
+  accountNumber: number | null;
+  bussinessRegNo: number | null;
+  companyRegNo: number | null;
+  taxRate: number | null;
 }

@@ -21,7 +21,7 @@ export default function StatsCard({
   return loading ? (
     <DashboardStatsCardSkeleton />
   ) : (
-    <Link href={route}>
+    <Link href={route ?? ''}>
       <div className="card flex flex-col justify-between cursor-pointer min-h-28">
         <div className="mb-2 flex items-center justify-between">
           <span className="text-gray-600">{label}</span>

@@ -20,6 +20,7 @@ import {
   faRectangleList,
   faStar,
   faStore,
+  faWallet,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Components
@@ -125,6 +126,30 @@ export default function MakeSidebar() {
         {
           text: t('Addons'),
           route: '/admin/store/product-management/add-ons',
+          isParent: false,
+        },
+      ],
+    },
+
+    {
+      text: t('Wallet'),
+      route: '/admin/store/wallets',
+      isParent: true,
+      icon: faWallet,
+      subMenu: [
+        {
+          text: t('Transaction History'),
+          route: '/admin/store/wallets/transaction-history',
+          isParent: false,
+        },
+        {
+          text: t('Withdrawal Request'),
+          route: '/admin/store/wallets/withdrawal-request',
+          isParent: false,
+        },
+        {
+          text: t('Earnings'),
+          route: '/admin/store/wallets/earnings',
           isParent: false,
         },
       ],

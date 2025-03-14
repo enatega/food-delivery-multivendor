@@ -17,8 +17,10 @@ import {
   IRestaurantResponse,
   IStaffResponse,
   IStatsCardProps,
+  ITransactionHistory,
   IVendorStoreDetails,
   IZoneResponse,
+  UserTypeEnum,
 } from '../interfaces';
 import { IRiderResponse } from '../interfaces/rider.interface';
 import { IUserResponse } from '../interfaces/users.interface';
@@ -538,4 +540,62 @@ export const generateVendorStoreDetails = (
   }
 
   return details;
+};
+
+export const generateSkeletonTransactionHistory = (
+  count: number = 10
+): ITransactionHistory[] => {
+  const transactionHistory: ITransactionHistory[] = [];
+  const currentDate = new Date().toISOString(); // Generate date string once
+
+  for (let i = 0; i < count; i++) {
+    transactionHistory.push({
+      _id: `skeleton_${i}`,
+      amountCurrency: '',
+      status: '',
+      transactionId: '',
+      userType: UserTypeEnum.ALL,
+      userId: '',
+      amountTransferred: 0,
+      createdAt: currentDate,
+      toBank: {
+        accountName: '',
+        bankName: '',
+        accountNumber: '',
+        accountCode: '',
+      },
+      rider: {
+        _id: '',
+        name: '',
+        email: '',
+        username: '',
+        password: '',
+        phone: '',
+        image: '',
+        available: false,
+        isActive: false,
+        // isSuperAdminRider: false,
+        accountNumber: '',
+        currentWalletAmount: 0,
+        totalWalletAmount: 0,
+        withdrawnWalletAmount: 0,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      },
+      store: {
+        unique_restaurant_id: '',
+        _id: '',
+        name: '',
+        rating: 0,
+        isActive: false,
+        isAvailable: false,
+        slug: '',
+        stripeDetailsSubmitted: false,
+        phone: '',
+        city: '',
+        postCode: '',
+      },
+    });
+  }
+  return transactionHistory;
 };

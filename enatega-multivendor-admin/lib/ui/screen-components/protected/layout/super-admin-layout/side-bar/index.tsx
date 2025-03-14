@@ -19,6 +19,7 @@ import {
   faHome,
   faSliders,
   faUpRightFromSquare,
+  faWallet,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Constants and Utiils
@@ -176,6 +177,32 @@ export default function MakeSidebar() {
           text: 'Notification',
           label: t('Notification'),
           route: '/management/notifications',
+          isParent: false,
+        },
+      ]),
+      shouldShow: function () {
+        return this.subMenu ? this.subMenu.length > 0 : false;
+      },
+    },
+    {
+      text: t('Wallet'),
+      route: '/wallet',
+      isParent: true,
+      icon: faWallet,
+      subMenu: useCheckAllowedRoutes([
+        {
+          text: t('Transaction History'),
+          route: '/wallet/transaction-history',
+          isParent: false,
+        },
+        {
+          text: 'Withdrawal Request',
+          route: '/wallet/withdraw-requests',
+          isParent: false,
+        },
+        {
+          text: t('Earnings'),
+          route: '/wallet/earnings',
           isParent: false,
         },
       ]),

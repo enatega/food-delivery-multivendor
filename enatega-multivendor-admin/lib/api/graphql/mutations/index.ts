@@ -17,4 +17,4 @@ export * from './withdraw-requests';
 export * from './zone';
 export * from './configuration';
 export * from './food';
-export * from './app-versions'
+export * from './app-versions';

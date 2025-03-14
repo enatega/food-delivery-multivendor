@@ -9,6 +9,7 @@ import {
   IVendorErrors,
   IUpdateProfileFormErrors,
   IVariationErrors,
+  IUpdateBussinessDetailsFormErrors,
 } from '@/lib/utils/interfaces/forms';
 
 import {
@@ -62,7 +63,7 @@ export const RestaurantErrors: IRestaurantFormErrors = {
   password: ['Required', ...PasswordErrors],
   confirmPassword: ['Required', 'Password must match'],
   address: ['Required', 'Name cannot be only spaces'],
-  deliveryTime: ['Required','The value must be greater than or equal to 1'],
+  deliveryTime: ['Required', 'The value must be greater than or equal to 1'],
   minOrder: ['Required'],
   salesTax: ['Required'],
   shopType: ['Required'],
@@ -86,6 +87,16 @@ export const ProfileErrors: IUpdateProfileFormErrors = {
   cuisines: ['Required', 'Cuisines field must have at least 1 items'],
   image: ['Required', 'Invalid image URL'],
   logo: ['Required', 'Invalid logo URL'],
+};
+
+export const BussinessDetailsErrors: IUpdateBussinessDetailsFormErrors = {
+  bankName: ['Required'],
+  accountName: ['Required'],
+  accountCode: ['Required'],
+  accountNumber: ['Required'],
+  bussinessRegNo: [],
+  companyRegNo: [],
+  taxRate: ['Required'],
 };
 
 export const RiderErrors: IRiderErrors = {
@@ -162,8 +173,18 @@ export const CuisineErrors: ICuisineErrors = {
 };
 
 export const CouponErrors: ICouponErrors = {
-  title: ['Required', 'Name cannot be only spaces', 'You have reached the maximum limit!', 'Title is a required field'],
-  discount: ['Required', 'Discount is a required field', 'The minimum starting value is one', 'You cannot exceed from 100 as this is a %age field'],
+  title: [
+    'Required',
+    'Name cannot be only spaces',
+    'You have reached the maximum limit!',
+    'Title is a required field',
+  ],
+  discount: [
+    'Required',
+    'Discount is a required field',
+    'The minimum starting value is one',
+    'You cannot exceed from 100 as this is a %age field',
+  ],
   enabled: ['Required', 'Please choose one'],
 };
 

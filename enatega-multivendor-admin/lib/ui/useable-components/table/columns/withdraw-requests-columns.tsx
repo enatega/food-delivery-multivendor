@@ -1,37 +1,39 @@
-// Interfaces
-import { IDropdownSelectItem } from '@/lib/utils/interfaces';
-import { IWithDrawRequest } from '@/lib/utils/interfaces/withdraw-request.interface';
-
-// Components
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-
-// GraphQL
-import {
-  GET_ALL_WITHDRAW_REQUESTS,
-  UPDATE_WITHDRAW_REQUEST,
-} from '@/lib/api/graphql';
-
-// Hooks
-import { useMutation } from '@apollo/client';
-import { useContext, useMemo, useState } from 'react';
-
-// Icons
+import { useMemo, useContext, useState, useCallback, useRef } from 'react';
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowsRotate,
   faCircleXmark,
-  faDashboard,
   faPaperPlane,
+  faDashboard,
 } from '@fortawesome/free-solid-svg-icons';
-
-// Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
-import { Tag } from 'primereact/tag';
-import { useTranslations } from 'next-intl';
+import { useMutation } from '@apollo/client';
+import {
+  UPDATE_WITHDRAW_REQUEST,
+  GET_ALL_WITHDRAW_REQUESTS,
+} from '@/lib/api/graphql';
+import { IWithDrawRequest } from '@/lib/utils/interfaces';
+import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
 
-export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
+import { Menu } from 'primereact/menu';
+
+export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
+  menuItems,
+  currentPage,
+  pageSize,
+  selectedActions,
+}: {
+  menuItems: IActionMenuProps<IWithDrawRequest>['items'];
+  currentPage: number;
+  pageSize: number;
+  selectedActions: string[];
+}) => {
+  // Refs
+  // const menuRef = useRef<Menu>(null);
+
   // Hooks
-  const t = useTranslations();
   const { showToast } = useContext(ToastContext);
 
   // States
@@ -40,67 +42,99 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
     bool: false,
   });
 
-  // Mutation
   const [updateWithdrawReqStatus, { loading: status_change_loading }] =
     useMutation(UPDATE_WITHDRAW_REQUEST, {
       onError: (err) => {
         showToast({
           type: 'error',
-          title: t('Update Withdraw Request'),
-          message: err?.cause?.message || t('Failed to update the request'),
+          title: 'Update Withdraw Request',
+          message: err?.cause?.message || 'Failed to update the request',
         });
-        setIsChangingStatus({
-          _id: '',
-          bool: false,
-        });
+        setIsChangingStatus({ _id: '', bool: false });
       },
       onCompleted: () => {
         showToast({
           type: 'success',
-          title: t('Update Withdraw Request'),
-          message: t('The withdraw request has been updated successfully'),
+          title: 'Update Withdraw Request',
+          message: 'The withdraw request has been updated successfully',
         });
+        setIsChangingStatus({ _id: '', bool: false });
+      },
+      refetchQueries: [
+        {
+          query: GET_ALL_WITHDRAW_REQUESTS,
+          variables: {
+            pageSize: pageSize,
+            pageNo: currentPage,
+            userType:
+              selectedActions.length > 0 ? selectedActions[0] : undefined,
+          },
+        },
+      ],
+    });
+
+  // Handlers
+  const handleDropDownChange = useCallback(
+    async (e: any, rowData: IWithDrawRequest) => {
+      try {
         setIsChangingStatus({
-          _id: '',
-          bool: false,
+          _id: rowData._id,
+          bool: true,
         });
+        await updateWithdrawReqStatus({
+          variables: {
+            id: rowData._id,
+            status: e.value.code,
+          },
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [updateWithdrawReqStatus]
+  );
+
+  // Options
+  const options = useMemo(
+    () => [
+      {
+        code: 'REQUESTED',
+        label: 'Requested',
       },
-      refetchQueries: [{ query: GET_ALL_WITHDRAW_REQUESTS }],
-    });
-
-  // Handle drop down change
-  const handleDropDownChange = async (
-    e: DropdownChangeEvent,
-    rowData: IWithDrawRequest
-  ) => {
-    // temp console
-    console.log(e.value.code);
-    setIsChangingStatus({
-      _id: rowData._id,
-      bool: true,
-    });
-    await updateWithdrawReqStatus({
-      variables: {
-        id: rowData._id,
-        status: e.value.code,
+      {
+        code: 'TRANSFERRED',
+        label: 'Transferred',
       },
-    });
-  };
+      {
+        code: 'CANCELLED',
+        label: 'Cancelled',
+      },
+    ],
+    []
+  );
 
-  // Templates
-  const valueTemplate = (option: IDropdownSelectItem) => {
-    return (
-      <Tag
-        severity={findSeverity(option?.code)}
-        value={option?.label}
-        rounded
-      />
-    );
-  };
+  // const itemTemplate = (option: any) => (
+  //   <div className="flex gap-2">
+  //     <FontAwesomeIcon
+  //       icon={
+  //         option.code === 'CANCELLED'
+  //           ? faCircleXmark
+  //           : option.code === 'TRANSFERRED'
+  //             ? faArrowsRotate
+  //             : option.code === 'REQUESTED'
+  //               ? faPaperPlane
+  //               : faDashboard
+  //       }
+  //       color={option.code === 'CANCELLED' ? 'red' : 'black'}
+  //       className="h-4 w-4"
+  //     />
+  //      <span className="inline-flex items-center">{option.label}</span>
+  //   </div>
+  // );
 
-  const itemTemplate = (option: IDropdownSelectItem) => {
-    return (
-      <div className="flex gap-2">
+  const itemTemplate = (option: any) => (
+    <div className="flex h-6 items-center gap-2">
+      <div className="flex h-full items-center">
         <FontAwesomeIcon
           icon={
             option.code === 'CANCELLED'
@@ -112,72 +146,77 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
                   : faDashboard
           }
           color={option.code === 'CANCELLED' ? 'red' : 'black'}
+          className="h-4 w-4 mb-4"
         />
+      </div>
+      <div className="flex h-full items-center">
         <span>{option.label}</span>
       </div>
-    );
-  };
-  // Status dropdown options
-  const options: IDropdownSelectItem[] = useMemo(
-    () => [
-      {
-        code: 'REQUESTED',
-        label: t('Requested'),
-        body: () => <Tag value={t('Requested')} severity="info" rounded />,
-      },
-      {
-        code: 'TRANSFERRED',
-        label: t('Transferred'),
-        body: () => <Tag value={t('Transferred')} severity="success" rounded />,
-      },
-      {
-        code: 'CANCELLED',
-        label: t('Cancelled'),
-        body: () => <Tag value={t('Cancelled')} severity="danger" rounded />,
-      },
-    ],
-    []
+    </div>
   );
 
-  // Find severity
-  function findSeverity(code: string | undefined) {
-    switch (code) {
-      case 'REQUESTED':
-        return 'info';
-      case 'TRANSFERRED':
-        return 'success';
-      case 'CANCELLED':
-        return 'danger';
-      default:
-        return 'warning';
-    }
-  }
+  // Templates
+  const valueTemplate = (option: any) => {
+    const findSeverity = (code: string | undefined) => {
+      switch (code) {
+        case 'REQUESTED':
+          return 'info';
+        case 'TRANSFERRED':
+          return 'success';
+        case 'CANCELLED':
+          return 'danger';
+        default:
+          return 'warning';
+      }
+    };
 
-  const withdraw_requests_columns = useMemo(
+    return (
+      <Tag
+        severity={findSeverity(option?.code ? String(option?.code) : undefined)}
+        value={option?.label}
+        rounded
+      />
+    );
+  };
+
+  return useMemo(
     () => [
       {
-        headerName: t('Request Id'),
+        headerName: 'Request ID',
         propertyName: 'requestId',
       },
       {
-        headerName: t('Rider'),
+        headerName: 'User Type',
         propertyName: 'rider.name',
+        body: (rowData: IWithDrawRequest) => (
+          <div className="flex flex-col">
+            <span className="font-medium">
+              {rowData.rider?.name || rowData.store?.slug || '-'}
+            </span>
+            <span className="text-sm text-gray-500">
+              {rowData.rider ? 'Rider' : 'Restaurant'}
+            </span>
+          </div>
+        ),
       },
       {
-        headerName: t('Amount'),
+        headerName: 'Amount',
         propertyName: 'requestAmount',
+        body: (rowData: IWithDrawRequest) => (
+          <span className="font-medium">${rowData.requestAmount}</span>
+        ),
       },
       {
-        headerName: t('Date'),
+        headerName: 'Date',
         propertyName: 'requestTime',
         body: (rowData: IWithDrawRequest) => {
-          return (
-            <span>{new Date(rowData.requestTime).toLocaleDateString()}</span>
-          );
+          const date = new Date(rowData.requestTime);
+          const formattedDate = date?.toISOString().split('T')[0];
+          return <div>{formattedDate}</div>;
         },
       },
       {
-        headerName: t('Status'),
+        headerName: 'Status',
         propertyName: 'status',
         body: (rowData: IWithDrawRequest) => (
           <Dropdown
@@ -195,8 +234,19 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = () => {
           />
         ),
       },
+      // {
+      //   propertyName: 'actions',
+      //   body: (rowData: IWithDrawRequest) => (
+      //     <ActionMenu items={menuItems} data={rowData} menuRef={menuRef} />
+      //   ),
+      // },
     ],
-    []
+    [
+      handleDropDownChange,
+      status_change_loading,
+      isChangingStatus,
+      options,
+      menuItems,
+    ]
   );
-  return withdraw_requests_columns;
 };

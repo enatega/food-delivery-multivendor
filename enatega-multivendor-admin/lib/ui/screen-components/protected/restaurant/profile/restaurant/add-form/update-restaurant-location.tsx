@@ -26,8 +26,9 @@ export default function UpdateRestaurantLocation({
   height,
   hideControls,
 }: IRestaurantsRestaurantLocationComponentProps) {
-  const { onStepChange } = stepperProps ?? {
+  const { onStepChange, order } = stepperProps ?? {
     onStepChange: () => {},
+    order: -1,
   };
 
   // Context
@@ -56,7 +57,7 @@ export default function UpdateRestaurantLocation({
                     <div className="mb-2 space-y-3">
                       {isLoaded && (
                         <UpdateRestaurantLocationBounds
-                          onStepChange={onStepChange}
+                          onStepChange={() => onStepChange(order + 1)}
                           height={height}
                           hideControls={hideControls}
                         />

@@ -4,6 +4,7 @@ import RESTAURANT_GUARD from '@/lib/hoc/RESTAURANT_GUARD';
 // Layout
 import { RestaurantLayoutProvider } from '@/lib/context/restaurant/layout-restaurant.context';
 import RestaurantLayout from '@/lib/ui/layouts/protected/restaurant';
+import { ProfileProvider } from '@/lib/context/restaurant/profile.context';
 
 export default function RootLayout({
   children,
@@ -17,8 +18,10 @@ export default function RootLayout({
   );
 
   return (
-    <RestaurantLayoutProvider>
-      <ProtectedLayout>{children}</ProtectedLayout>
-    </RestaurantLayoutProvider>
+    <ProtectedLayout>
+      <RestaurantLayoutProvider>
+        <ProfileProvider>{children}</ProfileProvider>
+      </RestaurantLayoutProvider>
+    </ProtectedLayout>
   );
 }

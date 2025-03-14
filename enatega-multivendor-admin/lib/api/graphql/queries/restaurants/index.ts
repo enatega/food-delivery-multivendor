@@ -166,6 +166,20 @@ export const GET_RESTAURANT_PROFILE = gql`
       }
       shopType
       cuisines
+
+      bussinessDetails {
+        bankName
+        accountName
+        accountCode
+        accountNumber
+        bussinessRegNo
+        companyRegNo
+        taxRate
+      }
+
+      currentWalletAmount
+      totalWalletAmount
+      withdrawnWalletAmount
     }
   }
 `;
