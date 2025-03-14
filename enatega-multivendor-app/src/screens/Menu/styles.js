@@ -218,6 +218,10 @@ const styles = (props = null) =>
     {
       padding:3,
       backgroundColor:"red"
+    },
+    brandImgContainer:
+    {
+      overflow:"scroll",
     }
   })
 export default styles
