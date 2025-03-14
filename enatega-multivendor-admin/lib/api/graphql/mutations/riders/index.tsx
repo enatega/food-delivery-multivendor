@@ -9,7 +9,7 @@ export const CREATE_RIDER = gql`
       password
       phone
       available
-      # vehicleType
+      vehicleType
       zone {
         _id
       }
@@ -25,7 +25,7 @@ export const EDIT_RIDER = gql`
       username
       phone
       password
-      # vehicleType
+      vehicleType
       zone {
         _id
       }
@@ -42,14 +42,14 @@ export const DELETE_RIDER = gql`
 `;
 
 export const TOGGLE_RIDER = gql`
-  mutation ToggleRider($id: String) {
+  mutation ToggleRider($id: String!) {
     toggleAvailablity(id: $id) {
       _id
       name
       username
       phone
       available
-      # vehicleType
+      vehicleType
       zone {
         title
       }

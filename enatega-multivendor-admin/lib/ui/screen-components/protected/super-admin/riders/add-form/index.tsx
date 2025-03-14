@@ -19,7 +19,10 @@ import CustomTextField from '@/lib/ui/useable-components/input-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Utilities and Constants
-import { RiderErrors /* , VEHICLE_TYPE  */ } from '@/lib/utils/constants';
+import {
+  RiderErrors /* , VEHICLE_TYPE  */,
+  VEHICLE_TYPE,
+} from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import { RiderSchema } from '@/lib/utils/schema/rider';
 
@@ -49,9 +52,9 @@ export default function RiderAddForm({
     username: '',
     password: '',
     ...rider,
-    // vehicleType: rider
-    //   ? VEHICLE_TYPE.find((vt) => vt?.code === rider?.vehicleType) || null
-    //   : null,
+    vehicleType: rider
+      ? VEHICLE_TYPE.find((vt) => vt?.code === rider?.vehicleType) || null
+      : null,
     confirmPassword: rider?.password ?? '',
     phone: rider ? +rider.phone : null,
     zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
@@ -89,7 +92,7 @@ export default function RiderAddForm({
             password: values.password,
             phone: values.phone?.toString(),
             zone: values.zone?.code,
-            // vehicleType: values.vehicleType?.code,
+            vehicleType: values.vehicleType?.code,
             available: rider ? rider.available : true,
           },
         },
@@ -233,7 +236,7 @@ export default function RiderAddForm({
                           }}
                         />
 
-                        {/*  <CustomDropdownComponent
+                        <CustomDropdownComponent
                           placeholder={'Vehicle Type'}
                           options={VEHICLE_TYPE}
                           showLabel={true}
@@ -250,7 +253,7 @@ export default function RiderAddForm({
                               : '',
                           }}
                         />
- */}
+
                         <CustomDropdownComponent
                           placeholder={t('Zone')}
                           options={

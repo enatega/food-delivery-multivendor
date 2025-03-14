@@ -25,10 +25,10 @@ export const RiderSchema = Yup.object().shape({
     })
     .required('Required'),
   phone: Yup.string().required('Required'),
-  // vehicleType: Yup.object()
-  //   .shape({
-  //     label: Yup.string().required('Required'),
-  //     code: Yup.string().required('Required'),
-  //   })
-  //   .required('Required'),
+  vehicleType: Yup.object()
+    .shape({
+      label: Yup.string().required('Required'),
+      code: Yup.string().required('Required'),
+    })
+    .required('Required'),
 });
