@@ -6,13 +6,27 @@ import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 import RestaurantProfileSkeleton from '@/lib/ui/useable-components/custom-skeletons/restaurant.profile.skeleton';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 
-const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => (
-  <div>
-    <p className="text-xs text-gray-500 mb-2">{label}</p>
-    <p className="font-medium">{value || 'N/A'}</p>
-  </div>
-);
+const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => {
+  // Conditionally render icons based on label
+  let icon = null;
+  if (label === 'Delivery Time') {
+    icon = <FontAwesomeIcon icon={faClock} className="mr-1" />;
+  } else if (label === 'Service Charges' || label === 'Min Order') {
+    icon = <FontAwesomeIcon icon={faDollarSign} className="mr-1" />;
+  }
+  return (
+    <div>
+      <p className="text-xs text-gray-500 mb-2">{label}</p>
+      <p className="font-medium">
+        {icon}
+        {value || 'N/A'}
+      </p>
+    </div>
+  );
+};
 
 const RestaurantMain: React.FC = () => {
   // Hooks

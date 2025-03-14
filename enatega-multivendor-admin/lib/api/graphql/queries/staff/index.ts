@@ -9,7 +9,7 @@ export const GET_STAFFS = gql`
       plainPassword
       password
       phone
-      vehicleType
+      # vehicleType
       isActive
       permissions
     }

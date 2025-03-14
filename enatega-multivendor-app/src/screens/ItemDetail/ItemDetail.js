@@ -439,7 +439,8 @@ function ItemDetail(props) {
         >
           <View>
           {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
-          <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}>
+          {/* <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}> */}
+          <Text style={[styles(currentTheme).descriptionText,{ width: '100%', height: 'auto', fontSize: 14 }]}>
             {food?.description}
           </Text>
           <HeadingComponent title={food?.title} price={calculatePrice()}  /> 

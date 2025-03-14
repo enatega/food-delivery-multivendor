@@ -8,7 +8,7 @@ export const CouponFormSchema = Yup.object().shape({
     .required('Title is a required field'),
   discount: Yup.number()
     .required('Discount is a required field')
-    .min(0, 'The minimum starting value is zero')
+    .min(1, 'The minimum starting value is one')
     .max(100, 'You cannot exceed from 100 as this is a %age field'),
   enabled: Yup.boolean().required('Required').required('Please choose one'),
 });

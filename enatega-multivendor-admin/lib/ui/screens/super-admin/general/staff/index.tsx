@@ -27,7 +27,7 @@ export default function StaffScreen() {
         staff={staff}
         onHide={() => {
           setIsAddStaffVisible(false);
-          setStaff(null);
+          // setStaff(null);
         }}
         isAddStaffVisible={isAddRiderVisible}
       />

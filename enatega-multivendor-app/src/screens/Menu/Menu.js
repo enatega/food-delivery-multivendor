@@ -748,7 +748,7 @@ const onPressCollection = (collection, index) => {
                     </Ripple>
                   )
                 }}
-                initialScrollIndex={currentIndex}
+                initialScrollIndex={0}
                 keyExtractor={(item) => item?._id}
                 contentContainerStyle={styles().collectionContainer}
                 showsVerticalScrollIndicator={false}
