@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Tag } from 'primereact/tag';
-import { IWithDrawRequest } from '@/lib/utils/interfaces/withdraw-request.interface';
-import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
+import { IWithDrawRequest } from '@/lib/utils/interfaces';
 
 export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
   const options = useMemo(
@@ -75,7 +74,9 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
             }
           };
 
-          const statusLabel = options.find(option => option.code === rowData.status)?.label || rowData.status;
+          const statusLabel =
+            options.find((option) => option.code === rowData.status)?.label ||
+            rowData.status;
 
           return (
             <Tag

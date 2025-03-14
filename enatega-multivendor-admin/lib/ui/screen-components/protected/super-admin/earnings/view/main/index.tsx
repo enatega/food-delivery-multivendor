@@ -7,12 +7,14 @@ import {
   IEarning,
   IEarningFilters,
   IEarningsMainComponentProps,
-} from '@/lib/utils/interfaces/earnings.interface';
+} from '@/lib/utils/interfaces';
 import EarningTableHeader from '../header/table-header';
 import { EARNING_COLUMNS } from '@/lib/ui/useable-components/table/columns/earning-column';
 import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
 
-export default function EarningsMain({ setTotalEarnings }: IEarningsMainComponentProps) {
+export default function EarningsMain({
+  setTotalEarnings,
+}: IEarningsMainComponentProps) {
   const [selectedEarnings, setSelectedEarnings] = useState<IEarning[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,8 +54,8 @@ export default function EarningsMain({ setTotalEarnings }: IEarningsMainComponen
     fetchPolicy: 'cache-and-network',
     onCompleted: (data) => {
       const grandTotalEarnings = data?.earnings?.data?.grandTotalEarnings;
-      setTotalEarnings(grandTotalEarnings)
-    }
+      setTotalEarnings(grandTotalEarnings);
+    },
   });
 
   // Global search handler
@@ -74,9 +76,9 @@ export default function EarningsMain({ setTotalEarnings }: IEarningsMainComponen
   const menuItems = [
     {
       label: 'View Details',
-      command: (data?: IEarning) => {
+      command: () => {
         // Handle view details action
-        // console.log('View details for:', data); 
+        // console.log('View details for:', data);
       },
     },
   ];
@@ -92,7 +94,10 @@ export default function EarningsMain({ setTotalEarnings }: IEarningsMainComponen
             setDateFilters={setDateFilters}
           />
         }
-        data={data?.earnings?.data?.earnings || (loading ? generateSkeletonTransactionHistory() : [])}
+        data={
+          data?.earnings?.data?.earnings ||
+          (loading ? generateSkeletonTransactionHistory() : [])
+        }
         filters={filters}
         setSelectedData={setSelectedEarnings}
         selectedData={selectedEarnings}

@@ -6,7 +6,8 @@ export interface IActionMenuItem<T> extends IGlobalComponentProps {
 }
 
 export interface IActionMenuProps<T> extends IGlobalComponentProps {
-  disabled?: boolean;
   items?: IActionMenuItem<T>[];
   data: T;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }

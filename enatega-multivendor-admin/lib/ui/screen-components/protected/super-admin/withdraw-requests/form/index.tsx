@@ -3,16 +3,14 @@ import { useContext } from 'react';
 import { Sidebar } from 'primereact/sidebar';
 import { Form, Formik } from 'formik';
 import { ToastContext } from '@/lib/context/global/toast.context';
-import CustomTextField from '@/lib/ui/useable-components/input-field';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { IWithDrawRequest } from '@/lib/utils/interfaces/withdraw-request.interface';
+import { IWithDrawRequest } from '@/lib/utils/interfaces';
 import { useMutation } from '@apollo/client';
-import { faEuroSign, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   UPDATE_WITHDRAW_REQUEST,
   GET_ALL_WITHDRAW_REQUESTS,
 } from '@/lib/api/graphql';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 interface IWithdrawRequestFormProps {
   setVisible: (value: boolean) => void;
@@ -92,10 +90,9 @@ export default function WithdrawRequestForm({
           setVisible(false);
         }}
       >
-        {({ handleSubmit, values, isSubmitting }) => (
+        {({ handleSubmit, values }) => (
           <Form onSubmit={handleSubmit} className="mt-6">
             <div className="space-y-6">
-              
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
                   Full Name of the Account Holder

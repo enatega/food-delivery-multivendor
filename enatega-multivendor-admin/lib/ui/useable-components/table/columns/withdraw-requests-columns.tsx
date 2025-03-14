@@ -1,4 +1,5 @@
-import { useMemo, useContext, useState, useCallback, useRef } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useMemo, useContext, useState, useCallback } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,10 +15,8 @@ import {
   UPDATE_WITHDRAW_REQUEST,
   GET_ALL_WITHDRAW_REQUESTS,
 } from '@/lib/api/graphql';
-import { IWithDrawRequest } from '@/lib/utils/interfaces';
+import { IWithDrawRequest } from '@/lib/utils/interfaces/withdraw-request.interface';
 import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
-
-import { Menu } from 'primereact/menu';
 
 export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   menuItems,
@@ -30,9 +29,6 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   pageSize: number;
   selectedActions: string[];
 }) => {
-  // Refs
-  // const menuRef = useRef<Menu>(null);
-
   // Hooks
   const { showToast } = useContext(ToastContext);
 

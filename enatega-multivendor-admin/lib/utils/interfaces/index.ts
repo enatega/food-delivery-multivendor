@@ -45,3 +45,4 @@ export * from './app-versions.interface';
 export * from './withdraw-request.interface';
 export * from './earnings.interface';
 export * from './transaction-history.interface';
+export * from './collective.interface';

@@ -27,7 +27,7 @@ import { IUserResponse } from '../interfaces/users.interface';
 import { ICoupon } from '../interfaces/coupons.interface';
 import { ICuisine } from '../interfaces/cuisine.interface';
 import { INotification } from '../interfaces/notification.interface';
-import { IWithDrawRequest } from '../interfaces/withdraw-request.interface';
+import { IWithDrawRequest } from '../interfaces';
 import { IActiveOrders } from '../interfaces/dispatch.interface';
 import { ICouponRestaurantResponse } from '../interfaces/coupons-restaurant.interface';
 
@@ -406,14 +406,34 @@ export const generateDummyWithdrawRequests = (count: number = 10) => {
       requestTime: new Date().toDateString(),
       rider: {
         _id: `rider_${i + 1}`,
-        currentWalletAmount: i + 1,
         name: `rider_${i + 1}`,
+        email: '',
+        phone: '',
+        available: false,
+        isActive: false,
+
+        accountNumber: '',
+        currentWalletAmount: 0,
+        totalWalletAmount: 0,
+        withdrawnWalletAmount: 0,
+        createdAt: '',
+        updatedAt: '',
+        username: '',
+        bussinessDetails: {
+          bankName: '',
+          accountName: '',
+          accountCode: '',
+          accountNumber: '',
+          bussinessRegNo: '',
+          companyRegNo: '',
+          taxRate: 0,
+        },
       },
+      createdAt: '',
     });
   }
   return withdrawRequests;
 };
-
 export const generateDummyDispatchOrders = (count: number = 10) => {
   const dispatchActiveOrders: IActiveOrders[] = [];
   for (let i = 0; i < count; i++) {

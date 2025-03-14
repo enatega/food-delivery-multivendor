@@ -1,4 +1,3 @@
-import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
@@ -102,7 +101,7 @@ export default function TransactionHistoryTableHeader({
                 userType: e.value,
               }))
             }
-            placeholder={`${t("Select")} ${t("User")} ${t("Type")}`}
+            placeholder={`${t('Select')} ${t('User')} ${t('Type')}`}
           />
         </div>
       </div>

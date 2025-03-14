@@ -2,8 +2,6 @@ import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
 import { ITransactionHistory } from '@/lib/utils/interfaces';
 import ActionMenu from '@/lib/ui/useable-components/action-menu';
 import { useTranslations } from 'next-intl';
-import { useRef } from 'react';
-import { Menu } from 'primereact/menu';
 
 export const TRANSACTION_HISTORY_COLUMNS = ({
   menuItems,
@@ -14,7 +12,6 @@ export const TRANSACTION_HISTORY_COLUMNS = ({
   openMenuId: string;
   setOpenMenuId: (id: string) => void;
 }) => {
-  
   // Hooks
   const t = useTranslations();
 
@@ -74,10 +71,14 @@ export const TRANSACTION_HISTORY_COLUMNS = ({
     {
       propertyName: 'actions',
       body: (transaction: ITransactionHistory) => (
-        <ActionMenu items={menuItems} data={transaction} isOpen={openMenuId === transaction._id} // CHANGE 3: Simplified menu open state check
-        onToggle={() =>
-          setOpenMenuId(openMenuId === transaction._id ? '' : transaction._id)
-        }  />
+        <ActionMenu
+          items={menuItems}
+          data={transaction}
+          isOpen={openMenuId === transaction._id} // CHANGE 3: Simplified menu open state check
+          onToggle={() =>
+            setOpenMenuId(openMenuId === transaction._id ? '' : transaction._id)
+          }
+        />
       ),
     },
   ];

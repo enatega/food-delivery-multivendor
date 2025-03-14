@@ -1,20 +1,13 @@
 import { IActionMenuProps } from '@/lib/utils/interfaces';
-import { IEarning } from '@/lib/utils/interfaces/earnings.interface';
-import ActionMenu from '../../action-menu';
+import { IEarning } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
-import { useRef } from 'react';
-import { Menu } from 'primereact/menu';
 
 export const EARNING_COLUMNS = ({
-  menuItems,
   isSuperAdmin = false,
 }: {
   menuItems: IActionMenuProps<IEarning>['items'];
   isSuperAdmin?: boolean;
 }) => {
-  // Refs
-  const menuRef = useRef<Menu>(null);
-
   // Hooks
   const t = useTranslations();
 

@@ -15,9 +15,9 @@ import { UserTypeEnum } from '@/lib/utils/interfaces';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { useTranslations } from 'next-intl';
 
-
-export default function EarningsRestaurantMain({ setTotalEarnings }: IEarningsRestaurantMainComponentProps) {
-
+export default function EarningsRestaurantMain({
+  setTotalEarnings,
+}: IEarningsRestaurantMainComponentProps) {
   // Hooks
   const t = useTranslations();
 
@@ -56,13 +56,13 @@ export default function EarningsRestaurantMain({ setTotalEarnings }: IEarningsRe
         dateFilters.paymentMethod !== 'ALL'
           ? dateFilters.paymentMethod
           : undefined,
-      userId: restaurantId
+      userId: restaurantId,
     },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
     onCompleted: (data) => {
       const grandTotalEarnings = data?.earnings?.data?.grandTotalEarnings;
-      setTotalEarnings(grandTotalEarnings)
-    }
+      setTotalEarnings(grandTotalEarnings);
+    },
   });
 
   // Global search handler
@@ -83,7 +83,7 @@ export default function EarningsRestaurantMain({ setTotalEarnings }: IEarningsRe
   const menuItems = [
     {
       label: t('View Details'),
-      command: (data?: IEarning) => {
+      command: () => {
         // Handle view details action
         // console.log('View details for:', data); removing consoles please uncomment when continuing
       },
@@ -101,7 +101,10 @@ export default function EarningsRestaurantMain({ setTotalEarnings }: IEarningsRe
             setDateFilters={setDateFilters}
           />
         }
-        data={data?.earnings?.data?.earnings || (loading ? generateSkeletonTransactionHistory() : [])}
+        data={
+          data?.earnings?.data?.earnings ||
+          (loading ? generateSkeletonTransactionHistory() : [])
+        }
         filters={filters}
         setSelectedData={setSelectedEarnings}
         selectedData={selectedEarnings}

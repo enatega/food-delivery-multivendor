@@ -16,7 +16,9 @@ export const ADDON_TABLE_COLUMNS = ({
     { headerName: t('Maximum'), propertyName: 'quantityMaximum' },
     {
       propertyName: 'actions',
-      body: (option: IAddon) => <ActionMenu items={menuItems} data={option} />,
+      body: (option: IAddon) => (
+        <ActionMenu items={menuItems} data={option} onToggle={() => {}} />
+      ),
     },
   ];
 };

@@ -1,18 +1,21 @@
-import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import { IQueryResult, IRestaurantsResponseGraphQL, IStoreRidersResponse, UserTypeEnum } from '@/lib/utils/interfaces';
+import {
+  IQueryResult,
+  IStoreRidersResponse,
+  UserTypeEnum,
+} from '@/lib/utils/interfaces';
 import { useMemo, useState } from 'react';
 import {
   IEarningTableHeaderProps,
   OrderTypeEnum,
   PaymentMethodEnum,
-} from '@/lib/utils/interfaces/earnings.interface';
+} from '@/lib/utils/interfaces/';
 import { useTranslations } from 'use-intl';
-import { GET_RESTAURANTS_L, GET_RIDERS_L } from '@/lib/api/graphql';
+
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
-import { IDriversDataResponse } from '@/lib/utils/interfaces/drivers.interface';
+
 import { GET_STORE_RIDER } from '@/lib/api/graphql/queries/concurrent';
 
 export default function EarningTableHeader({
@@ -22,16 +25,14 @@ export default function EarningTableHeader({
   setDateFilters,
 }: IEarningTableHeaderProps) {
   const [errors, setErrors] = useState({ startDate: '', endDate: '' });
-  const [userType, setUserType] = useState<UserTypeEnum>()
+  const [userType, setUserType] = useState<UserTypeEnum>();
   // Hooks
   const t = useTranslations();
 
   // Query
-  const { data, error, loading } = useQueryGQL(GET_STORE_RIDER, {
+  const { data } = useQueryGQL(GET_STORE_RIDER, {
     fetchPolicy: 'network-only',
   }) as IQueryResult<IStoreRidersResponse | undefined, undefined>;
-
-
 
   const storesDropdown = useMemo(
     () =>
@@ -48,7 +49,6 @@ export default function EarningTableHeader({
       }),
     [data?.riders]
   );
-
 
   // Constants
   const userTypes = [
@@ -69,8 +69,6 @@ export default function EarningTableHeader({
     { label: t('PayPal'), value: PaymentMethodEnum.PAYPAL },
     { label: t('Stripe'), value: PaymentMethodEnum.STRIPE },
   ];
-
-
 
   // Handlers
   const handleStartDateChange = (e: { value: Date | null }) => {
@@ -159,25 +157,28 @@ export default function EarningTableHeader({
           value={userType}
           onChange={(e) => {
             if (e.value === UserTypeEnum.ALL) {
-
-              setDateFilters((prev) => ({ ...prev, userType: e.value, userId: undefined }))
+              setDateFilters((prev) => ({
+                ...prev,
+                userType: e.value,
+                userId: undefined,
+              }));
+            } else {
+              setUserType(e.value);
             }
-            else {
-              setUserType(e.value)
-            }
-          }
-          }
+          }}
           placeholder={`${t('Select')} ${t('User')} ${t('Type')}`}
         />
-        {userType !== undefined && userType !== "ALL" && <Dropdown
-          className="h-10 rounded border-2 border-dashed border-gray-400 text-sm"
-          options={userType === "RIDER" ? ridersDropdown : storesDropdown}
-          value={dateFilters.userId}
-          onChange={(e) =>
-            setDateFilters((prev) => ({ ...prev, userType, userId: e.value }))
-          }
-          placeholder={t('Select User ID')}
-        />}
+        {userType !== undefined && userType !== 'ALL' && (
+          <Dropdown
+            className="h-10 rounded border-2 border-dashed border-gray-400 text-sm"
+            options={userType === 'RIDER' ? ridersDropdown : storesDropdown}
+            value={dateFilters.userId}
+            onChange={(e) =>
+              setDateFilters((prev) => ({ ...prev, userType, userId: e.value }))
+            }
+            placeholder={t('Select User ID')}
+          />
+        )}
         <Dropdown
           className="h-10 rounded border-2 border-dashed border-gray-400 text-sm"
           options={orderTypes}

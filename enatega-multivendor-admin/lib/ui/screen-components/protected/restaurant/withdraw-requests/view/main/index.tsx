@@ -21,8 +21,6 @@ import {
   IWithDrawRequest,
 } from '@/lib/utils/interfaces/withdraw-request.interface';
 import {
-  IActionMenuItem,
-  IActionMenuProps,
   IQueryResult,
   UserTypeEnum, // Add this import if not already present
 } from '@/lib/utils/interfaces';
@@ -69,7 +67,7 @@ export default function WithdrawRequestsAdminMain() {
   >;
 
   // Rest of your code remains the same...
-  
+
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const _filters = { ...filters };
@@ -82,18 +80,6 @@ export default function WithdrawRequestsAdminMain() {
     setCurrentPage(page);
     setPageSize(size);
   };
-
-  const menuItems: IActionMenuProps<IWithDrawRequest>['items'] = [
-    {
-      label: 'Bank Details',
-      command: (data?: IWithDrawRequest) => {
-        if (data) {
-          //   setSelectedRequest(data);
-          //   setVisible(true);
-        }
-      },
-    },
-  ];
 
   // Filter data based on status on the frontend
   const filteredData = useMemo(() => {
