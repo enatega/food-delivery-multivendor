@@ -105,7 +105,7 @@ export const RiderErrors: IRiderErrors = {
   password: ['Required', ...PasswordErrors],
   confirmPassword: ['Required', 'Password must match'],
   zone: ['Required'],
-  phone: ['Required'],
+  phone: ['Required','Minimum 5 Numbers are Required'],
   vehicleType: ['Required'],
 };
 
