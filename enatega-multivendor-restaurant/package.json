@@ -59,7 +59,7 @@
     "expo-updates": "~0.24.11",
     "graphql": "^15.6.1",
     "i18n": "^0.14.1",
-    "i18next": "^23.7.6",
+    "i18next": "^24.2.3",
     "lottie-react-native": "6.5.1",
     "moment": "^2.29.1",
     "patch-package": "^6.2.2",
