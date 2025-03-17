@@ -42,3 +42,7 @@ export * from './ratings.interface';
 export * from './orders/order-vendor.interface';
 export * from './orders/order-superadmin.interface';
 export * from './app-versions.interface';
+export * from './withdraw-request.interface';
+export * from './earnings.interface';
+export * from './transaction-history.interface';
+export * from './collective.interface';

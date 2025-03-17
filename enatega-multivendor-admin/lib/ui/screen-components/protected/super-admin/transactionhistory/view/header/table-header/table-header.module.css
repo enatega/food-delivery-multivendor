@@ -1,0 +1,13 @@
+.filter :global(.p-checkbox.p-highlight .p-checkbox-box) {
+    background-color: black !important;
+    border-color: black !important; /* Apply black border when highlighted */
+  }
+  
+  .filter :global(.p-checkbox .p-checkbox-box) {
+    border: 1px solid black !important; /* Black border for normal state */
+  }
+  
+  .filter :global(.p-checkbox-box.p-highlight) {
+    border-color: black !important; /* Ensure black border in highlighted state */
+  }
+  

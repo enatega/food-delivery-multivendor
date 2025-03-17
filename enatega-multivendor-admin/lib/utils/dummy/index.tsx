@@ -17,15 +17,17 @@ import {
   IRestaurantResponse,
   IStaffResponse,
   IStatsCardProps,
+  ITransactionHistory,
   IVendorStoreDetails,
   IZoneResponse,
+  UserTypeEnum,
 } from '../interfaces';
 import { IRiderResponse } from '../interfaces/rider.interface';
 import { IUserResponse } from '../interfaces/users.interface';
 import { ICoupon } from '../interfaces/coupons.interface';
 import { ICuisine } from '../interfaces/cuisine.interface';
 import { INotification } from '../interfaces/notification.interface';
-import { IWithDrawRequest } from '../interfaces/withdraw-request.interface';
+import { IWithDrawRequest } from '../interfaces';
 import { IActiveOrders } from '../interfaces/dispatch.interface';
 import { ICouponRestaurantResponse } from '../interfaces/coupons-restaurant.interface';
 
@@ -404,14 +406,34 @@ export const generateDummyWithdrawRequests = (count: number = 10) => {
       requestTime: new Date().toDateString(),
       rider: {
         _id: `rider_${i + 1}`,
-        currentWalletAmount: i + 1,
         name: `rider_${i + 1}`,
+        email: '',
+        phone: '',
+        available: false,
+        isActive: false,
+
+        accountNumber: '',
+        currentWalletAmount: 0,
+        totalWalletAmount: 0,
+        withdrawnWalletAmount: 0,
+        createdAt: '',
+        updatedAt: '',
+        username: '',
+        bussinessDetails: {
+          bankName: '',
+          accountName: '',
+          accountCode: '',
+          accountNumber: '',
+          bussinessRegNo: '',
+          companyRegNo: '',
+          taxRate: 0,
+        },
       },
+      createdAt: '',
     });
   }
   return withdrawRequests;
 };
-
 export const generateDummyDispatchOrders = (count: number = 10) => {
   const dispatchActiveOrders: IActiveOrders[] = [];
   for (let i = 0; i < count; i++) {
@@ -538,4 +560,62 @@ export const generateVendorStoreDetails = (
   }
 
   return details;
+};
+
+export const generateSkeletonTransactionHistory = (
+  count: number = 10
+): ITransactionHistory[] => {
+  const transactionHistory: ITransactionHistory[] = [];
+  const currentDate = new Date().toISOString(); // Generate date string once
+
+  for (let i = 0; i < count; i++) {
+    transactionHistory.push({
+      _id: `skeleton_${i}`,
+      amountCurrency: '',
+      status: '',
+      transactionId: '',
+      userType: UserTypeEnum.ALL,
+      userId: '',
+      amountTransferred: 0,
+      createdAt: currentDate,
+      toBank: {
+        accountName: '',
+        bankName: '',
+        accountNumber: '',
+        accountCode: '',
+      },
+      rider: {
+        _id: '',
+        name: '',
+        email: '',
+        username: '',
+        password: '',
+        phone: '',
+        image: '',
+        available: false,
+        isActive: false,
+        // isSuperAdminRider: false,
+        accountNumber: '',
+        currentWalletAmount: 0,
+        totalWalletAmount: 0,
+        withdrawnWalletAmount: 0,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      },
+      store: {
+        unique_restaurant_id: '',
+        _id: '',
+        name: '',
+        rating: 0,
+        isActive: false,
+        isAvailable: false,
+        slug: '',
+        stripeDetailsSubmitted: false,
+        phone: '',
+        city: '',
+        postCode: '',
+      },
+    });
+  }
+  return transactionHistory;
 };

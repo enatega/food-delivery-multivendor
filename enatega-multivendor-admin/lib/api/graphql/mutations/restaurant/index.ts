@@ -184,3 +184,21 @@ export const UPDATE_RESTAURANT_DELIVERY = gql`
     }
   }
 `;
+
+export const UPDATE_RESTAURANT_BUSSINESS_DETAILS = gql`
+  mutation updateRestaurantBussinessDetails(
+    $id: String!
+    $bussinessDetails: BussinessDetailsInput
+  ) {
+    updateRestaurantBussinessDetails(
+      id: $id
+      bussinessDetails: $bussinessDetails
+    ) {
+      success
+      message
+      data {
+        _id
+      }
+    }
+  }
+`;

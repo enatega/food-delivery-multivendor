@@ -1,26 +1,24 @@
 // Core
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Icons
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Interface & Types
-import {
-  ISidebarMenuItem,
-  LayoutContextProps,
-  SubMenuItemProps,
-} from '@/lib/utils/interfaces';
+import { ISidebarMenuItem, SubMenuItemProps } from '@/lib/utils/interfaces';
 
 // Styles
 import classes from './side-bar.module.css';
-import { LayoutContext } from '@/lib/context/global/layout.context';
+import { onUseLocalStorage } from '@/lib/utils/methods';
+import { SELECTED_SIDEBAR_MENU } from '@/lib/utils/constants';
 
+// This component is used to render the sub-menu items when hovered
 function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
   return (
     <div
-      className={`my-2 rounded-md p-2 ${
+      className={`my-3 rounded-md p-2 ${
         active ? 'bg-gray-300' : 'hover:bg-indigo-50'
       }`}
     >
@@ -40,31 +38,32 @@ function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
 export default function SidebarItem({
   icon,
   text,
-  label,
   expanded = false,
   subMenu = null,
   route,
   isParent,
   isClickable,
-  onClick = () => {},
-  shouldOpenInNewTab = false, // added prop
 }: ISidebarMenuItem) {
+  // States
   const [expandSubMenu, setExpandSubMenu] = useState(false);
+
+  // Hooks
   const pathname = usePathname();
   const router = useRouter();
-  const { showSuperAdminSidebar } =
-    useContext<LayoutContextProps>(LayoutContext);
 
+  // use Effect
   useEffect(() => {
     if (!expanded) {
       setExpandSubMenu(false);
     }
   }, [expanded]);
 
+  // Calculate the height of the sub-menu assuming each item is 40px tall
   const subMenuHeight = expandSubMenu
-    ? `${((subMenu?.length || 0) * 42 + (subMenu! && 15)).toString()}px`
+    ? `${((subMenu?.length || 0) * 41.5 + (subMenu! && 15)).toString()}px`
     : 0;
 
+  // Defaults
   const bg_color = pathname.includes(route ?? '')
     ? isParent
       ? 'primary-color'
@@ -74,21 +73,8 @@ export default function SidebarItem({
   const text_color = pathname.includes(route ?? '') ? 'white' : '[#71717A]';
   const isActive = pathname.includes(route ?? '');
 
-  const handleClick = () => {
-    if (shouldOpenInNewTab && route) {
-      window.open(route, '_blank');
-    } else if (!isParent || isClickable) {
-      router.push(route ?? '');
-      if (window.innerWidth < 650) {
-        showSuperAdminSidebar(false);
-      }
-    } else {
-      setExpandSubMenu((curr) => expanded && !curr);
-    }
-  };
-
   return (
-    <div className={`mt-[0.4rem] flex flex-col rounded-md `} onClick={onClick}>
+    <div className={`mt-[0.4rem] flex flex-col`}>
       <div>
         <button
           className={`group relative flex w-full cursor-pointer items-center rounded-md px-3 py-2 transition-colors ${
@@ -96,7 +82,22 @@ export default function SidebarItem({
               ? `bg-${isClickable ? bg_color : ''} text-${isClickable ? text_color : '[#71717A]'}`
               : `bg-${bg_color} text-${text_color} hover:bg-secondary-color`
           } ${!expanded && 'hidden sm:flex'} `}
-          onClick={handleClick}
+          onClick={() => {
+            if (!isParent || isClickable) {
+              if (
+                route === 'https://hedgego.com.au/' ||
+                route === 'https://hedge.net.au/become-a-stockist'
+              ) {
+                window.open(route, '_blank');
+              } else {
+                router.push(route ?? '');
+              }
+              return;
+            }
+
+            setExpandSubMenu((curr) => expanded && !curr);
+            onUseLocalStorage('save', SELECTED_SIDEBAR_MENU, text);
+          }}
         >
           {icon && (
             <span className="card-h1 w-6">
@@ -109,13 +110,11 @@ export default function SidebarItem({
               expanded ? 'ml-3 w-44' : 'w-0'
             }`}
           >
-            {label}
+            {text}
           </span>
           {subMenu && (
             <div
-              className={`absolute right-2 mb-1 h-4 w-4${expanded ? '' : 'top-6'} transition-all ${
-                expandSubMenu ? 'rotate-90' : 'rotate-0'
-              }`}
+              className={`absolute right-2 h-4 w-4${expanded ? '' : 'top-2'} transition-all ${expandSubMenu ? 'rotate-90' : 'rotate-0'}`}
             >
               <FontAwesomeIcon icon={faChevronRight} />
             </div>
@@ -130,9 +129,7 @@ export default function SidebarItem({
                 : subMenu.map((item, index) => (
                     <HoveredSubMenuItem
                       key={index}
-                      isLastItem={subMenu.length - 1 === index}
                       text={item.text}
-                      label={item.label}
                       icon={item.icon}
                       active={isActive}
                     />
@@ -147,10 +144,10 @@ export default function SidebarItem({
       >
         <div className="absolute bottom-0 left-6 top-0 w-px bg-gray-300"></div>
 
-        {expanded &&
+        {(expanded ||
+          onUseLocalStorage('get', SELECTED_SIDEBAR_MENU) === text) &&
           subMenu?.map((item, index) => {
             const isActive = pathname.includes(item.route ?? '');
-
             return (
               <li key={index} className="relative">
                 {isActive && (

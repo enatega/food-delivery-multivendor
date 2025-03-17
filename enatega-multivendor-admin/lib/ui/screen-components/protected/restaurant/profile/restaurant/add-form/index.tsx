@@ -17,6 +17,7 @@ import UpdateTiming from './update-timing';
 // Interfaces & Types
 import { IRestaurantsAddFormComponentProps } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
+import UpdateBusinessDetails from './update-bussiness-details';
 
 const UpdateRestaurantsProfileForm = ({
   position = 'right',
@@ -60,6 +61,15 @@ const UpdateRestaurantsProfileForm = ({
               stepperProps={{
                 onStepChange: onHandleStepChange,
                 order: activeIndex,
+              }}
+            />
+          </StepperPanel>
+          <StepperPanel header={t('Update Business Details')}>
+            <UpdateBusinessDetails
+              stepperProps={{
+                onStepChange: onHandleStepChange,
+                order: activeIndex,
+                isLastStep: true,
               }}
             />
           </StepperPanel>

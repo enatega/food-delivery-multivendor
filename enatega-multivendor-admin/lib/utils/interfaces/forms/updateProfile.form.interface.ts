@@ -18,6 +18,16 @@ export interface IUpdateProfileFormErrors {
   orderprefix: string[];
 }
 
+export interface IUpdateBussinessDetailsFormErrors {
+  bankName: string[];
+  accountName: string[];
+  accountCode: string[];
+  accountNumber: string[];
+  bussinessRegNo: string[];
+  companyRegNo: string[];
+  taxRate: string[];
+}
+
 export interface IUpdateProfileForm {
   name: string;
   username: string;
