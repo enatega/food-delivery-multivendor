@@ -42,14 +42,14 @@ export const EARNING_COLUMNS = ({
       propertyName: 'platformEarnings.totalEarnings',
       hidden: !isSuperAdmin,
       body: (earning: IEarning) => (
-        <div>${earning.platformEarnings.totalEarnings.toFixed(2)}</div>
+        <div>${earning?.platformEarnings?.totalEarnings?.toFixed(2)}</div>
       ),
     },
     {
       headerName: t('Store') + ' ID',
       propertyName: 'storeEarnings.storeId.username',
       body: (earning: IEarning) => (
-        <div>{earning.storeEarnings.storeId.username}</div>
+        <div>{earning?.storeEarnings?.storeId?.username}</div>
       ),
     },
     {
@@ -57,7 +57,7 @@ export const EARNING_COLUMNS = ({
       propertyName: 'storeEarnings.totalEarnings.',
 
       body: (earning: IEarning) => (
-        <div>${earning.storeEarnings.totalEarnings.toFixed(2)}</div>
+        <div>${earning?.storeEarnings?.totalEarnings?.toFixed(2)}</div>
       ),
     },
     {
@@ -65,7 +65,7 @@ export const EARNING_COLUMNS = ({
       propertyName: 'riderEarnings.riderId.username',
       hidden: !isSuperAdmin,
       body: (earning: IEarning) => (
-        <div>{earning.riderEarnings.riderId.username}</div>
+        <div>{earning?.riderEarnings?.riderId?.username}</div>
       ),
     },
     {
@@ -73,7 +73,7 @@ export const EARNING_COLUMNS = ({
       propertyName: 'riderEarnings.totalEarnings',
       hidden: !isSuperAdmin,
       body: (earning: IEarning) => (
-        <div>${earning.riderEarnings.totalEarnings.toFixed(2)}</div>
+        <div>${earning?.riderEarnings?.totalEarnings?.toFixed(2)}</div>
       ),
     },
   ];

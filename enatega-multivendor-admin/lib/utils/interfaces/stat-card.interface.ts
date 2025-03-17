@@ -8,6 +8,7 @@ export interface IStatsCardProps extends IGlobalComponentProps {
   route: string;
   icon?: IconDefinition;
   loading?: boolean;
+  isClickable?: boolean;
   amountConfig?: {
     format: 'currency' | 'number';
     currency: string;

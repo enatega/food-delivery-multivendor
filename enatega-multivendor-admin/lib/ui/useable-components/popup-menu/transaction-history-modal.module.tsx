@@ -105,19 +105,19 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                 <p className="font-medium">{transaction?.rider?.name}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Email')}</p>
-                <p className="font-medium">{transaction?.rider?.email}</p>
+                <p className="text-gray-600">{t('Username')}</p>
+                <p className="font-medium">{transaction?.rider?.username}</p>
               </div>
               <div>
                 <p className="text-gray-600">{t('Phone')}</p>
                 <p className="font-medium">{transaction?.rider?.phone}</p>
               </div>
-              <div>
+              {/* <div>
                 <p className="text-gray-600">{t('Account Number')}</p>
                 <p className="font-medium">
                   {transaction?.rider?.accountNumber}
                 </p>
-              </div>
+              </div> */}
               <div>
                 <p className="text-gray-600">{t('Current Wallet Amount')}</p>
                 <p className="font-medium">

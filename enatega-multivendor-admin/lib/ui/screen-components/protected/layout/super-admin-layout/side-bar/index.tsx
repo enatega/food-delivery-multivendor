@@ -167,12 +167,7 @@ export default function MakeSidebar() {
           route: '/management/commission-rates',
           isParent: false,
         },
-        {
-          text: 'Withdraw Request',
-          label: t('Withdraw Request'),
-          route: '/management/withdraw-requests',
-          isParent: false,
-        },
+
         {
           text: 'Notification',
           label: t('Notification'),

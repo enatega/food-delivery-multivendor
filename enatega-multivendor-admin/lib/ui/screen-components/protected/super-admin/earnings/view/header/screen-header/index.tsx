@@ -24,20 +24,23 @@ const EarningsSuperAdminHeader = ({
           label={t('Total Platform Earning')}
           total={formatNumber(earnings?.platformTotal || 0)}
           icon={faDollarSign}
-          route="/general/users"
+          route=""
+          isClickable={false}
           // loading= {loading}
         />
         <StatsCard
           label={t('Total Stores Earning')}
           total={formatNumber(earnings?.storeTotal || 0)}
           icon={faDollarSign}
-          route={''} // loading={loading}
+          isClickable={false}
+          route="" // loading={loading}
         />
         <StatsCard
           label={t('Total Riders Earnings')}
           total={formatNumber(earnings?.riderTotal || 0)}
           icon={faDollarSign}
-          route={''} // loading = {loading}
+          isClickable={false}
+          route="" // loading = {loading}
         />
       </div>
     </div>
