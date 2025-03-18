@@ -72,7 +72,7 @@ export default function EarningRestaurantTableHeader({
         <span className="p-input-icon-left w-full md:w-auto">
           <i className="pi pi-search" />
           <InputText
-            className="rounded border-2 border-dashed border-gray-400 p-2"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
             placeholder={t('Search')}
@@ -80,7 +80,7 @@ export default function EarningRestaurantTableHeader({
         </span>
         <div className="flex flex-col">
           <Calendar
-            className="rounded border-2 border-dashed border-gray-400 p-2 text-sm"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
             placeholder={t('Start Date')}
             value={
               dateFilters.startingDate
@@ -99,7 +99,7 @@ export default function EarningRestaurantTableHeader({
         </div>
         <div className="flex flex-col">
           <Calendar
-            className="w-18 rounded border-2 border-dashed border-gray-400 p-2 text-sm"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
             placeholder={t('End Date')}
             value={
               dateFilters.endingDate ? new Date(dateFilters.endingDate) : null
@@ -115,7 +115,7 @@ export default function EarningRestaurantTableHeader({
           )}
         </div>
         <Dropdown
-          className="h-10 rounded border-2 border-dashed border-gray-400 text-sm"
+          className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
           options={orderTypes}
           value={dateFilters.orderType}
           onChange={(e) =>
@@ -124,7 +124,7 @@ export default function EarningRestaurantTableHeader({
           placeholder={`${t('Select')} ${t('Order')} ${t('Type')}`}
         />
         <Dropdown
-          className="h-10 rounded border-2 border-dashed border-gray-400 text-sm"
+          className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
           options={paymentTypes}
           value={dateFilters.paymentMethod}
           onChange={(e) =>

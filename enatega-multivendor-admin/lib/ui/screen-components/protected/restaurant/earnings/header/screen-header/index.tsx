@@ -25,7 +25,8 @@ const EarningsRestaurantHeader = ({
           total={earnings?.storeTotal || 0}
           icon={faDollarSign}
           loading={false}
-          route={''}
+          route=""
+          isClickable={false}
         />
       </div>
     </div>

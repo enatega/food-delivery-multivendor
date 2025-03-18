@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Core
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 // Prime React
 import { FilterMatchMode } from 'primereact/api';
@@ -20,6 +21,7 @@ import {
 } from '@/lib/utils/interfaces/';
 import { IActionMenuProps, IQueryResult } from '@/lib/utils/interfaces';
 import { generateDummyWithdrawRequests } from '@/lib/utils/dummy';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function WithdrawRequestsSuperAdminMain({
   setVisible,
@@ -43,6 +45,9 @@ export default function WithdrawRequestsSuperAdminMain({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  // Hooks
+  const debouncedSearch = useDebounce(globalFilterValue);
+
   // Get userType from selected actions (RIDER or STORE)
   const selectedUserType = selectedActions.find((action) =>
     ['RIDER', 'STORE'].includes(action)
@@ -54,16 +59,15 @@ export default function WithdrawRequestsSuperAdminMain({
   );
 
   // Query with proper typing
-  const { data, loading } = useQuery(GET_ALL_WITHDRAW_REQUESTS, {
+  const { data, loading, refetch } = useQuery(GET_ALL_WITHDRAW_REQUESTS, {
     variables: {
       pageSize: pageSize,
       pageNo: currentPage,
       userType: selectedUserType,
+      search: debouncedSearch,
     },
-  }) as unknown as IQueryResult<
-    IGetWithDrawRequestsData | undefined,
-    undefined
-  >;
+    fetchPolicy: 'network-only',
+  }) as unknown as IQueryResult<IGetWithDrawRequestsData | undefined, any>;
 
   // Global search handler
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,6 +110,11 @@ export default function WithdrawRequestsSuperAdminMain({
     return filtered;
   }, [data?.withdrawRequests?.data, selectedStatus]);
 
+  // Use Effect
+  useEffect(() => {
+    refetch({ search: debouncedSearch });
+  }, [selectedUserType, debouncedSearch]);
+
   return (
     <div className="p-3">
       <Table
@@ -126,6 +135,7 @@ export default function WithdrawRequestsSuperAdminMain({
           menuItems,
           currentPage,
           pageSize,
+          search: debouncedSearch,
           selectedActions,
         })}
         totalRecords={data?.withdrawRequests?.pagination?.total}

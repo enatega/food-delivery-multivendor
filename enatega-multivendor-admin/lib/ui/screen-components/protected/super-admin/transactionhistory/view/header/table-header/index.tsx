@@ -60,7 +60,7 @@ export default function TransactionHistoryTableHeader({
       <div className="flex flex-row gap-4 md:flex-row">
         <div className="flex flex-col">
           <Calendar
-            className="border-2 border-dashed border-gray-400 p-3 text-black"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-black"
             placeholder={t('Start Date')}
             value={
               dateFilters.startingDate
@@ -77,7 +77,7 @@ export default function TransactionHistoryTableHeader({
         </div>
         <div className="flex flex-col">
           <Calendar
-            className="border-dashed border-2 border-gray-400 p-3 text-black"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-black"
             placeholder={t('End Date')}
             value={
               dateFilters.endingDate ? new Date(dateFilters.endingDate) : null
@@ -92,7 +92,7 @@ export default function TransactionHistoryTableHeader({
         </div>
         <div className="mx-8">
           <Dropdown
-            className="border-dashe h-12 border-2 border-gray-400 p-1 text-black"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem]  text-black"
             options={userTypes}
             value={dateFilters.userType || null}
             onChange={(e) =>
@@ -109,7 +109,7 @@ export default function TransactionHistoryTableHeader({
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
           <InputText
-            className="border-2 border-dashed border-gray-400 p-3 text-black"
+            className="w-[14rem] h-10 border-[1px] font-light border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-black"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
             placeholder={t('Search')}

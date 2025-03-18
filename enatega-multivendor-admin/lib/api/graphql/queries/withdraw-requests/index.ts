@@ -6,11 +6,13 @@ export const GET_ALL_WITHDRAW_REQUESTS = gql`
     $userId: String
     $pageSize: Int!
     $pageNo: Int!
+    $search: String
   ) {
     withdrawRequests(
       userType: $userType
       userId: $userId
       pagination: { pageSize: $pageSize, pageNo: $pageNo }
+      search: $search
     ) {
       message
       pagination {

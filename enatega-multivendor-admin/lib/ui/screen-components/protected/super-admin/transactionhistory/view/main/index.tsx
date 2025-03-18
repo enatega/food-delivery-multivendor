@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Core
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Prime React
 import { FilterMatchMode } from 'primereact/api';
@@ -25,6 +26,7 @@ import { useQuery } from '@apollo/client';
 import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
 import TransactionDetailModal from '@/lib/ui/useable-components/popup-menu/transaction-history-modal.module';
 import { useTranslations } from 'next-intl';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function TransactionHistoryMain() {
   // Hooks
@@ -44,6 +46,10 @@ export default function TransactionHistoryMain() {
       matchMode: FilterMatchMode.CONTAINS,
     },
   });
+
+  // Hooks
+  const debouncedSearch = useDebounce(globalFilterValue);
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -57,18 +63,15 @@ export default function TransactionHistoryMain() {
   const [openMenuId, setOpenMenuId] = useState<string>('');
 
   // Query with proper typing
-  const { data, loading } = useQuery(GET_TRANSACTION_HISTORY, {
+  const { data, loading, refetch } = useQuery(GET_TRANSACTION_HISTORY, {
     variables: {
-      pageSize: pageSize, // Required field
+      pageSize: pageSize + 30, // Required field
       pageNo: currentPage, // Required field
       startingDate: dateFilters.startingDate || undefined,
       endingDate: dateFilters.endingDate || undefined,
       ...(dateFilters.userType !== 'ALL' && { userType: dateFilters.userType }),
     },
-  }) as unknown as IQueryResult<
-    ITransactionHistoryResponse | undefined,
-    undefined
-  >;
+  }) as unknown as IQueryResult<ITransactionHistoryResponse | undefined, any>;
 
   // Global search handler
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +104,10 @@ export default function TransactionHistoryMain() {
   // Safely access data with proper typing
   const transactionData = data?.transactionHistory?.data;
 
+  useEffect(() => {
+    refetch({ search: debouncedSearch });
+  }, [debouncedSearch]);
+
   return (
     <div className="p-3">
       <Table
@@ -120,7 +127,11 @@ export default function TransactionHistoryMain() {
         setSelectedData={setSelectedTransactions}
         selectedData={selectedTransactions}
         loading={loading}
-        columns={TRANSACTION_HISTORY_COLUMNS({ menuItems, openMenuId, setOpenMenuId })}
+        columns={TRANSACTION_HISTORY_COLUMNS({
+          menuItems,
+          openMenuId,
+          setOpenMenuId,
+        })}
         totalRecords={data?.transactionHistory?.pagination?.total}
         onPageChange={onPageChange}
         currentPage={currentPage}

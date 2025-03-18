@@ -32,8 +32,8 @@ const Table = <T extends ITableExtends>({
   // For Store table
   sortField,
   sortOrder,
-  scrollable =true,
-  scrollHeight="420px",
+  scrollable = true,
+  scrollHeight = '420px',
   // New pagination props
   totalRecords,
   onPageChange,

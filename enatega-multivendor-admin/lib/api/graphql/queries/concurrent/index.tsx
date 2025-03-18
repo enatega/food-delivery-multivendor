@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_STORE_RIDER = gql`
- query FetchStoresAndRidersL($isSuperAdminRider: Boolean) {
-    riders(isSuperAdminRider: $isSuperAdminRider) {
+  query FetchStoresAndRidersL {
+    riders {
       _id
       name
     }
@@ -11,5 +11,4 @@ export const GET_STORE_RIDER = gql`
       _id
     }
   }
-
-`
+`;

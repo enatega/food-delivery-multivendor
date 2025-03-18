@@ -4,6 +4,7 @@ export const GET_TRANSACTION_HISTORY = gql`
   query TransactionHistory(
     $userType: UserTypeEnum
     $userId: String
+    $search: String
     $pageSize: Int!
     $pageNo: Int!
     $startingDate: String
@@ -12,6 +13,7 @@ export const GET_TRANSACTION_HISTORY = gql`
     transactionHistory(
       userType: $userType
       userId: $userId
+      search: $search
       pagination: { pageSize: $pageSize, pageNo: $pageNo }
       dateFilter: { starting_date: $startingDate, ending_date: $endingDate }
     ) {

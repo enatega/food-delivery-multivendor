@@ -45,7 +45,9 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         headerName: 'Amount',
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
-          <span className="font-medium">${rowData.requestAmount}</span>
+          <span className="font-medium">
+            ${rowData?.requestAmount?.toFixed(2)}
+          </span>
         ),
       },
       {

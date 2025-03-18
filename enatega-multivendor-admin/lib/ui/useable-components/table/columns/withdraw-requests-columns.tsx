@@ -22,11 +22,13 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   menuItems,
   currentPage,
   pageSize,
+  search,
   selectedActions,
 }: {
   menuItems: IActionMenuProps<IWithDrawRequest>['items'];
   currentPage: number;
   pageSize: number;
+  search: string;
   selectedActions: string[];
 }) => {
   // Hooks
@@ -62,6 +64,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
           variables: {
             pageSize: pageSize,
             pageNo: currentPage,
+            search,
             userType:
               selectedActions.length > 0 ? selectedActions[0] : undefined,
           },
@@ -142,7 +145,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
                   : faDashboard
           }
           color={option.code === 'CANCELLED' ? 'red' : 'black'}
-          className="h-4 w-4 mb-4"
+          className="h-4 w-4"
         />
       </div>
       <div className="flex h-full items-center">
@@ -199,7 +202,9 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         headerName: 'Amount',
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
-          <span className="font-medium">${rowData.requestAmount}</span>
+          <span className="font-medium">
+            ${rowData?.requestAmount.toFixed(2)}
+          </span>
         ),
       },
       {
