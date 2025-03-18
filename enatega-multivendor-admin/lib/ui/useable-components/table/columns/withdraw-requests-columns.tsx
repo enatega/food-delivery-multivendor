@@ -22,11 +22,13 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   menuItems,
   currentPage,
   pageSize,
+  search,
   selectedActions,
 }: {
   menuItems: IActionMenuProps<IWithDrawRequest>['items'];
   currentPage: number;
   pageSize: number;
+  search: string;
   selectedActions: string[];
 }) => {
   // Hooks
@@ -62,6 +64,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
           variables: {
             pageSize: pageSize,
             pageNo: currentPage,
+            search,
             userType:
               selectedActions.length > 0 ? selectedActions[0] : undefined,
           },

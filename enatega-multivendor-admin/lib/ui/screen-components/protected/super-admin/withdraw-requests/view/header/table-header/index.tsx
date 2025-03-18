@@ -34,21 +34,21 @@ export default function WithdrawRequestSuperAdminTableHeader({
   const [searchValue, setSearchValue] = useState('');
 
   const filterOptions: FilterOption[] = [
-    {
-      label: 'Transferred',
-      value: 'TRANSFERRED',
-      type: 'status',
-    },
-    {
-      label: 'Cancelled',
-      value: 'CANCELLED',
-      type: 'status',
-    },
-    {
-      label: 'Requested',
-      value: 'REQUESTED',
-      type: 'status',
-    },
+    // {
+    //   label: 'Transferred',
+    //   value: 'TRANSFERRED',
+    //   type: 'status',
+    // },
+    // {
+    //   label: 'Cancelled',
+    //   value: 'CANCELLED',
+    //   type: 'status',
+    // },
+    // {
+    //   label: 'Requested',
+    //   value: 'REQUESTED',
+    //   type: 'status',
+    // },
     {
       label: 'Rider',
       value: 'RIDER',
@@ -113,77 +113,6 @@ export default function WithdrawRequestSuperAdminTableHeader({
             placeholder={'Keyword Search'}
             className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3"
           />
-        </div>
-
-        {/* Status Filter */}
-        <div className="mx-4 flex items-center">
-          <TextIconClickable
-            className={`${
-              selectedActions.find(
-                (action) =>
-                  filterOptions.find((opt) => opt.value === action)?.type ===
-                  'status'
-              )
-                ? 'w-32' // Wider when a filter is selected
-                : 'w-20'
-            } rounded border border-dotted border-[#E4E4E7] text-black transition-all`}
-            icon={faAdd}
-            iconStyles={{ color: 'black' }}
-            title={
-              selectedActions.find(
-                (action) =>
-                  filterOptions.find((opt) => opt.value === action)?.type ===
-                  'status'
-              ) || 'Status'
-            }
-            onClick={(e) => statusOverlayRef.current?.toggle(e)}
-          />
-
-          <OverlayPanel ref={statusOverlayRef} dismissable>
-            <div className="w-60">
-              <div className="mb-3">
-                <CustomTextField
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder={'Search'}
-                  className="h-8 w-full"
-                  type="text"
-                  name="search"
-                  showLabel={false}
-                />
-              </div>
-
-              <div className="border-b border-t py-1">
-                {getFilteredOptions('status').map((option, index) => (
-                  <div
-                    key={index}
-                    className={`${classes.filter} my-2 flex items-center justify-between`}
-                  >
-                    <div className="flex">
-                      <Checkbox
-                        inputId={`status-${option.value}`}
-                        checked={selectedActions.includes(option.value)}
-                        onChange={() => toggleFilter(option)}
-                        className={`${classes.checkbox}`}
-                      />
-                      <label
-                        htmlFor={`status-${option.value}`}
-                        className="ml-1 text-sm"
-                      >
-                        {option.label}
-                      </label>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p
-                className="mt-3 cursor-pointer text-center text-sm"
-                onClick={() => clearTypeFilters('status')}
-              >
-                {'Clear filters'}
-              </p>
-            </div>
-          </OverlayPanel>
         </div>
 
         {/* User Type Filter */}
