@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_EARNING } from '@/lib/api/graphql/queries/earnings';
 import { FilterMatchMode } from 'primereact/api';
@@ -11,6 +11,7 @@ import {
 import EarningTableHeader from '../header/table-header';
 import { EARNING_COLUMNS } from '@/lib/ui/useable-components/table/columns/earning-column';
 import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function EarningsMain({
   setTotalEarnings,
@@ -26,6 +27,9 @@ export default function EarningsMain({
     },
   });
 
+  // Hooks
+  const debouncedSearch = useDebounce(globalFilterValue);
+
   const [dateFilters, setDateFilters] = useState<IEarningFilters>({
     startingDate: '',
     endingDate: '',
@@ -35,12 +39,13 @@ export default function EarningsMain({
     paymentMethod: undefined,
   });
 
-  const { data, loading } = useQuery(GET_EARNING, {
+  const { data, loading, refetch } = useQuery(GET_EARNING, {
     variables: {
       pageSize,
       pageNo: currentPage,
       startingDate: dateFilters.startingDate || undefined,
       endingDate: dateFilters.endingDate || undefined,
+      search: debouncedSearch,
       userType:
         dateFilters.userType !== 'ALL' ? dateFilters.userType : undefined,
       userId: dateFilters?.userId ?? undefined,
@@ -83,6 +88,10 @@ export default function EarningsMain({
     },
   ];
 
+  useEffect(() => {
+    refetch({ search: debouncedSearch });
+  }, [debouncedSearch]);
+
   return (
     <div className="p-4">
       <Table
@@ -102,7 +111,10 @@ export default function EarningsMain({
         setSelectedData={setSelectedEarnings}
         selectedData={selectedEarnings}
         loading={loading}
-        columns={EARNING_COLUMNS({ menuItems, isSuperAdmin: true })}
+        columns={EARNING_COLUMNS({
+          menuItems,
+          isSuperAdmin: true,
+        })}
         totalRecords={data?.earnings?.pagination?.total}
         onPageChange={onPageChange}
         currentPage={currentPage}

@@ -2,6 +2,9 @@ import React from 'react';
 import { Dialog } from 'primereact/dialog';
 import { ITransactionHistory } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
+import { Rating } from 'primereact/rating';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface ITransactionDetailModalProps {
   visible: boolean;
@@ -152,7 +155,23 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
               <div>
                 <p className="text-gray-600">{t('Rating')}</p>
                 <p className="font-medium">
-                  {transaction?.store?.rating?.toFixed(1)} ⭐
+                  <Rating
+                    value={transaction?.store?.reviewAverage}
+                    onIcon={
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        className="text-yellow-500"
+                      />
+                    } // Filled Star
+                    offIcon={
+                      <FontAwesomeIcon
+                        icon={faStarHalfAlt}
+                        className="text-yellow-500"
+                      />
+                    } // Empty Star
+                    readOnly
+                    cancel={false}
+                  />
                 </p>
               </div>
               <div>
@@ -161,7 +180,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
               </div>
               <div>
                 <p className="text-gray-600">{t('Location')}</p>
-                <p className="font-medium">{`${transaction?.store?.city}, ${transaction?.store?.postCode}`}</p>
+                <p className="font-medium">{transaction?.store?.address}</p>
               </div>
               <div>
                 <p className="text-gray-600">{t('Status')}</p>

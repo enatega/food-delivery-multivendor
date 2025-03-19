@@ -614,6 +614,8 @@ export const generateSkeletonTransactionHistory = (
         phone: '',
         city: '',
         postCode: '',
+        reviewAverage: 0,
+        address: '',
       },
     });
   }

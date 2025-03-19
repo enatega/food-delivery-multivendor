@@ -55,10 +55,12 @@ export const GET_TRANSACTION_HISTORY = gql`
           _id
           name
           rating
+          reviewAverage
           isActive
           isAvailable
           slug
           stripeDetailsSubmitted
+          address
           phone
           city
           postCode

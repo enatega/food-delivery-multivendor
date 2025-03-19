@@ -128,6 +128,7 @@ const Table = <T extends ITableExtends>({
             field={col.propertyName}
             header={col.headerName}
             sortable={!col.propertyName.includes('action')}
+            hidden={col.hidden}
             bodyClassName="selectable-column"
             body={loading ? <DataTableColumnSkeleton /> : col.body}
           />

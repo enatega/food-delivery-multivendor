@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Core
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // Prime React
 import { FilterMatchMode } from 'primereact/api';
@@ -27,6 +28,7 @@ import TransactionDetailModal from '@/lib/ui/useable-components/popup-menu/trans
 import TransactionHistoryStoreTableHeader from '../header/table-header';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { useTranslations } from 'next-intl';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function TransactionHistoryStoreMain() {
   // Hooks
@@ -46,6 +48,10 @@ export default function TransactionHistoryStoreMain() {
       matchMode: FilterMatchMode.CONTAINS,
     },
   });
+
+  // Hooks
+  const debouncedSearch = useDebounce(globalFilterValue);
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -58,9 +64,8 @@ export default function TransactionHistoryStoreMain() {
   const { restaurantId } = restaurantLayoutContextData;
   const [openMenuId, setOpenMenuId] = useState<string>('');
 
-
   // Query with proper typing
-  const { data, loading } = useQuery(GET_TRANSACTION_HISTORY, {
+  const { data, loading, refetch } = useQuery(GET_TRANSACTION_HISTORY, {
     variables: {
       pageSize: pageSize, // Required field
       pageNo: currentPage, // Required field
@@ -69,10 +74,7 @@ export default function TransactionHistoryStoreMain() {
       userId: restaurantId,
       userType: UserTypeEnum.STORE,
     },
-  }) as unknown as IQueryResult<
-    ITransactionHistoryResponse | undefined,
-    undefined
-  >;
+  }) as unknown as IQueryResult<ITransactionHistoryResponse | undefined, any>;
 
   // Global search handler
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,6 +107,10 @@ export default function TransactionHistoryStoreMain() {
   // Safely access data with proper typing
   const transactionData = data?.transactionHistory?.data;
 
+  useEffect(() => {
+    refetch({ search: debouncedSearch });
+  }, [debouncedSearch]);
+
   return (
     <div className="p-3">
       <Table
@@ -124,7 +130,11 @@ export default function TransactionHistoryStoreMain() {
         setSelectedData={setSelectedTransactions}
         selectedData={selectedTransactions}
         loading={loading}
-        columns={TRANSACTION_HISTORY_COLUMNS({ menuItems,  openMenuId, setOpenMenuId })}
+        columns={TRANSACTION_HISTORY_COLUMNS({
+          menuItems,
+          openMenuId,
+          setOpenMenuId,
+        })}
         totalRecords={data?.transactionHistory?.pagination?.total}
         onPageChange={onPageChange}
         currentPage={currentPage}

@@ -10,12 +10,14 @@ export const GET_EARNING = gql`
     $pageNo: Int!
     $startingDate: String
     $endingDate: String
+    $search: String
   ) {
     earnings(
       userId: $userId
       userType: $userType
       orderType: $orderType
       paymentMethod: $paymentMethod
+      search: $search
       pagination: { pageSize: $pageSize, pageNo: $pageNo }
       dateFilter: { starting_date: $startingDate, ending_date: $endingDate }
     ) {
@@ -77,6 +79,7 @@ export const GET_EARNING_FOR_STORE = gql`
     $paymentMethod: PaymentMethodEnum
     $pageSize: Int!
     $pageNo: Int!
+    $search: String
     $startingDate: String
     $endingDate: String
   ) {
@@ -85,6 +88,7 @@ export const GET_EARNING_FOR_STORE = gql`
       userType: $userType
       orderType: $orderType
       paymentMethod: $paymentMethod
+      search: $search
       pagination: { pageSize: $pageSize, pageNo: $pageNo }
       dateFilter: { starting_date: $startingDate, ending_date: $endingDate }
     ) {

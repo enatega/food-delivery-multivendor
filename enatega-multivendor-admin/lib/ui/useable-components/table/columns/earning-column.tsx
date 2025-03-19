@@ -11,6 +11,8 @@ export const EARNING_COLUMNS = ({
   // Hooks
   const t = useTranslations();
 
+  console.log({ isSuperAdmin });
+
   // Columns
   return [
     {
@@ -41,9 +43,12 @@ export const EARNING_COLUMNS = ({
       headerName: t('Platform Earnings'),
       propertyName: 'platformEarnings.totalEarnings',
       hidden: !isSuperAdmin,
-      body: (earning: IEarning) => (
-        <div>${earning?.platformEarnings?.totalEarnings?.toFixed(2)}</div>
-      ),
+      body: (earning: IEarning) =>
+        isSuperAdmin ? (
+          <div>${earning?.platformEarnings?.totalEarnings?.toFixed(2)}</div>
+        ) : (
+          <span>-</span>
+        ),
     },
     {
       headerName: t('Store') + ' ID',

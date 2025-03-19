@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_EARNING_FOR_STORE } from '@/lib/api/graphql/queries/earnings';
 import { FilterMatchMode } from 'primereact/api';
@@ -14,6 +14,7 @@ import EarningRestaurantTableHeader from '../header/table-header';
 import { UserTypeEnum } from '@/lib/utils/interfaces';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { useTranslations } from 'next-intl';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function EarningsRestaurantMain({
   setTotalEarnings,
@@ -32,6 +33,10 @@ export default function EarningsRestaurantMain({
       matchMode: FilterMatchMode.CONTAINS,
     },
   });
+
+  // Hooks
+  const debouncedSearch = useDebounce(globalFilterValue);
+
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const { restaurantId } = restaurantLayoutContextData;
 
@@ -43,13 +48,14 @@ export default function EarningsRestaurantMain({
     paymentMethod: undefined,
   });
 
-  const { data, loading } = useQuery(GET_EARNING_FOR_STORE, {
+  const { data, loading, refetch } = useQuery(GET_EARNING_FOR_STORE, {
     variables: {
       pageSize,
       pageNo: currentPage,
       startingDate: dateFilters.startingDate || undefined,
       endingDate: dateFilters.endingDate || undefined,
       userType: UserTypeEnum.STORE,
+      search: debouncedSearch,
       orderType:
         dateFilters.orderType !== 'ALL' ? dateFilters.orderType : undefined,
       paymentMethod:
@@ -89,6 +95,10 @@ export default function EarningsRestaurantMain({
       },
     },
   ];
+
+  useEffect(() => {
+    refetch({ search: debouncedSearch });
+  }, [debouncedSearch]);
 
   return (
     <div className="p-4">

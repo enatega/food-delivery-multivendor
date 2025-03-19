@@ -58,6 +58,7 @@ export interface ITransactionHistory {
     unique_restaurant_id: string;
     name: string;
     rating: number;
+    reviewAverage: number;
     isActive: boolean;
     isAvailable: boolean;
     slug: string;
@@ -65,6 +66,7 @@ export interface ITransactionHistory {
     phone: string;
     city: string;
     postCode: string;
+    address: string;
   };
 }
 

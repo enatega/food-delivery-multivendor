@@ -9,7 +9,7 @@ export default function WithdrawRequestAdminTableHeader({
   return (
     <div className="mb-4 flex flex-col gap-6">
       <div className="flex-colm:flex-row flex w-fit items-center gap-2">
-        <div className="w-60">
+        <div className="w-60 hidden">
           <CustomTextField
             type="text"
             name="vendorFilter"
