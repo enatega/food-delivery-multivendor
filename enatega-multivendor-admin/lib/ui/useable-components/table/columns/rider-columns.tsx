@@ -78,7 +78,6 @@ export const RIDER_TABLE_COLUMNS = ({
     { headerName: t('Name'), propertyName: 'name' },
     { headerName: t('Username'), propertyName: 'username' },
     { headerName: t('Phone'), propertyName: 'phone' },
-    { headerName: t('Phone'), propertyName: 'phone' },
     {
       headerName: t('Zone'),
       propertyName: 'zone',

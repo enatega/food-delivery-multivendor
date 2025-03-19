@@ -24,7 +24,7 @@ export const RiderSchema = Yup.object().shape({
       code: Yup.string().required('Required'),
     })
     .required('Required'),
-  phone: Yup.string().required('Required'),
+  phone: Yup.string().required('Required').min(5,"Minimum 5 Numbers are Required"),
   vehicleType: Yup.object()
     .shape({
       label: Yup.string().required('Required'),
