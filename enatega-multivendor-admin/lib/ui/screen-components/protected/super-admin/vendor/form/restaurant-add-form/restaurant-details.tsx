@@ -342,6 +342,15 @@ export default function RestaurantDetails({
                          // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
                          type="text"
                          className="rounded-[6px] border-[#D1D5DB]"
+                         style={{
+                          borderColor: onErrorMessageMatcher(
+                            'phoneNumber',
+                            errors?.phoneNumber,
+                            RestaurantErrors
+                          )
+                            ? 'red'
+                            : '',
+                        }}
                        />
                      </div>
 

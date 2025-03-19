@@ -122,6 +122,7 @@ export interface ICreateRestaurant {
   address: string;
   cuisines: string[];
   image: string;
+  phone: string;
   location: {
     __typename: string;
     coordinates: number[];
