@@ -14,6 +14,10 @@ import {
   IZoneMainComponentsProps,
 } from '@/lib/utils/interfaces';
 
+// Context
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
+
+
 // UI Components
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 import Table from '@/lib/ui/useable-components/table';
@@ -40,7 +44,7 @@ export default function ZoneMain({
   // Hooks
   const t = useTranslations();
   const { showToast } = useToast();
-
+  const {ISPAID_VERSION} =useConfiguration()
   // State - Table
   const [deleteId, setDeleteId] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<IZoneResponse[]>([]);
@@ -91,6 +95,31 @@ export default function ZoneMain({
     },
   ];
 
+  const handleDeleteZone=async()=> {
+    if (ISPAID_VERSION){
+      await  mutateDelete({
+        variables: { id: deleteId },
+        onCompleted: () => {
+          showToast({
+            type: 'success',
+            title: t('Delete Zone'),
+            message: t('Zone has been deleted successfully'),
+            duration: 3000,
+          });
+          setDeleteId('');
+        },
+      });
+    }else {
+      showToast({
+        type: 'error',
+        title: t('You are using free version'),
+        message: t('This Feature is only Available in Paid Version'),
+      });
+      setDeleteId('');
+    }
+     
+  }
+
   return (
     <div className="pt-5">
       <Table
@@ -114,18 +143,7 @@ export default function ZoneMain({
           setDeleteId('');
         }}
         onConfirm={() => {
-          mutateDelete({
-            variables: { id: deleteId },
-            onCompleted: () => {
-              showToast({
-                type: 'success',
-                title: t('Delete Zone'),
-                message: t('Zone has been deleted successfully'),
-                duration: 3000,
-              });
-              setDeleteId('');
-            },
-          });
+        handleDeleteZone()
         }}
         message={t('Are you sure you want to delete this item?')}
       />
