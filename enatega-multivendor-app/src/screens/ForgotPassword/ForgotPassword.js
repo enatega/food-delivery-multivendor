@@ -20,6 +20,9 @@ import { Feather } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 function ForgotPassword(props) {
   const Analytics = analytics()
 
@@ -49,6 +52,9 @@ function ForgotPassword(props) {
       })
     )
   }, [props?.navigation])
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
     <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>

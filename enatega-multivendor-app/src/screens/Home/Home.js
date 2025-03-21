@@ -55,6 +55,9 @@ import MapSection from '../MapSection/index'
 import { useTranslation } from 'react-i18next'
 import useGeocoding from '../../ui/hooks/useGeocoding'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 const RESTAURANTS = gql`
   ${restaurantList}
 `
@@ -413,6 +416,8 @@ function Main(props) {
       .flat()
   }))
 
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[refetch]} />
   return (
     <>
       <SafeAreaView

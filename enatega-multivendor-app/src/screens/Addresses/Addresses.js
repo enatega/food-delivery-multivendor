@@ -42,6 +42,9 @@ import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import Spinner from '../../components/Spinner/Spinner'
 import DeleteEditModal from '../../components/DeleteEditModal/DeleteEditModal'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 const DELETE_ADDRESS = gql`
   ${deleteAddress}
 `
@@ -257,6 +260,8 @@ function Addresses() {
     setDeleteModalVisible(false)
   };
 
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[refetchProfile]} />
 
   return (
     <View style={styles(currentTheme).flex}>
