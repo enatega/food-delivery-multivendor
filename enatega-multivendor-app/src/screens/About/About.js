@@ -24,6 +24,9 @@ import FavoriteButton from '../../components/FavButton/FavouriteButton'
 import { mapStyle } from '../../utils/mapStyle'
 import { customMapStyle } from '../../utils/customMapStyles'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 function About(props) {
   const Analytics = analytics()
   const { t, i18n } = useTranslation()
@@ -64,6 +67,10 @@ function About(props) {
     }
     Track()
   }, [])
+  
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!isConnected) return <ErrorView refetchFunctions={[]} />
+ 
 
   const inset = useSafeAreaInsets()
   return (

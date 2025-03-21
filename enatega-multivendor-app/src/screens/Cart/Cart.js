@@ -48,6 +48,9 @@ import Animated, {
   withSpring
 } from 'react-native-reanimated'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 // Constants
 const TIPPING = gql`
   ${getTipping}
@@ -292,6 +295,12 @@ function Cart(props) {
     setMinimumOrder(restaurant.minimumOrder)
     setLoadingData(false)
   }
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
+  
+
+  console.log("here")
 
   function emptyCart() {
     return (

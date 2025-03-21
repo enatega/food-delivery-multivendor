@@ -28,6 +28,9 @@ import ForceUpdate from '../../components/Update/ForceUpdate'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { checkLocationInCities } from '../../utils/locationUtil'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 export default function CurrentLocation() {
   const Analytics = analytics()
   const { t, i18n } = useTranslation()
@@ -169,6 +172,9 @@ export default function CurrentLocation() {
       navigation.navigate('Main')
     }, 100)
   }
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
     <>

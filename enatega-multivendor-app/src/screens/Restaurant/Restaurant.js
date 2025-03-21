@@ -17,6 +17,10 @@ import Animated, {
 import { useRestaurant } from '../../ui/hooks'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import PopularIcon from '../../assets/SVG/popular'
+import ErrorView from '../../components/ErrorView/ErrorView'
+import ItemCard from '../../components/ItemCards/ItemCards'
 
 // React Native
 import {
@@ -137,6 +141,9 @@ function Restaurant(props) {
       }
     }
   )
+
+ 
+
   const dataList =
     popularItems &&
     popularItems?.popularItems?.map((item) => {
@@ -413,6 +420,11 @@ function Restaurant(props) {
       )
     }
   }, [data])
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+
+  console.log(connect)
+  if (!connect) return <ErrorView/>
 
   if (loading || subCategoriesLoading)
     return (
@@ -717,15 +729,7 @@ function Restaurant(props) {
         ) : (
           <AnimatedSectionList
             sections={
-              merged_food_items?.filter((sub_ctg) => sub_ctg?.foods.length && (sub_ctg?.parentCategoryTitle || sub_ctg?.subCategoryTitle)).map((sub_ctg, index) => ({
-                title: {
-                  id: index,
-                  key: index,
-                  subCategoryTitle: sub_ctg?.foods?.length > 0 ? sub_ctg?.subCategoryTitle : '',
-                  parentCategoryTitle: sub_ctg?.foods?.length > 0 ? sub_ctg?.parentCategoryTitle : ''
-                },
-                data: sub_ctg?.foods || []
-              })) || []
+              updatedDeals
             }
             style={[
               {
@@ -763,28 +767,61 @@ function Restaurant(props) {
               `${item._id}-${index}` + Math.random() * 1000
             }
 
-            renderSectionHeader={(sectionData) => {
-              const section = sectionData.section.title
-              return (
-                <View style={[styles(currentTheme).sectionHeader]}>
-                  {section.parentCategoryTitle && (
-                    <TextDefault
-                      style={styles(currentTheme).sectionHeaderText}
+            renderSectionHeader={({ section: { title, data } }) => {
+              if (title === 'Popular') {
+                if (!dataList || dataList?.length === 0) {
+                  return null // Don't render the section header if dataList is empty
+                }
+                return (
+                  <View style={styles(currentTheme).restaurantItems}>
+                    <View style={styles().popularHeading}>
+                      <PopularIcon color={currentTheme.iconColorDark} />
+                      <TextDefault
+                        style={styles(currentTheme).popularText}
+                        textColor={currentTheme.fontFourthColor}
+                        bolder
+                      >
+                        {title}
+                      </TextDefault>
+                    </View>
+                    {/* <TextDefault
                       textColor={currentTheme.fontFourthColor}
-                      bolder
-                      isRTL
+                      style={{
+                        // ...alignment.PLmedium,
+                        // ...alignment.PRmedium,
+                        fontSize: scale(12),
+                        fontWeight: '400',
+                        marginTop: scale(3)
+                      }}
                     >
-                      {section.parentCategoryTitle}
-                    </TextDefault>
-                  )}
-                  {section.subCategoryTitle && <TextDefault
-                    style={[styles(currentTheme).sectionSubHeaderText]}
+                      {t('mostOrderedNow')}
+                    </TextDefault> */}
+                    <View style={styles().popularItemCards}>
+                      {data?.map((item) => (
+                        item?._id ?
+                        <ItemCard
+                          key={item._id}
+                          item={item}
+                          onPressItem={onPressItem}
+                          restaurant={restaurant}
+                          tagCart={tagCart}
+                        /> : ""
+                      ))}
+                    </View>
+                  </View>
+                  )
+                
+              }
+              // Render other section headers as usual
+              return (
+                <View style={styles(currentTheme).sectionHeader}>
+                  <TextDefault
+                    style={styles(currentTheme).sectionHeaderText}
                     textColor={currentTheme.fontFourthColor}
                     bolder
-                    isRTL
                   >
-                    {section.subCategoryTitle}
-                  </TextDefault>}
+                    {title}
+                  </TextDefault>
                 </View>
               )
             }}

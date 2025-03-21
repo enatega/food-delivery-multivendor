@@ -20,6 +20,9 @@ import ReviewModal from '../../components/Review'
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED','CANCELLED','CANCELLEDBYREST']
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 function MyOrders(props) {
   const reviewModalRef = useRef()
   const [reviewInfo, setReviewInfo] = useState()
@@ -124,7 +127,9 @@ function MyOrders(props) {
     setReviewInfo({order, selectedRating})
     openReviewModal()
   }
-
+  
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[reFetchOrders]} />
   return (
     <>
       <View style={styles(currentTheme).container}>

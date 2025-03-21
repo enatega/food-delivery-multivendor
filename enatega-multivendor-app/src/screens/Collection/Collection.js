@@ -8,6 +8,9 @@ import styles from './styles'
 import { useTranslation } from 'react-i18next'
 import Ripple from 'react-native-material-ripple'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 const HEADING = {
   Restaurants: 'I feel like eating',
   Store: 'Lets shop for',
@@ -57,6 +60,8 @@ const Collection = ({ navigation, route }) => {
     )
   }, [navigation, currentTheme])
 
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+   if (!connect) return <ErrorView refetchFunctions={[]} />
   return (
     <View style={styles(currentTheme).container}>
       <TextDefault bolder H2 isRTL>

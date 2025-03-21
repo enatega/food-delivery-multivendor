@@ -24,6 +24,9 @@ import { FontAwesome } from '@expo/vector-icons'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { WhatsAppNotInstalledModal } from '../../components/Help/WhatsAppNotInstalledModal'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 const FAQs = [
   {
     id: 1,
@@ -72,6 +75,7 @@ const Help = (props) => {
     setisModalVisible(false);
     Linking.openURL('https://play.google.com/store/apps/details?id=com.whatsapp')
   }
+
 
 const openWhatsAppChat = async () => {
   const phoneNumber = '+14232600408';
@@ -170,6 +174,10 @@ const openWhatsAppChat = async () => {
     })
   }, [props?.navigation])
 
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
+  
   return (
     <SafeAreaView
       edges={['bottom', 'right', 'left']}
