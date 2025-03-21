@@ -59,7 +59,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
     throw new Error(t('Cannot get the value of the Configuration Context'));
   }
 
-  const { deliveryRate } = configuration;
+  const { deliveryRate, isPaidVersion } = configuration;
 
   const {
     restaurantByOwnerResponse,
@@ -129,8 +129,16 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   };
 
   const handleDelete = async () => {
+    if(isPaidVersion) {
     hardDeleteRestaurant({ variables: { id: _id } });
-  };
+  }else {
+    showToast({
+      type: 'error',
+      title: t('You are using free version'),
+      message: t('This Feature is only Available in Paid Version'),
+    });
+  }
+}
 
   return (
     <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5] bg-white shadow-md">
