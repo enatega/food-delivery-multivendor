@@ -9,24 +9,6 @@ import { useTranslations } from 'next-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 
-const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => {
-  // Conditionally render icons based on label
-  let icon = null;
-  if (label === 'Delivery Time') {
-    icon = <FontAwesomeIcon icon={faClock} className="mr-1" />;
-  } else if (label === 'Service Charges' || label === 'Min Order') {
-    icon = <FontAwesomeIcon icon={faDollarSign} className="mr-1" />;
-  }
-  return (
-    <div>
-      <p className="text-xs text-gray-500 mb-2">{label}</p>
-      <p className="font-medium">
-        {icon}
-        {value || 'N/A'}
-      </p>
-    </div>
-  );
-};
 
 const RestaurantMain: React.FC = () => {
   // Hooks
@@ -38,6 +20,24 @@ const RestaurantMain: React.FC = () => {
 
   if (restaurantProfileResponse.loading) return <RestaurantProfileSkeleton />;
 
+  const InfoItem: React.FC<IInfoItemProps> = ({ label, value }) => {
+    // Conditionally render icons based on label
+    let icon = null;
+    if (label === t('Delivery Time')) {
+      icon = <FontAwesomeIcon icon={faClock} className="mr-1" />;
+    } else if (label === t('Service Charges') || label === t('Min Order')) {
+      icon = <FontAwesomeIcon icon={faDollarSign} className="mr-1" />;
+    }
+    return (
+      <div>
+        <p className="text-xs text-gray-500 mb-2">{label}</p>
+        <p className="font-medium">
+          {icon}
+          {value || 'N/A'}
+        </p>
+      </div>
+    );
+  };
   return (
     <div className="flex items-center justify-center mt-8">
       <div className="bg-white p-8 w-full border-2 border-dotted rounded border-inherit">
@@ -95,6 +95,7 @@ const RestaurantMain: React.FC = () => {
           />
           <InfoItem label={t('Order Prefix')} value={restaurant?.orderPrefix} />
           <InfoItem label={t('Shop Category')} value={restaurant?.shopType} />
+          <InfoItem label={t('Phone')} value={restaurant?.phone} />
         </div>
       </div>
     </div>
