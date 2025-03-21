@@ -57,6 +57,7 @@ import { IMAGE_LINK } from '../../utils/constants'
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import ForceUpdate from '../../components/Update/ForceUpdate'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -379,6 +380,11 @@ function Main(props) {
       })
     }
   }
+
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
+  
 
   return (
     <>

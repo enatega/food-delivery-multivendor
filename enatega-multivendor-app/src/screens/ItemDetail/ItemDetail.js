@@ -20,6 +20,8 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import UserContext from '../../context/User'
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
 
 // Hooks
 import React, {
@@ -397,6 +399,9 @@ function ItemDetail(props) {
     }
   })
   console.log({ scrollY })
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView />
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
@@ -440,7 +445,7 @@ function ItemDetail(props) {
           <View>
           {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
           {/* <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}> */}
-          <Text style={[styles(currentTheme).descriptionText,{ width: '90%', height: 'auto', fontSize: 14 ,alignSelf:"center"}]}>
+          <Text style={[styles(currentTheme).descriptionText,{ width: '90%', height: 'auto', fontSize: 14,alignSelf:"center" }]}>
             {food?.description}
           </Text>
           <HeadingComponent title={food?.title} price={calculatePrice()}  /> 

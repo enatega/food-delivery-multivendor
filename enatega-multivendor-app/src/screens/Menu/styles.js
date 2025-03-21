@@ -164,7 +164,7 @@ const styles = (props = null) =>
     },
     collectionCard: {
       backgroundColor: props !== null ? props?.cardBackground : '#181818',
-      height: 130,
+      height: 135,
       width: 100,
       borderRadius: 8,
       shadowColor: props !== null ? props?.iconColor : 'gray',

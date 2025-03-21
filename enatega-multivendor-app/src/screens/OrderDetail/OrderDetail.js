@@ -42,6 +42,9 @@ import { clearLogEntriesAsync } from 'expo-updates'
 import Taxes from './Taxes'
 const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 const CANCEL_ORDER = gql`
   ${cancelOrderMutation}
 `
@@ -132,6 +135,10 @@ if(!order)
   
 
   const subTotal = (total) - (tip) - tax - deliveryCharges
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
+  
   return (
     <View style={{ flex: 1 }}>
       <ScrollView

@@ -36,6 +36,9 @@ import {
 } from '../../utils/customFunctions'
 import { escapeRegExp } from '../../utils/regex'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 const RESTAURANTS = gql`
   ${restaurantListPreview}
 `
@@ -157,6 +160,9 @@ const SearchScreen = () => {
   }
 
   const uniqueTags = getUniqueTags(restaurants)
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView/>
 
   const emptyView = () => {
     return (

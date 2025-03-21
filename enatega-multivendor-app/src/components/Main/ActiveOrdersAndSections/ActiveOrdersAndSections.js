@@ -18,7 +18,7 @@ function ActiveOrdersAndSections(props) {
 
   return (
     <View
-      style={[styles().menuPageHeading,{backgroundColor:currentTheme.themeBackground}]}
+      style={styles(currentTheme).menuPageHeading}
     >
       <TextDefault
         numberOfLines={1}
