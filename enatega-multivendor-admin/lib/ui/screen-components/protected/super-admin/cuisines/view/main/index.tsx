@@ -78,7 +78,7 @@ export default function CuisinesMain({
         selectedActions.length === 0 || selectedActions.length === 2
           ? null // No filter when none or both are selected
           : selectedActions,
-      matchMode: FilterMatchMode.IN, // Use "IN" to filter based on multiple values
+      matchMode: FilterMatchMode.CONTAINS, // Use "IN" to filter based on multiple values
     },
   };
 
