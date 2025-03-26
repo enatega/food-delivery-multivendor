@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import { textStyles } from '../../../utils/textStyles'
@@ -9,22 +9,20 @@ const styles = (props = null) =>
       flex: 1,
     },
     mainContainer: {
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
+      backgroundColor:  props != null ? props.cardBackground : '#181818',
       width: '100%',
       position: 'absolute',
       top: 0,
       left: 0,
-      right: 0,
-      overflow: 'auto'
+      right: 0
     },
 
     touchArea: {
-      backgroundColor: props != null ? props?.themeBackground : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       justifyContent: 'center',
       alignItems: 'center',
-      maxWidth: 38,
-      maxHeight: 30,
-      padding: 4,
+      width: scale(30),
+      height: scale(30),
     },
     favouriteOverlay: {
       position: 'absolute',
@@ -36,9 +34,9 @@ const styles = (props = null) =>
       alignItems: 'center',
       zIndex: 1,
       borderRadius: scale(16),
-      backgroundColor: props != null ? props?.menuBar : 'white',
+      backgroundColor: props != null ? props.menuBar : 'white',
       borderWidth: 1,
-      borderColor: props != null ? props?.newBorderColor : '#F3F4F6'
+      borderColor: props != null ? props.newBorderColor : '#F3F4F6'
     },
     fixedViewNavigation: {
       width: '100%',
@@ -46,7 +44,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      zIndex: 9999,
+      zIndex: 1,
       ...alignment.PLmedium,
       ...alignment.PRmedium,
     },
@@ -55,7 +53,6 @@ const styles = (props = null) =>
       justifyContent: 'flex-end',
       alignItems: 'center',
       gap: 12,
-      marginTop: 12
     },
     restaurantDetails: {
       top: -scale(85),
@@ -64,7 +61,7 @@ const styles = (props = null) =>
       height: scale(250),
       width: '100%',
       position: 'relative',
-      ...alignment.MBlarge,
+      ...alignment.MBlarge
     },
     mainDetailsContainer: {
       position: 'absolute',
@@ -77,7 +74,7 @@ const styles = (props = null) =>
       alignItems: props?.isRTL ? 'flex-end' : 'flex-start'
     },
     subDetailsContainer: {
-      backgroundColor: props != null ? props?.themeBackground : 'white',
+      backgroundColor: props != null ? props.themeBackground : 'white',
       width: '45%',
       alignItems: 'center',
       borderRadius: scale(50),
@@ -90,7 +87,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
     },
     titleContainer: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row', 
       alignItems: 'center',
       gap: scale(10),
       width: '70%',
@@ -110,38 +107,9 @@ const styles = (props = null) =>
       marginBottom: 10,
       width: '100%'
     },
-    navbarTextContainer: {
-      zIndex: 3,
-      width: 'auto',
-      marginTop: -1
-    },
-    navbarTextContainerSubCtg: {
-      zIndex: 3,
-      width: 'auto',
-      marginTop: -1,
-    },
-    flatListStyle: {
-      height: 20,
-      width: '100%',
-      color: props != null ? props?.themeText : 'white',
-      backgroundColor: props != null ? props?.themeBackground : 'white',
-      zIndex: 999,
-      borderBottomColor: 'lightgray',
-      borderBottomWidth: 0.2,
-    },
-    SubCategoryflatListStyle: {
-      height: 20,
-      width: '100%',
-      backgroundColor: props != null ? props?.themeBackground : 'white',
-      color: props != null ? props?.themeText : 'white',
-      zIndex: 999,
-      marginTop: 0,
-      borderBottomColor: 'gray',
-      borderBottomWidth: 1,
-    },
     restaurantImg: {
       width: scale(60),
-      height: scale(50),
+      height: scale(60),
       borderRadius: 12
     },
     restaurantAbout: {
@@ -159,7 +127,7 @@ const styles = (props = null) =>
       alignSelf: 'center'
     },
     deliveryBox: {
-      color: props != null ? props?.fontWhite : 'white',
+      color: props != null ? props.fontWhite : 'white',
       borderRadius: scale(5),
       ...alignment.PxSmall
     },
@@ -171,7 +139,7 @@ const styles = (props = null) =>
       ...alignment.PRmedium,
     },
     seeReviewsBtn: {
-      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
       borderRadius: 4,
       paddingTop: 8,
       paddingBottom: 8,
@@ -179,7 +147,12 @@ const styles = (props = null) =>
       paddingRight: 16,
       marginHorizontal: 15
     },
-
+    flatListStyle: {
+      height: '100%',
+      width: '100%',
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      zIndex: 2
+    },
     headerContainer: {
       height: '100%',
       width: '100%',
@@ -190,46 +163,22 @@ const styles = (props = null) =>
       ...alignment.PRlarge
     },
     activeHeader: {
-      backgroundColor: props != null ? '#cdf7cd' : '#cdf7cd',
+      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
       borderRadius: scale(50),
-      height: 30,
-      marginLeft: 10,
-      marginTop: 10,
-    },
-    nonActiveHeader: {
-      borderWidth: 1,
-      marginTop: 10,
-      marginLeft: 10,
-      height: 30,
-      borderColor: 'gray',
-      borderRadius: scale(50),
-    },
-    activeHeaderCtg: {
-      // backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
-      marginLeft: 10,
-      borderColor: 'green',
-      borderWidth: 3,
-      borderColor: 'green',
-      borderRadius: scale(50),
-      height: 30,
-      marginTop: 10
     },
     heading: {
       fontWeight: 'bold'
     },
     overlayContainer: {
       position: 'absolute',
-      top: Platform.OS === 'ios' ? 7 : 0,
+      top: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      color: props != null ? props?.newFontcolor : 'red',
-      marginTop: -25
     },
     headerTitle: {
       ...textStyles.H5,
       ...textStyles.Bolder,
-      color: props != null ? props?.newFontcolor : 'black',
+      color: props != null ? props.newFontcolor : 'black',
       flex: 1,
       textAlign: 'center'
     },
@@ -237,7 +186,7 @@ const styles = (props = null) =>
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     }
   })
 export default styles
