@@ -15,6 +15,9 @@ import ReviewCard from '../../components/Review/ReviewCard'
 import { GET_REVIEWS_BY_RESTAURANT } from '../../apollo/queries'
 import { useQuery, gql } from '@apollo/client'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 import {
   calculateDaysAgo,
   groupAndCount,
@@ -34,6 +37,7 @@ const Reviews = ({ navigation, route }) => {
   const {
     loading,
     error,
+    refetch,
     data: reviewsdata
   } = useQuery(Review, {
     variables: { restaurant: restaurantId }
@@ -142,6 +146,8 @@ const Reviews = ({ navigation, route }) => {
   // Calculate percentages once before rendering
   const percentages = calculatePercentages(reviewGroups, total)
 
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[refetch]}/>
   return (
     <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
       <ScrollView style={[styles.container]}>

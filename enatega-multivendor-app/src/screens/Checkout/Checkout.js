@@ -57,6 +57,9 @@ import { isOpen } from '../../utils/customFunctions'
 import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
 import { useCallback } from "react";
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 // Constants
 const PLACEORDER = gql`
   ${placeOrder}
@@ -352,6 +355,8 @@ function Checkout(props) {
     }
   }, [data])
 
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView refetchFunctions={[]} />
   const showAvailablityMessage = () => {
     Alert.alert(
       '',
@@ -800,6 +805,10 @@ function Checkout(props) {
     loadingOrder
   )
     return loadginScreen()
+
+
+
+
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>

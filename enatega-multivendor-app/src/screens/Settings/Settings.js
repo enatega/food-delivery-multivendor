@@ -40,6 +40,8 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import i18next from '../../../i18next'
 import { useTranslation } from 'react-i18next'
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -280,6 +282,9 @@ function Settings(props) {
     return (
       <Spinner backColor={currentTheme.CustomLoadingBG} spinnerColor={currentTheme.main} />
     )
+
+    const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+    if (!connect) return <ErrorView refetchFunctions={[]} />
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}

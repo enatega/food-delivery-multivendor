@@ -22,6 +22,9 @@ import { scale } from '../../utils/scaling'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 import { useHeaderHeight } from '@react-navigation/elements'
 
+import useNetworkStatus from '../../utils/useNetworkStatus'
+import ErrorView from '../../components/ErrorView/ErrorView'
+
 function Login(props) {
   const {
     setEmail,
@@ -52,6 +55,9 @@ function Login(props) {
       })
     )
   }, [props?.navigation])
+
+  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  if (!connect) return <ErrorView />
 
   return (
     <SafeAreaView

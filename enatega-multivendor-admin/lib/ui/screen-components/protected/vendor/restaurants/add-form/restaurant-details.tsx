@@ -32,7 +32,12 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Constants and Utils
-import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import {
+  MAX_LANSDCAPE_FILE_SIZE,
+  MAX_SQUARE_FILE_SIZE,
+  RestaurantErrors,
+  SHOP_TYPE,
+} from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import { toTextCase } from '@/lib/utils/methods';
 
@@ -51,12 +56,14 @@ import { VendorLayoutRestaurantContext } from '@/lib/context/vendor/restaurant.c
 // Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { useTranslations } from 'next-intl';
+import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
 const initialValues: IRestaurantForm = {
   name: '',
   username: '',
   password: '',
   confirmPassword: '',
+  phoneNumber: '',
   address: '',
   deliveryTime: 1,
   minOrder: 1,
@@ -142,6 +149,7 @@ export default function RestaurantDetails({
           owner: vendorId,
           restaurant: {
             name: data.name,
+            phone: data.phoneNumber,
             address: data.address,
             image: data.image,
             logo: data.logo,
@@ -312,6 +320,35 @@ export default function RestaurantDetails({
                             borderColor: onErrorMessageMatcher(
                               'confirmPassword',
                               errors?.confirmPassword,
+                              RestaurantErrors
+                            )
+                              ? 'red'
+                              : '',
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                          {t('Phone')}
+                        </label>
+                        <CustomPhoneTextField
+                          mask="999-999-9999"
+                          name="phoneNumber"
+                          showLabel={true}
+                          // placeholder="Phone Number"
+                          onChange={(e) => {
+                            // console.log("phone number format ==> ", e, code);
+                            setFieldValue('phoneNumber', e);
+                            // setCountryCode(code);
+                          }}
+                          value={values.phoneNumber}
+                          // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
+                          type="text"
+                          className="rounded-[6px] border-[#D1D5DB]"
+                          style={{
+                            borderColor: onErrorMessageMatcher(
+                              'phoneNumber',
+                              errors?.phoneNumber,
                               RestaurantErrors
                             )
                               ? 'red'

@@ -5,14 +5,16 @@ const constraints = {
     presence: true,
     length: {
       minimum: 3,
-      maximum: 20
+      maximum: 20,
+      tooShort: 'must be at least %{count} characters long.'
     }
   },
   password: {
     presence: true,
     length: {
       minimum: 3,
-      maximum: 20
+      maximum: 20,
+      tooShort: 'must be at least %{count} characters long.'
     }
   }
 }

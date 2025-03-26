@@ -127,9 +127,11 @@ export const theme = {
     subText: '#475569',
     customBorder: '#E5E7EB',
     radiusBorder: '#fe0000',
-    radiusFill: 'rgba(0, 255, 0, 0.2)'
+    radiusFill: 'rgba(0, 255, 0, 0.2)',
+    toggler:"#fff"
   },
   Dark: {
+    toggler:"#000",
     statusBgColor:'#E4FFD9',
     placeholderColor:'#fff',
     placeholderColorMsg:'#fff',
