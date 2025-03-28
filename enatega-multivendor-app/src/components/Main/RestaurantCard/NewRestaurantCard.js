@@ -3,15 +3,11 @@ import React, { useContext } from 'react'
 import { TouchableOpacity, View, Image, Text, Alert } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
-import {
-  AntDesign,
-  FontAwesome5
-} from '@expo/vector-icons'
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
@@ -50,27 +46,23 @@ function NewRestaurantCard(props) {
     onCompleted,
     refetchQueries: [PROFILE, FAVOURITERESTAURANTS]
   })
-  // const isRestaurantOpen = props?.isOpen
+  const isRestaurantOpen = props?.isOpen
   const isAvailable = props?.isAvailable
+  const shopType = props?.shopType
 
-  const isRestaurantClosed = !isAvailable || !props?.isOpen;
-// console.log("isAvailable--->>",isAvailable)
+  const isRestaurantClosed = !isRestaurantOpen || !isAvailable
+
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
   }
 
-  const handleAddToFavorites = (e) => {
-     // Prevent the ripple/card click event
-    e.preventDefault();
-    e.stopPropagation();
+  const handleAddToFavorites = () => {
     if (!loadingMutation && profile) {
       mutate({ variables: { id: props?._id } })
     } else if (!profile) {
       FlashMessage({ message: t('loginRequired') })
       navigation.navigate('Profile')
     }
-     // Return false to ensure the event doesn't bubble up
-     return false;
   }
 
   const handleRestaurantClick = () => {
@@ -86,31 +78,35 @@ function NewRestaurantCard(props) {
           },
           {
             text: t('seeMenu'),
-            onPress: () => navigation.navigate('Restaurant', { ...props })
+            onPress: () => {
+              if (props.shopType === 'grocery') {
+                navigation.navigate('NewRestaurantDetailDesign', { ...props })
+              } else {
+                navigation.navigate('Restaurant', { ...props })
+              }
+            }
           }
         ],
         { cancelable: true }
       )
     } else {
-      navigation.navigate('Restaurant', { ...props })
+      if (props.shopType === 'grocery') {
+        navigation.navigate('NewRestaurantDetailDesign', { ...props })
+      } else {
+        navigation.navigate('Restaurant', { ...props })
+      }
     }
     if (props?.isSearch) {
       storeSearch(props?.isSearch)
     }
   }
-
   return (
-    <View style={[styles(currentTheme).offerContainer, props?.fullWidth && { width: '100%' },{
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5, // For Android
-    }]}>
-    {/* Main Card with Ripple Effect */}
     <Ripple
       rippleColor={'#F5F5F5'}
-      style={{ width: '100%', height: '100%' }}
+      style={[
+        styles(currentTheme).offerContainer,
+        props?.fullWidth && { width: '100%' }
+      ]}
       activeOpacity={1}
       onPress={handleRestaurantClick}
     >
@@ -159,7 +155,7 @@ function NewRestaurantCard(props) {
             <View style={styles(currentTheme).deliveryTime}>
               <AntDesign
                 name='clockcircleo'
-                size={15}
+                size={14}
                 color={currentTheme.editProfileButton}
               />
               <TextDefault
@@ -199,40 +195,35 @@ function NewRestaurantCard(props) {
           </View>
         </View>
       </View>
+      <View
+        style={[
+          styles().overlayContainer,
+          props?.fullWidth && { width: '100%' }
+        ]}
+      >
+        <TouchableOpacity
+          activeOpacity={0.7}
+          disabled={loadingMutation}
+          onPress={handleAddToFavorites}
+        >
+          <View style={styles(currentTheme).favouriteOverlay}>
+            {loadingMutation ? (
+              <Spinner
+                size={'small'}
+                backColor={'transparent'}
+                spinnerColor={currentTheme.iconColorDark}
+              />
+            ) : (
+              <AntDesign
+                name={heart ? 'heart' : 'hearto'}
+                size={scale(15)}
+                color={currentTheme.iconColor}
+              />
+            )}
+          </View>
+        </TouchableOpacity>
+      </View>
     </Ripple>
-    
-    {/* Place it outside Ripple otherwise fav icon will not work on pressing */}
-     <View
-     style={[
-       styles().overlayContainer,
-       props?.fullWidth && { width: '100%' },
-      ]}
-      // pointerEvents="box-none"--> This would prevent the underlying Ripple component from receiving touch events
-      pointerEvents="box-none"
-   >
-     <TouchableOpacity
-       activeOpacity={0.7}
-       disabled={loadingMutation}
-       onPress={handleAddToFavorites}
-     >
-       <View style={styles(currentTheme).favouriteOverlay}>
-         {loadingMutation ? (
-           <Spinner
-             size={'small'}
-             backColor={'transparent'}
-             spinnerColor={currentTheme.iconColorDark}
-           />
-         ) : (
-           <AntDesign
-             name={heart ? 'heart' : 'hearto'}
-             size={scale(15)}
-             color={currentTheme.iconColor}
-           />
-         )}
-       </View>
-     </TouchableOpacity>
-   </View>
-   </View>
   )
 }
 

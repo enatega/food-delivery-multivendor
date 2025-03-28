@@ -17,7 +17,6 @@ export interface ICategoryAddFormComponentProps extends IGlobalComponentProps {
   onHide: () => void;
   category: ICategory | null;
   subCategories?: ISubCategory[];
-  refetchCategories?: () => void;
 }
 
 export interface ICategoryMainComponentsProps extends IGlobalComponentProps {
@@ -44,6 +43,7 @@ export interface ISubCategoriesAddFormProps {
 export interface ICategory {
   _id: string;
   title: string;
+  image?: string | null;
 }
 
 export interface ICategoryByRestaurantResponse {

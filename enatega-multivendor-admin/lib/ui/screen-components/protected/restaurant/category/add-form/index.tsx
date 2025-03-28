@@ -55,7 +55,6 @@ export default function CategoryAddForm({
   category,
   position = 'right',
   isAddCategoryVisible,
-  refetchCategories
 }: ICategoryAddFormComponentProps) {
   // Hooks
   const t = useTranslations();

@@ -970,6 +970,36 @@ export const orderFragment = `fragment NewOrder on Order {
   assignedAt
 }`
 
+export const fetchCategoryDetailsByStore = `query FetchCategoryDetailsByStoreId($storeId: String!)  {
+  fetchCategoryDetailsByStoreId(storeId: $storeId) {
+      id
+      category_name
+      url
+      food_id
+  }
+}`
+
+export const popularFoodItems = `query popularFoodItems($restaurantId: String!) {
+  popularFoodItems(restaurantId: $restaurantId) {
+    _id
+    title
+    description 
+    image
+    subCategory
+    isActive
+    createdAt
+    isOutOfStock
+    variations {
+    _id
+    title 
+    price 
+    discounted
+    addons
+    isOutOfStock
+    }
+  }
+}`
+
 export const chat = `query Chat($order: ID!) {
   chat(order: $order) {
     id

@@ -69,7 +69,7 @@ function About(props) {
   }, [])
   
   const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
-  if (!isConnected) return <ErrorView refetchFunctions={[]} />
+  if (!connect) return <ErrorView refetchFunctions={[]} />
  
 
   const inset = useSafeAreaInsets()

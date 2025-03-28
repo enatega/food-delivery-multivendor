@@ -90,6 +90,7 @@
     "react-native": "0.73.6",
     "react-native-button": "^3.0.1",
     "react-native-country-picker-modal": "^2.0.0",
+    "react-native-exit-app": "^2.0.0",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-get-random-values": "^1.11.0",

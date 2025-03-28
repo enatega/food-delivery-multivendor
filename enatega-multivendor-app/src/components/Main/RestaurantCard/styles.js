@@ -10,7 +10,7 @@ const styles = (props = null) =>
       width: scale(270),
       height: height * 0.376,
       ...alignment.MRsmall,
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
+      backgroundColor: props != null ? props?.cardBackground : '#181818'
     },
     overlayContainer: {
       position: 'absolute',
