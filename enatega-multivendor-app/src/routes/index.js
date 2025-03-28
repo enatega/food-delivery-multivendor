@@ -67,7 +67,9 @@ import EditName from '../components/Account/EditName/EditName'
 import SearchScreen from '../screens/Search/SearchScreen'
 import UserContext from '../context/User'
 import { Easing, Platform } from 'react-native'
+import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
 // import HypCheckout from '../screens/Hyp/HypCheckout'
+import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
 import {
   SLIDE_RIGHT_WITH_CURVE_ANIM,
   SLIDE_UP_RIGHT_ANIMATION,
@@ -109,6 +111,22 @@ function MainNavigator() {
         name='Menu'
         component={Menu}
         options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='NewRestaurantDetailDesign'
+        component={NewRestaurantDetailDesign}
+        options={{
+          header: () => null,
+          ...AIMATE_FROM_CENTER
+        }}
+      />
+      <NavigationStack.Screen
+        name='CategoryPage'
+        component={CategoryPage}
+        options={{
+          header: () => null,
+          ...SLIDE_RIGHT_WITH_CURVE_ANIM
+        }}
       />
       <NavigationStack.Screen
         name='Restaurant'
