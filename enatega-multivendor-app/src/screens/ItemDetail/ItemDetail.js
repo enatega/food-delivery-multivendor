@@ -1,52 +1,50 @@
+import { MaterialIcons } from '@expo/vector-icons'
+import { HeaderBackButton } from '@react-navigation/elements'
 import {
-  View,
   Alert,
-  StatusBar,
-  Platform,
   Dimensions,
+  Platform,
+  StatusBar,
+  View,
 } from 'react-native'
-import styles from './styles'
-import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
-import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
 import CartComponent from '../../components/CustomizeComponents/CartComponent/CartComponent'
 import HeadingComponent from '../../components/CustomizeComponents/HeadingComponent/HeadingComponent'
 import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
+import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
+import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
+import ErrorView from '../../components/ErrorView/ErrorView'
 import FrequentlyBoughtTogether from '../../components/ItemDetail/Section'
-import Options from './Options'
-import { theme } from '../../utils/themeColors'
-import analytics from '../../utils/analytics'
-import { HeaderBackButton } from '@react-navigation/elements'
-import { MaterialIcons } from '@expo/vector-icons'
+import UserContext from '../../context/User'
 import navigationService from '../../routes/navigationService'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import UserContext from '../../context/User'
+import analytics from '../../utils/analytics'
+import { theme } from '../../utils/themeColors'
 import useNetworkStatus from '../../utils/useNetworkStatus'
-import ErrorView from '../../components/ErrorView/ErrorView'
-
+import Options from './Options'
+import styles from './styles'
 // Hooks
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, {
-  useState,
+  useCallback,
   useContext,
-  useLayoutEffect,
   useEffect,
+  useLayoutEffect,
   useRef,
-  useCallback
+  useState
 } from 'react'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Text } from 'react-native'
+// import { TextField } from 'react-native-material-textfield'
 import Animated, {
   Extrapolation,
   interpolate,
+  useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useSharedValue,
-  useAnimatedRef
+  useSharedValue
 } from 'react-native-reanimated'
-import { IconButton } from 'react-native-paper'
-import { Text } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { scale } from '../../utils/scaling'
-import { TextField } from 'react-native-material-textfield'
 
 const { height } = Dimensions.get('window')
 const TOP_BAR_HEIGHT = height * 0.08
@@ -63,7 +61,6 @@ function ItemDetail(props) {
 
   // States
   const [listZindex, setListZindex] = useState(0);
-  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState({
     ...food?.variations[0],
     addons: food?.variations[0].addons?.map((fa) => {
@@ -494,7 +491,7 @@ function ItemDetail(props) {
                 subTitle={t('anySpecificPreferences')}
                 status={t('optional')}
               />
-              <TextField
+              {/* <TextField
                 style={styles(currentTheme).input}
                 placeholder={t('noMayo')}
                 textAlignVertical='center'
@@ -506,7 +503,7 @@ function ItemDetail(props) {
                 errorColor={currentTheme.textErrorColor}
                 tintColor={currentTheme.themeBackground}
                 placeholderTextColor={currentTheme.fontGrayNew}
-              />
+              /> */}
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether

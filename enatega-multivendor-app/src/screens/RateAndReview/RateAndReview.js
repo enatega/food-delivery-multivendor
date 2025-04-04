@@ -1,33 +1,33 @@
-import React, { useState, useContext, useLayoutEffect, useEffect } from 'react'
+import gql from 'graphql-tag'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import {
-  View,
+  KeyboardAvoidingView,
+  ScrollView,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  ScrollView
+  View
 } from 'react-native'
-import gql from 'graphql-tag'
-import Spinner from '../../components/Spinner/Spinner'
-import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
-import styles from './styles'
-import { reviewOrder } from '../../apollo/mutations'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import StarRating from 'react-native-star-rating'
+import { reviewOrder } from '../../apollo/mutations'
+import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageHeader'
+import Spinner from '../../components/Spinner/Spinner'
+import styles from './styles'
+// import StarRating from 'react-native-star-rating'
 import { useMutation } from '@apollo/client'
+import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import TextDefault from '../../components/Text/TextDefault/TextDefault'
 
-import { scale } from '../../utils/scaling'
-import analytics from '../../utils/analytics'
-import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
-import navigationService from '../../routes/navigationService'
+import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
+import navigationService from '../../routes/navigationService'
+import analytics from '../../utils/analytics'
+import { scale } from '../../utils/scaling'
 
-import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import useNetworkStatus from '../../utils/useNetworkStatus'
 
 // constants
 const REVIEWORDER = gql`
@@ -173,14 +173,14 @@ if (!connect) return <ErrorView refetchFunctions={[]} />
           </View>
           <View style={styles().ratingContainer}>
             <View style={styles().ratingSubContainer}>
-              <StarRating
+              {/* <StarRating
                 emptyStarColor={currentTheme.startColor}
                 fullStarColor={currentTheme.startOutlineColor}
                 disabled={false}
                 maxStars={5}
                 rating={rating}
                 selectedStar={onFinishRating}
-              />
+              /> */}
             </View>
           </View>
           <View style={styles().line}></View>

@@ -1,43 +1,43 @@
 import React, {
-  useState,
-  useRef,
-  useEffect,
   useContext,
-  useLayoutEffect
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
 } from 'react'
 import {
-  View,
-  TouchableOpacity,
-  Platform,
+  Image,
   KeyboardAvoidingView,
+  Platform,
   ScrollView,
-  Image
+  TouchableOpacity,
+  View
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
-import { OutlinedTextField } from 'react-native-material-textfield'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+// import { OutlinedTextField } from 'react-native-material-textfield'
+import { useMutation } from '@apollo/client'
+import { Entypo, Foundation, MaterialIcons } from '@expo/vector-icons'
+import { HeaderBackButton } from '@react-navigation/elements'
 import * as Location from 'expo-location'
 import gql from 'graphql-tag'
-import { scale } from '../../utils/scaling'
-import { createAddress } from '../../apollo/mutations'
-import { useMutation } from '@apollo/client'
-import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
-import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import { alignment } from '../../utils/alignment'
-import { LocationContext } from '../../context/Location'
-import { mapStyle } from '../../utils/mapStyle'
-import SearchModal from '../../components/Address/SearchModal'
-import analytics from '../../utils/analytics'
-import { MaterialIcons, Entypo, Foundation } from '@expo/vector-icons'
-import { HeaderBackButton } from '@react-navigation/elements'
-import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import { createAddress } from '../../apollo/mutations'
+import SearchModal from '../../components/Address/SearchModal'
+import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import { LocationContext } from '../../context/Location'
+import navigationService from '../../routes/navigationService'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import { alignment } from '../../utils/alignment'
+import analytics from '../../utils/analytics'
+import { mapStyle } from '../../utils/mapStyle'
+import { scale } from '../../utils/scaling'
+import { theme } from '../../utils/themeColors'
 
-import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import useNetworkStatus from '../../utils/useNetworkStatus'
 
 const CREATE_ADDRESS = gql`
   ${createAddress}
@@ -260,7 +260,7 @@ function NewAddress(props) {
                 <View style={styles(currentTheme).addressContainer}>
                   <View style={styles(currentTheme).geoLocation}>
                     <View style={{ width: '100%' }}>
-                      <OutlinedTextField
+                      {/* <OutlinedTextField
                         placeholder={t('deliveryAddress')}
                         error={deliveryAddressError}
                         ref={addressRef}
@@ -298,11 +298,11 @@ function NewAddress(props) {
                               : null
                           )
                         }}
-                      />
+                      /> */}
                     </View>
                   </View>
                   <View style={{ ...alignment.MTlarge }}></View>
-                  <OutlinedTextField
+                  {/* <OutlinedTextField
                     placeholder={t('aptFloor')}
                     error={deliveryDetailsError}
                     label={t('deliveryDetails')}
@@ -333,7 +333,7 @@ function NewAddress(props) {
                           : null
                       )
                     }}
-                  />
+                  /> */}
                 </View>
 
                 <View style={styles().labelButtonContainer}>
