@@ -1,0 +1,188 @@
+export const restaurantPreviewFragment = `#graphql
+
+  fragment RestaurantPreviewFields on RestaurantPreview {
+    _id
+    orderId
+    orderPrefix
+    name
+    image
+    address
+    username
+    password
+    deliveryTime
+    minimumOrder
+    sections
+    rating
+    isActive
+    isAvailable
+    slug
+    stripeDetailsSubmitted
+    commissionRate
+    tax
+    notificationToken
+    enableNotification
+    shopType
+    cuisines
+    keywords
+    tags
+    reviewCount
+    reviewAverage
+    location {
+      coordinates
+    }
+    openingTimes {
+      day
+      times {
+        startTime
+        endTime
+      }
+    }
+  }
+`;
+export const restaurantList = `#graphql
+query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
+  nearByRestaurants(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+    offers{
+      _id
+      name
+      tag
+      restaurants
+    }
+    sections{
+      _id
+      name
+      restaurants
+    }
+    restaurants{
+      _id
+      orderId
+      orderPrefix
+      name
+      image
+      address
+      location{coordinates}
+      deliveryTime
+      minimumOrder
+      tax
+      shopType
+      distanceWithCurrentLocation @client
+      freeDelivery @client
+      acceptVouchers @client
+      cuisines
+      reviewData{
+          total
+          ratings
+          reviews{
+            _id
+            order{
+              _id
+              user{
+                _id
+                name
+                email
+              }
+            }
+            rating
+            description
+            createdAt
+          }
+      }
+      categories{
+        _id
+        title
+        foods{
+          _id
+          title
+          image
+          description
+          subCategory
+          variations{
+            _id
+            title
+            price
+            discounted
+            addons
+          }
+        }
+      }
+      options{
+        _id
+        title
+        description
+        price
+      }
+      addons{
+        _id
+        options
+        title
+        description
+        quantityMinimum
+        quantityMaximum
+      }
+      rating
+      isAvailable
+      openingTimes{
+      day
+      times{
+        startTime
+        endTime
+      }
+    }
+  }
+}
+}`;
+export const restaurantListPreview = `#graphql
+query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
+  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+    offers{
+      _id
+      name
+      tag
+      restaurants
+    }
+    sections{
+      _id
+      name
+      restaurants
+    }
+    restaurants{
+      _id
+      orderId
+      orderPrefix
+      name
+      image
+      address
+      username
+      password
+      deliveryTime
+      minimumOrder
+      sections
+      rating
+      isActive
+      isAvailable
+      slug
+      stripeDetailsSubmitted
+      commissionRate
+      tax
+      notificationToken
+      enableNotification
+      shopType
+      cuisines
+      keywords
+      tags
+      reviewCount
+      reviewAverage
+      distanceWithCurrentLocation @client
+      freeDelivery @client
+      acceptVouchers @client
+      location{coordinates}
+      openingTimes{
+        day
+        times {
+          startTime
+          endTime
+        }
+      }
+    }
+}
+}`;
