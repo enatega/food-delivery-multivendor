@@ -1,0 +1,15 @@
+diff --git a/node_modules/@twotalltotems/react-native-otp-input/dist/index.js b/node_modules/@twotalltotems/react-native-otp-input/dist/index.js
+index 71580b8..c9a05de 100644
+--- a/node_modules/@twotalltotems/react-native-otp-input/dist/index.js
++++ b/node_modules/@twotalltotems/react-native-otp-input/dist/index.js
+@@ -10,8 +10,8 @@ export default class OTPInputView extends Component {
+         this.fields = [];
+         this.copyCodeFromClipBoardOnAndroid = () => {
+             if (Platform.OS === "android") {
+-                this.checkPinCodeFromClipBoard();
+-                this.timer = setInterval(this.checkPinCodeFromClipBoard, 400);
++                // this.checkPinCodeFromClipBoard();
++                // this.timer = setInterval(this.checkPinCodeFromClipBoard, 400);
+             }
+         };
+         this.bringUpKeyBoardIfNeeded = () => {
