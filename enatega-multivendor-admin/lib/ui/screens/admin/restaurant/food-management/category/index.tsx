@@ -57,7 +57,6 @@ export default function CategoryScreen() {
           setSubCategories([]);
         }}
         isAddCategoryVisible={isAddCategoryVisible}
-        
       />
     </div>
   );

@@ -18,6 +18,7 @@ import { CategorySchema } from '@/lib/utils/schema';
 import CustomButton from '@/lib/ui/useable-components/button';
 import CustomTextField from '@/lib/ui/useable-components/input-field';
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
+import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Utilities and Constants
 import { CategoryErrors } from '@/lib/utils/constants';
@@ -77,6 +78,7 @@ export default function CategoryAddForm({
       subCategories?.subCategoriesByParentId.length && !subCategoriesLoading
         ? subCategories?.subCategoriesByParentId
         : [{ _id: '', title: '', parentCategoryId: '' }],
+    image: '',
     ...category,
   };
 
@@ -86,6 +88,8 @@ export default function CategoryAddForm({
   // Context
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
+  const shopType = restaurantLayoutContextData?.shopType || '';
+  console.log("🚀 ~ shopType:", shopType)
 
   // Mutations
   const [deleteSubCategory, { loading: deleteSubCategoryLoading }] =
@@ -136,10 +140,6 @@ export default function CategoryAddForm({
           message: `${t('Category has been')} ${category ? t('edited') : t('added')} ${t('successfully')}.`,
           duration: 3000,
         });
-         // Safely call refetchCategories if it exists
-      if (typeof refetchCategories === 'function') {
-        refetchCategories();
-      }
         onHide();
       },
       onError: (error) => {
@@ -173,6 +173,7 @@ export default function CategoryAddForm({
             _id: category ? category?._id : '',
             title: values.title,
             subCategories: transformedSubCategories,
+            image: shopType == 'grocery' ? (values?.image ?? '') : '',
           },
         },
       });
@@ -227,7 +228,7 @@ export default function CategoryAddForm({
                               type="text"
                               name="title"
                               placeholder={t('Title')}
-                              maxLength={15}
+                              maxLength={30}
                               value={values.title}
                               onChange={handleChange}
                               showLabel={true}
@@ -242,92 +243,114 @@ export default function CategoryAddForm({
                               }}
                             />
                           </div>
+
+                          {shopType == 'grocery' && (
+                            <div>
+                              <CustomUploadImageComponent
+                                name="image"
+                                title={t('Upload Image')}
+                                onSetImageUrl={setFieldValue}
+                                existingImageUrl={values.image}
+                                showExistingImage={category ? true : false}
+                                style={{
+                                  borderColor: onErrorMessageMatcher(
+                                    'image',
+                                    errors?.image as string,
+                                    CategoryErrors
+                                  )
+                                    ? 'red'
+                                    : '',
+                                }} maxFileSize={0} maxFileWidth={1980} maxFileHeight={1080} fileTypes={[]}                              />
+                            </div>
+                          )}
                           {/* Sub Categories  */}
-                          <FieldArray name="subCategories">
-                            {({ remove, push }) => (
-                              <div>
-                                {values?.subCategories?.map(
-                                  (value: ISubCategory, index) => {
-                                    if (values._id) {
-                                      setTimeout(
-                                        () =>
-                                          setFieldValue(
-                                            `subCategorites[${index}].parentCategoryId`,
-                                            values._id
-                                          ),
-                                        300
+                          {shopType == 'grocery' && (
+                            <FieldArray name="subCategories">
+                              {({ remove, push }) => (
+                                <div>
+                                  {values?.subCategories?.map(
+                                    (value: ISubCategory, index) => {
+                                      if (values._id) {
+                                        setTimeout(
+                                          () =>
+                                            setFieldValue(
+                                              `subCategorites[${index}].parentCategoryId`,
+                                              values._id
+                                            ),
+                                          300
+                                        );
+                                      }
+                                      return (
+                                        <div
+                                          key={index}
+                                          className=" rounded-lg shadow-sm"
+                                        >
+                                          <Fieldset
+                                            legend={`${t('Sub-Category')} #${index + 1} ${value.title ? `(${value.title})` : ''}`}
+                                            toggleable
+                                            className="my-1"
+                                          >
+                                            {/* Sub-Category Field and Remove Button */}
+                                            <div className="flex-col justify-center items-center">
+                                              <TextIconClickable
+                                                icon={
+                                                  deleteSubCategoryLoading
+                                                    ? 'spinner'
+                                                    : faTrash
+                                                }
+                                                iconStyles={{ color: 'red' }}
+                                                className={`text-red-500 hover:text-red-700 transition-colors justify-self-end ${deleteSubCategoryLoading ? 'animate-spin' : ''}`}
+                                                title=""
+                                                onClick={async () => {
+                                                  if (value._id) {
+                                                    remove(index);
+                                                    console.log(value._id);
+                                                    await deleteSubCategory({
+                                                      variables: {
+                                                        deleteSubCategoryId2:
+                                                          value._id,
+                                                      },
+                                                    });
+                                                  }
+                                                }}
+                                              />
+                                              <CustomTextField
+                                                name={`subCategories[${index}].title`}
+                                                value={value.title}
+                                                maxLength={15}
+                                                onChange={handleChange}
+                                                placeholder="Title"
+                                                showLabel={true}
+                                                type="text"
+                                              />
+                                            </div>
+                                          </Fieldset>
+                                          {/* Add More Button */}
+                                          {index ===
+                                            (values.subCategories.length - 1 &&
+                                              !category) && (
+                                            <div className="mt-4">
+                                              <TextIconClickable
+                                                icon={faAdd}
+                                                title={t('Add More')}
+                                                onClick={() =>
+                                                  push({
+                                                    title: '',
+                                                    parentCategoryId: '',
+                                                  })
+                                                }
+                                                className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black hover:border-black transition-all"
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
                                       );
                                     }
-                                    return (
-                                      <div
-                                        key={index}
-                                        className=" rounded-lg shadow-sm"
-                                      >
-                                        <Fieldset
-                                          legend={`${t('Sub-Category')} #${index + 1} ${value.title ? `(${value.title})` : ''}`}
-                                          toggleable
-                                          className="my-1"
-                                        >
-                                          {/* Sub-Category Field and Remove Button */}
-                                          <div className="flex-col justify-center items-center">
-                                            <TextIconClickable
-                                              icon={
-                                                deleteSubCategoryLoading
-                                                  ? 'spinner'
-                                                  : faTrash
-                                              }
-                                              iconStyles={{ color: 'red' }}
-                                              className={`text-red-500 hover:text-red-700 transition-colors justify-self-end ${deleteSubCategoryLoading ? 'animate-spin' : ''}`}
-                                              title=""
-                                              onClick={async () => {
-                                                if (value._id) {
-                                                  remove(index);
-                                                  console.log(value._id);
-                                                  await deleteSubCategory({
-                                                    variables: {
-                                                      deleteSubCategoryId2:
-                                                        value._id,
-                                                    },
-                                                  });
-                                                }
-                                              }}
-                                            />
-                                            <CustomTextField
-                                              name={`subCategories[${index}].title`}
-                                              value={value.title}
-                                              maxLength={15}
-                                              onChange={handleChange}
-                                              placeholder="Title"
-                                              showLabel={true}
-                                              type="text"
-                                            />
-                                          </div>
-                                        </Fieldset>
-                                        {/* Add More Button */}
-                                        {index ===
-                                          (values.subCategories.length - 1 &&
-                                            !category) && (
-                                          <div className="mt-4">
-                                            <TextIconClickable
-                                              icon={faAdd}
-                                              title={t('Add More')}
-                                              onClick={() =>
-                                                push({
-                                                  title: '',
-                                                  parentCategoryId: '',
-                                                })
-                                              }
-                                              className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black hover:border-black transition-all"
-                                            />
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  }
-                                )}
-                              </div>
-                            )}
-                          </FieldArray>
+                                  )}
+                                </div>
+                              )}
+                            </FieldArray>
+                          )}
 
                           <div className="mt-4 flex justify-end">
                             <CustomButton
