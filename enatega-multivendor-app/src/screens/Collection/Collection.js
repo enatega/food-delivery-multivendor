@@ -60,8 +60,9 @@ const Collection = ({ navigation, route }) => {
     )
   }, [navigation, currentTheme])
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
-   if (!connect) return <ErrorView refetchFunctions={[]} />
+  const { isConnected: connect, setIsConnected: setConnect } =
+    useNetworkStatus()
+  if (!connect) return <ErrorView refetchFunctions={[]} />
   return (
     <View style={styles(currentTheme).container}>
       <TextDefault bolder H2 isRTL>

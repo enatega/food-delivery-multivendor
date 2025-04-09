@@ -147,11 +147,12 @@ export default function App() {
 
   // For Sentry
   useEffect(() => {
-    if (SENTRY_DSN) {
+    // if (SENTRY_DSN) {
+    if (false) {
       Sentry.init({
         dsn: SENTRY_DSN,
         enableInExpoDevelopment: !isProduction ? true : false,
-        environment: !isProduction ? 'development' : 'production',
+        environment: isProduction ? 'production' : 'development',
         debug: !isProduction,
         tracesSampleRate: 1.0,
         enableTracing: true

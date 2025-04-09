@@ -1,10 +1,4 @@
-import {
-  View,
-  Alert,
-  StatusBar,
-  Platform,
-  Dimensions,
-} from 'react-native'
+import { View, Alert, StatusBar, Platform, Dimensions } from 'react-native'
 import styles from './styles'
 import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
 import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
@@ -50,20 +44,16 @@ import { TextField } from 'react-native-material-textfield'
 
 const { height } = Dimensions.get('window')
 const TOP_BAR_HEIGHT = height * 0.08
-const HEADER_MAX_HEIGHT = height * 0.40
+const HEADER_MAX_HEIGHT = height * 0.4
 const HEADER_MIN_HEIGHT = height * 0.05 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-function ItemDetail(props) {
-  // Analytics
-  const Analytics = analytics()
-  const { food, addons, options, restaurant } = props?.route?.params
-  const navigation = useNavigation()
-  const { t, i18n } = useTranslation()
 
+function ItemDetail(props) {
+  const { food, addons, options, restaurant } = props?.route?.params
 
   // States
-  const [listZindex, setListZindex] = useState(0);
-  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
+  const [listZindex, setListZindex] = useState(0)
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
   const [selectedVariation, setSelectedVariation] = useState({
     ...food?.variations[0],
     addons: food?.variations[0].addons?.map((fa) => {
@@ -77,9 +67,12 @@ function ItemDetail(props) {
       }
     })
   })
-
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')
+
+  const { t, i18n } = useTranslation()
+  const navigation = useNavigation()
+  const Analytics = analytics()
   const {
     restaurant: restaurantCart,
     setCartRestaurant,
@@ -88,26 +81,42 @@ function ItemDetail(props) {
     addCartItem
   } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const inset = useSafeAreaInsets()
-
+  const { isConnected: connect, setIsConnected: setConnect } =
+    useNetworkStatus()
   const scrollViewRef = useAnimatedRef()
   const addonRefs = useRef({})
+  const scrollY = useSharedValue(0)
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y
+    }
+  })
+  const animatedTitleStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      scrollY.value,
+      [SCROLL_RANGE - 10, SCROLL_RANGE],
+      [0, 1],
+      Extrapolation.CLAMP
+    )
+    return {
+      opacity,
+      transform: [
+        {
+          translateY: interpolate(
+            scrollY.value,
+            [0, SCROLL_RANGE],
+            [HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT, 0],
+            Extrapolation.CLAMP
+          )
+        }
+      ]
+    }
+  })
 
-  function scrollToError(addonId, totalAddons) {
-    // Use `setTimeout` to ensure the scroll happens after layout updates
-    setTimeout(() => {
-      if (addonRefs.current[addonId] && scrollViewRef.current && totalAddons > 0) {
-        addonRefs.current[addonId].measure(
-          (x, y, width, height, pageX, pageY) => {
-            scrollViewRef.current.scrollTo({
-              y: Math.max(0, pageY - HEADER_MAX_HEIGHT), // Adjust the offset if needed
-              animated: true
-            })
-          }
-        )
-      }
-    }, 300)
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
   }
 
   useFocusEffect(() => {
@@ -126,10 +135,10 @@ function ItemDetail(props) {
           restaurantID: restaurant,
           foodID: food?._id,
           foodName: food?.title,
-          foodRestaurantName: food?.restaurantName,
-        });
+          foodRestaurantName: food?.restaurantName
+        })
       } catch (error) {
-        console.error('Analytics tracking failed:', error);
+        console.error('Analytics tracking failed:', error)
       }
     }
     Track()
@@ -166,6 +175,26 @@ function ItemDetail(props) {
     })
   }, [navigation])
 
+  function scrollToError(addonId, totalAddons) {
+    // Use `setTimeout` to ensure the scroll happens after layout updates
+    setTimeout(() => {
+      if (
+        addonRefs.current[addonId] &&
+        scrollViewRef.current &&
+        totalAddons > 0
+      ) {
+        addonRefs.current[addonId].measure(
+          (x, y, width, height, pageX, pageY) => {
+            scrollViewRef.current.scrollTo({
+              y: Math.max(0, pageY - HEADER_MAX_HEIGHT), // Adjust the offset if needed
+              animated: true
+            })
+          }
+        )
+      }
+    }, 300)
+  }
+
   function validateButton() {
     if (!selectedVariation) return false
     const validatedAddons = []
@@ -185,7 +214,7 @@ function ItemDetail(props) {
   }
 
   async function onPressAddToCart(quantity) {
-    const isValidOrder = validateOrderItem();
+    const isValidOrder = validateOrderItem()
     if (isValidOrder) {
       Analytics.track(Analytics.events.ADD_TO_CART, {
         title: food?.title,
@@ -229,35 +258,35 @@ function ItemDetail(props) {
     const cartItem = clearFlag
       ? null
       : cart.find((cartItem) => {
-        if (
-          cartItem?._id === food?._id &&
-          cartItem?.variation?._id === selectedVariation?._id
-        ) {
-          if (cartItem?.addons?.length === addons?.length) {
-            if (addons?.length === 0) return true
-            const addonsResult = addons?.every((newAddon) => {
-              const cartAddon = cartItem.addons?.find(
-                (ad) => ad._id === newAddon._id
-              )
-
-              if (!cartAddon) return false
-              const optionsResult = newAddon?.options?.every((newOption) => {
-                const cartOption = cartAddon?.options?.find(
-                  (op) => op._id === newOption._id
+          if (
+            cartItem?._id === food?._id &&
+            cartItem?.variation?._id === selectedVariation?._id
+          ) {
+            if (cartItem?.addons?.length === addons?.length) {
+              if (addons?.length === 0) return true
+              const addonsResult = addons?.every((newAddon) => {
+                const cartAddon = cartItem.addons?.find(
+                  (ad) => ad._id === newAddon._id
                 )
 
-                if (!cartOption) return false
-                return true
+                if (!cartAddon) return false
+                const optionsResult = newAddon?.options?.every((newOption) => {
+                  const cartOption = cartAddon?.options?.find(
+                    (op) => op._id === newOption._id
+                  )
+
+                  if (!cartOption) return false
+                  return true
+                })
+
+                return optionsResult
               })
 
-              return optionsResult
-            })
-
-            return addonsResult
+              return addonsResult
+            }
           }
-        }
-        return false
-      })
+          return false
+        })
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -276,7 +305,7 @@ function ItemDetail(props) {
   }
 
   const onSelectVariation = (variation) => {
-    console.log("🚀 ~ onSelectVariation ~ variation:", variation)
+    console.log('🚀 ~ onSelectVariation ~ variation:', variation)
 
     if (variation?._id) {
       setSelectedVariation({
@@ -358,99 +387,61 @@ function ItemDetail(props) {
     return !hasError
   }
 
-  const scrollY = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
-    }
-  })
-  const animatedHeaderStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      scrollY.value,
-      [0, SCROLL_RANGE],
-      [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-      Extrapolation.CLAMP
-    )
-    return {
-      height,
-      opacity: 1
-    }
-  })
-
-  const animatedTitleStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      scrollY.value,
-      [SCROLL_RANGE - 10, SCROLL_RANGE],
-      [0, 1],
-      Extrapolation.CLAMP
-    )
-    return {
-      opacity,
-      transform: [
-        {
-          translateY: interpolate(
-            scrollY.value,
-            [0, SCROLL_RANGE],
-            [HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT, 0],
-            Extrapolation.CLAMP
-          )
-        }
-      ]
-    }
-  })
-  console.log({ scrollY })
-
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
   if (!connect) return <ErrorView />
   return (
     <>
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
-        {/* <Animated.View
-          style={[styles(currentTheme).headerContainer]}
-        > */}
-         
-          {/* <HeadingComponent title={food?.title} price={calculatePrice()} /> */}
-        {/* </Animated.View> */}
-
         <Animated.ScrollView
           ref={scrollViewRef}
           onScroll={scrollHandler}
           style={[styles(currentTheme).scrollViewStyle, { zIndex: listZindex }]}
           scrollEventThrottle={1}
           onScrollEndDrag={(e) => {
-            if (e?.nativeEvent?.contentOffset?.y >= 70) { 
+            if (e?.nativeEvent?.contentOffset?.y >= 70) {
               setListZindex(4)
               calculatePrice()
-            }
-            else {
+            } else {
               setListZindex(1)
               calculatePrice()
             }
           }}
           onMomentumScrollEnd={(e) => {
-            if (e?.nativeEvent?.contentOffset?.y >= 70) { 
-              setListZindex(4) 
+            if (e?.nativeEvent?.contentOffset?.y >= 70) {
+              setListZindex(4)
               calculatePrice()
-            }
-            else {
+            } else {
               setListZindex(1)
               calculatePrice()
             }
           }}
           contentContainerStyle={{
             // paddingTop: HEADER_MAX_HEIGHT,
-            paddingBottom: scale(height * 0.09),
+            paddingBottom: scale(height * 0.09)
           }}
         >
           <View>
-          {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
-          {/* <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}> */}
-          <Text style={[styles(currentTheme).descriptionText,{ width: '90%', height: 'auto', fontSize: 14,alignSelf:"center" }]}>
-            {food?.description}
-          </Text>
-          <HeadingComponent title={food?.title} price={calculatePrice()}  /> 
+            {food?.image ? (
+              <ImageHeader image={food?.image} />
+            ) : (
+              <Text>No image to display</Text>
+            )}
+            {/* <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}> */}
+            <Text
+              style={[
+                styles(currentTheme).descriptionText,
+                {
+                  width: '90%',
+                  height: 'auto',
+                  fontSize: 14,
+                  alignSelf: 'center'
+                }
+              ]}
+            >
+              {food?.description}
+            </Text>
+            <HeadingComponent title={food?.title} price={calculatePrice()} />
           </View>
-          <View style={[styles(currentTheme).subContainer,]}>
+          <View style={[styles(currentTheme).subContainer]}>
             <View>
               {food?.variations?.length > 1 && (
                 <View>
@@ -463,7 +454,9 @@ function ItemDetail(props) {
                     options={food?.variations}
                     selected={selectedVariation}
                     onPress={(e) => {
-                      onSelectVariation(food?.variations.find((v) => v._id === e._id))
+                      onSelectVariation(
+                        food?.variations.find((v) => v._id === e._id)
+                      )
                     }}
                     setSelectedVariation={onSelectVariation}
                     selectedVariation={selectedVariation}
@@ -482,7 +475,11 @@ function ItemDetail(props) {
                         : `${addon?.quantityMinimum} ${t('Required')}`
                     }
                   />
-                  <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} />
+                  <Options
+                    addon={addon}
+                    onSelectOption={onSelectOption}
+                    addonRefs={addonRefs}
+                  />
                 </View>
               ))}
             </View>
@@ -517,7 +514,11 @@ function ItemDetail(props) {
         </Animated.ScrollView>
 
         <Animated.View
-style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding:2}, animatedTitleStyle]}
+          style={[
+            styles(currentTheme).titleContainer,
+            { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 },
+            animatedTitleStyle
+          ]}
         >
           <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>

@@ -60,15 +60,17 @@ function OrderDetail(props) {
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   const navigation = useNavigation()
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   const mapView = useRef(null)
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
-    onCompleted:(data)=>
-    {
-      navigation.navigate("Main")
+    onCompleted: (data) => {
+      navigation.navigate('Main')
     },
     variables: { abortOrderId: id }
   })
@@ -89,20 +91,19 @@ function OrderDetail(props) {
       message: error.message
     })
   }
-let order=orders?.find((o)=>
-{
-  return o?._id === id
-})
+  let order = orders?.find((o) => {
+    return o?._id === id
+  })
 
-if(!order)
-{
-  order=orderData
-}
+  if (!order) {
+    order = orderData
+  }
 
   useEffect(() => {
     props?.navigation.setOptions({
-      headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-      headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ""}...`,
+      headerRight: () =>
+        HelpButton({ iconBackground: currentTheme.main, navigation, t }),
+      headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ''}...`,
       headerTitleStyle: { color: currentTheme.newFontcolor },
       headerStyle: { backgroundColor: currentTheme.newheaderBG }
     })
@@ -117,13 +118,14 @@ if(!order)
     )
   }
   if (errorOrders) {
-    console.log({errorOrders})
-    return <TextError text={JSON.stringify(errorOrders)} />}
+    console.log({ errorOrders })
+    return <TextError text={JSON.stringify(errorOrders)} />
+  }
 
   const remainingTime = calulateRemainingTime(order)
   const {
     _id,
-    id:orderId,
+    id: orderId,
     restaurant,
     deliveryAddress,
     items,
@@ -132,13 +134,13 @@ if(!order)
     orderAmount: total,
     deliveryCharges
   } = order
-  
 
-  const subTotal = (total) - (tip) - tax - deliveryCharges
+  const subTotal = total - tip - tax - deliveryCharges
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } =
+    useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
-  
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -150,7 +152,7 @@ if(!order)
         showsVerticalScrollIndicator={false}
         overScrollMode='never'
       >
-        {order?.rider && (order?.orderStatus) === ORDER_STATUS_ENUM.PICKED && (
+        {order?.rider && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && (
           <MapView
             ref={(c) => (mapView.current = c)}
             style={{ flex: 1, height: HEIGHT * 0.6 }}
@@ -224,7 +226,7 @@ if(!order)
           }}
         >
           <OrderStatusImage status={order?.orderStatus} />
-          {(order?.orderStatus) !== ORDER_STATUS_ENUM.DELIVERED && (
+          {order?.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
             <View
               style={{
                 ...alignment.MTxSmall,
@@ -237,32 +239,32 @@ if(!order)
                 ORDER_STATUS_ENUM.CANCELLED,
                 ORDER_STATUS_ENUM.CANCELLEDBYREST
               ].includes(order?.orderStatus) && (
-                  <>
-                    <TextDefault
-                      style={{ ...alignment.MTxSmall }}
-                      textColor={currentTheme.gray500}
-                      H5
-                    >
-                      {t('estimatedDeliveryTime')}
-                    </TextDefault>
-                    <TextDefault
-                      style={{ ...alignment.MTxSmall }}
-                      Regular
-                      textColor={currentTheme.gray900}
-                      H1
-                      bolder
-                    >
-                      {remainingTime}-{remainingTime + 5} {t('mins')}
-                    </TextDefault>
-                    <ProgressBar
-                      configuration={configuration}
-                      currentTheme={currentTheme}
-                      item={order}
-                      navigation={navigation}
-                      isPicked={order?.isPickedUp}
-                    />
-                  </>
-                )}
+                <>
+                  <TextDefault
+                    style={{ ...alignment.MTxSmall }}
+                    textColor={currentTheme.gray500}
+                    H5
+                  >
+                    {t('estimatedDeliveryTime')}
+                  </TextDefault>
+                  <TextDefault
+                    style={{ ...alignment.MTxSmall }}
+                    Regular
+                    textColor={currentTheme.gray900}
+                    H1
+                    bolder
+                  >
+                    {remainingTime}-{remainingTime + 5} {t('mins')}
+                  </TextDefault>
+                  <ProgressBar
+                    configuration={configuration}
+                    currentTheme={currentTheme}
+                    item={order}
+                    navigation={navigation}
+                    isPicked={order?.isPickedUp}
+                  />
+                </>
+              )}
               <TextDefault
                 H5
                 style={{ ...alignment.Mmedium }}
@@ -276,7 +278,11 @@ if(!order)
             </View>
           )}
         </View>
-        <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
+        <Instructions
+          title={'Instructions'}
+          theme={currentTheme}
+          message={order?.instructions}
+        />
         <Detail
           navigation={props?.navigation}
           currencySymbol={configuration.currencySymbol}
@@ -294,7 +300,11 @@ if(!order)
           rider={order?.rider}
           orderStatus={order?.orderStatus}
         />
-     <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol}/>
+        <Taxes
+          tax={tax}
+          deliveryCharges={deliveryCharges}
+          currency={configuration.currencySymbol}
+        />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         <PriceRow
@@ -303,7 +313,7 @@ if(!order)
           currency={configuration.currencySymbol}
           price={total.toFixed(2)}
         />
-        {(order?.orderStatus) === ORDER_STATUS_ENUM.PENDING && (
+        {order?.orderStatus === ORDER_STATUS_ENUM.PENDING && (
           <View style={{ margin: scale(20) }}>
             <Button
               text={t('cancelOrder')}
@@ -328,7 +338,7 @@ if(!order)
 }
 
 export const OrderStatusImage = ({ status }) => {
-  let imagePath = null;
+  let imagePath = null
   switch (status) {
     case ORDER_STATUS_ENUM.PENDING:
       imagePath = require('../../assets/SVG/order-placed.json')
@@ -349,15 +359,17 @@ export const OrderStatusImage = ({ status }) => {
 
   if (!imagePath) return null
 
-  return <LottieView
-    style={{
-      width: 250,
-      height: 250
-    }}
-    source={imagePath}
-    autoPlay
-    loop
-  />
+  return (
+    <LottieView
+      style={{
+        width: 250,
+        height: 250
+      }}
+      source={imagePath}
+      autoPlay
+      loop
+    />
+  )
 }
 
 export default OrderDetail

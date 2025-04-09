@@ -71,27 +71,29 @@ function Account(props) {
   const [lngModalVisible, setLngModalVisible] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [selectedLanguage, setselectedLanguage] = useState('')
-  const { logout } = useContext(UserContext)
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
   const [spinnerLoading, setSpinnerLoading] = useState(false)
 
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
-  const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
   const [btnText, setBtnText] = useState(null)
   const [appState, setAppState] = useState(AppState.currentState)
-  const [uploadToken] = useMutation(PUSH_TOKEN)
 
+  const [uploadToken] = useMutation(PUSH_TOKEN)
+  const { logout } = useContext(UserContext)
+  const themeContext = useContext(ThemeContext)
+  const { isConnected: connect, setIsConnected: setConnect } =
+    useNetworkStatus()
   const { profile, loadingProfile, errorProfile } = useContext(UserContext)
   const [mutate, { loading }] = useMutation(UPDATE_NOTIFICATION_TOKEN, {
     onCompleted,
     onError,
     refetchQueries: [{ query: PROFILE }]
   })
+
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
 
   const [deactivated, { loading: deactivateLoading }] = useMutation(
     DEACTIVATE,
@@ -100,7 +102,6 @@ function Account(props) {
       onError: onErrorDeactivate
     }
   )
-
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
@@ -108,7 +109,8 @@ function Account(props) {
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
-  })
+  }, [])
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_PROFILE)
@@ -167,6 +169,27 @@ function Account(props) {
     selectedLanguage
   ])
 
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange)
+  }, [])
+
+  useEffect(() => {
+    orderNotificationSetter(profile?.isOrderNotification)
+    offerNotificationSetter(profile?.isOfferNotification)
+  }, [profile])
+
+  useEffect(() => {
+    if (!lngModalVisible) {
+      fetchSelectedLanguage()
+    }
+  }, [lngModalVisible])
+
+  useEffect(() => {
+    return () => {
+      setSpinnerLoading(false)
+    }
+  }, [])
+
   const _handleAppStateChange = async (nextAppState) => {
     if (nextAppState === 'active') {
       let token = null
@@ -187,21 +210,6 @@ function Account(props) {
     }
     setAppState(nextAppState)
   }
-
-  useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange)
-  }, [])
-
-  useEffect(() => {
-    orderNotificationSetter(profile?.isOrderNotification)
-    offerNotificationSetter(profile?.isOfferNotification)
-  }, [profile])
-
-  useEffect(() => {
-    if (!lngModalVisible) {
-      fetchSelectedLanguage()
-    }
-  }, [lngModalVisible])
 
   const fetchSelectedLanguage = async () => {
     const lang = await AsyncStorage.getItem('enatega-language-name')
@@ -237,9 +245,9 @@ function Account(props) {
 
   function toggleTheme() {
     if (themeContext.ThemeValue === 'Pink') {
-      themeContext.dispatch({ type: 'Dark' });
+      themeContext.dispatch({ type: 'Dark' })
     } else {
-      themeContext.dispatch({ type: 'Pink' });
+      themeContext.dispatch({ type: 'Pink' })
     }
   }
 
@@ -276,16 +284,20 @@ function Account(props) {
     setModalVisible(false)
   }
   const handleLogout = async () => {
-    setSpinnerLoading(true)
-    setModalVisible(false)
-    await Analytics.track(Analytics.events.USER_LOGGED_OUT)
-    await Analytics.identify(null, null)
-    await logout()
-    navigation.reset({
-      routes: [{ name: 'Main' }]
-    })
-    // navigation.closeDrawer()
-    FlashMessage({ message: t('logoutMessage') })
+    try {
+      setSpinnerLoading(true)
+      setModalVisible(false)
+      await Analytics.track(Analytics.events.USER_LOGGED_OUT)
+      await Analytics.identify(null, null)
+      await logout()
+      navigation.reset({
+        routes: [{ name: 'Main' }]
+      })
+      // navigation.closeDrawer()
+      FlashMessage({ message: t('logoutMessage') })
+    } catch (error) {
+      console.error('Error during logout:', error)
+    }
   }
   const logoutClick = () => {
     setModalVisible(true)
@@ -372,12 +384,6 @@ function Account(props) {
     })
   }
 
-  useEffect(() => {
-    return () => {
-      setSpinnerLoading(false)
-    }
-  }, [])
-
   if (loadingProfile || spinnerLoading)
     return (
       <Spinner
@@ -386,10 +392,8 @@ function Account(props) {
       />
     )
 
-    const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
-    if (!connect) return <ErrorView refetchFunctions={[]} />
+  if (!connect) return <ErrorView refetchFunctions={[]} />
 
-    
   return (
     <>
       <View style={styles(currentTheme).formContainer}>

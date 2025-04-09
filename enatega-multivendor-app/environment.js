@@ -35,19 +35,19 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    GRAPHQL_URL: 'http://localhost:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
-    SERVER_URL: 'http://localhost:8001/', 
-    // GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    // WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    // SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+    // GRAPHQL_URL: 'http://localhost:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
+    // SERVER_URL: 'http://localhost:8001/',
+    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
     GOOGLE_MAPS_KEY: configuration?.googleApiKey,
     EXPO_CLIENT_ID: configuration?.expoClientID,
     SENTRY_DSN:
-      configuration?.customerAppSentryUrl ??
+      // configuration?.customerAppSentryUrl ??
       'https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.us.sentry.io/6131933',
     TERMS_AND_CONDITIONS: configuration?.termsAndConditions,
     PRIVACY_POLICY: configuration?.privacyPolicy,

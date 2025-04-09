@@ -27,13 +27,15 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
 
   const activeOrders = orders.filter(
     (o) =>
       orderStatusActive.includes(o.orderStatus) &&
-      (o?.paymentStatus === 'PAID' ||
-        o?.paymentMethod == 'COD')
+      (o?.paymentStatus === 'PAID' || o?.paymentMethod == 'COD')
   )
 
   const onPressDetails = (order) => {
@@ -71,7 +73,12 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
       modalStyle={modalStyle}
     >
       <View style={{ marginTop: scale(20), marginHorizontal: scale(10) }}>
-        <View style={{ justifyContent: 'space-between', flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' }}>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
+          }}
+        >
           <TextDefault Regular textColor={currentTheme.fontGrayNew}>
             {t('estimatedDeliveryTime')}
           </TextDefault>
