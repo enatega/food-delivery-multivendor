@@ -1,9 +1,9 @@
 'use client';
 
 // Core
-import { useContext, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
+import { useRouter } from 'next/navigation';
+import { useContext, useState } from 'react';
 
 // PrimeReact
 import { FilterMatchMode } from 'primereact/api';
@@ -16,10 +16,10 @@ import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.contex
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 
 // Custom Components
+import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
+import Table from '@/lib/ui/useable-components/table';
 import RestaurantDuplicateDialog from '../duplicate-dialog';
 import RestaurantsTableHeader from '../header/table-header';
-import Table from '@/lib/ui/useable-components/table';
-import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 
 // Constants and Interfaces
 import {
@@ -40,10 +40,10 @@ import {
 import { onUseLocalStorage } from '@/lib/utils/methods';
 
 // Dummy
-import { generateDummyRestaurants } from '@/lib/utils/dummy';
-import { DataTableRowClickEvent } from 'primereact/datatable';
-import { useTranslations } from 'next-intl';
 import { RESTAURANT_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/restaurant-column';
+import { generateDummyRestaurants } from '@/lib/utils/dummy';
+import { useTranslations } from 'next-intl';
+import { DataTableRowClickEvent } from 'primereact/datatable';
 
 export default function RestaurantsMain() {
   // Hooks
@@ -79,7 +79,7 @@ export default function RestaurantsMain() {
       debounceMs: 300,
     }
   ) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
-
+console.log("store screen has been rendered")
   // API
   const [hardDeleteRestaurant, { loading: isHardDeleting }] = useMutation(
     HARD_DELETE_RESTAURANT,

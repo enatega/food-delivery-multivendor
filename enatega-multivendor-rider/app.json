@@ -2,31 +2,42 @@
   "expo": {
     "name": "Enatega Multivendor Rider",
     "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "version": "1.1.31",
+    "version": "1.1.38",
     "slug": "food-delivery-rider-multivendor",
-    "privacy": "public",
+    "orientation": "portrait",
+    "splash": {
+      "image": "./lib/assets/images/black.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
+    },
+    "icon": "./lib/assets/images/icon.png",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "plugins": [
+      "expo-router",
       [
-        "expo-updates",
+        "@sentry/react-native/expo",
         {
-          "username": "ninjas_code"
+          "organization": "ninjas-code",
+          "project": "enatega-rider-app",
+          "url": "https://sentry.io/"
         }
       ],
-      "expo-font",
-      "expo-localization",
-      "sentry-expo"
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos for license, vehicle plate and profile image. Please allow these to continue using the app."
+        }
+      ],
+      "expo-font"
     ],
-    "androidStatusBar": {
-      "backgroundColor": "#000"
-    },
     "platforms": [
       "ios",
       "android"
-    ],
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
     ],
     "ios": {
       "supportsTablet": true,
@@ -34,17 +45,19 @@
       "config": {
         "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
       },
+      "icon": "./lib/assets/images/icon.png",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!.",
+        "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
         "UIBackgroundModes": [
           "location",
           "fetch",
           "remote-notification"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "versionCode": 39,
+      "versionCode": 50,
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -55,31 +68,20 @@
           "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
         }
       },
-      "package": "com.enatega.multirider"
+      "package": "com.enatega.multirider",
+      "icon": "./lib/assets/images/appIcon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./lib/assets/images/appIcon.png",
+        "backgroundColor": "#ffffff"
+      }
     },
     "extra": {
       "eas": {
         "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743"
       }
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/9144a7fc-b205-464a-8fb6-64eb66fc8743"
-    },
-    "newArchEnabled": true
-  },
-  "hooks": {
-    "postPublish": [
-      {
-        "file": "sentry-expo/upload-sourcemaps",
-        "config": {
-          "organization": "ninjas-code",
-          "project": "enatega-multivendor-app",
-          "authToken": "744ed798e04a40a896b0269c25f945de0e166db8362e41969b64d5e07ca80e65"
-        }
-      }
-    ]
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

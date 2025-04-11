@@ -1,5 +1,0 @@
-export { default } from './client'
-export * from './mutations'
-export * from './queries'
-export * from './mocks'
-export * from './subscriptions'

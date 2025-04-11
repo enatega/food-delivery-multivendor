@@ -1,0 +1,43 @@
+{
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "channel": "development",
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "staging": {
+      "developmentClient": false,
+      "channel": "staging",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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"
+      }
+    },
+
+    "production": {
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "production"
+      },
+      "ios": {
+        "appleId": "sharan.gohar@icloud.com",
+        "ascAppId": "1526672537",
+        "appleTeamId": "GDFK7MVY6P"
+      }
+    }
+  },
+  "cli": {
+    "version": ">= 0.43.0"
+  }
+}
