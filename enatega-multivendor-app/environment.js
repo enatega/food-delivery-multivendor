@@ -9,7 +9,6 @@ import * as Updates from 'expo-updates'
 
 const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
-  // console.log("configuration?.googleApiKey=>>", configuration?.googleApiKey)
   if (env === 'production' || env === 'staging') {
     return {
       // GRAPHQL_URL: 'https://localhost:8001/graphql',
@@ -24,9 +23,7 @@ const useEnvVars = (env = Updates.channel) => {
       AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
       GOOGLE_MAPS_KEY: configuration?.googleApiKey,
       EXPO_CLIENT_ID: configuration?.expoClientID,
-      SENTRY_DSN:
-        configuration?.customerAppSentryUrl ??
-        'https://4213c02977911e1b75898c93cc5517fb@o1103026.ingest.us.sentry.io/4508662470803456',
+      SENTRY_DSN: configuration?.customerAppSentryUrl ?? 'https://4213c02977911e1b75898c93cc5517fb@o1103026.ingest.us.sentry.io/4508662470803456',
       TERMS_AND_CONDITIONS: configuration?.termsAndConditions,
       PRIVACY_POLICY: configuration?.privacyPolicy,
       TEST_OTP: configuration?.testOtp,
@@ -35,12 +32,12 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    // GRAPHQL_URL: 'http://localhost:8001/graphql',
-    // WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
-    // SERVER_URL: 'http://localhost:8001/',
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+    GRAPHQL_URL: 'http://10.97.34.172:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://10.97.34.172:8001/graphql',
+    SERVER_URL: 'http://10.97.34.172:8001/',
+    // GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    // WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    // SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,

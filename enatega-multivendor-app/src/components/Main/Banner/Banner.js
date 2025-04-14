@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, ImageBackground, TouchableOpacity, Dimensions,Image } from 'react-native'
+import { View, ImageBackground, TouchableOpacity, Dimensions, Image } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -21,7 +21,7 @@ const Banner = ({ banners }) => {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const { width } = Dimensions.get('window');
+  const { width } = Dimensions.get('window')
 
   const onPressBanner = (banner) => {
     let _selectedType = ''
@@ -34,10 +34,7 @@ const Banner = ({ banners }) => {
       _queryType = parameters[1]?.value
     }
 
-    console.log({ banner })
-    console.log( 'action',action)
     if (action === 'Navigate Specific Restaurant') {
-      console.log('Navigating to Store')
       navigation.navigate('Restaurant', {
         _id: banner.screen
       })
@@ -49,8 +46,7 @@ const Banner = ({ banners }) => {
           : name,
           
       */
-     
-          
+
       const { name, selectedType, queryType } = BANNER_PARAMETERS[banner?.screen]
       navigation.navigate(name, {
         // Pass navigation parameters
@@ -62,15 +58,10 @@ const Banner = ({ banners }) => {
 
   const renderBannerContent = (item) => (
     <View style={styles().container}>
-      <TextDefault
-        H3
-        bolder
-        textColor='#fff'
-        style={{ textTransform: 'capitalize', marginHorizontal: scale(5)}}
-      >
+      <TextDefault H3 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(5) }}>
         {item?.title}
       </TextDefault>
-      <TextDefault bolder textColor='#fff' style={{marginHorizontal: scale(5), marginBottom: scale(5)}}>
+      <TextDefault bolder textColor='#fff' style={{ marginHorizontal: scale(5), marginBottom: scale(5) }}>
         {item?.description}
       </TextDefault>
     </View>
@@ -86,7 +77,7 @@ const Banner = ({ banners }) => {
       showPagination
       data={banners ?? []}
       snapToInterval={width} // Ensures only one image is visible at a time
-      snapToAlignment="center"
+      snapToAlignment='center'
       paginationStyle={styles().pagination}
       paginationActiveColor={currentTheme.main}
       paginationDefaultColor={currentTheme.hex}
@@ -97,26 +88,22 @@ const Banner = ({ banners }) => {
 
         return (
           <TouchableOpacity
-            style={[styles(currentTheme).banner, {width}]}
+            style={[styles(currentTheme).banner, { width }]}
             activeOpacity={0.9}
             onPress={() => {
               onPressBanner(item)
             }}
           >
-            {mediaType === 'video' ? ( 
+            {mediaType === 'video' ? (
               <VideoBanner style={styles().image} source={{ uri: item?.file }}>
                 {renderBannerContent(item)}
               </VideoBanner>
             ) : (
-                <View style={styles().csd}>
-              <ImageBackground
-                source={{ uri: item?.file }}
-                    style={styles().imgs1}
-                    resizeMode='cover'
-              >
-                {renderBannerContent(item)}
-                  </ImageBackground>
-                  </View>
+              <View style={styles().csd}>
+                <ImageBackground source={{ uri: item?.file }} style={styles().imgs1} resizeMode='cover'>
+                  {renderBannerContent(item)}
+                </ImageBackground>
+              </View>
             )}
           </TouchableOpacity>
         )

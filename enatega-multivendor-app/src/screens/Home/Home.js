@@ -1,35 +1,10 @@
 /* eslint-disable react/display-name */
-import React, {
-  useRef,
-  useContext,
-  useLayoutEffect,
-  useState,
-  useEffect
-} from 'react'
-import {
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  Animated,
-  StatusBar,
-  Platform,
-  RefreshControl,
-  Image,
-  FlatList,
-  ScrollView
-} from 'react-native'
+import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
+import { View, SafeAreaView, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, Image, FlatList, ScrollView } from 'react-native'
 import { Modalize } from 'react-native-modalize'
-import {
-  MaterialIcons,
-  SimpleLineIcons,
-  AntDesign,
-  MaterialCommunityIcons
-} from '@expo/vector-icons'
+import { MaterialIcons, SimpleLineIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
-import {
-  useCollapsibleSubHeader,
-  CollapsibleSubHeaderAnimator
-} from 'react-navigation-collapsible'
+import { useCollapsibleSubHeader, CollapsibleSubHeaderAnimator } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
@@ -79,35 +54,25 @@ function Main(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { getCurrentLocation } = useLocation()
   const { getAddress } = useGeocoding()
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null,
-        ip: null
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
+  const { data, refetch, networkStatus, loading, error } = useQuery(RESTAURANTS, {
+    variables: {
+      longitude: location.longitude || null,
+      latitude: location.latitude || null,
+      ip: null
+    },
+    fetchPolicy: 'network-only'
+  })
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
 
-  const {
-    onScroll /* Event handler */,
-    containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */,
-    translateY
-  } = useCollapsibleSubHeader()
+  const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */, translateY } = useCollapsibleSubHeader()
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.newheaderColor)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -157,14 +122,9 @@ function Main(props) {
     modalRef.current.close()
   }
   const setCurrentLocation = async () => {
-    console.log('Fetching current location...')
     setBusy(true)
 
     const { error, coords } = await getCurrentLocation()
-    console.log('getCurrentLocation result:', { error, coords })
-    console.log('coords', coords)
-    console.log('coords', coords.latitude)
-    console.log('coords', coords.longitude)
 
     if (!coords || !coords.latitude || !coords.longitude) {
       console.error('Invalid coordinates:', coords)
@@ -172,21 +132,11 @@ function Main(props) {
       return
     }
 
-    console.log(
-      `Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`
-    )
-
     // Get the address function from the hook
 
     try {
       // Fetch the address using the geocoding hook
-      const { formattedAddress, city } = await getAddress(
-        coords.latitude,
-        coords.longitude
-      )
-
-      console.log('Formatted address:', formattedAddress)
-      console.log('City:', city)
+      const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude)
 
       let address = formattedAddress || 'Unknown Address'
 
@@ -207,10 +157,7 @@ function Main(props) {
         setBusy(false)
       }
     } catch (fetchError) {
-      console.error(
-        'Error fetching address using Google Maps API:',
-        fetchError.message
-      )
+      console.error('Error fetching address using Google Maps API:', fetchError.message)
     }
   }
 
@@ -251,32 +198,16 @@ function Main(props) {
 
   const modalHeader = () => (
     <View style={[styles().addressbtn]}>
-      <TouchableOpacity
-        style={[styles(currentTheme).addressContainer]}
-        activeOpacity={0.7}
-        onPress={setCurrentLocation}
-      >
+      <TouchableOpacity style={[styles(currentTheme).addressContainer]} activeOpacity={0.7} onPress={setCurrentLocation}>
         <View style={styles().addressSubContainer}>
-          <MaterialCommunityIcons
-            name='target'
-            size={scale(25)}
-            color={currentTheme.black}
-          />
+          <MaterialCommunityIcons name='target' size={scale(25)} color={currentTheme.black} />
           <View style={styles().mL5p} />
           <TextDefault bold>{t('currentLocation')}</TextDefault>
         </View>
       </TouchableOpacity>
       <View style={styles().addressTick}>
-        {location.label === 'currentLocation' && (
-          <MaterialIcons
-            name='check'
-            size={scale(15)}
-            color={currentTheme.iconColorPink}
-          />
-        )}
-        {busy && (
-          <Spinner size={'small'} backColor={currentTheme.themeBackground} />
-        )}
+        {location.label === 'currentLocation' && <MaterialIcons name='check' size={scale(15)} color={currentTheme.iconColorPink} />}
+        {busy && <Spinner size={'small'} backColor={currentTheme.themeBackground} />}
       </View>
     </View>
   )
@@ -286,9 +217,7 @@ function Main(props) {
     else {
       return (
         <View style={styles().emptyViewContainer}>
-          <TextDefault textColor={currentTheme.fontMainColor}>
-            {t('noRestaurants')}
-          </TextDefault>
+          <TextDefault textColor={currentTheme.fontMainColor}>{t('noRestaurants')}</TextDefault>
         </View>
       )
     }
@@ -310,11 +239,7 @@ function Main(props) {
           }}
         >
           <View style={styles().addressSubContainer}>
-            <AntDesign
-              name='pluscircleo'
-              size={scale(12)}
-              color={currentTheme.black}
-            />
+            <AntDesign name='pluscircleo' size={scale(12)} color={currentTheme.black} />
             <View style={styles().mL5p} />
             <TextDefault bold>{t('addAddress')}</TextDefault>
           </View>
@@ -327,47 +252,16 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search
-          search={''}
-          setSearch={() => {}}
-          placeHolder={t('searchRestaurant')}
-        />
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Search search={''} setSearch={() => {}} placeHolder={t('searchRestaurant')} />
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />
         </Placeholder>
@@ -420,48 +314,29 @@ function Main(props) {
   // Flatten the array. That is important for data sequence
   const restaurantSections = sections.map((sec) => ({
     ...sec,
-    restaurants: sec.restaurants
-      .map((id) => restaurants.filter((res) => res._id === id))
-      .flat()
+    restaurants: sec.restaurants.map((id) => restaurants.filter((res) => res._id === id)).flat()
   }))
 
-  const { isConnected: connect, setIsConnected: setConnect } =
-    useNetworkStatus()
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[refetch]} />
   return (
     <>
-      <SafeAreaView
-        edges={['bottom', 'left', 'right']}
-        style={[styles().flex, { backgroundColor: 'black' }]}
-      >
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles().flex, { backgroundColor: 'black' }]}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
                 <View style={styles().searchbar}>
-                  <Search
-                    setSearch={setSearch}
-                    search={search}
-                    placeHolder={t('searchRestaurant')}
-                  />
+                  <Search setSearch={setSearch} search={search} placeHolder={t('searchRestaurant')} />
                 </View>
                 <ScrollView>
                   <View style={styles().mainItemsContainer}>
                     <View style={styles().mainItem}>
                       <View>
-                        <TextDefault
-                          H4
-                          bolder
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemName}
-                        >
+                        <TextDefault H4 bolder textColor={currentTheme.fontThirdColor} style={styles().ItemName}>
                           {t('foodDelivery')}
                         </TextDefault>
-                        <TextDefault
-                          Normal
-                          textColor={currentTheme.fontThirdColor}
-                          style={styles().ItemDescription}
-                        >
+                        <TextDefault Normal textColor={currentTheme.fontThirdColor} style={styles().ItemDescription}>
                           {t('OrderfoodLove')}
                         </TextDefault>
                       </View>
@@ -475,19 +350,10 @@ function Main(props) {
                       />
                     </View>
                     <View style={styles().mainItem}>
-                      <TextDefault
-                        H4
-                        bolder
-                        textColor={currentTheme.fontThirdColor}
-                        style={styles().ItemName}
-                      >
+                      <TextDefault H4 bolder textColor={currentTheme.fontThirdColor} style={styles().ItemName}>
                         {t('grocery')}
                       </TextDefault>
-                      <TextDefault
-                        Normal
-                        textColor={currentTheme.fontThirdColor}
-                        style={styles().ItemDescription}
-                      >
+                      <TextDefault Normal textColor={currentTheme.fontThirdColor} style={styles().ItemDescription}>
                         {t('essentialsDeliveredFast')}
                       </TextDefault>
                       <Image
@@ -525,9 +391,7 @@ function Main(props) {
                     >
                       {t('mostOrderedNow')}
                     </TextDefault>
-                    {search ? null : (
-                      <ActiveOrdersAndSections sections={restaurantSections} />
-                    )}
+                    {search ? null : <ActiveOrdersAndSections sections={restaurantSections} />}
                   </View>
                 </ScrollView>
 
@@ -593,42 +457,19 @@ function Main(props) {
               keyExtractor: (item) => item._id,
               renderItem: ({ item: address }) => (
                 <View style={styles().addressbtn}>
-                  <TouchableOpacity
-                    style={styles(currentTheme).addressContainer}
-                    activeOpacity={0.7}
-                    onPress={() => setAddressLocation(address)}
-                  >
+                  <TouchableOpacity style={styles(currentTheme).addressContainer} activeOpacity={0.7} onPress={() => setAddressLocation(address)}>
                     <View style={styles().addressSubContainer}>
-                      <SimpleLineIcons
-                        name={addressIcons[address.label]}
-                        size={scale(12)}
-                        color={currentTheme.black}
-                      />
+                      <SimpleLineIcons name={addressIcons[address.label]} size={scale(12)} color={currentTheme.black} />
                       <View style={styles().mL5p} />
                       <TextDefault bold>{t(address.label)}</TextDefault>
                     </View>
                     <View style={styles().addressTextContainer}>
-                      <TextDefault
-                        style={{ ...alignment.PLlarge }}
-                        textColor={currentTheme.fontSecondColor}
-                        small
-                      >
+                      <TextDefault style={{ ...alignment.PLlarge }} textColor={currentTheme.fontSecondColor} small>
                         {address.deliveryAddress}
                       </TextDefault>
                     </View>
                   </TouchableOpacity>
-                  <View style={styles().addressTick}>
-                    {address._id === location?._id &&
-                      ![t('currentLocation'), t('selectedLocation')].includes(
-                        location.label
-                      ) && (
-                        <MaterialIcons
-                          name='check'
-                          size={scale(25)}
-                          color={currentTheme.iconColorPink}
-                        />
-                      )}
-                  </View>
+                  <View style={styles().addressTick}>{address._id === location?._id && ![t('currentLocation'), t('selectedLocation')].includes(location.label) && <MaterialIcons name='check' size={scale(25)} color={currentTheme.iconColorPink} />}</View>
                 </View>
               )
             }}

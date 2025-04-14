@@ -10,15 +10,20 @@ import { useTranslation } from 'react-i18next'
 function Search(props) {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL: i18n.dir() == 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = {
+    isRTL: i18n.dir() == 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   return (
-    <View style={styles(currentTheme, props?.newheaderColor).mainContainerHolder}>
+    <View
+      style={styles(currentTheme, props?.newheaderColor).mainContainerHolder}
+    >
       <View style={styles(currentTheme, props?.cartContainer).mainContainer}>
         <View style={styles(currentTheme).subContainer}>
           <View style={styles(currentTheme).leftContainer}>
             <View style={styles().searchContainer}>
               <Ionicons
-                name="search"
+                name='search'
                 color={currentTheme.gray500}
                 size={scale(20)}
               />
@@ -28,7 +33,7 @@ function Search(props) {
                 style={styles(currentTheme).bodyStyleOne}
                 placeholder={props?.placeHolder}
                 placeholderTextColor={currentTheme.gray500}
-                onChangeText={text => props?.setSearch(text)}
+                onChangeText={(text) => props?.setSearch(text)}
                 value={props?.search}
               />
             </View>
@@ -38,9 +43,10 @@ function Search(props) {
               <TouchableOpacity
                 onPress={() => {
                   props?.setSearch('')
-                }}>
+                }}
+              >
                 <AntDesign
-                  name="closecircleo"
+                  name='closecircleo'
                   size={20}
                   color={currentTheme.fontSecondColor}
                 />

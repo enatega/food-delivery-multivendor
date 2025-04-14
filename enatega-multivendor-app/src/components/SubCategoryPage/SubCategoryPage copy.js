@@ -1,16 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react'
-import {
-  View,
-  StatusBar,
-  Animated,
-  Platform,
-  Dimensions,
-  ActivityIndicator,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-  FlatList
-} from 'react-native'
+import { View, StatusBar, Animated, Platform, Dimensions, ActivityIndicator, ScrollView, Pressable, StyleSheet, FlatList } from 'react-native'
 import { useQuery } from '@apollo/client'
 import CategoryPageHeader from './CategoryHeader/CategoryHeader'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -68,10 +57,8 @@ const CategoryPage = ({ route, navigation }) => {
 
   imagePath = require('../../assets/SVG/ItemUnavailable.json')
 
-  const { data: restaurantData, loading: restaurantLoading } =
-    useRestaurant(restaurantId)
-  const { data: subcategoriesData, loading: subcategoriesLoading } =
-    useQuery(GET_SUB_CATEGORIES)
+  const { data: restaurantData, loading: restaurantLoading } = useRestaurant(restaurantId)
+  const { data: subcategoriesData, loading: subcategoriesLoading } = useQuery(GET_SUB_CATEGORIES)
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -110,13 +97,9 @@ const CategoryPage = ({ route, navigation }) => {
       for (let category of restaurantData.restaurant.categories) {
         categories.push({ _id: category._id, name: category.title })
 
-        const subcategories = subcategoriesData?.subCategories?.filter(
-          (sub) => sub.parentCategoryId === category._id
-        )
+        const subcategories = subcategoriesData?.subCategories?.filter((sub) => sub.parentCategoryId === category._id)
 
-        subCategoriesForTabs.push(
-          subcategories?.length > 0 ? subcategories : []
-        )
+        subCategoriesForTabs.push(subcategories?.length > 0 ? subcategories : [])
       }
     }
 
@@ -176,37 +159,24 @@ const CategoryPage = ({ route, navigation }) => {
   }
 
   useEffect(() => {
-    if (
-      !restaurantData?.restaurant ||
-      !tabs[index] ||
-      !subCategories[index]?.[subIndex]
-    ) {
+    if (!restaurantData?.restaurant || !tabs[index] || !subCategories[index]?.[subIndex]) {
       return
     }
 
-    const selectedCategory = restaurantData.restaurant.categories.find(
-      (category) => category._id === tabs[index]?._id
-    )
+    const selectedCategory = restaurantData.restaurant.categories.find((category) => category._id === tabs[index]?._id)
 
     if (!selectedCategory) {
       console.log('No matching category found.')
       return
     }
 
-    const filteredFoods = selectedCategory.foods.filter(
-      (food) => food.subCategory === subCategories[index][subIndex]?._id
-    )
+    const filteredFoods = selectedCategory.foods.filter((food) => food.subCategory === subCategories[index][subIndex]?._id)
     setFilteredFood(filteredFoods)
   }, [restaurantData?.restaurant, index, subIndex])
 
   if (restaurantLoading || subcategoriesLoading) {
     return (
-      <View
-        style={[
-          styles(currentTheme).container,
-          { justifyContent: 'center', alignItems: 'center' }
-        ]}
-      >
+      <View style={[styles(currentTheme).container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size='large' color={currentTheme.tagColor} />
       </View>
     )
@@ -214,21 +184,9 @@ const CategoryPage = ({ route, navigation }) => {
 
   return (
     <View style={styles(currentTheme).container}>
-      <StatusBar
-        barStyle={
-          themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-        }
-        backgroundColor='transparent'
-        translucent={true}
-      />
+      <StatusBar barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} backgroundColor='transparent' translucent={true} />
 
-      <CategoryPageHeader
-        navigation={navigation}
-        restaurantName={restaurantName}
-        deliveryTime={deliveryTime}
-        currentTheme={currentTheme}
-        onOpenSearch={handleOpenSearch}
-      />
+      <CategoryPageHeader navigation={navigation} restaurantName={restaurantName} deliveryTime={deliveryTime} currentTheme={currentTheme} onOpenSearch={handleOpenSearch} />
 
       <View style={stylesb.container}>
         {/* Fixed Header with Tabs and Sub-Tabs */}
@@ -242,33 +200,10 @@ const CategoryPage = ({ route, navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            <View
-              style={[
-                styles(currentTheme).container2,
-                { minWidth: SCREEN_WIDTH }
-              ]}
-            >
+            <View style={[styles(currentTheme).container2, { minWidth: SCREEN_WIDTH }]}>
               {tabs?.map((_, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={[
-                    styles(currentTheme).subcategoryItem,
-                    index === i && styles(currentTheme).selectedSubcategoryItem
-                  ]}
-                  onPress={() => changeTab(i)}
-                >
-                  <TextDefault
-                    style={[
-                      styles(currentTheme).subcategoryText,
-                      index === i &&
-                        styles(currentTheme).selectedSubcategoryText
-                    ]}
-                    textColor={
-                      index === i
-                        ? currentTheme.buttonText
-                        : currentTheme.fontMainColor
-                    }
-                  >
+                <TouchableOpacity key={i} style={[styles(currentTheme).subcategoryItem, index === i && styles(currentTheme).selectedSubcategoryItem]} onPress={() => changeTab(i)}>
+                  <TextDefault style={[styles(currentTheme).subcategoryText, index === i && styles(currentTheme).selectedSubcategoryText]} textColor={index === i ? currentTheme.buttonText : currentTheme.fontMainColor}>
                     {_.name}
                   </TextDefault>
                 </TouchableOpacity>
@@ -282,27 +217,12 @@ const CategoryPage = ({ route, navigation }) => {
                 {subCategories[index]?.map((v, i) => (
                   <TouchableOpacity
                     key={i}
-                    style={[
-                      styles(currentTheme).subcategoryItem,
-                      subIndex === i &&
-                        styles(currentTheme).selectedSubcategoryItem
-                    ]}
+                    style={[styles(currentTheme).subcategoryItem, subIndex === i && styles(currentTheme).selectedSubcategoryItem]}
                     onPress={() => {
                       changeSubTab(i)
                     }}
                   >
-                    <TextDefault
-                      style={[
-                        styles(currentTheme).subcategoryText,
-                        subIndex === i &&
-                          styles(currentTheme).selectedSubcategoryText
-                      ]}
-                      textColor={
-                        subIndex === i
-                          ? currentTheme.buttonText
-                          : currentTheme.fontMainColor
-                      }
-                    >
+                    <TextDefault style={[styles(currentTheme).subcategoryText, subIndex === i && styles(currentTheme).selectedSubcategoryText]} textColor={subIndex === i ? currentTheme.buttonText : currentTheme.fontMainColor}>
                       {v.title}
                     </TextDefault>
                   </TouchableOpacity>
@@ -334,9 +254,7 @@ const CategoryPage = ({ route, navigation }) => {
                   style={stylesb.scrollContent}
                   contentContainerStyle={{ flexGrow: 1 }}
                   onMomentumScrollEnd={(e) => {
-                    setSubIndex(
-                      Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH)
-                    )
+                    setSubIndex(Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH))
                   }}
                   nestedScrollEnabled={true}
                   showsHorizontalScrollIndicator={false}
@@ -367,13 +285,10 @@ const CategoryPage = ({ route, navigation }) => {
                                   food: {
                                     ...item,
                                     restaurant: restaurantId,
-                                    restaurantName:
-                                      restaurantData?.restaurant?.name
+                                    restaurantName: restaurantData?.restaurant?.name
                                   },
-                                  addons:
-                                    restaurantData?.restaurant?.addons || [],
-                                  options:
-                                    restaurantData?.restaurant?.options || [],
+                                  addons: restaurantData?.restaurant?.addons || [],
+                                  options: restaurantData?.restaurant?.options || [],
                                   restaurant: restaurantId
                                 })
                               }
@@ -382,9 +297,7 @@ const CategoryPage = ({ route, navigation }) => {
                         )}
                         ListEmptyComponent={
                           <View style={stylesb.emptyContainer}>
-                            <Text style={stylesb.emptyText}>
-                              No food items available
-                            </Text>
+                            <Text style={stylesb.emptyText}>No food items available</Text>
                           </View>
                         }
                         contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -401,17 +314,12 @@ const CategoryPage = ({ route, navigation }) => {
                   style={stylesb.scrollContent2}
                   contentContainerStyle={{ flexGrow: 1 }}
                   onMomentumScrollEnd={(e) => {
-                    setSubIndex(
-                      Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH)
-                    )
-                    console.log('Subcategory changed')
+                    setSubIndex(Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH))
                   }}
                   showsHorizontalScrollIndicator={false}
                 >
                   <FlatList
-                    data={restaurantData?.restaurant?.categories?.filter(
-                      (category) => category._id === tabs[index]?._id
-                    )}
+                    data={restaurantData?.restaurant?.categories?.filter((category) => category._id === tabs[index]?._id)}
                     keyExtractor={(item) => item._id}
                     numColumns={2}
                     renderItem={({ item }) => (
@@ -428,8 +336,7 @@ const CategoryPage = ({ route, navigation }) => {
                                 restaurantName: restaurantData?.restaurant?.name
                               },
                               addons: restaurantData?.restaurant?.addons || [],
-                              options:
-                                restaurantData?.restaurant?.options || [],
+                              options: restaurantData?.restaurant?.options || [],
                               restaurant: restaurantId
                             })
                           }
@@ -438,9 +345,7 @@ const CategoryPage = ({ route, navigation }) => {
                     )}
                     ListEmptyComponent={
                       <View style={stylesb.emptyContainer}>
-                        <Text style={stylesb.emptyText}>
-                          No food items available
-                        </Text>
+                        <Text style={stylesb.emptyText}>No food items available</Text>
                       </View>
                     }
                     contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -453,22 +358,11 @@ const CategoryPage = ({ route, navigation }) => {
       </View>
 
       {/* Search Overlay */}
-      <SearchOverlay
-        isVisible={isSearchVisible}
-        onClose={handleCloseSearch}
-        currentTheme={currentTheme}
-        configuration={configuration}
-        restaurant={restaurantData?.restaurant}
-        navigation={navigation}
-      />
+      <SearchOverlay isVisible={isSearchVisible} onClose={handleCloseSearch} currentTheme={currentTheme} configuration={configuration} restaurant={restaurantData?.restaurant} navigation={navigation} />
 
       {cartCount > 0 && (
         <View style={styles(currentTheme).buttonContainer}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles(currentTheme).button}
-            onPress={() => navigation.navigate('Cart')}
-          >
+          <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
             <View style={styles().buttontLeft}>
               <Animated.View
                 style={[
@@ -481,24 +375,10 @@ const CategoryPage = ({ route, navigation }) => {
                   }
                 ]}
               >
-                <Text
-                  style={[
-                    styles(currentTheme).buttonTextLeft,
-                    { fontSize: scale(10) }
-                  ]}
-                >
-                  {cartCount}
-                </Text>
+                <Text style={[styles(currentTheme).buttonTextLeft, { fontSize: scale(10) }]}>{cartCount}</Text>
               </Animated.View>
             </View>
-            <TextDefault
-              style={styles().buttonText}
-              textColor={currentTheme.buttonTextPink}
-              uppercase
-              center
-              bolder
-              small
-            >
+            <TextDefault style={styles().buttonText} textColor={currentTheme.buttonTextPink} uppercase center bolder small>
               {t('viewCart')}
             </TextDefault>
             <View style={styles().buttonTextRight} />

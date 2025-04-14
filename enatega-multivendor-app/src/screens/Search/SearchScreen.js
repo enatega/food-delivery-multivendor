@@ -161,8 +161,9 @@ const SearchScreen = () => {
 
   const uniqueTags = getUniqueTags(restaurants)
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
-  if (!connect) return <ErrorView/>
+  const { isConnected: connect, setIsConnected: setConnect } =
+    useNetworkStatus()
+  if (!connect) return <ErrorView />
 
   const emptyView = () => {
     return (
@@ -310,7 +311,10 @@ const SearchScreen = () => {
           ) : (
             uniqueTags.map((tag, index) =>
               hasAnimated ? (
-                <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleTagPress(tag)}
+                >
                   <View style={styles(currentTheme).tagItem}>
                     <TextDefault>{tag}</TextDefault>
                   </View>

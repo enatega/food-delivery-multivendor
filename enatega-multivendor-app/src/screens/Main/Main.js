@@ -1,31 +1,11 @@
 /* eslint-disable react/display-name */
-import React, {
-  useRef,
-  useContext,
-  useLayoutEffect,
-  useState,
-  useEffect
-} from 'react'
-import {
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-  ScrollView,
-  FlatList,
-  Image,
-  RefreshControl
-} from 'react-native'
+import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
+import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, FlatList, Image, RefreshControl } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
-import {
-  getBanners,
-  getCuisines,
-  restaurantListPreview
-} from '../../apollo/queries'
+import { getBanners, getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -73,7 +53,6 @@ const GET_CUISINES = gql`
 `
 
 function Main(props) {
-
   const Analytics = analytics()
 
   const { t, i18n } = useTranslation()
@@ -89,10 +68,15 @@ function Main(props) {
     ...theme[themeContext.ThemeValue]
   }
   const { getCurrentLocation } = useLocation()
-  const { getAddress } = useGeocoding();
+  const { getAddress } = useGeocoding()
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
-  const { data, loading, error,refetch: refetchRestaurants} = useQuery(RESTAURANTS, {
+  const {
+    data,
+    loading,
+    error,
+    refetch: refetchRestaurants
+  } = useQuery(RESTAURANTS, {
     variables: {
       longitude: location?.longitude || null,
       latitude: location?.latitude || null,
@@ -103,7 +87,7 @@ function Main(props) {
   })
 
   let filteredCuisines
-  const { data: banners ,refetch:refetchBanners} = useQuery(GET_BANNERS, {
+  const { data: banners, refetch: refetchBanners } = useQuery(GET_BANNERS, {
     fetchPolicy: 'network-only'
   })
   const { data: allCuisines } = useQuery(GET_CUISINES)
@@ -122,8 +106,8 @@ function Main(props) {
   }
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    const { data: newBanners } = await refetchBanners();
-  const { data: newRestaurants } = await refetchRestaurants();
+    const { data: newBanners } = await refetchBanners()
+    const { data: newRestaurants } = await refetchRestaurants()
     setIsRefreshing(false)
   }
   useFocusEffect(() => {
@@ -231,75 +215,65 @@ function Main(props) {
   //     })
   // }
   const setCurrentLocation = async () => {
-      console.log("Fetching current location...");
-      setBusy(true);
-      
-      const { error, coords } = await getCurrentLocation();
-      console.log("getCurrentLocation result:", { error, coords });
-      console.log("coords", coords);
-      console.log("coords", coords.latitude);
-      console.log("coords", coords.longitude);
-  
-      if (!coords || !coords.latitude || !coords.longitude) {
-        console.error("Invalid coordinates:", coords);
-        setBusy(false);
-        return;
+    console.log('Fetching current location...')
+    setBusy(true)
+
+    const { error, coords } = await getCurrentLocation()
+    console.log('getCurrentLocation result:', { error, coords })
+    console.log('coords', coords)
+    console.log('coords', coords.latitude)
+    console.log('coords', coords.longitude)
+
+    if (!coords || !coords.latitude || !coords.longitude) {
+      console.error('Invalid coordinates:', coords)
+      setBusy(false)
+      return
+    }
+
+    console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`)
+
+    // Get the address function from the hook
+
+    try {
+      // Fetch the address using the geocoding hook
+      const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude)
+
+      console.log('Formatted address:', formattedAddress)
+      console.log('City:', city)
+
+      let address = formattedAddress || 'Unknown Address'
+
+      if (address.length > 21) {
+        address = address.substring(0, 21) + '...'
       }
-  
-      console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
-      
-       // Get the address function from the hook
-  
-      try {
-        // Fetch the address using the geocoding hook
-        const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude);
-  
-        console.log('Formatted address:', formattedAddress);
-        console.log('City:', city);
-  
-        let address = formattedAddress || 'Unknown Address';
-  
-        if (address.length > 21) {
-          address = address.substring(0, 21) + '...';
-        }
-  
-        if (error) {
-          navigation.navigate('SelectLocation');
-        } else {
-          modalRef.current?.close();
-          setLocation({
-            label: 'currentLocation',
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            deliveryAddress: address
-          });
-          setBusy(false);
-        }
-      } catch (fetchError) {
-        console.error('Error fetching address using Google Maps API:', fetchError.message);
+
+      if (error) {
+        navigation.navigate('SelectLocation')
+      } else {
+        modalRef.current?.close()
+        setLocation({
+          label: 'currentLocation',
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          deliveryAddress: address
+        })
+        setBusy(false)
       }
-    };
-  
+    } catch (fetchError) {
+      console.error('Error fetching address using Google Maps API:', fetchError.message)
+    }
+  }
 
   const modalHeader = () => (
     <View style={[styles().addNewAddressbtn]}>
       <View style={styles(currentTheme).addressContainer}>
-        <TouchableOpacity
-          style={[styles(currentTheme).addButton]}
-          activeOpacity={0.7}
-          onPress={setCurrentLocation}
-          disabled={busy}
-        >
+        <TouchableOpacity style={[styles(currentTheme).addButton]} activeOpacity={0.7} onPress={setCurrentLocation} disabled={busy}>
           <View style={styles(currentTheme).addressSubContainer}>
             {busy ? (
               <Spinner size='small' />
             ) : (
               <>
-                <SimpleLineIcons
-                  name='target'
-                  size={scale(18)}
-                  color={currentTheme.black}
-                />
+                <SimpleLineIcons name='target' size={scale(18)} color={currentTheme.black} />
                 <View style={styles().mL5p} />
                 <TextDefault bold textColor={currentTheme.black}>
                   {t('currentLocation')}
@@ -334,11 +308,7 @@ function Main(props) {
           }}
         >
           <View style={styles(currentTheme).addressSubContainer}>
-            <AntDesign
-              name='pluscircleo'
-              size={scale(20)}
-              color={currentTheme.black}
-            />
+            <AntDesign name='pluscircleo' size={scale(20)} color={currentTheme.black} />
             <View style={styles().mL5p} textColor={currentTheme.black} />
             <TextDefault bold textColor={currentTheme.black}>
               {t('addAddress')}
@@ -352,20 +322,12 @@ function Main(props) {
 
   if (error) return <ErrorView />
 
-  const groceryorders = data?.nearByRestaurantsPreview?.restaurants?.filter(
-    (restaurant) => restaurant.shopType === 'grocery'
-  )
+  const groceryorders = data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant) => restaurant.shopType === 'grocery')
 
-  const restaurantorders = data?.nearByRestaurantsPreview?.restaurants?.filter(
-    (restaurant) => restaurant.shopType === 'restaurant'
-  )
+  const restaurantorders = data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant) => restaurant.shopType === 'restaurant')
 
   const getCuisinesByShopType = (shopType) => {
-    return (
-      allCuisines?.cuisines?.filter(
-        (cuisine) => cuisine?.shopType === shopType
-      ) ?? []
-    )
+    return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === shopType) ?? []
   }
 
   const filterCusinies = () => {
@@ -381,10 +343,8 @@ function Main(props) {
     }
   }
 
-
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
-  
 
   return (
     <>
@@ -393,66 +353,18 @@ function Main(props) {
           <View style={styles().flex}>
             <View style={styles().mainContentContainer}>
               <View style={[styles().flex, styles().subContainer]}>
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={isRefreshing}
-                      onRefresh={handleRefresh}
-                    />
-                  }
-                >
-                  <Banner banners={banners?.banners}  />
+                <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
+                  <Banner banners={banners?.banners} />
                   <View style={{ gap: 16 }}>
-                    <View>
-                      {isLoggedIn &&
-                        recentOrderRestaurantsVar &&
-                        recentOrderRestaurantsVar.length > 0 && (
-                          <>
-                            {orderLoading || isRefreshing ? (
-                              <MainLoadingUI />
-                            ) : (
-                              <MainRestaurantCard
-                                orders={sortRestaurantsByOpenStatus(
-                                  recentOrderRestaurantsVar || []
-                                )}
-                                loading={orderLoading}
-                                error={orderError}
-                                title={'Order it again'}
-                                queryType='orderAgain'
-                              />
-                            )}
-                          </>
-                        )}
-                    </View>
+                    <View>{isLoggedIn && recentOrderRestaurantsVar && recentOrderRestaurantsVar.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(recentOrderRestaurantsVar || [])} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
-                    <View>
-                      {orderLoading || isRefreshing ? (
-                        <MainLoadingUI />
-                      ) : (
-                        <MainRestaurantCard
-                          orders={sortRestaurantsByOpenStatus(
-                            mostOrderedRestaurantsVar || []
-                          )}
-                          loading={orderLoading}
-                          error={orderError}
-                          title={t('Popular right now')}
-                          queryType='topPicks'
-                          icon='trending'
-                        />
-                      )}
-                    </View>
+                    <View>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar || [])} loading={orderLoading} error={orderError} title={t('Popular right now')} queryType='topPicks' icon='trending' />}</View>
                     <View style={{ padding: 15, gap: scale(8) }}>
                       <TextDefault bolder H4 isRTL>
                         {t('I feel like eating...')}
                       </TextDefault>
                       <FlatList
-                        data={
-                          filterCusinies()?.filter(
-                            (cuisine) => cuisine.shopType === 'Restaurant'
-                          ) ?? []
-                        }
+                        data={filterCusinies()?.filter((cuisine) => cuisine.shopType === 'Restaurant') ?? []}
                         renderItem={({ item }) => {
                           return (
                             <CollectionCard
@@ -477,37 +389,17 @@ function Main(props) {
                         horizontal={true}
                         inverted={currentTheme?.isRTL ? true : false}
                         maintainVisibleContentPosition={{
-                          minIndexForVisible: 0,
+                          minIndexForVisible: 0
                         }}
                       />
                     </View>
-                    <View>
-                      {loading || isRefreshing ? (
-                        <MainLoadingUI />
-                      ) : (
-                        <MainRestaurantCard
-                          orders={sortRestaurantsByOpenStatus(
-                            restaurantorders || []
-                          )}
-                          loading={orderLoading}
-                          error={orderError}
-                          title={t('Restaurants near you')}
-                          queryType='restaurant'
-                          icon='restaurant'
-                        />
-                      )}
-                    </View>
+                    <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(restaurantorders || [])} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
                     <View style={{ padding: 15, gap: scale(8) }}>
                       <TextDefault bolder H4 isRTL>
                         {t('Fresh finds await...')}
                       </TextDefault>
                       <FlatList
-                        data={
-                          filterCusinies()?.filter(
-                            (cuisine) =>
-                              cuisine?.shopType.toLowerCase() === 'grocery'
-                          ) ?? []
-                        }
+                        data={filterCusinies()?.filter((cuisine) => cuisine?.shopType.toLowerCase() === 'grocery') ?? []}
                         renderItem={({ item }) => {
                           return (
                             <CollectionCard
@@ -531,73 +423,21 @@ function Main(props) {
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         inverted={currentTheme?.isRTL ? true : false}
-                        
                       />
                     </View>
-                    <View>
-                      {loading ? (
-                        <MainLoadingUI />
-                      ) : (
-                        <MainRestaurantCard
-                          orders={sortRestaurantsByOpenStatus(
-                            groceryorders || []
-                          )}
-                          loading={orderLoading}
-                          error={orderError}
-                          title={t('Grocery List')}
-                          queryType='grocery'
-                          icon='grocery'
-                          selectedType='grocery'
-                        />
-                      )}
-                    </View>
+                    <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(groceryorders || [])} loading={orderLoading} error={orderError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View>
 
-                    <View>
-                      {orderLoading ? (
-                        <MainLoadingUI />
-                      ) : (
-                        <MainRestaurantCard
-                          orders={sortRestaurantsByOpenStatus(
-                            mostOrderedRestaurantsVar?.filter(
-                              (order) => order.shopType === 'grocery'
-                            ) || []
-                          )}
-                          loading={orderLoading}
-                          error={orderError}
-                          title={t('Top grocery picks')}
-                          queryType='grocery'
-                          icon='store'
-                          selectedType='grocery'
-                        />
-                      )}
-                    </View>
+                    <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar?.filter((order) => order.shopType === 'grocery') || [])} loading={orderLoading} error={orderError} title={t('Top grocery picks')} queryType='grocery' icon='store' selectedType='grocery' />}</View>
                   </View>
-                  <View
-                    style={
-                      styles(currentTheme, hasActiveOrders).topBrandsMargin
-                    }
-                  >
-                    {orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}
-                  </View>
+                  <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                 </ScrollView>
               </View>
-        <ForceUpdate />
-
+              <ForceUpdate />
             </View>
           </View>
           <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
 
-          <MainModalize
-            modalRef={modalRef}
-            currentTheme={currentTheme}
-            isLoggedIn={isLoggedIn}
-            addressIcons={addressIcons}
-            modalHeader={modalHeader}
-            modalFooter={modalFooter}
-            setAddressLocation={setAddressLocation}
-            profile={profile}
-            location={location}
-          />
+          <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
         </View>
       </SafeAreaView>
     </>

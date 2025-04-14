@@ -12,26 +12,15 @@ function TopPicks(props) {
   const { t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  console.log('props:', props)
 
   if (props?.loading) return <MainLoadingUI />
-  if (props?.error)
-    return <Text style={styles().margin}>Error: {props?.error?.message}</Text>
+  if (props?.error) return <Text style={styles().margin}>Error: {props?.error?.message}</Text>
   return (
     <View style={styles().topPicksSec}>
-      <TextDefault
-        numberOfLines={1}
-        textColor={currentTheme.fontFourthColor}
-        bolder
-        H4
-      >
+      <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder H4>
         {props?.title}
       </TextDefault>
-      <TextDefault
-        Normal
-        textColor={currentTheme.secondaryText}
-        style={styles().ItemDescription}
-      >
+      <TextDefault Normal textColor={currentTheme.secondaryText} style={styles().ItemDescription}>
         {t('mostOrderedNow')}
       </TextDefault>
       <FlatList

@@ -1,14 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Animated,
-  ScrollView,
-  Dimensions,
-  StatusBar
-} from 'react-native'
+import { View, FlatList, TouchableOpacity, StyleSheet, Animated, ScrollView, Dimensions, StatusBar } from 'react-native'
 import { PanGestureHandler, State } from 'react-native-gesture-handler'
 
 import { useQuery } from '@apollo/client'
@@ -70,31 +61,11 @@ const FoodItemSkeleton = ({ currentTheme }) => {
           }
         ]}
       >
-        <Animated.View
-          style={[
-            styles.addButton,
-            { backgroundColor: currentTheme?.plusIcon || '#000' }
-          ]}
-        />
-        <Animated.View
-          style={[
-            styles.imageContainer,
-            { backgroundColor: currentTheme?.gray || '#ddd' }
-          ]}
-        />
+        <Animated.View style={[styles.addButton, { backgroundColor: currentTheme?.plusIcon || '#000' }]} />
+        <Animated.View style={[styles.imageContainer, { backgroundColor: currentTheme?.gray || '#ddd' }]} />
         <View style={styles.detailsContainer}>
-          <Animated.View
-            style={[
-              styles.priceSkeleton,
-              { backgroundColor: currentTheme?.gray || '#ddd' }
-            ]}
-          />
-          <Animated.View
-            style={[
-              styles.titleSkeleton,
-              { backgroundColor: currentTheme?.gray || '#ddd' }
-            ]}
-          />
+          <Animated.View style={[styles.priceSkeleton, { backgroundColor: currentTheme?.gray || '#ddd' }]} />
+          <Animated.View style={[styles.titleSkeleton, { backgroundColor: currentTheme?.gray || '#ddd' }]} />
         </View>
       </Animated.View>
     </View>
@@ -105,15 +76,7 @@ const FoodItemSkeleton = ({ currentTheme }) => {
 const FoodItemsGridSkeleton = ({ currentTheme, count = 16 }) => {
   return (
     <View style={styles.foodList}>
-      <FlatList
-        data={Array(count).fill(0)}
-        keyExtractor={(_, index) => `skeleton-${index}`}
-        numColumns={2}
-        scrollEnabled={true}
-        renderItem={() => <FoodItemSkeleton currentTheme={currentTheme} />}
-        columnWrapperStyle={{ gap: 10 }}
-        contentContainerStyle={{ gap: 20 }}
-      />
+      <FlatList data={Array(count).fill(0)} keyExtractor={(_, index) => `skeleton-${index}`} numColumns={2} scrollEnabled={true} renderItem={() => <FoodItemSkeleton currentTheme={currentTheme} />} columnWrapperStyle={{ gap: 10 }} contentContainerStyle={{ gap: 20 }} />
     </View>
   )
 }
@@ -156,10 +119,8 @@ const CategoryPage = ({ route, navigation }) => {
   }
   const NO_ITEM_AVAILABLE = require('../../assets/SVG/ItemUnavailable.json')
 
-  const { data: restaurantData, loading: restaurantLoading } =
-    useRestaurant(restaurantId)
-  const { data: subcategoriesData, loading: subcategoriesLoading } =
-    useQuery(GET_SUB_CATEGORIES)
+  const { data: restaurantData, loading: restaurantLoading } = useRestaurant(restaurantId)
+  const { data: subcategoriesData, loading: subcategoriesLoading } = useQuery(GET_SUB_CATEGORIES)
 
   // Handlers
   const handleOpenSearch = () => {
@@ -236,11 +197,7 @@ const CategoryPage = ({ route, navigation }) => {
     let newSubIndex = selectedSubcategoryIndex + direction
 
     // Check if there are subcategories for the current category and we can move within them
-    if (
-      subCategories[selectedCategoryIndex]?.length > 0 &&
-      newSubIndex >= 0 &&
-      newSubIndex < subCategories[selectedCategoryIndex].length
-    ) {
+    if (subCategories[selectedCategoryIndex]?.length > 0 && newSubIndex >= 0 && newSubIndex < subCategories[selectedCategoryIndex].length) {
       // For the last category, we need special handling
       if (isLastCategory) {
         // First, clear the current food items and show loading
@@ -252,17 +209,12 @@ const CategoryPage = ({ route, navigation }) => {
           setSelectedSubcategoryIndex(newSubIndex)
 
           // After updating subcategory index, filter the food items
-          const selectedCategory = restaurantData.restaurant.categories.find(
-            (category) => category._id === tabs[selectedCategoryIndex]?._id
-          )
+          const selectedCategory = restaurantData.restaurant.categories.find((category) => category._id === tabs[selectedCategoryIndex]?._id)
 
           if (selectedCategory) {
-            const selectedSubCategoryId =
-              subCategories[selectedCategoryIndex][newSubIndex]?._id
+            const selectedSubCategoryId = subCategories[selectedCategoryIndex][newSubIndex]?._id
 
-            const filteredFoods = selectedCategory.foods.filter(
-              (food) => food.subCategory === selectedSubCategoryId
-            )
+            const filteredFoods = selectedCategory.foods.filter((food) => food.subCategory === selectedSubCategoryId)
 
             // Add a small delay before updating filtered foods
             setTimeout(() => {
@@ -296,10 +248,7 @@ const CategoryPage = ({ route, navigation }) => {
   const canSwipeNext = () => {
     // Check if there's a next subcategory in the current category
     if (subCategories[selectedCategoryIndex]?.length > 0) {
-      if (
-        selectedSubcategoryIndex <
-        subCategories[selectedCategoryIndex].length - 1
-      ) {
+      if (selectedSubcategoryIndex < subCategories[selectedCategoryIndex].length - 1) {
         return true
       }
     }
@@ -329,34 +278,26 @@ const CategoryPage = ({ route, navigation }) => {
 
   // Get Category and Sub Category
   const getSubCategoriesAndTabs = () => {
-    if (
-      !restaurantData?.restaurant?.categories ||
-      !subcategoriesData?.subCategories
-    )
-      return
+    if (!restaurantData?.restaurant?.categories || !subcategoriesData?.subCategories) return
 
     let categories = []
     let subCategoriesForTabs = []
 
+    // 67c0af4528b7eebde1764178, 67c0bc4428b7eebde1765e82
     if (restaurantData?.restaurant?.categories) {
       for (let category of restaurantData.restaurant.categories) {
         categories.push({ _id: category._id, name: category.title })
 
-        const subcategories = subcategoriesData?.subCategories?.filter(
-          (sub) => sub.parentCategoryId === category._id
-        )
+        const subcategories = subcategoriesData?.subCategories?.filter((sub) => sub.parentCategoryId === category._id)
+        console.log('🚀 ~ getSubCategoriesAndTabs ~ subcategories:', subcategories)
 
-        subCategoriesForTabs.push(
-          subcategories?.length > 0 ? subcategories : []
-        )
+        subCategoriesForTabs.push(subcategories?.length > 0 ? subcategories : [])
       }
     }
 
     if (category) {
       // Find the correct category index - this now checks both _id and id properties
-      const ctgryIndex = categories.findIndex(
-        (cat) => cat._id === category.id || cat._id === category._id
-      )
+      const ctgryIndex = categories.findIndex((cat) => cat._id === category.id || cat._id === category._id)
 
       if (ctgryIndex !== -1) {
         setSelectedCategoryIndex(ctgryIndex)
@@ -388,11 +329,7 @@ const CategoryPage = ({ route, navigation }) => {
         }).start()
       }, [])
 
-      return (
-        <Animated.View style={{ opacity: itemOpacity }}>
-          {children}
-        </Animated.View>
-      )
+      return <Animated.View style={{ opacity: itemOpacity }}>{children}</Animated.View>
     }
 
     if (isDataLoading || isChangingCategory) {
@@ -438,18 +375,10 @@ const CategoryPage = ({ route, navigation }) => {
           <View style={styles.emptyContainer}>
             {!initialRender && (
               <>
-                <LottieView
-                  source={NO_ITEM_AVAILABLE}
-                  autoPlay
-                  loop
-                  style={styles.lottie}
-                />
+                <LottieView source={NO_ITEM_AVAILABLE} autoPlay loop style={styles.lottie} />
                 <Text
                   style={{
-                    color:
-                      callStyles(currentTheme).backgroundColor === '#000'
-                        ? 'white'
-                        : 'black',
+                    color: callStyles(currentTheme).backgroundColor === '#000' ? 'white' : 'black',
                     fontSize: 20
                   }}
                 >
@@ -470,30 +399,20 @@ const CategoryPage = ({ route, navigation }) => {
 
   // Use Effects
   useEffect(() => {
-    if (
-      !restaurantData?.restaurant?.categories ||
-      !tabs[selectedCategoryIndex] ||
-      !subCategories[selectedCategoryIndex]?.[selectedSubcategoryIndex]
-    ) {
+    if (!restaurantData?.restaurant?.categories || !tabs[selectedCategoryIndex] || !subCategories[selectedCategoryIndex]?.[selectedSubcategoryIndex]) {
       return
     }
 
     setIsDataLoading(true)
 
-    const selectedCategory = restaurantData.restaurant.categories.find(
-      (category) => category._id === tabs[selectedCategoryIndex]?._id
-    )
+    const selectedCategory = restaurantData.restaurant.categories.find((category) => category._id === tabs[selectedCategoryIndex]?._id)
 
     if (!selectedCategory) {
       console.log('No matching category found.')
       return
     }
 
-    const filteredFoods = selectedCategory.foods.filter(
-      (food) =>
-        food.subCategory ===
-        subCategories[selectedCategoryIndex][selectedSubcategoryIndex]?._id
-    )
+    const filteredFoods = selectedCategory.foods.filter((food) => food.subCategory === subCategories[selectedCategoryIndex][selectedSubcategoryIndex]?._id)
 
     // Simulate loading time with a delay
     setTimeout(() => {
@@ -501,14 +420,7 @@ const CategoryPage = ({ route, navigation }) => {
       setIsDataLoading(false)
       setIsChangingCategory(false)
     }, 800) // Delay to show skeleton
-  }, [
-    restaurantData?.restaurant?.categories,
-    selectedCategoryIndex,
-    selectedSubcategoryIndex,
-    tabs.length,
-    subCategories.length,
-    category
-  ])
+  }, [restaurantData?.restaurant?.categories, selectedCategoryIndex, selectedSubcategoryIndex, tabs.length, subCategories.length, category])
 
   useEffect(() => {
     getSubCategoriesAndTabs()
@@ -541,56 +453,20 @@ const CategoryPage = ({ route, navigation }) => {
 
   return (
     <>
-      <PanGestureHandler
-        onHandlerStateChange={(event) =>
-          handleSwipe(event.nativeEvent, event.nativeEvent.state)
-        }
-      >
+      <PanGestureHandler onHandlerStateChange={(event) => handleSwipe(event.nativeEvent, event.nativeEvent.state)}>
         <View style={callStyles(currentTheme).container}>
-          <StatusBar
-            barStyle={
-              themeContext.ThemeValue === 'Dark'
-                ? 'light-content'
-                : 'dark-content'
-            }
-            backgroundColor='transparent'
-            translucent={true}
-          />
+          <StatusBar barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} backgroundColor='transparent' translucent={true} />
 
-          <CategoryPageHeader
-            navigation={navigation}
-            restaurantName={restaurantName}
-            deliveryTime={deliveryTime}
-            currentTheme={currentTheme}
-            onOpenSearch={handleOpenSearch}
-          />
+          <CategoryPageHeader navigation={navigation} restaurantName={restaurantName} deliveryTime={deliveryTime} currentTheme={currentTheme} onOpenSearch={handleOpenSearch} />
 
-          <View
-            style={[
-              styles.container,
-              { backgroundColor: callStyles(currentTheme).backgroundColor }
-            ]}
-          >
+          <View style={[styles.container, { backgroundColor: callStyles(currentTheme).backgroundColor }]}>
             {/* Category List */}
-            <ScrollView
-              horizontal
-              ref={categoryScrollRef}
-              showsHorizontalScrollIndicator={false}
-            >
-              <View
-                style={[
-                  callStyles(currentTheme).container2,
-                  { minWidth: SCREEN_WIDTH }
-                ]}
-              >
+            <ScrollView horizontal ref={categoryScrollRef} showsHorizontalScrollIndicator={false}>
+              <View style={[callStyles(currentTheme).container2, { minWidth: SCREEN_WIDTH }]}>
                 {tabs?.map((tab, index) => (
                   <TouchableOpacity
                     key={tab._id}
-                    style={[
-                      callStyles(currentTheme).categoryItem,
-                      selectedCategoryIndex === index &&
-                        callStyles(currentTheme).selectedCategoryItem
-                    ]}
+                    style={[callStyles(currentTheme).categoryItem, selectedCategoryIndex === index && callStyles(currentTheme).selectedCategoryItem]}
                     onPress={() => {
                       setSelectedCategoryIndex(index)
                       setSelectedSubcategoryIndex(0)
@@ -598,21 +474,8 @@ const CategoryPage = ({ route, navigation }) => {
                       scrollToSelected(categoryScrollRef, index, false)
                     }}
                   >
-                    <TextDefault
-                      style={[
-                        callStyles(currentTheme).categoryText,
-                        selectedCategoryIndex === index &&
-                          callStyles(currentTheme).selectedCategoryText
-                      ]}
-                      textColor={
-                        selectedCategoryIndex === index
-                          ? currentTheme.buttonText
-                          : currentTheme.fontMainColor
-                      }
-                    >
-                      {tab.name.length > MAX_CHAR_LEN
-                        ? tab.name.slice(0, MAX_CHAR_LEN) + '...'
-                        : tab.name}
+                    <TextDefault style={[callStyles(currentTheme).categoryText, selectedCategoryIndex === index && callStyles(currentTheme).selectedCategoryText]} textColor={selectedCategoryIndex === index ? currentTheme.buttonText : currentTheme.fontMainColor}>
+                      {tab.name.length > MAX_CHAR_LEN ? tab.name.slice(0, MAX_CHAR_LEN) + '...' : tab.name}
                     </TextDefault>
                   </TouchableOpacity>
                 ))}
@@ -635,32 +498,15 @@ const CategoryPage = ({ route, navigation }) => {
                     return (
                       <TouchableOpacity
                         key={sub._id}
-                        style={[
-                          callStyles(currentTheme).subcategoryItem,
-                          selectedSubcategoryIndex === index &&
-                            callStyles(currentTheme).selectedSubcategoryItem
-                        ]}
+                        style={[callStyles(currentTheme).subcategoryItem, selectedSubcategoryIndex === index && callStyles(currentTheme).selectedSubcategoryItem]}
                         onPress={() => {
                           setSelectedSubcategoryIndex(index)
                           setIsChangingCategory(true)
                           scrollToSelected(subcategoryScrollRef, index, true)
                         }}
                       >
-                        <TextDefault
-                          style={[
-                            callStyles(currentTheme).subcategoryText,
-                            selectedSubcategoryIndex === index &&
-                              callStyles(currentTheme).selectedSubcategoryText
-                          ]}
-                          textColor={
-                            selectedSubcategoryIndex === index
-                              ? currentTheme.buttonText
-                              : currentTheme.fontMainColor
-                          }
-                        >
-                          {sub.title.length > MAX_CHAR_LEN
-                            ? sub.title.slice(0, MAX_CHAR_LEN) + '...'
-                            : sub.title}
+                        <TextDefault style={[callStyles(currentTheme).subcategoryText, selectedSubcategoryIndex === index && callStyles(currentTheme).selectedSubcategoryText]} textColor={selectedSubcategoryIndex === index ? currentTheme.buttonText : currentTheme.fontMainColor}>
+                          {sub.title.length > MAX_CHAR_LEN ? sub.title.slice(0, MAX_CHAR_LEN) + '...' : sub.title}
                         </TextDefault>
                       </TouchableOpacity>
                     )
@@ -678,38 +524,18 @@ const CategoryPage = ({ route, navigation }) => {
                 transform: [{ translateX: translateX }]
               }}
             >
-              <MemoizedFlatList
-                data={
-                  subCategories[selectedCategoryIndex]?.length > 0
-                    ? filteredFood
-                    : restaurantData?.restaurant?.categories?.find(
-                        (category) =>
-                          category._id === tabs[selectedCategoryIndex]?._id
-                      )?.foods
-                }
-              />
+              <MemoizedFlatList data={subCategories[selectedCategoryIndex]?.length > 0 ? filteredFood : restaurantData?.restaurant?.categories?.find((category) => category._id === tabs[selectedCategoryIndex]?._id)?.foods} />
             </Animated.View>
           </View>
 
           {/* Search Overlay */}
-          <SearchOverlay
-            isVisible={isSearchVisible}
-            onClose={handleCloseSearch}
-            currentTheme={currentTheme}
-            configuration={configuration}
-            restaurant={restaurantData?.restaurant}
-            navigation={navigation}
-          />
+          <SearchOverlay isVisible={isSearchVisible} onClose={handleCloseSearch} currentTheme={currentTheme} configuration={configuration} restaurant={restaurantData?.restaurant} navigation={navigation} />
         </View>
       </PanGestureHandler>
 
       {cartCount > 0 && (
         <View style={callStyles(currentTheme).buttonContainer}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={callStyles(currentTheme).button}
-            onPress={() => navigation.navigate('Cart')}
-          >
+          <TouchableOpacity activeOpacity={0.7} style={callStyles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
             <View style={callStyles().buttontLeft}>
               <Animated.View
                 style={[
@@ -722,24 +548,10 @@ const CategoryPage = ({ route, navigation }) => {
                   }
                 ]}
               >
-                <Text
-                  style={[
-                    callStyles(currentTheme).buttonTextLeft,
-                    { fontSize: scale(10) }
-                  ]}
-                >
-                  {cartCount}
-                </Text>
+                <Text style={[callStyles(currentTheme).buttonTextLeft, { fontSize: scale(10) }]}>{cartCount}</Text>
               </Animated.View>
             </View>
-            <TextDefault
-              style={callStyles().buttonText}
-              textColor={currentTheme.buttonTextPink}
-              uppercase
-              center
-              bolder
-              small
-            >
+            <TextDefault style={callStyles().buttonText} textColor={currentTheme.buttonTextPink} uppercase center bolder small>
               {t('viewCart')}
             </TextDefault>
             <View style={callStyles().buttonTextRight} />

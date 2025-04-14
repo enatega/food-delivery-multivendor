@@ -14,8 +14,8 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
     mainContainerHolder: {
       zIndex: 333,
       width: '100%',
-      alignItems: 'center',     
-      backgroundColor:newheaderColor,
+      alignItems: 'center',
+      backgroundColor: newheaderColor
     },
     mainContainer: {
       width: '90%',
@@ -32,20 +32,20 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
         height: verticalScale(1)
       },
       shadowOpacity: 0.2,
-      shadowRadius: verticalScale(1),
-
+      shadowRadius: verticalScale(1)
     },
     subContainer: {
       width: '90%',
       height: '60%',
       alignItems: 'center',
       justifyContent: 'space-between',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row'
     },
     leftContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      width: '90%',
-      gap: scale(15)
+      width: '84%',
+      gap: scale(15),
+      overflow: 'hidden'
     },
     searchContainer: {
       width: '10%'
@@ -61,6 +61,8 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row'
+      // borderColor: 'white',
+      // borderWidth: 2
     }
   })
 export default styles

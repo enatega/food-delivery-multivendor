@@ -1,35 +1,9 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute
-} from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  Alert,
-  StatusBar,
-  Platform,
-  Image,
-  Dimensions,
-  SectionList,
-  Text
-} from 'react-native'
-import Animated, {
-  Extrapolate,
-  interpolateNode,
-  concat,
-  useValue,
-  EasingNode,
-  timing
-} from 'react-native-reanimated'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Image, Dimensions, SectionList, Text } from 'react-native'
+import Animated, { Extrapolate, interpolateNode, concat, useValue, EasingNode, timing } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade
-} from 'rn-placeholder'
+import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
 import ImageHeader from '../../components/Restaurant/ImageHeader'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ConfigurationContext from '../../context/Configuration'
@@ -78,30 +52,17 @@ function Restaurant(props) {
   const circle = useValue(0)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  console.log(currentTheme)
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
-  const {
-    restaurant: restaurantCart,
-    setCartRestaurant,
-    cartCount,
-    addCartItem,
-    addQuantity,
-    clearCart,
-    checkItemCart
-  } = useContext(UserContext)
-  const { data, refetch, networkStatus, loading, error } = useRestaurant(
-    propsData._id
-  )
+  const { restaurant: restaurantCart, setCartRestaurant, cartCount, addCartItem, addQuantity, clearCart, checkItemCart } = useContext(UserContext)
+  const { data, refetch, networkStatus, loading, error } = useRestaurant(propsData._id)
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -110,11 +71,7 @@ function Restaurant(props) {
     Track()
   }, [])
   useEffect(() => {
-    if (
-      data &&
-      data.restaurant &&
-      (!data.restaurant.isAvailable || !isOpen())
-    ) {
+    if (data && data.restaurant && (!data.restaurant.isAvailable || !isOpen())) {
       Alert.alert(
         '',
         'Restaurant Closed at the moment',
@@ -142,17 +99,9 @@ function Restaurant(props) {
     const day = date.getDay()
     const hours = date.getHours()
     const minutes = date.getMinutes()
-    const todaysTimings = data.restaurant.openingTimes.find(
-      (o) => o.day === DAYS[day]
-    )
+    const todaysTimings = data.restaurant.openingTimes.find((o) => o.day === DAYS[day])
     if (todaysTimings === undefined) return false
-    const times = todaysTimings.times.filter(
-      (t) =>
-        hours >= Number(t.startTime[0]) &&
-        minutes >= Number(t.startTime[1]) &&
-        hours <= Number(t.endTime[0]) &&
-        minutes <= Number(t.endTime[1])
-    )
+    const times = todaysTimings.times.filter((t) => hours >= Number(t.startTime[0]) && minutes >= Number(t.startTime[1]) && hours <= Number(t.endTime[0]) && minutes <= Number(t.endTime[1]))
 
     return times.length > 0
   }
@@ -214,13 +163,9 @@ function Restaurant(props) {
   }
 
   const addToCart = async (food, clearFlag) => {
-    if (
-      food.variations.length === 1 &&
-      food.variations[0].addons.length === 0
-    ) {
+    if (food.variations.length === 1 && food.variations[0].addons.length === 0) {
       await setCartRestaurant(food.restaurant)
       const result = checkItemCart(food._id)
-      console.log(result)
       if (result.exist) await addQuantity(result.key)
       else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
       animate()
@@ -242,14 +187,7 @@ function Restaurant(props) {
         return (
           <>
             <View style={styles(currentTheme).triangleCorner} />
-            <TextDefault
-              style={styles(currentTheme).tagText}
-              numberOfLines={1}
-              textColor={currentTheme.fontWhite}
-              bold
-              small
-              center
-            >
+            <TextDefault style={styles(currentTheme).tagText} numberOfLines={1} textColor={currentTheme.fontWhite} bold small center>
               {cartValue.quantity}
             </TextDefault>
           </>
@@ -301,10 +239,7 @@ function Restaurant(props) {
 
   function onViewableItemsChanged({ viewableItems }) {
     if (viewableItems.length === 0) return
-    if (
-      selectedLabel !== viewableItems[0].section.index &&
-      buttonClicked === false
-    ) {
+    if (selectedLabel !== viewableItems[0].section.index && buttonClicked === false) {
       selectedLabelSetter(viewableItems[0].section.index)
       scrollToNavbar(viewableItems[0].section.index)
     }
@@ -424,13 +359,7 @@ function Restaurant(props) {
           {Array.from(Array(10), (_, i) => (
             <Placeholder
               key={i}
-              Animation={(props) => (
-                <Fade
-                  {...props}
-                  style={{ backgroundColor: currentTheme.fontSecondColor }}
-                  duration={600}
-                />
-              )}
+              Animation={(props) => <Fade {...props} style={{ backgroundColor: currentTheme.fontSecondColor }} duration={600} />}
               Left={PlaceholderMedia}
               style={{
                 padding: 12
@@ -512,11 +441,7 @@ function Restaurant(props) {
             renderSectionHeader={({ section: { title } }) => {
               return (
                 <View style={{ backgroundColor: '#fff' }}>
-                  <TextDefault
-                    style={styles(currentTheme).sectionHeaderText}
-                    textColor='#111827'
-                    bolder
-                  >
+                  <TextDefault style={styles(currentTheme).sectionHeaderText} textColor='#111827' bolder>
                     {title}
                   </TextDefault>
                   <Text
@@ -570,44 +495,19 @@ function Restaurant(props) {
                       ) : null}
                       <View style={styles(currentTheme).flex}>
                         <View style={styles(currentTheme).dealDescription}>
-                          <TextDefault
-                            textColor={currentTheme.fontMainColor}
-                            style={styles(currentTheme).headerText}
-                            numberOfLines={1}
-                            bolder
-                          >
+                          <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder>
                             {item.title}
                           </TextDefault>
-                          <TextDefault
-                            style={styles(currentTheme).priceText}
-                            small
-                          >
+                          <TextDefault style={styles(currentTheme).priceText} small>
                             {wrapContentAfterWords(item.description, 5)}
                           </TextDefault>
                           <View style={styles(currentTheme).dealPrice}>
-                            <TextDefault
-                              numberOfLines={1}
-                              textColor={currentTheme.fontMainColor}
-                              style={styles(currentTheme).priceText}
-                              bolder
-                              small
-                            >
-                              {configuration.currencySymbol}{' '}
-                              {parseFloat(item.variations[0].price).toFixed(2)}
+                            <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small>
+                              {configuration.currencySymbol} {parseFloat(item.variations[0].price).toFixed(2)}
                             </TextDefault>
                             {item.variations[0].discounted > 0 && (
-                              <TextDefault
-                                numberOfLines={1}
-                                textColor={currentTheme.fontSecondColor}
-                                style={styles().priceText}
-                                small
-                                lineOver
-                              >
-                                {configuration.currencySymbol}{' '}
-                                {(
-                                  item.variations[0].price +
-                                  item.variations[0].discounted
-                                ).toFixed(2)}
+                              <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} style={styles().priceText} small lineOver>
+                                {configuration.currencySymbol} {(item.variations[0].price + item.variations[0].discounted).toFixed(2)}
                               </TextDefault>
                             )}
                           </View>
@@ -625,11 +525,7 @@ function Restaurant(props) {
           />
           {cartCount > 0 && (
             <View style={styles(currentTheme).buttonContainer}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles(currentTheme).button}
-                onPress={() => navigation.navigate('Cart')}
-              >
+              <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
                 <View style={styles().buttontLeft}>
                   <Animated.View
                     style={[
@@ -641,24 +537,10 @@ function Restaurant(props) {
                       }
                     ]}
                   >
-                    <Animated.Text
-                      style={[
-                        styles(currentTheme).buttonTextLeft,
-                        { fontSize: fontChange }
-                      ]}
-                    >
-                      {cartCount}
-                    </Animated.Text>
+                    <Animated.Text style={[styles(currentTheme).buttonTextLeft, { fontSize: fontChange }]}>{cartCount}</Animated.Text>
                   </Animated.View>
                 </View>
-                <TextDefault
-                  style={styles().buttonText}
-                  textColor={currentTheme.buttonTextPink}
-                  uppercase
-                  center
-                  bolder
-                  small
-                >
+                <TextDefault style={styles().buttonText} textColor={currentTheme.buttonTextPink} uppercase center bolder small>
                   {t('viewCart')}
                 </TextDefault>
                 <View style={styles().buttonTextRight} />

@@ -23,14 +23,22 @@ function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
   const orderStatusInactive = ['DELIVERED', 'COMPLETED']
   const { orders, loadingOrders, errorOrders } = useContext(OrdersContext)
-  if (loadingOrders) return <Spinner visible={loadingOrders} backColor="transparent" spinnerColor={currentTheme.main} />
+  if (loadingOrders)
+    return (
+      <Spinner
+        visible={loadingOrders}
+        backColor='transparent'
+        spinnerColor={currentTheme.main}
+      />
+    )
   if (errorOrders) return <TextError text={errorOrders.message} />
   else {
     const hasActiveOrders =
-      orders.filter(o => orderStatusActive.includes(o.orderStatus)).length > 0
+      orders.filter((o) => orderStatusActive.includes(o.orderStatus)).length > 0
 
     const hasPastOrders =
-      orders.filter(o => orderStatusInactive.includes(o.orderStatus)).length > 0
+      orders.filter((o) => orderStatusInactive.includes(o.orderStatus)).length >
+      0
     if (hasActiveOrders || hasPastOrders) return null
     return (
       <EmptyView
@@ -42,16 +50,22 @@ function emptyViewPastOrders() {
   }
 }
 
-const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) => {
+const PastOrders = ({
+  navigation,
+  loading,
+  error,
+  pastOrders,
+  onPressReview
+}) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   const configuration = useContext(ConfigurationContext)
-  const {
-    reFetchOrders,
-    fetchMoreOrdersFunc,
-    networkStatusOrders
-  } = useContext(OrdersContext)
+  const { reFetchOrders, fetchMoreOrdersFunc, networkStatusOrders } =
+    useContext(OrdersContext)
   const renderItem = ({ item }) => (
     <Item
       item={item}
@@ -80,7 +94,7 @@ const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) =
   )
 }
 
-const formatDeliveredAt = deliveredAt => {
+const formatDeliveredAt = (deliveredAt) => {
   // Convert deliveredAt string to a Date object
   const deliveryDate = new Date(deliveredAt)
 
@@ -114,10 +128,10 @@ const formatDeliveredAt = deliveredAt => {
   // Formatting the date and time
   return `${formattedDay} ${month} ${formattedHours}:${formattedMinutes}`
 }
-const getItems = items => {
+const getItems = (items) => {
   return items
     .map(
-      item =>
+      (item) =>
         `${item.quantity}x ${item.title}${
           item.variation.title ? `(${item.variation.title})` : ''
         }`
@@ -125,12 +139,21 @@ const getItems = items => {
     .join('\n')
 }
 
-const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) => {
+const Item = ({
+  item,
+  navigation,
+  currentTheme,
+  configuration,
+  onPressReview
+}) => {
   useSubscription(
     gql`
       ${subscriptionOrder}
     `,
-    { variables: { id: item._id }, skip:item.orderStatus===ORDER_STATUS_ENUM.DELIVERED }
+    {
+      variables: { id: item._id },
+      skip: item.orderStatus === ORDER_STATUS_ENUM.DELIVERED
+    }
   )
   const { t } = useTranslation()
 
@@ -145,37 +168,51 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
             restaurant: item.restaurant,
             user: item.user
           })
-        }>
+        }
+      >
         <View style={styles(currentTheme).subContainer}>
-       
-          {(item.orderStatus =='CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') &&
-                 <View style={ {display:'flex',paddingBottom:10}}>
-                 <View style={{borderRadius:14,alignSelf: 'flex-end',backgroundColor:currentTheme.statusBgColor,color:'black',padding:8}}>       
-                   <TextDefault
-                    textColor='black'
-                    uppercase
-                    bolder
-                    numberOfLines={2}
-                    style={[styles(currentTheme).restaurantName]}
-                  isRTL>
-                    {item.orderStatus}
-                  </TextDefault>
-                  </View>
-                  </View>
-                  }
-         
+          {(item.orderStatus == 'CANCELLED' ||
+            item.orderStatus === 'CANCELLEDBYREST') && (
+            <View style={{ display: 'flex', paddingBottom: 10 }}>
+              <View
+                style={{
+                  borderRadius: 14,
+                  alignSelf: 'flex-end',
+                  backgroundColor: currentTheme.statusBgColor,
+                  color: 'black',
+                  padding: 8
+                }}
+              >
+                <TextDefault
+                  textColor='black'
+                  uppercase
+                  bolder
+                  numberOfLines={2}
+                  style={[styles(currentTheme).restaurantName]}
+                  isRTL
+                >
+                  {item.orderStatus}
+                </TextDefault>
+              </View>
+            </View>
+          )}
+
           <View
             style={{
               flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
-            }}>
-              
+            }}
+          >
             <Image
               style={styles(currentTheme).restaurantImage}
-              resizeMode="cover"
+              resizeMode='cover'
               source={{ uri: item?.restaurant?.image }}
             />
             <View style={styles(currentTheme).textContainer2}>
-              <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' }}>
+              <View
+                style={{
+                  flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
+                }}
+              >
                 <View style={styles().subContainerLeft}>
                   <TextDefault
                     textColor={currentTheme.fontMainColor}
@@ -183,27 +220,32 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                     bolder
                     numberOfLines={2}
                     style={styles(currentTheme).restaurantName}
-                  isRTL>
+                    isRTL
+                  >
                     {item.restaurant.name}
                   </TextDefault>
                 </View>
                 <View style={styles(currentTheme).subContainerRight}>
-                  <TextDefault textColor={currentTheme.fontMainColor} bolder isRTL>
+                  <TextDefault
+                    textColor={currentTheme.fontMainColor}
+                    bolder
+                    isRTL
+                  >
                     {configuration.currencySymbol}
                     {parseFloat(item.orderAmount).toFixed(2)}
                   </TextDefault>
                 </View>
               </View>
-              <View style={{marginTop: 'auto'}}>
+              <View style={{ marginTop: 'auto' }}>
                 <TextDefault
                   numberOfLines={1}
                   style={{
-                    ...alignment.MTxSmall,
+                    ...alignment.MTxSmall
                     // width: '122%'
                   }}
                   textColor={currentTheme.secondaryText}
                   isRTL
-                  >
+                >
                   {t('deliveredOn')} {formatDeliveredAt(item.deliveredAt)}
                 </TextDefault>
                 <TextDefault
@@ -211,7 +253,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                   style={{ ...alignment.MTxSmall }}
                   textColor={currentTheme.secondaryText}
                   isRTL
-                  >
+                >
                   {getItems(item.items)}
                 </TextDefault>
               </View>
@@ -221,33 +263,42 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles(currentTheme).subContainerButton}
-              onPress={() => navigation.navigate('Reorder', { item })}>
+              onPress={() => navigation.navigate('Reorder', { item })}
+            >
               <TextDefault textColor={currentTheme.black} H4 bolder B700 center>
                 {' '}
                 {t('reOrder')}
               </TextDefault>
             </TouchableOpacity>
           </View>
-          {!(item.orderStatus === 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') && 
-          <View style={styles(currentTheme).starsContainer}>
-            <View> 
-              <TextDefault H5 bolder textColor={currentTheme.newFontcolor} isRTL>
-                {t('tapToRate')}
-              </TextDefault>
-            </View>
-             
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-                {[1, 2, 3, 4, 5].map(index => (
+          {!(
+            item.orderStatus === 'CANCELLED' ||
+            item.orderStatus === 'CANCELLEDBYREST'
+          ) && (
+            <View style={styles(currentTheme).starsContainer}>
+              <View>
+                <TextDefault
+                  H5
+                  bolder
+                  textColor={currentTheme.newFontcolor}
+                  isRTL
+                >
+                  {t('tapToRate')}
+                </TextDefault>
+              </View>
+
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                {[1, 2, 3, 4, 5].map((index) => (
                   <StarIcon
                     disabled={Boolean(item?.review)}
                     key={`star-icon-${index}`}
                     isFilled={index <= item?.review?.rating}
-                    onPress={()=>onPressReview(item, index)}
+                    onPress={() => onPressReview(item, index)}
                   />
                 ))}
+              </View>
             </View>
-          </View>
-          }
+          )}
         </View>
       </TouchableOpacity>
     </View>

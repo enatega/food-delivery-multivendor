@@ -30,20 +30,10 @@ function TopBrands(props) {
       longitude: location?.longitude
     }
   })
-  // console.log('GROCERY => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'grocery')?.length)
-  // console.log('RESTAURANTS => ', data?.topRatedVendors?.filter((item)=>item.shopType === 'restaurant')?.length)
-
   const RenderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles().topbrandsContainer}
-      onPress={() => navigation.navigate('Restaurant', { ...item })}
-    >
+    <TouchableOpacity style={styles().topbrandsContainer} onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View style={styles().brandImgContainer}>
-        <Image
-          source={{ uri: item?.logo }}
-          style={styles().brandImg}
-          resizeMode='contain'
-        />
+        <Image source={{ uri: item?.logo }} style={styles().brandImg} resizeMode='contain' />
       </View>
 
       <View
@@ -52,15 +42,10 @@ function TopBrands(props) {
           justifyContent: 'center'
         }}
       >
-        <TextDefault
-          style={styles().brandName}
-          textColor={currentTheme.fontThirdColor}
-          H5
-          bolder
-        >
-         {item?.name?.length > 11 ? item.name.substring(0, 11) + '...' : item.name}
+        <TextDefault style={styles().brandName} textColor={currentTheme.fontThirdColor} H5 bolder>
+          {item?.name?.length > 11 ? item.name.substring(0, 11) + '...' : item.name}
         </TextDefault>
-        <TextDefault textColor={currentTheme.fontFifthColor} normal >
+        <TextDefault textColor={currentTheme.fontFifthColor} normal>
           {item?.deliveryTime} mins
         </TextDefault>
       </View>
@@ -70,27 +55,16 @@ function TopBrands(props) {
   if (loading) return <TopBrandsLoadingUI />
   if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
-  const restaurantBrands = data?.topRatedVendorsPreview?.filter(
-    (item) => item.shopType === 'restaurant'
-  )
+  const restaurantBrands = data?.topRatedVendorsPreview?.filter((item) => item.shopType === 'restaurant')
 
-  const groceryBrands = data?.topRatedVendorsPreview?.filter(
-    (item) => item.shopType === 'grocery'
-  )
-
+  const groceryBrands = data?.topRatedVendorsPreview?.filter((item) => item.shopType === 'grocery')
 
   return (
     <View style={styles().mainContainer}>
-
       {data?.topRatedVendorsPreview?.length > 0 && (
         <View style={styles().topbrandsSec}>
           <View style={styles(currentTheme).header}>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontFourthColor}
-              bolder
-              H4
-            >
+            <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder H4>
               {t('Our brands')}
             </TextDefault>
             <TouchableOpacity
@@ -128,12 +102,7 @@ function TopBrands(props) {
       {restaurantBrands?.length > 0 && (
         <View style={styles().topbrandsSec}>
           <View style={styles(currentTheme).header}>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontFourthColor}
-              bolder
-              H4
-            >
+            <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder H4>
               {t('Top Restaurant Brands')}
             </TextDefault>
             <TouchableOpacity
@@ -151,11 +120,11 @@ function TopBrands(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-          <View style={{ ...alignment.PRsmall, height:height*0.384 }}>
+          <View style={{ ...alignment.PRsmall, height: height * 0.384 }}>
             <FlatList
               data={sortRestaurantsByOpenStatus(restaurantBrands || [])}
               renderItem={({ item }) => {
-                const restaurantOpen = isOpen(item);
+                const restaurantOpen = isOpen(item)
                 return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
               }}
               keyExtractor={(item) => item?._id}
@@ -172,12 +141,7 @@ function TopBrands(props) {
       {groceryBrands?.length > 0 && (
         <View style={styles().topbrandsSec}>
           <View style={styles(currentTheme).header}>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontFourthColor}
-              bolder
-              H4
-            >
+            <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder H4>
               {t('Top Grocery Brands')}
             </TextDefault>
             <TouchableOpacity
@@ -199,7 +163,7 @@ function TopBrands(props) {
             <FlatList
               data={sortRestaurantsByOpenStatus(groceryBrands || [])}
               renderItem={({ item }) => {
-                const restaurantOpen = isOpen(item);
+                const restaurantOpen = isOpen(item)
                 return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
               }}
               keyExtractor={(item) => item?._id}
