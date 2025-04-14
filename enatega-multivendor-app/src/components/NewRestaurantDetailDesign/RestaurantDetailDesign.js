@@ -29,7 +29,7 @@ function NewRestaurantDetailDesign(props) {
   const { cartCount } = useContext(UserContext)
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
-  
+
   // Extract restaurant data from route params
   const restaurant = props?.route.params
   const restaurantId = restaurant?._id
@@ -67,8 +67,10 @@ function NewRestaurantDetailDesign(props) {
   const { data: restaurantData, loading } = useRestaurant(restaurantId)
 
   // Use both route params and API data to determine if restaurant is closed
-  const isRestaurantOpen = restaurant?.isOpen ?? restaurantData?.restaurant?.isOpen
-  const isAvailable = restaurant?.isAvailable ?? restaurantData?.restaurant?.isAvailable
+  const isRestaurantOpen =
+    restaurant?.isOpen ?? restaurantData?.restaurant?.isOpen
+  const isAvailable =
+    restaurant?.isAvailable ?? restaurantData?.restaurant?.isAvailable
 
   // Calculate header animation values
   const headerHeight = scrollOffsetY.interpolate({
@@ -109,6 +111,12 @@ function NewRestaurantDetailDesign(props) {
   const mergedRestaurant = {
     ...(restaurantData?.restaurant || {}),
     ...restaurant,
+    latitude: restaurantData?.restaurant
+      ? restaurantData?.restaurant.location.coordinates[1]
+      : '',
+    longitude: restaurantData?.restaurant
+      ? restaurantData?.restaurant.location.coordinates[0]
+      : '',
     isOpen: isRestaurantOpen,
     isAvailable: isAvailable
   }
