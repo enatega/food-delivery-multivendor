@@ -227,6 +227,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
           label={t('View Details')}
           onClick={() => {
             onUseLocalStorage('save', 'restaurantId', _id);
+            onUseLocalStorage('save', 'shopType', shopType)
             const routeStack = ['Admin'];
             onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
             router.push(`/admin/store/`);
