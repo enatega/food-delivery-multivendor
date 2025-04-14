@@ -56,6 +56,8 @@ export default function CategoryMain({
     setSubCategoryParentId,
   } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
+  const shopType = restaurantLayoutContextData?.shopType || '';
+  // console.log("🚀 ~ restaurantLayoutContextData:", restaurantLayoutContextData)
 
   // Hooks
   const { showToast } = useToast();
@@ -163,22 +165,26 @@ export default function CategoryMain({
         }
       },
     },
-    {
-      label: t('View Sub-Categories'),
-      command: (data?: ICategory) => {
-        if (data && data._id) {
-          handleCategoryRowClick(data?._id);
-        } else {
-          showToast({
-            type: 'error',
-            title: t('View Sub-Categories'),
-            message: t(
-              'An error occured while previewing the related sub-categories'
-            ),
-          });
-        }
-      },
-    },
+    ...(shopType === 'grocery'
+      ? [
+          {
+            label: t('View Sub-Categories'),
+            command: (data?: ICategory) => {
+              if (data && data._id) {
+                handleCategoryRowClick(data?._id);
+              } else {
+                showToast({
+                  type: 'error',
+                  title: t('View Sub-Categories'),
+                  message: t(
+                    'An error occured while previewing the related sub-categories'
+                  ),
+                });
+              }
+            },
+          },
+        ]
+      : []),
   ];
   return (
     <div className="p-3">
@@ -206,6 +212,7 @@ export default function CategoryMain({
         columns={CATEGORY_TABLE_COLUMNS({
           menuItems,
           setIsAddSubCategoriesVisible,
+          shopType: shopType,
         })}
       />
       <CustomDialog

@@ -14,7 +14,7 @@ import {
 } from '@/lib/utils/interfaces';
 
 // Utils
-import { SELECTED_RESTAURANT } from '../../utils/constants';
+import { SELECTED_RESTAURANT, SELECTED_SHOPTYPE } from '../../utils/constants';
 import { onUseLocalStorage } from '../../utils/methods';
 
 // Types
@@ -30,6 +30,7 @@ export const RestaurantLayoutProvider = ({ children }: IProvider) => {
   const [restaurantLayoutContextData, setRestaurantLayoutContextData] =
     useState<RestaurantLayoutContextData>({
       restaurantId: onUseLocalStorage('get', SELECTED_RESTAURANT),
+      shopType: onUseLocalStorage('get', SELECTED_SHOPTYPE ),
     } as RestaurantLayoutContextData);
   const [isAddSubCategoriesVisible, setIsAddSubCategoriesVisible] = useState({
     bool: false,

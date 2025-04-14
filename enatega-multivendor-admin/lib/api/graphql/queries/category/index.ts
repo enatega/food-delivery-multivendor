@@ -8,6 +8,7 @@ export const GET_CATEGORY_BY_RESTAURANT_ID = gql`
       categories {
         _id
         title
+        image
       }
     }
   }

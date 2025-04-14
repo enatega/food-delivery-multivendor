@@ -1,0 +1,75 @@
+{
+  "expo": {
+    "name": "Enatega Store",
+    "slug": "enatega-multivendor-restaurant",
+    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "version": "1.0.41",
+    "orientation": "portrait",
+    "icon": "./lib/assets/images/icon.png",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+  "splash": {
+      "image": "./lib/assets/images/black.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "ninjas-code-w7",
+          "project": "enatega-store-app",
+          "url": "https://sentry.io/"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos for license, vehicle plate and profile image. Please allow these to continue using the app."
+        }
+      ]
+    ],
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "multivendor.enatega.restaurant",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
+        "UIBackgroundModes": [
+          "remote-notification"
+        ],
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIRequiresFullScreen": true
+      }
+    },
+    "android": {
+      "versionCode": 50,
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "package": "multivendor.enatega.restaurant",
+      "adaptiveIcon": {
+        "foregroundImage": "./lib/assets/images/appIcon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6a94161f-f21b-4ad9-8a04-c95b54ef0116"
+      }
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
