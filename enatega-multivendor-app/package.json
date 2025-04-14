@@ -20,7 +20,9 @@
     "submit:production:android": "eas submit --profile production -p android",
     "submit:production:ios": "eas submit --profile production -p ios",
     "publish:staging": "ENVIRONMENT=staging expo publish --release-channel staging",
-    "publish:production": "ENVIRONMENT=production expo publish --release-channel production"
+    "publish:production": "ENVIRONMENT=production expo publish --release-channel production",
+    "apkBuild":"eas build --profile staging --platform android",
+    "iosTestFlight":"eas build --profile production --platform ios"
   },
   "husky": {
     "hooks": {

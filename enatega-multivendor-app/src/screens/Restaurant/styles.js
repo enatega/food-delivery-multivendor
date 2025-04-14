@@ -1,4 +1,3 @@
-
 import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
@@ -24,8 +23,8 @@ const styles = (props = null) =>
       shadowRadius: verticalScale(2),
       zIndex: 1
     },
-    sectionHeader:{
-      backgroundColor: props != null ? props.themeBackground : '#fff',
+    sectionHeader: {
+      backgroundColor: props != null ? props.themeBackground : '#fff'
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
@@ -34,9 +33,8 @@ const styles = (props = null) =>
       ...alignment.PTlarge,
       paddingHorizontal: scale(15)
     },
-    restaurantItems:{
+    restaurantItems: {
       backgroundColor: props != null ? props.themeBackground : 'white'
-
     },
     popularItemCards: {
       ...alignment.PTlarge,
@@ -47,9 +45,9 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       rowGap: scale(10)
     },
-    dealSection:{
+    dealSection: {
       ...alignment.PLsmall,
-      ...alignment.PRsmall,
+      ...alignment.PRsmall
     },
     deal: {
       width: '80%',
@@ -94,7 +92,7 @@ const styles = (props = null) =>
       width: scale(25),
       height: scale(25),
       borderRadius: scale(12.5),
-      backgroundColor: props !== null ? props.newFontcolor :'#f0f0f0',
+      backgroundColor: props !== null ? props.newFontcolor : '#f0f0f0',
 
       justifyContent: 'center',
       alignItems: 'center',
@@ -177,7 +175,7 @@ const styles = (props = null) =>
       top: 1,
       right: 0,
       textAlign: 'center'
-    }, 
+    },
     popularHeading: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
@@ -188,7 +186,7 @@ const styles = (props = null) =>
     popularText: {
       textTransform: 'capitalize',
       fontSize: scale(18),
-      fontWeight: '600',
+      fontWeight: '600'
     }
   })
 export default styles

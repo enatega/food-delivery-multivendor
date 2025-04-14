@@ -283,13 +283,15 @@ const CategoryPage = ({ route, navigation }) => {
     let categories = []
     let subCategoriesForTabs = []
 
-    // 67c0af4528b7eebde1764178, 67c0bc4428b7eebde1765e82
     if (restaurantData?.restaurant?.categories) {
       for (let category of restaurantData.restaurant.categories) {
         categories.push({ _id: category._id, name: category.title })
 
         const subcategories = subcategoriesData?.subCategories?.filter((sub) => sub.parentCategoryId === category._id)
-        console.log('🚀 ~ getSubCategoriesAndTabs ~ subcategories:', subcategories)
+        // "parentCategoryId": "6749988ac2fa2be193d02f5d", ===  "category._id==": "67c0af4528b7eebde1764178"
+
+        console.log({ 'filtered subcategroy==': subcategoriesData.subCategories[0] })
+        console.log({ 'category._id==': category._id })
 
         subCategoriesForTabs.push(subcategories?.length > 0 ? subcategories : [])
       }
@@ -399,7 +401,14 @@ const CategoryPage = ({ route, navigation }) => {
 
   // Use Effects
   useEffect(() => {
-    if (!restaurantData?.restaurant?.categories || !tabs[selectedCategoryIndex] || !subCategories[selectedCategoryIndex]?.[selectedSubcategoryIndex]) {
+    if (!restaurantData?.restaurant?.categories || !tabs[selectedCategoryIndex]) {
+      if (restaurantLoading || subcategoriesLoading || tabs.length === 0) {
+        setIsDataLoading(true)
+      } else {
+        setIsDataLoading(false)
+        setIsChangingCategory(false)
+        setFilteredFood([])
+      }
       return
     }
 
@@ -409,18 +418,34 @@ const CategoryPage = ({ route, navigation }) => {
 
     if (!selectedCategory) {
       console.log('No matching category found.')
-      return
-    }
-
-    const filteredFoods = selectedCategory.foods.filter((food) => food.subCategory === subCategories[selectedCategoryIndex][selectedSubcategoryIndex]?._id)
-
-    // Simulate loading time with a delay
-    setTimeout(() => {
-      setFilteredFood(filteredFoods)
+      setFilteredFood([])
       setIsDataLoading(false)
       setIsChangingCategory(false)
-    }, 800) // Delay to show skeleton
-  }, [restaurantData?.restaurant?.categories, selectedCategoryIndex, selectedSubcategoryIndex, tabs.length, subCategories.length, category])
+      return
+    }
+    let foodsToShow = []
+    const currentCategorySubcategories = subCategories[selectedCategoryIndex] || []
+
+    if (currentCategorySubcategories.length > 0) {
+      const validSubIndex = Math.max(0, Math.min(selectedSubcategoryIndex, currentCategorySubcategories.length - 1))
+      const selectedSubCategoryId = currentCategorySubcategories[validSubIndex]?._id
+
+      if (selectedSubCategoryId) {
+        foodsToShow = selectedCategory.foods.filter((food) => food.subCategory === selectedSubCategoryId)
+      } else {
+        foodsToShow = []
+      }
+    } else {
+      foodsToShow = selectedCategory.foods
+    }
+    setFilteredFood(foodsToShow)
+    setIsDataLoading(false)
+    setIsChangingCategory(false)
+
+    if (initialRender && foodsToShow.length > 0) {
+      setInitialRender(false)
+    }
+  }, [restaurantData?.restaurant?.categories, selectedCategoryIndex, selectedSubcategoryIndex, tabs, subCategories, category, restaurantLoading, subcategoriesLoading])
 
   useEffect(() => {
     getSubCategoriesAndTabs()

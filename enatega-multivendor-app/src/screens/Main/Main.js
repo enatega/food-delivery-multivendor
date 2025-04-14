@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
+import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, FlatList, Image, RefreshControl } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
@@ -95,6 +95,9 @@ function Main(props) {
   const cus = new Set()
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
+  function onError(error) {
+    console.log(error)
+  }
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -110,12 +113,14 @@ function Main(props) {
     const { data: newRestaurants } = await refetchRestaurants()
     setIsRefreshing(false)
   }
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
-    }
-    StatusBar.setBarStyle('dark-content')
-  })
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+      }
+      StatusBar.setBarStyle('dark-content')
+    }, [currentTheme])
+  )
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_MAIN)
@@ -141,10 +146,6 @@ function Main(props) {
     }
   }
 
-  function onError(error) {
-    console.log(error)
-  }
-
   const addressIcons = {
     House: CustomHomeIcon,
     Office: CustomWorkIcon,
@@ -165,55 +166,6 @@ function Main(props) {
     modalRef.current.close()
   }
 
-  // const setCurrentLocation = async () => {
-  //   onsole.log("Fetching current location...");
-  //   setBusy(true)
-  //   const { error, coords } = await getCurrentLocation()
-  //   console.log("getCurrentLocation result:", { error, coords });
-  //   console.log("coords",coords)
-  //   console.log("coords",coords.latitude)
-  //   console.log("coords",coords.longitude)
-  //   if (!coords || !coords.latitude || !coords.longitude) {
-  //     console.error("Invalid coordinates:", coords);
-  //     setBusy(false);
-  //     return;
-  //   }
-  //   console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
-  //   // const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_KEY}&language=en`
-
-  //   const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
-  //   fetch(apiUrl)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (data.error) {
-  //         console.log('Reverse geocoding request failed:', data.error)
-  //       } else {
-  //         console.log('data->>>>',data)
-  //         setBusy(false)
-  //         let address = data.display_name
-  //         console.log('address=>>', address)
-  //         if (address.length > 21) {
-  //           address = address.substring(0, 21) + '...'
-  //         }
-
-  //         if (error) navigation.navigate('SelectLocation')
-  //         else {
-  //           modalRef.current.close()
-  //           setLocation({
-  //             label: 'currentLocation',
-  //             latitude: coords.latitude,
-  //             longitude: coords.longitude,
-  //             deliveryAddress: address
-  //           })
-  //           setBusy(false)
-  //         }
-  //         console.log(address)
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching reverse geocoding data:', error)
-  //     })
-  // }
   const setCurrentLocation = async () => {
     console.log('Fetching current location...')
     setBusy(true)
@@ -229,10 +181,6 @@ function Main(props) {
       setBusy(false)
       return
     }
-
-    console.log(`Coordinates received: Lat: ${coords.latitude}, Lon: ${coords.longitude}`)
-
-    // Get the address function from the hook
 
     try {
       // Fetch the address using the geocoding hook

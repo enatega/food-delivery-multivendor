@@ -1,36 +1,9 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute
-} from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  Alert,
-  StatusBar,
-  Platform,
-  Image,
-  Dimensions,
-  SectionList
-} from 'react-native'
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useSharedValue,
-  Easing as EasingNode,
-  withTiming,
-  withRepeat,
-  useAnimatedStyle,
-  useAnimatedScrollHandler
-} from 'react-native-reanimated'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Image, Dimensions, SectionList } from 'react-native'
+import Animated, { Extrapolation, interpolate, useSharedValue, Easing as EasingNode, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade
-} from 'rn-placeholder'
+import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
 import ImageHeader from '../../components/Restaurant/ImageHeader'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ConfigurationContext from '../../context/Configuration'
@@ -62,8 +35,7 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
-const HEADER_MAX_HEIGHT =
-  Platform.OS === 'android' ? height * 0.65 : height * 0.61
+const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
 const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
@@ -101,18 +73,8 @@ function Restaurant(props) {
   const [search, setSearch] = useState('')
   const [filterData, setFilterData] = useState([])
   const [showSearchResults, setShowSearchResults] = useState(false)
-  const {
-    restaurant: restaurantCart,
-    setCartRestaurant,
-    cartCount,
-    addCartItem,
-    addQuantity,
-    clearCart,
-    checkItemCart
-  } = useContext(UserContext)
-  const { data, refetch, networkStatus, loading, error } = useRestaurant(
-    propsData._id
-  )
+  const { restaurant: restaurantCart, setCartRestaurant, cartCount, addCartItem, addQuantity, clearCart, checkItemCart } = useContext(UserContext)
+  const { data, refetch, networkStatus, loading, error } = useRestaurant(propsData._id)
 
   const client = useApolloClient()
   const { data: popularItems } = useQuery(POPULAR_ITEMS, {
@@ -178,9 +140,7 @@ function Restaurant(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -189,11 +149,7 @@ function Restaurant(props) {
     Track()
   }, [])
   useEffect(() => {
-    if (
-      data &&
-      data?.restaurant &&
-      (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant))
-    ) {
+    if (data && data?.restaurant && (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant))) {
       Alert.alert(
         '',
         t('Restaurant Closed at the moment'),
@@ -217,12 +173,7 @@ function Restaurant(props) {
 
   const zIndexAnimation = useAnimatedStyle(() => {
     return {
-      zIndex: interpolate(
-        translationY.value,
-        [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2],
-        [-1, 1, 99],
-        Extrapolation.CLAMP
-      )
+      zIndex: interpolate(translationY.value, [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2], [-1, 1, 99], Extrapolation.CLAMP)
     }
   })
 
@@ -323,14 +274,7 @@ function Restaurant(props) {
         return (
           <>
             <View style={styles(currentTheme).triangleCorner} />
-            <TextDefault
-              style={styles(currentTheme).tagText}
-              numberOfLines={1}
-              textColor={currentTheme.fontWhite}
-              bold
-              small
-              center
-            >
+            <TextDefault style={styles(currentTheme).tagText} numberOfLines={1} textColor={currentTheme.fontWhite} bold small center>
               {cartValue.quantity}
             </TextDefault>
           </>
@@ -428,10 +372,7 @@ function Restaurant(props) {
   function onViewableItemsChanged({ viewableItems }) {
     buttonClickedSetter(false)
     if (viewableItems.length === 0) return
-    if (
-      selectedLabel !== viewableItems[0].section.index &&
-      buttonClicked === false
-    ) {
+    if (selectedLabel !== viewableItems[0].section.index && buttonClicked === false) {
       selectedLabelSetter(viewableItems[0].section.index)
       scrollToNavbar(viewableItems[0].section.index)
     }
@@ -449,59 +390,19 @@ function Restaurant(props) {
 
   const iconTouchWidth = scale(30)
 
-  const circleSize = interpolate(
-    circle.value,
-    [0, 0.5, 1],
-    [scale(18), scale(24), scale(18)],
-    Extrapolation.CLAMP
-  )
-  const radiusSize = interpolate(
-    circle.value,
-    [0, 0.5, 1],
-    [scale(9), scale(12), scale(9)],
-    Extrapolation.CLAMP
-  )
+  const circleSize = interpolate(circle.value, [0, 0.5, 1], [scale(18), scale(24), scale(18)], Extrapolation.CLAMP)
+  const radiusSize = interpolate(circle.value, [0, 0.5, 1], [scale(9), scale(12), scale(9)], Extrapolation.CLAMP)
 
   const fontStyles = useAnimatedStyle(() => {
     return {
-      fontSize: interpolate(
-        circle.value,
-        [0, 0.5, 1],
-        [8, 12, 8],
-        Extrapolation.CLAMP
-      )
+      fontSize: interpolate(circle.value, [0, 0.5, 1], [8, 12, 8], Extrapolation.CLAMP)
     }
   })
 
   if (loading) {
     return (
       <View style={[styles(currentTheme).flex]}>
-        <ImageHeader
-          iconColor={iconColor}
-          iconSize={iconSize}
-          iconBackColor={iconBackColor}
-          iconRadius={iconRadius}
-          iconTouchWidth={iconTouchWidth}
-          iconTouchHeight={iconTouchHeight}
-          restaurantName={propsData?.name ?? data?.restaurant?.name}
-          restaurantId={propsData?._id}
-          restaurantImage={propsData?.image ?? data?.restaurant?.image}
-          restaurant={null}
-          topaBarData={[]}
-          loading={loading}
-          minimumOrder={
-            propsData?.minimumOrder ?? data?.restaurant?.minimumOrder
-          }
-          tax={propsData?.tax ?? data?.restaurant?.tax}
-          updatedDeals={[]}
-          searchOpen={searchOpen}
-          showSearchResults={showSearchResults}
-          setSearch={setSearch}
-          search={search}
-          searchHandler={searchHandler}
-          searchPopupHandler={searchPopupHandler}
-          translationY={translationY}
-        />
+        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} />
         <View
           style={[
             styles(currentTheme).navbarContainer,
@@ -514,13 +415,7 @@ function Restaurant(props) {
           {Array.from(Array(10), (_, i) => (
             <Placeholder
               key={i}
-              Animation={(props) => (
-                <Fade
-                  {...props}
-                  style={{ backgroundColor: currentTheme.gray }}
-                  duration={600}
-                />
-              )}
+              Animation={(props) => <Fade {...props} style={{ backgroundColor: currentTheme.gray }} duration={600} />}
               Left={PlaceholderMedia}
               style={{
                 padding: 12
@@ -575,9 +470,7 @@ function Restaurant(props) {
             topaBarData={updatedDeals}
             changeIndex={changeIndex}
             selectedLabel={selectedLabel}
-            minimumOrder={
-              propsData?.minimumOrder ?? data?.restaurant?.minimumOrder
-            }
+            minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder}
             tax={propsData?.tax ?? data?.restaurant?.tax}
             updatedDeals={updatedDeals}
             searchOpen={searchOpen}
@@ -602,17 +495,13 @@ function Restaurant(props) {
                   <TouchableOpacity
                     style={
                       // styles(currentTheme).searchDealSection
-                      (styles(currentTheme).searchDealSection,
-                      { opacity: item.isOutOfStock ? 0.5 : 1 })
+                      (styles(currentTheme).searchDealSection, { opacity: item.isOutOfStock ? 0.5 : 1 })
                     }
                     activeOpacity={0.7}
                     onPress={() => {
                       if (item.isOutOfStock) {
                         // Display an alert if the item is out of stock
-                        Alert.alert(
-                          'Currently Unavailable',
-                          'Item Out of Stock'
-                        )
+                        Alert.alert('Currently Unavailable', 'Item Out of Stock')
                       } else {
                         onPressItem({
                           ...item,
@@ -629,9 +518,7 @@ function Restaurant(props) {
                   >
                     <View
                       style={{
-                        flexDirection: currentTheme?.isRTL
-                          ? 'row-reverse'
-                          : 'row',
+                        flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}
@@ -649,50 +536,19 @@ function Restaurant(props) {
                         ) : null}
                         <View style={styles(currentTheme).flex}>
                           <View style={styles(currentTheme).dealDescription}>
-                            <TextDefault
-                              textColor={currentTheme.fontMainColor}
-                              style={styles(currentTheme).headerText}
-                              numberOfLines={1}
-                              bolder
-                              isRTL
-                            >
+                            <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder isRTL>
                               {item?.title}
                             </TextDefault>
-                            <TextDefault
-                              style={styles(currentTheme).priceText}
-                              small
-                              isRTL
-                            >
+                            <TextDefault style={styles(currentTheme).priceText} small isRTL>
                               {wrapContentAfterWords(item?.description, 5)}
                             </TextDefault>
                             <View style={styles(currentTheme).dealPrice}>
-                              <TextDefault
-                                numberOfLines={1}
-                                textColor={currentTheme.fontMainColor}
-                                style={styles(currentTheme).priceText}
-                                bolder
-                                small
-                                isRTL
-                              >
-                                {configuration.currencySymbol}{' '}
-                                {parseFloat(item?.variations[0].price).toFixed(
-                                  2
-                                )}
+                              <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
+                                {configuration.currencySymbol} {parseFloat(item?.variations[0].price).toFixed(2)}
                               </TextDefault>
                               {item?.variations[0]?.discounted > 0 && (
-                                <TextDefault
-                                  numberOfLines={1}
-                                  textColor={currentTheme.fontSecondColor}
-                                  style={styles(currentTheme).priceText}
-                                  small
-                                  lineOver
-                                  isRTL
-                                >
-                                  {configuration.currencySymbol}{' '}
-                                  {(
-                                    item?.variations[0].price +
-                                    item?.variations[0].discounted
-                                  ).toFixed(2)}
+                                <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} style={styles(currentTheme).priceText} small lineOver isRTL>
+                                  {configuration.currencySymbol} {(item?.variations[0].price + item?.variations[0].discounted).toFixed(2)}
                                 </TextDefault>
                               )}
                             </View>
@@ -700,11 +556,7 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles(currentTheme).addToCart}>
-                        <MaterialIcons
-                          name='add'
-                          size={scale(20)}
-                          color={currentTheme.themeBackground}
-                        />
+                        <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
                       </View>
                     </View>
                     {/* )} */}
@@ -749,11 +601,7 @@ function Restaurant(props) {
                     <View style={styles(currentTheme).restaurantItems}>
                       <View style={styles(currentTheme).popularHeading}>
                         <PopularIcon color={currentTheme.iconColorDark} />
-                        <TextDefault
-                          style={styles(currentTheme).popularText}
-                          textColor={currentTheme.fontFourthColor}
-                          bolder
-                        >
+                        <TextDefault style={styles(currentTheme).popularText} textColor={currentTheme.fontFourthColor} bolder>
                           {t(title)}
                         </TextDefault>
                       </View>
@@ -772,13 +620,7 @@ function Restaurant(props) {
                       </TextDefault>
                       <View style={styles(currentTheme).popularItemCards}>
                         {data.map((item) => (
-                          <ItemCard
-                            key={item?._id}
-                            item={item}
-                            onPressItem={onPressItem}
-                            restaurant={restaurant}
-                            tagCart={tagCart}
-                          />
+                          <ItemCard key={item?._id} item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart} />
                         ))}
                       </View>
                     </View>
@@ -787,22 +629,14 @@ function Restaurant(props) {
                 // Render other section headers as usual
                 return (
                   <View style={styles(currentTheme).sectionHeader}>
-                    <TextDefault
-                      style={styles(currentTheme).sectionHeaderText}
-                      textColor={currentTheme.fontFourthColor}
-                      bolder
-                      isRTL
-                    >
+                    <TextDefault style={styles(currentTheme).sectionHeaderText} textColor={currentTheme.fontFourthColor} bolder isRTL>
                       {title}
                     </TextDefault>
                   </View>
                 )
               }}
               renderItem={({ item, section }) => {
-                const imageUrl =
-                  item?.image && item?.image.trim() !== ''
-                    ? item?.image
-                    : IMAGE_LINK
+                const imageUrl = item?.image && item?.image.trim() !== '' ? item?.image : IMAGE_LINK
                 if (section.title === 'Popular') {
                   if (!dataList || dataList?.length === 0) {
                     return null
@@ -813,17 +647,13 @@ function Restaurant(props) {
                   <TouchableOpacity
                     style={
                       // styles(currentTheme).dealSection
-                      (styles(currentTheme).dealSection,
-                      { opacity: item.isOutOfStock ? 0.5 : 1 })
+                      [{ paddingHorizontal: scale(12) }, (styles(currentTheme).dealSection, { opacity: item.isOutOfStock ? 0.5 : 1 })]
                     }
                     activeOpacity={0.7}
                     onPress={() => {
                       if (item?.isOutOfStock) {
                         // Display an alert if the item is out of stock
-                        Alert.alert(
-                          'Currently Unavailable',
-                          'Item Out of Stock'
-                        )
+                        Alert.alert('Currently Unavailable', 'Item Out of Stock')
                       } else {
                         onPressItem({
                           ...item,
@@ -835,9 +665,7 @@ function Restaurant(props) {
                   >
                     <View
                       style={{
-                        flexDirection: currentTheme?.isRTL
-                          ? 'row-reverse'
-                          : 'row',
+                        flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}
@@ -853,50 +681,19 @@ function Restaurant(props) {
                         />
                         <View style={styles(currentTheme).flex}>
                           <View style={styles(currentTheme).dealDescription}>
-                            <TextDefault
-                              textColor={currentTheme.fontMainColor}
-                              style={styles(currentTheme).headerText}
-                              numberOfLines={1}
-                              bolder
-                              isRTL
-                            >
+                            <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder isRTL>
                               {item?.title}
                             </TextDefault>
-                            <TextDefault
-                              style={styles(currentTheme).priceText}
-                              small
-                              isRTL
-                            >
+                            <TextDefault style={styles(currentTheme).priceText} small isRTL>
                               {wrapContentAfterWords(item?.description, 5)}
                             </TextDefault>
                             <View style={styles(currentTheme).dealPrice}>
-                              <TextDefault
-                                numberOfLines={1}
-                                textColor={currentTheme.fontMainColor}
-                                style={styles(currentTheme).priceText}
-                                bolder
-                                small
-                                isRTL
-                              >
-                                {configuration.currencySymbol}{' '}
-                                {parseFloat(item?.variations[0].price).toFixed(
-                                  2
-                                )}
+                              <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
+                                {configuration.currencySymbol} {parseFloat(item?.variations[0].price).toFixed(2)}
                               </TextDefault>
                               {item?.variations[0]?.discounted > 0 && (
-                                <TextDefault
-                                  numberOfLines={1}
-                                  textColor={currentTheme.fontSecondColor}
-                                  style={styles(currentTheme).priceText}
-                                  small
-                                  lineOver
-                                  isRTL
-                                >
-                                  {configuration.currencySymbol}{' '}
-                                  {(
-                                    item?.variations[0].price +
-                                    item?.variations[0].discounted
-                                  ).toFixed(2)}
+                                <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} style={styles(currentTheme).priceText} small lineOver isRTL>
+                                  {configuration.currencySymbol} {(item?.variations[0].price + item?.variations[0].discounted).toFixed(2)}
                                 </TextDefault>
                               )}
                             </View>
@@ -904,11 +701,7 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles(currentTheme).addToCart}>
-                        <MaterialIcons
-                          name='add'
-                          size={scale(20)}
-                          color={currentTheme.themeBackground}
-                        />
+                        <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
                       </View>
                     </View>
                     {/* )} */}
@@ -922,11 +715,7 @@ function Restaurant(props) {
 
           {cartCount > 0 && (
             <View style={styles(currentTheme).buttonContainer}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles(currentTheme).button}
-                onPress={() => navigation.navigate('Cart')}
-              >
+              <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
                 <View style={styles().buttontLeft}>
                   <Animated.View
                     style={[
@@ -939,21 +728,10 @@ function Restaurant(props) {
                       scaleStyles
                     ]}
                   >
-                    <Animated.Text
-                      style={[styles(currentTheme).buttonTextLeft, fontStyles]}
-                    >
-                      {cartCount}
-                    </Animated.Text>
+                    <Animated.Text style={[styles(currentTheme).buttonTextLeft, fontStyles]}>{cartCount}</Animated.Text>
                   </Animated.View>
                 </View>
-                <TextDefault
-                  style={styles().buttonText}
-                  textColor={currentTheme.buttonTextPink}
-                  uppercase
-                  center
-                  bolder
-                  small
-                >
+                <TextDefault style={styles().buttonText} textColor={currentTheme.buttonTextPink} uppercase center bolder small>
                   {t('viewCart')}
                 </TextDefault>
                 <View style={styles().buttonTextRight} />
