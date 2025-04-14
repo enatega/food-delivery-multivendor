@@ -41,7 +41,7 @@ export const useRestaurantQueries = (restaurantId) => {
     },
     // Category Details Query
     categories: {
-      data: categoryData?.fetchCategoryDetailsByStoreId,
+      data: categoryData?.fetchCategoryDetailsByStoreIdForMobile,
       loading: categoryLoading,
       error: categoryError,
       refetch: refetchCategories

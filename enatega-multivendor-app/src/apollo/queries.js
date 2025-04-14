@@ -970,28 +970,14 @@ export const orderFragment = `fragment NewOrder on Order {
 }`
 
 // TODO: Check why the url is null
-export const fetchCategoryDetailsByStore = `query FetchCategoryDetailsByStoreId($storeId: String!)  {
-  fetchCategoryDetailsByStoreId(storeId: $storeId) {
+export const fetchCategoryDetailsByStore = `query fetchCategoryDetailsByStoreIdForMobile($storeId: String!)  {
+  fetchCategoryDetailsByStoreIdForMobile(storeId: $storeId) {
       id
       category_name
       url
       food_id
   }
 }`
-
-// export const fetchCategoryDetailsByStore = `query FetchCategoryDetailsByStoreId($storeId: String!) {
-//     fetchCategoryDetailsByStoreId(storeId: $storeId) {
-//       id
-//       label
-//       url
-//       items {
-//         id
-//         label
-//         url
-//       }
-//     }
-//   }
-// `
 
 export const popularFoodItems = `query popularFoodItems($restaurantId: String!) {
   popularFoodItems(restaurantId: $restaurantId) {
