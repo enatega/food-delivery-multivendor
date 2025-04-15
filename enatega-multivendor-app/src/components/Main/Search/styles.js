@@ -9,7 +9,8 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
     bodyStyleOne: {
       fontFamily: fontStyles.MuseoSans500,
       fontSize: scale(14),
-      color: props != null ? props?.fontMainColor : 'black'
+      color: props != null ? props?.fontMainColor : 'black',
+      minHeight: verticalScale(40)
     },
     mainContainerHolder: {
       zIndex: 333,
@@ -44,16 +45,18 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
     leftContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       width: '84%',
-      gap: scale(15),
+      gap: scale(8),
       overflow: 'hidden'
     },
     searchContainer: {
-      width: '10%'
+      width: '10%',
+      alignSelf: 'center'
     },
     inputContainer: {
       justifyContent: 'center',
       ...alignment.MLxSmall,
-      ...alignment.MRxSmall
+      ...alignment.MRxSmall,
+      width: '90%'
     },
     filterContainer: {
       width: '10%',

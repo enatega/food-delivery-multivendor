@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
-import {
-  View,
-  RefreshControl,
-  Animated,
-  Platform,
-  TouchableOpacity
-} from 'react-native'
+import { View, RefreshControl, Animated, Platform, TouchableOpacity } from 'react-native'
 import { useQuery, gql } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import Search from '../../components/Main/Search/Search'
@@ -23,17 +17,10 @@ import Spinner from '../../components/Spinner/Spinner'
 import { alignment } from '../../utils/alignment'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
-import {
-  storeSearch,
-  getRecentSearches,
-  clearRecentSearches
-} from '../../utils/recentSearch'
+import { storeSearch, getRecentSearches, clearRecentSearches } from '../../utils/recentSearch'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import { ScrollView } from 'react-native-gesture-handler'
-import {
-  isOpen,
-  sortRestaurantsByOpenStatus
-} from '../../utils/customFunctions'
+import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import { escapeRegExp } from '../../utils/regex'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
@@ -88,18 +75,15 @@ const SearchScreen = () => {
     )
   }
 
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANTS,
-    {
-      variables: {
-        longitude: location.longitude || null,
-        latitude: location.latitude || null,
-        shopType: null,
-        ip: null
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
+  const { data, refetch, networkStatus, loading, error } = useQuery(RESTAURANTS, {
+    variables: {
+      longitude: location.longitude || null,
+      latitude: location.latitude || null,
+      shopType: null,
+      ip: null
+    },
+    fetchPolicy: 'network-only'
+  })
 
   useEffect(() => {
     navigation.setOptions({
@@ -128,11 +112,7 @@ const SearchScreen = () => {
     getRecentSearches().then((searches) => setRecentSearches(searches))
   }, [search])
 
-  const {
-    onScroll /* Event handler */,
-    containerPaddingTop /* number */,
-    scrollIndicatorInsetTop /* number */
-  } = useCollapsibleSubHeader()
+  const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
 
   const restaurants = data?.nearByRestaurantsPreview?.restaurants
 
@@ -161,8 +141,7 @@ const SearchScreen = () => {
 
   const uniqueTags = getUniqueTags(restaurants)
 
-  const { isConnected: connect, setIsConnected: setConnect } =
-    useNetworkStatus()
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView />
 
   const emptyView = () => {
@@ -229,14 +208,7 @@ const SearchScreen = () => {
             data={sortRestaurantsByOpenStatus(searchAllShops(search) || [])}
             renderItem={({ item }) => {
               const restaurantOpen = isOpen(item)
-              return (
-                <NewRestaurantCard
-                  {...item}
-                  isSearch={search}
-                  fullWidth
-                  isOpen={restaurantOpen}
-                />
-              )
+              return <NewRestaurantCard {...item} isSearch={search} fullWidth isOpen={restaurantOpen} />
             }}
           />
         </View>
@@ -246,24 +218,13 @@ const SearchScreen = () => {
         <View style={styles(currentTheme).recentSearchContainer}>
           <View style={styles(currentTheme).flexRow}>
             <View>
-              <TextDefault
-                style={styles().drawerContainer}
-                textColor={currentTheme.fontMainColor}
-                small
-                H4
-                bolder
-              >
+              <TextDefault style={styles().drawerContainer} textColor={currentTheme.fontMainColor} small H4 bolder>
                 {t('recentSearches')}
               </TextDefault>
             </View>
             <View>
               <TouchableOpacity onPress={() => handleClearRecentSearches()}>
-                <TextDefault
-                  style={styles().drawerContainer}
-                  textColor={currentTheme.fontMainColor}
-                  normal
-                  bolder
-                >
+                <TextDefault style={styles().drawerContainer} textColor={currentTheme.fontMainColor} normal bolder>
                   {t('clear')}
                 </TextDefault>
               </TouchableOpacity>
@@ -276,16 +237,9 @@ const SearchScreen = () => {
 
           {recentSearches.map((recentSearch, index) => (
             <React.Fragment key={index}>
-              <TouchableOpacity
-                onPress={() => handleTagPress(recentSearch)}
-                style={styles(currentTheme).recentListBtn}
-              >
+              <TouchableOpacity onPress={() => handleTagPress(recentSearch)} style={styles(currentTheme).recentListBtn}>
                 <View>
-                  <Ionicons
-                    name='search'
-                    color={currentTheme.gray500}
-                    size={scale(20)}
-                  />
+                  <Ionicons name='search' color={currentTheme.gray500} size={scale(20)} />
                 </View>
                 <View>
                   <TextDefault>{recentSearch}</TextDefault>
@@ -302,29 +256,19 @@ const SearchScreen = () => {
         <View style={styles(currentTheme).tagView}>
           {loading ? (
             <View style={{ ...alignment.MTmedium }}>
-              <Spinner
-                size={'small'}
-                backColor={'transparent'}
-                spinnerColor={currentTheme.main}
-              />
+              <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.main} />
             </View>
           ) : (
             uniqueTags.map((tag, index) =>
               hasAnimated ? (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handleTagPress(tag)}
-                >
+                <TouchableOpacity key={index} onPress={() => handleTagPress(tag)}>
                   <View style={styles(currentTheme).tagItem}>
                     <TextDefault>{tag}</TextDefault>
                   </View>
                 </TouchableOpacity>
               ) : (
                 <CustomItem index={index}>
-                  <TouchableOpacity
-                    key={tag}
-                    onPress={() => handleTagPress(tag)}
-                  >
+                  <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
                     <View style={styles(currentTheme).tagItem}>
                       <TextDefault>{tag}</TextDefault>
                     </View>
@@ -355,12 +299,7 @@ const SearchScreen = () => {
         }
       >
         <View style={styles().searchbar}>
-          <Search
-            setSearch={setSearch}
-            search={search}
-            newheaderColor={newheaderColor}
-            placeHolder={t('searchRestaurant')}
-          />
+          <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor} placeHolder={t('searchRestaurant')} />
         </View>
         {renderTagsOrSearches()}
       </View>

@@ -17,20 +17,19 @@ const styles = (props = null) =>
     },
     subContainer: {
       width: '90%',
-     backgroundColor: props != null ? props?.themeBackground : '#fff',
+      backgroundColor: props != null ? props?.themeBackground : '#fff',
       alignSelf: 'center'
     },
     scrollViewStyle: {
-      backgroundColor: props != null ? props?.themeBackground : '#fff',
-      
+      backgroundColor: props != null ? props?.themeBackground : '#fff'
     },
     headerContainer: {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-     backgroundColor: props != null ? props?.themeBackground : '#fff',
-      zIndex: 3,
+      backgroundColor: props != null ? props?.themeBackground : '#fff',
+      zIndex: 3
     },
     titleContainer: {
       position: 'absolute',
@@ -40,6 +39,7 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props?.themeBackground : '#fff',
       justifyContent: 'center',
       alignItems: 'center',
+      minHeight: scale(32)
     },
     line: {
       marginLeft: scale(10),
@@ -61,10 +61,8 @@ const styles = (props = null) =>
     inputContainer: {
       alignSelf: 'center',
       zIndex: scale(1)
-
     },
     backBtnContainer: {
-      
       borderRadius: scale(50),
       width: scale(55),
       alignItems: 'center'
@@ -75,6 +73,6 @@ const styles = (props = null) =>
       paddingTop: scale(10),
       maxWidth: '100%',
       ...alignment.MRxSmall
-    },
+    }
   })
 export default styles

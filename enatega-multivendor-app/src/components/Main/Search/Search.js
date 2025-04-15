@@ -15,27 +15,15 @@ function Search(props) {
     ...theme[themeContext.ThemeValue]
   }
   return (
-    <View
-      style={styles(currentTheme, props?.newheaderColor).mainContainerHolder}
-    >
+    <View style={styles(currentTheme, props?.newheaderColor).mainContainerHolder}>
       <View style={styles(currentTheme, props?.cartContainer).mainContainer}>
         <View style={styles(currentTheme).subContainer}>
           <View style={styles(currentTheme).leftContainer}>
             <View style={styles().searchContainer}>
-              <Ionicons
-                name='search'
-                color={currentTheme.gray500}
-                size={scale(20)}
-              />
+              <Ionicons name='search' color={currentTheme.gray500} size={scale(20)} />
             </View>
             <View style={styles().inputContainer}>
-              <TextInput
-                style={styles(currentTheme).bodyStyleOne}
-                placeholder={props?.placeHolder}
-                placeholderTextColor={currentTheme.gray500}
-                onChangeText={(text) => props?.setSearch(text)}
-                value={props?.search}
-              />
+              <TextInput style={styles(currentTheme).bodyStyleOne} placeholder={props?.placeHolder} placeholderTextColor={currentTheme.gray500} onChangeText={(text) => props?.setSearch(text)} value={props?.search} />
             </View>
           </View>
           <View style={[styles(currentTheme).filterContainer]}>
@@ -45,11 +33,7 @@ function Search(props) {
                   props?.setSearch('')
                 }}
               >
-                <AntDesign
-                  name='closecircleo'
-                  size={20}
-                  color={currentTheme.fontSecondColor}
-                />
+                <AntDesign name='closecircleo' size={20} color={currentTheme.fontSecondColor} />
               </TouchableOpacity>
             ) : (
               <></>

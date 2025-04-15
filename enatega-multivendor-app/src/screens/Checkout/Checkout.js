@@ -1,25 +1,10 @@
 /* eslint-disable indent */
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-  Alert,
-  TextInput,
-  Dimensions
-} from 'react-native'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  AntDesign,
-  EvilIcons,
-  Feather,
-  FontAwesome,
-  MaterialCommunityIcons
-} from '@expo/vector-icons'
+import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import { getTipping, orderFragment } from '../../apollo/queries'
@@ -55,7 +40,7 @@ import PickUp from '../../components/Pickup'
 import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
 import { isOpen } from '../../utils/customFunctions'
 import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
-import { useCallback } from "react";
+import { useCallback } from 'react'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -77,23 +62,14 @@ function Checkout(props) {
   useFocusEffect(
     useCallback(() => {
       // Alert.alert( "Server is currently unavailable. Please try again later.");
-      console.log("Server is currently unavailable. Please try again later.")
-    }, []))
-
+      console.log('Server is currently unavailable. Please try again later.')
+    }, [])
+  )
 
   const configuration = useContext(ConfigurationContext)
-  const {
-    isLoggedIn,
-    profile,
-    clearCart,
-    restaurant: cartRestaurant,
-    cart,
-    cartCount,
-    updateCart,
-    isPickup,
-    setIsPickup,
-    instructions
-  } = useContext(UserContext)
+  const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions } = useContext(UserContext)
+
+  console.log('rest===>', restaurant)
 
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
@@ -140,8 +116,6 @@ function Checkout(props) {
     }
   }
 
-
-
   const onModalClose = (modalRef) => {
     const modal = modalRef.current
     if (modal) {
@@ -149,12 +123,11 @@ function Checkout(props) {
     }
   }
 
-
-  const handleCartNavigation = async() => {
+  const handleCartNavigation = async () => {
     setisModalVisible(false)
     props?.navigation.navigate('CartAddress')
   }
-  
+
   function onCouponCompleted(data) {
     if (data?.coupon) {
       if (data?.coupon.enabled) {
@@ -190,14 +163,11 @@ function Checkout(props) {
     fetchPolicy: 'network-only'
   })
 
-  const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(
-    PLACEORDER,
-    {
-      onCompleted,
-      onError,
-      update
-    }
-  )
+  const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(PLACEORDER, {
+    onCompleted,
+    onError,
+    update
+  })
 
   const COD_PAYMENT = {
     payment: 'COD',
@@ -206,10 +176,7 @@ function Checkout(props) {
     icon: 'dollar'
   }
 
-  const paymentMethod =
-    props?.route.params && props?.route.params.paymentMethod
-      ? props?.route.params.paymentMethod
-      : COD_PAYMENT
+  const paymentMethod = props?.route.params && props?.route.params.paymentMethod ? props?.route.params.paymentMethod : COD_PAYMENT
 
   const [selectedTip, setSelectedTip] = useState()
   const inset = useSafeAreaInsets()
@@ -243,19 +210,10 @@ function Checkout(props) {
         const lonOrigin = Number(data?.restaurant.location.coordinates[0])
         const latDest = Number(location.latitude)
         const longDest = Number(location.longitude)
-        const distance = calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
+        const distance = calculateDistance(latOrigin, lonOrigin, latDest, longDest)
 
         let costType = configuration.costType
-        let amount = calculateAmount(
-          costType,
-          configuration.deliveryRate,
-          distance
-        )
+        let amount = calculateAmount(costType, configuration.deliveryRate, distance)
 
         if (isSubscribed) {
           setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
@@ -271,9 +229,7 @@ function Checkout(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
 
   useEffect(() => {
@@ -289,12 +245,10 @@ function Checkout(props) {
           >
             {t('titleCheckout')}
           </TextDefault>
-          <TextDefault
-            style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}
-          >
+          <TextDefault style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
             {data && data?.restaurant.name && data?.restaurant.address && (
               <>
-                {data?.restaurant.name} {' - '} 
+                {data?.restaurant.name} {' - '}
                 {data.restaurant.address.length > 12 ? data.restaurant.address.slice(0, 12) + '...' : data.restaurant.address}
               </>
             )}
@@ -317,11 +271,7 @@ function Checkout(props) {
           truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall, width: scale(30) }}>
-              <AntDesign
-                name='arrowleft'
-                size={22}
-                color={currentTheme.fontFourthColor}
-              />
+              <AntDesign name='arrowleft' size={22} color={currentTheme.fontFourthColor} />
             </View>
           )}
           onPress={() => {
@@ -345,17 +295,13 @@ function Checkout(props) {
   }, [])
   useEffect(() => {
     if (cart && cartCount > 0) {
-      if (
-        data &&
-        data?.restaurant &&
-        (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant))
-      ) {
+      if (data && data?.restaurant && (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant))) {
         showAvailablityMessage()
       }
     }
   }, [data])
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
   const showAvailablityMessage = () => {
     Alert.alert(
@@ -470,7 +416,7 @@ function Checkout(props) {
     setLoadingOrder(false)
     if (error.graphQLErrors.length) {
       if (error.graphQLErrors[0].message === "Sorry! we can't deliver to your address.") {
-        setisModalVisible(true);
+        setisModalVisible(true)
       }
     } else {
       FlashMessage({
@@ -483,8 +429,7 @@ function Checkout(props) {
         // FlashMessage({
         //   message: "Server is currently unavailable. Please try again later."
         // })
-        console.log("Server is currently unavailable. Please try again later.")
-        
+        console.log('Server is currently unavailable. Please try again later.')
       }
     }
   }
@@ -564,14 +509,14 @@ function Checkout(props) {
       return false
     }
     if (profile?.phone?.length < 1) {
-      props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen:'Checkout' })
+      props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen: 'Checkout' })
       return false
     }
     if (profile.phone.length > 0 && !profile.phoneIsVerified) {
       FlashMessage({
         message: t('numberVerificationAlert')
       })
-      props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen:'Checkout' })
+      props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen: 'Checkout' })
       return false
     }
     return true
@@ -604,49 +549,53 @@ function Checkout(props) {
     })
   }
   async function onPayment() {
-    if (checkPaymentMethod(configuration.currency)) {
-      const items = transformOrder(cart)
-      const orderVariables = {
-        restaurant: cartRestaurant,
-        orderInput: items,
-        paymentMethod: paymentMode,
-        couponCode: coupon ? coupon.title : null,
-        tipping: +calculateTip(),
-        taxationAmount: +taxCalculation(),
-        orderDate: orderDate,
-        isPickedUp: isPickup,
-        deliveryCharges: isPickup ? 0 : deliveryCharges,
-        instructions
-      }
-
-      if (isPickup) {
-        // For pickup, use the location from context
-        orderVariables.address = {
-          label: 'Current Location',
-          deliveryAddress: 'Pickup',
-          details: 'User will pick up the order',
-          longitude: '' + location.longitude,
-          latitude: '' + location.latitude
+    try {
+      if (checkPaymentMethod(configuration.currency)) {
+        const items = transformOrder(cart)
+        const orderVariables = {
+          restaurant: cartRestaurant,
+          orderInput: items,
+          paymentMethod: paymentMode,
+          couponCode: coupon ? coupon.title : null,
+          tipping: +calculateTip(),
+          taxationAmount: +taxCalculation(),
+          orderDate: orderDate,
+          isPickedUp: isPickup,
+          deliveryCharges: isPickup ? 0 : deliveryCharges,
+          instructions
         }
+
+        if (isPickup) {
+          // For pickup, use the location from context
+          orderVariables.address = {
+            label: 'Current Location',
+            deliveryAddress: 'Pickup',
+            details: 'User will pick up the order',
+            longitude: '' + location.longitude,
+            latitude: '' + location.latitude
+          }
+        } else {
+          // For delivery, use the selected address
+          orderVariables.address = {
+            label: location.label,
+            deliveryAddress: location.deliveryAddress,
+            details: location.details,
+            longitude: '' + location.longitude,
+            latitude: '' + location.latitude
+          }
+        }
+
+        await mutateOrder({ variables: orderVariables })
+        setLoadingOrder(false)
+        setIsPickup(false)
       } else {
-        // For delivery, use the selected address
-        orderVariables.address = {
-          label: location.label,
-          deliveryAddress: location.deliveryAddress,
-          details: location.details,
-          longitude: '' + location.longitude,
-          latitude: '' + location.latitude
-        }
+        FlashMessage({
+          message: t('paymentNotSupported')
+        })
+        setLoadingOrder(false)
       }
-
-      await mutateOrder({ variables: orderVariables })
-      setLoadingOrder(false)
-      setIsPickup(false)
-    } else {
-      FlashMessage({
-        message: t('paymentNotSupported')
-      })
-      setLoadingOrder(false)
+    } catch (error) {
+      console.error('Error placing order:', error)
     }
   }
 
@@ -661,14 +610,10 @@ function Checkout(props) {
         const transformCart = cart.map((cartItem) => {
           const food = foods.find((food) => food?._id === cartItem._id)
           if (!food) return null
-          const variation = food?.variations.find(
-            (variation) => variation._id === cartItem.variation._id
-          )
+          const variation = food?.variations.find((variation) => variation._id === cartItem.variation._id)
           if (!variation) return null
 
-          const title = `${food?.title}${
-            variation.title ? `(${variation.title})` : ''
-          }`
+          const title = `${food?.title}${variation.title ? `(${variation.title})` : ''}`
           let price = variation.price
           const optionsTitle = []
           if (cartItem.addons) {
@@ -717,78 +662,30 @@ function Checkout(props) {
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
 
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height60} />
           <PlaceholderLine />
         </Placeholder>
 
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
-          <View
-            style={[
-              styles(currentTheme).horizontalLine,
-              styles().width100,
-              styles().mB10
-            ]}
-          />
+          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
-          <View
-            style={[
-              styles(currentTheme).horizontalLine,
-              styles().width100,
-              styles().mB10
-            ]}
-          />
+          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
@@ -797,79 +694,33 @@ function Checkout(props) {
   }
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
-  if (
-    loading ||
-    loadingData ||
-    loadingTip ||
-    mutateOrderLoading ||
-    loadingOrder
-  )
-    return loadginScreen()
-
-
-
+  if (loading || loadingData || loadingTip || mutateOrderLoading || loadingOrder) return loadginScreen()
 
   return (
     <>
       <View style={styles(currentTheme).mainContainer}>
         {!!cart.length && (
           <>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={[styles().flex]}
-            >
+            <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex]}>
               <View>
                 <View style={[styles(currentTheme).headerContainer]}>
                   <View style={styles().mapView}>
-                    <MapView
-                      style={styles().flex}
-                      scrollEnabled={false}
-                      zoomEnabled={false}
-                      zoomControlEnabled={false}
-                      rotateEnabled={false}
-                      cacheEnabled={false}
-                      initialRegion={initialRegion}
-                      customMapStyle={customMapStyle}
-                      provider={PROVIDER_GOOGLE}
-                    ></MapView>
+                    <MapView style={styles().flex} scrollEnabled={false} zoomEnabled={false} zoomControlEnabled={false} rotateEnabled={false} cacheEnabled={false} initialRegion={initialRegion} customMapStyle={customMapStyle} provider={PROVIDER_GOOGLE}></MapView>
                     <View style={styles().marker}>
                       <RestaurantMarker />
                     </View>
                   </View>
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().width100
-                    ]}
-                  />
+                  <View style={[styles(currentTheme).horizontalLine, styles().width100]} />
                 </View>
-                <FulfillmentMode
-                  theme={currentTheme}
-                  setIsPickup={setIsPickup}
-                  isPickup={isPickup}
-                  t={t}
-                />
+                <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} t={t} />
                 <View style={[styles(currentTheme).headerContainer]}>
                   {!isPickup && (
                     <View style={alignment.PLsmall}>
-                      <Location
-                        locationIcon={currentTheme.newIconColor}
-                        locationLabel={currentTheme.newFontcolor}
-                        location={currentTheme.newFontcolor}
-                        navigation={props?.navigation}
-                        addresses={profile?.addresses}
-                        forwardIcon={true}
-                        screenName={'checkout'}
-                      />
+                      <Location locationIcon={currentTheme.newIconColor} locationLabel={currentTheme.newFontcolor} location={currentTheme.newFontcolor} navigation={props?.navigation} addresses={profile?.addresses} forwardIcon={true} screenName={'checkout'} />
                     </View>
                   )}
 
-                  <View
-                    style={[
-                      styles(currentTheme).horizontalLine,
-                      styles().width100
-                    ]}
-                  />
+                  <View style={[styles(currentTheme).horizontalLine, styles().width100]} />
                   <TouchableOpacity
                     onPress={() => {
                       onModalOpen(calenderModalRef)
@@ -883,56 +734,26 @@ function Checkout(props) {
                     </View>
                     <View style={styles(currentTheme).labelContainer}>
                       <View style={{ marginHorizontal: scale(5) }}>
-                        <TextDefault
-                          textColor={currentTheme.newFontcolor}
-                          numberOfLines={1}
-                          H5
-                          bolder
-                          isRTL
-                        >
-                          {t(isPickup ? 'pickUp' : 'delivery')} ({deliveryTime}{' '}
-                          {t('mins')})
+                        <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
+                          {t(isPickup ? 'pickUp' : 'delivery')} ({deliveryTime} {t('mins')})
                         </TextDefault>
                       </View>
                     </View>
-                    <View
-                      style={[
-                        styles().iconContainer,
-                        { justifyContent: 'center', alignItems: 'center' }
-                      ]}
-                    >
+                    <View style={[styles().iconContainer, { justifyContent: 'center', alignItems: 'center' }]}>
                       <View style={[styles().icon, { backgroundColor: null }]}>
-                        <Feather
-                          name={
-                            currentTheme?.isRTL
-                              ? 'chevron-left'
-                              : 'chevron-right'
-                          }
-                          size={20}
-                          color={currentTheme.secondaryText}
-                        />
+                        <Feather name={currentTheme?.isRTL ? 'chevron-left' : 'chevron-right'} size={20} color={currentTheme.secondaryText} />
                       </View>
                     </View>
                   </TouchableOpacity>
                 </View>
                 <View>
-                  <Instructions
-                    theme={currentTheme}
-                    title={'Instruction for the restaurant'}
-                    message={instructions}
-                  />
+                  <Instructions theme={currentTheme} title={'Instruction for the restaurant'} message={instructions} />
                 </View>
 
                 {isLoggedIn && profile && (
                   <>
                     <View style={styles().paymentSec}>
-                      <TextDefault
-                        numberOfLines={1}
-                        H5
-                        bolder
-                        textColor={currentTheme.fontNewColor}
-                        isRTL
-                      >
+                      <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor} isRTL>
                         {t('titlePayment')}
                       </TextDefault>
                       <View>
@@ -967,42 +788,19 @@ function Checkout(props) {
                     </View>
                   </>
                 )}
-                <View
-                  style={[
-                    styles(currentTheme).horizontalLine2,
-                    { width: '92%', alignSelf: 'center' }
-                  ]}
-                />
+                <View style={[styles(currentTheme).horizontalLine2, { width: '92%', alignSelf: 'center' }]} />
 
                 <View style={styles().voucherSec}>
                   {!coupon ? (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={styles(currentTheme).voucherSecInner}
-                      onPress={() => onModalOpen(voucherModalRef)}
-                    >
-                      <MaterialCommunityIcons
-                        name='ticket-confirmation-outline'
-                        size={24}
-                        color={currentTheme.lightBlue}
-                      />
-                      <TextDefault
-                        H4
-                        bolder
-                        textColor={currentTheme.lightBlue}
-                        center
-                      >
+                    <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(voucherModalRef)}>
+                      <MaterialCommunityIcons name='ticket-confirmation-outline' size={24} color={currentTheme.lightBlue} />
+                      <TextDefault H4 bolder textColor={currentTheme.lightBlue} center>
                         {t('applyVoucher')}
                       </TextDefault>
                     </TouchableOpacity>
                   ) : (
                     <>
-                      <TextDefault
-                        numberOfLines={1}
-                        H5
-                        bolder
-                        textColor={currentTheme.fontNewColor}
-                      >
+                      <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
                         Voucher
                       </TextDefault>
                       <View
@@ -1021,44 +819,20 @@ function Checkout(props) {
                             gap: scale(5)
                           }}
                         >
-                          <AntDesign
-                            name='tags'
-                            size={24}
-                            color={currentTheme.main}
-                          />
+                          <AntDesign name='tags' size={24} color={currentTheme.main} />
                           <View>
-                            <TextDefault
-                              numberOfLines={1}
-                              tnormal
-                              bold
-                              textColor={currentTheme.fontFourthColor}
-                            >
+                            <TextDefault numberOfLines={1} tnormal bold textColor={currentTheme.fontFourthColor}>
                               {coupon ? coupon.title : null} applied
                             </TextDefault>
-                            <TextDefault
-                              small
-                              bold
-                              textColor={currentTheme.fontFourthColor}
-                            >
+                            <TextDefault small bold textColor={currentTheme.fontFourthColor}>
                               -{configuration.currencySymbol}
-                              {parseFloat(
-                                calculatePrice(0, false) -
-                                  calculatePrice(0, true)
-                              ).toFixed(2)}
+                              {parseFloat(calculatePrice(0, false) - calculatePrice(0, true)).toFixed(2)}
                             </TextDefault>
                           </View>
                         </View>
                         <View style={styles(currentTheme).changeBtn}>
-                          <TouchableOpacity
-                            activeOpacity={0.7}
-                            onPress={() => setCoupon(null)}
-                          >
-                            <TextDefault
-                              small
-                              bold
-                              textColor={currentTheme.darkBgFont}
-                              center
-                            >
+                          <TouchableOpacity activeOpacity={0.7} onPress={() => setCoupon(null)}>
+                            <TextDefault small bold textColor={currentTheme.darkBgFont} center>
                               {coupon ? t('remove') : null}
                             </TextDefault>
                           </TouchableOpacity>
@@ -1067,112 +841,51 @@ function Checkout(props) {
                     </>
                   )}
                 </View>
-                  <View style={styles().tipSec}>
-                    <View style={[styles(currentTheme).tipRow]}>
-                      <TextDefault
-                        numberOfLines={1}
-                        H5
-                        bolder
-                        textColor={currentTheme.fontNewColor}
-                      >
-                        {t('AddTip')}
-                      </TextDefault>
-                      <TextDefault
-                        numberOfLines={1}
-                        normal
-                        bolder
-                        uppercase
-                        textItalic
-                        textColor={currentTheme.fontNewColor}
-                      >
-                        {t('optional')}
-                      </TextDefault>
-                    </View>
-                    {dataTip && (
-                      <View style={styles(currentTheme).buttonInline}>
-                        {dataTip.tips.tipVariations.map((label, index) => (
-                          <TouchableOpacity
-                            activeOpacity={0.7}
-                            key={index}
-                            style={[
-                              selectedTip === label
-                                ? styles(currentTheme).activeLabel
-                                : styles(currentTheme).labelButton
-                            ]}
-                            onPress={() => {
-                              props?.navigation.setParams({ tipAmount: null })
-                              setTip(null)
-                              setSelectedTip((prevState) =>
-                                prevState === label ? null : label
-                              )
-                            }}
-                          >
-                            <TextDefault
-                              textColor={
-                                selectedTip === label
-                                  ? currentTheme.black
-                                  : currentTheme.fontFourthColor
-                              }
-                              normal
-                              bolder
-                              center
-                            >
-                              {configuration.currencySymbol} {label}
-                            </TextDefault>
-                          </TouchableOpacity>
-                        ))}
+                <View style={styles().tipSec}>
+                  <View style={[styles(currentTheme).tipRow]}>
+                    <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
+                      {t('AddTip')}
+                    </TextDefault>
+                    <TextDefault numberOfLines={1} normal bolder uppercase textItalic textColor={currentTheme.fontNewColor}>
+                      {t('optional')}
+                    </TextDefault>
+                  </View>
+                  {dataTip && (
+                    <View style={styles(currentTheme).buttonInline}>
+                      {dataTip.tips.tipVariations.map((label, index) => (
                         <TouchableOpacity
                           activeOpacity={0.7}
-                          style={
-                            tip
-                              ? styles(currentTheme).activeLabel
-                              : styles(currentTheme).labelButton
-                          }
-                          onPress={() => onModalOpen(tipModalRef)}
+                          key={index}
+                          style={[selectedTip === label ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton]}
+                          onPress={() => {
+                            props?.navigation.setParams({ tipAmount: null })
+                            setTip(null)
+                            setSelectedTip((prevState) => (prevState === label ? null : label))
+                          }}
                         >
-                          <TextDefault
-                            textColor={
-                              tip
-                                ? currentTheme.black
-                                : currentTheme.fontFourthColor
-                            }
-                            normal
-                            bolder
-                            center
-                          >
-                            {t('Other')}
+                          <TextDefault textColor={selectedTip === label ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                            {configuration.currencySymbol} {label}
                           </TextDefault>
                         </TouchableOpacity>
-                      </View>
-                    )}
-                  </View>
+                      ))}
+                      <TouchableOpacity activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
+                        <TextDefault textColor={tip ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                          {t('Other')}
+                        </TextDefault>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
 
                 <View style={[styles(currentTheme).priceContainer]}>
-                  <TextDefault
-                    numberOfLines={1}
-                    H5
-                    bolder
-                    textColor={currentTheme.fontNewColor}
-                    style={{ ...alignment.MBmedium }}
-                    isRTL
-                  >
+                  <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor} style={{ ...alignment.MBmedium }} isRTL>
                     {t('paymentSummary')}
                   </TextDefault>
                   <View style={styles(currentTheme).billsec}>
-                    <TextDefault
-                      numberOfLines={1}
-                      normal
-                      bold
-                      textColor={currentTheme.fontFourthColor}
-                    >
+                    <TextDefault numberOfLines={1} normal bold textColor={currentTheme.fontFourthColor}>
                       {t('subTotal')}
                     </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      normal
-                      bold
-                    >
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {configuration.currencySymbol}
                       {calculatePrice(0, false)}
                     </TextDefault>
@@ -1182,20 +895,10 @@ function Checkout(props) {
                   {!isPickup && (
                     <>
                       <View style={styles(currentTheme).billsec}>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.fontFourthColor}
-                          normal
-                          bold
-                        >
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('deliveryFee')}
                         </TextDefault>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.fontFourthColor}
-                          normal
-                          bold
-                        >
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {configuration.currencySymbol}
                           {deliveryCharges.toFixed(2)}
                         </TextDefault>
@@ -1205,116 +908,57 @@ function Checkout(props) {
                   )}
 
                   <View style={styles(currentTheme).billsec}>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      normal
-                      bold
-                    >
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {t('taxFee')}
                     </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      normal
-                      bold
-                    >
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {configuration.currencySymbol}
                       {taxCalculation()}
                     </TextDefault>
                   </View>
 
                   <View style={styles(currentTheme).horizontalLine2} />
-                    <View style={styles(currentTheme).billsec}>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontFourthColor}
-                        normal
-                        bold
-                      >
-                        {t('tip')}
-                      </TextDefault>
-                      <TextDefault
-                        numberOfLines={1}
-                        textColor={currentTheme.fontFourthColor}
-                        normal
-                        bold
-                      >
-                        {configuration.currencySymbol}
-                        {parseFloat(calculateTip()).toFixed(2)}
-                      </TextDefault>
-                    </View>
+                  <View style={styles(currentTheme).billsec}>
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                      {t('tip')}
+                    </TextDefault>
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                      {configuration.currencySymbol}
+                      {parseFloat(calculateTip()).toFixed(2)}
+                    </TextDefault>
+                  </View>
 
                   {coupon && (
                     <View>
                       <View style={styles(currentTheme).horizontalLine2} />
                       <View style={styles(currentTheme).billsec}>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.fontFourthColor}
-                          normal
-                          bold
-                        >
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('voucherDiscount')}
                         </TextDefault>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.fontFourthColor}
-                          normal
-                          bold
-                        >
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           -{configuration.currencySymbol}
-                          {parseFloat(
-                            calculatePrice(0, false) - calculatePrice(0, true)
-                          ).toFixed(2)}
+                          {parseFloat(calculatePrice(0, false) - calculatePrice(0, true)).toFixed(2)}
                         </TextDefault>
                       </View>
                     </View>
                   )}
                   <View style={styles(currentTheme).horizontalLine2} />
                   <View style={styles(currentTheme).billsec}>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      H4
-                      bolder
-                    >
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} H4 bolder>
                       {t('total')}
                     </TextDefault>
-                    <TextDefault
-                      numberOfLines={1}
-                      textColor={currentTheme.fontFourthColor}
-                      normal
-                      bold
-                    >
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
                   </View>
                 </View>
 
-                <View
-                  style={[
-                    styles(currentTheme).termsContainer,
-                    styles().pT10,
-                    styles().mB10
-                  ]}
-                >
-                  <TextDefault
-                    textColor={currentTheme.fontMainColor}
-                    style={alignment.MBsmall}
-                    small
-                    isRTL
-                  >
+                <View style={[styles(currentTheme).termsContainer, styles().pT10, styles().mB10]}>
+                  <TextDefault textColor={currentTheme.fontMainColor} style={alignment.MBsmall} small isRTL>
                     {t('condition1')}
                   </TextDefault>
-                  <TextDefault
-                    textColor={currentTheme.fontSecondColor}
-                    style={alignment.MBsmall}
-                    small
-                    bold
-                    isRTL
-                  >
+                  <TextDefault textColor={currentTheme.fontSecondColor} style={alignment.MBsmall} small bold isRTL>
                     {t('condition2')}
                   </TextDefault>
                 </View>
@@ -1331,18 +975,10 @@ function Checkout(props) {
                       onPayment()
                     }
                   }}
-                  style={[
-                    styles(currentTheme).button,
-                    { opacity: loadingOrder ? 0.5 : 1 }
-                  ]}
+                  style={[styles(currentTheme).button, { opacity: loadingOrder ? 0.5 : 1 }]}
                 >
                   {!loadingOrder && (
-                    <TextDefault
-                      textColor={currentTheme.color4}
-                      style={styles().checkoutBtn}
-                      bold
-                      H4
-                    >
+                    <TextDefault textColor={currentTheme.color4} style={styles().checkoutBtn} bold H4>
                       {t('placeOrder')}
                     </TextDefault>
                   )}
@@ -1372,61 +1008,22 @@ function Checkout(props) {
         >
           <View style={styles().modalContainer}>
             <View style={styles(currentTheme).modalHeader}>
-              <View
-                activeOpacity={0.7}
-                style={styles(currentTheme).modalheading}
-              >
-                <FontAwesome
-                  name={paymentMethod?.icon}
-                  size={20}
-                  color={currentTheme.newIconColor}
-                />
-                <TextDefault
-                  H4
-                  bolder
-                  textColor={currentTheme.newFontcolor}
-                  center
-                >
+              <View activeOpacity={0.7} style={styles(currentTheme).modalheading}>
+                <FontAwesome name={paymentMethod?.icon} size={20} color={currentTheme.newIconColor} />
+                <TextDefault H4 bolder textColor={currentTheme.newFontcolor} center>
                   {t('AddTip')}
                 </TextDefault>
               </View>
-              <Feather
-                name='x-circle'
-                size={24}
-                color={currentTheme.newIconColor}
-                onPress={() => onModalClose(tipModalRef)}
-              />
+              <Feather name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(tipModalRef)} />
             </View>
             <View style={{ gap: 8 }}>
-              <TextDefault
-                uppercase
-                bold
-                textColor={currentTheme.gray500}
-                isRTL
-              >
+              <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
                 {t('enterAmount')}
               </TextDefault>
-              <TextInput
-                keyboardType='numeric'
-                placeholder={'25'}
-                placeholderTextColor={currentTheme.inputPlaceHolder}
-                value={tipAmount}
-                onChangeText={(text) => setTipAmount(text)}
-                style={styles(currentTheme).modalInput}
-              />
+              <TextInput keyboardType='numeric' placeholder={'25'} placeholderTextColor={currentTheme.inputPlaceHolder} value={tipAmount} onChangeText={(text) => setTipAmount(text)} style={styles(currentTheme).modalInput} />
             </View>
-            <TouchableOpacity
-              disabled={!tipAmount}
-              activeOpacity={0.7}
-              onPress={onTipping}
-              style={[styles(currentTheme).button, { height: scale(40) }]}
-            >
-              <TextDefault
-                textColor={currentTheme.black}
-                style={styles().checkoutBtn}
-                bold
-                H4
-              >
+            <TouchableOpacity disabled={!tipAmount} activeOpacity={0.7} onPress={onTipping} style={[styles(currentTheme).button, { height: scale(40) }]}>
+              <TextDefault textColor={currentTheme.black} style={styles().checkoutBtn} bold H4>
                 {t('apply')}
               </TextDefault>
             </TouchableOpacity>
@@ -1451,48 +1048,19 @@ function Checkout(props) {
         >
           <View style={styles().modalContainer}>
             <View style={styles(currentTheme).modalHeader}>
-              <View
-                activeOpacity={0.7}
-                style={styles(currentTheme).modalheading}
-              >
-                <MaterialCommunityIcons
-                  name='ticket-confirmation-outline'
-                  size={24}
-                  color={currentTheme.newIconColor}
-                />
-                <TextDefault
-                  H4
-                  bolder
-                  textColor={currentTheme.newFontcolor}
-                  center
-                >
+              <View activeOpacity={0.7} style={styles(currentTheme).modalheading}>
+                <MaterialCommunityIcons name='ticket-confirmation-outline' size={24} color={currentTheme.newIconColor} />
+                <TextDefault H4 bolder textColor={currentTheme.newFontcolor} center>
                   {t('applyVoucher')}
                 </TextDefault>
               </View>
-              <Feather
-                name='x-circle'
-                size={24}
-                color={currentTheme.newIconColor}
-                onPress={() => onModalClose(voucherModalRef)}
-              />
+              <Feather name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(voucherModalRef)} />
             </View>
             <View style={{ gap: 8 }}>
-              <TextDefault
-                uppercase
-                bold
-                textColor={currentTheme.gray500}
-                isRTL
-              >
+              <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
                 {t('enterCode')}
               </TextDefault>
-              <TextInput
-                label={t('inputCode')}
-                placeholder={t('inputCode')}
-                placeholderTextColor={currentTheme.inputPlaceHolder}
-                value={voucherCode}
-                onChangeText={(text) => setVoucherCode(text)}
-                style={styles(currentTheme).modalInput}
-              />
+              <TextInput label={t('inputCode')} placeholder={t('inputCode')} placeholderTextColor={currentTheme.inputPlaceHolder} value={voucherCode} onChangeText={(text) => setVoucherCode(text)} style={styles(currentTheme).modalInput} />
             </View>
             <TouchableOpacity
               disabled={!voucherCode || couponLoading}
@@ -1500,20 +1068,10 @@ function Checkout(props) {
               onPress={() => {
                 mutateCoupon({ variables: { coupon: voucherCode } })
               }}
-              style={[
-                styles(currentTheme).button,
-                !voucherCode && styles(currentTheme).buttonDisabled,
-                { height: scale(40) },
-                { opacity: couponLoading ? 0.5 : 1 }
-              ]}
+              style={[styles(currentTheme).button, !voucherCode && styles(currentTheme).buttonDisabled, { height: scale(40) }, { opacity: couponLoading ? 0.5 : 1 }]}
             >
               {!couponLoading && (
-                <TextDefault
-                  textColor={currentTheme.black}
-                  style={styles().checkoutBtn}
-                  bold
-                  H4
-                >
+                <TextDefault textColor={currentTheme.black} style={styles().checkoutBtn} bold H4>
                   {t('apply')}
                 </TextDefault>
               )}
@@ -1544,36 +1102,19 @@ function Checkout(props) {
           spring: { speed: 20, bounciness: 10 }
         }}
       >
-        <PickUp
-          minimumTime={restaurant?.deliveryTime}
-          setOrderDate={setOrderDate}
-          isPickedUp={isPickup}
-          setIsPickedUp={setIsPickup}
-          orderDate={orderDate}
-          pickupTextColor={currentTheme.newFontcolor}
-        />
+        <PickUp minimumTime={restaurant?.deliveryTime} setOrderDate={setOrderDate} isPickedUp={isPickup} setIsPickedUp={setIsPickup} orderDate={orderDate} pickupTextColor={currentTheme.newFontcolor} />
         <TouchableOpacity
           onPress={() => {
             calenderModalRef.current.close()
           }}
           style={styles(currentTheme).pickupButton}
         >
-          <TextDefault
-            textColor={currentTheme.fontMainColor}
-            style={styles().checkoutBtn}
-            bold
-            H4
-          >
+          <TextDefault textColor={currentTheme.fontMainColor} style={styles().checkoutBtn} bold H4>
             {t('apply')}
           </TextDefault>
         </TouchableOpacity>
       </Modalize>
-      <WrongAddressModal
-        theme={currentTheme}
-        modalVisible={isModalVisible}
-        setModalVisible={()=> setisModalVisible(!isModalVisible)}
-        handleNavigation={handleCartNavigation}
-      />
+      <WrongAddressModal theme={currentTheme} modalVisible={isModalVisible} setModalVisible={() => setisModalVisible(!isModalVisible)} handleNavigation={handleCartNavigation} />
     </>
   )
 }
