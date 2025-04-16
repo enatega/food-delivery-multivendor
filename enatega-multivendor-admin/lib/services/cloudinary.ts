@@ -1,4 +1,18 @@
 import { IUploadImageToCloudinary } from '../utils/interfaces/services.interface';
+import imageCompression from 'browser-image-compression';
+
+const base64ToFile = (base64: string, filename: string): File => {
+  const arr = base64.split(',');
+  const mimeMatch = arr[0].match(/:(.*?);/);
+  const mime = mimeMatch ? mimeMatch[1] : '';
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+};
 
 export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
   file,
@@ -6,21 +20,22 @@ export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
   preset
 ) => {
   if (!file) return;
-
-  const data = {
-    file: file,
-    upload_preset: preset,
-    name: 'image_upload',
-    unsigned: true,
+  const _file = base64ToFile(file, 'upload.jpg');
+  const options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true,
   };
 
   try {
+    const compressedFile = await imageCompression(_file, options);
+
+    const formData = new FormData();
+    formData.append('file', compressedFile);
+    formData.append('upload_preset', preset);
     const result = await fetch(url, {
-      body: JSON.stringify(data),
-      headers: {
-        'content-type': 'application/json',
-      },
       method: 'POST',
+      body: formData,
     });
     const imageData = await result.json();
     const originalUrl = imageData.secure_url;
