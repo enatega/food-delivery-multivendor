@@ -28,8 +28,6 @@ export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
       '/upload/',
       '/upload/q_70/f_auto/c_scale/'
     );
-    console.log('transformedUrl', transformedUrl);
-
     return transformedUrl;
   } catch (e) {
     throw new Error('Error uploading image to Cloudinary');
