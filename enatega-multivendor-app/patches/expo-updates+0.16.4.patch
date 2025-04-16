@@ -1,0 +1,17 @@
+diff --git a/node_modules/expo-updates/build-cli/cli.js b/node_modules/expo-updates/build-cli/cli.js
+index d16e0c1..bbf3675 100644
+--- a/node_modules/expo-updates/build-cli/cli.js
++++ b/node_modules/expo-updates/build-cli/cli.js
+@@ -43,4 +43,10 @@ if (args['--help']) {
+ // Install exit hooks
+ process.on('SIGINT', () => process.exit(0));
+ process.on('SIGTERM', () => process.exit(0));
+-commands[command]().then((exec) => exec(commandArgs));
++const execCommand = commands[command];
++if (typeof execCommand === 'function') {
++  execCommand().then((exec) => exec(commandArgs));
++} else {
++  console.error(`Invalid command: ${command}`);
++  process.exit(1);
++}
+\ No newline at end of file

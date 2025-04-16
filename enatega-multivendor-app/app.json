@@ -10,15 +10,10 @@
     "androidStatusBar": {
       "backgroundColor": "#000"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "ios": {
       "entitlements": {
@@ -33,10 +28,7 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
-        "UIBackgroundModes": [
-          "remote-notification",
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["remote-notification", "remote-notification"],
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device.",
         "CFBundleURLTypes": [
           {
@@ -78,10 +70,7 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "queries": {
-        "packages": [
-          "com.whatsapp",
-          "com.whatsapp.w4b"
-        ]
+        "packages": ["com.whatsapp", "com.whatsapp.w4b"]
       },
       "intentFilters": [
         {
@@ -91,10 +80,7 @@
               "scheme": "whatsapp"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
@@ -141,9 +127,7 @@
         "projectId": "331d4e5b-b12a-434a-92ec-d6d283dc0e46"
       }
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
+    "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/331d4e5b-b12a-434a-92ec-d6d283dc0e46"
     }

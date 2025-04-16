@@ -10,6 +10,8 @@ export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
   const data = {
     file: file,
     upload_preset: preset,
+    name: 'image_upload',
+    unsigned: true,
   };
 
   try {
@@ -21,7 +23,14 @@ export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
       method: 'POST',
     });
     const imageData = await result.json();
-    return imageData.secure_url;
+    const originalUrl = imageData.secure_url;
+    const transformedUrl = originalUrl.replace(
+      '/upload/',
+      '/upload/q_70/f_auto/c_scale/'
+    );
+    console.log('transformedUrl', transformedUrl);
+
+    return transformedUrl;
   } catch (e) {
     throw new Error('Error uploading image to Cloudinary');
   }

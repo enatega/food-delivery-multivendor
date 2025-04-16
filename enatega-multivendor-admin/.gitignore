@@ -37,3 +37,26 @@ next-env.d.ts
 
 *storybook.log
 
+.expo
+.DS_Store
+
+node_modules
+
+ios 
+
+android
+
+*.patch
+
+*.log
+
+*.log.*
+
+*.log.*.*
+
+package-lock.json
+
+yarn.lock
+
+yarn-debug.log*
+
