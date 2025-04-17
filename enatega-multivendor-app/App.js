@@ -1,22 +1,12 @@
 import { ApolloProvider } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import 'expo-dev-client'
+// import 'expo-dev-client'
 import * as Device from 'expo-device'
 import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useReducer, useRef, useState } from 'react'
-import {
-  ActivityIndicator,
-  BackHandler,
-  I18nManager,
-  LogBox,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-  useColorScheme
-} from 'react-native'
+import { ActivityIndicator, BackHandler, I18nManager, LogBox, Platform, StatusBar, StyleSheet, Text, View, useColorScheme } from 'react-native'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
 import * as Sentry from 'sentry-expo'
@@ -53,9 +43,7 @@ LogBox.ignoreAllLogs() // Ignore all log notifications
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
     return {
-      shouldShowAlert:
-        notification?.request?.content?.data?.type !==
-        NOTIFICATION_TYPES.REVIEW_ORDER,
+      shouldShowAlert: notification?.request?.content?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
       shouldPlaySound: false,
       shouldSetBadge: false
     }
@@ -78,10 +66,7 @@ export default function App() {
 
   // Use system theme
   const systemTheme = useColorScheme()
-  const [theme, themeSetter] = useReducer(
-    ThemeReducer,
-    systemTheme === 'dark' ? 'Dark' : 'Pink'
-  )
+  const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   useEffect(() => {
     try {
       themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
@@ -90,7 +75,6 @@ export default function App() {
       console.log('Theme Error : ', error.message)
     }
   }, [systemTheme])
-
 
   // For Fonts, etc
   useEffect(() => {
@@ -101,7 +85,7 @@ export default function App() {
       //   console.warn(e)
       // }
       // await i18n.initAsync()
-      await Font.loadAsync (  {
+      await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
@@ -147,11 +131,12 @@ export default function App() {
 
   // For Sentry
   useEffect(() => {
-    if (SENTRY_DSN) {
+    // if (SENTRY_DSN) {
+    if (false) {
       Sentry.init({
         dsn: SENTRY_DSN,
         enableInExpoDevelopment: !isProduction ? true : false,
-        environment: !isProduction ? 'development' : 'production',
+        environment: isProduction ? 'production' : 'development',
         debug: !isProduction,
         tracesSampleRate: 1.0,
         enableTracing: true
@@ -185,33 +170,25 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync()
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        if (
-          notification?.request?.content?.data?.type ===
-          NOTIFICATION_TYPES.REVIEW_ORDER
-        ) {
-          const id = notification?.request?.content?.data?._id
-          if (id) {
-            setOrderId(id)
-            reviewModalRef?.current?.open()
-          }
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = notification?.request?.content?.data?._id
+        if (id) {
+          setOrderId(id)
+          reviewModalRef?.current?.open()
         }
-      })
+      }
+    })
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        if (
-          response?.notification?.request?.content?.data?.type ===
-          NOTIFICATION_TYPES.REVIEW_ORDER
-        ) {
-          const id = response?.notification?.request?.content?.data?._id
-          if (id) {
-            setOrderId(id)
-            reviewModalRef?.current?.open()
-          }
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = response?.notification?.request?.content?.data?._id
+        if (id) {
+          setOrderId(id)
+          reviewModalRef?.current?.open()
         }
-      })
+      }
+    })
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current)
       Notifications.removeNotificationSubscription(responseListener.current)
@@ -251,7 +228,6 @@ export default function App() {
   const setStoredTheme = async (newTheme) => {
     try {
       await AsyncStorage.setItem('appTheme', newTheme)
-      console.log('Theme stored in AsyncStorage:', newTheme)
     } catch (error) {
       console.log('Error storing theme in AsyncStorage:', error)
     }
@@ -264,13 +240,7 @@ export default function App() {
 
   if (isUpdating) {
     return (
-      <View
-        style={[
-          styles.flex,
-          styles.mainContainer,
-          { backgroundColor: Theme[theme].startColor }
-        ]}
-      >
+      <View style={[styles.flex, styles.mainContainer, { backgroundColor: Theme[theme].startColor }]}>
         <TextDefault textColor={Theme[theme].white} bold>
           Please wait while app is updating
         </TextDefault>
@@ -294,22 +264,14 @@ export default function App() {
           //   }
           // }}
         >
-          <StatusBar
-            backgroundColor={Theme[theme].menuBar}
-            barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'}
-          />
+          <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
           <LocationProvider>
             <ConfigurationProvider>
               <AuthProvider>
                 <UserProvider>
                   <OrdersProvider>
                     <AppContainer />
-                    <ReviewModal
-                      ref={reviewModalRef}
-                      onOverlayPress={onOverlayPress}
-                      theme={Theme[theme]}
-                      orderId={orderId}
-                    />
+                    <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
                   </OrdersProvider>
                 </UserProvider>
               </AuthProvider>

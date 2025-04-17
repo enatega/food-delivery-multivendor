@@ -8,7 +8,6 @@ query Users {
  }
 }`
 
-
 export const GET_REVIEWS_BY_RESTAURANT = gql`
   query GetReviewsByRestaurant($restaurant: String!) {
     reviewsByRestaurant(restaurant: $restaurant) {
@@ -36,7 +35,7 @@ export const GET_REVIEWS_BY_RESTAURANT = gql`
       total
     }
   }
-`;
+`
 export const restaurantFragment = gql`
   fragment RestaurantFields on Restaurant {
     _id
@@ -970,8 +969,9 @@ export const orderFragment = `fragment NewOrder on Order {
   assignedAt
 }`
 
-export const fetchCategoryDetailsByStore = `query FetchCategoryDetailsByStoreId($storeId: String!)  {
-  fetchCategoryDetailsByStoreId(storeId: $storeId) {
+// TODO: Check why the url is null
+export const fetchCategoryDetailsByStore = `query fetchCategoryDetailsByStoreIdForMobile($storeId: String!)  {
+  fetchCategoryDetailsByStoreIdForMobile(storeId: $storeId) {
       id
       category_name
       url
@@ -1152,21 +1152,21 @@ query GetVersions {
 `
 
 export const GET_SUB_CATEGORIES = gql`
-query subCategories{
-  subCategories{
-    _id
-    title
-    parentCategoryId
+  query subCategories {
+    subCategories {
+      _id
+      title
+      parentCategoryId
+    }
   }
-}
 `
 
 export const GET_SUB_CATEGORIES_BY_PARENT_ID = gql`
-query subCategoriesByParentId($parentCategoryId:String!){
-  subCategoriesByParentId(parentCategoryId:$parentCategoryId){
-    _id
-    title
-    parentCategoryId
+  query subCategoriesByParentId($parentCategoryId: String!) {
+    subCategoriesByParentId(parentCategoryId: $parentCategoryId) {
+      _id
+      title
+      parentCategoryId
+    }
   }
-}
 `

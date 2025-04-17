@@ -1,18 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useLayoutEffect,
-  useRef
-} from 'react'
-import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-  Alert
-} from 'react-native'
+import React, { useState, useEffect, useContext, useLayoutEffect, useRef } from 'react'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { AntDesign } from '@expo/vector-icons'
@@ -42,11 +29,7 @@ import WouldYouLikeToAddThese from './Section'
 import { SpecialInstructions } from '../../components/Cart/SpecialInstructions'
 import { isOpen } from '../../utils/customFunctions'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring
-} from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -60,19 +43,7 @@ function Cart(props) {
   const Analytics = analytics()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
-  const {
-    isLoggedIn,
-    profile,
-    restaurant: cartRestaurant,
-    cart,
-    cartCount,
-    addQuantity,
-    removeQuantity,
-    isPickup,
-    setIsPickup,
-    instructions,
-    setInstructions
-  } = useContext(UserContext)
+  const { isLoggedIn, profile, restaurant: cartRestaurant, cart, cartCount, addQuantity, removeQuantity, isPickup, setIsPickup, instructions, setInstructions } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
@@ -116,15 +87,9 @@ function Cart(props) {
     animateQuantityChange()
   }, [addQuantity, removeQuantity])
 
-  const coupon =
-    props?.route.params && props?.route.params.coupon
-      ? props?.route.params.coupon
-      : null
+  const coupon = props?.route.params && props?.route.params.coupon ? props?.route.params.coupon : null
 
-  const tip =
-    props?.route.params && props?.route.params.tipAmount
-      ? props?.route.params.tipAmount
-      : null
+  const tip = props?.route.params && props?.route.params.tipAmount ? props?.route.params.tipAmount : null
 
   const [selectedTip, setSelectedTip] = useState()
   const modalRef = useRef(null)
@@ -145,18 +110,9 @@ function Cart(props) {
         const lonOrigin = Number(data?.restaurant.location.coordinates[0])
         const latDest = Number(location.latitude)
         const longDest = Number(location.longitude)
-        const distance = await calculateDistance(
-          latOrigin,
-          lonOrigin,
-          latDest,
-          longDest
-        )
+        const distance = await calculateDistance(latOrigin, lonOrigin, latDest, longDest)
         let costType = configuration.costType
-        let amount = calculateAmount(
-          costType,
-          configuration.deliveryRate,
-          distance
-        )
+        let amount = calculateAmount(costType, configuration.deliveryRate, distance)
 
         if (isSubscribed) {
           setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
@@ -172,9 +128,7 @@ function Cart(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
 
   useLayoutEffect(() => {
@@ -204,11 +158,7 @@ function Cart(props) {
                 alignItems: 'center'
               }}
             >
-              <AntDesign
-                name='arrowleft'
-                size={22}
-                color={currentTheme.newIconColor}
-              />
+              <AntDesign name='arrowleft' size={22} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -296,11 +246,8 @@ function Cart(props) {
     setLoadingData(false)
   }
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
-  
-
-  console.log("here")
 
   function emptyCart() {
     return (
@@ -326,13 +273,7 @@ function Cart(props) {
             })
           }
         >
-          <TextDefault
-            textColor={currentTheme.buttonText}
-            bolder
-            B700
-            center
-            uppercase
-          >
+          <TextDefault textColor={currentTheme.buttonText} bolder B700 center uppercase>
             {t('emptyCartBtn')}
           </TextDefault>
         </TouchableOpacity>
@@ -342,78 +283,30 @@ function Cart(props) {
   function loadginScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
 
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height60} />
           <PlaceholderLine />
         </Placeholder>
 
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
-          <View
-            style={[
-              styles(currentTheme).horizontalLine,
-              styles().width100,
-              styles().mB10
-            ]}
-          />
+          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
-        <Placeholder
-          Animation={(props) => (
-            <Fade
-              {...props}
-              style={styles(currentTheme).placeHolderFadeColor}
-              duration={600}
-            />
-          )}
-          style={styles(currentTheme).placeHolderContainer}
-        >
+        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height100} />
           <PlaceholderLine />
           <PlaceholderLine />
-          <View
-            style={[
-              styles(currentTheme).horizontalLine,
-              styles().width100,
-              styles().mB10
-            ]}
-          />
+          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
           <PlaceholderLine />
           <PlaceholderLine />
         </Placeholder>
@@ -437,14 +330,10 @@ function Cart(props) {
   function populateFood(cartItem) {
     const food = foods?.find((food) => food._id === cartItem._id)
     if (!food) return null
-    const variation = food.variations.find(
-      (variation) => variation._id === cartItem.variation._id
-    )
+    const variation = food.variations.find((variation) => variation._id === cartItem.variation._id)
     if (!variation) return null
 
-    const title = `${food.title}${
-      variation.title ? `(${variation.title})` : ''
-    }`
+    const title = `${food.title}${variation.title ? `(${variation.title})` : ''}`
     let price = variation.price
     const optionsTitle = []
     if (cartItem.addons) {
@@ -459,9 +348,7 @@ function Cart(props) {
         })
       })
     }
-    const populateAddons = addons.filter((addon) =>
-      food?.variations[0]?.addons?.includes(addon._id)
-    )
+    const populateAddons = addons.filter((addon) => food?.variations[0]?.addons?.includes(addon._id))
     return {
       ...cartItem,
       optionsTitle,
@@ -481,10 +368,7 @@ function Cart(props) {
           emptyCart()
         ) : (
           <>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={[styles().flex, styles().cartItems]}
-            >
+            <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex, styles().cartItems]}>
               <View
                 style={{
                   ...alignment.PLsmall,
@@ -492,12 +376,7 @@ function Cart(props) {
                   marginTop: 10
                 }}
               >
-                <SpecialInstructions
-                  instructions={instructions}
-                  onSubmitInstructions={setInstructions}
-                  theme={currentTheme}
-                  t={t}
-                />
+                <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme} t={t} />
               </View>
               <View
                 style={{
@@ -506,35 +385,22 @@ function Cart(props) {
                   marginTop: 10
                 }}
               >
-                <View
-                  style={[styles(currentTheme).dealContainer, styles().mB10]}
-                >
-                  <TextDefault
-                    textColor={currentTheme.gray500}
-                    style={styles().totalOrder}
-                    H5
-                    bolder
-                    isRTL
-                  >
+                <View style={[styles(currentTheme).dealContainer, styles().mB10]}>
+                  <TextDefault textColor={currentTheme.gray500} style={styles().totalOrder} H5 bolder isRTL>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
                   {cart?.map((cartItem, index) => {
                     const food = populateFood(cartItem)
                     if (!food) return null
                     return (
-                      <View
-                        key={cartItem._id + index}
-                        style={[styles(currentTheme).itemContainer]}
-                      >
+                      <View key={cartItem._id + index} style={[styles(currentTheme).itemContainer]}>
                         <CartItem
                           quantity={food.quantity}
                           dealName={food.title}
                           optionsTitle={food.optionsTitle}
                           itemImage={food.image}
                           itemAddons={food.addons}
-                          dealPrice={(
-                            parseFloat(food.price) * food.quantity
-                          ).toFixed(2)}
+                          dealPrice={(parseFloat(food.price) * food.quantity).toFixed(2)}
                           addQuantity={() => {
                             addQuantity(food.key)
                           }}
@@ -548,10 +414,7 @@ function Cart(props) {
                 </View>
               </View>
               <View style={styles().suggestedItems}>
-                <WouldYouLikeToAddThese
-                  itemId={foods[0]._id}
-                  restaurantId={restaurant?._id}
-                />
+                <WouldYouLikeToAddThese itemId={foods[0]._id} restaurantId={restaurant?._id} />
               </View>
             </ScrollView>
 
@@ -559,25 +422,13 @@ function Cart(props) {
               <View style={styles(currentTheme).buttonContainer}>
                 <View style={styles().cartAmount}>
                   <Animated.View style={[animatedStyle]}>
-                    <TextDefault
-                      textColor={currentTheme.black}
-                      style={styles().totalBill}
-                      bolder
-                      H2
-                      isRTL
-                    >
+                    <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder H2 isRTL>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
                   </Animated.View>
 
-                  <TextDefault
-                    textColor={currentTheme.black}
-                    style={styles().totalBill}
-                    bolder
-                    Smaller
-                    isRTL
-                  >
+                  <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder Smaller isRTL>
                     {t('exclusiveVAt')}
                   </TextDefault>
                 </View>
@@ -585,24 +436,17 @@ function Cart(props) {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => {
-                      if(calculateTotal() < minimumOrder )
-                      {
+                      if (calculateTotal() < minimumOrder) {
                         FlashMessage({
-                          message: t("OrderPriceValidation")
+                          message: t('OrderPriceValidation')
                         })
-                        return 
+                        return
                       }
                       navigation.navigate('Checkout')
                     }}
                     style={styles(currentTheme).button}
                   >
-                    <TextDefault
-                      textColor={currentTheme.white}
-                      style={styles().checkoutBtn}
-                      bold
-                      H5
-                      isRTL
-                    >
+                    <TextDefault textColor={currentTheme.white} style={styles().checkoutBtn} bold H5 isRTL>
                       {t('checkoutBtn')}
                     </TextDefault>
                   </TouchableOpacity>
@@ -614,14 +458,7 @@ function Cart(props) {
                     }}
                     style={styles(currentTheme).button}
                   >
-                    <TextDefault
-                      textColor={currentTheme.white}
-                      style={{ width: '100%', textAlign:'center'}}
-                      H5
-                      bolder
-                      center
-                      isRTL
-                    >
+                    <TextDefault textColor={currentTheme.white} style={{ width: '100%', textAlign: 'center' }} H5 bolder center isRTL>
                       {t('loginOrSignUp')}
                     </TextDefault>
                   </TouchableOpacity>

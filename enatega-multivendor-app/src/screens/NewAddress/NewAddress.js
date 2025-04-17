@@ -1,18 +1,5 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useContext,
-  useLayoutEffect
-} from 'react'
-import {
-  View,
-  TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-  Image
-} from 'react-native'
+import React, { useState, useRef, useEffect, useContext, useLayoutEffect } from 'react'
+import { View, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView, Image } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
 import { OutlinedTextField } from 'react-native-material-textfield'
@@ -205,16 +192,11 @@ function NewAddress(props) {
     setModalVisible(false)
   }
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
   return (
     <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0}
-        style={styles(currentTheme).flex}
-        enabled={!modalVisible}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'android' ? 20 : 0} style={styles(currentTheme).flex} enabled={!modalVisible}>
         <View style={styles().flex}>
           <View style={styles(currentTheme).mapContainer}>
             <MapView
@@ -243,18 +225,11 @@ function NewAddress(props) {
               }}
             ></MapView>
             <View style={styles().imageContainer}>
-              <Image
-                source={require('../../assets/images/user.png')}
-                width={20}
-              />
+              <Image source={require('../../assets/images/user.png')} width={20} />
             </View>
           </View>
 
-          <ScrollView
-            style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}
-            contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollView style={{ flex: 1, backgroundColor: currentTheme.themeBackground }} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
             <View style={styles(currentTheme).subContainer}>
               <View style={styles(currentTheme).upperContainer}>
                 <View style={styles(currentTheme).addressContainer}>
@@ -270,20 +245,14 @@ function NewAddress(props) {
                         fontSize={scale(12)}
                         renderRightAccessory={() => (
                           <TouchableOpacity onPress={onOpen}>
-                            <MaterialIcons
-                              name='edit'
-                              size={18}
-                              color={currentTheme.darkBgFont}
-                            />
+                            <MaterialIcons name='edit' size={18} color={currentTheme.darkBgFont} />
                           </TouchableOpacity>
                         )}
                         maxLength={100}
                         textColor={currentTheme.darkBgFont}
                         baseColor={currentTheme.darkBgFont}
                         errorColor={currentTheme.textErrorColor}
-                        tintColor={
-                          !deliveryAddressError ? currentTheme.tagColor : 'red'
-                        }
+                        tintColor={!deliveryAddressError ? currentTheme.tagColor : 'red'}
                         labelTextStyle={{
                           fontSize: scale(12),
                           paddingTop: scale(1)
@@ -292,11 +261,7 @@ function NewAddress(props) {
                           setDeliveryAddress(text)
                         }}
                         onBlur={() => {
-                          setDeliveryAddressError(
-                            !deliveryAddress.trim().length
-                              ? t('DeliveryAddressIsRequired')
-                              : null
-                          )
+                          setDeliveryAddressError(!deliveryAddress.trim().length ? t('DeliveryAddressIsRequired') : null)
                         }}
                       />
                     </View>
@@ -314,9 +279,7 @@ function NewAddress(props) {
                     textColor={currentTheme.darkBgFont}
                     baseColor={currentTheme.darkBgFont}
                     errorColor={currentTheme.textErrorColor}
-                    tintColor={
-                      !deliveryDetailsError ? currentTheme.tagColor : 'red'
-                    }
+                    tintColor={!deliveryDetailsError ? currentTheme.tagColor : 'red'}
                     labelOffset={{ y1: -5 }}
                     labelTextStyle={{
                       fontSize: scale(12),
@@ -327,11 +290,7 @@ function NewAddress(props) {
                       setDeliveryDetails(text)
                     }}
                     onBlur={() => {
-                      setDeliveryDetailsError(
-                        !deliveryDetails.trim().length
-                          ? t('DeliveryAddressIsRequired')
-                          : null
-                      )
+                      setDeliveryDetailsError(!deliveryDetails.trim().length ? t('DeliveryAddressIsRequired') : null)
                     }}
                   />
                 </View>
@@ -339,11 +298,7 @@ function NewAddress(props) {
                 <View style={styles().labelButtonContainer}>
                   <View style={styles().labelTitleContainer}>
                     <View style={styles().horizontalLine} />
-                    <TextDefault
-                      textColor={currentTheme.fontMainColor}
-                      h5
-                      bolder
-                    >
+                    <TextDefault textColor={currentTheme.fontMainColor} h5 bolder>
                       {t('addLabel')}
                     </TextDefault>
                   </View>
@@ -352,24 +307,12 @@ function NewAddress(props) {
                       <React.Fragment key={index}>
                         <TouchableOpacity
                           activeOpacity={0.5}
-                          style={
-                            selectedLabel === label.value
-                              ? styles(currentTheme).activeLabel
-                              : styles(currentTheme).labelButton
-                          }
+                          style={selectedLabel === label.value ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton}
                           onPress={() => {
                             setSelectedLabel(label.value)
                           }}
                         >
-                          <TextDefault
-                            textColor={
-                              selectedLabel === label.value
-                                ? currentTheme.iconColorPink
-                                : currentTheme.fontMainColor
-                            }
-                            bold
-                            center
-                          >
+                          <TextDefault textColor={selectedLabel === label.value ? currentTheme.iconColorPink : currentTheme.fontMainColor} bold center>
                             {label.icon}
                           </TextDefault>
                         </TouchableOpacity>
@@ -380,12 +323,7 @@ function NewAddress(props) {
                   <View style={styles().textbuttonInline}>
                     {labelValues.map((label, index) => (
                       <React.Fragment key={index}>
-                        <TextDefault
-                          style={styles().titlebuttonInline}
-                          textColor={currentTheme.black}
-                          bold
-                          center
-                        >
+                        <TextDefault style={styles().titlebuttonInline} textColor={currentTheme.black} bold center>
                           {t(label.title)}
                         </TextDefault>
                       </React.Fragment>
@@ -398,20 +336,13 @@ function NewAddress(props) {
             <TouchableOpacity
               disabled={loading}
               onPress={() => {
-                const deliveryAddressError = !deliveryAddress.trim().length
-                  ? t('DeliveryAddressIsRequired')
-                  : null
-                const deliveryDetailsError = !deliveryDetails.trim().length
-                  ? t('DeliveryAddressIsRequired')
-                  : null
+                const deliveryAddressError = !deliveryAddress.trim().length ? t('DeliveryAddressIsRequired') : null
+                const deliveryDetailsError = !deliveryDetails.trim().length ? t('DeliveryAddressIsRequired') : null
 
                 setDeliveryAddressError(deliveryAddressError)
                 setDeliveryDetailsError(deliveryDetailsError)
 
-                if (
-                  deliveryAddressError === null &&
-                  deliveryDetailsError === null
-                ) {
+                if (deliveryAddressError === null && deliveryDetailsError === null) {
                   mutate({
                     variables: {
                       addressInput: {
@@ -436,13 +367,7 @@ function NewAddress(props) {
         </View>
       </KeyboardAvoidingView>
 
-      {modalVisible ? (
-        <SearchModal
-          visible={modalVisible}
-          onClose={onClose}
-          onSubmit={onSubmit}
-        />
-      ) : null}
+      {modalVisible ? <SearchModal visible={modalVisible} onClose={onClose} onSubmit={onSubmit} /> : null}
 
       <View
         style={{

@@ -84,7 +84,7 @@ const Tab = createBottomTabNavigator()
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  
+
   return (
     <NavigationStack.Navigator
       screenOptions={screenOptions({

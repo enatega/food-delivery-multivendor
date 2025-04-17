@@ -18,7 +18,7 @@ import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 import ConfigurationContext from '../../context/Configuration'
 
-const renderInputToolbar = props => {
+const renderInputToolbar = (props) => {
   return (
     <InputToolbar
       {...props}
@@ -30,7 +30,7 @@ const renderInputToolbar = props => {
   )
 }
 
-const renderActions = props => {
+const renderActions = (props) => {
   return (
     <Actions
       {...props}
@@ -43,7 +43,7 @@ const renderActions = props => {
         <Image
           source={require('../../assets/images/add.png')}
           style={styles().addImg}
-          resizeMode="contain"
+          resizeMode='contain'
         />
       )}
       options={{
@@ -54,7 +54,7 @@ const renderActions = props => {
           console.log('Cancel')
         }
       }}
-      optionTintColor="#222B45"
+      optionTintColor='#222B45'
     />
   )
 }
@@ -74,22 +74,22 @@ const ChatScreen = ({ navigation, route }) => {
     total
   } = useChatScreen({ navigation, route })
 
-  const filterImages = src => {
-    setImage(image.filter(item => item !== src))
+  const filterImages = (src) => {
+    setImage(image.filter((item) => item !== src))
   }
   const { t } = useTranslation()
-  const renderAccessory = props => {
+  const renderAccessory = (props) => {
     return (
       <View style={styles().rowDisplay}>
-        {image.map(item => (
+        {image.map((item) => (
           <View key={item.uri} style={styles().accessoryContainer}>
             <Image source={{ uri: item }} style={styles().accessoryImg} />
             <Entypo
               onPress={() => filterImages(item)}
-              name="circle-with-cross"
+              name='circle-with-cross'
               size={18}
               style={styles().accessoryIcon}
-              color="black"
+              color='black'
             />
           </View>
         ))}
@@ -97,23 +97,25 @@ const ChatScreen = ({ navigation, route }) => {
     )
   }
 
-  const renderSend = props => {
+  const renderSend = (props) => {
     return (
       <Send
         {...props}
         sendButtonProps={{
           ...props,
           onPress: () => inputMessage.trim().length > 0 && onSend()
-        }}>
+        }}
+      >
         <View
           style={{
             width: scale(34),
             justifyContent: 'center',
             alignItems: 'center'
-          }}>
+          }}
+        >
           <Image
             source={require('../../assets/images/send-icon.png')}
-            resizeMode="contain"
+            resizeMode='contain'
             color={currentTheme.black}
             style={styles().sendIcon}
           />
@@ -122,28 +124,30 @@ const ChatScreen = ({ navigation, route }) => {
     )
   }
 
-  const renderChatEmpty = props => {
+  const renderChatEmpty = (props) => {
     return (
       <View>
         <TextDefault
           style={styles().emptyChat}
           textColor={currentTheme.fontSecondColor}
           center
-          H3>
+          H3
+        >
           {t('chatWithRider')}
         </TextDefault>
       </View>
     )
   }
 
-  const renderBubble = props => {
+  const renderBubble = (props) => {
     return (
       <View>
         {props.position === 'left' && (
           <TextDefault
             normal
             textColor={currentTheme.btnText}
-            style={{ ...alignment.PLsmall }}>
+            style={{ ...alignment.PLsmall }}
+          >
             {props.currentMessage.user.name}
           </TextDefault>
         )}
@@ -162,7 +166,7 @@ const ChatScreen = ({ navigation, route }) => {
       </View>
     )
   }
-  const renderTime = props => {
+  const renderTime = (props) => {
     return (
       <Time
         {...props}
@@ -183,7 +187,7 @@ const ChatScreen = ({ navigation, route }) => {
   const scrollToBottomComponent = () => {
     return (
       <FontAwesome
-        name="angle-double-down"
+        name='angle-double-down'
         size={22}
         color={currentTheme.main}
       />
@@ -240,10 +244,10 @@ const ChatScreen = ({ navigation, route }) => {
         renderInputToolbar={renderInputToolbar}
         renderAccessory={image.length > 0 ? renderAccessory : null}
         text={inputMessage}
-        onInputTextChanged={m => setInputMessage(m)}
+        onInputTextChanged={(m) => setInputMessage(m)}
         messagesContainerStyle={{ paddingBottom: scale(40) }}
       />
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={-200} />
+      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={-200} />
     </View>
   )
 }

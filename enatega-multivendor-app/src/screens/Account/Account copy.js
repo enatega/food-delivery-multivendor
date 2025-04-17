@@ -21,7 +21,10 @@ import gql from 'graphql-tag'
 import { TextField, OutlinedTextField } from 'react-native-material-textfield'
 import { scale, verticalScale } from '../../utils/scaling'
 import { updateUser, login, Deactivate } from '../../apollo/mutations'
-import { FavouriteRestaurant, recentOrderRestaurantsQuery } from '../../apollo/queries'
+import {
+  FavouriteRestaurant,
+  recentOrderRestaurantsQuery
+} from '../../apollo/queries'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
@@ -118,7 +121,7 @@ function Account(props) {
 
   // const recentOrderData = recentOrderRestaurants?.data?.recentOrderRestaurants
   // const recentOrderLoading = recentOrderRestaurants?.loading?.recentOrderRestaurants
-  
+
   // const onCompletedDeactivate = () => {
   //   setDeleteModalVisible(false)
   //   logout()
@@ -702,8 +705,6 @@ function Account(props) {
               </TouchableOpacity>
             </View>
           </View> */}
-
-            
           </ScrollView>
 
           {/* <Modal

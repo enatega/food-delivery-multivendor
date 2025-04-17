@@ -1,21 +1,7 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  FlatList,
-  StatusBar,
-  Platform,
-  Modal
-} from 'react-native'
+import { View, TouchableOpacity, FlatList, StatusBar, Platform, Modal } from 'react-native'
 import { NetworkStatus, useMutation } from '@apollo/client'
-import {
-  AntDesign,
-  EvilIcons,
-  SimpleLineIcons,
-  MaterialIcons,
-  MaterialCommunityIcons,
-  Feather
-} from '@expo/vector-icons'
+import { AntDesign, EvilIcons, SimpleLineIcons, MaterialIcons, MaterialCommunityIcons, Feather } from '@expo/vector-icons'
 
 import gql from 'graphql-tag'
 
@@ -65,11 +51,11 @@ function Addresses() {
   })
   const { profile, refetchProfile, networkStatus } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [isEditMode, setIsEditMode] = useState(false)
   const [selectedAddresses, setSelectedAddresses] = useState([])
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [selectedAddressId, setSelectedAddressId] = useState(null)
   const [deleteAllModalVisible, setdeleteAllModalVisible] = useState(false)
 
   function onCompleted() {
@@ -82,9 +68,7 @@ function Addresses() {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -114,14 +98,13 @@ function Addresses() {
       },
       headerLeft: () => {
         if (isEditMode) {
-          const isDeleteDisabled = selectedAddresses.length < 1 || loadingAddressMutation;
+          const isDeleteDisabled = selectedAddresses.length < 1 || loadingAddressMutation
           return (
             <TouchableOpacity
               disabled={isDeleteDisabled}
               style={[{ marginLeft: scale(10) }, { opacity: isDeleteDisabled ? 0.5 : 1 }]}
               onPress={() => {
                 setdeleteAllModalVisible(true)
-                console.log("onselection address id", selectedAddressId);
               }}
             >
               {loadingAddressMutation ? (
@@ -139,11 +122,7 @@ function Addresses() {
               truncatedLabel=''
               backImage={() => (
                 <View>
-                  <MaterialIcons
-                    name='arrow-back'
-                    size={30}
-                    color={currentTheme.newIconColor}
-                  />
+                  <MaterialIcons name='arrow-back' size={30} color={currentTheme.newIconColor} />
                 </View>
               )}
               onPress={() => navigation.navigate('Main')}
@@ -155,18 +134,20 @@ function Addresses() {
         if (profile?.addresses?.length > 0) {
           return (
             <View style={{ ...alignment.MRmedium }}>
-              <TouchableOpacity onPress={() => {
-                setIsEditMode((prev) => !prev)
-                setSelectedAddresses([]);
-              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsEditMode((prev) => !prev)
+                  setSelectedAddresses([])
+                }}
+              >
                 <TextDefault textColor={currentTheme.linkColor} H5 bolder>
                   {isEditMode ? t('cancel') : t('edit')}
                 </TextDefault>
               </TouchableOpacity>
             </View>
-          );
+          )
         }
-        return null;
+        return null
       }
     })
   }, [navigation, isEditMode, t, currentTheme, selectedAddresses, loadingAddressMutation, profile?.Addresses])
@@ -203,14 +184,11 @@ function Addresses() {
   }
 
   const handleAddressSelection = (addressId) => {
-
     setSelectedAddresses((prevSelected) => {
-      const updatedAddresses = prevSelected.includes(addressId)
-        ? prevSelected.filter((id) => id !== addressId)
-        : [...prevSelected, addressId];
-      return updatedAddresses;
-    });
-  };
+      const updatedAddresses = prevSelected.includes(addressId) ? prevSelected.filter((id) => id !== addressId) : [...prevSelected, addressId]
+      return updatedAddresses
+    })
+  }
 
   const handleDeleteSelectedAddresses = async () => {
     // Iterate through selected addresses and delete them
@@ -227,40 +205,37 @@ function Addresses() {
       variables: { ids: selectedAddresses }
     })
     // Clear the selected addresses state
-    setSelectedAddresses([]);
-
-  };
-
+    setSelectedAddresses([])
+  }
 
   const editMyAddress = (address) => {
-    const [longitude, latitude] = address.location.coordinates;
+    const [longitude, latitude] = address.location.coordinates
     setDeleteModalVisible(false)
     navigation.navigate('AddNewAddress', {
       id: address._id,
       longitude: +longitude, // Convert string to number
       latitude: +latitude,
       prevScreen: 'Addresses'
-    });
+    })
 
     // setSelectedAddressId(null)
-  };
-
+  }
 
   const deleteMyAddress = async (addressId) => {
     await mutate({ variables: { id: addressId } })
       .then((response) => {
-        console.log('Mutation success:', response);
+        console.log('Mutation success:', response)
         // Show success message after deletion (optional)
       })
       .catch((error) => {
-        console.log('Mutation error:', error);
+        console.log('Mutation error:', error)
         // Handle errors appropriately (optional)
-      });
+      })
     setSelectedAddressId(null)
     setDeleteModalVisible(false)
-  };
+  }
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[refetchProfile]} />
 
   return (
@@ -271,65 +246,43 @@ function Addresses() {
         data={profile?.addresses}
         ListEmptyComponent={emptyView}
         keyExtractor={(item) => item._id}
-        ItemSeparatorComponent={() => (
-          <View style={styles(currentTheme).line} />
-        )}
+        ItemSeparatorComponent={() => <View style={styles(currentTheme).line} />}
         ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
         renderItem={({ item: address }) => {
           return (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles(currentTheme).containerSpace]}
-              onPress={() => handleAddressSelection(address._id)}
-              disabled={!isEditMode}
-            >
+            <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).containerSpace]} onPress={() => handleAddressSelection(address._id)} disabled={!isEditMode}>
               <View style={[styles().width100, styles(currentTheme).rowContainer]}>
                 <View style={styles(currentTheme).rowContainer}>
                   {isEditMode && (
                     <View style={styles().checkboxContainer}>
-                      <CheckboxBtn
-                        checked={selectedAddresses.includes(address._id)}
-                        onPress={() => handleAddressSelection(address._id)}
-                      />
+                      <CheckboxBtn checked={selectedAddresses.includes(address._id)} onPress={() => handleAddressSelection(address._id)} />
                     </View>
                   )}
                   {/* location icon */}
                   <View style={[styles(currentTheme).homeIcon]}>
                     {addressIcons[address.label]
                       ? React.createElement(addressIcons[address.label], {
-                        fill: currentTheme.darkBgFont
-                      })
+                          fill: currentTheme.darkBgFont
+                        })
                       : React.createElement(addressIcons['Other'], {
-                        fill: currentTheme.darkBgFont
-                      })}
+                          fill: currentTheme.darkBgFont
+                        })}
                   </View>
 
                   {/* addresses */}
                   <View style={styles(currentTheme).actionButton}>
                     {/* location title */}
                     <View style={[styles().titleAddress]}>
-                      <TextDefault
-                        textColor={currentTheme.darkBgFont}
-                        style={styles(currentTheme).labelStyle}
-                        H5
-                        bolder
-                        isRTL
-                      >
+                      <TextDefault textColor={currentTheme.darkBgFont} style={styles(currentTheme).labelStyle} H5 bolder isRTL>
                         {t(address.label)}
                       </TextDefault>
                     </View>
                     {/* location description */}
                     <View style={styles(currentTheme).midContainer}>
                       <View style={styles(currentTheme).addressDetail}>
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.darkBgFont}
-                          style={{ ...alignment.PBxSmall }}
-                          isRTL
-                        >
+                        <TextDefault numberOfLines={1} textColor={currentTheme.darkBgFont} style={{ ...alignment.PBxSmall }} isRTL>
                           {/* {address.deliveryAddress} */}
-                          {address.deliveryAddress.slice(0, 35) +
-                            (address.deliveryAddress.length > 35 ? '...' : '')}
+                          {address.deliveryAddress.slice(0, 35) + (address.deliveryAddress.length > 35 ? '...' : '')}
                         </TextDefault>
                       </View>
                     </View>
@@ -355,14 +308,9 @@ function Addresses() {
                       onPress={() => {
                         setSelectedAddressId(address)
                         setDeleteModalVisible(true)
-                        console.log("onselection address id", selectedAddressId, address._id);
                       }}
                     >
-                      <MaterialCommunityIcons
-                        name='dots-horizontal-circle-outline'
-                        size={scale(24)}
-                        color={currentTheme.darkBgFont}
-                      />
+                      <MaterialCommunityIcons name='dots-horizontal-circle-outline' size={scale(24)} color={currentTheme.darkBgFont} />
                     </TouchableOpacity>
 
                     {/* <TouchableOpacity
@@ -380,7 +328,6 @@ function Addresses() {
                     </TouchableOpacity> */}
                   </View>
                 )}
-
               </View>
             </TouchableOpacity>
           )
@@ -404,17 +351,7 @@ function Addresses() {
         </View>
       </View>
 
-      <DeleteEditModal
-        modalVisible={deleteModalVisible}
-        setModalVisible={setDeleteModalVisible}
-        currentTheme={currentTheme}
-        selectedAddress={selectedAddressId}
-        loading={loadingAddressMutation}
-        onDelete={deleteMyAddress}
-        onEdit={editMyAddress}
-        t={t}
-        editButton
-      />
+      <DeleteEditModal modalVisible={deleteModalVisible} setModalVisible={setDeleteModalVisible} currentTheme={currentTheme} selectedAddress={selectedAddressId} loading={loadingAddressMutation} onDelete={deleteMyAddress} onEdit={editMyAddress} t={t} editButton />
 
       <DeleteEditModal
         modalVisible={deleteAllModalVisible}
@@ -426,7 +363,6 @@ function Addresses() {
         t={t}
         deleteAllButton
       />
-
     </View>
   )
 }

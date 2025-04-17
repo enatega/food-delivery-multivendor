@@ -7,7 +7,6 @@ import { alignment } from '../../utils/alignment'
 import { useTranslation } from 'react-i18next'
 
 const ReviewCard = ({ theme, name, rating, description, date }) => {
-  // console.log("date",date)
   return (
     <View style={styles.cardContainer(theme)}>
       <TextDefault bold H5 textColor={theme.gray700} isRTL>
@@ -17,7 +16,7 @@ const ReviewCard = ({ theme, name, rating, description, date }) => {
         <StarRating numberOfStars={5} rating={rating} />
         <TextDefault textColor={theme.gray500} isRTL>
           {date}
-           {/* {t('daysAgo')} */}
+          {/* {t('daysAgo')} */}
         </TextDefault>
       </View>
       <TextDefault textColor={theme.gray500} numberOfLines={5} isRTL>
@@ -27,14 +26,12 @@ const ReviewCard = ({ theme, name, rating, description, date }) => {
   )
 }
 
-
-
 const StarRating = ({ numberOfStars, rating }) => {
   const { t } = useTranslation()
   const stars = Array.from({ length: numberOfStars }, (_, index) => index)
   return (
     <View style={styles.smallStarContainer}>
-      {stars.map(index => (
+      {stars.map((index) => (
         <View key={`star-${index}`} style={{ ...alignment.MxSmall }}>
           <SmallStarIcon isFilled={index + 1 <= rating} />
         </View>

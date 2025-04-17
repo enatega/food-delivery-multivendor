@@ -1,14 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
-  Image,
-  TextInput,
-  Text
-} from 'react-native'
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image, TextInput, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Spinner from '../../components/Spinner/Spinner'
 import styles from './styles'
@@ -24,17 +15,7 @@ import { scale } from '../../utils/scaling'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 
 function PhoneNumber(props) {
-  const {
-    phone,
-    setPhone,
-    phoneError,
-    country,
-    countryCode,
-    registerAction,
-    onCountrySelect,
-    currentTheme,
-    loading
-  } = usePhoneNumber()
+  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading } = usePhoneNumber()
 
   const { t } = useTranslation()
 
@@ -50,22 +31,13 @@ function PhoneNumber(props) {
   }, [props?.navigation])
   const phoneInput = useRef < PhoneInput > null
 
-  console.log("code", country.callingCode[0]);
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[
-        styles().flex,
-        { backgroundColor: currentTheme.themeBackground }
-      ]}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
       <KeyboardAvoidingView
         // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles().flex}>
-        <ScrollView
-          style={styles().flex}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}>
+        style={styles().flex}
+      >
+        <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View>
@@ -80,7 +52,8 @@ function PhoneNumber(props) {
                     ...alignment.MTlarge,
                     ...alignment.MBmedium
                   }}
-                isRTL>
+                  isRTL
+                >
                   {t('yourPhoneNumber')}
                 </TextDefault>
                 <TextDefault
@@ -90,60 +63,41 @@ function PhoneNumber(props) {
                   style={{
                     paddingBottom: scale(5)
                   }}
-                  isRTL>
+                  isRTL
+                >
                   {t('secureAccountWithPhone')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
                 <View style={styles(currentTheme).number}>
-                  <View
-                    style={[
-                      styles(currentTheme).textField,
-                      styles().countryCode,
-                      {padding: Platform.OS === 'ios' ? scale(5) : scale(12)}
-                    ]}>
-                    <CountryPicker
-                      countryCode={countryCode}
-                      onSelect={country => onCountrySelect(country)}
-                      withAlphaFilter
-                      withFilter
-                    />
-                    <TextDefault  textColor={currentTheme.newFontcolor}
-                      style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
-                      {/* {country?.cca2} */}
-                      +{country?.callingCode[0]}
+                  <View style={[styles(currentTheme).textField, styles().countryCode, { padding: Platform.OS === 'ios' ? scale(5) : scale(12) }]}>
+                    <CountryPicker countryCode={countryCode} onSelect={(country) => onCountrySelect(country)} withAlphaFilter withFilter />
+                    <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
+                      {/* {country?.cca2} */}+{country?.callingCode[0]}
                     </TextDefault>
                   </View>
-                  <View
-                    style={[
-                      styles(currentTheme).textField,
-                      styles().phoneNumber,
-                      phoneError && styles(currentTheme).errorInput
-                    ]}>
+                  <View style={[styles(currentTheme).textField, styles().phoneNumber, phoneError && styles(currentTheme).errorInput]}>
                     <View style={styles(currentTheme).phoneField}>
                       {/* <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault> */}
-                      <TextInput style={styles(currentTheme).phoneNo}
+                      <TextInput
+                        style={styles(currentTheme).phoneNo}
                         placeholder={t('phoneNumber')}
                         placeholderTextColor={currentTheme.color6}
                         value={phone}
                         maxLength={16}
-                        onChangeText={e => {
+                        onChangeText={(e) => {
                           if (e >= 0 || e <= 9) {
                             setPhone(e)
                           }
                         }}
-                        keyboardType="numeric"
+                        keyboardType='numeric'
                       />
                     </View>
                   </View>
                 </View>
                 {phoneError && (
                   <View style={{ marginLeft: '30%' }}>
-                    <TextDefault
-                      style={styles().error}
-                      bold
-                      textColor={currentTheme.textErrorColor}
-                      isRTL>
+                    <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                       {phoneError}
                     </TextDefault>
                   </View>
@@ -151,16 +105,9 @@ function PhoneNumber(props) {
               </View>
             </View>
             <View style={{ width: '100%', marginBottom: 20 }}>
-              <TouchableOpacity
-                onPress={() => registerAction()}
-                activeOpacity={0.7}
-                style={styles(currentTheme).btn}>
+              <TouchableOpacity onPress={() => registerAction()} activeOpacity={0.7} style={styles(currentTheme).btn}>
                 <TextDefault H4 textColor={currentTheme.color4} bold>
-                  {loading ? (
-                    <Spinner size="small" backColor="transparent" spinnerColor={currentTheme.white} />
-                  ) : (
-                    t('textWithCodeBtn')
-                  )}
+                  {loading ? <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.white} /> : t('textWithCodeBtn')}
                 </TextDefault>
               </TouchableOpacity>
             </View>

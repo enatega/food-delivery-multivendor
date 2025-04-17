@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  Animated,
-  Easing
-} from 'react-native'
+import { View, FlatList, TouchableOpacity, Alert, Animated, Easing } from 'react-native'
 import { useRestaurantQueries } from '../../../ui/hooks/useRestaurantScreenNewDesign'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { scale } from '../../../utils/scaling'
@@ -86,7 +79,7 @@ const PopularItemsSkeleton = ({ currentTheme }) => {
                 }}
               />
             </View>
-            
+
             <SkeletonPlaceholder
               currentTheme={currentTheme}
               style={{
@@ -121,9 +114,7 @@ const PopularItemsSkeleton = ({ currentTheme }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles(currentTheme).popularList}
-        ItemSeparatorComponent={() => (
-          <View style={{ width: CARD_SPACING }} />
-        )}
+        ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
       />
     </View>
   )
@@ -145,10 +136,7 @@ const CategoriesSkeleton = ({ currentTheme }) => {
 
       <View style={styles(currentTheme).categoriesGrid}>
         {[1, 2, 3, 4].map((item, index) => (
-          <View
-            key={`category-skeleton-${index}`}
-            style={styles(currentTheme).categoryWrapper}
-          >
+          <View key={`category-skeleton-${index}`} style={styles(currentTheme).categoryWrapper}>
             <View style={styles(currentTheme).categoryCard}>
               <SkeletonPlaceholder
                 currentTheme={currentTheme}
@@ -159,10 +147,12 @@ const CategoriesSkeleton = ({ currentTheme }) => {
                   borderTopRightRadius: scale(16)
                 }}
               />
-              <View style={{
-                padding: scale(12),
-                alignItems: 'center'
-              }}>
+              <View
+                style={{
+                  padding: scale(12),
+                  alignItems: 'center'
+                }}
+              >
                 <SkeletonPlaceholder
                   currentTheme={currentTheme}
                   style={{
@@ -183,7 +173,7 @@ const CategoriesSkeleton = ({ currentTheme }) => {
 // AnimatedItem component that matches browse categories exactly
 const AnimatedItem = ({ index, children }) => {
   const scaleValue = useRef(new Animated.Value(0)).current
-  
+
   useEffect(() => {
     Animated.timing(scaleValue, {
       toValue: 1,
@@ -192,7 +182,7 @@ const AnimatedItem = ({ index, children }) => {
       useNativeDriver: true
     }).start()
   }, [index])
-  
+
   return (
     <Animated.View
       style={{
@@ -212,27 +202,26 @@ const RestaurantSections = ({
   restaurant // Restaurant details including isOpen, isAvailable
 }) => {
   const { t } = useTranslation()
-  // console.log(restaurantId)
-   const { popularItems, categories } = useRestaurantQueries(restaurantId)
+  const { popularItems, categories } = useRestaurantQueries(restaurantId)
   // let popularItems={}
   // let categories={}
   // Animation states
   const [hasPopularAnimated, setHasPopularAnimated] = useState(false)
   const [hasCategoriesAnimated, setHasCategoriesAnimated] = useState(false)
-  
+
   // Reset animations when new data arrives
   useEffect(() => {
     if (!popularItems.loading && popularItems.data) {
       setHasPopularAnimated(false)
     }
   }, [popularItems.data])
-  
+
   useEffect(() => {
     if (!categories.loading && categories.data) {
       setHasCategoriesAnimated(false)
     }
   }, [categories.data])
-  
+
   // Check if restaurant is closed
   const isRestaurantOpen = restaurant?.isOpen
   const isAvailable = restaurant?.isAvailable
@@ -252,7 +241,7 @@ const RestaurantSections = ({
           },
           {
             text: t('seeMenu'),
-            onPress: () => {},
+            onPress: () => {}
           }
         ],
         { cancelable: true }
@@ -286,7 +275,7 @@ const RestaurantSections = ({
           },
           {
             text: t('seeMenu'),
-            onPress: () => {},
+            onPress: () => {}
           }
         ],
         { cancelable: true }
@@ -308,30 +297,15 @@ const RestaurantSections = ({
     const discountedPrice = variation?.discounted
 
     // Use discounted price only if it exists and is greater than 0, otherwise use base price
-    const displayPrice =
-      discountedPrice && discountedPrice > 0 ? discountedPrice : price
+    const displayPrice = discountedPrice && discountedPrice > 0 ? discountedPrice : price
 
     const content = (
-      <TouchableOpacity
-        style={styles(currentTheme).popularItemCard}
-        onPress={() => handleItemClick(item)}
-      >
-        <TouchableOpacity
-          style={styles(currentTheme).plusButton}
-          onPress={() => handleItemClick(item)}
-        >
-          <Ionicons
-            name='add'
-            size={scale(16)}
-            color={currentTheme.fontWhite}
-          />
+      <TouchableOpacity style={styles(currentTheme).popularItemCard} onPress={() => handleItemClick(item)}>
+        <TouchableOpacity style={styles(currentTheme).plusButton} onPress={() => handleItemClick(item)}>
+          <Ionicons name='add' size={scale(16)} color={currentTheme.fontWhite} />
         </TouchableOpacity>
 
-        <ShimmerImage
-          imageUrl={item.image}
-          style={styles(currentTheme).popularItemImage}
-          resizeMode='cover'
-        />
+        <ShimmerImage imageUrl={item.image} style={styles(currentTheme).popularItemImage} resizeMode='cover' />
         <View style={styles(currentTheme).popularItemInfo}>
           <TextDefault style={styles(currentTheme).priceText}>
             {configuration.currencySymbol} {displayPrice}
@@ -346,21 +320,14 @@ const RestaurantSections = ({
     if (!hasPopularAnimated) {
       return <AnimatedItem index={index}>{content}</AnimatedItem>
     }
-    
+
     return content
   }
 
   const renderCategoryItem = ({ item, index }) => {
     const content = (
-      <TouchableOpacity
-        style={styles(currentTheme).categoryCard}
-        onPress={() => handleCategoryClick(item)}
-      >
-        <ShimmerImage
-          imageUrl={item.url}
-          style={styles(currentTheme).categoryImage}
-          resizeMode='cover'
-        />
+      <TouchableOpacity style={styles(currentTheme).categoryCard} onPress={() => handleCategoryClick(item)}>
+        <ShimmerImage imageUrl={item.url} style={styles(currentTheme).categoryImage} resizeMode='cover' />
         <TextDefault numberOfLines={1} style={styles(currentTheme).categoryTitle}>
           {item.category_name}
         </TextDefault>
@@ -370,7 +337,7 @@ const RestaurantSections = ({
     if (!hasCategoriesAnimated) {
       return <AnimatedItem index={index}>{content}</AnimatedItem>
     }
-    
+
     return content
   }
 
@@ -395,12 +362,10 @@ const RestaurantSections = ({
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles(currentTheme).popularList}
-              ItemSeparatorComponent={() => (
-                <View style={{ width: CARD_SPACING }} />
-              )}
+              ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
               onMomentumScrollEnd={() => {
                 if (!hasPopularAnimated && popularItems.data.length > 0) {
-                  setHasPopularAnimated(true);
+                  setHasPopularAnimated(true)
                 }
               }}
             />
@@ -413,12 +378,7 @@ const RestaurantSections = ({
         <CategoriesSkeleton currentTheme={currentTheme} />
       ) : (
         <View style={styles(currentTheme).section}>
-          <TextDefault
-            H4
-            bolder
-            textColor={currentTheme.fontMainColor}
-            style={{ marginBottom: scale(15) }}
-          >
+          <TextDefault H4 bolder textColor={currentTheme.fontMainColor} style={{ marginBottom: scale(15) }}>
             Find what you want
           </TextDefault>
 
@@ -427,19 +387,19 @@ const RestaurantSections = ({
               // Set animation complete after the last category is processed
               if (index === categories.data.length - 1 && !hasCategoriesAnimated) {
                 // Use timeout to delay setting the state to allow animation to be visible
-                setTimeout(() => {
-                  setHasCategoriesAnimated(true);
-                }, (index + 1) * 40 + 500); // Delay based on index plus animation duration
+                setTimeout(
+                  () => {
+                    setHasCategoriesAnimated(true)
+                  },
+                  (index + 1) * 40 + 500
+                ) // Delay based on index plus animation duration
               }
-              
+
               return (
-                <View
-                  key={category.id}
-                  style={styles(currentTheme).categoryWrapper}
-                >
+                <View key={category.id} style={styles(currentTheme).categoryWrapper}>
                   {renderCategoryItem({ item: category, index })}
                 </View>
-              );
+              )
             })}
           </View>
         </View>
