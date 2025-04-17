@@ -403,6 +403,7 @@ function Restaurant(props) {
     return (
       <View style={[styles(currentTheme).flex]}>
         <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} />
+
         <View
           style={[
             styles(currentTheme).navbarContainer,
@@ -470,7 +471,9 @@ function Restaurant(props) {
             topaBarData={updatedDeals}
             changeIndex={changeIndex}
             selectedLabel={selectedLabel}
-            minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder}
+            minimumOrder={
+              propsData?.minimumOrder ?? data?.restaurant?.minimumOrder
+            }
             tax={propsData?.tax ?? data?.restaurant?.tax}
             updatedDeals={updatedDeals}
             searchOpen={searchOpen}

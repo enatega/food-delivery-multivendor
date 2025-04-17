@@ -1,7 +1,7 @@
 'use client';
 
 // Core
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
 
@@ -79,7 +79,13 @@ export default function RestaurantsMain() {
       debounceMs: 300,
     }
   ) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
+  
 
+  useEffect(()=>{
+    console.log("🚀 Store Screen Rendered")
+  })
+ 
+  
   // API
   const [hardDeleteRestaurant, { loading: isHardDeleting }] = useMutation(
     HARD_DELETE_RESTAURANT,
@@ -164,6 +170,7 @@ export default function RestaurantsMain() {
       command: (data?: IRestaurantResponse) => {
         if (data) {
           onUseLocalStorage('save', 'restaurantId', data?._id);
+          onUseLocalStorage('save', 'shopType', data?.shopType)
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
           router.push(`/admin/store/`);
@@ -216,6 +223,7 @@ export default function RestaurantsMain() {
           }
 
           onUseLocalStorage('save', 'restaurantId', event.data._id);
+          onUseLocalStorage('save', 'shopType', event.data.shopType)
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
           router.push(`/admin/store/`);

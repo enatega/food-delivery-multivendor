@@ -402,7 +402,7 @@ function ImageTextCenterHeader(props, ref) {
                   }}
                 >
                   <TextDefault bolder textColor={currentTheme.main}>
-                    {t('seeReviews')}
+                    {t('seeReviews')}d
                   </TextDefault>
                 </AnimatedTouchable>
               </View>

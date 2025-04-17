@@ -88,7 +88,12 @@ function About(props) {
         <View style={[styles().flex, styles(currentTheme).mainContainer]}>
           <View>
             <View style={styles(currentTheme).subContainer}>
-              <TextDefault isRTL H3 bolder textColor={currentTheme.fontThirdColor}>
+              <TextDefault
+                isRTL
+                H3
+                bolder
+                textColor={currentTheme.fontThirdColor}
+              >
                 {restaurantObject?.restaurantName}
               </TextDefault>
               <View
@@ -108,7 +113,12 @@ function About(props) {
                   <View>
                     <AntDesign name='clockcircle' size={12} color={!IsOpen ? currentTheme.red600 : currentTheme.main} />
                   </View>
-                  <TextDefault isRTL textColor={currentTheme.fontThirdColor} H5 bold>
+                  <TextDefault
+                    isRTL
+                    textColor={currentTheme.fontThirdColor}
+                    H5
+                    bold
+                  >
                     {t(todayOpeningTimes?.day)}{' '}
                   </TextDefault>
                   {todayOpeningTimes?.times?.length < 1 ? (
@@ -127,7 +137,12 @@ function About(props) {
             </View>
 
             <View style={alignment.MTsmall}>
-              <TextDefault isRTL textColor={currentTheme.fontThirdColor} H5 bold>
+              <TextDefault
+                isRTL
+                textColor={currentTheme.fontThirdColor}
+                H5
+                bold
+              >
                 {t('preservationText')}
               </TextDefault>
             </View>
@@ -135,12 +150,22 @@ function About(props) {
 
           <View>
             <View style={alignment.MTlarge}>
-              <TextDefault isRTL H3 bolder textColor={currentTheme.fontThirdColor}>
+              <TextDefault
+                isRTL
+                H3
+                bolder
+                textColor={currentTheme.fontThirdColor}
+              >
                 {t('location')}
               </TextDefault>
             </View>
             <View style={alignment.MTsmall}>
-              <TextDefault isRTL textColor={currentTheme.fontThirdColor} H5 bold>
+              <TextDefault
+                isRTL
+                textColor={currentTheme.fontThirdColor}
+                H5
+                bold
+              >
                 {restaurantObject.address}
               </TextDefault>
             </View>
@@ -148,7 +173,12 @@ function About(props) {
 
           <View>
             <View style={alignment.MTlarge}>
-              <TextDefault isRTL H3 textColor={currentTheme.fontThirdColor} bolder>
+              <TextDefault
+                isRTL
+                H3
+                textColor={currentTheme.fontThirdColor}
+                bolder
+              >
                 {t('openingHours')}
               </TextDefault>
             </View>
@@ -179,7 +209,12 @@ function About(props) {
 
           <View>
             <View style={[alignment.MTlarge]}>
-              <TextDefault isRTL H3 bolder textColor={currentTheme.fontThirdColor}>
+              <TextDefault
+                isRTL
+                H3
+                bolder
+                textColor={currentTheme.fontThirdColor}
+              >
                 {t('deliveryInformation')}
               </TextDefault>
             </View>
@@ -194,6 +229,7 @@ function About(props) {
               </TextDefault>
 
               <TextDefault isRTL H5 textColor={currentTheme.fontThirdColor} bold style={alignment.MTxSmall}>
+
                 {t('salesTax')} {configuration.currencySymbol}
                 {restaurantObject.restaurantTax}
               </TextDefault>
@@ -202,18 +238,30 @@ function About(props) {
 
           <View>
             <View style={alignment.MTlarge}>
-              <TextDefault isRTL H3 bolder textColor={currentTheme.fontThirdColor}>
+              <TextDefault
+                isRTL
+                H3
+                bolder
+                textColor={currentTheme.fontThirdColor}
+              >
                 {t('contact')}
               </TextDefault>
             </View>
 
             <View style={alignment.MTsmall}>
-              <TextDefault isRTL textColor={currentTheme.fontThirdColor} H5 bold>
+              <TextDefault
+                isRTL
+                textColor={currentTheme.fontThirdColor}
+                H5
+                bold
+              >
                 {t('restrictionsInstructions')}
               </TextDefault>
             </View>
 
-            <View style={[styles(currentTheme).subContainer, alignment.MTsmall]}>
+            <View
+              style={[styles(currentTheme).subContainer, alignment.MTsmall]}
+            >
               <View>
                 <TextDefault isRTL H5 bold>
                   {t('restaurant')}
@@ -237,6 +285,7 @@ function About(props) {
             </View>
 
             <View style={styles().line} />
+
 
             <View style={[styles(currentTheme).subContainer, alignment.MTsmall]}>
               <View>
