@@ -160,7 +160,7 @@ function Checkout(props) {
   })
 
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'no-cache'
   })
 
   const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(PLACEORDER, {
