@@ -8,7 +8,8 @@
 #dist
 /dist
 .DS_Store
-
+android/
+ios/
 # Xcode
 #
 build/
@@ -40,6 +41,8 @@ local.properties
 
 # node.js
 #
+
+android/
 node_modules/
 npm-debug.log
 yarn-error.log

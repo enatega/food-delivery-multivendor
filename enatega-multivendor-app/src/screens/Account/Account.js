@@ -1,15 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-  Modal,
-  ScrollView,
-  AppState,
-  Linking
-} from 'react-native'
+import { View, TouchableOpacity, KeyboardAvoidingView, Platform, StatusBar, Modal, ScrollView, AppState, Linking } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { scale } from '../../utils/scaling'
@@ -71,21 +61,17 @@ function Account(props) {
   const [lngModalVisible, setLngModalVisible] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [selectedLanguage, setselectedLanguage] = useState('')
-  const { logout } = useContext(UserContext)
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
   const [spinnerLoading, setSpinnerLoading] = useState(false)
 
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
-  const [darkTheme, setDarkTheme] = useState(themeContext.ThemeValue === 'Dark')
   const [btnText, setBtnText] = useState(null)
   const [appState, setAppState] = useState(AppState.currentState)
-  const [uploadToken] = useMutation(PUSH_TOKEN)
 
+  const [uploadToken] = useMutation(PUSH_TOKEN)
+  const { logout } = useContext(UserContext)
+  const themeContext = useContext(ThemeContext)
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   const { profile, loadingProfile, errorProfile } = useContext(UserContext)
   const [mutate, { loading }] = useMutation(UPDATE_NOTIFICATION_TOKEN, {
     onCompleted,
@@ -93,22 +79,22 @@ function Account(props) {
     refetchQueries: [{ query: PROFILE }]
   })
 
-  const [deactivated, { loading: deactivateLoading }] = useMutation(
-    DEACTIVATE,
-    {
-      onCompleted: onCompletedDeactivate,
-      onError: onErrorDeactivate
-    }
-  )
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
 
+  const [deactivated, { loading: deactivateLoading }] = useMutation(DEACTIVATE, {
+    onCompleted: onCompletedDeactivate,
+    onError: onErrorDeactivate
+  })
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
-  })
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
+  }, [])
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_PROFILE)
@@ -145,11 +131,7 @@ function Account(props) {
           truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons
-                name='arrow-back'
-                size={25}
-                color={currentTheme.newIconColor}
-              />
+              <MaterialIcons name='arrow-back' size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -159,13 +141,28 @@ function Account(props) {
       )
     })
     checkPermission()
-  }, [
-    props.navigation,
-    showPass,
-    toggleView,
-    themeContext.ThemeValue,
-    selectedLanguage
-  ])
+  }, [props.navigation, showPass, toggleView, themeContext.ThemeValue, selectedLanguage])
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange)
+  }, [])
+
+  useEffect(() => {
+    orderNotificationSetter(profile?.isOrderNotification)
+    offerNotificationSetter(profile?.isOfferNotification)
+  }, [profile])
+
+  useEffect(() => {
+    if (!lngModalVisible) {
+      fetchSelectedLanguage()
+    }
+  }, [lngModalVisible])
+
+  useEffect(() => {
+    return () => {
+      setSpinnerLoading(false)
+    }
+  }, [])
 
   const _handleAppStateChange = async (nextAppState) => {
     if (nextAppState === 'active') {
@@ -188,21 +185,6 @@ function Account(props) {
     setAppState(nextAppState)
   }
 
-  useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange)
-  }, [])
-
-  useEffect(() => {
-    orderNotificationSetter(profile?.isOrderNotification)
-    offerNotificationSetter(profile?.isOfferNotification)
-  }, [profile])
-
-  useEffect(() => {
-    if (!lngModalVisible) {
-      fetchSelectedLanguage()
-    }
-  }, [lngModalVisible])
-
   const fetchSelectedLanguage = async () => {
     const lang = await AsyncStorage.getItem('enatega-language-name')
     const systemLangCode = Localization.locale.split('-')[0]
@@ -211,9 +193,7 @@ function Account(props) {
       setselectedLanguage(lang)
     } else {
       // Find the language value based on the system language code
-      const matchedLanguage = languageTypes.find(
-        (langType) => langType.code === systemLangCode
-      )
+      const matchedLanguage = languageTypes.find((langType) => langType.code === systemLangCode)
       // Set to the language value if found, otherwise default to 'English'
       setselectedLanguage(matchedLanguage ? matchedLanguage.value : 'English')
     }
@@ -237,9 +217,9 @@ function Account(props) {
 
   function toggleTheme() {
     if (themeContext.ThemeValue === 'Pink') {
-      themeContext.dispatch({ type: 'Dark' });
+      themeContext.dispatch({ type: 'Dark' })
     } else {
-      themeContext.dispatch({ type: 'Pink' });
+      themeContext.dispatch({ type: 'Pink' })
     }
   }
 
@@ -276,16 +256,20 @@ function Account(props) {
     setModalVisible(false)
   }
   const handleLogout = async () => {
-    setSpinnerLoading(true)
-    setModalVisible(false)
-    await Analytics.track(Analytics.events.USER_LOGGED_OUT)
-    await Analytics.identify(null, null)
-    await logout()
-    navigation.reset({
-      routes: [{ name: 'Main' }]
-    })
-    // navigation.closeDrawer()
-    FlashMessage({ message: t('logoutMessage') })
+    try {
+      setSpinnerLoading(true)
+      setModalVisible(false)
+      await Analytics.track(Analytics.events.USER_LOGGED_OUT)
+      await Analytics.identify(null, null)
+      await logout()
+      navigation.reset({
+        routes: [{ name: 'Main' }]
+      })
+      // navigation.closeDrawer()
+      FlashMessage({ message: t('logoutMessage') })
+    } catch (error) {
+      console.error('Error during logout:', error)
+    }
   }
   const logoutClick = () => {
     setModalVisible(true)
@@ -322,7 +306,6 @@ function Account(props) {
   }
 
   async function updateNotificationStatus(notificationCheck) {
-    console.log('Entering updateNotificationStatus')
     let orderNotify, offerNotify
     if (!Device.isDevice) {
       FlashMessage({
@@ -334,9 +317,7 @@ function Account(props) {
 
     const permission = await getPermission()
     if (!profile.notificationToken || permission !== 'granted') {
-      console.log(
-        'Permission not granted or notification token not available, opening settings'
-      )
+      console.log('Permission not granted or notification token not available, opening settings')
       Linking.openSettings()
     }
 
@@ -372,66 +353,30 @@ function Account(props) {
     })
   }
 
-  useEffect(() => {
-    return () => {
-      setSpinnerLoading(false)
-    }
-  }, [])
+  if (loadingProfile || spinnerLoading) return <Spinner backColor={currentTheme.CustomLoadingBG} spinnerColor={currentTheme.main} />
 
-  if (loadingProfile || spinnerLoading)
-    return (
-      <Spinner
-        backColor={currentTheme.CustomLoadingBG}
-        spinnerColor={currentTheme.main}
-      />
-    )
+  if (!connect) return <ErrorView refetchFunctions={[]} />
 
-    const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
-    if (!connect) return <ErrorView refetchFunctions={[]} />
-
-    
   return (
     <>
       <View style={styles(currentTheme).formContainer}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
-          style={styles(currentTheme).flex}
-        >
-          <ScrollView
-            style={styles().flex}
-            contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}
-            alwaysBounceVertical={false}
-          >
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles(currentTheme).flex}>
+          <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
             <View style={styles(currentTheme).mainContainer}>
               <View style={styles(currentTheme).padding}>
-                <TextDefault
-                  H2
-                  bolder
-                  textColor={currentTheme.fontThirdColor}
-                  isRTL
-                >
+                <TextDefault H2 bolder textColor={currentTheme.fontThirdColor} isRTL>
                   {t('Account')}
                 </TextDefault>
               </View>
 
               <View style={styles(currentTheme).subContainer}>
                 <View>
-                  <ButtonContainer
-                    title={t('email')}
-                    detail={profile?.email}
-                    status={
-                      profile?.emailIsVerified ? 'verified' : 'notVerified'
-                    }
-                    onPress='null'
-                  />
+                  <ButtonContainer title={t('email')} detail={profile?.email} status={profile?.emailIsVerified ? 'verified' : 'notVerified'} onPress='null' />
                   <View style={styles(currentTheme).line} />
                   <ButtonContainer
                     title={t('phone')}
                     detail={profile?.phone}
-                    status={
-                      profile?.phoneIsVerified ? 'verified' : 'notVerified'
-                    }
+                    status={profile?.phoneIsVerified ? 'verified' : 'notVerified'}
                     onPress={() =>
                       navigation.navigate('PhoneNumber', {
                         prevScreen: 'Account'
@@ -453,81 +398,35 @@ function Account(props) {
                   <View style={styles(currentTheme).line} />
 
                   <View style={[styles().padding]}>
-                    <TextDefault
-                      H5
-                      bolder
-                      textColor={currentTheme.fontThirdColor}
-                      isRTL
-                    >
+                    <TextDefault H5 bolder textColor={currentTheme.fontThirdColor} isRTL>
                       {t('language')}
                     </TextDefault>
                     <TouchableOpacity
-                      style={[
-                        styles(currentTheme).linkContainer,
-                        styles(currentTheme).flexRow
-                      ]}
+                      style={[styles(currentTheme).linkContainer, styles(currentTheme).flexRow]}
                       onPress={() => {
                         setLngModalVisible(true)
                       }}
                     >
-                      <TextDefault
-                        style={styles().drawerContainer}
-                        textColor={currentTheme.fontMainColor}
-                        small
-                        H5
-                        bolder
-                        isRTL
-                      >
+                      <TextDefault style={styles().drawerContainer} textColor={currentTheme.fontMainColor} small H5 bolder isRTL>
                         {selectedLanguage}
                       </TextDefault>
 
-                      <View
-                        style={[
-                          styles(currentTheme).leftContainer,
-                          styles(currentTheme).flexRow
-                        ]}
-                      >
-                        <TextDefault
-                          style={styles().drawerContainer}
-                          textColor={currentTheme.linkColor}
-                          small
-                          H5
-                          bolder
-                          isRTL
-                        >
+                      <View style={[styles(currentTheme).leftContainer, styles(currentTheme).flexRow]}>
+                        <TextDefault style={styles().drawerContainer} textColor={currentTheme.linkColor} small H5 bolder isRTL>
                           {t('edit')}
                         </TextDefault>
-                        <EvilIcons
-                          name={
-                            currentTheme.isRTL
-                              ? 'chevron-left'
-                              : 'chevron-right'
-                          }
-                          size={scale(30)}
-                          color={currentTheme.darkBgFont}
-                        />
+                        <EvilIcons name={currentTheme.isRTL ? 'chevron-left' : 'chevron-right'} size={scale(30)} color={currentTheme.darkBgFont} />
                       </View>
                     </TouchableOpacity>
                   </View>
                   <View style={styles(currentTheme).line} />
 
-                  <ButtonContainer
-                    title={t('DeleteAccount')}
-                    detail={''}
-                    status='null'
-                    onPress={() => setDeleteModalVisible(true)}
-                  />
+                  <ButtonContainer title={t('DeleteAccount')} detail={''} status='null' onPress={() => setDeleteModalVisible(true)} />
                   <View style={styles(currentTheme).line} />
                 </View>
 
                 <View style={styles(currentTheme).mainContainerArea}>
-                  <View
-                    style={[
-                      styles(currentTheme).languageContainer,
-                      styles().checkboxSettings,
-                      styles().padding
-                    ]}
-                  >
+                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <View>
                       <CheckboxBtn
                         checked={orderNotification}
@@ -544,11 +443,7 @@ function Account(props) {
                         setBtnText('order')
                       }}
                     >
-                      <View
-                        style={
-                          styles(currentTheme).notificationChekboxContainer
-                        }
-                      >
+                      <View style={styles(currentTheme).notificationChekboxContainer}>
                         <TextDefault
                           // numberOfLines={1}
                           textColor={currentTheme.darkBgFont}
@@ -561,23 +456,13 @@ function Account(props) {
                       </View>
                       {loading && btnText === 'order' && (
                         <View>
-                          <Spinner
-                            size='small'
-                            backColor='transparent'
-                            spinnerColor={currentTheme.main}
-                          />
+                          <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
                         </View>
                       )}
                     </TouchableOpacity>
                   </View>
 
-                  <View
-                    style={[
-                      styles(currentTheme).languageContainer,
-                      styles().checkboxSettings,
-                      styles().padding
-                    ]}
-                  >
+                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <View>
                       <CheckboxBtn
                         checked={offerNotification}
@@ -594,11 +479,7 @@ function Account(props) {
                         setBtnText('offer')
                       }}
                     >
-                      <View
-                        style={
-                          styles(currentTheme).notificationChekboxContainer
-                        }
-                      >
+                      <View style={styles(currentTheme).notificationChekboxContainer}>
                         <TextDefault
                           // numberOfLines={1}
                           textColor={currentTheme.darkBgFont}
@@ -611,44 +492,19 @@ function Account(props) {
                       </View>
                       {loading && btnText === 'offer' && (
                         <View>
-                          <Spinner
-                            size='small'
-                            backColor='transparent'
-                            spinnerColor={currentTheme.main}
-                          />
+                          <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
                         </View>
                       )}
                     </TouchableOpacity>
                   </View>
 
-                  <View
-                    style={[
-                      styles(currentTheme).languageContainer,
-                      styles().checkboxSettings,
-                      styles().padding
-                    ]}
-                  >
+                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <View>
-                      <CheckboxBtn
-                        checked={themeContext.ThemeValue === 'Dark'}
-                        onPress={() => toggleTheme()}
-                      />
+                      <CheckboxBtn checked={themeContext.ThemeValue === 'Dark'} onPress={() => toggleTheme()} />
                     </View>
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={() => toggleTheme()}
-                    >
-                      <View
-                        style={
-                          styles(currentTheme).notificationChekboxContainer
-                        }
-                      >
-                        <TextDefault
-                          numberOfLines={1}
-                          textColor={currentTheme.darkBgFont}
-                          style={alignment.MLsmall}
-                          isRTL
-                        >
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => toggleTheme()}>
+                      <View style={styles(currentTheme).notificationChekboxContainer}>
+                        <TextDefault numberOfLines={1} textColor={currentTheme.darkBgFont} style={alignment.MLsmall} isRTL>
                           {' '}
                           {t('turnOnDarkTheme')}{' '}
                         </TextDefault>
@@ -658,13 +514,7 @@ function Account(props) {
                 </View>
 
                 <View>
-                  <TextDefault
-                    H2
-                    bolder
-                    textColor={currentTheme.fontThirdColor}
-                    style={styles().padding}
-                    isRTL
-                  >
+                  <TextDefault H2 bolder textColor={currentTheme.fontThirdColor} style={styles().padding} isRTL>
                     {t('legal')}
                   </TextDefault>
                   <ButtonContainer
@@ -682,9 +532,7 @@ function Account(props) {
                     detail={''}
                     status='null'
                     onPress={() => {
-                      Linking.openURL(
-                        'https://multivendor.enatega.com/#/privacy'
-                      )
+                      Linking.openURL('https://multivendor.enatega.com/#/privacy')
                     }}
                   />
                 </View>
@@ -700,11 +548,7 @@ function Account(props) {
                 </View> */}
 
                 <View style={styles(currentTheme).containerButton}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles(currentTheme).addButton}
-                    onPress={logoutClick}
-                  >
+                  <TouchableOpacity activeOpacity={0.5} style={styles(currentTheme).addButton} onPress={logoutClick}>
                     <View style={styles(currentTheme).contentContainer}>
                       <TextDefault bold H5 textColor={currentTheme.red600}>
                         {t('Logout')}
@@ -735,33 +579,15 @@ function Account(props) {
                     paddingHorizontal: scale(10)
                   }}
                 >
-                  <TextDefault
-                    bolder
-                    H3
-                    textColor={currentTheme.newFontcolor}
-                    isRTL
-                  >
+                  <TextDefault bolder H3 textColor={currentTheme.newFontcolor} isRTL>
                     {t('DeleteConfirmation')}
                   </TextDefault>
-                  <Feather
-                    name='x-circle'
-                    size={24}
-                    color={currentTheme.newFontcolor}
-                    onPress={() => setDeleteModalVisible(!deleteModalVisible)}
-                  />
+                  <Feather name='x-circle' size={24} color={currentTheme.newFontcolor} onPress={() => setDeleteModalVisible(!deleteModalVisible)} />
                 </View>
                 <TextDefault H5 textColor={currentTheme.newFontcolor} isRTL>
                   {t('permanentDeleteMessage')}
                 </TextDefault>
-                <TouchableOpacity
-                  style={[
-                    styles(currentTheme).btn,
-                    styles().btnDelete,
-                    { opacity: deactivateLoading ? 0.5 : 1 }
-                  ]}
-                  onPress={deactivatewithemail}
-                  disabled={deactivateLoading}
-                >
+                <TouchableOpacity style={[styles(currentTheme).btn, styles().btnDelete, { opacity: deactivateLoading ? 0.5 : 1 }]} onPress={deactivatewithemail} disabled={deactivateLoading}>
                   {deactivateLoading ? (
                     <Spinner backColor='transparent' size='small' />
                   ) : (
@@ -770,11 +596,7 @@ function Account(props) {
                     </TextDefault>
                   )}
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles(currentTheme).btn, styles().btnCancel]}
-                  onPress={() => setDeleteModalVisible(false)}
-                  disabled={deactivateLoading}
-                >
+                <TouchableOpacity style={[styles(currentTheme).btn, styles().btnCancel]} onPress={() => setDeleteModalVisible(false)} disabled={deactivateLoading}>
                   <TextDefault bolder H4 textColor={currentTheme.black}>
                     {t('noDelete')}
                   </TextDefault>
@@ -783,19 +605,8 @@ function Account(props) {
             </View>
           </Modal>
 
-          <LogoutModal
-            visible={modalVisible}
-            onCancel={handleCancel}
-            onLogout={handleLogout}
-            showCrossButton
-          />
-          <LanguageModal
-            currentTheme={currentTheme}
-            modalVisible={lngModalVisible}
-            setModalVisible={setLngModalVisible}
-            setselectedLanguage={setselectedLanguage}
-            showCrossButton
-          />
+          <LogoutModal visible={modalVisible} onCancel={handleCancel} onLogout={handleLogout} showCrossButton />
+          <LanguageModal currentTheme={currentTheme} modalVisible={lngModalVisible} setModalVisible={setLngModalVisible} setselectedLanguage={setselectedLanguage} showCrossButton />
         </KeyboardAvoidingView>
       </View>
     </>

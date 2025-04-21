@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {
-  View,
-  StatusBar,
-  Platform,
-  FlatList,
-  Linking,
-  TouchableOpacity
-} from 'react-native'
+import { View, StatusBar, Platform, FlatList, Linking, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -68,59 +61,52 @@ const FAQs = [
 const Help = (props) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [isModalVisible, setisModalVisible] = useState(false)
 
   const handleNavigation = () => {
-    setisModalVisible(false);
+    setisModalVisible(false)
     Linking.openURL('https://play.google.com/store/apps/details?id=com.whatsapp')
   }
 
+  const openWhatsAppChat = async () => {
+    const phoneNumber = '+14232600408'
 
-const openWhatsAppChat = async () => {
-  const phoneNumber = '+14232600408';
+    if (Platform.OS === 'android') {
+      const androidUrl = `whatsapp://send?phone=${phoneNumber}`
 
-  if (Platform.OS === 'android') {
-    const androidUrl = `whatsapp://send?phone=${phoneNumber}`
-    
-    try {
-      const supported = Linking.canOpenURL(androidUrl)
-      console.log("🚀 ~ openWhatsAppChat ~ supported:", supported)
-      if (supported) {
-        await Linking.openURL(androidUrl)
-        console.log('WhatsApp opened successfully')
+      try {
+        const supported = Linking.canOpenURL(androidUrl)
+        if (supported) {
+          await Linking.openURL(androidUrl)
+        }
+      } catch (error) {
+        setisModalVisible(true)
+        console.error('Error opening URL', error)
       }
-    } catch (error) {
-      setisModalVisible(true);
-      console.error('Error opening URL', error);
-    }
-  } else if (Platform.OS === 'ios') {
-    const iosUrl = `https://wa.me/${phoneNumber.replace('+', '')}`;
-    console.log('Attempting to open URL:', iosUrl);
+    } else if (Platform.OS === 'ios') {
+      const iosUrl = `https://wa.me/${phoneNumber.replace('+', '')}`
 
-    try {
-      const supported = await Linking.canOpenURL(iosUrl);
-      console.log('Can open URL:', supported);
+      try {
+        const supported = await Linking.canOpenURL(iosUrl)
 
-      if (supported) {
-        await Linking.openURL(iosUrl);
-      } else {
-        console.log('WhatsApp is not installed on the device');
-        setisModalVisible(true);
+        if (supported) {
+          await Linking.openURL(iosUrl)
+        } else {
+          console.log('WhatsApp is not installed on the device')
+          setisModalVisible(true)
+        }
+      } catch (error) {
+        console.error('Error opening URL', error)
       }
-    } catch (error) {
-      console.error('Error opening URL', error);
     }
   }
-};
-  
+
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
 
   useEffect(() => {
@@ -159,11 +145,7 @@ const openWhatsAppChat = async () => {
           truncatedLabel=''
           backImage={() => (
             <View>
-              <MaterialIcons
-                name='arrow-back'
-                size={25}
-                color={currentTheme.newIconColor}
-              />
+              <MaterialIcons name='arrow-back' size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -174,22 +156,13 @@ const openWhatsAppChat = async () => {
     })
   }, [props?.navigation])
 
-
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
-  
+
   return (
-    <SafeAreaView
-      edges={['bottom', 'right', 'left']}
-      style={styles(currentTheme).flex}
-    >
-      <StatusBar
-        barStyle='light-content'
-        backgroundColor={currentTheme.themeBackground}
-      />
-      <View
-        style={[styles(currentTheme).flex, styles(currentTheme).mainContainer]}
-      >
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
+      <StatusBar barStyle='light-content' backgroundColor={currentTheme.themeBackground} />
+      <View style={[styles(currentTheme).flex, styles(currentTheme).mainContainer]}>
         <FlatList
           data={FAQs}
           keyExtractor={(item) => 'Faq-' + item.id}
@@ -205,23 +178,10 @@ const openWhatsAppChat = async () => {
 
         <View>
           <View style={styles(currentTheme).containerButton}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles(currentTheme).addButton}
-              onPress={openWhatsAppChat}
-            >
+            <TouchableOpacity activeOpacity={0.5} style={styles(currentTheme).addButton} onPress={openWhatsAppChat}>
               <View style={styles(currentTheme).contentContainer}>
-                <FontAwesome
-                  name='whatsapp'
-                  size={24}
-                  color={currentTheme.black}
-                />
-                <TextDefault
-                  textColor={currentTheme.black}
-                  bold
-                  H5
-                  style={styles(currentTheme).whatsAppText}
-                >
+                <FontAwesome name='whatsapp' size={24} color={currentTheme.black} />
+                <TextDefault textColor={currentTheme.black} bold H5 style={styles(currentTheme).whatsAppText}>
                   {t('whatsAppText')}
                 </TextDefault>
               </View>
@@ -229,13 +189,7 @@ const openWhatsAppChat = async () => {
           </View>
         </View>
 
-        <WhatsAppNotInstalledModal
-        theme={currentTheme}
-        modalVisible={isModalVisible}
-        setModalVisible={()=> setisModalVisible(!isModalVisible)}
-        handleNavigation={handleNavigation}
-        />
-
+        <WhatsAppNotInstalledModal theme={currentTheme} modalVisible={isModalVisible} setModalVisible={() => setisModalVisible(!isModalVisible)} handleNavigation={handleNavigation} />
       </View>
     </SafeAreaView>
   )

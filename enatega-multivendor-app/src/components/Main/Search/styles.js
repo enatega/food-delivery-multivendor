@@ -9,13 +9,14 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
     bodyStyleOne: {
       fontFamily: fontStyles.MuseoSans500,
       fontSize: scale(14),
-      color: props != null ? props?.fontMainColor : 'black'
+      color: props != null ? props?.fontMainColor : 'black',
+      minHeight: verticalScale(40)
     },
     mainContainerHolder: {
       zIndex: 333,
       width: '100%',
-      alignItems: 'center',     
-      backgroundColor:newheaderColor,
+      alignItems: 'center',
+      backgroundColor: newheaderColor
     },
     mainContainer: {
       width: '90%',
@@ -32,28 +33,30 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
         height: verticalScale(1)
       },
       shadowOpacity: 0.2,
-      shadowRadius: verticalScale(1),
-
+      shadowRadius: verticalScale(1)
     },
     subContainer: {
       width: '90%',
       height: '60%',
       alignItems: 'center',
       justifyContent: 'space-between',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row'
     },
     leftContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      width: '90%',
-      gap: scale(15)
+      width: '84%',
+      gap: scale(8),
+      overflow: 'hidden'
     },
     searchContainer: {
-      width: '10%'
+      width: '10%',
+      alignSelf: 'center'
     },
     inputContainer: {
       justifyContent: 'center',
       ...alignment.MLxSmall,
-      ...alignment.MRxSmall
+      ...alignment.MRxSmall,
+      width: '90%'
     },
     filterContainer: {
       width: '10%',
@@ -61,6 +64,8 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row'
+      // borderColor: 'white',
+      // borderWidth: 2
     }
   })
 export default styles

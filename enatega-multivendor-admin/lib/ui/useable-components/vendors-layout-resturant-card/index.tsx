@@ -242,6 +242,7 @@ export default function VendorsLayoutRestaurantCard({
           className="h-10 w-full bg-[#EBEDE6] text-black"
           label={t('View Details')}
           onClick={() => {
+            onUseLocalStorage('save', 'shopType', shopType )
             onUseLocalStorage('save', 'restaurantId', _id);
             // Get the existing route stack from local storage
             const existingRouteStack = JSON.parse(

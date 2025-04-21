@@ -1,4 +1,4 @@
-import 'expo-dev-client'
+// import 'expo-dev-client'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'

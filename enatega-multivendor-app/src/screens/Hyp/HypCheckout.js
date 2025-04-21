@@ -47,8 +47,6 @@ function HypCheckout(props) {
 
   // Handlers
   const onNotifiyUsers = async () => {
-    console.log('onNotifiyUsers called')
-
     try {
       // Notification
       await mutateOrderCreatedAndPaid({
@@ -58,7 +56,6 @@ function HypCheckout(props) {
           orderInput: orderInput
         }
       })
-      console.log('onNotifiyUsers passed')
       return
     } catch (err) {
       console.log('onNotifiyUsers failed')
@@ -76,8 +73,7 @@ function HypCheckout(props) {
             variables: {
               groupId: await AsyncStorage.getItem('hyp-session-id'),
               module: 'HypCheckout',
-              screenPath:
-                '/Users/umarkhalid/Projects/Yalla/yalla-apps/enatega-multivendor-app/src/screens/Hyp/HypCheckout.js',
+              screenPath: '/Users/umarkhalid/Projects/Yalla/yalla-apps/enatega-multivendor-app/src/screens/Hyp/HypCheckout.js',
               type,
               details
             }
@@ -99,11 +95,7 @@ function HypCheckout(props) {
           truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall, width: scale(30) }}>
-              <AntDesign
-                name='arrowleft'
-                size={22}
-                color={currentTheme.fontFourthColor}
-              />
+              <AntDesign name='arrowleft' size={22} color={currentTheme.fontFourthColor} />
             </View>
           )}
           onPress={() => {
@@ -150,7 +142,6 @@ function HypCheckout(props) {
         ]
       })
     } else if (data.url.includes('hyp/cancel')) {
-      console.log('order cancelled', data)
       FlashMessage({ message: t('PaymentNotSuccessfull'), duration: 2000 })
       loadingSetter(false)
       props?.navigation.goBack()
@@ -167,10 +158,7 @@ function HypCheckout(props) {
         bounces={false}
         originWhitelist={['*']}
         onLoadStart={async (e) => {
-          await onCreateActivityHandler(
-            'onLoadStart:HYP',
-            e?.description ?? '-'
-          )
+          await onCreateActivityHandler('onLoadStart:HYP', e?.description ?? '-')
           loadingSetter(true)
         }}
         userAgent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
@@ -178,10 +166,7 @@ function HypCheckout(props) {
           uri: `${SERVER_URL}hyp/create-hyp-api-sign?id=${_id}`
         }}
         onHttpError={async (e) => {
-          await onCreateActivityHandler(
-            'onHttpError:HYP',
-            e?.description ?? '-'
-          )
+          await onCreateActivityHandler('onHttpError:HYP', e?.description ?? '-')
           loadingSetter(false)
         }}
         onError={async (e) => {
@@ -200,13 +185,7 @@ function HypCheckout(props) {
         onNavigationStateChange={handleResponse}
       />
 
-      {loading ? (
-        <ActivityIndicator
-          style={{ position: 'absolute', bottom: '50%', left: '50%' }}
-          size='large'
-          color='#90E36D'
-        />
-      ) : null}
+      {loading ? <ActivityIndicator style={{ position: 'absolute', bottom: '50%', left: '50%' }} size='large' color='#90E36D' /> : null}
     </View>
   )
 }

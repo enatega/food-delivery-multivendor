@@ -39,8 +39,8 @@ const styles = (props = null) =>
       top: scale(10),
       right: scale(10),
       backgroundColor: props?.plusIcon,
-      width: scale(30),
-      height: scale(30),
+      width: scale(24),
+      height: scale(24),
       borderRadius: scale(15),
       justifyContent: 'center',
       alignItems: 'center'
