@@ -4,8 +4,6 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { getZones } from '../apollo/queries'
 import NetInfo from '@react-native-community/netinfo'
-import { useLocation } from '../ui/hooks'
-
 // import * as Network from 'expo-network';
 
 const GET_ZONES = gql`
@@ -18,51 +16,20 @@ export const LocationProvider = ({ children }) => {
   const [cities, setCities] = useState([])
   const [isConnected, setIsConnected] = useState(false)
   const { loading, error, data, refetch } = useQuery(GET_ZONES)
-  const { getCurrentLocation, getLocationPermission } = useLocation()
 
   useEffect(() => {
-    async function initLocation() {
+    const getActiveLocation = async () => {
       try {
         const locationStr = await AsyncStorage.getItem('location')
         if (locationStr) {
-          const storedLocation = JSON.parse(locationStr)
-          setLocation(storedLocation)
-          return
+          setLocation(JSON.parse(locationStr))
         }
-
-        const { status } = await getLocationPermission()
-        if (status !== 'granted') {
-          return
-        }
-
-        const { error, coords } = await getCurrentLocation()
-        if (error) {
-          return
-        }
-
-        const userLocation = {
-          latitude: coords.latitude,
-          longitude: coords.longitude
-        }
-
-        const response = await getAddress(userLocation.latitude, userLocation.longitude)
-
-        const locationData = {
-          label: 'Location',
-          deliveryAddress: response.formattedAddress,
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          city: response.city
-        }
-
-        setLocation(locationData)
-        await AsyncStorage.setItem('location', JSON.stringify(locationData))
       } catch (err) {
-        // Error silently ignored or optionally handle error silently here
+        console.log(err)
       }
     }
 
-    initLocation()
+    getActiveLocation()
   }, [])
 
   useEffect(() => {

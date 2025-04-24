@@ -1,5 +1,6 @@
 import React, { useContext, useLayoutEffect } from 'react'
-import { View, FlatList, Image, Animated } from 'react-native'
+import { View, FlatList, Image } from 'react-native'
+import Animated, { FadeIn, FadeInUp, ZoomIn } from 'react-native-reanimated'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -17,31 +18,27 @@ const HEADING = {
   default: 'Collections'
 }
 
-// CustomItem component to handle animation
-const CustomItem = ({ index, children }) => {
-  const scaleValue = new Animated.Value(0)
-
-  React.useEffect(() => {
-    Animated.timing(scaleValue, {
-      toValue: 1,
-      delay: index * 130,
-      useNativeDriver: true // Use native driver for better performance
-    }).start()
-  }, [index])
-
-  return (
-    <Animated.View
-      style={{
-        opacity: scaleValue,
-        flex: 1 / 2,
-        marginHorizontal: 5,
-        marginVertical: 2
-      }}
+// ✅ Use Reanimated Animated.View directly in renderItem
+const AnimatedItem = ({ index, item, navigation, collectionType, themeStyles }) => (
+  <Animated.View entering={FadeInUp.delay(index * 80).duration(500)} style={{ flex: 0.5, marginHorizontal: 5, marginVertical: 2 }}>
+    <Ripple
+      activeOpacity={0.7}
+      style={themeStyles.collectionCard}
+      onPress={() =>
+        navigation.navigate(collectionType ?? 'Restaurants', {
+          collection: item?.name
+        })
+      }
     >
-      {children}
-    </Animated.View>
-  )
-}
+      <View style={styles().brandImgContainer}>
+        <Image source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
+      </View>
+      <TextDefault Normal bold style={{ padding: 8 }} isRTL>
+        {item.name}
+      </TextDefault>
+    </Ripple>
+  </Animated.View>
+)
 
 const Collection = ({ navigation, route }) => {
   const themeContext = useContext(ThemeContext)
@@ -60,47 +57,16 @@ const Collection = ({ navigation, route }) => {
     )
   }, [navigation, currentTheme])
 
-  const { isConnected: connect, setIsConnected: setConnect } =
-    useNetworkStatus()
-  if (!connect) return <ErrorView refetchFunctions={[]} />
+  const { isConnected } = useNetworkStatus()
+  if (!isConnected) return <ErrorView refetchFunctions={[]} />
+
   return (
     <View style={styles(currentTheme).container}>
       <TextDefault bolder H2 isRTL>
         {t(HEADING[collectionType])}
       </TextDefault>
-      <FlatList
-        numColumns={2}
-        data={data ?? []}
-        renderItem={({ item, index }) => (
-          <CustomItem index={index}>
-            <Ripple
-              activeOpacity={0.7}
-              style={styles(currentTheme).collectionCard}
-              onPress={() => {
-                navigation.navigate(collectionType ?? 'Restaurants', {
-                  collection: item?.name
-                })
-              }}
-            >
-              <View style={styles().brandImgContainer}>
-                <Image
-                  source={{ uri: item?.image }}
-                  style={styles().collectionImage}
-                  resizeMode='cover'
-                />
-              </View>
-              <TextDefault Normal bold style={{ padding: 8 }} isRTL>
-                {item.name}
-              </TextDefault>
-            </Ripple>
-          </CustomItem>
-        )}
-        ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-        keyExtractor={(item) => item?._id}
-        contentContainerStyle={styles().contentContainerStyle}
-        showsVerticalScrollIndicator={false}
-        columnWrapperStyle={styles().columnWrapperStyle}
-      />
+
+      <FlatList numColumns={2} data={data} keyExtractor={(item) => item?._id} renderItem={({ item, index }) => <AnimatedItem index={index} item={item} navigation={navigation} collectionType={collectionType} themeStyles={styles(currentTheme)} />} ItemSeparatorComponent={() => <View style={{ width: 20 }} />} contentContainerStyle={styles().contentContainerStyle} showsVerticalScrollIndicator={false} columnWrapperStyle={styles().columnWrapperStyle} />
     </View>
   )
 }

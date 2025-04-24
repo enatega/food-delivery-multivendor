@@ -39,12 +39,13 @@ const Reviews = ({ navigation, route }) => {
   } = useQuery(Review, {
     variables: { restaurant: restaurantId }
   })
-  const rating = reviewsdata?.reviewsByRestaurant.ratings
-  const total = reviewsdata?.reviewsByRestaurant.total
-  const reviews = reviewsdata?.reviewsByRestaurant.reviews
-  // const reviews = restaurant?.reviewData?.ratings
-  const reviewGroups = groupAndCount(reviewsdata?.reviewsByRestaurant.reviews, 'rating')
-  // console.log("reviewGroups",reviewGroups)
+
+  const isStore = route.params.PRE_NAVIGATION_TAB === 'STORE_TAB'
+  const rating = isStore ? restaurant?.reviewData?.ratings : reviewsdata?.reviewsByRestaurant?.ratings
+  const total = isStore ? restaurant?.reviewData?.total : reviewsdata?.reviewsByRestaurant?.total
+  const reviews = isStore ? restaurant?.reviewData?.reviews : reviewsdata?.reviewsByRestaurant?.reviews
+
+  const reviewGroups = groupAndCount(reviews, 'rating')
   const [sortBy, setSortBy] = useState('newest')
   const sortingParams = {
     newest: t('Newest'),
@@ -88,8 +89,7 @@ const Reviews = ({ navigation, route }) => {
     })
   }, [navigation])
 
-  const sorted = route.params.PRE_NAVIGATION_TAB === 'STORE_TAB' ? restaurant?.reviewData?.reviews || [] : reviews?.length ? sortReviews([...reviews], sortBy) : []
-  // const sorted = reviews && reviews?.length ? sortReviews([...reviews], sortBy) : []
+  const sorted = reviews && reviews?.length ? sortReviews([...reviews], sortBy) : []
   // const sorted = paramReview && paramReview?.length ? sortReviews([...paramReview], sortBy) : []
 
   const calculatePercentages = (groups, total) => {

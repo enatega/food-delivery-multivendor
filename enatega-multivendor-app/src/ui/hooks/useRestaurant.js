@@ -7,9 +7,13 @@ const RESTAURANT = gql`
 `
 
 export default function useRestaurant(id) {
-  const { data, refetch, networkStatus, loading, error } = useQuery(
-    RESTAURANT,
-    { variables: { id }, fetchPolicy: 'network-only' }
-  )
+  const skip = !id // don't run query if id is not provided
+
+  const { data, refetch, networkStatus, loading, error } = useQuery(RESTAURANT, {
+    variables: { id },
+    fetchPolicy: 'network-only',
+    skip
+  })
+
   return { data, refetch, networkStatus, loading, error }
 }

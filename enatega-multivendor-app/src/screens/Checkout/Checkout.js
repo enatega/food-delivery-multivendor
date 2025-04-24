@@ -411,6 +411,7 @@ function Checkout(props) {
     //   //   currency: configuration.currency
     //   // })
     // }
+    setLoadingOrder(false)
   }
   function onError(error) {
     setLoadingOrder(false)
@@ -586,7 +587,6 @@ function Checkout(props) {
         }
 
         await mutateOrder({ variables: orderVariables })
-        setLoadingOrder(false)
         setIsPickup(false)
       } else {
         FlashMessage({
@@ -595,6 +595,7 @@ function Checkout(props) {
         setLoadingOrder(false)
       }
     } catch (error) {
+      setLoadingOrder(false)
       console.error('Error placing order:', error)
     }
   }

@@ -40,19 +40,31 @@ function ItemDetail(props) {
   // States
   const [listZindex, setListZindex] = useState(0)
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
-  const [selectedVariation, setSelectedVariation] = useState({
-    ...food?.variations[0],
-    addons: food?.variations[0].addons?.map((fa) => {
-      const addon = addons?.find((a) => a._id === fa)
-      const addonOptions = addon.options?.map((ao) => {
-        return options?.find((o) => o._id === ao)
+  const [selectedVariation, setSelectedVariation] = useState(() => {
+    const baseVariation = food?.variations?.[0]
+
+    const mappedAddons = baseVariation?.addons
+      ?.map((fa) => {
+        const addon = addons?.find((a) => a._id === fa)
+        if (!addon) return null
+
+        const addonOptions = addon.options?.map((ao) => options?.find((o) => o._id === ao))
+
+        return {
+          ...addon,
+          options: addonOptions
+        }
       })
-      return {
-        ...addon,
-        options: addonOptions
-      }
-    })
+      ?.filter(Boolean)
+
+    return {
+      ...baseVariation,
+      addons: mappedAddons && mappedAddons.length > 0 ? mappedAddons : null
+    }
   })
+
+  console.log(JSON.stringify(selectedVariation, null, 2))
+
   const [selectedAddons, setSelectedAddons] = useState([])
   const [specialInstructions, setSpecialInstructions] = useState('')
 
@@ -297,6 +309,7 @@ function ItemDetail(props) {
   function validateOrderItem() {
     let hasError = false
     const validatedAddons = selectedVariation?.addons?.map((addon) => {
+      console.log({ addon })
       const selected = selectedAddons?.find((ad) => ad._id === addon._id)
 
       if (!selected && addon?.quantityMinimum === 0) {

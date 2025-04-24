@@ -70,6 +70,8 @@ function Main(props) {
   const { getCurrentLocation } = useLocation()
   const { getAddress } = useGeocoding()
   const locationData = location
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const {
     data,
@@ -291,7 +293,6 @@ function Main(props) {
     }
   }
 
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
