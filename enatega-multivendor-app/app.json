@@ -7,6 +7,11 @@
     "slug": "enategamultivendor",
     "owner": "ninjas_code",
     "privacy": "public",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
     "androidStatusBar": {
       "backgroundColor": "#000"
     },
