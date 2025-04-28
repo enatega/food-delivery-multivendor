@@ -44,7 +44,7 @@
     "react-scripts": "^4.0.0",
     "react-scroll": "^1.8.2",
     "react-scrollspy": "^3.4.3",
-    "react-spinners": "^0.11.0",
+    "react-spinners": "^0.17.0",
     "react-star-ratings": "^2.3.0",
     "react-stripe-checkout": "^2.6.3",
     "source-map-explorer": "^2.5.2",
