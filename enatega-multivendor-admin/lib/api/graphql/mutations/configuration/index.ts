@@ -208,6 +208,16 @@ export const SAVE_VERIFICATION_CONFIGURATION = gql`
   }
 `;
 
+export const TOGGLE_VENDOR_TYPE_CONFIGURATION = gql`
+  mutation SAVE_VERIFICATIONS_TOGGLE(
+    $configurationInput: VendorTypeConfigurationInput!
+  ) {
+    saveVendorTypeToggle(configurationInput: $configurationInput) {
+      isMultiVendor
+    }
+  }
+`;
+
 export const SAVE_CURRENCY_CONFIGURATION = gql`
   mutation SAVE_CURRENCY_CONFIGURATION(
     $configurationInput: CurrencyConfigurationInput!

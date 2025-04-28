@@ -58,6 +58,7 @@ export const GET_CONFIGURATION = gql`
       skipMobileVerification
       costType
       vapidKey
+      isMultiVendor
     }
   }
 `;
