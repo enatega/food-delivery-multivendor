@@ -64,6 +64,7 @@ export interface IConfiguration {
   enableAdminDemo?: boolean;
   costType?: string;
   isMultiVendor?: boolean | null;
+  restaurantCount?: number | null;
 }
 
 export interface IConfigurationContext {

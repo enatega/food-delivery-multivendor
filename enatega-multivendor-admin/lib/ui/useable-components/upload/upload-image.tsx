@@ -1,15 +1,11 @@
 // Contexts
-import { ConfigurationContext } from '@/lib/context/global/configuration.context';
 import { ToastContext } from '@/lib/context/global/toast.context';
 
 // Utils
 import { uploadImageToCloudinary } from '@/lib/services';
 
 // Interfaces
-import {
-  IConfiguration,
-  IImageUploadComponentProps,
-} from '@/lib/utils/interfaces';
+import { IImageUploadComponentProps } from '@/lib/utils/interfaces';
 import Image from 'next/image';
 
 // Hooks
@@ -30,6 +26,7 @@ import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'use-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 // import { MAX_VIDEO_FILE_SIZE } from '@/lib/utils/constants';
 
 function CustomUploadImageComponent({
@@ -50,8 +47,7 @@ function CustomUploadImageComponent({
   ],
 }: IImageUploadComponentProps) {
   // Context
-  const configuration: IConfiguration | undefined =
-    useContext(ConfigurationContext);
+  const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_API_KEY } = useConfiguration();
   const { showToast } = useContext(ToastContext);
 
   // States
@@ -94,12 +90,12 @@ function CustomUploadImageComponent({
           if (fileReader.result) {
             setImageFile(fileReader.result as string);
             const uploadURL = file?.type.startsWith('video/')
-              ? configuration?.cloudinaryUploadUrl?.replace('image', 'video')
-              : (configuration?.cloudinaryUploadUrl ?? '');
+              ? CLOUDINARY_UPLOAD_URL?.replace('image', 'video')
+              : (CLOUDINARY_UPLOAD_URL ?? '');
             await uploadImageToCloudinary(
               fileReader.result as string,
               uploadURL ?? '',
-              configuration?.cloudinaryApiKey ?? ''
+              CLOUDINARY_API_KEY ?? ''
             )
               .then((url) => {
                 console.log(':rocket: ~ .then ~ url:', url);
@@ -149,8 +145,8 @@ function CustomUploadImageComponent({
     [
       name,
       onSetImageUrl,
-      configuration?.cloudinaryApiKey,
-      configuration?.cloudinaryUploadUrl,
+      CLOUDINARY_API_KEY,
+      CLOUDINARY_UPLOAD_URL,
       showToast,
       title,
       // validateImage,

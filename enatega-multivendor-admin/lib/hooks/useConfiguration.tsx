@@ -75,12 +75,14 @@ export const useConfiguration = () => {
   const ISPAID_VERSION = configuration?.isPaidVersion;
   const IS_MULTIVENDOR = configuration?.isMultiVendor;
   const IS_FETCHING_CONFIGURATION = loading;
+  const RESTURANT_COUNT = configuration?.restaurantCount;
 
   return {
-    SERVER_URL: BACKEND_URL.LIVE.SERVER_URL,
-    WS_SERVER_URL: BACKEND_URL.LIVE.WS_SERVER_URL,
+    SERVER_URL: BACKEND_URL.LOCAL.SERVER_URL,
+    WS_SERVER_URL: BACKEND_URL.LOCAL.WS_SERVER_URL,
     COLORS,
     IS_FETCHING_CONFIGURATION,
+    RESTURANT_COUNT,
 
     // EMAIL CONFIG
     EMAIL_NAME,

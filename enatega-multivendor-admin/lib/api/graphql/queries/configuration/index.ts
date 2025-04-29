@@ -59,6 +59,7 @@ export const GET_CONFIGURATION = gql`
       costType
       vapidKey
       isMultiVendor
+      restaurantCount
     }
   }
 `;

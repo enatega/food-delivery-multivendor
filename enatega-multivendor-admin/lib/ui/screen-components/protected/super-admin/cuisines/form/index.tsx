@@ -26,7 +26,11 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { useContext } from 'react';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
-import { CuisineErrors, MAX_SQUARE_FILE_SIZE, SHOP_TYPE } from '@/lib/utils/constants';
+import {
+  CuisineErrors,
+  MAX_SQUARE_FILE_SIZE,
+  SHOP_TYPE,
+} from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
 
 export default function CuisineForm({
@@ -56,7 +60,6 @@ export default function CuisineForm({
     },
     image: isEditing.bool ? isEditing.data.image : '',
   };
- 
 
   // Mutations
   const [CreateCuisine, { loading: createCuisineLoading }] = useMutation(
@@ -74,7 +77,6 @@ export default function CuisineForm({
       refetchQueries: [{ query: GET_CUISINES }],
     }
   );
-  console.log(isEditing.data);
 
   const [editCuisine, { loading: editCuisineLoading }] = useMutation(
     EDIT_CUISINE,
@@ -132,7 +134,6 @@ export default function CuisineForm({
         <Formik
           initialValues={initialValues}
           validationSchema={CuisineFormSchema}
-         
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
 
@@ -191,7 +192,7 @@ export default function CuisineForm({
             values,
             isSubmitting,
             setFieldValue,
-            touched
+            touched,
           }) => {
             return (
               <Form onSubmit={handleSubmit}>
@@ -214,14 +215,18 @@ export default function CuisineForm({
                         : '',
                     }}
                   />
-                  
+
                   <CustomTextAreaField
                     showLabel={true}
                     label={t('Description')}
                     name="description"
                     onChange={handleChange}
                     value={values.description}
-                    error={touched.description && errors.description ? errors.description : ''}
+                    error={
+                      touched.description && errors.description
+                        ? errors.description
+                        : ''
+                    }
                     placeholder={t('Description')}
                     rows={5}
                     style={{

@@ -81,6 +81,7 @@ export const ConfigurationContext = React.createContext<
     enableRestaurantDemo: false,
     enableAdminDemo: false,
     isMultiVendor: null,
+    restaurantCount: null,
   },
   loading: false,
 });
@@ -167,6 +168,7 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
               enableRestaurantDemo: false,
               enableAdminDemo: false,
               isMultiVendor: null,
+              restaurantCount: null,
             }
           : data?.configuration;
 

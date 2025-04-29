@@ -57,6 +57,7 @@ import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 const initialValues: IRestaurantForm = {
   name: '',
@@ -80,6 +81,10 @@ export default function RestaurantDetailsForm({
 }: IRestaurantsAddRestaurantComponentProps) {
   // Hooks
   const t = useTranslations();
+  const { IS_MULTIVENDOR, RESTURANT_COUNT } = useConfiguration();
+
+  // Constants
+  const IS_NOT_ALLOWED_MORE = !IS_MULTIVENDOR && (RESTURANT_COUNT || 0) >= 1;
 
   // Props
   const { onStepChange, order } = stepperProps ?? {
@@ -141,20 +146,34 @@ export default function RestaurantDetailsForm({
   // Handlers
   const onCreateRestaurant = async (data: IRestaurantForm) => {
     try {
-      const vendorId = restaurantsContextData?.vendor?._id?.code;
-      if (!vendorId) {
+      if (IS_NOT_ALLOWED_MORE) {
         showToast({
           type: 'error',
           title: t('Create Store'),
-          message: t(`Store Creation Failed - Please select a vendor.`),
+          message: 'Unauthorized Resource. Only single restaurant is allowed',
           duration: 2500,
         });
         return;
       }
 
+      let vendorId = null;
+
+      if (IS_MULTIVENDOR) {
+        vendorId = restaurantsContextData?.vendor?._id?.code;
+        if (!vendorId) {
+          showToast({
+            type: 'error',
+            title: t('Create Store'),
+            message: t(`Store Creation Failed - Please select a vendor.`),
+            duration: 2500,
+          });
+          return;
+        }
+      }
+
       await createRestaurant({
         variables: {
-          owner: vendorId,
+          ...(IS_MULTIVENDOR ? { owner: vendorId } : {}),
           restaurant: {
             name: data.name,
             address: data.address,

@@ -27,7 +27,6 @@ import { DELETE_RESTAURANT, HARD_DELETE_RESTAURANT } from '@/lib/api/graphql';
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { RestaurantContext } from '@/lib/context/super-admin/restaurant.context';
-import { ConfigurationContext } from '@/lib/context/global/configuration.context';
 
 // Components
 import CustomButton from '../button';
@@ -37,6 +36,7 @@ import CustomLoader from '../custom-progress-indicator';
 import { CarSVG } from '@/lib/utils/assets/svgs/Car';
 import { FrameSVG } from '@/lib/utils/assets/svgs/Frame';
 import { useTranslations } from 'next-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   // Props
@@ -50,16 +50,10 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
     unique_restaurant_id,
   } = restaurant;
 
-  const configuration = useContext(ConfigurationContext);
+  const { DELIVERY_RATE, ISPAID_VERSION } = useConfiguration();
   // Hooks
   const t = useTranslations();
   const { showToast } = useContext(ToastContext);
-
-  if (!configuration) {
-    throw new Error(t('Cannot get the value of the Configuration Context'));
-  }
-
-  const { deliveryRate, isPaidVersion } = configuration;
 
   const {
     restaurantByOwnerResponse,
@@ -129,16 +123,16 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   };
 
   const handleDelete = async () => {
-    if(isPaidVersion) {
-    hardDeleteRestaurant({ variables: { id: _id } });
-  }else {
-    showToast({
-      type: 'error',
-      title: t('You are using free version'),
-      message: t('This Feature is only Available in Paid Version'),
-    });
-  }
-}
+    if (ISPAID_VERSION) {
+      hardDeleteRestaurant({ variables: { id: _id } });
+    } else {
+      showToast({
+        type: 'error',
+        title: t('You are using free version'),
+        message: t('This Feature is only Available in Paid Version'),
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5] bg-white shadow-md">
@@ -209,7 +203,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
         <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-1 mb-2 text-sm">
           <CarSVG width="24" height="24" />
           <span>
-            {'₪'} {deliveryRate}
+            {'₪'} {DELIVERY_RATE}
           </span>
         </div>
 
@@ -227,7 +221,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
           label={t('View Details')}
           onClick={() => {
             onUseLocalStorage('save', 'restaurantId', _id);
-            onUseLocalStorage('save', 'shopType', shopType)
+            onUseLocalStorage('save', 'shopType', shopType);
             const routeStack = ['Admin'];
             onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
             router.push(`/admin/store/`);

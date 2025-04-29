@@ -50,7 +50,8 @@ export default function VendorTypeConversionComponent() {
       showToast({
         type: 'error',
         title: 'Toggle Vendor Type',
-        message: error?.message || 'Something went wrong',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        message: (error as any)?.message || 'Something went wrong',
       });
     }
   };

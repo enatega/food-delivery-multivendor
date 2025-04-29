@@ -15,5 +15,5 @@ export const CuisineFormSchema = Yup.object().shape({
     label: Yup.string().required('Required'),
     code: Yup.string().required('Required'),
   }).required('Please choose one'),
-  image: Yup.string().url().required("Image is Required"),
+  image: Yup.string().url().required('Image is Required'),
 });
