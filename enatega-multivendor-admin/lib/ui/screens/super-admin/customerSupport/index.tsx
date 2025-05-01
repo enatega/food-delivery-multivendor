@@ -18,17 +18,6 @@ export default function CustomerSupportScreen() {
   // States
   const [activeTab, setActiveTab] = useState<CustomerSupportTabType>('tickets');
   
-  // Input value state (before debouncing)
-  const [inputValue, setInputValue] = useState<string>('');
-  
-  // Debounced search value that will be passed to the main component
-  const debouncedSearchValue = useDebounce(inputValue, 500);
-  
-  // Handler for search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       {/* Header */}
@@ -47,7 +36,6 @@ export default function CustomerSupportScreen() {
       {/* Main content area */}
       <CustomerSupportMain 
         activeTab={activeTab}
-        searchValue={debouncedSearchValue} 
       />
     </div>
   );
