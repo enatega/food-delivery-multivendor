@@ -34,10 +34,10 @@ export default function TicketChatModal({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<string>('');
   const [isSending, setIsSending] = useState<boolean>(false);
-  const [initialMessageSent, setInitialMessageSent] = useState<boolean>(false);
+  // const [initialMessageSent, setInitialMessageSent] = useState<boolean>(false);
 
   // Create a polling interval reference
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fetch single ticket details
   const { data: ticketData, loading: ticketLoading } = useQuery(
