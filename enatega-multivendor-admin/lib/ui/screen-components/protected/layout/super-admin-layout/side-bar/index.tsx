@@ -16,6 +16,7 @@ import {
 // Icons
 import {
   faCog,
+  faHeadphones,
   faHome,
   faSliders,
   faUpRightFromSquare,
@@ -28,6 +29,7 @@ import useCheckAllowedRoutes from '@/lib/hooks/useCheckAllowedRoutes';
 // Components
 import SidebarItem from './side-bar-item';
 import { useTranslations } from 'next-intl';
+import { faHeadset } from '@fortawesome/free-solid-svg-icons/faHeadset';
 
 function SuperAdminSidebar({ children }: IGlobalComponentProps) {
   // Contexts
@@ -204,6 +206,14 @@ export default function MakeSidebar() {
       shouldShow: function () {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
+    },
+    {
+      text: 'CustomerSupport',
+      label: t('CustomerSupport'),
+      route: '/customerSupport',
+      icon: faHeadset,
+      isClickable: true,
+      isParent: true,
     },
   ];
 
