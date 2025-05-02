@@ -16,7 +16,6 @@ import {
 // Icons
 import {
   faCog,
-  faHeadphones,
   faHome,
   faSliders,
   faUpRightFromSquare,

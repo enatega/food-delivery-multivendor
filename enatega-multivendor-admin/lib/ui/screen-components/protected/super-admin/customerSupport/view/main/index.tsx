@@ -54,7 +54,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets'}: ICustomerS
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [isChatModalVisible, setIsChatModalVisible] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1);
+  const [page] = useState<number>(1);
   const [limit] = useState<number>(20);
   const [usersWithTickets, setUsersWithTickets] = useState<UserWithLatestTicket[]>([]);
   const [showTicketSkeleton, setShowTicketSkeleton] = useState<boolean>(false);
@@ -62,7 +62,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets'}: ICustomerS
   
   // Refs
   const initialDataLoaded = useRef<boolean>(false);
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPolledAt = useRef<number>(Date.now());
   
   // Fetch list of users who have created tickets

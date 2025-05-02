@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CustomerSupportMain from '@/lib/ui/screen-components/protected/super-admin/customerSupport/view/main';
 import CustomerSupportMobilesTabs from '@/lib/ui/screen-components/protected/super-admin/customerSupport/view/mobile-tabs';
 import { useTranslations } from 'next-intl';
-import CustomTextField from '@/lib/ui/useable-components/input-field';
 import HeaderText from '@/lib/ui/useable-components/header-text';
-import useDebounce from '@/lib/hooks/useDebounce';
 
 // Types
 type CustomerSupportTabType = 'tickets' | 'chats';
