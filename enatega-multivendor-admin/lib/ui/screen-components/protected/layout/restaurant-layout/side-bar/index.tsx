@@ -118,6 +118,11 @@ export default function MakeSidebar() {
           route: '/admin/store/product-management/category',
           isParent: false,
         },
+         {
+          text: t('Banners'),
+          route: '/admin/store/product-management/banners',
+          isParent: false,
+        },
         {
           text: t('Options'),
           route: '/admin/store/product-management/options',

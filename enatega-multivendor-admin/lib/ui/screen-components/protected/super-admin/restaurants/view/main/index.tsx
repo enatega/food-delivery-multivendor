@@ -20,6 +20,7 @@ import RestaurantDuplicateDialog from '../duplicate-dialog';
 import RestaurantsTableHeader from '../header/table-header';
 import Table from '@/lib/ui/useable-components/table';
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 // Constants and Interfaces
 import {
@@ -48,6 +49,8 @@ import { RESTAURANT_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/colu
 export default function RestaurantsMain() {
   // Hooks
   const t = useTranslations();
+
+  const { IS_MULTIVENDOR } = useConfiguration();
 
   // Context
   const { showToast } = useContext(ToastContext);
@@ -83,7 +86,7 @@ export default function RestaurantsMain() {
 
   useEffect(()=>{
     console.log("🚀 Store Screen Rendered")
-  })
+  }, [])
  
   
   // API
@@ -164,7 +167,8 @@ export default function RestaurantsMain() {
   };
 
   // Constants
-  const menuItems: IActionMenuItem<IRestaurantResponse>[] = [
+  // Create base menu items
+  const baseMenuItems: IActionMenuItem<IRestaurantResponse>[] = [
     {
       label: t('View'),
       command: (data?: IRestaurantResponse) => {
@@ -178,14 +182,6 @@ export default function RestaurantsMain() {
       },
     },
     {
-      label: t('Duplicate'),
-      command: (data?: IRestaurantResponse) => {
-        if (data) {
-          setDuplicateId(data._id);
-        }
-      },
-    },
-    {
       label: t('Delete'),
       command: (data?: IRestaurantResponse) => {
         if (data) {
@@ -194,6 +190,22 @@ export default function RestaurantsMain() {
       },
     },
   ];
+  
+  // Add duplicate option only if IS_MULTIVENDOR is true
+  const menuItems = IS_MULTIVENDOR 
+    ? [
+        baseMenuItems[0],
+        {
+          label: t('Duplicate'),
+          command: (data?: IRestaurantResponse) => {
+            if (data) {
+              setDuplicateId(data._id);
+            }
+          },
+        },
+        baseMenuItems[1]
+      ] 
+    : baseMenuItems;
 
   const _restaurants =
     currentTab === 'Actual' ? data?.restaurants : data?.getClonedRestaurants;
@@ -242,13 +254,15 @@ export default function RestaurantsMain() {
         message={t('Are you sure you want to delete this store?')}
       />
 
-      <RestaurantDuplicateDialog
-        restaurantId={duplicateId}
-        visible={!!duplicateId}
-        onHide={() => {
-          setDuplicateId('');
-        }}
-      />
+      {IS_MULTIVENDOR && (
+        <RestaurantDuplicateDialog
+          restaurantId={duplicateId}
+          visible={!!duplicateId}
+          onHide={() => {
+            setDuplicateId('');
+          }}
+        />
+      )}
     </div>
   );
 }

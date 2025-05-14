@@ -247,6 +247,28 @@ export const generateDummyOrderVendor = (
   return dummyOrderVendor;
 };
 
+// Function to generate dummy banner restaurant data for loading state
+export const generateDummyBannerRestaurants = (count: number = 10) => {
+  const banners = [];
+
+  for (let i = 0; i < count; i++) {
+    banners.push({
+      _id: `banner_${i + 1}`,
+      title: `Banner ${i + 1}`,
+      description: `Description for Banner ${i + 1}`,
+      file: `https://example.com/banner${i + 1}.jpg`,
+      foodId: `food_${i + 1}`,
+      restaurant: `restaurant_1`,
+      foodImage: `https://example.com/food${i + 1}.jpg`,
+      foodTitle: `Food ${i + 1}`,
+      displayImage: `https://example.com/banner${i + 1}.jpg`,
+      isActive: true,
+    });
+  }
+
+  return banners;
+};
+
 export const generateDummyCategories = (count: number = 10): ICategory[] => {
   const categories: ICategory[] = [];
 
