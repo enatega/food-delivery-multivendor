@@ -35,8 +35,6 @@ function AdminSidebar({ children }: IGlobalComponentProps) {
   const { isRestaurantSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
 
-  const { IS_MULTIVENDOR } = useConfiguration();
-
   return (
     <div className="relative">
       <aside

@@ -4,6 +4,7 @@ import {
   IGlobalComponentProps,
   IGlobalTableHeaderProps,
 } from './global.interface';
+import { IFood } from './food.interface';
 
 export interface ICategoryHeaderProps extends IGlobalComponentProps {
   setIsAddCategoryVisible: (visible: boolean) => void;
@@ -41,6 +42,7 @@ export interface ISubCategoriesAddFormProps {
 }
 /* API */
 export interface ICategory {
+  foods: IFood[];
   _id: string;
   title: string;
   image?: string | null;

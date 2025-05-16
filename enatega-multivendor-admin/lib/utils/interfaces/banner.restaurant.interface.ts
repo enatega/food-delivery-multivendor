@@ -1,4 +1,3 @@
-import { IDropdownSelectItem } from "./global.interface";
 import { IGlobalComponentProps } from './global.interface';
 
 export interface IBannerRestaurantResponse {

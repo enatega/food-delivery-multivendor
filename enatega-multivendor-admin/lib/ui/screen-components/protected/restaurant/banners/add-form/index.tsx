@@ -11,6 +11,7 @@ import {
   MAX_LANSDCAPE_FILE_SIZE,
   MAX_VIDEO_FILE_SIZE,
 } from '@/lib/utils/constants';
+import { ICategory, IFood } from '@/lib/utils/interfaces';
 import {
   IBannerRestaurantAddFormComponentProps,
   IBannerRestaurantForm
@@ -52,9 +53,9 @@ const BannerRestaurantAddForm = ({
     if (foodData?.restaurant?.categories) {
       const items: IDropdownSelectItem[] = [];
       
-      foodData.restaurant.categories.forEach((category: any) => {
+      foodData.restaurant.categories.forEach((category: ICategory) => {
         if (category.foods && category.foods.length > 0) {
-          category.foods.forEach((food: any) => {
+          category.foods.forEach((food: IFood) => {
             items.push({
               label: food.title,
               code: food._id,
