@@ -276,6 +276,7 @@ export const generateDummyCategories = (count: number = 10): ICategory[] => {
     categories.push({
       _id: `category_${i + 1}`,
       title: `Category ${i + 1}`,
+      foods: [], // Adding the required foods array property
     });
   }
 
