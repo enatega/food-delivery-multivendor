@@ -46,3 +46,4 @@ export * from './withdraw-request.interface';
 export * from './earnings.interface';
 export * from './transaction-history.interface';
 export * from './collective.interface';
+export * from './shop-type.interface'

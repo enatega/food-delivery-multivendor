@@ -151,6 +151,12 @@ export default function MakeSidebar() {
           isParent: false,
         },
         {
+          text: 'Shop Type',
+          label: t('ShopType'),
+          route: '/management/shop-types',
+          isParent: false,
+        },
+        {
           text: 'Banners',
           label: t('Banners'),
           route: '/management/banners',

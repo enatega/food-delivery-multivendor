@@ -7,6 +7,22 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     remotePatterns: [
       {
+        protocol:'http',
+        hostname:'freepick.com'
+      },
+      {
+        protocol:'https',
+        hostname:'freepick.com'
+      },
+      {
+        protocol:'http',
+        hostname:'placeholder.com'
+      },
+      {
+        protocol:'https',
+        hostname:'placeholder.com'
+      },
+      {
         protocol: 'https',
         hostname: 'placehold.co',
       },
