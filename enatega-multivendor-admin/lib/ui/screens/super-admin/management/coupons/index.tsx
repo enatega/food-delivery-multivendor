@@ -18,7 +18,6 @@ export default function CouponsScreen() {
       discount: 0,
       enabled: false,
       title: '',
-      startDate: null,
       endDate: null,
       lifeTimeActive: false,
     },
