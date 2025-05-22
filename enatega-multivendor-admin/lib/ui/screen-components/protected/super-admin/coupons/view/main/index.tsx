@@ -57,6 +57,8 @@ export default function CouponsMain({
       discount: 0,
       enabled: false,
       title: '',
+      endDate: null,
+      lifeTimeActive: false,
     },
   });
   const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -123,6 +125,8 @@ export default function CouponsMain({
         discount: 0,
         enabled: false,
         title: '',
+        endDate: null,
+        lifeTimeActive: false,
       },
     });
   }
@@ -204,6 +208,8 @@ export default function CouponsMain({
               discount: 0,
               enabled: false,
               title: '',
+              endDate: '',
+              lifeTimeActive: false,
             },
           })
         }
