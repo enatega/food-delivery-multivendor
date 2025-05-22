@@ -3,14 +3,12 @@ import './index.module.css';
 
 // GraphQL
 import { DELETE_SHOP_TYPE, GET_SHOP_TYPES } from '@/lib/api/graphql';
-import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
+
 
 // Interfaces
 import {
   IActionMenuItem,
   IEditState,
-  IGetShopTypesData,
-  ILazyQueryResult,
   IShopType,
   IShopTypesMainProps,
 } from '@/lib/utils/interfaces';
@@ -36,6 +34,7 @@ import { generateDummyShopTypes } from '@/lib/utils/dummy';
 
 // Table COlumns
 import { SHOP_TYPES_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/shop-types-columns';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 export default function ShopTypesMain({
   setVisible,
@@ -61,7 +60,7 @@ export default function ShopTypesMain({
     },
   });
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Filters
   const filters: IFilterType = {
@@ -69,11 +68,12 @@ export default function ShopTypesMain({
   };
 
   // Queries
-  const { data, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
+ const {data,loading, fetchShopTypes} =  useShopTypes()
+  /* const { data, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
     fetchPolicy: 'network-only',
     debounceMs: 5000,
     onCompleted: () => setIsLoading(false),
-  }) as ILazyQueryResult<IGetShopTypesData | undefined, undefined>;
+  }) as ILazyQueryResult<IGetShopTypesData | undefined, undefined>; */
 
   // Mutations
   const [deleteShopType, { loading: deleteShopTypeLoading }] = useMutation(
@@ -163,17 +163,17 @@ export default function ShopTypesMain({
   }, [data, isEditing.bool]);
 
   useEffect(() => {
-    fetch();
+    fetchShopTypes();
   }, []);
 
   return (
     <div className="p-3">
       <Table
         columns={SHOP_TYPES_TABLE_COLUMNS({ menuItems })}
-        data={data?.fetchShopTypes?.data || (isLoading ? generateDummyShopTypes() : [])}
+        data={data?.fetchShopTypes?.data || (loading ? generateDummyShopTypes() : [])}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e)}
-        loading={isLoading}
+        loading={loading}
         header={
           <ShopTypesTableHeader
             globalFilterValue={globalFilterValue}

@@ -27,7 +27,6 @@ import {
   MAX_LANSDCAPE_FILE_SIZE,
   MAX_SQUARE_FILE_SIZE,
   RestaurantErrors,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 
 // Interface
@@ -57,6 +56,7 @@ import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 const initialValues: IRestaurantForm = {
   name: '',
@@ -128,6 +128,9 @@ export default function RestaurantDetailsForm({
     debounceMs: 300,
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
   cuisineResponse.data?.cuisines;
+
+   const {dropdownList,loading} =  useShopTypes({invoke_now: true, transform_to_dropdown_list: true})
+
 
   // Memoized Constants
   const cuisinesDropdown = useMemo(
@@ -455,7 +458,8 @@ export default function RestaurantDetailsForm({
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
                           setSelectedItem={setFieldValue}
-                          options={SHOP_TYPE}
+                          loading={loading}
+                          options={dropdownList || []}
                           showLabel={true}
                           style={{
                             borderColor: onErrorMessageMatcher(
