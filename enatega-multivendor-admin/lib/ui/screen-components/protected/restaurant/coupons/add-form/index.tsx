@@ -1,5 +1,5 @@
 // Core
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 
 // Prime React
@@ -48,8 +48,11 @@ export default function CouponsAddForm({
     title: '',
     discount: null,
     enabled: true,
+    lifeTimeActive: false,
+    endDate: '',
     ...coupon,
   };
+  const [endDateError, setEndDateError] = useState('');
 
   // Hooks
   const t = useTranslations();
@@ -68,6 +71,10 @@ export default function CouponsAddForm({
     values: ICouponRestaurantForm,
     { resetForm }: FormikHelpers<ICouponRestaurantForm>
   ) => {
+    if (!values.lifeTimeActive && !values.endDate) {
+      setEndDateError('End Date is required when Lifetime is not active');
+      return;
+    }
     mutate({
       variables: {
         restaurantId: restaurantId,
@@ -76,6 +83,8 @@ export default function CouponsAddForm({
           title: values.title,
           discount: values.discount,
           enabled: values.enabled,
+          lifeTimeActive: values.lifeTimeActive,
+          endDate: values.lifeTimeActive ? '' : values.endDate,
         },
       },
       onCompleted: () => {
@@ -87,6 +96,7 @@ export default function CouponsAddForm({
         });
         resetForm();
         onHide();
+        setEndDateError(''); // reset error on success
       },
       onError: (error) => {
         let message = '';
@@ -101,6 +111,7 @@ export default function CouponsAddForm({
           message,
           duration: 3000,
         });
+        setEndDateError(''); // reset error on error
       },
     });
   };
@@ -177,6 +188,44 @@ export default function CouponsAddForm({
                           showLabel
                           placeholder={t('Status')}
                         />
+
+                        <Toggle
+                          checked={values.lifeTimeActive}
+                          onClick={() => {
+                            setFieldValue(
+                              'lifeTimeActive',
+                              !values.lifeTimeActive
+                            );
+                            if (!values.lifeTimeActive) {
+                              setFieldValue('endDate', '');
+                              setEndDateError('');
+                            }
+                          }}
+                          showLabel
+                          placeholder={t('Lifetime Active')}
+                        />
+
+                        {!values.lifeTimeActive && (
+                          <CustomTextField
+                            type="date"
+                            name="endDate"
+                            placeholder={t('End Date')}
+                            value={values.endDate}
+                            onChange={(e) => {
+                              setFieldValue('endDate', e.target.value);
+                              setEndDateError(''); // reset on change
+                            }}
+                            showLabel={true}
+                            style={{
+                              borderColor: endDateError ? 'red' : '',
+                            }}
+                          />
+                        )}
+                        {endDateError && (
+                          <span className="text-red-500 text-sm -mt-2">
+                            {endDateError}
+                          </span>
+                        )}
 
                         <CustomButton
                           className="h-10 ml-auto  w-fit border-gray-300 bg-black px-8 text-white"
