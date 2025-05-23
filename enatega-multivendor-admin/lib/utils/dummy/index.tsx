@@ -519,6 +519,8 @@ export const generateDummyCouponsRestaurant = (
       discount: i + 1,
       enabled: Math.random() > 0.5,
       __typename: 'Rider',
+      endDate: new Date().toISOString(),
+      lifeTimeActive: Math.random() > 0.5,
     });
   }
 
