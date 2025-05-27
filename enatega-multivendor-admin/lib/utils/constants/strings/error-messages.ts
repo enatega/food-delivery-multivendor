@@ -55,7 +55,7 @@ export const VendorErrors: IVendorErrors = {
   image: ['Required', 'Invalid image URL'],
   firstName: ['Required', 'Firstname cannot be only spaces'],
   lastName: ['Required', 'Lastname cannot be only spaces'],
-  phoneNumber:  ['Required','Minimum 5 Numbers are Required'],
+  phoneNumber: ['Required', 'Minimum 5 Numbers are Required'],
 };
 
 export const RestaurantErrors: IRestaurantFormErrors = {
@@ -71,7 +71,7 @@ export const RestaurantErrors: IRestaurantFormErrors = {
   cuisines: ['Required', 'Cuisines field must have at least 1 items'],
   image: ['Required', 'Invalid image URL'],
   logo: ['Required', 'Invalid logo URL'],
-  phoneNumber: ['Required','Minimum 5 Numbers are Required'],
+  phoneNumber: ['Required', 'Minimum 5 Numbers are Required'],
 };
 
 export const ProfileErrors: IUpdateProfileFormErrors = {
@@ -107,7 +107,7 @@ export const RiderErrors: IRiderErrors = {
   password: ['Required', ...PasswordErrors],
   confirmPassword: ['Required', 'Password must match'],
   zone: ['Required'],
-  phone: ['Required','Minimum 5 Numbers are Required'],
+  phone: ['Required', 'Minimum 5 Numbers are Required'],
   vehicleType: ['Required'],
 };
 
@@ -161,7 +161,7 @@ export const ZoneErrors: IZoneErrors = {
 export const StaffErrors: IStaffErrors = {
   name: ['Required', 'Name cannot be only spaces'],
   email: ['Required'],
-  phone: ['Required','Minimum 5 Numbers are Required'],
+  phone: ['Required', 'Minimum 5 Numbers are Required'],
   password: ['Required', ...PasswordErrors],
   confirmPassword: ['Required', 'Password must match'],
   isActive: ['Required'],
@@ -202,6 +202,8 @@ export const CouponErrors: ICouponErrors = {
     'You cannot exceed from 100 as this is a %age field',
   ],
   enabled: ['Required', 'Please choose one'],
+  lifeTimeActive: ['Required', 'Please choose one'],
+  endDate: ['Required', 'End Date is required when LifeTime is not active'],
 };
 
 

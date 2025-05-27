@@ -8,17 +8,17 @@ First off, thank you for considering contributing to our project! Your help is g
 
 If you find a bug in the project, please submit an issue. When reporting a bug, please include:
 
-- A clear and descriptive title.
-- A detailed description of the problem, including steps to reproduce.
-- Any relevant logs, screenshots, or other information that could help diagnose the problem.
+-   A clear and descriptive title.
+-   A detailed description of the problem, including steps to reproduce.
+-   Any relevant logs, screenshots, or other information that could help diagnose the problem.
 
 ### Suggesting Enhancements
 
 We welcome suggestions for improvements and new features. When suggesting an enhancement, please include:
 
-- A clear and descriptive title.
-- A detailed description of the proposed change.
-- Any relevant context or reasoning for the enhancement.
+-   A clear and descriptive title.
+-   A detailed description of the proposed change.
+-   Any relevant context or reasoning for the enhancement.
 
 ### Pull Requests
 
@@ -51,9 +51,9 @@ If you would like to contribute code, follow these steps:
 
 To ensure consistency in the codebase, please follow these guidelines:
 
-- **Code Style**: Follow the existing code style in the project.
-- **Comments**: Write clear and concise comments for complex code sections.
-- **Tests**: Write tests for new features and bug fixes.
+-   **Code Style**: Follow the existing code style in the project.
+-   **Comments**: Write clear and concise comments for complex code sections.
+-   **Tests**: Write tests for new features and bug fixes.
 
 ### Code of Conduct
 
@@ -65,18 +65,20 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 
 Ensure you have the following installed:
 
-- Node.js (version 14.0 to 16.0)
-- npm or yarn
+-   Node.js (version 14.0 to 16.0)
+-   npm or yarn
 
 ### Setting Up
 
 1. **Clone the repository**:
+
     ```bash
     git clone https://github.com/enatega/food-delivery-multivendor.git
     cd food-delivery-multivendor
     ```
 
 2. **Install dependencies**:
+
     ```bash
     npm install
     # or
@@ -89,4 +91,3 @@ Ensure you have the following installed:
     # or
     yarn start
     ```
-

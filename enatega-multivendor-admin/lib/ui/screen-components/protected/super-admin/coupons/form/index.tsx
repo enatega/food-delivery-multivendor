@@ -24,7 +24,7 @@ import { Sidebar } from 'primereact/sidebar';
 
 // Hooks
 import { useMutation } from '@apollo/client';
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { CouponErrors } from '@/lib/utils/constants';
@@ -38,6 +38,7 @@ export default function CouponForm({
 }: IAddCouponProps) {
   // Hooks
   const { showToast } = useContext(ToastContext);
+  const [endDateError, setEndDateError] = useState('');
   const t = useTranslations();
 
   // Initial values
@@ -46,6 +47,8 @@ export default function CouponForm({
     title: isEditing.bool ? isEditing?.data?.title : '',
     discount: isEditing.bool ? isEditing?.data?.discount : 0,
     enabled: isEditing.bool ? isEditing?.data?.enabled : true,
+    endDate: isEditing.bool ? isEditing?.data?.endDate : '',
+    lifeTimeActive: isEditing.bool ? isEditing?.data?.lifeTimeActive : false,
   };
 
   // Mutations
@@ -68,8 +71,11 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            endDate: '',
+            lifeTimeActive: false,
           },
         });
+        setEndDateError('');
       },
       onError: (err) => {
         showToast({
@@ -88,8 +94,11 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            endDate: '',
+            lifeTimeActive: false,
           },
         });
+        setEndDateError('');
       },
     }
   );
@@ -112,8 +121,11 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            endDate: '',
+            lifeTimeActive: false,
           },
         });
+        setEndDateError('');
       },
       onError: (err) => {
         showToast({
@@ -132,8 +144,11 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            endDate: '',
+            lifeTimeActive: false,
           },
         });
+        setEndDateError('');
       },
     }
   );
@@ -151,6 +166,10 @@ export default function CouponForm({
         initialValues={initialValues}
         validationSchema={CouponFormSchema}
         onSubmit={async (values, { setSubmitting }) => {
+          if (!values.lifeTimeActive && !values.endDate) {
+            setEndDateError('End Date is required');
+            return;
+          }
           setSubmitting(true);
           let formData;
           if (!isEditing.bool) {
@@ -158,6 +177,8 @@ export default function CouponForm({
               title: values.title,
               discount: values.discount,
               enabled: values.enabled,
+              endDate: values.endDate,
+              lifeTimeActive: values.lifeTimeActive,
             };
           } else {
             formData = {
@@ -165,6 +186,8 @@ export default function CouponForm({
               title: values.title,
               discount: values.discount,
               enabled: values.enabled,
+              endDate: values.endDate,
+              lifeTimeActive: values.lifeTimeActive,
             };
           }
 
@@ -189,10 +212,12 @@ export default function CouponForm({
               discount: 0,
               enabled: true,
               title: '',
+              endDate: '',
+              lifeTimeActive: false,
             },
           });
           setVisible(false);
-
+          setEndDateError('');
           setSubmitting(false);
         }}
         validateOnChange={true}
@@ -255,6 +280,28 @@ export default function CouponForm({
                       : '',
                   }}
                 />
+
+                <CustomInputSwitch
+                  label={t('Lifetime Active')}
+                  isActive={values.lifeTimeActive}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFieldValue('lifeTimeActive', e.target.checked)
+                  }
+                />
+
+                {!values.lifeTimeActive && (
+                  <CustomTextField
+                    value={values.endDate ? values.endDate : ''}
+                    name="endDate"
+                    showLabel={true}
+                    type="date"
+                    placeholder={t('End Date')}
+                    onChange={(e) => setFieldValue('endDate', e.target.value)}
+                    style={{
+                      borderColor: endDateError ? 'red' : '',
+                    }}
+                  />
+                )}
 
                 <button
                   className="float-end h-10 w-fit rounded-md border-gray-300 bg-black px-8 text-white"
