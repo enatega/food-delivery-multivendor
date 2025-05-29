@@ -9,7 +9,7 @@ import { IConfiguration } from '@/lib/utils/interfaces';
 
 // Interface
 import { ConfigurationContext } from '@/lib/context/global/configuration.context';
-import { BACKEND_URL } from '@/lib/utils/constants';
+
 import { Libraries } from '@react-google-maps/api';
 
 export const useConfiguration = () => {
@@ -72,8 +72,8 @@ export const useConfiguration = () => {
   const ISPAID_VERSION = configuration?.isPaidVersion;
 
   return {
-    SERVER_URL: BACKEND_URL.LIVE.SERVER_URL,
-    WS_SERVER_URL: BACKEND_URL.LIVE.WS_SERVER_URL,
+    SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
+    WS_SERVER_URL: process.env.NEXT_PUBLIC_WS_SERVER_URL,
     COLORS,
 
     // EMAIL CONFIG
