@@ -9,6 +9,7 @@ import { IConfiguration } from '@/lib/utils/interfaces';
 
 // Interface
 import { ConfigurationContext } from '@/lib/context/global/configuration.context';
+
 import { Libraries } from '@react-google-maps/api';
 
 export const useConfiguration = () => {
