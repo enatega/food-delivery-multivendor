@@ -1,6 +1,8 @@
-export const PERMISSIONS = [
+import { useConfiguration } from "@/lib/hooks/useConfiguration";
+
+// Base permissions that are always available
+const BASE_PERMISSIONS = [
   { label: 'Admin', code: 'Admin' },
-  { label: 'Vendors', code: 'Vendors' },
   { label: 'Stores', code: 'Stores' },
   { label: 'Riders', code: 'Riders' },
   { label: 'Users', code: 'Users' },
@@ -17,3 +19,23 @@ export const PERMISSIONS = [
   { label: 'Zone', code: 'Zone' },
   { label: 'Dispatch', code: 'Dispatch' },
 ];
+
+// Hook to get permissions based on configuration
+export const usePermissions = () => {
+  const { IS_MULTIVENDOR } = useConfiguration();
+  
+  return [
+    BASE_PERMISSIONS[0], // Admin
+    ...(IS_MULTIVENDOR ? [{ label: 'Vendors', code: 'Vendors' }] : []),
+    ...BASE_PERMISSIONS.slice(1), // Rest of permissions
+  ];
+};
+
+// Function to get permissions with IS_MULTIVENDOR parameter
+export const getPermissions = (isMultivendor: boolean) => {
+  return [
+    BASE_PERMISSIONS[0], // Admin
+    ...(isMultivendor ? [{ label: 'Vendors', code: 'Vendors' }] : []),
+    ...BASE_PERMISSIONS.slice(1), // Rest of permissions
+  ];
+};

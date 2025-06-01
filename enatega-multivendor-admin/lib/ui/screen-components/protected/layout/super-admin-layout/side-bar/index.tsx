@@ -139,6 +139,7 @@ export default function MakeSidebar() {
           label: t('Orders'),
           route: '/management/orders',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Coupons',
@@ -157,6 +158,7 @@ export default function MakeSidebar() {
           label: t('Banners'),
           route: '/management/banners',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Tipping',
@@ -182,7 +184,7 @@ export default function MakeSidebar() {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
     },
-    {
+    ...(IS_MULTIVENDOR ? [{
       text: t('Wallet'),
       route: '/wallet',
       isParent: true,
@@ -207,7 +209,7 @@ export default function MakeSidebar() {
       shouldShow: function () {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
-    },
+    }] : []),
   ];
 
   return (
