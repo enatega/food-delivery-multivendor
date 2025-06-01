@@ -93,8 +93,8 @@ export default function MakeSidebar() {
           isAllowed: IS_MULTIVENDOR === true,
         },
         {
-          text: 'Stores',
-          label: t('Stores'),
+          text: IS_MULTIVENDOR === true ? 'Stores' : 'Store',
+          label: IS_MULTIVENDOR === true ? t('Stores') : t('Store'),
           route: '/general/stores',
           isParent: false,
         },
