@@ -163,13 +163,13 @@ export default function ShopTypesForm({
           if (!isEditing.bool) {
             formData = {
               title: values.title,
-              image: values.image || 'https://placehold.co/600x400',
+              image: values.image || '',
             };
           } else {
             formData = {
               _id: values._id,
               title: values.title,
-              image: values.image || 'https://placehold.co/600x400',
+              image: values.image || '',
               isActive: values.isActive || false,
             };
           }
