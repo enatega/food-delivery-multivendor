@@ -74,7 +74,7 @@ function DetailCard(props) {
                   classes.smallText
                 )}`}
               >
-                {props.orderId ?? "..."}
+                {props.orderId?.toString()?.toUpperCase() ?? "..."}
               </Typography>
             </Grid>
           </Grid>
