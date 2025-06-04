@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Offline</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    a, button {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #0070f3;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover, a:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <h1>You are offline</h1>
+  <p>Sorry, this page is not available offline.</p>
+  
+  <!-- Link to go back -->
+  <a href="javascript:history.back()">Go Back</a>
+  
+  <!-- Or button to go back -->
+  <button onclick="history.back()">Go Back</button>
+</body>
+</html>

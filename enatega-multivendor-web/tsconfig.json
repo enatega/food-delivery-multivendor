@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],  // ✅ Added "webworker"
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "target": "ES2017"
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/serviceWorker.js"],
+  "exclude": ["cypress.config.ts", "cypress", "node_modules"]
+}

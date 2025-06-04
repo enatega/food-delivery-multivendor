@@ -1,0 +1,1 @@
+export {default as SeeAllSection} from './main'
