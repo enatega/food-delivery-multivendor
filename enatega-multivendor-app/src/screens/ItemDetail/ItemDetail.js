@@ -139,19 +139,18 @@ function ItemDetail(props) {
   }, [navigation])
 
   function scrollToError(addonId, totalAddons) {
-    // Use `setTimeout` to ensure the scroll happens after layout updates
     setTimeout(() => {
       if (addonRefs.current[addonId] && scrollViewRef.current && totalAddons > 0) {
         addonRefs.current[addonId].measure((x, y, width, height, pageX, pageY) => {
           scrollViewRef.current.scrollTo({
-            y: Math.max(0, pageY - HEADER_MAX_HEIGHT), // Adjust the offset if needed
+            // Solution: Round the final value to an integer
+            y: Math.round(Math.max(0, pageY - HEADER_MAX_HEIGHT)),
             animated: true
           })
         })
       }
     }, 300)
   }
-
   function validateButton() {
     if (!selectedVariation) return false
     const validatedAddons = []

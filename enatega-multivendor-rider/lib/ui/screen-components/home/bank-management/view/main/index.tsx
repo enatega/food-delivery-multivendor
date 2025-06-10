@@ -115,7 +115,7 @@ export default function BankManagementMain() {
           bussinessDetails: {
             bankName: formData.bankName,
             accountName: formData.accountName,
-            accountNumber: String(formData.accountNumber),
+            accountNumber: Number(formData.accountNumber),
             accountCode: formData.accountCode,
           },
         },
