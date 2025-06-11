@@ -67,7 +67,7 @@ function Cart(props) {
   const animatedQuantity = useSharedValue(1)
 
   const animateQuantityChange = () => {
-    animatedQuantity.value = withSpring(1.9, {
+    animatedQuantity.value = withSpring(1.3, {
       damping: 2, // Adjust for desired bounciness
       stiffness: 20 // Adjust for desired spring effect
     })
