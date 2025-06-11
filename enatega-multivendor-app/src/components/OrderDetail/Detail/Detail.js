@@ -24,7 +24,7 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
           {t('yourOrder')}
         </TextDefault>
         <TextDefault textColor={theme.lightBlue} bolder H4 style={{ ...alignment.MBmedium }} isRTL>
-          #{orderNo.toLowerCase()}
+          #{orderNo}
         </TextDefault>
       </View>
 
