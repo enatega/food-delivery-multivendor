@@ -29,8 +29,8 @@ import { scale } from '../../utils/scaling'
 import { TextField } from 'react-native-material-textfield'
 
 const { height } = Dimensions.get('window')
-const TOP_BAR_HEIGHT = height * 0.08
-const HEADER_MAX_HEIGHT = height * 0.4
+const TOP_BAR_HEIGHT = Math.round(height * 0.08)
+const HEADER_MAX_HEIGHT = Math.round(height * 0.4)
 const HEADER_MIN_HEIGHT = TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT
 
@@ -344,7 +344,7 @@ function ItemDetail(props) {
           }}
           contentContainerStyle={{
             // paddingTop: HEADER_MAX_HEIGHT,
-            paddingBottom: scale(height * 0.09)
+            paddingBottom: scale(Math.round(height * 0.09))
           }}
         >
           <View>
