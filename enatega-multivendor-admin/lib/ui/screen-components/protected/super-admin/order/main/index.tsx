@@ -61,8 +61,9 @@ export default function OrderSuperAdminMain() {
     { allOrdersWithoutPagination: IOrder[] } | undefined,
     undefined
   >;
-
-  console.log(data);
+if (!loading){
+  console.log(data, "data from orders without pagination-----------------");
+}
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({
     global: {
