@@ -105,6 +105,26 @@ function OrderDetail(props) {
     })
   }, [orders])
 
+  const [remainingTimeState, setRemainingTimeState] = useState(0)
+  
+  useEffect(() => {
+    if (order && ![ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
+      const initialTime = calulateRemainingTime(order)
+      setRemainingTimeState(initialTime)
+      
+      const intervalId = setInterval(() => {
+        const updatedTime = calulateRemainingTime(order)
+        setRemainingTimeState(updatedTime)
+        
+        if (updatedTime <= 0 || [ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
+          clearInterval(intervalId)
+        }
+      }, 1000)
+      
+      return () => clearInterval(intervalId)
+    }
+  }, [order])
+
   if (loadingOrders) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
@@ -113,7 +133,6 @@ function OrderDetail(props) {
     return <TextError text={JSON.stringify(errorOrders)} />
   }
 
-  const remainingTime = calulateRemainingTime(order)
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges } = order
 
   const subTotal = total - tip - tax - deliveryCharges
@@ -222,7 +241,7 @@ function OrderDetail(props) {
                     {t('estimatedDeliveryTime')}
                   </TextDefault>
                   <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>
-                    {remainingTime}-{remainingTime + 5} {t('mins')}
+                    {remainingTimeState}-{remainingTimeState + 5} {t('mins')}
                   </TextDefault>
                   <ProgressBar configuration={configuration} currentTheme={currentTheme} item={order} navigation={navigation} isPicked={order?.isPickedUp} />
                 </>
