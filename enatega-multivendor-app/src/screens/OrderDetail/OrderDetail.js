@@ -117,6 +117,15 @@ function OrderDetail(props) {
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges } = order
 
   const subTotal = total - tip - tax - deliveryCharges
+  
+  const isOrderAccepted = order?.orderStatus === ORDER_STATUS_ENUM.ACCEPTED
+  const isOrderDelivered = order?.orderStatus === ORDER_STATUS_ENUM.DELIVERED
+  const isOrderPicked = order?.orderStatus === ORDER_STATUS_ENUM.PICKED
+  const isOrderCancelled = order?.orderStatus === ORDER_STATUS_ENUM.CANCELLED
+  const isOrderCanceledByRest = order?.orderStatus === ORDER_STATUS_ENUM.CANCELLEDBYREST
+  const isOrderAssigned = order?.orderStatus === ORDER_STATUS_ENUM.ASSIGNED
+  const isOrderCompleted = order?.orderStatus === ORDER_STATUS_ENUM.COMPLETED
+  const isOrderCancelable = !isOrderAccepted || !isOrderDelivered || !isOrderCancelled || !isOrderCanceledByRest || !isOrderPicked || !isOrderAssigned || !isOrderCompleted
 
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
@@ -238,11 +247,11 @@ function OrderDetail(props) {
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         <PriceRow theme={currentTheme} title={t('total')} currency={configuration.currencySymbol} price={total.toFixed(2)} />
-        {order?.orderStatus === ORDER_STATUS_ENUM.PENDING && (
+        
           <View style={{ margin: scale(20) }}>
-            <Button text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+            <Button disabled={isOrderCancelable !== true ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
           </View>
-        )}
+        
       </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>
