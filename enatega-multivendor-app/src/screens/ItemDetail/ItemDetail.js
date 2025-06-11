@@ -1,4 +1,4 @@
-import { View, Alert, StatusBar, Platform, Dimensions } from 'react-native'
+import { View, Alert, StatusBar, Platform, Dimensions, KeyboardAvoidingView } from 'react-native'
 import styles from './styles'
 import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
 import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
@@ -317,7 +317,10 @@ function ItemDetail(props) {
 
   if (!connect) return <ErrorView />
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <Animated.ScrollView
           ref={scrollViewRef}
@@ -402,7 +405,7 @@ function ItemDetail(props) {
         <Animated.View style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 }, animatedTitleStyle]}>
           <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>
-        <View style={{ backgroundColor: currentTheme.themeBackground }}>
+        <View style={{ backgroundColor: currentTheme.themeBackground, zIndex: 10 }}>
           <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
         </View>
         <View
@@ -412,7 +415,7 @@ function ItemDetail(props) {
           }}
         />
       </View>
-    </>
+    </KeyboardAvoidingView>
   )
 }
 
