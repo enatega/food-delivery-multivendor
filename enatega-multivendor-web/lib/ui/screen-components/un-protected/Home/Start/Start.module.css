@@ -1,0 +1,19 @@
+/* .anim
+{
+transition: all 2s;
+animation: myAnimation 2s ease-in-out 4s infinite ;
+animation-delay: 10s;
+}
+
+@keyframes myAnimation {
+    0% {
+        transform: translatey(0);
+      }
+      /* 50% {
+        transform: translateX(100px);
+      } */
+      /* 100% {
+        transform: translatey(-100px);
+      }
+    
+} */ 

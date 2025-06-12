@@ -1,0 +1,25 @@
+.cardContainer {
+  position: relative;
+  /* width: 600px; */
+  height: 550px;
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
+  border-radius: 20px;
+  
+}
+
+.imageContainer {
+  transition: transform 0.4s;
+  object-fit: cover;
+}
+
+.textContainer {
+  z-index: 10;
+}
+
+.cardContainer:hover .imageContainer
+{
+  transform:scale(1.03);
+  cursor: "pointer";
+}
