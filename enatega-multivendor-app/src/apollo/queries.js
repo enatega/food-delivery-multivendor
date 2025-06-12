@@ -718,19 +718,6 @@ export const restaurant = `query Restaurant($id:String){
     reviewData{
       total
       ratings
-      reviews{
-        _id
-        order{
-          user{
-            _id
-            name
-            email
-          }
-        }
-        rating
-        description
-        createdAt
-      }
     }
     categories{
       _id
