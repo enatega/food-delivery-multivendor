@@ -16,7 +16,7 @@ import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
-import MapView, { PROVIDER_GOOGLE, Polygon, Marker } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT, Polygon, Marker } from 'react-native-maps'
 import { customMapStyle } from '../../utils/customMapStyles'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
 import { LocationContext } from '../../context/Location'
@@ -190,7 +190,7 @@ export default function CurrentLocation() {
           <View style={styles().mapView}>
             <MapView
               style={styles().flex}
-              provider={PROVIDER_GOOGLE}
+              provider={PROVIDER_DEFAULT}
               customMapStyle={customMapStyle}
               region={initialRegion}
             >
