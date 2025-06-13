@@ -7,10 +7,11 @@ export default function Button({
   textStyles,
   buttonStyles,
   buttonProps,
-  textProps
+  textProps,
+  disabled
 }) {
   return (
-    <TouchableOpacity {...buttonProps} style={buttonStyles}>
+    <TouchableOpacity {...buttonProps} style={[buttonStyles, { opacity: disabled ? 0.5 : 1 }]} disabled={disabled}>
       <TextDefault {...textProps} style={textStyles} bolder>
         {text}
       </TextDefault>

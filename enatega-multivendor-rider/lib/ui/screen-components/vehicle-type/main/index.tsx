@@ -140,7 +140,7 @@ export default function VehicleTypeMainScreen() {
           onPress={() => onHandlerSubmit()}
         >
           {mutationLoading ? (
-            <SpinnerComponent />
+            <SpinnerComponent color={appTheme.white} />
           ) : (
             <Text className="text-center text-white text-lg font-medium">
               {t("Update")}

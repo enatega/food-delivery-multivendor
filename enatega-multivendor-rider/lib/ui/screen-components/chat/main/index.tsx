@@ -39,7 +39,11 @@ export default function ChatMain() {
         height={30}
         name="send"
         color={appTheme.primary}
-        onPress={onSend}
+        onPress={() => {
+        if (inputMessage?.trim()) {  // Only send if message is not empty
+            onSend();
+          }
+        }}
       />
       //   </View>
       // </Send>

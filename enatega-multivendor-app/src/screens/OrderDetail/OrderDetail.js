@@ -5,7 +5,7 @@ import { alignment } from '../../utils/alignment'
 import styles from './styles'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -105,6 +105,26 @@ function OrderDetail(props) {
     })
   }, [orders])
 
+  const [remainingTimeState, setRemainingTimeState] = useState(0)
+  
+  useEffect(() => {
+    if (order && ![ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
+      const initialTime = calulateRemainingTime(order)
+      setRemainingTimeState(initialTime)
+      
+      const intervalId = setInterval(() => {
+        const updatedTime = calulateRemainingTime(order)
+        setRemainingTimeState(updatedTime)
+        
+        if (updatedTime <= 0 || [ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
+          clearInterval(intervalId)
+        }
+      }, 1000)
+      
+      return () => clearInterval(intervalId)
+    }
+  }, [order])
+
   if (loadingOrders) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
@@ -113,11 +133,12 @@ function OrderDetail(props) {
     return <TextError text={JSON.stringify(errorOrders)} />
   }
 
-  const remainingTime = calulateRemainingTime(order)
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges } = order
 
   const subTotal = total - tip - tax - deliveryCharges
-
+  
+  const isOrderPending = order?.orderStatus === ORDER_STATUS_ENUM.PENDING
+  const isOrderCancelable = isOrderPending
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
@@ -147,7 +168,7 @@ function OrderDetail(props) {
             zoomControlEnabled={true}
             rotateEnabled={false}
             customMapStyle={mapStyle}
-            provider={PROVIDER_GOOGLE}
+            provider={PROVIDER_DEFAULT}
           >
             <Marker
               coordinate={{
@@ -220,7 +241,7 @@ function OrderDetail(props) {
                     {t('estimatedDeliveryTime')}
                   </TextDefault>
                   <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>
-                    {remainingTime}-{remainingTime + 5} {t('mins')}
+                    {remainingTimeState}-{remainingTimeState + 5} {t('mins')}
                   </TextDefault>
                   <ProgressBar configuration={configuration} currentTheme={currentTheme} item={order} navigation={navigation} isPicked={order?.isPickedUp} />
                 </>
@@ -238,11 +259,11 @@ function OrderDetail(props) {
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         <PriceRow theme={currentTheme} title={t('total')} currency={configuration.currencySymbol} price={total.toFixed(2)} />
-        {order?.orderStatus === ORDER_STATUS_ENUM.PENDING && (
+        
           <View style={{ margin: scale(20) }}>
-            <Button text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+            <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
           </View>
-        )}
+        
       </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>

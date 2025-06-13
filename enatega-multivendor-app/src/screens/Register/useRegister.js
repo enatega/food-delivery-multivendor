@@ -112,7 +112,7 @@ const useRegister = () => {
   }
 
   function onCompleted({ phoneExist }) {
-    if (phoneExist.phone) {
+    if (phoneExist && phoneExist.phoneExist && phoneExist.phoneExist.phone) {
       FlashMessage({
         message: t('phoneNumberExist')
       })

@@ -74,7 +74,7 @@ export const useLogin = () => {
 
   function onCompleted({ emailExist }) {
     if (validateCredentials()) {
-      if (emailExist._id !== null) {
+      if (emailExist && emailExist._id) {
         if (
           emailExist.userType !== 'apple' &&
           emailExist.userType !== 'google' &&

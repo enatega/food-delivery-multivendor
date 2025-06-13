@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { View, TouchableOpacity, Image, FlatList } from 'react-native'
 import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -79,14 +79,32 @@ const getItems = (items) => {
 }
 
 const Item = ({ item, navigation, currentTheme, configuration }) => {
+  const [remainingTimeState, setRemainingTimeState] = useState(calulateRemainingTime(item))
+  const { t } = useTranslation()
+  
   useSubscription(
     gql`
       ${subscriptionOrder}
     `,
     { variables: { id: item._id } }
   )
-  const { t } = useTranslation()
-  const remainingTime = calulateRemainingTime(item)
+  
+  // Add useEffect to update the remaining time every second
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const updatedTime = calulateRemainingTime(item)
+      setRemainingTimeState(updatedTime)
+      
+      // Clear interval if time reaches zero
+      if (updatedTime <= 0) {
+        clearInterval(intervalId)
+      }
+    }, 1000)
+    
+    // Clean up interval on unmount
+    return () => clearInterval(intervalId)
+  }, [item])
+  
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -107,7 +125,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
               bolder
               isRTL
             >
-              {remainingTime}-{remainingTime + 5} {t('mins')}
+              {remainingTimeState}-{remainingTimeState + 5} {t('mins')}
             </TextDefault>
           </View>
           <View style={{ flex: 1 }}>

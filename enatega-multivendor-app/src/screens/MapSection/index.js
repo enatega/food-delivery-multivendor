@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import styles from './styles'
 import { Image, View, FlatList, TouchableOpacity, Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -69,7 +69,7 @@ export default function MapSection() {
         zoomEnabled={true}
         zoomControlEnabled={true}
         rotateEnabled={false}
-        // provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_DEFAULT}
         // customMapStyle={mapStyle}
         initialRegion={{
           latitude: restaurants?.length
