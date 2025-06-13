@@ -66,10 +66,15 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
   const [selectedPlaceObject, setSelectedPlaceObject] =
     useState<IPlaceSelectedOption | null>(null);
   const [search, setSearch] = useState<string>('');
+  const [lastSelectedLocation, setLastSelectedLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   // Ref
   const polygonRef = useRef<google.maps.Polygon | null>(null);
   const listenersRef = useRef<google.maps.MapsEventListener[]>([]);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const fetch = React.useMemo(
     () =>
@@ -79,9 +84,37 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
     []
   );
 
+  // Helper to create a polygon around a point
+  const createPolygonAroundPoint = (
+    center: { lat: number; lng: number },
+    sizeMeters = 100
+  ): ILocationPoint[] => {
+    const latOffset = sizeMeters * 0.0000089;
+    const lngOffset = (sizeMeters * 0.0000089) / Math.cos((center.lat * Math.PI) / 180);
+    return [
+      { lat: center.lat + latOffset, lng: center.lng - lngOffset },
+      { lat: center.lat + latOffset, lng: center.lng + lngOffset },
+      { lat: center.lat - latOffset, lng: center.lng + lngOffset },
+      { lat: center.lat - latOffset, lng: center.lng - lngOffset },
+      { lat: center.lat + latOffset, lng: center.lng - lngOffset },
+    ];
+  };
+
   // Handlers
   const handleInputChange = (value: string) => {
     setInputValue(value);
+  };
+
+  const focusZone = (zonePath: ILocationPoint[]) => {
+    if (!mapRef.current || !zonePath.length) return;
+    const bounds = new window.google.maps.LatLngBounds();
+    zonePath.forEach((point) => bounds.extend(point));
+    if (zonePath.length === 1) {
+      mapRef.current.setCenter(zonePath[0]);
+      mapRef.current.setZoom(17);
+    } else {
+      mapRef.current.fitBounds(bounds);
+    }
   };
 
   const onHandlerAutoCompleteSelectionChange = (
@@ -100,13 +133,27 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
             results[0]?.geometry.location
           ) {
             const location = results[0]?.geometry?.location;
-
-            setCenter({
+            const centerPoint = {
               lat: location?.lat() ?? 0,
               lng: location?.lng() ?? 0,
-            });
+            };
+            setCenter(centerPoint);
+            setLastSelectedLocation(centerPoint);
+
+            let newPath: ILocationPoint[];
+            if (deliveryZoneType === 'polygon') {
+              newPath = createPolygonAroundPoint(centerPoint);
+              setPath(newPath);
+            } else if (deliveryZoneType === 'point') {
+              newPath = [centerPoint];
+              setPath(newPath);
+            } else {
+              newPath = [];
+            }
 
             setInputValue(selectedOption.description);
+
+            setTimeout(() => focusZone(newPath), 200);
           }
         }
       );
@@ -316,7 +363,7 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
 
           {googleMapsContext?.isLoaded && (
             <GoogleMap
-              key={deliveryZoneType} // Forces re-render when type changes
+              key={deliveryZoneType}
               mapContainerStyle={{
                 height: '100%',
                 width: '100%',
@@ -334,6 +381,7 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
                 fullscreenControl: false,
               }}
               onClick={onClickGoogleMaps}
+              onLoad={map => { mapRef.current = map; }}
             >
               {path.length > 0 && (
                 <Polygon
@@ -363,18 +411,29 @@ const CustomGoogleMapsLocationZoneBounds: React.FC<
         selected={deliveryZoneType}
         hidenNames={['radius']}
         onClick={(val: string) => {
-          switch (val) {
-            case 'polygon':
-              setPath(DEFAULT_POLYGON);
-              break;
-            case 'point':
-              setPath([]);
-              break;
-            default:
-              break;
-          }
-
           setDeliveryZoneType(val);
+          if (lastSelectedLocation) {
+            let newPath: ILocationPoint[];
+            if (val === 'polygon') {
+              newPath = createPolygonAroundPoint(lastSelectedLocation);
+              setPath(newPath);
+            } else if (val === 'point') {
+              newPath = [lastSelectedLocation];
+              setPath(newPath);
+            }
+            setTimeout(() => focusZone(val === 'polygon' ? createPolygonAroundPoint(lastSelectedLocation) : [lastSelectedLocation]), 200);
+          } else {
+            switch (val) {
+              case 'polygon':
+                setPath(DEFAULT_POLYGON);
+                break;
+              case 'point':
+                setPath([]);
+                break;
+              default:
+                break;
+            }
+          }
         }}
       />
     </div>
