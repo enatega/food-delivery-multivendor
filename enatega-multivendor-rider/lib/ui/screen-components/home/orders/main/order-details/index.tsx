@@ -22,7 +22,7 @@ import MapView, {
   LatLng,
   MapStyleElement,
   Marker,
-  PROVIDER_GOOGLE,
+  PROVIDER_DEFAULT,
 } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { Easing } from "react-native-reanimated";
@@ -353,7 +353,7 @@ export default function OrderDetailScreen() {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
-              provider={PROVIDER_GOOGLE}
+              provider={PROVIDER_DEFAULT}
               // customMapStyle={MapStyles}
             >
               {deliveryAddressPin?.location && (

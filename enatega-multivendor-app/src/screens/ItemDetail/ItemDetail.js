@@ -1,4 +1,4 @@
-import { View, Alert, StatusBar, Platform, Dimensions } from 'react-native'
+import { View, Alert, StatusBar, Platform, Dimensions, KeyboardAvoidingView } from 'react-native'
 import styles from './styles'
 import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
 import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
@@ -29,8 +29,8 @@ import { scale } from '../../utils/scaling'
 import { TextField } from 'react-native-material-textfield'
 
 const { height } = Dimensions.get('window')
-const TOP_BAR_HEIGHT = height * 0.08
-const HEADER_MAX_HEIGHT = height * 0.4
+const TOP_BAR_HEIGHT = Math.round(height * 0.08)
+const HEADER_MAX_HEIGHT = Math.round(height * 0.4)
 const HEADER_MIN_HEIGHT = TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT
 
@@ -139,19 +139,18 @@ function ItemDetail(props) {
   }, [navigation])
 
   function scrollToError(addonId, totalAddons) {
-    // Use `setTimeout` to ensure the scroll happens after layout updates
     setTimeout(() => {
       if (addonRefs.current[addonId] && scrollViewRef.current && totalAddons > 0) {
         addonRefs.current[addonId].measure((x, y, width, height, pageX, pageY) => {
           scrollViewRef.current.scrollTo({
-            y: Math.max(0, pageY - HEADER_MAX_HEIGHT), // Adjust the offset if needed
+            // Solution: Round the final value to an integer
+            y: Math.round(Math.max(0, pageY - HEADER_MAX_HEIGHT)),
             animated: true
           })
         })
       }
     }, 300)
   }
-
   function validateButton() {
     if (!selectedVariation) return false
     const validatedAddons = []
@@ -318,7 +317,10 @@ function ItemDetail(props) {
 
   if (!connect) return <ErrorView />
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
       <View style={[styles().flex, styles(currentTheme).mainContainer]}>
         <Animated.ScrollView
           ref={scrollViewRef}
@@ -345,7 +347,7 @@ function ItemDetail(props) {
           }}
           contentContainerStyle={{
             // paddingTop: HEADER_MAX_HEIGHT,
-            paddingBottom: scale(height * 0.09)
+            paddingBottom: scale(Math.round(height * 0.09))
           }}
         >
           <View>
@@ -393,7 +395,7 @@ function ItemDetail(props) {
             <View style={styles(currentTheme).line}></View>
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
-              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={currentTheme.themeBackground} placeholderTextColor={currentTheme.fontGrayNew} />
+              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether itemId={food?._id} restaurantId={restaurant} />
@@ -403,7 +405,7 @@ function ItemDetail(props) {
         <Animated.View style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 }, animatedTitleStyle]}>
           <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>
-        <View style={{ backgroundColor: currentTheme.themeBackground }}>
+        <View style={{ backgroundColor: currentTheme.themeBackground, zIndex: 10 }}>
           <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
         </View>
         <View
@@ -413,7 +415,7 @@ function ItemDetail(props) {
           }}
         />
       </View>
-    </>
+    </KeyboardAvoidingView>
   )
 }
 

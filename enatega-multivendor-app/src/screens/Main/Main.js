@@ -292,10 +292,11 @@ function Main(props) {
   }
 
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
-  if (!connect) return <ErrorView refetchFunctions={[]} />
-
   return (
     <>
+      {!connect ? (
+        <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} />
+      ) : (
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
         <View style={[styles().flex, styles(currentTheme).screenBackground]}>
           <View style={styles().flex}>
@@ -388,6 +389,7 @@ function Main(props) {
           <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
         </View>
       </SafeAreaView>
+          )}
     </>
   )
 }

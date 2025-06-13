@@ -144,7 +144,7 @@ function RestaurantDetailHeader({
           <FavoriteButton iconSize={scale(24)} restaurantId={restaurant?._id} />
         </View>
 
-        <View style={styles(currentTheme).cuisineContainer}>
+        <View style={[styles(currentTheme).cuisineContainer, { paddingRight: scale(14) }]}>
           <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
             {toggle
               ? restaurant?.cuisines?.join(', ')

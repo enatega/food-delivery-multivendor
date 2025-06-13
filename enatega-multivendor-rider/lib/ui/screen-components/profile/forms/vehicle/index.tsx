@@ -2,6 +2,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Text,
   TextInput,
   TouchableOpacity,
@@ -183,8 +185,11 @@ export default function VehiclePlateForm({
   }, []);
   return (
     <View className="w-full">
+       <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex flex-col justify-between w-full p-2 h-full mt-0 ">
+        <View className="flex flex-col justify-between w-full p-2 h-[90%] mt-0 ">
           <FormHeader title={t("Vehicle Plate")} />
           <View>
             <View className="flex flex-col w-full my-2">
@@ -261,6 +266,7 @@ export default function VehiclePlateForm({
           </View>
         </View>
       </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </View>
   );
 }

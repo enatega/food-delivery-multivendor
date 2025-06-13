@@ -40,7 +40,7 @@ const Reviews = ({ navigation, route }) => {
     refetch,
     data: reviewsdata
   } = useQuery(Review, {
-    variables: { restaurant: restaurantId }
+    variables: { restaurant: restaurantId || restaurant?._id }
   })
   const rating = reviewsdata?.reviewsByRestaurant.ratings
   const total = reviewsdata?.reviewsByRestaurant.total

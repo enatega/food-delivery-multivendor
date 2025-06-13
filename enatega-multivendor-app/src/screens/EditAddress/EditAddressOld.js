@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styles from './styles'
 import { OutlinedTextField } from 'react-native-material-textfield'
 import { scale } from '../../utils/scaling'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
 import gql from 'graphql-tag'
 import { editAddress } from '../../apollo/mutations'
 import * as Location from 'expo-location'
@@ -202,7 +202,7 @@ function EditAddress(props) {
               customMapStyle={
                 themeContext.ThemeValue === 'Dark' ? mapStyle : null
               }
-              provider={PROVIDER_GOOGLE}
+              provider={PROVIDER_DEFAULT}
               onPress={() => {
                 props?.navigation.navigate('FullMap', {
                   latitude: region.latitude,

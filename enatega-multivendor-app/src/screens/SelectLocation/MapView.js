@@ -1,5 +1,5 @@
 import React from 'react'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
 const CustomMapView = React.memo(
   React.forwardRef(function CustomMapView(
     { initialRegion, customMapStyle, onRegionChangeComplete },
@@ -11,7 +11,7 @@ const CustomMapView = React.memo(
         initialRegion={initialRegion}
         region={initialRegion}
         style={{ flex: 1 }}
-        provider={PROVIDER_GOOGLE}
+        provider={PROVIDER_DEFAULT}
         showsTraffic={false}
         maxZoomLevel={16}
         customMapStyle={customMapStyle}

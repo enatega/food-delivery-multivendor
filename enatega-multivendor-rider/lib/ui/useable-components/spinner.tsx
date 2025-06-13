@@ -12,8 +12,12 @@ function SpinnerComponent(props: ISpinnerComponentProps) {
   return (
     <ActivityIndicator
       size="small"
-      color={props.color ?? appTheme.primary}
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      color={props.color ? props.color : appTheme.primary}
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+      }}
     />
   );
 }
