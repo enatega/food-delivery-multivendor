@@ -1,0 +1,845 @@
+@layer tailwind-base, primereact, tailwind-utilities;
+
+/* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
+@import "primereact/resources/themes/lara-light-blue/theme.css"
+  layer(primereact);
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+:root {
+  --primary-color: #b1c748;
+  --secondary-color: #d8e3a3;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+
+  overflow: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Optional: Set box-sizing to border-box globally for consistent sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* Screen Container */
+/* Start Generation Here */
+.screen-container {
+  display: flex;
+  flex-direction: column;
+  height: 90dvh;
+  overflow-y: auto;
+}
+/* End Generation Here */
+
+/* Layout */
+
+.layout-top-bar {
+  z-index: 997;
+  position: absolute;
+}
+
+.layout-top-container {
+  position: sticky;
+  /* height: 64px; */
+  z-index: 997;
+  left: 0;
+  top: 0;
+  width: 100%;
+  border-bottom: 0.2px solid rgba(0, 0, 0, 0.1);
+}
+
+.layout-main-container {
+  /* height: 92%; */
+  display: flex;
+  /* overflow: hidden; */
+}
+
+.layout-main {
+  /* height: 100%; */
+  width: 100%;
+  position: relative;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Text Component */
+.custom-text {
+  font-feature-settings:
+    "liga" off,
+    "clig" off;
+}
+
+.heading-1 {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 40px;
+}
+.heading-2 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 40px;
+}
+
+.heading-3 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.heading-4 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.heading-5 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.heading-6 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.heading-7 {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+/* Card */
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  background-color: white;
+}
+
+.card-h1 {
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 3%;
+  font-weight: 700;
+}
+
+.card-h2 {
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 3%;
+  font-weight: 400;
+}
+
+.card-h3 {
+  font-size: 11px;
+  line-height: 20px;
+  letter-spacing: 3%;
+  font-weight: 400;
+}
+
+/* Scroll Bar  */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px; /* Added height for horizontal scrollbars */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Light gray background for better visibility */
+}
+::-webkit-scrollbar-thumb {
+  background: #d3d3d3; /* A more lighter gray color for the scrollbar thumb */
+  border-radius: 7px;
+}
+
+/* ------------- Prime React ------------- */
+/* OTP Input */
+.p-inputotp {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.p-inputotp-input {
+  width: 70px;
+  height: 70px;
+}
+
+.p-inputotp > .p-inputtext {
+  height: 70px;
+  width: 80px;
+  border-radius: 0;
+}
+
+/* Dropdown */
+
+.p-multiselect {
+  box-shadow: none;
+}
+
+.p-multiselect-token {
+  background-color: var(--primary-color);
+  color: white; /* optional: change the text color to white for better contrast */
+}
+
+.p-multiselect-filter-container {
+  display: flex;
+  align-items: center;
+}
+.p-multiselect-filter {
+  height: 35px;
+  border: 1px solid lightgray;
+  padding-left: 10px;
+  box-shadow: none;
+}
+
+.p-multiselect-select-all > .p-checkbox > .p-checkbox-box {
+  border: 1px solid lightgray;
+  /* background-color: var(--secondary-color); */
+}
+
+.p-multiselect-item > .p-multiselect-checkbox > .p-checkbox > .p-checkbox-box {
+  border: 1px solid lightgray;
+  /* background-color: var(--secondary-color); */
+}
+
+.p-dropdown {
+  box-shadow: none !important;
+}
+
+.p-dropdown-filter {
+  height: 35px;
+  border: 1px solid lightgray;
+  padding-left: 10px;
+  box-shadow: none;
+}
+
+.p-dropdown-label {
+  font-size: 0.875rem /* 14px */;
+  line-height: 1.25rem /* 20px */;
+}
+
+/* Input Number */
+.p-inputnumber {
+  box-shadow: none;
+  outline: none;
+  border-radius: 0.5rem;
+}
+
+.p-inputnumber-input {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  border-radius: 0;
+  padding-left: 10px;
+  border-radius: 0.5rem;
+  box-shadow: none;
+  outline: none;
+}
+/* ------------------------ */
+
+/* Text Icon Clickable */
+.text-icon-clickable-container {
+  height: 40px;
+  padding: 0.4rem 0.6rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.text-icon-clickable-container > span {
+  font-size: 0.2rem; /* equivalent to text-xs */
+  font-weight: 400; /* equivalent to font-normal */
+  line-height: 1.5rem; /* equivalent to leading-6 */
+}
+
+/* Data Table */
+.p-datatable-header {
+  padding: 0;
+}
+
+.p-datatable-header {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.p-datatable-table .p-checkbox-box {
+  border: 1px solid !important;
+  height: 15px;
+  width: 15px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.p-datatable-table tbody {
+  border: 1px solid #ededed;
+}
+
+.p-datatable-table tbody tr {
+  border-bottom: 1px solid #ededed;
+}
+
+.p-paginator-bottom {
+  border: 1px solid #ededed !important;
+}
+
+.p-datatable-table tr.p-highlight {
+  background-color: black !important;
+  color: white;
+}
+
+.p-datatable-table .p-checkbox.p-highlight .p-checkbox-box {
+  background-color: #5ac12f !important;
+  border-color: #5ac12f !important;
+}
+
+.p-datatable-tbody tr td {
+  font-size: 13px;
+}
+
+.p-datatable-header {
+  background-color: transparent;
+}
+
+.p-column-title {
+  font-size: 14px;
+}
+
+/* Input Mask */
+.p-inputmask.p-inputtext.p-component::placeholder,
+.p-dropdown-label.p-inputtext.p-placeholder {
+  color: #adacac;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.p-inputmask.p-inputtext.p-component.p-filled,
+.p-inputmask.p-inputtext.p-component.p-filled:focus,
+.p-inputmask.p-inputtext.p-component.p-filled:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Password */
+.p-password > .p-icon-field {
+  width: 100%;
+}
+.p-password-input {
+  padding-left: 10px;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  border-radius: 0.5rem;
+}
+
+.p-paginator {
+  padding: 0;
+}
+
+.p-datatable-header .p-component::placeholder {
+  font-size: 14px; /* Adjust the font size as needed */
+  color: #adacac;
+  /* font-weight: 500; */
+}
+
+.p-datatable-header .p-component {
+  font-size: 14px; /* Adjust the font size as needed */
+  font-weight: lighter;
+}
+
+.p-menuitem-content {
+  height: 40px !important;
+}
+
+.p-menu.p-component.p-menu-overlay.p-menu.p-component.p-menu-overlay.p-connected-overlay-enter-done {
+  padding: 2px;
+}
+
+.p-menuitem.p-focus,
+.p-menuitem,
+.p-menuitem-content {
+  font-size: 13px;
+}
+
+.p-datatable-emptymessage {
+  font-size: 14px;
+}
+
+.p-overlaypanel-content .p-checkbox.p-highlight .p-checkbox-box {
+  height: 16px;
+  width: 16px;
+  margin-top: 2px;
+  border-radius: 3px;
+}
+
+.p-overlaypanel-content .p-checkbox-box {
+  height: 16px;
+  width: 16px;
+  margin-top: 2px;
+  border-radius: 3px;
+}
+
+.p-dropdown-label.p-inputtext,
+.p-paginator-pages button {
+  font-size: 13px;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #ccc !important;
+  color: black;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus {
+  background: rgba(4, 4, 4, 0.24);
+  color: black;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 5px 1.5rem;
+  font-size: 14px;
+}
+
+.p-dropdown-label {
+  margin-top: -2px;
+}
+
+.p-dropdown-label > .p-inputtext {
+  margin-top: 10px;
+}
+
+.p-multiselect-label {
+  margin-top: -2px;
+}
+
+/* Stepper */
+.p-stepper-title {
+  font-size: 12px;
+}
+
+.p-stepper-number {
+  font-size: 16px;
+  background-color: var(--primary-color);
+}
+
+/* Sidebar */
+.p-stepper-panels {
+  padding: 0;
+}
+
+/* Auto Complet */
+.p-autocomplete {
+  padding: 0;
+  border: 0;
+}
+.p-autocomplete-input {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 35px;
+  outline: none;
+  box-shadow: none;
+  border: 1px solid lightgray;
+  /* border-right: 0; */
+}
+
+.p-autocomplete-panel {
+  margin-top: 2px;
+}
+
+.p-autocomplete-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.p-autocomplete-dropdown {
+  background-color: white;
+  height: 2.62rem;
+  margin-top: 1px;
+}
+
+/* Fieldset */
+.p-fieldset {
+  border: 1px dashed black;
+  padding: 8px;
+}
+
+.p-fieldset-legend {
+  margin-left: 10px;
+  height: fit-content;
+  border: 1px dashed gray;
+}
+
+.p-fieldset-legend > a {
+  padding: 10px;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+  color: #000000;
+  background: var(--secondary-color);
+}
+
+.p-multiselect-select-all .p-highlight .p-checkbox-box,
+.p-multiselect-item.p-highlight .p-checkbox-box {
+  color: #000000;
+  background-color: var(--primary-color);
+  outline: none;
+  border: none;
+}
+
+.p-multiselect-item .p-highlight .p-checkbox-box svg {
+  fill: #000000;
+  color: #ffffff;
+}
+
+.p-paginator-bottom .p-dropdown-label.p-inputtext {
+  margin-top: 2px;
+}
+
+#time12 .p-inputtext {
+  padding: 0 10px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow);
+}
+
+/* .p-inputmask.p-inputtext.p-component.p-filled */
+.p-password-input.p-inputtext.p-component.p-filled .p-input-icon svg {
+  margin-right: -20px;
+}
+
+.icon-right .p-icon-field.p-icon-field-right svg {
+  /* margin-right: -90px; */
+  position: absolute;
+  right: -35px;
+}
+
+/* Data View */
+.p-dataview-header {
+  background-color: transparent;
+  padding: 0;
+}
+
+.p-dataview-header .p-component::placeholder {
+  font-size: 14px; /* Adjust the font size as needed */
+  color: #adacac;
+  /* font-weight: 500; */
+}
+
+.p-dataview-header .p-component {
+  font-size: 14px; /* Adjust the font size as needed */
+  font-weight: lighter;
+}
+
+/*Data Table */
+.row-assigned {
+  background-color: lightyellow !important;
+}
+
+.hover-clickable-row {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hover-clickable-row:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Light hover effect */
+}
+
+.react-international-phone-input-container
+  .react-international-phone-country-selector-button {
+  height: 40px;
+}
+
+/* 
+################################################
+Discovery Caurousal 
+################################################
+*/
+/* Target only this specific carousel */
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive Image Styling */
+.carousel-banner {
+  width: 100%;
+  height: 340px; /* Default height */
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Adjust image height for smaller screens */
+@media (max-width: 1024px) {
+  .carousel-banner {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-banner {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-banner {
+    height: 200px;
+  }
+}
+
+/* Navigation Buttons */
+.discovery-carousel {
+  position: relative;
+}
+
+.discovery-carousel .p-carousel-prev,
+.discovery-carousel .p-carousel-next {
+  background: #f9fafb;
+  color: #0f172a;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow:
+    0px 4px 6px -2px rgba(0, 0, 0, 0.5),
+    0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  position: absolute;
+}
+
+/* Adjust navigation button positions for responsiveness */
+.discovery-carousel .p-carousel-prev {
+  left: -10px;
+}
+
+.discovery-carousel .p-carousel-next {
+  right: -10px;
+}
+
+/* Remove button on smaller screens */
+@media (max-width: 768px) {
+  .discovery-carousel .p-carousel-prev,
+  .discovery-carousel .p-carousel-next {
+    display: none;
+  }
+}
+
+/* Reduce height for carousel items on smaller screens */
+.discovery-carousel .p-carousel-items .p-carousel-item {
+  height: 100px !important;
+}
+
+@media (max-width: 768px) {
+  .discovery-carousel .p-carousel-items .p-carousel-item {
+    height: 80px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .discovery-carousel .p-carousel-items .p-carousel-item {
+    height: 60px !important;
+  }
+}
+
+/* 
+########################################################
+  Card Slider
+
+########################################################
+*/
+/* Container */
+
+/* Header */
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* ScrollPanel Styling (Horizontal) */
+.scroll-container {
+  width: 100%;
+  height: 350px; /* Adjust height as needed */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden;
+  white-space: nowrap; /* Prevent items from wrapping */
+}
+
+/* Scroll Content */
+.scroll-content {
+  display: flex;
+  gap: 12px;
+}
+
+/* Items */
+.slider-item {
+  flex: 0 0 auto;
+  width: 300px;
+}
+
+.slider-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* styles/globals.css */
+@layer components {
+  /* Make Accordion container, header, and content transparent */
+  .custom-accordion .p-accordion,
+  .custom-accordion .p-accordion-header,
+  .custom-accordion .p-accordion-content {
+    background-color: transparent !important;
+    box-shadow: none !important; /* Remove shadows */
+    border: none !important; /* Remove borders if desired */
+    padding-left: 0;
+  }
+
+  /* Make AccordionTab header (the one inside each AccordionTab) transparent */
+  .custom-accordion .p-accordion-header {
+    background-color: transparent !important;
+    box-shadow: none !important; /* Remove any shadow on the header */
+  }
+
+  .custom-accordion .p-accordion-header-link {
+    background-color: transparent !important;
+    padding: 0;
+    color: white;
+  }
+
+  .custom-accordion .p-accordion-header .p-accordion-toggle-icon {
+    display: none;
+  }
+}
+
+/* Panel Menu */
+
+.p-panelmenu .p-panelmenu-header.p-highlight .p-menuitem-text,
+.p-panelmenu .p-panelmenu-header.p-highlight .p-panelmenu-header-link {
+  color: #5ac12f !important;
+}
+
+/* Remove background color on hover for menu items */
+.p-panelmenu .p-menuitem-link:hover {
+  background: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+
+.p-stepper-nav {
+  display: none !important;
+}
+/* Change border color */
+.p-checkbox-box {
+  border: 2px solid #9ca3af !important;
+}
+
+/* Change border color when checked */
+/* .p-checkbox-box.p-highlight {
+  border-color: green !important; 
+  background: green !important;
+} */
+
+/* Optional: change the checkmark color */
+/* .p-checkbox-icon {
+  color: white !important;
+} */
+
+.p-highlight {
+  background: green !important;
+  border-color: rgb(224, 224, 100) !important;
+}
+.p-inputotp-input {
+  border: 1px solid lightgray;
+  border-radius: 32px;
+}
+
+/* 3D Text Effect */
+.text-3d-effect {
+  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(1deg)
+    rotateY(1deg) rotateZ(1deg);
+  transform-style: preserve-3d;
+  text-shadow: 6px 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+.react-chat-elements-message-box .message-box-tail {
+  display: none !important;
+}
+
+.rce-mbox-right-notch , .rce-mbox-left-notch{
+  display: none;
+}
+
+.p-dialog-content{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.message-left {
+  text-align: left;
+}
+
+.message-right {
+  text-align: right;
+}
+
+ .message-left .rce-mbox-text {
+  background-color: #59c12f; /* Light green for current user */
+  border-radius: 3px;
+  padding: 5px;
+  color:white;
+  width:fit-content
+}
+
+.message-right {
+  /* background-color: #f1f1f1;; Light green for current user */
+  border-radius: 10px;
+  padding: 4px;  
+
+}

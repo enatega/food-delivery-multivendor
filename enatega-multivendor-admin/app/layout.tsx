@@ -8,8 +8,6 @@ export default async function RootLayout({
 }) {
   const locale = await getLocale();
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
   const messages = await getMessages({ locale });
 
   return (
