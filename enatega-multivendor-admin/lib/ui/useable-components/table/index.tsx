@@ -30,8 +30,6 @@ const Table = <T extends ITableExtends>({
   onPage,
   className,
   // For Store table
-  sortField,
-  sortOrder,
   scrollable = true,
   scrollHeight = '420px',
   // New pagination props
@@ -75,14 +73,8 @@ const Table = <T extends ITableExtends>({
   };
 
   // Prepare pagination props based on server pagination status
-  const paginationProps = isServerPaginated
-    ? {
-        first: (currentPage - 1) * rowsPerPage,
-        lazy: true,
-        totalRecords,
-        onPage: handlePageChange,
-      }
-    : {};
+  // Remove lazy and first for client-side sorting/pagination
+  const paginationProps = {};
 
   return (
     <>
@@ -90,10 +82,7 @@ const Table = <T extends ITableExtends>({
         header={header}
         paginator
         rows={rowsPerPage}
-        sortField={sortField}
-        sortOrder={sortOrder}
         rowsPerPageOptions={[10, 15, 25, 50]}
-        onPage={onPage}
         value={data}
         selectionAutoFocus={true}
         size={size}
@@ -114,7 +103,7 @@ const Table = <T extends ITableExtends>({
         rowClassName={rowClassName}
         onRowClick={handleRowClick}
         emptyMessage={t('No Data Available')}
-        {...paginationProps} // Spread pagination props conditionally
+        {...paginationProps}
       >
         {isSelectable && (
           <Column
