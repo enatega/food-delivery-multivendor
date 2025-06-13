@@ -74,6 +74,7 @@ export const useConfiguration = () => {
   return {
     SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
     WS_SERVER_URL: process.env.NEXT_PUBLIC_WS_SERVER_URL,
+
     COLORS,
 
     // EMAIL CONFIG
