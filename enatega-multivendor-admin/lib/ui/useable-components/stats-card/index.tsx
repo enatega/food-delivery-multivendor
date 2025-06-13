@@ -17,7 +17,7 @@ export default function StatsCard({
   route,
   loading = false,
   amountConfig,
-  isClickable = true,
+  isClickable = false,
 }: IStatsCardProps) {
   const stats_card = () => (
     <div

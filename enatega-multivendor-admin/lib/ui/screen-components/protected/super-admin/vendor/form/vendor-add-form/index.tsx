@@ -361,7 +361,7 @@ export default function VendorAddForm({
                           }}
                         />
 
-                        <div className="mt-4 flex justify-end">
+                        <div className="py-4 flex justify-end">
                           <CustomButton
                             className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
                             label={isEditingVendor ? t('Update') : t('Add')}

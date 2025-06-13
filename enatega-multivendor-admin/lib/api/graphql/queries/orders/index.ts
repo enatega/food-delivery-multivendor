@@ -353,12 +353,7 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
         createdAt
         updatedAt
       }
-      user {
-        _id
-        name
-        phone
-        email
-      }
+      
       paymentMethod
       paidAmount
       orderAmount
