@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { useRef, useState } from 'react'
-import Video from 'react-native-video'
+import {Video} from 'react-native-video'
 
 export default function SplashVideo({ onLoaded, onFinish }) {
   const videoRef = useRef(null);
