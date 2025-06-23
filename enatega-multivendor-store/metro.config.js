@@ -33,3 +33,5 @@ config.resolver.fallback = {
 // config.resolver.disableHierarchicalLookup = true;
 
 module.exports = withNativeWind(config, { input: "./global.css" });
+
+
