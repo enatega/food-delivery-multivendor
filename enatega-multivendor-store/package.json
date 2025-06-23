@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.12.7",
+    "@expo/config": "^11.0.10",
     "@expo/config-plugins": "^10.0.3",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5.1.1",
@@ -26,6 +27,7 @@
     "@react-navigation/drawer": "^7.1.1",
     "@react-navigation/native": "^7.0.14",
     "@sentry/react-native": "~6.14.0",
+    "ajv": "^8.17.1",
     "assert": "^2.1.0",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
