@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import NetInfo from "@react-native-community/netinfo";
+import * as Network from 'expo-network'
+
 import { NoInternetIcon } from "@/lib/ui/useable-components/svg";
 
 interface InternetContextProps {
@@ -24,17 +25,22 @@ export const useInternet = (): InternetContextProps => {
 const InternetProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isConnected, setIsConnected] = useState<boolean>(true);
+  const [isConnected, setIsConnected] = useState<boolean|undefined>(true);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected ?? false);
-    });
+    const checkConnection = async () => {
+      const networkState = await Network.getNetworkStateAsync()
+      setIsConnected(networkState.isConnected)
+    }
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    // Initial check
+    checkConnection()
+
+    // Optional: Poll every few seconds (no event listener in expo-network)
+    const interval = setInterval(checkConnection, 5000)
+
+    return () => clearInterval(interval) // Clean up
+  }, [])
 
   if (!isConnected) {
     return (
