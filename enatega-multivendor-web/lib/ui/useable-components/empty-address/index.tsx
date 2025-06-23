@@ -1,6 +1,7 @@
 "use client"
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import Lottie from "lottie-react";
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function EmptyAddress() {
       const [animationData, setAnimationData] = useState<null | object>(null);
