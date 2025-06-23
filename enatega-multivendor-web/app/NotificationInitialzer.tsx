@@ -15,9 +15,6 @@ export default function NotificationInitializer() {
   const [saveNotify] = useMutation(saveNotificationTokenWeb);
   const [mutatePrefs] = useMutation(updateNotificationStatus);
 
-
-  console.log("I am executing")
-
   const {
     FIREBASE_KEY,
     FIREBASE_AUTH_DOMAIN,

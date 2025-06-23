@@ -6,7 +6,8 @@ import DisplayError from "./components/DisplayError";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import Map from "./components/Map";
 import SideList from "./components/SideList";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface MapViewPageProps {
     params: {
