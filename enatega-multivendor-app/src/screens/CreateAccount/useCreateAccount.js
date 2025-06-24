@@ -16,9 +16,7 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
-// import { GoogleSignin } from '@react-native-google-signin/google-signin'
-
-import * as Google from 'expo-auth-session/providers/google'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 const LOGIN = gql`
   ${login}
@@ -26,8 +24,6 @@ const LOGIN = gql`
 
 export const useCreateAccount = () => {
   const Analytics = analytics()
-
-
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const [mutate] = useMutation(LOGIN, { onCompleted, onError })
@@ -37,142 +33,96 @@ export const useCreateAccount = () => {
   const { setTokenAsync } = useContext(AuthContext)
   const themeContext = useContext(ThemeContext)
   const [googleUser, setGoogleUser] = useState(null)
- // const [user, setUser] = useState('')
   const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  
   const {
     IOS_CLIENT_ID_GOOGLE,
     ANDROID_CLIENT_ID_GOOGLE,
+    EXPO_CLIENT_ID,
     TERMS_AND_CONDITIONS,
     PRIVACY_POLICY
   } = useEnvVars()
 
-  // const configureGoogleSignin = () => {
-  //   GoogleSignin.configure({
-  //     iosClientId: IOS_CLIENT_ID_GOOGLE,
-  //     androidClientId: ANDROID_CLIENT_ID_GOOGLE
-  //   })
-  // }
+  // Configure Google Sign-In ONCE
+  useEffect(() => {
+    console.log('🔧 Configuring Google Sign-In...')
+    
+    GoogleSignin.configure({
+      webClientId: EXPO_CLIENT_ID,
+      iosClientId: IOS_CLIENT_ID_GOOGLE,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+      offlineAccess: true,
+      hostedDomain: '',
+      forceCodeForRefreshToken: true,
+    })
+    
+    console.log('✅ Google Sign-In configured')
+  }, [])
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-    iosClientId: IOS_CLIENT_ID_GOOGLE
-  })
-
-  // Handlers
-
-  /* const signIn = async () => {
+  // Google Sign-In Function
+  const signIn = async () => {
     try {
-      console.log('sign in')
+      console.log('🚀 Starting Google sign in...')
+      loginButtonSetter('Google')
+      setLoading(true)
 
-      const status = await GoogleSignin.hasPlayServices()
+      if (Platform.OS === 'android') {
+        await GoogleSignin.hasPlayServices()
+        console.log('✅ Google Play Services available')
+      }
 
-      console.log('google playServices has been initialized')
-      const user = await GoogleSignin.signIn()
-      console.log('google  googlePlay signin called')
-      console.log({ user })
-      return
+      const userInfo = await GoogleSignin.signIn()
+      console.log('✅ Google sign-in successful!')
+      console.log('👤 User:', userInfo.user.email)
+
       const userData = {
         phone: '',
-        email: user.user.email,
+        email: userInfo.user.email,
         password: '',
-        name: user.user.name,
-        picture: user.user.photo,
+        name: userInfo.user.name,
+        picture: userInfo.user.photo || '',
         type: 'google'
       }
 
+      setGoogleUser(userInfo.user.name)
+      console.log('🔐 Logging in user...')
       await mutateLogin(userData)
 
-      setUser(user)
     } catch (error) {
-      console.log('🚀 ~ signIn ~ error:', error)
-    }
-  } */
-
- 
-  const getUserInfo = async (token) => {
-    //absent token
-    if (!token) return
-    //present token
-    try {
-      const response = await fetch(
-        'https://www.googleapis.com/userinfo/v2/me',
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
-      return await response.json()
-     
-    } catch (error) {
-      console.error(
-        'Failed to fetch user data:',
-        response.status,
-        response.statusText
-      )
+      console.error('❌ Google sign-in error:', error)
+      
+      if (error.code === 'SIGN_IN_CANCELLED') {
+        console.log('❌ User cancelled')
+      } else if (error.code === 'IN_PROGRESS') {
+        console.log('⏳ Sign in already in progress')
+      } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
+        console.log('❌ Google Play Services not available')
+        FlashMessage({ message: 'Google Play Services not available' })
+      } else {
+        FlashMessage({ message: 'Google sign in failed' })
+      }
+      
+      setLoading(false)
+      loginButtonSetter(null)
     }
   }
 
-  const signIn = async () => {
-    try {
-      loginButtonSetter('Google')
-      await promptAsync()
-    } catch (err) {
-      console.log('Sign in with Google error', err)
-    }
-  }
-
-  const signInWithGoogle = async () => {
-    try {
-  
-      if (response?.type === 'success') {
-
-        const google_user = await getUserInfo(response.authentication.accessToken)
-        setGoogleUser(google_user?.name)
-        const userData = {
-          phone: '',
-          email: google_user.email,
-          password: '',
-          name: google_user.name,
-          picture: google_user.picture,
-          type: 'google'
-        }
-
-        await mutateLogin(userData)
-      } 
-    } catch (error) {
-      // Handle any errors that occur during AsyncStorage retrieval or other operations
-      console.error('Error retrieving user data from AsyncStorage:', error)
-    }
-  }
-
-  //add it to a useEffect with response as a dependency
-  useEffect(() => {
-    signInWithGoogle()
-  }, [response])
-
-  // const [googleRequest, googleResponse, googlePromptAsync] =
-  //   Google.useAuthRequest({
-  //     expoClientId: EXPO_CLIENT_ID,
-  //     iosClientId: IOS_CLIENT_ID_GOOGLE,
-  //     iosStandaloneAppClientId: IOS_CLIENT_ID_GOOGLE,
-  //     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-  //     androidStandaloneAppClientId: ANDROID_CLIENT_ID_GOOGLE,
-  //     redirectUrl: `${AuthSession.OAuthRedirect}:/oauth2redirect/google`,
-  //     scopes: ['profile', 'email']
-  //   })
-
+  // Navigation functions
   const navigateToLogin = () => {
     navigation.navigate('Login')
   }
+  
   const navigateToRegister = () => {
     navigation.navigate('Register')
   }
+  
   const navigateToPhone = () => {
     navigation.navigate('PhoneNumber', {
       name: googleUser,
-      phone: '',
-      screen: 'Main'
+      phone: ''
     })
   }
+  
   const navigateToMain = () => {
     navigation.navigate({
       name: 'Main',
@@ -180,120 +130,144 @@ export const useCreateAccount = () => {
     })
   }
 
+  // Enhanced login mutation function with Apple debugging
   async function mutateLogin(user) {
-    setLoading(true)
-    let notificationToken = null
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync()
-      if (existingStatus === 'granted') {
-        notificationToken = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig.extra.eas.projectId
-          })
-        ).data
+    try {
+      console.log('🔐 [Login Debug] Starting login mutation for:', user.email)
+      console.log('🔐 [Login Debug] User type:', user.type)
+      console.log('🔐 [Login Debug] Full user object:', user)
+      
+      let notificationToken = null
+      
+      if (Device.isDevice) {
+        try {
+          const { status: existingStatus } = await Notifications.getPermissionsAsync()
+          console.log('🔐 [Login Debug] Notification permission status:', existingStatus)
+          
+          if (existingStatus === 'granted') {
+            try {
+              const tokenData = await Notifications.getExpoPushTokenAsync({
+                projectId: Constants.expoConfig?.extra?.eas?.projectId
+              })
+              notificationToken = tokenData.data
+              console.log('🔐 [Login Debug] ✅ Got notification token')
+            } catch (tokenError) {
+              console.warn('🔐 [Login Debug] ⚠️ Could not get push token (this is OK):', tokenError.message)
+              notificationToken = null
+            }
+          } else {
+            console.log('🔐 [Login Debug] ℹ️ Notification permission not granted, skipping token')
+          }
+        } catch (permissionError) {
+          console.warn('🔐 [Login Debug] ⚠️ Could not check notification permissions:', permissionError.message)
+          notificationToken = null
+        }
+      } else {
+        console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token')
       }
-    }
-    mutate({
-      variables: {
+
+      console.log('🔐 [Login Debug] About to call GraphQL mutation with variables:', {
         ...user,
-        notificationToken: notificationToken
-      }
-    })
+        notificationToken: notificationToken ? 'token_present' : 'no_token'
+      })
+
+      mutate({
+        variables: {
+          ...user,
+          notificationToken: notificationToken
+        }
+      })
+    } catch (error) {
+      console.error('🔐 [Login Debug] ❌ Error in mutateLogin:', error)
+      setLoading(false)
+      loginButtonSetter(null)
+    }
   }
 
-  // const googleSignUp = () => {
-  //   if (googleResponse?.type === 'success') {
-  //     const { authentication } = googleResponse
-  //     ;(async () => {
-  //       const userInfoResponse = await fetch(
-  //         'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-  //         {
-  //           headers: { Authorization: `Bearer ${authentication.accessToken}` }
-  //         }
-  //       )
-  //       const googleUser = await userInfoResponse.json()
-  //       const user = {
-  //         phone: '',
-  //         email: googleUser.email,
-  //         password: '',
-  //         name: googleUser.name,
-  //         picture: googleUser.picture,
-  //         type: 'google'
-  //       }
-  //       mutateLogin(user)
-  //     })()
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   googleSignUp()
-  // }, [googleResponse])
-
+  // Enhanced Apple authentication check with debugging
   useEffect(() => {
     checkIfSupportsAppleAuthentication()
   }, [])
 
   async function checkIfSupportsAppleAuthentication() {
-    setEnableApple(await AppleAuthentication.isAvailableAsync())
+    try {
+      console.log('🍎 [Apple Debug] Checking Apple Authentication support...')
+      console.log('🍎 [Apple Debug] Platform:', Platform.OS)
+      console.log('🍎 [Apple Debug] Device type:', Device.deviceType)
+      
+      const isAvailable = await AppleAuthentication.isAvailableAsync()
+      console.log('🍎 [Apple Debug] Apple Authentication available:', isAvailable)
+      
+      if (Platform.OS === 'ios') {
+        console.log('🍎 [Apple Debug] Running on iOS - Apple should be available')
+      } else {
+        console.log('🍎 [Apple Debug] Not running on iOS - Apple will not be available')
+      }
+      
+      setEnableApple(isAvailable)
+    } catch (error) {
+      console.error('🍎 [Apple Debug] ❌ Error checking Apple Authentication:', error)
+      setEnableApple(false)
+    }
   }
 
+  // Enhanced login success handler with debugging
   async function onCompleted(data) {
-    if (data.login.isActive == false) {
+    console.log('✅ [Login Debug] Login mutation completed successfully')
+    console.log('✅ [Login Debug] Response data:', data)
+    console.log('✅ [Login Debug] User email:', data.login.email)
+    console.log('✅ [Login Debug] User active status:', data.login.isActive)
+    console.log('✅ [Login Debug] User phone:', data.login.phone)
+    
+    if (data.login.isActive === false) {
+      console.log('❌ [Login Debug] Account is deactivated')
       FlashMessage({ message: t('accountDeactivated') })
       setLoading(false)
-    } else {
-      try {
-        if (data.login.inNewUser) {
-          await Analytics.identify(
-            {
-              userId: data.login.userId
-            },
-            data.login.userId
-          )
-          await Analytics.track(Analytics.events.USER_CREATED_ACCOUNT, {
-            userId: data.login.userId,
-            name: data.login.name,
-            email: data.login.email
-          })
-        } else {
-          await Analytics.identify(
-            {
-              userId: data.login.userId
-            },
-            data.login.userId
-          )
-          await Analytics.track(Analytics.events.USER_LOGGED_IN, {
-            userId: data.login.userId,
-            name: data.login.name,
-            email: data.login.email
-          })
-        }
-        setTokenAsync(data.login.token)
-        FlashMessage({ message: 'Successfully logged in' })
-        // eslint-disable-next-line no-unused-expressions
-        data?.login?.phone === '' ? navigateToPhone() : navigateToMain()
-      } catch (e) {
-        console.log(e)
-      } finally {
-        setLoading(false)
-      }
-    }
-  }
-
-  function onError(error) {
-    try {
-      FlashMessage({
-        message: error.message
-      })
       loginButtonSetter(null)
-    } catch (e) {
-      console.log(e)
+      return
+    }
+
+    try {
+      console.log('✅ [Login Debug] Setting auth token...')
+      setTokenAsync(data.login.token)
+      FlashMessage({ message: 'Successfully logged in' })
+      
+      // Navigate based on phone number
+      if (data?.login?.phone === '') {
+        console.log('✅ [Login Debug] No phone number - navigating to phone screen')
+        navigateToPhone()
+      } else {
+        console.log('✅ [Login Debug] Phone number exists - navigating to main app')
+        navigateToMain()
+      }
+      
+    } catch (error) {
+      console.error('❌ [Login Debug] Error in onCompleted:', error)
     } finally {
+      console.log('✅ [Login Debug] Resetting loading states')
       setLoading(false)
+      loginButtonSetter(null)
     }
   }
 
+  // Enhanced login error handler with debugging
+  function onError(error) {
+    console.error('❌ [Login Debug] Login mutation error occurred')
+    console.error('❌ [Login Debug] Error message:', error.message)
+    console.error('❌ [Login Debug] Error code:', error.code)
+    console.error('❌ [Login Debug] Full error object:', error)
+    console.error('❌ [Login Debug] GraphQL errors:', error.graphQLErrors)
+    console.error('❌ [Login Debug] Network error:', error.networkError)
+    
+    FlashMessage({
+      message: error.message || 'Login failed. Please try again.'
+    })
+    
+    setLoading(false)
+    loginButtonSetter(null)
+  }
+
+  // Focus effect for status bar
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.main)
@@ -302,18 +276,20 @@ export const useCreateAccount = () => {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
   })
+
+  // Link handlers
   const openTerms = () => {
     Linking.openURL(TERMS_AND_CONDITIONS)
   }
+  
   const openPrivacyPolicy = () => {
     Linking.openURL(PRIVACY_POLICY)
   }
+
   return {
     enableApple,
     loginButton,
     loginButtonSetter,
-    // googleRequest,
-    // googlePromptAsync,
     loading,
     setLoading,
     themeContext,
@@ -326,6 +302,5 @@ export const useCreateAccount = () => {
     navigateToMain,
     navigation,
     signIn,
-    //user
   }
 }
