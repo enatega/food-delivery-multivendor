@@ -3,7 +3,7 @@
 // Core
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 
 // PrimeReact
 import { FilterMatchMode } from 'primereact/api';
