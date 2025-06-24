@@ -76,9 +76,7 @@ export const COUPONS_TABLE_COLUMNS = ({
       _id: rowData?._id,
       title: rowData?.title,
       discount: rowData?.discount,
-      enabled: !rowData?.enabled,
-      endDate: rowData?.endDate,
-      lifeTimeActive: rowData?.lifeTimeActive,
+      enabled: !rowData?.enabled
     };
     await editCoupon({
       variables: {
@@ -105,26 +103,7 @@ export const COUPONS_TABLE_COLUMNS = ({
           return <span>{rowData.discount}%</span>;
         },
       },
-      {
-        headerName: t('Lifetime Active'),
-        propertyName: 'lifeTimeActive',
-        body: (rowData: ICoupon) => (
-          <span>{rowData.lifeTimeActive ? t('Yes') : t('No')}</span>
-        ),
-      },
-      {
-        headerName: t('End Date'),
-        propertyName: 'endDate',
-        body: (rowData: ICoupon) => (
-          <span>
-            {rowData.endDate
-              ? moment(rowData.endDate).format('YYYY-MM-DD')
-              : '-'}
-          </span>
-        ),
-      },
-
-      {
+     {
         headerName: t('Status'),
         propertyName: 'enabled',
         body: (rowData: ICoupon) => {
