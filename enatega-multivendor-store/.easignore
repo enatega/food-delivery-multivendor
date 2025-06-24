@@ -1,0 +1,16 @@
+node_modules/**/*
+.git/**/*
+.expo/**/*
+.vscode/**/*
+**/*.log
+**/*.DS_Store
+**/*.map
+docs/**/*
+screenshots/**/*
+**/*.test.js
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.js
+**/*.spec.ts
+**/*.spec.tsx
+coverage/**/*

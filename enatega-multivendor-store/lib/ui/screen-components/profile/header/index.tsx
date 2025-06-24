@@ -51,18 +51,18 @@ export default function ProfileHeader() {
                   textShadowRadius: 40,
                 }}
               >
-                {dataProfile?.name
-                  ?.split(" ")[0]
-                  ?.substring(0, 1)
-                  ?.toUpperCase()
-                  ?.concat(
-                    dataProfile?.name?.split(" ")[1]?.length > 0
-                      ? dataProfile?.name
-                          ?.split(" ")[1]
-                          ?.substring(0, 1)
-                          ?.toUpperCase()
-                      : "",
-                  ) ?? "JS"}
+                {(() => {
+                  const name = dataProfile?.name;
+                  if (!name || typeof name !== "string") return "JS";
+
+                  const nameParts = name.split(" ");
+                  const firstInitial =
+                    nameParts[0]?.substring(0, 1)?.toUpperCase() || "";
+                  const secondInitial =
+                    nameParts[1]?.substring(0, 1)?.toUpperCase() || "";
+
+                  return firstInitial + secondInitial || "JS";
+                })()}
               </Text>
             )}
           </View>
