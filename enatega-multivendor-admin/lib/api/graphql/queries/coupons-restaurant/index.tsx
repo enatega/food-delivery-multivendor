@@ -7,8 +7,6 @@ export const GET_RESTAURANT_COUPONS = gql`
       title
       discount
       enabled
-      endDate
-      lifeTimeActive
     }
   }
 `;

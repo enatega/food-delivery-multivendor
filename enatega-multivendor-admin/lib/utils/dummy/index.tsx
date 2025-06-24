@@ -364,8 +364,6 @@ export const generateDummyCoupons = (count: number = 10) => {
       __typename: `coupon_${i + 1}`,
       discount: Math.floor(Math.random() * i + 15),
       enabled: Math.random() * 3 > 2,
-      endDate: new Date().toISOString(),
-      lifeTimeActive: false,
     });
   }
   return coupons;
@@ -535,8 +533,7 @@ export const generateDummyCouponsRestaurant = (
       discount: i + 1,
       enabled: Math.random() > 0.5,
       __typename: 'Rider',
-      endDate: new Date().toISOString(),
-      lifeTimeActive: Math.random() > 0.5,
+
     });
   }
 

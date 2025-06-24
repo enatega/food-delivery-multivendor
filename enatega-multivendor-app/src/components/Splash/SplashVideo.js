@@ -1,29 +1,49 @@
-import { ResizeMode, Video } from 'expo-av'
 import { StyleSheet } from 'react-native'
 import { useRef, useState } from 'react'
+import {Video} from 'react-native-video'
 
 export default function SplashVideo({ onLoaded, onFinish }) {
-  const video = useRef(null)
-  const [lastStatus, setStatus] = useState({})
+  const videoRef = useRef(null);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasFinished, setHasFinished] = useState(false);
+
+  const handleLoad = () => {
+    if (!hasLoaded) {
+      setHasLoaded(true);
+      if (onLoaded) {
+        onLoaded();
+      }
+    }
+  };
+
+  const handleEnd = () => {
+    if (!hasFinished) {
+      setHasFinished(true);
+      if (onFinish) {
+        onFinish();
+      }
+    }
+  };
 
   return (
     <Video
-      ref={video}
-      style={StyleSheet.absoluteFill}
+      ref={videoRef}
       source={require('./../../../assets/mobileSplash.mp4')}
-      shouldPlay={!(lastStatus.isLoaded && lastStatus.didJustFinish)}
-      isLooping={false}
-      resizeMode={ResizeMode.COVER}
-      onPlaybackStatusUpdate={(status) => {
-        if (status.isLoaded) {
-          if (lastStatus.isLoaded !== status.isLoaded) {
-            onLoaded()
-          }
-          if (status.didJustFinish) {
-            onFinish()
-          }
+      style={StyleSheet.absoluteFill}
+      resizeMode="cover"
+      repeat={false}
+      muted={true}
+      playInBackground={false}
+      playWhenInactive={false}
+      ignoreSilentSwitch="ignore"
+      onLoad={handleLoad}
+      onEnd={handleEnd}
+      onError={(error) => {
+        console.log('Splash video error:', error);
+        // Fallback - call onFinish if video fails
+        if (onFinish) {
+          onFinish();
         }
-        setStatus(() => status)
       }}
     />
   )
