@@ -202,8 +202,6 @@ export const CouponErrors: ICouponErrors = {
     'You cannot exceed from 100 as this is a %age field',
   ],
   enabled: ['Required', 'Please choose one'],
-  lifeTimeActive: ['Required', 'Please choose one'],
-  endDate: ['Required', 'End Date is required when LifeTime is not active'],
 };
 
 
