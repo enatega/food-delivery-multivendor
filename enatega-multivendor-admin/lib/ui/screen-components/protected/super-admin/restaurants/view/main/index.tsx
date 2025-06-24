@@ -14,6 +14,7 @@ import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.contex
 
 // Custom Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // Custom Components
 import RestaurantDuplicateDialog from '../duplicate-dialog';
@@ -31,8 +32,8 @@ import {
 
 // GraphQL Queries and Mutations
 import {
-  GET_CLONED_RESTAURANTS,
-  GET_RESTAURANTS,
+  GET_RESTAURANTS_PAGINATED,
+  GET_CLONED_RESTAURANTS_PAGINATED,
   HARD_DELETE_RESTAURANT,
 } from '@/lib/api/graphql';
 
@@ -52,16 +53,22 @@ export default function RestaurantsMain() {
   // Context
   const { showToast } = useContext(ToastContext);
   const { currentTab } = useContext(RestaurantsContext);
+  
   // Hooks
   const router = useRouter();
 
+  // State for pagination and search
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [deleteId, setDeleteId] = useState('');
   const [duplicateId, setDuplicateId] = useState('');
-  const [selectedProducts, setSelectedProducts] = useState<
-    IRestaurantResponse[]
-  >([]);
+  const [selectedProducts, setSelectedProducts] = useState<IRestaurantResponse[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
+  
+  // Debounce search to avoid too many API calls
+  const debouncedSearchTerm = useDebounce(globalFilterValue, 500);
+
   const filters = {
     global: { value: globalFilterValue, matchMode: FilterMatchMode.CONTAINS },
     action: {
@@ -70,22 +77,32 @@ export default function RestaurantsMain() {
     },
   };
 
+  // Reset page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm, currentTab]);
+
+  // Query variables
+  const queryVariables = {
+    page: currentPage,
+    limit: rowsPerPage,
+    search: debouncedSearchTerm || undefined,
+  };
+
   //Query
-  const { data, loading } = useQueryGQL(
-    currentTab === 'Actual' ? GET_RESTAURANTS : GET_CLONED_RESTAURANTS,
-    {},
+  const { data, loading, refetch } = useQueryGQL(
+    currentTab === 'Actual' ? GET_RESTAURANTS_PAGINATED : GET_CLONED_RESTAURANTS_PAGINATED,
+    queryVariables,
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
     }
   ) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
-  
 
-  useEffect(()=>{
-    console.log("🚀 Store Screen Rendered")
-  })
- 
-  
+  useEffect(() => {
+    console.log("🚀 Store Screen Rendered");
+  });
+
   // API
   const [hardDeleteRestaurant, { loading: isHardDeleting }] = useMutation(
     HARD_DELETE_RESTAURANT,
@@ -98,6 +115,8 @@ export default function RestaurantsMain() {
           duration: 2000,
         });
         setDeleteId('');
+        // Refetch data after deletion
+        refetch();
       },
       onError: ({ networkError, graphQLErrors }: ApolloError) => {
         showToast({
@@ -111,48 +130,12 @@ export default function RestaurantsMain() {
         });
         setDeleteId('');
       },
-      update: (cache: ApolloCache<unknown>): void => {
-        try {
-          const cachedRestaurants =
-            currentTab === 'Actual'
-              ? data?.restaurants
-              : data?.getClonedRestaurants;
-
-          if (currentTab === 'Actual') {
-            cache.writeQuery({
-              query: GET_RESTAURANTS,
-              data: {
-                restaurants: [
-                  ...(cachedRestaurants || []).filter(
-                    (restaurant: IRestaurantResponse) =>
-                      restaurant._id !== deleteId
-                  ),
-                ],
-              },
-            });
-          } else {
-            cache.writeQuery({
-              query: GET_CLONED_RESTAURANTS,
-              data: {
-                getClonedRestaurants: [
-                  ...(cachedRestaurants || []).filter(
-                    (restaurant: IRestaurantResponse) =>
-                      restaurant._id !== deleteId
-                  ),
-                ],
-              },
-            });
-          }
-        } finally {
-          setDeleteId('');
-        }
-      },
     }
   );
 
   const handleDelete = async (id: string) => {
     try {
-      hardDeleteRestaurant({ variables: { id: id } });
+      await hardDeleteRestaurant({ variables: { id: id } });
     } catch (err) {
       showToast({
         type: 'error',
@@ -163,6 +146,12 @@ export default function RestaurantsMain() {
     }
   };
 
+  // Pagination handlers
+  const handlePageChange = (page: number, rows: number) => {
+    setCurrentPage(page);
+    setRowsPerPage(rows);
+  };
+
   // Constants
   const menuItems: IActionMenuItem<IRestaurantResponse>[] = [
     {
@@ -170,7 +159,7 @@ export default function RestaurantsMain() {
       command: (data?: IRestaurantResponse) => {
         if (data) {
           onUseLocalStorage('save', 'restaurantId', data?._id);
-          onUseLocalStorage('save', 'shopType', data?.shopType)
+          onUseLocalStorage('save', 'shopType', data?.shopType);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
           router.push(`/admin/store/`);
@@ -195,8 +184,13 @@ export default function RestaurantsMain() {
     },
   ];
 
-  const _restaurants =
-    currentTab === 'Actual' ? data?.restaurants : data?.getClonedRestaurants;
+  // Get pagination data
+  const restaurantData = currentTab === 'Actual' 
+  ? data?.restaurantsPaginated 
+  : data?.getClonedRestaurantsPaginated;
+
+  const restaurants = restaurantData?.data || [];
+  const totalRecords = restaurantData?.totalCount || 0;
 
   return (
     <div className="p-3">
@@ -209,12 +203,17 @@ export default function RestaurantsMain() {
             setSelectedActions={setSelectedActions}
           />
         }
-        data={loading ? generateDummyRestaurants() : (_restaurants ?? [])}
+        data={loading ? generateDummyRestaurants() : restaurants}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         columns={RESTAURANT_TABLE_COLUMNS({ menuItems })}
         loading={loading}
+        rowsPerPage={rowsPerPage}
+        // Server-side pagination props
+        totalRecords={totalRecords}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
         handleRowClick={(event: DataTableRowClickEvent) => {
           const target = event.originalEvent.target as HTMLElement | null;
 
@@ -223,7 +222,7 @@ export default function RestaurantsMain() {
           }
 
           onUseLocalStorage('save', 'restaurantId', event.data._id);
-          onUseLocalStorage('save', 'shopType', event.data.shopType)
+          onUseLocalStorage('save', 'shopType', event.data.shopType);
           const routeStack = ['Admin'];
           onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
           router.push(`/admin/store/`);
