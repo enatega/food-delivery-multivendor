@@ -76,7 +76,7 @@ export default function CategoryAddForm({
   // Fetch all categories for duplicate check
   const {
     data: allCategoriesData,
-    loading: allCategoriesLoading,
+    // loading: allCategoriesLoading,
   } = useQuery(GET_CATEGORY_BY_RESTAURANT_ID, {
     variables: { id: restaurantId },
     skip: !restaurantId,
@@ -179,7 +179,7 @@ export default function CategoryAddForm({
     const allCategories =
       allCategoriesData?.restaurant?.categories || [];
     const isDuplicate = allCategories.some(
-      (cat: any) =>
+      (cat: ICategoryForm) =>
         cat.title.trim().toLowerCase() === values.title.trim().toLowerCase() &&
         (!category || cat._id !== category._id)
     );
