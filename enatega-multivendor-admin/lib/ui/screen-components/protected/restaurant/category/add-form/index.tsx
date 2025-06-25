@@ -56,7 +56,8 @@ export default function CategoryAddForm({
   category,
   position = 'right',
   isAddCategoryVisible,
-}: ICategoryAddFormComponentProps) {
+  onCategoryAdded, // <-- add this prop
+}: ICategoryAddFormComponentProps & { onCategoryAdded?: () => void }) {
   // Hooks
   const t = useTranslations();
   // Queries
@@ -140,6 +141,8 @@ export default function CategoryAddForm({
           message: `${t('Category has been')} ${category ? t('edited') : t('added')} ${t('successfully')}.`,
           duration: 3000,
         });
+        // Call the callback to notify parent to refetch categories
+        if (onCategoryAdded) onCategoryAdded();
         onHide();
       },
       onError: (error) => {
