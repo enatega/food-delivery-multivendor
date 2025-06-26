@@ -8,8 +8,8 @@
 #dist
 /dist
 .DS_Store
-android/
-ios/
+android
+ios
 # Xcode
 #
 build/
