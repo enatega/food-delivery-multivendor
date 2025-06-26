@@ -67,9 +67,33 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
         headerName: t('Date'),
         propertyName: 'createdAt',
         body: (rowData: INotification) => {
-          const seconds = parseInt(rowData.createdAt);
-          const newDate = new Date(seconds).toDateString();
-          return <span>{newDate}</span>;
+          let dateObj;
+          if (!rowData.createdAt) {
+            return <span>Invalid Date</span>;
+          }
+          // Try to parse as number (timestamp)
+          const timestamp = Number(rowData.createdAt);
+          if (!isNaN(timestamp)) {
+            // If it's in seconds, convert to ms
+            dateObj = new Date(timestamp > 1e12 ? timestamp : timestamp * 1000);
+          } else {
+            // Fallback to ISO string
+            dateObj = new Date(rowData.createdAt);
+          }
+          const isValid = !isNaN(dateObj.getTime());
+          return (
+            <span>
+              {isValid
+                ? dateObj.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                : 'Invalid Date'}
+            </span>
+          );
         },
       },
       {
