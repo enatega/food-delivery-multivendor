@@ -425,6 +425,10 @@ export default function FoodDetails({
         }}
         isAddCategoryVisible={isAddCategoryVisible}
         subCategories={subCategories}
+        // Add this prop to trigger refetch after category add/edit
+        onCategoryAdded={() => {
+          refetchCategories();
+        }}
       />
     </div>
   );
