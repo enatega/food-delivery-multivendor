@@ -137,7 +137,7 @@ export default function EarningDetailsDateFilter({
       {isDateFilterVisible && (
         <View>
           <Calendar
-            initalDate={""}
+            initialDate={""}
             onDayPress={(day: DateData) => handleDayPress(day)}
             markedDates={{
               ...datesBeGetter,

@@ -8,8 +8,6 @@ export interface ICoupon {
   title: string;
   __typename: string;
   _id: string;
-  endDate: string | null;
-  lifeTimeActive: boolean;
 }
 export interface IGetCouponsData {
   coupons: ICoupon[];

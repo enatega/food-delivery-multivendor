@@ -6,10 +6,10 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, BackHandler, I18nManager, LogBox, Platform, StatusBar, StyleSheet, Text, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, BackHandler, I18nManager, LogBox, Platform, SafeAreaView, StatusBar, StyleSheet, Text, View, useColorScheme } from 'react-native'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
-import * as Sentry from 'sentry-expo'
+// import * as Sentry from 'sentry-expo'
 import useEnvVars, { isProduction } from './environment'
 import setupApolloClient from './src/apollo/index'
 import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
@@ -33,12 +33,12 @@ import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 
-LogBox.ignoreLogs([
-  // 'Warning: ...',
-  // 'Sentry Logger ',
-  'Constants.deviceYearClass'
-]) // Ignore log notification by message
-LogBox.ignoreAllLogs() // Ignore all log notifications
+// LogBox.ignoreLogs([
+//   // 'Warning: ...',
+//   // 'Sentry Logger ',
+//   'Constants.deviceYearClass'
+// ]) // Ignore log notification by message
+// LogBox.ignoreAllLogs() // Ignore all log notifications
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -58,7 +58,7 @@ export default function App() {
   const responseListener = useRef()
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
-  const { SENTRY_DSN } = useEnvVars()
+  // const { SENTRY_DSN } = useEnvVars()
   const client = setupApolloClient()
 
   useKeepAwake()
@@ -130,19 +130,19 @@ export default function App() {
   }, [])
 
   // For Sentry
-  useEffect(() => {
-    // if (SENTRY_DSN) {
-    if (false) {
-      Sentry.init({
-        dsn: SENTRY_DSN,
-        enableInExpoDevelopment: !isProduction ? true : false,
-        environment: isProduction ? 'production' : 'development',
-        debug: !isProduction,
-        tracesSampleRate: 1.0,
-        enableTracing: true
-      })
-    }
-  }, [SENTRY_DSN])
+  // useEffect(() => {
+  //   // if (SENTRY_DSN) {
+  //   if (false) {
+  //     Sentry.init({
+  //       dsn: SENTRY_DSN,
+  //       enableInExpoDevelopment: !isProduction ? true : false,
+  //       environment: isProduction ? 'production' : 'development',
+  //       debug: !isProduction,
+  //       tracesSampleRate: 1.0,
+  //       enableTracing: true
+  //     })
+  //   }
+  // }, [SENTRY_DSN])
 
   // For App Update
   useEffect(() => {

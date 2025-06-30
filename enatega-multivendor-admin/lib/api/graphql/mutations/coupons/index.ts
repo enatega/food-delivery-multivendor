@@ -7,8 +7,6 @@ export const CREATE_COUPON = gql`
       title
       discount
       enabled
-      startDate
-      endDate
     }
   }
 `;
@@ -19,8 +17,6 @@ export const EDIT_COUPON = gql`
       title
       discount
       enabled
-      startDate
-      endDate
     }
   }
 `;

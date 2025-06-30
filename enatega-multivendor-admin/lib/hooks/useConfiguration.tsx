@@ -28,7 +28,7 @@ export const useConfiguration = () => {
   const GOOGLE_MAPS_KEY = configuration?.googleApiKey;
   const AMPLITUDE_API_KEY_WEB = configuration?.webAmplitudeApiKey;
   const AMPLITUDE_API_KEY_APP = configuration?.appAmplitudeApiKey;
-  const LIBRARIES = 'places,drawing,geometry,localContext,visualization'.split(
+  const LIBRARIES = 'places,drawing,geometry,visualization'.split(
     ','
   ) as Libraries;
   const COLORS = {

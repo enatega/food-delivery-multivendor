@@ -17,7 +17,7 @@ import { useMutation } from '@apollo/client';
 import { EDIT_RESTAURANT_COUPON } from '@/lib/api/graphql/mutations/coupons-restaurant';
 import { GET_RESTAURANT_COUPONS } from '@/lib/api/graphql/queries/coupons-restaurant';
 import { useTranslations } from 'next-intl';
-import moment from 'moment';
+
 
 export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
   menuItems,
@@ -70,22 +70,6 @@ export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
     { headerName: t('Code'), propertyName: 'title' },
     { headerName: t('Discount'), propertyName: 'discount' },
     // add column for endDate and lifeTimeActive
-    {
-      headerName: t('End Date'),
-      propertyName: 'endDate',
-      body: (coupon: ICouponRestaurantResponse) => (
-        <span>
-          {coupon.endDate ? moment(coupon.endDate).format('YYYY-MM-DD') : '-'}
-        </span>
-      ),
-    },
-    {
-      headerName: t('Lifetime Active'),
-      propertyName: 'lifeTimeActive',
-      body: (coupon: ICouponRestaurantResponse) => (
-        <span>{coupon.lifeTimeActive ? t('Yes') : t('No')}</span>
-      ),
-    },
     {
       headerName: t('Enabled'),
       propertyName: 'enabled',
