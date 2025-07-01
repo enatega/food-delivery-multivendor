@@ -44,7 +44,7 @@ function ItemDetail(props) {
     ...food?.variations[0],
     addons: food?.variations[0].addons?.map((fa) => {
       const addon = addons?.find((a) => a._id === fa)
-      const addonOptions = addon.options?.map((ao) => {
+      const addonOptions = addon?.options?.map((ao) => {
         return options?.find((o) => o._id === ao)
       })
       return {
@@ -315,6 +315,9 @@ function ItemDetail(props) {
     return !hasError
   }
 
+                console.log('selectedVariation', selectedVariation)
+
+
   if (!connect) return <ErrorView />
   return (
     <KeyboardAvoidingView
@@ -371,7 +374,7 @@ function ItemDetail(props) {
           <View style={[styles(currentTheme).subContainer]}>
             <View>
               {food?.variations?.length > 1 && (
-                <View>
+                <View key={"1223323"}>
                   <TitleComponent title={t('SelectVariation')} subTitle={t('SelectOne')} status={t('Required')} />
                   <RadioComponent
                     options={food?.variations}
@@ -384,12 +387,12 @@ function ItemDetail(props) {
                   />
                 </View>
               )}
-              {selectedVariation?.addons?.map((addon) => (
-                <View key={addon?._id}>
+              {selectedVariation?.addons?.map((addon) => {
+                return (<View key={addon?._id}>
                   <TitleComponent title={addon?.title} subTitle={addon?.description} error={addon.error} status={addon?.quantityMinimum === 0 ? t('optional') : `${addon?.quantityMinimum} ${t('Required')}`} />
                   <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} />
-                </View>
-              ))}
+                </View>)
+              })}
             </View>
 
             <View style={styles(currentTheme).line}></View>

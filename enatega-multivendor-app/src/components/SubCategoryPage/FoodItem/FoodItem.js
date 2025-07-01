@@ -15,7 +15,7 @@ const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
   const { t, i18n } = useTranslation()
 
   // Use discounted price only if it exists and is greater than 0, otherwise use base price
-  const displayPrice = discountedPrice && discountedPrice > 0 ? discountedPrice : price
+  const displayPrice = discountedPrice && discountedPrice > 0 ? price-discountedPrice : price
 
   return (
     <TouchableOpacity style={[styles(currentTheme).foodItemContainer, isOutOfStock && styles(currentTheme).disabledItem]} activeOpacity={0.8} disabled={isOutOfStock}>
@@ -36,9 +36,14 @@ const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
       </View>
 
       <View style={styles(currentTheme).detailsContainer}>
-        <TextDefault H5 bold textColor={currentTheme.fontMainColor}>
-          {configuration.currencySymbol} {displayPrice}
+        <TextDefault H5 bold textColor={currentTheme.fontMainColor} style={{ }}>
+          {configuration.currencySymbol} {price}
         </TextDefault>
+        {/* {discountedPrice && discountedPrice > 0 && (
+          <TextDefault H5 bold textColor={currentTheme.fontMainColor} style={{textDecorationLine:  'line-through' }}>
+            {configuration.currencySymbol} {price}
+          </TextDefault>
+        )} */}
         <TextDefault textColor={isOutOfStock ? currentTheme.fontSecondColor || '#8A8A8E' : currentTheme.fontMainColor}>{item.title}</TextDefault>
       </View>
     </TouchableOpacity>

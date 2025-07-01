@@ -10,6 +10,7 @@
 .DS_Store
 android
 ios
+booting-device-commond
 # Xcode
 #
 build/

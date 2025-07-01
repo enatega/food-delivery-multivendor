@@ -1,5 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import 'react-native-get-random-values';
 // import 'expo-dev-client'
 import * as Device from 'expo-device'
 import * as Font from 'expo-font'
@@ -32,6 +33,7 @@ import useWatchLocation from './src/ui/hooks/useWatchLocation'
 import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
+import { ErrorBoundary } from './src/components/ErrorBoundary'
 
 // LogBox.ignoreLogs([
 //   // 'Warning: ...',
@@ -54,8 +56,7 @@ export default function App() {
   const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
   const [location, setLocation] = useState(null)
-  const notificationListener = useRef()
-  const responseListener = useRef()
+  // const responseListener = useRef()
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
   // const { SENTRY_DSN } = useEnvVars()
@@ -92,16 +93,17 @@ export default function App() {
       })
       // await permissionForPushNotificationsAsync()
       await getActiveLocation()
-      BackHandler.addEventListener('hardwareBackPress', exitAlert)
       // get stored theme
       // await getStoredTheme()
       setAppIsReady(true)
     }
 
     loadAppData()
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', exitAlert);
+
 
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', exitAlert)
+      backHandler.remove()
     }
   }, [])
 
@@ -170,7 +172,7 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync()
 
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+    const notifSub  = Notifications.addNotificationReceivedListener((notification) => {
       if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
         const id = notification?.request?.content?.data?._id
         if (id) {
@@ -180,7 +182,7 @@ export default function App() {
       }
     })
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+    const responseSub = Notifications.addNotificationResponseReceivedListener((response) => {
       if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
         const id = response?.notification?.request?.content?.data?._id
         if (id) {
@@ -190,8 +192,8 @@ export default function App() {
       }
     })
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current)
-      Notifications.removeNotificationSubscription(responseListener.current)
+      notifSub.remove()
+      responseSub.remove()
     }
   }, [])
 
@@ -250,6 +252,7 @@ export default function App() {
   }
 
   return (
+    <ErrorBoundary>
     <AnimatedSplashScreen>
       <ApolloProvider client={client}>
         <ThemeContext.Provider
@@ -281,6 +284,7 @@ export default function App() {
         </ThemeContext.Provider>
       </ApolloProvider>
     </AnimatedSplashScreen>
+    </ErrorBoundary>
   )
 }
 

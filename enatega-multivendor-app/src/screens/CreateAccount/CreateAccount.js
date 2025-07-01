@@ -59,6 +59,32 @@ const CreateAccount = (props) => {
         </View>
       )
     }
+
+    // <View style={styles.container}>
+    //   <AppleAuthentication.AppleAuthenticationButton
+    //     buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+    //     buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+    //     cornerRadius={5}
+    //     style={styles.button}
+    //     onPress={async () => {
+    //       try {
+    //         const credential = await AppleAuthentication.signInAsync({
+    //           requestedScopes: [
+    //             AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+    //             AppleAuthentication.AppleAuthenticationScope.EMAIL,
+    //           ],
+    //         });
+    //         // signed in
+    //       } catch (e) {
+    //         if (e.code === 'ERR_REQUEST_CANCELED') {
+    //           // handle that the user canceled the sign-in flow
+    //         } else {
+    //           // handle other errors
+    //         }
+    //       }
+    //     }}
+    //   />
+    // </View>
     return (
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
@@ -71,39 +97,37 @@ const CreateAccount = (props) => {
         style={styles().appleBtn}
         onPress={async () => {
           try {
-            const credential = await AppleAuthentication.signInAsync({
+            console.log('Apple Sign In Pressed')
+             const credential = await AppleAuthentication.signInAsync({
               requestedScopes: [
                 AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                AppleAuthentication.AppleAuthenticationScope.EMAIL
-              ]
-            })
+                AppleAuthentication.AppleAuthenticationScope.EMAIL,
+              ],
+            });
+            console.log('Apple Sign In Credential:', credential)
+
             const name = credential.fullName?.givenName
-              ? credential.fullName?.givenName +
-                ' ' +
-                credential.fullName?.familyName
+              ? credential.fullName.givenName + ' ' + credential.fullName.familyName
               : ''
+
             const user = {
               appleId: credential.user,
               phone: '',
               email: credential.email,
               password: '',
-              name: name,
+              name,
               picture: '',
               type: 'apple'
             }
+
             mutateLogin(user)
             loginButtonSetter('Apple')
-            // signed in
           } catch (e) {
-            if (e.code === 'ERR_CANCELLED') {
-              // handle that the user canceled the sign-in flow
-              loginButtonSetter(null)
-            } else {
-              // handle other errors
-              loginButtonSetter(null)
-            }
+            console.error('Apple Sign In Error:', e)
+            loginButtonSetter(null)
           }
         }}
+
       />
     )
   }

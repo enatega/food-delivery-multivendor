@@ -185,7 +185,7 @@ function Addresses() {
 
   const handleAddressSelection = (addressId) => {
     setSelectedAddresses((prevSelected) => {
-      const updatedAddresses = prevSelected.includes(addressId) ? prevSelected.filter((id) => id !== addressId) : [...prevSelected, addressId]
+      const updatedAddresses = prevSelected.includes(addressId) ? prevSelected?.filter((id) => id !== addressId) : [...prevSelected, addressId]
       return updatedAddresses
     })
   }
