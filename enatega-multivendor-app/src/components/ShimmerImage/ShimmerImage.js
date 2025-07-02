@@ -130,4 +130,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ShimmerImage
+export default React.memo(ShimmerImage)

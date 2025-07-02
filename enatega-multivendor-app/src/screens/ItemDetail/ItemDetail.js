@@ -293,6 +293,17 @@ function ItemDetail(props) {
     return (variation + addons).toFixed(2)
   }, [selectedVariation, addons])
 
+  const calculateDiscountedPrice = useCallback(() => {
+    const variation = selectedVariation.discounted
+    let addons = 0
+    selectedAddons.forEach((addon) => {
+      addons += addon?.options?.reduce((acc, option) => {
+        return acc + option?.price
+      }, 0)
+    })
+    return (variation + addons).toFixed(2)
+  }, [selectedVariation, addons])
+
   function validateOrderItem() {
     let hasError = false
     const validatedAddons = selectedVariation?.addons?.map((addon) => {
@@ -314,9 +325,6 @@ function ItemDetail(props) {
     setSelectedVariation({ ...selectedVariation, addons: validatedAddons })
     return !hasError
   }
-
-                console.log('selectedVariation', selectedVariation)
-
 
   if (!connect) return <ErrorView />
   return (
@@ -355,7 +363,6 @@ function ItemDetail(props) {
         >
           <View>
             {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
-            {/* <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}> */}
             <Text
               style={[
                 styles(currentTheme).descriptionText,
@@ -369,7 +376,7 @@ function ItemDetail(props) {
             >
               {food?.description}
             </Text>
-            <HeadingComponent title={food?.title} price={calculatePrice()} />
+            <HeadingComponent title={food?.title} price={calculatePrice()} discountedPrice={calculateDiscountedPrice()} />
           </View>
           <View style={[styles(currentTheme).subContainer]}>
             <View>
