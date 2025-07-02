@@ -15,6 +15,10 @@ function HeadingComponent(props) {
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  console.log(props?.price, props?.discountedPrice);
+
+  const withoutDiscountPrice = calculateDiscountedPrice(props?.price, props?.discountedPrice)
+  console.log(withoutDiscountPrice, "withoutDiscountPrice in HeadingComponent");
 
   const withoutDiscountPrice = calculateDiscountedPrice(props?.price, props?.discountedPrice)
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { Ionicons } from '@expo/vector-icons'
