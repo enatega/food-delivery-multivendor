@@ -17,8 +17,6 @@ const CustomDrawerHeader = () => {
   const { t } = useTranslation();
   const { dataProfile, userId } = useUserContext();
 
-  console.log({dataProfile, userId});
-
   const {refetch,loading:isLoading} = useQuery(RIDER_PROFILE, {
     variables: { id: userId },
     fetchPolicy: "cache-and-network",
