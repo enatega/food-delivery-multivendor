@@ -348,6 +348,7 @@ function EditAddress(props) {
                     {labelValues.map((label, index) => (
                       <>
                         <TextDefault
+                          key={index}
                           style={styles().titlebuttonInline}
                           textColor={currentTheme.black}
                           bold

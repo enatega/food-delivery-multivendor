@@ -1,50 +1,68 @@
-import { StyleSheet } from 'react-native'
-import { useRef, useState } from 'react'
-import {Video} from 'react-native-video'
+import { StyleSheet, View } from 'react-native';
+import { useState, useEffect } from 'react';
+import { VideoView, useVideoPlayer } from 'expo-video';
 
 export default function SplashVideo({ onLoaded, onFinish }) {
-  const videoRef = useRef(null);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
 
-  const handleLoad = () => {
-    if (!hasLoaded) {
-      setHasLoaded(true);
-      if (onLoaded) {
-        onLoaded();
-      }
-    }
-  };
+  const player = useVideoPlayer(require('./../../../assets/mobileSplash.mp4'), (player) => {
+    player.loop = false;
+    player.muted = true;
+  });
 
-  const handleEnd = () => {
-    if (!hasFinished) {
-      setHasFinished(true);
-      if (onFinish) {
-        onFinish();
+  useEffect(() => {
+    // Delay initial play to ensure video is ready after cache clear
+    const playTimeout = setTimeout(() => {
+      player.play();
+    }, 500);
+
+    const statusSubscription = player.addListener('statusChange', (status) => {
+      if (status.status === 'readyToPlay' && !hasLoaded) {
+        setHasLoaded(true);
+        onLoaded?.();
+        // Ensure play after ready state
+        player.play();
       }
-    }
-  };
+      
+      if (status.status === 'idle' && hasLoaded && !hasFinished) {
+        setHasFinished(true);
+        onFinish?.();
+      }
+    });
+
+    const endSubscription = player.addListener('playToEnd', () => {
+      if (!hasFinished) {
+        setHasFinished(true);
+        onFinish?.();
+      }
+    });
+
+    const timeout = setTimeout(() => {
+      if (hasLoaded && !hasFinished) {
+        setHasFinished(true);
+        onFinish?.();
+      }
+    }, 5000);
+
+    return () => {
+      clearTimeout(playTimeout);
+      statusSubscription?.remove();
+      endSubscription?.remove();
+      clearTimeout(timeout);
+    };
+  }, [player, hasLoaded, hasFinished, onLoaded, onFinish]);
 
   return (
-    <Video
-      ref={videoRef}
-      source={require('./../../../assets/mobileSplash.mp4')}
-      style={StyleSheet.absoluteFill}
-      resizeMode="cover"
-      repeat={false}
-      muted={true}
-      playInBackground={false}
-      playWhenInactive={false}
-      ignoreSilentSwitch="ignore"
-      onLoad={handleLoad}
-      onEnd={handleEnd}
-      onError={(error) => {
-        console.log('Splash video error:', error);
-        // Fallback - call onFinish if video fails
-        if (onFinish) {
-          onFinish();
-        }
-      }}
-    />
-  )
+    <View style={{ flex: 1 }}>
+      <VideoView
+        style={StyleSheet.absoluteFill}
+        player={player}
+        allowsFullscreen={false}
+        allowsPictureInPicture={false}
+        nativeControls={false}
+        contentFit="cover"
+      />
+    </View>
+  );
 }

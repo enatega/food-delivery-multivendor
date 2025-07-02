@@ -8,8 +8,9 @@
 #dist
 /dist
 .DS_Store
-android/
-ios/
+android
+ios
+booting-device-commond
 # Xcode
 #
 build/

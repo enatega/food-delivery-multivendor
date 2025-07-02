@@ -44,7 +44,7 @@ function ItemDetail(props) {
     ...food?.variations[0],
     addons: food?.variations[0].addons?.map((fa) => {
       const addon = addons?.find((a) => a._id === fa)
-      const addonOptions = addon.options?.map((ao) => {
+      const addonOptions = addon?.options?.map((ao) => {
         return options?.find((o) => o._id === ao)
       })
       return {
@@ -293,6 +293,17 @@ function ItemDetail(props) {
     return (variation + addons).toFixed(2)
   }, [selectedVariation, addons])
 
+  const calculateDiscountedPrice = useCallback(() => {
+    const variation = selectedVariation.discounted
+    let addons = 0
+    selectedAddons.forEach((addon) => {
+      addons += addon?.options?.reduce((acc, option) => {
+        return acc + option?.price
+      }, 0)
+    })
+    return (variation + addons).toFixed(2)
+  }, [selectedVariation, addons])
+
   function validateOrderItem() {
     let hasError = false
     const validatedAddons = selectedVariation?.addons?.map((addon) => {
@@ -352,7 +363,6 @@ function ItemDetail(props) {
         >
           <View>
             {food?.image ? <ImageHeader image={food?.image} /> : <Text>No image to display</Text>}
-            {/* <Text style={{ color: 'white', width: '100%', height: 'auto', fontSize: 14 }}> */}
             <Text
               style={[
                 styles(currentTheme).descriptionText,
@@ -366,12 +376,12 @@ function ItemDetail(props) {
             >
               {food?.description}
             </Text>
-            <HeadingComponent title={food?.title} price={calculatePrice()} />
+            <HeadingComponent title={food?.title} price={calculatePrice()} discountedPrice={calculateDiscountedPrice()} />
           </View>
           <View style={[styles(currentTheme).subContainer]}>
             <View>
               {food?.variations?.length > 1 && (
-                <View>
+                <View key={"1223323"}>
                   <TitleComponent title={t('SelectVariation')} subTitle={t('SelectOne')} status={t('Required')} />
                   <RadioComponent
                     options={food?.variations}
@@ -384,12 +394,12 @@ function ItemDetail(props) {
                   />
                 </View>
               )}
-              {selectedVariation?.addons?.map((addon) => (
-                <View key={addon?._id}>
+              {selectedVariation?.addons?.map((addon) => {
+                return (<View key={addon?._id}>
                   <TitleComponent title={addon?.title} subTitle={addon?.description} error={addon.error} status={addon?.quantityMinimum === 0 ? t('optional') : `${addon?.quantityMinimum} ${t('Required')}`} />
                   <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} />
-                </View>
-              ))}
+                </View>)
+              })}
             </View>
 
             <View style={styles(currentTheme).line}></View>

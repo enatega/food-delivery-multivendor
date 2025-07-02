@@ -244,7 +244,7 @@ function ItemDetail(props) {
           opt => opt._id === option._id
         )
         if (optionIndex > -1) {
-          selectedAddons[index].options = selectedAddons[index].options.filter(
+          selectedAddons[index].options = selectedAddons[index]?.options?.filter(
             opt => opt._id !== option._id
           )
         } else {

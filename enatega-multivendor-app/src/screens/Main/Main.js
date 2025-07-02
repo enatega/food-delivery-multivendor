@@ -69,6 +69,8 @@ function Main(props) {
   }
   const { getCurrentLocation } = useLocation()
   const { getAddress } = useGeocoding()
+    const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const {
@@ -291,7 +293,6 @@ function Main(props) {
     }
   }
 
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   return (
     <>
       {!connect ? (
