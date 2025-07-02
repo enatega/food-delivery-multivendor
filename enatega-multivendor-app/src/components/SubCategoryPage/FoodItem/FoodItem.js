@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons'
 import styles from './styles'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 import { useTranslation } from 'react-i18next'
+import { calculateDiscountedPrice } from '../../../utils/calculateDiscountedPrice'
 
 const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
   const variation = item.variations?.[0]
@@ -14,11 +15,14 @@ const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
   const isOutOfStock = item.isOutOfStock === true
   const { t, i18n } = useTranslation()
 
+  console.log(price, discountedPrice, "Price and Discounted Price in FoodItem");
   // Use discounted price only if it exists and is greater than 0, otherwise use base price
-  const displayPrice = discountedPrice && discountedPrice > 0 ? price-discountedPrice : price
+  const withoutDiscountPrice = calculateDiscountedPrice(price, discountedPrice)
+
+  console.log(withoutDiscountPrice, "withoutDiscountPrice in FoodItem");
 
   return (
-    <TouchableOpacity style={[styles(currentTheme).foodItemContainer, isOutOfStock && styles(currentTheme).disabledItem]} activeOpacity={0.8} disabled={isOutOfStock}>
+    <TouchableOpacity style={[styles(currentTheme).foodItemContainer, isOutOfStock && styles(currentTheme).disabledItem]} activeOpacity={0.8} disabled={isOutOfStock} onPress={onPress} >
       <View style={styles(currentTheme).imageContainer}>
         <ShimmerImage imageUrl={item.image} style={[styles(currentTheme).foodImage, isOutOfStock && styles(currentTheme).grayedImage]} resizeMode='cover' />
         {isOutOfStock && (
@@ -36,14 +40,16 @@ const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
       </View>
 
       <View style={styles(currentTheme).detailsContainer}>
-        <TextDefault H5 bold textColor={currentTheme.fontMainColor} style={{ }}>
-          {configuration.currencySymbol} {price}
-        </TextDefault>
-        {/* {discountedPrice && discountedPrice > 0 && (
-          <TextDefault H5 bold textColor={currentTheme.fontMainColor} style={{textDecorationLine:  'line-through' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap:scale(5) }}>
+          <TextDefault H5 bold textColor={currentTheme.fontMainColor} style={{ }}>
             {configuration.currencySymbol} {price}
           </TextDefault>
-        )} */}
+          {discountedPrice && discountedPrice > 0 && (
+            <TextDefault small bold textColor={currentTheme.fontSecondColor} style={{textDecorationLine:  'line-through' }}>
+              {configuration.currencySymbol} {withoutDiscountPrice}
+            </TextDefault>
+          )}
+        </View>
         <TextDefault textColor={isOutOfStock ? currentTheme.fontSecondColor || '#8A8A8E' : currentTheme.fontMainColor}>{item.title}</TextDefault>
       </View>
     </TouchableOpacity>

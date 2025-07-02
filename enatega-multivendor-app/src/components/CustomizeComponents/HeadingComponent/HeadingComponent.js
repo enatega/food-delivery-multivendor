@@ -8,12 +8,17 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { formatNumber } from '../../../utils/formatNumber'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../../utils/scaling'
+import { calculateDiscountedPrice } from '../../../utils/calculateDiscountedPrice'
 
 function HeadingComponent(props) {
   const { i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  console.log(props?.price, props?.discountedPrice);
+
+  const withoutDiscountPrice = calculateDiscountedPrice(props?.price, props?.discountedPrice)
+  console.log(withoutDiscountPrice, "withoutDiscountPrice in HeadingComponent");
 
   return (
     <View style={{ paddingVertical: scale(4) }}>
@@ -23,8 +28,15 @@ function HeadingComponent(props) {
             {props?.title}
           </TextDefault>
         </View>
-        <View style={styles.priceContainer}>
-          <TextDefault textColor={currentTheme.fontMainColor} H4 bolder>{`${configuration.currencySymbol}${formatNumber(props?.price)}`}</TextDefault>
+         <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(5) }}>
+          <TextDefault numberOfLines={2} textColor={currentTheme.fontMainColor} H4 bolder style={{ }}>
+            {configuration.currencySymbol} {props?.price}
+          </TextDefault>
+          {props?.discountedPrice && props?.discountedPrice > 0 && (
+            <TextDefault small bold textColor={currentTheme.fontSecondColor} style={{textDecorationLine:  'line-through' }}>
+              {configuration.currencySymbol} {withoutDiscountPrice}
+            </TextDefault>
+          )}
         </View>
       </View>
       <View style={styles().descContainer}>
