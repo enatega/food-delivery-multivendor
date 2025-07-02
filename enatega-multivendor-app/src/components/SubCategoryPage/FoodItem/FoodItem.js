@@ -15,11 +15,8 @@ const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
   const isOutOfStock = item.isOutOfStock === true
   const { t, i18n } = useTranslation()
 
-  console.log(price, discountedPrice, "Price and Discounted Price in FoodItem");
-  // Use discounted price only if it exists and is greater than 0, otherwise use base price
   const withoutDiscountPrice = calculateDiscountedPrice(price, discountedPrice)
 
-  console.log(withoutDiscountPrice, "withoutDiscountPrice in FoodItem");
 
   return (
     <TouchableOpacity style={[styles(currentTheme).foodItemContainer, isOutOfStock && styles(currentTheme).disabledItem]} activeOpacity={0.8} disabled={isOutOfStock} onPress={onPress} >

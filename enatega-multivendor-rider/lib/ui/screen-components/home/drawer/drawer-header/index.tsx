@@ -8,7 +8,7 @@ import { useUserContext } from "@/lib/context/global/user.context";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { IRiderProfile } from "@/lib/utils/interfaces";
-import { MutationTuple, useMutation } from "@apollo/client";
+import { MutationTuple, useMutation, useQuery } from "@apollo/client";
 import { showMessage } from "react-native-flash-message";
 
 const CustomDrawerHeader = () => {
@@ -17,9 +17,23 @@ const CustomDrawerHeader = () => {
   const { t } = useTranslation();
   const { dataProfile, userId } = useUserContext();
 
+  console.log({dataProfile, userId});
+
+  const {refetch,loading:isLoading} = useQuery(RIDER_PROFILE, {
+    variables: { id: userId },
+    fetchPolicy: "cache-and-network",
+  });
+
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
+    onCompleted: (data) => {
+      refetch();
+      showMessage({
+        message: t("Availability updated successfully"),
+        type: "success",
+      });
+    },
 
     onError: (error) => {
       showMessage({
@@ -88,7 +102,7 @@ const CustomDrawerHeader = () => {
         >
           {t("Availability")}
         </Text>
-        {loading ? (
+        {loading || isLoading ? (
           <SpinnerComponent color={appTheme.secondaryTextColor} />
         ) : (
           <CustomSwitch
