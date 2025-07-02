@@ -5,7 +5,7 @@
       "channel": "development",
       "distribution": "internal",
       "ios": {
-        "simulator": false
+        "simulator": true
       }
     },
     "staging": {

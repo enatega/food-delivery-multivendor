@@ -18,9 +18,6 @@ function HeadingComponent(props) {
   console.log(props?.price, props?.discountedPrice);
 
   const withoutDiscountPrice = calculateDiscountedPrice(props?.price, props?.discountedPrice)
-  console.log(withoutDiscountPrice, "withoutDiscountPrice in HeadingComponent");
-
-  const withoutDiscountPrice = calculateDiscountedPrice(props?.price, props?.discountedPrice)
 
   return (
     <View style={{ paddingVertical: scale(4) }}>
