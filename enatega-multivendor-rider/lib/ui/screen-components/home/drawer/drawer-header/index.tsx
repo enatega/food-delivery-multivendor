@@ -15,18 +15,16 @@ const CustomDrawerHeader = () => {
   // Hook
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { dataProfile, userId } = useUserContext();
+  const { dataProfile, userId, refetchProfile, loadingProfile } = useUserContext();
 
-  const {refetch,loading:isLoading} = useQuery(RIDER_PROFILE, {
-    variables: { id: userId },
-    fetchPolicy: "cache-and-network",
-  });
+  console.log("dataProfile", !!dataProfile?.available);
+  console.log("loadingProfile", loadingProfile);
 
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
     onCompleted: (data) => {
-      refetch();
+      refetchProfile();
       showMessage({
         message: t("Availability updated successfully"),
         type: "success",
@@ -100,7 +98,7 @@ const CustomDrawerHeader = () => {
         >
           {t("Availability")}
         </Text>
-        {loading || isLoading ? (
+        {loading || loadingProfile ? (
           <SpinnerComponent color={appTheme.secondaryTextColor} />
         ) : (
           <CustomSwitch
