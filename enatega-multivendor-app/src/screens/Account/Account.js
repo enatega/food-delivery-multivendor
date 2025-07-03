@@ -187,7 +187,7 @@ function Account(props) {
 
   const fetchSelectedLanguage = async () => {
     const lang = await AsyncStorage.getItem('enatega-language-name')
-    const systemLangCode = Localization.locale.split('-')[0]
+    const systemLangCode = Localization?.locale?.split('-')[0]
 
     if (lang) {
       setselectedLanguage(lang)
