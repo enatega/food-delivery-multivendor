@@ -16,6 +16,7 @@ import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
 import { IPaymentMethod } from '@/lib/utils/interfaces/payment.card.interface';
+import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 
 export default function PaymentMain() {
 
@@ -25,6 +26,7 @@ export default function PaymentMain() {
 
   // Contexts
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
+  const {restaurantProfileResponse} = useContext(ProfileContext)
   const { showToast } = useContext(ToastContext);
   const { restaurantId } = restaurantLayoutContextData;
 
@@ -55,6 +57,7 @@ export default function PaymentMain() {
     }
   };
 
+
   const fetchPaymentMethods = () => {
     // Simulating a fetch call to load payment methods
     setTimeout(() => {
@@ -65,6 +68,7 @@ export default function PaymentMain() {
           description: 'Connect with Stripe for payments',
           icon: faCreditCard,
           type: 'stripe',
+          isDetailsSubmitted: restaurantProfileResponse.data?.restaurant?.stripeDetailsSubmitted ?? false,
           onClick: handleStripeSubmit,
         },
       ]);
@@ -74,7 +78,7 @@ export default function PaymentMain() {
 
   useEffect(() => {
     fetchPaymentMethods();
-  }, []);
+  }, [restaurantProfileResponse.data?.restaurant?.stripeDetailsSubmitted]);
 
   const renderPaymentMethods = () => {
     if (initialLoading) {
@@ -90,6 +94,7 @@ export default function PaymentMain() {
         description={method.description}
         onClick={method.onClick}
         loading={submittingMethod === method.id}
+        isDetailsSubmitted={method?.isDetailsSubmitted ?? false}
         icon={method.icon}
         type={method.type}
       />
