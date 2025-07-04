@@ -404,7 +404,7 @@ const CategoryPage = ({ route, navigation }) => {
                       showsHorizontalScrollIndicator={false}
                     >
                       {subCategories[index]?.map((sub, j) => {
-                        return <View style={stylesb.foodListView}>{i === 0 && j == 0 ? <MemoizedFlatList data={filteredFood} total_filtered_items={total_filtered_items} /> : <MemoizedFlatList data={[]} total_filtered_items={total_filtered_items} />}</View>
+                        return <View key={j} style={stylesb.foodListView}>{i === 0 && j == 0 ? <MemoizedFlatList data={filteredFood} total_filtered_items={total_filtered_items} /> : <MemoizedFlatList data={[]} total_filtered_items={total_filtered_items} />}</View>
                       })}
                     </ScrollView>
                   )

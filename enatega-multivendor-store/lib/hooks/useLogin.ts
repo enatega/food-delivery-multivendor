@@ -36,7 +36,10 @@ const useLogin = () => {
     restaurantLogin,
     lastOrderCreds,
   }: IStoreLoginCompleteResponse) {
+    console.log("🚀 ~ onCompleted called with:", { restaurantLogin, lastOrderCreds });
+    
     setIsLoading(false);
+    
     if (restaurantLogin) {
       await setItem("store-id", restaurantLogin?.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
@@ -52,57 +55,82 @@ const useLogin = () => {
       });
     }
   }
+
   function onError(err: ApolloError) {
-    console.log({ err });
+    console.log("🚀 ~ onError called with:", { err });
     const error = err as ApolloError;
     setIsLoading(false);
     FlashMessageComponent({
       message:
-        error?.graphQLErrors[0]?.message ??
+        error?.graphQLErrors?.[0]?.message ??
         error?.networkError?.message ??
         "Something went wrong",
     });
   }
+
   const onLogin = async (username: string, password: string) => {
+    console.log("🚀 ~ onLogin called with:", { username, password: "***" });
+    
     try {
       setIsLoading(true);
-      // Get notification permisssions
+
+      // Validate inputs
+      if (!username || !password) {
+        throw new Error("Username and password are required");
+      }
+
+      // Get notification permissions
       const settings = await Notifications.getPermissionsAsync();
       let notificationPermissions = { ...settings };
-      console.log({ notificationPermissions, isDevice: Device.isDevice });
+      console.log("🚀 ~ Notification permissions:", { notificationPermissions, isDevice: Device.isDevice });
 
       // Request notification permissions if not granted or not provisional on iOS
       if (
         settings?.status !== "granted" ||
-        settings.ios?.status !==
-          Notifications.IosAuthorizationStatus.PROVISIONAL
+        (settings.ios && settings.ios?.status !== Notifications.IosAuthorizationStatus.PROVISIONAL)
       ) {
+        console.log("🚀 ~ Requesting notification permissions...");
         notificationPermissions = await Notifications.requestPermissionsAsync({
           ios: {
             allowProvisional: true,
             allowAlert: true,
             allowBadge: true,
             allowSound: true,
-            //   allowAnnouncements: true
           },
         });
+        console.log("🚀 ~ New notification permissions:", notificationPermissions);
       }
 
       let notificationToken = null;
+      
       // Get notification token if permissions are granted and it's a device
       if (
         (notificationPermissions?.status === "granted" ||
-          notificationPermissions.ios?.status ===
-            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
+          (notificationPermissions.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL)) &&
         Device.isDevice
       ) {
-        notificationToken = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig?.extra?.eas.projectId,
-          })
-        ).data;
+        try {
+          console.log("🚀 ~ Getting push token...");
+          const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+          console.log("🚀 ~ Project ID:", projectId);
+          
+          if (projectId) {
+            const tokenResult = await Notifications.getExpoPushTokenAsync({
+              projectId: projectId,
+            });
+            notificationToken = tokenResult.data;
+            console.log("🚀 ~ Got push token:", notificationToken);
+          } else {
+            console.warn("🚀 ~ No project ID found, skipping push token");
+          }
+        } catch (tokenError) {
+          console.warn("🚀 ~ Failed to get push token:", tokenError);
+          // Continue without token - don't fail the login
+        }
       }
 
+      console.log("🚀 ~ Performing login mutation...");
+      
       // Perform mutation with the obtained data
       const { data } = await login({
         variables: {
@@ -111,30 +139,36 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-      if (
-        storeLoginData.restaurantLogin?.restaurantId ||
-        data.restaurantLogin?.restaurantId
-      ) {
-        await AsyncStorage.setItem(
-          "store-id",
-          data.restaurantLogin?.restaurantId ||
-            storeLoginData.restaurantLogin?.restaurantId
-        );
+
+      console.log("🚀 ~ Login mutation result:", data);
+
+      // FIX: Check data first, then storeLoginData
+      const restaurantId = data?.restaurantLogin?.restaurantId || storeLoginData?.restaurantLogin?.restaurantId;
+      
+      if (restaurantId) {
+        await AsyncStorage.setItem("store-id", restaurantId);
+        console.log("🚀 ~ Stored restaurant ID:", restaurantId);
       }
+
     } catch (err) {
+      console.error("🚀 ~ Login error:", err);
+      setIsLoading(false);
+      
       const error = err as ApolloError;
       FlashMessageComponent({
         message:
-          error?.graphQLErrors[0]?.message ??
+          error?.graphQLErrors?.[0]?.message ??
           error?.networkError?.message ??
           "Something went wrong",
       });
     }
   };
+
   return {
     creds,
     onLogin,
     isLogging: isLoading,
   };
 };
+
 export default useLogin;

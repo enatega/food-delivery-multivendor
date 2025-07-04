@@ -44,7 +44,7 @@ const BannersAddForm = ({
   const t = useTranslations();
 
   const RESTAURANT_NAMES =
-    data?.restaurants?.map((v) => {
+    data?.restaurants?.data.map((v) => {
       return { label: v.name, code: v._id };
     }) || [];
 

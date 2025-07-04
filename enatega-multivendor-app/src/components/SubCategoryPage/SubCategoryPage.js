@@ -338,6 +338,7 @@ const CategoryPage = ({ route, navigation }) => {
       return <FoodItemsGridSkeleton currentTheme={currentTheme} count={6} />
     }
 
+    console.log(JSON.stringify(data, null, 2));
     return (
       <FlatList
         data={data}

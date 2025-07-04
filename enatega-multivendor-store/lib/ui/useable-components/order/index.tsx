@@ -260,7 +260,7 @@ const Order = ({
 
         {/* Divider */}
         <View
-          className="flex-1 h-[1px] mb-4 mt-4"
+          className="h-0.5 mb-4 mt-4"
           style={{ backgroundColor: appTheme.borderLineColor }}
         />
 
@@ -485,7 +485,7 @@ const Order = ({
             {order.orderStatus === "ASSIGNED" && (
               <View className="flex-row gap-x-4 w-full mt-10">
                 {/* Hand Order to Rider */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   className="flex-1 h-16 items-center justify-center rounded-[30px]"
                   style={{
                     backgroundColor: appTheme.primary,
@@ -507,7 +507,7 @@ const Order = ({
                       {t("Hand Order to Rider")}
                     </Text>
                   )}
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             )}
             {order.orderStatus === "ACCEPTED" && order.isPickedUp && (

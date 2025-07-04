@@ -19,6 +19,7 @@ export default function Options({ addon, onSelectOption, addonRefs }) {
         }
     }, [addon.error])
 
+
     if (addon?.quantityMinimum === 1 && addon?.quantityMaximum === 1) {
         return (
             <View

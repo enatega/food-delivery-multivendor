@@ -76,9 +76,27 @@ export interface IRestaurantResponse {
   __typename: string;
 }
 
+// Updated to support pagination
+export interface IPaginatedRestaurantResponse {
+  data: IRestaurantResponse[];
+  totalCount: number;
+  currentPage: number;
+  totalPages: number;
+}
+
 export interface IRestaurantsResponseGraphQL {
-  restaurants?: IRestaurantResponse[];
-  getClonedRestaurants?: IRestaurantResponse[];
+  restaurants?: IPaginatedRestaurantResponse;
+  getClonedRestaurants?: IPaginatedRestaurantResponse;
+  restaurantsPaginated?: IPaginatedRestaurantResponse;
+  getClonedRestaurantsPaginated?: IPaginatedRestaurantResponse;
+}
+
+// Table header props with pagination
+export interface IRestaurantsTableHeaderProps {
+  globalFilterValue: string;
+  onGlobalFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedActions: string[];
+  setSelectedActions: (actions: string[]) => void;
 }
 
 export interface IDeliveryInfo {
