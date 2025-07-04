@@ -73,9 +73,6 @@ const LoginScreen = () => {
       if (!creds?.username) return;
       setInitialValues(creds);
     } catch (err) {
-      // FlashMessageComponent({
-      //   message: err?.message ?? "Something went wrong. Please refresh.",
-      // });
       console.log("error login", err);
     }
   };

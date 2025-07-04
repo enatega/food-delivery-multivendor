@@ -16,7 +16,6 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
-// import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { makeRedirectUri } from 'expo-auth-session'
@@ -50,16 +49,16 @@ export const useCreateAccount = () => {
 
 
 
-  console.log("andorid client id: ", ANDROID_CLIENT_ID_GOOGLE);
+  console.log("android client id: ", ANDROID_CLIENT_ID_GOOGLE);
+  console.log("ios client id: ", IOS_CLIENT_ID_GOOGLE);
+  console.log("expo web client id: ", EXPO_CLIENT_ID);
+
   const [request, response, promptAsync] = Google.useAuthRequest({
-    // clientId: EXPO_CLIENT_ID,
+    clientId: EXPO_CLIENT_ID,
     androidClientId: ANDROID_CLIENT_ID_GOOGLE,
     iosClientId: IOS_CLIENT_ID_GOOGLE,
-    // redirectUri: makeRedirectUri({
-    //     native: 'enategamultivendor://redirect',
-    //     useProxy: false
-    //   }),  
     scopes: ['profile', 'email', 'openid'],
+
   });
 
 
@@ -152,7 +151,10 @@ export const useCreateAccount = () => {
       }
       
       // Prompt the user for sign-in
-      await promptAsync();
+       await promptAsync({
+        useProxy: false,
+        windowFeatures: 'popup',
+      });
     } catch (e) {
       console.error('Error during sign-in prompt: ' + e.message);
       console.error('Error during sign-in prompt:', e);

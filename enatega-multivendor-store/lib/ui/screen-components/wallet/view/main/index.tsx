@@ -240,7 +240,7 @@ export default function WalletMain() {
               style={{ color: appTheme.fontMainColor }}
             >
               $
-              {String(storeProfileData?.restaurant?.currentWalletAmount ?? "0")}
+              {String(storeProfileData?.restaurant?.currentWalletAmount?.toFixed(2) ?? "0.00")}
             </Text>
             <CustomContinueButton
               title={t("Withdraw Now")}

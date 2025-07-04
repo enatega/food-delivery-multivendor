@@ -1,85 +1,49 @@
 {
   "project_info": {
-    "project_number": "650001300965",
-    "firebase_url": "https://enatega-multivendor.firebaseio.com",
-    "project_id": "enatega-multivendor",
-    "storage_bucket": "enatega-multivendor.appspot.com"
+    "project_number": "967541328677",
+    "firebase_url": "https://fooddevlivery.firebaseio.com",
+    "project_id": "fooddevlivery",
+    "storage_bucket": "fooddevlivery.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:650001300965:android:e027e6c5c2074a426bc30c",
-        "android_client_info": {
-          "package_name": "com.enatega.multirider"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "host.exp.exponent"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:650001300965:android:6c9c0fedca09492b6bc30c",
+        "mobilesdk_app_id": "1:967541328677:android:a8782e91120125908ca8cc",
         "android_client_info": {
           "package_name": "com.enatega.multivendor"
         }
       },
       "oauth_client": [
         {
-          "client_id": "650001300965-fnumuadf66rhah0o1a9d7ci0fg8vuesv.apps.googleusercontent.com",
+          "client_id": "967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.enatega.multivendor",
-            "certificate_hash": "7fa9f5ce09bef5d511dd8823138aa6b1c21a8989"
+            "certificate_hash": "4d553a73e512d28200a95171fcf9948071d99b46"
           }
         },
         {
-          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_id": "967541328677-i97t98eqls2ssencsjjlnt0r9vm5jbmt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+          "current_key": "AIzaSyDPmPsgxicLCEdv3-JnoatPpZd2sh1H0R0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_id": "967541328677-2lkpq6a9cj7bnokht7ich14igsi3brs5.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_id": "967541328677-30n1b9dljqadrr4badeku41980rf2dt1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "host.exp.exponent"
+                "bundle_id": "com.enatega.multivendor"
               }
             }
           ]
@@ -88,34 +52,42 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:650001300965:android:0ec725fd3f014ddc6bc30c",
+        "mobilesdk_app_id": "1:967541328677:android:86f8813d9375f047",
         "android_client_info": {
-          "package_name": "multivendor.enatega.restaurant"
+          "package_name": "com.fooddelivery"
         }
       },
       "oauth_client": [
         {
-          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_id": "967541328677-pvafdv7nd8prr4asod4hejr09rr99f4m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fooddelivery",
+            "certificate_hash": "4d553a73e512d28200a95171fcf9948071d99b46"
+          }
+        },
+        {
+          "client_id": "967541328677-i97t98eqls2ssencsjjlnt0r9vm5jbmt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+          "current_key": "AIzaSyDPmPsgxicLCEdv3-JnoatPpZd2sh1H0R0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_id": "967541328677-2lkpq6a9cj7bnokht7ich14igsi3brs5.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_id": "967541328677-30n1b9dljqadrr4badeku41980rf2dt1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "host.exp.exponent"
+                "bundle_id": "com.enatega.multivendor"
               }
             }
           ]
