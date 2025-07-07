@@ -7,6 +7,9 @@
     "slug": "enategamultivendor",
     "owner": "ninjas_code",
     "privacy": "public",
+    "experiments": {
+      "buildCacheProvider": "eas"
+    },
     "androidStatusBar": {
       "backgroundColor": "#000"
     },
@@ -41,12 +44,7 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah"
-            ]
-          },
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah"
+              "com.googleusercontent.apps.650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7"
             ]
           }
         ],
@@ -96,8 +94,7 @@
             "DEFAULT"
           ]
         }
-      ],
-      "androidClientId":"967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com"
+      ]
     },
     "hooks": {
       "postPublish": [
