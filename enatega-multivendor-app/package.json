@@ -67,7 +67,6 @@
     "expo-dev-client": "~5.2.4",
     "expo-device": "~7.1.4",
     "expo-font": "~13.3.1",
-    "expo-image-picker": "~16.1.4",
     "expo-keep-awake": "~14.1.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.7",

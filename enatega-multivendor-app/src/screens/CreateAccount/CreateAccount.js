@@ -87,7 +87,7 @@ const CreateAccount = (props) => {
             const user = {
               appleId: credential.user,
               phone: '',
-              email: credential.email,
+              email: credential.email ?? '',
               password: '',
               name,
               picture: '',
