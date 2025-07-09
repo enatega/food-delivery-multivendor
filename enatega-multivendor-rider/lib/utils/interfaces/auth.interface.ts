@@ -20,12 +20,12 @@ export interface IAuthProviderProps extends IGlobalProviderProps {
   client: ApolloClient<NormalizedCacheObject>;
 }
 
-interface IRiderLoginResponse {
+export interface IRiderLoginResponse {
   token: string;
   userId: string;
 }
 
-interface IRiderDefaultCredsResponse {
+export interface IRiderDefaultCredsResponse {
   riderUsername: string;
   riderPassword: string;
 }

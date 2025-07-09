@@ -68,7 +68,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   }, [userId]);
 
   useEffect(() => {
-    const listener = asyncStorageEmitter.addListener("store-id", (data) => {
+    const listener = asyncStorageEmitter.addListener("store-id", (data:any) => {
       setUserId(data?.value ?? "");
     });
 
@@ -76,9 +76,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
     return () => {
       if (listener) {
-        listener.removeListener("store-id", () => {
-          console.log("Rider Id listerener removed");
-        });
+        listener.removeListener();
       }
     };
   }, []);
@@ -101,6 +99,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         requestForegroundPermissionsAsync,
         setStoreOrderEarnings,
         storeOrdersEarnings,
+        refetchProfile
       }}
     >
       {children}

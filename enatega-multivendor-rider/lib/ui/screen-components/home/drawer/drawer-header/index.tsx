@@ -10,29 +10,26 @@ import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { IRiderProfile } from "@/lib/utils/interfaces";
 import { MutationTuple, useMutation, useQuery } from "@apollo/client";
 import { showMessage } from "react-native-flash-message";
+import { useEffect, useState } from "react";
 
 const CustomDrawerHeader = () => {
   // Hook
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { dataProfile, userId } = useUserContext();
+  const { dataProfile, userId, loadingProfile } = useUserContext();
+  const [isRiderAvailable, setIsRiderAvailable] = useState(false)
 
-  const {refetch,loading:isLoading} = useQuery(RIDER_PROFILE, {
-    variables: { id: userId },
-    fetchPolicy: "cache-and-network",
-  });
+  console.log({isRiderAvailable:dataProfile?.available});
+
+  useEffect(()=>{
+    setIsRiderAvailable(dataProfile?.available || false)
+  },[dataProfile?.available])
+
 
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
-    onCompleted: (data) => {
-      refetch();
-      showMessage({
-        message: t("Availability updated successfully"),
-        type: "success",
-      });
-    },
-
+    awaitRefetchQueries: true,
     onError: (error) => {
       showMessage({
         message:
@@ -42,6 +39,7 @@ const CustomDrawerHeader = () => {
       });
     },
   }) as MutationTuple<IRiderProfile | undefined, { id: string }>;
+
   return (
     <View
       className={` w-full h-[15%] flex-row justify-between p-3 pt-6 top-0 bottom-4`}
@@ -100,11 +98,11 @@ const CustomDrawerHeader = () => {
         >
           {t("Availability")}
         </Text>
-        {loading || isLoading ? (
+        {loading || loadingProfile ? (
           <SpinnerComponent color={appTheme.secondaryTextColor} />
         ) : (
           <CustomSwitch
-            value={!!dataProfile?.available}
+            value={isRiderAvailable}
             isDisabled={loading}
             onToggle={async () =>
               await toggleAvailablity({ variables: { id: userId ?? "" } })

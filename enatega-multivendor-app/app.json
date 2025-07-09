@@ -2,11 +2,14 @@
   "expo": {
     "name": "Enatega Multi",
     "scheme": "enategamultivendor",
-    "version": "1.0.81",
+    "version": "1.0.86",
     "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     "slug": "enategamultivendor",
     "owner": "ninjas_code",
     "privacy": "public",
+    "experiments": {
+      "buildCacheProvider": "eas"
+    },
     "androidStatusBar": {
       "backgroundColor": "#000"
     },
@@ -41,12 +44,7 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah"
-            ]
-          },
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.967541328677-nf8h4ou7rhmq9fahs87p057rggo95eah"
+              "com.googleusercontent.apps.650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7"
             ]
           }
         ],
@@ -61,9 +59,10 @@
       "androidCollapsedTitle": "Enatega Multivendor"
     },
     "android": {
-      "versionCode": 81,
+      "versionCode": 86,
       "package": "com.enatega.multivendor",
       "userInterfaceStyle": "automatic",
+      "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
@@ -95,8 +94,7 @@
             "DEFAULT"
           ]
         }
-      ],
-      "androidClientId":"967541328677-7264tf7tkdtoufk844rck9mimrve135c.apps.googleusercontent.com"
+      ]
     },
     "hooks": {
       "postPublish": [
@@ -124,12 +122,6 @@
         }
       ],
       [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
-        }
-      ],
-      [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
@@ -138,14 +130,14 @@
       "expo-font",
       "expo-localization",
       "expo-web-browser",
+      "expo-video",
+      "expo-apple-authentication",
       [
-        "expo-video",
+        "expo-tracking-transparency",
         {
-          "supportsBackgroundPlayback": false,
-          "supportsPictureInPicture": true
+          "userTrackingPermission": "Allow this app to collect app-related data that can be used for tracking you or your device."
         }
-      ],
-      "@react-native-google-signin/google-signin"
+      ]
     ],
     "extra": {
       "eas": {

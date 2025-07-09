@@ -19,7 +19,7 @@ import {
 import { FlashMessageComponent } from "../ui/useable-components";
 
 // Interfaces
-import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
+import { IRiderDefaultCredsResponse, IRiderLoginCompleteResponse, IRiderLoginResponse } from "../utils/interfaces/auth.interface";
 
 // Constants
 import { ROUTES } from "../utils/constants";
@@ -29,6 +29,7 @@ import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { setItem } from "../services/async-storage";
+import { getNotificationToken } from "../utils/methods/permission";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -42,39 +43,37 @@ const useLogin = () => {
 
   // API
   const [login] = useMutation(RIDER_LOGIN, {
-    onCompleted,
+    onCompleted: onLoginCompleted,
     onError,
   });
 
-  useQuery(DEFAULT_RIDER_CREDS, { onCompleted, onError });
+  useQuery(DEFAULT_RIDER_CREDS, { onCompleted: onDefaultCredsCompleted });
 
   // Handlers
-  async function onCompleted({
-    riderLogin,
-    lastOrderCreds,
-  }: IRiderLoginCompleteResponse) {
-    setIsLoading(false);
-    if (riderLogin) {
-      //  await AsyncStorage.setItem("rider-id", riderLogin.userId);
-
-      await setItem("rider-id", riderLogin.userId);
-
-      await setTokenAsync(riderLogin.token);
-      router.replace(ROUTES.home as Href);
-    } else if (
-      lastOrderCreds &&
-      lastOrderCreds?.riderUsername &&
-      lastOrderCreds?.riderPassword
-    ) {
-      setCreds({
-        username: lastOrderCreds?.riderUsername,
-        password: lastOrderCreds?.riderPassword,
-      });
-    }
+  // For login mutation
+async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginResponse }) {
+  setIsLoading(false);
+  if (riderLogin) {
+    console.log("riderLogin", riderLogin);
+    await setItem("rider-id", riderLogin.userId);
+    await setTokenAsync(riderLogin.token);
+    router.replace(ROUTES.home as Href);
   }
+}
+
+// For default credentials query
+function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDefaultCredsResponse }) {
+  if (lastOrderCreds?.riderUsername && lastOrderCreds?.riderPassword) {
+    console.log("lastOrderCreds", lastOrderCreds);
+    setCreds({
+      username: lastOrderCreds.riderUsername,
+      password: lastOrderCreds.riderPassword,
+    });
+  }
+}
+
   function onError(err: ApolloError) {
     const error = err as ApolloError;
-
     setIsLoading(false);
     FlashMessageComponent({
       message:
@@ -83,63 +82,28 @@ const useLogin = () => {
         t("Something went wrong"),
     });
   }
+  
   const onLogin = async (username: string, password: string) => {
     try {
       setIsLoading(true);
-      // Get notification permissions
-      const settings = await Notifications.getPermissionsAsync();
-      let notificationPermissions = { ...settings };
 
-      // Request notification permissions if not granted or not provisional on iOS
-      if (
-        settings?.status !== "granted" ||
-        settings.ios?.status !==
-          Notifications.IosAuthorizationStatus.PROVISIONAL
-      ) {
-        notificationPermissions = await Notifications.requestPermissionsAsync({
-          ios: {
-            allowProvisional: true,
-            allowAlert: true,
-            allowBadge: true,
-            allowSound: true,
-            //   allowAnnouncements: true
-          },
-        });
-      }
+      const notificationToken = await getNotificationToken();
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      let notificationToken = null;
-      // Get notification token if permissions are granted and it's a device
-      if (
-        (notificationPermissions?.status === "granted" ||
-          notificationPermissions.ios?.status ===
-            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
-        Device.isDevice
-      ) {
-        notificationToken = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig?.extra?.eas.projectId,
-          })
-        ).data;
-      }
-
-      // Perform mutation with the obtained data
       await login({
         variables: {
           username: username.toLowerCase(),
-          password: password,
-          notificationToken: notificationToken,
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          password,
+          notificationToken,
+          timeZone,
         },
       });
     } catch (err) {
       const error = err as ApolloError;
-      // FlashMessageComponent({
-      //   message:
-      //     error?.graphQLErrors[0]?.message ??
-      //     error?.networkError?.message ??
-      //     t("Something went wrong"),
-      // });
-      console.log("login error", error);
+      console.log("Login error:", error);
+      FlashMessageComponent({ message: error.message || "Login failed. Please try again." });
+    } finally {
+      setIsLoading(false);
     }
   };
 

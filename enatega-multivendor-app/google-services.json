@@ -3,7 +3,7 @@
     "project_number": "650001300965",
     "firebase_url": "https://enatega-multivendor.firebaseio.com",
     "project_id": "enatega-multivendor",
-    "storage_bucket": "enatega-multivendor.appspot.com"
+    "storage_bucket": "enatega-multivendor.firebasestorage.app"
   },
   "client": [
     {
@@ -55,9 +55,45 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.enatega.multivendor",
-            "certificate_hash": "7fa9f5ce09bef5d511dd8823138aa6b1c21a8989"
+            "certificate_hash": "4d553a73e512d28200a95171fcf9948071d99b46"
           }
         },
+        {
+          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650001300965:android:9af80d70d1b1bb1b6bc30c",
+        "android_client_info": {
+          "package_name": "com.enategamultivendor.app"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
           "client_type": 3

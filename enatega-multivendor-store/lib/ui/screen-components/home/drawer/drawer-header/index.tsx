@@ -14,13 +14,18 @@ const CustomDrawerHeader = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { dataProfile, userId } = useUserContext();
+  const { dataProfile, userId, refetchProfile, loadingProfile } = useUserContext();
 
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [
       { query: STORE_PROFILE, variables: { restaurantId: userId } },
     ],
+    onCompleted: (data) => {
+      if (refetchProfile) {
+        refetchProfile();
+      }
+    },
     onError: (error) => {
       showMessage({
         message:
@@ -107,7 +112,7 @@ const CustomDrawerHeader = () => {
         >
           {t("Availability")}
         </Text>
-        {loading ? (
+        {loading || loadingProfile ? (
           <SpinnerComponent color={appTheme.secondaryTextColor} height={10} />
         ) : (
           <CustomSwitch
