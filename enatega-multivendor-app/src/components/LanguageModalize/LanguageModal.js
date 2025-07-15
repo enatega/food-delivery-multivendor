@@ -64,7 +64,7 @@ const LanguageModal = ({ modalVisible, setModalVisible, currentTheme, showCrossB
       const storedLanguageCode = await AsyncStorage.getItem('enatega-language')
 
       // Get system language
-      const systemLanguageCode = Localization.locale.split('-')[0]
+      const systemLanguageCode = Localization?.locale?.split('-')[0]
 
       // Available language codes
       const availableLanguageCodes = languageTypes.map((lang) => lang.code)

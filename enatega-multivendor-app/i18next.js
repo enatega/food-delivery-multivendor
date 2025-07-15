@@ -88,7 +88,7 @@ i18next
 const detectAndSetLanguage = async () => {
   try {
     const storedLanguage = await AsyncStorage.getItem('enatega-language');
-    const systemLanguage = Localization.locale.split('-')[0];
+    const systemLanguage = Localization?.locale?.split('-')[0];
     const availableLanguages = Object.keys(languageResources);
 
     // Prefer stored language if available, else system language if supported, else fallback to 'en'
