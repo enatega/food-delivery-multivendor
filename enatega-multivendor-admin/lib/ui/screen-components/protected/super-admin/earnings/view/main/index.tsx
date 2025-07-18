@@ -63,6 +63,8 @@ export default function EarningsMain({
     },
   });
 
+  console.log('Earnings data:', data);
+
   // Global search handler
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -88,6 +90,24 @@ export default function EarningsMain({
     },
   ];
 
+  const clearAllFilters = () => {
+    setDateFilters({
+      startingDate: '',
+      endingDate: '',
+      userType: undefined,
+      userId: undefined,
+      orderType: undefined,
+      paymentMethod: undefined,
+    });
+    setGlobalFilterValue('');
+    setFilters({
+      global: {
+        value: null,
+        matchMode: FilterMatchMode.CONTAINS,
+      },
+    });
+  };
+
   useEffect(() => {
     refetch({ search: debouncedSearch });
   }, [debouncedSearch]);
@@ -101,6 +121,7 @@ export default function EarningsMain({
             onGlobalFilterChange={onGlobalFilterChange}
             dateFilters={dateFilters}
             setDateFilters={setDateFilters}
+            onClearFilters={clearAllFilters}
           />
         }
         data={
