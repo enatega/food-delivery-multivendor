@@ -43,7 +43,7 @@ export default function UserStats() {
   }, [data]);
 
   return (
-    <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-3">
+    <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-3 cursor-pointer">
       <StatsCard
         label={t('Total Users')}
         total={dashboardUsers?.usersCount ?? 0}
