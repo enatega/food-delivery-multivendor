@@ -14,6 +14,8 @@ const EarningsSuperAdminHeader = ({
   // Helper function to format numbers to 2 decimal places
   const formatNumber = (value: number) => Number(value.toFixed(2));
 
+  console.log('earnings', earnings);
+
   return (
     <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
       <div className="flex w-full justify-between">
