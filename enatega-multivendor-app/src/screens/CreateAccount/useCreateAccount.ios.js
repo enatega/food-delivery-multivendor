@@ -48,17 +48,12 @@ export const useCreateAccount = () => {
     PRIVACY_POLICY
   } = useEnvVars();
 
-  // Logging client IDs from environment variables (good for debugging, even if hardcoded below)
-  console.log("android client id (from env): ", ANDROID_CLIENT_ID_GOOGLE);
-  console.log("ios client id (from env): ", IOS_CLIENT_ID_GOOGLE);
-  console.log("expo web client id (from env): ", EXPO_CLIENT_ID);
-
   // Google Auth Request for iOS (using expo-auth-session)
   // Hardcoded client IDs as per your provided iOS code block
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com", // Web client ID for Expo
-    androidClientId: "650001300965-ii3nafver2uiu4qat9gbde9rkmhmvj0j.apps.googleusercontent.com", // Android client ID
-    iosClientId: "650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7.apps.googleusercontent.com", // iOS client ID
+    clientId: EXPO_CLIENT_ID, // Web client ID for Expo
+    androidClientId: ANDROID_CLIENT_ID_GOOGLE, // Android client ID
+    iosClientId: IOS_CLIENT_ID_GOOGLE, // iOS client ID
     scopes: ['profile', 'email', 'openid'],
   });
 
@@ -74,10 +69,10 @@ export const useCreateAccount = () => {
       setLoading(false);
       loginButtonSetter(null);
     } else if (response?.type === 'cancel') {
-        console.log('Google sign-in cancelled by user.');
-        FlashMessage({ message: 'Google sign-in cancelled.' });
-        setLoading(false);
-        loginButtonSetter(null);
+      console.log('Google sign-in cancelled by user.');
+      FlashMessage({ message: 'Google sign-in cancelled.' });
+      setLoading(false);
+      loginButtonSetter(null);
     }
   }, [response]);
 

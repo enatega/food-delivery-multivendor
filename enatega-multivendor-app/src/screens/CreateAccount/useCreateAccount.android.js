@@ -51,8 +51,8 @@ export const useCreateAccount = () => {
     console.log('🔧 Configuring Google Sign-In for Android...');
     GoogleSignin.configure({
       webClientId: "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com", // Web client ID for Expo
-      androidClientId: "650001300965-ii3nafver2uiu4qat9gbde9rkmhmvj0j.apps.googleusercontent.com", // Android client ID
-      iosClientId: "650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7.apps.googleusercontent.com", // iOS client ID
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE, // Android client ID
+      iosClientId: IOS_CLIENT_ID_GOOGLE, // iOS client ID
       offlineAccess: true,
       hostedDomain: '',
       forceCodeForRefreshToken: true,
