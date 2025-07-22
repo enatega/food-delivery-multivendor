@@ -886,7 +886,7 @@ export default function OrderCheckoutScreen() {
                         alt="Big Share meal"
                         className="w-12 h-12 rounded-full mr-2"
                         height="50"
-                        src="https://storage.googleapis.com/a1aa/image/cPA2BWDjlQ26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
+                        src={item.image ||"https://storage.googleapis.com/a1aa/image/cPA2BWDjl26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"}
                         width="50"
                       />
                       <div>
