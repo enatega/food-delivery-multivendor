@@ -149,7 +149,7 @@ const TimingAddForm = () => {
                       }}
                       checked={value?.times?.length > 0}
                     />
-                    <span className="w-10 text-sm">{value.day}</span>
+                    <span className="w-10 text-sm">{t(value.day)}</span>
                   </div>
 
                   {/* center */}

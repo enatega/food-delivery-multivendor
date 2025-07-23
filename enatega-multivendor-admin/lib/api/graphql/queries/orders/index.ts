@@ -37,8 +37,7 @@ export const GET_ACTIVE_ORDERS = gql`
           }
           deliveryAddress
         }
-        user {
-          name
+        user {         
           phone
         }
         paymentMethod
