@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useRef } from 'react'
-import { sendOtpToEmail, createUser } from '../../../apollo/mutations'
+import { sendOtpToEmail, createUser, VERIFY_OTP } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
-import Constants  from 'expo-constants'
+import Constants from 'expo-constants'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
@@ -32,7 +32,6 @@ const useEmailOtp = () => {
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
-  const otpFrom = useRef(null)
   const [seconds, setSeconds] = useState(5)
   const [user] = useState(route.params?.user)
   const { setTokenAsync } = useContext(AuthContext)
@@ -97,8 +96,11 @@ const useEmailOtp = () => {
     }
   }
 
-  const [mutate, { loading }] = useMutation(SEND_OTP_TO_EMAIL, {
+  const [sendOTPToEmail, { loading }] = useMutation(SEND_OTP_TO_EMAIL, {
     onCompleted,
+    onError
+  })
+  const [verifyOTP] = useMutation(VERIFY_OTP, {
     onError
   })
 
@@ -113,12 +115,12 @@ const useEmailOtp = () => {
       if (Device.isDevice) {
         const { status } = await Notifications.requestPermissionsAsync()
         if (status === 'granted') {
-          notificationToken = (await Notifications.getExpoPushTokenAsync({  projectId: Constants.expoConfig.extra.eas.projectId})).data
+          notificationToken = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data
         }
       }
       mutateUser({
         variables: {
-          phone: user?.phone ?? "",
+          phone: user?.phone ?? '',
           email: user.email,
           password: user.password,
           name: user.name,
@@ -127,13 +129,21 @@ const useEmailOtp = () => {
         }
       })
     } catch (error) {
-      console.log("Error in mutateRegister:", error);
+      console.log('Error in mutateRegister:', error)
       FlashMessage({ message: t('somethingWentWrong') })
     }
   }
 
-  const onCodeFilled = code => {
-    if (configuration.skipEmailVerification || code === otpFrom.current) {
+  const onCodeFilled = async (otp_code) => {
+    let isVerified = configuration?.skipEmailVerification ?? false
+    const { data } = await verifyOTP({
+      variables: {
+        otp: otp_code,
+        email: user.email
+      }
+    })
+    isVerified = isVerified || data?.verifyOtp
+    if (isVerified) {
       mutateRegister()
     } else {
       setOtpError(true)
@@ -141,10 +151,8 @@ const useEmailOtp = () => {
   }
 
   const resendOtp = () => {
-    otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
-    console.log(otpFrom.current, "otpFrom.current");
-    mutate({
-      variables: { email: user.email, otp: otpFrom.current }
+    sendOTPToEmail({
+      variables: { email: user.email }
     })
     setSeconds(30)
   }
@@ -166,8 +174,7 @@ const useEmailOtp = () => {
   useEffect(() => {
     if (!configuration) return
     if (!configuration.skipEmailVerification) {
-      otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
-      mutate({ variables: { email: user.email, otp: otpFrom.current } })
+      sendOTPToEmail({ variables: { email: user.email } })
     }
   }, [configuration])
 
@@ -176,8 +183,8 @@ const useEmailOtp = () => {
     if (!configuration) return
     if (configuration.skipEmailVerification) {
       setOtp(TEST_OTP)
-      timer = setTimeout(() => {
-        onCodeFilled(TEST_OTP)
+      timer = setTimeout(async () => {
+        await onCodeFilled(TEST_OTP)
       }, 3000)
     }
     return () => {
