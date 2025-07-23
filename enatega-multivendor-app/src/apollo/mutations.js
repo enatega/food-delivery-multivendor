@@ -1,3 +1,5 @@
+import gql from 'graphql-tag'
+
 export const sendChatMessage = `mutation SendChatMessage($orderId: ID!, $messageInput: ChatMessageInput!) {
     sendChatMessage(message: $messageInput, orderId: $orderId) {
       success
@@ -91,7 +93,6 @@ export const placeOrder = `
       instructions
     }
   }`
-
 
 export const pushToken = `mutation PushToken($token:String){
     pushToken(token:$token){
@@ -309,15 +310,15 @@ export const phoneExist = `
   }`
 
 export const sendOtpToEmail = `
-  mutation SendOtpToEmail($email: String!, $otp: String!) {
-    sendOtpToEmail(email: $email, otp: $otp) {
+  mutation SendOtpToEmail($email: String!) {
+    sendOtpToEmail(email: $email) {
       result
     }
   }
   `
 export const sendOtpToPhoneNumber = `
-  mutation SendOtpToPhoneNumber($phone: String!, $otp: String!) {
-    sendOtpToPhoneNumber(phone: $phone, otp: $otp) {
+  mutation SendOtpToPhoneNumber($phone: String!) {
+    sendOtpToPhoneNumber(phone: $phone) {
       result
     }
   }
@@ -407,4 +408,12 @@ export const createActivity = `
           details: $details
       )
     }
+`
+
+export const VERIFY_OTP = gql`
+ mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
+    verifyOtp(otp: $otp, email: $email, phone: $phone) {
+        result
+    }
+}
 `
