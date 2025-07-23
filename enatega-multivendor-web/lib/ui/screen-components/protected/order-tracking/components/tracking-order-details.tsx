@@ -15,7 +15,7 @@ function TrackingOrderDetails({
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   const [setshowCancelOrderSuccessModal, setSetshowCancelOrderSuccessModal] =
     useState(orderTrackingDetails?.orderStatus === "CANCELLED" ? true : false);
-  const { CURRENCY_SYMBOL,} =
+  const { CURRENCY_SYMBOL, } =
     useConfig();
   // Format currency values
   const formatCurrency = (amount: number) => {
@@ -56,18 +56,20 @@ function TrackingOrderDetails({
   if (!orderTrackingDetails) {
     return <div className="mt-8 p-4 text-center">Loading order details...</div>;
   }
+  // Get Order instructions from local storage
+  const orderInstructions = localStorage.getItem("newOrderInstructions");
 
   return (
     <div className="mt-8 space-y-6 flex-1 max-w-2xl md:w-auto w-full md:px-0 px-4">
       <div>
-         <div className="flex flex-col mb-2 md:mb-4">
-        <h1 className="text-lg font-semibold">{orderTrackingDetails?.restaurant?.name}</h1>
-       <div className="flex items-center gap-2">
-         <h1>Order # </h1><h1 className="text-blue-600">{orderTrackingDetails?.orderId}</h1>
-       </div>
+        <div className="flex flex-col mb-2 md:mb-4">
+          <h1 className="text-lg font-semibold">{orderTrackingDetails?.restaurant?.name}</h1>
+          <div className="flex items-center gap-2">
+            <h1>Order # </h1><h1 className="text-blue-600">{orderTrackingDetails?.orderId}</h1>
+          </div>
         </div>
         <h3 className="text-lg font-semibold mb-2">Order Details</h3>
-       
+
 
         {/* Display each food item under Order Details */}
         {orderTrackingDetails.items?.map((item, index) => (
@@ -108,13 +110,14 @@ function TrackingOrderDetails({
                             + {option.title}
                             {option.price > 0 ?
                               ` (${formatCurrency(option.price)})`
-                            : ""}
+                              : ""}
                           </p>
                         ))}
                       </div>
                     ))}
                   </div>
                 )}
+
               </div>
             </div>
             <span className="text-blue-600 font-semibold">
@@ -123,7 +126,14 @@ function TrackingOrderDetails({
           </div>
         ))}
       </div>
-
+      <div className="border-gray-200 border-b">
+        <h2 className="font-semibold text-gray-900 text-base sm:text-lg md:text-[16px] lg:text-[18px] mb-4">
+          Order Instruction
+        </h2>
+        <p className="text-gray-500 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle">
+          {orderInstructions}
+        </p>
+      </div>
       {/* Items Summary */}
       <div>
         <h3 className="text-lg font-semibold mb-4">
@@ -189,7 +199,7 @@ function TrackingOrderDetails({
           <span>
             {orderTrackingDetails.paymentMethod === "COD" ?
               "Cash on Delivery"
-            : orderTrackingDetails.paymentMethod}
+              : orderTrackingDetails.paymentMethod}
           </span>
           <span className="ml-auto font-semibold">
             {formatCurrency(calculateTotal())}
