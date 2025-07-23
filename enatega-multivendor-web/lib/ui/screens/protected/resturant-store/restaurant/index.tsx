@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "next/navigation";
 import { Skeleton } from "primereact/skeleton";
@@ -27,7 +27,6 @@ import ClearCartModal from "@/lib/ui/useable-components/clear-cart-modal";
 import Confetti from "react-confetti";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import EmptySearch from "@/lib/ui/useable-components/empty-search-results";
-
 // Interface
 import { ICategory, IFood, IOpeningTime } from "@/lib/utils/interfaces";
 
@@ -91,7 +90,6 @@ export default function RestaurantDetailsScreen() {
             },
         }
     );
-
     // Transform cart items when restaurant data is loaded - only once when dependencies change
     useEffect(() => {
         if (data?.restaurant && cart.length > 0) {
@@ -225,10 +223,9 @@ export default function RestaurantDetailsScreen() {
             refetchQueries: [{ query: GET_USER_PROFILE }],
         }
     );
-
     const handleFavoriteClick = () => {
         if (!profile) {
-            // Handle case where user is not logged in
+            // // Handle case where user is not logged in
             console.log("Please login to add favorites");
             return;
         }
@@ -277,6 +274,9 @@ export default function RestaurantDetailsScreen() {
         description:
             data?.restaurant?.description ??
             "Preservation of the authentic taste of all traditional foods is upheld here.",
+        deliveryTime: data?.restaurant?.deliveryTime ?? "...",
+        deliveryTax: data?.restaurant?.deliveryTax ?? 0,
+        MinimumOrder: data?.restaurant?.MinimumOrder ?? 0,
     };
 
     // States

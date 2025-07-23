@@ -170,7 +170,7 @@ export default function AuthModal({
         className="absolute top-3 right-0 transition-all duration-300 rounded-full p-2"
       >
         <FontAwesomeIcon
-          size="lg"
+          size="sm"
           icon={faXmark}
           className="text-black"
           width={30}
