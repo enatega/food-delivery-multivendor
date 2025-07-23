@@ -29,7 +29,7 @@ import { useMutation } from '@apollo/client';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Sidebar } from 'primereact/sidebar';
-import { use, useMemo } from 'react';
+import { useMemo } from 'react';
 
 const BannersAddForm = ({
   isAddBannerVisible,
@@ -38,7 +38,7 @@ const BannersAddForm = ({
   position = 'right',
 }: IBannersAddFormComponentProps) => {
   // Queries
-  const { data, loading } = useQueryGQL(GET_RESTAURANTS, {
+  const { data } = useQueryGQL(GET_RESTAURANTS, {
     fetchPolicy: 'cache-and-network',
   }) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
 
@@ -242,7 +242,7 @@ const BannersAddForm = ({
                             }
                             showLabel={true}
                             name="screen"
-                            // loading={loading && values.action?.code === 'Navigate Specific Restaurant'}
+                            // loading={loading}
                             selectedItem={values.screen}
                             setSelectedItem={setFieldValue}
                             style={{
