@@ -13,7 +13,6 @@ import { useTranslations } from "next-intl";
 
 // Next
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 // Font Awesome
 
@@ -24,8 +23,6 @@ export default function LoginWithGoogle({
   // Hooks
   const t = useTranslations();
   const { isLoading } = useAuth();
-
-  const router = useRouter();
 
   return (
     <div>
