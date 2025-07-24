@@ -1,12 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  StatusBar,
-  ScrollView
-} from 'react-native'
+import { View, Image, TouchableOpacity, Dimensions, StatusBar, ScrollView } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -18,11 +11,11 @@ import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 import LoginHeader from '../../assets/SVG/imageComponents/LoginHeader'
-const { height } = Dimensions.get('window')
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { decodeJwtToken } from '../../utils/decode-jwt'
 
 const CreateAccount = (props) => {
   const {
@@ -62,32 +55,31 @@ const CreateAccount = (props) => {
     return (
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
-        buttonStyle={
-          themeContext.ThemeValue === 'Dark'
-            ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-            : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-        }
+        buttonStyle={themeContext.ThemeValue === 'Dark' ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
         cornerRadius={scale(20)}
         style={styles().appleBtn}
         onPress={async () => {
           try {
-            console.log('Apple Sign In Pressed')
-             const credential = await AppleAuthentication.signInAsync({
-              requestedScopes: [
-                AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                AppleAuthentication.AppleAuthenticationScope.EMAIL,
-              ],
-            });
-            console.log('Apple Sign In Credential:', credential)
+            const credential = await AppleAuthentication.signInAsync({
+              requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL]
+            })
+            const access_token = credential?.identityToken
 
-            const name = credential.fullName?.givenName
-              ? credential.fullName.givenName + ' ' + credential.fullName.familyName
-              : ''
+            const user_details = decodeJwtToken(access_token)
+
+            if (!user_details) {
+              throw 'Apple login failed.'
+            }
+
+            const { givenName, familyName } = credential.fullName || {}
+            const name = givenName || familyName ? `${givenName ?? ''} ${familyName ?? ''}`.trim() : ''
+            const appleId = credential.user ?? user_details?.sub
+            const email = credential?.email ?? user_details?.email
 
             const user = {
-              appleId: credential.user,
+              appleId,
               phone: '',
-              email: credential.email ?? '',
+              email,
               password: '',
               name,
               picture: '',
@@ -101,20 +93,12 @@ const CreateAccount = (props) => {
             loginButtonSetter(null)
           }
         }}
-
       />
     )
   }
 
   function renderGoogleAction() {
-    return (
-      <FdGoogleBtn
-        loadingIcon={loading && loginButton === 'Google'}
-        onPressIn={() => loginButtonSetter('Google')}
-        disabled={loading && loginButton === 'Google'}
-        onPress={signIn}
-      />
-    )
+    return <FdGoogleBtn loadingIcon={loading && loginButton === 'Google'} onPressIn={() => loginButtonSetter('Google')} disabled={loading && loginButton === 'Google'} onPress={signIn} />
   }
 
   function renderEmailAction() {
@@ -129,31 +113,17 @@ const CreateAccount = (props) => {
       />
     )
   }
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
-  
+
   return (
     <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
-      <StatusBar
-        backgroundColor={currentTheme.main}
-        barStyle={
-          themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-        }
-      />
-      <ScrollView
-        style={styles().flex}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        alwaysBounceVertical={false}
-      >
+      <StatusBar backgroundColor={currentTheme.main} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
+      <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
         <View style={styles().container}>
           <View style={styles(currentTheme).image}>
             <View style={styles().image1}>
-              <LoginHeader
-                blackStroke={currentTheme.themeBackground}
-                whiteStroke={currentTheme.darkBgFont}
-                fillColor={currentTheme.svgFill}
-              />
+              <LoginHeader blackStroke={currentTheme.themeBackground} whiteStroke={currentTheme.darkBgFont} fillColor={currentTheme.svgFill} />
             </View>
 
             <View style={styles(currentTheme).mainHeadingTextOverlay}>
@@ -181,46 +151,22 @@ const CreateAccount = (props) => {
                 marginTop: scale(10)
               }}
             >
-              <TextDefault
-                H2
-                bolder
-                center
-                textColor={currentTheme.newFontcolor}
-                style={{ marginBottom: scale(7) }}
-              >
+              <TextDefault H2 bolder center textColor={currentTheme.newFontcolor} style={{ marginBottom: scale(7) }}>
                 {t('welcomeText')}
               </TextDefault>
-              <TextDefault
-                center
-                H5
-                textColor={currentTheme.newFontcolor}
-                style={styles().descText}
-              >
+              <TextDefault center H5 textColor={currentTheme.newFontcolor} style={styles().descText}>
                 {t('createAccountDesc')}
               </TextDefault>
             </View>
 
             <View style={[styles().signupContainer]}>
-              <View style={{ marginBottom: scale(5) }}>
-                {renderGoogleAction()}
-              </View>
-              {enableApple && (
-                <View style={{ marginBottom: scale(5) }}>
-                  {renderAppleAction()}
-                </View>
-              )}
-              <View style={{ marginBottom: scale(5) }}>
-                {renderEmailAction()}
-              </View>
+              <View style={{ marginBottom: scale(5) }}>{renderGoogleAction()}</View>
+              {enableApple && <View style={{ marginBottom: scale(5) }}>{renderAppleAction()}</View>}
+              <View style={{ marginBottom: scale(5) }}>{renderEmailAction()}</View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles(currentTheme).line} />
                 <View style={{ marginBottom: scale(5) }}>
-                  <TextDefault
-                    H4
-                    bolder
-                    textColor={currentTheme.newFontcolor}
-                    style={{ width: 50, textAlign: 'center' }}
-                  >
+                  <TextDefault H4 bolder textColor={currentTheme.newFontcolor} style={{ width: 50, textAlign: 'center' }}>
                     {t('or')}
                   </TextDefault>
                 </View>
@@ -234,18 +180,10 @@ const CreateAccount = (props) => {
                 }}
               >
                 {props.loadingIcon ? (
-                  <Spinner
-                    backColor='rgba(0,0,0,0.1)'
-                    spinnerColor={currentTheme.main}
-                  />
+                  <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
                 ) : (
                   <>
-                    <TextDefault
-                      H4
-                      textColor={currentTheme.newFontcolor}
-                      style={alignment.MLsmall}
-                      bold
-                    >
+                    <TextDefault H4 textColor={currentTheme.newFontcolor} style={alignment.MLsmall} bold>
                       {t('continueAsGuest')}
                     </TextDefault>
                   </>
