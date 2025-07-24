@@ -139,28 +139,21 @@ export default function AuthModal({
   };
 
   return (
-    <Dialog
-      visible={isAuthModalVisible}
-      closeIcon
-      onHide={handleModalToggle}
-      closable={activePanel <= 3}
-      contentStyle={{
-        padding: "22px",
-        borderBottomLeftRadius: "12px",
-        borderBottomRightRadius: "12px",
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
-      }}
-      headerStyle={{
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
-        height: "fit-content",
-      }}
-      className={
-        activePanel == 6 || activePanel == 3 || activePanel == 4 ?
-          "lg:w-1/2 w-full h-auto"
-        : "lg:w-1/3 w-full max-w-[400px] h-auto"
-      }
+<Dialog
+  visible={isAuthModalVisible}
+  closeIcon
+  onHide={handleModalToggle}
+  closable={activePanel <= 3}
+  className={`auth-dialog ${[3, 4, 5, 6].includes(activePanel) ? "wide" : "narrow"}`}
+  contentStyle={{
+    padding: "22px",
+    borderRadius: "12px",
+  }}
+  headerStyle={{
+    borderTopLeftRadius: "8px",
+    borderTopRightRadius: "8px",
+    height: "fit-content",
+  }}
       closeOnEscape={activePanel <= 3}
       showHeader={false}
     >
