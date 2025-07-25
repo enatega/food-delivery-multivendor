@@ -88,7 +88,7 @@ const ReviewsModal = ({
               </div>
 
               <div className="w-full md:w-2/3 space-y-2">
-                {ratingBreakdown.map(({ stars, count, percentage }) => (
+                {ratingBreakdown.map(({ stars, percentage }) => (
                   <div
                     key={stars}
                     className="flex flex-wrap items-center gap-2 md:gap-3"
