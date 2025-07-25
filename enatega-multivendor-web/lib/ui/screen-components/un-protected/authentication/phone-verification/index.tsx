@@ -158,43 +158,61 @@ export default function PhoneVerification({
 
 
   return (
-    <div className=" flex flex-col justify-between item-center self-center">
-      <p>
-        {t("We have sent OTP code to")}
-        <span className="font-bold">{user?.phone}</span>
+ <div className="flex items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 md:px-8">
+  <div className="w-full max-w-md flex flex-col bg-white shadow-lg rounded-2xl p-5 sm:p-6 md:p-8">
+    {/* Heading */}
+    <div className="mb-6 text-left">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">
+        {t("Verify Your Phone Number")}
+      </h2>
+      <p className="text-sm sm:text-base text-gray-600 mt-2">
+        {t("We have sent an OTP to")}&nbsp;
+        <span className="font-medium text-gray-800">
+          {user?.phone ?? "example@email.com"}
+        </span>
       </p>
-      <p className="font-light text-sm mb-2">{t("Please check your inbox")}</p>
-      <InputOtp
-        value={phoneOtp}
-        onChange={(e) => setPhoneOtp(String(e.value))}
-        color="red"
-        autoFocus={true}
-        mask
-        maxLength={6}
-        length={6}
-        className=" w-full h-20 my-2"
-        onPaste={(e) =>
-          setPhoneOtp(
-            String(e.clipboardData.items[0].getAsString((data) => data)),
-          )
-        }
-
-        placeholder="12314"
-      />
-      {/* create a span and give a margin top */}
-      <span className="mt-4"></span>
-      <CustomButton
-        label={t("Continue")}
-        loading={isLoading}
-        className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
-        onClick={handleSubmit}
-      />
-      <CustomButton
-        label={t("Resend OTP")}
-        className={`bg-[#fff] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
-        onClick={handleResendPhoneOtp}
-        loading={isResendingOtp}
-      />
+      <p className="text-xs sm:text-sm text-gray-400 mt-1">
+        {t("Please check your inbox and enter the code below.")}
+      </p>
     </div>
+
+    {/* OTP Input */}
+    <InputOtp
+      value={phoneOtp}
+      onChange={(e) => setPhoneOtp(String(e.value))}
+      autoFocus
+      mask
+      maxLength={6}
+      length={6}
+      className="w-full h-16 sm:h-20 my-2"
+      onPaste={(e) =>
+        setPhoneOtp(
+          String(e.clipboardData.items[0].getAsString((data) => data)),
+        )
+      }
+      placeholder="123456"
+    />
+
+    {/* Button Spacer */}
+    <span className="mt-4" />
+
+    {/* Continue Button */}
+    <CustomButton
+      label={t("Continue")}
+      loading={isLoading}
+      className="bg-[#5AC12F] text-white flex items-center justify-center gap-x-3 px-4 py-3 rounded-full border border-gray-300 w-full sm:w-72 mx-auto mb-2 text-sm sm:text-base"
+      onClick={handleSubmit}
+    />
+
+    {/* Resend OTP Button */}
+    <CustomButton
+      label={t("Resend OTP")}
+      loading={isResendingOtp}
+      className="bg-white text-gray-700 flex items-center justify-center gap-x-3 px-4 py-3 rounded-full border border-gray-300 w-full sm:w-72 mx-auto mt-1 text-sm sm:text-base"
+      onClick={handleResendPhoneOtp}
+    />
+  </div>
+</div>
+
   );
 }

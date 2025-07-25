@@ -32,6 +32,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ChangePassword from "./change-password";
 import VerificationEmailForChangePassword  from "./change-password/email-otp";
+import { Tooltip } from "react-tooltip";
 
 export default function AuthModal({
   isAuthModalVisible,
@@ -139,44 +140,42 @@ export default function AuthModal({
   };
 
   return (
-    <Dialog
-      visible={isAuthModalVisible}
-      closeIcon
-      onHide={handleModalToggle}
-      closable={activePanel <= 3}
-      contentStyle={{
-        padding: "22px",
-        borderBottomLeftRadius: "12px",
-        borderBottomRightRadius: "12px",
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
-      }}
-      headerStyle={{
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
-        height: "fit-content",
-      }}
-      className={
-        activePanel == 6 || activePanel == 3 || activePanel == 4 ?
-          "lg:w-1/2 w-full h-auto"
-        : "lg:w-1/3 w-full max-w-[400px] h-auto"
-      }
+<Dialog
+  visible={isAuthModalVisible}
+  closeIcon
+  onHide={handleModalToggle}
+  closable={activePanel <= 3}
+  className={`auth-dialog ${[3, 4, 5, 6].includes(activePanel) ? "wide" : "narrow"}`}
+  contentStyle={{
+    padding: "22px",
+    borderRadius: "12px",
+  }}
+  headerStyle={{
+    borderTopLeftRadius: "8px",
+    borderTopRightRadius: "8px",
+    height: "fit-content",
+  }}
       closeOnEscape={activePanel <= 3}
       showHeader={false}
     >
       {/* close icon to close the modal */}
-      <button
-        onClick={handleModalToggle}
-        className="absolute top-3 right-0 transition-all duration-300 rounded-full p-2"
-      >
-        <FontAwesomeIcon
-          size="lg"
-          icon={faXmark}
-          className="text-black"
-          width={30}
-          height={30}
-        />
-      </button>
+     <button
+  onClick={handleModalToggle}
+  className="tooltip tooltip-left absolute top-3 right-3 z-10 transition-all duration-300 rounded-full p-2"
+  data-tip="Close"
+  data-tooltip-id="close-auth-modal"
+  data-tooltip-content="Close"
+>
+  <FontAwesomeIcon
+    size="sm"
+    icon={faXmark}
+    className="text-black"
+    width={30}
+    height={30}
+  />
+  <Tooltip id="close-auth-modal" />
+</button>
+
       <Stepper ref={authenticationPanelRef} activeStep={activePanel} >
         <StepperPanel>
           <LoginWithGoogle

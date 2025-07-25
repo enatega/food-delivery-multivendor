@@ -176,7 +176,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
 
           {/* Opening Times Section - Lists hours for each day of the week */}
           <div className="mb-6">
-            <h2 className="text-lg md:text-xl font-bold mb-2">Opening times</h2>
+            <h2 className="text-lg md:text-xl font-bold mb-2">Opening Hours</h2>
             <div className="grid grid-cols-1 gap-2">
               {restaurantInfo.openingTimes.map((day) => (
                 <div
@@ -196,15 +196,10 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               Delivery information
             </h2>
             <div className="grid grid-cols-1 gap-2">
-              {restaurantInfo.openingTimes.map((day) => (
-                <div
-                  key={`delivery-${day.day}`}
-                  className="flex justify-between text-xs md:text-[16px] font-normal leading-[16px] md:leading-[24px]"
-                >
-                  <span>{getCurrentDay(day.day)}</span>
-                  <span>{getFormattedHours(day)}</span>
-                </div>
-              ))}
+              <p>Minimum Order: {" "}£{restaurantInfo.MinimumOrder}</p>
+              <p>Delivery Time: {" "} {restaurantInfo.deliveryTime}mins</p>
+              <p>Sales Tax: {" "} £{restaurantInfo.deliveryTax}</p>
+              
             </div>
           </div>
           {/* Restaurant Contact Details */}

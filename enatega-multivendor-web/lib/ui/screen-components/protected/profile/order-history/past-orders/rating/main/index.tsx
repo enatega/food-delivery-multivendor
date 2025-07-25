@@ -15,7 +15,7 @@ import { IRatingModalProps } from "@/lib/utils/interfaces/ratings.interface";
 
 /**
  * RatingModal - A multi-step modal component for collecting user ratings for past orders
- * 
+ *
  * This component handles a 3-step rating flow:
  * 1. Select star rating (1-5)
  * 2. Select aspects (what was good/bad)
@@ -34,15 +34,12 @@ export default function RatingModal({
   const [selectedAspects, setSelectedAspects] = useState<string[]>([]); // Selected rating aspects/tags
 
   // Debounced submit function to prevent multiple rapid submissions
-  const handleSubmitDebounced = useDebounceFunction(
-    () => {
-      if (order && rating !== null) {
-        onSubmitRating(order._id, rating, comment, selectedAspects);
-        onHide();
-      }
-    },
-    500
-  );
+  const handleSubmitDebounced = useDebounceFunction(() => {
+    if (order && rating !== null) {
+      onSubmitRating(order._id, rating, comment, selectedAspects);
+      onHide();
+    }
+  }, 500);
 
   // Reset all form states when modal visibility changes
   useEffect(() => {
@@ -78,7 +75,12 @@ export default function RatingModal({
   };
 
   return (
-    <CustomDialog visible={visible} onHide={onHide} className="m-0" width="594px">
+    <CustomDialog
+      visible={visible}
+      onHide={onHide}
+      className="m-0"
+      width="594px"
+    >
       <div className="flex flex-col items-center md:p-6 p-0 pt-16 rounded-xl gap-4">
         {/* Restaurant Image - Shows restaurant profile picture or placeholder */}
         <div className="w-[162px] h-[162px] rounded-full overflow-hidden mb-4">
@@ -92,9 +94,11 @@ export default function RatingModal({
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-              <img
+              <Image
                 src="https://placehold.co/600x400"
                 alt="Restaurant"
+                width={600}
+                height={400}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -107,7 +111,9 @@ export default function RatingModal({
         </p>
 
         {/* Modal Title */}
-        <h2 className="md:text-2xl text-xl font-bold  text-black">How was the delivery?</h2>
+        <h2 className="md:text-2xl text-xl font-bold  text-black">
+          How was the delivery?
+        </h2>
 
         {/* Modal Description */}
         <p className="text-gray-600  text-center md:text-lg text-base">

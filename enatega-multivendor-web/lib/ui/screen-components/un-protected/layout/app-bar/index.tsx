@@ -4,7 +4,7 @@
 import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 
 // Components
 import Cart from "@/lib/ui/useable-components/cart";
@@ -40,7 +40,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Interface
 import { IAppBarProps } from "@/lib/utils/interfaces";
-
+import { ToastContext } from "@/lib/context/global/toast.context";
 // Methods
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import {
@@ -144,10 +144,20 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     }
   };
 
+
+
+  const {showToast} = useContext(ToastContext);
   const onLogout = () => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
+    //Give Toast Alert You Logout Successfully
+    showToast({
+      type: "success",
+      title: "Logout",
+      message: "You have Logged out successfully",
+    });
+    
     localStorage.clear();
   };
 
@@ -416,7 +426,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
                     {/* Show full name on large screens and up */}
                     {cartCount == 0  && 
-                    <span className="hidden xl:inline">
+                    <span className="hidden xl:inline hover:cursor-pointer">
                       {profile?.name || ""}
                     </span>
 }
