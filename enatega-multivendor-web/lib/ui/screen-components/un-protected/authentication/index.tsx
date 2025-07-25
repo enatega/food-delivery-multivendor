@@ -160,7 +160,7 @@ export default function AuthModal({
       {/* close icon to close the modal */}
       <button
         onClick={handleModalToggle}
-        className="absolute top-3 right-0 transition-all duration-300 rounded-full p-2"
+        className="absolute top-3 right-3 z-10 transition-all duration-300 rounded-full p-2"
       >
         <FontAwesomeIcon
           size="sm"

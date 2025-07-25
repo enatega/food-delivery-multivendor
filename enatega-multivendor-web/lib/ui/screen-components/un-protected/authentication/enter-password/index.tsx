@@ -93,7 +93,7 @@ export default function EnterPassword({
           <div className="flex flex-col items-start">
             <PasswordIcon />
             <div className="mt-4">
-              <h3 className="text-2xl md:text-3xl font-semibold text-gray-800">
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-800">
                 {t("Good to see you again!")}
               </h3>
               <p className="text-gray-600 mt-1 text-sm sm:text-base">

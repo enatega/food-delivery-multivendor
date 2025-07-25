@@ -25,7 +25,7 @@ export default function LoginWithGoogle({
   const { isLoading } = useAuth();
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-4 py-6 md:px-8">
+    <div className="w-full h-full flex flex-col items-center justify-center px-2 py-6 md:px-8">
       {/* Header Text */}
       
       <div className="flex flex-col gap-y-2 text-center w-full mb-6">

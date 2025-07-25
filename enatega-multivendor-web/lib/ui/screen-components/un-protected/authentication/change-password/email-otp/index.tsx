@@ -116,7 +116,7 @@ const VerificationEmailForChangePassword = ({
     <EmailIcon />
   </div>
 
-  <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
     We have sent OTP code to
   </h2>
 
@@ -153,13 +153,13 @@ const VerificationEmailForChangePassword = ({
 
   <CustomButton
     label="Continue"
-    className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg font-medium"
+    className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
     onClick={handleSubmit}
   />
 
   <CustomButton
     label="Resend OTP"
-    className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg font-medium"
+    className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg sm:text-md font-medium"
     onClick={handleResendEmailOtp}
   />
 </div>
