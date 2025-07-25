@@ -1,6 +1,6 @@
 
 // import { createBanner, editBanner } from '@/lib/api/graphql/mutation/banners';
-import { CREATE_BANNER, EDIT_BANNER, GET_RESTAURANTS, GET_RESTAURANTS_DROPDOWN } from '@/lib/api/graphql';
+import { CREATE_BANNER, EDIT_BANNER,  GET_RESTAURANTS_DROPDOWN } from '@/lib/api/graphql';
 import { GET_BANNERS } from '@/lib/api/graphql/queries/banners';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
