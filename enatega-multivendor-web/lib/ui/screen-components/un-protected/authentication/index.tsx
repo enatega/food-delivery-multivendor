@@ -32,6 +32,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ChangePassword from "./change-password";
 import VerificationEmailForChangePassword  from "./change-password/email-otp";
+import { Tooltip } from "react-tooltip";
 
 export default function AuthModal({
   isAuthModalVisible,
@@ -158,18 +159,23 @@ export default function AuthModal({
       showHeader={false}
     >
       {/* close icon to close the modal */}
-      <button
-        onClick={handleModalToggle}
-        className="absolute top-3 right-3 z-10 transition-all duration-300 rounded-full p-2"
-      >
-        <FontAwesomeIcon
-          size="sm"
-          icon={faXmark}
-          className="text-black"
-          width={30}
-          height={30}
-        />
-      </button>
+     <button
+  onClick={handleModalToggle}
+  className="tooltip tooltip-left absolute top-3 right-3 z-10 transition-all duration-300 rounded-full p-2"
+  data-tip="Close"
+  data-tooltip-id="close-auth-modal"
+  data-tooltip-content="Close"
+>
+  <FontAwesomeIcon
+    size="sm"
+    icon={faXmark}
+    className="text-black"
+    width={30}
+    height={30}
+  />
+  <Tooltip id="close-auth-modal" />
+</button>
+
       <Stepper ref={authenticationPanelRef} activeStep={activePanel} >
         <StepperPanel>
           <LoginWithGoogle

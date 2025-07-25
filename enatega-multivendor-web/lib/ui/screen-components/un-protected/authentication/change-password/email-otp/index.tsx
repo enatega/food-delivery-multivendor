@@ -110,8 +110,8 @@ const VerificationEmailForChangePassword = ({
 )
 
   return (
-<div className="w-full max-w-md mx-auto p-4 sm:p-6 md:p-8 flex flex-col items-center bg-white">
-  <div className="justify-start content-start text-left">
+<div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+  <div className="flex flex-col justify-items-start justify-start text-left">
   <div className="mb-4">
     <EmailIcon />
   </div>
