@@ -195,38 +195,53 @@ export default function EmailVerification({
     }
   }, [SKIP_EMAIL_VERIFICATION]);
   return (
-    <div className="flex flex-col justify-between item-center self-center p-4">
-      <p>
-        {t("We have sent OTP code to")}&nbsp;
-        <span className="font-bold">{user?.email ?? "example@email.com"}</span>
+    <>
+ <div className="flex items-center justify-center w-full min-h-screen mx-auto px-4 py-6 sm:px-6 md:px-8 bg-gray-50">
+  <div className="w-full max-w-md flex flex-col bg-white shadow-lg rounded-2xl p-4 sm:p-6 md:p-8">
+    
+    {/* Heading Section */}
+    <div className="mb-6 text-left">
+      <h2 className="text-3xl sm:text-xl font-semibold text-gray-800 leading-tight">
+        {t("Verify Your Email")}
+      </h2>
+      <p className="text-gray-600 mt-2 text-sm sm:text-base leading-snug">
+        {t("We have sent an OTP to")}{" "}
+        <span className="font-semibold text-gray-800 break-all">
+          {user?.email ?? "example@email.com"}
+        </span>
       </p>
-      <p className="font-light mb-3 text-sm flex ">
-        {t("Please check your inbox")}
+      <p className="text-xs sm:text-sm text-gray-500 mt-1">
+        {t("Please check your inbox and enter the code below.")}
       </p>
+    </div>
+
+    {/* OTP Input & Buttons */}
+    <div className="flex flex-col items-center justify-center w-full">
       <InputOtp
         value={emailOtp}
         onChange={(e) => setEmailOtp(String(e.value))}
-        color="red"
-        autoFocus={true}
         mask
+        autoFocus
         maxLength={6}
         length={6}
-        className=" w-full flex flex-wrap h-16 sm:h-20 my-2 "
+        className="w-full justify-center"
       />
-      {/* create a span and give a margin top */}
-      <span className="mt-4"></span>
+
       <CustomButton
         label={t("Continue")}
         loading={isLoading}
-        className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
         onClick={handleSubmit}
       />
+
       <CustomButton
         label={t("Resend OTP")}
         loading={isResendingOtp}
-        className={`bg-[#fff] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
         onClick={handleOtpResend}
       />
     </div>
+  </div>
+</div>
+
+    </>
   );
 }

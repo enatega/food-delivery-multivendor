@@ -77,25 +77,30 @@ const CitySearch: React.FC = () => {
   };
 
   // USe Effects
-  useEffect(() => {
-    if (!isLoaded || !window.google || !debouncedCityName) return;
+useEffect(() => {
+if (!isLoaded || !window.google || debouncedCityName.length < 2) {
+  setSuggestions([]);
+  return;
+}
 
-    const autocompleteService =
-      new window.google.maps.places.AutocompleteService();
-    autocompleteService.getPlacePredictions(
-      { input: debouncedCityName, types: ["(cities)"] },
-      (predictions, status) => {
-        if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          predictions
-        ) {
-          setSuggestions(predictions);
-        } else {
-          setSuggestions([]);
-        }
+
+  const autocompleteService =
+    new window.google.maps.places.AutocompleteService();
+
+  autocompleteService.getPlacePredictions(
+    { input: debouncedCityName, types: ["(cities)"] },
+    (predictions, status) => {
+      if (
+        status === window.google.maps.places.PlacesServiceStatus.OK &&
+        predictions
+      ) {
+        setSuggestions(predictions);
+      } else {
+        setSuggestions([]);
       }
-    );
-  }, [debouncedCityName, isLoaded]);
+    }
+  );
+}, [debouncedCityName, isLoaded]);
 
   // Added effect for outside click
   useEffect(() => {

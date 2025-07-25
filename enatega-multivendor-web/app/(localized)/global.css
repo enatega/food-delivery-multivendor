@@ -186,23 +186,82 @@ body {
   border-radius: 7px;
 }
 
+
+
+/* Global Dialog Styling */
+:root {
+  --dialog-max-width-narrow: 500px;
+  --dialog-max-width-wide: 600px;
+}
+
+.auth-dialog {
+  width: 100% !important;
+  max-width: var(--dialog-max-width-narrow);
+  margin: auto;
+  border-radius: 12px;
+}
+
+.auth-dialog.wide {
+  max-width: var(--dialog-max-width-wide);
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+  .auth-dialog {
+    max-width: 90% !important;
+    margin: 12px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-dialog {
+    max-width: 95% !important;
+    margin: 10px;
+    padding: 12px;
+  }
+}
+
 /* ------------- Prime React ------------- */
+/* OTP Input */
 /* OTP Input */
 .p-inputotp {
   display: flex;
-  justify-content: space-between;
+  gap: 2px;
   width: 100%;
 }
-.p-inputotp-input {
-  width: 70px;
-  height: 70px;
+
+.p-inputotp-input,
+.p-inputotp > .p-inputtext {
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  text-align: center;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
 }
 
-.p-inputotp > .p-inputtext {
-  height: 70px;
-  width: 80px;
-  border-radius: 0;
+/* Medium screens (tablets) */
+@media (max-width: 768px) {
+  .p-inputotp-input,
+  .p-inputotp > .p-inputtext {
+    width: 30px;
+    height: 30px;
+    font-size: 1.125rem;
+  }
 }
+
+/* Small screens (phones) */
+@media (max-width: 480px) {
+  .p-inputotp-input,
+  .p-inputotp > .p-inputtext {
+    width: 10px;
+    height: 10px;
+    font-size: 1rem;
+  }
+}
+
+
 
 /* Dropdown */
 
