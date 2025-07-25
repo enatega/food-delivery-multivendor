@@ -530,7 +530,7 @@ export default function RestaurantDetailsScreen() {
                 {loading ? (
                     <Skeleton width="100%" height="18rem" borderRadius="0" />
                 ) : (
-                    <img
+                    <Image
                         alt={`${restaurantInfo.name} banner`}
                         className="w-full h-72 object-cover"
                         height="300"
@@ -542,7 +542,7 @@ export default function RestaurantDetailsScreen() {
                 {!loading && (
                     <div className="absolute bottom-0 left-0 md:left-20 p-4">
                         <div className="flex flex-col items-start">
-                            <img
+                            <Image
                                 alt={`${restaurantInfo.name} logo`}
                                 className="w-12 h-12 mb-2"
                                 height="50"

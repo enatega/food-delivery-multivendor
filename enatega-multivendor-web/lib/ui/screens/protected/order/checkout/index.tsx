@@ -63,6 +63,7 @@ import {
 import HomeIcon from "../../../../../assets/home_icon.png";
 import RestIcon from "../../../../../assets/rest_icon.png";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import Image from "next/image";
 
 export default function OrderCheckoutScreen() {
   const [isAddressSelectedOnce, setIsAddressSelectedOnce] = useState(false);
@@ -755,7 +756,7 @@ export default function OrderCheckoutScreen() {
           </GoogleMap>
         ) : (
           <>
-            <img
+            <Image
               alt="Map showing delivery route"
               className="w-full h-64 object-cover"
               height="300"
@@ -882,11 +883,11 @@ export default function OrderCheckoutScreen() {
                     className="flex items-center justify-between mb-2"
                   >
                     <div className="flex items-start">
-                      <img
+                      <Image
                         alt="Big Share meal"
                         className="w-12 h-12 rounded-full mr-2"
                         height="50"
-                        src="https://storage.googleapis.com/a1aa/image/cPA2BWDjlQ26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
+                        src={item.image ||"https://storage.googleapis.com/a1aa/image/cPA2BWDjl26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"}
                         width="50"
                       />
                       <div>
