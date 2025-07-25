@@ -1,6 +1,6 @@
 
 // import { createBanner, editBanner } from '@/lib/api/graphql/mutation/banners';
-import { CREATE_BANNER, EDIT_BANNER, GET_RESTAURANTS } from '@/lib/api/graphql';
+import { CREATE_BANNER, EDIT_BANNER, GET_RESTAURANTS, GET_RESTAURANTS_DROPDOWN } from '@/lib/api/graphql';
 import { GET_BANNERS } from '@/lib/api/graphql/queries/banners';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
@@ -38,7 +38,7 @@ const BannersAddForm = ({
   position = 'right',
 }: IBannersAddFormComponentProps) => {
   // Queries
-  const { data } = useQueryGQL(GET_RESTAURANTS, {
+  const { data } = useQueryGQL(GET_RESTAURANTS_DROPDOWN, {
     fetchPolicy: 'cache-and-network',
   }) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
 
@@ -51,7 +51,7 @@ const BannersAddForm = ({
       code: v._id,
     })) ?? []; // Using nullish coalescing operator
   }, [data]);
-  console.log(data, 'data from restaurants query');
+  
   //State
   const initialValues: IBannersForm = {
     title: banner?.title || '',
