@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 
@@ -87,7 +88,7 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
                             router.push(getRedirectUrl(item));
                         }}
                     >
-                        <img
+                        <Image
                             src={item.image}
                             alt={item.name}
                             className="w-16 h-16 object-cover rounded-md mr-4"

@@ -32,7 +32,6 @@ import {
   CircleCrossSvg,
   ClockSvg,
   LocationSvg,
-  SearchSvg,
 } from "@/lib/utils/assets/svg";
 // import AnimatedLogo from "@/lib/assets/gif/logo.gif";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -63,10 +62,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
   // Hooks
   const router = useRouter();
-  const { GOOGLE_MAPS_KEY, CURRENCY_SYMBOL } = useConfig();
+  const { GOOGLE_MAPS_KEY } = useConfig();
   const {
     cartCount,
-    calculateSubtotal,
+    
     profile,
     loadingProfile,
     fetchProfile,
@@ -94,12 +93,11 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   } = useSearchUI();
 
   // Format subtotal for display
-  const formattedSubtotal =
-    cartCount > 0
-      ? `${CURRENCY_SYMBOL}${calculateSubtotal()}`
-      : `${CURRENCY_SYMBOL}0`;
+  // const formattedSubtotal =
+  //   cartCount > 0
+  //     ? `${CURRENCY_SYMBOL}${calculateSubtotal()}`
+  //     : `${CURRENCY_SYMBOL}0`;
 
-  console.log(userAddress);
   // Handlers
   const onInit = () => {
     const current_location_ls = onUseLocalStorage(
