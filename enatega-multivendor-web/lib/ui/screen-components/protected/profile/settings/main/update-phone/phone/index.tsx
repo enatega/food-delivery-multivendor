@@ -16,13 +16,16 @@ export interface IPhoneEntryProps {
 const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }: IPhoneEntryProps) => {
   const [loading, setLoading] = useState(false);
 
-  const handleSaveClick = () => {
-    setLoading(true);
-    setTimeout(() => {
-      handleSubmit(); // call the actual save logic after 2s
-      setLoading(false);
-    }, 3000);
-  };
+  const handleSaveClick = async () => {
+   setLoading(true);
+   try {
+     await handleSubmit();
+   } catch (error) {
+     console.error('Save failed:', error);
+   } finally {
+     setLoading(false);
+   }
+ };
 
   return (
     <div className="flex flex-col justify-between px-4 w-full items-center">
@@ -56,6 +59,7 @@ const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }
         <button
           onClick={handleSaveClick}
           disabled={loading}
+          aria-label={loading ? "Saving phone number..." : "Save phone number"}
           className={`bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-2 sm:p-3 w-full md:w-[268px] mb-4 text-sm sm:text-lg font-medium ${
             loading ? "opacity-70 cursor-not-allowed" : ""
           }`}

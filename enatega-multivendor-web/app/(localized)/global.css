@@ -257,8 +257,8 @@ body {
 @media (max-width: 480px) {
   .p-inputotp-input,
   .p-inputotp > .p-inputtext {
-    width: 10px;
-    height: 10px;
+    width: 35px;
+    height: 35px;
     font-size: 1rem;
   }
 }

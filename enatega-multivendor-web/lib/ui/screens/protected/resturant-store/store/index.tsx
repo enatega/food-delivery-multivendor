@@ -160,7 +160,6 @@ export default function StoreDetailsScreen() {
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
       if (isModalOpen.value !== value || isModalOpen.id !== id) {
-        console.log("value, id", value, id);
         setIsModalOpen({ value, id });
       }
     },

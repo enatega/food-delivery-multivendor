@@ -122,7 +122,6 @@ const isRestaurant = StoreType.toLowerCase() === "restaurant";
 
 
 const getStatusMessage = () => {
-  console.log("Order Tracking Details:", orderTrackingDetails, orderTrackingDetails.restaurant?.shopType);
   const status = orderTrackingDetails?.orderStatus;
   const now = new Date();
 

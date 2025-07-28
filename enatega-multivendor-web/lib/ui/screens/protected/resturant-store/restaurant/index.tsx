@@ -116,7 +116,6 @@ export default function RestaurantDetailsScreen() {
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
       if (isModalOpen.value !== value || isModalOpen.id !== id) {
-        console.log("value, id", value, id);
         setIsModalOpen({ value, id });
       }
     },
@@ -200,7 +199,6 @@ export default function RestaurantDetailsScreen() {
 
         // Only show confetti when adding a favorite (not removing)
         if (!wasLiked) {
-          console.log("Favorite added, triggering confetti!");
           setShowConfetti(true);
 
           // Reset confetti after a longer delay
@@ -210,7 +208,6 @@ export default function RestaurantDetailsScreen() {
         }
       },
       onError: (error) => {
-        console.error("Error toggling favorite:", error);
       },
       refetchQueries: [{ query: GET_USER_PROFILE }],
     }
@@ -218,7 +215,6 @@ export default function RestaurantDetailsScreen() {
   const handleFavoriteClick = () => {
     if (!profile) {
       // // Handle case where user is not logged in
-      console.log("Please login to add favorites");
       return;
     }
 
@@ -263,9 +259,7 @@ export default function RestaurantDetailsScreen() {
     location: data?.restaurant?.location ?? "N/A",
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
-    description:
-      data?.restaurant?.description ??
-      "Preservation of the authentic taste of all traditional foods is upheld here.",
+    description:data?.restaurant?.description ?? "Preservation of the authentic taste of all traditional foods is upheld here.",
     deliveryTime: data?.restaurant?.deliveryTime ?? "...",
     deliveryTax: data?.restaurant?.deliveryTax ?? 0,
     MinimumOrder: data?.restaurant?.MinimumOrder ?? 0,
@@ -764,8 +758,8 @@ export default function RestaurantDetailsScreen() {
                           alt={meal.title}
                           className="w-full h-full rounded-md object-cover mx-auto md:mx-0"
                           src={meal.image}
-                          width={100}
-                          height={100}
+                          width={112}
+                          height={112}
                         />
                       </div>
 
