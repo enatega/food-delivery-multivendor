@@ -29,7 +29,7 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
     useEffect(() => {
         const isTouchDevice = window.matchMedia('(hover: none)').matches;
 
-        if (!isTouchDevice) return; // ⛔ Skip scroll-based hover on desktop
+        if (!isTouchDevice) return; 
 
         const observer = new IntersectionObserver(
             (entries) => {
@@ -92,6 +92,8 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
                             src={item.image}
                             alt={item.name}
                             className="w-16 h-16 object-cover rounded-md mr-4"
+                            width={64}
+                            height={64}
                         />
                         <div className="flex-1">
                             <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>

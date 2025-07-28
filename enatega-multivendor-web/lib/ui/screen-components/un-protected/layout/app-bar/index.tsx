@@ -92,13 +92,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     setSearchedKeywords,
   } = useSearchUI();
 
-  // Format subtotal for display
-  // const formattedSubtotal =
-  //   cartCount > 0
-  //     ? `${CURRENCY_SYMBOL}${calculateSubtotal()}`
-  //     : `${CURRENCY_SYMBOL}0`;
-
-  // Handlers
+ 
   const onInit = () => {
     const current_location_ls = onUseLocalStorage(
       "get",
@@ -127,6 +121,17 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       }
     }
   };
+
+  const handleCartClose = () => {
+    setIsCartOpen(false);
+    localStorage.setItem(
+      "newOrderInstructions",
+      localStorage.getItem("orderInstructions") || ""
+    );
+    localStorage.removeItem("orderInstructions");
+    window.dispatchEvent(new Event("orderInstructionsUpdated"));
+  }; 
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -216,6 +221,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
         );
       }
 
+     
       // Subcase: Display recent history
       return (
         <div>
@@ -332,21 +338,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 className={`flex justify-center items-center transition-all duration-500 ease-in-out ${isSearchFocused ? "w-10/12" : "w-1/3"}`}
               >
                 <div className="relative w-full">
-                  {/* Search Icon - visible only below sm */}
-                  {/* {!isSearchFocused && (
-                    <div className="sm:hidden flex justify-end items-center w-full">
-                      <div
-                        className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer"
-                        onClick={() => {
-                          setIsSearchFocused(true);
-                        }}
-                      >
-                        <SearchSvg width={16} height={16} />
-                      </div>
-                    </div>
-                  )} */}
-
-                  {/* Search Input - hidden on mobile unless focused */}
+                  
+                 {/* Search Input - hidden on mobile unless focused */}
                   <input
                     id="search-input"
                     value={filter}
@@ -517,29 +510,11 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       {/* Cart Sidebar */}
       <Sidebar
         visible={isCartOpen}
-        onHide={() => {
-          setIsCartOpen(false);
-          localStorage.setItem(
-            "newOrderInstructions",
-            localStorage.getItem("orderInstructions") || ""
-          );
-          localStorage.removeItem("orderInstructions");
-          window.dispatchEvent(new Event("orderInstructionsUpdated"));
-        }}
+        onHide={handleCartClose}
         position="right"
         className="!p-0 !m-0 w-full md:w-[430] lg:w-[580px]"
-      >
-        <Cart
-          onClose={() => {
-            setIsCartOpen(false);
-            localStorage.setItem(
-              "newOrderInstructions",
-              localStorage.getItem("orderInstructions") || ""
-            );
-            localStorage.removeItem("orderInstructions");
-            window.dispatchEvent(new Event("orderInstructionsUpdated"));
-          }}
-        />
+       >
+      <Cart onClose={handleCartClose} />
       </Sidebar>
 
       <UserAddressComponent

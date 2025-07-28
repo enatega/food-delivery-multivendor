@@ -67,8 +67,8 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
 
   /**
    * Formats opening hours for a given day
-   * @param day - The opening time data for a specific day
-   * @returns Formatted string representing hours or "Closed" if no times available
+   * param day - The opening time data for a specific day
+   * returns Formatted string representing hours or "Closed" if no times available
    */
   const getFormattedHours = (day: IOpeningTime) => {
     if (day.times.length === 0) return "Closed";
@@ -95,7 +95,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
 
   /**
    * Gets the current day's opening hours for display in the header
-   * @returns Formatted string of today's hours or "Closed" if not available
+   * return Formatted string of today's hours or "Closed" if not available
    */
   const getCurrentDayHours = () => {
     const dayInfo = restaurantInfo?.openingTimes?.find(
@@ -157,7 +157,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
           <p className="mb-6 text-xs font-normal md:text-[16px]">
             {restaurantInfo.description}
           </p>
-
+          
           {/* Address Section with Google Maps link */}
           <div className="mb-6">
             <h2 className="text-lg md:text-xl font-bold mb-2">Address</h2>

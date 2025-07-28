@@ -96,6 +96,8 @@ export default function RatingModal({
                 src="https://placehold.co/600x400"
                 alt="Restaurant"
                 className="w-full h-full object-cover"
+                width={162}
+                height={162}
               />
             </div>
           )}

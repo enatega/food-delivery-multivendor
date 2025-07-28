@@ -110,8 +110,6 @@ export default function OrderCheckoutScreen() {
   // Context
   const { isLoaded } = useContext(GoogleMapsContext);
 
-  // Ref
-  // const contentRef = useRef<HTMLDivElement>(null);
 
   /*
     ##############
@@ -224,9 +222,6 @@ export default function OrderCheckoutScreen() {
     setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
   };
 
-  // const togglePriceSummary = () => {
-  //   setIsOpen((prev) => !prev);
-  // };
 
   function transformOrder(cartData: CartItem[]) {
     return cartData.map((food) => {
@@ -297,84 +292,6 @@ export default function OrderCheckoutScreen() {
     });
   }
 
-  // function validateOrder() {
-  //   if (!restaurantData.restaurant.isAvailable || !onCheckIsOpen()) {
-  //     // toggleCloseModal();
-  //     showToast({
-  //       title: "Restaurant",
-  //       message: "Restaurant is not available right now.",
-  //       type: "error",
-  //     });
-
-  //     return;
-  //   }
-  //   if (!cart.length) {
-  //     showToast({ title: "Cart", message: "Cart is empty", type: "error" });
-
-  //     return false;
-  //   }
-  //   const delivery = isPickUp ? 0 : deliveryCharges;
-  //   if (
-  //     Number(calculatePrice(delivery, true)) <
-  //     restaurantData?.restaurant?.minimumOrder
-  //   ) {
-  //     showToast({
-  //       title: "Minimum Amount",
-  //       message: `The minimum amount of (${CURRENCY_SYMBOL} ${restaurantData?.restaurant?.minimumOrder}) for your order has not been reached.`,
-  //       type: "warn",
-  //     });
-
-  //     return false;
-  //   }
-  //   if (!userAddress) {
-  //     showToast({
-  //       title: "Missing Address",
-  //       message: "Select your address.",
-  //       type: "warn",
-  //     });
-
-  //     return false;
-  //   }
-  //   if (!paymentMethod) {
-  //     showToast({
-  //       title: "Missing Payment Method",
-  //       message: "Set payment method before checkout",
-  //       type: "warn",
-  //     });
-
-  //     return false;
-  //   }
-  //   if ((profile?.phone?.length || 0) < 1) {
-  //     showToast({
-  //       title: "Missing Phone number",
-  //       message: "Phone number is missing.",
-  //       type: "warn",
-  //     });
-
-  //     setTimeout(() => {
-  //       router.replace("/phone-number");
-  //     }, 1000);
-
-  //     return false;
-  //   }
-  //   if (!profile?.phoneIsVerified) {
-  //     showToast({
-  //       title: "Unverified Phone number",
-  //       message: "Phone Number is not verified",
-
-  //       type: "warn",
-  //     });
-
-  //     setTimeout(() => {
-  //       router.replace("/phone-number");
-  //     }, 1000);
-
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  // Order
 
   // This is the fixed validateOrder function inside your OrderCheckoutScreen.js file
 
@@ -542,13 +459,7 @@ export default function OrderCheckoutScreen() {
           couponCode: coupon ? coupon.title : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
-          // address: {
-          //   label: location?.label,
-          //   deliveryAddress: location?.deliveryAddress,
-          //   details: location?.details,
-          //   longitude: "" + location?.longitude,
-          //   latitude: "" + location?.latitude,
-          // },
+      
           address: {
             label: userAddress?.label,
             deliveryAddress: userAddress?.deliveryAddress,
@@ -636,20 +547,6 @@ export default function OrderCheckoutScreen() {
     const taxAmount = ((amount / 100) * tax).toFixed(2);
     return taxAmount;
   }
-
-  /* function calculateTip() {
-    if (selectedTip) {
-      const _tip = parseFloat(selectedTip);
-      let total = 0;
-      const delivery = isPickUp ? 0 : deliveryCharges;
-      total += +calculatePrice(delivery, true);
-      total += +taxCalculation();
-      const tipPercentage = ((total / 100) * _tip).toFixed(2);
-      return tipPercentage;
-    } else {
-      return "0";
-    }
-  } */
 
   function calculateTotal() {
     let total: number = 0;
@@ -769,20 +666,7 @@ export default function OrderCheckoutScreen() {
           </>
         )}
       </div>
-      {/* <!-- Toggle Prices Button for Mobile --> 
-          <div className="sm:hidden fixed top-14 left-0 right-0 bg-transparent z-10 p-4">
-            <button
-              className="bg-white text-[#5AC12F] w-full py-2 px-4 rounded-full border border-gray-300 flex justify-between items-center"
-              onClick={togglePriceSummary}
-            >
-              <span className="font-inter text-[14px]">
-                Total: {`${CURRENCY_SYMBOL} ${calculateTotal()}`}
-              </span>
 
-              <FontAwesomeIcon icon={faChevronDown} className="text-[14px]" />
-            </button>
-          </div>
-          */}
 
       {/* <!-- Main Content --> */}
       <PaddingContainer className="pb-10">
