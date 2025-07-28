@@ -141,7 +141,6 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           options,
         };
       });
-    console.log(foodItem, "FoodItemmmmmmmmmmm");
     // Call the addItem function from useUser hook
     addItem(
       foodItem?.image,

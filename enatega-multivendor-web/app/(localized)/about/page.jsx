@@ -1,12 +1,10 @@
 import AboutUs from '@/lib/ui/screens/unprotected/AboutUs'
 import React from 'react'
 
-const page = () => {
+const AboutPage = () => {
   return (
-    <div>
     <AboutUs/>
-    </div>
   )
 }
 
-export default page
+export default AboutPage
