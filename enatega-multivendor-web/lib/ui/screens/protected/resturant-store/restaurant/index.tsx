@@ -208,6 +208,8 @@ export default function RestaurantDetailsScreen() {
         }
       },
       onError: (error) => {
+        console.error("Error adding favorite:", error);
+        setIsLiked((prev) => !prev); // Revert the like state on error
       },
       refetchQueries: [{ query: GET_USER_PROFILE }],
     }
