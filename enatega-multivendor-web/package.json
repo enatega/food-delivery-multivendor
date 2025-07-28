@@ -48,6 +48,7 @@
     "react-confetti-explosion": "^2.1.2",
     "react-dom": "^18",
     "react-geocode": "^0.2.2",
+    "react-icons": "^5.5.0",
     "react-international-phone": "^4.3.0",
     "react-phone-input-2": "^2.15.1",
     "react-tooltip": "^5.28.1",

@@ -1,6 +1,13 @@
 "use client";
 
-import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "next/navigation";
 import { Skeleton } from "primereact/skeleton";
@@ -29,7 +36,6 @@ import Confetti from "react-confetti";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 import EmptySearch from "@/lib/ui/useable-components/empty-search-results";
 
-
 // API
 import {
   GET_CATEGORIES_SUB_CATEGORIES_LIST,
@@ -56,6 +62,7 @@ import ChatSvg from "@/lib/utils/assets/svg/chat";
 import Image from "next/image";
 import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
+import { ToastContext } from "@/lib/context/global/toast.context";
 
 export default function StoreDetailsScreen() {
   // Access the UserContext via our custom hook
@@ -139,8 +146,9 @@ export default function StoreDetailsScreen() {
         onClick={() => handleScroll(_url ?? "", true)}
       >
         <span
-          className={`mx-2 ${item.items && "font-semibold"} text-${isClicked ? "[#5AC12F]" : "gray-600"
-            }`}
+          className={`mx-2 ${item.items && "font-semibold"} text-${
+            isClicked ? "[#5AC12F]" : "gray-600"
+          }`}
         >
           {item.label}
         </span>
@@ -165,13 +173,15 @@ export default function StoreDetailsScreen() {
 
     return (
       <div
-        className={`flex align-items-center px-3 py-2 cursor-pointer bg-${isClicked ? "[#F3FFEE]" : ""
-          }`}
+        className={`flex align-items-center px-3 py-2 cursor-pointer bg-${
+          isClicked ? "[#F3FFEE]" : ""
+        }`}
         onClick={() => handleScroll(_url ?? "", false, 80)}
       >
         <span
-          className={`mx-2 ${item.items && "font-semibold"} text-${isClicked ? "[#5AC12F]" : "gray-600"
-            }`}
+          className={`mx-2 ${item.items && "font-semibold"} text-${
+            isClicked ? "[#5AC12F]" : "gray-600"
+          }`}
         >
           {item.label}
         </span>
@@ -207,17 +217,17 @@ export default function StoreDetailsScreen() {
 
               return foods.length > 0
                 ? {
-                  _id: subCat._id,
-                  title: subCat.title,
-                  foods,
-                }
+                    _id: subCat._id,
+                    title: subCat.title,
+                    foods,
+                  }
                 : null;
             })
             .filter(Boolean) as {
-              _id: string;
-              title: string;
-              foods: IFood[];
-            }[];
+            _id: string;
+            title: string;
+            foods: IFood[];
+          }[];
 
           if (groupedFoods["uncategorized"]?.length > 0) {
             subCategoryGroups.push({
@@ -384,7 +394,9 @@ export default function StoreDetailsScreen() {
 
   const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
     const now = new Date();
-    const currentDay = now.toLocaleString('en-US', { weekday: 'short' }).toUpperCase(); // e.g., "MON", "TUE", ...
+    const currentDay = now
+      .toLocaleString("en-US", { weekday: "short" })
+      .toUpperCase(); // e.g., "MON", "TUE", ...
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
 
@@ -407,7 +419,11 @@ export default function StoreDetailsScreen() {
   const handleOpenFoodModal = (food: IFood) => {
     if (food.isOutOfStock) return;
 
-    if (!restaurantInfo?.isAvailable || !restaurantInfo?.isActive || !isWithinOpeningTime(restaurantInfo?.openingTimes)) {
+    if (
+      !restaurantInfo?.isAvailable ||
+      !restaurantInfo?.isActive ||
+      !isWithinOpeningTime(restaurantInfo?.openingTimes)
+    ) {
       handleUpdateIsModalOpen(true, food?._id);
       return;
     }
@@ -457,11 +473,14 @@ export default function StoreDetailsScreen() {
     openingTimes: data?.restaurant?.openingTimes ?? [],
     deliveryTime: data?.restaurant?.deliveryTime,
   };
-
+  const { showToast } = useContext(ToastContext);
   const handleFavoriteClick = () => {
     if (!profile) {
-      // Handle case where user is not logged in
-      console.log("Please login to add favorites");
+      showToast({
+        type: "error",
+        title: "Login Required",
+        message: "Please Login to add favorites",
+      });
       return;
     }
 
@@ -486,6 +505,9 @@ export default function StoreDetailsScreen() {
   };
 
   const restaurantInfoModalProps = {
+    deliveryTime: data?.restaurant.deliveryTime ?? "30-45",
+    deliveryTax: data?.restaurant.tax ?? "0",
+    MinimumOrder: data?.restaurant.minimumOrder ?? "0",
     _id: data?.restaurant._id ?? "",
     name: data?.restaurant?.name ?? "...",
     username: data?.restaurant?.username ?? "N/A",
@@ -598,24 +620,24 @@ export default function StoreDetailsScreen() {
         {loading ? (
           <Skeleton width="100%" height="20rem" borderRadius="0" />
         ) : (
-          <img
-            alt="McDonald's banner with a burger and fries"
-            className="w-full h-72 object-cover"
-            height="300"
+          <Image
             src={restaurantInfo.image}
-            width="1200"
+            alt="McDonald's banner with a burger and fries"
+            width={1200}
+            height={300}
+            className="w-full h-72 object-cover"
           />
         )}
 
         {!loading && (
           <div className="absolute bottom-0 left-0 md:left-20 p-4">
             <div className="flex flex-col items-start">
-              <img
-                alt={`${restaurantInfo.name} logo`}
-                className="w-12 h-12 mb-2"
-                height="50"
+              <Image
                 src={restaurantInfo.image}
-                width="50"
+                alt={`${restaurantInfo.name} logo`}
+                width={50}
+                height={50}
+                className="w-12 h-12 mb-2 object-cover"
               />
 
               <div className="text-white space-y-2">
@@ -655,9 +677,9 @@ export default function StoreDetailsScreen() {
                   {loading ? (
                     <Skeleton width="2rem" height="1.5rem" />
                   ) : (
-                   headerData.deliveryTime
+                    headerData.deliveryTime
                   )}
-                <span>mins</span>
+                  <span>mins</span>
                 </span>
 
                 {/* Rating */}
@@ -737,13 +759,15 @@ export default function StoreDetailsScreen() {
                     return (
                       <li key={index} className="shrink-0">
                         <button
-                          className={`bg-${selectedCategory === _slug
+                          className={`bg-${
+                            selectedCategory === _slug
                               ? "[#F3FFEE]"
                               : "gray-100"
-                            } text-${selectedCategory === _slug
+                          } text-${
+                            selectedCategory === _slug
                               ? "[#5AC12F]"
                               : "gray-600"
-                            } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
+                          } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
                           onClick={() => handleScroll(_slug, true, 100)}
                         >
                           {category.label}
@@ -769,13 +793,15 @@ export default function StoreDetailsScreen() {
                       return (
                         <li key={index} className="shrink-0">
                           <button
-                            className={`bg-${selectedSubCategory === _slug
+                            className={`bg-${
+                              selectedSubCategory === _slug
                                 ? "[#F3FFEE]"
                                 : "gray-100"
-                              } text-${selectedSubCategory === _slug
+                            } text-${
+                              selectedSubCategory === _slug
                                 ? "[#5AC12F]"
                                 : "gray-600"
-                              } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
+                            } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
                             onClick={() => handleScroll(_slug, false, 170)}
                           >
                             {sub_category.label}
@@ -802,10 +828,11 @@ export default function StoreDetailsScreen() {
             <div className="hidden md:block md:w-1/5 p-3 h-screen z-10  sticky top-14 left-0">
               <div className="h-full overflow-hidden group">
                 <div
-                  className={`h-full overflow-y-auto transition-all duration-300 ${isScrolling
+                  className={`h-full overflow-y-auto transition-all duration-300 ${
+                    isScrolling
                       ? "scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
                       : "overflow-hidden"
-                    }`}
+                  }`}
                   onScroll={handleMouseEnterCategoryPanel}
                 >
                   <PanelMenu
@@ -842,7 +869,7 @@ export default function StoreDetailsScreen() {
                           </h3>
                         )}
 
-                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 " >
+                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 ">
                           {subCategory.foods.map((meal: IFood, mealIndex) => (
                             <div
                               key={mealIndex}
@@ -932,13 +959,11 @@ export default function StoreDetailsScreen() {
             </div>
           </div>
         )}
-        {
-          !loading && deals.length == 0 &&
+        {!loading && deals.length == 0 && (
           <div className="text-center py-6 text-gray-500 flex flex-col items-center justify-center">
             <EmptySearch />
           </div>
-        }
-
+        )}
       </PaddingContainer>
 
       {/* Food Item Detail Modal */}
