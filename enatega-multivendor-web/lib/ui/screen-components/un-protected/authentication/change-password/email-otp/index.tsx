@@ -5,10 +5,13 @@ import { useRef, useState, useEffect } from "react"
 import CustomButton from "@/lib/ui/useable-components/button"
 // Icons
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction"
-import { useAuth } from "@/lib/context/auth/auth.context"
 import useToast from "@/lib/hooks/useToast"
 import { IVerificationEmailForChangePasswordProps } from "@/lib/utils/interfaces"
 import EmailIcon from "@/public/assets/images/svgs/email"
+
+// Hooks
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp"
+import { useTranslations } from "next-intl"
 
 
 const VerificationEmailForChangePassword = ({
@@ -20,8 +23,12 @@ const VerificationEmailForChangePassword = ({
 }: IVerificationEmailForChangePasswordProps) => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""))
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const {otp: emailOtpVerify} = useAuth()
   const { showToast } = useToast();
+  const { verifyOTP, error } = useVerifyOtp();
+
+  // Hooks
+  const t = useTranslations();
+
 
   // useEffect to handle resend email otp on first render
   const isFirstRender = useRef(true);
@@ -95,19 +102,47 @@ const VerificationEmailForChangePassword = ({
   }
 
   // Handle form submission
-  const handleSubmit =useDebounceFunction( async () => {
-    if (otp.join("").length !== 6 || emailOtp !== emailOtpVerify) {
-      return showToast({
-        type: "error",
-        title: "Error",
-        message: "Please enter a valid OTP",
-      })
-    }else{
-      handleSubmitAfterVerification()
+  const handleSubmit = useDebounceFunction(async () => {
+
+try {
+  const otpResponse = await verifyOTP({
+    variables: {
+      otp: emailOtp,
+      email: formData?.email
     }
+  })
+
+  if (otp.join("").length !== 6 || !otpResponse?.data?.verifyOtp) {
+    return showToast({
+      type: "error",
+      title: "Error",
+      message: "Please enter a valid OTP",
+    })
+  }else{
+    handleSubmitAfterVerification()
+  }
+
+} catch (error) {
+  showToast({
+    type: "error",
+    title: "Error",
+    message: "An error occurred while verifying the phone number",
+  })
+}
   },
     500, // Debounce time in milliseconds
 )
+  
+      // useEffect for displaying otp verification error
+      useEffect(() => {
+        if (error) {
+          showToast({
+            type: "error",
+            title: t("OTP Error"),
+            message: error.message,
+          });
+      }
+      }, [error])
 
   return (
 <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">

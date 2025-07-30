@@ -47,6 +47,7 @@ export default function AuthModal({
     name: "",
     phone: "",
   });
+  console.log("🚀 ~ AuthModal ~ formData:", formData)
 
   // Refs
   const authenticationPanelRef = useRef(null);

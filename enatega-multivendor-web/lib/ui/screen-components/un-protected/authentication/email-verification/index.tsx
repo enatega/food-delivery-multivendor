@@ -16,6 +16,7 @@ import useUser from "@/lib/hooks/useUser";
 import { ApolloError, useMutation } from "@apollo/client";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 
 // GQL
 import { UPDATE_USER } from "@/lib/api/graphql";
@@ -37,7 +38,6 @@ export default function EmailVerification({
   const {
     user,
     setIsAuthModalVisible,
-    otp,
     setOtp,
     sendOtpToEmailAddress,
     sendOtpToPhoneNumber,
@@ -45,6 +45,7 @@ export default function EmailVerification({
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
+  const { verifyOTP, error } = useVerifyOtp();
 
   // Mutations
   const [updateUser] = useMutation<
@@ -91,7 +92,13 @@ export default function EmailVerification({
           handleChangePanel(4);
         }
       } else {
-        if (String(emailOtp) === String(otp) && !!user?.email) {
+        const otpResponse = await verifyOTP({
+          variables: {
+            otp: emailOtp,
+            email: user?.email
+          }
+        })
+        if (otpResponse.data?.verifyOtp && !!user?.email) {
           const userData = await updateUser({
             variables: {
               name: user?.name ?? "",
@@ -133,12 +140,6 @@ export default function EmailVerification({
             });
             handleChangePanel(4);
           }
-        } else {
-          return showToast({
-            type: "error",
-            title: t("OTP Error"),
-            message: t("Please enter a valid OTP code"),
-          });
         }
       }
     } catch (error) {
@@ -194,6 +195,18 @@ export default function EmailVerification({
       setEmailOtp("");
     }
   }, [SKIP_EMAIL_VERIFICATION]);
+
+    // useEffect for displaying otp verification error
+    useEffect(() => {
+      if (error) {
+        showToast({
+          type: "error",
+          title: t("OTP Error"),
+          message: error.message,
+        });
+    }
+    }, [error])
+  
   return (
     <>
  <div className="flex items-center justify-center w-full min-h-screen mx-auto px-4 py-6 sm:px-6 md:px-8 bg-gray-50">
