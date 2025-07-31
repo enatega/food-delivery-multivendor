@@ -90,7 +90,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
         const end = formatTimeForHoursMins(time.endTime);
         return `${start}-${end}`;
       })
-      .join(", ");
+      .join("\n");
   };
 
   /**
@@ -184,7 +184,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
                   className="flex justify-between text-xs md:text-[16px] font-normal leading-[16px] md:leading-[24px]"
                 >
                   <span>{getCurrentDay(day.day)}</span>
-                  <span>{getFormattedHours(day)}</span>
+                  <span className="whitespace-pre-line">{getFormattedHours(day)}</span>
                 </div>
               ))}
             </div>
