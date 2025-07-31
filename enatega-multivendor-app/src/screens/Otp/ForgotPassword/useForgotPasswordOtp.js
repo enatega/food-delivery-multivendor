@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useRef } from 'react'
-import { forgotPassword } from '../../../apollo/mutations'
+import { forgotPassword, VERIFY_OTP } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -47,8 +47,17 @@ export const useForgotPasswordOtp = () => {
     onError
   })
 
-  const onCodeFilled = code => {
-    if (code === otpFrom.current) {
+  const [verifyOTP] = useMutation(VERIFY_OTP)
+
+  
+  const onCodeFilled = async (code) => {    
+    const { data } = await verifyOTP({
+      variables: {
+        otp: code,
+        email: email ?? ''
+      }
+    })
+    if (data?.verifyOtp) {
       navigation.navigate('SetYourPassword', { email })
     } else {
       setOtpError(true)
@@ -56,9 +65,8 @@ export const useForgotPasswordOtp = () => {
   }
 
   const resendOtp = () => {
-    otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
     mutate({
-      variables: { email: email.toLowerCase().trim(), otp: otpFrom.current }
+      variables: { email: email.toLowerCase().trim() }
     })
     setSeconds(30)
   }
