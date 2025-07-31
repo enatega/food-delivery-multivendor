@@ -885,7 +885,7 @@ export default function OrderCheckoutScreen() {
                   >
                     <div className="flex items-start">
                       <Image
-  src="https://storage.googleapis.com/a1aa/image/cPA2BWDjlQ26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
+  src={item.image ||"https://storage.googleapis.com/a1aa/image/cPA2BWDjl26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"}
   alt="Big Share meal"
   width={50}
   height={50}
