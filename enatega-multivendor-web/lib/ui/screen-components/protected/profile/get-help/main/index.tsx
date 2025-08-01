@@ -177,7 +177,7 @@ export default function GetHelpMain() {
             content: t('faq_cancel_order_content'),
           },
         {
-            header: ('faq_feedback_header'),
+            header: t('faq_feedback_header'),
             content:
              t('faq_feedback_content')
         },
@@ -307,7 +307,7 @@ export default function GetHelpMain() {
                         {reason === "others" && (
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Title
+                                    {t("title_label")}
                                 </label>
                                 <InputText
                                     value={ticketTitle}

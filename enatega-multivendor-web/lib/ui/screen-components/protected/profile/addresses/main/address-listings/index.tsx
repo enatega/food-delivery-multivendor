@@ -58,8 +58,7 @@ const AddressItem: FC<IAddressItemProps> = ({
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
               onClick={() => handleDelete(address?._id)}
             >
-                            {t("Delete_button_Address")}
-
+              {t("Delete_button_Address")}
             </div>
           </div>
         )}

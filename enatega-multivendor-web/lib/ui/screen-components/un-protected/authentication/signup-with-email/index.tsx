@@ -132,7 +132,7 @@ export default function SignUpWithEmail({
           showLabel={false}
           name="email"
           type="email"
-          placeholder={t("Email")}
+          placeholder={t("emailLabel")}
           onChange={(e) => handleFormChange("email", e.target.value)}
         />
       </div>
@@ -143,7 +143,7 @@ export default function SignUpWithEmail({
           mask={"999 999 999"}
           name="phone"
           type="text"
-          placeholder={t("Phone")}
+          placeholder={t("phone_label")}
           onChange={(val) => handleFormChange("phone", val)}
         />
       </div>

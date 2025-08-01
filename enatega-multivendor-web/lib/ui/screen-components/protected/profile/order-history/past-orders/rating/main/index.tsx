@@ -89,7 +89,7 @@ export default function RatingModal({
           {order?.restaurant?.image ? (
             <Image
               src={order.restaurant.image}
-              alt={order.restaurant.name || "Restaurant"}
+              alt={order.restaurant.name || t("restaurant_label")}
               width={162}
               height={162}
               className="w-full h-full object-cover"
@@ -98,7 +98,7 @@ export default function RatingModal({
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
               <Image
                 src="https://placehold.co/600x400"
-                alt="Restaurant"
+                alt={t("restaurant_label")}
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"

@@ -63,7 +63,7 @@ const Start: React.FC = () => {
                 router.push("/discovery");
               }}
             >
-              {t('LoginForSavedAddresses.currentlocation')} 123
+              {t('LoginForSavedAddresses.currentlocation')}
             </button>
           </div>
           <LoginInForSavedAddresses handleModalToggle={handleModalToggle}/>

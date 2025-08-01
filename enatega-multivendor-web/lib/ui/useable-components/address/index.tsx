@@ -270,7 +270,7 @@ export default function UserAddressComponent(
       _id: "",
       deliveryAddress: formattedAddress,
       location: { coordinates: [new_center.lng, new_center.lat] },
-      label: t('label_hone'),
+      label: t('label_home'),
     });
   };
 
@@ -301,6 +301,14 @@ export default function UserAddressComponent(
     icon: (color?: string) => <OtherSvg color={color || "#0F172A"} />,
   },
 ];
+
+// Define constants
+const ADDRESS_TYPES = {
+  OFFICE: 'OFFICE',
+  HOUSE: 'HOUSE', 
+  APARTMENT: 'APARTMENT',
+  OTHER: 'OTHER'
+} as const;
 
   const onHandleCreateAddress = () => {
     const addressInput = {
@@ -411,7 +419,7 @@ export default function UserAddressComponent(
               <div className="w-full flex items-center gap-x-2">
                 <div className="p-2 bg-gray-50 rounded-full">
                   {
-                    address?.label === t("office_label") && <OfficeSvg
+                    address?.label === ADDRESS_TYPES.OFFICE && <OfficeSvg
                     color={
                       address.selected && !hasCurrentLocation ?
                         "#0EA5E9"
@@ -420,7 +428,7 @@ export default function UserAddressComponent(
                   />
                   }
                   {
-                    address?.label === t("house_label") && <HomeSvg
+                    address?.label === ADDRESS_TYPES.OFFICE && <HomeSvg
                      height={18}
                     color={
                       address.selected && !hasCurrentLocation ?
@@ -430,7 +438,7 @@ export default function UserAddressComponent(
                   />
                   }
                    {
-                    address?.label === t("loctype3") && <AppartmentSvg
+                    address?.label === ADDRESS_TYPES.OFFICE && <AppartmentSvg
                     color={
                       address.selected && !hasCurrentLocation ?
                         "#0EA5E9"
@@ -439,7 +447,7 @@ export default function UserAddressComponent(
                   />
                   }
                    {
-                    address?.label === t("loctype4") && <OtherSvg
+                   address?.label === ADDRESS_TYPES.OFFICE && <OtherSvg
                     color={
                       address.selected && !hasCurrentLocation ?
                         "#0EA5E9"

@@ -855,6 +855,12 @@
   "AboutUsPage_commitment15": "We are committed to transparency, fairness, and inclusivity. Whether you're a small local eatery or a national chain, Enatega offers equal opportunity for growth and exposure. Our team works tirelessly to ensure timely deliveries, great user experience, and constant improvement through feedback.",
 
   "AboutUsPage_join16": "Join Us",
-  "AboutUsPage_join17": "Are you a vendor looking to grow your food business? Or a hungry customer looking for your next favorite meal? Enatega is the place for you. Join our growing community and be part of the food delivery future."
+  "AboutUsPage_join17": "Are you a vendor looking to grow your food business? Or a hungry customer looking for your next favorite meal? Enatega is the place for you. Join our growing community and be part of the food delivery future.",
 
+
+
+  "view_label": "View",
+  "onMap_label": "On Map",
+  "update_password_error_title": "Error",
+  "sort_by_label": "Sort by "
 }

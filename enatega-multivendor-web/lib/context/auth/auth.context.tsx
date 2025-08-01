@@ -120,10 +120,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Error while checking email:", error);
       showToast({
         type: "error",
-        title: t("Email Check Error"),
+        title: t("email_check_error"),
         message:
           error.cause?.message ||
-          t("An error occurred while checking the email"),
+          t("error_checking_email"),
       });
       return {} as IEmailExists;
     } finally {
@@ -140,12 +140,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       if (phoneResponse.data?.phoneExist?._id) {
         showToast({
           type: "error",
-          title: t("Phone Check Error"),
-          message: t(
+          title: t("phone_check_error"),
+          message: 
             t(
-              "This phone number is already registered please enter a different one"
-            ) // put a ","m after "registered" and "." at the end of the sentence in the translation
-          ),
+              "phone_already_registered"
+            ), // put a ","m after "registered" and "." at the end of the sentence in the translation,
         });
         return true;
       } else {
@@ -156,10 +155,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Error while checking phone:", error);
       return showToast({
         type: "error",
-        title: t("Phone Check Error"),
+        title: t("phone_check_error"),
         message:
           error.cause?.message ||
-          t("An error occurred while checking the phone"),
+          t("error_checking_phone"),
       });
     } finally {
       setIsLoading(false);
@@ -177,8 +176,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       if (resetPasswordResponse?.data?.resetPassword?.result === true) {
         showToast({
           type: "success",
-          title: t("Password Reset"),
-          message: t("Your password has been reset successfully"),
+          title: t("password_reset"),
+          message: t("password_reset_success"),
         });
         setFormData({} as IAuthFormData);
         setActivePanel(0);
@@ -190,10 +189,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Error while resetting password:", error);
       showToast({
         type: "error",
-        title: t("Password Reset Error"),
+        title: t("password_reset_error"),
         message:
           error.cause?.message ||
-          t("An error occurred while resetting the password"),
+          t("error_resetting_password"),
       });
     }
     finally {
