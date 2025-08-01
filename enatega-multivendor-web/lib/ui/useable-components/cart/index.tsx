@@ -11,6 +11,7 @@ import { RELATED_ITEMS, FOOD } from "@/lib/api/graphql";
 import useUser from "@/lib/hooks/useUser";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface CartProps {
   onClose?: () => void;
@@ -26,12 +27,14 @@ export default function Cart({ onClose }: CartProps) {
     restaurant: restaurantId,
     addItem,
   } = useUser();
+
   const { CURRENCY_SYMBOL } = useConfig();
   const [instructions, setInstructions] = useState(
     localStorage.getItem("orderInstructions") || ""
   );
 
   const router = useRouter();
+  const t = useTranslations()
   const client = useApolloClient();
   const shopType = localStorage.getItem("currentShopType");
 
@@ -79,10 +82,10 @@ export default function Cart({ onClose }: CartProps) {
       <div className="h-full flex flex-col items-center justify-center p-6">
         <div className="text-center">
           <h2 className="font-inter font-semibold text-xl text-gray-900 mb-2">
-            Your cart is empty
+            {t("your_cart_is_empty")}
           </h2>
           <p className="text-gray-500 mb-6">
-            Add items to your cart to continue
+            {t('add_items_to_cart_to_continue')}
           </p>
           <button
             onClick={async () => {
@@ -97,7 +100,7 @@ export default function Cart({ onClose }: CartProps) {
             className="bg-[#5AC12F] text-black px-6 py-2 rounded-full font-medium"
             type="button"
           >
-            Browse Restaurant
+            {t('browse_restaurant')}
           </button>
         </div>
       </div>
@@ -107,15 +110,16 @@ export default function Cart({ onClose }: CartProps) {
   // Slice related items to max 3
   const slicedRelatedItems = (relatedItemsData?.relatedItems || []).slice(0, 3);
 
+
   return (
     <div className="h-full flex flex-col bg-white relative">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="font-inter font-semibold text-xl text-gray-900">
-          Your order
+          {t('your_order_label')}
         </h2>
         <span className="text-gray-500 text-sm">
-          {cartCount} {cartCount === 1 ? "item" : "items"}
+          {cartCount} {cartCount === 1 ? t('item_label') : t('items_label')}
         </span>
       </div>
 
@@ -139,7 +143,7 @@ export default function Cart({ onClose }: CartProps) {
                   />
                   <div>
                     <h3 className="font-inter font-semibold text-sm text-gray-700">
-                      {item.foodTitle || item.title || "Food Item"}
+                      {item.foodTitle || item.title || t('food_item_label')}
                     </h3>
                     <p className="text-[#0EA5E9] font-semibold text-sm">
                       {CURRENCY_SYMBOL}
@@ -196,7 +200,7 @@ export default function Cart({ onClose }: CartProps) {
         {slicedRelatedItems.length > 0 && (
           <div className="p-4 bg-gray-50">
             <h2 className="font-inter font-semibold text-base text-gray-900 mb-3">
-              Recommended for you
+              {t('recommended_for_you_label')}
             </h2>
             <div className="flex flex-wrap gap-3">
               {slicedRelatedItems.map((id: string) => {
@@ -244,12 +248,12 @@ export default function Cart({ onClose }: CartProps) {
         <div className="p-4 bg-white">
           <div className="bg-gray-50 rounded-lg p-3">
             <h2 className="font-inter font-semibold text-base text-gray-900 mb-2">
-              Add comment for {shopType}
+               {t('add_comment_for_restaurant_label')} {" "} {shopType}
             </h2>
             <textarea
               id="instructions"
               className="w-full h-20 p-2 bg-white border border-gray-300 rounded-md resize-none focus:border-[#0EA5E9] focus:outline-none text-sm"
-              placeholder="Special requests, allergies, dietary restrictions..."
+              placeholder={t('special_requests_placeholder')}
               onChange={({ target: { value } }) => {
                 if (value?.length > 500) return;
                 localStorage.setItem("orderInstructions", value);
@@ -259,7 +263,7 @@ export default function Cart({ onClose }: CartProps) {
             />
             <div className="flex items-end justify-between mt-2">
               <span className="text-red-500 text-xs">
-                {instructions?.length >= 500 && "Maximum limit reached"}
+                {instructions?.length >= 500 && t('maximum_limit_reached_label')}
               </span>
               <span className="text-xs text-gray-500">
                 {instructions.length}/500
@@ -284,7 +288,7 @@ export default function Cart({ onClose }: CartProps) {
               {cartCount}
             </span>
             <span className="text-black text-base font-medium">
-              Go to Checkout
+              {t('go_to_checkout_label')}
             </span>
           </div>
           <span className="text-black text-base font-medium">

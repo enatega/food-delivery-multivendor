@@ -9,6 +9,7 @@ import useDebounce from "@/lib/hooks/useDebounce";
 import { useUserAddress } from "@/lib/context/address/address.context";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import { useTranslations } from "next-intl";
 
 const CitySearch: React.FC = () => {
   // Ref
@@ -76,6 +77,8 @@ const CitySearch: React.FC = () => {
     });
   };
 
+  const t = useTranslations();
+
   // USe Effects
 useEffect(() => {
 if (!isLoaded || !window.google || debouncedCityName.length < 2) {
@@ -133,7 +136,7 @@ if (!isLoaded || !window.google || debouncedCityName.length < 2) {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search for a city..."
+          placeholder={t('searchCity')}
           value={cityName}
           onChange={(e) => setCityName(e.target.value)}
           className="w-full border rounded-md focus:outline-none focus:ring-0 hover:outline-none hover:ring-0 border-none"

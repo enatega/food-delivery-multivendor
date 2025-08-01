@@ -16,7 +16,6 @@ import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 
 // Prime React
 import { InputOtp } from "primereact/inputotp";
@@ -37,6 +36,7 @@ export default function PhoneVerification({
   const t = useTranslations();
   const {
     user,
+    otp,
     setOtp,
     sendOtpToPhoneNumber,
     setIsAuthModalVisible,
@@ -47,7 +47,6 @@ export default function PhoneVerification({
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
-  const {verifyOTP, error} = useVerifyOtp();
 
   // Mutations
   const [updateUser] = useMutation<
@@ -57,10 +56,10 @@ export default function PhoneVerification({
     onError: (error: ApolloError) => {
       showToast({
         type: "error",
-        title: t("Error"),
+        title: t("update_phone_name_update_error_title"),
         message:
           error.cause?.message ||
-          t("An error occurred while updating the user"),
+          t("update_phone_name_update_error_msg"),
       });
     },
   });
@@ -69,18 +68,14 @@ export default function PhoneVerification({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-  
-      const otpResponse = await verifyOTP({
-        variables: {
-          otp: phoneOtp,
-          phone: user?.phone,
-        },
-      });
-  
-      if (otpResponse.data?.verifyOtp && !!user?.phone) {
-        const args = isRegistering
-          ? { name: user?.name ?? "", phoneIsVerified: true }
-          : {
+      if (String(phoneOtp) === String(otp) && !!user?.phone) {
+        const args =
+          isRegistering ?
+            {
+              name: user?.name ?? "",
+              phoneIsVerified: true,
+            }
+            : {
               phone: user?.phone,
               name: user?.name ?? "",
               phoneIsVerified: true,
@@ -101,14 +96,14 @@ export default function PhoneVerification({
         }
         return showToast({
           type: "success",
-          title: t("Phone Verification"),
-          message: t("Your phone number is verified successfully"),
+          title: t("update_phone_name_verification_success_title"),
+          message: t("update_phone_name_verification_success_msg"),
         });
       } else {
         showToast({
           type: "error",
-          title: t("OTP Error"),
-          message: t("Please enter a valid OTP code"),
+          title: t("update_phone_name_otp_error_title"),
+          message: t("update_phone_name_otp_error_msg"),
         });
       }
     } catch (error) {
@@ -128,15 +123,15 @@ export default function PhoneVerification({
       await sendOtpToPhoneNumber(user?.phone);
       showToast({
         type: "success",
-        title: t("OTP Resent"),
-        message: t("We have resent the OTP code to your phone"),
+        title: t("otp_resent_label"),
+        message: t("resent_otp_code_to_your_phone_message"),
       });
       setIsResendingOtp(false);
     } else {
       showToast({
         type: "error",
         title: t("Error"),
-        message: t("Please re-enter your valid phone number"),
+        message: t("update_phone_name_resend_error_msg"),
       });
       handleChangePanel(4);
     }
@@ -148,8 +143,8 @@ export default function PhoneVerification({
       setOtp(TEST_OTP);
       showToast({
         type: "success",
-        title: t("Phone Verification"),
-        message: t("Your phone number is verified successfully"),
+        title: t("phone_verification_label"),
+        message: t("your_phone_number_verified_successfully_message"),
       });
       if (!profile?.emailIsVerified) {
         handleChangePanel(5);
@@ -160,16 +155,7 @@ export default function PhoneVerification({
     }
   }, [SKIP_MOBILE_VERIFICATION]);
 
-  // useEffect for displaying otp verification error
-  useEffect(() => {
-    if (error) {
-      showToast({
-        type: "error",
-        title: t("OTP Error"),
-        message: error.message,
-      });
-  }
-}, [error])
+
 
   return (
  <div className="flex items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 md:px-8">
@@ -186,7 +172,7 @@ export default function PhoneVerification({
         </span>
       </p>
       <p className="text-xs sm:text-sm text-gray-400 mt-1">
-        {t("Please check your inbox and enter the code below.")}
+        {t("please_check_your_inbox_message_1")}
       </p>
     </div>
 

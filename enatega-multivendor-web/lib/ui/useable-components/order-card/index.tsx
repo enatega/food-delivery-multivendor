@@ -17,6 +17,7 @@ import {
 import CustomIconButton from "../custom-icon-button";
 // import OrderItemsWithImages from "../order-items-with-images";
 import OrderItems from "../order-items";
+import { useTranslations } from "next-intl";
 
 const OrderCard: FC<IOrderCardProps> = ({
   order,
@@ -38,6 +39,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     handleReOrderClicked?.(order?.restaurant?._id, order?.restaurant?.slug, order?.restaurant?.shopType,);
   }, []);
 
+  const t = useTranslations()
   const handleRateOrder = () => {
     // Implement rating functionality
     handleRateOrderClicked?.(order?._id);
@@ -80,14 +82,14 @@ const OrderCard: FC<IOrderCardProps> = ({
                   <i className="fa-solid fa-calendar-alt text-gray-400"></i>
                   <span>
                     {order?.deliveredAt ?
-                      `Delivered on ${formatDateAndTime(order.deliveredAt)}`
+                      `${t('delivered_on')} ${formatDateAndTime(order.deliveredAt)}`
                     : order?.cancelledAt ?
-                      `Cancelled on ${formatDate(order.cancelledAt)}`
-                    : "Cancelled"}
+                      `${t('cancelled_on')} ${formatDate(order.cancelledAt)}`
+                    : t('cancelled')}
                   </span>
                 </div>
                 <div className="text-sm text-gray-600 mt-1">
-                  Order #{order.orderId?.substring(0, 8)}
+                 {t("order_number")} #{order.orderId?.substring(0, 8)}
                 </div>
                 {/* order list without images */}
                 <OrderItems order={order} />
@@ -105,8 +107,8 @@ const OrderCard: FC<IOrderCardProps> = ({
           {(type === "active" || type === "past") && (
             <CustomIconButton
               title={
-                type === "active" ? "Track your order" : (
-                  "Select item to reorder"
+                type === "active" ? t("track_order_button_label") : (
+                  t("select_item_to_reorder")
                 )
               }
               iconColor="black"
@@ -130,7 +132,7 @@ const OrderCard: FC<IOrderCardProps> = ({
       {type === "past" && order.orderStatus === "DELIVERED" && (
         <div className="mt-4 pt-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Rate the Order</span>
+            <span className="text-sm font-medium">{t('rate_the_order')}</span>
             <Rating
               value={order.review?.rating || 0}
               cancel={false}

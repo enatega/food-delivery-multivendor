@@ -30,7 +30,7 @@ export default function SaveEmailAddress({
         showToast({
           type: "error",
           title: t("Error"),
-          message: t("Please enter a valid email address"),
+          message: t("please_enter_valid_email_address_message "),
         });
         return;
       }
@@ -41,8 +41,8 @@ export default function SaveEmailAddress({
       } else{
         showToast({
           type:"info",
-          title: t("Email Verification"),
-          message:t("Your email is already verified")
+          title: t("email_verification_label"),
+          message:t("your_email_already_verified_message")
         })
         if(profile?.phoneIsVerified){
           handleChangePanel(0);
@@ -50,7 +50,7 @@ export default function SaveEmailAddress({
           showToast({
             type: "success",
             title: t("Login"),
-            message: t("You have logged in successfully"), // put ! at the end of the statement in the translation
+            message: t("login_success_message"), // put ! at the end of the statement in the translation
           });
         }else{
           handleChangePanel(4);
@@ -72,7 +72,7 @@ export default function SaveEmailAddress({
       <EmailIcon />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
         <h3 className="text-2xl">
-          {t("Please enter your email address")}?
+          {t("please_enter_your_email_address_label")}?
         </h3>
         <span className="font-bold">example@email.com</span>
       </div>
@@ -82,12 +82,12 @@ export default function SaveEmailAddress({
           showLabel={false}
           name=""
           type="text"
-          placeholder={t("Email")}
+          placeholder={t("email")}
           onChange={(e) => handleChange(e.target.value)}
         />
       </div>
       <CustomButton
-        label={t("Continue")}
+        label={t("continue_label")}
         loading={isLoading}
         onClick={handleSubmit}
         className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72`}

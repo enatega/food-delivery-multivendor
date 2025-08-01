@@ -15,6 +15,7 @@ import LoginInForSavedAddresses from "@/lib/ui/useable-components/LoginForSavedA
 // imports related to auth module
 import AuthModal from "../../authentication";
 import { useAuth } from "@/lib/context/auth/auth.context";
+import { useTranslations } from "next-intl";
 
 const Start: React.FC = () => {
   // Hooks
@@ -39,13 +40,14 @@ const Start: React.FC = () => {
     }
     
   };
+  const t = useTranslations();
 
   return (
     <div className="h-[100vh] w-full bg-cover bg-center flex items-center justify-center bg-[#94e469] relative">
       <div className="text-center flex flex-col items-center justify-center">
         <TextFlyingAnimation />
         <h1 className="text-[40px] md:text-[90px] font-extrabold text-white">
-          DELIVERED
+          {t('delivered_heading')}
         </h1>
         <HomeSearch />
         <div className="my-6 text-white flex items-center justify-center">
@@ -61,7 +63,7 @@ const Start: React.FC = () => {
                 router.push("/discovery");
               }}
             >
-              Current Location
+              {t('LoginForSavedAddresses.currentlocation')} 123
             </button>
           </div>
           <LoginInForSavedAddresses handleModalToggle={handleModalToggle}/>

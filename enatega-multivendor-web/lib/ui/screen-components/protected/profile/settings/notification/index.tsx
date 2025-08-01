@@ -4,6 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import CustomInputSwitch from "@/lib/ui/useable-components/custom-input-switch";
 import TextComponent from "@/lib/ui/useable-components/text-field";
+import { useTranslations } from "next-intl";
 
 export default function NotificationSection() {
   // States for notification preferences
@@ -21,15 +22,16 @@ export default function NotificationSection() {
     const newValue = e.target.checked
     setEmailNotifications(newValue)
   }
+  const t = useTranslations()
 
   return (
     <div className="w-full mx-auto">
-      <TextComponent text="Notifications" className=" font-semibold text-gray-700 text-xl md:text-2xl   mb-4" />
+      <TextComponent text={t('NotificationSection_title')} className=" font-semibold text-gray-700 text-xl md:text-2xl   mb-4" />
 
       {/* Push Notifications */}
       <div className="py-4 border-b">
         <div className="flex justify-between items-center">
-          <TextComponent text="I want to receive special offers and promotions from us via push-messages" className="font-normal text-gray-700 text-base md:text-lg " />
+          <TextComponent text={t('NotificationSection_push')} className="font-normal text-gray-700 text-base md:text-lg " />
           <CustomInputSwitch
             loading={false}
             isActive={pushNotifications}
@@ -41,7 +43,7 @@ export default function NotificationSection() {
       {/* Email Notifications */}
       <div className="py-4 border-b">
         <div className="flex justify-between items-center">
-        <TextComponent text="I want to receive special offers and promotions from us via email" className="font-normal text-gray-700 text-base md:text-lg   " />
+        <TextComponent text={t('NotificationSection_email')} className="font-normal text-gray-700 text-base md:text-lg   " />
           <CustomInputSwitch
             loading={false}
             isActive={emailNotifications}
