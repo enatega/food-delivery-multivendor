@@ -1,10 +1,15 @@
+"use client"
 import SliderCard from "@/lib/ui/useable-components/slider-card";
 // hook
 import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 // loading skeleton
 import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
+import { useTranslations } from "next-intl";
+
+
 
 function MostOrderedRestaurants() {
+  const t = useTranslations();
   const { queryData, error, loading } = useMostOrderedRestaurants()
 
   if (loading) {
@@ -16,7 +21,7 @@ function MostOrderedRestaurants() {
   }
   return (
     <SliderCard
-      title="Most ordered restaurants"
+      title={t('DiscoveryPage.Mostorder')}
       data={queryData || []}
     />
   );

@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { HomeSvg, MenuSvg } from "@/lib/utils/assets/svg";
 import TextComponent from "@/lib/ui/useable-components/text-field";
 import { IAddressItemProps } from "@/lib/utils/interfaces/profile.interface";
+import { useTranslations } from "next-intl";
 
 const AddressItem: FC<IAddressItemProps> = ({
   address,
@@ -12,6 +13,7 @@ const AddressItem: FC<IAddressItemProps> = ({
   setDropdownRef,
   onEditAddress,
 }) => {
+  const t = useTranslations();
   return (
     <div
       key={address?._id}
@@ -50,13 +52,14 @@ const AddressItem: FC<IAddressItemProps> = ({
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => onEditAddress && onEditAddress(address)}
             >
-              Edit
+              {t("Edit_button_Address")}
             </div>
             <div
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
               onClick={() => handleDelete(address?._id)}
             >
-              Delete
+                            {t("Delete_button_Address")}
+
             </div>
           </div>
         )}

@@ -41,5 +41,5 @@ export default function RootPage() {
   //     });
   //   }
   // }, []);
-  return <Home/>
+  return  <Home/>
 }

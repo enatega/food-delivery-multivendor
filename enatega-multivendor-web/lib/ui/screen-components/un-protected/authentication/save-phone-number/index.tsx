@@ -38,8 +38,8 @@ export default function SavePhoneNumber() {
       }else if(profile?.phoneIsVerified){
         showToast({
           type: "info",
-          title: t("Phone Verification"),
-          message: t("Your phone number is already verified"),
+          title: t("phone_verification"),
+          message: t("your_phone_number_already_verified_message"),
         });
         return;
       }else{
@@ -64,7 +64,7 @@ export default function SavePhoneNumber() {
         {/*Put an apostrophy comma as "What's" and put a "?" mark at the end of sentence in the translation*/}
       </h2>
       <p className="my-1">
-        {t("We need this to verify and secure your account")}
+        {t("we_need_this_to_verify_and_secure_your_account_message")}
       </p>
       <div className="flex my-1">
         <CustomPhoneTextField

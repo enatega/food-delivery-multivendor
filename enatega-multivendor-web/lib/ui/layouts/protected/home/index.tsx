@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 // context
 import { useSearchUI } from "@/lib/context/search/search.context";
 import TabItem from "@/lib/ui/useable-components/tab-item/TabItem";
+import { useTranslations } from "next-intl";
 
 export default function HomeLayout({
   children,
@@ -40,6 +41,9 @@ export default function HomeLayout({
   const isRestaurants = pathname === "/restaurants";
   const isStore = pathname === "/store";
 
+
+  const t = useTranslations();
+  
   useEffect(() => {
     const handleScroll = () => {
       setStickyTop(window.scrollY > 300 ? 16 : 0);
@@ -47,6 +51,7 @@ export default function HomeLayout({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
 
   return (
     <div className="w-screen h-full flex flex-col ">
@@ -68,19 +73,19 @@ export default function HomeLayout({
         <div className="flex justify-center items-center space-x-4 md:space-x-6 p-2 md:p-4 overflow-x-auto">
           <TabItem
             active={isDiscovery}
-            label="Discovery"
+            label={t("tab_discovery")}
             onClick={() => onChangeScreen("Discovery")}
             Icon={HomeSvg}
           />
           <TabItem
             active={isRestaurants}
-            label="Restaurants"
+            label={t("tab_restaurants")}
             onClick={() => onChangeScreen("Restaurants")}
             Icon={CutlerySvg}
           />
           <TabItem
             active={isStore}
-            label="Store"
+            label={t("tab_store")}
             onClick={() => onChangeScreen("Store")}
             Icon={StoreSvg}
           />

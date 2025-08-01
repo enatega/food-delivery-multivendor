@@ -12,6 +12,7 @@ import RenderStepThree from "../step-three";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 // Interfaces
 import { IRatingModalProps } from "@/lib/utils/interfaces/ratings.interface";
+import { useTranslations } from "next-intl";
 
 /**
  * RatingModal - A multi-step modal component for collecting user ratings for past orders
@@ -33,6 +34,7 @@ export default function RatingModal({
   const [comment, setComment] = useState<string>(""); // User's text feedback
   const [selectedAspects, setSelectedAspects] = useState<string[]>([]); // Selected rating aspects/tags
 
+  const t = useTranslations()
   // Debounced submit function to prevent multiple rapid submissions
   const handleSubmitDebounced = useDebounceFunction(() => {
     if (order && rating !== null) {
@@ -107,17 +109,17 @@ export default function RatingModal({
 
         {/* Restaurant Name Display */}
         <p className="text-gray-600 ">
-          {order?.restaurant?.name || "Restaurant name"}
+          {order?.restaurant?.name || t('restaurant_name_label')}
         </p>
 
         {/* Modal Title */}
         <h2 className="md:text-2xl text-xl font-bold  text-black">
-          How was the delivery?
+          {t('how_was_the_delivery_title')}
         </h2>
 
         {/* Modal Description */}
         <p className="text-gray-600  text-center md:text-lg text-base">
-          Whether it&apos;s good or bad, let&apos;s talk about it
+          {t("rating_modal_description")}
         </p>
 
         {/* Conditional rendering based on current step */}

@@ -44,6 +44,7 @@ import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function RestaurantDetailsScreen() {
   // Access the UserContext via our custom hook
@@ -214,6 +215,8 @@ export default function RestaurantDetailsScreen() {
       refetchQueries: [{ query: GET_USER_PROFILE }],
     }
   );
+
+  const t = useTranslations()
   const handleFavoriteClick = () => {
     if (!profile) {
       // // Handle case where user is not logged in
@@ -261,7 +264,7 @@ export default function RestaurantDetailsScreen() {
     location: data?.restaurant?.location ?? "N/A",
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
-    description:data?.restaurant?.description ?? "Preservation of the authentic taste of all traditional foods is upheld here.",
+    description:data?.restaurant?.description ?? t("restaurant_modal_label"),
     deliveryTime: data?.restaurant?.deliveryTime ?? "...",
     deliveryTax: data?.restaurant?.deliveryTax ?? 0,
     MinimumOrder: data?.restaurant?.MinimumOrder ?? 0,
@@ -598,7 +601,7 @@ export default function RestaurantDetailsScreen() {
               {loading ? (
                 <Skeleton width="10rem" height="1.5rem" />
               ) : (
-                "See more information"
+                t('see_more_information')
               )}
             </a>
 
@@ -615,7 +618,7 @@ export default function RestaurantDetailsScreen() {
               {loading ? (
                 <Skeleton width="10rem" height="1.5rem" />
               ) : (
-                "See reviews"
+                t("see_reviews")
               )}
             </a>
           </div>
@@ -669,7 +672,7 @@ export default function RestaurantDetailsScreen() {
                         className="bg-blue-500 text-white rounded-full px-4 py-2 font-medium text-[14px] cursor-pointer"
                         onClick={() => setShowAll(true)}
                       >
-                        More
+                        {t("more_button")}
                       </button>
                     </li>
                   )}
@@ -688,7 +691,7 @@ export default function RestaurantDetailsScreen() {
                     position: "left",
                     style: { marginTop: "-10px" },
                   }}
-                  placeholder="Search for food items"
+                  placeholder={t("search_for_food_items_placeholder")}
                   type="text"
                   name="search"
                   showLabel={false}
@@ -739,7 +742,7 @@ export default function RestaurantDetailsScreen() {
                             {meal.title}
                           </h3>
                           {meal.isOutOfStock && (
-                            <span className="text-red-500">(Out of stock)</span>
+                            <span className="text-red-500">{t('out_of_stock_label')}</span>
                           )}
                         </div>
 
@@ -792,7 +795,7 @@ export default function RestaurantDetailsScreen() {
                       >
                         <div className="text-center pb-10 pt-10">
                           <p className="text-lg font-bold pb-3">
-                            Restaurant is closed
+                            {t("restaurant_is_closed")}
                           </p>
                           <p className="text-sm">
                             You can&apos;t order this food item right now.

@@ -48,8 +48,8 @@ export default function SignUpWithEmail({
       if (Object.values(formData).some((val) => !val)) {
         return showToast({
           type: "error",
-          title: t("Create User"),
-          message: t("All fields are required to be filled"),
+          title: t("create_user_label"),
+          message: t("all_fields_are_required_to_be_filled_message"),
         });
       } else {
         const userData = await handleCreateUser({
@@ -89,8 +89,8 @@ export default function SignUpWithEmail({
           setIsAuthModalVisible(false);
           showToast({
             type:"success",
-            title:t("Register"),
-            message:t("Successfully registered your account") // put an exclamation mark at the end of this sentence in the translations
+            title:t("register_label"),
+            message:t("successfully_registered_your_account_message") // put an exclamation mark at the end of this sentence in the translations
           })
         }
       }
@@ -99,9 +99,9 @@ export default function SignUpWithEmail({
       console.error("An error occured while registering a new user", error);
       showToast({
         type: "error",
-        title: t("Register"),
+        title: t("register_label"),
         message:
-          error?.cause?.message || t("An error occured while registering"),
+          error?.cause?.message || t("an_error_occurred_while_registering_message"),
       });
     } finally {
       setIsLoading(false);
@@ -111,9 +111,9 @@ export default function SignUpWithEmail({
     <div className="flex flex-col items-start justify-between w-full h-full">
       <PersonIcon />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
-        <h3 className="text-3xl font-semibold">{t("Lets get you started")}</h3>
+        <h3 className="text-3xl font-semibold">{t("lets_get_you_started_label")}</h3>
         {/*replace lets with let's in the translation*/}
-        <p>{t("First lets create your account")}</p>
+        <p>{t("first_lets_create_your_account_message")}</p>
         {/*replace "First" with "First," in the translation*/}
       </div>
       <div className="flex flex-col gap-y-1 my-3 w-full">
@@ -122,7 +122,7 @@ export default function SignUpWithEmail({
           showLabel={false}
           name="name"
           type="text"
-          placeholder={t("Name")}
+          placeholder={t("nameLabel")}
           onChange={(e) => handleFormChange("name", e.target.value)}
         />
       </div>
@@ -152,7 +152,7 @@ export default function SignUpWithEmail({
           value={formData.password}
           showLabel={false}
           name="password"
-          placeholder={t("Password")}
+          placeholder={t("password_label")}
           onChange={(e) => handleFormChange("password", e.target.value)}
         />
         <button
@@ -162,11 +162,11 @@ export default function SignUpWithEmail({
               >
         
                 <FcGoogle className="text-lg" />
-                {t("Continue with Google instead")}
+                {t("continue_with_google_instead_label")}
               </button>
       </div>
       <CustomButton
-        label={t("Continue")}
+        label={t("continue_label")}
         className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72`}
         onClick={handleSubmit}
         loading={isLoading}

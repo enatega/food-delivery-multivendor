@@ -62,6 +62,7 @@ import {
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import AppartmentSvg from "@/lib/utils/assets/svg/apartment";
+import { useTranslations } from "next-intl";
 
 const variants = {
   enter: (direction: number) => ({
@@ -78,24 +79,7 @@ const variants = {
   }),
 };
 
-const LOCATIONT_TYPE = [
-  {
-    name: "House",
-    icon: (color?: string) => <HomeSvg color={color || "#0F172A"} />,
-  },
-  {
-    name: "Office",
-    icon: (color?: string) => <OfficeSvg color={color || "#0F172A"} />,
-  },
-  {
-    name: "Apartment",
-    icon: (color?: string) => <ApartmentSvg color={color || "#0F172A"} />,
-  },
-  {
-    name: "Other",
-    icon: (color?: string) => <OtherSvg color={color || "#0F172A"} />,
-  },
-];
+
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -275,7 +259,7 @@ export default function UserAddressComponent(
       showToast({
         type: "error",
         title: "Error",
-        message: "Failed to fetch address",
+        message: t('failed_to_fetch_Address')
       });
       return;
     }
@@ -286,7 +270,7 @@ export default function UserAddressComponent(
       _id: "",
       deliveryAddress: formattedAddress,
       location: { coordinates: [new_center.lng, new_center.lat] },
-      label: "Home",
+      label: t('label_hone'),
     });
   };
 
@@ -296,6 +280,27 @@ export default function UserAddressComponent(
       lng: e?.latLng?.lng() ?? 0,
     });
   };
+
+  const t = useTranslations();
+
+  const LOCATIONT_TYPE = [
+  {
+    name: t('loctype1'),
+    icon: (color?: string) => <HomeSvg color={color || "#0F172A"} />,
+  },
+  {
+    name: t('loctype2'),
+    icon: (color?: string) => <OfficeSvg color={color || "#0F172A"} />,
+  },
+  {
+    name: t('loctype3'),
+    icon: (color?: string) => <ApartmentSvg color={color || "#0F172A"} />,
+  },
+  {
+    name: t('loctype4'),
+    icon: (color?: string) => <OtherSvg color={color || "#0F172A"} />,
+  },
+];
 
   const onHandleCreateAddress = () => {
     const addressInput = {
@@ -359,9 +364,9 @@ export default function UserAddressComponent(
 
   function onError() {
     showToast({
-      title: "New Address",
+      title: t('new_address_label'),
       type: "error",
-      message: `Address update failed`,
+      message: t('Address_updated_success'),
     });
   }
 
@@ -375,7 +380,7 @@ export default function UserAddressComponent(
       {/* Header */}
       <div className="w-full">
         <span className="font-inter font-bold text-[25px] tracking-normal">
-          Where to?
+         {t("where_to_address_label")}
         </span>
       </div>
 
@@ -390,7 +395,7 @@ export default function UserAddressComponent(
           icon={isLocationFetching ? faSpinner : faCirclePlus}
           spin={isLocationFetching}
         />
-        <span>Current location</span>
+        <span>{t('LoginForSavedAddresses.currentlocation')}</span>
       </button>
 
       <div className="w-full flex flex-col items-center">
@@ -406,7 +411,7 @@ export default function UserAddressComponent(
               <div className="w-full flex items-center gap-x-2">
                 <div className="p-2 bg-gray-50 rounded-full">
                   {
-                    address?.label === "Office" && <OfficeSvg
+                    address?.label === t("office_label") && <OfficeSvg
                     color={
                       address.selected && !hasCurrentLocation ?
                         "#0EA5E9"
@@ -415,7 +420,7 @@ export default function UserAddressComponent(
                   />
                   }
                   {
-                    address?.label === "House" && <HomeSvg
+                    address?.label === t("house_label") && <HomeSvg
                      height={18}
                     color={
                       address.selected && !hasCurrentLocation ?
@@ -425,7 +430,7 @@ export default function UserAddressComponent(
                   />
                   }
                    {
-                    address?.label === "Apartment" && <AppartmentSvg
+                    address?.label === t("loctype3") && <AppartmentSvg
                     color={
                       address.selected && !hasCurrentLocation ?
                         "#0EA5E9"
@@ -434,7 +439,7 @@ export default function UserAddressComponent(
                   />
                   }
                    {
-                    address?.label === "Other" && <OtherSvg
+                    address?.label === t("loctype4") && <OtherSvg
                     color={
                       address.selected && !hasCurrentLocation ?
                         "#0EA5E9"
@@ -459,7 +464,7 @@ export default function UserAddressComponent(
               {(!address.selected || hasCurrentLocation) && (
                 <div>
                   <CustomButton
-                    label="Choose"
+                    label={t('choose_Address_label')}
                     rounded
                     loading={modifiyingId === address._id && loading}
                     className="border p-2 pl-4 pr-4 border-gray-300 text-sky-500 font-medium"
@@ -475,7 +480,7 @@ export default function UserAddressComponent(
           className="w-[90%] h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
           onClick={() => paginate(1)}
         >
-          <FontAwesomeIcon icon={faPlus} /> <span>Add new address</span>
+          <FontAwesomeIcon icon={faPlus} /> <span> {t('add_new_address_button')}</span>
         </button>
       </div>
     </div>
@@ -486,7 +491,7 @@ export default function UserAddressComponent(
       {/* Header */}
       <div className="w-full">
         <span className="font-inter font-semibold text-[18px] tracking-normal">
-          Add new address
+          {t('Add_new_address')}
         </span>
       </div>
       {/* Google Maps */}
@@ -522,7 +527,7 @@ export default function UserAddressComponent(
         <div className="w-full space-y-2">
           <CustomDropdownComponent
             name="City"
-            placeholder={"Select City"}
+            placeholder={t('select_city_placeholder')}
             selectedItem={selectedCity}
             setSelectedItem={async (key: string, item: IDropdownSelectItem) => {
               setSelectedCity(item);
@@ -540,7 +545,7 @@ export default function UserAddressComponent(
                 _id: "",
                 deliveryAddress: formattedAddress,
                 location: { coordinates: [coords[0], coords[1]] },
-                label: "Home",
+                label: t('label_home'),
               });
             }}
             options={cities_dropdown}
@@ -563,7 +568,7 @@ export default function UserAddressComponent(
             dropdown={false}
             multiple={false}
             loadingIcon={undefined}
-            placeholder="Enter full address"
+            placeholder={t('enter_full_Address_placeholder')}
             style={{ width: "100%" }}
             itemTemplate={(item) => {
               const matches =
@@ -607,7 +612,7 @@ export default function UserAddressComponent(
         <div className="w-full">
           <div className="w-full">
             <span className="font-inter font-semibold text-[12px] tracking-normal">
-              Location Type
+              {t('Location_Type')}
             </span>
           </div>
           <div className="w-full grid grid-cols-2 gap-4">
@@ -642,7 +647,7 @@ export default function UserAddressComponent(
               onHide();
             }}
           >
-            <span>Cancel</span>
+            <span>{t('cancel_address')}</span>
           </button>
           <button
             className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
@@ -653,7 +658,7 @@ export default function UserAddressComponent(
                 icon={faSpinner}
                 spin={modifyingAddressLoading}
               />
-            : <span>Save</span>}
+            : <span>{t("Save_address")}</span>}
           </button>
         </div>
       </div>
@@ -665,7 +670,7 @@ export default function UserAddressComponent(
       {/* Header */}
       <div className="w-full">
         <span className="font-inter font-semibold text-[18px] tracking-normal">
-          Add new address
+           {t('Add_new_address')}
         </span>
       </div>
       {/* Google Maps */}
@@ -698,8 +703,8 @@ export default function UserAddressComponent(
       <div className="w-full flex flex-col items-center gap-y-2">
         <div className="w-full space-y-2">
           <CustomDropdownComponent
-            name="City"
-            placeholder={"Select City"}
+            name={t('City_label')}
+            placeholder={t('select_city_placeholder')}
             selectedItem={selectedCity}
             setSelectedItem={async (key: string, item: IDropdownSelectItem) => {
               setSelectedCity(item);
@@ -717,7 +722,7 @@ export default function UserAddressComponent(
                 _id: "",
                 deliveryAddress: formattedAddress,
                 location: { coordinates: [coords[0], coords[1]] },
-                label: "Home",
+                label: t("home"),
               });
             }}
             options={cities_dropdown}
@@ -740,7 +745,7 @@ export default function UserAddressComponent(
             dropdown={false}
             multiple={false}
             loadingIcon={undefined}
-            placeholder="Enter full address"
+            placeholder={t("enter_full_Address_placeholder")}
             style={{ width: "100%" }}
             itemTemplate={(item) => {
               const matches =
@@ -784,7 +789,7 @@ export default function UserAddressComponent(
         <div className="w-full">
           <div className="w-full">
             <span className="font-inter font-semibold text-[12px] tracking-normal">
-              Location Type
+              {t("Location_Type")}
             </span>
           </div>
           <div className="w-full grid grid-cols-2 gap-4">
@@ -819,7 +824,7 @@ export default function UserAddressComponent(
               onHide();
             }}
           >
-            <span>Cancel</span>
+            <span>{t("cancel_address")}</span>
           </button>
           <button
             className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
@@ -830,7 +835,7 @@ export default function UserAddressComponent(
                 icon={faSpinner}
                 spin={modifyingAddressLoading}
               />
-            : <span>Save</span>}
+            : <span>{t("Save_address")}</span>}
           </button>
         </div>
       </div>

@@ -4,9 +4,11 @@ import TranparentButton from "@/lib/ui/useable-components/Home-Buttons/Tranparen
 
 import riderImg from '@/public/assets/images/png/riderImg.webp'
 import reachNewCustomers from '@/public/assets/images/png/reachNewCustomers.jpg'
+import { useTranslations } from "next-intl";
 const Info = () => {
-  const CourierButton = <TranparentButton text={"For riders"} link={"/rider"} />;
-  const MerchantButton = <TranparentButton text={"For restaurants" } link={"/restaurantInfo"}/>;
+  const t = useTranslations()
+  const CourierButton = <TranparentButton text={t("for_riders")} link={"/rider"} />;
+  const MerchantButton = <TranparentButton text={t("for_rest")} link={"/restaurantInfo"}/>;
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       <MoveableCard
@@ -14,9 +16,9 @@ const Info = () => {
         image={
           riderImg
         }
-        heading={"Becoming a courier partner"}
+        heading={t('MoveableCardHomeScreen.title1')}
         subText={
-          "Earn by delivering to local customers. Set Your own schedule,deliver when and where you want"
+          t('MoveableCardHomeScreen.subText1')
         }
       />
       <MoveableCard
@@ -24,9 +26,9 @@ const Info = () => {
         image={
          reachNewCustomers
         }
-        heading={"Reach new customers"}
+        heading={t('MoveableCardHomeScreen.title2')}
         subText={
-          "We help you to grow your business by helping thousands of people find your venue."
+          t('MoveableCardHomeScreen.subText2')
         }
       />
     </div>

@@ -57,15 +57,15 @@ export const PHONE_EXISTS = gql`
 `;
 
 export const SENT_OTP_TO_EMAIL = gql`
-  mutation SendOtpToEmail($email: String!) {
-    sendOtpToEmail(email: $email) {
+  mutation SendOtpToEmail($email: String!, $otp: String!) {
+    sendOtpToEmail(email: $email, otp: $otp) {
       result
     }
   }
 `;
 export const SENT_OTP_TO_PHONE = gql`
-  mutation SendOtpToPhoneNumber($phone: String!) {
-    sendOtpToPhoneNumber(phone: $phone) {
+  mutation SendOtpToPhoneNumber($phone: String!, $otp: String!) {
+    sendOtpToPhoneNumber(phone: $phone, otp: $otp) {
       result
     }
   }
@@ -145,11 +145,3 @@ export const DEACTIVATE_USER = gql`
     }
   }
 `;
-
-export const VERIFY_OTP = gql`
- mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
-    verifyOtp(otp: $otp, email: $email, phone: $phone) {
-        result
-    }
-}
-`
