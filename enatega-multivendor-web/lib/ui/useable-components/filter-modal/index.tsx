@@ -100,7 +100,7 @@ export default function FilterModal({
           <div className="w-full h-px bg-gray-300 my-2" />
         </div>
 
-        <span className="text-xl font-semibold">Ratings</span>
+        <span className="text-xl font-semibold">{t("ratings")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {ratingData.map((item) => {
             const isSelected = tempFilters.rating.includes(item.name);
@@ -122,7 +122,7 @@ export default function FilterModal({
           <div className="w-full h-px bg-gray-300 my-2" />
         </div>
 
-        <span className="text-xl font-semibold">Sort by</span>
+        <span className="text-xl font-semibold">{t("sort_by_label")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {sortByData.map((item) => {
             const isSelected = tempSortBy === item.name;

@@ -1,5 +1,4 @@
 // slider card
-
 "use client"
 
 import SliderCard from "@/lib/ui/useable-components/slider-card";
