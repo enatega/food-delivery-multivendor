@@ -23,6 +23,7 @@ export default function EarningTableHeader({
   onGlobalFilterChange,
   dateFilters,
   setDateFilters,
+  onClearFilters,
 }: IEarningTableHeaderProps) {
   const [errors, setErrors] = useState({ startDate: '', endDate: '' });
   const [userType, setUserType] = useState<UserTypeEnum>();
@@ -179,6 +180,7 @@ export default function EarningTableHeader({
             placeholder={t('Select User ID')}
           />
         )}
+
         <Dropdown
           className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
           options={orderTypes}
@@ -198,6 +200,13 @@ export default function EarningTableHeader({
           placeholder={t(`${t('Select')} ${t('Payment Method')}`)}
         />
       </div>
+      <button
+        onClick={onClearFilters}
+        className="max-w-32 mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors"
+        type="button"
+      >
+        {t('Reset')}
+      </button>
     </div>
   );
 }
