@@ -78,7 +78,7 @@ export default function WithdrawModal({
             className="font-bold text-lg"
             style={{ color: appTheme.fontMainColor }}
           >
-            ${currentTotal}
+            ${currentTotal?.toFixed(2)}
           </Text>
         </View>
         <View className=" flex flex-col gap-3 w-full">
@@ -112,7 +112,7 @@ export default function WithdrawModal({
             disabled={withdrawRequestLoading}
             onPress={() =>
               handleFormSubmission(Number(withdrawAmount)).then(() =>
-                setWithdrawAmount(""),
+                setWithdrawAmount("")
               )
             }
             style={{ marginTop: 20 }}
