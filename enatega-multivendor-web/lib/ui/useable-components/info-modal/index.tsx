@@ -71,26 +71,38 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
    * @returns Formatted string representing hours or "Closed" if no times available
    */
   const getFormattedHours = (day: IOpeningTime) => {
-    if (day.times.length === 0) return "Closed";
+    if (day.times.length === 0) {
+      return [
+        <div key="closed" className="text-gray-500">
+          Closed
+        </div>,
+      ];
+    }
 
-    return day.times
-      .map((time) => {
-        // Validate time arrays before formatting
-        if (
-          !time.startTime ||
-          !time.startTime[0] ||
-          !time.startTime[1] ||
-          !time.endTime ||
-          !time.endTime[0] ||
-          !time.endTime[1]
-        ) {
-          return "Invalid time";
-        }
-        const start = formatTimeForHoursMins(time.startTime);
-        const end = formatTimeForHoursMins(time.endTime);
-        return `${start}-${end}`;
-      })
-      .join("\n");
+    return day.times.map((time, index) => {
+      if (
+        !time.startTime ||
+        !time.startTime[0] ||
+        !time.startTime[1] ||
+        !time.endTime ||
+        !time.endTime[0] ||
+        !time.endTime[1]
+      ) {
+        return (
+          <div key={index} className="text-red-500">
+            Invalid time
+          </div>
+        );
+      }
+
+      const start = formatTimeForHoursMins(time.startTime);
+      const end = formatTimeForHoursMins(time.endTime);
+      return (
+        <div key={index}>
+          {start} - {end}
+        </div>
+      );
+    });
   };
 
   /**
@@ -179,12 +191,16 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
             <h2 className="text-lg md:text-xl font-bold mb-2">Opening Hours</h2>
             <div className="grid grid-cols-1 gap-2">
               {restaurantInfo.openingTimes.map((day) => (
-                <div
-                  key={day.day}
-                  className="flex justify-between text-xs md:text-[16px] font-normal leading-[16px] md:leading-[24px]"
-                >
-                  <span>{getCurrentDay(day.day)}</span>
-                  <span className="whitespace-pre-line">{getFormattedHours(day)}</span>
+                <div key={day.day} className="flex justify-between items-start">
+                  {/* Day Name */}
+                  <div className="w-28 text-xs md:text-[16px] font-normal leading-[24px]">
+                    {getCurrentDay(day.day)}
+                  </div>
+
+                  {/* Time Ranges with monospaced font */}
+                  <div className="flex flex-col gap-[2px] text-xs md:text-[16px] font-normal leading-[24px] items-end font-inter">
+                    {getFormattedHours(day)}
+                  </div>
                 </div>
               ))}
             </div>
@@ -196,10 +212,9 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               Delivery information
             </h2>
             <div className="grid grid-cols-1 gap-2">
-              <p>Minimum Order: {" "}£{restaurantInfo.MinimumOrder}</p>
-              <p>Delivery Time: {" "} {restaurantInfo.deliveryTime}mins</p>
-              <p>Sales Tax: {" "} £{restaurantInfo.deliveryTax}</p>
-              
+              <p>Minimum Order: £{restaurantInfo.MinimumOrder}</p>
+              <p>Delivery Time: {restaurantInfo.deliveryTime}mins</p>
+              <p>Sales Tax: £{restaurantInfo.deliveryTax}</p>
             </div>
           </div>
           {/* Restaurant Contact Details */}
@@ -215,26 +230,30 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               <h1 className="text-sm md:text-[16px] font-bold mb-2">
                 Phone Number
               </h1>
-              {restaurantInfo?.phone !== "N/A" ?
+              {restaurantInfo?.phone !== "N/A" ? (
                 <a
                   href={`tel:${restaurantInfo?.phone}`}
                   className="text-blue-500 hover:underline"
                 >
                   {restaurantInfo?.phone}
                 </a>
-              : <span className="text-gray-500">N/A</span>}
+              ) : (
+                <span className="text-gray-500">N/A</span>
+              )}
             </div>
             <hr />
             <div className=" flex justify-between text-xs md:text-[16px] font-normal mt-2">
               <h1 className="text-sm md:text-[16px] font-bold mb-2">Email</h1>
-              {restaurantInfo?.username !== "N/A" ?
+              {restaurantInfo?.username !== "N/A" ? (
                 <a
                   href={`mailto:${restaurantInfo?.username || "N/A"}`}
                   className="text-blue-500 hover:underline"
                 >
                   {restaurantInfo?.username}
                 </a>
-              : <span className="text-gray-500">N/A</span>}
+              ) : (
+                <span className="text-gray-500">N/A</span>
+              )}
             </div>
           </div>
         </div>
