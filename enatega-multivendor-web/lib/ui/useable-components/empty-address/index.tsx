@@ -1,10 +1,12 @@
 "use client"
+import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function EmptyAddress() {
       const [animationData, setAnimationData] = useState<null | object>(null);
+      const t = useTranslations()
       
       useEffect(() => {
         fetch("/assets/lottie/address.json")
@@ -18,7 +20,7 @@ export default function EmptyAddress() {
      <div className="w-32 h-32 md:w-60 md:h-60 flex items-center justify-center">
        <Lottie animationData={animationData} loop={true} autoplay={true} />
       </div>
-      <p className="text-gray-500 text-sm md:text-base text-center mb-4">No addresses found. Please add an address.</p>
+      <p className="text-gray-500 text-sm md:text-base text-center mb-4">{t('no_addresses_found_please_add')}</p>
     </div>
   )
 }

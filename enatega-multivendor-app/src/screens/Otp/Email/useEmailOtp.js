@@ -125,7 +125,8 @@ const useEmailOtp = () => {
           password: user.password,
           name: user.name,
           picture: '',
-          notificationToken: notificationToken
+          notificationToken: notificationToken,
+          emailIsVerified: true
         }
       })
     } catch (error) {

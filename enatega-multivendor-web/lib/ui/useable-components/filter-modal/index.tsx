@@ -3,6 +3,7 @@
 import { Button } from "primereact/button";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 import { ICuisinesData } from "@/lib/utils/interfaces";
+import { useTranslations } from "next-intl";
 
 interface Props {
   visible: boolean;
@@ -18,14 +19,6 @@ interface Props {
   clearFilters: () => void;
 }
 
-const ratingData = [{ name: "1" }, { name: "2" }, { name: "3" }, { name: "4" }];
-const sortByData = [
-  { name: "Recommended" },
-  { name: "Delivery Time" },
-  { name: "Distance" },
-  { name: "Rating" },
-];
-
 export default function FilterModal({
   visible,
   onClose,
@@ -37,6 +30,16 @@ export default function FilterModal({
   handleFilterApply,
   clearFilters,
 }: Props) {
+   const t = useTranslations(); // ✅ move inside component
+
+  const ratingData = [{ name: "1" }, { name: "2" }, { name: "3" }, { name: "4" }];
+  const sortByData = [
+    { name: t("sort_by_recommended") },
+    { name: t("sort_by_delivery_time") },
+    { name: t("sort_by_distance") },
+    { name: t("sort_by_rating") },
+  ];
+
   const toggleCuisineSelection = (name: string) => {
     setTempFilters((prev) => {
       const alreadySelected = prev.cuisines.includes(name);
@@ -49,7 +52,6 @@ export default function FilterModal({
       };
     });
   };
-
   const toggleRatingSelection = (rating: string) => {
     setTempFilters((prev) => {
       const alreadySelected = prev.rating.includes(rating);
@@ -74,7 +76,7 @@ export default function FilterModal({
           onClick={clearFilters}
           className="text-sky-500 text-base font-semibold pb-2"
         >
-          Clear Filters
+          {t("clear_filters")}
         </button>
 
         <span className="text-xl font-semibold block">Filters</span>
@@ -98,7 +100,7 @@ export default function FilterModal({
           <div className="w-full h-px bg-gray-300 my-2" />
         </div>
 
-        <span className="text-xl font-semibold">Ratings</span>
+        <span className="text-xl font-semibold">{t("ratings")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {ratingData.map((item) => {
             const isSelected = tempFilters.rating.includes(item.name);
@@ -120,7 +122,7 @@ export default function FilterModal({
           <div className="w-full h-px bg-gray-300 my-2" />
         </div>
 
-        <span className="text-xl font-semibold">Sort by</span>
+        <span className="text-xl font-semibold">{t("sort_by_label")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {sortByData.map((item) => {
             const isSelected = tempSortBy === item.name;
@@ -145,7 +147,7 @@ export default function FilterModal({
           onClick={handleFilterApply}
           className="w-full py-3 px-2 bg-primary-color rounded-full justify-center items-center text-center text-gray-700"
         >
-          Apply
+          {t("apply_buttons")}
         </Button>
       </div>
     </CustomDialog>

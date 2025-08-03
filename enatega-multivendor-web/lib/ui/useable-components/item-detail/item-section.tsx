@@ -1,5 +1,6 @@
 // Interface
 import { SectionProps, Option } from "@/lib/utils/interfaces";
+import { useTranslations } from "next-intl";
 
 /**
  * `ItemDetailSection` is a generic component that renders either radio buttons or checkboxes
@@ -62,6 +63,8 @@ export const ItemDetailSection = <
     ? (multiSelected as T[]).filter((item) => !item.isOutOfStock)
     : [];
 
+    const t = useTranslations()
+
   return (
     <div className="mb-4">
       <div className="flex justify-between items-center mb-2">
@@ -101,7 +104,7 @@ export const ItemDetailSection = <
             <div className="flex justify-between items-center w-full">
               <span className="text-sm text-gray-900">
                 {option.title}{" "}
-                {option.isOutOfStock ?<span className="text-red-500">(Out of stock)</span> : ""}{" "}
+                {option.isOutOfStock ?<span className="text-red-500">{t('out_of_stock_label')}</span> : ""}{" "}
               </span>
               <span className="text-sm text-gray-700">${option.price}</span>
             </div>

@@ -31,10 +31,10 @@ export default function LoginWithGoogle({
       <div className="flex flex-col gap-y-2 text-center w-full mb-6">
 
         <h3 className="text-2xl md:text-3xl font-semibold text-black">
-          {t("Welcome")}!
+          {t("welcome_label")}!
         </h3>
         <p className="text-gray-600 text-sm md:text-base">
-          {t("Sign up or log in to continue")}
+          {t("sign_up_or_log_in_to_continue_message")}
         </p>
       </div>
 
@@ -44,7 +44,7 @@ export default function LoginWithGoogle({
           loading={isLoading}
           SvgIcon={GoogleLogo}
           classNames="hover:bg-gray-100 w-full"
-          title={t("Sign In With Google")}
+          title={t("sign_in_with_google_label")}
           handleClick={googleLogin}
         />
       </div>
@@ -52,14 +52,14 @@ export default function LoginWithGoogle({
       {/* Divider */}
       <div className="flex items-center justify-center w-full max-w-sm mb-4">
         <Divider color="border-gray-200" />
-        <span className="mx-2 text-sm text-gray-500">{t("or")}</span>
+        <span className="mx-2 text-sm text-gray-500">{t("or_label")}</span>
         <Divider color="border-gray-200" />
       </div>
 
       {/* Login Button */}
       <div className="w-full max-w-sm mb-4">
         <CustomButton
-          label={t("Login")}
+          label={t("login")}
           className="bg-[#5AC12F] hover:bg-[#54ad2e] text-white w-full py-3 rounded-full border border-gray-300 flex justify-center items-center"
           onClick={() => handleChangePanel(1)}
         />
@@ -68,7 +68,7 @@ export default function LoginWithGoogle({
       {/* Sign Up Button */}
       <div className="w-full max-w-sm mb-4">
         <CustomButton
-          label={t("Sign Up")}
+          label={t("sign_up_label")}
           className="bg-white hover:bg-gray-100 w-full py-3 rounded-full border border-gray-300 flex justify-center items-center text-black"
           onClick={() => handleChangePanel(2)}
         />
@@ -76,19 +76,19 @@ export default function LoginWithGoogle({
 
       {/* Terms and Privacy */}
       <p className="text-center text-xs text-gray-500 max-w-sm px-2">
-        {t("By signing up, you agree to our")}&nbsp;
+        {t("by_signing_up_you_agree_to_our_message")}&nbsp;
         <Link
           href="/terms"
-          className="font-semibold underline hover:text-gray-700"
+          className="font-bold underline hover:text-gray-700"
         >
-          {t("Terms")}
+          {t("terms_label")}
         </Link>{" "}
-        {t("and Conditions and")}&nbsp;
+        {t("and_conditions_and_message")}&nbsp;
         <Link
           href="/privacy"
-          className="font-semibold underline hover:text-gray-700"
+          className="font-bold underline hover:text-gray-700"
         >
-          {t("Privacy Policy")}
+          {t("privacy_policy_label")}
         </Link>
         .
       </p>

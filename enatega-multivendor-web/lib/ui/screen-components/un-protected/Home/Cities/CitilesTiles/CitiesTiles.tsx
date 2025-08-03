@@ -17,6 +17,7 @@ import { CircleCrossSvg } from "@/lib/utils/assets/svg";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { useUserAddress } from "@/lib/context/address/address.context";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
+import { useTranslations } from "next-intl";
 
 
 
@@ -35,6 +36,8 @@ const CitiesTiles: React.FC<CitiesTilesProps> = ({
     variables: { id: countryId },
     fetchPolicy: "cache-and-network",
   });
+
+    const t =useTranslations()
 
   const onCityClick = (item: City | CountryItem | void) => {
     if (!item || !("latitude" in item)) return;
@@ -71,7 +74,7 @@ const CitiesTiles: React.FC<CitiesTilesProps> = ({
   return (
     <div>
       <div className="flex w-full justify-start items-center gap-x-2">
-        <p className="text-[#111827] font-semibold text-xl">Explore Cities</p>
+        <p className="text-[#111827] font-semibold text-xl"> {t("explore_cities")}</p>
         {data?.getCitiesByCountry?.name && (
           <div className="relative flex gap-x-2">
             <p className="text-[#94e469] border-2 border-[#94e469] px-2 rounded">

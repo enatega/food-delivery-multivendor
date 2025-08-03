@@ -8,6 +8,7 @@ import PhoneIcon from "@/lib/utils/assets/svg/phone";
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useTranslations } from "next-intl";
 
 const VerificationPhone = ({
   handleSubmitAfterVerification,
@@ -91,13 +92,13 @@ const VerificationPhone = ({
 
   const [loading, setLoading] = useState(false);
 
-const handleSubmit = useDebounceFunction(
-  async () => {
+  const t = useTranslations();
+  const handleSubmit = useDebounceFunction(async () => {
     if (otp.join("").length !== 6) {
       return showToast({
         type: "error",
         title: "Error",
-        message: "Please enter a valid OTP",
+        message: t("please_enter_valid_otp_message"),
       });
     }
 
@@ -106,79 +107,82 @@ const handleSubmit = useDebounceFunction(
       await handleSubmitAfterVerification();
       setLoading(false);
     }, 3000);
-  },
-  500
-);
-
+  }, 500);
 
   return (
-<div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
-  <div className="mb-4">
-  <PhoneIcon/>
-  </div>
-  <div className="flex flex-col justify-items-start text-left w-full">
-    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-      We have sent OTP code to
-    </h2>
+    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+      <div className="mb-4">
+        <PhoneIcon />
+      </div>
+      <div className="flex flex-col justify-items-start text-left w-full">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+          {t("otp_sent_code_to_label")}
+        </h2>
 
-    <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
-      {user?.phone || "+49 123456789"}
-    </p>
+        <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
+          {user?.phone || "+49 123456789"}
+        </p>
 
-    <p className="text-base text-gray-600 mb-6">Verify your mobile number</p>
-  </div>
+        <p className="text-base text-gray-600 mb-6">
+          {" "}
+          {t("verify_your_mobile_number_label")}
+        </p>
+      </div>
 
-  <div className="w-full mb-6">
-    <div className="flex justify-center flex-wrap gap-2 sm:gap-3 md:gap-4">
-      {[0, 1, 2, 3, 4, 5].map((index) => (
-        <input
-          key={index}
-          ref={(el) => {
-            inputRefs.current[index] = el;
-          }}
-          type="text"
-          inputMode="numeric"
-          maxLength={1}
-          value={otp[index]}
-          onChange={(e) => handleChange(e, index)}
-          onKeyDown={(e) => handleKeyDown(e, index)}
-          onPaste={index === 0 ? handlePaste : undefined}
-          className="w-10 h-12 sm:w-12 sm:h-14 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
-          autoFocus={index === 0}
-        />
-      ))}
-    </div>
-  </div>
+      <div className="w-full mb-6">
+        <div className="flex justify-center flex-wrap gap-2 sm:gap-3 md:gap-4">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
+            <input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={otp[index]}
+              onChange={(e) => handleChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onPaste={index === 0 ? handlePaste : undefined}
+              className="w-10 h-12 sm:w-12 sm:h-14 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+              autoFocus={index === 0}
+            />
+          ))}
+        </div>
+      </div>
 
-  <p className="text-sm text-gray-500 mb-6 text-center w-full">
-    Valid for 10 minutes
-  </p>
+      <p className="text-sm text-gray-500 mb-6 text-center w-full">
+        {t("otp_valid_for_10_minutes_label")}
+      </p>
 
-  {/* <CustomButton
+      {/* <CustomButton
     label={"Continue"}
     className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-md lg:text-lg sm:text-md font-medium"
     onClick={handleSubmit}
   /> */}
-  <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className={`bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-md lg:text-lg sm:text-md font-medium ${
-              loading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-          >
-            {loading ? (
-              <FontAwesomeIcon icon={faSpinner} spin className="text-white text-lg" />
-            ) : (
-              "Save"
-            )}
-          </button>
-  <CustomButton
-    label={"Resend OTP"}
-    className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-md lg:text-lg sm:text-md sm:text-md font-medium"
-    onClick={handleResendPhoneOtp}
-  />
-</div>
-
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className={`bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-md lg:text-lg sm:text-md font-medium ${
+          loading ? "opacity-70 cursor-not-allowed" : ""
+        }`}
+      >
+        {loading ? (
+          <FontAwesomeIcon
+            icon={faSpinner}
+            spin
+            className="text-white text-lg"
+          />
+        ) : (
+          t("save_label")
+        )}
+      </button>
+      <CustomButton
+        label={t("resend_otp_label")}
+        className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-md lg:text-lg sm:text-md sm:text-md font-medium"
+        onClick={handleResendPhoneOtp}
+      />
+    </div>
   );
 };
 

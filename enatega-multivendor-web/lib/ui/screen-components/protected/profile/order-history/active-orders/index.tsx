@@ -7,9 +7,11 @@ import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/navigation";
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
 import TextComponent from "@/lib/ui/useable-components/text-field";
+import { useTranslations } from "next-intl";
 
 
 export default function ActiveOrders({ activeOrders, isOrdersLoading }: IActiveOrdersProps) {
+  const t = useTranslations()
   const router = useRouter()
 
   //Handlers
@@ -30,9 +32,9 @@ export default function ActiveOrders({ activeOrders, isOrdersLoading }: IActiveO
   if (activeOrders?.length === 0) {
     return (
       <EmptyState
-        title="No Active Orders"
-        message="You don't have any active orders at the moment."
-        actionLabel="Browse Store"
+        title={t("no_active_orders_title")}
+        message={t("no_active_orders_message")}
+        actionLabel={t("browse_store_button")}
         actionLink="/store"
       />
     )
@@ -46,7 +48,7 @@ export default function ActiveOrders({ activeOrders, isOrdersLoading }: IActiveO
   //  (optional) we can use styling for order status- for example if order is pending then display the order card style in yellow color 
   return (
     <div className="space-y-4 py-4">
-      <TextComponent text="Active Orders" className="text-xl md:text-2xl font-semibold mb-6" />
+      <TextComponent text={t("no_active_orders_title")} className="text-xl md:text-2xl font-semibold mb-6" />
       <div className="space-y-4">
         {activeOrders?.map((order: IOrder) => (
           <OrderCard
