@@ -758,14 +758,13 @@ export default function OrderCheckoutScreen() {
           </GoogleMap>
         ) : (
           <>
-            
-<Image
-  src="https://storage.googleapis.com/a1aa/image/jt1AynRJJVtM9j1LRb30CodA1xsK2R23pWTOmRv3nsM.jpg"
-  alt="Map showing delivery route"
-  width={1200}
-  height={300}
-  className="w-full h-64 object-cover"
-/>
+            <Image
+              src="https://storage.googleapis.com/a1aa/image/jt1AynRJJVtM9j1LRb30CodA1xsK2R23pWTOmRv3nsM.jpg"
+              alt="Map showing delivery route"
+              width={1200}
+              height={300}
+              className="w-full h-64 object-cover"
+            />
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#5AC12F] text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
               H
             </div>{" "}
@@ -886,12 +885,15 @@ export default function OrderCheckoutScreen() {
                   >
                     <div className="flex items-start">
                       <Image
-  src="https://storage.googleapis.com/a1aa/image/cPA2BWDjlQ26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
-  alt="Big Share meal"
-  width={50}
-  height={50}
-  className="w-12 h-12 rounded-full mr-2 object-cover"
-/>
+                        src={
+                          item.image ||
+                          "https://storage.googleapis.com/a1aa/image/cPA2BWDjl26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
+                        }
+                        alt="Big Share meal"
+                        width={50}
+                        height={50}
+                        className="w-12 h-12 rounded-full mr-2 object-cover"
+                      />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm sm:text-base md:text-[12px] lg:text-[14px] xl:text-[16px]">
                           {item.foodTitle}
