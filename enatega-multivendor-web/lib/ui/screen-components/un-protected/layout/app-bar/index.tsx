@@ -86,7 +86,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     fetchProfile,
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
-  
+
   const { getCurrentLocation } = useLocation();
   const { onSetUserLocation } = useSetUserCurrentLocation();
   const {
@@ -108,7 +108,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     setSearchedKeywords,
   } = useSearchUI();
 
-  
   // Format subtotal for display
   const formattedSubtotal =
     cartCount > 0
@@ -225,7 +224,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // filters search results
   let searchedKeywords = getSearchedKeywords();
 
-
   const filteredResults = useMemo(() => {
     if (!filter.trim()) return [];
     if (!queryData || !Array.isArray(queryData) || queryData.length === 0)
@@ -268,7 +266,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       if (searchedKeywords.length === 0) {
         return (
           <div className="text-center py-4 text-gray-500">
-            {t('start_typing_to_search_for_restaurants_or_stores')} 
+            {t("start_typing_to_search_for_restaurants_or_stores")}
           </div>
         );
       }
@@ -278,7 +276,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
         <div>
           <div className="flex flex-row justify-between">
             <span className="text-sm font-normal mb-2 text-gray-500">
-             {t("you_recently_searched")}
+              {t("you_recently_searched")}
             </span>
             <span
               className="text-sm font-normal mb-2 text-sky-500 hover:cursor-pointer"
@@ -310,7 +308,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     if (filteredResults.length > 0) {
       return (
         <MainSection
-          title={`${t('restaurant_and_stores_title')}: ${filter}`}
+          title={`${t("restaurant_and_stores_title")}: ${filter}`}
           data={filteredResults.slice(0, 3)}
           loading={false}
           error={false}
@@ -409,7 +407,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     value={filter}
                     onChange={handleSearchInputChange}
                     onFocus={() => setIsSearchFocused(true)}
-                    placeholder={t('SearchBarPlaceholder')}
+                    placeholder={t("SearchBarPlaceholder")}
                     className={`
       w-full px-4 py-2 pr-10 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500
       ${!isSearchFocused ? "hidden" : "block"} sm:block
@@ -488,7 +486,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     <Menu
                       model={[
                         {
-                          label: t('ProfileSection.profile_label'),
+                          label: t("ProfileSection.profile_label"),
                           command: () => {
                             router.push("/profile");
                           },
@@ -501,7 +499,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                           },
                         },
                         {
-                          label: t('ProfileSection.logout_appbar'),
+                          label: t("ProfileSection.logout_appbar"),
                           command: () => {
                             onLogout();
                           },
@@ -516,7 +514,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {/* Language Dropdown */}
                 {!isSearchFocused && (
-                  <div className="relative">
+                  <div className="relative" title="Languages">
                     <button
                       onClick={(e) => languageMenuRef.current?.toggle(e)}
                       className="flex items-center justify-center"
@@ -605,27 +603,29 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
 
                 {/* Cart Button */}
-                <div className="p-1">
-                  {authToken && (
-                    <div>
-                      {cartCount > 0 && !isSearchFocused && (
-                        <div
-                          className="hidden lg:flex items-center justify-between bg-[#5AC12F] rounded-lg px-4 py-3 w-64 cursor-pointer"
-                          onClick={() => setIsCartOpen(true)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div className="bg-white text-[#5AC12F] rounded-full w-5 h-5 flex items-center justify-center text-[10px] sm:text-[12px]">
-                              {cartCount}
-                            </div>
-                            <span className="ml-2 text-white text-[14px] font-semibold sm:text-[14px]">
-                              {t("show_items_btn")}
-                            </span>
-                          </div>
-                          <span className="text-white text-[14px]  sm:text-[16px]">
-                            {formattedSubtotal}
-                          </span>
+                <div className="p-1 cursor-pointer">
+                  {cartCount > 0 && !isSearchFocused && (
+                    <div
+                      className="hidden lg:flex items-center justify-between bg-[#5AC12F] rounded-lg px-4 py-3 w-64 cursor-pointer"
+                      onClick={() => {
+                        if (!authToken) {
+                          setIsAuthModalVisible(true); // ⬅️ Show login/signup modal
+                        } else {
+                          setIsCartOpen(true); // ⬅️ Open cart drawer
+                        }
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="bg-white text-[#5AC12F] rounded-full w-5 h-5 flex items-center justify-center text-[10px] sm:text-[12px]">
+                          {cartCount}
                         </div>
-                      )}
+                        <span className="ml-2 text-white text-[14px] font-semibold sm:text-[14px]">
+                          {t("show_items_btn")}
+                        </span>
+                      </div>
+                      <span className="text-white text-[14px] sm:text-[16px]">
+                        {formattedSubtotal}
+                      </span>
                     </div>
                   )}
 
