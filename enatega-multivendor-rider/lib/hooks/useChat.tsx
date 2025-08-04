@@ -56,6 +56,7 @@ export const useChatScreen = () => {
   const onSend = () => {
     send({
       variables: {
+        isStoreChat: false,
         orderId: String(orderId),
         messageInput: {
           message: String(inputMessage),

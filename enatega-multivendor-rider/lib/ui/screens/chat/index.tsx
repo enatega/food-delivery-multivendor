@@ -9,6 +9,7 @@ import ChatMain from "@/lib/ui/screen-components/chat/main";
 import { useApptheme } from "@/lib/context/global/theme.context";
 
 export default function Chat() {
+
   // Hooks
   const { appTheme } = useApptheme();
   return (

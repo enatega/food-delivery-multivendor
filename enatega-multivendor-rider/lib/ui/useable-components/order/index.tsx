@@ -4,7 +4,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 // Components
 import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
 // Interface
-import { IOrderComponentProps } from "@/lib/utils/interfaces/interface";
+import { IOrderComponentProps } from "@/lib/utils/interfaces";
 
 // Contexrtg
 // Hook

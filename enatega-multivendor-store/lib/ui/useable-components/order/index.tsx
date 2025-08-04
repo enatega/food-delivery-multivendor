@@ -9,13 +9,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import CountdownTimer from "../custom-timer";
 import SpinnerComponent from "../spinner";
-import { TimeLeftIcon } from "../svg";
+import { ChatIcon, TimeLeftIcon } from "../svg";
 
 // Hooks
 import { useApptheme } from "@/lib/context/theme.context";
 import useCancelOrder from "@/lib/hooks/useCancelOrder";
 import useOrderPickedUp from "@/lib/hooks/useOrderPickedUp";
 import { useTranslation } from "react-i18next";
+import { router } from "expo-router";
 
 const Order = ({
   order,
@@ -36,11 +37,11 @@ const Order = ({
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
 
   // Ref
-  const timer = useRef<NodeJS.Timeout>();
+  const timer = useRef<NodeJS.Timeout>(null);
 
   // States
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
-    getIsAcceptButtonVisible(order?.orderDate),
+    getIsAcceptButtonVisible(order?.orderDate)
   );
 
   // Timer
@@ -458,9 +459,49 @@ const Order = ({
           </View>
         )}
 
+        {order?.orderStatus !== "PENDING" && (
+          <View className="flex-row items-center gap-x-2">
+            <TouchableOpacity
+              onPress={() => {
+                router.push({
+                  pathname: "/chat",
+                  params: {
+                    phoneNumber: order.user.phone,
+                    orderId: order.orderId,
+                    id: order._id,
+                  },
+                });
+              }}
+            >
+              <View className="border border-[#E2E8F0] rounded-full p-3">
+                <ChatIcon
+                  width={30}
+                  height={30}
+                  color={appTheme.fontMainColor}
+                />
+              </View>
+            </TouchableOpacity>
+            {/* Order Comment */}
+            <View className="flex-1">
+              <Text
+                className="font-[Inter] text-[16px] text-base font-[500] "
+                style={{ color: appTheme.fontSecondColor }}
+              >
+                {t("Order Comment")}
+              </Text>
+              <Text
+                className="font-[Inter] text-[16px] italic font-medium "
+                style={{ color: appTheme.fontMainColor }}
+              >
+                {t("No Comment")}
+              </Text>
+            </View>
+          </View>
+        )}
+
         {/* Processing */}
         {["ACCEPTED", "ASSIGNED", "PICKED"].includes(
-          order?.orderStatus ?? "",
+          order?.orderStatus ?? ""
         ) && (
           <>
             <View className="w-full items-center">

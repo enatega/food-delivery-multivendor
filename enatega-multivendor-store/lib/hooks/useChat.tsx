@@ -7,7 +7,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import UserContext from "../context/global/user.context";
 
 // API
-import { CHAT } from "@/lib/apollo/queries";
+import { CHAT, GET_STORE_CHAT_MESSAGES } from "@/lib/apollo/queries";
 import { SEND_CHAT_MESSAGE } from "@/lib/apollo/mutations/chat.mutation";
 import { SUBSCRIPTION_NEW_MESSAGE } from "@/lib/apollo/subscriptions";
 
@@ -25,14 +25,23 @@ export const useChatScreen = () => {
   const [image, setImage] = useState([]);
 
   // API
-  const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
-    CHAT,
-    {
-      variables: { order: orderId },
-      fetchPolicy: "network-only",
-      onError,
-    },
-  );
+    const {
+    subscribeToMore: subscribeToMessages, data: chatData
+  } = useQuery(GET_STORE_CHAT_MESSAGES, {
+    variables: { order: orderId },
+    skip: !orderId,
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all',
+    // onCompleted: (data) => {
+    //   if (data?.storeChat) {
+    //     // Sort messages by creation time to ensure proper order
+    //     const sortedMessages = [...data.storeChat].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    //     setMessages(sortedMessages);
+    //   }
+    // },
+    onError,
+  });
+
   const [send] = useMutation(SEND_CHAT_MESSAGE, { onCompleted, onError });
 
   function onCompleted({ sendChatMessage: messageResult }) {
@@ -48,12 +57,13 @@ export const useChatScreen = () => {
   const onSend = () => {
     send({
       variables: {
+        isStoreChat: true,
         orderId: orderId,
         messageInput: {
           message: inputMessage,
           user: {
-            id: dataProfile.rider._id,
-            name: dataProfile.rider.name,
+            id: dataProfile?._id,
+            name: dataProfile?.name,
           },
         },
       },
@@ -70,17 +80,19 @@ export const useChatScreen = () => {
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         return {
-          chat: [subscriptionData.data.subscriptionNewMessage, ...prev.chat],
+          storeChat: [subscriptionData?.data?.subscriptionNewMessage, ...(prev?.storeChat ?? [])],
         };
       },
     });
     return unsubscribe;
   });
 
+
+
   useEffect(() => {
     if (chatData) {
       setMessages(
-        chatData?.chat?.map((message) => ({
+        chatData?.storeChat?.map((message) => ({
           _id: message.id,
           text: message.message,
           createdAt: message.createdAt,
