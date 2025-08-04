@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { UPDATE_DELIVERY_OPTIONS } from '@/lib/api/graphql/mutations/deliveryOptions';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import useToast from '@/lib/hooks/useToast';
-import CustomButton from '@/lib/ui/useable-components/button';
 import Toggle from '@/lib/ui/useable-components/toggle';
 import { useMutation } from '@apollo/client';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { useTranslations } from 'next-intl';
 import { useContext } from 'react';
 import * as Yup from 'yup';
@@ -20,8 +20,8 @@ interface IDeliveryOptions {
     pickup: boolean
     delivery: boolean
 }
-
-const DeliveryOptions = ({ data, loading, refetch }: any) => {
+//@ts-ignore
+const DeliveryOptions = ({ data, loading, refetch } : any) => {
     const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
     const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
@@ -102,7 +102,7 @@ const DeliveryOptions = ({ data, loading, refetch }: any) => {
                             onSubmit={handleSubmit}
                             enableReinitialize
                         >
-                            {({ values, setFieldValue, isSubmitting }) => (
+                            {({ values, setFieldValue }) => (
                                 <Form className="flex flex-col gap-6">
                                     <div className="flex items-center justify-between rounded-md border p-3">
                                         <label htmlFor="pickupOnly" className="text-sm font-medium text-gray-700">

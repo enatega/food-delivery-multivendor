@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 // Core
 import { ErrorMessage, Form, Formik, FormikErrors } from 'formik';
@@ -28,13 +29,13 @@ import { TimingSchema } from '@/lib/utils/schema/timing';
 import useToast from '@/lib/hooks/useToast';
 
 // GraphQL
-import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 import { UPDATE_TIMINGS } from '@/lib/api/graphql/mutations/timing';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 
-const TimingAddForm = ({ data , loading , refetch } : any) => {
-  // Context
+
+
+const TimingAddForm = ( { data, loading, refetch } : any) => {
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
