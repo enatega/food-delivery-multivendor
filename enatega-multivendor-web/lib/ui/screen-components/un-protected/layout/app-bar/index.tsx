@@ -516,7 +516,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {/* Language Dropdown */}
                 {!isSearchFocused && (
-                  <div className="relative">
+                  <div className="relative" title="Languages">
                     <button
                       onClick={(e) => languageMenuRef.current?.toggle(e)}
                       className="flex items-center justify-center"
@@ -605,7 +605,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
 
                 {/* Cart Button */}
-                <div className="p-1">
+                <div className="p-1 cursor-pointer">
                   {authToken && (
                     <div>
                       {cartCount > 0 && !isSearchFocused && (
