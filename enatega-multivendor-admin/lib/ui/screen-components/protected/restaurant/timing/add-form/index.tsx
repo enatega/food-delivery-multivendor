@@ -33,7 +33,7 @@ import { UPDATE_TIMINGS } from '@/lib/api/graphql/mutations/timing';
 import { useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 
-const TimingAddForm = () => {
+const TimingAddForm = ({ data , loading , refetch } : any) => {
   // Context
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
@@ -42,10 +42,10 @@ const TimingAddForm = () => {
   const t = useTranslations();
   const { showToast } = useToast();
 
-  const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
-    fetchPolicy: 'cache-and-network',
-    variables: { id: restaurantId },
-  });
+  // const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
+  //   fetchPolicy: 'cache-and-network',
+  //   variables: { id: restaurantId },
+  // });
 
   //for conversion from ["HH","MM"] to 'HH:MM' format
   const openingTimes: ITimingForm[] =
@@ -65,6 +65,7 @@ const TimingAddForm = () => {
         times,
       };
     }) ?? [];
+
 
   const initialValues: ITimingForm[] =
     openingTimes.length > 0 ? openingTimes : TIMING_INITIAL_VALUE;
