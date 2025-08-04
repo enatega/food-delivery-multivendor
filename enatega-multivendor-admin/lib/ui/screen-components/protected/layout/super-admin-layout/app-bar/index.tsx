@@ -574,10 +574,11 @@ const AppTopbar = () => {
 
       <div className="flex md:hidden space-x-3">
         <div
-          className="rounded-md p-2 hover:bg-[#d8d8d837]"
+          className="rounded-md p-2 hover:bg-[#d8d8d837] cursor-pointer"
           onClick={(event) => languageMenuRef.current?.toggle(event)}
           aria-controls="popup_menu_right"
-          aria-haspopup
+          aria-haspopup 
+          title='Languages'
         >
           <FontAwesomeIcon icon={faGlobe} />
 

@@ -15,7 +15,6 @@ export default function EarningRestaurantTableHeader({
   dateFilters,
   setDateFilters,
   onClearFilters,
-
 }: IEarningTableHeaderProps) {
   // Hooks
   const t = useTranslations();
@@ -134,14 +133,14 @@ export default function EarningRestaurantTableHeader({
           }
           placeholder={`${t('Select')} ${t('Payment Method')})`}
         />
+        <button
+          onClick={onClearFilters}
+          className="max-w-32  px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
+          type="button"
+        >
+          {t('Reset')}
+        </button>
       </div>
-      <button
-        onClick={onClearFilters}
-        className="max-w-32  px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
-        type="button"
-      >
-        {t('Reset')}
-      </button>
     </div>
   );
 }
