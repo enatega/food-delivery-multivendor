@@ -180,8 +180,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     //Give Toast Alert You Logout Successfully
     showToast({
       type: "success",
-      title: "Logout",
-      message: "You have Logged out successfully",
+      title: t("logoutSuccessToastTitle"),
+      message: t("logoutSuccessToastMessage"),
     });
 
     localStorage.clear();
@@ -447,10 +447,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
-                    className="md:w-20 w-16 h-fit py-3 text-gray-900 md:py-3  px-3 bg-[#5AC12F] rounded text-sm lg:text-[16px] md:text-md "
+                    className="md:w-fit w-18 h-fit py-3 text-gray-900 md:py-3  px-3 bg-[#5AC12F] rounded text-xs lg:text-[16px] md:text-md "
                     onClick={handleModalToggle}
                   >
-                    <span className="text-white font-semibold text-[16px]">
+                    <span className="text-white font-semibold  text-xs md:text-[16px]">
                       {t("login_label")}
                     </span>
                   </button>
