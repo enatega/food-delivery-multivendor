@@ -23,6 +23,7 @@ export default function EarningTableHeader({
   onGlobalFilterChange,
   dateFilters,
   setDateFilters,
+  onClearFilters,
 }: IEarningTableHeaderProps) {
   const [errors, setErrors] = useState({ startDate: '', endDate: '' });
   const [userType, setUserType] = useState<UserTypeEnum>();
@@ -104,7 +105,7 @@ export default function EarningTableHeader({
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
+    <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between  ">
       <div className="flex flex-wrap gap-4">
         <span className="p-input-icon-left w-full md:w-auto">
           <i className="pi pi-search" />
@@ -168,6 +169,7 @@ export default function EarningTableHeader({
           }}
           placeholder={`${t('Select')} ${t('User')} ${t('Type')}`}
         />
+        
         {userType !== undefined && userType !== 'ALL' && (
           <Dropdown
             className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
@@ -179,6 +181,8 @@ export default function EarningTableHeader({
             placeholder={t('Select User ID')}
           />
         )}
+             
+
         <Dropdown
           className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
           options={orderTypes}
@@ -188,6 +192,7 @@ export default function EarningTableHeader({
           }
           placeholder={`${t('Select')} ${t('Order')} ${t('Type')}`}
         />
+        
         <Dropdown
           className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
           options={paymentTypes}
@@ -197,7 +202,15 @@ export default function EarningTableHeader({
           }
           placeholder={t(`${t('Select')} ${t('Payment Method')}`)}
         />
+         <button
+        onClick={onClearFilters}
+        className="max-w-32  px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
+        type="button"
+      >
+        {t('Reset')}
+      </button>
       </div>
+
     </div>
   );
 }
