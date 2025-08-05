@@ -862,5 +862,7 @@
   "view_label": "View",
   "onMap_label": "On Map",
   "update_password_error_title": "Error",
-  "sort_by_label": "Sort by "
+  "sort_by_label": "Sort by ",
+  "installPWA":"Install this app for a better experience!",
+  "install_app_label": "Install App"
 }
