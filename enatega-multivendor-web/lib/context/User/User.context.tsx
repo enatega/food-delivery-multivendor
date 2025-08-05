@@ -789,12 +789,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     subscribeOrders();
   }, [dataProfile]);
 
-  const resetCart = useCallback(() => {
-  setCart([]); // Clear the cart in memory
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("cartItems"); // Remove from localStorage
-  }
-}, []);
 
 
   return (
