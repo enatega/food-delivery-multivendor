@@ -15,7 +15,7 @@ import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Prime React
 import { InputOtp } from "primereact/inputotp";
@@ -31,6 +31,8 @@ export default function PhoneVerification({
 }: IPhoneVerificationProps) {
   // States
   const [isResendingOtp, setIsResendingOtp] = useState(false);
+    const [userotp, setuserOtp] = useState<string[]>(Array(6).fill(""))
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   // Hooks
   const { SKIP_MOBILE_VERIFICATION, TEST_OTP } = useConfig();
@@ -136,6 +138,17 @@ export default function PhoneVerification({
     }
   };
 
+  useEffect(() => {
+  inputRefs.current = inputRefs.current.slice(0, 6);
+
+  if (phoneOtp) {
+    const otpArray = phoneOtp.split("").slice(0, 6);
+    const paddedArray = otpArray.concat(Array(6 - otpArray.length).fill(""));
+    setuserOtp(paddedArray);
+  }
+}, []);
+
+
   // UseEffects
   useEffect(() => {
     if (SKIP_MOBILE_VERIFICATION) {
@@ -153,6 +166,17 @@ export default function PhoneVerification({
       }
     }
   }, [SKIP_MOBILE_VERIFICATION]);
+
+    useEffect(() => {
+      inputRefs.current = inputRefs.current.slice(0, 6)
+  
+      // Set initial values from phoneOtp if it exists
+      if (phoneOtp) {
+        const otpArray = phoneOtp.split("").slice(0, 6)
+        setuserOtp(otpArray.concat(Array(6 - otpArray.length).fill("")))
+      }
+    }, [])
+
 
   return (
       <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
@@ -172,28 +196,47 @@ export default function PhoneVerification({
         
           <p className="text-base text-gray-600 mb-6">{t("please_check_your_inbox_message_1")}</p>
         </div>
-        OTP Input
         <div className="w-full mb-6">
           <div className="flex justify-center flex-wrap gap-2">
             {[0, 1, 2, 3, 4, 5].map((index) => (
-              <InputOtp
-                key={index}
-                type="text"
-                inputMode="numeric"
-                autoFocus
-                mask
-                maxLength={6}
-                length={6}
-                value={phoneOtp}
-                onChange={(e) => setPhoneOtp(String(e.value))}
-                onPaste={(e) =>
-                  setPhoneOtp(
-                    String(e.clipboardData.items[0].getAsString((data) => data))
-                  )
-                }
-                className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
-              />
-            ))}
+  <input
+    key={index}
+    type="text"
+    inputMode="numeric"
+    ref={(el) => {
+      inputRefs.current[index] = el;
+    }}
+    maxLength={1}
+    value={userotp[index]}
+    onChange={(e) => {
+      const value = e.target.value.replace(/\D/, ""); // Only digits
+      if (!value) return;
+
+      const updatedOtp = [...userotp];
+      updatedOtp[index] = value;
+      setuserOtp(updatedOtp);
+      setPhoneOtp(updatedOtp.join(""));
+
+      // Move focus to next box
+      if (index < 5 && inputRefs.current[index + 1]) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    }}
+    onKeyDown={(e) => {
+      if (e.key === "Backspace") {
+        const updatedOtp = [...userotp];
+        updatedOtp[index] = "";
+        setuserOtp(updatedOtp);
+        setPhoneOtp(updatedOtp.join(""));
+
+        if (index > 0 && !userotp[index]) {
+          inputRefs.current[index - 1]?.focus();
+        }
+      }
+    }}
+    className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+  />
+))}
           </div>
         </div>
         {/* Button Spacer */}
