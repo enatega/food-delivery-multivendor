@@ -17,8 +17,6 @@ import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
-// Prime React
-import { InputOtp } from "primereact/inputotp";
 
 // GQL
 import { UPDATE_USER } from "@/lib/api/graphql";
@@ -30,7 +28,7 @@ export default function PhoneVerification({
   handleChangePanel,
 }: IPhoneVerificationProps) {
   // States
-  const [isResendingOtp, setIsResendingOtp] = useState(false);
+  // const [isResendingOtp, setIsResendingOtp] = useState(false);
     const [userotp, setuserOtp] = useState<string[]>(Array(6).fill(""))
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
@@ -120,14 +118,14 @@ export default function PhoneVerification({
 
   const handleResendPhoneOtp = async () => {
     if (user?.phone) {
-      setIsResendingOtp(true);
+      // setIsResendingOtp(true);
       await sendOtpToPhoneNumber(user?.phone);
       showToast({
         type: "success",
         title: t("otp_resent_label"),
         message: t("resent_otp_code_to_your_phone_message"),
       });
-      setIsResendingOtp(false);
+      // setIsResendingOtp(false);
     } else {
       showToast({
         type: "error",
