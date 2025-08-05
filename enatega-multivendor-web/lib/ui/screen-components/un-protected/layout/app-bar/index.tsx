@@ -84,6 +84,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     profile,
     loadingProfile,
     fetchProfile,
+    clearCart
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
 
@@ -176,6 +177,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
+
     //Give Toast Alert You Logout Successfully
     showToast({
       type: "success",
@@ -184,6 +186,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     });
 
     localStorage.clear();
+    clearCart()
   };
 
   // Logo click handler

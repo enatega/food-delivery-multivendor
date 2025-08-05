@@ -807,6 +807,11 @@
 "enatega_rider_page_name_card2_heading": "احصل على المزيد من الطلبات",
 "enatega_rider_page_name_card2_text": "مع Enatega، يمكنك زيادة طلباتك",
 
+"enatega_rider_page_name_form_heading": "كن سائقًا",
+"enatega_rider_page_name_card3_heading": "قُم بالتوصيل إلى المزيد من العملاء",
+"enatega_rider_page_name_card3_text": "بعد تقديم الطلب، يقوم شركاء التوصيل من Enatega بتوصيل الطلبات إلى عملائك خلال حوالي 30 دقيقة.",
+
+
 "first_name_required": "الاسم الأول مطلوب",
     "last_name_required": "اسم العائلة مطلوب",
     "phone_invalid": "أدخل رقم هاتف صحيح",
@@ -850,6 +855,12 @@
   "AboutUsPage_join17": "هل أنت بائع تتطلع لتوسيع عملك في مجال الطعام؟ أو زبون جائع يبحث عن وجبته المفضلة القادمة؟ Enatega هي المكان المناسب لك. انضم إلى مجتمعنا المتنامي وكن جزءًا من مستقبل توصيل الطعام.",
 
   "installPWA": "ثبّت هذا التطبيق لتجربة أفضل!",
-"install_app_label": "تثبيت التطبيق"
+"install_app_label": "تثبيت التطبيق",
+
+"view_label": "عرض",
+"onMap_label": "على الخريطة",
+"update_password_error_title": "خطأ",
+"sort_by_label": "ترتيب حسب"
+
 
 }

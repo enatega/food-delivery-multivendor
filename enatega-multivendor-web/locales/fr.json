@@ -738,6 +738,12 @@
   "AboutUsPage_join16": "Rejoignez-nous",
   "AboutUsPage_join17": "Êtes-vous un vendeur cherchant à développer votre entreprise alimentaire ? Ou un client affamé à la recherche de votre prochain repas préféré ? Enatega est l'endroit pour vous. Rejoignez notre communauté grandissante et faites partie de l'avenir de la livraison de nourriture.",
   "installPWA": "Installez cette application pour une meilleure expérience !",
-"install_app_label": "Installer l'application"
+"install_app_label": "Installer l'application",
+
+"view_label": "Voir",
+"onMap_label": "Sur la carte",
+"update_password_error_title": "Erreur",
+"sort_by_label": "Trier par"
+
 
 }
