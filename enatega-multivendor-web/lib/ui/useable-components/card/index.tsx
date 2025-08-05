@@ -35,8 +35,6 @@ const Card: React.FC<ICardProps> = ({
     const { DELIVERY_RATE } = useConfig();
 
     console.log("isModalOpen", isModalOpen);
-
-    console.log(item._id)
     const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
         const now = new Date();
         const currentDay = now
