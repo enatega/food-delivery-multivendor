@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 // Core
 import { ErrorMessage, Form, Formik, FormikErrors } from 'formik';
@@ -28,13 +29,13 @@ import { TimingSchema } from '@/lib/utils/schema/timing';
 import useToast from '@/lib/hooks/useToast';
 
 // GraphQL
-import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 import { UPDATE_TIMINGS } from '@/lib/api/graphql/mutations/timing';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 
-const TimingAddForm = () => {
-  // Context
+
+
+const TimingAddForm = ( { data, loading, refetch } : any) => {
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
@@ -42,10 +43,10 @@ const TimingAddForm = () => {
   const t = useTranslations();
   const { showToast } = useToast();
 
-  const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
-    fetchPolicy: 'cache-and-network',
-    variables: { id: restaurantId },
-  });
+  // const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
+  //   fetchPolicy: 'cache-and-network',
+  //   variables: { id: restaurantId },
+  // });
 
   //for conversion from ["HH","MM"] to 'HH:MM' format
   const openingTimes: ITimingForm[] =
@@ -65,6 +66,7 @@ const TimingAddForm = () => {
         times,
       };
     }) ?? [];
+
 
   const initialValues: ITimingForm[] =
     openingTimes.length > 0 ? openingTimes : TIMING_INITIAL_VALUE;
