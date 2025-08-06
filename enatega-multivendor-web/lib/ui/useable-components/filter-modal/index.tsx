@@ -79,7 +79,7 @@ export default function FilterModal({
           {t("clear_filters")}
         </button>
 
-        <span className="text-xl font-semibold block">Filters</span>
+        <span className="text-xl font-semibold block">{t("filters")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {cuisineData.map((item) => {
             const isSelected = tempFilters.cuisines.includes(item.name);

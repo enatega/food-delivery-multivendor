@@ -79,14 +79,16 @@ export default function LoginWithGoogle({
         {t("by_signing_up_you_agree_to_our_message")}&nbsp;
         <Link
           href="/terms"
-          className="font-bold underline hover:text-gray-700"
+          target="_blank"
+          className="font-bold text-black underline hover:text-gray-700"
         >
           {t("terms_label")}
         </Link>{" "}
         {t("and_conditions_and_message")}&nbsp;
         <Link
           href="/privacy"
-          className="font-bold underline hover:text-gray-700"
+          target="_blank"
+          className="text-black font-bold underline hover:text-gray-700"
         >
           {t("privacy_policy_label")}
         </Link>
