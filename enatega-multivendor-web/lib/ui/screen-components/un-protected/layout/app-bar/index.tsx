@@ -84,7 +84,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     profile,
     loadingProfile,
     fetchProfile,
-    clearCart
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
 
@@ -177,6 +176,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
+    localStorage.clear();
 
     //Give Toast Alert You Logout Successfully
     showToast({
@@ -184,9 +184,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       title: t("logoutSuccessToastTitle"),
       message: t("logoutSuccessToastMessage"),
     });
-
-    localStorage.clear();
-    clearCart()
   };
 
   // Logo click handler
@@ -346,9 +343,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       >
         <div className={`w-full`}>
           <PaddingContainer>
-            <div className="flex flex-row items-center justify-center w-full h-16">
+            <div className="flex items-center justify-between w-full h-16 gap-2 flex-wrap md:flex-nowrap">
               {/* Left Section */}
-              <div className={`w-1/3 flex gap-x-2 items-center cursor-pointer`}>
+              <div className={`flex items-center gap-2 flex-shrink-0 cursor-pointer`}>
                 {!isSearchFocused && (
                   <div
                     onClick={logoClickHandler}
@@ -387,7 +384,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
               {/* Center Section */}
               <div
-                className={`flex justify-center items-center transition-all duration-500 ease-in-out ${isSearchFocused ? "w-10/12" : "w-1/3"}`}
+                className={`flex-grow transition-all duration-500 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-md"} px-2`}
               >
                 <div className="relative w-full">
                   {/* Search Icon - visible only below sm */}
@@ -432,7 +429,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               </div>
 
               {/* Right Section */}
-              <div className={`flex w-1/3 justify-end items-center space-x-4`}>
+              <div
+                className={`flex items-center justify-end gap-2 flex-shrink-0`}
+              >
                 {/* Login Button */}
                 {!isSearchFocused && (
                   <div className="sm:hidden flex justify-end items-center w-full">
@@ -448,7 +447,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
-                    className="md:w-fit w-18 h-fit py-3 text-gray-900 md:py-3  px-3 bg-[#5AC12F] rounded text-xs lg:text-[16px] md:text-md "
+                    className=" md:w-20 w-16 h-fit py-3 text-gray-900 md:py-3  px-3 bg-[#5AC12F] rounded text-sm lg:text-[16px] md:text-md "
                     onClick={handleModalToggle}
                   >
                     <span className="text-white font-semibold  text-xs md:text-[16px]">

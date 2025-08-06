@@ -29,18 +29,18 @@ export default function useSetUserCurrentLocation() {
       if (error) {
         setIsLocationFetching(false);
         showToast({
-          type: "error",
-          title: "Current Location",
-          message: `Error fetching current location - ${error}`,
+          type: "info",
+          title: "Ensure Current location for delivery",
+          message: ``,
         });
         return;
       }
       if (!currrent_location) {
         setIsLocationFetching(false);
         showToast({
-          type: "error",
-          title: "Current Location",
-          message: `Error fetching current location`,
+          type: "info",
+          title: "Ensure Current location for delivery",
+          message: ``,
         });
         return;
       }
