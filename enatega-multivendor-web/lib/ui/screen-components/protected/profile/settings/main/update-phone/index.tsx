@@ -7,7 +7,9 @@ import {
 
 // Hooks
 import { useAuth } from "@/lib/context/auth/auth.context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
+import { useTranslations } from "next-intl";
 
 // Components
 import useToast from "@/lib/hooks/useToast";
@@ -19,7 +21,6 @@ import VerificationPhone from "./verification-phone";
 import { GET_USER_PROFILE, UPDATE_USER } from "@/lib/api/graphql";
 import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
-import { useTranslations } from "next-intl";
 
 export interface IUpdatePhoneModalProps {
   isUpdatePhoneModalVisible: boolean
@@ -36,9 +37,10 @@ export default function UpdatePhoneModal({
   const [activeStep, setActiveStep] = useState(0);
 
     // Hooks
-  const { sendOtpToPhoneNumber, setUser, user, otp, setOtp, checkPhoneExists } = useAuth();
+  const { sendOtpToPhoneNumber, setUser, user, setOtp, checkPhoneExists } = useAuth();
   const { showToast } = useToast();
-  const t = useTranslations()
+  const { verifyOTP, error } = useVerifyOtp();
+  const t = useTranslations();
 
   // Queries and mutations 
 
@@ -108,7 +110,13 @@ export default function UpdatePhoneModal({
 
     const handleSubmitAfterVerification = useDebounceFunction(async () => {
       try {
-        if (String(phoneOtp) === String(otp) && !!user?.phone) {
+        const otpResponse = await verifyOTP({
+          variables: {
+            otp:phoneOtp,
+            phone: user?.phone
+          }
+        })
+        if (otpResponse.data?.verifyOtp && !!user?.phone) {
           const args = {
             phone: user?.phone,
             name: user?.name ?? "",
@@ -158,7 +166,18 @@ export default function UpdatePhoneModal({
       }
     },
       500, // Debounce time in milliseconds
-  )
+    )
+  
+    // useEffect for displaying otp verification error
+    useEffect(() => {
+      if (error) {
+        showToast({
+          type: "error",
+          title: t("OTP Error"),
+          message: error.message,
+        });
+    }
+  }, [error])
 
 
   return(

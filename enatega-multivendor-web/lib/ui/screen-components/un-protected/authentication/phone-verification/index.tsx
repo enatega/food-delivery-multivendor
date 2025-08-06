@@ -16,6 +16,7 @@ import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 
 // GQL
 import { UPDATE_USER } from "@/lib/api/graphql";
@@ -36,7 +37,6 @@ export default function PhoneVerification({
   const t = useTranslations();
   const {
     user,
-    otp,
     setOtp,
     sendOtpToPhoneNumber,
     setIsAuthModalVisible,
@@ -47,6 +47,7 @@ export default function PhoneVerification({
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
+  const {verifyOTP, error} = useVerifyOtp();
 
   // Mutations
   const [updateUser] = useMutation<
@@ -67,7 +68,15 @@ export default function PhoneVerification({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      if (phoneOtp === otp && user?.phone) {
+
+      const otpResponse = await verifyOTP({
+        variables: {
+          otp: phoneOtp,
+          phone: user?.phone,
+        },
+      });
+
+      if (otpResponse.data?.verifyOtp && !!user?.phone) {
         const args = isRegistering
           ? {
               name: user?.name ?? "",
@@ -162,6 +171,17 @@ export default function PhoneVerification({
       setuserOtp(otpArray.concat(Array(6 - otpArray.length).fill("")));
     }
   }, []);
+
+    // useEffect for displaying otp verification error
+    useEffect(() => {
+      if (error) {
+        showToast({
+          type: "error",
+          title: t("OTP Error"),
+          message: error.message,
+        });
+    }
+  }, [error])
 
   return (
     <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
