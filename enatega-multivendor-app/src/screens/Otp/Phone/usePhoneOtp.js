@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useRef } from 'react'
-import { sendOtpToPhoneNumber, updateUser } from '../../../apollo/mutations'
+import { sendOtpToPhoneNumber, updateUser, VERIFY_OTP } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -28,12 +28,11 @@ const usePhoneOtp = () => {
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
-  const otpFrom = useRef(null)
   const { profile, loadingProfile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone, screen} = route?.params || {}
+  const { name, phone, screen } = route?.params || {}
 
   function onError(error) {
     if (error.networkError) {
@@ -69,22 +68,26 @@ const usePhoneOtp = () => {
     FlashMessage({
       message: t('numberVerified')
     })
-    if (!profile?.name) { navigation.navigate('Profile', { editName: true }) }
-    else if (screen === 'Checkout') {
-      navigation.navigate('Checkout');
-    }
-    else {
+    if (!profile?.name) {
+      navigation.navigate('Profile', { editName: true })
+    } else if (screen === 'Checkout') {
+      navigation.navigate('Checkout')
+    } else {
       route.params?.prevScreen
-      ? navigation.navigate(route.params.prevScreen)
-      : navigation.navigate({
-        name: 'Main',
-        merge: true
-      })
+        ? navigation.navigate(route.params.prevScreen)
+        : navigation.navigate({
+            name: 'Main',
+            merge: true
+          })
     }
   }
 
-  const [mutate, { loading }] = useMutation(SEND_OTP_TO_PHONE, {
+  const [sendOTPToPhone, { loading }] = useMutation(SEND_OTP_TO_PHONE, {
     onCompleted,
+    onError
+  })
+
+  const [verifyOTP] = useMutation(VERIFY_OTP, {
     onError
   })
 
@@ -93,8 +96,18 @@ const usePhoneOtp = () => {
     onError: onUpdateUserError
   })
 
-  const onCodeFilled = code => {
-    if (configuration.skipMobileVerification || code === otpFrom.current || code === TEST_OTP) {
+  const onCodeFilled = async (otp_code) => {
+    let isVerified = configuration?.skipMobileVerification ?? false
+    console.log({ otp_code })
+
+    const { data } = await verifyOTP({
+      variables: {
+        otp: otp_code,
+        phone: phone ?? profile?.phone
+      }
+    })
+    isVerified = isVerified || data?.verifyOtp
+    if (isVerified) {
       mutateUser({
         variables: {
           name: name ?? profile?.name,
@@ -109,7 +122,6 @@ const usePhoneOtp = () => {
 
   const onSendOTPHandler = () => {
     try {
-
       if (!profile?.phone && !phone) {
         FlashMessage({
           message: t('mobileErr1')
@@ -117,18 +129,15 @@ const usePhoneOtp = () => {
         return
       }
 
-      mutate({ variables: { phone: profile?.phone ?? phone, otp: otpFrom.current } })
-    }
-    catch (err) {
+      sendOTPToPhone({ variables: { phone: profile?.phone ?? phone } })
+    } catch (err) {
       FlashMessage({
         message: t('somethingWentWrong')
       })
     }
   }
 
-
   const resendOtp = () => {
-    otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
     onSendOTPHandler()
     setSeconds(30)
   }
@@ -150,7 +159,6 @@ const usePhoneOtp = () => {
   useEffect(() => {
     if (!configuration) return
     if (!configuration.skipMobileVerification) {
-      otpFrom.current = Math.floor(100000 + Math.random() * 900000).toString()
       onSendOTPHandler()
     }
   }, [configuration, profile?.phone, phone])
@@ -165,7 +173,9 @@ const usePhoneOtp = () => {
       }, 3000)
     }
 
-    return () => { timer && clearTimeout(timer) }
+    return () => {
+      timer && clearTimeout(timer)
+    }
   }, [configuration, profile])
 
   return {

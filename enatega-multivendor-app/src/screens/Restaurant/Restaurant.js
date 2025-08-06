@@ -171,11 +171,18 @@ function Restaurant(props) {
     }
   }, [data])
 
+  // Fixed zIndexAnimation with integer values
   const zIndexAnimation = useAnimatedStyle(() => {
+    const zIndex = interpolate(
+      translationY.value, 
+      [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2], 
+      [-1, 1, 99], 
+      Extrapolation.CLAMP
+    );
     return {
-      zIndex: interpolate(translationY.value, [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2], [-1, 1, 99], Extrapolation.CLAMP)
-    }
-  })
+      zIndex: Math.round(zIndex) // Ensure integer values
+    };
+  });
 
   const onPressItem = async (food) => {
     if (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant)) {
@@ -234,27 +241,6 @@ function Restaurant(props) {
     return wrappedContent.join('\n')
   }
 
-  // const addToCart = async (food, clearFlag) => {
-  //   if (
-  //     food?.variations?.length === 1 &&
-  //     food?.variations[0].addons?.length === 0
-  //   ) {
-  //     await setCartRestaurant(food.restaurant)
-  //     const result = checkItemCart(food._id)
-  //     if (result.exist) await addQuantity(result.key)
-  //     else await addCartItem(food._id, food.variations[0]._id, 1, [], clearFlag)
-  //     animate()
-  //   } else {
-  //     if (clearFlag) await clearCart()
-  //     navigation.navigate('ItemDetail', {
-  //       food,
-  //       addons: restaurant?.addons,
-  //       options: restaurant?.options,
-  //       restaurant: restaurant?._id
-  //     })
-  //   }
-  // }
-
   // navigate every item to itemDetails screen
   const addToCart = async (food, clearFlag) => {
     if (clearFlag) await clearCart()
@@ -287,13 +273,22 @@ function Restaurant(props) {
   const scaleValue = useSharedValue(1)
 
   const scaleStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: scaleValue.value }]
+    transform: [{ scale: Math.max(0.1, scaleValue.value) }] // Ensure minimum scale
   }))
 
-  // button animation
+  // Fixed button animation with safety checks
   function animate() {
-    scaleValue.value = withRepeat(withTiming(1.5, { duration: 250 }), 2, true)
+    scaleValue.value = withRepeat(
+      withTiming(1.5, { duration: 250 }), 
+      2, 
+      true,
+      () => {
+        // Ensure value returns to 1 after animation
+        scaleValue.value = 1;
+      }
+    );
   }
+
   const config = (to) => ({
     duration: 250,
     toValue: to,
@@ -347,9 +342,13 @@ function Restaurant(props) {
     }
     buttonClickedSetter(false)
   }
+
+  // Fixed scroll handler with safety checks
   const scrollHandler = useAnimatedScrollHandler((event) => {
-    translationY.value = event.contentOffset.y
-  })
+    const offsetY = event.contentOffset.y;
+    // Clamp the value to prevent extremely small or negative values
+    translationY.value = Math.max(0, offsetY);
+  });
 
   function changeIndex(index) {
     if (selectedLabel !== index) {
@@ -379,25 +378,43 @@ function Restaurant(props) {
   }
 
   const iconColor = currentTheme.white
-
   const iconBackColor = currentTheme.white
-
   const iconRadius = scale(15)
-
   const iconSize = scale(20)
-
   const iconTouchHeight = scale(30)
-
   const iconTouchWidth = scale(30)
 
-  const circleSize = interpolate(circle.value, [0, 0.5, 1], [scale(18), scale(24), scale(18)], Extrapolation.CLAMP)
-  const radiusSize = interpolate(circle.value, [0, 0.5, 1], [scale(9), scale(12), scale(9)], Extrapolation.CLAMP)
+  // Fixed circle size - using constants instead of interpolation to prevent precision errors
+  const circleSize = scale(18);
+  const radiusSize = scale(9);
 
-  const fontStyles = useAnimatedStyle(() => {
+  // If you need animation for the circle, use transform scale instead
+  const animatedCircleStyles = useAnimatedStyle(() => {
+    const progress = circle.value;
+    const scaleValue = interpolate(
+      progress, 
+      [0, 0.5, 1], 
+      [1, 1.33, 1], 
+      Extrapolation.CLAMP
+    );
+    
     return {
-      fontSize: interpolate(circle.value, [0, 0.5, 1], [8, 12, 8], Extrapolation.CLAMP)
-    }
-  })
+      transform: [{ scale: Math.max(0.1, scaleValue) }] // Ensure minimum scale
+    };
+  });
+
+  // Fixed font styles with safer interpolation
+  const fontStyles = useAnimatedStyle(() => {
+    const fontSize = interpolate(
+      circle.value, 
+      [0, 0.5, 1], 
+      [8, 12, 8], 
+      Extrapolation.CLAMP
+    );
+    return {
+      fontSize: Math.max(8, Math.round(fontSize)) // Ensure minimum and integer font size
+    };
+  });
 
   if (loading) {
     return (
@@ -512,11 +529,6 @@ function Restaurant(props) {
                           restaurantName: restaurant?.name
                         })
                       }
-                      // onPressItem({
-                      //     ...item,
-                      //     restaurant: restaurant?._id,
-                      //     restaurantName: restaurant?.name
-                      //   })
                     }}
                   >
                     <View
@@ -728,6 +740,7 @@ function Restaurant(props) {
                         height: circleSize,
                         borderRadius: radiusSize
                       },
+                      animatedCircleStyles, // Use the safer animation
                       scaleStyles
                     ]}
                   >

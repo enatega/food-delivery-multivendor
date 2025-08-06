@@ -129,7 +129,7 @@ export default function LocationPermissionComponent({
                   className="text-center text-[14px] font-medium"
                   style={{ color: appTheme.black }}
                 >
-                  Allow
+                  Continue
                 </Text>
               )}
             </TouchableOpacity>

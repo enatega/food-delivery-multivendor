@@ -31,7 +31,6 @@ const FAVOURITERESTAURANTS = gql`
 `
 
 function NewRestaurantCard(props) {
-
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
@@ -40,6 +39,7 @@ function NewRestaurantCard(props) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props?._id) : false
   const [mutate, { loading: loadingMutation }] = useMutation(ADD_FAVOURITE, {
@@ -101,25 +101,27 @@ function NewRestaurantCard(props) {
     }
   }
   return (
-    <Ripple
-      rippleColor={'#F5F5F5'}
-      style={[
-        styles(currentTheme).offerContainer,
-        props?.fullWidth && { width: '100%' }
-      ]}
-      activeOpacity={1}
-      onPress={handleRestaurantClick}
-    >
-      <View style={styles().container}>
+    <Ripple rippleColor={'#F5F5F5'} style={[styles(currentTheme).offerContainer, props?.fullWidth && { width: '100%' }]} activeOpacity={1} onPress={handleRestaurantClick}>
+      <View
+        style={[
+          styles().container,
+          themeContext.ThemeValue === 'Pink' && {
+            backgroundColor: 'white',
+            borderRadius: 8,
+
+            // iOS shadow
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 8,
+            // Android shadow
+            elevation: 2,
+            marginBottom: 5
+          }
+        ]}
+      >
         <View style={styles().imageContainer}>
-          <Image
-            resizeMode='cover'
-            source={{ uri: props?.image }}
-            style={[
-              styles().restaurantImage,
-              props?.fullWidth && { width: '100%' }
-            ]}
-          />
+          <Image resizeMode='cover' source={{ uri: props?.image }} style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]} />
           {isRestaurantClosed && (
             <View style={styles(currentTheme).closedOverlay}>
               <TextDefault H4 textColor={currentTheme.white} bold>
@@ -130,61 +132,30 @@ function NewRestaurantCard(props) {
         </View>
         <View style={styles().descriptionContainer}>
           <View style={styles(currentTheme).aboutRestaurant}>
-            <TextDefault
-              H4
-              numberOfLines={1}
-              textColor={currentTheme.fontThirdColor}
-              bolder
-            >
+            <TextDefault H4 numberOfLines={1} textColor={currentTheme.fontThirdColor} bolder>
               {props?.name}
             </TextDefault>
           </View>
-          <TextDefault
-            textColor={currentTheme.gray600}
-            numberOfLines={1}
-            bold
-            Normal
-            style={styles(currentTheme).offerCategoty}
-          >
-            {props?.categories
-              ? props?.categories.map((category) => category?.title + ', ')
-              : props?.tags?.join(',')}
+          <TextDefault textColor={currentTheme.gray600} numberOfLines={1} bold Normal style={styles(currentTheme).offerCategoty}>
+            {props?.categories ? props?.categories.map((category) => category?.title + ', ') : props?.tags?.join(',')}
           </TextDefault>
           <View style={styles().border} />
           <View style={styles(currentTheme).deliveryInfo}>
             <View style={styles(currentTheme).deliveryTime}>
-              <AntDesign
-                name='clockcircleo'
-                size={14}
-                color={currentTheme.editProfileButton}
-              />
-              <TextDefault
-                textColor={currentTheme.editProfileButton}
-                numberOfLines={1}
-                bold
-                Normal
-              >
+              <AntDesign name='clockcircleo' size={14} color={currentTheme.editProfileButton} />
+              <TextDefault textColor={currentTheme.editProfileButton} numberOfLines={1} bold Normal>
                 {props?.deliveryTime + ' '}
                 {t('min')}
               </TextDefault>
             </View>
             <View style={styles(currentTheme).deliveryTime}>
               <Bicycle color={currentTheme.newFontcolor} />
-              <TextDefault
-                textColor={currentTheme.newFontcolor}
-                numberOfLines={1}
-                bold
-                Normal
-              >
+              <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} bold Normal>
                 {configuration.currencySymbol} {configuration.deliveryRate}
               </TextDefault>
             </View>
             <View style={styles(currentTheme).aboutRestaurant}>
-              <FontAwesome5
-                name='star'
-                size={14}
-                color={currentTheme.newFontcolor}
-              />
+              <FontAwesome5 name='star' size={14} color={currentTheme.newFontcolor} />
               <TextDefault textColor={currentTheme.newFontcolor} bold Normal>
                 {props?.reviewAverage}
               </TextDefault>
@@ -195,32 +166,9 @@ function NewRestaurantCard(props) {
           </View>
         </View>
       </View>
-      <View
-        style={[
-          styles().overlayContainer,
-          props?.fullWidth && { width: '100%' }
-        ]}
-      >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          disabled={loadingMutation}
-          onPress={handleAddToFavorites}
-        >
-          <View style={styles(currentTheme).favouriteOverlay}>
-            {loadingMutation ? (
-              <Spinner
-                size={'small'}
-                backColor={'transparent'}
-                spinnerColor={currentTheme.iconColorDark}
-              />
-            ) : (
-              <AntDesign
-                name={heart ? 'heart' : 'hearto'}
-                size={scale(15)}
-                color={currentTheme.iconColor}
-              />
-            )}
-          </View>
+      <View style={[styles().overlayContainer, props?.fullWidth && { width: '100%' }]}>
+        <TouchableOpacity activeOpacity={0.7} disabled={loadingMutation} onPress={handleAddToFavorites}>
+          <View style={styles(currentTheme).favouriteOverlay}>{loadingMutation ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={heart ? 'heart' : 'hearto'} size={scale(15)} color={currentTheme.iconColor} />}</View>
         </TouchableOpacity>
       </View>
     </Ripple>

@@ -9,6 +9,7 @@ import useDebounce from "@/lib/hooks/useDebounce";
 import { useUserAddress } from "@/lib/context/address/address.context";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import { useTranslations } from "next-intl";
 
 const CitySearch: React.FC = () => {
   // Ref
@@ -76,26 +77,33 @@ const CitySearch: React.FC = () => {
     });
   };
 
-  // USe Effects
-  useEffect(() => {
-    if (!isLoaded || !window.google || !debouncedCityName) return;
+  const t = useTranslations();
 
-    const autocompleteService =
-      new window.google.maps.places.AutocompleteService();
-    autocompleteService.getPlacePredictions(
-      { input: debouncedCityName, types: ["(cities)"] },
-      (predictions, status) => {
-        if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          predictions
-        ) {
-          setSuggestions(predictions);
-        } else {
-          setSuggestions([]);
-        }
+  // USe Effects
+useEffect(() => {
+if (!isLoaded || !window.google || debouncedCityName.length < 2) {
+  setSuggestions([]);
+  return;
+}
+
+
+  const autocompleteService =
+    new window.google.maps.places.AutocompleteService();
+
+  autocompleteService.getPlacePredictions(
+    { input: debouncedCityName, types: ["(cities)"] },
+    (predictions, status) => {
+      if (
+        status === window.google.maps.places.PlacesServiceStatus.OK &&
+        predictions
+      ) {
+        setSuggestions(predictions);
+      } else {
+        setSuggestions([]);
       }
-    );
-  }, [debouncedCityName, isLoaded]);
+    }
+  );
+}, [debouncedCityName, isLoaded]);
 
   // Added effect for outside click
   useEffect(() => {
@@ -128,7 +136,7 @@ const CitySearch: React.FC = () => {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search for a city..."
+          placeholder={t('searchCity')}
           value={cityName}
           onChange={(e) => setCityName(e.target.value)}
           className="w-full border rounded-md focus:outline-none focus:ring-0 hover:outline-none hover:ring-0 border-none"

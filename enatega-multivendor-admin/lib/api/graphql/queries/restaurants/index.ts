@@ -8,6 +8,15 @@ export const GET_RESTAURANTS_L = gql`
   }
 `;
 
+export const GET_RESTAURANTS_DROPDOWN = gql`
+  query restaurants {
+    restaurants {
+      _id
+      name
+    }
+  }
+`;
+
 export const GET_RESTAURANTS = gql`
   query restaurants {
     restaurants {
@@ -180,6 +189,76 @@ export const GET_RESTAURANT_PROFILE = gql`
       currentWalletAmount
       totalWalletAmount
       withdrawnWalletAmount
+      deliveryOptions {
+        pickup 
+        delivery
+      }
+    }
+  }
+`;
+
+export const GET_RESTAURANTS_PAGINATED = gql`
+  query restaurantsPaginated($page: Int, $limit: Int, $search: String) {
+    restaurantsPaginated(page: $page, limit: $limit, search: $search) {
+      data {
+        unique_restaurant_id
+        _id
+        name
+        image
+        orderPrefix
+        slug
+        address
+        deliveryTime
+        minimumOrder
+        isActive
+        commissionRate
+        username
+        tax
+        owner {
+          _id
+          email
+          isActive
+        }
+        shopType
+      }
+      totalCount
+      currentPage
+      totalPages
+    }
+  }
+`;
+
+export const GET_CLONED_RESTAURANTS_PAGINATED = gql`
+  query getClonedRestaurantsPaginated(
+    $page: Int
+    $limit: Int
+    $search: String
+  ) {
+    getClonedRestaurantsPaginated(page: $page, limit: $limit, search: $search) {
+      data {
+        _id
+        name
+        image
+        username
+        orderPrefix
+        slug
+        address
+        deliveryTime
+        minimumOrder
+        isActive
+        commissionRate
+        username
+        tax
+        owner {
+          _id
+          email
+          isActive
+        }
+        shopType
+      }
+      totalCount
+      currentPage
+      totalPages
     }
   }
 `;

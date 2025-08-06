@@ -45,7 +45,7 @@ export const useForgotPassword = () => {
 
   function forgotPassword() {
     if (validateCredentials()) {
-      mutate({ variables: { email: email.toLowerCase().trim(), otp } })
+      mutate({ variables: { email: email.toLowerCase().trim() } })
     }
   }
 
@@ -53,7 +53,7 @@ export const useForgotPassword = () => {
     FlashMessage({
       message: t('otpForResetPassword')
     })
-    navigation.navigate('ForgotPasswordOtp', { otp, email })
+    navigation.navigate('ForgotPasswordOtp', { email })
   }
 
   function onError(error) {

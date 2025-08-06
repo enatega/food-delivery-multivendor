@@ -14,13 +14,18 @@ const CustomDrawerHeader = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { dataProfile, userId } = useUserContext();
+  const { dataProfile, userId, refetchProfile, loadingProfile } = useUserContext();
 
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [
       { query: STORE_PROFILE, variables: { restaurantId: userId } },
     ],
+    onCompleted: (data) => {
+      if (refetchProfile) {
+        refetchProfile();
+      }
+    },
     onError: (error) => {
       showMessage({
         message:
@@ -65,18 +70,18 @@ const CustomDrawerHeader = () => {
                 color: appTheme.primary,
               }}
             >
-              {dataProfile?.name
-                ?.split(" ")[0]
-                ?.substring(0, 1)
-                ?.toUpperCase()
-                ?.concat(
-                  dataProfile?.name?.split(" ")[1]?.length > 0
-                    ? dataProfile?.name
-                        ?.split(" ")[1]
-                        ?.substring(0, 1)
-                        ?.toUpperCase()
-                    : "",
-                ) ?? "JS"}
+              {(() => {
+                const name = dataProfile?.name;
+                if (!name || typeof name !== "string") return "JS";
+
+                const nameParts = name.split(" ");
+                const firstInitial =
+                  nameParts[0]?.substring(0, 1)?.toUpperCase() || "";
+                const secondInitial =
+                  nameParts[1]?.substring(0, 1)?.toUpperCase() || "";
+
+                return firstInitial + secondInitial || "JS";
+              })()}
             </Text>
           )}
         </View>
@@ -107,7 +112,7 @@ const CustomDrawerHeader = () => {
         >
           {t("Availability")}
         </Text>
-        {loading ? (
+        {loading || loadingProfile ? (
           <SpinnerComponent color={appTheme.secondaryTextColor} height={10} />
         ) : (
           <CustomSwitch

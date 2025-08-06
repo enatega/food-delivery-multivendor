@@ -56,7 +56,8 @@ export default function CategoryAddForm({
   category,
   position = 'right',
   isAddCategoryVisible,
-}: ICategoryAddFormComponentProps) {
+  onCategoryAdded,
+}: ICategoryAddFormComponentProps & { onCategoryAdded?: () => void }) {
   // Hooks
   const t = useTranslations();
   // Queries
@@ -68,6 +69,18 @@ export default function CategoryAddForm({
     variables: {
       parentCategoryId: category?._id,
     },
+  });
+   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
+  const restaurantId = restaurantLayoutContextData?.restaurantId || '';
+
+  // Fetch all categories for duplicate check
+  const {
+    data: allCategoriesData,
+    // loading: allCategoriesLoading,
+  } = useQuery(GET_CATEGORY_BY_RESTAURANT_ID, {
+    variables: { id: restaurantId },
+    skip: !restaurantId,
+    fetchPolicy: 'cache-first',
   });
 
   // StateS
@@ -86,8 +99,7 @@ export default function CategoryAddForm({
   const { showToast } = useToast();
 
   // Context
-  const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
-  const restaurantId = restaurantLayoutContextData?.restaurantId || '';
+ 
   const shopType = restaurantLayoutContextData?.shopType || '';
   console.log("🚀 ~ shopType:", shopType)
 
@@ -140,6 +152,8 @@ export default function CategoryAddForm({
           message: `${t('Category has been')} ${category ? t('edited') : t('added')} ${t('successfully')}.`,
           duration: 3000,
         });
+        // Call the callback to notify parent to refetch categories
+        if (onCategoryAdded) onCategoryAdded();
         onHide();
       },
       onError: (error) => {
@@ -161,6 +175,23 @@ export default function CategoryAddForm({
 
   // Form Submission
   const handleSubmit = async (values: ICategoryForm) => {
+    // Duplicate name check (case-insensitive, ignore self if editing)
+    const allCategories =
+      allCategoriesData?.restaurant?.categories || [];
+    const isDuplicate = allCategories.some(
+      (cat: ICategoryForm) =>
+        cat.title.trim().toLowerCase() === values.title.trim().toLowerCase() &&
+        (!category || cat._id !== category._id)
+    );
+    if (isDuplicate) {
+      showToast({
+        type: 'error',
+        title: t('Duplicate Category'),
+        message: t('A category with this name already exists.'),
+        duration: 3000,
+      });
+      return;
+    }
     const transformedSubCategories = values.subCategories.map((subCategory) => {
       delete subCategory.__typename;
       return subCategory;

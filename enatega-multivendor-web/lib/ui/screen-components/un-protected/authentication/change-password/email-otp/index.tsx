@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/context/auth/auth.context"
 import useToast from "@/lib/hooks/useToast"
 import { IVerificationEmailForChangePasswordProps } from "@/lib/utils/interfaces"
 import EmailIcon from "@/public/assets/images/svgs/email"
+import { useTranslations } from "next-intl"
 
 
 const VerificationEmailForChangePassword = ({
@@ -73,6 +74,7 @@ const VerificationEmailForChangePassword = ({
     }
   }
 
+  const t = useTranslations()
   // Handle paste event
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -100,7 +102,7 @@ const VerificationEmailForChangePassword = ({
       return showToast({
         type: "error",
         title: "Error",
-        message: "Please enter a valid OTP",
+        message: t('please_enter_valid_otp_code_message'),
       })
     }else{
       handleSubmitAfterVerification()
@@ -110,53 +112,60 @@ const VerificationEmailForChangePassword = ({
 )
 
   return (
-    <div className="w-[300px] sm:w-full max-w-md mx-auto p-4 flex flex-col items-center bg-white rounded-3xl shadow-sm">
-      <div className="mb-2">
-        <EmailIcon/>
-      </div>
+<div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+  <div className="flex flex-col justify-items-start justify-start text-left">
+  <div className="mb-4">
+    <EmailIcon />
+  </div>
 
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">We have sent OTP code to</h2>
+  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+    {t("OTP_Code_Sent")}
+  </h2>
 
-      <p className="text-xl font-bold text-center text-gray-800 mb-4">{formData?.email || ""}</p>
 
-      <p className="text-base text-gray-600 mb-8 text-center">Verify your Email</p>
+  <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
+    {formData?.email || "your@email.com"}
+  </p>
 
-      <div className="w-full mb-8">
-        <div className="flex justify-center flex-wrap gap-2 sm:gap-4">
-          {[0, 1, 2, 3, 4, 5].map((index) => (
-            <input
-              key={index}
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={otp[index]}
-              onChange={(e) => handleChange(e, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              onPaste={index === 0 ? handlePaste : undefined}
-              className="w-12 h-12 sm:w-14 sm:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
-              autoFocus={index === 0}
-            />
-          ))}
-        </div>
-      </div>
-
-      <p className="text-sm text-gray-500 mb-8 text-center">Valid for 10 minutes</p>
-
-      <CustomButton
-        label={"Continue"}
-        className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-14 text-lg font-medium"
-        onClick={handleSubmit}
-      />
-
-      <CustomButton
-        label={"Resend OTP"}
-        className="bg-white flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-14 text-lg font-medium"
-        onClick={handleResendEmailOtp}
-      />
+  <p className="text-base text-gray-600 mb-6">{t("verify_your_email_label")}</p>
+</div>
+  <div className="w-full mb-6">
+    <div className="flex justify-center flex-wrap gap-2">
+      {[0, 1, 2, 3, 4, 5].map((index) => (
+        <input
+          key={index}
+          ref={(el) => {
+            inputRefs.current[index] = el;
+          }}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={otp[index]}
+          onChange={(e) => handleChange(e, index)}
+          onKeyDown={(e) => handleKeyDown(e, index)}
+          onPaste={index === 0 ? handlePaste : undefined}
+          className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+          autoFocus={index === 0}
+        />
+      ))}
     </div>
+  </div>
+
+  <p className="text-sm text-gray-500 mb-6 text-center">{t("otp_valid_for_10_minutes_label")}</p>
+
+  <CustomButton
+    label= {t("continue_label")}
+    className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
+    onClick={handleSubmit}
+  />
+
+  <CustomButton
+    label= {t("resend_otp_label")}
+    className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg sm:text-md font-medium"
+    onClick={handleResendEmailOtp}
+  />
+</div>
+
   )
 }
 

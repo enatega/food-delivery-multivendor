@@ -7,8 +7,10 @@ import { useQuery } from "@apollo/client";
 import UpdatePhoneModal from "../../settings/main/update-phone";
 import { useState } from "react";
 import "primeicons/primeicons.css";
+import { useTranslations } from "next-intl";
 
 export default function PersonalInfoMain() {
+  const t = useTranslations()
   const [isUpdatePhoneModalVisible, setIsUpdatePhoneModalVisible] =
     useState<boolean>(false);
 
@@ -45,7 +47,7 @@ export default function PersonalInfoMain() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
           <div>
             <TextComponent
-              text="Email"
+              text={t("Email")}
               className="text-black font-semibold text-base md:text-lg"
             />
             <TextComponent
@@ -57,7 +59,7 @@ export default function PersonalInfoMain() {
             <div className="flex items-center gap-2">
 
             <TextComponent
-              text="Phone number"
+              text={t("Phone")}
               className="text-black font-semibold text-base md:text-lg"
             />
              <i  onClick={handleUpdatePhoneModal} className="pi pi-pen-to-square cursor-pointer text-sm"></i>

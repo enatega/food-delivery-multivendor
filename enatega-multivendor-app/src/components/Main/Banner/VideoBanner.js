@@ -1,25 +1,41 @@
-import * as React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { VideoView, useVideoPlayer } from 'expo-video';
 
 export default function VideoBanner(props) {
-  const video = React.useRef(null);
-  
-  React.useEffect(() => {
-    if (video.current) {
-      video.current.playAsync();
-    }
-  }, []);
+  // Create video player instance
+  const player = useVideoPlayer(props?.source, (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
+  useEffect(() => {
+    const subscription = player.addListener('statusChange', (status) => {
+      if (status.isLoaded) {
+        // Video is ready to play
+        console.log('Video loaded successfully');
+      }
+      
+      if (status.error) {
+        console.log('expo-video error:', status.error);
+      }
+    });
+
+    return () => {
+      subscription?.remove();
+    };
+  }, [player]);
 
   return (
     <View style={[styles.container, props?.style]}>
-      <Video
-        ref={video}
+      <VideoView
         style={styles.video}
-        source={props?.source}
-        resizeMode={ResizeMode.COVER}
-        isLooping
-        shouldPlay
+        player={player}
+        allowsFullscreen={false}
+        allowsPictureInPicture={false}
+        nativeControls={false}
+        contentFit="cover"
       />
       {props?.children}
     </View>
@@ -33,11 +49,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderRadius: 8,
-    objectFit: 'cover'
   },
   video: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-  }
+  },
 });

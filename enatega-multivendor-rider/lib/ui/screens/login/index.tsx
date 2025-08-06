@@ -17,7 +17,8 @@ import {
 // Components
 
 // Icon
-import Icon from "react-native-vector-icons/FontAwesome6";
+import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
+
 
 // Schemas
 import { SignInSchema } from "@/lib/utils/schema";
@@ -31,6 +32,7 @@ import setupApollo from "@/lib/apollo";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { CustomContinueButton } from "../../useable-components";
+import { set } from "lodash";
 
 const initial: ILoginInitialValues = {
   username: "",
@@ -47,14 +49,18 @@ const LoginScreen = () => {
   const client = setupApollo();
   const { t } = useTranslation();
   const { onLogin, creds, isLogging } = useLogin();
+  const [loading, setLoading] = useState(false);
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
     // TODO: Implement login logic
     try {
+      setLoading(true);
       await onLogin(creds.username.toLowerCase(), creds.password);
     } catch (err: unknown) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,9 +73,6 @@ const LoginScreen = () => {
       if (!creds?.username) return;
       setInitialValues(creds);
     } catch (err) {
-      // FlashMessageComponent({
-      //   message: err?.message ?? "Something went wrong. Please refresh.",
-      // });
       console.log("error login", err);
     }
   };
@@ -78,6 +81,14 @@ const LoginScreen = () => {
   useEffect(() => {
     onInit();
   }, [creds]);
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text>{t("Loading...")}</Text>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -100,7 +111,7 @@ const LoginScreen = () => {
               return (
                 <View className="mt-24 p-5 items-center justify-between gap-y-2">
                   {/* Icon */}
-                  <Icon
+                  <FontAwesome
                     name="envelope"
                     size={30}
                     color={appTheme.fontMainColor}
@@ -167,7 +178,7 @@ const LoginScreen = () => {
                       onPress={() => setPasswordVisible(!passwordVisible)}
                       className="ml-2"
                     >
-                      <Icon
+                      <FontAwesome6
                         name={passwordVisible ? "eye-slash" : "eye"}
                         size={14}
                         color={appTheme.fontMainColor}

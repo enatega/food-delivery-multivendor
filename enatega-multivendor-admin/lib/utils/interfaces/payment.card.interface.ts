@@ -5,6 +5,7 @@ import { TPaymentType } from '../types/payment-type';
 export interface IPaymentCardProps extends IGlobalComponentProps {
   name: string;
   description: string;
+  isDetailsSubmitted: boolean;
   onClick: () => void;
   loading: boolean;
   icon: IconDefinition;
@@ -21,5 +22,6 @@ export interface IPaymentMethod {
   description: string;
   icon: IconDefinition;
   type: TPaymentType;
+  isDetailsSubmitted?: boolean | null;
   onClick: () => void;
 }

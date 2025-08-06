@@ -658,5 +658,6 @@ export const en = {
   "Applied Filters": 'Applied Filters',
   "WhatsApp is not installed on the device": "WhatsApp is not installed on the device",
   "Install it": "Install it",
+  "errorWhileGettingNotificationToken": "Error while getting notification token",
   
 }

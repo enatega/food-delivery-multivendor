@@ -9,7 +9,7 @@ import { Column } from 'primereact/column';
 import {
   DataTable,
   DataTableSelectionMultipleChangeEvent,
-  // DataTablePageEvent,
+  DataTablePageEvent,
 } from 'primereact/datatable';
 import DataTableColumnSkeleton from '../custom-skeletons/datatable.column.skeleton';
 import { useTranslations } from 'next-intl';
@@ -27,15 +27,13 @@ const Table = <T extends ITableExtends>({
   moduleName = 'Restaurant-Orders',
   handleRowClick,
   rowsPerPage = 10,
-  // onPage,
   className,
-  // For Store table
   scrollable = true,
   scrollHeight = '420px',
-  // New pagination props
-  // totalRecords,
-  // onPageChange,
-  // currentPage = 1,
+  // Server-side pagination props
+  totalRecords,
+  onPageChange,
+  currentPage = 1,
 }: IDataTableProps<T>) => {
   const handleSelectionChange = (
     e: DataTableSelectionMultipleChangeEvent<T[]>
@@ -47,15 +45,15 @@ const Table = <T extends ITableExtends>({
   const t = useTranslations();
 
   // Handlers
-  // const handlePageChange = (event: DataTablePageEvent) => {
-  //   if (onPageChange) {
-  //     // Add 1 to first because PrimeReact uses 0-based indexing for pages
-  //     const page = Math.floor(event.first / event.rows) + 1;
-  //     onPageChange(page, event.rows);
-  //   }
-  // };
+  const handlePageChange = (event: DataTablePageEvent) => {
+    if (onPageChange) {
+      // Calculate page number (PrimeReact uses 0-based indexing for first)
+      const page = Math.floor(event.first / event.rows) + 1;
+      onPageChange(page, event.rows);
+    }
+  };
 
-  // const isServerPaginated = Boolean(onPageChange && totalRecords !== undefined);
+  const isServerPaginated = Boolean(onPageChange && totalRecords !== undefined);
 
   const rowClassName = (data: T) => {
     let className = '';
@@ -73,8 +71,14 @@ const Table = <T extends ITableExtends>({
   };
 
   // Prepare pagination props based on server pagination status
-  // Remove lazy and first for client-side sorting/pagination
-  const paginationProps = {};
+  const paginationProps = isServerPaginated
+    ? {
+        lazy: true,
+        first: (currentPage - 1) * rowsPerPage,
+        totalRecords: totalRecords,
+        onPage: handlePageChange,
+      }
+    : {};
 
   return (
     <>

@@ -9,14 +9,7 @@ import { useTranslation } from 'react-i18next'
 import Spinner from '../Spinner/Spinner'
 import { scale } from '../../utils/scaling'
 
-export const CancelModal = ({
-  theme,
-  modalVisible,
-  setModalVisible,
-  cancelOrder,
-  loading,
-  orderStatus
-}) => {
+export const CancelModal = ({ theme, modalVisible, setModalVisible, cancelOrder, loading, orderStatus }) => {
   const { t } = useTranslation()
   const [isCancelling, setIsCancelling] = useState(false)
 
@@ -29,10 +22,11 @@ export const CancelModal = ({
   const handleCancelOrder = async () => {
     setIsCancelling(true)
     await cancelOrder()
+    setIsCancelling(false)
   }
 
   return (
-    <Modal animationType="slide" visible={modalVisible} transparent={true}>
+    <Modal animationType='slide' visible={modalVisible} transparent={true}>
       <Pressable style={styles.container(theme)} onPress={setModalVisible}>
         {orderStatus === ORDER_STATUS_ENUM.CANCELLED ? (
           <View style={styles.modalContainer(theme)}>
@@ -61,29 +55,15 @@ export const CancelModal = ({
             </View>
             {isCancelling ? (
               <View style={{ height: scale(20), marginTop: scale(15) }}>
-                <Spinner spinnerColor={theme.main} backColor="transparent" size="small" />
+                <Spinner spinnerColor={theme.main} backColor='transparent' size='small' />
               </View>
             ) : (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{ ...alignment.MTlarge }}>
-                  <Button
-                    text={t('cancelOrder')}
-                    buttonProps={{ onPress: handleCancelOrder, disabled: isCancelling }}
-                    buttonStyles={[
-                      styles.cancelButtonContainer(theme),
-                      { backgroundColor: theme.red600 }
-                    ]}
-                    textProps={{ textColor: theme.white }}
-                    textStyles={{ ...alignment.Pmedium }}
-                  />
+                  <Button text={t('cancelOrder')} buttonProps={{ onPress: handleCancelOrder, disabled: isCancelling }} buttonStyles={[styles.cancelButtonContainer(theme), { backgroundColor: theme.red600 }]} textProps={{ textColor: theme.white }} textStyles={{ ...alignment.Pmedium }} />
                 </View>
                 <View style={{ ...alignment.MTsmall }}>
-                  <Button
-                    text={t('waitForOrder')}
-                    buttonProps={{ onPress: setModalVisible }}
-                    buttonStyles={styles.dismissButtonContainer(theme)}
-                    textStyles={{ ...alignment.Pmedium, color: theme.newIconColor }}
-                  />
+                  <Button text={t('waitForOrder')} buttonProps={{ onPress: setModalVisible }} buttonStyles={styles.dismissButtonContainer(theme)} textStyles={{ ...alignment.Pmedium, color: theme.newIconColor }} />
                 </View>
               </View>
             )}
