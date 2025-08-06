@@ -84,7 +84,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     profile,
     loadingProfile,
     fetchProfile,
-    clearCart
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
 
