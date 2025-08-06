@@ -798,8 +798,8 @@ export default function RestaurantDetailsScreen() {
                             {t("restaurant_is_closed")}
                           </p>
                           <p className="text-sm">
-                            You can&apos;t order this food item right now.
-                            <br></br> Please try again later.
+                            {t("cannot_order_food_item_now")}
+                            <br></br> {t("please_try_again_later")}
                           </p>
                         </div>
                       </CustomDialog>

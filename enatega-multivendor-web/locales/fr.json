@@ -736,5 +736,14 @@
   "AboutUsPage_commitment14": "Notre engagement",
   "AboutUsPage_commitment15": "Nous nous engageons à la transparence, l'équité et l'inclusivité. Que vous soyez un petit restaurant local ou une chaîne nationale, Enatega offre des opportunités égales de croissance et d'exposition. Notre équipe travaille sans relâche pour assurer des livraisons rapides, une excellente expérience utilisateur et une amélioration constante grâce aux retours.",
   "AboutUsPage_join16": "Rejoignez-nous",
-  "AboutUsPage_join17": "Êtes-vous un vendeur cherchant à développer votre entreprise alimentaire ? Ou un client affamé à la recherche de votre prochain repas préféré ? Enatega est l'endroit pour vous. Rejoignez notre communauté grandissante et faites partie de l'avenir de la livraison de nourriture."
+  "AboutUsPage_join17": "Êtes-vous un vendeur cherchant à développer votre entreprise alimentaire ? Ou un client affamé à la recherche de votre prochain repas préféré ? Enatega est l'endroit pour vous. Rejoignez notre communauté grandissante et faites partie de l'avenir de la livraison de nourriture.",
+  "installPWA": "Installez cette application pour une meilleure expérience !",
+"install_app_label": "Installer l'application",
+
+"view_label": "Voir",
+"onMap_label": "Sur la carte",
+"update_password_error_title": "Erreur",
+"sort_by_label": "Trier par"
+
+
 }
