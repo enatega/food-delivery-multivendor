@@ -177,6 +177,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
+    localStorage.clear();
 
     //Give Toast Alert You Logout Successfully
     showToast({
@@ -184,9 +185,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       title: t("logoutSuccessToastTitle"),
       message: t("logoutSuccessToastMessage"),
     });
-
-    localStorage.clear();
-    clearCart()
   };
 
   // Logo click handler
@@ -348,7 +346,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           <PaddingContainer>
             <div className="flex items-center justify-between w-full h-16 gap-2 flex-wrap md:flex-nowrap">
               {/* Left Section */}
-              <div className={`flex items-center gap-2 flex-shrink-0`}>
+              <div className={`flex items-center gap-2 flex-shrink-0 cursor-pointer`}>
                 {!isSearchFocused && (
                   <div
                     onClick={logoClickHandler}

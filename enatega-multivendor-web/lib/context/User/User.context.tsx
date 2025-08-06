@@ -595,11 +595,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       // Check if we need to clear the cart (different restaurant)
       const needsClear = Boolean(restaurantId && restaurant !== restaurantId);
 
-      if(!foodId) {
-        
-      }
       // Create new cart item
-      const newItem: CartItem =   {
+      const newItem: CartItem = {
         image,
         key: v4(),
         _id: foodId,
@@ -660,7 +657,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
   const updateItemQuantity = useCallback(
     async (key: string, changeAmount: number) => {
       // Force change to be exactly +1 or -1
-      const safeChange = changeAmount > 0 ? changeAmount : -1;
+      const safeChange = changeAmount > 0 ? 1 : -1;
 
       // Use a local variable that will be unique to each function call
       // This ensures the flag is reset for each new click
@@ -791,8 +788,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     if (!dataProfile) return;
     subscribeOrders();
   }, [dataProfile]);
-
-
 
   return (
     <UserContext.Provider
