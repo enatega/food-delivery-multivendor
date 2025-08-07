@@ -107,6 +107,16 @@ export default function Cart({ onClose }: CartProps) {
     );
   }
 
+  const getshopTypeTranslated = () =>{
+    if(shopType === "store")
+    {
+      return t("store_label")
+    }
+    else{
+      return t("tab_restaurants")
+    }
+  }
+
   // Slice related items to max 3
   const slicedRelatedItems = (relatedItemsData?.relatedItems || []).slice(0, 3);
 
@@ -248,7 +258,7 @@ export default function Cart({ onClose }: CartProps) {
         <div className="p-4 bg-white">
           <div className="bg-gray-50 rounded-lg p-3">
             <h2 className="font-inter font-semibold text-base text-gray-900 mb-2">
-               {t('add_comment_for_restaurant_label')} {" "} {shopType}
+               {t('add_comment_for_restaurant_label')} {" "} {getshopTypeTranslated()}
             </h2>
             <textarea
               id="instructions"

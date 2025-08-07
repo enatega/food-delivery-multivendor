@@ -111,7 +111,7 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
 
         <h2 className="text-xl font-semibold mb-3">{t("order_cancel_warning_line2")}</h2>
         <p className="text-gray-600 text-sm mb-6">
-          {"We've got your order and may find you a rider any"}
+          {t("order_cancel_warning_line1")}
           <br />
           {t('order_cancel_warning_line2')}
         </p>

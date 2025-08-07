@@ -115,7 +115,7 @@ const TermsConditions = () => {
     },
     {
       number: "15.",
-      head: t("yalla"),
+      head: t("Enatega"),
       paras: [
         t("list_15_1")
       ],
