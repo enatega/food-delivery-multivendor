@@ -24,7 +24,13 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
   const { CURRENCY_SYMBOL } = useConfig();
 
   // Access user context for cart functionality
-  const { addItem, restaurant: cartRestaurant, clearCart } = useUser();
+  const {
+    addItem,
+    restaurant: cartRestaurant,
+    clearCart,
+    cart,
+    updateItemQuantity,
+  } = useUser();
 
   // State for selected variation
   const [selectedVariation, setSelectedVariation] = useState(
@@ -71,7 +77,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
     }));
   };
 
-  const t = useTranslations()
+  const t = useTranslations();
 
   // Validate if all required addons are selected
   const isFormValid = () => {
@@ -144,16 +150,53 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           options,
         };
       });
-    // Call the addItem function from useUser hook
-    addItem(
-      foodItem?.image,
-      foodItem._id,
-      selectedVariation._id,
-      foodItem.restaurant,
-      quantity,
-      formattedAddons
-      // Special instructions - could add a field for this
-    );
+    // chech if foodItem._id matches the id of any item in the cart and foodItem.variation.id matches variation id of selected item then return true
+    const isItemInCart = cart.some(
+      (item) =>
+        item._id === foodItem._id &&
+        item.variation._id === selectedVariation._id &&
+        // check if addons ids and their option id's of item matches formattedAddons ids and option id's
+        JSON.stringify(item.addons?.map((a) => a._id)) ===
+          JSON.stringify(formattedAddons.map((a) => a._id)) &&
+        JSON.stringify(
+          item.addons?.flatMap((a) => a.options.map((o) => o._id))
+        ) ===
+          JSON.stringify(
+            formattedAddons.flatMap((a) => a.options.map((o) => o._id))
+          )
+    );  
+
+    if (isItemInCart) {
+      cart.map((item) => {
+        if (
+          item._id === foodItem._id &&
+          item.variation._id === selectedVariation._id &&
+          // check if addons ids and their option id's of item matches formattedAddons ids and option id's
+          JSON.stringify(item.addons?.map((a) => a._id)) ===
+            JSON.stringify(formattedAddons.map((a) => a._id)) &&
+          JSON.stringify(
+            item.addons?.flatMap((a) => a.options.map((o) => o._id))
+          ) ===
+            JSON.stringify(
+              formattedAddons.flatMap((a) => a.options.map((o) => o._id))
+            )
+        ) {
+          // If item is already in cart, update its quantity
+          updateItemQuantity(item.key, quantity);
+        }
+      });
+    } else {
+      // Call the addItem function from useUser hook
+      addItem(
+        foodItem?.image,
+        foodItem._id,
+        selectedVariation._id,
+        foodItem.restaurant,
+        quantity,
+        formattedAddons
+        // Special instructions - could add a field for this
+      );
+    }
 
     // UPDAT4 STORAGE
     onUseLocalStorage("save", "restaurant", restaurant?._id);
