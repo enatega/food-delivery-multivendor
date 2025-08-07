@@ -867,5 +867,6 @@
   "installPWA":"Install this app for a better experience!",
   "install_app_label": "Install App",
 
-  "delete_success": "If you have any questions, feel free to reach  out to our support team."
+  "delete_success": "If you have any questions, feel free to reach  out to our support team.",
+  "Addons_label": "Addons"
 }

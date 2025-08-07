@@ -861,7 +861,9 @@
 "onMap_label": "على الخريطة",
 "update_password_error_title": "خطأ",
 "sort_by_label": "ترتيب حسب",
-"delete_success": "تم الحذف بنجاح"
+"delete_success": "تم الحذف بنجاح",
+
+"Addons_label": "الإضافات"
 
 
 }
