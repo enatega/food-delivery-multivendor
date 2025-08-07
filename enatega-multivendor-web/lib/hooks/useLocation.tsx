@@ -8,14 +8,12 @@ import Geocode from "react-geocode";
 import { ILocation } from "@/lib/utils/interfaces";
 
 // Hooks
-import useToast from "./useToast";
 import { useConfig } from "../context/configuration/configuration.context";
 
 type LocationCallback = (error: string | null, location?: ILocation) => void;
 
 export default function useLocation() {
   // Toast Context
-  const { showToast } = useToast();
 
   const { GOOGLE_MAPS_KEY } = useConfig();
 
@@ -57,11 +55,11 @@ export default function useLocation() {
       },
       (error: GeolocationPositionError) => {
         callback && callback(error.message);
-        showToast({
-          type: "error",
-          title: "Current Location",
-          message: error.message,
-        });
+        // showToast({
+        //   type: "error",
+        //   title: "Current Location",
+        //   message: error.message,
+        // });
       }
     );
   };
