@@ -30,6 +30,23 @@ function TrackingOrderDetails({
     onUseLocalStorage("save", "orderTrackingRestaurantId", restaurantId);
   }
 
+const calculateTotalAddonPrice = () => {
+  if (!orderTrackingDetails?.items) return 0;
+
+  return orderTrackingDetails.items.reduce((total, item) => {
+    if (!item.addons || item.addons.length === 0) return total;
+
+    const addonTotal = item.addons.reduce((addonSum, addon) => {
+      const optionsTotal = addon.options.reduce((optSum, option) => {
+        return optSum + (option.price as number);
+      }, 0);
+      return addonSum + optionsTotal;
+    }, 0);
+
+    return total + addonTotal;
+  }, 0);
+};
+
   // Calculate subtotal (items only)
   const calculateSubtotal = () => {
     if (!orderTrackingDetails?.items) return 0;
@@ -39,14 +56,17 @@ function TrackingOrderDetails({
     }, 0);
   };
 
+console.log(orderTrackingDetails)
+
   // Calculate total
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
     const deliveryCharge = orderTrackingDetails?.deliveryCharges || 0;
     const tax = orderTrackingDetails?.taxationAmount || 0;
     const tip = orderTrackingDetails?.tipping || 0;
+    const addons = calculateTotalAddonPrice();
 
-    return subtotal + deliveryCharge + tax + tip;
+    return subtotal + deliveryCharge + tax + tip + addons;
   };
 
   // Check if order can be cancelled (only PENDING or ACCEPTED)
@@ -71,6 +91,7 @@ function TrackingOrderDetails({
           </div>
         </div>
         <h3 className="text-lg font-semibold mb-2">{t("order_details_heading")}</h3>
+
 
 
         {/* Display each food item under Order Details */}
@@ -111,8 +132,9 @@ function TrackingOrderDetails({
                           >
                             + {option.title}
                             {option.price > 0 ?
-                              ` (${formatCurrency(option.price)})`
+                              ` (${formatCurrency(calculateTotalAddonPrice())})`
                               : ""}
+
                           </p>
                         ))}
                       </div>
@@ -177,12 +199,22 @@ function TrackingOrderDetails({
             </div>
           )}
 
+          {calculateTotalAddonPrice() > 0 && (
+          <div className="flex justify-between">
+            <span>{t("Addons")}</span>
+            <span>
+              {formatCurrency(calculateTotalAddonPrice() || 0)}
+            </span>
+          </div>
+          )}
+
           <div className="flex justify-between">
             <span>{t("order_details_delivery_charge_label")}</span>
             <span>
               {formatCurrency(orderTrackingDetails.deliveryCharges || 0)}
             </span>
           </div>
+
 
           <div className="flex justify-between font-semibold pt-2 border-t">
             <span>{t("order_details_total_label")}</span>
