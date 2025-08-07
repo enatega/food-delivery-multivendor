@@ -176,8 +176,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
-    localStorage.clear();
-
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("token");
     //Give Toast Alert You Logout Successfully
     showToast({
       type: "success",
@@ -345,7 +345,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           <PaddingContainer>
             <div className="flex items-center justify-between w-full h-16 gap-2 flex-wrap md:flex-nowrap">
               {/* Left Section */}
-              <div className={`flex items-center gap-2 flex-shrink-0 cursor-pointer`}>
+              <div
+                className={`flex items-center gap-2 flex-shrink-0 cursor-pointer`}
+              >
                 {!isSearchFocused && (
                   <div
                     onClick={logoClickHandler}

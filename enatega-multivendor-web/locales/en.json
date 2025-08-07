@@ -196,7 +196,7 @@
     "login_to_cancel_order_message": "Please log in to cancel your order.",
     "cancel_your_order_heading": "Cancel your order",
     "order_cancel_warning_line1": "We've got your order and may find you a rider any",
-    "order_cancel_warning_line2": "second now. Cancel anyway?",
+    "order_cancel_warning_line2": "Cancel anyway?",
     "cancelling_text": "Cancelling...",
 
 
@@ -865,5 +865,7 @@
   "update_password_error_title": "Error",
   "sort_by_label": "Sort by ",
   "installPWA":"Install this app for a better experience!",
-  "install_app_label": "Install App"
+  "install_app_label": "Install App",
+
+  "delete_success": "If you have any questions, feel free to reach  out to our support team."
 }

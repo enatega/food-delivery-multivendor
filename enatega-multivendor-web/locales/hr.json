@@ -835,6 +835,8 @@
 "view_label": "הצג",
 "onMap_label": "על המפה",
 "update_password_error_title": "שגיאה",
-"sort_by_label": "מיון לפי"
+"sort_by_label": "מיון לפי",
+"delete_success": "נמחק בהצלחה"
+
 
 }
