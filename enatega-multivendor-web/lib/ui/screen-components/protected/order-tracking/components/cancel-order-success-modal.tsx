@@ -1,4 +1,5 @@
 "use client"
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Dialog } from 'primereact/dialog'
 import React, { useEffect } from 'react'
@@ -24,6 +25,7 @@ function CancelOrderSuccessModal({ visible, onHide }: CancelOrderSuccessModalPro
         }
     }, [visible]);
 
+    const t = useTranslations()
     return (
         <Dialog
             visible={visible}
@@ -59,9 +61,9 @@ function CancelOrderSuccessModal({ visible, onHide }: CancelOrderSuccessModalPro
                 </svg>
             </button>
             <div className="flex flex-col items-center justify-center">
-                <h2 className="text-xl font-semibold mb-2">Your order is Cancelled</h2>
+                <h2 className="text-xl font-semibold mb-2">{t("your_order_is_cancelled")}</h2>
                 <p className="text-gray-600 text-sm text-center">
-                    {"If you have any questions, feel free to reach  out to our support team."}
+                    {t("delete_success")}
                 </p>
             </div>
         </Dialog>
