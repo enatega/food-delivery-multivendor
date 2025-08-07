@@ -8,7 +8,6 @@ import Geocode from "react-geocode";
 import { ILocation } from "@/lib/utils/interfaces";
 
 // Hooks
-import useToast from "./useToast";
 import { useConfig } from "../context/configuration/configuration.context";
 
 type LocationCallback = (error: string | null, location?: ILocation) => void;
