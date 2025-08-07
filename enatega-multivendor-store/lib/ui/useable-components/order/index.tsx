@@ -28,7 +28,6 @@ const Order = ({
 }) => {
   // Context
   const configuration = useContext(ConfigurationContext);
-
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
@@ -242,6 +241,37 @@ const Order = ({
                         >
                           x{item?.quantity}
                         </Text>
+                      </View>
+                      <View>
+                      <View>
+                        {item?.variation && (
+                          <View className="flex-row items-center">
+                            <Text>{item?.variation?.title}</Text>
+                            <Text className="ml-2">
+                              {configuration?.currencySymbol}
+                              {item?.variation?.price}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                      <View>
+                        {
+                          item?.addons?.map((addon) => {
+                            return (
+                              <View key={addon._id}>
+                                {addon?.options?.map((option) => {
+                                  return (
+                                    <View key={option._id} className="flex-row items-center">
+                                      <Text>{option.title}</Text>
+                                      <Text className="ml-2">({option?.price}{configuration?.currencySymbol})</Text>
+                                    </View>
+                                  );
+                                })}
+                              </View>
+                            );
+                          })
+                        }
+                      </View>
                       </View>
                     </View>
                   </View>
