@@ -20,7 +20,6 @@ import {
   MAX_SQUARE_FILE_SIZE,
   ProfileErrors,
   RestaurantErrors,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { EDIT_RESTAURANT, GET_CUISINES } from '@/lib/api/graphql';
@@ -41,6 +40,7 @@ import {
 } from '@/lib/utils/interfaces/cuisine.interface';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 export default function UpdateRestaurantDetails({
   stepperProps,
@@ -87,6 +87,11 @@ export default function UpdateRestaurantDetails({
     },
   });
 
+    const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
+  
   const cuisineResponse = useQueryGQL(GET_CUISINES, {
     debounceMs: 300,
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
@@ -113,7 +118,7 @@ export default function UpdateRestaurantDetails({
       minOrder: restaurantData?.minimumOrder ?? 0,
       salesTax: restaurantData?.tax ?? 0,
       shopType:
-        SHOP_TYPE.find((type) => type.code === restaurantData?.shopType) ??
+        dropdownList?.find((type) => type.label === restaurantData?.shopType) ??
         null,
       cuisines: Array.isArray(restaurantData?.cuisines)
         ? restaurantData.cuisines.map((cuisine) => ({
@@ -126,7 +131,7 @@ export default function UpdateRestaurantDetails({
       email: restaurantData?.username ?? '',
       orderprefix: restaurantData?.orderPrefix ?? '',
     };
-  }, [restaurantProfileResponse.data?.restaurant]);
+  }, [restaurantProfileResponse.data?.restaurant, dropdownList]);
 
   const onEditRestaurant = async (data: IUpdateProfileForm) => {
     if (!restaurantId) {
@@ -412,7 +417,8 @@ export default function UpdateRestaurantDetails({
                       placeholder={t('Shop Category')}
                       selectedItem={values.shopType}
                       setSelectedItem={setFieldValue}
-                      options={SHOP_TYPE}
+                      options={dropdownList || []}
+                      loading={loading}
                       showLabel={true}
                       style={{
                         borderColor: onErrorMessageMatcher(

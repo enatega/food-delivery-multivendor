@@ -28,6 +28,7 @@ import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/uploa
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { CuisineErrors, MAX_SQUARE_FILE_SIZE, SHOP_TYPE } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 export default function CuisineForm({
   setVisible,
@@ -56,6 +57,9 @@ export default function CuisineForm({
     },
     image: isEditing.bool ? isEditing.data.image : '',
   };
+
+     const {dropdownList,loading} =  useShopTypes({invoke_now: true, transform_to_dropdown_list: true})
+  
  
 
   // Mutations
@@ -237,11 +241,12 @@ export default function CuisineForm({
 
                   <CustomDropdownComponent
                     name="shopType"
-                    options={SHOP_TYPE}
+                    options={dropdownList ?? []}
                     selectedItem={values.shopType}
                     setSelectedItem={setFieldValue}
                     placeholder={t('Shop Category')}
                     showLabel={true}
+                    loading={loading}
                     style={{
                       borderColor: onErrorMessageMatcher(
                         'shopType',

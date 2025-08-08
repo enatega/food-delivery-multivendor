@@ -3,7 +3,11 @@ import { ChangeEvent, useContext } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMutation } from '@apollo/client';
 // GraphQL
-import { CREATE_SHOP_TYPE, GET_SHOP_TYPES, UPDATE_SHOP_TYPE } from '@/lib/api/graphql';
+import {
+  CREATE_SHOP_TYPE,
+  GET_SHOP_TYPES,
+  UPDATE_SHOP_TYPE,
+} from '@/lib/api/graphql';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -30,12 +34,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 
 // Constants
-import {
-  MAX_SQUARE_FILE_SIZE,
-  ShopTypeErrors,
-} from '@/lib/utils/constants';
-
-
+import { MAX_SQUARE_FILE_SIZE, ShopTypeErrors } from '@/lib/utils/constants';
 
 export default function ShopTypesForm({
   setVisible,
@@ -163,15 +162,24 @@ export default function ShopTypesForm({
           if (!isEditing.bool) {
             formData = {
               title: values.title,
-              image: values.image || 'https://placehold.co/600x400',
+              image: values.image || '',
             };
           } else {
             formData = {
               _id: values._id,
               title: values.title,
-              image: values.image || 'https://placehold.co/600x400',
+              image: values.image || '',
               isActive: values.isActive || false,
             };
+          }
+
+          if (!values.image) {
+            showToast({
+              type: 'warn',
+              title: 'Image',
+              message: 'Please upload an image for shop type',
+            });
+            return;
           }
 
           if (!isEditing.bool) {

@@ -29,7 +29,11 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Constants
-import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import {
+  MAX_LANSDCAPE_FILE_SIZE,
+  MAX_SQUARE_FILE_SIZE,
+  RestaurantErrors,
+} from '@/lib/utils/constants';
 
 // Interface
 import { IRestaurantForm } from '@/lib/utils/interfaces';
@@ -54,13 +58,14 @@ import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 const initialValues: IRestaurantForm = {
   name: '',
   username: '',
   password: '',
   confirmPassword: '',
-  phoneNumber: "",
+  phoneNumber: '',
   address: '',
   deliveryTime: 1,
   minOrder: 1,
@@ -127,6 +132,11 @@ export default function RestaurantDetails({
       }),
     [cuisineResponse.data?.cuisines]
   );
+
+  const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
 
   // Handlers
   const onCreateRestaurant = async (data: IRestaurantForm) => {
@@ -325,34 +335,34 @@ export default function RestaurantDetails({
                         />
                       </div>
                       <div>
-                       <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                         {t('Phone')}
-                       </label>
-                       <CustomPhoneTextField
-                         mask="999-999-9999"
-                         name="phoneNumber"
-                         showLabel={true}
-                         // placeholder="Phone Number"
-                         onChange={(e) => {
-                           // console.log("phone number format ==> ", e, code);
-                           setFieldValue('phoneNumber', e);
-                           // setCountryCode(code);
-                         }}
-                         value={values.phoneNumber}
-                         // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
-                         type="text"
-                         className="rounded-[6px] border-[#D1D5DB]"
-                         style={{
-                          borderColor: onErrorMessageMatcher(
-                            'phoneNumber',
-                            errors?.phoneNumber,
-                            RestaurantErrors
-                          )
-                            ? 'red'
-                            : '',
-                        }}
-                       />
-                     </div>
+                        <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                          {t('Phone')}
+                        </label>
+                        <CustomPhoneTextField
+                          mask="999-999-9999"
+                          name="phoneNumber"
+                          showLabel={true}
+                          // placeholder="Phone Number"
+                          onChange={(e) => {
+                            // console.log("phone number format ==> ", e, code);
+                            setFieldValue('phoneNumber', e);
+                            // setCountryCode(code);
+                          }}
+                          value={values.phoneNumber}
+                          // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
+                          type="text"
+                          className="rounded-[6px] border-[#D1D5DB]"
+                          style={{
+                            borderColor: onErrorMessageMatcher(
+                              'phoneNumber',
+                              errors?.phoneNumber,
+                              RestaurantErrors
+                            )
+                              ? 'red'
+                              : '',
+                          }}
+                        />
+                      </div>
 
                       <div>
                         <CustomTextField
@@ -446,7 +456,8 @@ export default function RestaurantDetails({
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
                           setSelectedItem={setFieldValue}
-                          options={SHOP_TYPE}
+                          options={dropdownList || []}
+                          loading={loading}
                           showLabel={true}
                           style={{
                             borderColor: onErrorMessageMatcher(
