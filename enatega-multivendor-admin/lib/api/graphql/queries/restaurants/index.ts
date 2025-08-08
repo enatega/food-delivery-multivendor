@@ -189,10 +189,6 @@ export const GET_RESTAURANT_PROFILE = gql`
       currentWalletAmount
       totalWalletAmount
       withdrawnWalletAmount
-      deliveryOptions {
-        pickup 
-        delivery
-      }
     }
   }
 `;
