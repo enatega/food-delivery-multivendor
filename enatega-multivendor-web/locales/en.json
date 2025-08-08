@@ -307,6 +307,7 @@
 
     "send_button": "Send",
     "no_active_orders_title": "No Active Orders",
+    "active_orders_title": "Active Orders",
     "no_active_orders_message": "You don't have any active orders at the moment.",
     "browse_store_button": "Browse Store",
     "active_orders_label": "Active Orders",
@@ -487,9 +488,9 @@
     "for_greater_hunger_title": "For greater hunger",
     "in_10_20_min_label": "in 10-20 min",
     "coupon_applied_title": "Coupon Applied",
-    "coupon_has_been_applied_message": "coupon has been applied",
+    "coupon_has_been_applied_message_title": "coupon has been applied",
     "coupon_not_found_title": "Coupon Not Found",
-    "coupon_is_not_valid_message": "coupon is not valid.",
+    "coupon_is_not_valid_message_with_title": "coupon is not valid.",
     "invalid_coupon_title": "Invalid Coupon",
     "invalid_coupon_message": "Invalid Coupon.",
     "see_more_information": "See more information",
@@ -605,6 +606,8 @@
     "inc_taxes_label": "Inc. Taxes (if applicable)",
     "item_subtotal_label": "Item subtotal",
     "delivery_with_distance_label": "Delivery Distance",
+    "km_unit": "km",
+
     "tip_label": "Tip",
     "tax_label": "Tax",
     "discount_label": "Discount",

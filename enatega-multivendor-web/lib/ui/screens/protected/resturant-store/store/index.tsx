@@ -64,9 +64,10 @@ import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import { ToastContext } from "@/lib/context/global/toast.context";
 import { useTranslations } from "next-intl";
+import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
 export default function StoreDetailsScreen() {
-  const t = useTranslations()
+  const t = useTranslations();
   // Access the UserContext via our custom hook
   const { cart, transformCartWithFoodInfo, updateCart, profile } = useUser();
 
@@ -268,7 +269,7 @@ export default function StoreDetailsScreen() {
       if (popularFoods.length > 0) {
         allDealCategories.unshift({
           _id: "popular-items",
-          title: t('StoresPage.popitems'),
+          title: t("StoresPage.popitems"),
           foods: [],
           subCategories: [
             {
@@ -339,8 +340,8 @@ export default function StoreDetailsScreen() {
       if (matchedPopularFoods.length > 0) {
         baseItems.unshift({
           id: "popular-items",
-          label: t('StoresPage.popitems'),
-          title: t('StoresPage.popitems'),
+          label: t("StoresPage.popitems"),
+          title: t("StoresPage.popitems"),
 
           url: "#popular-items",
           template: parentItemRenderer,
@@ -518,9 +519,7 @@ export default function StoreDetailsScreen() {
     location: data?.restaurant?.location ?? "N/A",
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
-    description:
-      data?.restaurant?.description ??
-      t("restaurant_modal_label"),
+    description: data?.restaurant?.description ?? t("restaurant_modal_label"),
   };
 
   // Handlers
@@ -573,6 +572,14 @@ export default function StoreDetailsScreen() {
       container?.removeEventListener("scroll", handleScrollUpdate);
     };
   }, [deals]);
+
+  onUseLocalStorage("save", "restaurant", data?.restaurant?._id);
+  onUseLocalStorage("save", "restaurant-slug", data?.restaurant?.slug);
+  onUseLocalStorage(
+    "save",
+    "currentShopType",
+    data?.restaurant?.shopType === "restaurant" ? "restaurant" : "store"
+  );
 
   return (
     <>
@@ -707,7 +714,7 @@ export default function StoreDetailsScreen() {
                   {loading ? (
                     <Skeleton width="10rem" height="1.5rem" />
                   ) : (
-                    t('StoresPage.SeeStoreinfo')
+                    t("StoresPage.SeeStoreinfo")
                   )}
                 </a>
                 {/* Review Link */}
@@ -723,7 +730,7 @@ export default function StoreDetailsScreen() {
                   {loading ? (
                     <Skeleton width="10rem" height="1.5rem" />
                   ) : (
-                    t('StoresPage.storereviews')
+                    t("StoresPage.storereviews")
                   )}
                 </a>
               </div>
@@ -886,7 +893,7 @@ export default function StoreDetailsScreen() {
                                   </h3>
                                   {meal.isOutOfStock && (
                                     <span className="text-red-500">
-                                      {t('out_of_stock_label')}
+                                      {t("out_of_stock_label")}
                                     </span>
                                   )}
                                 </div>
@@ -946,8 +953,8 @@ export default function StoreDetailsScreen() {
                                   </p>
                                   <p className="text-sm">
                                     {t("cannot_order_food_item_now")}
-                                   <br></br> 
-                                   {t("please_try_again_later")}
+                                    <br></br>
+                                    {t("please_try_again_later")}
                                   </p>
                                 </div>
                               </CustomDialog>

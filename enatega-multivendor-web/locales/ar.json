@@ -300,6 +300,7 @@
 
     "send_button": "إرسال",
   "no_active_orders_title": "لا توجد طلبات نشطة",
+  "active_orders_title": "الطلبات النشطة",
   "no_active_orders_message": "لا يوجد لديك أي طلبات نشطة في الوقت الحالي.",
   "browse_store_button": "تصفح المتجر",
   "active_orders_label": "الطلبات النشطة",
