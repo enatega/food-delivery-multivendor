@@ -64,6 +64,7 @@ import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import { ToastContext } from "@/lib/context/global/toast.context";
 import { useTranslations } from "next-intl";
+import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
 export default function StoreDetailsScreen() {
   const t = useTranslations()
@@ -171,6 +172,7 @@ export default function StoreDetailsScreen() {
   const itemRenderer = (item: MenuItem) => {
     const _url = item.url?.slice(1);
     const isClicked = _url === selectedSubCategoryRefs.current;
+
 
     return (
       <div
@@ -573,6 +575,14 @@ export default function StoreDetailsScreen() {
       container?.removeEventListener("scroll", handleScrollUpdate);
     };
   }, [deals]);
+
+   onUseLocalStorage("save", "restaurant", data?.restaurant?._id);
+      onUseLocalStorage("save", "restaurant-slug", data?.restaurant?.slug);
+      onUseLocalStorage(
+        "save",
+        "currentShopType",
+        data?.restaurant?.shopType === "restaurant" ? "restaurant" : "store"
+      );
 
   return (
     <>
