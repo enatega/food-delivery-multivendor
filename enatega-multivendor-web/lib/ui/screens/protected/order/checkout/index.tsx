@@ -277,7 +277,7 @@ export default function OrderCheckoutScreen() {
         showToast({
           type: "info",
           title: t("coupon_applied_title"),
-          message: `${coupon.title} ${" "} ${t("coupon_has_been_applied_message")}`,
+          message: `${coupon.title} ${t("coupon_has_been_applied_message")}`,
         });
         setIsCouponApplied(true);
         setCoupon(coupon);
@@ -285,7 +285,7 @@ export default function OrderCheckoutScreen() {
         showToast({
           type: "info",
           title: t("coupon_not_found_title"),
-          message: `${coupon.title} ${" "} ${t("coupon_is_not_valid_message")}`,
+          message: `${coupon.title} ${t("coupon_is_not_valid_message")}`,
         });
       }
     }
