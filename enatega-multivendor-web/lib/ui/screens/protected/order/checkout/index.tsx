@@ -539,7 +539,7 @@ export default function OrderCheckoutScreen() {
         variables: {
           restaurant: restaurantId,
           orderInput: items,
-          instructions: localStorage.getItem("orderInstructions") || "",
+          instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
           couponCode: coupon ? coupon.title : null,
           tipping: +selectedTip,
