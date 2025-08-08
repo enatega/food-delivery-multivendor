@@ -298,6 +298,8 @@
   "describe_issue_in_detail_placeholder": "אנא תאר את הבעיה שלך בפירוט...",
   "send_button": "שלח",
   "no_active_orders_title": "אין הזמנות פעילות",
+  "active_orders_title": "הזמנות פעילות",
+
   "no_active_orders_message": "אין לך הזמנות פעילות כרגע.",
   "browse_store_button": "עיין בחנות",
   "active_orders_label": "הזמנות פעילות",

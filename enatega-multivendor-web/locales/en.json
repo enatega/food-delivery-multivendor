@@ -307,6 +307,7 @@
 
     "send_button": "Send",
     "no_active_orders_title": "No Active Orders",
+    "active_orders_title": "Active Orders",
     "no_active_orders_message": "You don't have any active orders at the moment.",
     "browse_store_button": "Browse Store",
     "active_orders_label": "Active Orders",
