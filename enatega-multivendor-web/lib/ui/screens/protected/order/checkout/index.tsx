@@ -277,7 +277,7 @@ export default function OrderCheckoutScreen() {
         showToast({
           type: "info",
           title: t("coupon_applied_title"),
-          message: `${coupon.title} ${t("coupon_has_been_applied_message")}`,
+          message: `${coupon.title} ${t("coupon_has_been_applied_message_with_title")}`,
         });
         setIsCouponApplied(true);
         setCoupon(coupon);
@@ -285,7 +285,7 @@ export default function OrderCheckoutScreen() {
         showToast({
           type: "info",
           title: t("coupon_not_found_title"),
-          message: `${coupon.title} ${t("coupon_is_not_valid_message")}`,
+          message: `${coupon.title} ${t("coupon_is_not_valid_message_with_title")}`,
         });
       }
     }
@@ -1208,7 +1208,7 @@ export default function OrderCheckoutScreen() {
               id="price-summary"
             >
               <h2 className="text-sm lg:text-base font-semibold text-left flex justify-between">
-                {t("prices_in_label")} {CURRENCY}
+              {t("prices_in_label", { currency: CURRENCY })}
                 <InfoSvg />
               </h2>
               <p className="text-gray-400 mb-3 text-left leading-5 tracking-normal font-inter text-xs lg:text-[10px]">
@@ -1228,7 +1228,7 @@ export default function OrderCheckoutScreen() {
               {deliveryType === "Delivery" && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    {t("delivery_with_distance_label")} ({distance} km)
+                  {t("delivery_with_distance_label", { distance, unit: t("km_unit") })}
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {CURRENCY_SYMBOL}
