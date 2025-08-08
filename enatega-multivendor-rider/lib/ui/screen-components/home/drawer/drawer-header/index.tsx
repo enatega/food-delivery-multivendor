@@ -8,8 +8,8 @@ import { useUserContext } from "@/lib/context/global/user.context";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { IRiderProfile } from "@/lib/utils/interfaces";
-import { MutationTuple, useMutation, useQuery } from "@apollo/client";
-import { showMessage } from "react-native-flash-message";
+import { MutationTuple, useMutation } from "@apollo/client";
+// import { showMessage } from "react-native-flash-message";
 import { useEffect, useState } from "react";
 
 const CustomDrawerHeader = () => {
@@ -30,14 +30,23 @@ const CustomDrawerHeader = () => {
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
     awaitRefetchQueries: true,
-    onError: (error) => {
-      showMessage({
-        message:
-          error.graphQLErrors[0].message ||
-          error?.networkError?.message ||
-          t("Unable to update availability"),
-      });
-    },
+    // onCompleted: () => {
+    //   // Don't manually update state - let the refetch handle it through useEffect
+    //   // The refetch will update dataProfile and trigger the useEffect to update isRiderAvailable
+    //   showMessage({
+    //     message: t(!isRiderAvailable ? "You are now online" : "You are now offline"),
+    //     type: "success",
+    //   });
+    // },
+    // onError: (error) => {
+    //   showMessage({
+    //     message:
+    //       error.graphQLErrors[0]?.message ||
+    //       error?.networkError?.message ||
+    //       t("Unable to update availability"),
+    //     type: "danger",
+    //   });
+    // },
   }) as MutationTuple<IRiderProfile | undefined, { id: string }>;
 
   return (
@@ -104,9 +113,14 @@ const CustomDrawerHeader = () => {
           <CustomSwitch
             value={isRiderAvailable}
             isDisabled={loading}
-            onToggle={async () =>
-              await toggleAvailablity({ variables: { id: userId ?? "" } })
-            }
+            onToggle={async () => {
+              try {
+                await toggleAvailablity({ variables: { id: userId ?? "" } });
+              } catch (error) {
+                // Error is already handled in the mutation's onError callback
+                console.error("Toggle availability error:", error);
+              }
+            }}
           />
         )}
         <Text

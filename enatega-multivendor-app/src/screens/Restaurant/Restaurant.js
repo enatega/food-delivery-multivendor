@@ -643,7 +643,7 @@ function Restaurant(props) {
                 }
                 // Render other section headers as usual
                 return (
-                  <View style={styles(currentTheme).sectionHeader}>
+                  <View style={[styles(currentTheme).sectionHeader,{marginBottom: scale(20)}]}>
                     <TextDefault style={styles(currentTheme).sectionHeaderText} textColor={currentTheme.fontFourthColor} bolder isRTL>
                       {title}
                     </TextDefault>
@@ -699,9 +699,11 @@ function Restaurant(props) {
                             <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder isRTL>
                               {item?.title}
                             </TextDefault>
-                            <TextDefault style={styles(currentTheme).priceText} small isRTL>
-                              {wrapContentAfterWords(item?.description, 5)}
-                            </TextDefault>
+                            {item?.description && (
+                              <TextDefault style={styles(currentTheme).priceText} small isRTL>
+                                {wrapContentAfterWords(item?.description, 5)}
+                              </TextDefault>
+                            )}
                             <View style={styles(currentTheme).dealPrice}>
                               <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
                                 {configuration.currencySymbol} {parseFloat(item?.variations[0].price).toFixed(2)}

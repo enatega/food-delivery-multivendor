@@ -17,21 +17,33 @@ import useCancelOrder from "@/lib/hooks/useCancelOrder";
 import useOrderPickedUp from "@/lib/hooks/useOrderPickedUp";
 import { useTranslation } from "react-i18next";
 
+interface IOrderProps {
+  order: IOrder;
+  tab: ORDER_TYPE;
+  handlePresentModalPress?: (order: IOrder) => void;
+  showDetails: Record<string, boolean>;
+  onToggleDetails: (itemId: string) => void;
+}
+
 const Order = ({
   order,
   tab,
   handlePresentModalPress,
-}: {
-  order: IOrder;
-  tab: ORDER_TYPE;
-  handlePresentModalPress?: (order: IOrder) => void;
-}) => {
-  // Context
-  const configuration = useContext(ConfigurationContext);
+  showDetails = {},
+  onToggleDetails,
+}: IOrderProps) => {
+  if (!order) {
+    return null; // Return early if order is not available
+  }
 
-  // Hooks
-  const { t } = useTranslation();
+  // Hooks can be called safely now
   const { appTheme } = useApptheme();
+  const configuration = useContext(ConfigurationContext);
+  const { t } = useTranslation();
+
+  if (!configuration) {
+    return null; // Configuration context is not available yet
+  }
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
 
@@ -42,6 +54,7 @@ const Order = ({
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
     getIsAcceptButtonVisible(order?.orderDate),
   );
+
 
   // Timer
   const timeNow = new Date();
@@ -189,69 +202,142 @@ const Order = ({
         </View>
 
         <View>
-          {order?.items?.map((item) => {
+          {order?.items?.filter(Boolean).map((item) => {
+            // Ensure variation is an object, default to empty if undefined.
+            const variation = item.variation || {};
+            const itemPrice = variation.price ?? 0;
+            const itemTotal = itemPrice * (item.quantity ?? 1);
+
             return (
               <View
                 key={item._id}
-                className="flex-1 flex-row justify-between items-center mb-6"
+                className="flex-1 flex-row justify-between items-start mb-6"
               >
-                <View className="w-full flex-row justify-between">
-                  {/* Left */}
-                  <View className="flex-row gap-x-2 w-[90%]">
-                    {/* Image */}
-                    <View
-                      className="w-[60px] h-[70px] rounded-[8px] overflow-hidden"
-                      style={{
-                        backgroundColor: appTheme.lowOpacityPrimaryColor,
-                      }}
-                    >
-                      <Image
-                        src={item.image}
-                        style={{ width: 60, height: 70, borderRadius: 8 }}
-                      />
+                {/* Left Side: Image and Details */}
+                <View className="flex-row gap-x-2 flex-1">
+                  {/* Image */}
+                  <View
+                    className="w-[60px] h-[70px] rounded-[8px] overflow-hidden"
+                    style={{
+                      backgroundColor: appTheme.lowOpacityPrimaryColor,
+                    }}
+                  >
+                    <Image
+                      src={item.image}
+                      style={{ width: 60, height: 70, borderRadius: 8 }}
+                    />
+                  </View>
+
+                  {/* Item Details */}
+                  <View className="flex-1 justify-between">
+                    <View>
+                      <Text
+                        style={{
+                          color: appTheme.fontMainColor,
+                          fontSize: 14,
+                          fontWeight: "600",
+                        }}
+                      >
+                        {`${item?.quantity}x ${item?.title}`}
+                      </Text>
+                      <Text
+                        style={{
+                          color: appTheme.fontSecondColor,
+                          fontSize: 12,
+                        }}
+                      >
+                        {item?.description}
+                      </Text>
                     </View>
 
-                    {/* Item Details */}
-                    <View className="flex-1 justify-between">
-                      <View>
-                        <Text
-                          style={{
-                            color: appTheme.fontMainColor,
-                            fontSize: 14,
-                            fontWeight: "600",
-                          }}
+                    {/* Toggle and Collapsible Details */}
+                    <View className="mt-2">
+                      {(variation.title || (item?.addons && item?.addons.length > 0)) && (
+                        <TouchableOpacity
+                          onPress={() => onToggleDetails(item._id)}
+                          className="flex-row items-center mb-2"
                         >
-                          {item?.title}
-                        </Text>
-                        <Text
-                          style={{
-                            color: appTheme.fontSecondColor,
-                            fontSize: 12,
-                          }}
-                        >
-                          {item?.description}
-                        </Text>
-                      </View>
-                      <View>
-                        <Text
-                          style={{
-                            color: appTheme.fontMainColor,
-                            fontSize: 14,
-                            fontWeight: "600",
-                          }}
-                        >
-                          x{item?.quantity}
-                        </Text>
-                      </View>
+                          <Text
+                            style={{
+                              color: appTheme.primary,
+                              fontSize: 12,
+                              fontWeight: "500",
+                            }}
+                          >
+                            {showDetails[item._id] ? "Hide Details" : "Show Details"}
+                          </Text>
+                          <View className="ml-1">
+                            <Text style={{ color: appTheme.primary, fontSize: 10 }}>
+                              {showDetails[item._id] ? "▲" : "▼"}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+
+                      {showDetails[item._id] && (
+                        <View>
+                          {variation.title && (
+                            <View className="mb-2">
+                              <View className="flex-row items-center">
+                                <Text
+                                  style={{
+                                    color: appTheme.fontSecondColor,
+                                    fontSize: 12,
+                                    fontWeight: "500",
+                                  }}
+                                >
+                                  {variation.title}
+                                </Text>
+                                <Text
+                                  className="ml-2"
+                                  style={{
+                                    color: appTheme.fontMainColor,
+                                    fontSize: 12,
+                                    fontWeight: "600",
+                                  }}
+                                >
+                                  {`${configuration?.currencySymbol}${variation.price}`}
+                                </Text>
+                              </View>
+                            </View>
+                          )}
+
+                          {item?.addons?.map((addon) => (
+                            <View key={addon._id} className="mb-1">
+                              {addon?.options?.map((option) => (
+                                <View key={option._id} className="flex-row items-center">
+                                  <Text
+                                    style={{
+                                      color: appTheme.fontSecondColor,
+                                      fontSize: 12,
+                                    }}
+                                  >
+                                    {option.title}
+                                  </Text>
+                                  <Text
+                                    className="ml-2"
+                                    style={{
+                                      color: appTheme.fontMainColor,
+                                      fontSize: 12,
+                                    }}
+                                  >
+                                    {`(+${configuration?.currencySymbol}${option?.price})`}
+                                  </Text>
+                                </View>
+                              ))}
+                            </View>
+                          ))}
+                        </View>
+                      )}
                     </View>
                   </View>
-                  {/* Right */}
-                  <View className="w-auto items-end">
-                    <Text style={{ color: appTheme.fontMainColor }}>
-                      {configuration?.currencySymbol}
-                      {item?.variation.price}
-                    </Text>
-                  </View>
+                </View>
+
+                {/* Right Side: Price */}
+                <View className="w-auto items-end">
+                  <Text style={{ color: appTheme.fontMainColor, fontWeight: "600" }}>
+                    {`${configuration?.currencySymbol}${itemTotal.toFixed(2)}`}
+                  </Text>
                 </View>
               </View>
             );
