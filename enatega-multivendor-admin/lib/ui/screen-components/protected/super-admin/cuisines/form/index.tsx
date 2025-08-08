@@ -26,7 +26,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { useContext } from 'react';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
-import { CuisineErrors, MAX_SQUARE_FILE_SIZE, SHOP_TYPE } from '@/lib/utils/constants';
+import { CuisineErrors, MAX_SQUARE_FILE_SIZE } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
 import { useShopTypes } from '@/lib/hooks/useShopType';
 
