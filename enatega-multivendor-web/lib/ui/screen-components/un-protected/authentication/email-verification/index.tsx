@@ -21,6 +21,7 @@ export default function EmailVerification({
   handleChangePanel,
   emailOtp,
   setEmailOtp,
+  formData,
 }: IEmailVerificationProps) {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -35,8 +36,9 @@ export default function EmailVerification({
     setIsAuthModalVisible,
     setOtp: setStoredOtp,
     sendOtpToEmailAddress,
-    sendOtpToPhoneNumber,
+    // sendOtpToPhoneNumber,
     isLoading,
+    handleCreateUser,
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
@@ -60,13 +62,7 @@ export default function EmailVerification({
   }, [otp]);
 
   // Initialize on mount
-  useEffect(() => {
-    if (emailOtp) {
-      const otpArray = emailOtp.split("").slice(0, 6);
-      setOtp([...otpArray, ...Array(6 - otpArray.length).fill("")]);
-    }
-    if (!user?.email) handleChangePanel(4);
-  }, []);
+ 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value;
@@ -105,7 +101,7 @@ export default function EmailVerification({
         handleChangePanel(0);
         setIsAuthModalVisible(false);
       } else {
-        handleChangePanel(4);
+      
       }
       setStoredOtp("");
       setEmailOtp("");
@@ -115,31 +111,45 @@ export default function EmailVerification({
     const otpResponse = await verifyOTP({
           variables: {
             otp: emailOtp,
-            email: user?.email
+            email: formData?.email
           }
         })
 
-    if (otpResponse.data?.verifyOtp && !!user?.email) {
-      const userData = await updateUser({
+    if (otpResponse.data?.verifyOtp.result && !!formData?.email) {
+
+      // if otp is verified then createuser also update it
+      const userData = await handleCreateUser({
+        email: formData?.email,
+        phone: formData?.phone,
+        name: formData?.name,
+        password: formData?.password,
+      });
+      const updateUserData = await updateUser({
         variables: {
-          name: user?.name ?? "",
-          email: user?.email ?? "",
+          name: userData?.name ?? "",
+          email: userData?.email ?? "",
           emailIsVerified: true,
+          
         },
+        
       });
       setStoredOtp("");
       setEmailOtp("");
-      if (userData?.data?.updateUser?.phoneIsVerified) {
-        showToast({ type: "success", title: t("email_verification_label"), message: t("your_email_verified_successfully_message") });
-        showToast({ type: "success", title: t("login_label"), message: t("login_success_message") });
-        handleChangePanel(0);
-        setIsAuthModalVisible(false);
-      } else if (!userData?.data?.updateUser?.phoneIsVerified && user.phone) {
-        sendOtpToPhoneNumber(user.phone);
-        handleChangePanel(6);
-      } else {
-        handleChangePanel(4);
-      }
+      // reset formData 
+      formData.email = "";
+      formData.phone = "";
+      formData.name = "";
+      formData.password = "";
+      
+     
+      showToast({
+        type: "success",
+        title: t("email_verification_label"),
+        message: t("your_email_verified_successfully_message"),
+      });
+      handleChangePanel(0);
+      setIsAuthModalVisible(false);
+      
     } else {
       showToast({
         type: "error",
@@ -150,7 +160,7 @@ export default function EmailVerification({
   };
 
   const handleOtpResend = async () => {
-    if (!user?.email) {
+    if (!formData?.email) {
       return showToast({
         type: "error",
         title: t("Error"),
@@ -158,7 +168,7 @@ export default function EmailVerification({
       });
     }
     setIsResendingOtp(true);
-    await sendOtpToEmailAddress(user.email);
+    await sendOtpToEmailAddress(formData.email);
     setIsResendingOtp(false);
   };
 
@@ -180,7 +190,7 @@ export default function EmailVerification({
           {t("OTP_Code_Sent")}
         </h2>
         <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
-          {user?.email || "your@email.com"}
+          {formData?.email || "your@email.com"}
         </p>
         <p className="text-base text-gray-600 mb-6">{t("verify_your_email_label")}</p>
       </div>
