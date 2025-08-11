@@ -522,7 +522,7 @@ function Account(props) {
                     detail={''}
                     status='null'
                     onPress={() => {
-                      Linking.openURL('https://multivendor.enatega.com/#/terms')
+                      Linking.openURL('https://multivendor.enatega.com/terms')
                     }}
                   />
                   <View style={styles(currentTheme).line} />
@@ -532,7 +532,7 @@ function Account(props) {
                     detail={''}
                     status='null'
                     onPress={() => {
-                      Linking.openURL('https://multivendor.enatega.com/#/privacy')
+                      Linking.openURL('https://multivendor.enatega.com/privacy')
                     }}
                   />
                 </View>

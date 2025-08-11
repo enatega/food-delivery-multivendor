@@ -5,10 +5,12 @@ import { useRef, useState, useEffect } from "react"
 import CustomButton from "@/lib/ui/useable-components/button"
 // Icons
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction"
-import { useAuth } from "@/lib/context/auth/auth.context"
 import useToast from "@/lib/hooks/useToast"
 import { IVerificationEmailForChangePasswordProps } from "@/lib/utils/interfaces"
 import EmailIcon from "@/public/assets/images/svgs/email"
+
+// Hooks
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp"
 import { useTranslations } from "next-intl"
 
 
@@ -21,8 +23,12 @@ const VerificationEmailForChangePassword = ({
 }: IVerificationEmailForChangePasswordProps) => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""))
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const {otp: emailOtpVerify} = useAuth()
   const { showToast } = useToast();
+  const { verifyOTP, error } = useVerifyOtp();
+
+  // Hooks
+  const t = useTranslations();
+
 
   // useEffect to handle resend email otp on first render
   const isFirstRender = useRef(true);
@@ -74,7 +80,6 @@ const VerificationEmailForChangePassword = ({
     }
   }
 
-  const t = useTranslations()
   // Handle paste event
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -97,19 +102,47 @@ const VerificationEmailForChangePassword = ({
   }
 
   // Handle form submission
-  const handleSubmit =useDebounceFunction( async () => {
-    if (otp.join("").length !== 6 || emailOtp !== emailOtpVerify) {
-      return showToast({
-        type: "error",
-        title: "Error",
-        message: t('please_enter_valid_otp_code_message'),
-      })
-    }else{
-      handleSubmitAfterVerification()
+  const handleSubmit = useDebounceFunction(async () => {
+
+try {
+  const otpResponse = await verifyOTP({
+    variables: {
+      otp: emailOtp,
+      email: formData?.email
     }
+  })
+
+  if (otp.join("").length !== 6 || !otpResponse?.data?.verifyOtp) {
+    return showToast({
+      type: "error",
+      title: "Error",
+      message: "Please enter a valid OTP",
+    })
+  }else{
+    handleSubmitAfterVerification()
+  }
+
+} catch (error) {
+  showToast({
+    type: "error",
+    title: "Error",
+    message: "An error occurred while verifying the phone number",
+  })
+}
   },
     500, // Debounce time in milliseconds
 )
+  
+      // useEffect for displaying otp verification error
+      useEffect(() => {
+        if (error) {
+          showToast({
+            type: "error",
+            title: t("OTP Error"),
+            message: error.message,
+          });
+      }
+      }, [error])
 
   return (
 <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
@@ -119,7 +152,7 @@ const VerificationEmailForChangePassword = ({
   </div>
 
   <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-    {t("OTP_Code_Sent")}
+    We have sent OTP code to
   </h2>
 
 
@@ -127,7 +160,7 @@ const VerificationEmailForChangePassword = ({
     {formData?.email || "your@email.com"}
   </p>
 
-  <p className="text-base text-gray-600 mb-6">{t("verify_your_email_label")}</p>
+  <p className="text-base text-gray-600 mb-6">Verify your Email</p>
 </div>
   <div className="w-full mb-6">
     <div className="flex justify-center flex-wrap gap-2">
@@ -151,16 +184,16 @@ const VerificationEmailForChangePassword = ({
     </div>
   </div>
 
-  <p className="text-sm text-gray-500 mb-6 text-center">{t("otp_valid_for_10_minutes_label")}</p>
+  <p className="text-sm text-gray-500 mb-6 text-center">Valid for 10 minutes</p>
 
   <CustomButton
-    label= {t("continue_label")}
+    label="Continue"
     className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
     onClick={handleSubmit}
   />
 
   <CustomButton
-    label= {t("resend_otp_label")}
+    label="Resend OTP"
     className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg sm:text-md font-medium"
     onClick={handleResendEmailOtp}
   />

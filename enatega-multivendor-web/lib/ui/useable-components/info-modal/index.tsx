@@ -176,9 +176,9 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
           <div className="mb-6">
             <h2 className="text-lg md:text-xl font-bold mb-2">{t("DeliveryInfo")}</h2>
             <div className="grid grid-cols-1 gap-2">
-              <p>Minimum Order: £{restaurantInfo.MinimumOrder}</p>
-              <p>Delivery Time: {restaurantInfo.deliveryTime}mins</p>
-              <p>Sales Tax: £{restaurantInfo.deliveryTax}</p>
+              <p>{t("MinOrder")} {" "}: £{restaurantInfo.MinimumOrder}</p>
+              <p>{t("DeliveryTime")} {" "}: {restaurantInfo.deliveryTime}mins</p>
+              <p>{t("SalesTax")} {" "}: £{restaurantInfo.deliveryTax}</p>
             </div>
           </div>
 
@@ -191,7 +191,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
             {/* Phone */}
             <div className=" flex justify-between text-xs md:text-[16px] font-normal leading-[16px] md:leading-[24px] mt-2">
               <h1 className="text-sm md:text-[16px] font-bold mb-2">
-                Phone Number
+                {t("Phone")}
               </h1>
               {restaurantInfo?.phone !== "N/A" ? (
                 <a
@@ -206,7 +206,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
             </div>
             <hr />
             <div className=" flex justify-between text-xs md:text-[16px] font-normal mt-2">
-              <h1 className="text-sm md:text-[16px] font-bold mb-2">Email</h1>
+              <h1 className="text-sm md:text-[16px] font-bold mb-2">{t("Email")}</h1>
               {restaurantInfo?.username !== "N/A" ? (
                 <a
                   href={`mailto:${restaurantInfo?.username || "N/A"}`}

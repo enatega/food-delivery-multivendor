@@ -15,13 +15,12 @@ import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-
-// Prime React
-import { InputOtp } from "primereact/inputotp";
+import { useEffect, useRef, useState } from "react";
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 
 // GQL
 import { UPDATE_USER } from "@/lib/api/graphql";
+import PhoneIcon from "@/lib/utils/assets/svg/phone";
 
 export default function PhoneVerification({
   phoneOtp,
@@ -29,14 +28,15 @@ export default function PhoneVerification({
   handleChangePanel,
 }: IPhoneVerificationProps) {
   // States
-  const [isResendingOtp, setIsResendingOtp] = useState(false);
+  // const [isResendingOtp, setIsResendingOtp] = useState(false);
+  const [userotp, setuserOtp] = useState<string[]>(Array(6).fill(""));
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Hooks
   const { SKIP_MOBILE_VERIFICATION, TEST_OTP } = useConfig();
   const t = useTranslations();
   const {
     user,
-    otp,
     setOtp,
     sendOtpToPhoneNumber,
     setIsAuthModalVisible,
@@ -47,6 +47,7 @@ export default function PhoneVerification({
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
+  const {verifyOTP, error} = useVerifyOtp();
 
   // Mutations
   const [updateUser] = useMutation<
@@ -58,8 +59,7 @@ export default function PhoneVerification({
         type: "error",
         title: t("update_phone_name_update_error_title"),
         message:
-          error.cause?.message ||
-          t("update_phone_name_update_error_msg"),
+          error.cause?.message || t("update_phone_name_update_error_msg"),
       });
     },
   });
@@ -68,14 +68,21 @@ export default function PhoneVerification({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      if (String(phoneOtp) === String(otp) && !!user?.phone) {
-        const args =
-          isRegistering ?
-            {
+
+      const otpResponse = await verifyOTP({
+        variables: {
+          otp: phoneOtp,
+          phone: user?.phone,
+        },
+      });
+
+      if (otpResponse.data?.verifyOtp && !!user?.phone) {
+        const args = isRegistering
+          ? {
               name: user?.name ?? "",
               phoneIsVerified: true,
             }
-            : {
+          : {
               phone: user?.phone,
               name: user?.name ?? "",
               phoneIsVerified: true,
@@ -109,7 +116,7 @@ export default function PhoneVerification({
     } catch (error) {
       console.error(
         "Error while updating user and phone otp verification:",
-        error,
+        error
       );
     } finally {
       setIsLoading(false);
@@ -119,14 +126,14 @@ export default function PhoneVerification({
 
   const handleResendPhoneOtp = async () => {
     if (user?.phone) {
-      setIsResendingOtp(true);
+      // setIsResendingOtp(true);
       await sendOtpToPhoneNumber(user?.phone);
       showToast({
         type: "success",
         title: t("otp_resent_label"),
         message: t("resent_otp_code_to_your_phone_message"),
       });
-      setIsResendingOtp(false);
+      // setIsResendingOtp(false);
     } else {
       showToast({
         type: "error",
@@ -155,64 +162,119 @@ export default function PhoneVerification({
     }
   }, [SKIP_MOBILE_VERIFICATION]);
 
+  useEffect(() => {
+    inputRefs.current = inputRefs.current.slice(0, 6);
 
+    // Set initial values from phoneOtp if it exists
+    if (phoneOtp) {
+      const otpArray = phoneOtp.split("").slice(0, 6);
+      setuserOtp(otpArray.concat(Array(6 - otpArray.length).fill("")));
+    }
+  }, []);
+
+    // useEffect for displaying otp verification error
+    useEffect(() => {
+      if (error) {
+        showToast({
+          type: "error",
+          title: t("OTP Error"),
+          message: error.message,
+        });
+    }
+  }, [error])
 
   return (
- <div className="flex items-center justify-center w-full min-h-screen px-4 py-8 sm:px-6 md:px-8">
-  <div className="w-full max-w-md flex flex-col bg-white shadow-lg rounded-2xl p-5 sm:p-6 md:p-8">
-    {/* Heading */}
-    <div className="mb-6 text-left">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">
-        {t("Verify Your Phone Number")}
-      </h2>
-      <p className="text-sm sm:text-base text-gray-600 mt-2">
-        {t("We have sent an OTP to")}&nbsp;
-        <span className="font-medium text-gray-800">
-          {user?.phone ?? "example@email.com"}
-        </span>
+    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+      <div className="flex flex-col justify-items-start justify-start text-left">
+        <div className="mb-4">
+          <PhoneIcon />
+        </div>
+
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+          {t("OTP_Code_Sent")}
+        </h2>
+
+        <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
+          {user?.phone || "your@email.com"}
+        </p>
+
+        <p className="text-base text-gray-600 mb-6">
+          {t("please_check_your_inbox_message_1")}
+        </p>
+      </div>
+      <div className="w-full mb-6">
+        <div className="flex justify-center flex-wrap gap-2">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
+            <input
+              key={index}
+              type="text"
+              inputMode="numeric"
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              maxLength={1}
+              aria-label={`OTP digit ${index + 1}`}
+              value={userotp[index]}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/, ""); // Only digits
+                const updatedOtp = [...userotp];
+
+                // Handle both new input and overwriting
+                if (value.length === 0) {
+                  updatedOtp[index] = "";
+                } else if (value.length === 1) {
+                  updatedOtp[index] = value;
+                } else {
+                  // If multiple characters (e.g., from paste), take the last one
+                  updatedOtp[index] = value.slice(-1);
+                }
+
+                setuserOtp(updatedOtp);
+                setPhoneOtp(updatedOtp.join(""));
+
+                // Move focus to next box
+                if (index < 5 && inputRefs.current[index + 1]) {
+                  if (value && index < 5 && inputRefs.current[index + 1]) {
+                    inputRefs.current[index + 1]?.focus();
+                  }
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Backspace") {
+                  const updatedOtp = [...userotp];
+                  updatedOtp[index] = "";
+                  setuserOtp(updatedOtp);
+                  setPhoneOtp(updatedOtp.join(""));
+
+                  if (index > 0 && !userotp[index]) {
+                    inputRefs.current[index - 1]?.focus();
+                  }
+                }
+              }}
+              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+            />
+          ))}
+        </div>
+      </div>
+      {/* Button Spacer */}
+      {/* <span className="mt-4" />
+        {/* Continue Button */}
+      <p className="text-sm text-gray-500 mb-6 text-center">
+        {t("otp_valid_for_10_minutes_label")}
       </p>
-      <p className="text-xs sm:text-sm text-gray-400 mt-1">
-        {t("please_check_your_inbox_message_1")}
-      </p>
+
+      <CustomButton
+        label={t("continue_label")}
+        loading={isLoading}
+        className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
+        onClick={handleSubmit}
+      />
+
+      <CustomButton
+        label={t("resend_otp_label")}
+        className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg sm:text-md font-medium"
+        onClick={handleResendPhoneOtp}
+      />
     </div>
-
-    {/* OTP Input */}
-    <InputOtp
-      value={phoneOtp}
-      onChange={(e) => setPhoneOtp(String(e.value))}
-      autoFocus
-      mask
-      maxLength={6}
-      length={6}
-      className="w-full h-16 sm:h-20 my-2"
-      onPaste={(e) =>
-        setPhoneOtp(
-          String(e.clipboardData.items[0].getAsString((data) => data)),
-        )
-      }
-      placeholder="123456"
-    />
-
-    {/* Button Spacer */}
-    <span className="mt-4" />
-
-    {/* Continue Button */}
-    <CustomButton
-      label={t("Continue")}
-      loading={isLoading}
-      className="bg-[#5AC12F] text-white flex items-center justify-center gap-x-3 px-4 py-3 rounded-full border border-gray-300 w-full sm:w-72 mx-auto mb-2 text-sm sm:text-base"
-      onClick={handleSubmit}
-    />
-
-    {/* Resend OTP Button */}
-    <CustomButton
-      label={t("Resend OTP")}
-      loading={isResendingOtp}
-      className="bg-white text-gray-700 flex items-center justify-center gap-x-3 px-4 py-3 rounded-full border border-gray-300 w-full sm:w-72 mx-auto mt-1 text-sm sm:text-base"
-      onClick={handleResendPhoneOtp}
-    />
-  </div>
-</div>
-
   );
 }

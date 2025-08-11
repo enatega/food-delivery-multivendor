@@ -30,12 +30,13 @@ import useToast from '@/lib/hooks/useToast';
 
 // GraphQL
 import { UPDATE_TIMINGS } from '@/lib/api/graphql/mutations/timing';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
+import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 
 
 
-const TimingAddForm = ( { data, loading, refetch } : any) => {
+const TimingAddForm = () => {
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
@@ -43,10 +44,10 @@ const TimingAddForm = ( { data, loading, refetch } : any) => {
   const t = useTranslations();
   const { showToast } = useToast();
 
-  // const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
-  //   fetchPolicy: 'cache-and-network',
-  //   variables: { id: restaurantId },
-  // });
+  const { data, loading, refetch } = useQuery(GET_RESTAURANT_PROFILE, {
+    fetchPolicy: 'cache-and-network',
+    variables: { id: restaurantId },
+  });
 
   //for conversion from ["HH","MM"] to 'HH:MM' format
   const openingTimes: ITimingForm[] =

@@ -116,7 +116,7 @@ const VerificationPhone = ({
       </div>
       <div className="flex flex-col justify-items-start text-left w-full">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-          {t("otp_sent_code_to_label")}
+          {t("OTP_Code_Sent")}
         </h2>
 
         <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">

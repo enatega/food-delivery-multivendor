@@ -66,6 +66,15 @@ body {
   position: absolute;
 }
 
+/* Add this to your global CSS or scoped module */
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-footer {
+  border: none !important;
+  box-shadow: none !important;
+  border-top: none !important;
+}
+
+
 .layout-top-container {
   position: sticky;
   /* height: 64px; */

@@ -196,7 +196,7 @@
     "login_to_cancel_order_message": "Please log in to cancel your order.",
     "cancel_your_order_heading": "Cancel your order",
     "order_cancel_warning_line1": "We've got your order and may find you a rider any",
-    "order_cancel_warning_line2": "second now. Cancel anyway?",
+    "order_cancel_warning_line2": "Cancel anyway?",
     "cancelling_text": "Cancelling...",
 
 
@@ -307,6 +307,7 @@
 
     "send_button": "Send",
     "no_active_orders_title": "No Active Orders",
+    "active_orders_title": "Active Orders",
     "no_active_orders_message": "You don't have any active orders at the moment.",
     "browse_store_button": "Browse Store",
     "active_orders_label": "Active Orders",
@@ -361,7 +362,7 @@
   "successToastMessage": "User Account Has Been Deleted Successfully",
   "errorToastTitle": "Error",
   "logoutSuccessToastTitle": "Logout",
-  "logoutSuccessToastMessage": "User logged out successfully",
+  "logoutSuccessToastMessage": "User Logged out successfully",
   "your_fav": "Your Favourites",
   "See_all": "See all",
     "update_phone_name_title": "Enter phone number",
@@ -401,7 +402,7 @@
     "last_name_label": "Last name",
     "save_label": "Save",
     "please_enter_valid_otp_message": "Please enter a valid OTP",
-    "verify_your_mobile_number_label": "Verify your mobile number",
+    "verify_your_mobile_number_label": "Verify your Phone number",
     "otp_valid_for_10_minutes_label": "Valid for 10 minutes",
     "continue_label": "Continue",
     "resend_otp_label": "Resend OTP",
@@ -425,7 +426,7 @@
     "otp_error_label": "OTP Error",
     "error": "Error",
     "login": "Login",
-    "OTP_Code_Sent": "We have sent OTP code to",
+    "OTP_Code_Sent": "We have Sent OTP Code to",
     "please_enter_valid_otp_code_message": "Please enter a valid OTP code",
     "error_occurred_while_verifying_email_message": "An error occurred while verifying the email",
     "please_enter_valid_email_address_message": "Please enter a valid email address",
@@ -487,9 +488,9 @@
     "for_greater_hunger_title": "For greater hunger",
     "in_10_20_min_label": "in 10-20 min",
     "coupon_applied_title": "Coupon Applied",
-    "coupon_has_been_applied_message": "coupon has been applied",
+    "coupon_has_been_applied_message_title": "coupon has been applied",
     "coupon_not_found_title": "Coupon Not Found",
-    "coupon_is_not_valid_message": "coupon is not valid.",
+    "coupon_is_not_valid_message_with_title": "coupon is not valid.",
     "invalid_coupon_title": "Invalid Coupon",
     "invalid_coupon_message": "Invalid Coupon.",
     "see_more_information": "See more information",
@@ -605,6 +606,8 @@
     "inc_taxes_label": "Inc. Taxes (if applicable)",
     "item_subtotal_label": "Item subtotal",
     "delivery_with_distance_label": "Delivery Distance",
+    "km_unit": "km",
+
     "tip_label": "Tip",
     "tax_label": "Tax",
     "discount_label": "Discount",
@@ -815,6 +818,7 @@
   "enatega_rider_page_name_card3_text": "After an order is placed, Enatega rider partners deliver to your customers in about 30 minutes.",
   "enatega_rider_page_name_form_heading": "Become a Rider",
   "enatega_rider_page_name_form_role": "Driver Registration",
+  
 
 
       "first_name_required": "First name is required",
@@ -862,5 +866,9 @@
   "view_label": "View",
   "onMap_label": "On Map",
   "update_password_error_title": "Error",
-  "sort_by_label": "Sort by "
+  "sort_by_label": "Sort by ",
+  "installPWA":"Install this app for a better experience!",
+  "install_app_label": "Install App",
+
+  "delete_success": "If you have any questions, feel free to reach  out to our support team."
 }

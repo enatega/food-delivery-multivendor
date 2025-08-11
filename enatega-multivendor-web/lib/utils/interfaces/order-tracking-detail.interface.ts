@@ -82,6 +82,7 @@ export interface IOrderTrackingDetail {
   orderAmount: number;
   orderStatus: string;
   deliveryCharges: number;
+  instructions:string;
   tipping: number;
   taxationAmount: number;
   orderDate: string;
