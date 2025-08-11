@@ -13,12 +13,11 @@ function TrackingOrderDetails({
 }: {
   orderTrackingDetails: IOrderTrackingDetail;
 }) {
-  const t = useTranslations()
+  const t = useTranslations();
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   const [setshowCancelOrderSuccessModal, setSetshowCancelOrderSuccessModal] =
     useState(orderTrackingDetails?.orderStatus === "CANCELLED" ? true : false);
-  const { CURRENCY_SYMBOL, } =
-    useConfig();
+  const { CURRENCY_SYMBOL } = useConfig();
   // Format currency values
   const formatCurrency = (amount: number) => {
     return `${CURRENCY_SYMBOL}${amount?.toFixed(2) || "0.00"}`;
@@ -30,22 +29,22 @@ function TrackingOrderDetails({
     onUseLocalStorage("save", "orderTrackingRestaurantId", restaurantId);
   }
 
-const calculateTotalAddonPrice = () => {
-  if (!orderTrackingDetails?.items) return 0;
+  const calculateTotalAddonPrice = () => {
+    if (!orderTrackingDetails?.items) return 0;
 
-  return orderTrackingDetails.items.reduce((total, item) => {
-    if (!item.addons || item.addons.length === 0) return total;
+    return orderTrackingDetails.items.reduce((total, item) => {
+      if (!item.addons || item.addons.length === 0) return total;
 
-    const addonTotal = item.addons.reduce((addonSum, addon) => {
-      const optionsTotal = addon.options.reduce((optSum, option) => {
-        return optSum + (option.price as number);
+      const addonTotal = item.addons.reduce((addonSum, addon) => {
+        const optionsTotal = addon.options.reduce((optSum, option) => {
+          return optSum + (option.price as number);
+        }, 0);
+        return addonSum + optionsTotal;
       }, 0);
-      return addonSum + optionsTotal;
-    }, 0);
 
-    return total + addonTotal;
-  }, 0);
-};
+      return total + addonTotal;
+    }, 0);
+  };
 
   // Calculate subtotal (items only)
   const calculateSubtotal = () => {
@@ -56,7 +55,7 @@ const calculateTotalAddonPrice = () => {
     }, 0);
   };
 
-console.log(orderTrackingDetails)
+  console.log(orderTrackingDetails);
 
   // Calculate total
   const calculateTotal = () => {
@@ -76,23 +75,31 @@ console.log(orderTrackingDetails)
   };
 
   if (!orderTrackingDetails) {
-    return <div className="mt-8 p-4 text-center">{t("loading_order_details_text")}</div>;
+    return (
+      <div className="mt-8 p-4 text-center">
+        {t("loading_order_details_text")}
+      </div>
+    );
   }
   // Get Order instructions from local storage
-  const orderInstructions = localStorage.getItem("newOrderInstructions");
+  // const orderInstructions = localStorage.getItem("newOrderInstructions");
 
+  const orderInstructions = orderTrackingDetails?.instructions || t("order_details_no_instructions_text");
   return (
     <div className="mt-8 space-y-6 flex-1 max-w-2xl md:w-auto w-full md:px-0 px-4">
       <div>
         <div className="flex flex-col mb-2 md:mb-4">
-          <h1 className="text-lg font-semibold">{orderTrackingDetails?.restaurant?.name}</h1>
+          <h1 className="text-lg font-semibold">
+            {orderTrackingDetails?.restaurant?.name}
+          </h1>
           <div className="flex items-center gap-2">
-            <h1>{t("order_details_subheading")} # </h1><h1 className="text-blue-600">{orderTrackingDetails?.orderId}</h1>
+            <h1>{t("order_details_subheading")} # </h1>
+            <h1 className="text-blue-600">{orderTrackingDetails?.orderId}</h1>
           </div>
         </div>
-        <h3 className="text-lg font-semibold mb-2">{t("order_details_heading")}</h3>
-
-
+        <h3 className="text-lg font-semibold mb-2">
+          {t("order_details_heading")}
+        </h3>
 
         {/* Display each food item under Order Details */}
         {orderTrackingDetails.items?.map((item, index) => (
@@ -131,17 +138,15 @@ console.log(orderTrackingDetails)
                             className="text-xs text-gray-500"
                           >
                             + {option.title}
-                            {option.price > 0 ?
-                              ` (${formatCurrency(calculateTotalAddonPrice())})`
+                            {option.price > 0
+                              ? ` (${formatCurrency(calculateTotalAddonPrice())})`
                               : ""}
-
                           </p>
                         ))}
                       </div>
                     ))}
                   </div>
                 )}
-
               </div>
             </div>
             <span className="text-blue-600 font-semibold">
@@ -161,7 +166,9 @@ console.log(orderTrackingDetails)
       {/* Items Summary */}
       <div>
         <h3 className="text-lg font-semibold mb-4">
-          {t("order_details_summary_label")} ({orderTrackingDetails.items?.length || 0} {t("order_details_items_label")})
+          {t("order_details_summary_label")} (
+          {orderTrackingDetails.items?.length || 0}{" "}
+          {t("order_details_items_label")})
         </h3>
         <div className="text-sm text-gray-700 space-y-3">
           {/* Display each item with quantity and price */}
@@ -200,12 +207,19 @@ console.log(orderTrackingDetails)
           )}
 
           {calculateTotalAddonPrice() > 0 && (
+<<<<<<< HEAD
           <div className="flex justify-between">
             <span>{t("Addons_label")}</span>
             <span>
               {formatCurrency(calculateTotalAddonPrice() || 0)}
             </span>
           </div>
+=======
+            <div className="flex justify-between">
+              <span>{t("Addons")}</span>
+              <span>{formatCurrency(calculateTotalAddonPrice() || 0)}</span>
+            </div>
+>>>>>>> 3a2ab4680db4e7b0f46ef6247e3c34a2c0d0a0e4
           )}
 
           <div className="flex justify-between">
@@ -214,7 +228,6 @@ console.log(orderTrackingDetails)
               {formatCurrency(orderTrackingDetails.deliveryCharges || 0)}
             </span>
           </div>
-
 
           <div className="flex justify-between font-semibold pt-2 border-t">
             <span>{t("order_details_total_label")}</span>
@@ -225,14 +238,16 @@ console.log(orderTrackingDetails)
 
       {/* Payment Info */}
       <div className="border rounded-md p-4">
-        <h4 className="font-semibold mb-2">{t("order_details_paid_with_label")}</h4>
+        <h4 className="font-semibold mb-2">
+          {t("order_details_paid_with_label")}
+        </h4>
         <div className="flex items-center gap-2 text-sm">
           <span className="text-gray-500">
             {orderTrackingDetails.paymentMethod === "COD" ? "💵" : "💳"}
           </span>
           <span>
-            {orderTrackingDetails.paymentMethod === "COD" ?
-              t('order_details_cash_on_delivery_label')
+            {orderTrackingDetails.paymentMethod === "COD"
+              ? t("order_details_cash_on_delivery_label")
               : orderTrackingDetails.paymentMethod}
           </span>
           <span className="ml-auto font-semibold">
@@ -248,7 +263,7 @@ console.log(orderTrackingDetails)
             onClick={() => setIsCancelModalVisible(true)}
             className="w-full border border-red-500 text-red-500 px-6 py-2 rounded-full hover:bg-red-50 transition"
           >
-                      {t("order_details_cancel_order_button")}
+            {t("order_details_cancel_order_button")}
           </button>
         </div>
       )}

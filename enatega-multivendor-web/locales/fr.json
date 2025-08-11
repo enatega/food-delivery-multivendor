@@ -299,6 +299,8 @@
   "describe_issue_in_detail_placeholder": "Veuillez décrire votre problème en détail...",
   "send_button": "Envoyer",
   "no_active_orders_title": "Aucune commande active",
+  "active_orders_title": " Commandes actives",
+
   "no_active_orders_message": "Vous n'avez aucune commande active pour le moment.",
   "browse_store_button": "Parcourir le magasin",
   "active_orders_label": "Commandes actives",
