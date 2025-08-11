@@ -106,6 +106,7 @@ function Checkout(props) {
     longitudeDelta: 0.5
   }
   const [isModalVisible, setisModalVisible] = useState(false)
+  const [orderConfirmedTime, setOrderConfirmedTime] = useState(null);
 
   const restaurant = data?.restaurant
 
@@ -351,6 +352,7 @@ function Checkout(props) {
   }
 
   async function onCompleted(data) {
+    setOrderConfirmedTime(new Date());
     await Analytics.track(Analytics.events.ORDER_PLACED, {
       userId: data?.placeOrder.user._id,
       orderId: data?.placeOrder.orderId,
@@ -692,8 +694,11 @@ function Checkout(props) {
       </View>
     )
   }
-  let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
-  if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
+  // let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
+  // if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
+  const deliveryTime = orderConfirmedTime 
+  ? Math.floor((orderDate - orderConfirmedTime) / 1000 / 60) 
+  : restaurant?.deliveryTime; // Fallback to default time if not confirmed
   if (loading || loadingData || loadingTip || mutateOrderLoading || loadingOrder) return loadginScreen()
 
   return (
@@ -734,9 +739,15 @@ function Checkout(props) {
                     </View>
                     <View style={styles(currentTheme).labelContainer}>
                       <View style={{ marginHorizontal: scale(5) }}>
-                        <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
+                        {/* <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>                         
                           {t(isPickup ? 'pickUp' : 'delivery')} ({deliveryTime} {t('mins')})
-                        </TextDefault>
+                        </TextDefault> */}
+                        <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
+                          {orderConfirmedTime 
+                            ? `${t(isPickup ? 'pickUp' : 'delivery')} (${deliveryTime} ${t('mins')})`
+                            : `${t(isPickup ? 'pickUp' : 'delivery')} (${restaurant?.deliveryTime} ${t('mins')})`
+                          }
+                      </TextDefault>
                       </View>
                     </View>
                     <View style={[styles().iconContainer, { justifyContent: 'center', alignItems: 'center' }]}>

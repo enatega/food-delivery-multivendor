@@ -30,124 +30,77 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   }
 
   return (
-    <View style={styles().container}>
-      <TextDefault H2 bolder style={styles().heading} isRTL>
-        {t('filters')}
-      </TextDefault>
-      {Object.keys(filters).map((filter, index) => (
-        <View style={{ gap: 12 }}key={'filters-'+filter+index} >
-          <TextDefault H4 bolder style={{ paddingHorizontal: 15}} isRTL>
-            {t(filter)}
-          </TextDefault>
-          {filter === 'Cuisines' ? (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              directionalLockEnabled={true}
-              alwaysBounceVertical={false}
-            >
-              <FlatList
-                contentContainerStyle={styles().flatlist}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                numColumns={Math.ceil(filters[filter].values.length / 3)}
-                data={filters[filter].values}
-                renderItem={({ item, index }) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => handleValueSelection(filter, item)}
-                      style={[
-                        styles().filterBtn,
-                        {
-                          borderColor: filters[filter].selected.includes(item)
-                            ? currentTheme.main
-                            : currentTheme.color7,
-  
-                          backgroundColor: filters[filter].selected.includes(item)
-                            ? currentTheme.main
-                            : currentTheme.color1
-                        }
-                      ]}
-                    >
-                      <TextDefault
-                        Normal
-                        bolder
-                        textColor={
-                          filters[filter].selected.includes(item)
-                            ? currentTheme.white
-                            : currentTheme.fontMainColor
-                        }
-                      >
-                        {item}
-                      </TextDefault>
-                    </TouchableOpacity>
-                  )
-                }}
-              />
-            </ScrollView>
-          ) : (
-            <FlatList
-              contentContainerStyle={styles().flatlist}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={filters[filter].values}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => handleValueSelection(filter, item)}
-                    style={[
-                      styles().filterBtn,
-                      {
-                        borderColor: filters[filter].selected.includes(item)
-                          ? currentTheme.main
-                          : currentTheme.color7,
+  <ScrollView style={styles().container}>
+    <TextDefault H2 bolder style={styles().heading} isRTL>
+      {t('filters')}
+    </TextDefault>
 
-                        backgroundColor: filters[filter].selected.includes(item)
-                          ? currentTheme.main
-                          : currentTheme.color1
-                      }
-                    ]}
-                  >
-                    <TextDefault
-                      Normal
-                      bolder
-                      textColor={
-                        filters[filter].selected.includes(item)
-                          ? currentTheme.white
-                          : currentTheme.fontMainColor
-                      }
-                    >
-                      {t(item)}
-                    </TextDefault>
-                  </TouchableOpacity>
-                )
-              }}
-            />
-          )}
-          <View style={{ height: 1, backgroundColor: '#D1D5DB' }} />
-        </View>
-      ))}
-      <TouchableOpacity
-        style={styles(currentTheme).applyBtn}
-        activeOpacity={0.8}
-        onPress={applyFilters}
-      >
-        <TextDefault center bold H4 textColor={currentTheme.black}>
-          {t('apply')}
+    {Object.keys(filters).map((filter, index) => (
+      <View style={{ gap: 8 }} key={'filters-' + filter + index}>
+        <TextDefault H4 bolder style={{ paddingHorizontal: 15, paddingVertical: 10 }} isRTL>
+          {t(filter)}
         </TextDefault>
-      </TouchableOpacity>
-      <Feather
-        name='x-circle'
-        size={24}
-        color={currentTheme.newIconColor}
-        style={styles(currentTheme).closeBtn}
-        onPress={onClose}
-      />
-    </View>
-  )
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles().flatlist}
+        >
+          {filters[filter].values.map((item, idx) => (
+            <TouchableOpacity
+              key={item + idx}
+              activeOpacity={0.8}
+              onPress={() => handleValueSelection(filter, item)}
+              style={[
+                styles().filterBtn,
+                {
+                  borderColor: filters[filter].selected.includes(item)
+                    ? currentTheme.main
+                    : currentTheme.color7,
+                  backgroundColor: filters[filter].selected.includes(item)
+                    ? currentTheme.main
+                    : currentTheme.color1
+                }
+              ]}
+            >
+              <TextDefault
+                Normal
+                bolder
+                textColor={
+                  filters[filter].selected.includes(item)
+                    ? currentTheme.white
+                    : currentTheme.fontMainColor
+                }
+              >
+                {t(item)}
+              </TextDefault>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        <View style={{ height: 1, backgroundColor: '#D1D5DB', marginBottom: 10 }}  />
+      </View>
+    ))}
+
+    <TouchableOpacity
+      style={styles(currentTheme).applyBtn}
+      activeOpacity={0.8}
+      onPress={applyFilters}
+    >
+      <TextDefault center bold H4 textColor={currentTheme.black}>
+        {t('apply')}
+      </TextDefault>
+    </TouchableOpacity>
+
+    <Feather
+      name="x-circle"
+      size={24}
+      color={currentTheme.newIconColor}
+      style={styles(currentTheme).closeBtn}
+      onPress={onClose}
+    />
+  </ScrollView>
+)
 }
 
 export default Filters

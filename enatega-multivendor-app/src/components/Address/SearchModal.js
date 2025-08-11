@@ -230,7 +230,6 @@ export default function SearchModal({
           </TouchableOpacity>
           <GooglePlacesAutocomplete
             placeholder={t('search')}
-            minLength={2}
             autoFocus={true}
             returnKeyType={'search'}
             listViewDisplayed='auto'
