@@ -47,7 +47,7 @@ export default function PhoneVerification({
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
-  const {verifyOTP, error} = useVerifyOtp();
+  const { verifyOTP, error } = useVerifyOtp();
 
   // Mutations
   const [updateUser] = useMutation<
@@ -172,16 +172,16 @@ export default function PhoneVerification({
     }
   }, []);
 
-    // useEffect for displaying otp verification error
-    useEffect(() => {
-      if (error) {
-        showToast({
-          type: "error",
-          title: t("OTP Error"),
-          message: error.message,
-        });
+  // useEffect for displaying otp verification error
+  useEffect(() => {
+    if (error) {
+      showToast({
+        type: "error",
+        title: t("OTP Error"),
+        message: error.message,
+      });
     }
-  }, [error])
+  }, [error]);
 
   return (
     <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
@@ -259,7 +259,7 @@ export default function PhoneVerification({
       {/* Button Spacer */}
       {/* <span className="mt-4" />
         {/* Continue Button */}
-      <p className="text-sm text-gray-500 mb-6 text-center">
+      <p className="text-sm text-gray-500 mb-6 text-center w-full">
         {t("otp_valid_for_10_minutes_label")}
       </p>
 

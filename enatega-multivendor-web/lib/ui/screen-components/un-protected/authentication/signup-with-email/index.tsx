@@ -15,7 +15,7 @@ import { useAuth } from "@/lib/context/auth/auth.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useToast from "@/lib/hooks/useToast";
 import { useTranslations } from "next-intl";
-import {FcGoogle} from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 
 // Apollo
 import { ApolloError } from "@apollo/client";
@@ -28,8 +28,6 @@ export default function SignUpWithEmail({
   // Hooks
   const t = useTranslations();
   const {
-    handleCreateUser,
-    setUser,
     sendOtpToEmailAddress,
     sendOtpToPhoneNumber,
     isLoading,
@@ -52,46 +50,23 @@ export default function SignUpWithEmail({
           message: t("all_fields_are_required_to_be_filled_message"),
         });
       } else {
-        const userData = await handleCreateUser({
-          email: formData.email,
-          phone: formData.phone,
-          name: formData.name,
-          password: formData.password,
-        });
-
-        if (
-          !userData.emailIsVerified &&
-          userData.email &&
-          !SKIP_EMAIL_VERIFICATION
-        ) {
-          setUser((prev) => ({
-            ...prev,
-            email: userData.email,
-          }));
-          sendOtpToEmailAddress(userData.email);
+        if (formData.email && !SKIP_EMAIL_VERIFICATION) {
+          sendOtpToEmailAddress(formData.email);
           // Verify email OTP
           handleChangePanel(3);
-        } else if (
-          !userData.phoneIsVerified &&
-          userData.phone &&
-          !SKIP_MOBILE_VERIFICATION
-        ) {
-          setUser((prev) => ({
-            ...prev,
-            phone: userData.phone,
-          }));
-          sendOtpToPhoneNumber(userData.phone);
+        } else if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
+          sendOtpToPhoneNumber(formData.phone);
           // Verify Phone OTP
           handleChangePanel(6);
-        }else if(userData.userId&&SKIP_EMAIL_VERIFICATION&&SKIP_MOBILE_VERIFICATION){
+        } else if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
           // Navigate to first modal
           handleChangePanel(0);
           setIsAuthModalVisible(false);
           showToast({
-            type:"success",
-            title:t("register_label"),
-            message:t("successfully_registered_your_account_message") // put an exclamation mark at the end of this sentence in the translations
-          })
+            type: "success",
+            title: t("register_label"),
+            message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
+          });
         }
       }
     } catch (err) {
@@ -101,7 +76,8 @@ export default function SignUpWithEmail({
         type: "error",
         title: t("register_label"),
         message:
-          error?.cause?.message || t("an_error_occurred_while_registering_message"),
+          error?.cause?.message ||
+          t("an_error_occurred_while_registering_message"),
       });
     } finally {
       setIsLoading(false);
@@ -111,7 +87,9 @@ export default function SignUpWithEmail({
     <div className="flex flex-col items-start justify-between w-full h-full">
       <PersonIcon />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
-        <h3 className="text-3xl font-semibold">{t("lets_get_you_started_label")}</h3>
+        <h3 className="text-3xl font-semibold">
+          {t("lets_get_you_started_label")}
+        </h3>
         {/*replace lets with let's in the translation*/}
         <p>{t("first_lets_create_your_account_message")}</p>
         {/*replace "First" with "First," in the translation*/}
@@ -156,14 +134,13 @@ export default function SignUpWithEmail({
           onChange={(e) => handleFormChange("password", e.target.value)}
         />
         <button
-                type="button"
-                onClick={() => handleChangePanel(0)}
-                className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
-              >
-        
-                <FcGoogle className="text-lg" />
-                {t("continue_with_google_instead_label")}
-              </button>
+          type="button"
+          onClick={() => handleChangePanel(0)}
+          className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
+        >
+          <FcGoogle className="text-lg" />
+          {t("continue_with_google_instead_label")}
+        </button>
       </div>
       <CustomButton
         label={t("continue_label")}
