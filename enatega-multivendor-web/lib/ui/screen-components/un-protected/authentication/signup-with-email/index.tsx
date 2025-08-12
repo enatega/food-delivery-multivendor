@@ -28,8 +28,6 @@ export default function SignUpWithEmail({
   // Hooks
   const t = useTranslations();
   const {
-    handleCreateUser,
-    setUser,
     sendOtpToEmailAddress,
     sendOtpToPhoneNumber,
     isLoading,
