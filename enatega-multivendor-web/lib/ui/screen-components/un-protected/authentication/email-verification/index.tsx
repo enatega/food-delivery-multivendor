@@ -27,18 +27,18 @@ export default function EmailVerification({
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [isResendingOtp, setIsResendingOtp] = useState(false);
 
-  
   const t = useTranslations();
   const { SKIP_EMAIL_VERIFICATION, TEST_OTP } = useConfig();
   const { verifyOTP, error } = useVerifyOtp();
   const {
-    user,
+    
     setIsAuthModalVisible,
     setOtp: setStoredOtp,
     sendOtpToEmailAddress,
     // sendOtpToPhoneNumber,
     isLoading,
     handleCreateUser,
+  
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
@@ -51,7 +51,8 @@ export default function EmailVerification({
       showToast({
         type: "error",
         title: t("Error"),
-        message: error.cause?.message || t("update_phone_name_update_error_msg"),
+        message:
+          error.cause?.message || t("update_phone_name_update_error_msg"),
       });
     },
   });
@@ -62,9 +63,11 @@ export default function EmailVerification({
   }, [otp]);
 
   // Initialize on mount
- 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const value = e.target.value;
     if (!/^\d*$/.test(value)) return;
     const newOtp = [...otp];
@@ -73,7 +76,10 @@ export default function EmailVerification({
     if (value && index < 5) inputRefs.current[index + 1]?.focus();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -81,7 +87,10 @@ export default function EmailVerification({
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
     const newOtp = Array(6).fill("");
     pasted.split("").forEach((digit, i) => (newOtp[i] = digit));
     setOtp(newOtp);
@@ -97,11 +106,13 @@ export default function EmailVerification({
         message: t("your_email_verified_successfully_message"),
       });
       if (profile?.phoneIsVerified) {
-        showToast({ type: "success", title: t("Login"), message: t("login_success_message") });
+        showToast({
+          type: "success",
+          title: t("Login"),
+          message: t("login_success_message"),
+        });
         handleChangePanel(0);
         setIsAuthModalVisible(false);
-      } else {
-      
       }
       setStoredOtp("");
       setEmailOtp("");
@@ -109,14 +120,13 @@ export default function EmailVerification({
     }
 
     const otpResponse = await verifyOTP({
-          variables: {
-            otp: emailOtp,
-            email: formData?.email
-          }
-        })
+      variables: {
+        otp: emailOtp,
+        email: formData?.email,
+      },
+    });
 
     if (otpResponse.data?.verifyOtp.result && !!formData?.email) {
-
       // if otp is verified then createuser also update it
       const userData = await handleCreateUser({
         email: formData?.email,
@@ -124,24 +134,39 @@ export default function EmailVerification({
         name: formData?.name,
         password: formData?.password,
       });
+      
       const updateUserData = await updateUser({
         variables: {
           name: userData?.name ?? "",
           email: userData?.email ?? "",
           emailIsVerified: true,
-          
         },
-        
       });
+
       setStoredOtp("");
       setEmailOtp("");
-      // reset formData 
+
+      // reset formData
       formData.email = "";
       formData.phone = "";
       formData.name = "";
       formData.password = "";
-      
-     
+
+      // now check if phone number is verified after user creation
+      if (
+        userData?.phone &&
+        !updateUserData?.data?.updateUser?.phoneIsVerified
+      ) {
+        handleChangePanel(4); // Go to phone verification panel
+        return;
+      }
+
+      // reset formData
+      formData.email = "";
+      formData.phone = "";
+      formData.name = "";
+      formData.password = "";
+
       showToast({
         type: "success",
         title: t("email_verification_label"),
@@ -149,7 +174,6 @@ export default function EmailVerification({
       });
       handleChangePanel(0);
       setIsAuthModalVisible(false);
-      
     } else {
       showToast({
         type: "error",
@@ -172,16 +196,16 @@ export default function EmailVerification({
     setIsResendingOtp(false);
   };
 
-      // useEffect for displaying otp verification error
-      useEffect(() => {
-        if (error) {
-          showToast({
-            type: "error",
-            title: t("OTP Error"),
-            message: error.message,
-          });
-      }
-      }, [error])
+  // useEffect for displaying otp verification error
+  useEffect(() => {
+    if (error) {
+      showToast({
+        type: "error",
+        title: t("OTP Error"),
+        message: error.message,
+      });
+    }
+  }, [error]);
 
   return (
     <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
@@ -192,7 +216,9 @@ export default function EmailVerification({
         <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
           {formData?.email || "your@email.com"}
         </p>
-        <p className="text-base text-gray-600 mb-6">{t("verify_your_email_label")}</p>
+        <p className="text-base text-gray-600 mb-6">
+          {t("verify_your_email_label")}
+        </p>
       </div>
 
       <div className="w-full mb-6">
@@ -201,8 +227,8 @@ export default function EmailVerification({
             <input
               key={i}
               ref={(el) => {
-            inputRefs.current[i] = el;
-          }}
+                inputRefs.current[i] = el;
+              }}
               type="text"
               inputMode="numeric"
               maxLength={1}
@@ -217,7 +243,9 @@ export default function EmailVerification({
         </div>
       </div>
 
-      <p className="text-sm text-gray-500 mb-6 text-center w-full">{t("otp_valid_for_10_minutes_label")}</p>
+      <p className="text-sm text-gray-500 mb-6 text-center w-full">
+        {t("otp_valid_for_10_minutes_label")}
+      </p>
 
       <CustomButton
         label={t("continue_label")}
