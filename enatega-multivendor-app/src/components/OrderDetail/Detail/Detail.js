@@ -12,7 +12,7 @@ import { formatNumber } from '../../../utils/formatNumber'
 export default function Detail({ theme, from, orderNo, deliveryAddress, items, currencySymbol, subTotal, tip, tax, deliveryCharges, total, navigation, id, rider, orderStatus }) {
   const riderPhone = rider?.phone
   const { t } = useTranslation()
-
+ console.log(JSON.stringify(items, null, 2))
   return (
     <View style={styles.container(theme)}>
       {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && orderStatus !== ORDER_STATUS_ENUM.CANCELLED && <ChatButton onPress={() => navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone })} title={t('chatWithRider')} description={t('askContactlessDelivery')} theme={theme} />}
@@ -38,14 +38,14 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
       </View>
 
       <View style={styles.itemsContainer}>
-        {items.map((item) => (
-          <ItemRow key={item._id} theme={theme} quantity={item.quantity} title={`${item.title} ${item.variation.title}`} currency={currencySymbol} price={item.variation.price} options={item.addons.map((addon) => addon.options.map(({ title }) => title))} image={item?.image} />
+        {items?.map((item) => (
+          <ItemRow key={item._id} theme={theme} quantity={item.quantity} variationTitle={item.variation.title} title={`${item.title}`} currency={currencySymbol} price={item.variation.price} options={item.addons.map((addon) => addon.options.map(({ title }) => title))} image={item?.image} />
         ))}
       </View>
     </View>
   )
 }
-const ItemRow = ({ theme, quantity, title, options = ['raita', '7up'], price, currency, image }) => {
+const ItemRow = ({ theme, quantity, title, variationTitle, options = ['raita', '7up'], price, currency, image }) => {
   const { t } = useTranslation()
   return (
     <View style={styles.itemRow(theme)}>
@@ -62,6 +62,9 @@ const ItemRow = ({ theme, quantity, title, options = ['raita', '7up'], price, cu
       <View style={{ width: '60%', justifyContent: 'center' }}>
         <TextDefault left numberOfLines={1} textColor={theme.gray900} H5 bolder style={{ ...alignment.MBxSmall }} isRTL>
           {title}
+        </TextDefault>
+        <TextDefault left numberOfLines={1} textColor={theme.gray900} style={{ ...alignment.MBxSmall }} isRTL>
+          {`(${variationTitle})`}
         </TextDefault>
 
         {options.length > 0 && (
