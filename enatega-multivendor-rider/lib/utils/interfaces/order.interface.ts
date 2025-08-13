@@ -16,9 +16,12 @@ export interface IOrder {
   items: Array<{
     variation: {
       price: number;
+      title: string;
     };
     addons?: Array<{
+      _id: string;
       options: Array<{
+        _id: string;
         price: number;
         title: string;
       }>;
