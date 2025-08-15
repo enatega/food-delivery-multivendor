@@ -56,26 +56,26 @@ const RestaurantMain: React.FC = () => {
             <p className="text-xs text-gray-500 mb-4">{t('Images')}</p>
             <div className="flex space-x-2">
               {restaurant?.image ? (
-                <Image
-                  src={restaurant?.image}
-                  alt={t('Store logo')}
-                  className="object-cover rounded"
-                  width={96}
-                  height={96}
-                />
+          <Image
+            src={restaurant?.image}
+            alt={t('Store logo')}
+            className="object-cover rounded"
+            width={96}
+            height={96}
+          />
               ) : (
-                <Avatar label="I" className="w-24 h-24" />
+          <Avatar label="I" className="w-24 h-24" />
               )}
               {restaurant?.logo ? (
-                <Image
-                  src={restaurant?.logo}
-                  alt={t('Store logo')}
-                  className="object-cover rounded"
-                  width={96}
-                  height={96}
-                />
+          <Image
+            src={restaurant?.logo}
+            alt={t('Store logo')}
+            className="object-cover rounded"
+            width={96}
+            height={96}
+          />
               ) : (
-                <Avatar label="L" className="w-24 h-24" />
+          <Avatar label="L" className="w-24 h-24" />
               )}
             </div>
           </div>
@@ -91,7 +91,7 @@ const RestaurantMain: React.FC = () => {
           />
           <InfoItem
             label={t('Service Charges')}
-            value={restaurant?.tax?.toString()}
+            value={`${restaurant?.tax?.toString()}%`}
           />
           <InfoItem label={t('Order Prefix')} value={restaurant?.orderPrefix} />
           <InfoItem label={t('Shop Category')} value={restaurant?.shopType} />
