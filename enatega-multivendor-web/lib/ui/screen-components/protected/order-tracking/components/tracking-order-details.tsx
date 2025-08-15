@@ -207,19 +207,12 @@ function TrackingOrderDetails({
           )}
 
           {calculateTotalAddonPrice() > 0 && (
-<<<<<<< HEAD
           <div className="flex justify-between">
             <span>{t("Addons_label")}</span>
             <span>
               {formatCurrency(calculateTotalAddonPrice() || 0)}
             </span>
           </div>
-=======
-            <div className="flex justify-between">
-              <span>{t("Addons")}</span>
-              <span>{formatCurrency(calculateTotalAddonPrice() || 0)}</span>
-            </div>
->>>>>>> 3a2ab4680db4e7b0f46ef6247e3c34a2c0d0a0e4
           )}
 
           <div className="flex justify-between">

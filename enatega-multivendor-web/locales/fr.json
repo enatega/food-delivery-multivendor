@@ -406,6 +406,7 @@
   "update_your_password_now_message": "Mettez à jour votre mot de passe maintenant",
   "please_enter_valid_password_message": "Veuillez entrer un mot de passe valide",
   "failed_to_reset_password_message": "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
+  "password_not_strong_enough_message": "Le mot de passe doit contenir au moins 6 caractères dont une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial",
   "update_password_title": "Mettre à jour le mot de passe",
   "password_label": "Mot de passe",
   "verify_your_email_label": "Vérifiez votre e-mail",
@@ -433,7 +434,7 @@
   "sign_up_label": "S'inscrire",
   "by_signing_up_you_agree_to_our_message": "En vous inscrivant, vous acceptez nos",
   "terms_label": "Conditions",
-  "and_conditions_and_message": "et Conditions et",
+  "and_conditions_and_message": "et Conditions",
   "privacy_policy_label": "Politique de confidentialité",
   "phone_verification_label": "Vérification du téléphone",
   "your_phone_number_verified_successfully_message": "Votre numéro de téléphone a été vérifié avec succès",
@@ -748,7 +749,9 @@
 "sort_by_label": "Trier par",
 "delete_success": "Supprimé avec succès",
 
- "Addons_label": "Modules complémentaires"
+ "Addons_label": "Modules complémentaires",
+ "order_details_no_instructions_text": "Aucune instruction ajoutée",
 
+ "and_labed": "et"
 
 }

@@ -405,6 +405,7 @@
   "update_your_password_now_message": "עדכן את הסיסמה שלך עכשיו",
   "please_enter_valid_password_message": "אנא הזן סיסמה תקינה",
   "failed_to_reset_password_message": "שחזור הסיסמה נכשל. אנא נסה שוב.",
+  "password_not_strong_enough_message": "הסיסמה חייבת להכיל לפחות 6 תווים הכוללים אות גדולה, אות קטנה, מספר ותו מיוחד",
   "update_password_title": "עדכן סיסמה",
   "password_label": "סיסמה",
   "verify_your_email_label": "אמת את האימייל שלך",
@@ -432,7 +433,7 @@
   "sign_up_label": "הירשם",
   "by_signing_up_you_agree_to_our_message": "על ידי ההרשמה, אתה מסכים ל",
   "terms_label": "תנאים",
-  "and_conditions_and_message": "ותנאים ו",
+  "and_conditions_and_message":"ותנאים ",
   "privacy_policy_label": "מדיניות פרטיות",
   "phone_verification_label": "אימות טלפון",
   "your_phone_number_verified_successfully_message": "מספר הטלפון שלך אומת בהצלחה",
@@ -840,5 +841,9 @@
 "sort_by_label": "מיון לפי",
 "delete_success": "אם יש לך שאלות, אל תהסס לפנות לצוות התמיכה שלנו.",
 
-"Addons_label": "תוספים"
+"Addons_label": "תוספים",
+"order_details_no_instructions_text": "לא נוספו הוראות",
+"and_labed": "ו"
+
+
 }

@@ -445,7 +445,7 @@
     "by_signing_up_you_agree_to_our_message": "By signing up, you agree to our",
     "terms_label": "Terms",
     "password": "Password",
-    "and_conditions_and_message": "and Conditions and",
+    "and_conditions_and_message": "and Conditions",
     "privacy_policy_label": "Privacy Policy",
     "phone_verification_label": "Phone Verification",
     "your_phone_number_verified_successfully_message": "Your phone number is verified successfully",
@@ -467,6 +467,7 @@
     "register_label": "Register",
     "successfully_registered_your_account_message": "Successfully registered your account!",
     "an_error_occurred_while_registering_message": "An error occurred while registering",
+    "password_not_strong_enough_message": "Password must contain at least 6 characters including one uppercase letter, one lowercase letter, one number, and one special character",
     "lets_get_you_started_label": "Let's get you started",
     "first_lets_create_your_account_message": "First, let's create your account",
     "phone_label": "Phone",
@@ -871,5 +872,10 @@
   "install_app_label": "Install App",
 
   "delete_success": "If you have any questions, feel free to reach  out to our support team.",
-  "Addons_label": "Addons"
+  "Addons_label": "Addons",
+
+  "order_details_no_instructions_text": "No instructions added",
+  "and_labed": "and",
+
+  "please_enter_a_valid_name_message": "Username only Conatins Letters"
 }

@@ -297,7 +297,6 @@
   "describe_issue_with_order_label": "وصف مشكلتك مع الطلب",
   "tell_us_more_about_issue_label": "أخبرنا بالمزيد عن مشكلتك",
   "describe_issue_in_detail_placeholder": "يرجى وصف مشكلتك بالتفصيل...",
-
     "send_button": "إرسال",
   "no_active_orders_title": "لا توجد طلبات نشطة",
   "active_orders_title": "الطلبات النشطة",
@@ -409,6 +408,7 @@
   "update_your_password_now_message": "قم بتحديث كلمة المرور الآن",
   "please_enter_valid_password_message": "يرجى إدخال كلمة مرور صالحة",
   "failed_to_reset_password_message": "فشل في إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى.",
+  "password_not_strong_enough_message": "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل تتضمن حرفًا كبيرًا وحرفًا صغيرًا ورقمًا وحرفًا خاصًا",
   "update_password_title": "تحديث كلمة المرور",
   "password_label": "كلمة المرور",
   "verify_your_email_label": "تحقق من بريدك الإلكتروني",
@@ -437,7 +437,7 @@
   "by_signing_up_you_agree_to_our_message": "بالتسجيل، أنت توافق على",
   "terms_label": "الشروط",
   "password": "كلمة المرور",
-  "and_conditions_and_message": "والأحكام و",
+  "and_conditions_and_message":"والأحكام ",
   "privacy_policy_label": "سياسة الخصوصية",
   "phone_verification_label": "تأكيد رقم الهاتف",
   "your_phone_number_verified_successfully_message": "تم التحقق من رقم هاتفك بنجاح",
@@ -864,7 +864,10 @@
 "sort_by_label": "ترتيب حسب",
 "delete_success": "إذا كان لديك أي أسئلة، لا تتردد في التواصل مع فريق الدعم لدينا.",
 
-"Addons_label": "الإضافات"
+"Addons_label": "الإضافات",
+"order_details_no_instructions_text": "لم يتم إضافة أي تعليمات",
+"and_labed": "و"
+
 
 
 }

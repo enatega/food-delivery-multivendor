@@ -107,7 +107,9 @@ export default function OrderCheckoutScreen() {
   } = useUser();
 
   const { userAddress } = useUserAddress();
-  const { data: restaurantData } = useRestaurant(restaurantId || "");
+ const restaurantFromLocalStorage = localStorage.getItem("restaurant");
+const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: restaurantFromLocalStorage ? JSON.parse(restaurantFromLocalStorage) : null };
+
 
   // Context
   const { isLoaded } = useContext(GoogleMapsContext);
@@ -189,7 +191,6 @@ export default function OrderCheckoutScreen() {
 
     // Set Tax
     setTaxValue(restaurantData?.restaurant?.tax);
-
     // Delivery Charges
     onInitDeliveryCharges();
   };
@@ -403,6 +404,7 @@ export default function OrderCheckoutScreen() {
     });
   };
 
+  
   function validateOrder() {
     if (
       !restaurantData?.restaurant?.isAvailable ||
@@ -1016,7 +1018,7 @@ export default function OrderCheckoutScreen() {
             })}
 
             {/* <!-- Tip the Courier --> */}
-            <div className="bg-white mb-6 w-full">
+          {!isPickUp && ( <div className="bg-white mb-6 w-full">
               <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
                 {t("tip_the_courier_label")}
               </h2>
@@ -1043,7 +1045,9 @@ export default function OrderCheckoutScreen() {
                   ))}
                 </div>
               </div>
-            </div>
+            </div>)}
+
+
 
             {/* <!-- Promo Code --> */}
             <div className="bg-white  pb-2 rounded-lg mb-4 w-full">
