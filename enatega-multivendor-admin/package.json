@@ -25,7 +25,7 @@
     "@react-google-maps/api": "^2.19.3",
     "autosuggest-highlight": "^3.3.4",
     "browser-image-compression": "^2.0.2",
-    "chart.js": "^4.4.4",
+    "chart.js": "^4.4.9",
     "date-fns": "^4.1.0",
     "firebase": "^11.3.0",
     "formik": "^2.4.6",
