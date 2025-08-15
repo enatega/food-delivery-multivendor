@@ -48,7 +48,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@types/autosuggest-highlight": "^3.2.3",
-    "@types/lodash": "^4.17.7",
+    "@types/lodash": "^4.17.16",
     "@types/node": "^20.14.12",
     "@types/react": "^18",
     "@types/react-dom": "^18",
