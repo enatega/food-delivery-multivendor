@@ -21,7 +21,6 @@ import CategoryTableHeader from '../header/table-header';
 
 // Utilities and Data
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
-import { generateDummyAddons } from '@/lib/utils/dummy';
 
 // Context
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
@@ -137,8 +136,10 @@ export default function OptionMain({
           />
         }
         data={
-          data?.restaurant?.addons.slice().reverse() ||
-          (loading ? generateDummyAddons() : [])
+          (data?.restaurant?.addons || [])
+            .filter(addon => addon.title !== 'Default Addon') // Filtered out default addons from backend data
+            .slice()
+            .reverse() || []
         }
         filters={filters}
         setSelectedData={setSelectedProducts}
