@@ -700,7 +700,7 @@ function Checkout(props) {
 
   return (
     <>
-      <View style={styles(currentTheme).mainContainer}>
+      <View style={{ ...styles(currentTheme).mainContainer, paddingBottom: inset.bottom }}>
         {!!cart.length && (
           <>
             <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex]}>

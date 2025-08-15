@@ -71,7 +71,9 @@ export default function RecentTransaction({
               : appTheme.fontMainColor,
         }}
       >
-        ${transaction?.amountTransferred}
+        $
+        {transaction?.amountTransferred.toFixed(2) ||
+          Number(Number(0.0).toFixed(2))}
       </Text>
     </View>
   );

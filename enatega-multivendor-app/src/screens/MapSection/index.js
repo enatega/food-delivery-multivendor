@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import styles from './styles'
 import { Image, View, FlatList, TouchableOpacity, Platform } from 'react-native'
@@ -17,18 +11,20 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function MapSection() {
   const { i18n } = useTranslation()
   const mapRef = useRef()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const route = useRoute()
   const navigation = useNavigation()
   const location = route?.params?.location
   const restaurants = route?.params?.restaurants
   const [visibleMarkerIndex, setVisibleMarkerIndex] = useState(0)
   const configuration = useContext(ConfigurationContext)
+  const inset = useSafeAreaInsets()
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -37,7 +33,7 @@ export default function MapSection() {
   }, [navigation, currentTheme])
 
   const handleMarkerAnimate = (coord) => {
-    mapRef.current.animateToRegion({
+    mapRef.current?.animateToRegion({
       ...coord,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
@@ -51,17 +47,77 @@ export default function MapSection() {
   }
 
   useEffect(() => {
-    if (!restaurants?.length || !restaurants || !visibleMarkerIndex) return
+    if (!restaurants?.length || !restaurants || visibleMarkerIndex == null) return
     const rest = restaurants[visibleMarkerIndex]
     const coord = {
       latitude: parseFloat(rest.location.coordinates[1]),
       longitude: parseFloat(rest.location.coordinates[0])
     }
     handleMarkerAnimate(coord)
-}, [visibleMarkerIndex])
+    // eslint-disable-next-line
+  }, [visibleMarkerIndex])
+
+  const renderMarker = (rest, index) => {
+    const coord = {
+      latitude: parseFloat(rest.location.coordinates[1]),
+      longitude: parseFloat(rest.location.coordinates[0])
+    }
+
+    let offset = 0
+    if (restaurants) {
+      const overlapCount = restaurants.filter((r, i) => i < index && parseFloat(r.location.coordinates[1]) === coord.latitude && parseFloat(r.location.coordinates[0]) === coord.longitude).length
+      offset = overlapCount * 0.00005 
+    }
+
+    return (
+      <Marker
+        coordinate={{
+          latitude: coord.latitude + offset,
+          longitude: coord.longitude + offset
+        }}
+        key={index}
+        onPress={() => {
+          navigation.navigate('Restaurant', { ...rest })
+        }}
+        zIndex={restaurants?.length - index} 
+        style={styles().markerContainer}
+      >
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <View style={styles(currentTheme).greenDot} />
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: 24,
+              padding: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 2,
+              elevation: 3
+            }}
+          >
+            <Image
+              source={{ uri: rest?.image }}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                borderWidth: 1,
+                borderColor: '#e0e0e0',
+                backgroundColor: '#f5f5f5'
+              }}
+              resizeMode='cover'
+            />
+          </View>
+        </View>
+      </Marker>
+    )
+  }
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <MapView
         ref={mapRef}
         style={styles().map}
@@ -69,53 +125,19 @@ export default function MapSection() {
         zoomEnabled={true}
         zoomControlEnabled={true}
         rotateEnabled={false}
-        // provider={PROVIDER_DEFAULT}
-        // customMapStyle={mapStyle}
         initialRegion={{
-          latitude: restaurants?.length
-            ? parseFloat(restaurants[0].location?.coordinates[1])
-            : location.latitude,
-          longitude: restaurants?.length
-            ? parseFloat(restaurants[0].location?.coordinates[0])
-            : location.longitude,
+          latitude: restaurants?.length ? parseFloat(restaurants[0].location?.coordinates[1]) : location.latitude,
+          longitude: restaurants?.length ? parseFloat(restaurants[0].location?.coordinates[0]) : location.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
         }}
       >
         <Marker coordinate={location} title='Current Address'>
-          <Image source={require('../../assets/images/user.png')} width={20} />
+          <Image source={require('../../assets/images/user.png')} style={{ width: 28, height: 28, borderRadius: 14 }} resizeMode='cover' />
         </Marker>
-        {restaurants &&
-          restaurants?.map((rest, index) => {
-            const coord = {
-              latitude: parseFloat(rest.location.coordinates[1]),
-              longitude: parseFloat(rest.location.coordinates[0])
-            }
-            return (
-              <Marker
-                coordinate={coord}
-                key={index}
-                onPress={() => {
-                  navigation.navigate('Restaurant', { ...rest })
-                }}
-                style={styles().markerContainer}
-              >
-                <View
-                  style={styles(currentTheme).greenDot}
-                />
-                <Image
-                  source={{uri: rest?.image}}
-                  width={20}
-                  style={styles().markerImage}
-                />
-                
-              </Marker>
-            )
-          })}
+        {restaurants && restaurants.map((rest, index) => renderMarker(rest, index))}
       </MapView>
-      <View
-        style={styles().restContainer}
-      >
+      <View style={{ ...styles().restContainer, paddingBottom: inset.bottom }}>
         <FlatList
           data={restaurants}
           renderItem={({ item }) => {
@@ -127,71 +149,30 @@ export default function MapSection() {
                 }}
                 activeOpacity={0.8}
               >
-                <Image
-                  resizeMode='cover'
-                  source={{ uri: item?.image }}
-                  style={styles().restImg}
-                />
+                <Image resizeMode='cover' source={{ uri: item?.image }} style={styles().restImg} />
                 <View style={{ gap: 3 }}>
-                  <TextDefault
-                    H5
-                    bolder
-                    textColor={currentTheme.buttonText}
-                  >
+                  <TextDefault H5 bolder textColor={currentTheme.buttonText}>
                     {item.name}
                   </TextDefault>
-                  <TextDefault
-                    numberOfLines={1}
-                    bold
-                    Normal
-                    textColor={currentTheme.subText}
-                  >
+                  <TextDefault numberOfLines={1} bold Normal textColor={currentTheme.subText}>
                     {item?.tags?.slice(0, 2)?.join(', ')}
                   </TextDefault>
-                  <View
-                    style={styles().restInfo}
-                  >
-                    <View
-                      style={styles().deliveryTime}
-                    >
+                  <View style={styles().restInfo}>
+                    <View style={styles().deliveryTime}>
                       <Bicycle color={currentTheme.color2} />
 
-                      <TextDefault
-                        textColor={currentTheme.color2}
-                        numberOfLines={1}
-                        bold
-                        Small
-                      >
-                        {configuration.currencySymbol}{' '}{configuration.deliveryRate}
+                      <TextDefault textColor={currentTheme.color2} numberOfLines={1} bold Small>
+                        {configuration.currencySymbol} {configuration.deliveryRate}
                       </TextDefault>
                     </View>
-                    <View
-                      style={styles().deliveryTime}
-                    >
-                      <AntDesign
-                        name='clockcircleo'
-                        size={14}
-                        color={currentTheme.editProfileButton}
-                      />
-
-                      <TextDefault
-                        textColor={currentTheme.editProfileButton}
-                        numberOfLines={1}
-                        bold
-                        Small
-                      >
+                    <View style={styles().deliveryTime}>
+                      <AntDesign name='clockcircleo' size={14} color={currentTheme.editProfileButton} />
+                      <TextDefault textColor={currentTheme.editProfileButton} numberOfLines={1} bold Small>
                         {item.deliveryTime + ' '} min
                       </TextDefault>
                     </View>
-                    <View
-                      style={styles().deliveryTime}
-                    >
-                      <FontAwesome5
-                        name='star'
-                        size={14}
-                        color={currentTheme.color2}
-                      />
-
+                    <View style={styles().deliveryTime}>
+                      <FontAwesome5 name='star' size={14} color={currentTheme.color2} />
                       <TextDefault bold Small>
                         {item.reviewAverage}
                       </TextDefault>
@@ -202,7 +183,12 @@ export default function MapSection() {
             )
           }}
           keyExtractor={(item) => item?._id}
-          contentContainerStyle={{ flexGrow: 1, gap: 16, marginHorizontal: 15, paddingRight: 50 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            gap: 16,
+            marginHorizontal: 15,
+            paddingRight: 50
+          }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
@@ -222,7 +208,12 @@ export default function MapSection() {
           height: 40,
           width: 40,
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 2,
+          elevation: 3
         }}
       >
         <Ionicons name='arrow-back' size={24} color='black' />
