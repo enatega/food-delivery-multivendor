@@ -64,7 +64,7 @@ export default function WalletMain() {
     {
       userType: "RIDER",
       userId: userId,
-    },
+    }
   ) as ILazyQueryResult<
     IRiderTransactionHistoryResponse | undefined,
     {
@@ -81,7 +81,7 @@ export default function WalletMain() {
     { enabled: !!userId },
     {
       id: userId,
-    },
+    }
   ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>;
 
   const {
@@ -91,7 +91,7 @@ export default function WalletMain() {
   } = useLazyQueryQL(
     RIDER_CURRENT_WITHDRAW_REQUEST,
     {},
-    { riderId: userId },
+    { riderId: userId }
   ) as ILazyQueryResult<
     IRiderCurrentWithdrawRequestResponse | undefined,
     {
@@ -148,11 +148,11 @@ export default function WalletMain() {
     const currentAmount = riderProfileData?.rider.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {
       return setAmountErrMsg(
-        `${t("Please enter a valid amount, You have $")}${currentAmount} ${t("available")}.`,
+        `${t("Please enter a valid amount, You have $")}${currentAmount} ${t("available")}.`
       );
     } else if (withdrawAmount < 10) {
       return setAmountErrMsg(
-        t("The withdraw amount must be atleast 10 or greater"),
+        t("The withdraw amount must be atleast 10 or greater")
       );
     } else if (typeof withdrawAmount !== "number") {
       return setAmountErrMsg(t("Please enter a valid number"));
@@ -213,7 +213,9 @@ export default function WalletMain() {
             className="font-semibold text-[32px]"
             style={{ color: appTheme.fontMainColor }}
           >
-            ${riderProfileData?.rider.currentWalletAmount ?? 0}
+            $
+            {riderProfileData?.rider.currentWalletAmount.toFixed(2) ??
+              Number(0.0).toFixed(2)}
           </Text>
           <CustomContinueButton
             title={t("Withdraw Now")}
@@ -241,8 +243,11 @@ export default function WalletMain() {
             <RecentTransaction
               transaction={{
                 amountTransferred:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
-                    .requestAmount || 0,
+                  Number(
+                    riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest.requestAmount.toFixed(
+                      2
+                    )
+                  ) || Number(Number(0.0).toFixed(2)),
                 status:
                   riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
                     .status,
@@ -284,7 +289,7 @@ export default function WalletMain() {
                 }
               />
             );
-          },
+          }
         )}
         {!riderTransactionData?.transactionHistory?.data?.length && (
           <NoRecordFound />
