@@ -327,8 +327,7 @@ const RestaurantSections = ({
   const renderCategoryItem = ({ item, index }) => {
     const content = (
       // update beautifull shadow to category card
-      <TouchableOpacity style={[styles(currentTheme).categoryCard, {shadowColor:currentTheme.fontMainColor,shadowOffset:{width:0,height:1},shadowOpacity:0.15,shadowRadius:1.84, elevation:5}]} onPress={() => handleCategoryClick(item)}>
-        <ShimmerImage imageUrl={item.url} style={styles(currentTheme).categoryImage} resizeMode='cover' />
+      <TouchableOpacity style={styles(currentTheme).categoryCard} onPress={() => handleCategoryClick(item)}> <ShimmerImage imageUrl={item.url} style={styles(currentTheme).categoryImage} resizeMode='cover' />
         <TextDefault numberOfLines={1} style={styles(currentTheme).categoryTitle}>
           {item.category_name}
         </TextDefault>
@@ -397,7 +396,7 @@ const RestaurantSections = ({
               }
 
               return (
-                <View key={category.id} style={styles(currentTheme).categoryWrapper}>
+                <View key={category.id} style={[styles(currentTheme).categoryWrapper,{shadowColor:currentTheme.fontMainColor,shadowOffset:{width:0,height:1},shadowOpacity:0.15,shadowRadius:1.84, elevation:5}]}>
                   {renderCategoryItem({ item: category, index })}
                 </View>
               )
