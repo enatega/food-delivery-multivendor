@@ -43,7 +43,7 @@ export default function SignUpWithEmail({
     try {
       setIsLoading(true);
       setIsRegistering(true);
-      if (Object.values(formData).some((val) => !val)) {
+      if (Object.values(formData).some((val) => !val)) {  
         return showToast({
           type: "error",
           title: t("create_user_label"),
@@ -51,7 +51,7 @@ export default function SignUpWithEmail({
         });
       } else {
         if (formData.email && !SKIP_EMAIL_VERIFICATION) {
-          sendOtpToEmailAddress(formData.email);
+          sendOtpToEmailAddress(formData.email,);
           // Verify email OTP
           handleChangePanel(3);
         } else if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
