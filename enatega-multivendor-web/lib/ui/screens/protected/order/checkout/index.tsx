@@ -528,7 +528,7 @@ export default function OrderCheckoutScreen() {
     }
 
     // if false then select the address
-    if (!isAddressSelectedOnce) {
+    if (!isAddressSelectedOnce && deliveryType === "Delivery") {
       setIsUserAddressModalOpen(true);
       return;
     }
