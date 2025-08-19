@@ -14,6 +14,9 @@ export default function PersonalInfoMain() {
   const [isUpdatePhoneModalVisible, setIsUpdatePhoneModalVisible] =
     useState<boolean>(false);
 
+  // ActiveStep state variable
+  const [activeStep, setActiveStep] = useState<number>(0);
+
   // Get profile data by using the query
   const { data: profileData, loading: profileLoading } = useQuery(
     GET_USER_PROFILE,
@@ -26,6 +29,7 @@ export default function PersonalInfoMain() {
   const initials = getInitials(profileData?.profile?.name);
 
   const handleUpdatePhoneModal = () => {
+    setActiveStep(0); // Reset active step to 0 when opening the modal
     setIsUpdatePhoneModalVisible(!isUpdatePhoneModalVisible);
   };
 
@@ -75,6 +79,9 @@ export default function PersonalInfoMain() {
         </div>
         <UpdatePhoneModal
           handleUpdatePhoneModal={handleUpdatePhoneModal}
+          ActiveStep={activeStep}
+          setActiveStep={setActiveStep}
+
           isUpdatePhoneModalVisible={isUpdatePhoneModalVisible}
         />
       </div>
