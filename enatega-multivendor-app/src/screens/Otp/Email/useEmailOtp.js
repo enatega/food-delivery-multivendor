@@ -136,15 +136,16 @@ const useEmailOtp = () => {
   }
 
   const onCodeFilled = async (otp_code) => {
-    let isVerified = configuration?.skipEmailVerification ?? false
+    if (configuration?.skipEmailVerification) {
+      mutateRegister()
+      return
+    }
+
     const { data } = await verifyOTP({
-      variables: {
-        otp: otp_code,
-        email: user.email
-      }
+      variables: { otp: otp_code, email: user.email }
     })
-    isVerified = isVerified || data?.verifyOtp
-    if (isVerified) {
+
+    if (data?.verifyOtp) {
       mutateRegister()
     } else {
       setOtpError(true)
