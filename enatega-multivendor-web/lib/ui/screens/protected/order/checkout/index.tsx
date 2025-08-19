@@ -528,7 +528,7 @@ export default function OrderCheckoutScreen() {
     }
 
     // if false then select the address
-    if (!isAddressSelectedOnce) {
+    if (!isAddressSelectedOnce && deliveryType === "Delivery") {
       setIsUserAddressModalOpen(true);
       return;
     }
@@ -1208,8 +1208,8 @@ export default function OrderCheckoutScreen() {
               id="price-summary"
             >
               <h2 className="text-sm lg:text-base font-semibold text-left flex justify-between">
-              {t("prices_in_label", { currency: CURRENCY })}
-                <InfoSvg />
+              {t("prices_in_label")} {CURRENCY}
+              <InfoSvg />
               </h2>
               <p className="text-gray-400 mb-3 text-left leading-5 tracking-normal font-inter text-xs lg:text-[10px]">
                 {t("inc_taxes_label")}
