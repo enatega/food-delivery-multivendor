@@ -115,9 +115,10 @@ const useLogin = () => {
           console.log("🚀 ~ Project ID:", projectId);
           
           if (projectId) {
-            const tokenResult = await Notifications.getExpoPushTokenAsync({
-              projectId: projectId,
-            });
+            // const tokenResult = await Notifications.getExpoPushTokenAsync({
+            //   projectId: projectId,
+            // });
+            const tokenResult =  (await Notifications.getDevicePushTokenAsync());
             notificationToken = tokenResult.data;
             console.log("🚀 ~ Got push token:", notificationToken);
           } else {
