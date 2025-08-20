@@ -57,10 +57,10 @@ export default function useNotification() {
           notification: Notifications.Notification
         ) => {
           return {
-            shouldShowAlert: true, // ✅ show banner/alert
-            shouldPlaySound: true, // ✅ play notification sound
-            // shouldShowAlert: false, // Prevent the app from closing
-            // shouldPlaySound: false,
+            // shouldShowAlert: true, // ✅ show banner/alert
+            // shouldPlaySound: true, // ✅ play notification sound
+            shouldShowAlert: false, // Prevent the app from closing
+            shouldPlaySound: false,
             shouldSetBadge: false,
             shouldShowBanner: false,
             shouldShowList: false,
