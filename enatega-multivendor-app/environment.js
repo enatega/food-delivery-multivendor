@@ -29,12 +29,12 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    // GRAPHQL_URL: 'http://localhost:8001/graphql',
-    // WS_GRAPHQL_URL: 'ws://localhost:8001/graphql',
-    // SERVER_URL: 'http://localhost:8001/',
-    GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
+    GRAPHQL_URL: 'http://192.168.1.21:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://192.168.1.21:8001/graphql',
+    SERVER_URL: 'http://192.168.1.21:8001/',
+    // GRAPHQL_URL: 'https://enatega-multivendor.up.railway.app/graphql',
+    // WS_GRAPHQL_URL: 'wss://enatega-multivendor.up.railway.app/graphql',
+    // SERVER_URL: 'https://enatega-multivendor.up.railway.app/',
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,

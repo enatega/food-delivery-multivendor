@@ -58,7 +58,7 @@ async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginRespons
     await setItem("rider-id", riderLogin.userId);
     await setTokenAsync(riderLogin.token);
     router.replace(ROUTES.home as Href);
-  }
+  } 
 }
 
 // For default credentials query

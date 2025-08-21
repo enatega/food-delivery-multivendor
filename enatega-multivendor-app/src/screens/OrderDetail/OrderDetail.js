@@ -113,7 +113,8 @@ function OrderDetail(props) {
     if (order && ![ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
       const initialTime = calulateRemainingTime(order)
       setRemainingTimeState(initialTime)
-      
+ 
+    
       const intervalId = setInterval(() => {
         const updatedTime = calulateRemainingTime(order)
         setRemainingTimeState(updatedTime)
@@ -121,7 +122,7 @@ function OrderDetail(props) {
         if (updatedTime <= 0 || [ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
           clearInterval(intervalId)
         }
-      }, 1000)
+      }, 5000)
       
       return () => clearInterval(intervalId)
     }
@@ -131,7 +132,6 @@ function OrderDetail(props) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (errorOrders) {
-    console.log({ errorOrders })
     return <TextError text={JSON.stringify(errorOrders)} />
   }
 

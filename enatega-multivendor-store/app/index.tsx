@@ -15,6 +15,7 @@ function App() {
     restaurantData,
     getPermission,
     getExpoPushToken,
+    getDevicePushToken,
     // requestPermission,
     sendTokenToBackend,
   } = useNotification();
@@ -74,13 +75,16 @@ function App() {
         ) {
           const permissionStatus = await getPermission();
           if (permissionStatus.granted) {
-            const token = (
+            /*  const token = (
               await getExpoPushToken({
                 projectId: Constants?.expoConfig?.extra?.eas.projectId,
               })
-            ).data;
+            ).data; */
+
+            const token = (await getDevicePushToken()).data;
 
             try {
+              console.log({ token });
               sendTokenToBackend({
                 variables: { token, isEnabled: true },
                 onCompleted: () => {

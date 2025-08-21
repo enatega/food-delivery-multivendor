@@ -38,7 +38,7 @@ function About(props) {
   }
   const RestAbout = {
     name: restaurantObject.name,
-    id: restaurantObject.restaurantId,
+    id: restaurantObject._id,
     address: restaurantObject.address,
     deliveryTime: restaurantObject.deliveryTime,
     minimumOrder: restaurantObject.minimumOrder,

@@ -54,9 +54,16 @@ function Favourite() {
         longitude: location.longitude || null,
         latitude: location.latitude || null
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
+      errorPolicy: "all"
     }
   )
+  useEffect(() => {
+    if(data && data.userFavourite) {
+  console.log(JSON.stringify(data, null, 2), 'FavouriteRestaurantsData')
+    }
+  },[data])
+ 
   useEffect(() => {
     async function Track() {
       await analytics.track(analytics.events.NAVIGATE_TO_FAVOURITES)
@@ -71,6 +78,12 @@ function Favourite() {
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
     )
   })
+
+  useEffect(() => {
+    if(error){
+      console.error('Error fetching favourite restaurants:', error)
+    }
+  }, [error]) 
 
   useEffect(() => {
     navigation.setOptions({
@@ -133,11 +146,12 @@ function Favourite() {
     )
   if (error) return <ErrorView />
 
-
+const favouriteRestaurants = data?.userFavourite?.filter(item => item !== null) || []
+console.log('Favourite Restaurants:', favouriteRestaurants)
   return (
     <SafeAreaView edges={['bottom']} style={styles(currentTheme).flex}>
       <FlatList
-        data={data ? sortRestaurantsByOpenStatus(data?.userFavourite) : []}
+        data={favouriteRestaurants}
         keyExtractor={(item, index) => item._id}
         showsVerticalScrollIndicator={false}
         refreshing={networkStatus === 4}
@@ -147,20 +161,20 @@ function Favourite() {
         ListEmptyComponent={emptyView()}
         ListHeaderComponent={null}
         renderItem={({ item }) => {
-          const restaurantOpen = isOpen(item);
-        //  console.log(item)
-          return (
-            <NewRestaurantCard
-              {...item}
-              reviewAverage={item.reviewAverage}
-              reviewCount={item.reviewCount}
-              isCategories
-              fullWidth
-              isOpen={true}
-              isAvailable={item.isAvailable ||  true}
-            />
-          )
-        }}
+  if (!item) return null // skip nulls
+
+  return (
+    <NewRestaurantCard
+      {...item}
+      reviewAverage={item.reviewAverage}
+      reviewCount={item.reviewCount}
+      isCategories
+      fullWidth
+      isOpen={true}
+      isAvailable={item.isAvailable || true}
+    />
+  )
+}}
       />
     </SafeAreaView>
   )

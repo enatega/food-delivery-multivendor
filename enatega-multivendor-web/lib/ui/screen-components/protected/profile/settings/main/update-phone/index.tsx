@@ -24,18 +24,22 @@ import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
 
 export interface IUpdatePhoneModalProps {
   isUpdatePhoneModalVisible: boolean
-  handleUpdatePhoneModal: () => void
+  handleUpdatePhoneModal: () => void,
+  ActiveStep?: number,
+  setActiveStep: (step: number) => void
 }
 
 export default function UpdatePhoneModal({
   isUpdatePhoneModalVisible,
   handleUpdatePhoneModal,
+  ActiveStep,
+  setActiveStep
   
 }: IUpdatePhoneModalProps) {
   // States
   const [phoneOtp, setPhoneOtp] = useState("");
-  const [activeStep, setActiveStep] = useState(0);
-
+  // const [activeStep, setActiveStep] = useState(ActiveStep);
+  
     // Hooks
   const { sendOtpToPhoneNumber, setUser, user, setOtp, checkPhoneExists } = useAuth();
   const { showToast } = useToast();
@@ -183,7 +187,7 @@ export default function UpdatePhoneModal({
   return(
      <CustomDialog visible={isUpdatePhoneModalVisible} onHide={handleUpdatePhoneModal} width="600px" >  
         {
-            activeStep === 0 ? (
+            ActiveStep === 0 ? (
             <PhoneEntry
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
