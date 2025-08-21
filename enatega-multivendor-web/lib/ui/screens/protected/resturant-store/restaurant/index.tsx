@@ -301,10 +301,10 @@ export default function RestaurantDetailsScreen() {
     });
   };
 
+  
   // Function to handle clicking on a restaurant
   const handleRestaurantClick = (food: IFood) => {
     if (food.isOutOfStock) return;
-
     if (
       !restaurantInfo?.isAvailable ||
       !restaurantInfo?.isActive ||
@@ -328,6 +328,7 @@ export default function RestaurantDetailsScreen() {
       handleOpenFoodModal(food);
     }
   };
+
 
   // Function to handle clear cart confirmation
   const handleClearCartConfirm = async () => {
@@ -381,6 +382,7 @@ export default function RestaurantDetailsScreen() {
       restaurant: restaurantInfo._id,
     });
     setShowDialog(true);
+    console.log("Food ModAL dETAISL",food)
   };
 
   // Function to close the food item modal

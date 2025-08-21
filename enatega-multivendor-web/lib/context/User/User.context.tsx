@@ -189,6 +189,7 @@ export interface UserContextType {
     foodsData: IRestaurant
   ) => CartItem[];
   fetchProfile: LazyQueryExecFunction<any, OperationVariables>;
+  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -728,13 +729,20 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     [deleteItem]
   );
 
-  const calculateSubtotal = useCallback(() => {
-    return cart
-      .reduce((total, item) => {
-        return total + (parseFloat(item.price as string) || 0) * item.quantity;
-      }, 0)
-      .toFixed(2);
-  }, [cart]);
+const calculateSubtotal = useCallback(() => {
+  return cart
+    .reduce((total, item) => {
+      const priceRaw = (item.variation as { price?: number | string })?.price ?? item.price ?? 0;
+      const price = typeof priceRaw === 'string' ? parseFloat(priceRaw) : priceRaw;
+      const quantity = item.quantity ?? 0;
+      return total + price * quantity;
+    }, 0)
+    .toFixed(2);
+}, [cart]);
+
+
+
+
 
   // UseEffects
   useEffect(() => {
@@ -821,6 +829,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         removeItem,
         calculateSubtotal,
         transformCartWithFoodInfo,
+        setCart
       }}
     >
       {props.children}

@@ -75,16 +75,17 @@ export default function LoginWithGoogle({
       </div>
 
       {/* Terms and Privacy */}
-      <p className="text-center text-xs text-gray-500 max-w-sm px-2">
+      <p className="text-center text-xs text-gray-500 max-w-sm px-2 ">
         {t("by_signing_up_you_agree_to_our_message")}&nbsp;
         <Link
           href="/terms"
           target="_blank"
           className="font-bold text-black underline hover:text-gray-700"
         >
-          {t("terms_label")}
-        </Link>{" "}
+          {t("terms_label")}{" "}
         {t("and_conditions_and_message")}&nbsp;
+        </Link>
+        {t("and_labed")}{" "}
         <Link
           href="/privacy"
           target="_blank"
