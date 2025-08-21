@@ -211,8 +211,8 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
   };
 
   const onInitDeliveryCharges = () => {
-    const latOrigin = Number(restaurantData.restaurant.location.coordinates[1]);
-    const lonOrigin = Number(restaurantData.restaurant.location.coordinates[0]);
+    const latOrigin = Number(restaurantData?.restaurant.location.coordinates[1]);
+    const lonOrigin = Number(restaurantData?.restaurant.location.coordinates[0]);
     const latDest = userAddress?.location?.coordinates[1] || 0;
     const longDest = userAddress?.location?.coordinates[0] || 0;
     const distance = calculateDistance(latOrigin, lonOrigin, latDest, longDest);
