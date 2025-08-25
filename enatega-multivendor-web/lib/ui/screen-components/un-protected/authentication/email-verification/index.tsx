@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { useTranslations } from "next-intl";
-import { useMutation, ApolloError } from "@apollo/client";
 import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 
 // Components and Utilities
@@ -12,10 +11,8 @@ import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import {
   IEmailVerificationProps,
-  IUpdateUserEmailArguments,
-  IUpdateUserResponse,
+
 } from "@/lib/utils/interfaces";
-import { UPDATE_USER } from "@/lib/api/graphql";
 
 export default function EmailVerification({
   handleChangePanel,
@@ -42,19 +39,6 @@ export default function EmailVerification({
   const { showToast } = useToast();
   const { profile } = useUser();
 
-  // const [updateUser] = useMutation<
-  //   IUpdateUserResponse,
-  //   undefined | IUpdateUserEmailArguments
-  // >(UPDATE_USER, {
-  //   onError: (error: ApolloError) => {
-  //     showToast({
-  //       type: "error",
-  //       title: t("Error"),
-  //       message:
-  //         error.cause?.message || t("update_phone_name_update_error_msg"),
-  //     });
-  //   },
-  // });
 
   // Sync parent state with local OTP
   useEffect(() => {

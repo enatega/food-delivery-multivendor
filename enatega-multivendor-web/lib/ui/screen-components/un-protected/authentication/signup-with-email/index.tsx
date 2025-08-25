@@ -70,11 +70,15 @@ export default function SignUpWithEmail({
           });
           handleChangePanel(0);
           setIsAuthModalVisible(false);
-          showToast({
-            type: "success",
-            title: t("register_label"),
-            message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
-          });
+          // if userData exist then show success message
+          if (userData){
+            showToast({
+              type: "success",
+              title: t("register_label"),
+              message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
+            });
+          }
+      
         }
       }
     } catch (err) {

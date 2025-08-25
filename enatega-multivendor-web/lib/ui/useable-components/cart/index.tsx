@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { useQuery, useApolloClient } from "@apollo/client";
@@ -12,10 +12,7 @@ import useUser from "@/lib/hooks/useUser";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import useRestaurant from "@/lib/hooks/useRestaurant";
-import { Dialog } from "primereact/dialog";
-import { IFood, IOpeningTime } from "@/lib/utils/interfaces";
-import FoodItemDetail from "../item-detail";
+
 
 interface CartProps {
   onClose?: () => void;
@@ -153,28 +150,28 @@ export default function Cart({ onClose }: CartProps) {
   //   isActive: data?.restaurant?.isActive ?? true,
   // };
 
-    const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-      const now = new Date();
-      const currentDay = now
-        .toLocaleString("en-US", { weekday: "short" })
-        .toUpperCase(); // e.g., "MON", "TUE", ...
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
+    // const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
+    //   const now = new Date();
+    //   const currentDay = now
+    //     .toLocaleString("en-US", { weekday: "short" })
+    //     .toUpperCase(); // e.g., "MON", "TUE", ...
+    //   const currentHour = now.getHours();
+    //   const currentMinute = now.getMinutes();
   
-      const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-      if (!todayOpening) return false;
+    //   const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
+    //   if (!todayOpening) return false;
   
-      return todayOpening.times.some(({ startTime, endTime }) => {
-        const [startHour, startMinute] = startTime.map(Number);
-        const [endHour, endMinute] = endTime.map(Number);
+    //   return todayOpening.times.some(({ startTime, endTime }) => {
+    //     const [startHour, startMinute] = startTime.map(Number);
+    //     const [endHour, endMinute] = endTime.map(Number);
   
-        const startTotal = startHour * 60 + startMinute;
-        const endTotal = endHour * 60 + endMinute;
-        const nowTotal = currentHour * 60 + currentMinute;
+    //     const startTotal = startHour * 60 + startMinute;
+    //     const endTotal = endHour * 60 + endMinute;
+    //     const nowTotal = currentHour * 60 + currentMinute;
   
-        return nowTotal >= startTotal && nowTotal <= endTotal;
-      });
-    };
+    //     return nowTotal >= startTotal && nowTotal <= endTotal;
+    //   });
+    // };
 
     // const handleCloseFoodModal = () => {
     //   setShowDialog(null);

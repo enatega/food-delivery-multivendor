@@ -90,7 +90,7 @@ export default function PhoneVerification({
           });
 
           if (!userData.phoneIsVerified) {
-            const updateUserData = await updateUser({
+            await updateUser({
               variables: {
                 name: userData?.name ?? "",
                 phone: userData?.phone,
@@ -113,6 +113,7 @@ export default function PhoneVerification({
             message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
           });
 
+          setIsRegistering(false);
           handleChangePanel(0);
           setIsAuthModalVisible(false);
         } else {
@@ -171,7 +172,7 @@ export default function PhoneVerification({
   const handleResendPhoneOtp = async () => {
     if (user?.phone || formData.phone) {
       // setIsResendingOtp(true);
-      await sendOtpToPhoneNumber(user?.phone || formData.phone );
+      await sendOtpToPhoneNumber(user?.phone || formData.phone);
       showToast({
         type: "success",
         title: t("otp_resent_label"),
