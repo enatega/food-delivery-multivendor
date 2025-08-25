@@ -34,6 +34,7 @@ export default function SignUpWithEmail({
     setIsLoading,
     setIsRegistering,
     setIsAuthModalVisible,
+    handleCreateUser,
   } = useAuth();
   const { showToast } = useToast();
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
@@ -43,7 +44,7 @@ export default function SignUpWithEmail({
     try {
       setIsLoading(true);
       setIsRegistering(true);
-      if (Object.values(formData).some((val) => !val)) {  
+      if (Object.values(formData).some((val) => !val)) {
         return showToast({
           type: "error",
           title: t("create_user_label"),
@@ -51,7 +52,7 @@ export default function SignUpWithEmail({
         });
       } else {
         if (formData.email && !SKIP_EMAIL_VERIFICATION) {
-          sendOtpToEmailAddress(formData.email,);
+          sendOtpToEmailAddress(formData?.email);
           // Verify email OTP
           handleChangePanel(3);
         } else if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
@@ -60,6 +61,13 @@ export default function SignUpWithEmail({
           handleChangePanel(6);
         } else if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
           // Navigate to first modal
+          const userData = await handleCreateUser({
+            email: formData?.email,
+            phone: formData?.phone,
+            name: formData?.name,
+            password: formData?.password,
+            emailIsVerified:false
+          });
           handleChangePanel(0);
           setIsAuthModalVisible(false);
           showToast({
