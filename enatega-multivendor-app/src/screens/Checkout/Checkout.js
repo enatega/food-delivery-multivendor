@@ -1050,7 +1050,7 @@ function Checkout(props) {
           modalStyle={[styles(currentTheme).modal]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
-          modalHeight={550}
+          modalHeight={600}
           handlePosition='inside'
           openAnimationConfig={{
             timing: { duration: 400 },
