@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {  useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { useQuery, useApolloClient } from "@apollo/client";
@@ -30,7 +30,6 @@ export default function Cart({ onClose }: CartProps) {
     updateItemQuantity,
     calculateSubtotal,
     restaurant: restaurantId,
-    addItem,
   } = useUser();
 
   const { CURRENCY_SYMBOL } = useConfig();
@@ -70,19 +69,19 @@ export default function Cart({ onClose }: CartProps) {
   });
   console.log("Related Items Data:", relatedItemsData);
   // Handle adding related item to cart
-  const handleAddRelatedItem = (id: string) => {
-    // Use Apollo Client to read the food fragment
-    const food = client.readFragment({
-      id: `Food:${id}`,
-      fragment: FOOD,
-    });
+  // const handleAddRelatedItem = (id: string) => {
+  //   // Use Apollo Client to read the food fragment
+  //   const food = client.readFragment({
+  //     id: `Food:${id}`,
+  //     fragment: FOOD,
+  //   });
 
-    if (food) {
-      // Assuming first variation for simplicity
-      const variation = food.variations[0];
-      addItem(food?.image, food._id, variation._id, restaurantId || "");
-    }
-  };
+  //   if (food) {
+  //     // Assuming first variation for simplicity
+  //     const variation = food.variations[0];
+  //     addItem(food?.image, food._id, variation._id, restaurantId || "");
+  //   }
+  // };
 
   // Empty cart state
   if (cart.length === 0) {
