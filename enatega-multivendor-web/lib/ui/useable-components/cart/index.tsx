@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {  useRouter } from "next/navigation";
+import {  useParams, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { useQuery, useApolloClient } from "@apollo/client";
@@ -12,6 +12,10 @@ import useUser from "@/lib/hooks/useUser";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import useRestaurant from "@/lib/hooks/useRestaurant";
+import { IFood, IOpeningTime } from "@/lib/utils/interfaces";
+import { Dialog } from "primereact/dialog";
+import FoodItemDetail from "../item-detail";
 
 
 interface CartProps {
@@ -33,10 +37,13 @@ export default function Cart({ onClose }: CartProps) {
   const [instructions, setInstructions] = useState(
     localStorage.getItem("orderInstructions") || ""
   );
-  // const [showDialog, setShowDialog] = useState<IFood | null>(null);
+  const [showDialog, setShowDialog] = useState<IFood | null>(null);
 
-  // const { id, slug }: { id: string; slug: string } = useParams();
-  // const { data } = useRestaurant(id, decodeURIComponent(slug));
+  // retrieve cart-product-store-slug and id from local storage rather than useParams
+  const slug = localStorage.getItem("cart-product-store-slug") || "";
+  const id = localStorage.getItem("cart-product-store-id") || "";
+
+  const { data } = useRestaurant(id, decodeURIComponent(slug));
   
 
   const router = useRouter();
@@ -52,7 +59,7 @@ export default function Cart({ onClose }: CartProps) {
 
   // Get first item's ID for related items query (if cart is not empty)
   const firstCartItemId = cart.length > 0 ? cart[0]._id : null;
-
+ console.log("First Cart Items and restaurant:", firstCartItemId, restaurantId);
   // Fetch related items
   const { data: relatedItemsData } = useQuery(RELATED_ITEMS, {
     variables: {
@@ -61,7 +68,7 @@ export default function Cart({ onClose }: CartProps) {
     },
     skip: !firstCartItemId || !restaurantId,
   });
-
+  console.log("Related Items Data:", relatedItemsData);
   // Handle adding related item to cart
   const handleAddRelatedItem = (id: string) => {
     // Use Apollo Client to read the food fragment
@@ -118,67 +125,69 @@ export default function Cart({ onClose }: CartProps) {
 
   // Slice related items to max 3
   const slicedRelatedItems = (relatedItemsData?.relatedItems || []).slice(0, 3);
-  // const handleOpenFoodModal = (food: IFood) => {
-  //   if (food.isOutOfStock) return;
+  const handleOpenFoodModal = async (food: IFood) => {
+    if (food.isOutOfStock) return;
 
-  //   if (
-  //     !restaurantInfo?.isAvailable ||
-  //     !restaurantInfo?.isActive ||
-  //     !isWithinOpeningTime(restaurantInfo?.openingTimes)
-  //   ) {
-  //     return;
-  //   }
-  //   // Add restaurant ID to the food item
-  //   console.log("....food:", food);
-  //   console.log("....restaurant:", data?.restaurant?._id);
-  //   setShowDialog({
-  //     ...food,
-  //     restaurant: data?.restaurant?._id,
-  //   });
-  // };
+    if (
+      !restaurantInfo?.isAvailable ||
+      !restaurantInfo?.isActive ||
+      !isWithinOpeningTime(restaurantInfo?.openingTimes)
+    ) {
+      return;
+    }
+    // Add restaurant ID to the food item
+    console.log("....food:", food);
+    console.log("....restaurant:", data?.restaurant?._id);
+    
+    setShowDialog({
+      ...food,
+      restaurant: data?.restaurant?._id,
+    });
+  };
 
-  // const restaurantInfo = {
-  //   _id: data?.restaurant?._id ?? "",
-  //   name: data?.restaurant?.name ?? "...",
-  //   image: data?.restaurant?.image ?? "",
-  //   reviewData: data?.restaurant?.reviewData ?? {},
-  //   address: data?.restaurant?.address ?? "",
-  //   deliveryCharges: data?.restaurant?.deliveryCharges ?? "",
-  //   deliveryTime: data?.restaurant?.deliveryTime ?? "...",
-  //   isAvailable: data?.restaurant?.isAvailable ?? true,
-  //   openingTimes: data?.restaurant?.openingTimes ?? [],
-  //   isActive: data?.restaurant?.isActive ?? true,
-  // };
+  const restaurantInfo = {
+    _id: data?.restaurant?._id ?? "",
+    name: data?.restaurant?.name ?? "...",
+    image: data?.restaurant?.image ?? "",
+    reviewData: data?.restaurant?.reviewData ?? {},
+    address: data?.restaurant?.address ?? "",
+    deliveryCharges: data?.restaurant?.deliveryCharges ?? "",
+    deliveryTime: data?.restaurant?.deliveryTime ?? "...",
+    isAvailable: data?.restaurant?.isAvailable ?? true,
+    openingTimes: data?.restaurant?.openingTimes ?? [],
+    isActive: data?.restaurant?.isActive ?? true,
+  };
 
-    // const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-    //   const now = new Date();
-    //   const currentDay = now
-    //     .toLocaleString("en-US", { weekday: "short" })
-    //     .toUpperCase(); // e.g., "MON", "TUE", ...
-    //   const currentHour = now.getHours();
-    //   const currentMinute = now.getMinutes();
+    const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
+      const now = new Date();
+      const currentDay = now
+        .toLocaleString("en-US", { weekday: "short" })
+        .toUpperCase(); // e.g., "MON", "TUE", ...
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
   
-    //   const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-    //   if (!todayOpening) return false;
+      const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
+      if (!todayOpening) return false;
   
-    //   return todayOpening.times.some(({ startTime, endTime }) => {
-    //     const [startHour, startMinute] = startTime.map(Number);
-    //     const [endHour, endMinute] = endTime.map(Number);
+      return todayOpening.times.some(({ startTime, endTime }) => {
+        const [startHour, startMinute] = startTime.map(Number);
+        const [endHour, endMinute] = endTime.map(Number);
   
-    //     const startTotal = startHour * 60 + startMinute;
-    //     const endTotal = endHour * 60 + endMinute;
-    //     const nowTotal = currentHour * 60 + currentMinute;
+        const startTotal = startHour * 60 + startMinute;
+        const endTotal = endHour * 60 + endMinute;
+        const nowTotal = currentHour * 60 + currentMinute;
   
-    //     return nowTotal >= startTotal && nowTotal <= endTotal;
-    //   });
-    // };
+        return nowTotal >= startTotal && nowTotal <= endTotal;
+      });
+    };
 
-    // const handleCloseFoodModal = () => {
-    //   setShowDialog(null);
-    // };
+    const handleCloseFoodModal = () => {
+      setShowDialog(null);
+    };
   
 
   return (
+    <>
     <div className="h-full flex flex-col bg-white relative">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b">
@@ -272,6 +281,7 @@ export default function Cart({ onClose }: CartProps) {
             <div className="flex flex-wrap gap-3">
               {slicedRelatedItems.map((id: string) => {
                 // Read the food fragment using Apollo Client
+                console.log("Related Item ID:", id);
                 const food = client.readFragment({
                   id: `Food:${id}`,
                   fragment: FOOD,
@@ -282,7 +292,8 @@ export default function Cart({ onClose }: CartProps) {
                 return (
                   <div
                     key={id}
-                    onClick={() => handleAddRelatedItem(id)}
+                    // onClick={() => handleAddRelatedItem(id)}
+                    onClick={() => handleOpenFoodModal(food)}
                     className="flex-grow basis-[calc(50%-0.75rem)] bg-white rounded-lg overflow-hidden relative 
                     transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer group"
                   >
@@ -364,8 +375,10 @@ export default function Cart({ onClose }: CartProps) {
           </span>
         </button>
       </div>
-      {/* Food Item Detail Modal */}
-      {/* <Dialog
+      
+    </div>
+    {/* Food Item Detail Modal */}
+      <Dialog
         visible={!!showDialog}
         className="mx-3 sm:mx-4 md:mx-0 " // Adds margin on small screens
         onHide={handleCloseFoodModal}
@@ -383,9 +396,10 @@ export default function Cart({ onClose }: CartProps) {
             addons={data?.restaurant?.addons}
             options={data?.restaurant?.options}
             onClose={handleCloseFoodModal}
+            isRecommendedProduct={true}
           />
         )}
-      </Dialog> */}
-    </div>
+      </Dialog>
+    </>
   );
 }
