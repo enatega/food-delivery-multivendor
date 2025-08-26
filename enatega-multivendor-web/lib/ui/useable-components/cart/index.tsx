@@ -58,7 +58,6 @@ export default function Cart({ onClose }: CartProps) {
 
   // Get first item's ID for related items query (if cart is not empty)
   const firstCartItemId = cart.length > 0 ? cart[0]._id : null;
- console.log("First Cart Items and restaurant:", firstCartItemId, restaurantId);
   // Fetch related items
   const { data: relatedItemsData } = useQuery(RELATED_ITEMS, {
     variables: {
@@ -67,7 +66,6 @@ export default function Cart({ onClose }: CartProps) {
     },
     skip: !firstCartItemId || !restaurantId,
   });
-  console.log("Related Items Data:", relatedItemsData);
   // Handle adding related item to cart
   // const handleAddRelatedItem = (id: string) => {
   //   // Use Apollo Client to read the food fragment
@@ -135,8 +133,6 @@ export default function Cart({ onClose }: CartProps) {
       return;
     }
     // Add restaurant ID to the food item
-    console.log("....food:", food);
-    console.log("....restaurant:", data?.restaurant?._id);
     
     setShowDialog({
       ...food,
@@ -280,14 +276,12 @@ export default function Cart({ onClose }: CartProps) {
             <div className="flex flex-wrap gap-3">
               {slicedRelatedItems.map((id: string) => {
                 // Read the food fragment using Apollo Client
-                console.log("Related Item ID:", id);
                 const food = client.readFragment({
                   id: `Food:${id}`,
                   fragment: FOOD,
                 });
 
                 if (!food) return null;
-                console.log("Related Food Item:", food);
                 return (
                   <div
                     key={id}
