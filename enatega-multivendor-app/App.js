@@ -10,7 +10,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { ActivityIndicator, BackHandler, I18nManager, LogBox, Platform, SafeAreaView, StatusBar, StyleSheet, Text, View, useColorScheme } from 'react-native'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
-// import * as Sentry from 'sentry-expo'
+// import * as Sentry from '@sentry/react-native';
 import useEnvVars, { isProduction } from './environment'
 import setupApolloClient from './src/apollo/index'
 import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
