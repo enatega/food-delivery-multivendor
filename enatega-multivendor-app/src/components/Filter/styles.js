@@ -7,7 +7,8 @@ const styles = (props = null) =>
     container: {
       flexDirection: 'column',
       gap: 24,
-      ...alignment.MBxLarge
+      // ...alignment.MBxLarge
+      marginVertical : 16
     },
     heading: { 
       marginBottom: 10, 
