@@ -431,6 +431,8 @@ export default function StoreDetailsScreen() {
       return;
     }
     // Add restaurant ID to the food item
+    console.log("....food:", food);
+    console.log("....restaurant:", data?.restaurant?._id);
     setShowDialog({
       ...food,
       restaurant: data?.restaurant?._id,

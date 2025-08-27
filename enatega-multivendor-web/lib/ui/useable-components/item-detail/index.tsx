@@ -18,10 +18,12 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
 export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
-  const { foodItem, addons, options, onClose, restaurant } = props;
+  const { foodItem, addons, options, onClose, restaurant, isRecommendedProduct } = props;
   const { CURRENCY_SYMBOL } = useConfig();
+  const { id, slug }: { id: string; slug: string } = useParams();
 
   // Access user context for cart functionality
   const {
@@ -164,7 +166,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           JSON.stringify(
             formattedAddons.flatMap((a) => a.options.map((o) => o._id))
           )
-    );  
+    );
 
     if (isItemInCart) {
       cart.map((item) => {
@@ -196,11 +198,18 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         formattedAddons
         // Special instructions - could add a field for this
       );
+      // save restaurant id to local storage for product recommendation
+      if(!isRecommendedProduct){
+        onUseLocalStorage("save", "cart-product-store-id", id);
+        onUseLocalStorage("save", "cart-product-store-slug", slug);
+      }
+      
     }
 
     // UPDAT4 STORAGE
+
     onUseLocalStorage("save", "restaurant", restaurant?._id);
-    onUseLocalStorage("save", "restaurant-slug", restaurant?.slug);
+    onUseLocalStorage("save", "restaurant-slug", restaurant?.slug) ;
     onUseLocalStorage(
       "save",
       "currentShopType",

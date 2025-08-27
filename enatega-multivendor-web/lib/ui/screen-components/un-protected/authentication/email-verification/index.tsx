@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { useTranslations } from "next-intl";
-import { useMutation, ApolloError } from "@apollo/client";
 import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 
 // Components and Utilities
@@ -12,10 +11,8 @@ import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import {
   IEmailVerificationProps,
-  IUpdateUserEmailArguments,
-  IUpdateUserResponse,
+
 } from "@/lib/utils/interfaces";
-import { UPDATE_USER } from "@/lib/api/graphql";
 
 export default function EmailVerification({
   handleChangePanel,
@@ -31,31 +28,17 @@ export default function EmailVerification({
   const { SKIP_EMAIL_VERIFICATION, TEST_OTP } = useConfig();
   const { verifyOTP, error } = useVerifyOtp();
   const {
-    
     setIsAuthModalVisible,
     setOtp: setStoredOtp,
     sendOtpToEmailAddress,
     // sendOtpToPhoneNumber,
     isLoading,
     handleCreateUser,
-  
+    setIsRegistering
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
 
-  const [updateUser] = useMutation<
-    IUpdateUserResponse,
-    undefined | IUpdateUserEmailArguments
-  >(UPDATE_USER, {
-    onError: (error: ApolloError) => {
-      showToast({
-        type: "error",
-        title: t("Error"),
-        message:
-          error.cause?.message || t("update_phone_name_update_error_msg"),
-      });
-    },
-  });
 
   // Sync parent state with local OTP
   useEffect(() => {
@@ -96,7 +79,7 @@ export default function EmailVerification({
     setOtp(newOtp);
     inputRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
-
+  // handler
   const handleSubmit = async () => {
     if (SKIP_EMAIL_VERIFICATION) {
       setStoredOtp(TEST_OTP);
@@ -133,44 +116,37 @@ export default function EmailVerification({
         phone: formData?.phone,
         name: formData?.name,
         password: formData?.password,
-      });
-      
-      const updateUserData = await updateUser({
-        variables: {
-          name: userData?.name ?? "",
-          email: userData?.email ?? "",
-          emailIsVerified: true,
-        },
+        emailIsVerified: true,
       });
 
+
+ 
       setStoredOtp("");
       setEmailOtp("");
 
-      // reset formData
-      formData.email = "";
-      formData.phone = "";
-      formData.name = "";
-      formData.password = "";
+
 
       // now check if phone number is verified after user creation
       if (
-        userData?.phone &&
-        !updateUserData?.data?.updateUser?.phoneIsVerified
+        userData?.phone && 
+        !userData?.phoneIsVerified
       ) {
+        setIsRegistering(false)
         handleChangePanel(4); // Go to phone verification panel
         return;
       }
 
-      // reset formData
-      formData.email = "";
-      formData.phone = "";
-      formData.name = "";
-      formData.password = "";
+    
 
       showToast({
         type: "success",
         title: t("email_verification_label"),
         message: t("your_email_verified_successfully_message"),
+      });
+      showToast({
+        type: "success",
+        title: t("register_label"),
+        message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
       });
       handleChangePanel(0);
       setIsAuthModalVisible(false);

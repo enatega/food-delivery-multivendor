@@ -9,6 +9,7 @@ export interface IFoodItemDetalComponentProps extends IGlobalComponentProps {
   options: IOption[];
   restaurant?: IRestaurant;
   onClose?: () => void;
+  isRecommendedProduct?: boolean | false;
 }
 
 export interface Option {
