@@ -2,11 +2,11 @@
 
 // Interfaces
 import { IPhoneTextFieldProps } from '@/lib/utils/interfaces';
-import { PhoneInput } from 'react-international-phone';
-import 'react-international-phone/style.css';
-
+import PhoneInput from 'react-phone-input-2';
+import "react-phone-input-2/lib/style.css"
 // Hooks
 import { useState } from 'react';
+
 
 // Components & Skeletons
 import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
@@ -72,15 +72,30 @@ export default function CustomPhoneTextField({
         className={`flex items-center ${className} ${style?.borderColor === 'red' ? 'phone-error' : ''}`}
       >
         <PhoneInput
-          defaultCountry="au"
+          country={'au'}
           value={value ?? ''}
           onChange={handlePhoneInputChange}
-          style={inputStyle}
+          enableSearch={true}
+          disableSearchIcon={true}
+          searchPlaceholder="Search country"
           inputStyle={{
             ...MaininputStyle,
-            borderColor: style?.borderColor || MaininputStyle.borderColor,   
-          }
-        }
+            borderColor: style?.borderColor || MaininputStyle.borderColor,
+          }}
+          buttonStyle={{
+            borderRight: '1px solid #ddd',
+            width: "40px",
+          }}
+          searchStyle={{
+            position: 'relative',
+            width: '100%',
+            margin: '0',
+            padding: '5px',
+            borderRadius: '8px',
+          }}
+          containerStyle={{
+            ...inputStyle,
+          }}
         />
       </div>
     </div>
@@ -88,3 +103,4 @@ export default function CustomPhoneTextField({
     <InputSkeleton />
   );
 }
+

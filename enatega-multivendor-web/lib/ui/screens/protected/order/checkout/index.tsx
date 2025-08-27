@@ -107,8 +107,26 @@ export default function OrderCheckoutScreen() {
   } = useUser();
 
   const { userAddress } = useUserAddress();
- const restaurantFromLocalStorage = localStorage.getItem("restaurant");
-const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: restaurantFromLocalStorage ? JSON.parse(restaurantFromLocalStorage) : null };
+  const restaurantFromLocalStorage = localStorage.getItem("restaurant");
+  const { data: restaurantData} = useRestaurant(restaurantId || "") || { data: restaurantFromLocalStorage ? JSON.parse(restaurantFromLocalStorage) : null, loading: false };
+  
+  // Load restaurant data from localStorage if not available from GraphQL
+  const [localRestaurantData, setLocalRestaurantData] = useState(null);
+  
+  useEffect(() => {
+    if (!restaurantData && restaurantFromLocalStorage) {
+      try {
+        const restaurantDataStr = localStorage.getItem("restaurantData") || "{}";
+        const parsedData = JSON.parse(restaurantDataStr);
+        setLocalRestaurantData(parsedData);
+      } catch (error) {
+        console.error("Error parsing restaurant data from localStorage:", error);
+      }
+    }
+  }, [restaurantData, restaurantFromLocalStorage]);
+  
+  // Use local restaurant data if GraphQL data is not available
+  const finalRestaurantData = restaurantData || localRestaurantData;
 
 
   // Context
@@ -123,13 +141,13 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
     #############
    */
   const origin = {
-    lat: Number(restaurantData?.restaurant?.location.coordinates[1]) || 0,
-    lng: Number(restaurantData?.restaurant?.location.coordinates[0]) || 0,
+    lat: Number(finalRestaurantData?.restaurant?.location?.coordinates?.[1]) || 0,
+    lng: Number(finalRestaurantData?.restaurant?.location?.coordinates?.[0]) || 0,
   };
 
   const destination = {
-    lat: Number(userAddress?.location?.coordinates[1]) || 0,
-    lng: Number(userAddress?.location?.coordinates[0]) || 0,
+    lat: Number(userAddress?.location?.coordinates?.[1]) || 0,
+    lng: Number(userAddress?.location?.coordinates?.[0]) || 0,
   };
   const store_user_location_cache_key = `${origin?.lat},${origin?.lng}_${destination?.lat},${destination?.lng}`;
 
@@ -187,13 +205,27 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
 
   // Handlers
   const onInit = () => {
-    if (!restaurantData) return;
+    if (!finalRestaurantData) return;
 
     // Set Tax
-    setTaxValue(restaurantData?.restaurant?.tax);
+    setTaxValue(finalRestaurantData?.restaurant?.tax);
     // Delivery Charges
     onInitDeliveryCharges();
   };
+
+  // Update tax value when restaurant data is loaded
+  useEffect(() => {
+    if (finalRestaurantData?.restaurant?.tax !== undefined) {
+      setTaxValue(finalRestaurantData.restaurant.tax);
+    }
+  }, [finalRestaurantData]);
+  
+  // Initialize tax value on component mount
+  useEffect(() => {
+    if (!taxValue && finalRestaurantData?.restaurant?.tax !== undefined) {
+      setTaxValue(finalRestaurantData.restaurant.tax);
+    }
+  }, [finalRestaurantData, taxValue]);
 
   const onInitDirectionCacheSet = () => {
     try {
@@ -209,23 +241,27 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
       setIsCheckingCache(false);
     }
   };
+const onInitDeliveryCharges = () => {
+  const latOrigin = Number(finalRestaurantData?.restaurant?.location?.coordinates?.[1]) || 0;
+  const lonOrigin = Number(finalRestaurantData?.restaurant?.location?.coordinates?.[0]) || 0;
+  const latDest = userAddress?.location?.coordinates?.[1] || 0;
+  const longDest = userAddress?.location?.coordinates?.[0] || 0;
 
-  const onInitDeliveryCharges = () => {
-    const latOrigin = Number(restaurantData?.restaurant.location.coordinates[1]);
-    const lonOrigin = Number(restaurantData?.restaurant.location.coordinates[0]);
-    const latDest = userAddress?.location?.coordinates[1] || 0;
-    const longDest = userAddress?.location?.coordinates[0] || 0;
-    const distance = calculateDistance(latOrigin, lonOrigin, latDest, longDest);
-    setDistance(distance.toFixed(2));
+  console.log("Restaurant:", latOrigin, lonOrigin);
+  console.log("User:", latDest, longDest);
 
-    let amount = calculateAmount(
-      COST_TYPE as OrderTypes.TCostType,
-      DELIVERY_RATE,
-      distance
-    );
+  const distance = calculateDistance(latOrigin, lonOrigin, latDest, longDest);
+  console.log("Distance (km):", distance);
 
-    setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
-  };
+  let amount = calculateAmount(
+    COST_TYPE as OrderTypes.TCostType,
+    DELIVERY_RATE,
+    distance
+  );
+  setDistance(distance.toFixed(2));
+  setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
+};
+
 
   // const togglePriceSummary = () => {
   //   setIsOpen((prev) => !prev);
@@ -249,13 +285,18 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
   }
 
   const onCheckIsOpen = () => {
+    if (!finalRestaurantData?.restaurant) return false;
+    
     const date = new Date();
     const day = date.getDay();
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const todaysTimings = restaurantData?.restaurant?.openingTimes?.find(
+    const todaysTimings = finalRestaurantData.restaurant.openingTimes?.find(
       (o: any) => o.day === DAYS[day]
     );
+    
+    if (!todaysTimings) return false;
+    
     const times = todaysTimings.times.filter(
       (t: any) =>
         hours >= Number(t.startTime[0]) &&
@@ -406,10 +447,19 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
 
   
   function validateOrder() {
+    if (!finalRestaurantData?.restaurant) {
+      showToast({
+        title: t("restaurant_label"),
+        message: t("restaurant_data_not_loaded"),
+        type: "error",
+      });
+      return false;
+    }
+
     if (
-      !restaurantData?.restaurant?.isAvailable ||
-      !restaurantData?.restaurant?.isActive ||
-      !isWithinOpeningTime(restaurantData?.restaurant?.openingTimes) ||
+      !finalRestaurantData.restaurant.isAvailable ||
+      !finalRestaurantData.restaurant.isActive ||
+      !isWithinOpeningTime(finalRestaurantData.restaurant.openingTimes) ||
       !onCheckIsOpen()
     ) {
       // toggleCloseModal();
@@ -429,11 +479,11 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
     const delivery = isPickUp ? 0 : deliveryCharges;
     if (
       Number(calculatePrice(delivery, true)) <
-      restaurantData?.restaurant?.minimumOrder
+      (finalRestaurantData.restaurant.minimumOrder || 0)
     ) {
       showToast({
         title: "Minimum Amount",
-        message: `The minimum amount of (${CURRENCY_SYMBOL} ${restaurantData?.restaurant?.minimumOrder}) for your order has not been reached.`,
+        message: `The minimum amount of (${CURRENCY_SYMBOL} ${finalRestaurantData.restaurant.minimumOrder || 0}) for your order has not been reached.`,
         type: "warn",
       });
       return false;
@@ -684,15 +734,17 @@ const { data: restaurantData } = useRestaurant(restaurantId || "") || { data: re
   );
 
   // Filter PAYMENT_METHOD_LIST based on stripeDetailsSubmitted
-  const filteredPaymentMethods = !restaurantData?.restaurant
+  const filteredPaymentMethods = !finalRestaurantData?.restaurant
     ?.stripeDetailsSubmitted
     ? PAYMENT_METHOD_LIST.filter((method) => method.value === "COD")
     : PAYMENT_METHOD_LIST;
 
   // Use Effect
   useEffect(() => {
-    onInit();
-  }, [restaurantData]);
+    if (finalRestaurantData?.restaurant) {
+      onInit();
+    }
+  }, [finalRestaurantData]);
 
   useEffect(() => {
     onInitDirectionCacheSet();

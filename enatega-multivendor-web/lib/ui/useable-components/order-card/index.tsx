@@ -49,41 +49,45 @@ const OrderCard: FC<IOrderCardProps> = ({
   }, []);
 
   function cleanReorderItems(items: any[]): CartItem[] {
-  return items.map(item => {
-    // Calculate option titles from addons
-    const optionTitles: string[] = [];
-    (item.addons ?? []).forEach((addon: any) => {
-      (addon.options ?? []).forEach((option: any) => {
-        if (option.title) {
-          optionTitles.push(option.title);
-        }
+    return items.map(item => {
+      // Calculate option titles from addons
+      const optionTitles: string[] = [];
+      let totalPrice = item.variation?.price ?? 0;
+      
+      (item.addons ?? []).forEach((addon: any) => {
+        (addon.options ?? []).forEach((option: any) => {
+          if (option.title) {
+            optionTitles.push(option.title);
+          }
+          // Add option price to total
+          totalPrice += option.price ?? 0;
+        });
       });
-    });
-
-    return {
-      _id: item._id ?? item.id ?? "",
-      key: crypto.randomUUID(), // or any unique string generator
-      quantity: item.quantity ?? 1,
-      variation: {
-        _id: item.variation?._id ?? item.variation?.id ?? "defaultVariationId",
-      },
-      addons: (item.addons ?? []).map((addon: any) => ({
-        _id: addon._id,
-        options: (addon.options ?? []).map((opt: any) => ({
-          _id: opt._id,
-          title: opt.title, // Include title for display purposes
+  
+      return {
+        _id: item._id ?? item.id ?? "",
+        key: crypto.randomUUID(), // or any unique string generator
+        quantity: item.quantity ?? 1,
+        variation: {
+          _id: item.variation?._id ?? item.variation?.id ?? "defaultVariationId",
+        },
+        addons: (item.addons ?? []).map((addon: any) => ({
+          _id: addon._id,
+          options: (addon.options ?? []).map((opt: any) => ({
+            _id: opt._id,
+            title: opt.title, // Include title for display purposes
+          })),
         })),
-      })),
-      image: item.image ?? "/default-image.jpg",
-      foodTitle: item.title ?? "",
-      variationTitle: item.variation?.title ?? "",
-      optionTitles, // Include option titles
-      price: item.variation?.price.toString() ?? "0.00",
-      specialInstructions: item.specialInstructions ?? "",
-      title: `${item.title ?? ""}(${item.variation?.title ?? ""})`,
-    };
-  });
-}
+        image: item.image ?? "/default-image.jpg",
+        foodTitle: item.title ?? "",
+        variationTitle: item.variation?.title ?? "",
+        optionTitles, // Include option titles
+        price: totalPrice.toFixed(2), // Include addon prices in total
+        specialInstructions: item.specialInstructions ?? "",
+        title: `${item.title ?? ""}(${item.variation?.title ?? ""})`,
+      };
+    });
+  }
 
 const handleConfirmReorder = () => {
   if (!selectedOrder) return;
@@ -126,8 +130,14 @@ const processReorder = (itemsToReorder: any[]) => {
       } else {
         localStorage.setItem("cartItems", JSON.stringify(updatedCart));
         localStorage.setItem("restaurant", selectedOrder.restaurant?._id ?? "");
-        localStorage.setItem("restaurant-slug", JSON.stringify(selectedOrder.restaurant?.slug))
-        localStorage.setItem("currentShopType", JSON.stringify(selectedOrder.restaurant?.shopType))
+        localStorage.setItem("restaurant-slug", selectedOrder.restaurant?.slug || "");
+        localStorage.setItem("currentShopType", selectedOrder.restaurant?.shopType || "");
+        // Save restaurant data for checkout page
+        try {
+          localStorage.setItem("restaurantData", JSON.stringify(selectedOrder.restaurant || {}));
+        } catch (error) {
+          console.error("Error saving restaurant data to localStorage:", error);
+        }
       }
     }
     return updatedCart;
@@ -147,6 +157,15 @@ const handleClearCartAndReorder = () => {
   setCart([]);
   if (typeof window !== "undefined") {
     localStorage.removeItem("cartItems");
+  }
+  
+  // Save restaurant data before processing reorder
+  if (typeof window !== "undefined" && selectedOrder) {
+    try {
+      localStorage.setItem("restaurantData", JSON.stringify(selectedOrder.restaurant || {}));
+    } catch (error) {
+      console.error("Error saving restaurant data to localStorage:", error);
+    }
   }
   
   // Process the reorder
