@@ -39,6 +39,12 @@ export default function SignUpWithEmail({
   const { showToast } = useToast();
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
 
+  // Validation
+  const validatePassword = (password: string) => {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    return strongPasswordRegex.test(password);
+  };
+
   // Handlers
   const handleSubmit = async () => {
     try {
@@ -49,6 +55,21 @@ export default function SignUpWithEmail({
           type: "error",
           title: t("create_user_label"),
           message: t("all_fields_are_required_to_be_filled_message"),
+        });
+      }
+      const namePattern = /^[A-Za-z\s]+$/;
+      if (!namePattern.test(formData.name || "")) {
+        return showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("please_enter_a_valid_name_message"), // add this key in translations
+        });
+      }
+      if (!validatePassword(formData.password || "")) {
+        return showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("password_not_strong_enough_message"),
         });
       } else {
         if (formData.email && !SKIP_EMAIL_VERIFICATION) {
