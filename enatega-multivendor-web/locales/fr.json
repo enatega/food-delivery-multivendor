@@ -166,6 +166,7 @@
   "error_sending_otp_to_email": "Une erreur s'est produite lors de l'envoi de l'OTP par e-mail.",
   "phone_verification": "Vérification du téléphone",
   "otp_sent_phone_verify_number": "Un OTP a été envoyé à {phone}, veuillez vérifier votre numéro de téléphone.",
+  "please_verify_your_phone_number": "Veuillez vérifier votre numéro de téléphone.",
   "phone_otp_error": "Erreur d'OTP par téléphone",
   "error_sending_otp_to_phone": "Une erreur s'est produite lors de l'envoi de l'OTP par téléphone.",
   "toast_success": "Succès",

@@ -45,7 +45,8 @@ const CitySearch: React.FC = () => {
       ) {
         const latitude = place.geometry.location.lat();
         const longitude = place.geometry.location.lng();
-
+        console.log("longitude and latitude", longitude, latitude);
+        console.log("description:", description);
         onUseLocalStorage(
           "save",
           USER_CURRENT_LOCATION_LS_KEY,

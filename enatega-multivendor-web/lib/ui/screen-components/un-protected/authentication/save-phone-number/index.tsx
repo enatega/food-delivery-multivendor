@@ -54,35 +54,44 @@ export default function SavePhoneNumber() {
       });
     }
   };
-  return (
-    <div className="flex flex-col justify-between p-3 items-start w-[100%] ">
-      <div className="self-start my-1">
-        <PhoneIcon />
-      </div>
-      <h2 className="font-bold text-xl my-1">
-        {t("Whats your mobile number")}
-        {/*Put an apostrophy comma as "What's" and put a "?" mark at the end of sentence in the translation*/}
-      </h2>
-      <p className="my-1">
-        {t("we_need_this_to_verify_and_secure_your_account_message")}
-      </p>
-      <div className="flex my-1">
-        <CustomPhoneTextField
-          mask="999 999 999 999"
-          name="phone"
-          showLabel={false}
-          type="text"
-          className="min-w-[22vw]"
-          value={user?.phone}
-          onChange={handleChange}
-        />
-      </div>
-      <CustomButton
-        className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
-        onClick={handleSubmit}
-        loading={isLoading}
-        label={t("Continue")}
+ return (
+  <div className="flex flex-col justify-center items-center p-6 w-full text-center">
+    {/* Icon */}
+    <div className="my-2">
+      <PhoneIcon  />
+    </div>
+
+    {/* Heading */}
+    <h2 className="font-bold text-2xl my-2">
+      {t("What's your mobile number?")}
+    </h2>
+
+    {/* Subheading */}
+    <p className="text-gray-600 my-2 max-w-md">
+      {t("we_need_this_to_verify_and_secure_your_account_message")}
+    </p>
+
+    {/* Input field */}
+    <div className="w-full flex justify-center my-3">
+      <CustomPhoneTextField
+        mask="999 999 999 999"
+        name="phone"
+        showLabel={false}
+        type="text"
+        // className="w-72"
+        value={user?.phone}
+        onChange={handleChange}
       />
     </div>
-  );
+
+    {/* Continue button */}
+    <CustomButton
+      className="bg-[#5AC12F] flex items-center justify-center gap-x-4 px-4 py-3 rounded-full w-72 my-3 text-white font-medium shadow-sm"
+      onClick={handleSubmit}
+      loading={isLoading}
+      label={t("Continue")}
+    />
+  </div>
+);
+
 }
