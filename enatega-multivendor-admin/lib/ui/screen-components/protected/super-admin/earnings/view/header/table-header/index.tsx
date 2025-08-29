@@ -181,7 +181,7 @@ export default function EarningTableHeader({
             placeholder={t('Select User ID')}
           />
         )}
-             
+
 
         <Dropdown
           className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
@@ -210,6 +210,14 @@ export default function EarningTableHeader({
         {t('Reset')}
       </button>
       </div>
+
+      <button
+        onClick={onClearFilters}
+        className="max-w-32 mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors"
+        type="button"
+      >
+        {t('Reset')}
+      </button>
 
     </div>
   );
