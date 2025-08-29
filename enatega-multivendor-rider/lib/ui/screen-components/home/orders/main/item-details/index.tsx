@@ -86,6 +86,39 @@ const ItemDetails = ({
                     x{item?.quantity ?? "0"}
                   </Text>
                 </View>
+
+                {/* Variation */}
+                <View>
+                  {item?.variation && (
+                    <View className="flex-row items-center">
+                      <Text style={{ color: appTheme.fontMainColor }}>{item?.variation?.title}</Text>
+                      <Text className="ml-2" style={{ color: appTheme.fontMainColor }}>
+                        {configuration?.currencySymbol}
+                        {item?.variation?.price}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+
+                {/* Addons */}
+                <View>
+                  {
+                    item?.addons?.map((addon) => {
+                      return (
+                        <View key={addon._id}>
+                          {addon?.options?.map((option) => {
+                            return (
+                              <View key={option._id} className="flex-row items-center">
+                                <Text style={{ color: appTheme.fontMainColor }}>{option.title}</Text>
+                                <Text className="ml-2" style={{ color: appTheme.fontMainColor }}>({option?.price}{configuration?.currencySymbol})</Text>
+                              </View>
+                            );
+                          })}
+                        </View>
+                      );
+                    })
+                  }
+                </View>
               </View>
 
               <View>

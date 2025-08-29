@@ -96,6 +96,24 @@ export default function EarningsRestaurantMain({
     },
   ];
 
+  const clearAllFilters = () => {
+      setDateFilters({
+        startingDate: '',
+        endingDate: '',
+        userType: undefined,
+        userId: undefined,
+        orderType: undefined,
+        paymentMethod: undefined,
+      });
+      setGlobalFilterValue('');
+      setFilters({
+        global: {
+          value: null,
+          matchMode: FilterMatchMode.CONTAINS,
+        },
+      });
+    };
+
   useEffect(() => {
     refetch({ search: debouncedSearch });
   }, [debouncedSearch]);
@@ -108,10 +126,12 @@ export default function EarningsRestaurantMain({
             globalFilterValue={globalFilterValue}
             onGlobalFilterChange={onGlobalFilterChange}
             dateFilters={dateFilters}
+
             setDateFilters={setDateFilters} 
             onClearFilters={function (): void {
               throw new Error('Function not implemented.');
             } }          
+
           />
         }
         data={

@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Dimensions } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { MaterialIcons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import TextDefault from '../../Text/TextDefault/TextDefault';
@@ -7,6 +7,9 @@ import { alignment } from '../../../utils/alignment';
 import { scale } from '../../../utils/scaling';
 import styles from './styles';
 import { useTranslation } from'react-i18next';
+
+const { height: HEIGHT } = Dimensions.get('window')
+
 
 const MainModalize = ({
   modalRef,
@@ -19,12 +22,13 @@ const MainModalize = ({
   profile,
   location,
 }) => {
-  const { t} = useTranslation();
+  const { t} = useTranslation()
   return (
     <Modalize
       ref={modalRef}
+      adjustToContentHeight
+      disableScrollIfPossible={false}
       modalStyle={styles(currentTheme).modal}
-      modalHeight={400}
       overlayStyle={styles(currentTheme).overlay}
       handleStyle={styles(currentTheme).handle}
       handlePosition='inside'
@@ -41,7 +45,6 @@ const MainModalize = ({
         data: isLoggedIn && profile ? profile.addresses : '',
         ListHeaderComponent: modalHeader(),
         ListFooterComponent: modalFooter(),
-        showsVerticalScrollIndicator: false,
         keyExtractor: (item) => item._id,
         renderItem: ({ item: address }) => (
           <View style={styles(currentTheme).addressbtn}>

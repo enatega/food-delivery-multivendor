@@ -22,7 +22,7 @@ export default function useUser() {
   // Override the method with a debugging version
   const debugUpdateItemQuantity = (key: string, changeAmount: number) => {
     // Call the original with enforced +1/-1 change
-    const safeChangeAmount = changeAmount > 0 ? 1 : -1;
+    const safeChangeAmount = changeAmount > 0 ? changeAmount : -1;
     return originalUpdateItemQuantity(key, safeChangeAmount);
   };
 

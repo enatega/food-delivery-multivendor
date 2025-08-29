@@ -7,36 +7,38 @@ import competetiveEarning  from "@/public/assets/images/png/competitiveEarning.w
 import flexibleHours  from "@/public/assets/images/png/flexibleHours.webp"
 
 import Banner2 from "@/public/assets/images/png/Banner2.webp"
+import { useTranslations } from "next-intl";
 
 const Couriers:React.FC = () => {
-  const EarningButton = <TranparentButton text={"Learn More"} link={'restaurantInfo'} />;
-  const FLexiblegButton = <TranparentButton text={"Learn More"} link={'rider'} />;
-  const EarnWhereButton = <TranparentButton text={"Get started"} link={'rider'} />;
+  const t = useTranslations();
+  const EarningButton = <TranparentButton text={t('learn_more_btn')} link={'restaurantInfo'} />;
+  const FLexiblegButton = <TranparentButton text={t('learn_more_btn')} link={'rider'} />;
+  const EarnWhereButton = <TranparentButton text={t('get_started_btn')} link={'rider'} />;
   return (
     <div className="my-[60px]">
       <MoveableCard
         image={
           Banner2
         }
-        heading={"For Riders"}
-        subText={"EARN WHEN AND WHERE YOU WANT"}
+        heading={t('RidersInfoCards.heading1')}
+        subText={t('RidersInfoCards.subHeading1')}
         button={EarnWhereButton}
         middle={true}
       />
       <div className="grid gird-cols-1 md:grid-cols-2 my-[30px] gap-8">
         <MoveableCard
           image={competetiveEarning}
-          heading={"Competitive earnings"}
+          heading={t('RidersInfoCards.heading2')}
           subText={
-            "The more you deliver, the more money you can earn. Get paid per delivery and for distance covered."
+           t('RidersInfoCards.subHeading2')
           }
           button={EarningButton}
         />
         <MoveableCard
           image={flexibleHours}
-          heading={"Flexible hours"}
+          heading={t('RidersInfoCards.heading3')}
           subText={
-            "Choose your own hours and set your own schedule. Plus, no delivery experience required."
+            t('RidersInfoCards.subHeading3')
           }
           button={FLexiblegButton}
         />
@@ -46,8 +48,8 @@ const Couriers:React.FC = () => {
         image={
           "https://images.ctfassets.net/23u853certza/QScF4OasY8MBTmzrKJfv1/9afd4f8a826825cc097fb36606a81963/3DCourier.webp?w=200&q=90&fm=webp"
         }
-        heading={"Become a Enatega rider"}
-        buttonText={"For riders"}
+        heading={t('RidersInfoCards.TinyTile.heading')}
+        buttonText={t('RidersInfoCards.TinyTile.subText')}
         backColor={"#eaf7fc"}
         link={"/rider"}
       />

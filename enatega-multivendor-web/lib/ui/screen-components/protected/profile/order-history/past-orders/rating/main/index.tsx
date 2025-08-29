@@ -12,10 +12,11 @@ import RenderStepThree from "../step-three";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 // Interfaces
 import { IRatingModalProps } from "@/lib/utils/interfaces/ratings.interface";
+import { useTranslations } from "next-intl";
 
 /**
  * RatingModal - A multi-step modal component for collecting user ratings for past orders
- * 
+ *
  * This component handles a 3-step rating flow:
  * 1. Select star rating (1-5)
  * 2. Select aspects (what was good/bad)
@@ -33,16 +34,14 @@ export default function RatingModal({
   const [comment, setComment] = useState<string>(""); // User's text feedback
   const [selectedAspects, setSelectedAspects] = useState<string[]>([]); // Selected rating aspects/tags
 
+  const t = useTranslations()
   // Debounced submit function to prevent multiple rapid submissions
-  const handleSubmitDebounced = useDebounceFunction(
-    () => {
-      if (order && rating !== null) {
-        onSubmitRating(order._id, rating, comment, selectedAspects);
-        onHide();
-      }
-    },
-    500
-  );
+  const handleSubmitDebounced = useDebounceFunction(() => {
+    if (order && rating !== null) {
+      onSubmitRating(order._id, rating, comment, selectedAspects);
+      onHide();
+    }
+  }, 500);
 
   // Reset all form states when modal visibility changes
   useEffect(() => {
@@ -78,23 +77,30 @@ export default function RatingModal({
   };
 
   return (
-    <CustomDialog visible={visible} onHide={onHide} className="m-0" width="594px">
+    <CustomDialog
+      visible={visible}
+      onHide={onHide}
+      className="m-0"
+      width="594px"
+    >
       <div className="flex flex-col items-center md:p-6 p-0 pt-16 rounded-xl gap-4">
         {/* Restaurant Image - Shows restaurant profile picture or placeholder */}
         <div className="w-[162px] h-[162px] rounded-full overflow-hidden mb-4">
           {order?.restaurant?.image ? (
             <Image
               src={order.restaurant.image}
-              alt={order.restaurant.name || "Restaurant"}
+              alt={order.restaurant.name || t("restaurant_label")}
               width={162}
               height={162}
               className="w-full h-full object-cover"
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-              <img
+              <Image
                 src="https://placehold.co/600x400"
-                alt="Restaurant"
+                alt={t("restaurant_label")}
+                width={600}
+                height={400}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -103,15 +109,17 @@ export default function RatingModal({
 
         {/* Restaurant Name Display */}
         <p className="text-gray-600 ">
-          {order?.restaurant?.name || "Restaurant name"}
+          {order?.restaurant?.name || t('restaurant_name_label')}
         </p>
 
         {/* Modal Title */}
-        <h2 className="md:text-2xl text-xl font-bold  text-black">How was the delivery?</h2>
+        <h2 className="md:text-2xl text-xl font-bold  text-black">
+          {t('how_was_the_delivery_title')}
+        </h2>
 
         {/* Modal Description */}
         <p className="text-gray-600  text-center md:text-lg text-base">
-          Whether it&apos;s good or bad, let&apos;s talk about it
+          {t("rating_modal_description")}
         </p>
 
         {/* Conditional rendering based on current step */}

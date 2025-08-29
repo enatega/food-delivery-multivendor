@@ -111,7 +111,7 @@ const EditName = (props) => {
         await mutate({
           variables: {
             name: updatedName,
-            phone
+            // phone
           }
         })
         return true

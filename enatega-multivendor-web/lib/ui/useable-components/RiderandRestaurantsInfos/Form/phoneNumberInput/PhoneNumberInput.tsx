@@ -12,7 +12,7 @@ const PhoneNumberInput = () => {
         inputProps={{
           name: "phoneNumber",
           id: "phoneNumber",
-          className: "w-full border-2 border-gray-100 py-2 pl-[40px] focus:outline-none focus:ring-0 active:outline-none rounded-lg",
+          className: "w-full border-2 border-gray-100 py-1 pl-[40px] focus:outline-none focus:ring-0 active:outline-none rounded-lg",
         }}
         buttonStyle={{
           background: "none", 
@@ -21,7 +21,7 @@ const PhoneNumberInput = () => {
           width: "40px",
           height: "85%", 
           padding: 0, 
-          margin: 3, 
+          margin: 0, 
         
         }}
         containerStyle={{

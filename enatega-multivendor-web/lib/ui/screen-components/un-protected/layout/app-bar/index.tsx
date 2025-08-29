@@ -4,7 +4,14 @@
 import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 
 // Components
 import Cart from "@/lib/ui/useable-components/cart";
@@ -38,9 +45,10 @@ import {
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 // Interface
 import { IAppBarProps } from "@/lib/utils/interfaces";
-
+import { ToastContext } from "@/lib/context/global/toast.context";
 // Methods
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import {
@@ -51,15 +59,21 @@ import {
 // Constnats
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import EmptySearch from "@/lib/ui/useable-components/empty-search-results";
+import { useLocale, useTranslations } from "next-intl";
+import { TLocale } from "@/lib/utils/types/locale";
+import { setUserLocale } from "@/lib/utils/methods/locale";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isUserAddressModalOpen, setIsUserAddressModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-
+  const t = useTranslations();
+  const [, startTransition] = useTransition();
+  const currentLocale = useLocale();
   // REf
   const menuRef = useRef<Menu>(null);
+  const languageMenuRef = useRef<Menu>(null);
 
   // Hooks
   const router = useRouter();
@@ -72,6 +86,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     fetchProfile,
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
+
   const { getCurrentLocation } = useLocation();
   const { onSetUserLocation } = useSetUserCurrentLocation();
   const {
@@ -94,17 +109,22 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   } = useSearchUI();
 
   // Format subtotal for display
-  const formattedSubtotal = cartCount > 0 ? `${CURRENCY_SYMBOL}${calculateSubtotal()}` : `${CURRENCY_SYMBOL}0`;
+  const formattedSubtotal =
+    cartCount > 0
+      ? `${CURRENCY_SYMBOL}${calculateSubtotal()}`
+      : `${CURRENCY_SYMBOL}0`;
 
   console.log(userAddress);
+
   // Handlers
   const onInit = () => {
     const current_location_ls = onUseLocalStorage(
       "get",
       USER_CURRENT_LOCATION_LS_KEY
     );
-    const user_current_location =
-      current_location_ls ? JSON.parse(current_location_ls) : null;
+    const user_current_location = current_location_ls
+      ? JSON.parse(current_location_ls)
+      : null;
 
     if (user_current_location) {
       setUserAddress(user_current_location);
@@ -114,7 +134,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     const selectedAddress = profile?.addresses.find(
       (address) => address.selected
     );
-
     // ✅ If there's a selected address, use that
     if (selectedAddress) {
       setUserAddress(selectedAddress);
@@ -125,6 +144,14 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       }
     }
   };
+
+  //Locale Configuration
+  function onLocaleChange(value: string) {
+    const locale = value as TLocale;
+    startTransition(() => {
+      setUserLocale(locale);
+    });
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -144,22 +171,43 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     }
   };
 
+  const { showToast } = useContext(ToastContext);
   const onLogout = () => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
-    localStorage.clear();
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("token");
+    //Give Toast Alert You Logout Successfully
+    showToast({
+      type: "success",
+      title: t("logoutSuccessToastTitle"),
+      message: t("logoutSuccessToastMessage"),
+    });
   };
 
-    // Logo click handler
-   const logoClickHandler = () => {
-    if (isLogin){
+  // Logo click handler
+  const logoClickHandler = () => {
+    if (isLogin) {
       router.push("/discovery");
-    }else {
+    } else {
       router.push("/");
     }
-   };
-   
+  };
+
+  //Language DropDowm
+  // const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+
+  // const handleLanguageChange = (lang: string) => {
+  //   localStorage.setItem("language", lang);
+  //   setShowLanguageDropdown(false);
+  //   showToast({
+  //     type: "success",
+  //     title: "Language Changed",
+  //     message: `Language switched to ${lang.toUpperCase()}`,
+  //   });
+  // };
+
   // UseEffects
   useEffect(() => {
     onInit();
@@ -191,6 +239,15 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     });
   }, [filter, queryData]);
 
+  //Language Dropdown UseEffect
+  useEffect(() => {
+    const closeDropdown = () => {
+      // setShowLanguageDropdown(false);
+    };
+    window.addEventListener("click", closeDropdown);
+    return () => window.removeEventListener("click", closeDropdown);
+  }, []);
+
   // Update searchedData in context whenever filter changes
   useEffect(() => {
     setSearchedData(filteredResults);
@@ -209,7 +266,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       if (searchedKeywords.length === 0) {
         return (
           <div className="text-center py-4 text-gray-500">
-            🔍 Start typing to search for restaurants or stores.
+            {t("start_typing_to_search_for_restaurants_or_stores")}
           </div>
         );
       }
@@ -219,7 +276,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
         <div>
           <div className="flex flex-row justify-between">
             <span className="text-sm font-normal mb-2 text-gray-500">
-              You recently searched
+              {t("you_recently_searched")}
             </span>
             <span
               className="text-sm font-normal mb-2 text-sky-500 hover:cursor-pointer"
@@ -228,7 +285,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 setSearchedKeywords([]);
               }}
             >
-              Clear history
+              {t("clear_history_btn")}
             </span>
           </div>
           <div className="flex flex-col gap-2">
@@ -251,7 +308,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     if (filteredResults.length > 0) {
       return (
         <MainSection
-          title={`Restaurant and stores: ${filter}`}
+          title={`${t("restaurant_and_stores_title")}: ${filter}`}
           data={filteredResults.slice(0, 3)}
           loading={false}
           error={false}
@@ -270,16 +327,14 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
   function fittedAddress(address: String | undefined) {
     if (address) {
-      let adr = address.slice(0, 16)
+      let adr = address.slice(0, 16);
       if (address.length > 16) {
-        adr = adr + '...'
-
+        adr = adr + "...";
       }
-      return adr
+      return adr;
     }
-    return ""
+    return "";
   }
-   
 
   return (
     <>
@@ -288,47 +343,50 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       >
         <div className={`w-full`}>
           <PaddingContainer>
-            <div className="flex flex-row items-center justify-center w-full h-16">
+            <div className="flex items-center justify-between w-full h-16 gap-2 flex-wrap md:flex-nowrap">
               {/* Left Section */}
-              <div className={`w-1/3 flex gap-x-2 items-center cursor-pointer`}>
+              <div
+                className={`flex items-center gap-2 flex-shrink-0 cursor-pointer`}
+              >
                 {!isSearchFocused && (
-                  <div 
-                  onClick={logoClickHandler}
-                  className="text-xl font-bold text-gray-900">
-                   <Logo className="w-32 h-auto" fillColor="#000000" />
+                  <div
+                    onClick={logoClickHandler}
+                    className="text-xl font-bold text-gray-900"
+                  >
+                    <Logo className="w-32 h-auto" fillColor="#000000" />
                   </div>
                 )}
-                {!isSearchFocused && 
-                <div
-                  className={`flex items-center ${isSearchFocused && "hidden"} hidden lg:flex`}
-                  onClick={onHandleAddressModelVisibility}
-                >
-                  {/* Show on large screens only */}
-                  <div className="hidden md:block p-[4px] m-2 rounded-full">
-                    <LocationSvg width={22} height={22} />
+                {!isSearchFocused && (
+                  <div
+                    className={`flex items-center ${isSearchFocused && "hidden"} hidden lg:flex`}
+                    onClick={onHandleAddressModelVisibility}
+                  >
+                    {/* Show on large screens only */}
+                    <div className="hidden md:block p-[4px] m-2 rounded-full">
+                      <LocationSvg width={22} height={22} />
+                    </div>
+
+                    {/* Show on medium and up */}
+                    <span className="hidden md:inline text-xs sm:text-sm md:text-base text-[#94e469] font-inter font-normal leading-6 tracking-normal mr-2 truncate">
+                      {/* {userAddress?.deliveryAddress} */}
+                      {fittedAddress(userAddress?.deliveryAddress)}
+                    </span>
+
+                    <div className="hidden sm:flex items-center">
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        width={12}
+                        hanging={12}
+                        color="#94e469"
+                      />
+                    </div>
                   </div>
-
-                  {/* Show on medium and up */}
-                  <span className="hidden md:inline text-xs sm:text-sm md:text-base text-[#94e469] font-inter font-normal leading-6 tracking-normal mr-2 truncate">
-                    {/* {userAddress?.deliveryAddress} */}
-                    {fittedAddress(userAddress?.deliveryAddress)}
-                  </span>
-
-                  <div className="hidden sm:flex items-center">
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      width={12}
-                      hanging={12}
-                      color="#94e469"
-                    />
-                  </div> 
-                </div>
-}
+                )}
               </div>
 
               {/* Center Section */}
               <div
-                className={`flex justify-center items-center transition-all duration-500 ease-in-out ${isSearchFocused ? "w-10/12" : "w-1/3"}`}
+                className={`flex-grow transition-all duration-500 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-md"} px-2`}
               >
                 <div className="relative w-full">
                   {/* Search Icon - visible only below sm */}
@@ -351,7 +409,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     value={filter}
                     onChange={handleSearchInputChange}
                     onFocus={() => setIsSearchFocused(true)}
-                    placeholder="Search in enatega"
+                    placeholder={t("SearchBarPlaceholder")}
                     className={`
       w-full px-4 py-2 pr-10 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500
       ${!isSearchFocused ? "hidden" : "block"} sm:block
@@ -373,30 +431,33 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               </div>
 
               {/* Right Section */}
-              <div className={`flex w-1/3 justify-end items-center space-x-4`}>
+              <div
+                className={`flex items-center justify-end gap-2 flex-shrink-0`}
+              >
                 {/* Login Button */}
                 {!isSearchFocused && (
-                    <div className="sm:hidden flex justify-end items-center w-full">
-                      <div
-                        className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer"
-                        onClick={() => {
-                          setIsSearchFocused(true);
-                        }}
-                      >
-                        <SearchSvg width={16} height={16} />
-                      </div>
+                  <div className="sm:hidden flex justify-end items-center w-full">
+                    <div
+                      className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer"
+                      onClick={() => {
+                        setIsSearchFocused(true);
+                      }}
+                    >
+                      <SearchSvg width={16} height={16} />
                     </div>
-                  )}
-                {!authToken && !isSearchFocused ?
+                  </div>
+                )}
+                {!authToken && !isSearchFocused ? (
                   <button
-                    className="md:w-20 w-16 h-fit py-3 text-gray-900 md:py-3  px-3 bg-[#5AC12F] rounded text-sm lg:text-[16px] md:text-md "
+                    className="w-auto min-w-[64px] h-fit py-2 md:py-3 px-4 bg-[#5AC12F] rounded text-sm lg:text-[16px] md:text-md flex items-center justify-center"
                     onClick={handleModalToggle}
                   >
-                    <span className="text-white font-semibold text-[16px]">
-                      Login
+                    <span className="text-white font-semibold text-xs md:text-[16px] whitespace-nowrap">
+                      {t("login_label")}
                     </span>
                   </button>
-                  : <div
+                ) : (
+                  <div
                     className={`flex items-center space-x-2 rounded-md p-2 hover:bg-[#d8d8d837] ${isSearchFocused && "hidden"}`}
                     onClick={(event) => menuRef.current?.toggle(event)}
                     aria-controls="popup_menu_right"
@@ -415,11 +476,11 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     </div>
 
                     {/* Show full name on large screens and up */}
-                    {cartCount == 0  && 
-                    <span className="hidden xl:inline">
-                      {profile?.name || ""}
-                    </span>
-}
+                    {cartCount == 0 && (
+                      <span className="hidden xl:inline hover:cursor-pointer">
+                        {profile?.name || ""}
+                      </span>
+                    )}
 
                     <FontAwesomeIcon
                       icon={faChevronDown}
@@ -429,20 +490,20 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     <Menu
                       model={[
                         {
-                          label: "Profile",
+                          label: t("ProfileSection.profile_label"),
                           command: () => {
                             router.push("/profile");
                           },
                         },
-                        
+
                         {
-                          label: "Get Help",
+                          label: t("ProfileSection.gethelp"),
                           command: () => {
                             router.push("/profile/getHelp");
                           },
                         },
                         {
-                          label: "Logout",
+                          label: t("ProfileSection.logout_appbar"),
                           command: () => {
                             onLogout();
                           },
@@ -454,34 +515,125 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       popupAlignment="right"
                     />
                   </div>
-                }
+                )}
+                {/* Language Dropdown */}
+                {!isSearchFocused && (
+                  <div className="relative" title="Languages">
+                    <button
+                      onClick={(e) => languageMenuRef.current?.toggle(e)}
+                      className="flex items-center justify-center"
+                    >
+                      <FontAwesomeIcon
+                        icon={faGlobe}
+                        width={24}
+                        height={24}
+                        className="text-gray-700"
+                      />
+                    </button>
+
+                    <Menu
+                      model={[
+                        {
+                          label: "ENGLISH",
+                          template(item) {
+                            return (
+                              <div
+                                className={`${currentLocale === "en" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                onClick={() => onLocaleChange("en")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
+                          command: () => {
+                            onLocaleChange("en");
+                          },
+                        },
+                        {
+                          label: "ARABIC",
+                          template(item) {
+                            return (
+                              <div
+                                className={`${currentLocale === "ar" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                onClick={() => onLocaleChange("ar")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
+                          command: () => {
+                            onLocaleChange("ar");
+                          },
+                        },
+                        {
+                          label: "FRENCH",
+                          template(item) {
+                            return (
+                              <div
+                                className={`${currentLocale === "fr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                onClick={() => onLocaleChange("fr")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
+                          command: () => {
+                            onLocaleChange("fr");
+                          },
+                        },
+                        {
+                          label: "HEBREW",
+                          template(item) {
+                            return (
+                              <div
+                                className={`${currentLocale === "hr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                onClick={() => onLocaleChange("hr")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
+                          command: () => {
+                            onLocaleChange("hr");
+                          },
+                        },
+                      ]}
+                      popup
+                      ref={languageMenuRef}
+                      id="language_menu_popup"
+                      popupAlignment="right"
+                    />
+                  </div>
+                )}
 
                 {/* Cart Button */}
-                <div className="p-1">
-                  {authToken && (
-                    <div>
-                      {cartCount > 0 && !isSearchFocused && (
-                        <div
-                          className="hidden lg:flex items-center justify-between bg-[#5AC12F] rounded-lg px-4 py-3 w-64 cursor-pointer"
-                          onClick={() => setIsCartOpen(true)}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div className="bg-white text-[#5AC12F] rounded-full w-5 h-5 flex items-center justify-center text-[10px] sm:text-[12px]">
-                              {cartCount}
-                            </div>
-                            <span className="ml-2 text-white text-[14px] font-semibold sm:text-[14px]">
-                              Show Items
-                            </span>
-                          </div>
-                          <span className="text-white text-[14px]  sm:text-[16px]">
-                            {formattedSubtotal}
-                          </span>
+                <div className="p-1 cursor-pointer">
+                  {cartCount > 0 && !isSearchFocused && (
+                    <div
+                      className="hidden lg:flex items-center justify-between bg-[#5AC12F] rounded-lg px-4 py-3 w-64 cursor-pointer"
+                      onClick={() => {
+                        if (!authToken) {
+                          setIsAuthModalVisible(true); // ⬅️ Show login/signup modal
+                        } else {
+                          setIsCartOpen(true); // ⬅️ Open cart drawer
+                        }
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="bg-white text-[#5AC12F] rounded-full w-5 h-5 flex items-center justify-center text-[10px] sm:text-[12px]">
+                          {cartCount}
                         </div>
-                      )}
+                        <span className="ml-2 text-white text-[14px] font-semibold sm:text-[14px]">
+                          {t("show_items_btn")}
+                        </span>
+                      </div>
+                      <span className="text-white text-[14px] sm:text-[16px]">
+                        {formattedSubtotal}
+                      </span>
                     </div>
                   )}
 
-                  {isSearchFocused ?
+                  {isSearchFocused ? (
                     <div
                       className={`flex items-center justify-center rounded-full w-10 h-10 bg-gray-100 relative cursor-pointer`}
                       onClick={() => {
@@ -491,7 +643,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     >
                       <CircleCrossSvg color="black" width={24} height={24} />
                     </div>
-                    : <div
+                  ) : (
+                    <div
                       className={`${cartCount > 0 ? "lg:hidden" : ""} flex items-center justify-center rounded-full w-8 h-8 md:w-10 md:h-10 bg-gray-100 relative`}
                       onClick={() => setIsCartOpen(true)}
                     >
@@ -511,7 +664,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                         </div>
                       )}
                     </div>
-                  }
+                  )}
                 </div>
               </div>
             </div>
@@ -562,11 +715,29 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       {/* Cart Sidebar */}
       <Sidebar
         visible={isCartOpen}
-        onHide={() => { setIsCartOpen(false); localStorage.setItem("newOrderInstructions", localStorage.getItem("orderInstructions") || ""); localStorage.removeItem('orderInstructions'); window.dispatchEvent(new Event("orderInstructionsUpdated")); }}
+        onHide={() => {
+          setIsCartOpen(false);
+          localStorage.setItem(
+            "newOrderInstructions",
+            localStorage.getItem("orderInstructions") || ""
+          );
+          localStorage.removeItem("orderInstructions");
+          window.dispatchEvent(new Event("orderInstructionsUpdated"));
+        }}
         position="right"
         className="!p-0 !m-0 w-full md:w-[430] lg:w-[580px]"
       >
-        <Cart onClose={() => { setIsCartOpen(false); localStorage.setItem("newOrderInstructions", localStorage.getItem("orderInstructions") || ""); localStorage.removeItem('orderInstructions'); window.dispatchEvent(new Event("orderInstructionsUpdated")); }} />
+        <Cart
+          onClose={() => {
+            setIsCartOpen(false);
+            localStorage.setItem(
+              "newOrderInstructions",
+              localStorage.getItem("orderInstructions") || ""
+            );
+            localStorage.removeItem("orderInstructions");
+            window.dispatchEvent(new Event("orderInstructionsUpdated"));
+          }}
+        />
       </Sidebar>
 
       <UserAddressComponent

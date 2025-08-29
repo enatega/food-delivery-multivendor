@@ -407,13 +407,17 @@ const CustomGoogleMapsLocationBounds: React.FC<
       return [];
     }
   }
+  // const handleDistanceChange = (val: number) => {
+  //   if (val === 0 || val > 100) {
+  //     return;
+  //   }
+  //   const newDistance = val || 0;
+  //   setDistance(newDistance);
+  // };
   const handleDistanceChange = (val: number) => {
-    if (val === 0 || val > 100) {
-      return;
-    }
-    const newDistance = val || 0;
-    setDistance(newDistance);
-  };
+  const newDistance = Math.max(0, val); // Only ensure it's not negative
+  setDistance(newDistance);
+};
   const locationCallback = (error: string | null, data?: ILocation) => {
     if (error) {
       return;
@@ -766,6 +770,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
                 placeholder={t('Radius')}
                 maxLength={35}
                 min={0}
+                max={1000}
                 value={distance}
                 onChange={handleDistanceChange}
                 showLabel={true}

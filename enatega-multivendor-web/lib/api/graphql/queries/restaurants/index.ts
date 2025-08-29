@@ -4,19 +4,19 @@ export const RELATED_ITEMS = gql`query RelatedItems($itemId: String!, $restauran
   relatedItems(itemId: $itemId, restaurantId: $restaurantId)
 }`
 
-export const FOOD = gql`fragment FoodItem on Food{
+export const FOOD = gql`fragment FoodItem on Food {
   _id
   title
   image
   description
   subCategory
-  variations{
+  isOutOfStock
+  variations {
     _id
     title
     price
     discounted
     addons
-
   }
 }
 `

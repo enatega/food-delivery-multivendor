@@ -22,6 +22,7 @@ export interface ILoginWithGoogleProps {
   handleChangePanel: (index: number) => void;
   handleFormChange: (name: string, value: string) => void;
   formData: IAuthFormData;
+  
 }
 
 export interface ILoginWithEmailProps {
@@ -38,11 +39,13 @@ export interface IEmailVerificationProps {
   emailOtp: string;
   setEmailOtp: Dispatch<SetStateAction<string>>;
   handleChangePanel: (index: number) => void;
+   formData:any,
 }
 export interface IPhoneVerificationProps {
   phoneOtp: string;
   setPhoneOtp: Dispatch<SetStateAction<string>>;
   handleChangePanel: (index: number) => void;
+  formData:any,
 }
 
 export interface IUserLoginArguments {
@@ -191,6 +194,8 @@ export interface ICreateUserArguments {
   name?: string;
   notificationToken?: string;
   appleId?: string;
+  emailIsVerified?: boolean; // optional, can be undefined
+
 }
 export interface IVerificationEmailForChangePasswordProps {
   handleSubmitAfterVerification: () => void;
@@ -198,4 +203,16 @@ export interface IVerificationEmailForChangePasswordProps {
   emailOtp: string;
   setEmailOtp: (otp: string) => void;
   formData: { email?: string, password?: string, name?: string, phone?: string };
+}
+
+export interface VerifyOtpResponse {
+  verifyOtp: {
+    result: string;
+  };
+}
+
+export interface VerifyOtpVariables {
+  otp: string;
+  email?: string;
+  phone?: string;
 }

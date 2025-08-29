@@ -63,8 +63,11 @@ import {
 import HomeIcon from "../../../../../assets/home_icon.png";
 import RestIcon from "../../../../../assets/rest_icon.png";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function OrderCheckoutScreen() {
+  const t = useTranslations();
   const [isAddressSelectedOnce, setIsAddressSelectedOnce] = useState(false);
   const [isUserAddressModalOpen, setIsUserAddressModalOpen] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +107,27 @@ export default function OrderCheckoutScreen() {
   } = useUser();
 
   const { userAddress } = useUserAddress();
-  const { data: restaurantData } = useRestaurant(restaurantId || "");
+  const restaurantFromLocalStorage = localStorage.getItem("restaurant");
+  const { data: restaurantData} = useRestaurant(restaurantId || "") || { data: restaurantFromLocalStorage ? JSON.parse(restaurantFromLocalStorage) : null, loading: false };
+  
+  // Load restaurant data from localStorage if not available from GraphQL
+  const [localRestaurantData, setLocalRestaurantData] = useState(null);
+  
+  useEffect(() => {
+    if (!restaurantData && restaurantFromLocalStorage) {
+      try {
+        const restaurantDataStr = localStorage.getItem("restaurantData") || "{}";
+        const parsedData = JSON.parse(restaurantDataStr);
+        setLocalRestaurantData(parsedData);
+      } catch (error) {
+        console.error("Error parsing restaurant data from localStorage:", error);
+      }
+    }
+  }, [restaurantData, restaurantFromLocalStorage]);
+  
+  // Use local restaurant data if GraphQL data is not available
+  const finalRestaurantData = restaurantData || localRestaurantData;
+
 
   // Context
   const { isLoaded } = useContext(GoogleMapsContext);
@@ -118,13 +141,13 @@ export default function OrderCheckoutScreen() {
     #############
    */
   const origin = {
-    lat: Number(restaurantData?.restaurant?.location.coordinates[1]) || 0,
-    lng: Number(restaurantData?.restaurant?.location.coordinates[0]) || 0,
+    lat: Number(finalRestaurantData?.restaurant?.location?.coordinates?.[1]) || 0,
+    lng: Number(finalRestaurantData?.restaurant?.location?.coordinates?.[0]) || 0,
   };
 
   const destination = {
-    lat: Number(userAddress?.location?.coordinates[1]) || 0,
-    lng: Number(userAddress?.location?.coordinates[0]) || 0,
+    lat: Number(userAddress?.location?.coordinates?.[1]) || 0,
+    lng: Number(userAddress?.location?.coordinates?.[0]) || 0,
   };
   const store_user_location_cache_key = `${origin?.lat},${origin?.lng}_${destination?.lat},${destination?.lng}`;
 
@@ -182,14 +205,27 @@ export default function OrderCheckoutScreen() {
 
   // Handlers
   const onInit = () => {
-    if (!restaurantData) return;
+    if (!finalRestaurantData) return;
 
     // Set Tax
-    setTaxValue(restaurantData?.restaurant?.tax);
-
+    setTaxValue(finalRestaurantData?.restaurant?.tax);
     // Delivery Charges
     onInitDeliveryCharges();
   };
+
+  // Update tax value when restaurant data is loaded
+  useEffect(() => {
+    if (finalRestaurantData?.restaurant?.tax !== undefined) {
+      setTaxValue(finalRestaurantData.restaurant.tax);
+    }
+  }, [finalRestaurantData]);
+  
+  // Initialize tax value on component mount
+  useEffect(() => {
+    if (!taxValue && finalRestaurantData?.restaurant?.tax !== undefined) {
+      setTaxValue(finalRestaurantData.restaurant.tax);
+    }
+  }, [finalRestaurantData, taxValue]);
 
   const onInitDirectionCacheSet = () => {
     try {
@@ -205,23 +241,27 @@ export default function OrderCheckoutScreen() {
       setIsCheckingCache(false);
     }
   };
+const onInitDeliveryCharges = () => {
+  const latOrigin = Number(finalRestaurantData?.restaurant?.location?.coordinates?.[1]) || 0;
+  const lonOrigin = Number(finalRestaurantData?.restaurant?.location?.coordinates?.[0]) || 0;
+  const latDest = userAddress?.location?.coordinates?.[1] || 0;
+  const longDest = userAddress?.location?.coordinates?.[0] || 0;
 
-  const onInitDeliveryCharges = () => {
-    const latOrigin = Number(restaurantData.restaurant.location.coordinates[1]);
-    const lonOrigin = Number(restaurantData.restaurant.location.coordinates[0]);
-    const latDest = userAddress?.location?.coordinates[1] || 0;
-    const longDest = userAddress?.location?.coordinates[0] || 0;
-    const distance = calculateDistance(latOrigin, lonOrigin, latDest, longDest);
-    setDistance(distance.toFixed(2));
+  console.log("Restaurant:", latOrigin, lonOrigin);
+  console.log("User:", latDest, longDest);
 
-    let amount = calculateAmount(
-      COST_TYPE as OrderTypes.TCostType,
-      DELIVERY_RATE,
-      distance
-    );
+  const distance = calculateDistance(latOrigin, lonOrigin, latDest, longDest);
+  console.log("Distance (km):", distance);
 
-    setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
-  };
+  let amount = calculateAmount(
+    COST_TYPE as OrderTypes.TCostType,
+    DELIVERY_RATE,
+    distance
+  );
+  setDistance(distance.toFixed(2));
+  setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
+};
+
 
   // const togglePriceSummary = () => {
   //   setIsOpen((prev) => !prev);
@@ -245,13 +285,18 @@ export default function OrderCheckoutScreen() {
   }
 
   const onCheckIsOpen = () => {
+    if (!finalRestaurantData?.restaurant) return false;
+    
     const date = new Date();
     const day = date.getDay();
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const todaysTimings = restaurantData?.restaurant?.openingTimes?.find(
+    const todaysTimings = finalRestaurantData.restaurant.openingTimes?.find(
       (o: any) => o.day === DAYS[day]
     );
+    
+    if (!todaysTimings) return false;
+    
     const times = todaysTimings.times.filter(
       (t: any) =>
         hours >= Number(t.startTime[0]) &&
@@ -273,16 +318,16 @@ export default function OrderCheckoutScreen() {
       if (coupon.enabled) {
         showToast({
           type: "info",
-          title: "Coupon Applied",
-          message: `${coupon.title} coupon has been applied`,
+          title: t("coupon_applied_title"),
+          message: `${coupon.title} ${t("coupon_has_been_applied_message_with_title")}`,
         });
         setIsCouponApplied(true);
         setCoupon(coupon);
       } else {
         showToast({
           type: "info",
-          title: "Coupon Not Found",
-          message: `${coupon.title} coupon is not valid.`,
+          title: t("coupon_not_found_title"),
+          message: `${coupon.title} ${t("coupon_is_not_valid_message_with_title")}`,
         });
       }
     }
@@ -291,8 +336,8 @@ export default function OrderCheckoutScreen() {
   function couponOnError() {
     showToast({
       type: "error",
-      title: "Invalid Coupon",
-      message: "Invalid Coupon.",
+      title: t("invalid_coupon_title"),
+      message: t("invalid_coupon_title"),
     });
   }
 
@@ -400,17 +445,27 @@ export default function OrderCheckoutScreen() {
     });
   };
 
+  
   function validateOrder() {
+    if (!finalRestaurantData?.restaurant) {
+      showToast({
+        title: t("restaurant_label"),
+        message: t("restaurant_data_not_loaded"),
+        type: "error",
+      });
+      return false;
+    }
+
     if (
-      !restaurantData?.restaurant?.isAvailable ||
-      !restaurantData?.restaurant?.isActive ||
-      !isWithinOpeningTime(restaurantData?.restaurant?.openingTimes) ||
+      !finalRestaurantData.restaurant.isAvailable ||
+      !finalRestaurantData.restaurant.isActive ||
+      !isWithinOpeningTime(finalRestaurantData.restaurant.openingTimes) ||
       !onCheckIsOpen()
     ) {
       // toggleCloseModal();
       showToast({
-        title: "Restaurant",
-        message: "Restaurant is not available right now.",
+        title: t("restaurant_label"),
+        message: t("restaurant_unavailable"),
         type: "error",
       });
       return false;
@@ -424,11 +479,11 @@ export default function OrderCheckoutScreen() {
     const delivery = isPickUp ? 0 : deliveryCharges;
     if (
       Number(calculatePrice(delivery, true)) <
-      restaurantData?.restaurant?.minimumOrder
+      (finalRestaurantData.restaurant.minimumOrder || 0)
     ) {
       showToast({
         title: "Minimum Amount",
-        message: `The minimum amount of (${CURRENCY_SYMBOL} ${restaurantData?.restaurant?.minimumOrder}) for your order has not been reached.`,
+        message: `The minimum amount of (${CURRENCY_SYMBOL} ${finalRestaurantData.restaurant.minimumOrder || 0}) for your order has not been reached.`,
         type: "warn",
       });
       return false;
@@ -525,7 +580,7 @@ export default function OrderCheckoutScreen() {
     }
 
     // if false then select the address
-    if (!isAddressSelectedOnce) {
+    if (!isAddressSelectedOnce && deliveryType === "Delivery") {
       setIsUserAddressModalOpen(true);
       return;
     }
@@ -536,7 +591,7 @@ export default function OrderCheckoutScreen() {
         variables: {
           restaurant: restaurantId,
           orderInput: items,
-          instructions: localStorage.getItem("orderInstructions") || "",
+          instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
           couponCode: coupon ? coupon.title : null,
           tipping: +selectedTip,
@@ -679,15 +734,17 @@ export default function OrderCheckoutScreen() {
   );
 
   // Filter PAYMENT_METHOD_LIST based on stripeDetailsSubmitted
-  const filteredPaymentMethods = !restaurantData?.restaurant
+  const filteredPaymentMethods = !finalRestaurantData?.restaurant
     ?.stripeDetailsSubmitted
     ? PAYMENT_METHOD_LIST.filter((method) => method.value === "COD")
     : PAYMENT_METHOD_LIST;
 
   // Use Effect
   useEffect(() => {
-    onInit();
-  }, [restaurantData]);
+    if (finalRestaurantData?.restaurant) {
+      onInit();
+    }
+  }, [finalRestaurantData]);
 
   useEffect(() => {
     onInitDirectionCacheSet();
@@ -755,12 +812,12 @@ export default function OrderCheckoutScreen() {
           </GoogleMap>
         ) : (
           <>
-            <img
-              alt="Map showing delivery route"
-              className="w-full h-64 object-cover"
-              height="300"
+            <Image
               src="https://storage.googleapis.com/a1aa/image/jt1AynRJJVtM9j1LRb30CodA1xsK2R23pWTOmRv3nsM.jpg"
-              width="1200"
+              alt="Map showing delivery route"
+              width={1200}
+              height={300}
+              className="w-full h-64 object-cover"
             />
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#5AC12F] text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
               H
@@ -801,7 +858,7 @@ export default function OrderCheckoutScreen() {
                   className="mr-2 text-gray-900"
                 />
                 <span className="font-medium text-gray-900 font-inter text-xs md:text-sm xl:[14px]">
-                  Delivery
+                  {t("delivery_label")}
                 </span>
               </button>
 
@@ -817,27 +874,42 @@ export default function OrderCheckoutScreen() {
                   className="mr-2 text-gray-900"
                 />
                 <span className="font-medium text-gray-900 font-inter text-xs md:text-sm xl:[14px]">
-                  Pickup
+                  {t("pickup_label")}
                 </span>
               </button>
             </div>
 
             {/* <!-- Section Title --> */}
             <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
-              For greater hunger
+              {t("for_greater_hunger_title")}
             </h2>
 
             {/* <!-- Delivery Details --> */}
             <div className="bg-white px-4 pt-4 pb-2 rounded-lg mb-4 border border-gray-300 w-full">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
-                  <FontAwesomeIcon
-                    icon={faBicycle}
-                    className="mr-2 text-gray-900"
-                  />
+                  {deliveryType === "Pickup" ? (
+                    <FontAwesomeIcon
+                      icon={faStore}
+                      className="mr-2 text-gray-900"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faBicycle}
+                      className="mr-2 text-gray-900"
+                    />
+                  )}
+
                   <p className="text-gray-900 leading-4 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle">
-                    <span className="font-semibold">Delivery </span>
-                    <span className="font-normal">in 10-20 min </span>
+                    <span className="font-semibold">
+                      {" "}
+                      {deliveryType === "Pickup"
+                        ? t("pickup_label")
+                        : t("delivery_label")}{" "}
+                    </span>
+                    <span className="font-normal">
+                      {t("in_10_20_min_label")}{" "}
+                    </span>
                     <span className="font-semibold">
                       {userAddress?.deliveryAddress}
                     </span>
@@ -847,7 +919,13 @@ export default function OrderCheckoutScreen() {
             </div>
 
             {/* <!-- Leave at Door --> */}
-            <div className="bg-white px-4 pt-4 pb-2 rounded-lg mb-4 border border-gray-300 w-full">
+            <div
+              className={
+                deliveryType === "Pickup"
+                  ? "hidden"
+                  : "bg-white px-4 pt-4 pb-2 rounded-lg mb-4 border border-gray-300 w-full"
+              }
+            >
               <div className="flex items-center">
                 <input
                   className="mr-2"
@@ -860,19 +938,18 @@ export default function OrderCheckoutScreen() {
                   className="text-gray-900 leading-4 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle"
                   htmlFor="leave-at-door"
                 >
-                  Leave the order at my door
+                  {t("leave_order_at_my_door_label")}
                 </label>
               </div>
               <p className="text-gray-300 leading-4 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle mt-2">
-                If you are not available to receive the order, the courier will
-                leave it at your door.
+                {t("leave_at_door_info")}
               </p>
             </div>
 
             {/* <!-- Selected Items --> */}
             <div className="bg-white pt-4 pb-2 rounded-lg mb-4 w-full">
               <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
-                Selected items
+                {t("selected_items_label")}
               </h2>
               {/* Map this below section */}
               {cart.map((item) => {
@@ -882,12 +959,15 @@ export default function OrderCheckoutScreen() {
                     className="flex items-center justify-between mb-2"
                   >
                     <div className="flex items-start">
-                      <img
+                      <Image
+                        src={
+                          item.image ||
+                          "https://storage.googleapis.com/a1aa/image/cPA2BWDjl26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
+                        }
                         alt="Big Share meal"
-                        className="w-12 h-12 rounded-full mr-2"
-                        height="50"
-                        src="https://storage.googleapis.com/a1aa/image/cPA2BWDjlQ26C-OR-Sz-gd7gFcDc7QbvTZ_904FkN0Y.jpg"
-                        width="50"
+                        width={50}
+                        height={50}
+                        className="w-12 h-12 rounded-full mr-2 object-cover"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm sm:text-base md:text-[12px] lg:text-[14px] xl:text-[16px]">
@@ -937,14 +1017,14 @@ export default function OrderCheckoutScreen() {
                   );
                 }}
               >
-                + Add more items
+                {t("add_more_items_button")}
               </button>
             </div>
 
             {orderInstructions && orderInstructions.length > 0 ? (
               <>
                 <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
-                  Order Instruction
+                  {t("order_instruction_label")}
                 </h2>
                 <p className="text-gray-500 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle mt-2">
                   {orderInstructions}
@@ -956,7 +1036,7 @@ export default function OrderCheckoutScreen() {
 
             {/* <!-- Payment Details --> */}
             <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
-              Payment details
+              {t("payment_details_label")}
             </h2>
             {filteredPaymentMethods.map((paymentMethodItem, methodIndex) => {
               return (
@@ -973,7 +1053,7 @@ export default function OrderCheckoutScreen() {
                         icon={paymentMethodItem.icon}
                         className="text-gray-900 mr-2"
                       />
-                      {paymentMethodItem.label}
+                      {t(paymentMethodItem.label)}
                     </label>
                     <input
                       className="mr-2"
@@ -990,13 +1070,13 @@ export default function OrderCheckoutScreen() {
             })}
 
             {/* <!-- Tip the Courier --> */}
-            <div className="bg-white mb-6 w-full">
+          {!isPickUp && ( <div className="bg-white mb-6 w-full">
               <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
-                Tip the courier
+                {t("tip_the_courier_label")}
               </h2>
               <div className="border border-gray-300 rounded-lg p-5">
                 <p className="text-gray-500 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle mt-2">
-                  They&apos;ll get 100% of your tip after the delivery
+                  {t("tip_courier_info")}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {TIPS.map((tip: string, index: number) => (
@@ -1017,28 +1097,29 @@ export default function OrderCheckoutScreen() {
                   ))}
                 </div>
               </div>
-            </div>
+            </div>)}
+
+
 
             {/* <!-- Promo Code --> */}
             <div className="bg-white  pb-2 rounded-lg mb-4 w-full">
               <h2 className="font-semibold text-gray-900 mb-2 text-base sm:text-lg md:text-[16px] lg:text-[18px]">
-                Promo code
+                {t("promo_code_label")}
               </h2>
               {isCouponApplied ? (
                 <Message
                   severity="success"
-                  text="Coupon has been applied successfully"
+                  text={t("coupon_applied_successfully_message")}
                 />
               ) : (
                 <>
                   <p className="text-gray-500 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle mt-2">
-                    If you have a promo code enter it below to claim your
-                    benefit!
+                    {t("promo_code_info")}
                   </p>
                   <div className="flex items-center flex-wrap space-x-2">
                     <input
                       className="flex-grow p-2 border border-gray-300 rounded text-[12px] md:text-[14px]"
-                      placeholder="Enter promo code..."
+                      placeholder={t("enter_promo_code_placeholder")}
                       type="text"
                       value={couponText}
                       onChange={(e) => setCouponText(e.target.value)}
@@ -1051,7 +1132,7 @@ export default function OrderCheckoutScreen() {
                       {couponLoading ? (
                         <FontAwesomeIcon icon={faSpinner} spin />
                       ) : (
-                        <span>Submit</span>
+                        <span>{t("submit_button")}</span>
                       )}
                     </button>
                   </div>
@@ -1073,16 +1154,16 @@ export default function OrderCheckoutScreen() {
               id="price-summary"
             >
               <h2 className="text-sm lg:text-lg font-semibold text-left flex justify-between">
-                Prices in {CURRENCY}
+                {t("prices_in_label")} {CURRENCY}
                 <InfoSvg />
               </h2>
               <p className="text-gray-400 mb-3 text-left leading-5 tracking-normal font-inter text-xs lg:text-[16px]">
-                Inc. Taxes (if applicable)
+                {t("inc_taxes_label")}
               </p>
 
               <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
                 <span className="font-inter text-gray-900 leading-5">
-                  Item subtotal
+                  {t("item_subtotal_label")}
                 </span>
                 <span className="font-inter text-gray-900 leading-5">
                   {CURRENCY_SYMBOL}
@@ -1093,7 +1174,7 @@ export default function OrderCheckoutScreen() {
               {deliveryType === "Delivery" && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    Delivery ({distance} km)
+                    {t("delivery_with_distance_label")} ({distance} km)
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {CURRENCY_SYMBOL}
@@ -1105,7 +1186,7 @@ export default function OrderCheckoutScreen() {
               {selectedTip && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    Tip
+                    {t("tip_label")}
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {`${CURRENCY_SYMBOL} ${selectedTip}`}
@@ -1117,7 +1198,10 @@ export default function OrderCheckoutScreen() {
               )}
 
               <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
-                <span className="font-inter text-gray-900 leading-5">Tax</span>
+                <span className="font-inter text-gray-900 leading-5">
+                  {" "}
+                  {t("tax_label")}{" "}
+                </span>
                 <span className="font-inter text-gray-900 leading-5">
                   {CURRENCY_SYMBOL}
                   {taxCalculation()}
@@ -1138,7 +1222,7 @@ export default function OrderCheckoutScreen() {
               {isCouponApplied && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    Discount
+                    {t("discount_label")}
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {`-${CURRENCY_SYMBOL} ${(
@@ -1156,7 +1240,7 @@ export default function OrderCheckoutScreen() {
                   <Divider /> */}
 
               <div className="flex justify-between font-semibold mb-4 text-xs lg:text-[16px]">
-                <span>Total sum</span>
+                <span>{t("total_sum_label")}</span>
                 <span>{`${CURRENCY_SYMBOL} ${calculateTotal()}`}</span>
               </div>
 
@@ -1167,7 +1251,7 @@ export default function OrderCheckoutScreen() {
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />
                 ) : (
-                  <span> Click to order</span>
+                  <span> {t("click_to_order_button")}</span>
                 )}
               </button>
             </div>
@@ -1180,16 +1264,16 @@ export default function OrderCheckoutScreen() {
               id="price-summary"
             >
               <h2 className="text-sm lg:text-base font-semibold text-left flex justify-between">
-                Prices in {CURRENCY}
-                <InfoSvg />
+              {t("prices_in_label")} {CURRENCY}
+              <InfoSvg />
               </h2>
               <p className="text-gray-400 mb-3 text-left leading-5 tracking-normal font-inter text-xs lg:text-[10px]">
-                Inc. Taxes (if applicable)
+                {t("inc_taxes_label")}
               </p>
 
               <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
                 <span className="font-inter text-gray-900 leading-5">
-                  Item subtotal
+                  {t("item_subtotal_label")}
                 </span>
                 <span className="font-inter text-gray-900 leading-5">
                   {CURRENCY_SYMBOL}
@@ -1200,7 +1284,7 @@ export default function OrderCheckoutScreen() {
               {deliveryType === "Delivery" && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    Delivery ({distance} km)
+                  {t("delivery_with_distance_label", { distance, unit: t("km_unit") })}
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {CURRENCY_SYMBOL}
@@ -1212,7 +1296,7 @@ export default function OrderCheckoutScreen() {
               {selectedTip && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    Tip
+                    {t("tip_label")}
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {`${CURRENCY_SYMBOL} ${selectedTip}`}
@@ -1224,7 +1308,9 @@ export default function OrderCheckoutScreen() {
               )}
 
               <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
-                <span className="font-inter text-gray-900 leading-5">Tax</span>
+                <span className="font-inter text-gray-900 leading-5">
+                  {t("tax_label")}
+                </span>
                 <span className="font-inter text-gray-900 leading-5">
                   {CURRENCY_SYMBOL}
                   {taxCalculation()}
@@ -1245,7 +1331,7 @@ export default function OrderCheckoutScreen() {
               {isCouponApplied && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
                   <span className="font-inter text-gray-900 leading-5">
-                    Discount
+                    {t("discount_label")}
                   </span>
                   <span className="font-inter text-gray-900 leading-5">
                     {`-${CURRENCY_SYMBOL} ${(
@@ -1263,7 +1349,7 @@ export default function OrderCheckoutScreen() {
               {/* <Divider /> */}
 
               <div className="flex justify-between font-semibold mb-4 text-xs lg:text-[14px]">
-                <span>Total sum</span>
+                <span>{t("total_sum_label")}</span>
                 <span>{`${CURRENCY_SYMBOL} ${calculateTotal()}`}</span>
               </div>
 
@@ -1274,7 +1360,7 @@ export default function OrderCheckoutScreen() {
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />
                 ) : (
-                  <span> Click to order</span>
+                  <span> {t("click_to_order_button")} </span>
                 )}
               </button>
             </div>
@@ -1293,7 +1379,7 @@ export default function OrderCheckoutScreen() {
                       className="bg-white p-2 rounded-lg shadow-md border border-gray-300 overflow-hidden"
                     >
                       <h2 className="text-base font-semibold text-left flex justify-between">
-                        Prices in {CURRENCY}
+                       
                         <InfoSvg />
                       </h2>
                       <p className="text-gray-300 mb-4 text-left  sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle ">
@@ -1302,7 +1388,7 @@ export default function OrderCheckoutScreen() {
 
                       <div className="flex justify-between mb-1 text-sm">
                         <span className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7">
-                          Item subtotal
+                          
                         </span>
                         <span className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7">
                           {CURRENCY_SYMBOL}
@@ -1312,7 +1398,7 @@ export default function OrderCheckoutScreen() {
 
                       <div className="flex justify-between mb-1 text-sm">
                         <span className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7">
-                          Delivery ({distance} km)
+                          Delivery ({dstance} km)
                         </span>
                         <span className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7">
                           {CURRENCY_SYMBOL}

@@ -60,6 +60,8 @@ function Profile(props) {
   const [showPass, setShowPass] = useState(false)
   const { location } = useContext(LocationContext)
 
+ 
+
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === "rtl", ...theme[themeContext.ThemeValue] }
@@ -70,12 +72,13 @@ function Profile(props) {
     return orders.filter((o) => orderStatusActive.includes(o.orderStatus))
   }, [orders])
 
-  const { data, loading, refetch } = useQuery(RESTAURANTS, {
+  const { data, loading, error, refetch } = useQuery(RESTAURANTS, {
     variables: {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    errorPolicy : "all"
   })
   const { orderLoading, orderData } = useHomeRestaurants()
 

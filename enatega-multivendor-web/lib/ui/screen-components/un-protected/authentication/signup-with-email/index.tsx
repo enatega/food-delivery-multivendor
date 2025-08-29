@@ -15,6 +15,7 @@ import { useAuth } from "@/lib/context/auth/auth.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useToast from "@/lib/hooks/useToast";
 import { useTranslations } from "next-intl";
+import { FcGoogle } from "react-icons/fc";
 
 // Apollo
 import { ApolloError } from "@apollo/client";
@@ -27,17 +28,22 @@ export default function SignUpWithEmail({
   // Hooks
   const t = useTranslations();
   const {
-    handleCreateUser,
-    setUser,
     sendOtpToEmailAddress,
     sendOtpToPhoneNumber,
     isLoading,
     setIsLoading,
     setIsRegistering,
     setIsAuthModalVisible,
+    handleCreateUser,
   } = useAuth();
   const { showToast } = useToast();
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
+
+  // Validation
+  const validatePassword = (password: string) => {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    return strongPasswordRegex.test(password);
+  };
 
   // Handlers
   const handleSubmit = async () => {
@@ -47,50 +53,53 @@ export default function SignUpWithEmail({
       if (Object.values(formData).some((val) => !val)) {
         return showToast({
           type: "error",
-          title: t("Create User"),
-          message: t("All fields are required to be filled"),
+          title: t("create_user_label"),
+          message: t("all_fields_are_required_to_be_filled_message"),
+        });
+      }
+      const namePattern = /^[A-Za-z\s]+$/;
+      if (!namePattern.test(formData.name || "")) {
+        return showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("please_enter_a_valid_name_message"), // add this key in translations
+        });
+      }
+      if (!validatePassword(formData.password || "")) {
+        return showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("password_not_strong_enough_message"),
         });
       } else {
-        const userData = await handleCreateUser({
-          email: formData.email,
-          phone: formData.phone,
-          name: formData.name,
-          password: formData.password,
-        });
-
-        if (
-          !userData.emailIsVerified &&
-          userData.email &&
-          !SKIP_EMAIL_VERIFICATION
-        ) {
-          setUser((prev) => ({
-            ...prev,
-            email: userData.email,
-          }));
-          sendOtpToEmailAddress(userData.email);
+        if (formData.email && !SKIP_EMAIL_VERIFICATION) {
+          sendOtpToEmailAddress(formData?.email);
           // Verify email OTP
           handleChangePanel(3);
-        } else if (
-          !userData.phoneIsVerified &&
-          userData.phone &&
-          !SKIP_MOBILE_VERIFICATION
-        ) {
-          setUser((prev) => ({
-            ...prev,
-            phone: userData.phone,
-          }));
-          sendOtpToPhoneNumber(userData.phone);
+        } else if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
+          sendOtpToPhoneNumber(formData.phone);
           // Verify Phone OTP
           handleChangePanel(6);
-        }else if(userData.userId&&SKIP_EMAIL_VERIFICATION&&SKIP_MOBILE_VERIFICATION){
+        } else if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
           // Navigate to first modal
+          const userData = await handleCreateUser({
+            email: formData?.email,
+            phone: formData?.phone,
+            name: formData?.name,
+            password: formData?.password,
+            emailIsVerified:false
+          });
           handleChangePanel(0);
           setIsAuthModalVisible(false);
-          showToast({
-            type:"success",
-            title:t("Register"),
-            message:t("Successfully registered your account") // put an exclamation mark at the end of this sentence in the translations
-          })
+          // if userData exist then show success message
+          if (userData){
+            showToast({
+              type: "success",
+              title: t("register_label"),
+              message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
+            });
+          }
+      
         }
       }
     } catch (err) {
@@ -98,9 +107,10 @@ export default function SignUpWithEmail({
       console.error("An error occured while registering a new user", error);
       showToast({
         type: "error",
-        title: t("Register"),
+        title: t("register_label"),
         message:
-          error?.cause?.message || t("An error occured while registering"),
+          error?.cause?.message ||
+          t("an_error_occurred_while_registering_message"),
       });
     } finally {
       setIsLoading(false);
@@ -110,9 +120,11 @@ export default function SignUpWithEmail({
     <div className="flex flex-col items-start justify-between w-full h-full">
       <PersonIcon />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
-        <h3 className="text-2xl">{t("Lets get you started")}</h3>
+        <h3 className="text-3xl font-semibold">
+          {t("lets_get_you_started_label")}
+        </h3>
         {/*replace lets with let's in the translation*/}
-        <p>{t("First lets create your account")}</p>
+        <p>{t("first_lets_create_your_account_message")}</p>
         {/*replace "First" with "First," in the translation*/}
       </div>
       <div className="flex flex-col gap-y-1 my-3 w-full">
@@ -121,7 +133,7 @@ export default function SignUpWithEmail({
           showLabel={false}
           name="name"
           type="text"
-          placeholder={t("Name")}
+          placeholder={t("nameLabel")}
           onChange={(e) => handleFormChange("name", e.target.value)}
         />
       </div>
@@ -131,7 +143,7 @@ export default function SignUpWithEmail({
           showLabel={false}
           name="email"
           type="email"
-          placeholder={t("Email")}
+          placeholder={t("emailLabel")}
           onChange={(e) => handleFormChange("email", e.target.value)}
         />
       </div>
@@ -142,7 +154,7 @@ export default function SignUpWithEmail({
           mask={"999 999 999"}
           name="phone"
           type="text"
-          placeholder={t("Phone")}
+          placeholder={t("phone_label")}
           onChange={(val) => handleFormChange("phone", val)}
         />
       </div>
@@ -151,18 +163,20 @@ export default function SignUpWithEmail({
           value={formData.password}
           showLabel={false}
           name="password"
-          placeholder={t("Password")}
+          placeholder={t("password_label")}
           onChange={(e) => handleFormChange("password", e.target.value)}
         />
-        <span
-          className="self-end font-semibold text-sm underline cursor-pointer text-[#5AC12F]"
+        <button
+          type="button"
           onClick={() => handleChangePanel(0)}
+          className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
         >
-          {t("Continue with google instead")}
-        </span>
+          <FcGoogle className="text-lg" />
+          {t("continue_with_google_instead_label")}
+        </button>
       </div>
       <CustomButton
-        label={t("Continue")}
+        label={t("continue_label")}
         className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72`}
         onClick={handleSubmit}
         loading={isLoading}

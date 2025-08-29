@@ -23,7 +23,7 @@ export default function ProfileHeader() {
       className="backdrop-blur-3xl"
     >
       <View
-        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4 shadow-xl sticky top-5`}
+        className={`justify-between flex-row h-[130px] w-[40%] items-center p-4 shadow-xl sticky top-5`}
       >
         <View
           className="p-1 rounded-[100px]"
@@ -67,7 +67,7 @@ export default function ProfileHeader() {
             )}
           </View>
         </View>
-        <View className="left-5">
+        <View className="left-1">
           <Text
             className={`font-semibold xs`}
             style={{

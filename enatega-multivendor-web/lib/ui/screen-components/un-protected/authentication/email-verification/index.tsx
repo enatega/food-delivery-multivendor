@@ -1,230 +1,239 @@
-// Components
-import CustomButton from "@/lib/ui/useable-components/button";
-
-// Interfaces
-import {
-  IEmailVerificationProps,
-  IUpdateUserEmailArguments,
-  IUpdateUserResponse,
-} from "@/lib/utils/interfaces";
-
-// Hooks
+// Hooks and Context
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
+import { useTranslations } from "next-intl";
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
+
+// Components and Utilities
+import CustomButton from "@/lib/ui/useable-components/button";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
-import { ApolloError, useMutation } from "@apollo/client";
-import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import {
+  IEmailVerificationProps,
 
-// GQL
-import { UPDATE_USER } from "@/lib/api/graphql";
-
-// Prime React
-import { InputOtp } from "primereact/inputotp";
+} from "@/lib/utils/interfaces";
 
 export default function EmailVerification({
   handleChangePanel,
   emailOtp,
   setEmailOtp,
+  formData,
 }: IEmailVerificationProps) {
-  // States
+  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [isResendingOtp, setIsResendingOtp] = useState(false);
 
-  // Hooks
   const t = useTranslations();
   const { SKIP_EMAIL_VERIFICATION, TEST_OTP } = useConfig();
+  const { verifyOTP, error } = useVerifyOtp();
   const {
-    user,
     setIsAuthModalVisible,
-    otp,
-    setOtp,
+    setOtp: setStoredOtp,
     sendOtpToEmailAddress,
-    sendOtpToPhoneNumber,
+    // sendOtpToPhoneNumber,
     isLoading,
+    handleCreateUser,
+    setIsRegistering
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
 
-  // Mutations
-  const [updateUser] = useMutation<
-    IUpdateUserResponse,
-    undefined | IUpdateUserEmailArguments
-  >(UPDATE_USER, {
-    onError: (error: ApolloError) => {
-      showToast({
-        type: "error",
-        title: t("Error"),
-        message:
-          error.cause?.message ||
-          t("An error occurred while updating the user"),
-      });
-    },
-  });
 
-  // Handlers
+  // Sync parent state with local OTP
+  useEffect(() => {
+    setEmailOtp(otp.join(""));
+  }, [otp]);
+
+  // Initialize on mount
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const value = e.target.value;
+    if (!/^\d*$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value.slice(-1);
+    setOtp(newOtp);
+    if (value && index < 5) inputRefs.current[index + 1]?.focus();
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+    const newOtp = Array(6).fill("");
+    pasted.split("").forEach((digit, i) => (newOtp[i] = digit));
+    setOtp(newOtp);
+    inputRefs.current[Math.min(pasted.length, 5)]?.focus();
+  };
+  // handler
   const handleSubmit = async () => {
-    try {
-      if (SKIP_EMAIL_VERIFICATION) {
-        if (profile?.phoneIsVerified) {
-          showToast({
-            type: "success",
-            title: t("Email Verification"),
-            message: t("Your email is verified successfully"),
-          });
-          showToast({
-            type: "success",
-            title: t("Login"),
-            message: t("You have logged in successfully"), // put ! at the end of the statement in the translation
-          });
-          handleChangePanel(0);
-          setOtp("");
-          setEmailOtp("");
-          setIsAuthModalVisible(false);
-        } else {
-          showToast({
-            type: "success",
-            title: t("Email Verification"),
-            message: t("Your email is verified successfully"),
-          });
-          setOtp(TEST_OTP);
-          handleChangePanel(4);
-        }
-      } else {
-        if (String(emailOtp) === String(otp) && !!user?.email) {
-          const userData = await updateUser({
-            variables: {
-              name: user?.name ?? "",
-              email: user?.email ?? "",
-              emailIsVerified: true,
-            },
-          });
-          setOtp("");
-          setEmailOtp("");
-          if (userData?.data?.updateUser?.phoneIsVerified) {
-            showToast({
-              type: "success",
-              title: t("Email Verification"),
-              message: t("Your email is verified successfully"),
-            });
-            showToast({
-              type: "success",
-              title: t("Login"),
-              message: t("You have logged in successfully"), // put ! at the end of the statement in the translation
-            });
-            handleChangePanel(0);
-            setIsAuthModalVisible(false);
-          } else if (
-            !userData?.data?.updateUser?.phoneIsVerified &&
-            user.phone
-          ) {
-            showToast({
-              type: "success",
-              title: t("Email Verification"),
-              message: t("Your email is verified successfully"),
-            });
-            sendOtpToPhoneNumber(user.phone);
-            handleChangePanel(6);
-          } else {
-            showToast({
-              type: "success",
-              title: t("Email Verification"),
-              message: t("Your email is verified successfully"),
-            });
-            handleChangePanel(4);
-          }
-        } else {
-          return showToast({
-            type: "error",
-            title: t("OTP Error"),
-            message: t("Please enter a valid OTP code"),
-          });
-        }
+    if (SKIP_EMAIL_VERIFICATION) {
+      setStoredOtp(TEST_OTP);
+      showToast({
+        type: "success",
+        title: t("email_verification_label"),
+        message: t("your_email_verified_successfully_message"),
+      });
+      if (profile?.phoneIsVerified) {
+        showToast({
+          type: "success",
+          title: t("Login"),
+          message: t("login_success_message"),
+        });
+        handleChangePanel(0);
+        setIsAuthModalVisible(false);
       }
-    } catch (error) {
-      console.error("An error occured while email verification:", error);
+      setStoredOtp("");
+      setEmailOtp("");
+      return;
+    }
+
+    const otpResponse = await verifyOTP({
+      variables: {
+        otp: emailOtp,
+        email: formData?.email,
+      },
+    });
+
+    if (otpResponse.data?.verifyOtp.result && !!formData?.email) {
+      // if otp is verified then createuser also update it
+      const userData = await handleCreateUser({
+        email: formData?.email,
+        phone: formData?.phone,
+        name: formData?.name,
+        password: formData?.password,
+        emailIsVerified: true,
+      });
+
+
+ 
+      setStoredOtp("");
+      setEmailOtp("");
+
+
+
+      // now check if phone number is verified after user creation
+      if (
+        userData?.phone && 
+        !userData?.phoneIsVerified
+      ) {
+        setIsRegistering(false)
+        handleChangePanel(4); // Go to phone verification panel
+        return;
+      }
+
+    
+
+      showToast({
+        type: "success",
+        title: t("email_verification_label"),
+        message: t("your_email_verified_successfully_message"),
+      });
+      showToast({
+        type: "success",
+        title: t("register_label"),
+        message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
+      });
+      handleChangePanel(0);
+      setIsAuthModalVisible(false);
+    } else {
       showToast({
         type: "error",
-        title: t("Error"),
-        message: t("An error occurred while verifying the email"),
+        title: t("otp_error_label"),
+        message: t("please_enter_valid_otp_code_message"),
       });
     }
   };
 
   const handleOtpResend = async () => {
-    if (user?.email) {
-      setIsResendingOtp(true);
-      await sendOtpToEmailAddress(user?.email);
-      setIsResendingOtp(false);
-    } else {
-      showToast({
+    if (!formData?.email) {
+      return showToast({
         type: "error",
         title: t("Error"),
-        message: t("Please enter a valid email address"),
+        message: t("please_enter_valid_email_address_message"),
       });
     }
+    setIsResendingOtp(true);
+    await sendOtpToEmailAddress(formData.email);
+    setIsResendingOtp(false);
   };
-  // UseEffects
-  useEffect(() => {
-    if (!user?.email) {
-      handleChangePanel(4);
-    }
-  }, [user?.email]);
 
+  // useEffect for displaying otp verification error
   useEffect(() => {
-    if (SKIP_EMAIL_VERIFICATION) {
-      setOtp(TEST_OTP);
-      if (profile?.phoneIsVerified) {
-        handleChangePanel(0);
-        setIsAuthModalVisible(false);
-        showToast({
-          type: "success",
-          title: t("Login"),
-          message: t("You have logged in successfully"), // put ! at the end of the statement in the translation
-        });
-      } else {
-        handleChangePanel(4);
-      }
+    if (error) {
       showToast({
-        type: "success",
-        title: t("Email Verification"),
-        message: t("Your email is verified successfully"),
+        type: "error",
+        title: t("OTP Error"),
+        message: error.message,
       });
-      setOtp("");
-      setEmailOtp("");
     }
-  }, [SKIP_EMAIL_VERIFICATION]);
+  }, [error]);
+
   return (
-    <div className="flex flex-col justify-between item-center self-center p-4">
-      <p>
-        {t("We have sent OTP code to")}&nbsp;
-        <span className="font-bold">{user?.email ?? "example@email.com"}</span>
+    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+      <div className="flex flex-col justify-start text-left w-full">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+          {t("OTP_Code_Sent")}
+        </h2>
+        <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
+          {formData?.email || "your@email.com"}
+        </p>
+        <p className="text-base text-gray-600 mb-6">
+          {t("verify_your_email_label")}
+        </p>
+      </div>
+
+      <div className="w-full mb-6">
+        <div className="flex justify-center flex-wrap gap-2">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <input
+              key={i}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={otp[i]}
+              onChange={(e) => handleChange(e, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              onPaste={i === 0 ? handlePaste : undefined}
+              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+              autoFocus={i === 0}
+            />
+          ))}
+        </div>
+      </div>
+
+      <p className="text-sm text-gray-500 mb-6 text-center w-full">
+        {t("otp_valid_for_10_minutes_label")}
       </p>
-      <p className="font-light mb-3 text-sm flex ">
-        {t("Please check your inbox")}
-      </p>
-      <InputOtp
-        value={emailOtp}
-        onChange={(e) => setEmailOtp(String(e.value))}
-        color="red"
-        autoFocus={true}
-        mask
-        maxLength={6}
-        length={6}
-        className=" w-full flex flex-wrap h-16 sm:h-20 my-2 "
-      />
-      {/* create a span and give a margin top */}
-      <span className="mt-4"></span>
+
       <CustomButton
-        label={t("Continue")}
+        label={t("continue_label")}
         loading={isLoading}
-        className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
+        className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
         onClick={handleSubmit}
       />
+
       <CustomButton
-        label={t("Resend OTP")}
+        label={t("resend_otp_label")}
         loading={isResendingOtp}
-        className={`bg-[#fff] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72 my-1`}
+        className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg sm:text-md font-medium"
         onClick={handleOtpResend}
       />
     </div>

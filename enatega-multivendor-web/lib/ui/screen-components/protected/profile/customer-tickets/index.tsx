@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import TicketSkeleton from "@/lib/ui/useable-components/custom-skeletons/ticket.skeleton";
 import useToast from "@/lib/hooks/useToast";
 import TicketChatModal from "@/lib/ui/useable-components/ticket-chat-modal";
+import { useTranslations } from "next-intl";
 
 // Defined types for tickets
 interface ITicket {
@@ -27,6 +28,7 @@ interface ITicket {
 }
 
 export default function CustomerTicketsMain() {
+  const t = useTranslations()
   const router = useRouter();
   const { showToast } = useToast();
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
@@ -141,10 +143,10 @@ export default function CustomerTicketsMain() {
   if (ticketsError) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-        <TextComponent text="Error loading tickets" className="text-lg text-red-500 mb-2" />
-        <p className="text-gray-500 mb-4">There was a problem fetching your tickets. Please try again later.</p>
+        <TextComponent text={t('error_loading_tickets')} className="text-lg text-red-500 mb-2" />
+        <p className="text-gray-500 mb-4">{t('tickets_fetch_error_message')}</p>
         <CustomButton 
-          label="Retry"
+          label={t('retry_button')}
           onClick={() => window.location.reload()}
           className="bg-[#5AC12F] text-white px-4 py-2 rounded-full"
         />
@@ -156,11 +158,11 @@ export default function CustomerTicketsMain() {
     <div className="w-full mx-auto">
       <div className="mb-6">
         <TextComponent 
-          text={`Hi ${userName} 👋`}
+          text={`${t('welcome_user')} ${userName} 👋`}
           className="text-xl md:text-2xl font-bold mb-2"
         />
         <div className="flex justify-between items-center">
-          <TextComponent text="Your Customer Support Tickets 🎟️" className="text-xl md:text-2xl font-semibold" />
+          <TextComponent text={t("your_customer_support_tickets_label")} className="text-xl md:text-2xl font-semibold" />
         </div>
       </div>
       
@@ -171,20 +173,20 @@ export default function CustomerTicketsMain() {
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <TextComponent text={ticket.title} className="font-medium text-lg text-gray-800" />
-                  <p className="text-sm text-gray-500">Ticket ID: {ticket._id}</p>
+                  <p className="text-sm text-gray-500">{t('ticket_id_label')} {ticket._id}</p>
                 </div>
                 <span className={`${getStatusColor(ticket.status)} px-3 py-1 rounded-full text-sm font-medium`}>
-                  {ticket.status === 'inProgress' ? 'In Progress' : 
+                  {ticket.status === 'inProgress' ? t('in_progress_status_label') : 
                    ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
                 </span>
               </div>
               <div className="flex justify-between text-sm text-gray-500">
-                <p>Created: {formatDate(ticket.createdAt)}</p>
-                <p>Last Updated: {formatDate(ticket.updatedAt)}</p>
+                <p> {t('created_label')} {formatDate(ticket.createdAt)}</p>
+                <p>{t('last_updated_label')} {formatDate(ticket.updatedAt)}</p>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-100 flex justify-end">
                 <CustomButton 
-                  label="View Messages" 
+                  label={t("view_messages_button")}
                   className="text-blue-600 hover:text-blue-800 bg-transparent"
                   onClick={() => handleOpenChat(ticket._id)}
                 />
@@ -194,10 +196,10 @@ export default function CustomerTicketsMain() {
         </div>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-          <TextComponent text="No tickets found" className="text-lg text-gray-500 mb-2" />
-          <p className="text-gray-500 mb-4">You haven&apos;t created any support tickets yet.</p>
+          <TextComponent text={t("no_tickets_found_label")} className="text-lg text-gray-500 mb-2" />
+          <p className="text-gray-500 mb-4"> {t('no_support_tickets_yet_message')}</p>
           <CustomButton 
-            label="Create Your First Ticket"
+            label={t("create_first_ticket_button")}
             onClick={handleCreateTicket}
             className="bg-[#5AC12F] text-white px-4 py-2 rounded-full"
           />

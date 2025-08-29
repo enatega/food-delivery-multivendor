@@ -7,7 +7,9 @@ import {
 
 // Hooks
 import { useAuth } from "@/lib/context/auth/auth.context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
+import { useTranslations } from "next-intl";
 
 // Components
 import useToast from "@/lib/hooks/useToast";
@@ -22,21 +24,27 @@ import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
 
 export interface IUpdatePhoneModalProps {
   isUpdatePhoneModalVisible: boolean
-  handleUpdatePhoneModal: () => void
+  handleUpdatePhoneModal: () => void,
+  ActiveStep?: number,
+  setActiveStep: (step: number) => void
 }
 
 export default function UpdatePhoneModal({
   isUpdatePhoneModalVisible,
   handleUpdatePhoneModal,
+  ActiveStep,
+  setActiveStep
   
 }: IUpdatePhoneModalProps) {
   // States
   const [phoneOtp, setPhoneOtp] = useState("");
-  const [activeStep, setActiveStep] = useState(0);
-
+  // const [activeStep, setActiveStep] = useState(ActiveStep);
+  
     // Hooks
-  const { sendOtpToPhoneNumber, setUser, user, otp, setOtp, checkPhoneExists } = useAuth();
+  const { sendOtpToPhoneNumber, setUser, user, setOtp, checkPhoneExists } = useAuth();
   const { showToast } = useToast();
+  const { verifyOTP, error } = useVerifyOtp();
+  const t = useTranslations();
 
   // Queries and mutations 
 
@@ -55,10 +63,11 @@ export default function UpdatePhoneModal({
       onError: (error: ApolloError) => {
         showToast({
           type: "error",
-          title: "Error",
+          title:             t('update_phone_name_update_error_title'),
+
           message:
             error.cause?.message ||
-            "An error occurred while updating the user",
+            t('update_phone_name_update_error_msg'),
         });
       },
     });
@@ -77,8 +86,8 @@ export default function UpdatePhoneModal({
     if(!user?.phone || user?.phone.length < 7) {
       showToast({
         type: "error",
-        title: "Error",
-        message: "Please enter a valid phone number",
+        title: t("update_phone_name_update_error_title"),
+        message: t("update_phone_name_invalid_number"),
       });
       return;
     }
@@ -95,8 +104,8 @@ export default function UpdatePhoneModal({
   } catch (error) {
     showToast({
       type: "error",
-      title: "Error",
-      message: "An error occured while saving the phone number",
+      title: t("update_phone_name_update_error_title"),
+      message: t("update_phone_name_send_otp_error"),
     });
   }
 },
@@ -105,7 +114,13 @@ export default function UpdatePhoneModal({
 
     const handleSubmitAfterVerification = useDebounceFunction(async () => {
       try {
-        if (String(phoneOtp) === String(otp) && !!user?.phone) {
+        const otpResponse = await verifyOTP({
+          variables: {
+            otp:phoneOtp,
+            phone: user?.phone
+          }
+        })
+        if (otpResponse.data?.verifyOtp && !!user?.phone) {
           const args = {
             phone: user?.phone,
             name: user?.name ?? "",
@@ -122,15 +137,15 @@ export default function UpdatePhoneModal({
           fetchProfile();
           return showToast({
             type: "success",
-            title: "Phone Verification",
-            message: "Your phone number is verified successfully",
+            title: t("update_phone_name_verification_success_title"),
+            message: t("update_phone_name_verification_success_msg"),
           });
          
         } else {
           showToast({
             type: "error",
-            title: "OTP Error",
-            message: "Please enter a valid OTP code",
+            title: t("update_phone_name_otp_error_title"),
+            message: t("update_phone_name_otp_error_msg"),
           });
         }
       } catch (error) {
@@ -149,19 +164,30 @@ export default function UpdatePhoneModal({
       } else {
         showToast({
           type: "error",
-          title: "Error",
-          message: "Please re-enter your valid phone number",
+          title: t("update_phone_name_update_error_title"),
+          message: t("update_phone_name_resend_error_msg")
         });
       }
     },
       500, // Debounce time in milliseconds
-  )
+    )
+  
+    // useEffect for displaying otp verification error
+    useEffect(() => {
+      if (error) {
+        showToast({
+          type: "error",
+          title: t("OTP Error"),
+          message: error.message,
+        });
+    }
+  }, [error])
 
 
   return(
      <CustomDialog visible={isUpdatePhoneModalVisible} onHide={handleUpdatePhoneModal} width="600px" >  
         {
-            activeStep === 0 ? (
+            ActiveStep === 0 ? (
             <PhoneEntry
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}

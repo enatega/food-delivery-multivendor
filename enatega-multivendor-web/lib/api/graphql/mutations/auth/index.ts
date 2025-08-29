@@ -57,15 +57,15 @@ export const PHONE_EXISTS = gql`
 `;
 
 export const SENT_OTP_TO_EMAIL = gql`
-  mutation SendOtpToEmail($email: String!, $otp: String!) {
-    sendOtpToEmail(email: $email, otp: $otp) {
+  mutation SendOtpToEmail($email: String!) {
+    sendOtpToEmail(email: $email) {
       result
     }
   }
 `;
 export const SENT_OTP_TO_PHONE = gql`
-  mutation SendOtpToPhoneNumber($phone: String!, $otp: String!) {
-    sendOtpToPhoneNumber(phone: $phone, otp: $otp) {
+  mutation SendOtpToPhoneNumber($phone: String!) {
+    sendOtpToPhoneNumber(phone: $phone) {
       result
     }
   }
@@ -85,6 +85,7 @@ export const CREATE_USER = gql`
     $name: String
     $notificationToken: String
     $appleId: String
+    $emailIsVerified: Boolean
   ) {
     createUser(
       userInput: {
@@ -94,6 +95,7 @@ export const CREATE_USER = gql`
         name: $name
         notificationToken: $notificationToken
         appleId: $appleId
+        emailIsVerified: $emailIsVerified
       }
     ) {
       userId
@@ -107,6 +109,7 @@ export const CREATE_USER = gql`
       picture
       isNewUser
       userTypeId
+      emailIsVerified
     }
   }
 `;
@@ -138,10 +141,18 @@ export const UPDATE_USER = gql`
 export const DEACTIVATE_USER = gql`
   mutation DeactivateUser($isActive: Boolean!, $email: String!) {
     Deactivate(isActive: $isActive, email: $email) {
-      _id,
-      name,
-      email,
+      _id
+      name
+      email
       isActive
+    }
+  }
+`;
+
+export const VERIFY_OTP = gql`
+  mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
+    verifyOtp(otp: $otp, email: $email, phone: $phone) {
+      result
     }
   }
 `;

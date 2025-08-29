@@ -1,5 +1,6 @@
+
 // import { createBanner, editBanner } from '@/lib/api/graphql/mutation/banners';
-import { CREATE_BANNER, EDIT_BANNER, GET_RESTAURANTS } from '@/lib/api/graphql';
+import { CREATE_BANNER, EDIT_BANNER,  GET_RESTAURANTS_DROPDOWN } from '@/lib/api/graphql';
 import { GET_BANNERS } from '@/lib/api/graphql/queries/banners';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
@@ -28,6 +29,7 @@ import { useMutation } from '@apollo/client';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Sidebar } from 'primereact/sidebar';
+import { useMemo } from 'react';
 
 const BannersAddForm = ({
   isAddBannerVisible,
@@ -36,39 +38,41 @@ const BannersAddForm = ({
   position = 'right',
 }: IBannersAddFormComponentProps) => {
   // Queries
-  const { data, loading } = useQueryGQL(GET_RESTAURANTS, {
+  const { data } = useQueryGQL(GET_RESTAURANTS_DROPDOWN, {
     fetchPolicy: 'cache-and-network',
   }) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
 
   // Hooks
   const t = useTranslations();
-
-  const RESTAURANT_NAMES =
-    data?.restaurants?.data.map((v) => {
-      return { label: v.name, code: v._id };
-    }) || [];
-
+  
+  const RESTAURANT_NAMES = useMemo(() => {
+    return data?.restaurants?.data?.map((v) => ({
+      label: v.name,
+      code: v._id,
+    })) ?? []; // Using nullish coalescing operator
+  }, [data]);
+  
   //State
   const initialValues: IBannersForm = {
     title: banner?.title || '',
     description: banner?.description || '',
     action: banner
       ? {
-          label: getLabelByCode(ACTION_TYPES, banner.action),
-          code: banner.action,
-        }
+        label: getLabelByCode(ACTION_TYPES, banner.action),
+        code: banner.action,
+      }
       : null,
     screen: banner
       ? banner.action === 'Navigate Specific Page'
         ? {
-            label: getLabelByCode(SCREEN_NAMES, banner.screen),
-            code: banner.screen,
-          }
+          label: getLabelByCode(SCREEN_NAMES, banner.screen),
+          code: banner.screen,
+        }
         : banner.action === 'Navigate Specific Restaurant'
           ? {
-              label: banner.screen,
-              code: banner.screen,
-            }
+            label: banner.screen,
+            code: banner.screen,
+          }
           : null
       : null,
     file: banner?.file || '',
@@ -229,16 +233,16 @@ const BannersAddForm = ({
                             placeholder={t('Screen')}
                             options={
                               values.action?.code ===
-                              'Navigate Specific Restaurant'
+                                'Navigate Specific Restaurant'
                                 ? RESTAURANT_NAMES
                                 : values.action?.code ===
-                                    'Navigate Specific Page'
+                                  'Navigate Specific Page'
                                   ? SCREEN_NAMES
                                   : []
                             }
                             showLabel={true}
                             name="screen"
-                            loading={loading}
+                            // loading={loading}
                             selectedItem={values.screen}
                             setSelectedItem={setFieldValue}
                             style={{
@@ -254,11 +258,10 @@ const BannersAddForm = ({
                         </div>
 
                         <div
-                          className={`${
-                            errors.file && !values.file
-                              ? 'border-red-500'
-                              : 'border-gray-200'
-                          } rounded-lg border p-4`}
+                          className={`${errors.file && !values.file
+                            ? 'border-red-500'
+                            : 'border-gray-200'
+                            } rounded-lg border p-4`}
                         >
                           <CustomUploadImageComponent
                             key={'file'}

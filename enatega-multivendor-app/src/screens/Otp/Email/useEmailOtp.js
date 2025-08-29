@@ -113,38 +113,44 @@ const useEmailOtp = () => {
     try {
       let notificationToken = null
       if (Device.isDevice) {
-        const { status } = await Notifications.requestPermissionsAsync()
+        try {
+          const { status } = await Notifications.requestPermissionsAsync()
         if (status === 'granted') {
           notificationToken = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data
         }
+        } catch (error) {
+          console.log('Error catched in notificationToken:', error)
+        }
       }
-      mutateUser({
+      await mutateUser({
         variables: {
           phone: user?.phone ?? '',
           email: user.email,
           password: user.password,
           name: user.name,
           picture: '',
-          notificationToken: notificationToken
+          notificationToken: notificationToken,
+          emailIsVerified: true
         }
       })
     } catch (error) {
-      console.log('Error in mutateRegister:', error)
+      console.log('Error catched in mutateRegister:', error)
       FlashMessage({ message: t('somethingWentWrong') })
     }
   }
 
   const onCodeFilled = async (otp_code) => {
-    let isVerified = configuration?.skipEmailVerification ?? false
+    if (configuration?.skipEmailVerification) {
+      await mutateRegister()
+      return
+    }
+
     const { data } = await verifyOTP({
-      variables: {
-        otp: otp_code,
-        email: user.email
-      }
+      variables: { otp: otp_code, email: user.email }
     })
-    isVerified = isVerified || data?.verifyOtp
-    if (isVerified) {
-      mutateRegister()
+
+    if (data?.verifyOtp) {
+      await mutateRegister()
     } else {
       setOtpError(true)
     }

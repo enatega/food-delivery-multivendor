@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 // Core
 import { ErrorMessage, Form, Formik, FormikErrors } from 'formik';
@@ -28,13 +29,14 @@ import { TimingSchema } from '@/lib/utils/schema/timing';
 import useToast from '@/lib/hooks/useToast';
 
 // GraphQL
-import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 import { UPDATE_TIMINGS } from '@/lib/api/graphql/mutations/timing';
 import { useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
+import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
+
+
 
 const TimingAddForm = () => {
-  // Context
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
@@ -65,6 +67,7 @@ const TimingAddForm = () => {
         times,
       };
     }) ?? [];
+
 
   const initialValues: ITimingForm[] =
     openingTimes.length > 0 ? openingTimes : TIMING_INITIAL_VALUE;
@@ -149,7 +152,7 @@ const TimingAddForm = () => {
                       }}
                       checked={value?.times?.length > 0}
                     />
-                    <span className="w-10 text-sm">{value.day}</span>
+                    <span className="w-10 text-sm">{t(value.day)}</span>
                   </div>
 
                   {/* center */}

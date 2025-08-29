@@ -88,6 +88,7 @@ function Restaurant(props) {
   const dataList =
     popularItems &&
     popularItems?.popularItems?.map((item) => {
+      console.log({ item })
       const foodDetails = fetchFoodDetails(item?.id)
       return foodDetails
     })
@@ -173,16 +174,11 @@ function Restaurant(props) {
 
   // Fixed zIndexAnimation with integer values
   const zIndexAnimation = useAnimatedStyle(() => {
-    const zIndex = interpolate(
-      translationY.value, 
-      [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2], 
-      [-1, 1, 99], 
-      Extrapolation.CLAMP
-    );
+    const zIndex = interpolate(translationY.value, [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2], [-1, 1, 99], Extrapolation.CLAMP)
     return {
       zIndex: Math.round(zIndex) // Ensure integer values
-    };
-  });
+    }
+  })
 
   const onPressItem = async (food) => {
     if (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant)) {
@@ -278,15 +274,10 @@ function Restaurant(props) {
 
   // Fixed button animation with safety checks
   function animate() {
-    scaleValue.value = withRepeat(
-      withTiming(1.5, { duration: 250 }), 
-      2, 
-      true,
-      () => {
-        // Ensure value returns to 1 after animation
-        scaleValue.value = 1;
-      }
-    );
+    scaleValue.value = withRepeat(withTiming(1.5, { duration: 250 }), 2, true, () => {
+      // Ensure value returns to 1 after animation
+      scaleValue.value = 1
+    })
   }
 
   const config = (to) => ({
@@ -345,10 +336,10 @@ function Restaurant(props) {
 
   // Fixed scroll handler with safety checks
   const scrollHandler = useAnimatedScrollHandler((event) => {
-    const offsetY = event.contentOffset.y;
+    const offsetY = event.contentOffset.y
     // Clamp the value to prevent extremely small or negative values
-    translationY.value = Math.max(0, offsetY);
-  });
+    translationY.value = Math.max(0, offsetY)
+  })
 
   function changeIndex(index) {
     if (selectedLabel !== index) {
@@ -385,36 +376,26 @@ function Restaurant(props) {
   const iconTouchWidth = scale(30)
 
   // Fixed circle size - using constants instead of interpolation to prevent precision errors
-  const circleSize = scale(18);
-  const radiusSize = scale(9);
+  const circleSize = scale(18)
+  const radiusSize = scale(9)
 
   // If you need animation for the circle, use transform scale instead
   const animatedCircleStyles = useAnimatedStyle(() => {
-    const progress = circle.value;
-    const scaleValue = interpolate(
-      progress, 
-      [0, 0.5, 1], 
-      [1, 1.33, 1], 
-      Extrapolation.CLAMP
-    );
-    
+    const progress = circle.value
+    const scaleValue = interpolate(progress, [0, 0.5, 1], [1, 1.33, 1], Extrapolation.CLAMP)
+
     return {
       transform: [{ scale: Math.max(0.1, scaleValue) }] // Ensure minimum scale
-    };
-  });
+    }
+  })
 
   // Fixed font styles with safer interpolation
   const fontStyles = useAnimatedStyle(() => {
-    const fontSize = interpolate(
-      circle.value, 
-      [0, 0.5, 1], 
-      [8, 12, 8], 
-      Extrapolation.CLAMP
-    );
+    const fontSize = interpolate(circle.value, [0, 0.5, 1], [8, 12, 8], Extrapolation.CLAMP)
     return {
       fontSize: Math.max(8, Math.round(fontSize)) // Ensure minimum and integer font size
-    };
-  });
+    }
+  })
 
   if (loading) {
     return (
@@ -488,9 +469,7 @@ function Restaurant(props) {
             topaBarData={updatedDeals}
             changeIndex={changeIndex}
             selectedLabel={selectedLabel}
-            minimumOrder={
-              propsData?.minimumOrder ?? data?.restaurant?.minimumOrder
-            }
+            minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder}
             tax={propsData?.tax ?? data?.restaurant?.tax}
             updatedDeals={updatedDeals}
             searchOpen={searchOpen}
@@ -635,7 +614,25 @@ function Restaurant(props) {
                       </TextDefault>
                       <View style={styles(currentTheme).popularItemCards}>
                         {data.map((item) => (
-                          <ItemCard key={item?._id} item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart} />
+                          <ItemCard
+                            key={item?._id}
+                            item={item}
+                            onPressItem={() => {
+                              if (item?.isOutOfStock) {
+                                // Display an alert if the item is out of stock
+                                Alert.alert('Currently Unavailable', 'Item Out of Stock')
+                                return
+                              }
+
+                              onPressItem({
+                                ...item,
+                                restaurant: restaurant?._id,
+                                restaurantName: restaurant?.name
+                              })
+                            }}
+                            restaurant={restaurant}
+                            tagCart={tagCart}
+                          />
                         ))}
                       </View>
                     </View>
@@ -643,7 +640,7 @@ function Restaurant(props) {
                 }
                 // Render other section headers as usual
                 return (
-                  <View style={styles(currentTheme).sectionHeader}>
+                  <View style={[styles(currentTheme).sectionHeader, { marginBottom: scale(20) }]}>
                     <TextDefault style={styles(currentTheme).sectionHeaderText} textColor={currentTheme.fontFourthColor} bolder isRTL>
                       {title}
                     </TextDefault>
@@ -699,9 +696,11 @@ function Restaurant(props) {
                             <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder isRTL>
                               {item?.title}
                             </TextDefault>
-                            <TextDefault style={styles(currentTheme).priceText} small isRTL>
-                              {wrapContentAfterWords(item?.description, 5)}
-                            </TextDefault>
+                            {item?.description && (
+                              <TextDefault style={styles(currentTheme).priceText} small isRTL>
+                                {wrapContentAfterWords(item?.description, 5)}
+                              </TextDefault>
+                            )}
                             <View style={styles(currentTheme).dealPrice}>
                               <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
                                 {configuration.currencySymbol} {parseFloat(item?.variations[0].price).toFixed(2)}

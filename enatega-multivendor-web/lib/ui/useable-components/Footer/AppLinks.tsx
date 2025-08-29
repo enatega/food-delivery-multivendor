@@ -6,8 +6,11 @@ const PlayStoreLink =
 const AppleStoreLink =
   "https://apps.apple.com/pk/app/enatega-multivendor/id1526488093";
 import Logo from "@/lib/utils/assets/svg/Logo";
+import { useTranslations } from "next-intl";
 
 const AppLinks = () => {
+  
+  const t = useTranslations()
   const handleButtonClick = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -21,7 +24,7 @@ const AppLinks = () => {
       <div className="flex gap-2 flex-wrap">
         <button onClick={() => handleButtonClick(AppleStoreLink)}>
           <Image
-            alt={"Apple App Store Link"}
+            alt={t("apple_app_store_link")}
             width={130}
             height={130}
             src={
@@ -31,7 +34,7 @@ const AppLinks = () => {
         </button>
         <button onClick={() => handleButtonClick(PlayStoreLink)}>
           <Image
-            alt={"Google Play Store Link"}
+            alt={t("google_play_store_link")}
             width={130}
             height={130}
             src={
