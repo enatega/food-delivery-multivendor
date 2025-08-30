@@ -12,9 +12,10 @@ export interface IPhoneEntryProps {
   user: IUser | null;
   handleSubmit: () => void;
   handleUpdatePhoneModal: () => void;
+  userPhone?: string;
 }
 
-const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }: IPhoneEntryProps) => {
+const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal, userPhone }: IPhoneEntryProps) => {
   const [loading, setLoading] = useState(false);
   const t= useTranslations()
 
@@ -28,7 +29,7 @@ const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }
      setLoading(false);
    }
  };
-
+ console.log('user phone:', user?.phone);
   return (
     <div className="flex flex-col justify-between px-4 w-full items-center">
       <div className="flex items-center justify-center">
@@ -46,7 +47,7 @@ const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }
           showLabel={false}
           type="text"
           className="min-w-[22vw] w-full"
-          value={user?.phone}
+          value={userPhone}
           onChange={handleChange}
         />
       </div>

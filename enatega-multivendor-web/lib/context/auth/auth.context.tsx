@@ -117,9 +117,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("email_check_error"),
-        message:
-          error.cause?.message ||
-          t("error_checking_email"),
+        message: error.cause?.message || t("error_checking_email"),
       });
       return {} as IEmailExists;
     } finally {
@@ -137,10 +135,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         showToast({
           type: "error",
           title: t("phone_check_error"),
-          message: 
-            t(
-              "phone_already_registered"
-            ), // put a ","m after "registered" and "." at the end of the sentence in the translation,
+          message: t("phone_already_registered"), // put a ","m after "registered" and "." at the end of the sentence in the translation,
         });
         return true;
       } else {
@@ -152,9 +147,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return showToast({
         type: "error",
         title: t("phone_check_error"),
-        message:
-          error.cause?.message ||
-          t("error_checking_phone"),
+        message: error.cause?.message || t("error_checking_phone"),
       });
     } finally {
       setIsLoading(false);
@@ -163,7 +156,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   // handlers
 
-  const handlePasswordReset = async (password: string, email: string, setFormData: Dispatch<SetStateAction<IAuthFormData>>) => {
+  const handlePasswordReset = async (
+    password: string,
+    email: string,
+    setFormData: Dispatch<SetStateAction<IAuthFormData>>
+  ) => {
     try {
       setIsLoading(true);
       const resetPasswordResponse = await mutateResetPassword({
@@ -179,23 +176,18 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         setActivePanel(0);
         // setIsAuthModalVisible(false);
       }
-    }
-    catch (err) {
+    } catch (err) {
       const error = err as ApolloError;
       console.error("Error while resetting password:", error);
       showToast({
         type: "error",
         title: t("password_reset_error"),
-        message:
-          error.cause?.message ||
-          t("error_resetting_password"),
+        message: error.cause?.message || t("error_resetting_password"),
       });
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
-  }
-
+  };
 
   const handleUserLogin = async (user: IUserLoginArguments) => {
     try {
@@ -292,9 +284,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       setRefetchProfileData(true);
     }
   };
-  const [
-    fetchProfile
-  ] = useLazyQuery(GET_USER_PROFILE, {
+  const [fetchProfile] = useLazyQuery(GET_USER_PROFILE, {
     fetchPolicy: "network-only",
   });
   // GQL Handlers
@@ -356,7 +346,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         return;
       } else {
         const otpResponse = await sendOtpToEmail({
-          variables: { email: email }
+          variables: { email: email },
         });
         if (otpResponse.data?.sendOtpToEmail?.result) {
           if (type && type !== "password-recovery") {
@@ -365,8 +355,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           showToast({
             type: "info",
             title: t("email_verification_label"),
-            message: t("please_enter_valid_otp_code_message"
-            ),
+            message: t("please_enter_valid_otp_code_message"),
           });
           return;
         } else {
@@ -384,9 +373,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("email_otp_error"),
-        message:
-          error.cause?.message ||
-          t("error_sending_otp_to_email"),
+        message: error.cause?.message || t("error_sending_otp_to_email"),
       });
     } finally {
       setIsLoading(false);
@@ -416,7 +403,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             type: "info",
             title: t("phone_verification_label"),
             message: t(
-              "otp_sent_phone_verify_number"
+              `${t("otp_sent_phone_verify_number")} ${phone} ${t("please_verify_your_phone_number")}`
             ),
           });
           setActivePanel(6);
@@ -428,9 +415,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("phone_otp_error"),
-        message:
-          error.cause?.message ||
-          t("error_sending_otp_to_phone"),
+        message: error.cause?.message || t("error_sending_otp_to_phone"),
       });
     } finally {
       setIsLoading(false);
@@ -484,7 +469,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setIsRegistering,
           refetchProfileData,
           setRefetchProfileData,
-          handlePasswordReset
+          handlePasswordReset,
         }}
       >
         {children}

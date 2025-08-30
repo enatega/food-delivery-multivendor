@@ -240,7 +240,7 @@ export default function PhoneVerification({
         </h2>
 
         <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
-          {formData?.phone || "your@email.com"}
+          {formData?.phone || "your phone number"}
         </p>
 
         <p className="text-base text-gray-600 mb-6">
