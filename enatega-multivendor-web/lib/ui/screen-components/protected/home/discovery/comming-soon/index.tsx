@@ -1,17 +1,12 @@
-// components/ComingSoonScreen.tsx
+
 "use client";
 
 import CustomButton from "@/lib/ui/useable-components/button";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
-
 export default function ComingSoonScreen() {
 
-  // Example available region
-  const regionName = "Yarka, Israel";
-
-  // handle click
     const handleClick = () => {
         onUseLocalStorage(
                   "save",
