@@ -4,14 +4,13 @@
 import CustomButton from "@/lib/ui/useable-components/button";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
-import { useRouter } from "next/navigation";
+
 
 export default function ComingSoonScreen() {
-  const router = useRouter();
 
   // Example available region
   const regionName = "Yarka, Israel";
-  const regionPath = "/region/yarka"; // adjust according to your routes
+
   // handle click
     const handleClick = () => {
         onUseLocalStorage(
