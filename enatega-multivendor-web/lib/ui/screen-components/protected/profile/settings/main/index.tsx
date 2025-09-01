@@ -18,6 +18,10 @@ import { useAuth } from "@/lib/context/auth/auth.context";
 import useToast from "@/lib/hooks/useToast";
 import NameUpdateModal from "./update-name";
 import { useTranslations } from "next-intl";
+import { Dialog } from "primereact/dialog";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { set } from "lodash";
 
 export default function SettingsMain() {
   // States for current values
@@ -25,6 +29,9 @@ export default function SettingsMain() {
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [deleteReason, setDeleteReason] = useState<string>("");
+  const [logoutConfirmationVisible, setLogoutConfirmationVisible] =
+    useState(false);
+
   const [isUpdatePhoneModalVisible, setIsUpdatePhoneModalVisible] =
     useState<boolean>(false);
   const [isUpdateNameModalVisible, setIsUpdateNameModalVisible] =
@@ -251,10 +258,47 @@ export default function SettingsMain() {
           />
           <CustomButton
             className="font-light text-gray-700 text-base lg:text-lg hover:text-gray-500"
-            onClick={handleLogout}
+            onClick={() => setLogoutConfirmationVisible(true)}
             label={t("logoutButton")}
           />
         </div>
+
+        {/* Logout Confirmation Dialog */}
+        <Dialog
+          maskClassName="bg-black/80"
+          visible={logoutConfirmationVisible}
+          onHide={() => setLogoutConfirmationVisible(false)}
+          className="w-[95%] sm:w-[80%] md:w-[60%] lg:w-1/3 rounded-xl px-8 bg-white"
+          header={
+            <div className="w-full flex justify-center">
+              <span className="font-inter font-bold text-lg text-gray-800">
+                Are you sure you want to log out?
+              </span>
+            </div>
+          }
+          headerClassName="!justify-center"
+          closable={true}
+          dismissableMask
+        >
+          <div className="flex flex-col items-center text-center space-y-4">
+            {/* Action buttons */}
+            <div className="flex justify-center gap-3 w-full">
+              <CustomButton
+                label="Cancel"
+                className="w-1/2 h-fit bg-transparent text-gray-900 py-2 border border-gray-400 rounded-full text-sm font-medium"
+                onClick={() => setLogoutConfirmationVisible(false)}
+              />
+
+              <button
+                className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
+                onClick={handleLogout}
+              >
+                <FontAwesomeIcon icon={faSignOutAlt} />
+                Logout
+              </button>
+            </div>
+          </div>
+        </Dialog>
       </div>
     </div>
   );
