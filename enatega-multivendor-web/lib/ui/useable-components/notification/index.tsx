@@ -10,23 +10,28 @@ const CustomNotification = ({
   const styles = SEVERITY_STYLES[type];
 
   return (
-    <div className="flex h-full w-full">
-      <div
-        className={`w-[0.5rem] rounded-bl-lg rounded-tl-lg`}
-        style={{ backgroundColor: styles.textColor }}
-      >
+    <div className="flex w-full items-start">
+      <div className="w-1.5" style={{ backgroundColor: styles.textColor }} />
+
+      <div className="flex items-start gap-3 p-3 w-full">
         <FontAwesomeIcon
           icon={styles.icon}
-          size="2xl"
-          color={styles.textColor}
-          className="m-4 ml-4"
+          className="text-[18px] mt-0.5"
+          style={{ color: styles.textColor }}
         />
-      </div>
-
-      <div className="m-4 ml-14">
-        <div className={`font-semibold ${styles.textColor}`}>{title}</div>
-        <div className={`text-sm font-[400] ${styles.textColor}`}>
-          {message}
+        <div className="flex-1">
+          <div
+            className="font-inter font-semibold text-base"
+            style={{ color: styles.textColor }}
+          >
+            {title}
+          </div>
+          <div
+            className="font-inter text-sm leading-5 break-words"
+            style={{ color: styles.textColor }}
+          >
+            {message}
+          </div>
         </div>
       </div>
     </div>

@@ -317,9 +317,9 @@ const onInitDeliveryCharges = () => {
     if (coupon) {
       if (coupon.enabled) {
         showToast({
-          type: "info",
+          type: "success",
           title: t("coupon_applied_title"),
-          message: `${coupon.title} ${t("coupon_has_been_applied_message_with_title")}`,
+          message: `${coupon.title} ${t("coupon_has_been_applied_message")}`,
         });
         setIsCouponApplied(true);
         setCoupon(coupon);
