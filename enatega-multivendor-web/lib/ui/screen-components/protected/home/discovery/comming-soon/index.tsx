@@ -1,4 +1,4 @@
-// components/ComingSoonScreen.tsx
+
 "use client";
 
 import CustomButton from "@/lib/ui/useable-components/button";
