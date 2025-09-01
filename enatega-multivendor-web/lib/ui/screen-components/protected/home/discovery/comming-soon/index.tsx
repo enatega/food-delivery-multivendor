@@ -30,22 +30,22 @@ export default function ComingSoonScreen() {
   return (
     <div className="relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] text-white">
       {/* Floating Food Emojis */}
-      <span className="absolute top-10 left-10 text-4xl opacity-20 animate-bounce">
+      <span aria-hidden="true" className="absolute top-10 left-10 text-4xl opacity-20 animate-bounce">
         🍕
       </span>
-      <span className="absolute top-1/3 right-10 text-5xl opacity-20 animate-pulse">
+      <span aria-hidden="true" className="absolute top-1/3 right-10 text-5xl opacity-20 animate-pulse">
         🍔
       </span>
-      <span className="absolute bottom-16 left-1/4 text-3xl opacity-20 animate-bounce">
+      <span aria-hidden="true" className="absolute bottom-16 left-1/4 text-3xl opacity-20 animate-bounce">
         🥗
       </span>
-      <span className="absolute bottom-24 right-1/3 text-4xl opacity-20 animate-pulse">
+      <span aria-hidden="true" className="absolute bottom-24 right-1/3 text-4xl opacity-20 animate-pulse">
         🍣
       </span>
-      <span className="absolute top-1/4 left-36 text-4xl opacity-20 animate-bounce">
+      <span aria-hidden="true" className="absolute top-1/4 left-36 text-4xl opacity-20 animate-bounce">
         🍩
       </span>
-      <span className="absolute bottom-10 right-1/4 text-4xl opacity-20 animate-pulse">
+      <span aria-hidden="true" className="absolute bottom-10 right-1/4 text-4xl opacity-20 animate-pulse">
         🌮
       </span>
 
@@ -66,7 +66,7 @@ export default function ComingSoonScreen() {
 
       {/* Explore Another Region Button */}
       <CustomButton
-        label= {t('explore_restaurants_in_yarka_israle')}
+        label= {t('explore_restaurants_in_yarka_israel')}
         onClick={handleClick}
         className="px-8 py-3 rounded-full font-semibold bg-white text-[#5AC12F] shadow-lg 
                    hover:bg-white/90 hover:scale-105 transition-transform duration-200"
