@@ -21,7 +21,6 @@ import { useTranslations } from "next-intl";
 import { Dialog } from "primereact/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { set } from "lodash";
 
 export default function SettingsMain() {
   // States for current values

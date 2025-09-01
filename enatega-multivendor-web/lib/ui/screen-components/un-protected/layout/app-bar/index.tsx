@@ -63,8 +63,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { TLocale } from "@/lib/utils/types/locale";
 import { setUserLocale } from "@/lib/utils/methods/locale";
 import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
-import { set } from "lodash";
+
 import CustomButton from "@/lib/ui/useable-components/button";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
@@ -344,9 +343,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     return "";
   }
 
-  function handleLogout(event: any): void {
-    throw new Error("Function not implemented.");
-  }
+
 
   return (
     <>
