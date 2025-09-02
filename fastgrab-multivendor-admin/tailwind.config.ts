@@ -26,9 +26,9 @@ const config = {
         none: 'none',
       },
       colors: {
-        'primary-color': '#b1c748',
-        'secondary-color': '#d8e3a3',
-        'secondary-border-color': '#111827',
+        'primary-color': '#8400ff',
+        'secondary-color': '#a700ff',
+        'secondary-border-color': '#dd0efe',
       },
       width: {
         'custom-button': '110px',

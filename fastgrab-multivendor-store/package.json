@@ -88,7 +88,7 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
-    "sentry-expo": "~7.0.0",
+    "sentry-expo": "^5.0.3",
     "stream": "^0.0.3",
     "subscriptions-transport-ws": "^0.11.0",
     "tailwindcss": "^3.4.17",

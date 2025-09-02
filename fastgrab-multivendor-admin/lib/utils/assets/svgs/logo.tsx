@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function AppLogo() {
   return (
     <div className="flex items-center justify-center relative p-2">
