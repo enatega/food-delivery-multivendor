@@ -21,6 +21,7 @@ import { useTranslations } from "next-intl";
 import { Dialog } from "primereact/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import ThemeToggle from "@/lib/ui/useable-components/theme-button";
 
 export default function SettingsMain() {
   // States for current values
@@ -229,6 +230,18 @@ export default function SettingsMain() {
             isActive={sendReceipts}
             onChange={handleSendReceiptsChange}
           />
+        </div>
+      </div>
+
+      {/* Theme Toggle */}
+      <div className="py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex justify-between items-center">
+          <TextComponent
+            text="theme"
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg"
+          />
+          <ThemeToggle/>
+         
         </div>
       </div>
 

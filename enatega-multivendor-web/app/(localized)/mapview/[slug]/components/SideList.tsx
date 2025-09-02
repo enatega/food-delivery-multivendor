@@ -66,7 +66,7 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
   }, [data, onHover]);
 
   return (
-    <div className="md:shadow-lg md:pt-8 md:bg-white  md:rounded-lg overflow-y-auto h-full md:pb-12 md:p-4 pl-2">
+    <div className="md:shadow-lg md:pt-8 md:bg-white dark:bg-gray-900 md:rounded-lg overflow-y-auto h-full md:pb-12 md:p-4 pl-2">
       <div
         className="flex md:flex-col gap-4 flex-shrink-0 overflow-x-auto scroll-snap-x w-full md:pb-0 pb-2"
         style={{
@@ -79,7 +79,7 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
             ref={(el) => {
               itemRefs.current[index] = el;
             }}
-            className="bg-white flex items-center p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow flex-shrink-0 md:w-auto w-[85%] cursor-pointer"
+            className="bg-white dark:bg-gray-800 flex items-center p-3 border border-gray-200 dark:border-gray-400 rounded-lg hover:shadow-md transition-shadow flex-shrink-0 md:w-auto w-[85%] cursor-pointer"
             style={{
               scrollSnapAlign: "start",
             }}
@@ -102,11 +102,11 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
               style={{ minWidth: "64px", minHeight: "64px" }}
             />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                 {item.name}
               </h3>
-              <p className="text-sm text-gray-600">{item.address}</p>
-              <div className="flex items-center text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-600 dark:text-white">{item.address}</p>
+              <div className="flex items-center text-sm text-gray-500 mt-1 dark:text-white">
                 <span className="mr-2">⭐ {item.reviewAverage.toFixed(1)}</span>
                 <span>({item.reviewCount} reviews)</span>
               </div>

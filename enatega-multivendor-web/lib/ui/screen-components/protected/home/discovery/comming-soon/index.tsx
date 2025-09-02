@@ -28,7 +28,7 @@ export default function ComingSoonScreen() {
     window.location.reload();
   };
   return (
-    <div className="relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] text-white">
+    <div className="relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] dark:bg-gradient-to-b dark:from-[#467e2e] dark:to-[#316e17] text-white">
       {/* Floating Food Emojis */}
       <span aria-hidden="true" className="absolute top-10 left-10 text-4xl opacity-20 animate-bounce">
         🍕

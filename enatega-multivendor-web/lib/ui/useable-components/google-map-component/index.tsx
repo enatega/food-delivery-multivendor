@@ -4,6 +4,8 @@ import { GoogleMap, Marker, Circle } from "@react-google-maps/api";
 import styles from "./google-map-component.module.css";
 import { IGoogleMapComponentProps } from "@/lib/utils/interfaces";
 import { GoogleMapsContext } from "@/lib/context/global/google-maps.context";
+import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
+import { useTheme } from "@/lib/providers/ThemeProvider";
 
 const GoogleMapComponent = ({
   center,
@@ -16,6 +18,7 @@ const GoogleMapComponent = ({
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   // State for controlling zoom level
   const [zoom, setZoom] = useState(15);
+  const { theme } = useTheme();
 
   // Context
   const { isLoaded } = useContext(GoogleMapsContext);
@@ -105,7 +108,9 @@ const GoogleMapComponent = ({
   return (
     <div className="map-container" style={{ position: "relative" }}>
       {/* Google Map Component */}
+      {/* light mode map*/}
       <GoogleMap
+        mapContainerClassName="block dark:hidden"
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={zoom}
@@ -126,6 +131,31 @@ const GoogleMapComponent = ({
               ],
             },
           ],
+        }}
+      >
+        {/* Marker at the center position */}
+        <Marker position={center} />
+        {/* Circle with specified radius around the center */}
+        <Circle center={center} radius={circleRadius} options={circleOptions} />
+      </GoogleMap>
+
+      {/* dark mode Map */}
+
+      <GoogleMap
+        mapContainerClassName=" hidden dark:block"
+        mapContainerStyle={mapContainerStyle}
+        center={center}
+        zoom={zoom}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        options={{
+          zoomControl: false, // Disable default zoom controls
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+          cameraControl: false,
+          styles: theme === "dark" ? darkMapStyle : null,
+          disableDefaultUI: true,
         }}
       >
         {/* Marker at the center position */}

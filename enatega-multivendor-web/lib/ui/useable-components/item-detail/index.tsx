@@ -283,7 +283,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
   }, [foodItem]);
 
   return (
-    <div className="bg-white md:max-w-md w-100 w-full relative">
+    <div className="bg-white md:max-w-md w-100 w-full relative dark:bg-gray-800 dark:text-gray-200">
       {/* close icon to close the modal */}
       <button
         onClick={onClose}
@@ -314,14 +314,14 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
       </div>
 
       <div className="py-3 px-6 mb-4">
-        <h2 className="font-inter font-bold text-[#111827] text-[16px] md:text-[18px] lg:text-[19px] leading-[22px] md:leading-[24px]">
+        <h2 className="font-inter font-bold text-[#111827] dark:text-white text-[16px] md:text-[18px] lg:text-[19px] leading-[22px] md:leading-[24px]">
           {foodItem?.title}
         </h2>
         <p className="text-[#0EA5E9] font-[600] text-[14px] md:text-[15px] lg:text-[16px] mb-2">
           {CURRENCY_SYMBOL}
           {selectedVariation?.price.toFixed(2)}
         </p>
-        <p className="font-inter font-normal text-gray-500 text-[12px] md:text-[13px] lg:text-[14px] leading-[18px] md:leading-[20px]">
+        <p className="font-inter font-normal text-gray-500 dark:text-gray-300 text-[12px] md:text-[13px] lg:text-[14px] leading-[18px] md:leading-[20px]">
           {foodItem?.description}
         </p>
 

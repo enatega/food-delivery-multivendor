@@ -17,7 +17,6 @@ import { IFood, IOpeningTime } from "@/lib/utils/interfaces";
 import { Dialog } from "primereact/dialog";
 import FoodItemDetail from "../item-detail";
 
-
 interface CartProps {
   onClose?: () => void;
 }
@@ -43,7 +42,6 @@ export default function Cart({ onClose }: CartProps) {
   const id = localStorage.getItem("cart-product-store-id") || "";
 
   const { data } = useRestaurant(id, decodeURIComponent(slug));
-  
 
   const router = useRouter();
   const t = useTranslations();
@@ -84,12 +82,12 @@ export default function Cart({ onClose }: CartProps) {
   // Empty cart state
   if (cart.length === 0) {
     return (
-      <div className="h-full flex flex-col items-center justify-center p-6">
+      <div className="h-full flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 transition-colors duration-300">
         <div className="text-center">
-          <h2 className="font-inter font-semibold text-xl text-gray-900 mb-2">
+          <h2 className="font-inter font-semibold text-xl text-gray-900 dark:text-gray-100 mb-2">
             {t("your_cart_is_empty")}
           </h2>
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 dark:text-gray-400 mb-6">
             {t("add_items_to_cart_to_continue")}
           </p>
           <button
@@ -133,7 +131,7 @@ export default function Cart({ onClose }: CartProps) {
       return;
     }
     // Add restaurant ID to the food item
-    
+
     setShowDialog({
       ...food,
       restaurant: data?.restaurant?._id,
@@ -153,224 +151,223 @@ export default function Cart({ onClose }: CartProps) {
     isActive: data?.restaurant?.isActive ?? true,
   };
 
-    const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-      const now = new Date();
-      const currentDay = now
-        .toLocaleString("en-US", { weekday: "short" })
-        .toUpperCase(); // e.g., "MON", "TUE", ...
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-  
-      const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-      if (!todayOpening) return false;
-  
-      return todayOpening.times.some(({ startTime, endTime }) => {
-        const [startHour, startMinute] = startTime.map(Number);
-        const [endHour, endMinute] = endTime.map(Number);
-  
-        const startTotal = startHour * 60 + startMinute;
-        const endTotal = endHour * 60 + endMinute;
-        const nowTotal = currentHour * 60 + currentMinute;
-  
-        return nowTotal >= startTotal && nowTotal <= endTotal;
-      });
-    };
+  const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
+    const now = new Date();
+    const currentDay = now
+      .toLocaleString("en-US", { weekday: "short" })
+      .toUpperCase(); // e.g., "MON", "TUE", ...
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
-    const handleCloseFoodModal = () => {
-      setShowDialog(null);
-    };
-  
+    const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
+    if (!todayOpening) return false;
+
+    return todayOpening.times.some(({ startTime, endTime }) => {
+      const [startHour, startMinute] = startTime.map(Number);
+      const [endHour, endMinute] = endTime.map(Number);
+
+      const startTotal = startHour * 60 + startMinute;
+      const endTotal = endHour * 60 + endMinute;
+      const nowTotal = currentHour * 60 + currentMinute;
+
+      return nowTotal >= startTotal && nowTotal <= endTotal;
+    });
+  };
+
+  const handleCloseFoodModal = () => {
+    setShowDialog(null);
+  };
 
   return (
     <>
-    <div className="h-full flex flex-col bg-white relative">
-      {/* Header */}
-      <div className="flex justify-between items-center p-4 border-b">
-        <h2 className="font-inter font-semibold text-xl text-gray-900">
-          {t("your_order_label")}
-        </h2>
-        <span className="text-gray-500 text-sm">
-          {cartCount} {cartCount === 1 ? t("item_label") : t("items_label")}
-        </span>
-      </div>
-
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Cart Items */}
-        <div className="p-4 space-y-4">
-          {cart.map((item) => (
-            <div
-              key={item.key}
-              className="flex sm:flex-row sm:items-center bg-white rounded-lg p-3 shadow-sm"
-            >
-              <div className="flex-grow">
-                <div className="flex sm:flex-row flex-col sm:items-center gap-4">
-                  <Image
-                    src={item.image}
-                    alt="item image"
-                    width={112} // w-28 = 112px
-                    height={112} // h-28 = 112px
-                    className="w-28 h-28 object-cover rounded-md mb-2"
-                  />
-                  <div>
-                    <h3 className="font-inter font-semibold text-sm text-gray-700">
-                      {item.foodTitle || item.title || t("food_item_label")}
-                    </h3>
-                    <p className="text-[#0EA5E9] font-semibold text-sm">
-                      {CURRENCY_SYMBOL}
-                      {item.price || 0}
-                    </p>
-                  </div>
-                </div>
-                {item.optionTitles && item.optionTitles.length > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    {item.optionTitles.map((title, index) => (
-                      <span key={index} className="mr-2">
-                        + {title}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Quantity Controls */}
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    updateItemQuantity(item.key, -1);
-                  }}
-                  className="bg-gray-200 text-gray-600 rounded-full w-6 h-6 flex items-center justify-center"
-                  type="button"
-                >
-                  <FontAwesomeIcon icon={faMinus} size="xs" />
-                </button>
-
-                <span className="text-gray-900 w-6 text-center">
-                  {item.quantity}
-                </span>
-
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    updateItemQuantity(item.key, 1);
-                  }}
-                  className="bg-[#0EA5E9] text-white rounded-full w-6 h-6 flex items-center justify-center"
-                  type="button"
-                >
-                  <FontAwesomeIcon icon={faPlus} size="xs" />
-                </button>
-              </div>
-            </div>
-          ))}
+      <div className="h-full flex flex-col bg-white dark:bg-gray-800 dark:text-white relative">
+        {/* Header */}
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="font-inter font-semibold text-xl text-gray-900 dark:text-white">
+            {t("your_order_label")}
+          </h2>
+          <span className="text-gray-500 dark:text-white text-sm">
+            {cartCount} {cartCount === 1 ? t("item_label") : t("items_label")}
+          </span>
         </div>
 
-        {/* Recommended for You Section */}
-        {slicedRelatedItems.length > 0 && (
-          <div className="p-4 bg-gray-50">
-            <h2 className="font-inter font-semibold text-base text-gray-900 mb-3">
-              {t("recommended_for_you_label")}
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {slicedRelatedItems.map((id: string) => {
-                // Read the food fragment using Apollo Client
-                const food = client.readFragment({
-                  id: `Food:${id}`,
-                  fragment: FOOD,
-                });
-
-                if (!food) return null;
-                return (
-                  <div
-                    key={id}
-                    // onClick={() => handleAddRelatedItem(id)}
-                    onClick={() => handleOpenFoodModal(food)}
-                    className="flex-grow basis-[calc(50%-0.75rem)] bg-white rounded-lg overflow-hidden relative 
-                    transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer group"
-                  >
-                    {food.image && (
-                      <Image
-                        src={food.image}
-                        alt={food.title}
-                        width={600} // adjust as needed
-                        height={144} // h-36 = 144px
-                        className="w-full h-36 object-cover group-hover:opacity-80 transition-opacity duration-300"
-                      />
-                    )}
-                    <div className="p-2">
-                      <p className="text-sm font-semibold text-gray-700 truncate">
-                        {food.title}
-                      </p>
-                      <p className="text-[#0EA5E9] text-sm font-semibold">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Cart Items */}
+          <div className="p-4 space-y-4">
+            {cart.map((item) => (
+              <div
+                key={item.key}
+                className="flex sm:flex-row sm:items-center bg-white dark:bg-gray-800 dark:text-white rounded-lg p-3 shadow-sm dark:shadow-gray-700"
+              >
+                <div className="flex-grow">
+                  <div className="flex sm:flex-row flex-col sm:items-center gap-4">
+                    <Image
+                      src={item.image}
+                      alt="item image"
+                      width={112} // w-28 = 112px
+                      height={112} // h-28 = 112px
+                      className="w-28 h-28 object-cover rounded-md mb-2"
+                    />
+                    <div>
+                      <h3 className="font-inter font-semibold text-sm text-gray-700 dark:text-white ">
+                        {item.foodTitle || item.title || t("food_item_label")}
+                      </h3>
+                      <p className="text-[#0EA5E9] font-semibold text-sm">
                         {CURRENCY_SYMBOL}
-                        {food.variations[0].price}
+                        {item.price || 0}
                       </p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+                  {item.optionTitles && item.optionTitles.length > 0 && (
+                    <div className="text-xs text-gray-500 dark:text-white mt-1">
+                      {item.optionTitles.map((title, index) => (
+                        <span key={index} className="mr-2">
+                          + {title}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-        {/* Add Comment Section */}
-        <div className="p-4 bg-white">
-          <div className="bg-gray-50 rounded-lg p-3">
-            <h2 className="font-inter font-semibold text-base text-gray-900 mb-2">
-              {t("add_comment_for_restaurant_label")} {getshopTypeTranslated()}
-            </h2>
-            <textarea
-              id="instructions"
-              className="w-full h-20 p-2 bg-white border border-gray-300 rounded-md resize-none focus:border-[#0EA5E9] focus:outline-none text-sm"
-              placeholder={t("special_requests_placeholder")}
-              onChange={({ target: { value } }) => {
-                if (value?.length > 500) return;
-                localStorage.setItem("orderInstructions", value);
-                setInstructions(value);
-              }}
-              value={instructions}
-            />
-            <div className="flex items-end justify-between mt-2">
-              <span className="text-red-500 text-xs">
-                {instructions?.length >= 500 &&
-                  t("maximum_limit_reached_label")}
-              </span>
-              <span className="text-xs text-gray-500">
-                {instructions.length}/500
-              </span>
+                {/* Quantity Controls */}
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      updateItemQuantity(item.key, -1);
+                    }}
+                    className="bg-gray-200 text-gray-600 rounded-full w-6 h-6 flex items-center justify-center"
+                    type="button"
+                  >
+                    <FontAwesomeIcon icon={faMinus} size="xs" />
+                  </button>
+
+                  <span className="text-gray-900 dark:text-white  w-6 text-center">
+                    {item.quantity}
+                  </span>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      updateItemQuantity(item.key, 1);
+                    }}
+                    className="bg-[#0EA5E9] text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    type="button"
+                  >
+                    <FontAwesomeIcon icon={faPlus} size="xs" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Recommended for You Section */}
+          {slicedRelatedItems.length > 0 && (
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 ">
+              <h2 className="font-inter font-semibold text-base  text-gray-900 dark:text-white mb-3">
+                {t("recommended_for_you_label")}
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {slicedRelatedItems.map((id: string) => {
+                  // Read the food fragment using Apollo Client
+                  const food = client.readFragment({
+                    id: `Food:${id}`,
+                    fragment: FOOD,
+                  });
+
+                  if (!food) return null;
+                  return (
+                    <div
+                      key={id}
+                      // onClick={() => handleAddRelatedItem(id)}
+                      onClick={() => handleOpenFoodModal(food)}
+                      className="flex-grow basis-[calc(50%-0.75rem)] bg-white dark:bg-gray-800 rounded-lg overflow-hidden relative 
+                    transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer group"
+                    >
+                      {food.image && (
+                        <Image
+                          src={food.image}
+                          alt={food.title}
+                          width={600} // adjust as needed
+                          height={144} // h-36 = 144px
+                          className="w-full h-36 object-cover group-hover:opacity-80 transition-opacity duration-300"
+                        />
+                      )}
+                      <div className="p-2">
+                        <p className="text-sm font-semibold text-gray-700 dark:text-white truncate">
+                          {food.title}
+                        </p>
+                        <p className="text-[#0EA5E9] text-sm font-semibold">
+                          {CURRENCY_SYMBOL}
+                          {food.variations[0].price}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Add Comment Section */}
+          <div className="p-4 bg-whitedark:bg-gray-800 ">
+            <div className="bg-gray-50 dark:bg-gray-800  rounded-lg p-3">
+              <h2 className="font-inter font-semibold text-base text-gray-900 dark:text-white  mb-2">
+                {t("add_comment_for_restaurant_label")}{" "}
+                {getshopTypeTranslated()}
+              </h2>
+              <textarea
+                id="instructions"
+                className="w-full h-20 p-2 bg-white dark:bg-gray-800 border border-gray-300 rounded-md resize-none focus:border-[#0EA5E9] focus:outline-none text-sm"
+                placeholder={t("special_requests_placeholder")}
+                onChange={({ target: { value } }) => {
+                  if (value?.length > 500) return;
+                  localStorage.setItem("orderInstructions", value);
+                  setInstructions(value);
+                }}
+                value={instructions}
+              />
+              <div className="flex items-end justify-between mt-2">
+                <span className="text-red-500 text-xs">
+                  {instructions?.length >= 500 &&
+                    t("maximum_limit_reached_label")}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-white ">
+                  {instructions.length}/500
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Fixed Checkout Button */}
-      <div className="p-4 border-t bg-white">
-        <button
-          className="flex justify-between items-center w-full bg-[#5AC12F] text-black rounded-full px-4 py-3"
-          onClick={() => {
-            router.push("/order/checkout");
-            if (onClose) onClose();
-          }}
-          type="button"
-        >
-          <div className="flex items-center">
-            <span className="bg-black text-[#5AC12F] rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm font-medium">
-              {cartCount}
-            </span>
+        {/* Fixed Checkout Button */}
+        <div className="p-4 border-t bg-white dark:bg-gray-800 ">
+          <button
+            className="flex justify-between items-center w-full bg-[#5AC12F] text-black rounded-full px-4 py-3"
+            onClick={() => {
+              router.push("/order/checkout");
+              if (onClose) onClose();
+            }}
+            type="button"
+          >
+            <div className="flex items-center">
+              <span className="bg-black text-[#5AC12F] rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm font-medium">
+                {cartCount}
+              </span>
+              <span className="text-black text-base font-medium">
+                {t("go_to_checkout_label")}
+              </span>
+            </div>
             <span className="text-black text-base font-medium">
-              {t("go_to_checkout_label")}
+              {formattedSubtotal}
             </span>
-          </div>
-          <span className="text-black text-base font-medium">
-            {formattedSubtotal}
-          </span>
-        </button>
+          </button>
+        </div>
       </div>
-      
-    </div>
-    {/* Food Item Detail Modal */}
+      {/* Food Item Detail Modal */}
       <Dialog
         visible={!!showDialog}
         className="mx-3 sm:mx-4 md:mx-0 " // Adds margin on small screens

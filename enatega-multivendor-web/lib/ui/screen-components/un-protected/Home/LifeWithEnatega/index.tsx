@@ -18,7 +18,7 @@ const EnategaInfo: React.FC = () => {
   const t = useTranslations();
   return (
     <div className="mt-[80px] mb-[80px]">
-      <div className="flex flex-col justify-center items-center my-[20px]">
+      <div className="flex flex-col justify-center items-center my-[20px] dark:text-white">
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold m-4">
           {t("InfoCardHomeScreen.tagLine")}
         </h1>
