@@ -770,7 +770,7 @@ const onInitDeliveryCharges = () => {
             <Marker
               position={origin}
               icon={{
-                url: HomeIcon.src, // Replace with your icon path or external URL
+                url: RestIcon.src, // Replace with your icon path or external URL
                 scaledSize: new window.google.maps.Size(40, 40),
               }}
             />
@@ -779,7 +779,7 @@ const onInitDeliveryCharges = () => {
             <Marker
               position={destination}
               icon={{
-                url: RestIcon.src, // Replace with your icon path or external URL
+                url:HomeIcon.src,  // Replace with your icon path or external URL
                 scaledSize: new window.google.maps.Size(40, 40),
               }}
             />

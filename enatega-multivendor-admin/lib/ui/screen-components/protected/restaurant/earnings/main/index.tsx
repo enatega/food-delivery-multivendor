@@ -128,9 +128,7 @@ export default function EarningsRestaurantMain({
             dateFilters={dateFilters}
 
             setDateFilters={setDateFilters} 
-            onClearFilters={function (): void {
-              throw new Error('Function not implemented.');
-            } }          
+            onClearFilters={clearAllFilters}          
 
           />
         }

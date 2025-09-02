@@ -42,7 +42,7 @@ import {
   SearchSvg,
 } from "@/lib/utils/assets/svg";
 // import AnimatedLogo from "@/lib/assets/gif/logo.gif";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
@@ -62,15 +62,21 @@ import EmptySearch from "@/lib/ui/useable-components/empty-search-results";
 import { useLocale, useTranslations } from "next-intl";
 import { TLocale } from "@/lib/utils/types/locale";
 import { setUserLocale } from "@/lib/utils/methods/locale";
+import { Dialog } from "primereact/dialog";
+
+import CustomButton from "@/lib/ui/useable-components/button";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isUserAddressModalOpen, setIsUserAddressModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [logoutConfirmationVisible, setLogoutConfirmationVisible] =
+    useState(false);
   const t = useTranslations();
   const [, startTransition] = useTransition();
   const currentLocale = useLocale();
+
   // REf
   const menuRef = useRef<Menu>(null);
   const languageMenuRef = useRef<Menu>(null);
@@ -184,6 +190,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       title: t("logoutSuccessToastTitle"),
       message: t("logoutSuccessToastMessage"),
     });
+    setLogoutConfirmationVisible(false);
   };
 
   // Logo click handler
@@ -335,6 +342,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     }
     return "";
   }
+
+
 
   return (
     <>
@@ -505,7 +514,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                         {
                           label: t("ProfileSection.logout_appbar"),
                           command: () => {
-                            onLogout();
+                            // onLogout();
+                            setLogoutConfirmationVisible(true);
                           },
                         },
                       ]}
@@ -739,6 +749,44 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           }}
         />
       </Sidebar>
+
+      
+      {/* Logout Confirmation Dialog */}
+      <Dialog
+        maskClassName="bg-black/80"
+        visible={logoutConfirmationVisible}
+        onHide={() => setLogoutConfirmationVisible(false)}
+        className="w-[95%] sm:w-[80%] md:w-[60%] lg:w-1/3 rounded-xl px-8 bg-white"
+        header={
+          <div className="w-full flex justify-center">
+            <span className="font-inter font-bold text-lg text-gray-800">
+              Are you sure you want to log out?
+            </span>
+          </div>
+        }
+        headerClassName="!justify-center"
+        closable={true}
+        dismissableMask
+      >
+        <div className="flex flex-col items-center text-center space-y-4">
+          {/* Action buttons */}
+          <div className="flex justify-center gap-3 w-full">
+            <CustomButton
+              label="Cancel"
+              className="w-1/2 h-fit bg-transparent text-gray-900 py-2 border border-gray-400 rounded-full text-sm font-medium"
+              onClick={() => setLogoutConfirmationVisible(false)}
+            />
+
+            <button
+              className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
+              onClick={onLogout}
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} />
+              Logout
+            </button>
+          </div>
+        </div>
+      </Dialog>
 
       <UserAddressComponent
         visible={isUserAddressModalOpen}
