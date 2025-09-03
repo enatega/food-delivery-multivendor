@@ -19,13 +19,13 @@ import { useTranslations } from "next-intl";
 
 export default function DiscoveryScreen() {
   const t = useTranslations();
-  const { restaurantCuisinesData, groceryCuisinesData, error, loading } =
+  const { restaurantCuisinesData, groceryCuisinesData, error, loading  } =
     useGetCuisines();
 
   // if restaurantCuisinesData is empty array then call coomingSoonCard
   if (loading) {
     return null;
-  } else if (restaurantCuisinesData.length === 0) {
+  } else if (restaurantCuisinesData?.length === 0) {
     return <CommingSoonScreen />;
   } else return (
       <>

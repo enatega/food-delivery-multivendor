@@ -709,6 +709,10 @@ export default function UserAddressComponent(
       {isLoaded && (
         <div className="w-full">
           <GoogleMap
+           options={{
+            styles: theme === "dark" ? darkMapStyle : null,
+            disableDefaultUI: true,
+          }}  
             mapContainerStyle={{
               width: "100%",
               height: "400px",
@@ -830,17 +834,18 @@ export default function UserAddressComponent(
             {LOCATIONT_TYPE.map((item) => (
               <div
                 key={item.name}
-                className="p-2 cursor-pointer flex items-center gap-x-2 shadow rounded"
+                className="p-2 cursor-pointer flex items-center gap-x-2 shadow rounded dark:bg-gray-800"
                 onClick={() => setSelectedLocationType(item.name)}
               >
                 <div>
                   {item.icon(
+                    selectedLocationType === item.name ? "#0EA5E9" : undefined,
                     selectedLocationType === item.name ? "#0EA5E9" : undefined
                   )}
                 </div>
                 <div className="flex flex-col gap-y-[2px]">
                   <span
-                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500"}`}
+                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
                   >
                     {item.name}
                   </span>
@@ -852,7 +857,7 @@ export default function UserAddressComponent(
 
         <div className="w-full flex justify-between gap-x-2">
           <button
-            className="w-full  h-fit bg-transparent text-gray-900 py-2 border border-black rounded-full text-base lg:text-[14px]"
+            className="w-full  h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-black dark:border-gray-600 rounded-full text-base lg:text-[14px]"
             onClick={() => {
               setIndex([0, 0]);
               onHide();

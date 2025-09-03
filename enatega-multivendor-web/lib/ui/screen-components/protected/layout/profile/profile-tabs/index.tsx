@@ -46,7 +46,7 @@ export default function ProfileTabs({ className, tabs }: IProfileTabsProps & { t
   }, [pathname]);
 
   return (
-    <div className={`w-full md:w-auto max-w-7xl border-b border-gray-200 ${className || ""}`}>
+    <div className={`w-full md:w-auto max-w-7xl border-b border-gray-200 dark:border-gray-700 ${className || ""}`}>
       {/* Mobile View - Horizontally scrollable with centered active tab */}
       <div 
         ref={scrollContainerRef}
@@ -61,7 +61,7 @@ export default function ProfileTabs({ className, tabs }: IProfileTabsProps & { t
               tab={tab}
               isActive={isActive}
               onClick={() => router.push(tab.path)}
-              className={`py-1 text-sm font-medium whitespace-nowrap flex-shrink-0 mx-3 snap-center ${
+              className={`py-1 text-sm font-medium whitespace-nowrap flex-shrink-0 mx-3 snap-center dark:text-gray-300 ${
                 isActive ? 'active-tab' : ''
               }`}
             />
@@ -77,7 +77,7 @@ export default function ProfileTabs({ className, tabs }: IProfileTabsProps & { t
             tab={tab}
             isActive={pathname === tab.path}
             onClick={() => router.push(tab.path)}
-            className="py-1 px-1 text-lg font-medium"
+            className="py-1 px-1 text-lg font-medium dark:text-gray-300"
           />
         ))}
       </div>

@@ -1018,10 +1018,4 @@ input:-webkit-autofill:active {
 
 /* === PrimeReact panel overrides === */
 
-.dark .p-inputtext,
-.dark .p-password input,
-.dark .p-autocomplete-panel,
-.dark .p-password-panel {
-  background-color:  /* gray-800 */ #374151 ;
-  color: #f3f4f6; /* gray-100 */
-}
+
