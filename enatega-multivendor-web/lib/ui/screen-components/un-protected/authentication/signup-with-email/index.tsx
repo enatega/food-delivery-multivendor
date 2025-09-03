@@ -117,7 +117,7 @@ export default function SignUpWithEmail({
     }
   };
   return (
-    <div className="flex flex-col items-start justify-between w-full h-full dark:bg-gray-900 dark:text-white">
+    <div className="flex flex-col items-start justify-between w-full h-full dark:bg-gray-900 dark:text-gray-100">
       <PersonIcon lightColor="#000000" darkColor="#FFFFFF" />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
         <h3 className="text-3xl font-semibold">
