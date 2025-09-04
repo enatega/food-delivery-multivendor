@@ -229,7 +229,6 @@
   "Assigned": "Un livreur a été assigné et viendra bientôt chercher votre commande.",
   "PickedElapsed": "Votre livreur a pris votre commande il y a {min} min et est en route vers vous !",
   "Picked": "Votre livreur a pris votre commande et est en route vers vous !",
-  "JustNowLabel": "À l'instant",
   "DeliveredRestaurant": "Votre commande a été livrée à {time}. Bon appétit !",
   "DeliveredStore": "Votre commande a été livrée à {time}. Merci d'avoir magasiné avec nous !",
   "DeliveredSimpleRestaurant": "Votre commande a été livrée. Bon appétit !",
