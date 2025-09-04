@@ -1,5 +1,4 @@
 "use client";
-import { useTheme } from "@/lib/providers/ThemeProvider";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Dialog } from "primereact/dialog";

@@ -4,7 +4,7 @@ import { IProtectedHomeLayoutComponent } from "@/lib/utils/interfaces";
 import { usePathname, useRouter } from "next/navigation";
 
 // Svg
-import { CutlerySvg, HomeSvg, StoreSvg } from "@/lib/utils/assets/svg";
+import { CutlerySvg,StoreSvg } from "@/lib/utils/assets/svg";
 import PaddingContainer from "@/lib/ui/useable-components/containers/padding";
 import { useEffect, useState } from "react";
 // context

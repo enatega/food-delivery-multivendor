@@ -35,8 +35,8 @@ export default function CustomPhoneTextField({
     onChange?.(phone);
   };
 
-  const inputStyle =
-    page === "vendor-profile-edit" ? { width: "100%" } : { width: "100%" };
+  // const inputStyle =
+  //   page === "vendor-profile-edit" ? { width: "100%" } : { width: "100%" };
 
   // const MaininputStyle =
   //   page === 'vendor-profile-edit'
