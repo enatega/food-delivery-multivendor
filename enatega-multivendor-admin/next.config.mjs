@@ -78,6 +78,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'enatega-backend.s3.eu-north-1.amazonaws.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.s3.*.amazonaws.com',
+      },
     ], // Add placehold.co as an allowed domain
   },
 };
