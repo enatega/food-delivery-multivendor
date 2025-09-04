@@ -1,4 +1,6 @@
+import { DirectionProvider } from "@/lib/context/direction/DirectionContext";
 import { ThemeProvider } from "@/lib/providers/ThemeProvider";
+import { DirectionHandler } from "@/lib/ui/layouts/global/rtl/DirectionHandler";
 import InstallPWA from "@/lib/ui/pwa/InstallPWA";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -17,8 +19,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getLocale();
-
- 
+  const rtlLocales = ["ar", "hr", "fa", "ur"];
+  const baseLocale = locale.split("-")[0];
+  const dir = rtlLocales.includes(locale) || rtlLocales.includes(baseLocale)
+      ? "rtl"
+      : "ltr";
   //Providing all messages to the client
   //side is the easiest way to get started
   
@@ -26,7 +31,7 @@ export default async function RootLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/png" href="/favsicon.png" />
         {/* 🔥 Inline theme script to prevent flash of wrong theme */}
@@ -62,11 +67,14 @@ export default async function RootLayout({
         />
         {/* Add more media queries for other device sizes if needed */}
       </head>
-      <body>
+      <body  className={dir === "rtl" ? "rtl" : ""}>
       <ThemeProvider>
         <NextIntlClientProvider messages={messages}>
+        <DirectionProvider dir={dir}>
+        <DirectionHandler />
           {children}
           <InstallPWA/>
+          </DirectionProvider>
         </NextIntlClientProvider>
         </ThemeProvider>
       </body>

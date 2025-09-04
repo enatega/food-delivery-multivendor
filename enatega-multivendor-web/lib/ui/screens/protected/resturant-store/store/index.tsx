@@ -67,9 +67,15 @@ import { useTranslations } from "next-intl";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
 export default function StoreDetailsScreen() {
+
+   // get the RTL direction
+   const direction = document.documentElement.getAttribute("dir") || "ltr";
+   
   const t = useTranslations();
   // Access the UserContext via our custom hook
   const { cart, transformCartWithFoodInfo, updateCart, profile } = useUser();
+
+  
 
   // Params
   const { id, slug }: { id: string; slug: string } = useParams();
@@ -647,7 +653,7 @@ export default function StoreDetailsScreen() {
         )}
 
         {!loading && (
-          <div className="absolute bottom-0 left-0 md:left-20 p-4">
+          <div className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}>
             <div className="flex flex-col items-start">
               <Image
                 src={restaurantInfo.image}
@@ -672,8 +678,7 @@ export default function StoreDetailsScreen() {
         <button
           onClick={handleFavoriteClick}
           disabled={addFavoriteLoading}
-          className="absolute top-4 right-4 md:bottom-4 md:right-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95"
-        >
+          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}        >
           {addFavoriteLoading ? (
             <Loader style={{ width: "1.5rem", height: "1.5rem" }} />
           ) : (
@@ -930,7 +935,7 @@ export default function StoreDetailsScreen() {
                               </div>
 
                               {/* Add Button */}
-                              <div className="absolute top-2 right-2">
+                              <div className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}>
                                 <button
                                   className={`rounded-full shadow-md w-6 h-6 flex items-center justify-center ${
                                     meal.isOutOfStock

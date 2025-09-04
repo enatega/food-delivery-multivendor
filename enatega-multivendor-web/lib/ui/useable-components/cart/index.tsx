@@ -354,7 +354,7 @@ export default function Cart({ onClose }: CartProps) {
             type="button"
           >
             <div className="flex items-center">
-              <span className="bg-black text-[#5AC12F] rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm font-medium">
+              <span className="bg-black text-[#5AC12F] rounded-full w-6 h-6 flex items-center justify-center mr-2 rtl:ml-2 text-sm font-medium">
                 {cartCount}
               </span>
               <span className="text-black text-base font-medium">

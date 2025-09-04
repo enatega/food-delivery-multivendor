@@ -49,6 +49,9 @@ export default function AuthModal({
     phone: "",
   });
 
+  // get the RTL direction
+  const direction = document.documentElement.getAttribute("dir") || "ltr";
+
   // Refs
   const authenticationPanelRef = useRef(null);
 
@@ -164,7 +167,7 @@ export default function AuthModal({
       {/* close icon to close the modal */}
       <button
         onClick={handleModalToggle}
-        className="tooltip tooltip-left absolute top-3 right-3 z-10 transition-all duration-300 rounded-full p-2 dark:text-gray-300"
+        className={` ${direction === "rtl" ? "left-0" : "right-0"} tooltip tooltip-left absolute top-3  z-10 transition-all duration-300 rounded-full p-2 dark:text-gray-300`}
         data-tip="Close"
         data-tooltip-id="close-auth-modal"
         data-tooltip-content="Close"

@@ -65,6 +65,7 @@ import { setUserLocale } from "@/lib/utils/methods/locale";
 import { Dialog } from "primereact/dialog";
 
 import CustomButton from "@/lib/ui/useable-components/button";
+import { useDirection } from "@/lib/context/direction/DirectionContext";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
@@ -81,6 +82,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   const menuRef = useRef<Menu>(null);
   const languageMenuRef = useRef<Menu>(null);
 
+  const dir = useDirection();
+  const position: "left" | "right" = dir === "rtl" ? "left" : "right";
   // Hooks
   const router = useRouter();
   const { GOOGLE_MAPS_KEY, CURRENCY_SYMBOL } = useConfig();
@@ -202,7 +205,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     }
   };
 
-  //Language DropDowm
+  //Language DropDoDowm
   // const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
 
   // const handleLanguageChange = (lang: string) => {
@@ -698,6 +701,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
       {/* Cart Sidebar */}
       <Sidebar
+        position={position}
         visible={isCartOpen}
         onHide={() => {
           setIsCartOpen(false);
@@ -708,7 +712,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           localStorage.removeItem("orderInstructions");
           window.dispatchEvent(new Event("orderInstructionsUpdated"));
         }}
-        position="right"
         className={`!ml-0 !p-0 !m-0 w-full md:w-[430px] lg:w-[580px] dark:bg-gray-800`}
       >
         <Cart

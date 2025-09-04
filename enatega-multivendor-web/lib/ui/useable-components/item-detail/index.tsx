@@ -25,6 +25,9 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
   const { CURRENCY_SYMBOL } = useConfig();
   const { id, slug }: { id: string; slug: string } = useParams();
 
+    // get the RTL direction
+    const direction = document.documentElement.getAttribute('dir') || 'ltr';
+
   // Access user context for cart functionality
   const {
     addItem,
@@ -287,7 +290,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
       {/* close icon to close the modal */}
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 bg-slate-400 hover:bg-slate-500 transition-all duration-300 rounded-full p-2"
+        className={`${direction === "rtl" ? "left-3" : "right-3" } absolute top-3 bg-slate-400 hover:bg-slate-500 transition-all duration-300 rounded-full p-2`}
       >
         <FontAwesomeIcon
           icon={faXmark}
@@ -411,7 +414,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           {/* Quantity Controls - Rounded Rectangle Container */}
           <div className="flex items-center space-x-2 bg-gray-200 rounded-[42px] px-3 py-1 flex-[0.2]">
             <button
-              className="bg-white text-gray-900 rounded-full w-6 h-6 flex items-center justify-center shadow"
+              className="bg-white text-gray-900 rounded-full w-6 h-6 flex rtl:ml-2 items-center justify-center shadow"
               onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
               type="button"
             >

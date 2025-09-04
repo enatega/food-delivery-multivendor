@@ -860,7 +860,7 @@ export default function OrderCheckoutScreen() {
       {/* <!-- Main Content --> */}
       <PaddingContainer className="pb-10">
         <div className="max-w-6xl md:pt-10 p-4 md:p-0 lg:flex lg:space-x-4">
-          <div className="lg:w-3/4 md:mr-40">
+          <div className="lg:w-3/4 md:mr-40 md:rtl:ml-40">
             {/* <!-- Delivery and Pickup Toggle --> */}
             <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full p-2 mb-6">
               <button
@@ -876,7 +876,7 @@ export default function OrderCheckoutScreen() {
               >
                 <FontAwesomeIcon
                   icon={faBicycle}
-                  className="mr-2 text-gray-900 dark:text-gray-100"
+                  className="mr-2 rtl:ml-2 text-gray-900 dark:text-gray-100"
                 />
                 <span className="font-medium text-gray-900 dark:text-gray-100 font-inter text-xs md:text-sm xl:[14px]">
                   {t("delivery_label")}
@@ -896,7 +896,7 @@ export default function OrderCheckoutScreen() {
               >
                 <FontAwesomeIcon
                   icon={faStore}
-                  className="mr-2 text-gray-900 dark:text-gray-100"
+                  className="mr-2 rtl:ml-2 text-gray-900 dark:text-gray-100"
                 />
                 <span className="font-medium text-gray-900 dark:text-gray-100 font-inter text-xs md:text-sm xl:[14px]">
                   {t("pickup_label")}
@@ -916,12 +916,12 @@ export default function OrderCheckoutScreen() {
                   {deliveryType === "Pickup" ? (
                     <FontAwesomeIcon
                       icon={faStore}
-                      className="mr-2 text-gray-900 dark:text-gray-100"
+                      className="mr-2 rtl:ml-2 text-gray-900 dark:text-gray-100"
                     />
                   ) : (
                     <FontAwesomeIcon
                       icon={faBicycle}
-                      className="mr-2 text-gray-900 dark:text-gray-100"
+                      className="mr-2 rtl:ml-2 text-gray-900 dark:text-gray-100"
                     />
                   )}
 
@@ -953,7 +953,7 @@ export default function OrderCheckoutScreen() {
             >
               <div className="flex items-center">
                 <input
-                  className="mr-2"
+                  className="mr-2 rtl:ml-2"
                   id="leave-at-door"
                   type="checkbox"
                   checked={shouldLeaveAtDoor}
@@ -992,7 +992,7 @@ export default function OrderCheckoutScreen() {
                         alt="Big Share meal"
                         width={50}
                         height={50}
-                        className="w-12 h-12 rounded-full mr-2 object-cover"
+                        className="w-12 h-12 rounded-full mr-2 rtl:ml-2 object-cover"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base md:text-[12px] lg:text-[14px] xl:text-[16px]">
@@ -1076,7 +1076,7 @@ export default function OrderCheckoutScreen() {
                     >
                       <FontAwesomeIcon
                         icon={paymentMethodItem.icon}
-                        className="text-gray-900 mr-2 dark:text-gray-100"
+                        className="text-gray-900 mr-2 dark:text-gray-100 rtl:ml-2"
                       />
                       {t(paymentMethodItem.label)}
                     </label>
@@ -1155,7 +1155,7 @@ export default function OrderCheckoutScreen() {
                       disabled={couponLoading}
                     />
                     <button
-                      className="bg-[#5AC12F] sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
+                      className="bg-[#5AC12F] rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
                       onClick={onApplyCoupon}
                     >
                       {couponLoading ? (

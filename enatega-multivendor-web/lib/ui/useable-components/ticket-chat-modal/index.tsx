@@ -169,6 +169,9 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     return ticket.title;
   };
 
+   // get the RTL direction
+   const direction = document.documentElement.getAttribute("dir") || "ltr";
+
   return (
     <Dialog
       visible={visible}
@@ -308,13 +311,32 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || isSending}
-                className={`bg-green-500 rounded-r-md p-2 text-white flex items-center justify-center ${
+                className={`bg-green-500 ${direction === "rtl" ? "rounded-l-md" : "rounded-r-md"} p-2 text-white flex items-center justify-center ${
                   !message.trim() || isSending
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-green-600"
                 }`}
               >
-                {isSending ? (
+                {direction === "rtl" ? (
+                  isSending ? (
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                      />
+                    </svg>
+                  )
+                ) : isSending ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
                   <svg

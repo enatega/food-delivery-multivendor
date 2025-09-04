@@ -70,7 +70,7 @@ export default function ProfileTabs({ className, tabs }: IProfileTabsProps & { t
       </div>
 
       {/* Desktop View */}
-      <div className="hidden md:flex space-x-8">
+      <div className="hidden md:flex space-x-8 rtl:space-x-reverse">
         {tabsToRender.map((tab) => (
           <TabItem
             key={tab.path}

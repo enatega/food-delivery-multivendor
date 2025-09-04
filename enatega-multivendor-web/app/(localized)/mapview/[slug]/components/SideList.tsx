@@ -98,7 +98,7 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
               alt={item.name}
               width={64}
               height={64}
-              className="object-cover rounded-md mr-4"
+              className="object-cover rounded-md mr-4 rtl:ml-4"
               style={{ minWidth: "64px", minHeight: "64px" }}
             />
             <div className="flex-1">
@@ -107,7 +107,7 @@ const SideList: React.FC<SideListProps> = ({ data, onHover }) => {
               </h3>
               <p className="text-sm text-gray-600 dark:text-white">{item.address}</p>
               <div className="flex items-center text-sm text-gray-500 mt-1 dark:text-white">
-                <span className="mr-2">⭐ {item.reviewAverage.toFixed(1)}</span>
+                <span className="mr-2 rtl:ml-2">⭐ {item.reviewAverage.toFixed(1)}</span>
                 <span>({item.reviewCount} reviews)</span>
               </div>
             </div>

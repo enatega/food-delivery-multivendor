@@ -535,6 +535,8 @@ body {
   padding: 0;
 }
 
+
+
 /* Auto Complet */
 .p-autocomplete {
   padding: 0;
@@ -1016,6 +1018,13 @@ input:-webkit-autofill:active {
   caret-color: #f3f4f6 !important; /* keeps cursor visible */
 }
 
-/* === PrimeReact panel overrides === */
+[dir = "rtl"] .p-icon-field-right > .p-input-icon:last-of-type {
+  left: 0;
+  right: auto;
+}
+
+.rtl-carousel .p-carousel-container {
+  direction: ltr !important; /* Force LTR for animation */
+}
 
 

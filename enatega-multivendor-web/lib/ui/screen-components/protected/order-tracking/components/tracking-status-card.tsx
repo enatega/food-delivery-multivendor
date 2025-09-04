@@ -210,7 +210,7 @@ const getStatusMessage = () => {
       {/* Status indicator with icon */}
       <div className="flex items-center mb-3">
         {/* Status icon based on order status */}
-        <div className="mr-3">
+        <div className="mr-3 rtl:ml-3">
           {orderTrackingDetails.orderStatus === "PENDING" && (
             <div className="w-8 h-8 flex items-center justify-center bg-orange-100 dark:bg-orange-900 rounded-full">
               <svg

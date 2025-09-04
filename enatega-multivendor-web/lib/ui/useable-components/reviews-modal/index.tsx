@@ -131,7 +131,7 @@ const ReviewsModal = ({
                     <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200">
                       {review.order?.user?.name || "Anonymous User"}
                     </h3>
-                    <span className="text-xs md:text-sm text-gray-400 dark:text-gray-400 whitespace-nowrap">
+                    <span className="text-xs rtl:mr-2 md:text-sm text-gray-400 dark:text-gray-400 whitespace-nowrap">
                       {formatDateForCreatedAt(review.createdAt)}
                     </span>
                   </div>

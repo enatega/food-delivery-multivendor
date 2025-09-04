@@ -20,7 +20,7 @@ const AddressItem: FC<IAddressItemProps> = ({
       className="flex items-center justify-between p-4 border-b relative dark:border-gray-700"
     >
       <div className="flex items-center">
-        <div className="mr-4">
+        <div className="mr-4 rtl:ml-4">
           <HomeSvg color="black" width={28} height={28} darkColor="#ffffff" />
         </div>
         <div>
