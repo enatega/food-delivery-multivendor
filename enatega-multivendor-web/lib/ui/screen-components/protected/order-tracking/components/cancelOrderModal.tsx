@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { Dialog } from "primereact/dialog";
 import { useMutation } from "@apollo/client";
@@ -14,11 +14,16 @@ interface CancelOrderModalProps {
   onSuccess: () => void;
 }
 
-function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderModalProps) {
+function CancelOrderModal({
+  visible,
+  onHide,
+  orderId,
+  onSuccess,
+}: CancelOrderModalProps) {
   const { showToast } = useToast();
   const { authToken } = useAuth(); // Get auth context for authentication
-  const t = useTranslations()
- 
+  const t = useTranslations();
+
   const [abortOrder, { loading }] = useMutation(ABORT_ORDER, {
     onCompleted: (data) => {
       console.log("Order cancelled successfully:", data);
@@ -30,7 +35,6 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
       console.log("onSuccess is called");
       onSuccess();
       // Refresh the order tracking page to show the updated status
-    
     },
     onError: (error) => {
       console.error("Abort order error:", error);
@@ -42,7 +46,7 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
       showToast({
         type: "error",
         title: t("cancellation_failed_title"),
-        message: error.message || t('unable_to_cancel_order_message'),
+        message: error.message || t("unable_to_cancel_order_message"),
       });
     },
     // Ensure token is sent with the request
@@ -79,11 +83,13 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
 
   return (
     <Dialog
+      contentClassName="p-6 dark:bg-gray-900 dark:text-gray-300"
+      headerClassName="dark:bg-gray-900 dark:text-gray-300"
       visible={visible}
       onHide={onHide}
       modal
-      className="w-full max-w-md mx-4 bg-white p-5"
-      contentClassName="p-6"
+      className="w-full max-w-md mx-4 bg-white dark:bg-gray-900 p-5"
+     
       showHeader={false}
       closable={true}
       dismissableMask
@@ -92,11 +98,11 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
         <div className="flex justify-end mb-2">
           <button
             onClick={onHide}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-500"
+              className="h-5 w-5 text-gray-500 dark:text-gray-400"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -109,11 +115,13 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
           </button>
         </div>
 
-        <h2 className="text-xl font-semibold mb-3">{t("order_cancel_warning_line2")}</h2>
-        <p className="text-gray-600 text-sm mb-6">
+        <h2 className="text-xl font-semibold mb-3 dark:text-gray-100">
+          {t("order_cancel_warning_line2")}
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
           {t("order_cancel_warning_line1")}
           <br />
-          {t('order_cancel_warning_line2')}
+          {t("order_cancel_warning_line2")}
         </p>
 
         <div className="space-y-3">
@@ -122,20 +130,18 @@ function CancelOrderModal({ visible, onHide, orderId, onSuccess }: CancelOrderMo
             disabled={loading}
             className="w-full py-3 px-4 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors disabled:opacity-50"
           >
-            {loading ? t("cancelling_text") : t('cancel_my_order_button')}
+            {loading ? t("cancelling_text") : t("cancel_my_order_button")}
           </button>
 
           <button
             onClick={onHide}
             disabled={loading}
-            className="w-full py-3 px-4 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="w-full py-3 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
           >
             {t("ill_wait_for_my_order_button")}
           </button>
         </div>
       </div>
-
-   
     </Dialog>
   );
 }

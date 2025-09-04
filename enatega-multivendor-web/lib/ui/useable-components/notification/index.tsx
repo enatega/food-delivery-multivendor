@@ -19,11 +19,11 @@ const CustomNotification = ({
           icon={styles.icon}
           size="2xl"
           color={styles.textColor}
-          className="m-4 ml-4"
+          className="m-4 ml-4 rtl:mr-4"
         />
       </div>
 
-      <div className="m-4 ml-14">
+      <div className="m-4 ml-14 rtl:mr-4">
         <div className={`font-semibold ${styles.textColor}`}>{title}</div>
         <div className={`text-sm font-[400] ${styles.textColor}`}>
           {message}

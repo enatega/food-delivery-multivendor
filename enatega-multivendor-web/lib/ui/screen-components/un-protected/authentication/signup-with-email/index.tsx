@@ -117,8 +117,8 @@ export default function SignUpWithEmail({
     }
   };
   return (
-    <div className="flex flex-col items-start justify-between w-full h-full">
-      <PersonIcon />
+    <div className="flex flex-col items-start justify-between w-full h-full dark:bg-gray-900 dark:text-gray-100">
+      <PersonIcon lightColor="#000000" darkColor="#FFFFFF" />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
         <h3 className="text-3xl font-semibold">
           {t("lets_get_you_started_label")}
@@ -169,7 +169,7 @@ export default function SignUpWithEmail({
         <button
           type="button"
           onClick={() => handleChangePanel(0)}
-          className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
+          className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium mt-2 dark:bg-gray-500 dark:text-gray-300 dark:hover:bg-gray-600 text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
         >
           <FcGoogle className="text-lg" />
           {t("continue_with_google_instead_label")}

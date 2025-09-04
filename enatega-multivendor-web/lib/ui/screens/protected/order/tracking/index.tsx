@@ -244,7 +244,7 @@ console.log("data ",mergedOrderDetails)
         order={orderTrackingDetails}
         onSubmitRating={handleSubmitRating}
       />
-      <div className="w-screen h-full flex flex-col pb-20">
+      <div className="w-screen h-full flex flex-col pb-20 dark:bg-gray-900 dark:text-gray-100">
         <div className="scrollable-container flex-1">
           {/* Google Map for Tracking */}
           <GoogleMapTrackingComponent

@@ -65,8 +65,8 @@ const AppLayout = ({ children }: IProvider) => {
       `}>
         <AppTopbar handleModalToggle={handleModalToggle} />
       </div>
-      <div className={`layout-main-container ${isSearchFocused && 'blur-md overflow-hidden h-screen'}`}>
-        <div className="layout-main w-full min-h-screen">{children}</div>
+      <div className={`layout-main-container ${isSearchFocused && 'blur-md overflow-hidden h-screen '}`}>
+        <div className="layout-main w-full min-h-screen dark:bg-gray-900">{children}</div>
       </div>
       <div className="pb-[45px] md:pb-0 bg-[#141414]">
         <AppFooter />

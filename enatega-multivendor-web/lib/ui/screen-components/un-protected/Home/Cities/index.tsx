@@ -33,7 +33,7 @@ const Cities = () => {
     <div>
       {toggle == false ?
         <>
-          <div className="text-[#111827] text-xl font-semibold ">
+          <div className="text-[#111827] dark:text-white text-xl font-semibold ">
            {t('selectCity')}
           </div>
           {/* <div className="flex flex-wrap gap-6 items-center  my-[30px]"> */}

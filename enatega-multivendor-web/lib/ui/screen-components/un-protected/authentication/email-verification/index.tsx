@@ -184,15 +184,15 @@ export default function EmailVerification({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8 dark:bg-gray-900 dark:text-gray-100">
       <div className="flex flex-col justify-start text-left w-full">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-2">
           {t("OTP_Code_Sent")}
         </h2>
-        <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
+        <p className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white mb-3 break-words">
           {formData?.email || "your@email.com"}
         </p>
-        <p className="text-base text-gray-600 mb-6">
+        <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
           {t("verify_your_email_label")}
         </p>
       </div>
@@ -212,14 +212,14 @@ export default function EmailVerification({
               onChange={(e) => handleChange(e, i)}
               onKeyDown={(e) => handleKeyDown(e, i)}
               onPaste={i === 0 ? handlePaste : undefined}
-              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 dark:bg-gray-800  rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
               autoFocus={i === 0}
             />
           ))}
         </div>
       </div>
 
-      <p className="text-sm text-gray-500 mb-6 text-center w-full">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center w-full">
         {t("otp_valid_for_10_minutes_label")}
       </p>
 

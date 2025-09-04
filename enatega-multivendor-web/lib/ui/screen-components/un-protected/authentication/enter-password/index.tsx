@@ -88,15 +88,15 @@ export default function EnterPassword({
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full h-full px-4 sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col items-center justify-center w-full h-full px-4 sm:px-6 lg:px-8 py-6 dark:bg-gray-900 dark:text-white">
         <div className="w-full max-w-md space-y-6">
           <div className="flex flex-col items-start">
             <PasswordIcon />
             <div className="mt-4">
-              <h3 className="text-xl md:text-2xl font-semibold text-gray-800">
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("good_to_see_you_again")}
               </h3>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">
+              <p className="text-gray-600  mt-1 text-sm sm:text-base">
                 {t("enter_password_to_login")}
               </p>
             </div>
@@ -130,7 +130,7 @@ export default function EnterPassword({
             <button
               type="button"
               onClick={() => handleChangePanel(0)}
-              className="flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-full transition-colors duration-200 w-full"
+              className="flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300  dark:bg-gray-500 dark:hover:bg-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200 w-full"
             >
               <FcGoogle className="text-xl" />
               {t("continue_with_google_instead_label")}
