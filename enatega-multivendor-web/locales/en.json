@@ -230,6 +230,7 @@
   "Assigned": "A rider has been assigned and will pick up your order soon.",
   "PickedElapsed": "Your rider picked up your order {min} min ago and is heading your way!",
   "Picked": "Your rider has picked up your order and is heading your way!",
+  "JustNowLabel": "Just Now",
   "DeliveredRestaurant": "Your order was delivered at {time}. Enjoy your meal!",
   "DeliveredStore": "Your order was delivered at {time}. Thank you for shopping with us!",
   "DeliveredSimpleRestaurant": "Your order has been delivered. Enjoy your meal!",

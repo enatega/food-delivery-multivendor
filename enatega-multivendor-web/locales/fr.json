@@ -229,6 +229,7 @@
   "Assigned": "Un livreur a été assigné et viendra bientôt chercher votre commande.",
   "PickedElapsed": "Votre livreur a pris votre commande il y a {min} min et est en route vers vous !",
   "Picked": "Votre livreur a pris votre commande et est en route vers vous !",
+  "JustNowLabel": "À l'instant",
   "DeliveredRestaurant": "Votre commande a été livrée à {time}. Bon appétit !",
   "DeliveredStore": "Votre commande a été livrée à {time}. Merci d'avoir magasiné avec nous !",
   "DeliveredSimpleRestaurant": "Votre commande a été livrée. Bon appétit !",
@@ -551,7 +552,7 @@
   "coming_soon": "Bientôt disponible",
   "coming_soon_in_your_area_label": "Bientôt disponible dans votre région",
   "explore_restaurants_in_yarka_israel": "Explorer les restaurants à Yarka, Israël",
-  "coming_soon_in_your_area_message": "Nous travaillons dur pour amener Enatega dans votre région. En attendant, explorez les restaurants dans d'autres villes.",  
+  "coming_soon_in_your_area_message": "Nous travaillons dur pour amener Enatega dans votre région. En attendant, explorez les restaurants dans d'autres villes.",
   "see_all": "Voir tout",
   "decrease": "-",
   "increase": "+",
@@ -745,17 +746,16 @@
   "AboutUsPage_join16": "Rejoignez-nous",
   "AboutUsPage_join17": "Êtes-vous un vendeur cherchant à développer votre entreprise alimentaire ? Ou un client affamé à la recherche de votre prochain repas préféré ? Enatega est l'endroit pour vous. Rejoignez notre communauté grandissante et faites partie de l'avenir de la livraison de nourriture.",
   "installPWA": "Installez cette application pour une meilleure expérience !",
-"install_app_label": "Installer l'application",
+  "install_app_label": "Installer l'application",
 
-"view_label": "Voir",
-"onMap_label": "Sur la carte",
-"update_password_error_title": "Erreur",
-"sort_by_label": "Trier par",
-"delete_success": "Supprimé avec succès",
+  "view_label": "Voir",
+  "onMap_label": "Sur la carte",
+  "update_password_error_title": "Erreur",
+  "sort_by_label": "Trier par",
+  "delete_success": "Supprimé avec succès",
 
- "Addons_label": "Modules complémentaires",
- "order_details_no_instructions_text": "Aucune instruction ajoutée",
+  "Addons_label": "Modules complémentaires",
+  "order_details_no_instructions_text": "Aucune instruction ajoutée",
 
- "and_labed": "et"
-
+  "and_labed": "et"
 }
