@@ -1,5 +1,5 @@
 // Contexts
-import { ConfigurationContext } from '@/lib/context/global/configuration.context';
+// import { ConfigurationContext } from '@/lib/context/global/configuration.context';
 import { ToastContext } from '@/lib/context/global/toast.context';
 
 // GraphQL
@@ -8,7 +8,6 @@ import { UPLOAD_IMAGE_TO_S3 } from '@/lib/api/graphql/mutations';
 
 // Interfaces
 import {
-  IConfiguration,
   IImageUploadComponentProps,
 } from '@/lib/utils/interfaces';
 import Image from 'next/image';
@@ -51,8 +50,8 @@ function CustomUploadImageComponent({
   ],
 }: IImageUploadComponentProps) {
   // Context
-  const configuration: IConfiguration | undefined =
-    useContext(ConfigurationContext);
+  // const configuration: IConfiguration | undefined =
+  //   useContext(ConfigurationContext);
   const { showToast } = useContext(ToastContext);
 
   // Mutations
