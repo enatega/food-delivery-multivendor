@@ -15,6 +15,9 @@ import Image from 'next/image';
 // Hooks
 import { memo, useCallback, useContext, useState } from 'react';
 
+// Utils
+import { compressImage } from '@/lib/utils/methods';
+
 // Components
 import CustomLoader from '../custom-progress-indicator';
 
@@ -85,11 +88,16 @@ function CustomUploadImageComponent({
       setImageFile(URL.createObjectURL(file));
       
       try {
-        // Convert to base64 if needed
+        // Compress image if it's an image file
+        const processedFile = file.type.startsWith('image/') 
+          ? await compressImage(file, 800, 0.7)
+          : file;
+        
+        // Convert to base64
         const base64 = await new Promise<string>((resolve) => {
           const reader = new FileReader();
           reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(processedFile);
         });
         
         const { data } = await uploadToS3({
