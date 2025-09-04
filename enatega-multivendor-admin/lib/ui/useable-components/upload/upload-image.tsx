@@ -2,8 +2,9 @@
 import { ConfigurationContext } from '@/lib/context/global/configuration.context';
 import { ToastContext } from '@/lib/context/global/toast.context';
 
-// Utils
-import { uploadImageToCloudinary } from '@/lib/services';
+// GraphQL
+import { useMutation } from '@apollo/client';
+import { UPLOAD_IMAGE_TO_S3 } from '@/lib/api/graphql/mutations';
 
 // Interfaces
 import {
@@ -54,6 +55,9 @@ function CustomUploadImageComponent({
     useContext(ConfigurationContext);
   const { showToast } = useContext(ToastContext);
 
+  // Mutations
+  const [uploadToS3] = useMutation(UPLOAD_IMAGE_TO_S3);
+
   // States
   const [isUploading, setIsUploading] = useState(false);
   const [imageFile, setImageFile] = useState('');
@@ -75,100 +79,67 @@ function CustomUploadImageComponent({
     return extracted_files.length ? extracted_files[0] : files[0];
   };
 
-  // Convert to Base64
-  const imageToBase64 = useCallback(
+  // Upload to S3
+  const uploadImageToS3 = useCallback(
     async (file: File): Promise<void> => {
-      var isValid = true;
       setIsUploading(true);
-      // if (file?.type.startsWith('video/')) {
-      //   isValid = await validateVideo(file);
-      // } else {
-      //   isValid = await validateImage(file);
-      // }
-      if (!isValid) {
+      setImageFile(URL.createObjectURL(file));
+      
+      try {
+        // Convert to base64 if needed
+        const base64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+        
+        const { data } = await uploadToS3({
+          variables: { image: base64 }
+        });
+        
+        const imageUrl = data?.uploadImageToS3?.imageUrl;
+        
+        if (imageUrl) {
+          onSetImageUrl(name, imageUrl);
+          showToast({
+            type: 'info',
+            title: title,
+            message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
+            duration: 2500,
+          });
+        } else {
+          throw new Error('No image URL returned');
+        }
+      } catch (error) {
+        onSetImageUrl(name, '');
+        showToast({
+          type: 'error',
+          title: title,
+          message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+          duration: 2500,
+        });
+        setImageValidationErr({
+          bool: true,
+          msg: 'Upload failed',
+        });
+        setImageFile('');
+      } finally {
         setIsUploading(false);
-        return;
-      } else {
-        const fileReader = new FileReader();
-        fileReader.onloadend = async () => {
-          if (fileReader.result) {
-            setImageFile(fileReader.result as string);
-            const uploadURL = file?.type.startsWith('video/')
-              ? configuration?.cloudinaryUploadUrl?.replace('image', 'video')
-              : (configuration?.cloudinaryUploadUrl ?? '');
-            await uploadImageToCloudinary(
-              fileReader.result as string,
-              uploadURL ?? '',
-              configuration?.cloudinaryApiKey ?? ''
-            )
-              .then((url) => {
-                console.log(':rocket: ~ .then ~ url:', url);
-                isValid = false;
-                console.log(':rocket: ~ Valid url idk about the response');
-                onSetImageUrl(name, url);
-                if (!url) {
-                  showToast({
-                    type: 'error',
-                    title: title,
-                    message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
-                    duration: 2500,
-                  });
-                  setImageValidationErr({
-                    bool: true,
-                    msg: 'Cloudinary Url Invalid',
-                  });
-                  setImageFile('');
-                  return;
-                }
-                showToast({
-                  type: 'info',
-                  title: title,
-                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
-                  duration: 2500,
-                });
-              })
-              .catch((err) => {
-                onSetImageUrl(name, '');
-                showToast({
-                  type: 'error',
-                  title: title,
-                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
-                  duration: 2500,
-                });
-
-                console.log('errrror=====>', err);
-              })
-              .finally(() => {
-                setIsUploading(false);
-              });
-          }
-        };
-        fileReader.readAsDataURL(file);
       }
     },
-    [
-      name,
-      onSetImageUrl,
-      configuration?.cloudinaryApiKey,
-      configuration?.cloudinaryUploadUrl,
-      showToast,
-      title,
-      // validateImage,
-      fileTypes,
-    ]
+    [name, onSetImageUrl, showToast, title, fileTypes, uploadToS3, t]
   );
 
   // Select Image
   const handleFileSelect = useCallback(
     (event: FileUploadSelectEvent): void => {
       const result = filterFiles(event);
-      // Size and Resolution Check
       if (result) {
         setCurrentFileType(result.type);
-        imageToBase64(result);
+        uploadImageToS3(result);
       }
     },
-    [imageToBase64]
+    [uploadImageToS3]
   );
 
   // Handle cancel click
