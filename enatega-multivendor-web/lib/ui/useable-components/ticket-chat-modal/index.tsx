@@ -169,6 +169,9 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     return ticket.title;
   };
 
+   // get the RTL direction
+   const direction = document.documentElement.getAttribute("dir") || "ltr";
+
   return (
     <Dialog
       visible={visible}
@@ -231,19 +234,19 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
         {/* Fixed Ticket Description Section (non-scrollable) */}
         {ticketData?.getSingleSupportTicket?.description && (
-          <div className="border-b border-gray-200 p-3 bg-gray-50">
-            <div className="text-xs font-medium text-gray-500 mb-1">
+          <div className="border-b border-gray-200 dark:border-gray-600 p-3 bg-gray-50 dark:text-white dark:bg-gray-700">
+            <div className="text-xs font-medium text-gray-500 mb-1 dark:text-white">
               Ticket Description:
             </div>
-            <p className="text-sm text-gray-700">{ticketData.getSingleSupportTicket.description}</p>
-            <div className="text-xs text-right mt-1 text-gray-500">
+            <p className="text-sm text-gray-700 dark:text-white">{ticketData.getSingleSupportTicket.description}</p>
+            <div className="text-xs text-right mt-1 text-gray-500 dark:text-white">
               {formatTimestamp(ticket?.createdAt || Date.now().toString())}
             </div>
           </div>
         )}
 
         {/* Messages Area (scrollable) */}
-        <div className="flex-1 p-4 overflow-y-auto bg-white">
+        <div className="flex-1 p-4 overflow-y-auto bg-white dark:bg-gray-800 dark:text-white">
           {loading || ticketLoading ? (
             <ChatSkeleton />
           ) : error ? (
@@ -288,33 +291,52 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
         {/* Input Area */}
         {isClosed ? (
-          <div className="p-4 border-t border-gray-200 bg-gray-50 text-center">
+          <div className="p-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-800 dark:text-white text-center">
             <p className="text-gray-500">
               This ticket is closed. You cannot send new messages.
             </p>
           </div>
         ) : (
-          <div className="p-4 border-t border-gray-200 bg-white">
+          <div className="p-4 border-t border-gray-200 bg-white dark:bg-gray-800 dark:text-white">
             <div className="flex gap-2">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Type your message here..."
-                className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#5AC12F] resize-none"
+                className="flex-1 p-3 border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#5AC12F] resize-none"
                 rows={2}
                 disabled={isSending}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || isSending}
-                className={`bg-green-500 rounded-r-md p-2 text-white flex items-center justify-center ${
+                className={`bg-green-500 ${direction === "rtl" ? "rounded-l-md" : "rounded-r-md"} p-2 text-white flex items-center justify-center ${
                   !message.trim() || isSending
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-green-600"
                 }`}
               >
-                {isSending ? (
+                {direction === "rtl" ? (
+                  isSending ? (
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                      />
+                    </svg>
+                  )
+                ) : isSending ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
                   <svg

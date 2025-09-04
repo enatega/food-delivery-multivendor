@@ -80,8 +80,8 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white shadow-lg rounded-m my-6">
-      <h2 className="text-[20px] font-semibold mb-6">{heading}</h2>
+    <div className="p-6 max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-m my-6">
+      <h2 className="text-[20px] font-semibold mb-6 dark:text-gray-100">{heading}</h2>
 
       <Formik
         initialValues={initialValues}
@@ -98,7 +98,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                     <InputText
                       placeholder={t("first_name_label")}
                       {...field}
-                      className="w-full text-sm border-2 border-gray-100 p-2 rounded-lg"
+                      className="w-full text-sm border-2 border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
                     />
                   )}
                 </Field>
@@ -115,7 +115,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                     <InputText
                       placeholder={t('last_name_label')}
                       {...field}
-                      className="w-full border-2 text-sm border-gray-100 p-2 rounded-lg"
+                      className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
                     />
                   )}
                 </Field>
@@ -129,13 +129,13 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
             {/* Email */}
             <div>
-              <label className="text-sm">{t("email_label")}</label>
+              <label className="text-sm dark:text-gray-300">{t("email_label")}</label>
               <Field name= "email">
                 {({ field }: any) => (
                   <InputText
                     placeholder={t("please_enter_your_email_address_label")}
                     {...field}
-                    className="w-full border-2 text-sm border-gray-100 p-2 rounded-lg"
+                    className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
                   />
                 )}
               </Field>
@@ -162,9 +162,11 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                 {({ field }: any) => (
                   <Password
                     {...field}
+                    inputClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
+                    panelClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
                     placeholder={t("password")}
                     toggleMask
-                    className="w-full border-2 text-sm border-gray-100 p-2 rounded-lg"
+                    className="w-full text-sm border-2 border-gray-200 dark:border-gray-600 p-2 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     feedback={false}
                   />
                 )}
@@ -178,14 +180,16 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
             {/* Confirm Password */}
             <div>
-              <label className="text-sm">{t("confirm_password_label")}</label>
+              <label className="text-sm dark:text-gray-300">{t("confirm_password_label")}</label>
               <Field name="confirmPassword">
                 {({ field }: any) => (
                   <Password
                     placeholder={t("confirm_password_label")}
+                    inputClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
+                    panelClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
                     {...field}
                     toggleMask
-                    className="w-full border-2 text-sm border-gray-100 p-2 rounded-lg"
+                    className="w-full text-sm border-2 border-gray-200 dark:border-gray-600 p-2 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     feedback={false}
                   />
                 )}
@@ -203,9 +207,9 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                 inputId="termsAccepted"
                 checked={values.termsAccepted}
                 onChange={(e) => setFieldValue("termsAccepted", e.checked)}
-                className="border-gray-400 text-sm"
+                className="border-gray-400 dark:border-gray-600 dark:bg-gray-700"
               />
-              <label className="text-sm" htmlFor="termsAccepted">
+              <label className="text-sm text-gray-800 dark:text-gray-300" htmlFor="termsAccepted">
                 {t("i_accept_the_terms_and_conditions")}
               </label>
             </div>

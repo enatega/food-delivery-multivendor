@@ -1,12 +1,27 @@
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { HomeMiniCardProps } from '@/lib/utils/interfaces/Home-interfaces'
 
 
-const HomeMiniCard:React.FC<HomeMiniCardProps> = ({image,heading,subText,headingColor,backColor}) => {
+
+const HomeMiniCard:React.FC<HomeMiniCardProps> = ({image,heading,subText,headingColor,backColor, darkBackColor}) => {
+
+
+// get theme from local storage
+  const [theme, setTheme] = useState("light");
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme) {
+      setTheme(storedTheme);
+    }
+  }, []);
+
+const bgColor = theme === "dark" ? darkBackColor : backColor;
+
   return (
     <div className='h-[400px] flex justify-center items-center flex-col bg-green-100 rounded-3xl '
-    style={{backgroundColor:backColor}}
+    style={{backgroundColor:bgColor}}
     >
       <div className='w-[300px] mx-auto flex flex-col items-center justify-between'>
       <Image
@@ -20,7 +35,7 @@ const HomeMiniCard:React.FC<HomeMiniCardProps> = ({image,heading,subText,heading
         style={{color:headingColor}}
         
         >{heading}</h1>
-        <p className='font-light'>{subText}</p>
+        <p className='font-light dark:text-white'>{subText}</p>
       </div>
       </div>
     </div>

@@ -73,14 +73,14 @@ export default function LoginWithEmail({
   };
 
   return (
-    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
-      <EmailIcon />
+    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8 dark:bg-gray-900 dark:text-gray-300">
+      <EmailIcon lightColor="#000000" darkColor="#FFFFFF" />
 
       <div className="flex flex-col w-full mt-4">
-        <h3 className="text-xl md:text-2xl font-semibold">
+        <h3 className="text-xl md:text-2xl font-semibold dark:text-white">
           {t("whats_your_email_label")}?
         </h3>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
           {t("well_check_if_you_have_an_account_message")}
         </p>
       </div>
@@ -98,7 +98,7 @@ export default function LoginWithEmail({
             onChange={(e) => handleChange(e.target.value)}
             className={`pl-10 w-full py-2 px-3 rounded-md border ${
               isValid ? "border-gray-300" : "border-red-500"
-            } focus:outline-none focus:ring-2 focus:ring-[#5AC12F]`}
+            } focus:outline-none focus:ring-2 focus:ring-[#5AC12F] dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300`}
           />
         </div>
 
@@ -115,7 +115,7 @@ export default function LoginWithEmail({
         <button
           type="button"
           onClick={() => handleChangePanel(0)}
-          className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
+          className="flex items-center justify-center gap-2 rounded-full py-2 px-4 text-sm font-medium dark:bg-gray-500 dark:text-gray-200 dark:hover:bg-gray-400 text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto self-center"
         >
           <FcGoogle className="text-lg" />
           {t("continue_with_google_instead_label")}

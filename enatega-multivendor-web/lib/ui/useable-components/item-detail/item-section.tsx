@@ -66,15 +66,15 @@ export const ItemDetailSection = <
     const t = useTranslations()
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 dark:bg-gray-800 dark:rounded-lg dark:p-3">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-inter font-bold text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[22px]">
+        <h3 className="font-inter font-bold text-[14px] md:text-[16px] lg:text-[18px] leading-[20px] md:leading-[22px] dark:text-white">
           {title}
         </h3>
 
         {/* Required/Optional Tag - Only shown when showTag is true */}
         {showTag && requiredTag && (
-          <span className="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-800">
+          <span className="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white">
             {requiredTag}
           </span>
         )}
@@ -98,15 +98,16 @@ export const ItemDetailSection = <
               }
               onChange={() => handleSelect(option)}
               disabled={option.isOutOfStock}
+              className="accent-sky-600 dark:accent-sky-400 dark:bg-gray-700 dark:border-gray-600 "
             />
 
             {/* Label & Price */}
             <div className="flex justify-between items-center w-full">
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-gray-900 dark:text-white">
                 {option.title}{" "}
-                {option.isOutOfStock ?<span className="text-red-500">{t('out_of_stock_label')}</span> : ""}{" "}
+                {option.isOutOfStock ?<span className="text-red-500 dark:text-red-400">{t('out_of_stock_label')}</span> : ""}{" "}
               </span>
-              <span className="text-sm text-gray-700">${option.price}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">${option.price}</span>
             </div>
           </label>
         ))}

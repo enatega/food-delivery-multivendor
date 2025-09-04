@@ -28,10 +28,10 @@ export default function ClearCartModal({
     >
       <div className="p-6">
         <div className="text-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-3">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
             {t('are_you_sure_label')}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             {t('clear_cart_warning_message')}
           </p>
         </div>

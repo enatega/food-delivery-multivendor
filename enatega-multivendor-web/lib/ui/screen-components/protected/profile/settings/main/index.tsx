@@ -21,6 +21,7 @@ import { useTranslations } from "next-intl";
 import { Dialog } from "primereact/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import ThemeToggle from "@/lib/ui/useable-components/theme-button";
 
 export default function SettingsMain() {
   // States for current values
@@ -131,7 +132,7 @@ export default function SettingsMain() {
   }
 
   return (
-    <div className="w-full mx-auto bg-white">
+    <div className="w-full mx-auto bg-white dark:bg-gray-900">
       <DeleteAccountDialog
         visible={deleteAccount}
         onHide={handleCancelDelete}
@@ -147,24 +148,24 @@ export default function SettingsMain() {
       />
       {/* Email */}
       <div className="py-4 border-b">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center dark:border-gray-700">
           <TextComponent
             text={t("emailLabel")}
-            className="font-normal text-gray-700 text-base md:text-lg "
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg "
           />
           <TextComponent
             text={profileData?.profile?.email}
-            className="font-medium text-gray-700 text-base md:text-lg "
+            className="font-medium text-gray-700 dark:text-gray-100  text-base md:text-lg "
           />
         </div>
       </div>
 
       {/* Mobile Number */}
-      <div className="py-4 border-b">
-        <div className="flex justify-between items-center">
+      <div className="py-4 border-b dark:border-gray-700">
+        <div className="flex justify-between items-center ">
           <TextComponent
             text={t("mobileNumberLabel")}
-            className="font-normal text-gray-700 text-base md:text-lg "
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg "
           />
           <div className="flex flex-col md:flex-row items-center gap-2">
             {!profileData?.profile?.phoneIsVerified && (
@@ -178,7 +179,7 @@ export default function SettingsMain() {
             <h1
               title={t("updatePhoneTitle")}
               onClick={handleUpdatePhoneModal}
-              className="font-medium text-blue-700 text-base md:text-lg  cursor-pointer"
+              className="font-medium text-blue-700 dark:text-blue-400 text-base md:text-lg  cursor-pointer"
             >
               {profileData?.profile?.phone || "N/A"}
             </h1>
@@ -187,16 +188,16 @@ export default function SettingsMain() {
       </div>
 
       {/* Name */}
-      <div className="py-4 border-b">
+      <div className="py-4 border-b dark:border-gray-700">
         <div className="flex justify-between items-center">
           <TextComponent
             text={t("nameLabel")}
-            className="font-normal text-gray-700 text-base md:text-lg "
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg "
           />
           <h1
             title={t("updateNameTitle")}
             onClick={handleUpdateNameModal}
-            className="font-medium text-blue-700 text-base md:text-lg  cursor-pointer"
+            className="font-medium text-blue-700 dark:text-blue-400 text-base md:text-lg  cursor-pointer"
           >
             {profileData?.profile?.name || "N/A"}
           </h1>
@@ -204,31 +205,43 @@ export default function SettingsMain() {
       </div>
 
       {/* Delete Account */}
-      <div className="py-4 border-b">
+      <div className="py-4 border-b dark:border-gray-700">
         <div className="flex justify-between items-center">
           <TextComponent
             text={t("deleteAccountLabel")}
-            className="font-normal text-gray-700 text-base md:text-lg "
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg "
           />
           <CustomButton
             label={t("deleteButton")}
-            className="text-red-500 hover:text-red-600 font-medium text-base md:text-lg  "
+            className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 font-medium text-base md:text-lg  "
             onClick={handleDeleteAccount}
           />
         </div>
       </div>
 
       {/* Send Receipts */}
-      <div className="py-4 border-b">
+      <div className="py-4 border-b dark:border-gray-700">
         <div className="flex justify-between items-center">
           <TextComponent
             text={t("sendReceiptsLabel")}
-            className="font-normal text-gray-700 text-base md:text-lg "
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg "
           />
           <CustomInputSwitch
             isActive={sendReceipts}
             onChange={handleSendReceiptsChange}
           />
+        </div>
+      </div>
+
+      {/* Theme Toggle */}
+      <div className="py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex justify-between items-center">
+          <TextComponent
+            text="theme"
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg"
+          />
+          <ThemeToggle/>
+         
         </div>
       </div>
 
@@ -253,10 +266,10 @@ export default function SettingsMain() {
         <div className="flex justify-between items-center">
           <TextComponent
             text={t("logoutLabel")}
-            className="font-normal text-gray-700 text-base md:text-lg "
+            className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg "
           />
           <CustomButton
-            className="font-light text-gray-700 text-base lg:text-lg hover:text-gray-500"
+            className="font-light text-gray-700 dark:text-gray-200 text-base lg:text-lg hover:text-gray-500"
             onClick={() => setLogoutConfirmationVisible(true)}
             label={t("logoutButton")}
           />
@@ -264,27 +277,28 @@ export default function SettingsMain() {
 
         {/* Logout Confirmation Dialog */}
         <Dialog
+        contentClassName="dark:bg-gray-800"
           maskClassName="bg-black/80"
           visible={logoutConfirmationVisible}
           onHide={() => setLogoutConfirmationVisible(false)}
-          className="w-[95%] sm:w-[80%] md:w-[60%] lg:w-1/3 rounded-xl px-8 bg-white"
+          className="w-[95%] sm:w-[80%] md:w-[60%] lg:w-1/3 rounded-xl px-8 bg-white dark:bg-gray-800 dark:text-white"
           header={
             <div className="w-full flex justify-center">
-              <span className="font-inter font-bold text-lg text-gray-800">
+              <span className="font-inter font-bold text-lg text-gray-800 dark:text-white">
                 Are you sure you want to log out?
               </span>
             </div>
           }
-          headerClassName="!justify-center"
+          headerClassName="!justify-center dark:bg-gray-800"
           closable={true}
           dismissableMask
         >
-          <div className="flex flex-col items-center text-center space-y-4">
+          <div className="flex flex-col items-center text-center space-y-4 dark:bg-gray-800 dark:text-white">
             {/* Action buttons */}
             <div className="flex justify-center gap-3 w-full">
               <CustomButton
                 label="Cancel"
-                className="w-1/2 h-fit bg-transparent text-gray-900 py-2 border border-gray-400 rounded-full text-sm font-medium"
+                className="w-1/2 h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-gray-400 rounded-full text-sm font-medium"
                 onClick={() => setLogoutConfirmationVisible(false)}
               />
 
@@ -292,7 +306,7 @@ export default function SettingsMain() {
                 className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
                 onClick={handleLogout}
               >
-                <FontAwesomeIcon icon={faSignOutAlt} />
+                <FontAwesomeIcon icon={faSignOutAlt} /> 
                 Logout
               </button>
             </div>

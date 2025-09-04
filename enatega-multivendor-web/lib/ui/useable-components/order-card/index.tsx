@@ -214,7 +214,7 @@ const handleCloseClearCartDialog = () => {
   };
 
   return (
-    <div className={twMerge("p-6", className)}>
+    <div className={twMerge("p-6 dark:bg-gray-900 dark:border-gray-700", className)}>
       <div className="flex flex-col md:flex-row gap-4">
         {/* Restaurant Info */}
         <div className="flex items-start gap-4 flex-1">
@@ -228,19 +228,19 @@ const handleCloseClearCartDialog = () => {
             />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-lg">{order?.restaurant?.name}</h3>
+            <h3 className="font-semibold text-lg dark:text-gray-100">{order?.restaurant?.name}</h3>
             {type === "active" && (
-              <h1 className="text-gray-600 text-sm">
+              <h1 className="text-gray-600 dark:text-gray-300 text-sm">
                 {(order?.items && order?.items[0]?.title) || ""}
               </h1>
             )}
             {type === "active" ? (
-              <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                <i className="fa-solid fa-clock text-gray-400"></i>
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400  mt-1">
+                <i className="fa-solid fa-clock text-gray-400 dark:text-gray-500"></i>
               </div>
             ) : (
               <>
-                <div className="flex items-center text-sm text-gray-600 mt-1">
+                <div className="flex items-center text-sm text-gray-600 dark:text-white mt-1">
                   <i className="fa-solid fa-calendar-alt text-gray-400"></i>
                   <span>
                     {order?.deliveredAt
@@ -250,7 +250,7 @@ const handleCloseClearCartDialog = () => {
                         : t("cancelled")}
                   </span>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
+                <div className="text-sm text-gray-600 mt-1 dark:text-white">
                   {t("order_number")} #{order.orderId?.substring(0, 8)}
                 </div>
                 <OrderItems order={order} />
@@ -261,7 +261,7 @@ const handleCloseClearCartDialog = () => {
 
         {/* Price and Action */}
         <div className="flex md:flex-col md:items-end justify-between gap-2">
-          <div className="font-semibold text-lg">
+          <div className="font-semibold text-lg dark:text-gray-100">
             ${order.orderAmount?.toFixed(2)}
           </div>
 
@@ -273,7 +273,7 @@ const handleCloseClearCartDialog = () => {
                   : t("select_item_to_reorder")
               }
               iconColor="black"
-              classNames="bg-[#5AC12F] w-[content] px-4 gap-x-0 text-[12px] font-medium m-0"
+              classNames="bg-[#5AC12F]  w-[content] px-4 gap-x-0 text-[12px] font-medium m-0"
               handleClick={
                 type === "active"
                   ? () => handleTrackOrder(order)
@@ -287,9 +287,9 @@ const handleCloseClearCartDialog = () => {
 
       {/* Rating for past orders */}
       {type === "past" && order.orderStatus === "DELIVERED" && (
-        <div className="mt-4 pt-4">
+        <div className="mt-4 pt-4 dark:border-gray-700">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{t("rate_the_order")}</span>
+            <span className="text-sm font-medium dark:text-gray-100">{t("rate_the_order")}</span>
             <Rating
               value={order.review?.rating || 0}
               cancel={false}
@@ -306,7 +306,7 @@ const handleCloseClearCartDialog = () => {
 <CustomDialog
   visible={isDialogVisible}
   onHide={handleCloseDialog}
-  className="p-4 sm:p-6 max-w-sm sm:max-w-md w-full rounded-xl"
+  className="p-4 sm:p-6 max-w-sm sm:max-w-md w-full rounded-xl dark:bg-gray-900"
 >
   {selectedOrder && (
     <div className="space-y-5">
@@ -320,10 +320,10 @@ const handleCloseClearCartDialog = () => {
           className="rounded-lg object-cover flex-shrink-0 border border-gray-200"
         />
         <div className="flex flex-col">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
             {selectedOrder.restaurant?.name}
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-white ">
             {selectedOrder.restaurant?.address}
           </p>
         </div>
@@ -331,7 +331,7 @@ const handleCloseClearCartDialog = () => {
 
       {/* Order Info with Checkboxes */}
       <div className="border-t pt-4">
-        <h3 className="font-semibold text-gray-800 mb-2">
+        <h3 className="font-semibold text-gray-800 dark:text-white mb-2">
           Order #{selectedOrder.orderId}
         </h3>
         <ul className="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -347,7 +347,7 @@ const handleCloseClearCartDialog = () => {
             return (
               <li
                 key={id}
-                className="flex flex-col p-2 rounded-lg hover:bg-gray-50 transition"
+                className="flex flex-col p-2 rounded-lg dark:text-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-600 transition"
               >
                 <div className="flex items-center gap-3 w-full">
                   <input
@@ -363,14 +363,14 @@ const handleCloseClearCartDialog = () => {
                     }}
                   />
                   <div className="flex flex-col flex-1">
-                    <span className="text-gray-800 font-medium text-sm">
+                    <span className="text-gray-800 font-medium text-sm dark:text-white">
                       {item.title}
                     </span>
-                    <span className="text-gray-500 text-xs">
+                    <span className="text-gray-500 text-xs dark:text-white">
                       Qty: {item.quantity}
                     </span>
                   </div>
-                  <span className="text-gray-700 font-medium text-sm">
+                  <span className="text-gray-700 font-medium text-sm dark:text-white">
                     ${itemTotal.toFixed(2)}
                   </span>
                 </div>
@@ -378,13 +378,13 @@ const handleCloseClearCartDialog = () => {
                 {(item.addons ?? []).length > 0 && (
                   <div className="ml-8 mt-1 space-y-1">
                     {item.addons?.map((addon, addonIndex) => (
-                      <div key={addonIndex} className="text-xs text-gray-600">
+                      <div key={addonIndex} className="text-xs text-gray-600 dark:text-white">
                         <span className="font-medium">{addon.title}:</span>
                         <ul className="ml-2 list-disc list-inside">
                           {addon.options?.map((option, optionIndex) => (
                             <li key={optionIndex} className="flex justify-between">
-                              <span>{option.title}</span>
-                              <span>${(option.price ?? 0).toFixed(2)}</span>
+                              <span className="dark:text-white">{option.title}</span>
+                              <span className="dark:text-white">${(option.price ?? 0).toFixed(2)}</span>
                             </li>
                           ))}
                         </ul>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   DirectionsRenderer,
   DirectionsService,
@@ -13,6 +13,8 @@ import RestIcon from "../../../../../assets/rest_icon.png";
 import Image from "next/image";
 import TrackingRider from "./trackingRider";
 import { useTranslations } from "next-intl";
+import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
+import { useTheme } from "@/lib/providers/ThemeProvider";
 
 interface IGoogleMapTrackingComponent {
   isLoaded: boolean;
@@ -48,9 +50,9 @@ function GoogleMapTrackingComponent({
   const showRestaurantMarker = ["PENDING", "ACCEPTED", "ASSIGNED"].includes(
     orderStatus
   );
-  const t = useTranslations()
+  const t = useTranslations();
   const showRiderMarker = ["PICKED", "ASSIGNED"].includes(orderStatus);
-
+  const { theme } = useTheme();
   // Update map center and directions based on order status
   const mapOrigin = showRiderMarker ? undefined : origin; // Will be provided by TrackingRider component if rider is shown
   const mapDestination = destination; // Always show home location
@@ -58,8 +60,12 @@ function GoogleMapTrackingComponent({
 
   return (
     <div className="relative">
-      {isLoaded ?
+      {isLoaded ? (
         <GoogleMap
+          options={{
+            styles: theme === "dark" ? darkMapStyle : null,
+            disableDefaultUI: true,
+          }}
           mapContainerStyle={{
             width: "100%",
             height: "400px",
@@ -118,7 +124,8 @@ function GoogleMapTrackingComponent({
             />
           )}
         </GoogleMap>
-      : <>
+      ) : (
+        <>
           <Image
             alt={t("map_showing_delivery_route_alt")}
             className="w-full h-64 object-cover"
@@ -130,7 +137,7 @@ function GoogleMapTrackingComponent({
             H
           </div>{" "}
         </>
-      }
+      )}
     </div>
   );
 }
