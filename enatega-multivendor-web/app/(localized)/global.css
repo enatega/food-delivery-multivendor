@@ -535,6 +535,8 @@ body {
   padding: 0;
 }
 
+
+
 /* Auto Complet */
 .p-autocomplete {
   padding: 0;
@@ -827,7 +829,6 @@ Discovery Caurousal
     display: none;
   }
 }
-
 /* Panel Menu */
 
 .p-panelmenu .p-panelmenu-header.p-highlight .p-menuitem-text,
@@ -913,3 +914,117 @@ Discovery Caurousal
   padding: 4px;  
 
 }
+
+/* 🔹 Dark mode Dropdown wrapper (the white container around filter) */
+.dark .p-dropdown-panel {
+  background-color: #1f2937 !important; /* gray-800 */
+  color: #f9fafb !important;           /* gray-100 */
+  border-color: #4b5563 !important;    /* gray-600 */
+}
+
+/* 🔹 The header above items (where filter input lives) */
+.dark .p-dropdown-header {
+  background-color: #1f2937 !important; /* gray-800 */
+  border-bottom: 1px solid #4b5563 !important;
+}
+
+/* 🔹 Ensure dropdown items match dark theme */
+.dark .p-dropdown-items-wrapper {
+  background-color: #1f2937 !important;
+}
+
+.dark .p-dropdown-item {
+  color: #f9fafb !important;
+}
+
+.dark .p-dropdown-panel .p-dropdown-items .p-highlight {
+  background-color: transparent !important;
+  color: #f9fafb !important;
+}
+
+
+.dark .p-dropdown-panel .p-dropdown-filter {
+  background-color: #1f2937; /* gray-800 */
+  color: #f9fafb;           /* gray-100 */
+  border: 1px solid #4b5563;
+}
+
+/* 🔹 Selected option text box (closed dropdown) */
+.dark .p-dropdown .p-dropdown-label {
+  background-color: #1f2937 !important; /* gray-800 */
+  color: #f9fafb !important;            /* gray-100 */
+  border-color: #4b5563 !important;     /* gray-600 */
+}
+
+/* 🔹 Placeholder text */
+.dark .p-dropdown .p-dropdown-label.p-placeholder {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+
+/* 🔹 Input field (already partly handled by Tailwind) */
+.dark .p-autocomplete-input {
+  background-color: #1f2937 !important; /* gray-800 */
+  color: #f9fafb !important;           /* gray-100 */
+  border-color: #4b5563 !important;    /* gray-600 */
+}
+
+/* 🔹 Suggestion panel (the floating dropdown) */
+.dark .p-autocomplete-panel {
+  background-color: #1f2937 !important; /* gray-800 */
+  border: 1px solid #4b5563 !important; /* gray-600 */
+  color: #f9fafb !important;
+}
+
+/* 🔹 Each suggestion */
+.dark .p-autocomplete-item {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+/* 🔹 Highlight (hover / arrow-selected item) */
+.dark .p-autocomplete-item.p-highlight {
+  background-color: #374151 !important; /* gray-700 */
+  color: #ffffff !important;
+}
+
+/* === Autofill styles (Chrome, Safari, Edge) === */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-800 bg for dark */
+  -webkit-text-fill-color: #f3f4f6 !important; /* gray-100 text for dark */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* === Dark mode autofill === */
+ input:-webkit-autofill,
+ input:-webkit-autofill:hover,
+ input:-webkit-autofill:focus,
+ input:-webkit-autofill:active {
+  /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-700 bg */
+  -webkit-text-fill-color: #000000 !important; /* gray-100 text */
+  caret-color: #000000 !important; /* keeps cursor visible */
+}
+
+
+/* === Dark mode autofill === */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-700 bg */
+  -webkit-text-fill-color: #f3f4f6 !important; /* gray-100 text */
+  caret-color: #f3f4f6 !important; /* keeps cursor visible */
+}
+
+[dir = "rtl"] .p-icon-field-right > .p-input-icon:last-of-type {
+  left: 0;
+  right: auto;
+}
+
+.rtl-carousel .p-carousel-container {
+  direction: ltr !important; /* Force LTR for animation */
+}
+
+

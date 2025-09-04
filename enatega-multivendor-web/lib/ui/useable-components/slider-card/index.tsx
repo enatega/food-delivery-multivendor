@@ -93,11 +93,17 @@ const SliderCard = <T,>({
     router.push(`/see-all/${title?.toLocaleLowerCase().replace(/\s/g, "-")}`);
   };
 
+    // Check if RTL (client-side only)
+    const [isRTL, setIsRTL] = useState(false);
+    useEffect(() => {
+      setIsRTL(document.documentElement.dir === "rtl");
+    }, []);
+
   return (
     data?.length > 0 && (
       <div className={`${last && "mb-20"}`}>
         <div className="flex justify-between mx-[6px]">
-          <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900">
+          <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900 dark:text-white">
             {title}
           </span>
           <div className="flex items-center justify-end gap-x-2">
@@ -111,16 +117,16 @@ const SliderCard = <T,>({
             {/* Navigation Buttons */}
             <div className="gap-x-2 hidden md:flex">
               <button
-                className="w-8 h-8 flex items-center justify-center  shadow-md  rounded-full"
+                className="w-8 h-8 flex items-center justify-center  shadow-md  rounded-full dark:bg-gray-800"
                 onClick={prev}
               >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </button>
+                {isRTL ? <FontAwesomeIcon className="dark:text-white" icon={faAngleRight} /> : <FontAwesomeIcon className="dark:text-white" icon={faAngleLeft} /> } 
+              </button> 
               <button
-                className="w-8 h-8 flex items-center justify-center  shadow-md rounded-full"
+                className="w-8 h-8 flex items-center justify-center  shadow-md rounded-full dark:bg-gray-800"
                 onClick={next}
               >
-                <FontAwesomeIcon icon={faAngleRight} />
+                 {isRTL ? <FontAwesomeIcon className="dark:text-white" icon={faAngleLeft} />  : <FontAwesomeIcon className="dark:text-white" icon={faAngleRight} /> }
               </button>
             </div>
           </div>
@@ -128,7 +134,7 @@ const SliderCard = <T,>({
 
         <Carousel
           value={data}
-          className="w-[100%]"
+          className={`  w-["100%"] ${data?.length == 1 ? "md:w-[25%]" : "md:w-[100%]"} discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
           itemTemplate={(item) => <Card item={item} isModalOpen={isModalOpen} handleUpdateIsModalOpen={handleUpdateIsModalOpen} />}
           numVisible={numVisible}
           numScroll={1}

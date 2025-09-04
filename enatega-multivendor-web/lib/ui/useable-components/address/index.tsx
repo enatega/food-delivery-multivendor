@@ -63,6 +63,8 @@ import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import AppartmentSvg from "@/lib/utils/assets/svg/apartment";
 import { useTranslations } from "next-intl";
+import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
+import { useTheme } from "@/lib/providers/ThemeProvider";
 
 const variants = {
   enter: (direction: number) => ({
@@ -78,8 +80,6 @@ const variants = {
     opacity: 0,
   }),
 };
-
-
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -98,7 +98,8 @@ export default function UserAddressComponent(
     null
   );
   const [newDraggedCenter, setNewDraggedCenter] = useState({ lat: 0, lng: 0 });
-  const [selectedLocationType, setSelectedLocationType] = useState<string>("House");
+  const [selectedLocationType, setSelectedLocationType] =
+    useState<string>("House");
   const [search, setSearch] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [options, setOptions] = useState<IPlaceSelectedOption[]>([]);
@@ -107,7 +108,7 @@ export default function UserAddressComponent(
 
   // Hook
   const { profile, loadingProfile } = useUser();
-
+  const { theme } = useTheme();
   const { getCurrentLocation } = useLocation();
   const { getAddress } = useGeocoding();
   const { userAddress, setUserAddress } = useUserAddress();
@@ -259,7 +260,7 @@ export default function UserAddressComponent(
       showToast({
         type: "error",
         title: "Error",
-        message: t('failed_to_fetch_Address')
+        message: t("failed_to_fetch_Address"),
       });
       return;
     }
@@ -270,7 +271,7 @@ export default function UserAddressComponent(
       _id: "",
       deliveryAddress: formattedAddress,
       location: { coordinates: [new_center.lng, new_center.lat] },
-      label: t('label_home'),
+      label: t("label_home"),
     });
   };
 
@@ -284,31 +285,52 @@ export default function UserAddressComponent(
   const t = useTranslations();
 
   const LOCATIONT_TYPE = [
-  {
-    name: t('loctype1'),
-    icon: (color?: string) => <HomeSvg color={color || "#0F172A"} />,
-  },
-  {
-    name: t('loctype2'),
-    icon: (color?: string) => <OfficeSvg color={color || "#0F172A"} />,
-  },
-  {
-    name: t('loctype3'),
-    icon: (color?: string) => <ApartmentSvg color={color || "#0F172A"} />,
-  },
-  {
-    name: t('loctype4'),
-    icon: (color?: string) => <OtherSvg color={color || "#0F172A"} />,
-  },
-];
+    {
+      name: t("loctype1"),
+      icon: (color?: string, darkColor?: string) => (
+        <HomeSvg
+          darkColor={darkColor || "#ffffff"}
+          color={color || "#0F172A"}
+        />
+      ),
+    },
+    {
+      name: t("loctype2"),
+      icon: (color?: string, darkColor?: string) => (
+        <OfficeSvg
+          darkColor={darkColor || "#ffffff"}
+          color={color || "#0F172A"}
+        />
+      ),
+    },
+    {
+      name: t("loctype3"),
+      icon: (color?: string, darkColor?: string) => (
+        <ApartmentSvg
+          darkColor={darkColor || "#ffffff"}
+          color={color || "#0F172A"}
+        />
+      ),
+    },
+    {
+      name: t("loctype4"),
+      icon: (color?: string, darkColor?: string) => (
+        <OtherSvg
+          darkColor={darkColor || "#ffffff"}
+          color={color || "#0F172A"}
+        />
+      ),
+    },
+  ];
+  
 
-// Define constants
-const ADDRESS_TYPES = {
-  OFFICE: 'OFFICE',
-  HOUSE: 'HOUSE', 
-  APARTMENT: 'APARTMENT',
-  OTHER: 'OTHER'
-} as const;
+  // Define constants
+  const ADDRESS_TYPES = {
+    OFFICE: "OFFICE",
+    HOUSE: "HOUSE",
+    APARTMENT: "APARTMENT",
+    OTHER: "OTHER",
+  } as const;
 
   const onHandleCreateAddress = () => {
     const addressInput = {
@@ -328,11 +350,11 @@ const ADDRESS_TYPES = {
 
   // API Handlers
   function onCompleted({ createAddress, editAddress }) {
-   const address_response: IUserAddress = (
+    const address_response: IUserAddress = (
       createAddress || editAddress
     )?.addresses.find((a: IUserAddress) => a.selected);
 
-  setUserAddress({
+    setUserAddress({
       _id: address_response?._id,
       label: selectedLocationType,
       deliveryAddress: address_response.deliveryAddress,
@@ -346,7 +368,7 @@ const ADDRESS_TYPES = {
     });
     setModifyingId(address_response?._id);
     changeUserSelectedAddress({
-      variables: { id: address_response?._id  },
+      variables: { id: address_response?._id },
       onCompleted: () => {
         const new_address = {
           _id: address_response?._id,
@@ -372,9 +394,9 @@ const ADDRESS_TYPES = {
 
   function onError() {
     showToast({
-      title: t('new_address_label'),
+      title: t("new_address_label"),
       type: "error",
-      message: t('Address_updated_success'),
+      message: t("Address_updated_success"),
     });
   }
 
@@ -388,12 +410,12 @@ const ADDRESS_TYPES = {
       {/* Header */}
       <div className="w-full">
         <span className="font-inter font-bold text-[25px] tracking-normal">
-         {t("where_to_address_label")}
+          {t("where_to_address_label")}
         </span>
       </div>
 
       <button
-        className="w-[90%] h-fit bg-[#5AC12F] mb-2 text-gray-900 py-2 space-x-2 rounded-full text-base lg:text-[14px]"
+        className="w-[90%] h-fit bg-[#5AC12F] mb-2 text-gray-900 py-2 space-x-2 rtl:space-x-reverse  rounded-full text-base lg:text-[14px]"
         onClick={() => {
           getCurrentLocation(onSetUserLocation);
           onHide();
@@ -403,58 +425,59 @@ const ADDRESS_TYPES = {
           icon={isLocationFetching ? faSpinner : faCirclePlus}
           spin={isLocationFetching}
         />
-        <span>{t('LoginForSavedAddresses.currentlocation')}</span>
+        <span>{t("LoginForSavedAddresses.currentlocation")}</span>
       </button>
 
       <div className="w-full flex flex-col items-center">
-        {loadingProfile ?
+        {loadingProfile ? (
           <div className="w-full flex items-center justify-center m-4">
             <CustomLoader />
           </div>
-        : profile?.addresses.map((address, index) => (
+        ) : (
+          profile?.addresses.map((address, index) => (
             <div
               key={index}
               className="w-full mb-4 flex items-center justify-between"
             >
               <div className="w-full flex items-center gap-x-2">
-                <div className="p-2 bg-gray-50 rounded-full">
-                  {
-                    address?.label === ADDRESS_TYPES.OFFICE && <OfficeSvg
-                    color={
-                      address.selected && !hasCurrentLocation ?
-                        "#0EA5E9"
-                      : undefined
-                    }
-                  />
-                  }
-                  {
-                    address?.label === ADDRESS_TYPES.OFFICE && <HomeSvg
-                     height={18}
-                    color={
-                      address.selected && !hasCurrentLocation ?
-                        "#0EA5E9"
-                      : "black"
-                    }
-                  />
-                  }
-                   {
-                    address?.label === ADDRESS_TYPES.OFFICE && <AppartmentSvg
-                    color={
-                      address.selected && !hasCurrentLocation ?
-                        "#0EA5E9"
-                      : undefined
-                    }
-                  />
-                  }
-                   {
-                   address?.label === ADDRESS_TYPES.OFFICE && <OtherSvg
-                    color={
-                      address.selected && !hasCurrentLocation ?
-                        "#0EA5E9"
-                      : undefined
-                    }
-                  />
-                  }
+                <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded-full">
+                  {address?.label === ADDRESS_TYPES.OFFICE && (
+                    <OfficeSvg
+                      color={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : undefined
+                      }
+                    />
+                  )}
+                  {address?.label === ADDRESS_TYPES.OFFICE && (
+                    <HomeSvg
+                      height={18}
+                      color={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : "black"
+                      }
+                    />
+                  )}
+                  {address?.label === ADDRESS_TYPES.OFFICE && (
+                    <AppartmentSvg
+                      color={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : undefined
+                      }
+                    />
+                  )}
+                  {address?.label === ADDRESS_TYPES.OFFICE && (
+                    <OtherSvg
+                      color={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : undefined
+                      }
+                    />
+                  )}
                 </div>
                 <div className="w-full flex flex-col gap-y-[2px]">
                   <span
@@ -472,7 +495,7 @@ const ADDRESS_TYPES = {
               {(!address.selected || hasCurrentLocation) && (
                 <div>
                   <CustomButton
-                    label={t('choose_Address_label')}
+                    label={t("choose_Address_label")}
                     rounded
                     loading={modifiyingId === address._id && loading}
                     className="border p-2 pl-4 pr-4 border-gray-300 text-sky-500 font-medium"
@@ -482,13 +505,14 @@ const ADDRESS_TYPES = {
               )}
             </div>
           ))
-        }
+        )}
 
         <button
           className="w-[90%] h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
           onClick={() => paginate(1)}
         >
-          <FontAwesomeIcon icon={faPlus} /> <span> {t('add_new_address_button')}</span>
+          <FontAwesomeIcon icon={faPlus} />{" "}
+          <span> {t("add_new_address_button")}</span>
         </button>
       </div>
     </div>
@@ -499,13 +523,17 @@ const ADDRESS_TYPES = {
       {/* Header */}
       <div className="w-full">
         <span className="font-inter font-semibold text-[18px] tracking-normal">
-          {t('Add_new_address')}
+          {t("Add_new_address")}
         </span>
       </div>
       {/* Google Maps */}
       {isLoaded && (
         <div className="w-full">
           <GoogleMap
+            options={{
+              styles: theme === "dark" ? darkMapStyle : null,
+              disableDefaultUI: true,
+            }}
             mapContainerStyle={{
               width: "100%",
               height: "35vh",
@@ -535,7 +563,7 @@ const ADDRESS_TYPES = {
         <div className="w-full space-y-2">
           <CustomDropdownComponent
             name="City"
-            placeholder={t('select_city_placeholder')}
+            placeholder={t("select_city_placeholder")}
             selectedItem={selectedCity}
             setSelectedItem={async (key: string, item: IDropdownSelectItem) => {
               setSelectedCity(item);
@@ -553,7 +581,7 @@ const ADDRESS_TYPES = {
                 _id: "",
                 deliveryAddress: formattedAddress,
                 location: { coordinates: [coords[0], coords[1]] },
-                label: t('label_home'),
+                label: t("label_home"),
               });
             }}
             options={cities_dropdown}
@@ -562,183 +590,6 @@ const ADDRESS_TYPES = {
           <AutoComplete
             id="google-map"
             disabled={!selectedCity}
-            className={`mr-4 h-11 w-full border border-gray-300 px-2 text-sm focus:shadow-none focus:outline-none`}
-            value={inputValue}
-            completeMethod={(event) => {
-              setSearch(event.query);
-            }}
-            onChange={(e) => {
-              if (typeof e.value === "string") handleInputChange(e.value);
-            }}
-            onSelect={onHandlerAutoCompleteSelectionChange}
-            suggestions={options}
-            forceSelection={false}
-            dropdown={false}
-            multiple={false}
-            loadingIcon={undefined}
-            placeholder={t('enter_full_Address_placeholder')}
-            style={{ width: "100%" }}
-            itemTemplate={(item) => {
-              const matches =
-                item.structured_formatting?.main_text_matched_substrings;
-              let parts: { text: string; highlight: boolean }[] | null = null;
-              if (matches) {
-                parts = parse(
-                  item.structured_formatting.main_text,
-                  matches.map((match: { offset: number; length: number }) => [
-                    match.offset,
-                    match.offset + match.length,
-                  ])
-                );
-              }
-
-              return (
-                <div className="flex flex-col">
-                  <div className="flex items-center">
-                    <FontAwesomeIcon icon={faMapMarker} className="mr-2" />
-                    {parts &&
-                      parts?.map((part, index) => (
-                        <span
-                          key={index}
-                          style={{
-                            fontWeight: part.highlight ? 700 : 400,
-                            color: "black",
-                            marginRight: "2px",
-                          }}
-                        >
-                          {part.text}
-                        </span>
-                      ))}
-                  </div>
-                  <small>{item.structured_formatting?.secondary_text}</small>
-                </div>
-              );
-            }}
-          />
-        </div>
-
-        <div className="w-full">
-          <div className="w-full">
-            <span className="font-inter font-semibold text-[12px] tracking-normal">
-              {t('Location_Type')}
-            </span>
-          </div>
-          <div className="w-full grid grid-cols-2 gap-4">
-            {LOCATIONT_TYPE.map((item) => (
-              <div
-                key={item.name}
-                className="p-2 cursor-pointer flex items-center gap-x-2 shadow rounded"
-                onClick={() => setSelectedLocationType(item.name)}
-              >
-                <div>
-                  {item.icon(
-                    selectedLocationType === item.name ? "#0EA5E9" : undefined
-                  )}
-                </div>
-                <div className="flex flex-col gap-y-[2px]">
-                  <span
-                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500"}`}
-                  >
-                    {item.name}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full flex justify-between gap-x-2">
-          <button
-            className="w-full  h-fit bg-transparent text-gray-900 py-2 border border-black rounded-full text-base lg:text-[14px]"
-            onClick={() => {
-              setIndex([0, 0]);
-              onHide();
-            }}
-          >
-            <span>{t('cancel_address')}</span>
-          </button>
-          <button
-            className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
-            onClick={() => onHandleCreateAddress()}
-          >
-            {modifyingAddressLoading ?
-              <FontAwesomeIcon
-                icon={faSpinner}
-                spin={modifyingAddressLoading}
-              />
-            : <span>{t("Save_address")}</span>}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const EDIT_ADDRESS_UI = (
-    <div className="w-full space-y-2">
-      {/* Header */}
-      <div className="w-full">
-        <span className="font-inter font-semibold text-[18px] tracking-normal">
-           {t('Add_new_address')}
-        </span>
-      </div>
-      {/* Google Maps */}
-      {isLoaded && (
-        <div className="w-full">
-          <GoogleMap
-            mapContainerStyle={{
-              width: "100%",
-              height: "400px",
-            }}
-            center={{
-              lat: Number(editAddress?.location?.coordinates[1]) || 0,
-              lng: Number(editAddress?.location?.coordinates[0]) || 0,
-            }}
-            zoom={13}
-            onCenterChanged={() => {}}
-          >
-            {editAddress?.location?.coordinates && (
-              <Marker
-                position={{
-                  lat: Number(editAddress?.location?.coordinates[1]) || 0,
-                  lng: Number(editAddress?.location?.coordinates[0]) || 0,
-                }}
-              />
-            )}
-          </GoogleMap>
-        </div>
-      )}
-
-      <div className="w-full flex flex-col items-center gap-y-2">
-        <div className="w-full space-y-2">
-          <CustomDropdownComponent
-            name={t('City_label')}
-            placeholder={t('select_city_placeholder')}
-            selectedItem={selectedCity}
-            setSelectedItem={async (key: string, item: IDropdownSelectItem) => {
-              setSelectedCity(item);
-
-              const { coords } = JSON.parse(item.code || "");
-
-              const { formattedAddress } = await getAddress(
-                coords[1],
-                coords[0]
-              );
-
-              setInputValue(formattedAddress);
-
-              setUserAddress({
-                _id: "",
-                deliveryAddress: formattedAddress,
-                location: { coordinates: [coords[0], coords[1]] },
-                label: t("home"),
-              });
-            }}
-            options={cities_dropdown}
-          />
-
-          <AutoComplete
-            id="google-map"
-            disabled={false}
             className={`mr-4 h-11 w-full border border-gray-300 px-2 text-sm focus:shadow-none focus:outline-none`}
             value={inputValue}
             completeMethod={(event) => {
@@ -775,11 +626,188 @@ const ADDRESS_TYPES = {
                     <FontAwesomeIcon icon={faMapMarker} className="mr-2" />
                     {parts &&
                       parts?.map((part, index) => (
+                        <span className="dark:text-white" key={index}>
+                          {part.text}
+                        </span>
+                      ))}
+                  </div>
+                  <small>{item.structured_formatting?.secondary_text}</small>
+                </div>
+              );
+            }}
+          />
+        </div>
+
+        <div className="w-full">
+          <div className="w-full">
+            <span className="font-inter font-semibold text-[12px] tracking-normal dark:text-gray-300">
+              {t("Location_Type")}
+            </span>
+          </div>
+          <div className="w-full grid grid-cols-2 gap-4">
+            {LOCATIONT_TYPE.map((item) => (
+              <div
+                key={item.name}
+                className="p-2 cursor-pointer flex items-center gap-x-2 shadow rounded dark:bg-gray-800"
+                onClick={() => setSelectedLocationType(item.name)}
+              >
+                <div>
+                  {item.icon(
+                    selectedLocationType === item.name ? "#0EA5E9" : undefined,
+                    selectedLocationType === item.name ? "#0EA5E9" : undefined
+                  )}
+                </div>
+                <div className="flex flex-col gap-y-[2px]">
+                  <span
+                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
+                  >
+                    {item.name}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="w-full flex justify-between gap-x-2">
+          <button
+            className="w-full h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-black dark:border-gray-600 rounded-full text-base lg:text-[14px]"
+            onClick={() => {
+              setIndex([0, 0]);
+              onHide();
+            }}
+          >
+            <span>{t("cancel_address")}</span>
+          </button>
+          <button
+            className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
+            onClick={() => onHandleCreateAddress()}
+          >
+            {modifyingAddressLoading ? (
+              <FontAwesomeIcon
+                icon={faSpinner}
+                spin={modifyingAddressLoading}
+              />
+            ) : (
+              <span>{t("Save_address")}</span>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const EDIT_ADDRESS_UI = (
+    <div className="w-full space-y-2">
+      {/* Header */}
+      <div className="w-full">
+        <span className="font-inter font-semibold text-[18px] tracking-normal">
+          {t("Add_new_address")}
+        </span>
+      </div>
+      {/* Google Maps */}
+      {isLoaded && (
+        <div className="w-full">
+          <GoogleMap
+           options={{
+            styles: theme === "dark" ? darkMapStyle : null,
+            disableDefaultUI: true,
+          }}  
+            mapContainerStyle={{
+              width: "100%",
+              height: "400px",
+            }}
+            center={{
+              lat: Number(editAddress?.location?.coordinates[1]) || 0,
+              lng: Number(editAddress?.location?.coordinates[0]) || 0,
+            }}
+            zoom={13}
+            onCenterChanged={() => {}}
+          >
+            {editAddress?.location?.coordinates && (
+              <Marker
+                position={{
+                  lat: Number(editAddress?.location?.coordinates[1]) || 0,
+                  lng: Number(editAddress?.location?.coordinates[0]) || 0,
+                }}
+              />
+            )}
+          </GoogleMap>
+        </div>
+      )}
+
+      <div className="w-full flex flex-col items-center gap-y-2">
+        <div className="w-full space-y-2">
+          <CustomDropdownComponent
+            name={t("City_label")}
+            placeholder={t("select_city_placeholder")}
+            selectedItem={selectedCity}
+            setSelectedItem={async (key: string, item: IDropdownSelectItem) => {
+              setSelectedCity(item);
+
+              const { coords } = JSON.parse(item.code || "");
+
+              const { formattedAddress } = await getAddress(
+                coords[1],
+                coords[0]
+              );
+
+              setInputValue(formattedAddress);
+
+              setUserAddress({
+                _id: "",
+                deliveryAddress: formattedAddress,
+                location: { coordinates: [coords[0], coords[1]] },
+                label: t("home"),
+              });
+            }}
+            options={cities_dropdown}
+          />
+
+          <AutoComplete
+            id="google-map"
+            disabled={false}
+            className={`mr-4 h-11 w-full border border-gray-300 dark:text-white px-2 text-sm focus:shadow-none focus:outline-none`}
+            value={inputValue}
+            completeMethod={(event) => {
+              setSearch(event.query);
+            }}
+            onChange={(e) => {
+              if (typeof e.value === "string") handleInputChange(e.value);
+            }}
+            onSelect={onHandlerAutoCompleteSelectionChange}
+            suggestions={options}
+            forceSelection={false}
+            dropdown={false}
+            multiple={false}
+            loadingIcon={undefined}
+            placeholder={t("enter_full_Address_placeholder")}
+            style={{ width: "100%" }}
+            itemTemplate={(item) => {
+              const matches =
+                item.structured_formatting?.main_text_matched_substrings;
+              let parts: { text: string; highlight: boolean }[] | null = null;
+              if (matches) {
+                parts = parse(
+                  item.structured_formatting.main_text,
+                  matches.map((match: { offset: number; length: number }) => [
+                    match.offset,
+                    match.offset + match.length,
+                  ])
+                );
+              }
+
+              return (
+                <div className="flex flex-col">
+                  <div className="flex items-center dark:text-white">
+                    <FontAwesomeIcon icon={faMapMarker} className="mr-2 " />
+                    {parts &&
+                      parts?.map((part, index) => (
                         <span
+                          className="dark:text-white"
                           key={index}
                           style={{
                             fontWeight: part.highlight ? 700 : 400,
-                            color: "black",
                             marginRight: "2px",
                           }}
                         >
@@ -787,7 +815,9 @@ const ADDRESS_TYPES = {
                         </span>
                       ))}
                   </div>
-                  <small>{item.structured_formatting?.secondary_text}</small>
+                  <small className="dark:text-white">
+                    {item.structured_formatting?.secondary_text}
+                  </small>
                 </div>
               );
             }}
@@ -804,17 +834,18 @@ const ADDRESS_TYPES = {
             {LOCATIONT_TYPE.map((item) => (
               <div
                 key={item.name}
-                className="p-2 cursor-pointer flex items-center gap-x-2 shadow rounded"
+                className="p-2 cursor-pointer flex items-center gap-x-2 shadow rounded dark:bg-gray-800"
                 onClick={() => setSelectedLocationType(item.name)}
               >
                 <div>
                   {item.icon(
+                    selectedLocationType === item.name ? "#0EA5E9" : undefined,
                     selectedLocationType === item.name ? "#0EA5E9" : undefined
                   )}
                 </div>
                 <div className="flex flex-col gap-y-[2px]">
                   <span
-                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500"}`}
+                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
                   >
                     {item.name}
                   </span>
@@ -826,7 +857,7 @@ const ADDRESS_TYPES = {
 
         <div className="w-full flex justify-between gap-x-2">
           <button
-            className="w-full  h-fit bg-transparent text-gray-900 py-2 border border-black rounded-full text-base lg:text-[14px]"
+            className="w-full  h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-black dark:border-gray-600 rounded-full text-base lg:text-[14px]"
             onClick={() => {
               setIndex([0, 0]);
               onHide();
@@ -838,12 +869,14 @@ const ADDRESS_TYPES = {
             className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
             onClick={() => onHandleCreateAddress()}
           >
-            {modifyingAddressLoading ?
+            {modifyingAddressLoading ? (
               <FontAwesomeIcon
                 icon={faSpinner}
                 spin={modifyingAddressLoading}
               />
-            : <span>{t("Save_address")}</span>}
+            ) : (
+              <span>{t("Save_address")}</span>
+            )}
           </button>
         </div>
       </div>
@@ -905,18 +938,23 @@ const ADDRESS_TYPES = {
         setIndex([0, 0]);
         onHide();
       }}
-      className={`w-[90%] lg:w-1/3 bg-white m-4 `}
+      className={`w-[90%] lg:w-1/3 bg-white m-4  `}
+      headerClassName="dark:bg-gray-900 dark:text-white"
+      contentClassName="dark:bg-gray-900 dark:text-white"
       header={
-        index !== 0 ?
+        index !== 0 ? (
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => paginate(-1)}
           >
-            <FontAwesomeIcon icon={faArrowCircleLeft} />
+            <FontAwesomeIcon
+              icon={faArrowCircleLeft}
+              className="dark:text-white"
+            />
           </div>
-        : null
+        ) : null
       }
-      headerStyle={{ paddingTop: '10px', paddingBottom: '0px' }}
+      headerStyle={{ paddingTop: "10px", paddingBottom: "0px" }}
     >
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
@@ -927,7 +965,7 @@ const ADDRESS_TYPES = {
           animate="center"
           exit="exit"
           transition={{ duration: 0.2 }}
-          className="w-full relative flex justify-between px-4" // changed from absolute to relative
+          className="w-full relative flex justify-between px-4 dark:bg-gray-900 dark:text-white" // changed from absolute to relative
         >
           {COMPONENTS_LIST[index]}
         </motion.div>

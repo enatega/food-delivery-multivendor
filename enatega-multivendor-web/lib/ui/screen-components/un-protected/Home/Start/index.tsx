@@ -22,8 +22,8 @@ const Start: React.FC = () => {
   const router = useRouter();
   const { getCurrentLocation } = useLocation();
   const { onSetUserLocation } = useSetUserCurrentLocation();
-  const { isAuthModalVisible, setIsAuthModalVisible, setActivePanel } = useAuth();
-
+  const { isAuthModalVisible, setIsAuthModalVisible, setActivePanel } =
+    useAuth();
 
   const handleModalToggle = () => {
     const token = localStorage.getItem("token");
@@ -36,9 +36,8 @@ const Start: React.FC = () => {
         return !prev;
       });
     } else {
-      router.push("/profile/addresses") 
+      router.push("/profile/addresses");
     }
-    
   };
   const t = useTranslations();
 
@@ -47,7 +46,7 @@ const Start: React.FC = () => {
       <div className="text-center flex flex-col items-center justify-center">
         <TextFlyingAnimation />
         <h1 className="text-[40px] md:text-[90px] font-extrabold text-white">
-          {t('delivered_heading')}
+          {t("delivered_heading")}
         </h1>
         <HomeSearch />
         <div className="my-6 text-white flex items-center justify-center">
@@ -63,21 +62,32 @@ const Start: React.FC = () => {
                 router.push("/discovery");
               }}
             >
-              {t('LoginForSavedAddresses.currentlocation')}
+              {t("LoginForSavedAddresses.currentlocation")}
             </button>
           </div>
-          <LoginInForSavedAddresses handleModalToggle={handleModalToggle}/>
+          <LoginInForSavedAddresses handleModalToggle={handleModalToggle} />
         </div>
       </div>
 
       <svg
         viewBox="0 0 1000 200"
         preserveAspectRatio="none"
-        className="absolute bottom-0 left-0 w-full h-[100px]"
+        className="absolute bottom-0 left-0 w-full h-[100px] "
       >
+        {/* light mode */}
         <path
           d="M0,100 C500,60 500,60 1000,100 L1000,200 L0,200 Z"
           fill="white"
+          className="block dark:hidden"
+        />
+         {/* Dark Mode */}
+         <path
+          d="M0,100 C500,60 500,60 1000,100 L1000,200 L0,200 Z"
+          //"bg-gray-900"
+          fill="#111827"
+          
+          className="hidden dark:block"
+
         />
       </svg>
 

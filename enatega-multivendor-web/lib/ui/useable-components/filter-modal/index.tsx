@@ -71,14 +71,14 @@ export default function FilterModal({
 
   return (
     <CustomDialog visible={visible} onHide={onClose}>
-      <div className="m-[3%]">
+      <div className="m-[3%] dark:bg-gray-900 dark:text-white rounded-lg p-2">
         <button
           onClick={clearFilters}
-          className="text-sky-500 text-base font-semibold pb-2"
+          className="text-sky-500 dark:text-sky-400 text-base font-semibold pb-2"
         >
           {t("clear_filters")}
         </button>
-
+  
         <span className="text-xl font-semibold block">{t("filters")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {cuisineData.map((item) => {
@@ -88,18 +88,18 @@ export default function FilterModal({
                 key={item._id}
                 onClick={() => toggleCuisineSelection(item.name)}
                 className={`px-3 py-1 rounded-full text-sm border ${
-                  isSelected ?
-                    "bg-primary-color border-primary-color"
-                  : "border-gray-500"
+                  isSelected
+                    ? "bg-primary-color border-primary-color text-gray-900 dark:text-gray-900"
+                    : "border-gray-500 dark:border-gray-600"
                 }`}
               >
                 {item.name}
               </Button>
             );
           })}
-          <div className="w-full h-px bg-gray-300 my-2" />
+          <div className="w-full h-px bg-gray-300 dark:bg-gray-700 my-2" />
         </div>
-
+  
         <span className="text-xl font-semibold">{t("ratings")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {ratingData.map((item) => {
@@ -109,9 +109,9 @@ export default function FilterModal({
                 key={item.name}
                 onClick={() => toggleRatingSelection(item.name)}
                 className={`px-3 py-1 rounded-full text-sm border gap-1 flex justify-end items-center text-center ${
-                  isSelected ?
-                    "bg-primary-color border-primary-color"
-                  : "border-gray-500"
+                  isSelected
+                    ? "bg-primary-color border-primary-color text-gray-900 dark:text-gray-900"
+                    : "border-gray-500 dark:border-gray-600"
                 }`}
               >
                 <span>{item.name}</span>
@@ -119,9 +119,9 @@ export default function FilterModal({
               </Button>
             );
           })}
-          <div className="w-full h-px bg-gray-300 my-2" />
+          <div className="w-full h-px bg-gray-300 dark:bg-gray-700 my-2" />
         </div>
-
+  
         <span className="text-xl font-semibold">{t("sort_by_label")}</span>
         <div className="flex flex-wrap gap-2 pt-2 pb-2">
           {sortByData.map((item) => {
@@ -131,25 +131,26 @@ export default function FilterModal({
                 key={item.name}
                 onClick={() => handleSortBy(item.name)}
                 className={`px-3 py-1 rounded-full text-sm border ${
-                  isSelected ?
-                    "bg-primary-color border-primary-color"
-                  : "border-gray-500"
+                  isSelected
+                    ? "bg-primary-color border-primary-color text-gray-900 dark:text-gray-900"
+                    : "border-gray-500 dark:border-gray-600"
                 }`}
               >
                 {item.name}
               </Button>
             );
           })}
-          <div className="w-full h-px bg-gray-300 my-2" />
+          <div className="w-full h-px bg-gray-300 dark:bg-gray-700 my-2" />
         </div>
-
+  
         <Button
           onClick={handleFilterApply}
-          className="w-full py-3 px-2 bg-primary-color rounded-full justify-center items-center text-center text-gray-700"
+          className="w-full py-3 px-2 bg-primary-color rounded-full justify-center items-center text-center text-gray-700 dark:text-gray-900"
         >
           {t("apply_buttons")}
         </Button>
       </div>
     </CustomDialog>
   );
+  
 }

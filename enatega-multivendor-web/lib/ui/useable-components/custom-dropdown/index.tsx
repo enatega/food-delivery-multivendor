@@ -1,11 +1,11 @@
 // Interface
-import { IDropdownComponentProps } from '@/lib/utils/interfaces';
+import { IDropdownComponentProps } from "@/lib/utils/interfaces";
 
 // Prime React
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
-import { faAdd } from '@fortawesome/free-solid-svg-icons';
-import TextIconClickable from '../text-icon-clickable';
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import InputSkeleton from "../custom-skeletons/inputfield.skeleton";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import TextIconClickable from "../text-icon-clickable";
 
 const CustomDropdownComponent = ({
   name,
@@ -21,7 +21,7 @@ const CustomDropdownComponent = ({
 }: IDropdownComponentProps) => {
   const itemTemplate = (option: { label: string }) => {
     return (
-      <div className="align-items-center flex">
+      <div className="align-items-center flex text-gray-800 dark:text-gray-100 dark:bg-gray-800">
         <div>{option.label}</div>
       </div>
     );
@@ -29,12 +29,12 @@ const CustomDropdownComponent = ({
 
   const panelFooterTemplate = () => {
     return (
-      <div className="flex justify-between space-x-2">
+      <div className="flex justify-between space-x-2 dark:border-gray-600">
         {extraFooterButton?.title && (
           <TextIconClickable
-            className="w-full h-fit rounded  text-black"
+            className="w-full h-fit rounded  text-black dark:bg-gray-700 "
             icon={faAdd}
-            iconStyles={{ color: 'black' }}
+            iconStyles={{ color: "black" }}
             title={extraFooterButton.title}
             onClick={extraFooterButton.onChange}
           />
@@ -46,7 +46,10 @@ const CustomDropdownComponent = ({
   return !isLoading ? (
     <div className={`flex w-full flex-col justify-center gap-y-1`}>
       {showLabel && (
-        <label htmlFor="username" className="text-sm font-[500]">
+        <label
+          htmlFor="username"
+          className="text-sm font-[500] text-gray-700 dark:text-gray-200"
+        >
           {placeholder}
         </label>
       )}
@@ -58,10 +61,13 @@ const CustomDropdownComponent = ({
         optionLabel="label"
         placeholder={placeholder}
         itemTemplate={itemTemplate}
-        className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
-        panelClassName="border-gray-200 border-2"
+        className="md:w-20rem m-0 h-10 w-full border border-gray-300 dark:border-gray-600 
+             bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100
+             rounded focus:shadow-none focus:outline-none text-sm"
+        panelClassName="border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100"
         filter={filter}
-        checkmark={true}
+        checkmark
+        focusOnHover={false}
         panelFooterTemplate={panelFooterTemplate}
         {...props}
       />

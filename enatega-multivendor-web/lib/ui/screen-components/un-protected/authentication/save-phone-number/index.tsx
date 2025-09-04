@@ -55,7 +55,7 @@ export default function SavePhoneNumber() {
     }
   };
  return (
-  <div className="flex flex-col justify-center items-center p-6 w-full text-center">
+  <div className="flex flex-col justify-center items-center p-6 w-full text-center dark:bg-gray-900 dark:text-white">
     {/* Icon */}
     <div className="my-2">
       <PhoneIcon  />
@@ -67,7 +67,7 @@ export default function SavePhoneNumber() {
     </h2>
 
     {/* Subheading */}
-    <p className="text-gray-600 my-2 max-w-md">
+    <p className="text-gray-600 dark:text-gray-400 my-2 max-w-md">
       {t("we_need_this_to_verify_and_secure_your_account_message")}
     </p>
 

@@ -22,12 +22,9 @@ export default function DiscoveryScreen() {
   const { restaurantCuisinesData, groceryCuisinesData, error, loading } =
     useGetCuisines();
 
-  // if restaurantCuisinesData is empty array then call coomingSoonCard
+  // Show loader/skeleton while fetching
   if (loading) {
-    return null;
-  } else if (restaurantCuisinesData.length === 0) {
-    return <CommingSoonScreen />;
-  } else return (
+    return (
       <>
         <DiscoveryBannerSection />
         <OrderItAgain />
@@ -52,4 +49,36 @@ export default function DiscoveryScreen() {
         <PopularStores />
       </>
     );
+  }
+
+  // Show ComingSoon only after loading is complete and data is confirmed empty
+  if (restaurantCuisinesData && restaurantCuisinesData.length === 0) {
+    return <CommingSoonScreen />;
+  }
+
+  return (
+    <>
+      <DiscoveryBannerSection />
+      <OrderItAgain />
+      <MostOrderedRestaurants />
+      <CuisinesSection
+        title={t("DiscoveryPage.restaurantcusines")}
+        data={restaurantCuisinesData}
+        loading={loading}
+        error={!!error}
+      />
+      <RestaurantsNearYou />
+      <CuisinesSection
+        title={t("DiscoveryPage.GroceryStores")}
+        data={groceryCuisinesData}
+        loading={loading}
+        error={!!error}
+      />
+      <GroceryList />
+      <TopGroceryPicks />
+      <TopRatedVendors />
+      <PopularRestaurants />
+      <PopularStores />
+    </>
+  );
 }

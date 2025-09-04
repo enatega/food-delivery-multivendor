@@ -35,12 +35,12 @@ const CustomDialog = ({
   } = buttonConfig || {};
 
   const footer = (
-    <div className="flex space-x-2 text-center justify-center">
+    <div className="flex space-x-2 text-center justify-center dark:text-white dark:bg-gray-800">
       <CustomButton
         label={secondaryButtonLabel}
         icon={secondaryButtonIcon}
         onClick={onHide}
-        className={`h-9 rounded border border-gray-300 px-5 ${secondaryButtonBGColor} ${secondaryButtonTextColor}`}
+        className={`h-9 rounded border border-gray-300  dark:text-white px-5 ${secondaryButtonBGColor} ${secondaryButtonTextColor}`}
       />
       <CustomButton
         loading={loading}
@@ -54,6 +54,9 @@ const CustomDialog = ({
 
   return (
     <Dialog
+      contentClassName="dark:bg-gray-800 dark:text-white"
+      headerClassName="dark:bg-gray-800 dark:text-white"
+      className="dark:bg-gray-800 dark:text-white"
       visible={visible}
       style={{ width: "32rem", textAlign: "center" }}
       breakpoints={{ "960px": "75vw", "641px": "90vw" }}
@@ -62,7 +65,7 @@ const CustomDialog = ({
       footer={footer}
       onHide={onHide}
     >
-      <div className="confirmation-content text-center mx-3 text-sm sm:text-lg">
+      <div className="confirmation-content text-center mx-3 text-sm sm:text-lg dark:bg-gray-800">
         <span>{message || t("confirm_delete")}</span>
       </div>
     </Dialog>

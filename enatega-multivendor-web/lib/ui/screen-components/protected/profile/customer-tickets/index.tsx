@@ -159,35 +159,35 @@ export default function CustomerTicketsMain() {
       <div className="mb-6">
         <TextComponent 
           text={`${t('welcome_user')} ${userName} 👋`}
-          className="text-xl md:text-2xl font-bold mb-2"
+          className="text-xl md:text-2xl font-bold mb-2 dark:text-white"
         />
         <div className="flex justify-between items-center">
-          <TextComponent text={t("your_customer_support_tickets_label")} className="text-xl md:text-2xl font-semibold" />
+          <TextComponent text={t("your_customer_support_tickets_label")} className="text-xl md:text-2xl font-semibold dark:text-gray-200" />
         </div>
       </div>
       
       {sortedTickets.length > 0 ? (
         <div className="space-y-4">
           {sortedTickets.map((ticket) => (
-            <div key={ticket._id} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div key={ticket._id} className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <TextComponent text={ticket.title} className="font-medium text-lg text-gray-800" />
-                  <p className="text-sm text-gray-500">{t('ticket_id_label')} {ticket._id}</p>
+                  <TextComponent text={ticket.title} className="font-medium text-lg text-gray-800 dark:text-gray-100" />
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('ticket_id_label')} {ticket._id}</p>
                 </div>
                 <span className={`${getStatusColor(ticket.status)} px-3 py-1 rounded-full text-sm font-medium`}>
                   {ticket.status === 'inProgress' ? t('in_progress_status_label') : 
                    ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
                 </span>
               </div>
-              <div className="flex justify-between text-sm text-gray-500">
+              <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                 <p> {t('created_label')} {formatDate(ticket.createdAt)}</p>
                 <p>{t('last_updated_label')} {formatDate(ticket.updatedAt)}</p>
               </div>
-              <div className="mt-3 pt-3 border-t border-gray-100 flex justify-end">
+              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-end">
                 <CustomButton 
                   label={t("view_messages_button")}
-                  className="text-blue-600 hover:text-blue-800 bg-transparent"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300  bg-transparent"
                   onClick={() => handleOpenChat(ticket._id)}
                 />
               </div>
@@ -195,9 +195,9 @@ export default function CustomerTicketsMain() {
           ))}
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-sm text-center">
-          <TextComponent text={t("no_tickets_found_label")} className="text-lg text-gray-500 mb-2" />
-          <p className="text-gray-500 mb-4"> {t('no_support_tickets_yet_message')}</p>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm text-center">
+          <TextComponent text={t("no_tickets_found_label")} className="text-lg text-gray-500 dark:text-gray-400 mb-2" />
+          <p className="text-gray-500 dark:text-gray-400 mb-4"> {t('no_support_tickets_yet_message')}</p>
           <CustomButton 
             label={t("create_first_ticket_button")}
             onClick={handleCreateTicket}
