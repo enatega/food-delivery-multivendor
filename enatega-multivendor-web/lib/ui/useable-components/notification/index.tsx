@@ -23,7 +23,7 @@ const CustomNotification = ({
         />
       </div>
 
-      <div className="m-4 ml-14 rtl:mr-4">
+      <div className="m-4 ml-14 rtl:mr-14">
         <div className={`font-semibold ${styles.textColor}`}>{title}</div>
         <div className={`text-sm font-[400] ${styles.textColor}`}>
           {message}

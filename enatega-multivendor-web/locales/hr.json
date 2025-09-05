@@ -149,6 +149,7 @@
   "password_reset": "איפוס סיסמה",
   "password_reset_success": "הסיסמה שלך אופסה בהצלחה.",
   "password_reset_error": "שגיאת איפוס סיסמה",
+  "your@email.com":" האימייל שלך",
   "error_resetting_password": "אירעה שגיאה באיפוס הסיסמה.",
   "settings": "הגדרות",
   "login_error": "שגיאת התחברות",
@@ -434,7 +435,7 @@
   "sign_up_label": "הירשם",
   "by_signing_up_you_agree_to_our_message": "על ידי ההרשמה, אתה מסכים ל",
   "terms_label": "תנאים",
-  "and_conditions_and_message":"ותנאים ",
+  "and_conditions_and_message": "ותנאים ",
   "privacy_policy_label": "מדיניות פרטיות",
   "phone_verification_label": "אימות טלפון",
   "your_phone_number_verified_successfully_message": "מספר הטלפון שלך אומת בהצלחה",
@@ -810,7 +811,7 @@
   "card": "",
   "restaurant_unavailable": "המסעדה אינה זמינה כרגע.",
 
-   "AboutUsPage_title": "אודותינו",
+  "AboutUsPage_title": "אודותינו",
 
   "AboutUsPage_mission1": "המשימה שלנו",
   "AboutUsPage_mission2": "ב-Enatega, המשימה שלנו היא לחולל מהפכה בחוויית משלוחי האוכל המקוונים על ידי העצמת ספקים מקומיים והענקת חוויית הזמנה חלקה, יעילה ומהנה ללקוחות. אנחנו מחברים אנשים לטעמים הטובים ביותר בעיר שלהם — במהירות, בבטחה ובאמינות.",
@@ -837,17 +838,28 @@
   "AboutUsPage_join17": "האם אתה ספק שרוצה להרחיב את עסקי האוכל שלך? או לקוח רעב שמחפש את הארוחה הבאה שלך? Enatega היא המקום בשבילך. הצטרף לקהילה שלנו והיה חלק מהעתיד של משלוחי האוכל.",
 
   "installPWA": "התקן את האפליקציה הזו לחוויית שימוש טובה יותר!",
-"install_app_label": "התקן אפליקציה",
+  "install_app_label": "התקן אפליקציה",
 
-"view_label": "הצג",
-"onMap_label": "על המפה",
-"update_password_error_title": "שגיאה",
-"sort_by_label": "מיון לפי",
-"delete_success": "אם יש לך שאלות, אל תהסס לפנות לצוות התמיכה שלנו.",
+  "view_label": "הצג",
+  "onMap_label": "על המפה",
+  "update_password_error_title": "שגיאה",
+  "sort_by_label": "מיון לפי",
+  "delete_success": "אם יש לך שאלות, אל תהסס לפנות לצוות התמיכה שלנו.",
 
-"Addons_label": "תוספים",
-"order_details_no_instructions_text": "לא נוספו הוראות",
-"and_labed": "ו"
+  "Addons_label": "תוספים",
+  "order_details_no_instructions_text": "לא נוספו הוראות",
+  "and_labed": "ו",
 
-
+  "firstNameRequired": " נדרש שם פרטי",
+  "lastNameRequired": " נדרש שם משפחה",
+  "phoneNumberRequired": " נדרש מספר טלפון",
+  "phoneNumberInvalid": " הזן מספר טלפון תקין",
+  "emailRequired": " נדרש אימייל",
+  "emailInvalid": " הזן אימייל תקין",
+  "passwordRequired": " נדרשת סיסמה",
+  "passwordMin": " מינימום 6 תווים",
+  "confirmPasswordRequired": " נדרש אישור סיסמה",
+  "confirmPasswordMismatch": " הסיסמאות אינן תואמות",
+  "termsRequired": " אשר את התנאים כדי להמשיך",
+  "invalid_credentials": " אימייל או סיסמה שגויים"
 }

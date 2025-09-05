@@ -147,6 +147,7 @@
   "phone_already_registered": "Ce numéro de téléphone est déjà enregistré, veuillez en entrer un autre.",
   "error_checking_phone": "Une erreur s'est produite lors de la vérification du téléphone.",
   "password_reset": "Réinitialisation du mot de passe",
+  "your@email.com":"",
   "password_reset_success": "Votre mot de passe a été réinitialisé avec succès.",
   "password_reset_error": "Erreur de réinitialisation du mot de passe",
   "error_resetting_password": "Une erreur s'est produite lors de la réinitialisation du mot de passe.",
@@ -756,6 +757,18 @@
  "Addons_label": "Modules complémentaires",
  "order_details_no_instructions_text": "Aucune instruction ajoutée",
 
- "and_labed": "et"
+ "and_labed": "et",
+ "firstNameRequired": "",
+ "lastNameRequired": "Le nom de famille est requis",
+ "phoneNumberRequired": " Le numéro de téléphone est requis",
+ "phoneNumberInvalid": "  Entrez un numéro de téléphone valide",
+ "emailRequired": "L'e-mail est requis",
+ "emailInvalid": "Entrez un e-mail valide",
+ "passwordRequired": "Le mot de passe est requis",
+ "passwordMin": "Minimum 6 caractères",
+ "confirmPasswordRequired": "Confirmez votre mot de passe",
+ "confirmPasswordMismatch": "Les mots de passe doivent correspondre",
+ "termsRequired": "Acceptez les conditions pour continuer",
+ "invalid_credentials": "Identifiants invalides"
 
 }

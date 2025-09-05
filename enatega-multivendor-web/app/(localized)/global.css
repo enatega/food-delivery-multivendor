@@ -49,6 +49,9 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.p-sidebar-left {
+  justify-content: flex-end !important;
+}
 /* Screen Container */
 /* Start Generation Here */
 .screen-container {
