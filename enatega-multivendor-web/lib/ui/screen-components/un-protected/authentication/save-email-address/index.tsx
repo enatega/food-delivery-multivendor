@@ -68,8 +68,8 @@ export default function SaveEmailAddress({
     }));
   };
   return (
-    <div className="flex flex-col items-start justify-between w-full h-full">
-      <EmailIcon />
+    <div className="flex flex-col items-start justify-between w-full h-full dark:bg-gray-900 dark:text-white">
+      <EmailIcon darkColor="#ffffff" />
       <div className="flex flex-col w-full h-auto self-start left-2 my-2">
         <h3 className="text-2xl">
           {t("please_enter_your_email_address_label")}?

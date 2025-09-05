@@ -6,7 +6,7 @@ import { TileProps } from "@/lib/utils/interfaces/Home-interfaces";
 const ListItem: React.FC<TileProps> = ({ item, loading = false, onClick }) => {
   if (loading) {
     return (
-      <div className="border-2 border-solid flex w-full md:w-[280px] rounded p-2 border-[#D1D5DB] gap-4">
+      <div className="border-2 border-solid flex w-full md:w-[280px] rounded p-2 border-[#D1D5DB] dark:text-white gap-4">
         <Skeleton shape="circle" size="3rem" />
         <div className="flex flex-col gap-2">
           <Skeleton width="8rem" height="1rem" />
@@ -17,9 +17,9 @@ const ListItem: React.FC<TileProps> = ({ item, loading = false, onClick }) => {
   }
 
   return (
-    <div>
+    <div className="">
       <button
-        className="border-[1px] border-solid flex w-full md:w-[280px] rounded-md h-[60px] p-2 border-[#D1D5DB] gap-4 justify-between items-center"
+        className="border-[1px] border-solid flex w-full md:w-[280px] rounded-md h-[60px] p-2 border-[#D1D5DB] gap-4 justify-between items-center dark:text-white dark:bg-gray-800"
         onClick={() => {
           if (onClick) {
             onClick(item);
@@ -30,7 +30,7 @@ const ListItem: React.FC<TileProps> = ({ item, loading = false, onClick }) => {
           {item?.flag && (
             <Image src={item.flag} height={50} width={50} alt="Flag image" />
           )}
-          <p className="text-[#374151] text-[16px]  text-left">{item?.name}</p>
+          <p className="text-[#374151] dark:text-white text-[16px]  text-left">{item?.name}</p>
         </div>
         <i className="pi pi-angle-right" style={{ fontSize: "1rem" }}></i>
       </button>

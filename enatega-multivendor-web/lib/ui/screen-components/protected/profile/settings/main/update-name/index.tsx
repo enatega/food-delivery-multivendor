@@ -122,16 +122,16 @@ export default function NameUpdateModal({
         </div>
         <div className="w-full">
           <div className="">
-            <h2 className="text-2xl font-extrabold mb-10 text-black">Name</h2>
+            <h2 className="text-2xl font-extrabold mb-10 text-black dark:text-white">Name</h2>
             <div className="p-float-label mb-6">
               <InputText
                 id="firstName"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
-                className="w-full p-3 border-2 border-gray-300 rounded-md"
+                className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md"
               />
-              <label htmlFor="firstName">{t("first_name_label")}</label>
+              <label className="text-gray-600 dark:text-gray-300" htmlFor="firstName">{t("first_name_label")}</label>
             </div>
             <div className="p-float-label">
               <InputText
@@ -139,9 +139,11 @@ export default function NameUpdateModal({
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
-                className="w-full p-3 border-2 border-gray-300 rounded-md"
+                className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-md 
+                     bg-white dark:bg-gray-800 text-black dark:text-white"
+
               />
-              <label htmlFor="lastName">{t("last_name_label")}</label>
+              <label className="text-gray-600 dark:text-gray-300" htmlFor="lastName">{t("last_name_label")}</label>
             </div>
           </div>
         </div>
@@ -149,7 +151,7 @@ export default function NameUpdateModal({
       <div className="flex flex-row w-full justify-between  gap-2 md:gap-0 px-4 ">
         <CustomButton
           label={t('cancel_label')}
-          className="bg-white flex items-center justify-center rounded-full border border-gray-300 p-3 w-full md:w-[268px] h-14 text-lg font-medium"
+          className="bg-white dark:bg-gray-800 flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 dark:text-gray-200 p-3 w-full md:w-[268px] h-14 text-lg font-medium"
           onClick={handleCancel}
         />
 

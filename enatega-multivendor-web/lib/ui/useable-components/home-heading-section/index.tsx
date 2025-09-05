@@ -43,8 +43,8 @@ function HomeHeadingSection({
                   {appliedFilters}
                 </span>
               )}
-              <button className="w-8 h-8 flex items-center justify-center  shadow-md  rounded-full">
-                <FontAwesomeIcon icon={faFilter} />
+              <button className="w-8 h-8 flex items-center justify-center  shadow-md  rounded-full dark:bg-gray-700">
+                <FontAwesomeIcon icon={faFilter} className="dark:text-white" />
               </button>
             </div>
           </div>
