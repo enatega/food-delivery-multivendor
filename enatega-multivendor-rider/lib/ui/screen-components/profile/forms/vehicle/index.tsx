@@ -17,6 +17,7 @@ import FormHeader from "../form-header";
 
 // Expo
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import { Link } from "expo-router";
 
 // Icons
@@ -31,11 +32,10 @@ import { Skeleton } from "moti/skeleton";
 import { showMessage } from "react-native-flash-message";
 
 // GraphQL
-import { UPDATE_VEHICLE } from "@/lib/apollo/mutations/rider.mutation";
+import { UPDATE_VEHICLE, UPLOAD_IMAGE_TO_S3 } from "@/lib/apollo/mutations/rider.mutation";
 import { RIDER_PROFILE } from "@/lib/apollo/queries";
 
 // Types & Interfaces
-import { ICloudinaryResponse } from "@/lib/utils/interfaces/cloudinary.interface";
 import { TRiderProfileBottomBarBit } from "@/lib/utils/types/rider";
 
 // Hooks
@@ -59,13 +59,14 @@ export default function VehiclePlateForm({
     isUploading: false,
     isSubmitting: false,
   });
-  const [cloudinaryResponse, setCloudinaryResponse] =
-    useState<ICloudinaryResponse | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     image: "",
     number: "",
   });
   // Mutations
+  const [uploadImageToS3] = useMutation(UPLOAD_IMAGE_TO_S3);
+  
   const [mutateLicense] = useMutation(UPDATE_VEHICLE, {
     onError: (error) => {
       showMessage({
@@ -98,32 +99,26 @@ export default function VehiclePlateForm({
       });
 
       if (!result.canceled) {
-        const formData = new FormData();
-        formData.append("file", {
-          uri: result.assets[0].uri,
-          name: `license_${Date.now()}.jpg`,
-          type: "image/jpeg",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
-
-        // ✅ Make sure upload_preset is inside formData, not in the URL
-        formData.append("upload_preset", "rider_data");
-
-        const response = await fetch(
-          "https://api.cloudinary.com/v1_1/do1ia4vzf/image/upload",
-          {
-            method: "POST",
-            body: formData,
+        const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        
+        const { data, errors } = await uploadImageToS3({
+          variables: {
+            image: `data:image/jpeg;base64,${base64}`,
           },
-        );
+        });
 
-        const data: ICloudinaryResponse = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.error?.message || "Failed to upload image");
+        if (errors && errors.length > 0) {
+          throw new Error(errors[0].message || t("Failed to upload image"));
         }
 
-        setCloudinaryResponse(data);
-        setFormData((prev) => ({ ...prev, image: data.secure_url }));
+        if (data?.uploadImageToS3?.imageUrl) {
+          setUploadedImageUrl(data.uploadImageToS3.imageUrl);
+          setFormData((prev) => ({ ...prev, image: data.uploadImageToS3.imageUrl }));
+        } else {
+          throw new Error(t("Failed to upload image"));
+        }
       }
     } catch (error) {
       console.log(error);
@@ -212,7 +207,7 @@ export default function VehiclePlateForm({
               <Text style={{ color: appTheme.fontMainColor }}>
                 {t("Add Registration Document")}
               </Text>
-              {!cloudinaryResponse?.secure_url ? (
+              {!uploadedImageUrl || !formData.image ? (
                 <TouchableOpacity
                   className="w-full rounded-md border border-dashed  p-3 h-28 items-center justify-center"
                   style={{ borderColor: appTheme.borderLineColor }}
@@ -238,17 +233,13 @@ export default function VehiclePlateForm({
                       className="text-[#3F51B5] border-b-2 border-b-[#3F51B5]"
                       style={{ color: appTheme.fontSecondColor }}
                     >
-                      {cloudinaryResponse.original_filename}.
-                      {cloudinaryResponse.format}
+                      vehicle_image.jpg
                     </Text>
                   </View>
                   <View className="flex flex-row">
-                    <Text style={{ color: appTheme.fontSecondColor }}>
-                      {cloudinaryResponse.bytes / 1000}KB
-                    </Text>
                     <Link
-                      download={cloudinaryResponse.secure_url}
-                      href={cloudinaryResponse.secure_url}
+                      download={uploadedImageUrl ?? formData.image}
+                      href={uploadedImageUrl ?? formData.image}
                       className="text-[#9CA3AF] text-xs"
                     >
                       <Ionicons size={18} name="download" color="#6B7280" />

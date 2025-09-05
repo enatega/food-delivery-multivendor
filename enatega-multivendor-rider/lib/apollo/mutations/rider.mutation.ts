@@ -96,3 +96,11 @@ export const UPDATE_WORK_SCHEDULE = gql`
     }
   }
 `;
+
+export const UPLOAD_IMAGE_TO_S3 = gql`
+  mutation UploadImageToS3($image: String!) {
+    uploadImageToS3(image: $image) {
+      imageUrl
+    }
+  }
+`;
