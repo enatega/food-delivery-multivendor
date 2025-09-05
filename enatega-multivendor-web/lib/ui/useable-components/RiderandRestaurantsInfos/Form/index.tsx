@@ -85,7 +85,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
       <Formik
         initialValues={initialValues}
-        validationSchema={emailValidationSchema}
+        validationSchema={emailValidationSchema(t)}
         onSubmit={handleSubmit}
       >
         {({ values, setFieldValue, isSubmitting }) => (
@@ -147,7 +147,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
             </div>
 
             {/* Phone Number */}
-            <div>
+            <div >
               <PhoneNumberInput />
               <ErrorMessage
                 name="phoneNumber"

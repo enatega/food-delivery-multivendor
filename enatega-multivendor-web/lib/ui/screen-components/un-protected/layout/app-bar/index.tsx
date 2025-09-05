@@ -522,7 +522,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       />{" "}
                     </button>{" "}
                     <Menu
-                      className="dark:bg-gray-800 dark:text-white "
+                      className="dark:bg-gray-800 dark:text-white mt-5"  
                       model={[
                         {
                           label: "ENGLISH",
@@ -596,7 +596,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       popup
                       ref={languageMenuRef}
                       id="language_menu_popup"
-                      popupAlignment="right"
+                      popupAlignment="left"
                     />{" "}
                   </div>
                 )}
@@ -705,7 +705,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
       {/* Cart Sidebar */}
       <Sidebar
-      position={position} // ✅ dynamic position
+        position={position} // ✅ dynamic position
         visible={isCartOpen}
         onHide={() => {
           setIsCartOpen(false);

@@ -119,8 +119,8 @@ const VerificationEmailForChangePassword = ({
         if (otp.join("").length !== 6 || !otpResponse?.data?.verifyOtp) {
           return showToast({
             type: "error",
-            title: "Error",
-            message: "Please enter a valid OTP",
+            title:t("toast_error"),
+            message: t("update_phone_name_otp_error_msg"),
           });
         } else {
           handleSubmitAfterVerification();
@@ -128,7 +128,7 @@ const VerificationEmailForChangePassword = ({
       } catch (error) {
         showToast({
           type: "error",
-          title: "Error",
+          title: t("toast_error"),
           message: "An error occurred while verifying the phone number",
         });
       }
@@ -155,14 +155,17 @@ const VerificationEmailForChangePassword = ({
         </div>
 
         <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-2">
-          We have sent OTP code to
+        {t("OTP_Code_Sent")}
+          
         </h2>
 
         <p className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white mb-3 break-words">
-          {formData?.email || "your@email.com"}
+          {formData?.email || t("your@email.com") }
         </p>
 
-        <p className="text-base text-gray-600 dark:text-gray-400  mb-6">Verify your Email</p>
+        <p className="text-base text-gray-600 dark:text-gray-400  mb-6">
+        {t("verify_your_email_label")}
+          </p>
       </div>
       <div className="w-full mb-6">
         <div className="flex justify-center flex-wrap gap-2">
@@ -187,17 +190,18 @@ const VerificationEmailForChangePassword = ({
       </div>
 
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center">
-        Valid for 10 minutes
+      {t("otp_valid_for_10_minutes_label")}
+        
       </p>
 
       <CustomButton
-        label="Continue"
+        label={t("continue_label")}
         className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
         onClick={handleSubmit}
       />
 
       <CustomButton
-        label="Resend OTP"
+        label={t("resend_otp_label")}
         className="bg-white text-black flex items-center justify-center rounded-full border border-gray-300 p-3 w-full h-12 sm:h-14 text-lg sm:text-md font-medium"
         onClick={handleResendEmailOtp}
       />

@@ -1,17 +1,20 @@
 import * as Yup from "yup";
 
-const emailValidationSchema = Yup.object({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
+const emailValidationSchema = (t: (key: string) => string) =>
+  Yup.object({
+    firstName: Yup.string().required(t("firstNameRequired")),
+    lastName: Yup.string().required(t("lastNameRequired")),
     phoneNumber: Yup.string()
-      .matches(/^\+?[0-9]{7,15}$/, "Enter a valid phone number")
-      .required("Phone number is required"),
-    email: Yup.string().email("Enter a valid email").required("Email is required"),
-    password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
+      .matches(/^\+?[0-9]{7,15}$/, t("phoneNumberInvalid"))
+      .required(t("phoneNumberRequired")),
+    email: Yup.string().email(t("emailInvalid")).required(t("emailRequired")),
+    password: Yup.string()
+      .min(6, t("passwordMin"))
+      .required(t("passwordRequired")),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Confirm your password"),
-    termsAccepted: Yup.boolean().oneOf([true], "Accept terms to continue"),
+      .oneOf([Yup.ref("password")], t("confirmPasswordMismatch"))
+      .required(t("confirmPasswordRequired")),
+    termsAccepted: Yup.boolean().oneOf([true], t("termsRequired")),
   });
 
-  export default emailValidationSchema;
+export default emailValidationSchema;

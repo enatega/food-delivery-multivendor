@@ -400,6 +400,7 @@
   "please_enter_valid_otp_message": "Please enter a valid OTP",
   "verify_your_mobile_number_label": "Verify your Phone number",
   "otp_valid_for_10_minutes_label": "Valid for 10 minutes",
+  "your@email.com":"your@email.com",
   "continue_label": "Continue",
   "resend_otp_label": "Resend OTP",
   "login_label": "Login",
@@ -861,5 +862,17 @@
   "order_details_no_instructions_text": "No instructions added",
   "and_labed": "and",
 
-  "please_enter_a_valid_name_message": "Please enter a valid username"
+  "please_enter_a_valid_name_message": "Please enter a valid username",
+  "firstNameRequired": "First name is required",
+  "lastNameRequired": "Last name is required",
+  "phoneNumberRequired": "Phone number is required",
+  "phoneNumberInvalid": "Enter a valid phone number",
+  "emailRequired": "Email is required",
+  "emailInvalid": "Enter a valid email",
+  "passwordRequired": "Password is required",
+  "passwordMin": "Minimum 6 characters",
+  "confirmPasswordRequired": "Confirm your password",
+  "confirmPasswordMismatch": "Passwords must match",
+  "termsRequired": "Accept terms to continue",
+  "invalid_credentials": "Invalid credentials!"
 }
