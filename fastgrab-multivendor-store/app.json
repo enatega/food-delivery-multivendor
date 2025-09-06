@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Enatega Store",
-    "slug": "enatega-multivendor-restaurant",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "version": "1.0.55",
+    "name": "FastGrab Store",
+    "slug": "fastgrab-multivendor-restaurant",
+    "description": "The official business management tool for all FastGrab vendors. The FastGrab Store app is a centralized platform that puts you in control of your online presence and daily operations. Streamline your workflow, reach more customers, and increase your revenue with a single, intuitive interface.",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
     "assetBundlePatterns": [
@@ -55,8 +55,9 @@
       "versionCode": 55,
       "googleServicesFile": "./google-services.json",
       "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "package": "multivendor.enatega.restaurant",
       "adaptiveIcon": {
@@ -66,11 +67,13 @@
     },
     "extra": {
       "eas": {
-        "projectId": "6a94161f-f21b-4ad9-8a04-c95b54ef0116"
-      }
+        "projectId": "4a84d902-4d69-454e-ae15-d2948abbcca0"
+      },
+      "router": {}
     },
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "owner": "it4chi00"
   }
 }

@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Enatega Multivendor Rider",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "version": "1.1.61",
-    "slug": "food-delivery-rider-multivendor",
+    "name": "Fastgrab Multivendor Rider",
+    "description": "The official app for FastGrab delivery partners in Namibia. FastGrab Rider is a powerful tool designed to help you manage deliveries with maximum efficiency. Maximize your earnings with a streamlined, intelligent system that gives you the tools to succeed on your terms.",
+    "version": "1.0.2",
+    "slug": "fastgrab-rider-multivendor",
     "orientation": "portrait",
     "splash": {
       "image": "./lib/assets/images/black.png",
@@ -18,7 +18,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "plugins": [
-    "expo-router",
+      "expo-router",
       [
         "@sentry/react-native/expo",
         {
@@ -67,8 +67,9 @@
       "versionCode": 61,
       "googleServicesFile": "./google-services.json",
       "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "config": {
         "googleMaps": {
@@ -84,11 +85,13 @@
     },
     "extra": {
       "eas": {
-        "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743"
-      }
+        "projectId": "fc60a80d-5fdd-46a6-b79b-07bfbb9e35a8"
+      },
+      "router": {}
     },
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "owner": "it4chi00"
   }
 }

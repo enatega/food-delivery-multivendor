@@ -1,11 +1,8 @@
 {
   "expo": {
-    "name": "Enatega Multi",
-    "scheme": "enategamultivendor",
-    "version": "1.0.88",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "slug": "enategamultivendor",
-    "owner": "ninjas_code",
+    "name": "FastGrab Multi",
+    "version": "1.0.2",
+    "description": "FastGrab is Namibia's premier multi-vendor delivery app, connecting you to the best restaurants and stores in your city. It's more than just food; it's a seamless experience designed to bring you what you want, when you want it, with a tap",
     "experiments": {
       "buildCacheProvider": "eas"
     },
@@ -55,7 +52,7 @@
       "color": "#90E36D",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
-      "androidCollapsedTitle": "Enatega Multivendor"
+      "androidCollapsedTitle": "Fastgrab Multivendor"
     },
     "android": {
       "versionCode": 88,
@@ -110,7 +107,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $FastGrab Multivendor to use your location."
         }
       ],
       "expo-font",
@@ -127,7 +124,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+        "projectId": "8da302ca-fffd-47cd-8050-d8175c2d2f69"
       }
     },
     "runtimeVersion": {
@@ -135,6 +132,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/331d4e5b-b12a-434a-92ec-d6d283dc0e46"
-    }
+    },
+    "owner": "it4chi00"
   }
 }
