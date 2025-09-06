@@ -355,6 +355,20 @@ export default function OrderCheckoutScreen() {
     });
   }
 
+  function onRemoveCoupon() {
+    setIsCouponApplied(false);
+    setCoupon({} as ICoupon);
+    setCouponText("");
+    showToast({
+      type: "info",
+      title: t("coupon_removed_title", { default: "Coupon removed" }),
+      message: t("coupon_removed_message", {
+        default: "The coupon has been removed.",
+      }),
+    });
+  }
+
+
   // function validateOrder() {
   //   if (!restaurantData.restaurant.isAvailable || !onCheckIsOpen()) {
   //     // toggleCloseModal();
@@ -606,7 +620,7 @@ export default function OrderCheckoutScreen() {
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
-          couponCode: coupon ? coupon.title : null,
+          couponCode: isCouponApplied ? coupon?.title ?? null : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
           // address: {
@@ -1136,10 +1150,19 @@ export default function OrderCheckoutScreen() {
                 {t("promo_code_label")}
               </h2>
               {isCouponApplied ? (
-                <Message
-                  severity="success"
-                  text={t("coupon_applied_successfully_message")}
-                />
+                <div className="flex items-center justify-between gap-2">
+                  <Message
+                    severity="success"
+                    text={`${t("coupon_applied_successfully_message")} • ${coupon?.title ?? ""}`}
+                  />
+                  <button
+                    className="ml-2 shrink-0 px-3 py-2 rounded-full border border-gray-300 dark:border-gray-700 text-xs sm:text-sm"
+                    onClick={onRemoveCoupon}
+                    aria-label={t("remove_coupon_button", { default: "Remove coupon" })}
+                  >
+                    {t("remove_coupon_button", { default: "Remove coupon" })}
+                  </button>
+                </div>
               ) : (
                 <>
                   <p className="text-gray-500 dark:text-gray-400 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle mt-2">
