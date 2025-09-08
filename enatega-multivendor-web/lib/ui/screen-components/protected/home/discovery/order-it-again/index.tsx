@@ -17,7 +17,7 @@ function OrderItAgain() {
   }
 
   return (
-    <SliderCard title="Order it again" data={queryData || []} />
+    <SliderCard heading="" title="Order it again" data={queryData || []} />
   );
 }
 export default OrderItAgain;
