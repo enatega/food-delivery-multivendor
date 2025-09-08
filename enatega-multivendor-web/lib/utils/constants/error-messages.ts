@@ -4,13 +4,17 @@ import {
   INoticiationErrors,
 } from "@/lib/utils/interfaces";
 
+
+// translation
+
+
 export const PasswordErrors = [
-  "At least 6 characters",
-  "At least one lowercase letter (a-z)",
-  "At least one uppercase letter (A-Z)",
-  "At least one number (0-9)",
-  "At least one special character",
-  "Password does not match",
+  "At_least_6_characters_label",
+  "At_least_one_lowercase_letter_(a-z)_label",
+  "At_least_one_uppercase_letter_(A-Z)_label",
+  "At_least_one_number_(0-9)_label",
+  "At_least_one_special_character",
+  "Password_does_not_match",
 ];
 
 export const SignUpErrors: ISignUpFormErrors = {

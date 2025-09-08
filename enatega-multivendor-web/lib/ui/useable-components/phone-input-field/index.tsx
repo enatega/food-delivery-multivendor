@@ -70,103 +70,115 @@ export default function CustomPhoneTextField({
         style={style}
         className={`flex items-center ${className} ${style?.borderColor === "red" ? "phone-error" : ""} bg-white text-black dark:bg-gray-800 dark:text-white `}
       >
-       <PhoneInput
-  country={"au"}
-  value={value ?? ""}
-  onChange={handlePhoneInputChange}
-  disableSearchIcon={true}
-  searchPlaceholder="Search country"
-  inputStyle={{
-    ...MaininputStyle,
-    borderColor: style?.borderColor || MaininputStyle.borderColor,
-    backgroundColor: "white",
-    color: "#111827", // gray-900
-  }}
-  buttonStyle={{
-    borderRight: "1px solid #ddd",
-    width: "40px",
-    backgroundColor: "white",
-  }}
-  searchStyle={{
-    position: "relative",
-    width: "100%",
-    margin: "0",
-    padding: "5px",
-    borderRadius: "8px",
-  }}
-  containerClass="custom-phone-input w-full"
-/>
+        <PhoneInput
+          country={"au"}
+          value={value ?? ""}
+          onChange={handlePhoneInputChange}
+          disableSearchIcon={true}
+          searchPlaceholder="Search country"
+          inputStyle={{
+            ...MaininputStyle,
+            borderColor: style?.borderColor || MaininputStyle.borderColor,
+            backgroundColor: "white",
+            color: "#111827", // gray-900
+          }}
+          buttonStyle={{
+            borderRight: "1px solid #ddd",
+            width: "40px",
+            backgroundColor: "white",
+          }}
+          searchStyle={{
+            position: "relative",
+            width: "100%",
+            margin: "0",
+            padding: "5px",
+            borderRadius: "8px",
+          }}
+          containerClass="custom-phone-input w-full"
+        />
 
-<style jsx global>{`
-  /* Light mode dropdown */
-  .custom-phone-input .country-list {
-    background-color: white;
-    color: #111827; /* gray-900 */
-    border: 1px solid #d1d5db; /* gray-300 */
-    border-radius: 0.5rem;
-  }
-  .custom-phone-input .search {
-    background-color: white;
-    color: #111827;
-    border: 1px solid #d1d5db;
-  }
-  .custom-phone-input .country-list .country:hover {
-    background-color: #f3f4f6; /* gray-100 */
-  }
-  .custom-phone-input .country-list .country.highlight {
-    background-color: #e5e7eb; /* gray-200 */
-  }
+        <style jsx global>{`
+          /* Light mode dropdown */
+          .custom-phone-input .country-list {
+            background-color: white;
+            color: #111827; /* gray-900 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem;
+          }
+          .custom-phone-input .search {
+            background-color: white;
+            color: #111827;
+            border: 1px solid #d1d5db;
+          }
+          .custom-phone-input .country-list .country:hover {
+            background-color: #f3f4f6; /* gray-100 */
+          }
+          .custom-phone-input .country-list .country.highlight {
+            background-color: #e5e7eb; /* gray-200 */
+          }
 
-  /* Dark mode input */
-  html.dark .custom-phone-input .form-control {
-    background-color: #1f2937 !important; /* gray-800 */
-    color: #f9fafb !important; /* gray-50 */
-    border: 1px solid #4b5563 !important; /* gray-600 */
-  }
+          /* Dark mode input */
+          html.dark .custom-phone-input .form-control {
+            background-color: #1f2937 !important; /* gray-800 */
+            color: #f9fafb !important; /* gray-50 */
+            border: 1px solid #4b5563 !important; /* gray-600 */
+          }
 
-  /* Dark mode flag button */
-  html.dark .custom-phone-input .flag-dropdown,
-  html.dark .custom-phone-input .selected-flag {
-    background-color: #1f2937 !important; /* gray-800 */
-    border: 1px solid #374151 !important; /* gray-700 */
-  }
+          /* Dark mode flag button */
+          html.dark .custom-phone-input .flag-dropdown,
+          html.dark .custom-phone-input .selected-flag {
+            background-color: #1f2937 !important; /* gray-800 */
+            border: 1px solid #374151 !important; /* gray-700 */
+          }
 
-  /* Force flag button to stay gray when open/clicked */
-  html.dark .react-tel-input .flag-dropdown.open,
-  html.dark .react-tel-input .selected-flag:focus,
-  html.dark .react-tel-input .selected-flag:active {
-    background-color: #1f2937 !important;
-    box-shadow: none !important;
-    outline: none !important;
-  }
+          /* Force flag button to stay gray when open/clicked */
+          html.dark .react-tel-input .flag-dropdown.open,
+          html.dark .react-tel-input .selected-flag:focus,
+          html.dark .react-tel-input .selected-flag:active {
+            background-color: #1f2937 !important;
+            box-shadow: none !important;
+            outline: none !important;
+          }
 
-  /* Remove weird hover background */
-  .react-tel-input .flag-dropdown:hover,
-  .react-tel-input .selected-flag:hover {
-    background-color: transparent !important;
-  }
+          /* Remove weird hover background */
+          .react-tel-input .flag-dropdown:hover,
+          .react-tel-input .selected-flag:hover {
+            background-color: transparent !important;
+          }
 
-  /* Dark mode dropdown */
-  html.dark .custom-phone-input .country-list {
-    background-color: #1f2937 !important; /* gray-800 */
-    color: #f9fafb !important;
-    border: 1px solid #374151 !important; /* gray-700 */
-    border-radius: 0.5rem;
-  }
-  html.dark .custom-phone-input .search {
-    background-color: #374151 !important; /* gray-700 */
-    color: #f9fafb !important;
-    border: 1px solid #4b5563 !important;
-  }
-  html.dark .custom-phone-input .country-list .country:hover {
-    background-color: #374151 !important; /* gray-700 */
-  }
-  html.dark .custom-phone-input .country-list .country.highlight {
-    background-color: #94e469 !important; /* theme green */
-    color: #111827 !important; /* gray-900 */
-  }
-`}</style>
+          /* Dark mode dropdown */
+          html.dark .custom-phone-input .country-list {
+            background-color: #1f2937 !important; /* gray-800 */
+            color: #f9fafb !important;
+            border: 1px solid #374151 !important; /* gray-700 */
+            border-radius: 0.5rem;
+          }
+          html.dark .custom-phone-input .search {
+            background-color: #374151 !important; /* gray-700 */
+            color: #f9fafb !important;
+            border: 1px solid #4b5563 !important;
+          }
+          html.dark .custom-phone-input .country-list .country:hover {
+            background-color: #374151 !important; /* gray-700 */
+          }
+          html.dark .custom-phone-input .country-list .country.highlight {
+            background-color: #94e469 !important; /* theme green */
+            color: #111827 !important; /* gray-900 */
+          }
 
+          html[dir="rtl"] .custom-phone-input .selected-flag {
+            right: 0;
+            left: auto !important;
+            padding-right: 0.5rem; /* spacing so flag doesn’t touch border */
+          }
+          /* ✅ RTL Arrow Fix */
+          html[dir="rtl"] .custom-phone-input .selected-flag .arrow {
+            right: 20px !important; /* place arrow inside the box */
+            left: auto !important;
+            display: block !important;
+            position: absolute;
+          }
+        `}</style>
       </div>
     </div>
   ) : (

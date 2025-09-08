@@ -102,8 +102,8 @@
     "restaurantcusines": "أنواع مطاعم",
     "storenearyou": "مطاعم بالقرب منك",
     "GroceryStores": " محلات البقالة",
-    "grocerylist": "قائمة البقالة",
-    "toppicks": "أفضل اختيارات البقالة",
+    
+   
     "ourbrand": "علاماتنا التجارية",
     "popularrest": "مطاعم شائعة",
     "popularstore": "متاجر شائعة"
@@ -124,6 +124,8 @@
   },
   "addresses": "العناوين",
   "app_version": "1.0.0",
+  "toppicks": "أفضل اختيارات البقالة",
+  "grocerylist": "قائمة البقالة",
   "no_items_found": "لم يتم العثور على عناصر",
   "something_went_wrong": "حدث خطأ ما",
   "for_riders": "للسائقين",
@@ -196,7 +198,9 @@
   "order_cancel_warning_line1": "لقد استلمنا طلبك وقد نجد لك سائقًا في أي",
   "order_cancel_warning_line2": "ثانية الآن. إلغاء على أي حال؟",
   "cancelling_text": "جارٍ الإلغاء...",
-
+  "most_ordered_restaurants": " المطاعم الأكثر طلبًا",
+  "Popular-restaurants": " مطاعم شائعة",
+  "Popular-stores": " متاجر شائعة",
   "cancel_my_order_button": "إلغاء طلبي",
   "ill_wait_for_my_order_button": "سأنتظر طلبي",
   "chat_with_rider_button": "الدردشة مع السائق",
@@ -350,7 +354,9 @@
   "deleteButton": "حذف",
   "sendReceiptsLabel": "إرسال الإيصالات إلى البريد الإلكتروني",
   "logoutLabel": "تسجيل الخروج من التطبيق",
+  "Got_your_account_please_enter_your_password": "هل لديك حساب؟ يرجى إدخال كلمة المرور الخاصة بك",
   "logoutButton": "تسجيل الخروج",
+  "Are_you_sure_you_want_to_log_out?": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "successToastTitle": "نجاح",
   "successToastMessage": "تم حذف حساب المستخدم بنجاح",
   "errorToastTitle": "خطأ",
@@ -400,6 +406,13 @@
   "continue_label": "متابعة",
   "resend_otp_label": "إعادة إرسال رمز التحقق",
   "login_label": "تسجيل الدخول",
+
+  "At_least_6_characters_label": "على الأقل 6 أحرف",
+  "At_least_one_lowercase_letter_(a-z)_label": " حرف صغير واحد على الأقل (a-z)",
+  "At_least_one_uppercase_letter_(A-Z)_label": " حرف كبير واحد على الأقل (A-Z) ",
+  "At_least_one_number_(0-9)_label": "رقم واحد على الأقل (0-9) ",
+  "At_least_one_special_character": " رمز خاص واحد على الأقل ",
+  "Password_does_not_match": "كلمة المرور غير متطابقة",
 
   "password_recovery_label": "استعادة كلمة المرور",
   "update_your_password_now_message": "قم بتحديث كلمة المرور الآن",
@@ -802,22 +815,26 @@
   "enatega_rider_page_name_card3_heading": "قُم بالتوصيل إلى المزيد من العملاء",
   "enatega_rider_page_name_card3_text": "بعد تقديم الطلب، يقوم شركاء التوصيل من Enatega بتوصيل الطلبات إلى عملائك خلال حوالي 30 دقيقة.",
   "enatega_rider_page_name_form_role": "تسجيل السائق",
-
+  "Missing_Phone_number": " رقم الهاتف مفقود",
+  "Phone_number_is_missing": " رقم الهاتف مفقود",
   "first_name_required": "الاسم الأول مطلوب",
   "last_name_required": "اسم العائلة مطلوب",
   "phone_invalid": "أدخل رقم هاتف صحيح",
   "phone_required": "رقم الهاتف مطلوب",
+  "Unverified_Phone_number": "رقم الهاتف غير موثق",
+  "Phone_Number_is_not_verified": "رقم الهاتف غير موثق",
   "email_invalid": "أدخل بريد إلكتروني صالح",
   "email_required": "البريد الإلكتروني مطلوب",
   "password_min": "الحد الأدنى 6 أحرف",
   "password_required": "كلمة المرور مطلوبة",
   "confirm_password_match": "يجب أن تتطابق كلمات المرور",
-  "your@email.com":"بريدك الإلكتروني",
+  "your@email.com": "بريدك الإلكتروني",
   "confirm_password_required": "يرجى تأكيد كلمة المرور",
   "terms_required": "يجب قبول الشروط للمتابعة",
   "cash": "نقداً",
   "card": "",
   "restaurant_unavailable": "المطعم غير متاح حالياً",
+  "restaurant_data_not_loaded": "لم يتم تحميل بيانات المطعم",
 
   "AboutUsPage_title": "معلومات عنا",
 
@@ -869,5 +886,20 @@
   "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
   "confirmPasswordMismatch": "يجب أن تتطابق كلمتا المرور",
   "termsRequired": "يجب قبول الشروط للمتابعة",
-  "invalid_credentials": "بيانات الاعتماد غير صحيحة!"
+  "invalid_credentials": "بيانات الاعتماد غير صحيحة!",
+
+  "Monday": "الإثنين",
+  "Tuesday": "الثلاثاء",
+  "Wednesday": "الأربعاء",
+  "Thursday": "الخميس",
+  "Friday": "الجمعة",
+  "Saturday": "السبت",
+  "Sunday": "الأحد",
+  "Favourites": "المفضلة",
+  "Password": {
+    "enter_a_password": "أدخل كلمة المرور",
+    "weak": "ضعيف",
+    "medium": "متوسط",
+    "strong": "قوي"
+  }
 }

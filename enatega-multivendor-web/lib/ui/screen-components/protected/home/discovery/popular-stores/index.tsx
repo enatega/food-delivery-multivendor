@@ -20,7 +20,7 @@ function PopularStores() {
 
   return (
     <CuisinesSliderCard
-      title={t('DiscoveryPage.popularstore')}
+      title="Popular-stores"
       data={groceriesData || []}
       showLogo={true}
       last={true}

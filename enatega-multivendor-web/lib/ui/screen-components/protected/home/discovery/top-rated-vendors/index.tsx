@@ -18,7 +18,7 @@ function TopRatedVendors() {
   }
   return (
     <CuisinesSliderCard
-      title={t('DiscoveryPage.ourbrand')}
+      title="Our-brands"
       data={queryData || []}
       showLogo={true}
       cuisines={false}

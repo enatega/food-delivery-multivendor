@@ -23,6 +23,7 @@ const SliderCard = <T,>({
   title,
   data,
   last,
+  heading,
 }: ISliderCardComponentProps<T>) => {
   const [page, setPage] = useState(0);
   const t = useTranslations()
@@ -104,7 +105,7 @@ const SliderCard = <T,>({
       <div className={`${last && "mb-20"}`}>
         <div className="flex justify-between mx-[6px]">
           <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900 dark:text-white">
-            {title}
+            {t(heading)}
           </span>
           <div className="flex items-center justify-end gap-x-2">
             {/* See All Button */}

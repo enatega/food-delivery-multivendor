@@ -6,6 +6,7 @@ export interface ISliderCardComponentProps<T> extends IGlobalComponentProps {
   title: string;
   data: T[];
   last?: boolean;
+  heading : string
 }
 
 export interface ISliderCardItemProps {

@@ -102,11 +102,11 @@ export default function AuthModal({
           setActivePanel(0);
           setIsAuthModalVisible(false);
 
-          showToast({
-            type: "success",
-            title: t("login_success"),
-            message: t("login_success_message"),
-          });
+          // showToast({
+          //   type: "success",
+          //   title: t("login_success"),
+          //   message: t("login_success_message"),
+          // });
         }
         setIsLoading(false);
       }

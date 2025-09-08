@@ -357,7 +357,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
             const requiredTagText =
               (addon.quantityMinimum ?? 0) > 0
                 ? `${addon.quantityMinimum} ${t("required")}`
-                : "Optional";
+                : `${t("optional")}`;
 
             return (
               <ItemDetailSection

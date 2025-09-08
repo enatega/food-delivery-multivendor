@@ -74,14 +74,14 @@ export default function DiscoveryScreen() {
       <OrderItAgain />
       <MostOrderedRestaurants />
       <CuisinesSection
-        title={t("DiscoveryPage.restaurantcusines")}
+        title="restaurant_cuisines_title"
         data={restaurantCuisinesData}
         loading={loading}
         error={!!error}
       />
       <RestaurantsNearYou />
       <CuisinesSection
-        title={t("DiscoveryPage.GroceryStores")}
+        title="grocery_cuisines_title"
         data={groceryCuisinesData}
         loading={loading}
         error={!!error}

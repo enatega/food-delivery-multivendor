@@ -21,7 +21,7 @@ function PopularRestaurants() {
 
   return (
     <CuisinesSliderCard
-      title={t('DiscoveryPage.popularrest')}
+      title="Popular-restaurants"
       data={restaurantsData || []}
       showLogo={true}
       cuisines={false}

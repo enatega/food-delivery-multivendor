@@ -3,6 +3,7 @@ import { Password } from 'primereact/password';
 import { twMerge } from 'tailwind-merge';
 import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 import PasswordFeedback from './password-feedback';
+import { usePrimeReactLocales } from '@/lib/hooks/usePrimeReactLocales';
 
 export default function CustomPasswordTextField({
   className,
@@ -12,6 +13,7 @@ export default function CustomPasswordTextField({
   isLoading = false,
   ...props
 }: IPasswordTextFieldProps) {
+  usePrimeReactLocales();
   return !isLoading ? (
     <div className="flex flex-col gap-y-1 rounded-lg dark:bg-gray-800">
       {showLabel && (   

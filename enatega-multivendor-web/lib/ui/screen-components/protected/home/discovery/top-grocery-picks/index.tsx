@@ -21,7 +21,7 @@ function TopGroceryPicks() {
     return;
   }
 
-  return <SliderCard title={t('DiscoveryPage.toppicks')} data={groceriesData || []} />;
+  return <SliderCard heading="toppicks" title="Top-grocery-picks" data={groceriesData || []} />;
 }
 
 export default TopGroceryPicks;

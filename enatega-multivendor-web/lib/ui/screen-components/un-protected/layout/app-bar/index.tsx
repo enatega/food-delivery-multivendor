@@ -741,7 +741,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
         header={
           <div className="w-full flex justify-center">
             <span className="font-inter font-bold text-lg text-gray-800  dark:text-white ">
-              Are you sure you want to log out?
+              {t("Are_you_sure_you_want_to_log_out?")}
             </span>
           </div>
         }
@@ -753,7 +753,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           {/* Action buttons */}
           <div className="flex justify-center gap-3 w-full ">
             <CustomButton
-              label="Cancel"
+              label={t("cancel_address")}
               className="w-1/2 h-fit bg-transparent dark:text-white text-gray-900 py-2 border border-gray-400 rounded-full text-sm font-medium"
               onClick={() => setLogoutConfirmationVisible(false)}
             />
@@ -763,7 +763,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               onClick={onLogout}
             >
               <FontAwesomeIcon icon={faSignOutAlt} />
-              Logout
+              {t("logoutButton")}
             </button>
           </div>
         </div>
