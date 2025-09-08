@@ -16,13 +16,13 @@ export default function CustomTextField({
   return !isLoading ? (
     <div className={`flex w-full flex-col justify-center gap-y-1`}>
       {showLabel && (
-        <label htmlFor="username" className="text-sm font-[500]">
+        <label htmlFor="username" className="text-sm font-[500] dark:text-white">
           {placeholder}
         </label>
       )}
 
       <InputText
-        className={`h-10 w-full rounded-lg border ${error? 'border-red-500': 'border-gray-300'}  px-2 text-sm focus:shadow-none focus:outline-none ${className}`}
+        className={`h-10 w-full rounded-lg border ${error? 'border-red-500': 'border-gray-300 dark:border-gray-600'} dark:bg-gray-800 dark:text-white  px-2 text-sm focus:shadow-none focus:outline-none ${className}`}
         placeholder={placeholder}
         {...props}
       />

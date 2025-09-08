@@ -12,9 +12,10 @@ export interface IPhoneEntryProps {
   user: IUser | null;
   handleSubmit: () => void;
   handleUpdatePhoneModal: () => void;
+  userPhone?: string;
 }
 
-const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }: IPhoneEntryProps) => {
+const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal, userPhone }: IPhoneEntryProps) => {
   const [loading, setLoading] = useState(false);
   const t= useTranslations()
 
@@ -28,9 +29,9 @@ const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }
      setLoading(false);
    }
  };
-
+ console.log('user phone:', user?.phone);
   return (
-    <div className="flex flex-col justify-between px-4 w-full items-center">
+    <div className="flex flex-col justify-between px-4 w-full items-center dark:bg-gray-900 dark:text-white">
       <div className="flex items-center justify-center">
         <LaptopSvg width={250} height={250} />
       </div>
@@ -45,8 +46,10 @@ const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }
           name="phone"
           showLabel={false}
           type="text"
-          className="min-w-[22vw] w-full"
-          value={user?.phone}
+          className="min-w-[22vw] w-full 
+          bg-white text-black border border-gray-300
+          dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          value={userPhone}
           onChange={handleChange}
         />
       </div>
@@ -54,7 +57,7 @@ const PhoneEntry = ({ handleChange, handleSubmit, user, handleUpdatePhoneModal }
       <div className="flex flex-row w-full justify-between mt-2 gap-2 md:gap-0">
         <CustomButton
           label={t('update_phone_name_cancel_button')}
-          className="bg-white border border-gray-300 flex items-center justify-center rounded-full p-2 sm:p-3 w-full md:w-[268px] mb-4 text-sm sm:text-lg font-medium"
+          className="bg-white border dark:bg-gray-800 border-gray-300 dark:text-gray-100 dark:border-gray-400 flex items-center justify-center rounded-full p-2 sm:p-3 w-full md:w-[268px] mb-4 text-sm sm:text-lg font-medium"
           onClick={handleUpdatePhoneModal}
         />
 

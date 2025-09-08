@@ -23,6 +23,7 @@ import { UPDATE_USER } from "@/lib/api/graphql";
 import PhoneIcon from "@/lib/utils/assets/svg/phone";
 
 export default function PhoneVerification({
+  formData,
   phoneOtp,
   setPhoneOtp,
   handleChangePanel,
@@ -44,6 +45,7 @@ export default function PhoneVerification({
     setIsRegistering,
     isLoading,
     setIsLoading,
+    handleCreateUser,
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
@@ -72,40 +74,83 @@ export default function PhoneVerification({
       const otpResponse = await verifyOTP({
         variables: {
           otp: phoneOtp,
-          phone: user?.phone,
+          phone: formData?.phone,
         },
       });
 
-      if (otpResponse.data?.verifyOtp && !!user?.phone) {
-        const args = isRegistering
-          ? {
-              name: user?.name ?? "",
-              phoneIsVerified: true,
-            }
-          : {
-              phone: user?.phone,
-              name: user?.name ?? "",
-              phoneIsVerified: true,
-            };
+      console.log("OTP Response:", otpResponse);
 
-        const userData = await updateUser({
-          variables: args,
-        });
-        setOtp("");
-        setPhoneOtp("");
-        if (!userData.data?.updateUser?.emailIsVerified && !user.email) {
-          handleChangePanel(5);
-        } else if (!userData.data?.updateUser?.emailIsVerified && user.email) {
-          handleChangePanel(3);
-        } else {
+      if (otpResponse.data?.verifyOtp && !!formData?.phone) {
+        if (isRegistering) {
+          const userData = await handleCreateUser({
+            email: formData?.email,
+            phone: formData?.phone,
+            name: formData?.name,
+            password: formData?.password,
+          });
+
+          if (!userData.phoneIsVerified) {
+            await updateUser({
+              variables: {
+                name: userData?.name ?? "",
+                phone: userData?.phone,
+                phoneIsVerified: true,
+              },
+            });
+          }
+
+          setOtp("");
+          setPhoneOtp("");
+
+          showToast({
+            type: "success",
+            title: t("phone_verification_label"),
+            message: t("your_phone_number_verified_successfully_message"),
+          });
+          showToast({
+            type: "success",
+            title: t("register_label"),
+            message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
+          });
+
+          setIsRegistering(false);
           handleChangePanel(0);
           setIsAuthModalVisible(false);
+        } else {
+          const args = isRegistering
+            ? {
+                name: user?.name ?? "",
+                phoneIsVerified: true,
+              }
+            : {
+                phone: user?.phone,
+                name: user?.name ?? "",
+                phoneIsVerified: true,
+              };
+
+          const userData = await updateUser({
+            variables: args,
+          });
+
+          setOtp("");
+          setPhoneOtp("");
+          if (!userData.data?.updateUser?.emailIsVerified && !user?.email) {
+            handleChangePanel(5);
+          } else if (
+            !userData.data?.updateUser?.emailIsVerified &&
+            user?.email
+          ) {
+            handleChangePanel(3);
+          } else {
+            handleChangePanel(0);
+            setIsAuthModalVisible(false);
+          }
+          return showToast({
+            type: "success",
+            title: t("update_phone_name_verification_success_title"),
+            message: t("update_phone_name_verification_success_msg"),
+          });
         }
-        return showToast({
-          type: "success",
-          title: t("update_phone_name_verification_success_title"),
-          message: t("update_phone_name_verification_success_msg"),
-        });
       } else {
         showToast({
           type: "error",
@@ -125,9 +170,9 @@ export default function PhoneVerification({
   };
 
   const handleResendPhoneOtp = async () => {
-    if (user?.phone) {
+    if (user?.phone || formData.phone) {
       // setIsResendingOtp(true);
-      await sendOtpToPhoneNumber(user?.phone);
+      await sendOtpToPhoneNumber(user?.phone || formData.phone);
       showToast({
         type: "success",
         title: t("otp_resent_label"),
@@ -184,21 +229,21 @@ export default function PhoneVerification({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8">
+    <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8 dark:bg-gray-900 dark:text-white">
       <div className="flex flex-col justify-items-start justify-start text-left">
         <div className="mb-4">
           <PhoneIcon />
         </div>
 
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-2">
           {t("OTP_Code_Sent")}
         </h2>
 
-        <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
-          {user?.phone || "your@email.com"}
+        <p className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white mb-3 break-words">
+          {formData?.phone || "your phone number"}
         </p>
 
-        <p className="text-base text-gray-600 mb-6">
+        <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
           {t("please_check_your_inbox_message_1")}
         </p>
       </div>
@@ -251,7 +296,7 @@ export default function PhoneVerification({
                   }
                 }
               }}
-              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border dark:bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
             />
           ))}
         </div>
@@ -259,7 +304,7 @@ export default function PhoneVerification({
       {/* Button Spacer */}
       {/* <span className="mt-4" />
         {/* Continue Button */}
-      <p className="text-sm text-gray-500 mb-6 text-center w-full">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center w-full">
         {t("otp_valid_for_10_minutes_label")}
       </p>
 

@@ -31,7 +31,7 @@ import SignUpWithEmail from "./signup-with-email";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ChangePassword from "./change-password";
-import VerificationEmailForChangePassword  from "./change-password/email-otp";
+import VerificationEmailForChangePassword from "./change-password/email-otp";
 import { Tooltip } from "react-tooltip";
 import { useTranslations } from "next-intl";
 
@@ -49,6 +49,9 @@ export default function AuthModal({
     phone: "",
   });
 
+  // get the RTL direction
+  const direction = document.documentElement.getAttribute("dir") || "ltr";
+
   // Refs
   const authenticationPanelRef = useRef(null);
 
@@ -61,10 +64,9 @@ export default function AuthModal({
     setIsAuthModalVisible,
     setIsLoading,
     sendOtpToEmailAddress,
-    
   } = useAuth();
   const { showToast } = useToast();
-  const t = useTranslations()
+  const t = useTranslations();
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
 
   // Login With Google
@@ -102,8 +104,8 @@ export default function AuthModal({
 
           showToast({
             type: "success",
-            title: t('login_success'),
-            message: t('login_success_message'),
+            title: t("login_success"),
+            message: t("login_success_message"),
           });
         }
         setIsLoading(false);
@@ -136,49 +138,51 @@ export default function AuthModal({
     // setIsAuthModalVisible(false);
     showToast({
       type: "success",
-      title: t('password_recovery_label'),
-      message: t('update_your_password_now_message'),
+      title: t("password_recovery_label"),
+      message: t("update_your_password_now_message"),
     });
   };
 
   return (
-<Dialog
-  visible={isAuthModalVisible}
-  closeIcon
-  onHide={handleModalToggle}
-  closable={activePanel <= 3}
-  className={`auth-dialog ${[3, 4, 5, 6].includes(activePanel) ? "wide" : "narrow"}`}
-  contentStyle={{
-    padding: "22px",
-    borderRadius: "12px",
-  }}
-  headerStyle={{
-    borderTopLeftRadius: "8px",
-    borderTopRightRadius: "8px",
-    height: "fit-content",
-  }}
+    <Dialog
+      contentClassName="dark:bg-gray-900 dark:text-gray-300"
+      headerClassName="dark:bg-gray-900 dark:text-gray-300"
+      visible={isAuthModalVisible}
+      closeIcon
+      onHide={handleModalToggle}
+      closable={activePanel <= 3}
+      className={`auth-dialog ${[3, 4, 5, 6].includes(activePanel) ? "wide" : "narrow"}`}
+      contentStyle={{
+        padding: "22px",
+        borderRadius: "12px",
+      }}
+      headerStyle={{
+        borderTopLeftRadius: "8px",
+        borderTopRightRadius: "8px",
+        height: "fit-content",
+      }}
       closeOnEscape={activePanel <= 3}
       showHeader={false}
     >
       {/* close icon to close the modal */}
-     <button
-  onClick={handleModalToggle}
-  className="tooltip tooltip-left absolute top-3 right-3 z-10 transition-all duration-300 rounded-full p-2"
-  data-tip="Close"
-  data-tooltip-id="close-auth-modal"
-  data-tooltip-content="Close"
->
-  <FontAwesomeIcon
-    size="sm"
-    icon={faXmark}
-    className="text-black"
-    width={30}
-    height={30}
-  />
-  <Tooltip id="close-auth-modal" />
-</button>
+      <button
+        onClick={handleModalToggle}
+        className={` ${direction === "rtl" ? "left-0" : "right-0"} tooltip tooltip-left absolute top-3  z-10 transition-all duration-300 rounded-full p-2 dark:text-gray-300`}
+        data-tip="Close"
+        data-tooltip-id="close-auth-modal"
+        data-tooltip-content="Close"
+      >
+        <FontAwesomeIcon
+          size="sm"
+          icon={faXmark}
+          className="text-black dark:text-gray-300"
+          width={30}
+          height={30}
+        />
+        <Tooltip id="close-auth-modal" />
+      </button>
 
-      <Stepper ref={authenticationPanelRef} activeStep={activePanel} >
+      <Stepper ref={authenticationPanelRef} activeStep={activePanel}>
         <StepperPanel>
           <LoginWithGoogle
             googleLogin={googleLogin}
@@ -210,7 +214,6 @@ export default function AuthModal({
             emailOtp={emailOtp}
             setEmailOtp={setEmailOtp}
             formData={formData}
-
           />
         </StepperPanel>
         <StepperPanel>
@@ -221,6 +224,7 @@ export default function AuthModal({
         </StepperPanel>
         <StepperPanel>
           <PhoneVerification
+            formData={formData}
             handleChangePanel={handleChangePanel}
             phoneOtp={phoneOtp}
             setPhoneOtp={setPhoneOtp}
@@ -236,7 +240,9 @@ export default function AuthModal({
         </StepperPanel>
         <StepperPanel>
           <VerificationEmailForChangePassword
-            handleSubmitAfterVerification={()=>handleSubmitAfterVerification()}
+            handleSubmitAfterVerification={() =>
+              handleSubmitAfterVerification()
+            }
             handleResendEmailOtp={handleResendEmailOtp}
             emailOtp={emailOtp}
             setEmailOtp={setEmailOtp}
@@ -244,7 +250,12 @@ export default function AuthModal({
           />
         </StepperPanel>
         <StepperPanel>
-         <ChangePassword handleChangePanel={handleChangePanel} handleFormChange={handleFormChange} formData={formData} setFormData={setFormData}/>
+          <ChangePassword
+            handleChangePanel={handleChangePanel}
+            handleFormChange={handleFormChange}
+            formData={formData}
+            setFormData={setFormData}
+          />
         </StepperPanel>
       </Stepper>
     </Dialog>

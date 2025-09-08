@@ -63,6 +63,9 @@ export default function RestaurantDetailsScreen() {
   const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
   const selectedCategoryRef = useRef<string>("");
 
+  // get the RTL direction
+  const direction = document.documentElement.getAttribute("dir") || "ltr";
+
   // State
   const [filter, setFilter] = useState("");
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -216,7 +219,7 @@ export default function RestaurantDetailsScreen() {
     }
   );
 
-  const t = useTranslations()
+  const t = useTranslations();
   const handleFavoriteClick = () => {
     if (!profile) {
       // // Handle case where user is not logged in
@@ -264,7 +267,7 @@ export default function RestaurantDetailsScreen() {
     location: data?.restaurant?.location ?? "N/A",
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
-    description:data?.restaurant?.description ?? t("restaurant_modal_label"),
+    description: data?.restaurant?.description ?? t("restaurant_modal_label"),
     deliveryTime: data?.restaurant?.deliveryTime ?? "...",
     deliveryTax: data?.restaurant?.deliveryTax ?? 0,
     MinimumOrder: data?.restaurant?.MinimumOrder ?? 0,
@@ -304,7 +307,6 @@ export default function RestaurantDetailsScreen() {
   // Function to handle clicking on a restaurant
   const handleRestaurantClick = (food: IFood) => {
     if (food.isOutOfStock) return;
-
     if (
       !restaurantInfo?.isAvailable ||
       !restaurantInfo?.isActive ||
@@ -381,6 +383,7 @@ export default function RestaurantDetailsScreen() {
       restaurant: restaurantInfo._id,
     });
     setShowDialog(true);
+    console.log("Food ModAL dETAISL", food);
   };
 
   // Function to close the food item modal
@@ -531,7 +534,7 @@ export default function RestaurantDetailsScreen() {
         )}
 
         {!loading && (
-          <div className="absolute bottom-0 left-0 md:left-20 p-4">
+          <div className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}>
             <div className="flex flex-col items-start">
               <Image
                 src={restaurantInfo.image}
@@ -555,8 +558,7 @@ export default function RestaurantDetailsScreen() {
         <button
           disabled={addFavoriteLoading}
           onClick={handleFavoriteClick}
-          className="absolute top-4 right-4 md:bottom-4 md:right-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95"
-        >
+          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}        >
           {addFavoriteLoading ? (
             <Loader style={{ width: "1.5rem", height: "1.5rem" }} />
           ) : (
@@ -565,11 +567,11 @@ export default function RestaurantDetailsScreen() {
         </button>
       </div>
       {/* Restaurant Info */}
-      <div className="bg-gray-50 shadow-[0px_1px_3px_rgba(0,0,0,0.1)] p-3 h-[80px] flex justify-between items-center">
+      <div className="bg-gray-50 dark:bg-gray-800 shadow-[0px_1px_3px_rgba(0,0,0,0.1)] p-3 h-[80px] flex justify-between items-center">
         <PaddingContainer>
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             {/* Time */}
-            <span className="flex items-center gap-2 text-gray-600 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
+            <span className="flex items-center gap-2 text-gray-600 dark:text-gray-300 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
               <ClockSvg />
               {loading ? (
                 <Skeleton width="1rem" height="1.5rem" />
@@ -579,7 +581,7 @@ export default function RestaurantDetailsScreen() {
             </span>
 
             {/* Rating */}
-            <span className="flex items-center gap-2 text-gray-600 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
+            <span className="flex items-center gap-2 text-gray-600 dark:text-gray-300  font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
               <RatingSvg />
               {loading ? (
                 <Skeleton width="1rem" height="1.5rem" />
@@ -590,7 +592,7 @@ export default function RestaurantDetailsScreen() {
 
             {/* Info Link */}
             <a
-              className="flex items-center gap-2 text-[#0EA5E9] font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+              className="flex items-center gap-2 text-[#0EA5E9] dark:text-sky-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -601,13 +603,13 @@ export default function RestaurantDetailsScreen() {
               {loading ? (
                 <Skeleton width="10rem" height="1.5rem" />
               ) : (
-                t('see_more_information')
+                t("see_more_information")
               )}
             </a>
 
             {/* Review Link */}
             <a
-              className="flex items-center gap-2 text-[#0EA5E9] font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+              className="flex items-center gap-2 text-[#0EA5E9] dark:text-sky-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -630,14 +632,7 @@ export default function RestaurantDetailsScreen() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="lg:top-[60px] top-[95px]"
-        style={{
-          position: "sticky",
-
-          zIndex: 50,
-          backgroundColor: "white",
-          boxShadow: "0 1px 1px rgba(0, 0, 0, 0.1)",
-        }}
+        className="lg:top-[60px] top-[95px] sticky z-50 bg-white dark:bg-gray-900 shadow-[0_1px_1px_rgba(0,0,0,0.1)] dark:shadow-[0_1px_1px_rgba(255,255,255,0.05)]"
       >
         <PaddingContainer height={headerHeight}>
           <div className="p-3 h-full w-full flex flex-col md:flex-row gap-2 items-center justify-between">
@@ -655,7 +650,11 @@ export default function RestaurantDetailsScreen() {
                         <li key={index} className="shrink-0">
                           <button
                             type="button"
-                            className={`bg-${selectedCategory === _slug ? "[#F3FFEE]" : "gray-100"} text-${selectedCategory === _slug ? "[#5AC12F]" : "gray-600"} rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
+                            className={`${
+                              selectedCategory === _slug
+                                ? "bg-[#F3FFEE] text-[#5AC12F] dark:bg-[#2E3B23] dark:text-[#D2F29E]"
+                                : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+                            } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
                             onClick={() => handleScroll(toSlug(category.title))}
                           >
                             {category.title}
@@ -669,7 +668,7 @@ export default function RestaurantDetailsScreen() {
                     <li className="shrink-0">
                       <button
                         type="button"
-                        className="bg-blue-500 text-white rounded-full px-4 py-2 font-medium text-[14px] cursor-pointer"
+                        className="bg-blue-500 text-white dark:bg-blue-600 rounded-full px-4 py-2 font-medium text-[14px] cursor-pointer"
                         onClick={() => setShowAll(true)}
                       >
                         {t("more_button")}
@@ -685,7 +684,7 @@ export default function RestaurantDetailsScreen() {
               {
                 <CustomIconTextField
                   value={filter}
-                  className="w-full md:h-10 h-9 rounded-full pl-10"
+                  className="w-full md:h-10 h-9 rounded-full pl-10 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
                   iconProperties={{
                     icon: faSearch,
                     position: "left",
@@ -724,7 +723,7 @@ export default function RestaurantDetailsScreen() {
                   categoryRefs.current[categorySlug] = el;
                 }}
               >
-                <h2 className="mb-4 font-inter text-gray-900 font-bold text-2xl sm:text-xl leading-snug tracking-tight">
+                <h2 className="mb-4 font-inter text-gray-900 dark:text-gray-100 font-bold text-2xl sm:text-xl leading-snug tracking-tight">
                   {category.title}
                 </h2>
 
@@ -732,26 +731,28 @@ export default function RestaurantDetailsScreen() {
                   {category.foods.map((meal: IFood, mealIndex) => (
                     <div
                       key={mealIndex}
-                      className="flex gap-4 rounded-lg border border-gray-300 shadow-sm bg-white p-3 relative cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                      className="flex gap-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm bg-white dark:bg-gray-800 p-3 relative cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg"
                       onClick={() => handleRestaurantClick(meal)}
                     >
                       {/* Text Content */}
                       <div className="flex-grow text-left md:text-left space-y-2">
                         <div className="flex flex-col lg:flex-row justify-between flex-wrap">
-                          <h3 className="text-gray-900 text-lg font-semibold font-inter">
+                          <h3 className="text-gray-900 dark:text-gray-100  text-lg font-semibold font-inter">
                             {meal.title}
                           </h3>
                           {meal.isOutOfStock && (
-                            <span className="text-red-500">{t('out_of_stock_label')}</span>
+                            <span className="text-red-500">
+                              {t("out_of_stock_label")}
+                            </span>
                           )}
                         </div>
 
-                        <p className="text-gray-500 text-sm text-wrap">
+                        <p className="text-gray-500 dark:text-gray-400 text-sm text-wrap">
                           {meal.description}
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[#0EA5E9] text-lg font-semibold">
+                          <span className="text-[#0EA5E9] dark:text-sky-400 text-lg font-semibold">
                             {CURRENCY_SYMBOL} {meal.variations[0].price}
                           </span>
                         </div>
@@ -769,7 +770,7 @@ export default function RestaurantDetailsScreen() {
                       </div>
 
                       {/* Add Button */}
-                      <div className="absolute top-2 right-2">
+                      <div className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}>
                         <button
                           className="bg-[#0EA5E9] rounded-full shadow-md w-6 h-6 flex items-center justify-center"
                           onClick={(e) => {
@@ -794,10 +795,10 @@ export default function RestaurantDetailsScreen() {
                         }
                       >
                         <div className="text-center pb-10 pt-10">
-                          <p className="text-lg font-bold pb-3">
+                          <p className="text-lg font-bold pb-3 dark:text-gray-100">
                             {t("restaurant_is_closed")}
                           </p>
-                          <p className="text-sm">
+                          <p className="text-sm dark:text-gray-300">
                             {t("cannot_order_food_item_now")}
                             <br></br> {t("please_try_again_later")}
                           </p>
@@ -819,6 +820,8 @@ export default function RestaurantDetailsScreen() {
 
       {/* Food Item Detail Modal */}
       <Dialog
+        contentClassName="dark:bg-gray-800 dark:text-gray-300"
+        headerClassName="dark:bg-gray-800 dark:text-gray-300"
         visible={!!showDialog}
         className="mx-3 sm:mx-4 md:mx-0 " // Adds margin on small screens
         onHide={handleCloseFoodModal}

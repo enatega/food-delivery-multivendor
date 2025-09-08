@@ -126,8 +126,9 @@ export default function EarningsRestaurantMain({
             globalFilterValue={globalFilterValue}
             onGlobalFilterChange={onGlobalFilterChange}
             dateFilters={dateFilters}
-            setDateFilters={setDateFilters}
-            onClearFilters={clearAllFilters}
+
+            setDateFilters={setDateFilters} 
+            onClearFilters={clearAllFilters}          
 
           />
         }

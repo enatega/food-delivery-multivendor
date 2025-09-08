@@ -67,9 +67,15 @@ import { useTranslations } from "next-intl";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
 export default function StoreDetailsScreen() {
+
+   // get the RTL direction
+   const direction = document.documentElement.getAttribute("dir") || "ltr";
+   
   const t = useTranslations();
   // Access the UserContext via our custom hook
   const { cart, transformCartWithFoodInfo, updateCart, profile } = useUser();
+
+  
 
   // Params
   const { id, slug }: { id: string; slug: string } = useParams();
@@ -145,16 +151,24 @@ export default function StoreDetailsScreen() {
 
     return (
       <div
-        className="flex align-items-center px-3 py-2 cursor-pointer"
+        className="flex align-items-center px-3 py-2 cursor-pointer dark:bg-gray-700 dark:hover:bg-gray-800"
         onClick={() => handleScroll(_url ?? "", true)}
       >
         <span
+            className={`mx-2 ${item.items && "font-semibold"} text-${
+              isClicked ? "[#5AC12F]" : "gray-600"
+            }
+            dark:text-${isClicked ? "[#5AC12F]" : "gray-300"}`}
+          >
+            {item.label}
+          </span>
+        {/* <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
-            isClicked ? "[#5AC12F]" : "gray-600"
+            isClicked ? "[#5AC12F]" : "gray-100"
           }`}
         >
           {item.label}
-        </span>
+        </span> */}
       </div>
     );
   };
@@ -175,15 +189,14 @@ export default function StoreDetailsScreen() {
 
     return (
       <div
-        className={`flex align-items-center px-3 py-2 cursor-pointer bg-${
-          isClicked ? "[#F3FFEE]" : ""
-        }`}
-        onClick={() => handleScroll(_url ?? "", false, 80)}
+        className="flex align-items-center px-3 py-2 cursor-pointer dark:bg-gray-700 dark:hover:bg-gray-800 "
+        onClick={() => handleScroll(_url ?? "", true)}
       >
         <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
-            isClicked ? "[#5AC12F]" : "gray-600"
-          }`}
+            isClicked ? "[#F3FFEE]" : "gray-600"
+          }
+          dark:text-${isClicked ? "[#5AC12F]" : "gray-300"}`}
         >
           {item.label}
         </span>
@@ -431,6 +444,7 @@ export default function StoreDetailsScreen() {
       return;
     }
     // Add restaurant ID to the food item
+
     setShowDialog({
       ...food,
       restaurant: data?.restaurant?._id,
@@ -639,7 +653,7 @@ export default function StoreDetailsScreen() {
         )}
 
         {!loading && (
-          <div className="absolute bottom-0 left-0 md:left-20 p-4">
+          <div className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}>
             <div className="flex flex-col items-start">
               <Image
                 src={restaurantInfo.image}
@@ -664,8 +678,7 @@ export default function StoreDetailsScreen() {
         <button
           onClick={handleFavoriteClick}
           disabled={addFavoriteLoading}
-          className="absolute top-4 right-4 md:bottom-4 md:right-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95"
-        >
+          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}        >
           {addFavoriteLoading ? (
             <Loader style={{ width: "1.5rem", height: "1.5rem" }} />
           ) : (
@@ -675,14 +688,14 @@ export default function StoreDetailsScreen() {
       </div>
 
       {/* Restaurant Info */}
-      <div className="bg-gray-50 shadow-[0px_1px_3px_rgba(0,0,0,0.1)]  p-3 md:h-[80px] h-fit flex justify-between items-center">
+      <div className="bg-gray-50 dark:bg-gray-800 shadow-[0px_1px_3px_rgba(0,0,0,0.1)]  p-3 md:h-[80px] h-fit flex justify-between items-center">
         <PaddingContainer>
           <div className="p-3  h-full w-full flex flex-col md:flex-row gap-2 items-center justify-between">
             <div className="w-full md:w-[80%]">
               <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                 {/* Time */}
-                <span className="flex items-center gap-1 text-gray-600 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
-                  <ClockSvg />
+                <span className="flex items-center gap-1 text-gray-600 dark:text-gray-300 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
+                  <ClockSvg className="dark:fill-gray-300" />
                   {loading ? (
                     <Skeleton width="2rem" height="1.5rem" />
                   ) : (
@@ -692,8 +705,8 @@ export default function StoreDetailsScreen() {
                 </span>
 
                 {/* Rating */}
-                <span className="flex items-center gap-2 text-gray-600 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
-                  <RatingSvg />
+                <span className="flex items-center gap-2 text-gray-600 dark:text-gray-300 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle">
+                  <RatingSvg className="dark:fill-gray-300" />
                   {loading ? (
                     <Skeleton width="2rem" height="1.5rem" />
                   ) : (
@@ -703,7 +716,7 @@ export default function StoreDetailsScreen() {
 
                 {/* Info Link */}
                 <a
-                  className="flex items-center gap-2 text-[#0EA5E9] font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+                  className="flex items-center gap-2 text-[#0EA5E9] dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
@@ -719,14 +732,14 @@ export default function StoreDetailsScreen() {
                 </a>
                 {/* Review Link */}
                 <a
-                  className="flex items-center gap-2 text-[#0EA5E9] font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+                  className="flex items-center gap-2 text-[#0EA5E9] dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     handleSeeReviews();
                   }}
                 >
-                  <ChatSvg />
+                  <ChatSvg className="dark:fill-blue-400" />
                   {loading ? (
                     <Skeleton width="10rem" height="1.5rem" />
                   ) : (
@@ -839,7 +852,7 @@ export default function StoreDetailsScreen() {
                 <div
                   className={`h-full overflow-y-auto transition-all duration-300 ${
                     isScrolling
-                      ? "scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+                      ? "scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent dark:scrollbar-thumb-gray-600"
                       : "overflow-hidden"
                   }`}
                   onScroll={handleMouseEnterCategoryPanel}
@@ -853,7 +866,7 @@ export default function StoreDetailsScreen() {
                 </div>
               </div>
             </div>
-
+            {/* right  panel(foods) */}
             <div className="w-full md:w-4/5 p-3 h-full overflow-y-auto">
               {deals.map((category: ICategoryV2, catIndex: number) => (
                 <div
@@ -861,7 +874,7 @@ export default function StoreDetailsScreen() {
                   className="mb-4"
                   id={toSlug(category.title)}
                 >
-                  <h2 className="mb-2 font-inter text-gray-900 font-bold text-2xl sm:text-xl leading-snug tracking-tight">
+                  <h2 className="mb-2 font-inter text-gray-900 font-bold text-2xl sm:text-xl leading-snug tracking-tight dark:text-gray-200">
                     {category.title}
                   </h2>
 
@@ -873,7 +886,7 @@ export default function StoreDetailsScreen() {
                         id={toSlug(subCategory.title)}
                       >
                         {subCategory.title !== "Uncategorized" && (
-                          <h3 className="mb-2 font-inter text-gray-600 font-semibold text-lg sm:text-base leading-snug tracking-normal">
+                          <h3 className="mb-2 font-inter text-gray-600 font-semibold text-lg sm:text-base leading-snug tracking-normal dark:text-gray-400">
                             {subCategory.title}
                           </h3>
                         )}
@@ -882,13 +895,15 @@ export default function StoreDetailsScreen() {
                           {subCategory.foods.map((meal: IFood, mealIndex) => (
                             <div
                               key={mealIndex}
-                              className="flex items-center gap-4 rounded-lg border border-gray-300 shadow-sm bg-white p-3 relative transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:cursor-pointer"
+                              className={`flex items-center gap-4 rounded-lg border shadow-sm p-3 relative transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:cursor-pointer
+                       ${meal.isOutOfStock ? "bg-gray-200 dark:bg-gray-950 border-gray-400 dark:border-gray-600" : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"}
+                     `}
                               onClick={() => handleOpenFoodModal(meal)}
                             >
                               {/* Text Content */}
                               <div className="flex-grow text-left md:text-left space-y-2 ">
                                 <div className="flex flex-col lg:flex-row justify-between flex-wrap">
-                                  <h3 className="text-gray-900 text-lg font-semibold font-inter">
+                                  <h3 className="text-gray-900 text-lg font-semibold font-inter dark:text-gray-200">
                                     {meal.title}
                                   </h3>
                                   {meal.isOutOfStock && (
@@ -897,12 +912,12 @@ export default function StoreDetailsScreen() {
                                     </span>
                                   )}
                                 </div>
-                                <p className="text-gray-500 text-sm">
+                                <p className="text-gray-500 text-sm dark:text-gray-400">
                                   {meal.description}
                                 </p>
 
                                 <div className="flex items-center gap-2">
-                                  <span className="text-[#0EA5E9] text-lg font-semibold">
+                                  <span className="text-[#0EA5E9] dark:text-sky-400 text-lg font-semibold">
                                     {CURRENCY_SYMBOL} {meal.variations[0].price}
                                   </span>
                                 </div>
@@ -920,9 +935,13 @@ export default function StoreDetailsScreen() {
                               </div>
 
                               {/* Add Button */}
-                              <div className="absolute top-2 right-2">
+                              <div className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}>
                                 <button
-                                  className="bg-[#0EA5E9] rounded-full shadow-md w-6 h-6 flex items-center justify-center"
+                                  className={`rounded-full shadow-md w-6 h-6 flex items-center justify-center ${
+                                    meal.isOutOfStock
+                                      ? "bg-gray-400 dark:bg-gray-600"
+                                      : "bg-[#0EA5E9] dark:bg-sky-600"
+                                  }`}
                                   onClick={() => handleOpenFoodModal(meal)}
                                   type="button"
                                 >
@@ -935,7 +954,7 @@ export default function StoreDetailsScreen() {
 
                               {/* create a modal that will be show that this restaurant is closed do want to see menu or want to close if click on the see menu then will move to the next page other wise modal will be closed */}
                               <CustomDialog
-                                className="max-w-[300px]"
+                                className="max-w-[300px] dark:bg-gray-900 dark:text-gray-300 "
                                 visible={
                                   isModalOpen.value &&
                                   isModalOpen.id === meal?._id?.toString()
@@ -948,10 +967,10 @@ export default function StoreDetailsScreen() {
                                 }
                               >
                                 <div className="text-center pb-10 pt-10">
-                                  <p className="text-lg font-bold pb-3">
+                                  <p className="text-lg font-bold pb-3 text-gray-900 dark:text-gray-200">
                                     {t("restaurant_is_closed")}
                                   </p>
-                                  <p className="text-sm">
+                                  <p className="text-sm text-gray-700 dark:text-gray-400">
                                     {t("cannot_order_food_item_now")}
                                     <br></br>
                                     {t("please_try_again_later")}
@@ -970,7 +989,7 @@ export default function StoreDetailsScreen() {
           </div>
         )}
         {!loading && deals.length == 0 && (
-          <div className="text-center py-6 text-gray-500 flex flex-col items-center justify-center">
+          <div className="text-center py-6 text-gray-500 dark:text-gray-400 flex flex-col items-center justify-center">
             <EmptySearch />
           </div>
         )}
@@ -979,6 +998,8 @@ export default function StoreDetailsScreen() {
       {/* Food Item Detail Modal */}
       <Dialog
         visible={!!showDialog}
+        contentClassName="dark:bg-gray-800 dark:text-gray-300"
+        headerClassName="dark:bg-gray-800 dark:text-gray-300"
         className="mx-3 sm:mx-4 md:mx-0 " // Adds margin on small screens
         onHide={handleCloseFoodModal}
         showHeader={false}

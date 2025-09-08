@@ -654,7 +654,7 @@ function Menu({ route, props }) {
       <Modalize
         ref={filtersModalRef}
         modalStyle={styles(currentTheme).modal}
-        // modalHeight={HEIGHT * 0.72}
+        adjustToContentHeight
         overlayStyle={styles(currentTheme).overlay}
         handleStyle={styles(currentTheme).handle}
         handlePosition='inside'

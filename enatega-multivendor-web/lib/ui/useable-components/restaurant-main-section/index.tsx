@@ -62,30 +62,43 @@ function MainSection({
   return (
     <div className="mb-20">
       <div className="mx-[6px] flex items-center gap-0 justify-between">
-        <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900">
+        <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900 dark:text-white">
           {title}
         </span>
         {search && (
           <CustomButton
             label={t("see_all")}
             onClick={onSeeAllClick}
-            className="text-[#0EA5E9] transition-colors duration-200 text-sm md:text-base"
+            className="text-[#0EA5E9] dark:text-[#94e469] transition-colors duration-200 text-sm md:text-base"
           />
         )}
       </div>
-
-      {data?.length > 0 ?
+  
+      {data?.length > 0 ? (
         <div
-          className={`grid grid-cols-1 gap-2 mt-4 items-center ${isSearchFocused ? "sm:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-4"}`}
+          className={`grid grid-cols-1 gap-2 mt-4 items-center ${
+            isSearchFocused
+              ? "sm:grid-cols-2 lg:grid-cols-3"
+              : "md:grid-cols-2 lg:grid-cols-4"
+          }`}
         >
-          {data?.map((item) => <Card key={item._id} item={item} isModalOpen={isModalOpen} handleUpdateIsModalOpen={handleUpdateIsModalOpen} />)}
+          {data?.map((item) => (
+            <Card
+              key={item._id}
+              item={item}
+              isModalOpen={isModalOpen}
+              handleUpdateIsModalOpen={handleUpdateIsModalOpen}
+            />
+          ))}
         </div>
-      : <div className="text-center py-6 flex flex-col items-center justify-center">
+      ) : (
+        <div className="text-center py-6 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
           <EmptySearch />
         </div>
-      }
+      )}
     </div>
   );
+  
 }
 
 export default MainSection;

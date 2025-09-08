@@ -11,6 +11,7 @@ export interface buttonProps{
     subText:string,
     headingColor:string,
     backColor:string,
+    darkBackColor:string
 }
  export interface MoveableProps{
     heading?:string,

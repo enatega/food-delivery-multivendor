@@ -18,10 +18,15 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
 export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
-  const { foodItem, addons, options, onClose, restaurant } = props;
+  const { foodItem, addons, options, onClose, restaurant, isRecommendedProduct } = props;
   const { CURRENCY_SYMBOL } = useConfig();
+  const { id, slug }: { id: string; slug: string } = useParams();
+
+    // get the RTL direction
+    const direction = document.documentElement.getAttribute('dir') || 'ltr';
 
   // Access user context for cart functionality
   const {
@@ -164,7 +169,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           JSON.stringify(
             formattedAddons.flatMap((a) => a.options.map((o) => o._id))
           )
-    );  
+    );
 
     if (isItemInCart) {
       cart.map((item) => {
@@ -196,11 +201,18 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         formattedAddons
         // Special instructions - could add a field for this
       );
+      // save restaurant id to local storage for product recommendation
+      if(!isRecommendedProduct){
+        onUseLocalStorage("save", "cart-product-store-id", id);
+        onUseLocalStorage("save", "cart-product-store-slug", slug);
+      }
+      
     }
 
     // UPDAT4 STORAGE
+
     onUseLocalStorage("save", "restaurant", restaurant?._id);
-    onUseLocalStorage("save", "restaurant-slug", restaurant?.slug);
+    onUseLocalStorage("save", "restaurant-slug", restaurant?.slug) ;
     onUseLocalStorage(
       "save",
       "currentShopType",
@@ -274,11 +286,11 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
   }, [foodItem]);
 
   return (
-    <div className="bg-white md:max-w-md w-100 w-full relative">
+    <div className="bg-white md:max-w-md w-100 w-full relative dark:bg-gray-800 dark:text-gray-200">
       {/* close icon to close the modal */}
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 bg-slate-400 hover:bg-slate-500 transition-all duration-300 rounded-full p-2"
+        className={`${direction === "rtl" ? "left-3" : "right-3" } absolute top-3 bg-slate-400 hover:bg-slate-500 transition-all duration-300 rounded-full p-2`}
       >
         <FontAwesomeIcon
           icon={faXmark}
@@ -305,14 +317,14 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
       </div>
 
       <div className="py-3 px-6 mb-4">
-        <h2 className="font-inter font-bold text-[#111827] text-[16px] md:text-[18px] lg:text-[19px] leading-[22px] md:leading-[24px]">
+        <h2 className="font-inter font-bold text-[#111827] dark:text-white text-[16px] md:text-[18px] lg:text-[19px] leading-[22px] md:leading-[24px]">
           {foodItem?.title}
         </h2>
         <p className="text-[#0EA5E9] font-[600] text-[14px] md:text-[15px] lg:text-[16px] mb-2">
           {CURRENCY_SYMBOL}
           {selectedVariation?.price.toFixed(2)}
         </p>
-        <p className="font-inter font-normal text-gray-500 text-[12px] md:text-[13px] lg:text-[14px] leading-[18px] md:leading-[20px]">
+        <p className="font-inter font-normal text-gray-500 dark:text-gray-300 text-[12px] md:text-[13px] lg:text-[14px] leading-[18px] md:leading-[20px]">
           {foodItem?.description}
         </p>
 
@@ -402,7 +414,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           {/* Quantity Controls - Rounded Rectangle Container */}
           <div className="flex items-center space-x-2 bg-gray-200 rounded-[42px] px-3 py-1 flex-[0.2]">
             <button
-              className="bg-white text-gray-900 rounded-full w-6 h-6 flex items-center justify-center shadow"
+              className="bg-white text-gray-900 rounded-full w-6 h-6 flex rtl:ml-2 items-center justify-center shadow"
               onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
               type="button"
             >

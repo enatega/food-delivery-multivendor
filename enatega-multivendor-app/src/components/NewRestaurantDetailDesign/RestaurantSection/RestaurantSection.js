@@ -324,24 +324,67 @@ const RestaurantSections = ({
     return content
   }
 
+  // const renderCategoryItem = ({ item, index }) => {
+  //   const content = (
+  //     // update beautifull shadow to category card
+  //     <TouchableOpacity style={styles(currentTheme).categoryCard} onPress={() => handleCategoryClick(item)}> 
+  //     <ShimmerImage imageUrl={item.url} style={styles(currentTheme).categoryImage} resizeMode='cover' />
+  //       <TextDefault numberOfLines={1} style={styles(currentTheme).categoryTitle}>
+  //         {item.category_name}
+  //       </TextDefault>
+  //     </TouchableOpacity>
+  //   )
+
+  //   if (!hasCategoriesAnimated) {
+  //     return <AnimatedItem index={index}>{content}</AnimatedItem>
+  //   }
+
+  //   return content
+  // }
+
   const renderCategoryItem = ({ item, index }) => {
     const content = (
-      // update beautifull shadow to category card
-      <TouchableOpacity style={[styles(currentTheme).categoryCard, {shadowColor:currentTheme.fontMainColor,shadowOffset:{width:0,height:1},shadowOpacity:0.15,shadowRadius:1.84, elevation:5}]} onPress={() => handleCategoryClick(item)}>
-        <ShimmerImage imageUrl={item.url} style={styles(currentTheme).categoryImage} resizeMode='cover' />
+      <TouchableOpacity 
+        style={[
+          styles(currentTheme).categoryCard,
+          // Cross-platform shadow with subtle appearance
+          {
+            // iOS shadow - subtle and professional
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 2, // Reduced for subtlety
+            },
+            shadowOpacity: 0.08, // Much lighter opacity
+            shadowRadius: 3, // Smaller radius for crisp shadow
+            // Android shadow
+            elevation: 3, // Reduced elevation for consistency
+            // Ensure the shadow container has proper background
+            backgroundColor: currentTheme.themeBackground || '#FFFFFF',
+            // Add these for iOS shadow fix
+            borderRadius: scale(16), // Make sure border radius is here
+            overflow: 'visible', // Important for shadow visibility
+          }
+        ]} 
+        onPress={() => handleCategoryClick(item)}
+      > 
+        <ShimmerImage 
+          imageUrl={item.url} 
+          style={styles(currentTheme).categoryImage} 
+          resizeMode='cover' 
+        />
         <TextDefault numberOfLines={1} style={styles(currentTheme).categoryTitle}>
           {item.category_name}
         </TextDefault>
       </TouchableOpacity>
     )
-
+  
     if (!hasCategoriesAnimated) {
       return <AnimatedItem index={index}>{content}</AnimatedItem>
     }
-
+  
     return content
   }
-
   return (
     <View style={styles(currentTheme).container}>
       {/* Popular Section */}

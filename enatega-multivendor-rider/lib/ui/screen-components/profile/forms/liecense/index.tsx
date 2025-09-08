@@ -30,6 +30,7 @@ import { CustomContinueButton } from "@/lib/ui/useable-components";
 
 // Expo
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import { Link } from "expo-router";
 
 // Skeleton
@@ -42,12 +43,11 @@ import { useMutation } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 // GraphQL
-import { UPDATE_LICENSE } from "@/lib/apollo/mutations/rider.mutation";
+import { UPDATE_LICENSE, UPLOAD_IMAGE_TO_S3 } from "@/lib/apollo/mutations/rider.mutation";
 import { RIDER_PROFILE } from "@/lib/apollo/queries";
 
 // Interfaces
 import { useApptheme } from "@/lib/context/global/theme.context";
-import { ICloudinaryResponse } from "@/lib/utils/interfaces/cloudinary.interface";
 import { TRiderProfileBottomBarBit } from "@/lib/utils/types/rider";
 
 type IOSMode = "date" | "time" | "datetime" | "countdown";
@@ -71,8 +71,7 @@ export default function DrivingLicenseForm({
   // const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  const [cloudinaryResponse, setCloudinaryResponse] =
-    useState<ICloudinaryResponse | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     expiryDate: new Date(),
     image: "",
@@ -87,6 +86,8 @@ export default function DrivingLicenseForm({
   });
 
   // Mutations
+  const [uploadImageToS3] = useMutation(UPLOAD_IMAGE_TO_S3);
+  
   const [mutateLicense] = useMutation(UPDATE_LICENSE, {
     onError: (error) => {
       showMessage({
@@ -125,44 +126,40 @@ export default function DrivingLicenseForm({
       });
 
       if (!result.canceled) {
-        const formData = new FormData();
-        formData.append("file", {
-          uri: result.assets[0].uri,
-          name: `license_${Date.now()}.jpg`,
-          type: "image/jpeg",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
-
-        // ✅ Make sure upload_preset is inside formData, not in the URL
-        formData.append("upload_preset", "rider_data");
-
-        const response = await fetch(
-          "https://api.cloudinary.com/v1_1/do1ia4vzf/image/upload",
-          {
-            method: "POST",
-            body: formData,
+        console.log("Reading image as base64...");
+        const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        
+        console.log("Base64 length:", base64.length);
+        console.log("Uploading to S3...");
+        
+        const { data, errors } = await uploadImageToS3({
+          variables: {
+            image: `data:image/jpeg;base64,${base64}`,
           },
-        );
+        });
 
-        const data: ICloudinaryResponse = await response.json();
+        console.log("S3 response:", data);
+        console.log("S3 errors:", errors);
 
-        if (!response.ok) {
-          setError({
-            field: "image",
-            message: t("Failed to upload image"),
-          });
-          throw new Error(data?.error?.message || t("Failed to upload image"));
+        if (errors && errors.length > 0) {
+          throw new Error(errors[0].message || t("Failed to upload image"));
         }
 
-        setCloudinaryResponse(data);
-        setFormData((prev) => ({ ...prev, image: data.secure_url }));
+        if (data?.uploadImageToS3?.imageUrl) {
+          setUploadedImageUrl(data.uploadImageToS3.imageUrl);
+          setFormData((prev) => ({ ...prev, image: data.uploadImageToS3.imageUrl }));
+        } else {
+          throw new Error(t("Failed to upload image"));
+        }
       }
     } catch (error) {
       console.log(error);
-      // showMessage({
-      //   message: t("Failed to upload image"),
-      //   type: "danger",
-      // });
+      setError({
+        field: "image",
+        message: t("Failed to upload image"),
+      });
     } finally {
       setIsLoading((prev) => ({
         ...prev,
@@ -336,7 +333,7 @@ export default function DrivingLicenseForm({
                 <Text style={{ color: appTheme.fontMainColor }}>
                   {t("Add License Document")}
                 </Text>
-                {!cloudinaryResponse?.secure_url || !formData.image ? (
+                {!uploadedImageUrl || !formData.image ? (
                   <TouchableOpacity
                     className={`w-full rounded-md border border-dashed ${error.field === "image" && error.message ? "border-red-600" : "border-gray-300"} p-3 h-28 items-center justify-center`}
                     onPress={pickImage}
@@ -357,18 +354,13 @@ export default function DrivingLicenseForm({
                     <View className="flex flex-row gap-2">
                       <Ionicons name="image" size={20} color="#3F51B5" />
                       <Text className="text-[#3F51B5] border-b-2 border-b-[#3F51B5]">
-                        {cloudinaryResponse?.original_filename ??
-                          !formData.image}
-                        .{cloudinaryResponse?.format ?? "image"}
+                        license_image.jpg
                       </Text>
                     </View>
                     <View className="flex flex-row">
-                      <Text>{(cloudinaryResponse.bytes ?? 0) / 1000}KB</Text>
                       <Link
-                        download={
-                          cloudinaryResponse.secure_url ?? formData.image
-                        }
-                        href={cloudinaryResponse.secure_url ?? !formData.image}
+                        download={uploadedImageUrl ?? formData.image}
+                        href={uploadedImageUrl ?? formData.image}
                         className="text-[#9CA3AF] text-xs"
                       >
                         <Ionicons size={18} name="download" color="#6B7280" />

@@ -194,14 +194,14 @@ const getStatusMessage = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 w-full max-w-2xl">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 w-full max-w-2xl">
       <div className="flex justify-between items-center mb-3">
-        <h3 className="text-sm sm:text-base font-semibold">
+        <h3 className="text-sm sm:text-base font-semibold dark:text-white">
            {orderTrackingDetails.orderStatus === "DELIVERED" ? "Delivered" : t("estimated_Delivery_time")}
         </h3>
 
         {orderTrackingDetails.orderStatus === "CANCELLED" && (
-          <span className="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs">
+          <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full text-xs">
             {t("order_status_cancelled_label")}
           </span>
         )}
@@ -210,9 +210,9 @@ const getStatusMessage = () => {
       {/* Status indicator with icon */}
       <div className="flex items-center mb-3">
         {/* Status icon based on order status */}
-        <div className="mr-3">
+        <div className="mr-3 rtl:ml-3">
           {orderTrackingDetails.orderStatus === "PENDING" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-orange-100 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-orange-100 dark:bg-orange-900 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-orange-500"
@@ -228,7 +228,7 @@ const getStatusMessage = () => {
             </div>
           )}
           {orderTrackingDetails.orderStatus === "ACCEPTED" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-blue-500"
@@ -245,7 +245,7 @@ const getStatusMessage = () => {
             </div>
           )}
           {orderTrackingDetails.orderStatus === "ASSIGNED" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-purple-100 dark:bg-purple-900 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-purple-500"
@@ -257,7 +257,7 @@ const getStatusMessage = () => {
             </div>
           )}
           {orderTrackingDetails.orderStatus === "PICKED" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-green-100 dark:bg-green-900 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-green-500"
@@ -271,7 +271,7 @@ const getStatusMessage = () => {
           )}
           {(orderTrackingDetails.orderStatus === "DELIVERED" ||
             orderTrackingDetails.orderStatus === "COMPLETED") && (
-            <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-green-100 dark:bg-green-900 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-green-500"
@@ -287,7 +287,7 @@ const getStatusMessage = () => {
             </div>
           )}
           {orderTrackingDetails.orderStatus === "CANCELLED" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-red-100 dark:bg-red-900 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-red-500"
@@ -303,7 +303,7 @@ const getStatusMessage = () => {
             </div>
           )}
         </div>
-        <div className="text-xl sm:text-2xl font-bold">
+        <div className="text-xl sm:text-2xl font-bold dark:text-white">
           {getEstimatedDeliveryTime()}
         </div>
       </div>
@@ -315,13 +315,13 @@ const getStatusMessage = () => {
           return (
             <div
               key={index}
-              className="h-2 rounded-full bg-gray-200 overflow-hidden"
+              className="h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden"
             >
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
                   status === "completed" ? "bg-green-500"
                   : status === "active" ? "bg-green-500 animate-pulse"
-                  : "bg-gray-200"
+                  : "bg-gray-200 dark:bg-gray-700"
                 }`}
                 style={{
                   width:
@@ -335,13 +335,13 @@ const getStatusMessage = () => {
         })}
       </div>
 
-      <p className="text-gray-600 text-xs sm:text-sm">{getStatusMessage()}</p>
+      <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">{getStatusMessage()}</p>
 
       {/* Real-time update indicator */}
       {orderTrackingDetails.orderStatus !== "DELIVERED" &&
         orderTrackingDetails.orderStatus !== "COMPLETED" &&
         orderTrackingDetails.orderStatus !== "CANCELLED" && (
-          <div className="mt-2 flex items-center text-xs text-gray-500">
+          <div className="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
             <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
             {t("live_updates_enabled_label")}
           </div>

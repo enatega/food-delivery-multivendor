@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   DiscoveryBannerSection,
   RestaurantsNearYou,
@@ -9,17 +9,65 @@ import {
   PopularRestaurants,
   PopularStores,
   OrderItAgain,
+  CommingSoonScreen,
 } from "@/lib/ui/screen-components/protected/home";
 // ui componnet
 import CuisinesSection from "@/lib/ui/useable-components/cuisines-section";
 // hooks
 import useGetCuisines from "@/lib/hooks/useGetCuisines";
 import { useTranslations } from "next-intl";
+import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
 
 export default function DiscoveryScreen() {
-  const t = useTranslations()
+  const t = useTranslations();
   const { restaurantCuisinesData, groceryCuisinesData, error, loading } =
     useGetCuisines();
+
+  const {
+    loading: restaurantsLoading,
+    restaurantsData,
+    groceriesData,
+  } = useNearByRestaurantsPreview();
+
+  // Show loader/skeleton while fetching
+  if (loading && restaurantsLoading) {
+    return (
+      <>
+        <DiscoveryBannerSection />
+        <OrderItAgain />
+        <MostOrderedRestaurants />
+        <CuisinesSection
+          title={t("DiscoveryPage.restaurantcusines")}
+          data={restaurantCuisinesData}
+          loading={loading || restaurantsLoading}
+          error={!!error}
+        />
+        <RestaurantsNearYou />
+        <CuisinesSection
+          title={t("DiscoveryPage.GroceryStores")}
+          data={groceryCuisinesData}
+          loading={loading || restaurantsLoading}
+          error={!!error}
+        />
+        <GroceryList />
+        <TopGroceryPicks />
+        <TopRatedVendors />
+        <PopularRestaurants />
+        <PopularStores />
+      </>
+    );
+  }
+
+  // // Show ComingSoon only after loading is complete and data is confirmed empty
+  if (
+    restaurantsData.length === 0 &&
+    groceriesData.length === 0 &&
+    !loading &&
+    !restaurantsLoading
+  ) {
+    return <CommingSoonScreen />;
+  }
+
   return (
     <>
       <DiscoveryBannerSection />
