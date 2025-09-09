@@ -4,10 +4,8 @@ import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card
 import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 // loading skeleton
 import CuisinesSliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/cuisines.slider.skeleton";
-import { useTranslations } from "next-intl";
 
 function PopularRestaurants() {
-  const t = useTranslations()
   const { error, loading, restaurantsData } = useMostOrderedRestaurants();
 
   if (loading) {
@@ -21,7 +19,7 @@ function PopularRestaurants() {
 
   return (
     <CuisinesSliderCard
-      title={t('DiscoveryPage.popularrest')}
+      title="Popular-restaurants"
       data={restaurantsData || []}
       showLogo={true}
       cuisines={false}

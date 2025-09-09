@@ -102,8 +102,8 @@
     "restaurantcusines": "מטבחי מסעדות",
     "storenearyou": "מסעדות לידך",
     "GroceryStores": "מטבחי מכולת",
-    "grocerylist": "רשימת מכולת",
-    "toppicks": "מוצרי המכולת המובילים",
+    
+   
     "ourbrand": "המותגים שלנו",
     "popularrest": "מסעדות פופולריות",
     "popularstore": "חנויות פופולריות"
@@ -124,8 +124,10 @@
   },
   "addresses": "כתובות",
   "app_version": "1.0.0",
+  "grocerylist": "רשימת מכולת",
   "no_items_found": "לא נמצאו פריטים",
   "something_went_wrong": "משהו השתבש",
+  "toppicks": "מוצרי המכולת המובילים",
   "for_rest": "למסעדות",
   "for_riders": "לשליחים",
   "reviews": "ביקורות",
@@ -149,8 +151,21 @@
   "password_reset": "איפוס סיסמה",
   "password_reset_success": "הסיסמה שלך אופסה בהצלחה.",
   "password_reset_error": "שגיאת איפוס סיסמה",
-  "your@email.com":" האימייל שלך",
+  "your@email.com": " האימייל שלך",
   "error_resetting_password": "אירעה שגיאה באיפוס הסיסמה.",
+  "At_least_6_characters_label": "לפחות 6 תווים",
+  "At_least_one_lowercase_letter_(a-z)_label": "לפחות אות קטנה אחת (a-z)",
+  "At_least_one_uppercase_letter_(A-Z)_label": "לפחות אות גדולה אחת (A-Z)",
+  "At_least_one_number_(0-9)_label": "לפחות מספר אחד (0-9)",
+  "At_least_one_special_character": "לפחות תו מיוחד אחד",
+  "Password_does_not_match": "הסיסמאות אינן תואמות",
+  "Password": {
+    "enter_a_password": "הזן סיסמה",
+    "weak": "חלשה",
+    "medium": " בינונית",
+    "strong": "חזקה"
+  },
+
   "settings": "הגדרות",
   "login_error": "שגיאת התחברות",
   "error_logging_in": "אירעה שגיאה במהלך ההתחברות.",
@@ -301,7 +316,9 @@
   "send_button": "שלח",
   "no_active_orders_title": "אין הזמנות פעילות",
   "active_orders_title": "הזמנות פעילות",
-
+  "most_ordered_restaurants": "המסעדות המוזמנות ביותר",
+  "Popular-stores": "חנויות פופולריות",
+  "Popular-restaurants": " מסעדות פופולריות",
   "no_active_orders_message": "אין לך הזמנות פעילות כרגע.",
   "browse_store_button": "עיין בחנות",
   "active_orders_label": "הזמנות פעילות",
@@ -352,6 +369,8 @@
   "sendReceiptsLabel": "שלח קבלות לאימייל",
   "logoutLabel": "התנתק מהאפליקציה",
   "logoutButton": "התנתק",
+  "Got_your_account_please_enter_your_password": "יש לך חשבון? אנא הזן את הסיסמה שלך",
+  "Are_you_sure_you_want_to_log_out?": "האם אתה בטוח שברצונך להתנתק?",
   "successToastTitle": "הצלחה",
   "successToastMessage": "חשבון המשתמש נמחק בהצלחה",
   "errorToastTitle": "שגיאה",
@@ -845,15 +864,18 @@
   "update_password_error_title": "שגיאה",
   "sort_by_label": "מיון לפי",
   "delete_success": "אם יש לך שאלות, אל תהסס לפנות לצוות התמיכה שלנו.",
-
+  "Phone_number_is_missing": "מספר טלפון חסר",
+  "Missing_Phone_number": " מספר טלפון חסר",
   "Addons_label": "תוספים",
   "order_details_no_instructions_text": "לא נוספו הוראות",
   "and_labed": "ו",
-
+  "restaurant_data_not_loaded": "נתוני המסעדה לא נטענו",
   "firstNameRequired": " נדרש שם פרטי",
   "lastNameRequired": " נדרש שם משפחה",
   "phoneNumberRequired": " נדרש מספר טלפון",
   "phoneNumberInvalid": " הזן מספר טלפון תקין",
+  "Unverified_Phone_number": " מספר טלפון לא מאומת",
+  "Phone_Number_is_not_verified": " מספר הטלפון לא אומת",
   "emailRequired": " נדרש אימייל",
   "emailInvalid": " הזן אימייל תקין",
   "passwordRequired": " נדרשת סיסמה",
@@ -861,5 +883,14 @@
   "confirmPasswordRequired": " נדרש אישור סיסמה",
   "confirmPasswordMismatch": " הסיסמאות אינן תואמות",
   "termsRequired": " אשר את התנאים כדי להמשיך",
-  "invalid_credentials": " אימייל או סיסמה שגויים"
+  "invalid_credentials": " אימייל או סיסמה שגויים",
+  "Monday": "יום שני",
+  "Tuesday": "יום שלישי",
+  "Wednesday": "יום רביעי",
+  "Thursday": "יום חמישי",
+  "Friday": "יום שישי",
+  "Saturday": "שבת",
+  "Sunday": "ראשון",
+  "Favourites": " מועדפים"
+
 }

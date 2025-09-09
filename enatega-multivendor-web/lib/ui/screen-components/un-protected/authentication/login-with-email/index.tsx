@@ -61,7 +61,7 @@ export default function LoginWithEmail({
       showToast({
         type: "success",
         title: t("Login"),
-        message: t("Got your account, please enter your password"),
+        message: t("Got_your_account_please_enter_your_password"),
         //User exists with default auth - go to password
       });
       return handleChangePanel(7); // go to password

@@ -20,7 +20,8 @@ function RestaurantsNearYou() {
   }
   return (
     <SliderCard
-      title={t("DiscoveryPage.storenearyou")}
+    heading={t("generic_listing_heading")}
+    title={"restaurants-near-you"}
       data={queryData || []}
     />
   );

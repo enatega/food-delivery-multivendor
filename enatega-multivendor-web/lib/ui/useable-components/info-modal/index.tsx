@@ -40,6 +40,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
       "Friday",
       "Saturday",
     ];
+    console.log(restaurantInfo);
     const today = days[new Date().getDay()];
     setCurrentDay(today.slice(0, 3).toUpperCase());
 
@@ -160,7 +161,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
                 <div key={day.day} className="flex justify-between items-start">
                   {/* Day Name */}
                   <div className="w-28 text-xs md:text-[16px] font-normal leading-[24px]">
-                    {getCurrentDay(day.day)}
+                    {t(getCurrentDay(day.day))}
                   </div>
 
                   {/* Time Ranges with monospaced font */}

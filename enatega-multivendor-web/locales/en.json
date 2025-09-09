@@ -102,11 +102,9 @@
     "restaurantcusines": "Restaurant cuisines",
     "storenearyou": "Restaurants near you",
     "GroceryStores": "Grocery cuisines",
-    "grocerylist": "Grocery list",
-    "toppicks": "Top grocery picks",
+
     "ourbrand": "Our brands",
-    "popularrest": "Popular restaurants",
-    "popularstore": "Popular stores"
+    "popularrest": "Popular restaurants"
   },
   "RestaurantPage": {
     "headingTitle": "Restaurants near you",
@@ -123,6 +121,8 @@
     "Uncategorized": "Uncategorized"
   },
   "addresses": "Addresses",
+  "grocerylist": "Grocery list",
+  "toppicks": "Top grocery picks",
   "app_version": "1.0.0",
   "no_items_found": "No items found",
   "something_went_wrong": "Something went wrong",
@@ -131,8 +131,10 @@
   "reviews": "reviews",
   "redirecting_in": "Redirecting in",
   "all_restaurants": "All Restaurants",
+  "restaurant_data_not_loaded": "Restaurant data not loaded",
   "error_loading_data": "Error loading data",
   "your_order_is_cancelled": "Your order is Cancelled",
+  "Popular-stores": "Popular stores",
   "order_history": "Order History",
   "forbidden_403_code": "403",
   "forbidden_label": "Forbidden",
@@ -167,6 +169,9 @@
   "email_otp_error": "Email OTP Error",
   "error_sending_otp_to_email": "An error occurred while sending the OTP to email.",
   "phone_verification": "Phone Verification",
+  "Missing_Phone_number": " Missing Phone number",
+  "Phone_number_is_missing": "Phone number is missing",
+
   "phone_otp_error": "Phone OTP Error",
   "error_sending_otp_to_phone": "An error occurred while sending the OTP to phone.",
   "toast_success": "Success",
@@ -197,6 +202,8 @@
   "order_cancel_warning_line1": "We've got your order and may find you a rider any",
   "order_cancel_warning_line2": "Cancel anyway?",
   "cancelling_text": "Cancelling...",
+  "most_ordered_restaurants": " Most ordered restaurants",
+  "Popular-restaurants": " Popular restaurants",
 
   "cancel_my_order_button": "Cancel my order",
   "ill_wait_for_my_order_button": "I'll wait for my order",
@@ -354,12 +361,15 @@
   "sendReceiptsLabel": "Send receipts to email",
   "logoutLabel": "Log out of app",
   "logoutButton": "Logout",
+  "Are_you_sure_you_want_to_log_out?": "Are you sure you want to log out?",
   "successToastTitle": "Success",
   "successToastMessage": "User Account Has Been Deleted Successfully",
   "errorToastTitle": "Error",
   "logoutSuccessToastTitle": "Logout",
   "logoutSuccessToastMessage": "User Logged out successfully",
   "your_fav": "Your Favourites",
+  "Favourites": "Favourites",
+
   "See_all": "See all",
   "update_phone_name_title": "Enter phone number",
   "update_phone_name_cancel_button": "Cancel",
@@ -400,13 +410,28 @@
   "please_enter_valid_otp_message": "Please enter a valid OTP",
   "verify_your_mobile_number_label": "Verify your Phone number",
   "otp_valid_for_10_minutes_label": "Valid for 10 minutes",
-  "your@email.com":"your@email.com",
+  "your@email.com": "your@email.com",
+
   "continue_label": "Continue",
   "resend_otp_label": "Resend OTP",
   "login_label": "Login",
   "Continue_with_mail": "Continue with Email",
 
   "restaurant_modal_label": "Preservation of the authentic taste of all traditional foods is upheld here.",
+
+  "At_least_6_characters_label": "At least 6 characters",
+  "At_least_one_lowercase_letter_(a-z)_label": "At least one lowercase letter (a-z)",
+  "At_least_one_uppercase_letter_(A-Z)_label": "At least one uppercase letter (A-Z)",
+  "At_least_one_number_(0-9)_label": "At least one number (0-9)",
+  "At_least_one_special_character": "At least one special character",
+  "Password_does_not_match": "Password does not match",
+
+  "Password": {
+    "enter_a_password": "Enter a password",
+    "weak": "Weak",
+    "medium": "Medium",
+    "strong": "Strong"
+  },
 
   "password_recovery_label": "Password Recovery",
   "update_your_password_now_message": "Update your password now",
@@ -421,6 +446,7 @@
   "otp_error_label": "OTP Error",
   "error": "Error",
   "login": "Login",
+  "Got_your_account_please_enter_your_password": "Got your account? Please enter your password to log in.",
   "OTP_Code_Sent": "We have Sent OTP Code to",
   "please_enter_valid_otp_code_message": "Please enter a valid OTP code",
   "error_occurred_while_verifying_email_message": "An error occurred while verifying the email",
@@ -629,6 +655,9 @@
   "Contact": "Contact",
   "AllergyNote": "If you have allergies or other dietary restrictions, please contact the restaurant. The restaurant will provide food-specific information upon request.",
   "Phone": "Phone Number",
+  "Unverified_Phone_number": "Phone Number Unverified",
+  "Phone_Number_is_not_verified": "Phone Number Verification required",
+
   "Email": "Email",
   "NA": "N/A",
   "InvalidTime": "Invalid time",
@@ -874,5 +903,13 @@
   "confirmPasswordRequired": "Confirm your password",
   "confirmPasswordMismatch": "Passwords must match",
   "termsRequired": "Accept terms to continue",
-  "invalid_credentials": "Invalid credentials!"
+  "invalid_credentials": "Invalid credentials!",
+
+  "Monday": "Monday",
+  "Tuesday": "Tuesday",
+  "Wednesday": "Wednesday",
+  "Thursday": "Thursday",
+  "Friday": "Friday",
+  "Saturday": "Saturday",
+  "Sunday": "Sunday"
 }

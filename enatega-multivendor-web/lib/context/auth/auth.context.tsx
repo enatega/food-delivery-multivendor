@@ -261,7 +261,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         showToast({
           type: "success",
           title: t("create_user_label"),
-          message: t("You have successfully registered"),
+          message: t("registration_success"),
         });
         localStorage.setItem("token", userData.data.createUser.token);
         localStorage.setItem("userId", userData.data.createUser.userId);
@@ -305,8 +305,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setIsAuthModalVisible(false);
           showToast({
             type: "success",
-            title: t("Login Success"),
-            message: t("You have logged in successfully"),
+            title: t("login_success"),
+            message: t("login_success_message"),
           });
         } else {
           setActivePanel(4);
@@ -318,7 +318,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Error while logging in:", error);
       showToast({
         type: "error",
-        title: t("Login Error"),
+        title: t("login_error"),
         message:
           error.cause?.message || t("An error occurred while logging in"),
       });
@@ -329,7 +329,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     console.error("Error while logging in:", error);
     showToast({
       type: "error",
-      title: t("Login Error"),
+      title: t("login_error"),
       message: error.cause?.message || t("An error occurred while logging in"),
     });
   }
@@ -394,8 +394,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         if (!otpResponse.data?.sendOtpToPhoneNumber?.result) {
           showToast({
             type: "error",
-            title: t("Error Sending OTP"),
-            message: t("An error occurred while sending the OTP"),
+            title: t("error_sending_otp"),
+            message: t("error_sending_otp_message"),
           });
           return;
         } else {

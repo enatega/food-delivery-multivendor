@@ -552,8 +552,8 @@ export default function OrderCheckoutScreen() {
     // Now safely check for phone number and verification status
     if (!profile.phone || profile.phone.length < 1) {
       showToast({
-        title: "Missing Phone number",
-        message: "Phone number is missing.",
+        title: t("Missing_Phone_number"),
+        message: t("Phone_number_is_missing"),
         type: "warn",
       });
 
@@ -566,8 +566,8 @@ export default function OrderCheckoutScreen() {
 
     if (!profile.phoneIsVerified) {
       showToast({
-        title: "Unverified Phone number",
-        message: "Phone Number is not verified",
+        title: t("Unverified_Phone_number"),
+        message: t("Phone_Number_is_not_verified"),
         type: "warn",
       });
 
