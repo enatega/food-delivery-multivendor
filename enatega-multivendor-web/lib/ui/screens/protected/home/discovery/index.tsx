@@ -15,11 +15,9 @@ import {
 import CuisinesSection from "@/lib/ui/useable-components/cuisines-section";
 // hooks
 import useGetCuisines from "@/lib/hooks/useGetCuisines";
-import { useTranslations } from "next-intl";
 import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
 
 export default function DiscoveryScreen() {
-  const t = useTranslations();
   const { restaurantCuisinesData, groceryCuisinesData, error, loading } =
     useGetCuisines();
 
