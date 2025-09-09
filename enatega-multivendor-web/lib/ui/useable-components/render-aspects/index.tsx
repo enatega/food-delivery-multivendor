@@ -1,4 +1,5 @@
 import { ratingAspects } from "@/lib/utils/constants";
+import { useTranslations } from "next-intl";
 import { Button } from "primereact/button";
 import { twMerge } from "tailwind-merge";
 
@@ -33,12 +34,13 @@ function RenderAspects({
   selectedAspects: string[]; // Array of selected aspects
   handleAspectToggle: (aspect: string) => void; // Toggle callback
 }) {
+  const t = useTranslations()
   return (
     <div className="flex flex-wrap justify-center gap-2 mb-4">
       {ratingAspects?.map((aspect) => (
         <AspectButton
           key={aspect}
-          aspect={aspect}
+          aspect={t(aspect)}
           selected={selectedAspects.includes(aspect)}
           onToggle={handleAspectToggle}
         />

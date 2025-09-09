@@ -9,4 +9,4 @@
   ];
 
   // Rating aspects for step 2
-  export const ratingAspects = ["Courier Professionalism", "Estimate", "Delivery on time"]
+  export const ratingAspects = ["Courier_Professionalism", "Estimate", "Delivery_on_time"]

@@ -211,9 +211,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       );
       showToast({
         type: "error",
-        title: t("Login Error"),
-        message:
-          error.cause?.message || t("An error occurred while logging in"),
+        title: t("login_error"),
+        message: t("invalid_credentials"),
       });
     } finally {
       setIsLoading(false);
@@ -275,8 +274,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("create_user_label"),
-        message:
-          error.cause?.message || t("An error occured while creating the user"),
+        message: t("phone_number_already_associated_with_different_account"),
       });
       return {} as ICreateUserData;
     } finally {
@@ -319,8 +317,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("login_error"),
-        message:
-          error.cause?.message || t("An error occurred while logging in"),
+        message: t("invalid_credentials"),
       });
     }
   }
@@ -330,7 +327,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     showToast({
       type: "error",
       title: t("login_error"),
-      message: error.cause?.message || t("An error occurred while logging in"),
+      message: t("invalid_credentials"),
     });
   }
 

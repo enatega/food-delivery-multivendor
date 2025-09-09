@@ -39,7 +39,7 @@ const RenderStepThree: React.FC<IRenderStepThreeProps> = ({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder={t("type_here_placeholder")}
-          className="w-full p-4 rounded-lg focus:outline-none resize-none"
+          className="w-full p-4 rounded-lg focus:outline-none resize-none "
           maxLength={200}
           rows={5}
         />

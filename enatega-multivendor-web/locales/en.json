@@ -99,9 +99,8 @@
   },
   "DiscoveryPage": {
     "Mostorder": "Most ordered restaurants",
-    "restaurantcusines": "Restaurant cuisines",
+
     "storenearyou": "Restaurants near you",
-    "GroceryStores": "Grocery cuisines",
 
     "ourbrand": "Our brands",
     "popularrest": "Popular restaurants"
@@ -120,6 +119,9 @@
     "popitems": "Popular Items",
     "Uncategorized": "Uncategorized"
   },
+  "Restaurant-cuisines": "Restaurant cuisines",
+  "Grocery-cuisines": "Grocery cuisines",
+
   "addresses": "Addresses",
   "grocerylist": "Grocery list",
   "toppicks": "Top grocery picks",
@@ -218,6 +220,7 @@
   "order_details_heading": "Order Details",
   "order_details_subheading": "Order",
   "order_details_summary_label": "Details",
+  "Qty:": "Qty:",
   "order_details_items_label": "Items",
   "order_details_subtotal_label": "Subtotal",
   "order_details_instruction_label": "Order Instruction",
@@ -273,9 +276,10 @@
   "not_available_label": "N/A",
   "support_ticket_created_successfully": "Your support ticket has been created successfully",
   "failed_to_create_support_ticket": "Failed to create support ticket",
+
   "validation_error_title": "Validation Error",
   "select_reason_for_inquiry": "Please select a reason for your inquiry",
-  "provide_order_id": "Please provide an order ID",
+  "provide_order_idprovide_order_id": "Please provide an order ID",
   "provide_title_for_inquiry": "Please provide a title for your inquiry",
   "provide_description_of_issue": "Please provide a description of your issue",
   "order_related_label": "Order Related",
@@ -351,6 +355,7 @@
   "NotificationSection_push": "I want to receive special offers and promotions from us via push-messages",
   "NotificationSection_email": "I want to receive special offers and promotions from us via email",
   "emailLabel": "Email",
+  "confirm_reorder_button": "Confirm Reorder",
   "mobileNumberLabel": "Mobile Number",
   "notVerifiedButton": "Not Verified",
   "updatePhoneTitle": "Update phone number",
@@ -514,6 +519,7 @@
   "coupon_not_found_title": "Coupon Not Found",
   "coupon_is_not_valid_message_with_title": "coupon is not valid.",
   "invalid_coupon_title": "Invalid Coupon",
+  "invalid_otp": "Invalid OTP",
   "invalid_coupon_message": "Invalid Coupon.",
   "see_more_information": "See more information",
   "see_reviews": "See reviews",
@@ -536,6 +542,7 @@
   "access_to_your_information": "Access to your information",
   "privacy_policy_access_info": "You have a right to request a copy of the information we hold on you at any time. Please email us if you would like to receive a copy of this information – info@enatega.com. There will be a small charge for processing this request.",
   "other_websites": "Other Websites",
+  "theme": " Theme",
 
   "privacy_policy_other_websites": "Our website may have links to other websites. This privacy policy only applies to this website. You should therefore read the privacy policies of the other websites when you are using those sites.",
   "grow_with_Enatega": "Grow with Enatega",
@@ -650,6 +657,12 @@
   "OpeningHours": "Opening Hours",
   "DeliveryInfo": "Delivery information",
   "MinOrder": "Minimum Order",
+  "minimum_amount": "Minimum Amount",
+  "The_minimum_amount_of_(": "The minimum amount of (",
+  ")_for_your_order_has_not_been_reached.": ") for your order has not been reached.",
+  "missing_address": "Missing Address",
+  "Select_your_address.": "Select your address.",
+
   "DeliveryTime": "Delivery Time",
   "SalesTax": "Sales Tax",
   "Contact": "Contact",
@@ -688,6 +701,7 @@
   "contact": "Contact",
   "allergy_notice": "If you have allergies or other dietary restrictions, please contact the restaurant. The restaurant will provide food-specific information upon request.",
   "phone_number": "Phone Number",
+  "phone_number_already_associated_with_different_account": "Phone number already associated with different account",
   "email": "Email",
   "select_variation": "Select Variation",
   "required": "Required",
@@ -724,6 +738,7 @@
   "support_chat_title": "Support Chat",
   "order_issue_title": "Order Issue",
   "ticket_description_label": "Ticket Description",
+  "title_is_not_allowed_to_be_empty": "Title is not allowed to be empty",
   "no_messages_yet": "No messages yet",
   "ticket_closed_cannot_send": "This ticket is closed. You cannot send new messages.",
   "type_your_message_here_placeholder": "Type your message here...",
@@ -904,6 +919,14 @@
   "confirmPasswordMismatch": "Passwords must match",
   "termsRequired": "Accept terms to continue",
   "invalid_credentials": "Invalid credentials!",
+  "Horrible": "Horrible",
+  "Bad": "Bad",
+  "Good": "Good",
+  "Meh": "Meh",
+  "Awesome": "Awesome",
+  "Courier_Professionalism": "Courier Professionalism",
+  "Estimate": "Estimate ",
+  "Delivery_on_time": " Delivery on time",
 
   "Monday": "Monday",
   "Tuesday": "Tuesday",

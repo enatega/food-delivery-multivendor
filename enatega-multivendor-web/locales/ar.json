@@ -99,11 +99,9 @@
   },
   "DiscoveryPage": {
     "Mostorder": "المطاعم الأكثر طلبًا",
-    "restaurantcusines": "أنواع مطاعم",
+
     "storenearyou": "مطاعم بالقرب منك",
-    "GroceryStores": " محلات البقالة",
-    
-   
+
     "ourbrand": "علاماتنا التجارية",
     "popularrest": "مطاعم شائعة",
     "popularstore": "متاجر شائعة"
@@ -122,6 +120,8 @@
     "popitems": "عناصر شائعة",
     "Uncategorized": "بدون تصنيف"
   },
+  "Restaurant-cuisines": "أنواع المطاعم",
+  "Grocery-cuisines": " محلات البقالة",
   "addresses": "العناوين",
   "app_version": "1.0.0",
   "toppicks": "أفضل اختيارات البقالة",
@@ -155,6 +155,7 @@
   "login_error": "خطأ في تسجيل الدخول",
   "error_logging_in": "حدث خطأ أثناء تسجيل الدخول",
   "create_user": "إنشاء مستخدم",
+  "phone_number_already_associated_with_different_account": "رقم الهاتف مرتبط بحساب مختلف",
   "registration_success": "تم التسجيل بنجاح",
   "error_creating_user": "حدث خطأ أثناء إنشاء المستخدم",
   "login_success": "تم تسجيل الدخول بنجاح",
@@ -269,6 +270,8 @@
   "support_ticket_created_successfully": "تم إنشاء تذكرتك بنجاح",
   "failed_to_create_support_ticket": "فشل في إنشاء تذكرة الدعم",
   "validation_error_title": "خطأ في التحقق",
+  "please_enter_a_valid_name_message": "يرجى إدخال اسم صحيح",
+  "title_is_not_allowed_to_be_empty": "العنوان لا يمكن أن يكون فارغًا",
   "select_reason_for_inquiry": "يرجى اختيار سبب الاستفسار",
   "provide_order_id": "يرجى تقديم رقم الطلب",
   "provide_title_for_inquiry": "يرجى تقديم عنوان للاستفسار",
@@ -416,6 +419,12 @@
 
   "password_recovery_label": "استعادة كلمة المرور",
   "update_your_password_now_message": "قم بتحديث كلمة المرور الآن",
+  "invalid_otp": "رمز التحقق غير صالح",
+  "minimum_amount": " الحد الأدنى 6 أحرف",
+  "The_minimum_amount_of_(": "الحد الأدنى للمبلغ (",
+  ")_for_your_order_has_not_been_reached.": ") لطلبك لم يتم الوصول إليه.",
+  "missing_address": " العنوان مفقود",
+  "Select_your_address.": "اختر عنوانك.",
   "please_enter_valid_password_message": "يرجى إدخال كلمة مرور صالحة",
   "failed_to_reset_password_message": "فشل في إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى.",
   "password_not_strong_enough_message": "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل تتضمن حرفًا كبيرًا وحرفًا صغيرًا ورقمًا وحرفًا خاصًا",
@@ -887,6 +896,17 @@
   "confirmPasswordMismatch": "يجب أن تتطابق كلمتا المرور",
   "termsRequired": "يجب قبول الشروط للمتابعة",
   "invalid_credentials": "بيانات الاعتماد غير صحيحة!",
+  "Qty:": "الكمية:",
+  "theme": " المظهر",
+    "confirm_reorder_button": "تأكيد إعادة الطلب",
+  "Horrible": " فظيع",
+  "Bad": " سيء",
+  "Good": " جيد",
+  "Meh": " معقول",
+  "Awesome": " رائع",
+  "Courier_Professionalism": "احترافية الساعي",
+  "Estimate": " التقدير",
+  "Delivery_on_time": " التوصيل في الوقت المحدد",
 
   "Monday": "الإثنين",
   "Tuesday": "الثلاثاء",

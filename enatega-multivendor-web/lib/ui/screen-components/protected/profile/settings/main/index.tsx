@@ -237,7 +237,7 @@ export default function SettingsMain() {
       <div className="py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex justify-between items-center">
           <TextComponent
-            text="theme"
+            text={t("theme")}
             className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg"
           />
           <ThemeToggle/>

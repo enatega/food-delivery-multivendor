@@ -99,11 +99,9 @@
   },
   "DiscoveryPage": {
     "Mostorder": "המסעדות המוזמנות ביותר",
-    "restaurantcusines": "מטבחי מסעדות",
+
     "storenearyou": "מסעדות לידך",
-    "GroceryStores": "מטבחי מכולת",
-    
-   
+
     "ourbrand": "המותגים שלנו",
     "popularrest": "מסעדות פופולריות",
     "popularstore": "חנויות פופולריות"
@@ -122,6 +120,8 @@
     "popitems": "פריטים פופולריים",
     "Uncategorized": "ללא קטגוריה"
   },
+  "Restaurant-cuisines": "מטבחי מסעדות",
+  "Grocery-cuisines": "מטבחי מכולת",
   "addresses": "כתובות",
   "app_version": "1.0.0",
   "grocerylist": "רשימת מכולת",
@@ -280,6 +280,8 @@
   "support_ticket_created_successfully": "כרטיס התמיכה שלך נוצר בהצלחה",
   "failed_to_create_support_ticket": "יצירת כרטיס תמיכה נכשלה",
   "validation_error_title": "שגיאת אימות",
+  "title_is_not_allowed_to_be_empty": "כותרת לא יכולה להיות ריקה",
+  "please_enter_a_valid_name_message": "אנא הזן שם חוקי",
   "select_reason_for_inquiry": "אנא בחר סיבה לפנייתך",
   "provide_order_id": "אנא ספק מספר הזמנה",
   "provide_title_for_inquiry": "אנא ספק כותרת לפנייתך",
@@ -380,6 +382,11 @@
   "See_all": "ראה הכל",
   "update_phone_name_title": "הזן מספר טלפון",
   "update_phone_name_cancel_button": "ביטול",
+  "minimum_amount": "סכום מינימלי להזמנה הוא {amount}",
+  "The_minimum_amount_of_(": "הסכום המינימלי של (",
+  ")_for_your_order_has_not_been_reached.": ") להזמנה שלך לא הושג.",
+  "missing_address": " אנא הוסף כתובת למשלוח כדי להמשיך",
+  "Select_your_address.": " בחר את הכתובת שלך.",
   "update_phone_name_save_button": "שמור",
   "update_phone_name_saving_aria": "שומר מספר טלפון...",
   "update_phone_name_save_aria": "שמור מספר טלפון",
@@ -389,6 +396,7 @@
   "update_phone_name_verification_success_msg": "מספר הטלפון שלך אומת בהצלחה",
   "update_phone_name_otp_error_title": "שגיאת OTP",
   "update_phone_name_otp_error_msg": "אנא הזן קוד OTP תקין",
+  "invalid_otp": " OTP לא תקין",
   "update_phone_name_resend_error_title": "שגיאה",
   "update_phone_name_resend_error_msg": "אנא הזן מחדש את מספר הטלפון התקין שלך",
   "update_phone_name_update_error_title": "שגיאה",
@@ -474,6 +482,7 @@
   "create_user_label": "צור משתמש",
   "all_fields_are_required_to_be_filled_message": "כל השדות נדרשים למלוי",
   "register_label": "הירשם",
+  "phone_number_already_associated_with_different_account": " מספר הטלפון כבר משויך לחשבון אחר",
   "successfully_registered_your_account_message": "נרשמת בהצלחה לחשבון שלך!",
   "an_error_occurred_while_registering_message": "אירעה שגיאה במהלך הרישום",
   "lets_get_you_started_label": "בוא נתחיל",
@@ -884,6 +893,18 @@
   "confirmPasswordMismatch": " הסיסמאות אינן תואמות",
   "termsRequired": " אשר את התנאים כדי להמשיך",
   "invalid_credentials": " אימייל או סיסמה שגויים",
+  "Horrible": " נורא",
+  "Bad": " רע",
+  "Good": " טוב",
+  "Meh": " ממוצע",
+  "Awesome": " מדהים",
+  "Courier_Professionalism": " מקצועיות השליח",
+  "confirm_reorder_button": "אשר הזמנה מחדש",
+  "Qty:": "כמות:",
+  "theme": " ערכת נושא",
+  "Estimate": " הערכה",
+  "Delivery_on_time": " משלוח בזמן",
+
   "Monday": "יום שני",
   "Tuesday": "יום שלישי",
   "Wednesday": "יום רביעי",
@@ -892,5 +913,4 @@
   "Saturday": "שבת",
   "Sunday": "ראשון",
   "Favourites": " מועדפים"
-
 }

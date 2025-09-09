@@ -2,6 +2,7 @@
 import ActionButton from "@/lib/ui/useable-components/action-button";
 import { ratingOptions } from "@/lib/utils/constants";
 import { IRatingOption } from "@/lib/utils/interfaces/ratings.interface";
+import { useTranslations } from "next-intl";
 import { twMerge } from "tailwind-merge";
 
 
@@ -23,6 +24,7 @@ const RatingOption = ({ value, emoji, label, selected, onSelect }: IRatingOption
 
   // Render the first step - Rating selection (1-5 stars)
   function RenderStepOne({rating,handleRatingSelect,handleNext}: {rating: number | null,handleRatingSelect: (value: number) => void,handleNext: () => void}) {
+    const t = useTranslations()
     return (
         <div className="w-full">
           <div className="flex justify-between items-center mb-8 md:px-20">
@@ -31,14 +33,14 @@ const RatingOption = ({ value, emoji, label, selected, onSelect }: IRatingOption
                 key={option.value}
                 value={option.value}
                 emoji={option.emoji}
-                label={option.label}
+                label={t(option.label)}
                 selected={rating === option.value}
                 onSelect={handleRatingSelect}
               />
             ))}
           </div>
           <ActionButton onClick={handleNext} disabled={rating === null}>
-            Next
+            {t("next_button")}
           </ActionButton>
         </div>
       )
