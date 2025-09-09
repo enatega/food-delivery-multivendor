@@ -60,7 +60,6 @@ export default function RiderAddForm({
     zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
   };
 
-  console.log(rider);
 
   // Hooks
   const t = useTranslations();
