@@ -28,6 +28,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
   last,
   showLogo,
   cuisines,
+  
 }) => {
   const [page, setPage] = useState(0);
   const [numVisible, setNumVisible] = useState(getNumVisible());

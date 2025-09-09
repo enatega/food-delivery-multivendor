@@ -332,7 +332,7 @@ const handleCloseClearCartDialog = () => {
       {/* Order Info with Checkboxes */}
       <div className="border-t pt-4">
         <h3 className="font-semibold text-gray-800 dark:text-white mb-2">
-          Order #{selectedOrder.orderId}
+          {t("order_details_subheading")} #{selectedOrder.orderId}
         </h3>
         <ul className="space-y-2 max-h-48 overflow-y-auto pr-1">
           {selectedOrder.items?.map((item) => {
@@ -367,7 +367,7 @@ const handleCloseClearCartDialog = () => {
                       {item.title}
                     </span>
                     <span className="text-gray-500 text-xs dark:text-white">
-                      Qty: {item.quantity}
+                      {t("Qty:")} {item.quantity}
                     </span>
                   </div>
                   <span className="text-gray-700 font-medium text-sm dark:text-white">
@@ -397,7 +397,7 @@ const handleCloseClearCartDialog = () => {
           })}
         </ul>
         <p className="mt-3 font-semibold text-gray-900">
-          Total: ${calculateSelectedTotal(selectedOrder, selectedItems)}
+          {t("order_details_total_label")}: ${calculateSelectedTotal(selectedOrder, selectedItems)}
         </p>
       </div>
 
@@ -407,7 +407,7 @@ const handleCloseClearCartDialog = () => {
           className="px-5 py-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 w-full sm:w-auto transition"
           onClick={handleCloseDialog}
         >
-          Cancel
+          {t("cancel_label")}
         </button>
         <button
           className="px-5 py-2 text-sm rounded-lg bg-[#5AC12F] hover:bg-[#4bb126] text-white w-full sm:w-auto disabled:opacity-50 transition"
@@ -425,7 +425,7 @@ const handleCloseClearCartDialog = () => {
             // handleCloseDialog();
           }
         >
-          Confirm Reorder
+          {t("confirm_reorder_button")}
         </button>
       </div>
     </div>

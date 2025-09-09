@@ -58,7 +58,7 @@ export default function NameUpdateModal({
       fetchProfile()
       showToast({
         type: "success",
-        title: "Success",
+        title: t("toast_success"),
         message: t('user_profile_updated_successfully'),
       });
       handleUpdateNameModal?.();
@@ -66,7 +66,7 @@ export default function NameUpdateModal({
     onError: (error) => {
       showToast({
         type: "error",
-        title: "Error",
+        title: t("toast_error"),
         message: error.message,
       });
     },
@@ -122,7 +122,7 @@ export default function NameUpdateModal({
         </div>
         <div className="w-full">
           <div className="">
-            <h2 className="text-2xl font-extrabold mb-10 text-black dark:text-white">Name</h2>
+            <h2 className="text-2xl font-extrabold mb-10 text-black dark:text-white">{t("nameLabel")}</h2>
             <div className="p-float-label mb-6">
               <InputText
                 id="firstName"

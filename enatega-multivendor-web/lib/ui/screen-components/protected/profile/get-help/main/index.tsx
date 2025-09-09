@@ -42,7 +42,7 @@ export default function GetHelpMain() {
       setIsSubmitting(false);
       showToast({
         type: "success",
-        title: "Success",
+        title: t("toast_success"),
         message: t("support_ticket_created_successfully"),
         duration: 3000,
       });
@@ -55,8 +55,8 @@ export default function GetHelpMain() {
       console.error("Mutation error:", error);
       showToast({
         type: "error",
-        title: "Error",
-        message: error.message || t("failed_to_create_support_ticket"),
+        title: t("toast_error"),
+        message: t("title_is_not_allowed_to_be_empty"),
         duration: 3000,
       });
     },
@@ -79,7 +79,7 @@ export default function GetHelpMain() {
     if (!reason) {
       showToast({
         type: "error",
-        title: "Validation Error",
+        title: t("validation_error_title"),
         message: t("select_reason_for_inquiry"),
         duration: 3000,
       });
@@ -89,7 +89,7 @@ export default function GetHelpMain() {
     if (reason === "order related" && !orderId.trim()) {
       showToast({
         type: "error",
-        title: "Validation Error",
+        title: t("validation_error_title"),
         message: t("provide_order_id"),
         duration: 3000,
       });
@@ -99,7 +99,7 @@ export default function GetHelpMain() {
     if (reason === "others" && !ticketTitle.trim()) {
       showToast({
         type: "error",
-        title: "Validation Error",
+        title: "validation_error_title",
         message: t("provide_title_for_inquiry"),
         duration: 3000,
       });
@@ -109,7 +109,7 @@ export default function GetHelpMain() {
     if (!description.trim()) {
       showToast({
         type: "error",
-        title: "Validation Error",
+        title: "validation_error_title",
         message: t("provide_description_of_issue"),
         duration: 3000,
       });
@@ -314,7 +314,7 @@ export default function GetHelpMain() {
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                   placeholder={t("enter_order_id_placeholder")}
-                  className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-100" 
+                  className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-100"
                 />
               </div>
             )}

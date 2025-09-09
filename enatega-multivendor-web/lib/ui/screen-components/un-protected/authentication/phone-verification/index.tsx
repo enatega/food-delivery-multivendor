@@ -222,8 +222,8 @@ export default function PhoneVerification({
     if (error) {
       showToast({
         type: "error",
-        title: t("OTP Error"),
-        message: error.message,
+        title: t("otp_error_label"),
+        message: t("invalid_otp"),
       });
     }
   }, [error]);

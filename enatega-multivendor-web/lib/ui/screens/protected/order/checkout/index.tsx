@@ -495,8 +495,8 @@ export default function OrderCheckoutScreen() {
       (finalRestaurantData.restaurant.minimumOrder || 0)
     ) {
       showToast({
-        title: "Minimum Amount",
-        message: `The minimum amount of (${CURRENCY_SYMBOL} ${finalRestaurantData.restaurant.minimumOrder || 0}) for your order has not been reached.`,
+        title: t("minimum_amount"),
+        message: ` ${t("The_minimum_amount_of_(")} ${CURRENCY_SYMBOL} ${finalRestaurantData.restaurant.minimumOrder || 0} ${t(")_for_your_order_has_not_been_reached.")}`,
         type: "warn",
       });
       return false;
@@ -504,8 +504,8 @@ export default function OrderCheckoutScreen() {
 
     if (!userAddress) {
       showToast({
-        title: "Missing Address",
-        message: "Select your address.",
+        title: t("missing_address"),
+        message: t("Select_your_address"),
         type: "warn",
       });
       return false;

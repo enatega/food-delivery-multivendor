@@ -177,8 +177,8 @@ export default function EmailVerification({
     if (error) {
       showToast({
         type: "error",
-        title: t("OTP Error"),
-        message: error.message,
+        title: t("otp_error_label"),
+        message: t("invalid_otp"),
       });
     }
   }, [error]);
@@ -198,7 +198,7 @@ export default function EmailVerification({
       </div>
 
       <div className="w-full mb-6">
-        <div className="flex justify-center flex-wrap gap-2">
+        <div dir="ltr" className="flex justify-center flex-wrap gap-2">
           {[0, 1, 2, 3, 4, 5].map((i) => (
             <input
               key={i}

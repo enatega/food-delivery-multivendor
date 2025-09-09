@@ -37,14 +37,14 @@ export default function DiscoveryScreen() {
         <OrderItAgain />
         <MostOrderedRestaurants />
         <CuisinesSection
-          title={t("DiscoveryPage.restaurantcusines")}
+          title="Restaurant-cuisines"
           data={restaurantCuisinesData}
           loading={loading || restaurantsLoading}
           error={!!error}
         />
         <RestaurantsNearYou />
         <CuisinesSection
-          title={t("DiscoveryPage.GroceryStores")}
+          title="Grocery-cuisines"
           data={groceryCuisinesData}
           loading={loading || restaurantsLoading}
           error={!!error}
@@ -70,27 +70,27 @@ export default function DiscoveryScreen() {
 
   return (
     <>
-      <DiscoveryBannerSection />
-      <OrderItAgain />
-      <MostOrderedRestaurants />
-      <CuisinesSection
-        title="restaurant_cuisines_title"
-        data={restaurantCuisinesData}
-        loading={loading}
-        error={!!error}
-      />
-      <RestaurantsNearYou />
-      <CuisinesSection
-        title="grocery_cuisines_title"
-        data={groceryCuisinesData}
-        loading={loading}
-        error={!!error}
-      />
-      <GroceryList />
-      <TopGroceryPicks />
-      <TopRatedVendors />
-      <PopularRestaurants />
-      <PopularStores />
-    </>
+        <DiscoveryBannerSection />
+        <OrderItAgain />
+        <MostOrderedRestaurants />
+        <CuisinesSection
+          title="Restaurant-cuisines"
+          data={restaurantCuisinesData}
+          loading={loading || restaurantsLoading}
+          error={!!error}
+        />
+        <RestaurantsNearYou />
+        <CuisinesSection
+          title="Grocery-cuisines"
+          data={groceryCuisinesData}
+          loading={loading || restaurantsLoading}
+          error={!!error}
+        />
+        <GroceryList />
+        <TopGroceryPicks />
+        <TopRatedVendors />
+        <PopularRestaurants />
+        <PopularStores />
+      </>
   );
 }

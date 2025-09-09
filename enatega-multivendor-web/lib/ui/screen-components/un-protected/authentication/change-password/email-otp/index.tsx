@@ -129,7 +129,7 @@ const VerificationEmailForChangePassword = ({
         showToast({
           type: "error",
           title: t("toast_error"),
-          message: "An error occurred while verifying the phone number",
+          message: t("error_occurred_while_verifying_email_message"),
         });
       }
     },
@@ -141,8 +141,8 @@ const VerificationEmailForChangePassword = ({
     if (error) {
       showToast({
         type: "error",
-        title: t("OTP Error"),
-        message: error.message,
+        title: t("otp_error_label"),
+        message: t("invalid_otp"),
       });
     }
   }, [error]);
