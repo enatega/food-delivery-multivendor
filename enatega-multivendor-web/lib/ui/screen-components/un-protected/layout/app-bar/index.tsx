@@ -286,8 +286,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       }
 
       // Subcase: Display recent history
-      return (
-        <div>
+      return  (
+        <div className="p-3">
           <div className="flex flex-row justify-between">
             <span className="text-sm font-normal mb-2 text-gray-500 dark:text-gray-400">
               {t("you_recently_searched")}
@@ -664,15 +664,23 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 <AnimatePresence>
                   {isSearchFocused && (
                     <motion.div
-                      key="search-results"
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="w-full h-[10%] mt-2 max-h-[60vh] bg-white dark:bg-gray-800 overflow-scroll"
-                    >
-                      {renderSearchResults()}
-                    </motion.div>
+                    key="search-results"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="
+                      w-full h-[10%] mt-2 max-h-[60vh] 
+                      bg-white dark:bg-gray-800 
+                      overflow-y-auto 
+                      scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100
+                      dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700
+                      rounded-md
+                    "
+                  >
+                    {renderSearchResults()}
+                  </motion.div>
+                  
                   )}
                 </AnimatePresence>
               </div>
