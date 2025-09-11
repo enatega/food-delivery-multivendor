@@ -496,7 +496,7 @@ export default function OrderCheckoutScreen() {
     ) {
       showToast({
         title: t("minimum_amount"),
-        message: ` ${t("The_minimum_amount_of_(")} ${CURRENCY_SYMBOL} ${finalRestaurantData.restaurant.minimumOrder || 0} ${t(")_for_your_order_has_not_been_reached.")}`,
+        message: ` ${t("The_minimum_amount_of_(")} ${CURRENCY_SYMBOL} ${finalRestaurantData.restaurant.minimumOrder || 0} ${t(")_for_your_order_has_not_been_reached")}`,
         type: "warn",
       });
       return false;

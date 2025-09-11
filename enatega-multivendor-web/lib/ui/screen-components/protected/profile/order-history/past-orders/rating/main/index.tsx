@@ -34,7 +34,7 @@ export default function RatingModal({
   const [comment, setComment] = useState<string>(""); // User's text feedback
   const [selectedAspects, setSelectedAspects] = useState<string[]>([]); // Selected rating aspects/tags
 
-  const t = useTranslations()
+  const t = useTranslations();
   // Debounced submit function to prevent multiple rapid submissions
   const handleSubmitDebounced = useDebounceFunction(() => {
     if (order && rating !== null) {
@@ -108,17 +108,17 @@ export default function RatingModal({
         </div>
 
         {/* Restaurant Name Display */}
-        <p className="text-gray-600 ">
-          {order?.restaurant?.name || t('restaurant_name_label')}
+        <p className="text-gray-600 dark:text-gray-400 ">
+          {order?.restaurant?.name || t("restaurant_name_label")}
         </p>
 
         {/* Modal Title */}
-        <h2 className="md:text-2xl text-xl font-bold  text-black">
-          {t('how_was_the_delivery_title')}
+        <h2 className="md:text-2xl text-xl font-bold  text-black dark:text-white">
+          {t("how_was_the_delivery_title")}
         </h2>
 
         {/* Modal Description */}
-        <p className="text-gray-600  text-center md:text-lg text-base">
+        <p className="text-gray-600  dark:text-gray-400  text-center md:text-lg text-base">
           {t("rating_modal_description")}
         </p>
 

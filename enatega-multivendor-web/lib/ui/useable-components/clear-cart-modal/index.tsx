@@ -43,7 +43,7 @@ export default function ClearCartModal({
             label={t('ok_label')}
           />
           <Button
-            className="bg-transparent text-gray-700 border border-gray-300 py-2 px-4 rounded-full font-medium"
+            className="bg-transparent text-gray-700 dark:text-white border border-gray-300 py-2 px-4 rounded-full font-medium"
             onClick={onHide}
             label={t("cancel_label")}
           />

@@ -34,8 +34,28 @@ const CustomDialog = ({
     } = {},
   } = buttonConfig || {};
 
-  const footer = (
-    <div className="flex space-x-2 text-center justify-center dark:text-white dark:bg-gray-800">
+  // const footer = (
+    
+  // );
+
+  return (
+    <Dialog
+
+      contentClassName="dark:bg-gray-800 dark:text-white"
+      headerClassName="dark:bg-gray-800 dark:text-white"
+      visible={visible}
+      style={{ width: "32rem", textAlign: "center" }}
+      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+      header={title || t("confirm_deletion")}
+      
+      // footer={footer}
+      onHide={onHide}
+    >
+      <div className="confirmation-content text-center mx-3 text-sm sm:text-lg dark:bg-gray-800">
+        <span>{message || t("confirm_delete")}</span>
+      </div>
+
+      <div className=" mt-10 flex space-x-2 text-center justify-center dark:text-white dark:bg-gray-800">
       <CustomButton
         label={secondaryButtonLabel}
         icon={secondaryButtonIcon}
@@ -50,24 +70,6 @@ const CustomDialog = ({
         onClick={onConfirm}
       />
     </div>
-  );
-
-  return (
-    <Dialog
-      contentClassName="dark:bg-gray-800 dark:text-white"
-      headerClassName="dark:bg-gray-800 dark:text-white"
-      className="dark:bg-gray-800 dark:text-white"
-      visible={visible}
-      style={{ width: "32rem", textAlign: "center" }}
-      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-      header={title || t("confirm_deletion")}
-      modal
-      footer={footer}
-      onHide={onHide}
-    >
-      <div className="confirmation-content text-center mx-3 text-sm sm:text-lg dark:bg-gray-800">
-        <span>{message || t("confirm_delete")}</span>
-      </div>
     </Dialog>
   );
 };

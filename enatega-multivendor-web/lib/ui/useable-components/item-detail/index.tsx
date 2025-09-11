@@ -412,9 +412,9 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
 
         <div className="flex items-center justify-between gap-x-2 mt-4">
           {/* Quantity Controls - Rounded Rectangle Container */}
-          <div className="flex items-center space-x-2 bg-gray-200 rounded-[42px] px-3 py-1 flex-[0.2]">
+          <div className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-400 rounded-[42px] px-3 py-1 flex-[0.2]">
             <button
-              className="bg-white text-gray-900 rounded-full w-6 h-6 flex rtl:ml-2 items-center justify-center shadow"
+              className="bg-white text-black text-2xl rounded-full w-6 h-6 flex rtl:ml-2 items-center justify-center shadow"
               onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
               type="button"
             >

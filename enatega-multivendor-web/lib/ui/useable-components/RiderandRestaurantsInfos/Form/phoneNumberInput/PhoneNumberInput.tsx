@@ -29,7 +29,7 @@ const PhoneNumberInput = () => {
         /* Light mode */
         .custom-phone-input .flag-dropdown {
           background-color: white;
-          border-right: 1px solid #d1d5db; /* gray-300 */
+          border: 2px solid #e5e7eb;
           border-radius: 0.5rem 0 0 0.5rem;
         }
 
@@ -80,8 +80,8 @@ const PhoneNumberInput = () => {
           right: 0; /* stick to right */
           left: auto !important; /* override default left */
           border-radius: 0 0.5rem 0.5rem 0; /* rounded corners on right */
-          border-left: 1px solid #4b5563; /* dark gray border for dark mode */
-          border-right: none;
+          border: 2px solid #e5e7eb; /* dark gray border for dark mode */
+           
           padding-right: 8px; /* keep flag and dropdown inside container */
         }
 
