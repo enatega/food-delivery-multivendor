@@ -43,6 +43,7 @@ export default function CustomNumberField({
       )}
 
       <InputNumber
+        
         className={`h-10 w-full rounded-lg border border-gray-300 bg-gray-300 text-sm focus:shadow-none focus:outline-none ${className}`}
         placeholder={placeholder}
         min={min}
@@ -56,6 +57,10 @@ export default function CustomNumberField({
               message:
                 'As Discount is a %age field, please choose a value from 0 to 100.',
             });
+          }
+          // prevent floating point numbers. only allow numbers
+          if (e.key === '.' || e.key === 'e' || e.key === '-') {
+            e.preventDefault();
           }
         }}
         onChange={(e: InputNumberChangeEvent) => {

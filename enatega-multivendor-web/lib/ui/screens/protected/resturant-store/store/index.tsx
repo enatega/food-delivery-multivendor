@@ -67,15 +67,12 @@ import { useTranslations } from "next-intl";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
 export default function StoreDetailsScreen() {
+  // get the RTL direction
+  const direction = document.documentElement.getAttribute("dir") || "ltr";
 
-   // get the RTL direction
-   const direction = document.documentElement.getAttribute("dir") || "ltr";
-   
   const t = useTranslations();
   // Access the UserContext via our custom hook
   const { cart, transformCartWithFoodInfo, updateCart, profile } = useUser();
-
-  
 
   // Params
   const { id, slug }: { id: string; slug: string } = useParams();
@@ -155,13 +152,13 @@ export default function StoreDetailsScreen() {
         onClick={() => handleScroll(_url ?? "", true)}
       >
         <span
-            className={`mx-2 ${item.items && "font-semibold"} text-${
-              isClicked ? "[#5AC12F]" : "gray-600"
-            }
+          className={`mx-2 ${item.items && "font-semibold"} text-${
+            isClicked ? "[#5AC12F]" : "gray-600"
+          }
             dark:text-${isClicked ? "[#5AC12F]" : "gray-300"}`}
-          >
-            {item.label}
-          </span>
+        >
+          {item.label}
+        </span>
         {/* <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
             isClicked ? "[#5AC12F]" : "gray-100"
@@ -643,17 +640,23 @@ export default function StoreDetailsScreen() {
         {loading ? (
           <Skeleton width="100%" height="20rem" borderRadius="0" />
         ) : (
-          <Image
-            src={restaurantInfo.image}
-            alt="McDonald's banner with a burger and fries"
-            width={1200}
-            height={300}
-            className="w-full h-72 object-cover"
-          />
+          <div className="relative">
+      <Image
+        src={restaurantInfo.image}
+        alt="McDonald's banner with a burger and fries"
+        width={1200}
+        height={300}
+        className="w-full h-72 object-cover"
+      />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/10" />
+    </div>
         )}
 
         {!loading && (
-          <div className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}>
+          <div
+            className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}
+          >
             <div className="flex flex-col items-start">
               <Image
                 src={restaurantInfo.image}
@@ -664,7 +667,7 @@ export default function StoreDetailsScreen() {
               />
 
               <div className="text-white space-y-2">
-                <h1 className="font-inter font-extrabold text-[32px] leading-[100%] sm:text-[40px] md:text-[48px]">
+                <h1 className="font-inter font-extrabold text-[32px] leading-[100%] sm:text-[40px] md:text-[48px] drop-shadow-lg">
                   {restaurantInfo.name}
                 </h1>
                 <p className="font-inter font-medium text-[18px] leading-[28px] sm:text-[20px] sm:leading-[30px] md:text-[24px] md:leading-[32px]">
@@ -678,7 +681,8 @@ export default function StoreDetailsScreen() {
         <button
           onClick={handleFavoriteClick}
           disabled={addFavoriteLoading}
-          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white dark:bg-gray-700 h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}        >
+          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white dark:bg-gray-700 h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}
+        >
           {addFavoriteLoading ? (
             <Loader style={{ width: "1.5rem", height: "1.5rem" }} />
           ) : (
@@ -935,7 +939,9 @@ export default function StoreDetailsScreen() {
                               </div>
 
                               {/* Add Button */}
-                              <div className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}>
+                              <div
+                                className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}
+                              >
                                 <button
                                   className={`rounded-full shadow-md w-6 h-6 flex items-center justify-center ${
                                     meal.isOutOfStock
