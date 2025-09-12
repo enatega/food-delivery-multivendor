@@ -43,7 +43,7 @@ export default function LoginWithGoogle({
         <CustomIconButton
           loading={isLoading}
           SvgIcon={GoogleLogo}
-          classNames="hover:bg-gray-100 dark:text-black w-full"
+          classNames="hover:bg-gray-100 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-500 w-full"
           title={t("sign_in_with_google_label")}
           handleClick={googleLogin}
         />
