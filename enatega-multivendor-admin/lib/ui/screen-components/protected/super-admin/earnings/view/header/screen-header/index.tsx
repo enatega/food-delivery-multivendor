@@ -29,7 +29,7 @@ const EarningsSuperAdminHeader = ({
         />
         <StatsCard
           label={t('Total Stores Earning')}
-          total={formatNumber(earnings?.storeTotal || 0)}
+          total = {formatNumber((earnings?.storeTotal || 0) * -1)}
           icon={faDollarSign}
           isClickable={false}
           route="" // loading={loading}
