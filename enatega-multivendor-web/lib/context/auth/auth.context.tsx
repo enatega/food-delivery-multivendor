@@ -125,35 +125,38 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function checkPhoneExists(phone: string) {
-    try {
-      setIsLoading(true);
-      const phoneResponse = await mutatePhoneCheck({
-        variables: { phone: phone },
-      });
-      if (phoneResponse.data?.phoneExist?._id) {
-        showToast({
-          type: "error",
-          title: t("phone_check_error"),
-          message: t("phone_already_registered"), // put a ","m after "registered" and "." at the end of the sentence in the translation,
-        });
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      const error = err as ApolloError;
-      console.error("Error while checking phone:", error);
-      return showToast({
+  async function checkPhoneExists(phone: string): Promise<boolean> {
+  try {
+    setIsLoading(true);
+
+    const resp = await mutatePhoneCheck({ variables: { phone } });
+    const exists = Boolean(resp.data?.phoneExist?._id);
+
+    if (exists) {
+      showToast({
         type: "error",
         title: t("phone_check_error"),
-        message: error.cause?.message || t("error_checking_phone"),
+        message: t("phone_already_registered"), // fix punctuation in translations file
       });
-    } finally {
-      setIsLoading(false);
     }
-  }
 
+    return exists; // true = already registered, false = not registered
+  } catch (err) {
+    const error = err as ApolloError;
+    console.error("Error while checking phone:", error);
+
+    showToast({
+      type: "error",
+      title: t("phone_check_error"),
+      message: error.cause?.message || t("error_checking_phone"),
+    });
+
+    // Safer fallback: treat as "exists" so the flow stops on error
+    return true;
+  } finally {
+    setIsLoading(false);
+  }
+}
   // handlers
 
   const handlePasswordReset = async (

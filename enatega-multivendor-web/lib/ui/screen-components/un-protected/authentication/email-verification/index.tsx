@@ -19,6 +19,7 @@ export default function EmailVerification({
   emailOtp,
   setEmailOtp,
   formData,
+  setFormData
 }: IEmailVerificationProps) {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -148,8 +149,15 @@ export default function EmailVerification({
         title: t("register_label"),
         message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
       });
+      
       handleChangePanel(0);
       setIsAuthModalVisible(false);
+      setFormData({
+        name : "",
+        email : "",
+        phone : "",
+        password : ""
+      })
     } else {
       showToast({
         type: "error",
