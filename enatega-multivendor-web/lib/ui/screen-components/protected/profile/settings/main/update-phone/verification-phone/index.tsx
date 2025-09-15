@@ -115,15 +115,15 @@ const VerificationPhone = ({
         <PhoneIcon />
       </div>
       <div className="flex flex-col justify-items-start text-left w-full">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 dark:text-white">
           {t("OTP_Code_Sent")}
         </h2>
 
-        <p className="text-md sm:text-xl font-semibold text-gray-800 mb-3 break-words">
+        <p className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white mb-3 break-words">
           {user?.phone || "+49 123456789"}
         </p>
 
-        <p className="text-base text-gray-600 mb-6">
+        <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
           {" "}
           {t("verify_your_mobile_number_label")}
         </p>
@@ -144,14 +144,14 @@ const VerificationPhone = ({
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               onPaste={index === 0 ? handlePaste : undefined}
-              className="w-10 h-12 sm:w-12 sm:h-14 md:w-14 md:h-16 text-xl text-center border border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+              className="w-10 h-12 sm:w-12 sm:h-14 md:w-14 md:h-16 text-xl text-center border dark:bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
               autoFocus={index === 0}
             />
           ))}
         </div>
       </div>
 
-      <p className="text-sm text-gray-500 mb-6 text-center w-full">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center w-full">
         {t("otp_valid_for_10_minutes_label")}
       </p>
 

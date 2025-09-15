@@ -384,7 +384,7 @@
   "update_phone_name_cancel_button": "ביטול",
   "minimum_amount": "סכום מינימלי להזמנה הוא {amount}",
   "The_minimum_amount_of_(": "הסכום המינימלי של (",
-  ")_for_your_order_has_not_been_reached.": ") להזמנה שלך לא הושג.",
+  ")_for_your_order_has_not_been_reached": ") להזמנה שלך לא הושג.",
   "missing_address": " אנא הוסף כתובת למשלוח כדי להמשיך",
   "Select_your_address.": " בחר את הכתובת שלך.",
   "update_phone_name_save_button": "שמור",

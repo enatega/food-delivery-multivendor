@@ -31,7 +31,7 @@ const RenderStepThree: React.FC<IRenderStepThreeProps> = ({
 
       <CustomButton
         label={t("add_a_comment_button")}
-        className="!font-thin w-full py-2 rounded-full bg-gray-100 text-gray-400 mb-4 text-center"
+        className="!font-thin w-full py-2 rounded-full bg-gray-100 dark:bg-gray-600 dark:text-gray-300 text-gray-400 mb-4 text-center"
       />
 
       <div className="w-full mb-4 rounded-lg">

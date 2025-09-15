@@ -422,7 +422,7 @@
   "invalid_otp": "رمز التحقق غير صالح",
   "minimum_amount": " الحد الأدنى 6 أحرف",
   "The_minimum_amount_of_(": "الحد الأدنى للمبلغ (",
-  ")_for_your_order_has_not_been_reached.": ") لطلبك لم يتم الوصول إليه.",
+  ")_for_your_order_has_not_been_reached": ") لطلبك لم يتم الوصول إليه.",
   "missing_address": " العنوان مفقود",
   "Select_your_address.": "اختر عنوانك.",
   "please_enter_valid_password_message": "يرجى إدخال كلمة مرور صالحة",

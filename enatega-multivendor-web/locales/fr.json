@@ -158,7 +158,7 @@
   "invalid_otp": "OTP invalide",
   "minimum_amount": " Montant minimum",
   "The_minimum_amount_of_(": " Le montant minimum de (",
-  ")_for_your_order_has_not_been_reached.": ") pour votre commande n'a pas été atteint.",
+  ")_for_your_order_has_not_been_reached": ") pour votre commande n'a pas été atteint.",
   "missing_address": " manque d'adresse",
   "Select_your_address.": " Sélectionnez votre adresse.",
   "error_logging_in": "Une erreur s'est produite lors de la connexion.",
