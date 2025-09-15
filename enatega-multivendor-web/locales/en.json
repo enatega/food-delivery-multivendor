@@ -591,6 +591,7 @@
   "go_to_checkout_label": "Go to Checkout",
   "are_you_sure_label": "Are you sure?",
   "clear_cart_warning_message": "Your cart contains items from a different restaurant. Adding this item will clear your current cart.",
+  "clear_cart_button": "Clear Cart",
   "ok_label": "OK",
   "coming_soon": "Coming Soon",
   "coming_soon_in_your_area_label": "Coming Soon to Your Area!",

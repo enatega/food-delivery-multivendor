@@ -67,9 +67,8 @@ export default function Cart({ onClose }: CartProps) {
   });
 
   const handleClearCart = async () => {
-   
     await clearCart();
-  }
+  };
   // Handle adding related item to cart
   // const handleAddRelatedItem = (id: string) => {
   //   // Use Apollo Client to read the food fragment
@@ -84,7 +83,6 @@ export default function Cart({ onClose }: CartProps) {
   //     addItem(food?.image, food._id, variation._id, restaurantId || "");
   //   }
   // };
-
 
   // Empty cart state
   if (cart.length === 0) {
@@ -352,8 +350,6 @@ export default function Cart({ onClose }: CartProps) {
 
         {/* Fixed Checkout Button */}
         <div className="p-4 flex flex-col justify-center items-center border-t bg-white dark:bg-gray-800 ">
-          {/* Clear Cart */}
-
           <button
             className="flex justify-between items-center w-full bg-[#5AC12F] text-black rounded-full px-4 py-3"
             onClick={() => {
@@ -374,13 +370,15 @@ export default function Cart({ onClose }: CartProps) {
               {formattedSubtotal}
             </span>
           </button>
-
+          {/* Clear Cart */}
           <button
             onClick={handleClearCart}
             className="mt-3  w-full flex items-center justify-center gap-2 rounded-full px-4 py-3 border border-red-500 text-red-500 hover:bg-red-50 dark:hover:border-red-700 dark:hover:bg-inherit transition-colors"
             type="button"
           >
-            <span className="text-base font-medium">Clear Cart</span>
+            <span className="text-base font-medium">
+            {t("clear_cart_button")}
+            </span>
           </button>
         </div>
       </div>

@@ -577,6 +577,7 @@
   "go_to_checkout_label": "Passer à la caisse",
   "are_you_sure_label": "Êtes-vous sûr ?",
   "clear_cart_warning_message": "Votre panier contient des articles d'un autre restaurant. Ajouter cet article vidangera votre panier actuel.",
+  "clear_cart_button": "Vider le panier",
   "ok_label": "OK",
   "coming_soon": "Bientôt disponible",
   "coming_soon_in_your_area_label": "Bientôt disponible dans votre région",
