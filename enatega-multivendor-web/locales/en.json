@@ -331,6 +331,8 @@
   "failed_deleted_address": "Failed to delete",
   "failed_deleted_title": "Address",
   "Add_new_address_title": "Add New Address",
+  "Address_Saved_toast_title": "Address Saved",
+  "Your_address_has_been_saved_successfully": "Your address has been saved successfully.",
   "Edit_button_Address": "Edit",
   "Delete_button_Address": "Delete",
   "where_to_address_label": "Where to?",
@@ -342,6 +344,8 @@
   "Add_new_address": "Add new address",
   "failed_to_fetch_Address": "Failed to fetch address",
   "Address_updated_success": "Address update failed",
+
+  "Address_updated_failed_message": "All required fields must be filled before saving the address.",
   "Location_Type": "Location Type",
   "cancel_address": "Cancel",
   "Save_address": "Save",
