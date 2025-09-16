@@ -482,20 +482,50 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     <Menu
                       className="
                      dark:bg-gray-800
-                      
-                   "
+                     dark:text-white
+                     
+                     "
                       model={[
                         {
                           label: t("ProfileSection.profile_label"),
-                          command: () => router.push("/profile"),
+                          template(item) {
+                            return (
+                              <div
+                                className="text-gray-600 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-600  p-2 cursor-pointer"
+                                onClick={() => router.push("/profile")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
                         },
                         {
                           label: t("ProfileSection.gethelp"),
-                          command: () => router.push("/profile/getHelp"),
+                          template(item) {
+                            return (
+                              <div
+                                className="text-gray-500 hover:bg-gray-300  dark:text-white dark:hover:bg-gray-600 p-2  cursor-pointer"
+                                onClick={() => router.push("/profile/getHelp")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
                         },
                         {
                           label: t("ProfileSection.logout_appbar"),
-                          command: () => setLogoutConfirmationVisible(true),
+                          template(item) {
+                            return (
+                              <div
+                                className="text-gray-500 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-600 p-2  cursor-pointer"
+                                onClick={() =>
+                                  setLogoutConfirmationVisible(true)
+                                }
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       popup
