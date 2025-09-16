@@ -238,7 +238,6 @@ body {
 
 /* ------------- Prime React ------------- */
 /* OTP Input */
-/* OTP Input */
 .p-inputotp {
   display: flex;
   gap: 2px;
@@ -665,8 +664,7 @@ body {
   height: 40px;
 }
 
-/* 
-################################################
+/* ################################################
 Discovery Caurousal 
 ################################################
 */
@@ -760,8 +758,7 @@ Discovery Caurousal
   }
 }
 
-/* 
-########################################################
+/* ########################################################
   Card Slider
 
 ########################################################
@@ -903,7 +900,7 @@ Discovery Caurousal
   text-align: right;
 }
 
- .message-left .rce-mbox-text {
+  .message-left .rce-mbox-text {
   background-color: #59c12f; /* Light green for current user */
   border-radius: 3px;
   padding: 5px;
@@ -940,11 +937,11 @@ Discovery Caurousal
   color: #f9fafb !important;
 }
 
-.dark .p-dropdown-panel .p-dropdown-items .p-highlight {
-  background-color: transparent !important;
-  color: #f9fafb !important;
+/* 🔹 FIX: Correctly style the HIGHLIGHTED dropdown item in dark mode */
+.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #374151 !important; /* A darker highlight, e.g., gray-700 */
+  color: #ffffff !important;           /* White text */
 }
-
 
 .dark .p-dropdown-panel .p-dropdown-filter {
   background-color: #1f2937; /* gray-800 */
@@ -955,7 +952,7 @@ Discovery Caurousal
 /* 🔹 Selected option text box (closed dropdown) */
 .dark .p-dropdown .p-dropdown-label {
   background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;            /* gray-100 */
+  color: #f9fafb !important;           /* gray-100 */
   border-color: #4b5563 !important;     /* gray-600 */
 }
 
@@ -1001,10 +998,10 @@ input:-webkit-autofill:active {
 }
 
 /* === Dark mode autofill === */
- input:-webkit-autofill,
- input:-webkit-autofill:hover,
- input:-webkit-autofill:focus,
- input:-webkit-autofill:active {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
   /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-700 bg */
   -webkit-text-fill-color: #000000 !important; /* gray-100 text */
   caret-color: #000000 !important; /* keeps cursor visible */
@@ -1029,5 +1026,3 @@ input:-webkit-autofill:active {
 .rtl-carousel .p-carousel-container {
   direction: ltr !important; /* Force LTR for animation */
 }
-
-
