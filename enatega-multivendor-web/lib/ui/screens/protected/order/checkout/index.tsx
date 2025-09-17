@@ -67,7 +67,6 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
-import CustomButton from "@/lib/ui/useable-components/button";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();

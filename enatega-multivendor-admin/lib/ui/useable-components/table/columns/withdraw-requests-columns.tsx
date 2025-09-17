@@ -43,20 +43,33 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   const [updateWithdrawReqStatus, { loading: status_change_loading }] =
     useMutation(UPDATE_WITHDRAW_REQUEST, {
       onError: (err) => {
+        console.log("error updating withdraw request status", err);
         showToast({
           type: 'error',
           title: 'Update Withdraw Request',
-          message: err?.cause?.message || 'Failed to update the request',
+          message: err?.cause?.message || 'Faile  d to update the request',
         });
         setIsChangingStatus({ _id: '', bool: false });
       },
-      onCompleted: () => {
-        showToast({
+      onCompleted: (res) => {
+        // console.log('Withdraw Request Status Updated', res);
+        if(!res.updateWithdrawReqStatus.success){
+          showToast({
+            type: 'error',
+            title: 'Update Withdraw Request',
+            message: res.updateWithdrawReqStatus.message || 'Failed to update the request',
+          });
+          setIsChangingStatus({ _id: '', bool: false });
+          return;
+        } else {
+          showToast({
           type: 'success',
           title: 'Update Withdraw Request',
-          message: 'The withdraw request has been updated successfully',
+          message: 'The withdraw request has been updated successfully.....',
         });
+
         setIsChangingStatus({ _id: '', bool: false });
+      }
       },
       refetchQueries: [
         {
@@ -71,6 +84,8 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         },
       ],
     });
+
+    // console.log("withDraw Data",{ data });
 
   // Handlers
   const handleDropDownChange = useCallback(
