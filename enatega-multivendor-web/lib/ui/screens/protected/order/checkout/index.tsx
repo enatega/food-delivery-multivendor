@@ -67,6 +67,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
+import CustomButton from "@/lib/ui/useable-components/button";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();
@@ -333,7 +334,7 @@ export default function OrderCheckoutScreen() {
         showToast({
           type: "info",
           title: t("coupon_applied_title"),
-          message: `${coupon.title} ${t("coupon_has_been_applied_message_with_title")}`,
+          message: `${coupon.title} ${t("coupon_has_been_applied_message")}`,
         });
         setIsCouponApplied(true);
         setCoupon(coupon);
@@ -1136,10 +1137,26 @@ export default function OrderCheckoutScreen() {
                 {t("promo_code_label")}
               </h2>
               {isCouponApplied ? (
-                <Message
-                  severity="success"
-                  text={t("coupon_applied_successfully_message")}
-                />
+                <div className="flex items-center">
+                  <Message
+                    className="dark:bg-gray-800"
+                    severity="success"
+                    text={t("coupon_applied_successfully_message")}
+                  />
+
+                  <button
+                    className="border border-red-500 text-red-500 hover:bg-red-50 dark:border-red-500 dark:hover:border-red-700 dark:hover:bg-inherit rtl:mr-3 ml-3 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium   tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
+                    onClick={() => {
+                      setIsCouponApplied(false);
+                    }}
+                  >
+                    {couponLoading ? (
+                      <FontAwesomeIcon icon={faSpinner} spin />
+                    ) : (
+                      <span>{t("Remove")}</span>
+                    )}
+                  </button>
+                </div>
               ) : (
                 <>
                   <p className="text-gray-500 dark:text-gray-400 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle mt-2">

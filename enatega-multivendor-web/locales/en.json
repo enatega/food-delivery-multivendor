@@ -519,7 +519,9 @@
   "for_greater_hunger_title": "For greater hunger",
   "in_10_20_min_label": "in 10-20 min",
   "coupon_applied_title": "Coupon Applied",
-  "coupon_has_been_applied_message_title": "coupon has been applied",
+  "Remove": "Remove",
+
+  "coupon_has_been_applied_message": "coupon has been applied",
   "coupon_not_found_title": "Coupon Not Found",
   "coupon_is_not_valid_message_with_title": "coupon is not valid.",
   "invalid_coupon_title": "Invalid Coupon",
