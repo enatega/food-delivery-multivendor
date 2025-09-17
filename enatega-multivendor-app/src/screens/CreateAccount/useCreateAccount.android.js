@@ -145,34 +145,25 @@ export const useCreateAccount = () => {
       if (Device.isDevice) {
         try {
           const { status: existingStatus } = await Notifications.getPermissionsAsync();
-          console.log('🔐 [Login Debug] Notification permission status:', existingStatus);
-
+  
           if (existingStatus === 'granted') {
             try {
               const tokenData = await Notifications.getExpoPushTokenAsync({
                 projectId: Constants.expoConfig?.extra?.eas?.projectId
               });
               notificationToken = tokenData.data;
-              console.log('🔐 [Login Debug] ✅ Got notification token');
             } catch (tokenError) {
-              console.warn('🔐 [Login Debug] ⚠️ Could not get push token (this is OK):', tokenError.message);
               notificationToken = null;
             }
           } else {
-            console.log('🔐 [Login Debug] ℹ️ Notification permission not granted, skipping token');
+            FlashMessage({ message: 'Notification permission not granted, skipping token' });
           }
         } catch (permissionError) {
-          console.warn('🔐 [Login Debug] ⚠️ Could not check notification permissions:', permissionError.message);
           notificationToken = null;
         }
       } else {
         console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token');
       }
-
-      console.log('🔐 [Login Debug] About to call GraphQL mutation with variables:', {
-        ...user,
-        notificationToken: notificationToken ? 'token_present' : 'no_token'
-      });
 
       mutate({
         variables: {

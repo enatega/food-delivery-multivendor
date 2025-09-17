@@ -114,7 +114,6 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
         console.error('Refetch error:', error)
       })
     } else {
-      console.log('Network status is not 7, current status:', networkStatus)
     }
   }
 

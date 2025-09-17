@@ -63,7 +63,7 @@ export default function App() {
   const client = setupApolloClient()
 
   useKeepAwake()
-  useWatchLocation()
+  // useWatchLocation()
 
   // Use system theme
   const systemTheme = useColorScheme()
@@ -170,7 +170,7 @@ export default function App() {
 
   // For Push Notification
   useEffect(() => {
-    registerForPushNotificationsAsync()
+    // registerForPushNotificationsAsync()
 
     const notifSub  = Notifications.addNotificationReceivedListener((notification) => {
       if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
@@ -310,8 +310,11 @@ async function registerForPushNotificationsAsync() {
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync()
     let finalStatus = existingStatus
+    const { status } = await Notifications.requestPermissionsAsync()
+
+    console.log({status, existingStatus})
+
     if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync()
       finalStatus = status
     }
     if (finalStatus !== 'granted') {

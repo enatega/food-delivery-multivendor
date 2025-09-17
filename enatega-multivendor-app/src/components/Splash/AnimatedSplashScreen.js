@@ -12,6 +12,8 @@ import Animated, {
 import SplashVideo from './SplashVideo'
 
 export default function AnimatedSplashScreen({ children }) {
+
+
   const opacityAnimation = useSharedValue(1) // Shared value for opacity
   const scaleAnimation = useSharedValue(1) // Shared value for scale
   const [isAppReady, setAppReady] = useState(false)
