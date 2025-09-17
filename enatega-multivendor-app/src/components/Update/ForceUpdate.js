@@ -90,7 +90,7 @@ const ForceUpdate = () => {
 
   return (
     <Modal
-      visible={isUpdateModalVisible}
+      visible={false}
       transparent={true}
       animationType='fade'
       onRequestClose={() => {}}
