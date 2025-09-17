@@ -178,7 +178,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
             <h2 className="text-lg md:text-xl font-bold mb-2">{t("DeliveryInfo")}</h2>
             <div className="grid grid-cols-1 gap-2">
               <p>{t("MinOrder")} {" "}: £{restaurantInfo.MinimumOrder}</p>
-              <p>{t("DeliveryTime")} {" "}: {restaurantInfo.deliveryTime}mins</p>
+              <p>{t("DeliveryTime")} {" "}: {restaurantInfo.deliveryTime} mins</p>
               <p>{t("SalesTax")} {" "}: £{restaurantInfo.deliveryTax}</p>
             </div>
           </div>

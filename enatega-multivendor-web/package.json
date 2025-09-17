@@ -37,7 +37,7 @@
     "graphql-ws": "^5.16.0",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.1",
-    "next": "14.2.5",
+    "next": "^14.2.32",
     "next-intl": "^3.26.5",
     "next-pwa": "^5.6.0",
     "primeicons": "^7.0.0",
