@@ -312,8 +312,6 @@ async function registerForPushNotificationsAsync() {
     let finalStatus = existingStatus
     const { status } = await Notifications.requestPermissionsAsync()
 
-    console.log({status, existingStatus})
-
     if (existingStatus !== 'granted') {
       finalStatus = status
     }
