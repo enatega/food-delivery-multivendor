@@ -30,7 +30,7 @@ export default function CustomPasswordTextField({
         panelClassName="bg-white text-black dark:bg-gray-800 dark:text-white"
         placeholder={placeholder}
         toggleMask
-        strongRegex="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
+        // strongRegex="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
         feedback={feedback}
         footer={feedback ? <PasswordFeedback /> : null}
         

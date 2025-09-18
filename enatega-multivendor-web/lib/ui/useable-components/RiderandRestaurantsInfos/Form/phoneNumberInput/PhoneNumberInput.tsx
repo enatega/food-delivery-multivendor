@@ -6,24 +6,25 @@ const PhoneNumberInput = () => {
   return (
     <div>
       <PhoneInput
-        country={"au"}
-        value={field.value}
-        onChange={(value) => helpers.setValue(value)}
-        inputProps={{
-          name: "phoneNumber",
-          id: "phoneNumber",
-          className:
-            "w-full border-2 border-gray-200 dark:border-gray-600 py-2 rounded-lg " +
-            "focus:outline-none focus:ring-0 active:outline-none " +
-            "bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 " +
-            (typeof window !== "undefined" &&
-            document?.documentElement?.dir === "rtl"
-              ? "pr-12"
-              : "pl-12"),
-        }}
-        containerClass="custom-phone-input w-full"
-        buttonClass="custom-phone-button"
-      />
+      // default country Israel
+      country={"il"}
+      value={field.value}
+      onChange={(value) => helpers.setValue(value)}
+      inputProps={{
+        name: "phoneNumber",
+        id: "phoneNumber",
+        className:
+          "w-full border-2 border-gray-200 dark:border-gray-600 py-2 rounded-lg " +
+          "focus:outline-none focus:ring-0 active:outline-none " +
+          "bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 " +
+          (typeof window !== "undefined" &&
+          document?.documentElement?.dir === "rtl"
+            ? "pr-12"
+            : "pl-12"),
+      }}
+      containerClass="custom-phone-input w-full"
+      buttonClass="custom-phone-button"
+          />
 
       <style jsx global>{`
         /* Light mode */

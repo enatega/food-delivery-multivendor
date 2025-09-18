@@ -286,7 +286,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       }
 
       // Subcase: Display recent history
-      return  (
+      return (
         <div className="p-3">
           <div className="flex flex-row justify-between">
             <span className="text-sm font-normal mb-2 text-gray-500 dark:text-gray-400">
@@ -482,20 +482,50 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     <Menu
                       className="
                      dark:bg-gray-800
-                      
-                   "
+                     dark:text-white
+                     
+                     "
                       model={[
                         {
                           label: t("ProfileSection.profile_label"),
-                          command: () => router.push("/profile"),
+                          template(item) {
+                            return (
+                              <div
+                                className="text-gray-600 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-600  p-2 cursor-pointer"
+                                onClick={() => router.push("/profile")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
                         },
                         {
                           label: t("ProfileSection.gethelp"),
-                          command: () => router.push("/profile/getHelp"),
+                          template(item) {
+                            return (
+                              <div
+                                className="text-gray-500 hover:bg-gray-300  dark:text-white dark:hover:bg-gray-600 p-2  cursor-pointer"
+                                onClick={() => router.push("/profile/getHelp")}
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
                         },
                         {
                           label: t("ProfileSection.logout_appbar"),
-                          command: () => setLogoutConfirmationVisible(true),
+                          template(item) {
+                            return (
+                              <div
+                                className="text-gray-500 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-600 p-2  cursor-pointer"
+                                onClick={() =>
+                                  setLogoutConfirmationVisible(true)
+                                }
+                              >
+                                {item.label}
+                              </div>
+                            );
+                          },
                         },
                       ]}
                       popup
@@ -522,7 +552,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       />{" "}
                     </button>{" "}
                     <Menu
-                      className="dark:bg-gray-800 dark:text-white mt-5"  
+                      className="dark:bg-gray-800 dark:text-white mt-5"
                       model={[
                         {
                           label: "ENGLISH",
@@ -664,12 +694,12 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 <AnimatePresence>
                   {isSearchFocused && (
                     <motion.div
-                    key="search-results"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="
+                      key="search-results"
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="
                       w-full h-[10%] mt-2 max-h-[60vh] 
                       bg-white dark:bg-gray-800 
                       overflow-y-auto 
@@ -677,10 +707,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700
                       rounded-md
                     "
-                  >
-                    {renderSearchResults()}
-                  </motion.div>
-                  
+                    >
+                      {renderSearchResults()}
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </div>
@@ -710,6 +739,13 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           </PaddingContainer>
         </div>
       </nav>
+      {/* Preventing everything at the background from being clickable when searchbar is open  */}
+      {isSearchFocused && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsSearchFocused(false)}
+        />
+      )}
 
       {/* Cart Sidebar */}
       <Sidebar

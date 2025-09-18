@@ -45,8 +45,7 @@ const initialValues: VendorFormValues = {
 const EmailForm: React.FC<formProps> = ({ heading, role }) => {
   const { showToast } = useToast();
   const router = useRouter();
-    const t = useTranslations()
-
+  const t = useTranslations();
 
   const handleSubmit = async (formData: VendorFormValues) => {
     const templateParams = {
@@ -54,7 +53,6 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
       role: role,
       isRider: false,
     };
-
 
     try {
       await sendEmail("template_eogfh2k", templateParams);
@@ -81,7 +79,9 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-m my-6">
-      <h2 className="text-[20px] font-semibold mb-6 dark:text-gray-100">{heading}</h2>
+      <h2 className="text-[20px] font-semibold mb-6 dark:text-gray-100">
+        {heading}
+      </h2>
 
       <Formik
         initialValues={initialValues}
@@ -91,8 +91,12 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
         {({ values, setFieldValue, isSubmitting }) => (
           <Form className="grid gap-5">
             {/* First and Last Name */}
+
             <div className="gap-4 flex w-[100%] justify-between">
               <div className="w-[50%]">
+                <label className="text-sm dark:text-gray-300">
+                  {t("first_name_label")}
+                </label>
                 <Field name="firstName">
                   {({ field }: any) => (
                     <InputText
@@ -110,10 +114,13 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
               </div>
 
               <div className="w-[50%]">
+                <label className="text-sm dark:text-gray-300">
+                  {t("last_name_label")}
+                </label>
                 <Field name="lastName">
                   {({ field }: any) => (
                     <InputText
-                      placeholder={t('last_name_label')}
+                      placeholder={t("last_name_label")}
                       {...field}
                       className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
                     />
@@ -129,11 +136,13 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
             {/* Email */}
             <div>
-              <label className="text-sm dark:text-gray-300">{t("email_label")}</label>
-              <Field name= "email">
+              <label className="text-sm dark:text-gray-300">
+                {t("email_label")}
+              </label>
+              <Field name="email">
                 {({ field }: any) => (
                   <InputText
-                    placeholder={t("please_enter_your_email_address_label")}
+                    placeholder={t("email_address_placeholder")}
                     {...field}
                     className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
                   />
@@ -147,7 +156,10 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
             </div>
 
             {/* Phone Number */}
-            <div >
+            <div>
+              <label className="text-sm dark:text-gray-300">
+                {t("phone_label")}
+              </label>
               <PhoneNumberInput />
               <ErrorMessage
                 name="phoneNumber"
@@ -158,6 +170,9 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
             {/* Password */}
             <div>
+              <label className="text-sm dark:text-gray-300">
+                {t("password_label")}
+              </label>
               <Field name="password">
                 {({ field }: any) => (
                   <Password
@@ -166,6 +181,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                     panelClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
                     placeholder={t("password")}
                     toggleMask
+                    
                     className="w-full text-sm border-2 border-gray-200 dark:border-gray-600 p-2 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     feedback={false}
                   />
@@ -180,7 +196,9 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
             {/* Confirm Password */}
             <div>
-              <label className="text-sm dark:text-gray-300">{t("confirm_password_label")}</label>
+              <label className="text-sm dark:text-gray-300">
+                {t("confirm_password_label")}
+              </label>
               <Field name="confirmPassword">
                 {({ field }: any) => (
                   <Password
@@ -209,7 +227,10 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                 onChange={(e) => setFieldValue("termsAccepted", e.checked)}
                 className="border-gray-400 dark:border-gray-600 dark:bg-gray-700"
               />
-              <label className="text-sm text-gray-800 dark:text-gray-300" htmlFor="termsAccepted">
+              <label
+                className="text-sm text-gray-800 dark:text-gray-300"
+                htmlFor="termsAccepted"
+              >
                 {t("i_accept_the_terms_and_conditions")}
               </label>
             </div>
@@ -223,7 +244,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
             <div className="flex justify-center items-center">
               <Button
                 type="submit"
-                label={t("send_button")}
+                label={t("register_label")}
                 loading={isSubmitting}
                 className="mt-4 bg-[#5AC12F] text-[16px] font-medium w-[200px] p-2 rounded-full text-white  hover:bg-[#5AC12F] transition-all"
               />

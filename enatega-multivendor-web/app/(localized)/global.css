@@ -842,7 +842,7 @@ Discovery Caurousal
 /* Remove background color on hover for menu items */
 .p-panelmenu .p-menuitem-link:hover {
   background: transparent !important;
-  color: inherit !important;
+  color: white !important;
   box-shadow: none !important;
 }
 
