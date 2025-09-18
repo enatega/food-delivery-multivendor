@@ -451,7 +451,7 @@ function Account(props) {
                           isRTL
                         >
                           {' '}
-                          {t('receivePushNotification')}
+                          {t('receivePushNotification')}{' '}
                         </TextDefault>
                       </View>
                       {loading && btnText === 'order' && (

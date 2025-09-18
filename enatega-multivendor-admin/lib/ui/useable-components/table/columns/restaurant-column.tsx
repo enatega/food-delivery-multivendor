@@ -117,10 +117,10 @@ export const RESTAURANT_TABLE_COLUMNS = ({
     },
     { headerName: t('ID'), propertyName: 'unique_restaurant_id' },
     { headerName: t('Name'), propertyName: 'name' },
-    { headerName: t('Vendor'), propertyName: 'username' },
+    { headerName: t('Vendor'), propertyName: 'owner.email' },
     {
       headerName: t('Email'),
-      propertyName: 'owner.email',
+      propertyName: 'username',
     },
     { headerName: t('Address'), propertyName: 'address' },
     {

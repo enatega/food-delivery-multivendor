@@ -1,7 +1,10 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
-import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
+import {
+  CardStyleInterpolators,
+  createStackNavigator
+} from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
@@ -41,7 +44,10 @@ import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
 import Favourite from '../screens/Favourite/Favourite'
 import ChatScreen from '../screens/ChatWithRider/ChatScreen'
-import { DarkBackButton, RightButton } from '../components/Header/HeaderIcons/HeaderIcons'
+import {
+  DarkBackButton,
+  RightButton
+} from '../components/Header/HeaderIcons/HeaderIcons'
 import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
@@ -64,8 +70,12 @@ import { Easing, Platform } from 'react-native'
 import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
 // import HypCheckout from '../screens/Hyp/HypCheckout'
 import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
-import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER } from '../utils/constants'
-
+import {
+  SLIDE_RIGHT_WITH_CURVE_ANIM,
+  SLIDE_UP_RIGHT_ANIMATION,
+  AIMATE_FROM_CENTER
+} from '../utils/constants'
+import { useLocation } from '../ui/hooks'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -93,10 +103,15 @@ function MainNavigator() {
         options={{
           headerShown: false,
           gestureDirection: 'vertical-inverted',
-          cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid
+          cardStyleInterpolator:
+            CardStyleInterpolators.forScaleFromCenterAndroid
         }}
       />
-      <NavigationStack.Screen name='Menu' component={Menu} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='Menu'
+        component={Menu}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen
         name='NewRestaurantDetailDesign'
         component={NewRestaurantDetailDesign}
@@ -121,15 +136,43 @@ function MainNavigator() {
           ...AIMATE_FROM_CENTER
         }}
       />
-      <NavigationStack.Screen name='ItemDetail' component={ItemDetail} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Cart' component={Cart} options={SLIDE_UP_RIGHT_ANIMATION} />
-      <NavigationStack.Screen name='Checkout' component={Checkout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Profile' component={Profile} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Addresses' component={Addresses} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='ItemDetail'
+        component={ItemDetail}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Cart'
+        component={Cart}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen
+        name='Checkout'
+        component={Checkout}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Profile'
+        component={Profile}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='Addresses'
+        component={Addresses}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='NewAddress' component={NewAddress} />
       <NavigationStack.Screen name='EditAddress' component={EditAddress} />
-      <NavigationStack.Screen name='FullMap' component={FullMap} options={SLIDE_UP_RIGHT_ANIMATION} />
-      <NavigationStack.Screen name='CartAddress' component={CartAddress} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='FullMap'
+        component={FullMap}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen
+        name='CartAddress'
+        component={CartAddress}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='Payment' component={Payment} />
       <NavigationStack.Screen
         name='OrderDetail'
@@ -147,35 +190,83 @@ function MainNavigator() {
         }}
       />
       <NavigationStack.Screen name='Settings' component={Settings} />
-      <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='MyOrders'
+        component={MyOrders}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
-      <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='Help'
+        component={Help}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
-      <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
-      <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='About'
+        component={About}
+        options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}
+      />
+      <NavigationStack.Screen
+        name='Reviews'
+        component={Reviews}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='Paypal' component={Paypal} />
       <NavigationStack.Screen name='RateAndReview' component={RateAndReview} />
 
-      <NavigationStack.Screen name='StripeCheckout' component={StripeCheckout} />
+      <NavigationStack.Screen
+        name='StripeCheckout'
+        component={StripeCheckout}
+      />
 
       {/* Authentication Login */}
       <NavigationStack.Screen name='CreateAccount' component={CreateAccount} />
       <NavigationStack.Screen name='Login' component={Login} />
       <NavigationStack.Screen name='Register' component={Register} />
       <NavigationStack.Screen name='PhoneNumber' component={PhoneNumber} />
-      <NavigationStack.Screen name='ForgotPassword' component={ForgotPassword} />
-      <NavigationStack.Screen name='SetYourPassword' component={SetYourPassword} />
+      <NavigationStack.Screen
+        name='ForgotPassword'
+        component={ForgotPassword}
+      />
+      <NavigationStack.Screen
+        name='SetYourPassword'
+        component={SetYourPassword}
+      />
       <NavigationStack.Screen name='EmailOtp' component={EmailOtp} />
       <NavigationStack.Screen name='PhoneOtp' component={PhoneOtp} />
-      <NavigationStack.Screen name='ForgotPasswordOtp' component={ForgotPasswordOtp} />
-      <NavigationStack.Screen name='SelectLocation' component={SelectLocation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='ForgotPasswordOtp'
+        component={ForgotPasswordOtp}
+      />
+      <NavigationStack.Screen
+        name='SelectLocation'
+        component={SelectLocation}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='AddNewAddress' component={AddNewAddress} />
       <NavigationStack.Screen name='SaveAddress' component={SaveAddress} />
-      <NavigationStack.Screen name='Favourite' component={Favourite} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='Favourite'
+        component={Favourite}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='ChatWithRider' component={ChatScreen} />
-      <NavigationStack.Screen name='Collection' component={Collection} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='MapSection' component={MapSection} options={SLIDE_UP_RIGHT_ANIMATION} />
-      <NavigationStack.Screen name='Account' component={Account} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='Collection'
+        component={Collection}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
+      <NavigationStack.Screen
+        name='MapSection'
+        component={MapSection}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen
+        name='Account'
+        component={Account}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen name='SearchScreen' component={SearchScreen} />
       {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
@@ -186,16 +277,25 @@ function MainNavigator() {
 function LocationStack() {
   return (
     <Location.Navigator>
-      <Location.Screen name='CurrentLocation' component={CurrentLocation} options={{ header: () => null }} />
+      <Location.Screen
+        name='CurrentLocation'
+        component={CurrentLocation}
+        options={{ header: () => null }}
+      />
       <Location.Screen name='SelectLocation' component={SelectLocation} />
-      <Location.Screen name='AddNewAddress' component={AddNewAddress} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <Location.Screen
+        name='AddNewAddress'
+        component={AddNewAddress}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen
         name='Main'
         component={BottomTabNavigator}
         options={{
           headerShown: false,
           gestureDirection: 'vertical-inverted',
-          cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid
+          cardStyleInterpolator:
+            CardStyleInterpolators.forScaleFromCenterAndroid
         }}
       />
     </Location.Navigator>
@@ -212,7 +312,13 @@ function BottomTabNavigator() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
-          return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
+          return (
+            <BottomTabIcon
+              name={route.name.toLowerCase()}
+              size={focused ? '28' : size}
+              color={color}
+            />
+          )
         },
         tabBarStyle: {
           paddingHorizontal: 15,
@@ -224,7 +330,14 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: '#0EA5E9',
         tabBarInactiveTintColor: currentTheme.fontNewColor,
         tabBarLabelStyle: { fontSize: 12 },
-        headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
+        headerRight: () => (
+          <RightButton
+            icon='cart'
+            iconColor={currentTheme.iconColor}
+            menuHeader={false}
+            t={t}
+          />
+        )
       })}
     >
       <Tab.Screen
@@ -281,7 +394,9 @@ function AppContainer() {
   const handleNotification = useCallback(
     async (response) => {
       const { _id } = response.notification.request.content.data
-      const lastNotificationHandledId = await AsyncStorage.getItem('@lastNotificationHandledId')
+      const lastNotificationHandledId = await AsyncStorage.getItem(
+        '@lastNotificationHandledId'
+      )
       await client.query({
         query: gql`
           ${myOrders}
@@ -298,7 +413,13 @@ function AppContainer() {
     [lastNotificationResponse]
   )
   useEffect(() => {
-    if (lastNotificationResponse && lastNotificationResponse.notification.request.content.data?.type === 'order' && lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.notification.request.content.data?.type ===
+        'order' &&
+      lastNotificationResponse.actionIdentifier ===
+        Notifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
       handleNotification(lastNotificationResponse)
     }
   }, [lastNotificationResponse])

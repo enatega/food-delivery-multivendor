@@ -74,13 +74,13 @@ export default function PhoneVerification({
       const otpResponse = await verifyOTP({
         variables: {
           otp: phoneOtp,
-          phone: formData?.phone,
+          phone: formData?.phone || user?.phone || "",
         },
       });
 
       console.log("OTP Response:", otpResponse);
 
-      if (otpResponse.data?.verifyOtp && !!formData?.phone) {
+      if (otpResponse.data?.verifyOtp && (!!formData?.phone || !!user?.phone)) {
         if (isRegistering) {
           const userData = await handleCreateUser({
             email: formData?.email,

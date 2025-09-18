@@ -6,7 +6,10 @@ const useNetworkStatus = () => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
+      console.log("Network Status:", state.isConnected);
       setIsConnected(state.isConnected);
+
+      console.log("running again")
     });
 
     return () => unsubscribe();

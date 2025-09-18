@@ -40,8 +40,6 @@ export default function useLocation() {
     const location = await getLocationFromStorage()
     if (location) return { coords: location }
     const { status } = await askLocationPermission()
-
-    
     if (status === 'granted') {
       try {
         const location = await Location.getCurrentPositionAsync({

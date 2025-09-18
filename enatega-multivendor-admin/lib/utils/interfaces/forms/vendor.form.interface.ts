@@ -14,6 +14,7 @@ export interface IVendorErrors {
 }
 
 export interface IVendorForm {
+  
   name?: string;
   email: string;
   password: string;
@@ -26,9 +27,12 @@ export interface IVendorForm {
 
 export interface IRestauransVendorDetailsForm {
   _id: IDropdownSelectItem | null;
-  name: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   password: string;
   confirmPassword: string;
   image?: string;
+  phoneNumber?: string;
 }
