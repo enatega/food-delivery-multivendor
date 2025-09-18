@@ -411,24 +411,19 @@ function Main(props) {
                     </ScrollView>
                   ) : (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
-                      <TextDefault bold H4 textColor={currentTheme.black} style={{ textAlign: 'center', marginBottom: 10 }}>
+                      <TextDefault bold H4 style={{ textAlign: 'center', marginBottom: 4 }}>
                         {t('We are currently not available in your location.')}
                       </TextDefault>
-                      <TextDefault textColor={currentTheme.gray} style={{ textAlign: 'center' }}>
-                        {t('Please check back later or try a different location.')}
-                      </TextDefault>
+                      <TextDefault style={{ textAlign: 'center', marginBottom: 10 }}>{t('Please check back later or try a different location.')}</TextDefault>
 
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: currentTheme.iconColor,
-                          paddingHorizontal: 20,
-                          paddingVertical: 12,
-                          borderRadius: 8,
-                          marginTop: 20
-                        }}
-                        onPress={() => setCitiesModalVisible(true)}
-                      >
-                        <TextDefault bold textColor={currentTheme.white} style={{ textAlign: 'center' }}>
+                      {/* <TouchableOpacity style={styles(currentTheme).buttonContainer} onPress={() => setCitiesModalVisible(true)}>
+                        <TextDefault textColor={currentTheme.color4} style={styles().checkoutBtn} bold H4>
+                          {t('Select Different Location')}
+                        </TextDefault>
+                      </TouchableOpacity> */}
+
+                      <TouchableOpacity activeOpacity={0.7} onPress={() => setCitiesModalVisible(true)} style={[styles(currentTheme).button, { opacity: 1 }]}>
+                        <TextDefault textColor={currentTheme.color4} style={{ paddingHorizontal: 10 }} bold H7>
                           {t('Select Different Location')}
                         </TextDefault>
                       </TouchableOpacity>
