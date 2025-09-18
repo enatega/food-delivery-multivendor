@@ -1,4 +1,3 @@
-
 "use client";
 
 import CustomButton from "@/lib/ui/useable-components/button";
@@ -17,11 +16,11 @@ export default function ComingSoonScreen() {
       JSON.stringify({
         label: "Home",
         location: {
-          coordinates: [35.21199, 32.953492],
+          coordinates: [73.036187, 33.699619],
         },
         _id: "",
 
-        deliveryAddress: "Yarka, Israel",
+        deliveryAddress: "Islamabad, Pakistan",
       })
     );
     // reload window
@@ -30,22 +29,40 @@ export default function ComingSoonScreen() {
   return (
     <div className="relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] dark:bg-gradient-to-b dark:from-[#467e2e] dark:to-[#316e17] text-white">
       {/* Floating Food Emojis */}
-      <span aria-hidden="true" className="absolute top-10 left-10 text-4xl opacity-20 animate-bounce">
+      <span
+        aria-hidden="true"
+        className="absolute top-10 left-10 text-4xl opacity-20 animate-bounce"
+      >
         🍕
       </span>
-      <span aria-hidden="true" className="absolute top-1/3 right-10 text-5xl opacity-20 animate-pulse">
+      <span
+        aria-hidden="true"
+        className="absolute top-1/3 right-10 text-5xl opacity-20 animate-pulse"
+      >
         🍔
       </span>
-      <span aria-hidden="true" className="absolute bottom-16 left-1/4 text-3xl opacity-20 animate-bounce">
+      <span
+        aria-hidden="true"
+        className="absolute bottom-16 left-1/4 text-3xl opacity-20 animate-bounce"
+      >
         🥗
       </span>
-      <span aria-hidden="true" className="absolute bottom-24 right-1/3 text-4xl opacity-20 animate-pulse">
+      <span
+        aria-hidden="true"
+        className="absolute bottom-24 right-1/3 text-4xl opacity-20 animate-pulse"
+      >
         🍣
       </span>
-      <span aria-hidden="true" className="absolute top-1/4 left-36 text-4xl opacity-20 animate-bounce">
+      <span
+        aria-hidden="true"
+        className="absolute top-1/4 left-36 text-4xl opacity-20 animate-bounce"
+      >
         🍩
       </span>
-      <span aria-hidden="true" className="absolute bottom-10 right-1/4 text-4xl opacity-20 animate-pulse">
+      <span
+        aria-hidden="true"
+        className="absolute bottom-10 right-1/4 text-4xl opacity-20 animate-pulse"
+      >
         🌮
       </span>
 
@@ -56,17 +73,17 @@ export default function ComingSoonScreen() {
 
       {/* Heading */}
       <h1 className="text-3xl md:text-5xl font-extrabold mb-3 drop-shadow-lg">
-        {t('coming_soon_in_your_area_label')}
+        {t("coming_soon_in_your_area_label")}
       </h1>
 
       {/* Sub Text */}
       <p className="text-lg md:text-xl text-white/90 max-w-xl mb-8">
-      {t('coming_soon_in_your_area_message')}
+        {t("coming_soon_in_your_area_message")}
       </p>
 
       {/* Explore Another Region Button */}
       <CustomButton
-        label= {t('explore_restaurants_in_yarka_israel')}
+        label={t("explore_restaurants_in_islamabad_pakistan")}
         onClick={handleClick}
         className="px-8 py-3 rounded-full font-semibold bg-white text-[#5AC12F] shadow-lg 
                    hover:bg-white/90 hover:scale-105 transition-transform duration-200"
