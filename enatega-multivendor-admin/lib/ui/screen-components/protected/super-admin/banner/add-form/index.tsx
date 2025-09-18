@@ -46,7 +46,8 @@ const BannersAddForm = ({
   const t = useTranslations();
   
   const RESTAURANT_NAMES = useMemo(() => {
-    return data?.restaurants?.data?.map((v) => ({
+    // @ts-ignore
+    return data?.restaurants?.map((v) => ({
       label: v.name,
       code: v._id,
     })) ?? []; // Using nullish coalescing operator
@@ -130,7 +131,6 @@ const BannersAddForm = ({
       });
     }
   };
-
   return (
     <Sidebar
       visible={isAddBannerVisible}

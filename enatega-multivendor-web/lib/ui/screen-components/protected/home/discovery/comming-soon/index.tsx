@@ -1,11 +1,18 @@
 "use client";
 
+import { GET_ZONES } from "@/lib/api/graphql";
 import CustomButton from "@/lib/ui/useable-components/button";
 import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import { useQuery } from "@apollo/client";
 import { useTranslations } from "next-intl";
 
 export default function ComingSoonScreen() {
+
+  //  // API
+  //   const { loading, error, data, refetch } = useQuery(GET_ZONES);
+
+  //   console.log("Zones",{loading, error, data});
   // trnaslations
   const t = useTranslations();
   // handle click
