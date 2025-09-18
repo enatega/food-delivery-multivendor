@@ -424,7 +424,7 @@ function Main(props) {
 
                       <TouchableOpacity activeOpacity={0.7} onPress={() => setCitiesModalVisible(true)} style={[styles(currentTheme).button, { opacity: 1 }]}>
                         <TextDefault textColor={currentTheme.color4} style={{ paddingHorizontal: 10 }} bold H7>
-                          {t('Select Different Location')}
+                          {t('Select different location')}
                         </TextDefault>
                       </TouchableOpacity>
                     </View>
