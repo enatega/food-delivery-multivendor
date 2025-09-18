@@ -21,19 +21,24 @@ export const VendorSchema = Yup.object().shape({
     .matches(/\S/, 'Last name cannot be only spaces')
     .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
- password: Yup.string()
-  .required('Required')
-  .min(6, 'At least 6 characters')
-  .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
-  .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
-  .matches(/[0-9]/, 'At least one number (0-9)')
-  .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, 'At least one special character'),
+  password: Yup.string()
+    .required('Required')
+    .min(6, 'At least 6 characters')
+    .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
+    .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
+    .matches(/[0-9]/, 'At least one number (0-9)')
+    .matches(
+      /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+      'At least one special character'
+    ),
   confirmPassword: Yup.string()
     .nullable()
     .oneOf([Yup.ref('password'), null], 'Password must match')
     .required('Required'),
   image: Yup.string().url('Invalid image URL').required('Required'),
-  phoneNumber: Yup.string().required('Required').min(5,"Minimum 5 Numbers are Required"),
+  phoneNumber: Yup.string()
+    .required('Required')
+    .min(5, 'Minimum 5 Numbers are Required'),
 });
 
 // Creating separate schema for store vendor form
@@ -56,18 +61,23 @@ export const VendorEditSchema = Yup.object().shape({
   name: Yup.string().trim().matches(/\S/, 'Name cannot be only spaces'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
-  .required('Required')
-  .min(6, 'At least 6 characters')
-  .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
-  .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
-  .matches(/[0-9]/, 'At least one number (0-9)')
-  .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, 'At least one special character'),
+    .required('Required')
+    .min(6, 'At least 6 characters')
+    .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
+    .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
+    .matches(/[0-9]/, 'At least one number (0-9)')
+    .matches(
+      /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+      'At least one special character'
+    ),
   confirmPassword: Yup.string()
     .nullable()
     .oneOf([Yup.ref('password'), null], 'Password must match')
     .required('Required'),
   image: Yup.string().required(),
-  phoneNumber: Yup.string().required('Required').min(5,"Minimum 5 Numbers are Required"),
+  phoneNumber: Yup.string()
+    .required('Required')
+    .min(5, 'Minimum 5 Numbers are Required'),
   firstName: Yup.string()
     .trim()
     .matches(/\S/, 'First Name cannot be only spaces')
@@ -82,24 +92,39 @@ export const RestaurantsVendorDetails = Yup.object().shape({
   _id: Yup.mixed<IDropdownSelectItem>().required('Required'),
 });
 
-
 export const VendorSchemaOnStoreCreate = Yup.object().shape({
-  name: Yup.string()
-  .max(35)
-  .trim()
-  .matches(/\S/, 'Name cannot be only spaces')
-  .required('Required'),
+  // name: Yup.string()
+  // .max(35)
+  // .trim()
+  // .matches(/\S/, 'Name cannot be only spaces')
+  // .required('Required'),
+  firstName: Yup.string()
+    .max(35)
+    .trim()
+    .matches(/\S/, 'First name cannot be only spaces')
+    .required('Required'),
+  lastName: Yup.string()
+    .max(35)
+    .trim()
+    .matches(/\S/, 'Last name cannot be only spaces')
+    .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
-   password: Yup.string()
-   .required('Required')
-   .min(6, 'At least 6 characters')
-   .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
-   .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
-   .matches(/[0-9]/, 'At least one number (0-9)')
-   .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, 'At least one special character'),
+  password: Yup.string()
+    .required('Required')
+    .min(6, 'At least 6 characters')
+    .matches(/[a-z]/, 'At least one lowercase letter (a-z)')
+    .matches(/[A-Z]/, 'At least one uppercase letter (A-Z)')
+    .matches(/[0-9]/, 'At least one number (0-9)')
+    .matches(
+      /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+      'At least one special character'
+    ),
   confirmPassword: Yup.string()
     .nullable()
     .oneOf([Yup.ref('password'), null], 'Password must match')
     .required('Required'),
   image: Yup.string().url('Invalid image URL').required('Required'),
+  phoneNumber: Yup.string()
+    .required('Required')
+    .min(5, 'Minimum 5 Numbers are Required'),
 });
