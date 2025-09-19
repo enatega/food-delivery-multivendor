@@ -13,6 +13,7 @@ import {
 } from 'primereact/datatable';
 import DataTableColumnSkeleton from '../custom-skeletons/datatable.column.skeleton';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 const Table = <T extends ITableExtends>({
   header,
@@ -79,6 +80,12 @@ const Table = <T extends ITableExtends>({
         onPage: handlePageChange,
       }
     : {};
+
+    useEffect(() => {
+      if (data?.length === 0 && currentPage > 1 && onPageChange) {
+        onPageChange(1, rowsPerPage);
+      }
+    }, [data, currentPage, onPageChange, rowsPerPage]);
 
   return (
     <>

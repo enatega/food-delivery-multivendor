@@ -12,9 +12,21 @@ export default function ClockSvg(props: ISvgComponentProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      {/* light mode */}
       <path
+      className="block dark:hidden"
         d="M16 8V16H22M28 16C28 22.6274 22.6274 28 16 28C9.37258 28 4 22.6274 4 16C4 9.37258 9.37258 4 16 4C22.6274 4 28 9.37258 28 16Z"
         stroke={isBlue ? '#0EA5E9' : color }
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* dark mode */}
+      <path
+      className="hidden dark:block"
+        d="M16 8V16H22M28 16C28 22.6274 22.6274 28 16 28C9.37258 28 4 22.6274 4 16C4 9.37258 9.37258 4 16 4C22.6274 4 28 9.37258 28 16Z"
+        stroke={isBlue ? '#0EA5E9' : "#ffffff" }
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

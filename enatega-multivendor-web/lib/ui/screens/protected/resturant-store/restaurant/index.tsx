@@ -524,17 +524,23 @@ export default function RestaurantDetailsScreen() {
         {loading ? (
           <Skeleton width="100%" height="18rem" borderRadius="0" />
         ) : (
-          <Image
-            src={restaurantInfo.image}
-            alt={`${restaurantInfo.name} banner`}
-            width={1200}
-            height={300}
-            className="w-full h-72 object-cover"
-          />
+          <div className="relative">
+                <Image
+                  src={restaurantInfo.image}
+                  alt="McDonald's banner with a burger and fries"
+                  width={1200}
+                  height={300}
+                  className="w-full h-72 object-cover"
+                />
+                {/* Dark overlay */}
+                <div className="absolute inset-0 bg-black/10" />
+              </div>
         )}
 
         {!loading && (
-          <div className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}>
+          <div
+            className={`${direction === "rtl" ? "right-0 md:right-20" : "left-0 md:left-20"} absolute bottom-0  p-4`}
+          >
             <div className="flex flex-col items-start">
               <Image
                 src={restaurantInfo.image}
@@ -558,7 +564,8 @@ export default function RestaurantDetailsScreen() {
         <button
           disabled={addFavoriteLoading}
           onClick={handleFavoriteClick}
-          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}        >
+          className={`absolute top-4 ${direction === "rtl" ? "left-4 md:left-4" : "right-4 md:right-4"} md:bottom-4 md:top-auto rounded-full bg-white dark:bg-gray-700 h-8 w-8 flex justify-center items-center transform transition-transform duration-300 hover:scale-110 active:scale-95`}
+        >
           {addFavoriteLoading ? (
             <Loader style={{ width: "1.5rem", height: "1.5rem" }} />
           ) : (
@@ -770,7 +777,9 @@ export default function RestaurantDetailsScreen() {
                       </div>
 
                       {/* Add Button */}
-                      <div className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}>
+                      <div
+                        className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}
+                      >
                         <button
                           className="bg-[#0EA5E9] rounded-full shadow-md w-6 h-6 flex items-center justify-center"
                           onClick={(e) => {
