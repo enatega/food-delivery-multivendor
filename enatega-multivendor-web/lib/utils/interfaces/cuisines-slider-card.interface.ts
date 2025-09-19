@@ -7,6 +7,7 @@ export interface ICuisinesSliderCardComponentProps<T>
   last?: boolean;
   showLogo?: boolean;
   cuisines?: boolean;
+  heading? : string;
 }
 
 export interface ICuisinesSliderCardItemProps {

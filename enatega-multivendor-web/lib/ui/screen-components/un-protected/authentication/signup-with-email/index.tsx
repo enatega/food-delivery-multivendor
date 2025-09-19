@@ -1,3 +1,4 @@
+"use client"
 // Icons
 import PersonIcon from "@/lib/utils/assets/svg/person";
 
@@ -19,6 +20,8 @@ import { FcGoogle } from "react-icons/fc";
 
 // Apollo
 import { ApolloError } from "@apollo/client";
+import { useEffect } from "react";
+import useUser from "@/lib/hooks/useUser";
 
 export default function SignUpWithEmail({
   handleChangePanel,
@@ -35,9 +38,17 @@ export default function SignUpWithEmail({
     setIsRegistering,
     setIsAuthModalVisible,
     handleCreateUser,
+  checkPhoneExists
   } = useAuth();
-  const { showToast } = useToast();
+  const { showToast } = useToast();               <q> </q>
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
+
+  const {fetchProfile} = useUser()
+
+   useEffect(() => {
+    fetchProfile();
+  }, []);
+
 
   // Validation
   const validatePassword = (password: string) => {
@@ -47,75 +58,96 @@ export default function SignUpWithEmail({
 
   // Handlers
   const handleSubmit = async () => {
-    try {
-      setIsLoading(true);
-      setIsRegistering(true);
-      if (Object.values(formData).some((val) => !val)) {
-        return showToast({
-          type: "error",
-          title: t("create_user_label"),
-          message: t("all_fields_are_required_to_be_filled_message"),
-        });
-      }
-      const namePattern = /^[A-Za-z\s]+$/;
-      if (!namePattern.test(formData.name || "")) {
-        return showToast({
-          type: "error",
-          title: t("create_user_label"),
-          message: t("please_enter_a_valid_name_message"), // add this key in translations
-        });
-      }
-      if (!validatePassword(formData.password || "")) {
-        return showToast({
-          type: "error",
-          title: t("create_user_label"),
-          message: t("password_not_strong_enough_message"),
-        });
-      } else {
-        if (formData.email && !SKIP_EMAIL_VERIFICATION) {
-          sendOtpToEmailAddress(formData?.email);
-          // Verify email OTP
-          handleChangePanel(3);
-        } else if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
-          sendOtpToPhoneNumber(formData.phone);
-          // Verify Phone OTP
-          handleChangePanel(6);
-        } else if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
-          // Navigate to first modal
-          const userData = await handleCreateUser({
-            email: formData?.email,
-            phone: formData?.phone,
-            name: formData?.name,
-            password: formData?.password,
-            emailIsVerified:false
-          });
-          handleChangePanel(0);
-          setIsAuthModalVisible(false);
-          // if userData exist then show success message
-          if (userData){
-            showToast({
-              type: "success",
-              title: t("register_label"),
-              message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
-            });
-          }
-      
-        }
-      }
-    } catch (err) {
-      const error = err as ApolloError;
-      console.error("An error occured while registering a new user", error);
+  try {
+    setIsLoading(true);
+    setIsRegistering(true);
+
+    // Required fields
+    if (Object.values(formData).some((val) => !val)) {
       showToast({
         type: "error",
-        title: t("register_label"),
-        message:
-          error?.cause?.message ||
-          t("an_error_occurred_while_registering_message"),
+        title: t("create_user_label"),
+        message: t("all_fields_are_required_to_be_filled_message"),
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
-  };
+
+    // Name validation
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(formData.name || "")) {
+      showToast({
+        type: "error",
+        title: t("create_user_label"),
+        message: t("please_enter_a_valid_name_message"),
+      });
+      return;
+    }
+
+    // Password strength
+    if (!validatePassword(formData.password || "")) {
+      showToast({
+        type: "error",
+        title: t("create_user_label"),
+        message: t("password_not_strong_enough_message"),
+      });
+      return;
+    }
+
+    // If phone provided, check existence first
+    if (formData.phone) {
+      const exists = await checkPhoneExists(formData.phone);
+      if (exists) return; // stop if already registered (or on error fallback)
+    }
+
+    // Verification flow (prioritize email, then phone, then direct create)
+    if (formData.email && !SKIP_EMAIL_VERIFICATION) {
+      sendOtpToEmailAddress(formData.email);
+      handleChangePanel(3); // Email OTP step
+      // setIsAuthModalVisible(true); // uncomment if your UX shows modal here
+      return;
+    }
+
+    if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
+      sendOtpToPhoneNumber(formData.phone);
+      handleChangePanel(6); // Phone OTP step
+      // setIsAuthModalVisible(true); // uncomment if needed
+      return;
+    }
+
+    // If both verifications are skipped → create user immediately
+    if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
+      const userData = await handleCreateUser({
+        email: formData.email,
+        phone: formData.phone,
+        name: formData.name,
+        password: formData.password,
+        emailIsVerified: false,
+      });
+
+      handleChangePanel(0);
+      setIsAuthModalVisible(false);
+
+      if (userData) {
+        showToast({
+          type: "success",
+          title: t("register_label"),
+          message: t("successfully_registered_your_account_message"),
+        });
+      }
+    }
+  } catch (err) {
+    const error = err as ApolloError;
+    console.error("An error occured while registering a new user", error);
+    showToast({
+      type: "error",
+      title: t("register_label"),
+      message: error?.cause?.message || t("an_error_occurred_while_registering_message"),
+    });
+  } finally {
+    setIsRegistering(false);
+    setIsLoading(false);
+  }
+};
   return (
     <div className="flex flex-col items-start justify-between w-full h-full dark:bg-gray-900 dark:text-gray-100">
       <PersonIcon lightColor="#000000" darkColor="#FFFFFF" />

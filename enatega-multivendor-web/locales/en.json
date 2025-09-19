@@ -19,13 +19,13 @@
   },
   "MiniCardsHomeScreen": {
     "title1": "Boost your sales",
-    "subText1": "91% of Wolt orders are extra sales you wouldn’t otherwise get.",
+    "subText1": "91% of Enatega orders are extra sales you wouldn’t otherwise get.",
     "title2": "We do the heavy lifting",
     "subText2": "We handle ads, payments, delivery and support.",
     "title3": "It's 100% risk-free",
-    "subText3": "There's no fee for joining Wolt. You can quit whenever, for any reason. When you earn, we earn.",
+    "subText3": "There's no fee for joining Enatega. You can quit whenever, for any reason. When you earn, we earn.",
     "title4": "Power online sales with same-hour deliveries",
-    "subText4": "Add Wolt Drive logistics for fast, affordable express deliveries for e-commerce.",
+    "subText4": "Add Enatega Drive logistics for fast, affordable express deliveries for e-commerce.",
     "title5": "Reach new customers and get more orders",
     "subText5": "For restaurants",
     "title6": "Become a store partner",
@@ -107,7 +107,7 @@
   },
   "RestaurantPage": {
     "headingTitle": "Restaurants near you",
-    "cuisineSectionTitle": "Browse categories",
+    "cuisineSectionTitle": "Browse Cuisines",
     "mainSectionTitle": "All Restaurants"
   },
   "StoresPage": {
