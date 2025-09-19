@@ -102,6 +102,7 @@ export default function UserAddressComponent(
     useState<string>("House");
   const [search, setSearch] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
+  const [isDragged, setIsDragged] = useState(false);
   const [options, setOptions] = useState<IPlaceSelectedOption[]>([]);
   const [selectedPlaceObject, setSelectedPlaceObject] =
     useState<IPlaceSelectedOption | null>(null);
@@ -248,7 +249,6 @@ export default function UserAddressComponent(
       lat: e?.latLng?.lat() || newDraggedCenter.lat || 0,
       lng: e?.latLng?.lng() || newDraggedCenter.lng || 0,
     };
-
     if (new_center.lat === 0 && new_center.lng === 0) return;
 
     const { formattedAddress } = await getAddress(
@@ -266,7 +266,10 @@ export default function UserAddressComponent(
     }
 
     setInputValue(formattedAddress);
-
+    //set isDragged to true to enable save_address button
+    setIsDragged(true);
+    // setIsDragged(true); // to enable save_address button
+    console.log("isDragged set to true",isDragged);
     setUserAddress({
       _id: "",
       deliveryAddress: formattedAddress,
@@ -322,7 +325,6 @@ export default function UserAddressComponent(
       ),
     },
   ];
-  
 
   // Define constants
   const ADDRESS_TYPES = {
@@ -684,19 +686,20 @@ export default function UserAddressComponent(
           >
             <span>{t("cancel_address")}</span>
           </button>
-          <button
-            className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
+            <button
+            disabled={!isDragged && !selectedCity}
+            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-gray-700":"bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
             onClick={() => onHandleCreateAddress()}
-          >
+            >
             {modifyingAddressLoading ? (
               <FontAwesomeIcon
-                icon={faSpinner}
-                spin={modifyingAddressLoading}
+              icon={faSpinner}
+              spin={modifyingAddressLoading}
               />
             ) : (
               <span>{t("Save_address")}</span>
             )}
-          </button>
+            </button>
         </div>
       </div>
     </div>
@@ -714,10 +717,10 @@ export default function UserAddressComponent(
       {isLoaded && (
         <div className="w-full">
           <GoogleMap
-           options={{
-            styles: theme === "dark" ? darkMapStyle : null,
-            disableDefaultUI: true,
-          }}  
+            options={{
+              styles: theme === "dark" ? darkMapStyle : null,
+              disableDefaultUI: true,
+            }}
             mapContainerStyle={{
               width: "100%",
               height: "400px",
