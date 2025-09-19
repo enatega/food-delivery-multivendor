@@ -10,5 +10,7 @@ export default function NotFound() {
     router.push("/not-found");
   }, []);
 
+  // check file
+
   return <></>;
 }
