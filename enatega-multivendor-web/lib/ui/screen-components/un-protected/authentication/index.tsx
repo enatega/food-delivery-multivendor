@@ -85,7 +85,7 @@ export default function AuthModal({
         name: userData.name,
         notificationToken: "",
       });
-
+      
       if (userLoginResponse) {
         setUser(userLoginResponse.login as ILoginProfile);
         if (
@@ -95,7 +95,7 @@ export default function AuthModal({
           setActivePanel(5);
         } else if (
           !userLoginResponse.login.phoneIsVerified &&
-          SKIP_MOBILE_VERIFICATION
+          !SKIP_MOBILE_VERIFICATION
         ) {
           setActivePanel(4);
         } else {
@@ -109,6 +109,7 @@ export default function AuthModal({
           // });
         }
         setIsLoading(false);
+        console.log("userLoginResponse", userLoginResponse);
       }
     },
 
