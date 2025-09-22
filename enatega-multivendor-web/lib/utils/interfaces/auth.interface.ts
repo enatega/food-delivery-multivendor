@@ -22,13 +22,13 @@ export interface ILoginWithGoogleProps {
   handleChangePanel: (index: number) => void;
   handleFormChange: (name: string, value: string) => void;
   formData: IAuthFormData;
-  
 }
 
 export interface ILoginWithEmailProps {
   handleChangePanel: (index: number) => void;
   handleFormChange: (name: string, value: string) => void;
   formData: IAuthFormData;
+  setFormData : Dispatch<SetStateAction<IAuthFormData>>
 }
 
 export interface ISaveEmailAddressProps {
@@ -40,6 +40,7 @@ export interface IEmailVerificationProps {
   setEmailOtp: Dispatch<SetStateAction<string>>;
   handleChangePanel: (index: number) => void;
    formData:any,
+   setFormData : any
 }
 export interface IPhoneVerificationProps {
   phoneOtp: string;

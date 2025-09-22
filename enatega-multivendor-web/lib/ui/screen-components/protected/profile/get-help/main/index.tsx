@@ -155,10 +155,10 @@ export default function GetHelpMain() {
   }, 500);
 
   // Simplified reason options - matching exact values from API
-  const reasonOptions = [
-    { label: t("order_related_label"), value: t("order_related_label") },
-    { label: t("others_label"), value: t("others_label") },
-  ];
+ const reasonOptions = [
+  { label: t("order_related_label"), value: "order related" },
+  { label: t("others_label"), value: "others" },
+];
 
   const faqItems = [
     {
