@@ -1,7 +1,7 @@
 import createNextIntlPlugin from "next-intl/plugin";
-import PWA from 'next-pwa';
+// import PWA from 'next-pwa';
 
-const withPWA = PWA({
+/* const withPWA = PWA({
     skipWaiting: false,
     register:false,
     dest:'public',
@@ -14,7 +14,7 @@ const withPWA = PWA({
     scope: '/',
   }
 );
-
+ */
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -134,4 +134,5 @@ const nextConfig = {
       }    ], // Add placehold.co as an allowed domain
   },
 };
-export default withPWA(withNextIntl(nextConfig));
+// export default withPWA(withNextIntl(nextConfig));
+export default withNextIntl(nextConfig);

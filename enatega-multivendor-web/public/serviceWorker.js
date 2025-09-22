@@ -7,9 +7,9 @@ importScripts("https://www.gstatic.com/firebasejs/10.3.1/firebase-messaging-comp
 
 // ✅ Workbox Scripts
 import { precacheAndRoute } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { ExpirationPlugin } from 'workbox-expiration';
+// import { registerRoute } from 'workbox-routing';
+// import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+// import { ExpirationPlugin } from 'workbox-expiration';
 
 
 // ✅ Firebase Config
@@ -70,7 +70,7 @@ self.addEventListener("notificationclick", function (event) {
 
 
 // ✅ Cache GraphQL Queries
-registerRoute(
+/* registerRoute(
   ({ url, request }) =>
     url.pathname.includes('/graphql') && request.method === 'GET',
   new NetworkFirst({
@@ -119,7 +119,7 @@ registerRoute(
     ],
   })
 );
-
+ */
 
 // self.addEventListener('install', (event) => {
 //   console.log('[Service Worker] Installing...');
