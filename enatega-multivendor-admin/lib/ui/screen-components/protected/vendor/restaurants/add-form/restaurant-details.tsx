@@ -231,6 +231,7 @@ export default function RestaurantDetails({
             >
               {({
                 values,
+                touched,
                 errors,
                 handleChange,
                 handleSubmit,
@@ -376,6 +377,11 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
+                        {errors.address && touched.address && (
+                          <small className="ml-1 p-error">
+                            {errors.address}
+                          </small>
+                        )}
                       </div>
 
                       <div>
@@ -529,7 +535,12 @@ export default function RestaurantDetails({
                         />
                       </div>
 
-                      <div className="mt-4 flex justify-end">
+                      <div className="mt-4 flex justify-end items-center">
+                        {errors.address && touched.address && (
+                          <small className="p-error mr-4">
+                            {errors.address}
+                          </small>
+                        )}
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
                           label={t('Add')}

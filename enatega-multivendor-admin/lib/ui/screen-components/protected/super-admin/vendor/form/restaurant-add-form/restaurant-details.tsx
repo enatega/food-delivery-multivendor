@@ -29,7 +29,12 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
 
 // Constants
-import { MAX_LANSDCAPE_FILE_SIZE, MAX_SQUARE_FILE_SIZE, RestaurantErrors, SHOP_TYPE } from '@/lib/utils/constants';
+import {
+  MAX_LANSDCAPE_FILE_SIZE,
+  MAX_SQUARE_FILE_SIZE,
+  RestaurantErrors,
+  SHOP_TYPE,
+} from '@/lib/utils/constants';
 
 // Interface
 import { IRestaurantForm } from '@/lib/utils/interfaces';
@@ -60,7 +65,7 @@ const initialValues: IRestaurantForm = {
   username: '',
   password: '',
   confirmPassword: '',
-  phoneNumber: "",
+  phoneNumber: '',
   address: '',
   deliveryTime: 1,
   minOrder: 1,
@@ -228,6 +233,7 @@ export default function RestaurantDetails({
             >
               {({
                 values,
+                touched,
                 errors,
                 handleChange,
                 handleSubmit,
@@ -325,34 +331,34 @@ export default function RestaurantDetails({
                         />
                       </div>
                       <div>
-                       <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
-                         {t('Phone')}
-                       </label>
-                       <CustomPhoneTextField
-                         mask="999-999-9999"
-                         name="phoneNumber"
-                         showLabel={true}
-                         // placeholder="Phone Number"
-                         onChange={(e) => {
-                           // console.log("phone number format ==> ", e, code);
-                           setFieldValue('phoneNumber', e);
-                           // setCountryCode(code);
-                         }}
-                         value={values.phoneNumber}
-                         // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
-                         type="text"
-                         className="rounded-[6px] border-[#D1D5DB]"
-                         style={{
-                          borderColor: onErrorMessageMatcher(
-                            'phoneNumber',
-                            errors?.phoneNumber,
-                            RestaurantErrors
-                          )
-                            ? 'red'
-                            : '',
-                        }}
-                       />
-                     </div>
+                        <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                          {t('Phone')}
+                        </label>
+                        <CustomPhoneTextField
+                          mask="999-999-9999"
+                          name="phoneNumber"
+                          showLabel={true}
+                          // placeholder="Phone Number"
+                          onChange={(e) => {
+                            // console.log("phone number format ==> ", e, code);
+                            setFieldValue('phoneNumber', e);
+                            // setCountryCode(code);
+                          }}
+                          value={values.phoneNumber}
+                          // value={values.phoneNumber?.toString().match(/\(\+(\d+)\)\s(.+)/)?.[2]}
+                          type="text"
+                          className="rounded-[6px] border-[#D1D5DB]"
+                          style={{
+                            borderColor: onErrorMessageMatcher(
+                              'phoneNumber',
+                              errors?.phoneNumber,
+                              RestaurantErrors
+                            )
+                              ? 'red'
+                              : '',
+                          }}
+                        />
+                      </div>
 
                       <div>
                         <CustomTextField
@@ -373,6 +379,11 @@ export default function RestaurantDetails({
                               : '',
                           }}
                         />
+                        {errors.address && touched.address && (
+                          <small className="ml-1 p-error">
+                            {errors.address}
+                          </small>
+                        )}
                       </div>
 
                       <div>
@@ -526,7 +537,12 @@ export default function RestaurantDetails({
                         />
                       </div>
 
-                      <div className="mt-4 flex justify-end">
+                      <div className="mt-4 flex justify-end items-center">
+                        {errors.address && touched.address && (
+                          <small className="p-error mr-4">
+                            {errors.address}
+                          </small>
+                        )}
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
                           label={t('Add')}

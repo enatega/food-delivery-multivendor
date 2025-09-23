@@ -235,6 +235,7 @@ export default function RestaurantDetailsForm({
               validateOnChange={false}
             >
               {({
+                touched,
                 values,
                 errors,
                 handleChange,
@@ -244,7 +245,7 @@ export default function RestaurantDetailsForm({
               }) => {
                 return (
                   <Form onSubmit={handleSubmit}>
-                    <div className="mb-2 space-y-3">
+                    <div className="mb-3 space-y-3">
                       <div>
                         <CustomTextField
                           type="text"
@@ -382,6 +383,11 @@ export default function RestaurantDetailsForm({
                               : '',
                           }}
                         />
+                        {errors.address && touched.address && (
+                          <small className="ml-1 p-error">
+                            {errors.address}
+                          </small>
+                        )}
                       </div>
 
                       <div>
@@ -542,12 +548,20 @@ export default function RestaurantDetailsForm({
                           type="button"
                           onClick={() => onStepChange(order - 1)}
                         />
+
                         <CustomButton
                           className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
                           label={t('Save & Next')}
                           type="submit"
                           loading={isSubmitting}
                         />
+                      </div>
+                      <div className='flex justify-end'>
+                        {errors.address && touched.address && (
+                          <small className="ml-5 p-error">
+                            {errors.address}
+                          </small>
+                        )}
                       </div>
                     </div>
                   </Form>

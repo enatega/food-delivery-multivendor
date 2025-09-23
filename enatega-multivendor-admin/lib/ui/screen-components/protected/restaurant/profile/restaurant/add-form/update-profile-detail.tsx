@@ -330,7 +330,7 @@ export default function UpdateRestaurantDetails({
                     {errors.address && touched.address && (
                       <small className="p-error">{errors.address}</small>
                     )}
-                      
+
                     <CustomNumberField
                       suffix=" m"
                       min={0}
@@ -494,7 +494,10 @@ export default function UpdateRestaurantDetails({
                       />
                     </div>
 
-                    <div className="flex justify-end mt-4">
+                    <div className="flex justify-end items-center mt-4">
+                      {errors.address && touched.address && (
+                        <small className="p-error mr-4">{errors.address}</small>
+                      )}
                       <CustomButton
                         className="w-fit h-10 bg-black text-white border-gray-300 px-8"
                         label={t('Update')}
