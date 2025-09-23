@@ -199,6 +199,7 @@
   "sort_by_rating": "Note",
   "order_cancelled_title": "Commande annulée",
   "order_cancelled_success_message": "Votre commande a été annulée avec succès.",
+  "order_cancelled_by_restaurant": " Votre commande a été annulée par le restaurant.",
   "cancellation_failed_title": "Échec de l'annulation",
   "unable_to_cancel_order_message": "Impossible d'annuler la commande pour le moment.",
   "authentication_required_title": "Authentification requise",
