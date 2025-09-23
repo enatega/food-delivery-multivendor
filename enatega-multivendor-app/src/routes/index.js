@@ -424,6 +424,8 @@ function AppContainer() {
     }
   }, [lastNotificationResponse])
 
+  console.log({location})
+
   return (
     <SafeAreaProvider>
       <NavigationContainer
@@ -431,9 +433,9 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!location ? <LocationStack /> : <MainNavigator />}
+        {/* {location ? <LocationStack /> : <MainNavigator />} */}
 
-        {/* {<LocationStack />} */}
+        {<LocationStack />}
 
         {/* <MainNavigator /> */}
       </NavigationContainer>
