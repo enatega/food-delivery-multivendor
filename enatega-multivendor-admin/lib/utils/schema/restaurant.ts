@@ -23,7 +23,7 @@ export const RestaurantSchema = Yup.object().shape({
     .max(100, 'Maximum 100 characters allowed')
     .trim()
     .matches(/\S/, 'Address cannot be only spaces')
-    .matches(/[a-zA-Z]/, 'Address must contain at least one letter')
+    .matches(/[a-zA-Z]/, 'Address must contain at least one letter.')
     .required('Required'),
   
   deliveryTime: Yup.number()
