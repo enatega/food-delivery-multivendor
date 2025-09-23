@@ -52,11 +52,20 @@ export default function GetHelpMain() {
     },
     onError: (error) => {
       setIsSubmitting(false);
-      console.error("Mutation error:", error);
+
+      let backendMessage =
+        error?.graphQLErrors?.[0]?.message ||
+        error?.message ||
+        t("something_went_wrong");
+
+      if (backendMessage.startsWith("Validation error:")) {
+        backendMessage = backendMessage.replace("Validation error:", "").trim();
+      }
+       backendMessage = backendMessage.replace(/"/g, "");
       showToast({
         type: "error",
         title: t("toast_error"),
-        message: t("title_is_not_allowed_to_be_empty"),
+        message: backendMessage,
         duration: 3000,
       });
     },
@@ -155,10 +164,10 @@ export default function GetHelpMain() {
   }, 500);
 
   // Simplified reason options - matching exact values from API
- const reasonOptions = [
-  { label: t("order_related_label"), value: "order related" },
-  { label: t("others_label"), value: "others" },
-];
+  const reasonOptions = [
+    { label: t("order_related_label"), value: "order related" },
+    { label: t("others_label"), value: "others" },
+  ];
 
   const faqItems = [
     {
