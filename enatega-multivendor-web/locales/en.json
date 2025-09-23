@@ -196,6 +196,7 @@
   "sort_by_rating": "Rating",
   "order_cancelled_title": "Order Cancelled",
   "order_cancelled_success_message": "Your order has been cancelled successfully.",
+  "order_cancelled_by_restaurant": " Your order has been cancelled by the restaurant.",
   "cancellation_failed_title": "Cancellation Failed",
   "unable_to_cancel_order_message": "Unable to cancel order at this time.",
   "authentication_required_title": "Authentication Required",

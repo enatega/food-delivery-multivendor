@@ -205,6 +205,7 @@
   "sort_by_rating": "דירוג",
   "order_cancelled_title": "הזמנה בוטלה",
   "order_cancelled_success_message": "ההזמנה שלך בוטלה בהצלחה.",
+  "order_cancelled_by_restaurant": " ההזמנה בוטלה על ידי המסעדה.",
   "cancellation_failed_title": "ביטול נכשל",
   "unable_to_cancel_order_message": "לא ניתן לבטל את ההזמנה כרגע.",
   "authentication_required_title": "נדרש אימות",

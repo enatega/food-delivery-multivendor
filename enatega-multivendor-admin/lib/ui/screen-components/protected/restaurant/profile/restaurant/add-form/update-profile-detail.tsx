@@ -187,6 +187,7 @@ export default function UpdateRestaurantDetails({
             enableReinitialize
           >
             {({
+              touched,
               values,
               errors,
               handleChange,
@@ -326,7 +327,10 @@ export default function UpdateRestaurantDetails({
                           : '',
                       }}
                     />
-
+                    {errors.address && touched.address && (
+                      <small className="p-error">{errors.address}</small>
+                    )}
+                      
                     <CustomNumberField
                       suffix=" m"
                       min={0}

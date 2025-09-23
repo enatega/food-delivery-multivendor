@@ -191,6 +191,7 @@
   "sort_by_rating": "التقييم",
   "order_cancelled_title": "تم إلغاء الطلب",
   "order_cancelled_success_message": "تم إلغاء طلبك بنجاح",
+  "order_cancelled_by_restaurant": " تم إلغاء طلبك من قبل المطعم",
   "cancellation_failed_title": "فشل الإلغاء",
   "unable_to_cancel_order_message": "غير قادر على إلغاء الطلب في هذا الوقت",
   "authentication_required_title": "مطلوب التوثيق",
