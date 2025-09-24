@@ -53,6 +53,19 @@ export default async function RootLayout({
           src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
           strategy="beforeInteractive"
         />
+
+        {/* Microsoft Clarity */}
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/m893shrzty";
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script");
+          `}
+        </Script>
+
+        
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#94e469" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
