@@ -10,20 +10,23 @@ import {
 // context
 import { useUserAddress } from "../context/address/address.context";
 
-const useNearByRestaurantsPreview = (enabled = true) => {
+const useNearByRestaurantsPreview = (enabled = true , page = 1, limit= 10) => {
   const { userAddress } = useUserAddress();
   const userLongitude = Number(userAddress?.location?.coordinates[0]) || 0
   const userLatitude = Number(userAddress?.location?.coordinates[1]) || 0
 
-  const { data, loading, error, networkStatus } =
+  const { data, loading, error, networkStatus, fetchMore } =
     useQuery<INearByRestaurantsPreviewData>(NEAR_BY_RESTAURANTS_PREVIEW, {
       variables: {
         latitude: userLatitude,
         longitude: userLongitude,
         shopType: null,
+        page,
+        limit,
       },
       fetchPolicy: "cache-and-network",
-      skip: !enabled
+      skip: !enabled,
+      notifyOnNetworkStatusChange: true, // 🔑 helps track loading state when fetching more
     });
 
   let queryData = data?.nearByRestaurantsPreview?.restaurants;
@@ -43,6 +46,7 @@ const useNearByRestaurantsPreview = (enabled = true) => {
     networkStatus,
     groceriesData,
     restaurantsData,
+    fetchMore, // 🔑 expose fetchMore for infinite scroll
   };
 };
 

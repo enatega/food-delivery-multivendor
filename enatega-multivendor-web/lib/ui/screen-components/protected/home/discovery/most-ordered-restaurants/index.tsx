@@ -6,7 +6,7 @@ import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
 
 function MostOrderedRestaurants() {
-  const { queryData, error, loading } = useMostOrderedRestaurants();
+  const { queryData, error, loading } = useMostOrderedRestaurants(true, 1, 6);
 
   if (loading) {
     return <SliderSkeleton />;
