@@ -31,6 +31,8 @@ export const GET_ORDERS = gql`
         description
         image
         quantity
+        specialInstructions
+
         variation {
           _id
           id
