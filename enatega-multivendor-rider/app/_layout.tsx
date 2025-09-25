@@ -32,12 +32,19 @@ import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSpl
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
 import { requestMediaLibraryPermissionsAsync } from "expo-image-picker";
 import { useEffect } from "react";
+import * as Clarity from '@microsoft/react-native-clarity';
+
 import "../global.css";
 
 initSentry();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen?.preventAutoHideAsync();
+
+
+Clarity.initialize('mc98tsj0ik', {
+  logLevel: Clarity.LogLevel.Verbose, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
+});
 
 function RootLayout() {
   // Hooks

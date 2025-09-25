@@ -35,6 +35,7 @@ import InternetProvider from "@/lib/context/global/internet-provider";
 import AppThemeProvidor, { useApptheme } from "@/lib/context/theme.context";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
+import * as Clarity from '@microsoft/react-native-clarity';
 
 import { Slot } from "expo-router";
 
@@ -42,6 +43,12 @@ initSentry();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+
+Clarity.initialize('nq7dea7dt4', {
+  logLevel: Clarity.LogLevel.None, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
+});
+
 
 function RootLayout() {
   // Hooks
