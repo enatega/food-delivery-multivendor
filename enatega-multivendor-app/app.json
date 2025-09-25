@@ -12,15 +12,14 @@
     "androidStatusBar": {
       "backgroundColor": "#000000"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "splash": {
+      "backgroundColor": "#000000",
+      "resizeMode": "contain"
+    },
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "ios": {
       "entitlements": {
@@ -35,16 +34,11 @@
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
-        "UIBackgroundModes": [
-          "remote-notification",
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["remote-notification", "remote-notification"],
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device.",
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7"
-            ]
+            "CFBundleURLSchemes": ["com.googleusercontent.apps.650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7"]
           }
         ],
         "ITSAppUsesNonExemptEncryption": false
@@ -67,17 +61,9 @@
           "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
         }
       },
-      "permissions": [
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.FOREGROUND_SERVICE",
-        "com.google.android.gms.permission.AD_ID"
-      ],
+      "permissions": ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.FOREGROUND_SERVICE", "com.google.android.gms.permission.AD_ID"],
       "queries": {
-        "packages": [
-          "com.whatsapp",
-          "com.whatsapp.w4b"
-        ]
+        "packages": ["com.whatsapp", "com.whatsapp.w4b"]
       },
       "intentFilters": [
         {
@@ -87,10 +73,7 @@
               "scheme": "whatsapp"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
