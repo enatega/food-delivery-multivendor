@@ -24,10 +24,10 @@ const getEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    // GRAPHQL_URL: "http://localhost:4000/graphql",
-    // WS_GRAPHQL_URL: "ws://localhost:4000/graphql",
-      GRAPHQL_URL: "https://aws-server.enatega.com/graphql",
-      WS_GRAPHQL_URL: "wss://aws-server.enatega.com/graphql",
+    GRAPHQL_URL: "http://192.168.1.11:8001/graphql",
+    WS_GRAPHQL_URL: "ws://192.168.1.11:8001/graphql",
+      // GRAPHQL_URL: "https://aws-server.enatega.com/graphql",
+      // WS_GRAPHQL_URL: "wss://aws-server.enatega.com/graphql",
     SENTRY_DSN:
       configuration?.riderAppSentryUrl ??
       "https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/6135261",

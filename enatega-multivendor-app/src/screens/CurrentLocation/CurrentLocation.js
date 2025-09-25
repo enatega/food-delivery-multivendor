@@ -101,32 +101,10 @@ export default function CurrentLocation() {
     // Handle permission request result
     if (!permission) return
 
-    if (!permission.granted) {
-      if (!permission.canAskAgain) {
-        // User denied and selected "Don't ask again"
-        Alert.alert('Location Permission Required', 'Please enable location access in your device settings to use this feature.', [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Open Settings',
-            onPress: async () => {
-              try {
-                await Linking.openSettings()
-              } catch (error) {
-                console.warn('Could not open settings:', error)
-              }
-            }
-          }
-        ])
-        return
-      }
-
-      // Permission denied but we can ask again
-      console.log('Permission denied, but can request again later')
+    if (!permission?.granted && permission?.status !== 'granted') {
+      console.log('Location permission not granted')
       return
     }
-
-    // Permission granted - proceed with location functionality
-    console.log('Location permission granted')
 
     // Permission is granted, continue with location logic
 
@@ -147,6 +125,28 @@ export default function CurrentLocation() {
     setCurrentLocation(userLocation)
     // console.log("Current Location before rendering Marker:", currentLocation);
     setLoading(false)
+  }
+
+  async function onRequestPermissionHandler() {
+    const { granted, canAskAgain } = permission || {}
+
+    // ✅ Can still ask → show the popup
+    if (!granted && canAskAgain) {
+      await onRequestPermission()
+      return
+    }
+
+    // ❌ Permanently denied (cannot ask again)
+    if (!canAskAgain) {
+      // Optionally prompt user to open settings
+      if (Platform.OS === 'ios') {
+        Linking.openURL('app-settings:') // iOS deep link to app settings
+      } else {
+        Linking.openSettings() // Android
+      }
+
+      return
+    }
   }
 
   useEffect(() => {
@@ -221,7 +221,7 @@ export default function CurrentLocation() {
     <View style={allowedLocationStyles.container}>
       <Text style={allowedLocationStyles.title}>Enable Location Services</Text>
       <Text style={allowedLocationStyles.description}>We need access to your location to show nearby restaurants and provide accurate delivery services.</Text>
-      <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermission}>
+      <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermissionHandler}>
         <Text style={allowedLocationStyles.buttonText}>Allow Location Access</Text>
       </TouchableOpacity>
     </View>
