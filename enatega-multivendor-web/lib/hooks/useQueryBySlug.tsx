@@ -3,38 +3,15 @@ import useNearByRestaurantsPreview from "./useNearByRestaurantsPreview";
 import useRecentOrderRestaurants from "./useRecentOrderRestaurants";
 import useTopRatedVendors from "./useTopRatedVendors";
 
-// interfaces
 import { IRestaurant } from "../utils/interfaces/restaurants.interface";
 import { ApolloError } from "@apollo/client";
 import { ICuisinesData } from "../utils/interfaces";
-
-const SLUG_TO_DATA_KEY_MAP: Record<
-  string,
-  {
-    type: "mostOrdered" | "nearby" | "recent" | "cuisines" | "ourBrands";
-    key:
-      | "queryData"
-      | "groceriesData"
-      | "restaurantsData"
-      | "restaurantCuisinesData"
-      | "groceryCuisinesData";
-  }
-> = {
-  "most-ordered-restaurants": { type: "mostOrdered", key: "queryData" },
-  "top-grocery-picks": { type: "mostOrdered", key: "groceriesData" },
-  "popular-restaurants": { type: "mostOrdered", key: "restaurantsData" },
-  "popular-stores": { type: "mostOrdered", key: "groceriesData" },
-  "restaurants-near-you": { type: "nearby", key: "queryData" },
-  "grocery-list": { type: "nearby", key: "groceriesData" },
-  "order-it-again": { type: "recent", key: "queryData" },
-  "our-brands": { type: "ourBrands", key: "queryData" },
-};
 
 interface UseQueryBySlugResult {
   data?: IRestaurant[] | ICuisinesData[];
   loading: boolean;
   error?: ApolloError;
-  fetchMore?: (vars?: any) => Promise<IRestaurant[]>; // 🔑 normalized return: always array
+  fetchMore?: (vars?: any) => Promise<IRestaurant[]>; // ✅ always return array
 }
 
 export default function useQueryBySlug(
@@ -42,83 +19,74 @@ export default function useQueryBySlug(
   page: number = 1,
   limit: number
 ): UseQueryBySlugResult {
-  const config = SLUG_TO_DATA_KEY_MAP[slug];
+  // ✅ Hooks must always be called — never conditionally
+  const mostOrdered = useMostOrderedRestaurants(true, page, limit);
+  const nearby = useNearByRestaurantsPreview(true, page, limit);
+  const recentOrdered = useRecentOrderRestaurants(true);
+  const ourBrands = useTopRatedVendors(true);
 
-  const mostOrdered =
-    !!config && config.type === "mostOrdered"
-      ? useMostOrderedRestaurants(true, page, limit)
-      : undefined;
+  // Default return if slug is invalid
+  if (!slug) return { data: [], loading: false, error: undefined };
 
-  const nearby =
-    !!config && config.type === "nearby"
-      ? useNearByRestaurantsPreview(true, page, limit)
-      : undefined;
+  // Decide mapping
+  switch (slug) {
+    case "most-ordered-restaurants":
+    case "top-grocery-picks":
+    case "popular-restaurants":
+    case "popular-stores": {
+      const data =
+        mostOrdered.queryData ||
+        mostOrdered.groceriesData ||
+        mostOrdered.restaurantsData;
 
-  const recentOrdered = useRecentOrderRestaurants(
-    !!config && config.type === "recent"
-  );
+      return {
+        data: Array.isArray(data) ? (data as IRestaurant[]) : [],
+        loading: mostOrdered.loading,
+        error: mostOrdered.error,
+        fetchMore: async (vars) => {
+          const res = await mostOrdered.fetchMore(vars);
+          return res?.data?.mostOrderedRestaurantsPreview ?? [];
+        },
+      };
+    }
 
-  const ourBrands = useTopRatedVendors(!!config && config.type === "ourBrands");
+    case "restaurants-near-you":
+    case "grocery-list": {
+      const data =
+        nearby.queryData ||
+        nearby.groceriesData ||
+        nearby.restaurantsData;
 
-  if (!config) {
-    return { data: [], loading: false, error: undefined };
+      return {
+        data: Array.isArray(data) ? (data as IRestaurant[]) : [],
+        loading: nearby.loading,
+        error: nearby.error,
+        fetchMore: async (vars) => {
+          const res = await nearby.fetchMore(vars);
+          return res?.data?.nearByRestaurantsPreview?.restaurants ?? [];
+        },
+      };
+    }
+
+    case "order-it-again": {
+      const data = recentOrdered.queryData;
+      return {
+        data: Array.isArray(data) ? data : [],
+        loading: recentOrdered.loading,
+        error: recentOrdered.error,
+      };
+    }
+
+    case "our-brands": {
+      const data = ourBrands.queryData;
+      return {
+        data: Array.isArray(data) ? data : [],
+        loading: ourBrands.loading,
+        error: ourBrands.error,
+      };
+    }
+
+    default:
+      return { data: [], loading: false, error: undefined };
   }
-
-  const { type, key } = config;
-
-  // --- MOST ORDERED ---
-  if (type === "mostOrdered" && mostOrdered) {
-    const data = mostOrdered[key as keyof typeof mostOrdered];
-
-    const wrappedFetchMore = async (vars?: any): Promise<IRestaurant[]> => {
-      const res = await mostOrdered.fetchMore?.(vars);
-      return res?.data?.mostOrderedRestaurantsPreview ?? [];
-    };
-
-    return {
-      data: Array.isArray(data) ? (data as IRestaurant[]) : [],
-      loading: mostOrdered.loading,
-      error: mostOrdered.error,
-      fetchMore: wrappedFetchMore,
-    };
-  }
-
-  // --- NEARBY ---
-  if (type === "nearby" && nearby) {
-    const data = nearby[key as keyof typeof nearby];
-
-    const wrappedFetchMore = async (vars?: any): Promise<IRestaurant[]> => {
-      const res = await nearby.fetchMore?.(vars);
-      return res?.data?.nearByRestaurantsPreview?.restaurants ?? [];
-    };
-
-    return {
-      data: Array.isArray(data) ? (data as IRestaurant[]) : [],
-      loading: nearby.loading,
-      error: nearby.error,
-      fetchMore: wrappedFetchMore,
-    };
-  }
-
-  // --- RECENT ---
-  if (type === "recent") {
-    const data = recentOrdered.queryData;
-    return {
-      data: Array.isArray(data) ? data : [],
-      loading: recentOrdered.loading,
-      error: recentOrdered.error,
-    };
-  }
-
-  // --- OUR BRANDS ---
-  if (type === "ourBrands") {
-    const data = ourBrands.queryData;
-    return {
-      data: Array.isArray(data) ? data : [],
-      loading: ourBrands.loading,
-      error: ourBrands.error,
-    };
-  }
-
-  return { data: [], loading: false, error: undefined };
 }

@@ -109,7 +109,9 @@ function SeeAllSection() {
 
       if (bottom && !loading) {
         try {
-          const newItems = await fetchMore({ variables: { page: page + 1, limit } });
+          const newItems = await fetchMore({
+            variables: { page: page + 1, limit },
+          });
 
           if (newItems.length > 0) {
             setPage((p) => p + 1);
