@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TouchableOpacity, Linking, Platform, StatusBar, ActivityIndicator, Text, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Linking, Platform, StatusBar, ActivityIndicator, Text, StyleSheet, Alert } from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -98,11 +98,38 @@ export default function CurrentLocation() {
   }
 
   async function getCurrentLocationOnStart() {
-    if (!permission?.canAskAgain) {
-      Linking.openSettings()
+    // Handle permission request result
+    if (!permission) return
+
+    if (!permission.granted) {
+      if (!permission.canAskAgain) {
+        // User denied and selected "Don't ask again"
+        Alert.alert('Location Permission Required', 'Please enable location access in your device settings to use this feature.', [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Open Settings',
+            onPress: async () => {
+              try {
+                await Linking.openSettings()
+              } catch (error) {
+                console.warn('Could not open settings:', error)
+              }
+            }
+          }
+        ])
+        return
+      }
+
+      // Permission denied but we can ask again
+      console.log('Permission denied, but can request again later')
       return
     }
-    if (!permission || !permission.granted) return
+
+    // Permission granted - proceed with location functionality
+    console.log('Location permission granted')
+
+    // Permission is granted, continue with location logic
+
     setLoading(true)
 
     const { error, coords, message } = await getCurrentLocation()
@@ -140,8 +167,6 @@ export default function CurrentLocation() {
   useEffect(() => {
     getCurrentLocationOnStart()
   }, [permission])
-
- 
 
   useEffect(() => {
     async function checkCityMatch() {
