@@ -22,9 +22,9 @@ const useWatchLocation = () => {
     await AsyncStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify({ ...coords }))
   }
 
-//   useEffect(() => {
-//     requestPermission()
-//   }, [])
+  //   useEffect(() => {
+  //     requestPermission()
+  //   }, [])
 
   useEffect(() => {
     if (permission && !permission.granted) return
@@ -42,7 +42,7 @@ const useWatchLocation = () => {
   }, [permission])
 
   const onRequestPermission = async () => {
-    requestPermission()
+    return await requestPermission()
   }
 
   return { permission, onRequestPermission }

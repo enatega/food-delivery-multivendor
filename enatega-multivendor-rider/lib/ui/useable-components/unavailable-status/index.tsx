@@ -8,7 +8,7 @@ export default function UnavailableStatus() {
   const pathName = usePathname();
   const { dataProfile } = useUserContext();
   const insets = useSafeAreaInsets(); // Get Safe Area Insets
-  console.log({profileisava: dataProfile?.available});
+ 
 
   if (pathName && pathName === "/login") return null;
   if (!!dataProfile?.available) return null;

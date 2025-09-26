@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TouchableOpacity, Linking, Platform, StatusBar, ActivityIndicator, Text, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Linking, Platform, StatusBar, ActivityIndicator, Text, StyleSheet, Alert } from 'react-native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -18,7 +18,6 @@ import CustomMarkerWithLabel from '../../assets/SVG/imageComponents/CustomMarker
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import Spinner from '../../components/Spinner/Spinner'
 import ForceUpdate from '../../components/Update/ForceUpdate'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { checkLocationInCities } from '../../utils/locationUtil'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
@@ -27,7 +26,8 @@ import useWatchLocation from '../../ui/hooks/useWatchLocation'
 
 export default function CurrentLocation() {
   const Analytics = analytics()
-  const { permission, onRequestPermission } = useWatchLocation()
+  const { onRequestPermission } = useWatchLocation()
+  // const [permissionState, setPermissionState] = useState(permission)
   const { t, i18n } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [isCheckingZone, setIsCheckingZone] = useState(false)
@@ -43,7 +43,7 @@ export default function CurrentLocation() {
 
   const { getAddress } = useGeocoding()
 
-  const { cities, setLocation } = useContext(LocationContext)
+  const { cities, setLocation, permissionState, setPermissionState } = useContext(LocationContext)
 
   const checkLocationPermission = async () => {
     setLoading(true)
@@ -98,11 +98,16 @@ export default function CurrentLocation() {
   }
 
   async function getCurrentLocationOnStart() {
-    if (!permission?.canAskAgain) {
-      Linking.openSettings()
+    // Handle permission request result
+    if (!permissionState) return
+
+    if (!permissionState?.granted && permissionState?.status !== 'granted') {
+      console.log('Location permission not granted')
       return
     }
-    if (!permission || !permission.granted) return
+
+    // Permission is granted, continue with location logic
+
     setLoading(true)
 
     const { error, coords, message } = await getCurrentLocation()
@@ -122,6 +127,25 @@ export default function CurrentLocation() {
     setLoading(false)
   }
 
+  async function onRequestPermissionHandler() {
+    const permission_response = await onRequestPermission()
+
+    setPermissionState(permission_response)
+
+    // ❌ Permanently denied (cannot ask again)
+    if (!permission_response?.canAskAgain) {
+      console.log('sadahsdjkasdhajksh')
+      // Optionally prompt user to open settings
+      if (Platform.OS === 'ios') {
+        Linking.openURL('app-settings:') // iOS deep link to app settings
+      } else {
+        Linking.openSettings() // Android
+      }
+
+      return
+    }
+  }
+
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
@@ -139,9 +163,7 @@ export default function CurrentLocation() {
 
   useEffect(() => {
     getCurrentLocationOnStart()
-  }, [permission])
-
- 
+  }, [permissionState])
 
   useEffect(() => {
     async function checkCityMatch() {
@@ -196,7 +218,7 @@ export default function CurrentLocation() {
     <View style={allowedLocationStyles.container}>
       <Text style={allowedLocationStyles.title}>Enable Location Services</Text>
       <Text style={allowedLocationStyles.description}>We need access to your location to show nearby restaurants and provide accurate delivery services.</Text>
-      <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermission}>
+      <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermissionHandler}>
         <Text style={allowedLocationStyles.buttonText}>Allow Location Access</Text>
       </TouchableOpacity>
     </View>
