@@ -304,7 +304,6 @@ function AppContainer() {
     }
   }, [lastNotificationResponse])
 
-
   return (
     <SafeAreaProvider>
       <NavigationContainer
