@@ -1,154 +1,217 @@
-"use client"
-// core
-import React, { useCallback, useState } from "react";
-// card component
-import Card from "@/lib/ui/useable-components/card";
-// hooks
-import useQueryBySlug from "@/lib/hooks/useQueryBySlug";
-// loading skeleton
-import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
-// useParams
-import { useParams } from "next/navigation";
-// heading component
-import HomeHeadingSection from "@/lib/ui/useable-components/home-heading-section";
-// square card
-import SquareCard from "@/lib/ui/useable-components/square-card";
-// interface
-import { IRestaurant } from "@/lib/utils/interfaces/restaurants.interface";
-import { IUserFavouriteQueryResponse } from "@/lib/utils/interfaces/favourite.restaurants.interface";
-import { GET_USER_FAVOURITE } from "@/lib/api/graphql";
+"use client";
+
+import React, { useCallback, useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@apollo/client";
+
+import Card from "@/lib/ui/useable-components/card";
+import SquareCard from "@/lib/ui/useable-components/square-card";
+import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
+import HomeHeadingSection from "@/lib/ui/useable-components/home-heading-section";
 import FavouriteCardsGrid from "@/lib/ui/useable-components/favourite-cards-grid";
 import FavoritesEmptyState from "@/lib/ui/useable-components/favorites-empty-state";
 import CardSkeletonGrid from "@/lib/ui/useable-components/card-skelton-grid";
+
+import { GET_USER_FAVOURITE } from "@/lib/api/graphql";
+import { IUserFavouriteQueryResponse } from "@/lib/utils/interfaces/favourite.restaurants.interface";
+import { IRestaurant } from "@/lib/utils/interfaces/restaurants.interface";
+
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
-import { useRouter } from "next/navigation";
+import useQueryBySlug from "@/lib/hooks/useQueryBySlug";
 import AuthGuard from "@/lib/hoc/auth.guard";
-// import { ICuisinesData } from "@/lib/utils/interfaces";
 
-// Slugs for rendering cuisines-specific cards
-// const CUISINE_SLUGS = new Set(["restaurant-cuisines", "grocery-cuisines"]);
-
-// Slugs for rendering cards with logo/images for restaurants/stores
 const RESTAURANT_SLUGS = new Set(["popular-restaurants", "popular-stores"]);
+
 function SeeAllSection() {
-  const router= useRouter()
-  // Get slug from URL params
+  const router = useRouter();
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-  
-  const [isModalOpen, setIsModalOpen] = useState({value: false, id: ""});
-    // Generate a formatted title from the slug
-  let title = slug
-  .replaceAll("-", " ")
-  .replace(/^./, (str) => str.toUpperCase());
 
-  // Queries
-  
-  // Get Fav Restaurants by using the query
+  const [isModalOpen, setIsModalOpen] = useState({ value: false, id: "" });
+  const [items, setItems] = useState<IRestaurant[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 10;
+
+
+  // Title from slug
+  const title = slug
+    ? slug.replaceAll("-", " ").replace(/^./, (str) => str.toUpperCase())
+    : "";
+
+  // --- Favourites ---
   const {
     data: FavouriteRestaurantsData,
     loading: isFavouriteRestaurantsLoading,
   } = useQuery<IUserFavouriteQueryResponse>(GET_USER_FAVOURITE, {
-    variables: {}, // Empty object for optional variables
     fetchPolicy: "network-only",
   });
 
-    // Fetch data using slug
-  const { data, loading, error } = useQueryBySlug(slug);
-  
-  // handlers
-  // use debouncefunction if user click multiple times at once it will call function only 1 time
+  // --- Main data ---
+  const { data, loading, error, fetchMore } = useQueryBySlug(slug, page, limit);
+
+  // Reset when slug changes
+  useEffect(() => {
+    setItems([]);
+    setPage(1);
+    setHasMore(true);
+  }, [slug]);
+
+  // Append new data when it arrives
+  useEffect(() => {
+    if (Array.isArray(data) && data.length > 0) {
+      // @ts-ignore
+      setItems((prev) => {
+        const ids = new Set(prev.map((i) => i._id));
+        const appended = data.filter((i) => !ids.has(i._id));
+        return [...prev, ...appended];
+      });
+
+      if (data.length < limit) {
+        setHasMore(false);
+      }
+    }
+  }, [data, limit]);
+
+  // Debounced click handler for fav cards
   const handleClickFavRestaurant = useDebounceFunction(
-    (FavRestaurantId: string | undefined, shopType: string | undefined, slug: string | undefined) => {
-      router.push( `/${shopType === "restaurant" ? "restaurant" : "store"}/${slug}/${FavRestaurantId}`);
+    (
+      FavRestaurantId: string | undefined,
+      shopType: string | undefined,
+      slug: string | undefined
+    ) => {
+      router.push(
+        `/${shopType === "restaurant" ? "restaurant" : "store"}/${slug}/${FavRestaurantId}`
+      );
     },
-    500 // Debounce time in milliseconds
+    500
   );
 
-  // Handle update is modal open
-  const handleUpdateIsModalOpen = useCallback((value: boolean, id: string) => {
-    if (isModalOpen.value !== value || isModalOpen.id !== id) {
-      setIsModalOpen({ value, id });
-    }
-  }, [isModalOpen]);
+  const handleUpdateIsModalOpen = useCallback(
+    (value: boolean, id: string) => {
+      if (isModalOpen.value !== value || isModalOpen.id !== id) {
+        setIsModalOpen({ value, id });
+      }
+    },
+    [isModalOpen]
+  );
 
-// Create the protected layout component for the favourite restaurants
-// This layout will be used to wrap the favourite restaurants section
-const ProtectedLayout = ({ children }) => {
-  return <div className="protected-container">{children}</div>;
-};
-// Create the guarded version of the layout
-const ProtectedFavRestaurants = AuthGuard(ProtectedLayout);
-  
-  if(slug == "favourites") {
-      return(
-        <ProtectedFavRestaurants>
-       <div className="w-full py-6 flex flex-col gap-6">
-      <HomeHeadingSection title={title} showFilter={false} />
-      {isFavouriteRestaurantsLoading ? (
-        <CardSkeletonGrid count={4} />
-      ) : FavouriteRestaurantsData?.userFavourite && FavouriteRestaurantsData.userFavourite.length > 0 ? (
-        <FavouriteCardsGrid items={FavouriteRestaurantsData.userFavourite}
-        handleClickFavRestaurant={handleClickFavRestaurant}
-        type={"seeAllFavourites"}
-        />
-      ) : (
-        <FavoritesEmptyState/>
-      )}
-       </div>
-       </ProtectedFavRestaurants>
-      )
-  } 
+  // Infinite scroll
+  useEffect(() => {
+    if (!fetchMore || !hasMore) return;
 
-  // Show skeleton loader while fetching
-  if (loading) {
-    return <SliderSkeleton />;
+    const handleScroll = async () => {
+      const scrollTop = document.body.scrollTop;
+      const clientHeight = document.body.clientHeight;
+      const scrollHeight = document.body.scrollHeight;
+
+      const bottom = scrollTop + clientHeight >= scrollHeight - 200;
+
+      if (bottom && !loading) {
+        try {
+          const newItems = await fetchMore({
+            variables: { page: page + 1, limit },
+          });
+
+          if (newItems.length > 0) {
+            setPage((p) => p + 1);
+          } else {
+            setHasMore(false);
+          }
+        } catch (err) {
+          console.error("❌ Error fetching more:", err);
+        }
+      }
+    };
+
+    document.body.addEventListener("scroll", handleScroll);
+    return () => document.body.removeEventListener("scroll", handleScroll);
+  }, [fetchMore, hasMore, loading, page]);
+
+  // --- Guarded favourites section ---
+  const ProtectedLayout = ({ children }: { children: React.ReactNode }) => (
+    <div className="protected-container">{children}</div>
+  );
+  const ProtectedFavRestaurants = AuthGuard(ProtectedLayout);
+
+  if (slug === "favourites") {
+    return (
+      <ProtectedFavRestaurants>
+        <div className="w-full py-6 flex flex-col gap-6">
+          <HomeHeadingSection title={title} showFilter={false} />
+          {isFavouriteRestaurantsLoading ? (
+            <CardSkeletonGrid count={4} />
+          ) : FavouriteRestaurantsData?.userFavourite &&
+            FavouriteRestaurantsData.userFavourite.length > 0 ? (
+            <FavouriteCardsGrid
+              items={FavouriteRestaurantsData.userFavourite}
+              handleClickFavRestaurant={handleClickFavRestaurant}
+              type={"seeAllFavourites"}
+            />
+          ) : (
+            <FavoritesEmptyState />
+          )}
+        </div>
+      </ProtectedFavRestaurants>
+    );
   }
 
-  // Handle query error silently (can be extended with an error UI)
-  if (error) {
-    return <div>Error loading data</div>;
-  }
-
-  // If no data returned, show empty state
-  if (!data?.length) return <div>No items found</div>;
+  if (loading && page === 1) return <SliderSkeleton />;
+  if (error) return <div>Error loading data</div>;
+  if (!items.length) return <div>No items found</div>;
 
   return (
     <>
       <HomeHeadingSection title={title} showFilter={false} />
+
       <div className="mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-4 items-center">
-          {/* Render SquareCard for cuisine-related slugs */}
-          {/* {Array.isArray(data) &&
-            CUISINE_SLUGS.has(slug) &&
-            (data as ICuisinesData[]).map((item) => (
-              <SquareCard
-                key={item._id}
-                item={item}
-                cuisines={true}
-                showLogo={false} // No logo so it will show image for cuisines
-              />
-            ))} */}
-
-          {/* Render SquareCard with logo for popular restaurants/stores */}
-          {Array.isArray(data) &&
+          {Array.isArray(items) &&
             RESTAURANT_SLUGS.has(slug) &&
-            (data as IRestaurant[]).map((item) => (
-              <SquareCard
-                key={item._id}
-                item={item}
-                showLogo={true} // Show logo/image
-              />
+            items.map((item) => (
+              <SquareCard key={item._id} item={item} showLogo={true} />
             ))}
 
-          {/* Render default Card for any other slug types */}
-          {Array.isArray(data) &&
+          {Array.isArray(items) &&
             !RESTAURANT_SLUGS.has(slug) &&
-            (data as IRestaurant[]).map((item) => (
-              <Card key={item._id} item={item} isModalOpen={isModalOpen} handleUpdateIsModalOpen={handleUpdateIsModalOpen} />
+            items.map((item) => (
+              <Card
+                key={item._id}
+                item={item}
+                isModalOpen={isModalOpen}
+                handleUpdateIsModalOpen={handleUpdateIsModalOpen}
+              />
             ))}
         </div>
+
+        {/* Infinite scroll loader */}
+        {loading && hasMore && (
+          <div className="flex justify-center mt-6">
+            <div className="flex items-center gap-2 text-gray-500">
+              <svg
+                className="animate-spin h-5 w-5 text-primary"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              <span>Loading more...</span>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

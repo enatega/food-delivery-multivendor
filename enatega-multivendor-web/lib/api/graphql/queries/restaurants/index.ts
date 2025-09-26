@@ -1,25 +1,28 @@
 import { gql } from "@apollo/client";
 
-export const RELATED_ITEMS = gql`query RelatedItems($itemId: String!, $restaurantId: String!) {
-  relatedItems(itemId: $itemId, restaurantId: $restaurantId)
-}`
+export const RELATED_ITEMS = gql`
+  query RelatedItems($itemId: String!, $restaurantId: String!) {
+    relatedItems(itemId: $itemId, restaurantId: $restaurantId)
+  }
+`;
 
-export const FOOD = gql`fragment FoodItem on Food {
-  _id
-  title
-  image
-  description
-  subCategory
-  isOutOfStock
-  variations {
+export const FOOD = gql`
+  fragment FoodItem on Food {
     _id
     title
-    price
-    discounted
-    addons
+    image
+    description
+    subCategory
+    isOutOfStock
+    variations {
+      _id
+      title
+      price
+      discounted
+      addons
+    }
   }
-}
-`
+`;
 
 export const RESTAURANTS_FRAGMENT = gql`
   fragment RestaurantPreviewFields on RestaurantPreview {
@@ -44,12 +47,12 @@ export const RESTAURANTS_FRAGMENT = gql`
       coordinates
     }
     openingTimes {
-        day
-        times {
-          startTime
-          endTime
-        }
+      day
+      times {
+        startTime
+        endTime
       }
+    }
   }
 `;
 
@@ -64,18 +67,38 @@ export const RECENT_ORDER_RESTAURANTS = gql`
 
 export const MOST_ORDER_RESTAURANTS = gql`
   ${RESTAURANTS_FRAGMENT}
-  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
-    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
+  query GetMostOrderedRestaurants(
+    $latitude: Float!
+    $longitude: Float!
+    $page: Int
+    $limit: Int
+    $shopType: String
+  ) {
+    mostOrderedRestaurantsPreview(
+      latitude: $latitude
+      longitude: $longitude
+      page: $page
+      limit: $limit
+      shopType: $shopType
+    ) {
       ...RestaurantPreviewFields
     }
   }
 `;
 
 export const NEAR_BY_RESTAURANTS_PREVIEW = gql`
-  query Restaurants($latitude: Float, $longitude: Float, $shopType: String) {
+  query Restaurants(
+    $latitude: Float
+    $longitude: Float
+    $page: Int
+    $limit: Int
+    $shopType: String
+  ) {
     nearByRestaurantsPreview(
       latitude: $latitude
       longitude: $longitude
+      page: $page
+      limit: $limit
       shopType: $shopType
     ) {
       restaurants {
@@ -207,7 +230,6 @@ export const GET_RESTAURANT_BY_ID_SLUG = gql`
   }
 `;
 
-
 export const GET_REVIEWS_BY_RESTAURANT = gql`
   query GetReviewsByRestaurant($restaurant: String!) {
     reviewsByRestaurant(restaurant: $restaurant) {
@@ -254,13 +276,12 @@ export const GET_CATEGORIES_SUB_CATEGORIES_LIST = gql`
   }
 `;
 
-
 export const GET_POPULAR_SUB_CATEGORIES_LIST = gql`
   query PopularItems($restaurantId: String!) {
-  popularItems(restaurantId: $restaurantId) {
-    id
-    count
-}
+    popularItems(restaurantId: $restaurantId) {
+      id
+      count
+    }
   }
 `;
 

@@ -158,4 +158,5 @@ export interface IMainSectionProps {
   loading: boolean;
   error: boolean;
   search?: boolean
+  hasMore?: boolean
 }
