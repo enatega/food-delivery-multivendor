@@ -33,6 +33,7 @@ function SeeAllSection() {
   const [hasMore, setHasMore] = useState(true);
   const limit = 10;
 
+
   // Title from slug
   const title = slug
     ? slug.replaceAll("-", " ").replace(/^./, (str) => str.toUpperCase())
@@ -58,8 +59,8 @@ function SeeAllSection() {
 
   // Append new data when it arrives
   useEffect(() => {
-    if (data && Array.isArray(data) && data.length > 0) {
-      //@ts-ignore
+    if (Array.isArray(data) && data.length > 0) {
+      // @ts-ignore
       setItems((prev) => {
         const ids = new Set(prev.map((i) => i._id));
         const appended = data.filter((i) => !ids.has(i._id));
@@ -95,7 +96,7 @@ function SeeAllSection() {
     [isModalOpen]
   );
 
-  // Infinite scroll on body
+  // Infinite scroll
   useEffect(() => {
     if (!fetchMore || !hasMore) return;
 
@@ -104,7 +105,6 @@ function SeeAllSection() {
       const clientHeight = document.body.clientHeight;
       const scrollHeight = document.body.scrollHeight;
 
-      // Trigger when 200px to the bottom
       const bottom = scrollTop + clientHeight >= scrollHeight - 200;
 
       if (bottom && !loading) {

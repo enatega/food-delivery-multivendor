@@ -72,12 +72,14 @@ export const MOST_ORDER_RESTAURANTS = gql`
     $longitude: Float!
     $page: Int
     $limit: Int
+    $shopType: String
   ) {
     mostOrderedRestaurantsPreview(
       latitude: $latitude
       longitude: $longitude
       page: $page
       limit: $limit
+      shopType: $shopType
     ) {
       ...RestaurantPreviewFields
     }

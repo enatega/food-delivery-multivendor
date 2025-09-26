@@ -10,7 +10,7 @@ import {
 // context
 import { useUserAddress } from "../context/address/address.context";
 
-const useMostOrderedRestaurants = (enabled = true, page = 1, limit=10 ) => {
+const useMostOrderedRestaurants = (enabled = true, page = 1, limit=10, shopType?: "restaurant" | "grocery" | null ) => {
   const { userAddress } = useUserAddress();
   const userLongitude = userAddress?.location?.coordinates[0] || 0;
   const userLatitude = userAddress?.location?.coordinates[1] || 0;
@@ -22,6 +22,7 @@ const useMostOrderedRestaurants = (enabled = true, page = 1, limit=10 ) => {
         longitude: userLongitude,
         page,
         limit,
+        shopType: shopType ?? null,
       },
       fetchPolicy: "cache-and-network",
       skip: !enabled,
@@ -37,7 +38,7 @@ const useMostOrderedRestaurants = (enabled = true, page = 1, limit=10 ) => {
   let groceriesData: IRestaurant[] =
     queryData?.filter((item) => item?.shopType.toLowerCase() === "grocery") ||
     [];
-
+    console.log("groceriesData in hook", groceriesData);
   return {
     queryData,
     loading,
