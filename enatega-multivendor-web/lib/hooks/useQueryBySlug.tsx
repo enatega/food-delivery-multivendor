@@ -19,14 +19,35 @@ export default function useQueryBySlug(
   page: number = 1,
   limit: number
 ): UseQueryBySlugResult {
+  const mostOrdered = useMostOrderedRestaurants(true, page, limit, null); // null → no filter
+  const grocery_pick = useMostOrderedRestaurants(true, page, limit, "grocery");
+  const popular_restaurant = useMostOrderedRestaurants(
+    true,
+    page,
+    limit,
+    "restaurant"
+  );
+  const popular_stores = useMostOrderedRestaurants(
+    true,
+    page,
+    limit,
+    "grocery"
+  );
+  const nearby = useNearByRestaurantsPreview(true, page, limit);
+  const grocery_list = useNearByRestaurantsPreview(
+    true,
+    page,
+    limit,
+    "grocery"
+  );
+  const recentOrdered = useRecentOrderRestaurants(true);
+  const ourBrands = useTopRatedVendors(true);
   if (!slug) return { data: [], loading: false, error: undefined };
-
   switch (slug) {
     /**
      * 🔹 Most ordered (all shop types)
      */
     case "most-ordered-restaurants": {
-      const mostOrdered = useMostOrderedRestaurants(true, page, limit, null); // null → no filter
       const data = mostOrdered.queryData;
       return {
         data: Array.isArray(data) ? data : [],
@@ -45,19 +66,13 @@ export default function useQueryBySlug(
      * 🔹 Top grocery picks
      */
     case "top-grocery-picks": {
-      const mostOrdered = useMostOrderedRestaurants(
-        true,
-        page,
-        limit,
-        "grocery"
-      );
-      const data = mostOrdered.queryData;
+      const data = grocery_pick.queryData;
       return {
         data: Array.isArray(data) ? data : [],
-        loading: mostOrdered.loading,
-        error: mostOrdered.error,
+        loading: grocery_pick.loading,
+        error: grocery_pick.error,
         fetchMore: async (vars) => {
-          const res = await mostOrdered.fetchMore({
+          const res = await grocery_pick.fetchMore({
             variables: { ...vars, shopType: "grocery" },
           });
           return res?.data?.mostOrderedRestaurantsPreview ?? [];
@@ -69,19 +84,13 @@ export default function useQueryBySlug(
      * 🔹 Popular restaurants
      */
     case "popular-restaurants": {
-      const mostOrdered = useMostOrderedRestaurants(
-        true,
-        page,
-        limit,
-        "restaurant"
-      );
-      const data = mostOrdered.queryData;
+      const data = popular_restaurant.queryData;
       return {
         data: Array.isArray(data) ? data : [],
-        loading: mostOrdered.loading,
-        error: mostOrdered.error,
+        loading: popular_restaurant.loading,
+        error: popular_restaurant.error,
         fetchMore: async (vars) => {
-          const res = await mostOrdered.fetchMore({
+          const res = await popular_restaurant.fetchMore({
             variables: { ...vars, shopType: "restaurant" },
           });
           return res?.data?.mostOrderedRestaurantsPreview ?? [];
@@ -93,19 +102,13 @@ export default function useQueryBySlug(
      * 🔹 Popular stores (alias for grocery)
      */
     case "popular-stores": {
-      const mostOrdered = useMostOrderedRestaurants(
-        true,
-        page,
-        limit,
-        "grocery"
-      );
-      const data = mostOrdered.queryData;
+      const data = popular_stores.queryData;
       return {
         data: Array.isArray(data) ? data : [],
-        loading: mostOrdered.loading,
-        error: mostOrdered.error,
+        loading: popular_stores.loading,
+        error: popular_stores.error,
         fetchMore: async (vars) => {
-          const res = await mostOrdered.fetchMore({
+          const res = await popular_stores.fetchMore({
             variables: { ...vars, shopType: "grocery" },
           });
           return res?.data?.mostOrderedRestaurantsPreview ?? [];
@@ -117,7 +120,6 @@ export default function useQueryBySlug(
      * 🔹 Nearby
      */
     case "restaurants-near-you": {
-      const nearby = useNearByRestaurantsPreview(true, page, limit);
       const data = nearby.queryData;
       return {
         data: Array.isArray(data) ? data : [],
@@ -130,14 +132,13 @@ export default function useQueryBySlug(
       };
     }
     case "grocery-list": {
-      const nearby = useNearByRestaurantsPreview(true, page, limit, "grocery");
-      const data = nearby.queryData;
+      const data = grocery_list.queryData;
       return {
         data: Array.isArray(data) ? data : [],
-        loading: nearby.loading,
-        error: nearby.error,
+        loading: grocery_list.loading,
+        error: grocery_list.error,
         fetchMore: async (vars) => {
-          const res = await nearby.fetchMore(vars);
+          const res = await grocery_list.fetchMore(vars);
           return res?.data?.nearByRestaurantsPreview?.restaurants ?? [];
         },
       };
@@ -147,7 +148,6 @@ export default function useQueryBySlug(
      * 🔹 Order it again
      */
     case "order-it-again": {
-      const recentOrdered = useRecentOrderRestaurants(true);
       const data = recentOrdered.queryData;
       return {
         data: Array.isArray(data) ? data : [],
@@ -160,7 +160,6 @@ export default function useQueryBySlug(
      * 🔹 Our brands
      */
     case "our-brands": {
-      const ourBrands = useTopRatedVendors(true);
       const data = ourBrands.queryData;
       return {
         data: Array.isArray(data) ? data : [],
