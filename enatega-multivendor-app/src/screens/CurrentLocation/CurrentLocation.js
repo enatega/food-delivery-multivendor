@@ -18,7 +18,6 @@ import CustomMarkerWithLabel from '../../assets/SVG/imageComponents/CustomMarker
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import Spinner from '../../components/Spinner/Spinner'
 import ForceUpdate from '../../components/Update/ForceUpdate'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { checkLocationInCities } from '../../utils/locationUtil'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
@@ -27,7 +26,8 @@ import useWatchLocation from '../../ui/hooks/useWatchLocation'
 
 export default function CurrentLocation() {
   const Analytics = analytics()
-  const { permission, onRequestPermission } = useWatchLocation()
+  const { onRequestPermission } = useWatchLocation()
+  // const [permissionState, setPermissionState] = useState(permission)
   const { t, i18n } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [isCheckingZone, setIsCheckingZone] = useState(false)
@@ -43,7 +43,7 @@ export default function CurrentLocation() {
 
   const { getAddress } = useGeocoding()
 
-  const { cities, setLocation } = useContext(LocationContext)
+  const { cities, setLocation, permissionState, setPermissionState } = useContext(LocationContext)
 
   const checkLocationPermission = async () => {
     setLoading(true)
@@ -99,9 +99,9 @@ export default function CurrentLocation() {
 
   async function getCurrentLocationOnStart() {
     // Handle permission request result
-    if (!permission) return
+    if (!permissionState) return
 
-    if (!permission?.granted && permission?.status !== 'granted') {
+    if (!permissionState?.granted && permissionState?.status !== 'granted') {
       console.log('Location permission not granted')
       return
     }
@@ -128,16 +128,13 @@ export default function CurrentLocation() {
   }
 
   async function onRequestPermissionHandler() {
-    const { granted, canAskAgain } = permission || {}
+    const permission_response = await onRequestPermission()
 
-    // ✅ Can still ask → show the popup
-    if (!granted && canAskAgain) {
-      await onRequestPermission()
-      return
-    }
+    setPermissionState(permission_response)
 
     // ❌ Permanently denied (cannot ask again)
-    if (!canAskAgain) {
+    if (!permission_response?.canAskAgain) {
+      console.log('sadahsdjkasdhajksh')
       // Optionally prompt user to open settings
       if (Platform.OS === 'ios') {
         Linking.openURL('app-settings:') // iOS deep link to app settings
@@ -166,7 +163,7 @@ export default function CurrentLocation() {
 
   useEffect(() => {
     getCurrentLocationOnStart()
-  }, [permission])
+  }, [permissionState])
 
   useEffect(() => {
     async function checkCityMatch() {
