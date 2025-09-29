@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from 'react'
+import { useState, useContext, useRef, useEffect } from 'react'
 import { Alert } from 'react-native'
 import _ from 'lodash' // Import lodash
 import * as Device from 'expo-device'
@@ -28,7 +28,7 @@ export const useLogin = () => {
 
   const navigation = useNavigation()
   const emailRef = useRef('demo-customer@enatega.com')
-  const [password, setPassword] = useState('123123')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -51,6 +51,17 @@ export const useLogin = () => {
   const setEmail = (email)=>{
     emailRef.current = email
   }
+
+  // Reset password when registeredEmail becomes true
+  useEffect(() => {
+    if (registeredEmail) {
+      if (emailRef.current === 'demo-customer@enatega.com') {
+        setPassword('123123')
+      } else {
+        setPassword('')
+      }
+    }
+  }, [registeredEmail])
   function validateCredentials() {
     let result = true
     setEmailError(null)
