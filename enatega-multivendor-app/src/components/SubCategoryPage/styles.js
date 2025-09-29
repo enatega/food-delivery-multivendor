@@ -68,9 +68,17 @@ const styles = (props = null) =>
       paddingHorizontal: scale(16),
       paddingVertical: scale(6),
       borderRadius: scale(20),
-
-      // opacity: 0.,
       marginRight: scale(8),
+      textAlign: 'center',
+      alignItems: 'center'
+    },
+    // Sub Category LTR with better spacing
+    subcategoryItemltr: {
+      width: 140,
+      paddingHorizontal: scale(18),
+      paddingVertical: scale(8),
+      borderRadius: scale(20),
+      marginRight: scale(12),
       textAlign: 'center',
       alignItems: 'center'
     },
