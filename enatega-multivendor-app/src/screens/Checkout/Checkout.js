@@ -433,6 +433,11 @@ function Checkout(props) {
         // })
         console.log('Server is currently unavailable. Please try again later.')
       }
+      if (error?.networkError.statusCode === 504) {
+        FlashMessage({
+          message: "Request timed out. Please try again."
+        })
+      }
     }
   }
 
