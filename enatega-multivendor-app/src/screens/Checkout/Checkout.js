@@ -246,11 +246,11 @@ function Checkout(props) {
           >
             {t('titleCheckout')}
           </TextDefault>
-          <TextDefault style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
+          <TextDefault numberOfLines={1} style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
             {data && data?.restaurant.name && data?.restaurant.address && (
               <>
                 {data?.restaurant.name} {' - '}
-                {data.restaurant.address.length > 12 ? data.restaurant.address.slice(0, 12) + '...' : data.restaurant.address}
+                {data.restaurant.address}
               </>
             )}
           </TextDefault>
