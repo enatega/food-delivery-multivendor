@@ -433,6 +433,11 @@ function Checkout(props) {
         // })
         console.log('Server is currently unavailable. Please try again later.')
       }
+      if (error?.networkError.statusCode === 504) {
+        FlashMessage({
+          message: "Request timed out. Please try again."
+        })
+      }
     }
   }
 
@@ -440,6 +445,9 @@ function Checkout(props) {
     // if (paymentMode !== 'HYP') {
     //   return 0 // Return 0 if payment mode is not 'COD'
     // }
+    if (isPickup) {
+      return 0 // No tip for pickup orders since no rider is involved
+    }
     if (tip) {
       return tip
     } else if (selectedTip) {
@@ -856,41 +864,43 @@ function Checkout(props) {
                     </>
                   )}
                 </View>
-                <View style={styles().tipSec}>
-                  <View style={[styles(currentTheme).tipRow]}>
-                    <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
-                      {t('AddTip')}
-                    </TextDefault>
-                    <TextDefault numberOfLines={1} normal bolder uppercase textItalic textColor={currentTheme.fontNewColor}>
-                      {t('optional')}
-                    </TextDefault>
-                  </View>
-                  {dataTip && (
-                    <View style={styles(currentTheme).buttonInline}>
-                      {dataTip.tips.tipVariations.map((label, index) => (
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          key={index}
-                          style={[selectedTip === label ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton]}
-                          onPress={() => {
-                            props?.navigation.setParams({ tipAmount: null })
-                            setTip(null)
-                            setSelectedTip((prevState) => (prevState === label ? null : label))
-                          }}
-                        >
-                          <TextDefault textColor={selectedTip === label ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
-                            {configuration.currencySymbol} {label}
+                {!isPickup && (
+                  <View style={styles().tipSec}>
+                    <View style={[styles(currentTheme).tipRow]}>
+                      <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
+                        {t('AddTip')}
+                      </TextDefault>
+                      <TextDefault numberOfLines={1} normal bolder uppercase textItalic textColor={currentTheme.fontNewColor}>
+                        {t('optional')}
+                      </TextDefault>
+                    </View>
+                    {dataTip && (
+                      <View style={styles(currentTheme).buttonInline}>
+                        {dataTip.tips.tipVariations.map((label, index) => (
+                          <TouchableOpacity
+                            activeOpacity={0.7}
+                            key={index}
+                            style={[selectedTip === label ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton]}
+                            onPress={() => {
+                              props?.navigation.setParams({ tipAmount: null })
+                              setTip(null)
+                              setSelectedTip((prevState) => (prevState === label ? null : label))
+                            }}
+                          >
+                            <TextDefault textColor={selectedTip === label ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                              {configuration.currencySymbol} {label}
+                            </TextDefault>
+                          </TouchableOpacity>
+                        ))}
+                        <TouchableOpacity activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
+                          <TextDefault textColor={tip ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                            {t('Other')}
                           </TextDefault>
                         </TouchableOpacity>
-                      ))}
-                      <TouchableOpacity activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
-                        <TextDefault textColor={tip ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
-                          {t('Other')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
+                      </View>
+                    )}
+                  </View>
+                )}
 
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor} style={{ ...alignment.MBmedium }} isRTL>
@@ -932,16 +942,20 @@ function Checkout(props) {
                     </TextDefault>
                   </View>
 
-                  <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles(currentTheme).billsec}>
-                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
-                      {t('tip')}
-                    </TextDefault>
-                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
-                      {configuration.currencySymbol}
-                      {parseFloat(calculateTip()).toFixed(2)}
-                    </TextDefault>
-                  </View>
+                  {!isPickup && (
+                    <>
+                      <View style={styles(currentTheme).horizontalLine2} />
+                      <View style={styles(currentTheme).billsec}>
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                          {t('tip')}
+                        </TextDefault>
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                          {configuration.currencySymbol}
+                          {parseFloat(calculateTip()).toFixed(2)}
+                        </TextDefault>
+                      </View>
+                    </>
+                  )}
 
                   {coupon && (
                     <View>

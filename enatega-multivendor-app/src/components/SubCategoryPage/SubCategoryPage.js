@@ -1100,7 +1100,7 @@ const CategoryPage = ({ route, navigation }) => {
                   ref={subcategoryScrollRef}
                   showsHorizontalScrollIndicator={false}
                   style={{
-                    height: 40,
+                    height: 50,
                     backgroundColor: callStyles(currentTheme).topSectionColor,
                     width: "100%",
                   }}
@@ -1261,13 +1261,13 @@ const styles = StyleSheet.create({
   },
   
   subcategoryContainer: {
-    height: 30,
+    height: 50,
     flexDirection: 'row',
-    paddingHorizontal: 17,
+    paddingHorizontal: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    marginTop: 5
+    justifyContent: 'flex-start',
+    paddingVertical: 5,
+    gap: 8
   },
   // Food List
   foodList: {

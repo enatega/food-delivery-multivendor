@@ -305,15 +305,23 @@ function Main(props) {
 
   const filterCusinies = () => {
     if (data !== undefined) {
-      for (let cui of data?.nearByRestaurantsPreview?.restaurants) {
-        for (let cuisine of cui.cuisines) {
-          cus.add(cuisine)
+      const cuisineShopTypeMap = new Map()
+      
+      for (let restaurant of data?.nearByRestaurantsPreview?.restaurants) {
+        for (let cuisine of restaurant.cuisines) {
+          const key = `${cuisine.name}-${restaurant.shopType}`
+          if (!cuisineShopTypeMap.has(key)) {
+            cuisineShopTypeMap.set(key, {
+              ...cuisine,
+              shopType: restaurant.shopType
+            })
+          }
         }
       }
-      return allCuisines?.cuisines?.filter((cuisine) => {
-        return cus.has(cuisine.name)
-      })
+      
+      return Array.from(cuisineShopTypeMap.values())
     }
+    return []
   }
 
   return (
@@ -342,7 +350,7 @@ function Main(props) {
                             {t('I feel like eating...')}
                           </TextDefault>
                           <FlatList
-                            data={filterCusinies()?.filter((cuisine) => cuisine.shopType === 'Restaurant') ?? []}
+                            data={filterCusinies()?.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'restaurant') ?? []}
                             renderItem={({ item }) => {
                               return (
                                 <CollectionCard
@@ -356,7 +364,7 @@ function Main(props) {
                                 />
                               )
                             }}
-                            keyExtractor={(item) => item?._id}
+                            keyExtractor={(item, index) => item?._id || `${item?.name}-restaurant-${index}`}
                             contentContainerStyle={{
                               flexGrow: 1,
                               gap: 8,
@@ -391,7 +399,7 @@ function Main(props) {
                                 />
                               )
                             }}
-                            keyExtractor={(item) => item?._id}
+                            keyExtractor={(item, index) => item?._id || `${item?.name}-grocery-${index}`}
                             contentContainerStyle={{
                               flexGrow: 1,
                               gap: 8,
