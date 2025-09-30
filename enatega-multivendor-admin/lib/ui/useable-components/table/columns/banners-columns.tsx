@@ -19,15 +19,20 @@ export const BANNERS_TABLE_COLUMNS = ({
       headerName: t('Image'),
       propertyName: 'image',
       body: (product: IBannersResponse) => {
-        if (product.file.includes('video')) {
+        const fileUrl = product.file?.toLowerCase() || '';
+        const isVideo = fileUrl.includes('.mp4') || fileUrl.includes('.webm') || fileUrl.includes('video');
+        
+        if (isVideo) {
           return (
             <video
               autoPlay
+              loop
+              muted
+              playsInline
               src={product.file}
               width={40}
               height={40}
-              loop
-              muted
+              className="rounded object-cover"
             />
           );
         } else {
@@ -36,6 +41,7 @@ export const BANNERS_TABLE_COLUMNS = ({
               width={40}
               height={40}
               alt="Banner"
+              className="rounded object-cover"
               src={
                 product.file
                   ? product.file

@@ -10,31 +10,42 @@ import {
 // context
 import { useUserAddress } from "../context/address/address.context";
 
-const useNearByRestaurantsPreview = (enabled = true) => {
+const useNearByRestaurantsPreview = (
+  enabled = true,
+  page = 1,
+  limit = 10,
+  shopType?: "restaurant" | "grocery" | null // <-- 🔑 allow passing
+) => {
   const { userAddress } = useUserAddress();
-  const userLongitude = Number(userAddress?.location?.coordinates[0]) || 0
-  const userLatitude = Number(userAddress?.location?.coordinates[1]) || 0
+  const userLongitude = Number(userAddress?.location?.coordinates[0]) || 0;
+  const userLatitude = Number(userAddress?.location?.coordinates[1]) || 0;
 
-  const { data, loading, error, networkStatus } =
+  const { data, loading, error, networkStatus, fetchMore } =
     useQuery<INearByRestaurantsPreviewData>(NEAR_BY_RESTAURANTS_PREVIEW, {
       variables: {
         latitude: userLatitude,
         longitude: userLongitude,
-        shopType: null,
+        shopType: shopType ?? null, // 🔑 pass down if provided
+        page,
+        limit,
       },
       fetchPolicy: "cache-and-network",
-      skip: !enabled
+      skip: !enabled,
+      notifyOnNetworkStatusChange: true,
     });
 
-  let queryData = data?.nearByRestaurantsPreview?.restaurants;
+  const queryData: IRestaurant[] =
+    data?.nearByRestaurantsPreview?.restaurants ?? [];
 
-  let groceriesData: IRestaurant[] =
-    queryData?.filter((item) => item.shopType.toLowerCase() === "grocery") ||
-    [];
+  const groceriesData: IRestaurant[] =
+    queryData?.filter(
+      (item) => item?.shopType?.toLowerCase() === "grocery"
+    ) ?? [];
 
-  let restaurantsData: IRestaurant[] =
-    queryData?.filter((item) => item.shopType.toLowerCase() === "restaurant") ||
-    [];
+  const restaurantsData: IRestaurant[] =
+    queryData?.filter(
+      (item) => item?.shopType?.toLowerCase() === "restaurant"
+    ) ?? [];
 
   return {
     queryData,
@@ -43,6 +54,7 @@ const useNearByRestaurantsPreview = (enabled = true) => {
     networkStatus,
     groceriesData,
     restaurantsData,
+    fetchMore, // expose for infinite scroll
   };
 };
 

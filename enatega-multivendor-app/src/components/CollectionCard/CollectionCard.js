@@ -5,10 +5,13 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import Ripple from 'react-native-material-ripple'
+import { IMAGE_LINK } from '../../utils/constants'
 
 const CollectionCard = ({ onPress, image, name }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const imageUri = image || IMAGE_LINK
+  
   return (
     <Ripple
       activeOpacity={0.8}
@@ -17,7 +20,7 @@ const CollectionCard = ({ onPress, image, name }) => {
     >
       <View style={styles().brandImgContainer}>
         <Image
-          source={{ uri: image }}
+          source={{ uri: imageUri }}
           style={styles().collectionImage}
           resizeMode='cover'
         />
