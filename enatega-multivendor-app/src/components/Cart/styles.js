@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
+import { textStyles } from '../../utils/textStyles'
 const { height } = Dimensions.get('window')
 
 const BACKDROP_HEIGHT = Math.floor(scale(height / 5))
@@ -52,5 +53,15 @@ export const useStyles = (theme) => StyleSheet.create({
         borderRadius: scale(5),
         flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
         alignItems: 'center'
+    },
+    textInput: {
+        padding: scale(10),
+        ...textStyles.H4,
+        flex: 1,
+        color: theme.fontMainColor,
+        textAlign: theme?.isRTL ? 'right' : 'left'
+    },
+    clearButton: {
+        ...alignment.MRxSmall
     }
 })
