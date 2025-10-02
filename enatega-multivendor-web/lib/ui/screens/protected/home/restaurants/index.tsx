@@ -60,16 +60,11 @@ export default function RestaurantsScreen() {
       const scrollTop = document.body.scrollTop;
       const clientHeight = document.body.clientHeight;
       const scrollHeight = document.body.scrollHeight;
-      console.log(
-        "scrollTop, clientHeight, scrollHeight",
-        scrollTop,
-        clientHeight,
-        scrollHeight
-      );
+ 
       const bottom = scrollTop + clientHeight >= scrollHeight - 300;
 
       if (bottom && !loading) {
-        console.log("near bottom reached");
+       
         loadMore();
       }
     };

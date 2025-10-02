@@ -45,7 +45,7 @@ function CuisineSelectionSection() {
       (c) => c?.toString().normalize("NFKC").toLocaleLowerCase() === normalizedSlug
     )
   );
-  console.log("getCusineRestaurants", queryData);
+
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
       if (isModalOpen.value !== value || isModalOpen.id !== id) {
