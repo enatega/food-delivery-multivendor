@@ -83,7 +83,7 @@ const LoginScreen = () => {
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
-                <View className="mt-24 p-5 items-start gap-y-2">
+                <View className="mt-24 p-5 items-center gap-y-2">
                   {/* Icon */}
                   <Icon name="envelope" size={30} color={appTheme.primary} />
 
@@ -160,6 +160,7 @@ const LoginScreen = () => {
                       />
                     </TouchableOpacity>
                   </View>
+
                   {errors.password && (
                     <Text
                       style={{

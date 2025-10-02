@@ -45,9 +45,9 @@ initSentry();
 SplashScreen.preventAutoHideAsync();
 
 
-Clarity.initialize('nq7dea7dt4', {
-  logLevel: Clarity.LogLevel.None, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
-});
+// Clarity.initialize('nq7dea7dt4', {
+//   logLevel: Clarity.LogLevel.None, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
+// });
 
 
 function RootLayout() {
