@@ -134,9 +134,9 @@ export default function App() {
   }, [location])
 
   // For Permission
-  useEffect(() => {
+/*   useEffect(() => {
     requestTrackingPermissions()
-  }, [])
+  }, []) */
 
   // For Sentry
   // useEffect(() => {
