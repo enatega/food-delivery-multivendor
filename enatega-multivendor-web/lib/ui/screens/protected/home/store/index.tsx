@@ -15,16 +15,16 @@ export default function StoreScreen() {
   const [hasMore, setHasMore] = useState(true);
 
   
-  const { loading, error, groceriesData, fetchMore } = useNearByRestaurantsPreview(true, 1, limit, "grocery");
-  const { groceryCuisinesData } = useGetCuisines();
+  const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(true, page, limit, "grocery");
+  const { loading:cuisinesloading, groceryCuisinesData } = useGetCuisines();
  
 
   // ✅ Initial load
   useEffect(() => {
-    if (page === 1 && groceriesData?.length) {
-      setItems(groceriesData);
+    if (page === 1 && queryData?.length) {
+      setItems(queryData);
     }
-  }, [groceriesData, page]);
+  }, [queryData, page]);
 
   // ✅ Load more
   const loadMore = useCallback(async () => {
@@ -78,6 +78,7 @@ export default function StoreScreen() {
       mainData={items} // ✅ pass paginated items
       cuisineDataFromHook={groceryCuisinesData}
       loading={loading}
+      cuisinesloading={cuisinesloading}
       error={!!error}
       hasMore={hasMore} // ✅ pass down so MainSection can show "No more"
     />
