@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
-import { TouchableOpacity, View, Image, Text, Alert } from 'react-native'
+import { TouchableOpacity, View, Image, Text, Alert, Platform } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../../utils/scaling'
@@ -101,7 +101,23 @@ function NewRestaurantCard(props) {
     }
   }
   return (
-    <Ripple rippleColor={'#F5F5F5'} style={[styles(currentTheme).offerContainer, props?.fullWidth && { width: '100%' }]} activeOpacity={1} onPress={handleRestaurantClick}>
+    <Ripple 
+      rippleColor={'#F5F5F5'} 
+      style={[
+        styles(currentTheme).offerContainer, 
+        props?.fullWidth && { width: '100%' },
+        Platform.OS === 'android' && {
+          overflow: 'hidden',
+          borderRadius: 15
+        }
+      ]} 
+      activeOpacity={0.8} 
+      onPress={handleRestaurantClick}
+      rippleContainerBorderRadius={15}
+      rippleDuration={Platform.OS === 'android' ? 300 : 400}
+      rippleSize={Platform.OS === 'android' ? 150 : 200}
+      disabled={false}
+    >
       <View
         style={[
           styles().container,
@@ -167,8 +183,26 @@ function NewRestaurantCard(props) {
         </View>
       </View>
       <View style={[styles().overlayContainer, props?.fullWidth && { width: '100%' }]}>
-        <TouchableOpacity activeOpacity={0.7} disabled={loadingMutation} onPress={handleAddToFavorites}>
-          <View style={styles(currentTheme).favouriteOverlay}>{loadingMutation ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={heart ? 'heart' : 'hearto'} size={scale(15)} color={currentTheme.iconColor} />}</View>
+        <TouchableOpacity 
+          activeOpacity={0.7} 
+          disabled={loadingMutation} 
+          onPress={handleAddToFavorites}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          style={{ 
+            position: 'absolute',
+            top: 10,
+            ...(currentTheme?.isRTL ? { left: 10 } : { right: 10 }),
+            width: scale(38),
+            height: scale(28),
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+            pointerEvents: 'auto'
+          }}
+        >
+          <View style={styles(currentTheme).favouriteOverlay}>
+            {loadingMutation ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={heart ? 'heart' : 'hearto'} size={scale(15)} color={currentTheme.iconColor} />}
+          </View>
         </TouchableOpacity>
       </View>
     </Ripple>
