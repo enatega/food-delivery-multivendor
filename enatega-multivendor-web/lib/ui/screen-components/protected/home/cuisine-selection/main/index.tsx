@@ -38,18 +38,18 @@ function CuisineSelectionSection() {
 
   const [isModalOpen, setIsModalOpen] = useState({ value: false, id: "" });
 
-  const { queryData, loading, error } = useNearByRestaurantsPreview();
+  const { queryData, loading, error } = useNearByRestaurantsPreview(true,1,109,null);
 
   const getCuisinRestaurants = queryData?.filter((item) =>
     item?.cuisines?.some(
       (c) => c?.toString().normalize("NFKC").toLocaleLowerCase() === normalizedSlug
     )
   );
-
+  console.log("getCusineRestaurants", queryData);
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
       if (isModalOpen.value !== value || isModalOpen.id !== id) {
-        setIsModalOpen({ value, id });
+        setIsModalOpen({ value, id });  
       }
     },
     [isModalOpen]

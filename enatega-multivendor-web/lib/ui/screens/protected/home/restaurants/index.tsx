@@ -14,10 +14,14 @@ export default function RestaurantsScreen() {
   const [items, setItems] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  const { loading, error, queryData, fetchMore } =
-    useNearByRestaurantsPreview(true, page, limit, "restaurant");
+  const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(
+    true,
+    page,
+    limit,
+    "restaurant"
+  );
 
-  const { restaurantCuisinesData } = useGetCuisines();
+  const { loading: cuisinesloading, restaurantCuisinesData } = useGetCuisines();
 
   // ✅ Initial load
   useEffect(() => {
@@ -56,11 +60,16 @@ export default function RestaurantsScreen() {
       const scrollTop = document.body.scrollTop;
       const clientHeight = document.body.clientHeight;
       const scrollHeight = document.body.scrollHeight;
-      console.log("scrollTop, clientHeight, scrollHeight", scrollTop, clientHeight, scrollHeight);
-      const bottom = scrollTop + clientHeight >= scrollHeight - 300;   
+      console.log(
+        "scrollTop, clientHeight, scrollHeight",
+        scrollTop,
+        clientHeight,
+        scrollHeight
+      );
+      const bottom = scrollTop + clientHeight >= scrollHeight - 300;
 
       if (bottom && !loading) {
-        console.log("near bottom reached")
+        console.log("near bottom reached");
         loadMore();
       }
     };
@@ -77,6 +86,7 @@ export default function RestaurantsScreen() {
       mainData={items} // ✅ pass paginated items
       cuisineDataFromHook={restaurantCuisinesData}
       loading={loading}
+      cuisinesloading={cuisinesloading}
       error={!!error}
       hasMore={hasMore} // ✅ pass down so MainSection can show "No more"
     />

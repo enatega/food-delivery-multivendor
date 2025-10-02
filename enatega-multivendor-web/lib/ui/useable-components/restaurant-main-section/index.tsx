@@ -25,7 +25,7 @@ function MainSection({
   const { isSearchFocused, setIsSearchFocused, filter } = useSearchUI();
 
   const [isModalOpen, setIsModalOpen] = useState({ value: false, id: "" });
-
+  console.log("Loading and Has more in MainSection:", loading, hasMore);
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
       if (isModalOpen.value !== value || isModalOpen.id !== id) {
