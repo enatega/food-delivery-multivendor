@@ -43,7 +43,7 @@ function Cart(props) {
   const Analytics = analytics()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
-  const { isLoggedIn, profile, restaurant: cartRestaurant, cart, cartCount, addQuantity, removeQuantity, isPickup, setIsPickup, instructions, setInstructions } = useContext(UserContext)
+  const { isLoggedIn, profile, restaurant: cartRestaurant, cart, cartCount, addQuantity, removeQuantity, isPickup, setIsPickup, instructions, setInstructions, coupon } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
@@ -86,8 +86,6 @@ function Cart(props) {
   useEffect(() => {
     animateQuantityChange()
   }, [addQuantity, removeQuantity])
-
-  const coupon = props?.route.params && props?.route.params.coupon ? props?.route.params.coupon : null
 
   const tip = props?.route.params && props?.route.params.tipAmount ? props?.route.params.tipAmount : null
 
