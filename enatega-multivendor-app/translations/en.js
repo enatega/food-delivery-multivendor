@@ -392,6 +392,8 @@ export const en = {
   change: 'Change',
   myAccount: 'My Account',
   estimatedDeliveryTime: 'Estimated delivery time',
+  orderTracking: 'Order Tracking',
+  deliveringSoon: 'Delivering Soon',
   current: 'Current',
   past: 'Past',
   deliveredOn: 'delivered on',

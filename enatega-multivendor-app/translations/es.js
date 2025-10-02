@@ -392,6 +392,8 @@ export const es = {
     change: 'Cambiar',
     myAccount: 'Mi cuenta',
     estimatedDeliveryTime: 'Tiempo estimado de entrega',
+    orderTracking: 'Seguimiento de Pedido',
+    deliveringSoon: 'Entregando Pronto',
     current: 'Actual',
     past: 'Anterior',
     deliveredOn: 'entregado el',
