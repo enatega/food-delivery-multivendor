@@ -6,12 +6,10 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import Script from "next/script";
 
-
 export const metadata = {
   title: "Enatega Multivendor",
-  manifest:"/manifest.json",
+  manifest: "/manifest.json",
 };
-
 
 export default async function RootLayout({
   children,
@@ -21,13 +19,13 @@ export default async function RootLayout({
   const locale = await getLocale();
   const rtlLocales = ["ar", "hr", "fa", "ur"];
   const baseLocale = locale.split("-")[0];
-  const dir = rtlLocales.includes(locale) || rtlLocales.includes(baseLocale)
+  const dir =
+    rtlLocales.includes(locale) || rtlLocales.includes(baseLocale)
       ? "rtl"
       : "ltr";
   //Providing all messages to the client
   //side is the easiest way to get started
-  
-  
+
   const messages = await getMessages({ locale });
 
   return (
@@ -58,14 +56,13 @@ export default async function RootLayout({
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/m893shrzty";
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script");
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "tjqw9wn955");
           `}
         </Script>
 
-        
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#94e469" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -80,15 +77,15 @@ export default async function RootLayout({
         />
         {/* Add more media queries for other device sizes if needed */}
       </head>
-      <body  className={dir === "rtl" ? "rtl" : ""}>
-      <ThemeProvider>
-        <NextIntlClientProvider messages={messages}>
-        <DirectionProvider dir={dir}>
-        <DirectionHandler />
-          {children}
-          {/* <InstallPWA/> */}
-          </DirectionProvider>
-        </NextIntlClientProvider>
+      <body className={dir === "rtl" ? "rtl" : ""}>
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            <DirectionProvider dir={dir}>
+              <DirectionHandler />
+              {children}
+              {/* <InstallPWA/> */}
+            </DirectionProvider>
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>
