@@ -24,8 +24,8 @@ const FdGoogleBtn = props => {
       onPress={props?.onPress}>
       {props?.loadingIcon ? (
         <Spinner
-        backColor={currentTheme.themeBackground}
-        spinnerColor={currentTheme.main}
+        backColor='transparent'
+          spinnerColor={currentTheme.main}
         />
       ) : (
         <>
