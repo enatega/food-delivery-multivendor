@@ -100,7 +100,7 @@
     "react-native-get-random-values": "~1.11.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-google-places-autocomplete": "^2.5.7",
-    "react-native-keyboard-controller": "^1.16.8",
+    "react-native-keyboard-controller": "^1.18.6",
     "react-native-maps": "1.20.1",
     "react-native-maps-directions": "^1.9.0",
     "react-native-material-ripple": "^0.9.1",
