@@ -29,15 +29,15 @@ export default function ChatHeader() {
       className="mt-2 p-2"
       style={{ backgroundColor: appTheme.themeBackground }}
     >
-      <View className="flex-row justify-between">
+      <View className="flex-row justify-between items-center">
         <TouchableOpacity onPress={() => router.back()}>
-          <CircleCrossIcon color={appTheme.fontMainColor} height={22} width={22}/>
+          <CircleCrossIcon color={appTheme.fontMainColor} height={30} width={30}/>
         </TouchableOpacity>
-        <Text style={{ color: appTheme.fontMainColor }}>
+        <Text  style={{ color: appTheme.fontMainColor , fontSize:16 }}>
           {t("Contact Customer")}
         </Text>
         <TouchableOpacity onPress={() => callNumber(phoneNumber ?? "")} >
-          <CallIcon color={appTheme.fontMainColor} height={22} width={22}/>
+          <CallIcon color={appTheme.fontMainColor} height={25} width={25}/>
         </TouchableOpacity>
       </View>
       <View

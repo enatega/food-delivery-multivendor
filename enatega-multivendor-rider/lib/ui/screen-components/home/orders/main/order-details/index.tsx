@@ -681,7 +681,7 @@ export default function OrderDetailScreen() {
               {tab == "processing" && localOrder.orderStatus === "PICKED" && (
                 <TouchableOpacity
                   className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
-                  style={{ backgroundColor: appTheme.primary }}
+                  style={{ backgroundColor: appTheme.primary , marginBottom: insets.bottom +10 }}
                   disabled={loadingOrderStatus}
                   onPress={async () => {
                     await mutateOrderStatus({
