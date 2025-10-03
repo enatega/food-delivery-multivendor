@@ -39,6 +39,7 @@ export default function CurrentLocation() {
   const { getCurrentLocation, getLocationPermission } = useLocation()
   const [citiesModalVisible, setCitiesModalVisible] = useState(false)
   const [currentLocation, setCurrentLocation] = useState(null)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   const { getAddress } = useGeocoding()
 
@@ -208,6 +209,15 @@ export default function CurrentLocation() {
     checkCityMatch()
   }, [currentLocation, cities])
 
+  // Add a small delay to prevent flashing of permission screen
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false)
+    }, 1000) // Wait 1 second before showing permission screen
+
+    return () => clearTimeout(timer)
+  }, [])
+
   const initialRegion = {
     latitude: 16.10966,
     longitude: 71.41271,
@@ -218,8 +228,8 @@ export default function CurrentLocation() {
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
-  return !currentLocation ? (
-    <View style={allowedLocationStyles.container}>
+  return !currentLocation && !isInitialLoading ? (
+    <View style={[allowedLocationStyles.container, { backgroundColor: currentTheme.themeBackground }]}>
       <Text style={allowedLocationStyles.title}>Enable Location Services</Text>
       <Text style={allowedLocationStyles.description}>We need access to your location to show nearby restaurants and provide accurate delivery services.</Text>
       <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermissionHandler}>
@@ -322,7 +332,6 @@ const allowedLocationStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff'
   },
   title: {
     fontSize: 24,

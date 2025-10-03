@@ -57,6 +57,7 @@ function Addresses() {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [selectedAddressId, setSelectedAddressId] = useState(null)
   const [deleteAllModalVisible, setdeleteAllModalVisible] = useState(false)
+  const [finalConfirmVisible, setFinalConfirmVisible] = useState(false)
 
   function onCompleted() {
     setdeleteAllModalVisible(false)
@@ -190,22 +191,17 @@ function Addresses() {
     })
   }
 
-  const handleDeleteSelectedAddresses = async () => {
-    // Iterate through selected addresses and delete them
-    // await Promise.all(selectedAddresses.forEach((address) => {
-    //   mutate({ variables: { id: address } })
-    //     .then((response) => {
-    //       console.log('Mutation success:', response);
-    //     })
-    //     .catch((error) => {
-    //       console.log('Mutation error:', error);
-    //     });
-    // }))
+  const handleDeleteSelectedAddresses = () => {
+    setdeleteAllModalVisible(false)
+    setFinalConfirmVisible(true)
+  }
+
+  const confirmBulkDelete = async () => {
     mutateBulkDelete({
       variables: { ids: selectedAddresses }
     })
-    // Clear the selected addresses state
     setSelectedAddresses([])
+    setFinalConfirmVisible(false)
   }
 
   const editMyAddress = (address) => {
@@ -221,18 +217,21 @@ function Addresses() {
     // setSelectedAddressId(null)
   }
 
-  const deleteMyAddress = async (addressId) => {
-    await mutate({ variables: { id: addressId } })
+  const deleteMyAddress = () => {
+    setDeleteModalVisible(false)
+    setFinalConfirmVisible(true)
+  }
+
+  const confirmSingleDelete = async () => {
+    await mutate({ variables: { id: selectedAddressId._id } })
       .then((response) => {
         console.log('Mutation success:', response)
-        // Show success message after deletion (optional)
       })
       .catch((error) => {
         console.log('Mutation error:', error)
-        // Handle errors appropriately (optional)
       })
     setSelectedAddressId(null)
-    setDeleteModalVisible(false)
+    setFinalConfirmVisible(false)
   }
 
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
@@ -357,11 +356,20 @@ function Addresses() {
         modalVisible={deleteAllModalVisible}
         setModalVisible={setdeleteAllModalVisible}
         currentTheme={currentTheme}
-        // selectedAddress={selectedAddressId}
         loading={loadingDeleteBulk}
         onDelete={handleDeleteSelectedAddresses}
         t={t}
         deleteAllButton
+      />
+
+      <DeleteEditModal
+        modalVisible={finalConfirmVisible}
+        setModalVisible={setFinalConfirmVisible}
+        currentTheme={currentTheme}
+        selectedAddress={{ deliveryAddress: t('confirmDelete') }}
+        loading={loadingAddressMutation || loadingDeleteBulk}
+        onDelete={selectedAddresses.length > 0 ? confirmBulkDelete : confirmSingleDelete}
+        t={t}
       />
     </View>
   )

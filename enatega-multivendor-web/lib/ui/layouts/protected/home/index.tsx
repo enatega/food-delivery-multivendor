@@ -71,7 +71,7 @@ export default function HomeLayout({
       <div
         className={`sm:sticky sm:top-${stickyTop} sm:left-0 fixed bottom-0 left-0 w-full bg-gray-100 dark:bg-gray-900 sm:bg-white z-30 pt-2 pb-2 sm:pt-3 sm:pb-3 ${isSearchFocused && "opacity-0"}`}
       >
-        <div className="flex justify-center items-center space-x-4 md:space-x-6 p-2 md:p-4 overflow-x-auto">
+        <div className="flex justify-center items-center space-x-4 md:space-x-6 p-2 md:p-4 overflow-x-auto mt-6 lg:mt-0">
           <TabItem
             active={isDiscovery}
             label={t("tab_discovery")}

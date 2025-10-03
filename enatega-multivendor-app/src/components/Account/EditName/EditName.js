@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { TouchableOpacity, View, TextInput } from 'react-native'
+import Spinner from '../../Spinner/Spinner'
 import styles from './styles.js'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext.js'
 import { theme } from '../../../utils/themeColors.js'
@@ -12,7 +13,7 @@ import navigationService from '../../../routes/navigationService.js'
 import { updateUser } from '../../../apollo/mutations.js'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
-import { useRoute } from '@react-navigation/native'
+import { useRoute, useFocusEffect } from '@react-navigation/native'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage.js'
 
 const UPDATEUSER = gql`
@@ -27,11 +28,28 @@ const EditName = (props) => {
   const { name: initialName, phone } = route?.params
   const [mutate, { loading: loadingMutation }] = useMutation(UPDATEUSER, {
     onCompleted,
-    onError
+    onError,
+    refetchQueries: ['Profile'],
+    awaitRefetchQueries: true
   })
   const [name, setName] = useState(initialName)
   const [nameError, setNameError] = useState('')
   const [isNameChanged, setIsNameChanged] = useState(false)
+
+  // Handle back button press with unsaved changes
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (isNameChanged) {
+          // Could add an alert here asking if user wants to discard changes
+          return false // Allow navigation
+        }
+        return false
+      }
+
+      return onBackPress
+    }, [isNameChanged])
+  )
 
   useEffect(() => {
     props?.navigation.setOptions({
@@ -66,6 +84,11 @@ const EditName = (props) => {
             </View>
           )}
           onPress={() => {
+            if (isNameChanged) {
+              // Reset to original name if there are unsaved changes
+              setName(initialName)
+              setIsNameChanged(false)
+            }
             navigationService.goBack()
           }}
         />
@@ -98,7 +121,6 @@ const EditName = (props) => {
 
   const validateName = async () => {
     setNameError('')
-
     const updatedName = name.trim()
 
     if (updatedName !== initialName) {
@@ -106,21 +128,8 @@ const EditName = (props) => {
         setNameError(t('nameError'))
         return false
       }
-
-      try {
-        await mutate({
-          variables: {
-            name: updatedName,
-            // phone
-          }
-        })
-        return true
-      } catch (error) {
-        console.error('Mutation error:', error)
-        return false
-      }
+      return true
     }
-
     return true
   }
 
@@ -139,9 +148,9 @@ const EditName = (props) => {
 
   const updateName = async () => {
     const isValid = await validateName()
-    if (isValid) {
+    if (isValid && name.trim() !== initialName) {
       try {
-        const response = await mutate({
+        await mutate({
           variables: {
             name: name.trim()
           }
@@ -149,8 +158,6 @@ const EditName = (props) => {
       } catch (error) {
         console.error('Mutation error:', error)
       }
-    } else {
-      console.log('Validation failed, not updating user name')
     }
   }
 
@@ -193,12 +200,16 @@ const EditName = (props) => {
                 }
               ]}
               onPress={handleNamePressUpdate}
-              disabled={!isNameChanged}
+              disabled={!isNameChanged || loadingMutation}
             >
               <View style={styles(currentTheme).contentContainer}>
-                <TextDefault bold H5>
-                  {t('saveBtn')}
-                </TextDefault>
+                {loadingMutation ? (
+                  <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.white} />
+                ) : (
+                  <TextDefault bold H5>
+                    {t('saveBtn')}
+                  </TextDefault>
+                )}
               </View>
             </TouchableOpacity>
           </View>

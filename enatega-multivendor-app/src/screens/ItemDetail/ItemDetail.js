@@ -28,6 +28,9 @@ import { Text } from 'react-native'
 import { scale } from '../../utils/scaling'
 import { TextField } from 'react-native-material-textfield'
 
+// Utils
+import { truncateText } from '../../utils/customFunctions'
+
 const { height } = Dimensions.get('window')
 const TOP_BAR_HEIGHT = Math.round(height * 0.08)
 const HEADER_MAX_HEIGHT = Math.round(height * 0.4)
@@ -113,7 +116,7 @@ function ItemDetail(props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
-      title: food?.restaurantName,
+      title: truncateText(20, food?.restaurantName),
       headerTitleAlign: 'center',
       headerStyle: {
         backgroundColor: currentTheme.newheaderBG

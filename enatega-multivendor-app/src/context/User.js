@@ -34,6 +34,7 @@ export const UserProvider = (props) => {
   const [restaurant, setRestaurant] = useState(null)
   const [isPickup, setIsPickup] = useState(false)
   const [instructions, setInstructions] = useState('')
+  const [coupon, setCoupon] = useState(null)
 
   const {
     called: calledProfile,
@@ -53,8 +54,10 @@ export const UserProvider = (props) => {
     ;(async () => {
       const restaurant = await AsyncStorage.getItem('restaurant')
       const cart = await AsyncStorage.getItem('cartItems')
+      const savedCoupon = await AsyncStorage.getItem('coupon')
       isSubscribed && setRestaurant(restaurant || null)
       isSubscribed && setCart(cart ? JSON.parse(cart) : [])
+      isSubscribed && setCoupon(savedCoupon ? JSON.parse(savedCoupon) : null)
     })()
     return () => {
       isSubscribed = false
@@ -105,6 +108,7 @@ export const UserProvider = (props) => {
     setCart([])
     setRestaurant(null)
     setInstructions('')
+    await saveCoupon(null)
     await AsyncStorage.removeItem('cartItems')
     await AsyncStorage.removeItem('restaurant')
   }
@@ -186,6 +190,15 @@ export const UserProvider = (props) => {
     await AsyncStorage.setItem('restaurant', id)
   }
 
+  const saveCoupon = async (couponData) => {
+    setCoupon(couponData)
+    if (couponData) {
+      await AsyncStorage.setItem('coupon', JSON.stringify(couponData))
+    } else {
+      await AsyncStorage.removeItem('coupon')
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -210,7 +223,9 @@ export const UserProvider = (props) => {
         isPickup,
         setIsPickup,
         instructions,
-        setInstructions
+        setInstructions,
+        coupon,
+        setCoupon: saveCoupon
       }}
     >
       {props.children}

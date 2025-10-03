@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { verticalScale, scale } from '../../../utils/scaling'
 import { fontStyles } from '../../../utils/fontStyles'
 import { theme } from '../../../utils/themeColors'
@@ -115,6 +115,25 @@ const styles = (props = null) =>
       marginTop: scale(2),
       marginBottom: scale(2),
       paddingLeft: scale(40)
+    },
+    minimizedTab: {
+      backgroundColor: props !== null ? props?.main : '#FF6B6B',
+      borderRadius: scale(30),
+      paddingHorizontal: scale(16),
+      paddingVertical: scale(12),
+      minWidth: scale(120)
+    },
+    minimizedContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    minimizedBadge: {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      borderRadius: scale(12),
+      paddingHorizontal: scale(8),
+      paddingVertical: scale(4),
+      marginLeft: scale(8)
     }
   })
 
