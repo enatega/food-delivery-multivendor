@@ -294,7 +294,7 @@ function ItemDetail(props) {
       }, 0)
     })
     return (variation + addons).toFixed(2)
-  }, [selectedVariation, addons])
+  }, [selectedVariation, addons,selectedAddons])
 
   const calculateDiscountedPrice = useCallback(() => {
     const variation = selectedVariation.discounted
