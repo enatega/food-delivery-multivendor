@@ -322,6 +322,30 @@ export const restaurantPreviewFragment = gql`
     }
   }
 `
+
+export const RESTAURANTS_CARD_FRAGMENT = gql`
+  fragment RestaurantCardPreviewFields on RestaurantCardPreview {
+    _id
+    name
+    image
+    logo
+    slug
+    shopType
+    deliveryTime
+    reviewAverage
+    cuisines
+    openingTimes {
+      day
+      times {
+        startTime
+        endTime
+      }
+    }
+    isAvailable
+    isActive
+  }
+`;
+
 export const profile = `
         query{
           profile{
