@@ -34,7 +34,6 @@ const Card: React.FC<ICardProps> = ({
 
   const { DELIVERY_RATE } = useConfig();
 
-  console.log("isModalOpen", isModalOpen);
   const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
     const now = new Date();
     const currentDay = now
@@ -136,7 +135,7 @@ const Card: React.FC<ICardProps> = ({
         {/* Icons Section */}
         <div className="flex flex-row justify-between w-[80%] sm:w-[100%] lg:w-[75%] pt-1">
           <IconWithTitle
-            logo={() => <ClockSvg isBlue={true}  />}
+            logo={() => <ClockSvg isBlue={true} />}
             title={item?.deliveryTime + " mins"}
             isBlue={true}
           />

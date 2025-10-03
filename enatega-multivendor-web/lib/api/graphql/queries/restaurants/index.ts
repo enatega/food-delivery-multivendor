@@ -56,17 +56,40 @@ export const RESTAURANTS_FRAGMENT = gql`
   }
 `;
 
+export const RESTAURANTS_CARD_FRAGMENT = gql`
+  fragment RestaurantCardPreviewFields on RestaurantCardPreview {
+    _id
+    name
+    image
+    slug
+    shopType
+    deliveryTime
+    reviewAverage
+    cuisines
+    openingTimes {
+      day
+      times {
+        startTime
+        endTime
+      }
+    }
+    isAvailable
+    isActive
+  }
+`;
+
 export const RECENT_ORDER_RESTAURANTS = gql`
-  ${RESTAURANTS_FRAGMENT}
+  ${RESTAURANTS_CARD_FRAGMENT}
   query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
     recentOrderRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantPreviewFields
+      # ...RestaurantPreviewFields
+      ...RestaurantCardPreviewFields
     }
   }
 `;
 
 export const MOST_ORDER_RESTAURANTS = gql`
-  ${RESTAURANTS_FRAGMENT}
+  ${RESTAURANTS_CARD_FRAGMENT}
   query GetMostOrderedRestaurants(
     $latitude: Float!
     $longitude: Float!
@@ -81,12 +104,14 @@ export const MOST_ORDER_RESTAURANTS = gql`
       limit: $limit
       shopType: $shopType
     ) {
-      ...RestaurantPreviewFields
+      # ...RestaurantPreviewFields
+      ...RestaurantCardPreviewFields
     }
   }
 `;
 
 export const NEAR_BY_RESTAURANTS_PREVIEW = gql`
+  ${RESTAURANTS_CARD_FRAGMENT}
   query Restaurants(
     $latitude: Float
     $longitude: Float
@@ -102,38 +127,8 @@ export const NEAR_BY_RESTAURANTS_PREVIEW = gql`
       shopType: $shopType
     ) {
       restaurants {
-        _id
-        name
-        slug
-        image
-        address
-        deliveryTime
-        minimumOrder
-        rating
-        isActive
-        isAvailable
-        commissionRate
-        tax
-        shopType
-        cuisines
-        reviewCount
-        reviewAverage
-        distanceWithCurrentLocation @client
-        freeDelivery @client
-        acceptVouchers @client
-        deliveryInfo {
-          deliveryFee
-        }
-        location {
-          coordinates
-        }
-        openingTimes {
-          day
-          times {
-            startTime
-            endTime
-          }
-        }
+        # ...RestaurantPreviewFields
+        ...RestaurantCardPreviewFields
       }
     }
   }
