@@ -192,7 +192,7 @@ export const theme = {
     shadow: '#707070',
     errorInputBack: '#000',
     errorInputBorder: '#DB4A39',
-    inputPlaceHolder: 'rgba(255, 255, 255, 0.5)',
+    inputPlaceHolder: 'rgba(255, 255, 255, 0.3)',
     transparent: '#ff000080',
     customizeOpacityBtn: 'rgba(0, 0, 0, 0.74)',
     backgroundColor3: 'rgba(0, 0, 0, 0.9)',

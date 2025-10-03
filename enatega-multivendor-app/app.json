@@ -29,6 +29,7 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",
+      "icon": "./assets/icon.png",
       "config": {
         "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
       },

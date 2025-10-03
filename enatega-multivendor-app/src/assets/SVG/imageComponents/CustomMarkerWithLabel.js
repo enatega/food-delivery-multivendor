@@ -17,11 +17,11 @@ const CustomMarkerWithLabel = ({ coordinate, label, icon, onPress, currentTheme 
 
 const getStyles = (currentTheme) => StyleSheet.create({
   markerContainer: {
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   icon: {
-    width: 50,
-    height: 50,
+    width: 32,
+    height: 32,
   },
   label: {
     marginTop: 2,

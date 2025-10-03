@@ -134,11 +134,26 @@ export const useChatScreen = ({ navigation, route }) => {
     return unsubscribe
   })
   const onSend = () => {
+    if (!inputMessage?.trim()) return
+    
+    const newMessage = {
+      _id: Date.now().toString(),
+      text: inputMessage.trim(),
+      createdAt: new Date(),
+      user: {
+        _id: profile._id,
+        name: profile.name
+      }
+    }
+    
+    // Optimistically update messages
+    setMessages(previousMessages => [newMessage, ...previousMessages])
+    
     send({
       variables: {
         orderId: orderId,
         messageInput: {
-          message: inputMessage,
+          message: inputMessage.trim(),
           user: {
             id: profile._id,
             name: profile.name
@@ -146,7 +161,7 @@ export const useChatScreen = ({ navigation, route }) => {
         }
       }
     })
-    setInputMessage(null)
+    setInputMessage('')
     setImage([])
   }
 

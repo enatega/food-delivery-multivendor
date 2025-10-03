@@ -22,12 +22,12 @@ export const WrongAddressModal = ({
           <View style={styles.modalContainer}>
             <View style={{ ...alignment.MBsmall }}>
               <TextDefault H4 bolder textColor={theme.gray900}>
-                {t("Can't delivery to this address")}
+                {t("Can't deliver to this address")}
               </TextDefault>
             </View>
             <View>
               <TextDefault H5 textColor={theme.gray500}>
-                {t('Currently Restaurant is not delivering to your selected address')}
+                {t('This restaurant doesn’t deliver to your location. Please explore restaurants available in your delivery area')}{'.'}
               </TextDefault>
             </View>
 
