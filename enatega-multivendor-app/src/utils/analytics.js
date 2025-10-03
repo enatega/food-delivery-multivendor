@@ -48,7 +48,7 @@ const Analytics = () => {
 
   const initialize = async () => {
     const trackingStatus = await getTrackingPermissions()
-    if (isInitialized || !apiKey/*  || trackingStatus !== 'granted' */) {
+    if (isInitialized || !apiKey /*  || trackingStatus !== 'granted' */) {
       return
     }
     await amplitude.init(apiKey)
