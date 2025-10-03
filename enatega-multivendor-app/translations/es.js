@@ -327,7 +327,6 @@ export const es = {
   statusAssigned: 'Asignado',
   statusPicked: 'Recogido',
   statusDelivered: 'Entregado',
-  ///
   selectLocation: 'Seleccionar ubicación',
   languageSetting: 'Configuración de idioma',
   receiveOfferByEmail: 'Deseo recibir ofertas especiales y promociones de nosotros por correo electrónico',
@@ -383,15 +382,12 @@ export const es = {
   locationType: 'Tipo de ubicación',
   locationTypeDetails: 'El tipo de ubicación nos ayuda a encontrarlo mejor',
   additionalItems: 'Artículos adicionales',
-  edit: 'Editar',
   notAvailableinYourArea: 'Actualmente no estamos disponibles en su área',
   noRestaurant: 'Actualmente ningún restaurante ofrece entrega en su área',
   apply: 'Aplicar',
   filters: 'Filtros',
   help: 'Ayuda',
   frequentlyBoughtTogether: 'Comprados frecuentemente juntos',
-  estimatedDeliveryTime: 'Tiempo estimado de entrega',
-  details: 'Detalles',
   mins: 'minutos',
   mostOrderedNow: 'Más pedidos en este momento',
   'Order it again': 'Pedirlo nuevamente',
@@ -411,7 +407,6 @@ export const es = {
   emptyHere: 'Está vacío aquí',
   addressNotSaved: 'Aún no ha guardado ninguna dirección',
   addNewAddress: 'Haga clic en Añadir nueva dirección para comenzar',
-  yourOrder: 'Pedido',
   exclusiveVAt: 'IVA ya incluido',
   replyRider: '¡Envíe una respuesta al repartidor!',
   within: 'Dentro de',
@@ -575,7 +570,6 @@ export const es = {
   'Lets shop for': 'Vamos a comprar',
   Collections: 'Colecciones',
   'All Stores': 'Todas las tiendas',
-
   'Order Again': 'Pedir nuevamente',
   'Top Picks': 'Mejores selecciones',
   'Top Brands': 'Mejores marcas',
@@ -623,4 +617,4 @@ export const es = {
   'Applied Filters': 'Filtros aplicados',
   'WhatsApp is not installed on the device': 'WhatsApp no está instalado en el dispositivo',
   'Install it': 'Instalarlo'
-}
+};

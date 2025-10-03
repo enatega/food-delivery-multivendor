@@ -67,7 +67,7 @@ function Checkout(props) {
   )
 
   const configuration = useContext(ConfigurationContext)
-  const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions } = useContext(UserContext)
+  const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions, coupon, setCoupon } = useContext(UserContext)
 
   console.log('rest===>', restaurant)
 
@@ -89,7 +89,6 @@ function Checkout(props) {
   const [deliveryCharges, setDeliveryCharges] = useState(0)
   const [restaurantName, setrestaurantName] = useState('...')
   const [voucherCode, setVoucherCode] = useState('')
-  const [coupon, setCoupon] = useState(null)
   const [tip, setTip] = useState(null)
   const [tipAmount, setTipAmount] = useState('')
   const calenderModalRef = useRef(null)
@@ -246,11 +245,11 @@ function Checkout(props) {
           >
             {t('titleCheckout')}
           </TextDefault>
-          <TextDefault style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
+          <TextDefault numberOfLines={1} style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
             {data && data?.restaurant.name && data?.restaurant.address && (
               <>
                 {data?.restaurant.name} {' - '}
-                {data.restaurant.address.length > 12 ? data.restaurant.address.slice(0, 12) + '...' : data.restaurant.address}
+                {data.restaurant.address}
               </>
             )}
           </TextDefault>

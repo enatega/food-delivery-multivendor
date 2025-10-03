@@ -38,9 +38,30 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
       </View>
 
       <View style={styles.itemsContainer}>
-        {items?.map((item) => (
-          <ItemRow key={item._id} theme={theme} quantity={item.quantity} variationTitle={item.variation.title} title={`${item.title}`} currency={currencySymbol} price={item.variation.price} options={item.addons.map((addon) => addon.options.map(({ title }) => title))} image={item?.image} />
-        ))}
+        {items?.map((item) => {
+          // Calculate total price including addons
+          const basePrice = item.variation.price
+          const addonPrice = item.addons.reduce((total, addon) => {
+            return total + addon.options.reduce((addonTotal, option) => {
+              return addonTotal + (option.price || 0)
+            }, 0)
+          }, 0)
+          const totalItemPrice = basePrice + addonPrice
+          
+          return (
+            <ItemRow 
+              key={item._id} 
+              theme={theme} 
+              quantity={item.quantity} 
+              variationTitle={item.variation.title} 
+              title={`${item.title}`} 
+              currency={currencySymbol} 
+              price={totalItemPrice} 
+              options={item.addons.map((addon) => addon.options.map(({ title }) => title))} 
+              image={item?.image} 
+            />
+          )
+        })}
       </View>
     </View>
   )

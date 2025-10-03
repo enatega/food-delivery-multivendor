@@ -37,9 +37,18 @@ const FavoriteButton = ({ restaurantId, iconSize }) => {
   })
 
   const handleAddToFavorites = () => {
-    if (!loadingMutation && profile) {
+    console.log('FavoriteButton pressed!', { restaurantId, loadingMutation, profile: !!profile })
+    
+    if (loadingMutation) {
+      console.log('Button disabled due to loading state')
+      return
+    }
+    
+    if (profile) {
+      console.log('Adding to favorites...')
       mutate({ variables: { id: restaurantId } })
-    } else if (!profile) {
+    } else {
+      console.log('User not logged in, showing login message')
       FlashMessage({ message: t('loginRequired') }) 
       navigation.navigate('CreateAccount') 
     }
@@ -50,6 +59,19 @@ const FavoriteButton = ({ restaurantId, iconSize }) => {
       activeOpacity={0.7}
       disabled={loadingMutation}
       onPress={handleAddToFavorites}
+      hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+      pointerEvents={loadingMutation ? 'none' : 'auto'}
+      style={{
+        minWidth: scale(44),
+        minHeight: scale(44),
+        paddingHorizontal: scale(8),
+        paddingVertical: scale(8),
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 9999,
+        elevation: 9999,
+        position: 'relative'
+      }}
     >
       {loadingMutation ? (
         <Spinner

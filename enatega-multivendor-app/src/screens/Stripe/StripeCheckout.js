@@ -17,7 +17,7 @@ const MYORDERS = gql`
 function StripeCheckout(props) {
   const Analytics = analytics()
 
-  const { SERVER_URL } = useEnvVars()
+  const { SERVER_REST_URL } = useEnvVars()
   const { t } = useTranslation()
   const [loading, loadingSetter] = useState(true)
   const { clearCart } = useContext(UserContext)
@@ -75,7 +75,7 @@ function StripeCheckout(props) {
           loadingSetter(false)
         }}
         source={{
-          uri: `${SERVER_URL}stripe/create-checkout-session?id=${_id}`
+          uri: `${SERVER_REST_URL}stripe/create-checkout-session?id=${_id}`
         }}
         scalesPageToFit={true}
         onNavigationStateChange={(data) => {
