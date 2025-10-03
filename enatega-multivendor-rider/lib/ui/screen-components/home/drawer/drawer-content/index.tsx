@@ -178,7 +178,7 @@ export default function CustomDrawerContent(
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            Linking.openURL("https://multivendor.enatega.com/#/privacy");
+            Linking.openURL("https://multivendor.enatega.com/privacy");
           }}
           className="flex-row justify-between items-center px-4 py-4 border-b-[0.5px]"
           style={{ borderColor: appTheme.borderLineColor }}
