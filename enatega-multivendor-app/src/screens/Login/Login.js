@@ -1,14 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
-  Image,
-  TextInput,
-  StatusBar
-} from 'react-native'
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image, TextInput, StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import Spinner from '../../components/Spinner/Spinner'
@@ -26,23 +17,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 
 function Login(props) {
-  const {
-    setEmail,
-    password,
-    setPassword,
-    emailError,
-    passwordError,
-    registeredEmail,
-    loading,
-    loginLoading,
-    loginAction,
-    currentTheme,
-    showPassword,
-    setShowPassword,
-    checkEmailExist,
-    emailRef,
-    themeContext
-  } = useLogin()
+  const { setEmail, password, setPassword, emailError, passwordError, registeredEmail, loading, loginLoading, loginAction, currentTheme, showPassword, setShowPassword, checkEmailExist, emailRef, themeContext } = useLogin()
   const { t } = useTranslation()
   const headerHeight = useHeaderHeight()
   useLayoutEffect(() => {
@@ -56,40 +31,18 @@ function Login(props) {
     )
   }, [props?.navigation])
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView />
 
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={styles(currentTheme).safeAreaViewStyles}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles().flex}
-        keyboardVerticalOffset={headerHeight}
-      >
-        <StatusBar
-          backgroundColor={currentTheme.themeBackground}
-          barStyle={
-            themeContext.ThemeValue === 'Dark'
-              ? 'light-content'
-              : 'dark-content'
-          }
-        />
-        <ScrollView
-          style={styles().flex}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}
-        >
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles().flex} keyboardVerticalOffset={headerHeight}>
+        <StatusBar backgroundColor={currentTheme.themeBackground} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
+        <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View>
-                <SignUpSvg
-                  fillColor={currentTheme.svgFill}
-                  strokeColor={currentTheme.newIconColor}
-                />
+                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
@@ -105,13 +58,7 @@ function Login(props) {
                   {registeredEmail ? t('yourEmailPassword') : t('yourEmail')}
                 </TextDefault>
 
-                <TextDefault
-                  H5
-                  bold
-                  textColor={currentTheme.horizontalLine}
-                  style={{ ...alignment.MBmedium }}
-                  isRTL
-                >
+                <TextDefault H5 bold textColor={currentTheme.horizontalLine} style={{ ...alignment.MBmedium }} isRTL>
                   {registeredEmail ? t('emailExists') : t('checkAccount')}
                 </TextDefault>
               </View>
@@ -121,24 +68,15 @@ function Login(props) {
                     <View>
                       <TextInput
                         placeholder={t('email')}
-                        style={[
-                          styles(currentTheme).textField,
-                          emailError !== null
-                            ? styles(currentTheme).errorInput
-                            : {}
-                        ]}
+                        style={[styles(currentTheme).textField, emailError !== null ? styles(currentTheme).errorInput : {}]}
                         placeholderTextColor={currentTheme.fontSecondColor}
                         // value={setEmail}
-                        defaultValue='demo-customer@enatega.com'
+                        // defaultValue='demo-customer@enatega.com'
+                        defaultValue=''
                         onChangeText={(e) => setEmail(e.toLowerCase().trim())}
                       />
                       {emailError !== null && (
-                        <TextDefault
-                          style={styles().error}
-                          bold
-                          textColor={currentTheme.textErrorColor}
-                          isRTL
-                        >
+                        <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                           {emailError}
                         </TextDefault>
                       )}
@@ -147,40 +85,12 @@ function Login(props) {
                   {registeredEmail && (
                     <>
                       <View style={styles(currentTheme).passwordField}>
-                        <TextInput
-                          secureTextEntry={showPassword}
-                          placeholder={t('password')}
-                          style={[
-                            styles(currentTheme).textField,
-                            styles().passwordInput,
-                            passwordError !== null
-                              ? styles(currentTheme).errorInput
-                              : {}
-                          ]}
-                          placeholderTextColor={currentTheme.fontSecondColor}
-                          value={password}
-                          onChangeText={(e) => setPassword(e)}
-                        />
-                        <FontAwesome
-                          onPress={() => setShowPassword(!showPassword)}
-                          name={showPassword ? 'eye-slash' : 'eye'}
-                          size={24}
-                          color={
-                            passwordError === null
-                              ? currentTheme.newFontcolor
-                              : currentTheme.textErrorColor
-                          }
-                          style={[styles(currentTheme).eyeBtn]}
-                        />
+                        <TextInput secureTextEntry={showPassword} placeholder={t('password')} style={[styles(currentTheme).textField, styles().passwordInput, passwordError !== null ? styles(currentTheme).errorInput : {}]} placeholderTextColor={currentTheme.fontSecondColor} value={password} onChangeText={(e) => setPassword(e)} />
+                        <FontAwesome onPress={() => setShowPassword(!showPassword)} name={showPassword ? 'eye-slash' : 'eye'} size={24} color={passwordError === null ? currentTheme.newFontcolor : currentTheme.textErrorColor} style={[styles(currentTheme).eyeBtn]} />
                       </View>
                       {passwordError !== null && (
                         <View>
-                          <TextDefault
-                            style={styles().error}
-                            bold
-                            textColor={currentTheme.textErrorColor}
-                            isRTL
-                          >
+                          <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                             {passwordError}
                           </TextDefault>
                         </View>
@@ -194,43 +104,19 @@ function Login(props) {
                           })
                         }
                       >
-                        <TextDefault
-                          textColor={currentTheme.linkColor}
-                          style={alignment.MTsmall}
-                          bolder
-                          isRTL
-                        >
+                        <TextDefault textColor={currentTheme.linkColor} style={alignment.MTsmall} bolder isRTL>
                           {t('forgotPassword')}
                         </TextDefault>
                       </TouchableOpacity>
                     </>
                   )}
                 </View>
-
               </View>
-              
+
               <View>
-                <TouchableOpacity
-                  onPress={() =>
-                    registeredEmail
-                      ? loginAction(emailRef.current, password)
-                      : checkEmailExist()
-                  }
-                  activeOpacity={0.7}
-                  style={styles(currentTheme).btn}
-                >
+                <TouchableOpacity onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} activeOpacity={0.7} style={styles(currentTheme).btn}>
                   <TextDefault H4 textColor={currentTheme.black} bold>
-                    {loading || loginLoading ? (
-                      <Spinner
-                        backColor='transparent'
-                        spinnerColor={currentTheme.white}
-                        size='small'
-                      />
-                    ) : registeredEmail ? (
-                      t('loginBtn')
-                    ) : (
-                      t('continueBtn')
-                    )}
+                    {loading || loginLoading ? <Spinner backColor='transparent' spinnerColor={currentTheme.white} size='small' /> : registeredEmail ? t('loginBtn') : t('continueBtn')}
                   </TextDefault>
                 </TouchableOpacity>
               </View>

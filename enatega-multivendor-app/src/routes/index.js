@@ -276,8 +276,7 @@ function BottomTabNavigator() {
 
 function AppContainer() {
   const client = useApolloClient()
-  const { permissionState } = useContext(LocationContext)
-  const { location, permission } = useWatchLocation()
+  const { permissionState, location } = useContext(LocationContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
   const handleNotification = useCallback(
     async (response) => {
@@ -304,6 +303,7 @@ function AppContainer() {
     }
   }, [lastNotificationResponse])
 
+  console.log({ permissionState, location })
 
   return (
     <SafeAreaProvider>
@@ -312,7 +312,7 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!permissionState?.granted ? <LocationStack /> : <MainNavigator />}
+        {!permissionState?.granted || !location ? <LocationStack /> : <MainNavigator />}
 
         {/* {<LocationStack />}
         <MainNavigator /> */}
