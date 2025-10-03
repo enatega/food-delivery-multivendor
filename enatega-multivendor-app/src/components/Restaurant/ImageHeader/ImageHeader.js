@@ -332,7 +332,7 @@ function ImageTextCenterHeader(props, ref) {
                       H3
                       bolder
                       textColor={currentTheme.fontThirdColor}
-                      style={{ flex: 1, flexShrink: 1 }}
+                      style={{ flex: 1, flexShrink: 1, marginRight: scale(10) }}
                     >
                       {aboutObject?.restaurantName}
                     </TextDefault>
