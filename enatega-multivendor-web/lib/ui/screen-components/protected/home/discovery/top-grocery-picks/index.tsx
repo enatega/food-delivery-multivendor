@@ -7,9 +7,9 @@ import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 // loading skeleton
 import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
 
-function TopGroceryPicks() {
+function TopGroceryPicks({ data, loading,error }) {
 
-  const { error, loading, groceriesData } = useMostOrderedRestaurants(true, 1, 15);
+  // const { error, loading, groceriesData } = useMostOrderedRestaurants(true, 1, 15);
 
   if (loading) {
     return <SliderSkeleton />;
@@ -19,7 +19,7 @@ function TopGroceryPicks() {
     return;
   }
 
-  return <SliderCard heading="toppicks" title="Top-grocery-picks" data={groceriesData || []} />;
+  return <SliderCard heading="toppicks" title="Top-grocery-picks" data={data || []} />;
 }
 
 export default TopGroceryPicks;
