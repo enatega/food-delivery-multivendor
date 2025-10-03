@@ -61,6 +61,7 @@ export const RESTAURANTS_CARD_FRAGMENT = gql`
     _id
     name
     image
+    logo
     slug
     shopType
     deliveryTime
