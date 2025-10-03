@@ -1049,7 +1049,7 @@ function Checkout(props) {
               <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
                 {t('enterAmount')}
               </TextDefault>
-              <TextInput keyboardType='numeric' placeholder={'25'} placeholderTextColor={currentTheme.inputPlaceHolder} value={tipAmount} onChangeText={(text) => setTipAmount(text)} style={styles(currentTheme).modalInput} />
+              <TextInput keyboardType='numeric' placeholder={'e.g. 25'} placeholderTextColor={currentTheme.inputPlaceHolder} value={tipAmount} onChangeText={(text) => setTipAmount(text)} style={styles(currentTheme).modalInput} />
             </View>
             <TouchableOpacity disabled={!tipAmount} activeOpacity={0.7} onPress={onTipping} style={[styles(currentTheme).button, { height: scale(40) }]}>
               <TextDefault textColor={currentTheme.black} style={styles().checkoutBtn} bold H4>
