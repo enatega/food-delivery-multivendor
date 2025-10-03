@@ -64,6 +64,7 @@ function OrderDetail(props) {
   const navigation = useNavigation()
   const { GOOGLE_MAPS_KEY } = useEnvVars()
   const mapView = useRef(null)
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
     onCompleted: (data) => {
@@ -141,7 +142,7 @@ function OrderDetail(props) {
   
   const isOrderPending = order?.orderStatus === ORDER_STATUS_ENUM.PENDING
   const isOrderCancelable = isOrderPending
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
