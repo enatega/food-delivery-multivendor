@@ -104,8 +104,6 @@ export default function CurrentLocation() {
     // console.log("Checking city match for location:", currentLocation);
     // console.log("Cities list:", cities);
 
-    console.log({ cl_p })
-
     setIsCheckingZone(true)
 
     const matchingCity = checkLocationInCities(cl_p, filterCities())
@@ -172,6 +170,7 @@ export default function CurrentLocation() {
     const permission_response = await onRequestPermission()
 
     setPermissionState(permission_response)
+
 
     // ❌ Permanently denied (cannot ask again)
     if (!permission_response?.canAskAgain) {
