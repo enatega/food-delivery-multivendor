@@ -397,6 +397,7 @@ export const en = {
   current: 'Current',
   past: 'Past',
   deliveredOn: 'delivered on',
+  cancelledOn: 'cancelled on',
   address: 'Address',
   language: 'Language',
   saveAddress: 'Save Address',

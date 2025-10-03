@@ -96,8 +96,18 @@ const PastOrders = ({
 }
 
 const formatDeliveredAt = (deliveredAt) => {
+  // Check if deliveredAt is null, undefined, or empty
+  if (!deliveredAt) {
+    return 'N/A'
+  }
+
   // Convert deliveredAt string to a Date object
   const deliveryDate = new Date(deliveredAt)
+
+  // Check if the date is valid
+  if (isNaN(deliveryDate.getTime())) {
+    return 'N/A'
+  }
 
   // Define months array for formatting
   const months = [
@@ -247,7 +257,10 @@ const Item = ({
                   textColor={currentTheme.secondaryText}
                   isRTL
                 >
-                  {t('deliveredOn')} {formatDeliveredAt(item.deliveredAt)}
+                  {(item.orderStatus === 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') 
+                    ? `${t('cancelledOn')} ${formatDeliveredAt(item.cancelledAt || item.completionTime)}`
+                    : `${t('deliveredOn')} ${formatDeliveredAt(item.deliveredAt)}`
+                  }
                 </TextDefault>
                 <TextDefault
                   numberOfLines={1}
