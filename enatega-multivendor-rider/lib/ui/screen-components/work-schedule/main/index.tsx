@@ -64,6 +64,7 @@ export default function ScheduleScreen() {
   const [updateSchedule, { loading: isUpatingSchedule }] =
     useMutation(UPDATE_WORK_SCHEDULE);
 
+    console.log("updated schedule is ", updateSchedule)
   // Handler
   const onHandlerSubmit = async () => {
     try {
@@ -75,6 +76,8 @@ export default function ScheduleScreen() {
         });
         return;
       }
+
+       
 
       // eslint-disable-next-line unused-imports/no-unused-vars
       const cleaned_work_schedule = schedule?.map(({ __typename, ...day }) => ({
@@ -118,7 +121,9 @@ export default function ScheduleScreen() {
   const toggleDay = (index: number) => {
     const updatedSchedule = [...(schedule ?? [])];
     updatedSchedule[index].enabled = !updatedSchedule[index].enabled;
+  
     setSchedule(updatedSchedule);
+      console.log("my updated schedule is ", updatedSchedule)
   };
 
   const hasOverlappingSlots = (schedule: WorkSchedule[]): string => {
