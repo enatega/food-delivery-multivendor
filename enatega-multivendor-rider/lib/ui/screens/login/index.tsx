@@ -99,7 +99,7 @@ const LoginScreen = () => {
       <SafeAreaView>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          // contentContainerStyle={{ height: height * 1 }}
+        // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
             initialValues={initialValues}
@@ -144,6 +144,7 @@ const LoginScreen = () => {
                       className="flex-1 h-12 text-base"
                       style={{ color: appTheme.fontMainColor }}
                       placeholder={t("Email")}
+                      placeholderTextColor={appTheme.fontSecondColor}
                       keyboardType="email-address"
                       inputMode="email"
                       value={values.username}
@@ -170,6 +171,8 @@ const LoginScreen = () => {
                       style={{ color: appTheme.fontMainColor }}
                       placeholder={t("Password")}
                       secureTextEntry={!passwordVisible}
+                      placeholderTextColor={appTheme.fontSecondColor}
+
                       value={values.password}
                       onChangeText={handleChange("password")}
                       onBlur={handleBlur("password")}

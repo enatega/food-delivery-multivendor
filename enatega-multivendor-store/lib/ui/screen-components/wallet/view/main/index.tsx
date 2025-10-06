@@ -73,7 +73,7 @@ export default function WalletMain() {
     {
       userType: "STORE",
       userId: userId,
-    },
+    }
   ) as ILazyQueryResult<
     IStoreTransactionHistoryResponse | undefined,
     {
@@ -90,7 +90,7 @@ export default function WalletMain() {
     { fetchPolicy: "network-only" },
     {
       id: userId,
-    },
+    }
   ) as ILazyQueryResult<IStoreByIdResponse | undefined, { id: string }>;
 
   const {
@@ -100,7 +100,7 @@ export default function WalletMain() {
   } = useLazyQueryQL(
     STORE_CURRENT_WITHDRAW_REQUEST,
     { fetchPolicy: "network-only" },
-    { storeId: userId },
+    { storeId: userId }
   ) as ILazyQueryResult<
     IStoreCurrentWithdrawRequestResponse | undefined,
     {
@@ -166,11 +166,11 @@ export default function WalletMain() {
       storeProfileData?.restaurant?.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {
       return setAmountErrMsg(
-        `${t("Please enter a valid amount")}. ${t("You have")} $${currentAmount} ${"available"}.`,
+        `${t("Please enter a valid amount")}. ${t("You have")} $${currentAmount} ${"available"}.`
       );
     } else if (withdrawAmount < 10) {
       return setAmountErrMsg(
-        t("The withdraw amount must be atleast 10 or greater"),
+        t("The withdraw amount must be atleast 10 or greater")
       );
     } else if (typeof withdrawAmount !== "number") {
       return setAmountErrMsg(t("Please enter a valid number"));
@@ -219,13 +219,13 @@ export default function WalletMain() {
   else
     return (
       <View
-        className="flex flex-col justify-between items-center -top-8  w-[100%] h-[110%] "
-        style={{ backgroundColor: appTheme.themeBackground }}
+        className="flex flex-col justify-between items-center -top-8  w-full h-[110%] "
+        // style={{ backgroundColor: appTheme.themeBackground }}
       >
         {storeProfileData?.restaurant ? (
           <View
-            className="flex-1 flex flex-column gap-2 items-center top-0"
-            style={{ backgroundColor: appTheme.themeBackground }}
+            className="flex-1 w-full flex flex-column gap-2 items-center top-0"
+            // style={{ backgroundColor: appTheme.themeBackground }}
           >
             <Text
               className="text-[18px] font-[600] mt-12"
@@ -240,8 +240,12 @@ export default function WalletMain() {
               style={{ color: appTheme.fontMainColor }}
             >
               $
-              {String(storeProfileData?.restaurant?.currentWalletAmount?.toFixed(2) ?? "0.00")}
+              {String(
+                storeProfileData?.restaurant?.currentWalletAmount?.toFixed(2) ??
+                  "0.00"
+              )}
             </Text>
+
             <CustomContinueButton
               title={t("Withdraw Now")}
               onPress={() => setIsBottomModalOpen((prev) => !prev)}
