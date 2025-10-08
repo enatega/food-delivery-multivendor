@@ -295,23 +295,23 @@ export const generateDummyAddons = (count: number = 10): IAddon[] => {
   return addons;
 };
 
-export const generateDummyUsers = (count: number = 10): IUserResponse[] => {
+export const generateDummyUsers = (): IUserResponse[] => {
   const users: IUserResponse[] = [];
 
-  for (let i = 0; i < count; i++) {
-    users.push({
-      _id: `user_${i + 1}`,
-      name: `User ${i + 1}`,
-      email: `user${i + 1}@example.com`,
-      phone: `+1${Math.floor(1000000000 + Math.random() * 9000000000)}`,
-      addresses: [],
+  // for (let i = 0; i < count; i++) {
+  //   users.push({
+  //     _id: `user_${i + 1}`,
+  //     name: `User ${i + 1}`,
+  //     email: `user${i + 1}@example.com`,
+  //     phone: `+1${Math.floor(1000000000 + Math.random() * 9000000000)}`,
+  //     addresses: [],
 
-      createdAt: (
-        Date.now() - Math.floor(Math.random() * 31536000000)
-      ).toString(),
-      __typename: 'User',
-    });
-  }
+  //     createdAt: (
+  //       Date.now() - Math.floor(Math.random() * 31536000000)
+  //     ).toString(),
+  //     __typename: 'User',
+  //   });
+  // }
 
   return users;
 };

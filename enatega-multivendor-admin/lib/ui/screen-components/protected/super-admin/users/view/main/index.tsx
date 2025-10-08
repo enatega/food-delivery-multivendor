@@ -1,8 +1,10 @@
 // Core
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Prime React
 import { FilterMatchMode } from 'primereact/api';
+import { DataTableRowClickEvent } from 'primereact/datatable';
 
 // Interface and Types
 import { IQueryResult } from '@/lib/utils/interfaces';
@@ -31,6 +33,9 @@ export default function UsersMain() {
     global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
   });
 
+  // Router
+  const router = useRouter();
+
   // Query
   const { data, loading } = useQueryGQL(GET_USERS, {
     fetchPolicy: 'cache-and-network',
@@ -43,6 +48,13 @@ export default function UsersMain() {
     _filters['global'].value = value;
     setFilters(_filters);
     setGlobalFilterValue(value);
+  };
+
+  // On Row Click
+  const handleRowClick = (event: DataTableRowClickEvent) => {
+    if (event.data._id) {
+      router.push(`/general/users/user-detail/${event.data._id}`);
+    }
   };
 
   return (
@@ -60,6 +72,7 @@ export default function UsersMain() {
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         columns={USERS_TABLE_COLUMNS()}
+        handleRowClick={handleRowClick}
       />
     </div>
   );

@@ -24,8 +24,8 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   isSelectable?: boolean;
   header?: React.ReactNode;
   data: T[];
-  selectedData: T[];
-  setSelectedData: React.Dispatch<React.SetStateAction<T[]>>;
+  selectedData?: T[];
+  setSelectedData?: React.Dispatch<React.SetStateAction<T[]>>;
   columns: IColumnConfig<T>[];
   filters?: IFilterType;
   size?: 'small' | 'normal' | 'large';

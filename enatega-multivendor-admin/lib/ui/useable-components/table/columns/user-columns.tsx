@@ -26,6 +26,33 @@ export const USERS_TABLE_COLUMNS = () => {
     },
     { headerName: t('Email'), propertyName: 'email' },
     { headerName: t('Phone'), propertyName: 'phone' },
+    { headerName: t('User ID'), propertyName: '_id' },
+    { 
+      headerName: t('Registration Method'), 
+      propertyName: 'userType',
+      body: (user: IUserResponse) => {
+        const userType = user.userType || 'default';
+        const formattedUserType = {
+          google: 'Google',
+          apple: 'Apple',
+          default: 'Manual'
+        }[userType];
+        return <div className="flex items-center gap-2">{formattedUserType}</div>;
+      },
+    },
+    { 
+      headerName: t('Status'), 
+      propertyName: 'status',
+      body: (user: IUserResponse) => {
+        const status = user.status || 'active';
+        const formattedStatus = {
+          active: 'Active',
+          blocked: 'Blocked',
+          deactivate: 'Deactivated'
+        }[status];
+        return <div className="flex items-center gap-2">{formattedStatus}</div>;
+      },
+    },
     {
       headerName: t('Created At'),
       propertyName: 'createdAt',
@@ -33,6 +60,15 @@ export const USERS_TABLE_COLUMNS = () => {
         const formattedDate = new Date(
           Number(user.createdAt)
         ).toLocaleDateString('en-GB');
+        return <div className="flex items-center gap-2">{formattedDate}</div>;
+      },
+    },
+    {
+      headerName: t('Last Login'), propertyName: 'lastLogin',
+      body: (user: IUserResponse) => {
+        const formattedDate = new Date(user.lastLogin ?? "").toLocaleDateString(
+          'en-GB'
+        );
         return <div className="flex items-center gap-2">{formattedDate}</div>;
       },
     },
