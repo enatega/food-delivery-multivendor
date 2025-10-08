@@ -8,6 +8,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import { phoneExist } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import { useCountryFromIP } from '../../utils/useCountryFromIP'
 
 const PHONE = gql`
   ${phoneExist}
@@ -28,16 +29,28 @@ const useRegister = () => {
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
   const [phoneError, setPhoneError] = useState(null)
-  const [countryCode, setCountryCode] = useState('IL')
-  const [country, setCountry] = useState({
-    callingCode: ['972'],
-    cca2: 'IL',
-    currency: ['ILS'],
-    flag: 'flag-il',
-    name: 'Israel',
-    region: 'Asia',
-    subregion: 'Western Asia'
-  });
+  // const [countryCode, setCountryCode] = useState('IL')
+  // const [country, setCountry] = useState({
+  //   callingCode: ['972'],
+  //   cca2: 'IL',
+  //   currency: ['ILS'],
+  //   flag: 'flag-il',
+  //   name: 'Israel',
+  //   region: 'Asia',
+  //   subregion: 'Western Asia'
+  // });
+
+  const {
+    country,
+    setCountry,
+    currentCountry: countryCode,
+    setCurrentCountry: setCountryCode,
+    ipAddress,
+    isLoading: isCountryLoading,
+    error: countryError,
+    refetch
+  } = useCountryFromIP()
+
 
   const [phoneExist, { loading }] = useMutation(PHONE, {
     onCompleted,
@@ -50,7 +63,7 @@ const useRegister = () => {
   }
 
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   function validateCredentials() {
     let result = true
