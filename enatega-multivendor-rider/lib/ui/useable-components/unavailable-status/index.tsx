@@ -1,5 +1,6 @@
 import { useUserContext } from "@/lib/context/global/user.context";
 import { usePathname } from "expo-router";
+import { isBoolean } from "lodash";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -8,9 +9,9 @@ export default function UnavailableStatus() {
   const pathName = usePathname();
   const { dataProfile } = useUserContext();
   const insets = useSafeAreaInsets(); // Get Safe Area Insets
- 
 
   if (pathName && pathName === "/login") return null;
+  if (!isBoolean(dataProfile?.available)) return null;
   if (!!dataProfile?.available) return null;
 
   return (

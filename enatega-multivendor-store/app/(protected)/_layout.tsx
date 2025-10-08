@@ -1,7 +1,9 @@
 // Providers
 import RestaurantProvider from "@/lib/context/global/restaurant";
 import { SoundProvider } from "@/lib/context/global/sound.context";
+import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 // Expo
 import { Stack } from "expo-router";
@@ -12,6 +14,7 @@ import FlashMessage from "react-native-flash-message";
 
 export default function ProtectedLayout() {
   const { appTheme, currentTheme } = useApptheme();
+
   return (
     <RestaurantProvider.Provider>
       <SoundProvider>
@@ -25,18 +28,12 @@ export default function ProtectedLayout() {
               headerTitleAlign: "center",
             }}
           >
-            <Stack.Screen
-              name="(tabs)"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="order-detail"
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="chat"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="chat" options={{ headerShown: false }} />
           </Stack>
           {/* <Stack.Screen
             name="bank-management"

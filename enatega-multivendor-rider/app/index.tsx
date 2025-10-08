@@ -21,12 +21,15 @@ import setupApollo from "@/lib/apollo";
 
 // Interfaces
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { useUserContext } from "@/lib/context/global/user.context";
 
 function App() {
   const client = setupApollo();
   const router = useRouter();
   const { locationPermission } = useLocationContext();
+  const { dataProfile } = useUserContext();
   // Handler
+
   const init = async () => {
     const token = await AsyncStorage.getItem(RIDER_TOKEN);
     if (token) {
@@ -76,7 +79,7 @@ function App() {
         });
         const order = data.riderOrders.find((o: IOrder) => o._id === _id);
         const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId",
+          "@lastNotificationHandledId"
         );
         if (lastNotificationHandledId === _id) return;
         await AsyncStorage.setItem("@lastNotificationHandledId", _id);
@@ -85,7 +88,7 @@ function App() {
         router.setParams({ itemId: _id, order });
       }
     },
-    [],
+    []
   );
 
   // Use Effect
@@ -113,7 +116,7 @@ function App() {
 
   useEffect(() => {
     init();
-  }, [locationPermission, router]);
+  }, [locationPermission, router, dataProfile]);
 
   // return <Redirect href="/(tabs)/home/orders" />;
   // return <Redirect href="/login" />;

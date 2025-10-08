@@ -65,7 +65,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     data: dataProfile,
     refetch: refetchProfile,
   } = useQuery(RIDER_PROFILE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-first",
     skip: !userId,
     variables: {
       id: userId,
@@ -92,9 +92,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     },
   });
 
-  // let unsubscribeZoneOrder: unknown = null
-  // let unsubscribeAssignOrder: unknown = null
-
   async function getUserId() {
     const id = await AsyncStorage.getItem("rider-id");
 
@@ -102,55 +99,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       setUserId(id);
     }
   }
-
-  const subscribeNewOrders = {
-    unsubAssignOrder: subscribeToMore({
-      document: SUBSCRIPTION_ASSIGNED_RIDER,
-      variables: { riderId: dataProfile?.rider?._id ?? userId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
-          return {
-            riderOrders: [
-              subscriptionData.data.subscriptionAssignRider.order,
-              ...prev.riderOrders,
-            ],
-          };
-        } else if (
-          subscriptionData.data.subscriptionAssignRider.origin === "remove"
-        ) {
-          return {
-            riderOrders: [
-              ...prev.riderOrders.filter(
-                (o: IOrder) =>
-                  o._id !==
-                  subscriptionData.data.subscriptionAssignRider.order._id,
-              ),
-            ],
-          };
-        }
-        return prev;
-      },
-    }),
-
-    unsubZoneOrder: subscribeToMore({
-      document: SUBSCRIPTION_ZONE_ORDERS, // Previously known as SUBSCRIPTION_UNASSIGNED_ORDER
-      variables: { zoneId: dataProfile?.rider?.zone?._id ?? zoneId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-
-        if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
-          return {
-            riderOrders: [
-              subscriptionData.data.subscriptionZoneOrders.order,
-              ...prev.riderOrders,
-            ],
-          };
-        }
-        return prev;
-      },
-    }),
-  };
 
   const trackRiderLocation = async () => {
     locationListener.current = await watchPositionAsync(
@@ -181,13 +129,63 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         } catch (error) {
           console.log(error);
         }
-      },
+      }
     );
   };
 
   // UseEffects
   useEffect(() => {
     if (!dataProfile?.rider.zone._id || !dataProfile.rider._id) return;
+
+    const subscribeNewOrders = {
+      unsubAssignOrder: subscribeToMore({
+        document: SUBSCRIPTION_ASSIGNED_RIDER,
+        variables: { riderId: dataProfile?.rider?._id ?? userId },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
+            return {
+              riderOrders: [
+                subscriptionData.data.subscriptionAssignRider.order,
+                ...prev.riderOrders,
+              ],
+            };
+          } else if (
+            subscriptionData.data.subscriptionAssignRider.origin === "remove"
+          ) {
+            return {
+              riderOrders: [
+                ...prev.riderOrders.filter(
+                  (o: IOrder) =>
+                    o._id !==
+                    subscriptionData.data.subscriptionAssignRider.order._id
+                ),
+              ],
+            };
+          }
+          return prev;
+        },
+      }),
+
+      unsubZoneOrder: subscribeToMore({
+        document: SUBSCRIPTION_ZONE_ORDERS, // Previously known as SUBSCRIPTION_UNASSIGNED_ORDER
+        variables: { zoneId: dataProfile?.rider?.zone?._id ?? zoneId },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+
+          if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
+            return {
+              riderOrders: [
+                subscriptionData.data.subscriptionZoneOrders.order,
+                ...prev.riderOrders,
+              ],
+            };
+          }
+          return prev;
+        },
+      }),
+    };
+
     const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders;
     return () => {
       if (dataProfile?.rider?.zone?._id) {
@@ -234,7 +232,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       }
     };
   }, []);
-
 
   return (
     <UserContext.Provider

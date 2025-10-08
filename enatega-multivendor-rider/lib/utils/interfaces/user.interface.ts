@@ -18,7 +18,7 @@ export interface IUserContextProps {
   errorAssigned: ApolloError | undefined;
   assignedOrders: IOrder[] | null;
   refetchAssigned: () => void;
-  refetchProfile: () => void;
+  refetchProfile: () => Promise<any>;
   networkStatusAssigned: NetworkStatus;
   requestForegroundPermissionsAsync: () => Promise<LocationPermissionResponse>;
   modalVisible: IRiderEarnings & { bool: boolean };

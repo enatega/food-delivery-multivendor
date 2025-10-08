@@ -1,9 +1,12 @@
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useUserContext } from "@/lib/context/global/user.context";
 import { Stack } from "expo-router";
+import SpinnerComponent from "../../useable-components/spinner";
 
 export default function RootStackLayout() {
   // Hooks
   const { appTheme } = useApptheme();
+
   return (
     <Stack
       screenOptions={{
