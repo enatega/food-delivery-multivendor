@@ -158,7 +158,8 @@ export default function RestaurantDetails({
 
       // check if values.name is present in restaurantData and show error toast
       const existingRestaurant = restaurantData?.restaurants.find(
-        (restaurant :any) =>
+        // @ts-ignore
+        (restaurant) =>
           restaurant.name.toLowerCase() === data.name.toLowerCase()
       );
       console.log('existingRestaurant ==> ', existingRestaurant);
