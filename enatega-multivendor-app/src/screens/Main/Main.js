@@ -324,8 +324,6 @@ function Main(props) {
     return []
   }
 
-  console.log({ location })
-
   return (
     <>
       {!connect ? (
