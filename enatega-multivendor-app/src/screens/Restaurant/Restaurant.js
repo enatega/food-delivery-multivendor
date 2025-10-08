@@ -514,7 +514,8 @@ function Restaurant(props) {
                       style={{
                         flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
                         justifyContent: 'space-between',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        padding: scale(10)
                       }}
                     >
                       <View style={styles(currentTheme).deal}>

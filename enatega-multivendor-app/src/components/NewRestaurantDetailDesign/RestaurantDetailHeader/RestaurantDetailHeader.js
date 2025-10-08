@@ -137,6 +137,7 @@ function RestaurantDetailHeader({
               H3
               bolder
               textColor={currentTheme.fontThirdColor}
+              style={{ flex: 1, flexShrink: 1 }}
             >
               {restaurant?.name?.substring(0, 25) + '...'}
             </TextDefault>

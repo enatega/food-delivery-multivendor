@@ -85,12 +85,15 @@ const styles = (props = null) =>
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      minHeight: scale(60),
     },
     titleContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row', 
       alignItems: 'center',
       gap: scale(10),
-      width: '70%',
+      flex: 1,
+      marginRight: props?.isRTL ? 0 : scale(10),
+      marginLeft: props?.isRTL ? scale(10) : 0,
     },
     timingRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

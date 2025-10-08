@@ -157,6 +157,59 @@ const styles = (props = null) =>
       ...textStyles.Smaller,
       backgroundColor: 'transparent',
       color: props != null ? props.white : 'white'
+    },
+    // Skeleton styles
+    categoryTabsContainer: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    },
+    categoryTabSkeleton: {
+      width: 80,
+      height: 32,
+      borderRadius: 16,
+      marginRight: 12,
+    },
+    foodItemContainer: {
+      flex: 1,
+      margin: 5,
+    },
+    foodItemCard: {
+      borderRadius: 12,
+      padding: 12,
+      minHeight: 200,
+    },
+    addButton: {
+      position: 'absolute',
+      top: 8,
+      right: 8,
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      zIndex: 1,
+    },
+    imageContainer: {
+      width: '100%',
+      height: 120,
+      borderRadius: 8,
+      marginBottom: 8,
+    },
+    detailsContainer: {
+      gap: 6,
+    },
+    priceSkeleton: {
+      width: '40%',
+      height: 16,
+      borderRadius: 4,
+    },
+    titleSkeleton: {
+      width: '80%',
+      height: 14,
+      borderRadius: 4,
+    },
+    foodList: {
+      flex: 1,
+      paddingHorizontal: 16,
+      paddingTop: 16,
     }
   })
 

@@ -17,6 +17,9 @@ const CollectionCard = ({ onPress, image, name }) => {
       activeOpacity={0.8}
       onPress={onPress}
       style={styles(currentTheme).collectionCard}
+      rippleColor={'#F5F5F5'}
+      rippleContainerBorderRadius={8}
+      rippleDuration={300}
     >
       <View style={styles().brandImgContainer}>
         <Image

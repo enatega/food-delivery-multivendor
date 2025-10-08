@@ -51,56 +51,58 @@ const CustomDrawerHeader = () => {
       className="w-full -mt-0 h-[150px] flex-row justify-between p-4 pt-8"
       style={{ backgroundColor: appTheme.primary, marginTop: 1 }}
     >
-      <View className="justify-between">
+      <View className="justify-between flex-1">
         <View
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
           style={{ backgroundColor: appTheme.white }}
         >
           {dataProfile?.logo ? (
-            <Image
-              source={{ uri: dataProfile.logo }}
-              width={100}
-              height={100}
-              resizeMode="cover"
-            />
+        <Image
+          source={{ uri: dataProfile.logo }}
+          width={100}
+          height={100}
+          resizeMode="cover"
+        />
           ) : (
-            <Text
-              className="text-[16px] font-semibold"
-              style={{
-                color: appTheme.primary,
-              }}
-            >
-              {(() => {
-                const name = dataProfile?.name;
-                if (!name || typeof name !== "string") return "JS";
+        <Text
+          className="text-[16px] font-semibold"
+          style={{
+            color: appTheme.primary,
+          }}
+        >
+          {(() => {
+            const name = dataProfile?.name;
+            if (!name || typeof name !== "string") return "JS";
 
-                const nameParts = name.split(" ");
-                const firstInitial =
-                  nameParts[0]?.substring(0, 1)?.toUpperCase() || "";
-                const secondInitial =
-                  nameParts[1]?.substring(0, 1)?.toUpperCase() || "";
+            const nameParts = name.split(" ");
+            const firstInitial =
+          nameParts[0]?.substring(0, 1)?.toUpperCase() || "";
+            const secondInitial =
+          nameParts[1]?.substring(0, 1)?.toUpperCase() || "";
 
-                return firstInitial + secondInitial || "JS";
-              })()}
-            </Text>
+            return firstInitial + secondInitial || "JS";
+          })()}
+        </Text>
           )}
         </View>
-        <View>
+        <View className="flex-1 pr-2">
           <Text
-            className="font-semibold text-[16px]"
-            style={{
-              color: appTheme.black,
-            }}
+        className="font-semibold text-[16px]"
+        style={{
+          color: appTheme.black,
+        }}
+        numberOfLines={2}
+        ellipsizeMode="tail"
           >
-            {dataProfile?.name ?? t("store name")}
+        {dataProfile?.name ?? t("store name")}
           </Text>
           <Text
-            className="font-medium"
-            style={{
-              color: appTheme.secondaryTextColor,
-            }}
+        className="font-medium"
+        style={{
+          color: appTheme.secondaryTextColor,
+        }}
           >
-            {dataProfile?._id?.substring(0, 9)?.toUpperCase() ?? t("store id")}
+        {dataProfile?._id?.substring(0, 9)?.toUpperCase() ?? t("store id")}
           </Text>
         </View>
       </View>
@@ -116,9 +118,9 @@ const CustomDrawerHeader = () => {
           <SpinnerComponent color={appTheme.secondaryTextColor} height={10} />
         ) : (
           <CustomSwitch
-            value={!!dataProfile?.isAvailable}
-            isDisabled={loading}
-            onToggle={handleToggleAvailability}
+        value={!!dataProfile?.isAvailable}
+        isDisabled={loading}
+        onToggle={handleToggleAvailability}
           />
         )}
         <Text

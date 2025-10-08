@@ -14,7 +14,7 @@ const useEnvVars = (env = Updates.channel) => {
       GRAPHQL_URL: 'https://aws-server.enatega.com/graphql',
       WS_GRAPHQL_URL: 'wss://aws-server.enatega.com/graphql',
       SERVER_URL: 'https://aws-server.enatega.com/graphql',
-
+      SERVER_REST_URL: 'https://aws-server.enatega.com/',
       IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
       ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
       AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
@@ -35,6 +35,7 @@ const useEnvVars = (env = Updates.channel) => {
     GRAPHQL_URL: 'https://aws-server.enatega.com/graphql',
     WS_GRAPHQL_URL: 'wss://aws-server.enatega.com/graphql',
     SERVER_URL: 'https://aws-server.enatega.com/graphql',
+    SERVER_REST_URL: 'https://aws-server.enatega.com/',
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
