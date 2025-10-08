@@ -32,7 +32,9 @@ import CustomGoogleMapsLocationZoneBounds from '@/lib/ui/useable-components/goog
 import { TPolygonPoints } from '@/lib/utils/types';
 import { useTranslations } from 'next-intl';
 import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
-import { useContext } from 'react';
+import { ChangeEvent, useContext } from 'react';
+
+const DESCRIPTION_MAX_LENGTH = 100;
 
 export default function ZoneAddForm({
   onHide,
@@ -155,7 +157,24 @@ export default function ZoneAddForm({
                   handleSubmit,
                   setFieldValue,
                 }) => {
-
+                  const handleDescriptionChange = (
+                    event: ChangeEvent<HTMLTextAreaElement>
+                  ) => {
+                    const { value } = event.target;
+                    if (value.length > DESCRIPTION_MAX_LENGTH) {
+                      showToast({
+                        type: 'error',
+                        title: t('Description'),
+                        message: t('Character limit of max length 100'),
+                      });
+                      setFieldValue(
+                        'description',
+                        value.slice(0, DESCRIPTION_MAX_LENGTH)
+                      );
+                      return;
+                    }
+                    handleChange(event);
+                  };
 
                   return (
                     <Form onSubmit={handleSubmit}>
@@ -185,7 +204,8 @@ export default function ZoneAddForm({
                             name="description"
                             placeholder={t('Description')}
                             value={values.description}
-                            onChange={handleChange}
+                            onChange={handleDescriptionChange}
+                            maxLength={DESCRIPTION_MAX_LENGTH}
                             showLabel={true}
                             style={{
                               borderColor: onErrorMessageMatcher(
