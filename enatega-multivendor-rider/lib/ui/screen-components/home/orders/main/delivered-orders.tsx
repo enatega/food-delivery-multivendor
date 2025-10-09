@@ -90,7 +90,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
               paymentStatus={item.paymentStatus}
               acceptedAt={item.acceptedAt}
               user={item.user}
-              key={item._id}
+            
               isLast={index === orders.length - 1}
             />
           )}

@@ -23,6 +23,7 @@
     "@expo/prebuild-config": "~9.0.0",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5.0.6",
+    "@microsoft/react-native-clarity": "^4.3.3",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.3.0",
     "@react-navigation/bottom-tabs": "^7.2.0",

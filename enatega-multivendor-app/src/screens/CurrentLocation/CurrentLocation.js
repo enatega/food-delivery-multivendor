@@ -26,8 +26,7 @@ import useWatchLocation from '../../ui/hooks/useWatchLocation'
 
 export default function CurrentLocation() {
   const Analytics = analytics()
-  const { onRequestPermission } = useWatchLocation()
-  // const [permissionState, setPermissionState] = useState(permission)
+  const { permission, onRequestPermission } = useWatchLocation()
   const { t, i18n } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [isCheckingZone, setIsCheckingZone] = useState(false)
@@ -98,25 +97,64 @@ export default function CurrentLocation() {
     }, 100)
   }
 
+  async function checkCityMatch(new_location = null) {
+    console.log('calling checkCityMatch', new_location)
+    const cl_p = new_location || currentLocation
+    if (!cl_p || !cities.length) return
+    // console.log("Checking city match for location:", currentLocation);
+    // console.log("Cities list:", cities);
+
+    setIsCheckingZone(true)
+
+    const matchingCity = checkLocationInCities(cl_p, filterCities())
+    if (matchingCity) {
+      try {
+        const response = await getAddress(cl_p.latitude, cl_p.longitude)
+        // console.log("Fetched Address Data:", response);
+        const locationData = {
+          label: 'Location',
+          deliveryAddress: response.formattedAddress,
+          latitude: cl_p.latitude,
+          longitude: cl_p.longitude,
+          city: response.city
+        }
+
+        setLocation(locationData)
+        setTimeout(() => {
+          setIsCheckingZone(false)
+          navigation.navigate('Main')
+        }, 100)
+      } catch (error) {
+        // console.error('Error getting address:', error)
+        setIsCheckingZone(false)
+      }
+    } else {
+      // console.warn("No matching city found for this location.");
+      setIsCheckingZone(false)
+    }
+  }
+
   async function getCurrentLocationOnStart() {
+    console.log('calling getCurrentLocationOnStart', permissionState)
+    setLoading(true)
+
     // Handle permission request result
     if (!permissionState) return
 
-    if (!permissionState?.granted && permissionState?.status !== 'granted') {
+    if (!permissionState?.granted) {
       console.log('Location permission not granted')
       return
     }
 
     // Permission is granted, continue with location logic
+    const { error, coords } = await getCurrentLocation()
 
-    setLoading(true)
-
-    const { error, coords, message } = await getCurrentLocation()
     if (error) {
       // console.log("Location error:",message, error)
       setLoading(false)
       return
     }
+
     // console.log("Fetched Location:", coords);
     const userLocation = {
       latitude: coords.latitude,
@@ -133,9 +171,9 @@ export default function CurrentLocation() {
 
     setPermissionState(permission_response)
 
+
     // ❌ Permanently denied (cannot ask again)
     if (!permission_response?.canAskAgain) {
-      console.log('sadahsdjkasdhajksh')
       // Optionally prompt user to open settings
       if (Platform.OS === 'ios') {
         Linking.openURL('app-settings:') // iOS deep link to app settings
@@ -164,44 +202,9 @@ export default function CurrentLocation() {
 
   useEffect(() => {
     getCurrentLocationOnStart()
-  }, [permissionState])
+  }, [permissionState, permission])
 
   useEffect(() => {
-    async function checkCityMatch() {
-      if (!currentLocation || !cities.length) return
-      // console.log("Checking city match for location:", currentLocation);
-      // console.log("Cities list:", cities);
-
-      setIsCheckingZone(true)
-
-      const matchingCity = checkLocationInCities(currentLocation, filterCities())
-      if (matchingCity) {
-        try {
-          const response = await getAddress(currentLocation.latitude, currentLocation.longitude)
-          // console.log("Fetched Address Data:", response);
-          const locationData = {
-            label: 'Location',
-            deliveryAddress: response.formattedAddress,
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-            city: response.city
-          }
-
-          setLocation(locationData)
-          setTimeout(() => {
-            setIsCheckingZone(false)
-            navigation.navigate('Main')
-          }, 100)
-        } catch (error) {
-          // console.error('Error getting address:', error)
-          setIsCheckingZone(false)
-        }
-      } else {
-        // console.warn("No matching city found for this location.");
-        setIsCheckingZone(false)
-      }
-    }
-
     checkCityMatch()
   }, [currentLocation, cities])
 
