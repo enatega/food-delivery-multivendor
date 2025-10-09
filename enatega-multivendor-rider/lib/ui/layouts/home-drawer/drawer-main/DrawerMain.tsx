@@ -27,6 +27,7 @@ import { AppTheme } from "@/lib/utils/interfaces/app-theme";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
+
 const DrawerMain = ({
   currentTheme,
   appTheme,
@@ -35,7 +36,6 @@ const DrawerMain = ({
   appTheme: AppTheme;
 }) => {
   const { t } = useTranslation();
-  console.log("rendered drawer");
 
   return (
     <Drawer

@@ -9,7 +9,7 @@ import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { useRouter } from "expo-router";
 
 export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext,
+  {} as IAuthContext
 );
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({

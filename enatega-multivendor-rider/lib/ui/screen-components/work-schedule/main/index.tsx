@@ -58,7 +58,7 @@ export default function ScheduleScreen() {
   const parallaxAnim = useRef(new Animated.Value(0)).current; // Parallax effect
 
   // Context
-  const { dataProfile } = useUserContext();
+  const { dataProfile, refetchProfile, loadingProfile } = useUserContext();
 
   // API Hook
   const [updateSchedule, { loading: isUpatingSchedule }] =
@@ -92,7 +92,9 @@ export default function ScheduleScreen() {
           workSchedule: cleaned_work_schedule,
           timeZone,
         },
-        onCompleted: () => {
+        onCompleted: async () => {
+          await refetchProfile();
+
           FlashMessageComponent({
             message: t("Work Schedule has been updated successfully"),
           });
@@ -135,7 +137,7 @@ export default function ScheduleScreen() {
 
       // Sort slots by start time to ensure proper order
       const sortedSlots = [...slots].sort(
-        (a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime),
+        (a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime)
       );
 
       for (let i = 0; i < sortedSlots.length - 1; i++) {
@@ -156,7 +158,7 @@ export default function ScheduleScreen() {
     dayIndex: number,
     slotIndex: number,
     type: "startTime" | "endTime",
-    value: string,
+    value: string
   ) => {
     const updatedSchedule = JSON.parse(JSON.stringify(schedule));
 
@@ -202,7 +204,7 @@ export default function ScheduleScreen() {
         } else {
           return newTime > otherStart && newTime <= otherEnd;
         }
-      },
+      }
     );
 
     if (isOverlapping) {
@@ -272,6 +274,8 @@ export default function ScheduleScreen() {
   }, [dropdown]);
 
   useEffect(() => {
+    if (!dataProfile) return;
+
     setSchedule(
       (dataProfile?.workSchedule?.length ?? 0) > 0
         ? JSON.parse(JSON.stringify(dataProfile?.workSchedule))
@@ -279,35 +283,34 @@ export default function ScheduleScreen() {
             day,
             enabled: false,
             slots: [{ startTime: "09:00", endTime: "17:00" }],
-          })),
+          }))
     );
 
     // Auto-detect user's time zone on first render
     const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setTimeZone(detectedTimeZone);
-  }, []);
+  }, [dataProfile]);
 
   return (
-    <TouchableWithoutFeedback onPress={closeDropdown}>
-      <View className="flex-1 items-center">
-        <View
-          className="p-2 h-[80%] w-full"
-          style={{ backgroundColor: appTheme.screenBackground }}
-        >
+    <View
+      className="flex-1 items-center"
+      style={{ backgroundColor: appTheme.screenBackground }}
+    >
+      <View
+        className="p-2 h-[80%] w-full"
+        style={{ backgroundColor: "transparent" }}
+      >
+        {loadingProfile ? (
+          <SpinnerComponent />
+        ) : (
           <FlatList
             data={schedule}
             keyExtractor={(item) => item.day}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
-              const translatedDay = t(item.day);
-              console.log(
-                "🚀 ~ ScheduleScreen ~ translatedDay:",
-
-                item.day,
-                translatedDay,
-              );
               return (
                 <View
-                  className=" border p-4 mb-3 rounded-lg"
+                  className="border p-4 mb-3 rounded-lg"
                   style={{
                     backgroundColor: appTheme.themeBackground,
                     borderColor: appTheme.borderLineColor,
@@ -326,7 +329,7 @@ export default function ScheduleScreen() {
                       onValueChange={() => toggleDay(index)}
                       activeText={""}
                       inActiveText={""}
-                      circleSize={20}
+                      circleSize={25}
                       barHeight={25}
                       backgroundActive={appTheme.primary}
                       backgroundInactive={appTheme.gray}
@@ -371,7 +374,7 @@ export default function ScheduleScreen() {
                               </Text>
                             </TouchableOpacity>
 
-                            <Text className="mx-">-</Text>
+                            <Text>-</Text>
 
                             {/* End Time Button */}
                             <TouchableOpacity
@@ -412,7 +415,7 @@ export default function ScheduleScreen() {
                                 style={{ borderColor: appTheme.primary }}
                               >
                                 <Text
-                                  className=" font-bold text-center"
+                                  className="font-bold text-center"
                                   style={{ color: appTheme.primary }}
                                 >
                                   +
@@ -428,26 +431,44 @@ export default function ScheduleScreen() {
               );
             }}
           />
-        </View>
-        <TouchableOpacity
-          className="h-12 w-full rounded-3xl py-3"
-          style={{ width: width * 0.9, backgroundColor: appTheme.primary }}
-          onPress={() => onHandlerSubmit()}
-        >
-          {isUpatingSchedule ? (
-            <SpinnerComponent />
-          ) : (
-            <Text
-              className="text-center  text-lg font-medium"
-              style={{ color: appTheme.fontMainColor }}
-            >
-              {t("Update Schedule")}
-            </Text>
-          )}
-        </TouchableOpacity>
+        )}
+      </View>
 
-        {/* Animated Dropdown */}
-        {dropdown && (
+      {!loadingProfile && <TouchableOpacity
+        className="h-12 w-full rounded-3xl py-3"
+        style={{ width: width * 0.9, backgroundColor: appTheme.primary }}
+        onPress={onHandlerSubmit}
+      >
+        {isUpatingSchedule ? (
+          <SpinnerComponent />
+        ) : (
+          <Text
+            className="text-center text-lg font-medium"
+            style={{ color: appTheme.fontMainColor }}
+          >
+            {t("Update Schedule")}
+          </Text>
+        )}
+      </TouchableOpacity>}
+
+      {/* Dropdown & Overlay */}
+      {dropdown && (
+        <>
+          {/* Transparent overlay to close dropdown when tapped */}
+          <TouchableWithoutFeedback onPress={closeDropdown}>
+            <View
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "transparent",
+              }}
+            />
+          </TouchableWithoutFeedback>
+
+          {/* Animated Dropdown */}
           <Animated.View
             className="mb-[6rem]"
             style={{
@@ -462,13 +483,12 @@ export default function ScheduleScreen() {
               borderRadius: 8,
               padding: 10,
               opacity: fadeAnim,
-
               transform: [
                 { translateY: translateYAnim },
                 {
                   translateY: parallaxAnim.interpolate({
-                    inputRange: [0, 300], // Adjust based on your dropdown height
-                    outputRange: [0, -30], // Parallax effect range
+                    inputRange: [0, 300],
+                    outputRange: [0, -30],
                     extrapolate: "clamp",
                   }),
                 },
@@ -481,11 +501,12 @@ export default function ScheduleScreen() {
             >
               {t("Select Time Slot")}
             </Text>
+
             <ScrollView
               style={{ maxHeight: 300 }}
               onScroll={Animated.event(
                 [{ nativeEvent: { contentOffset: { y: parallaxAnim } } }],
-                { useNativeDriver: false },
+                { useNativeDriver: false }
               )}
               scrollEventThrottle={16}
             >
@@ -497,7 +518,7 @@ export default function ScheduleScreen() {
                       dropdown.dayIndex,
                       dropdown.slotIndex,
                       dropdown.type === "start" ? "startTime" : "endTime",
-                      time,
+                      time
                     )
                   }
                   className="p-2 border-b border-gray-300"
@@ -509,10 +530,231 @@ export default function ScheduleScreen() {
               ))}
             </ScrollView>
           </Animated.View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+        </>
+      )}
+    </View>
   );
+  // return (
+  //   <TouchableWithoutFeedback onPress={closeDropdown}>
+  //     <View className="flex-1 items-center">
+  //     {/* <> */}
+  //       <View
+  //         className="p-2 h-[80%] w-full"
+  //         style={{ backgroundColor: appTheme.screenBackground }}
+  //       >
+  //         <FlatList
+  //           data={schedule}
+  //           keyExtractor={(item) => item.day}
+  //           renderItem={({ item, index }) => {
+  //             return (
+  //               <View
+  //                 className=" border p-4 mb-3 rounded-lg"
+  //                 style={{
+  //                   backgroundColor: appTheme.themeBackground,
+  //                   borderColor: appTheme.borderLineColor,
+  //                 }}
+  //               >
+  //                 {/* Day Header with Toggle */}
+  //                 <View className="flex-row justify-between items-center">
+  //                   <Text
+  //                     className="text-lg font-bold"
+  //                     style={{ color: appTheme.fontMainColor }}
+  //                   >
+  //                     {t(item.day)}
+  //                   </Text>
+  //                   <Switch
+  //                     value={item.enabled}
+  //                     onValueChange={() => toggleDay(index)}
+  //                     activeText={""}
+  //                     inActiveText={""}
+  //                     circleSize={25}
+  //                     barHeight={25}
+  //                     backgroundActive={appTheme.primary}
+  //                     backgroundInactive={appTheme.gray}
+  //                     circleBorderWidth={0}
+  //                   />
+  //                 </View>
+
+  //                 {/* Time Slots */}
+  //                 {item.enabled && (
+  //                   <View className="mt-2">
+  //                     {item.slots.map((slot, slotIndex) => {
+  //                       const isStartTapped =
+  //                         dropdown?.dayIndex === index &&
+  //                         dropdown?.slotIndex === slotIndex &&
+  //                         dropdown?.type === "start";
+  //                       const isEndTapped =
+  //                         dropdown?.dayIndex === index &&
+  //                         dropdown?.slotIndex === slotIndex &&
+  //                         dropdown?.type === "end";
+
+  //                       return (
+  //                         <View
+  //                           key={slotIndex}
+  //                           className="flex-row items-center justify-between mt-2 gap-x-2"
+  //                         >
+  //                           {/* Start Time Button */}
+  //                           <TouchableOpacity
+  //                             onPress={() =>
+  //                               setDropdown({
+  //                                 dayIndex: index,
+  //                                 slotIndex,
+  //                                 type: "start",
+  //                               })
+  //                             }
+  //                             className={`w-[40%] bg-white p-2 rounded-md`}
+  //                             style={
+  //                               isStartTapped ? style.tappedSlot : style.slot
+  //                             }
+  //                           >
+  //                             <Text className="text-center">
+  //                               {slot.startTime}
+  //                             </Text>
+  //                           </TouchableOpacity>
+
+  //                           <Text className="mx-">-</Text>
+
+  //                           {/* End Time Button */}
+  //                           <TouchableOpacity
+  //                             onPress={() =>
+  //                               setDropdown({
+  //                                 dayIndex: index,
+  //                                 slotIndex,
+  //                                 type: "end",
+  //                               })
+  //                             }
+  //                             className="w-[40%] bg-white p-2 rounded-md"
+  //                             style={
+  //                               isEndTapped ? style.tappedSlot : style.slot
+  //                             }
+  //                           >
+  //                             <Text className="text-center">
+  //                               {slot.endTime}
+  //                             </Text>
+  //                           </TouchableOpacity>
+
+  //                           {/* Remove Slot Button */}
+  //                           {item.slots.length > 1 && slotIndex !== 0 && (
+  //                             <TouchableOpacity
+  //                               onPress={() => removeSlot(index, slotIndex)}
+  //                               className="w-8 h-8 justify-center items-center border border-red-600 rounded-full"
+  //                             >
+  //                               <Text className="text-red-600 font-bold">
+  //                                 −
+  //                               </Text>
+  //                             </TouchableOpacity>
+  //                           )}
+
+  //                           {/* Add Slot Button */}
+  //                           {slotIndex === 0 && (
+  //                             <TouchableOpacity
+  //                               onPress={() => addSlot(index)}
+  //                               className="w-8 h-8 justify-center items-center border rounded-full"
+  //                               style={{ borderColor: appTheme.primary }}
+  //                             >
+  //                               <Text
+  //                                 className=" font-bold text-center"
+  //                                 style={{ color: appTheme.primary }}
+  //                               >
+  //                                 +
+  //                               </Text>
+  //                             </TouchableOpacity>
+  //                           )}
+  //                         </View>
+  //                       );
+  //                     })}
+  //                   </View>
+  //                 )}
+  //               </View>
+  //             );
+  //           }}
+  //         />
+  //       </View>
+  //       <TouchableOpacity
+  //         className="h-12 w-full rounded-3xl py-3"
+  //         style={{ width: width * 0.9, backgroundColor: appTheme.primary }}
+  //         onPress={onHandlerSubmit}
+  //       >
+  //         {isUpatingSchedule ? (
+  //           <SpinnerComponent />
+  //         ) : (
+  //           <Text
+  //             className="text-center  text-lg font-medium"
+  //             style={{ color: appTheme.fontMainColor }}
+  //           >
+  //             {t("Update Schedule")}
+  //           </Text>
+  //         )}
+  //       </TouchableOpacity>
+
+  //       {/* Animated Dropdown */}
+  //       {dropdown && (
+  //         <Animated.View
+  //           className="mb-[6rem]"
+  //           style={{
+  //             position: "absolute",
+  //             bottom: -80,
+  //             left: 5,
+  //             right: 5,
+  //             backgroundColor: "white",
+  //             shadowColor: "#000",
+  //             shadowOpacity: 0.2,
+  //             shadowRadius: 5,
+  //             borderRadius: 8,
+  //             padding: 10,
+  //             opacity: fadeAnim,
+
+  //             transform: [
+  //               { translateY: translateYAnim },
+  //               {
+  //                 translateY: parallaxAnim.interpolate({
+  //                   inputRange: [0, 300], // Adjust based on your dropdown height
+  //                   outputRange: [0, -30], // Parallax effect range
+  //                   extrapolate: "clamp",
+  //                 }),
+  //               },
+  //             ],
+  //           }}
+  //         >
+  //           <Text
+  //             className="font-[Inter] text-lg font-bold mb-2"
+  //             style={{ color: appTheme.fontMainColor }}
+  //           >
+  //             {t("Select Time Slot")}
+  //           </Text>
+  //           <ScrollView
+  //             style={{ maxHeight: 300 }}
+  //             onScroll={Animated.event(
+  //               [{ nativeEvent: { contentOffset: { y: parallaxAnim } } }],
+  //               { useNativeDriver: false }
+  //             )}
+  //             scrollEventThrottle={16}
+  //           >
+  //             {timeOptions.map((time) => (
+  //               <TouchableOpacity
+  //                 key={time}
+  //                 onPress={() =>
+  //                   updateTime(
+  //                     dropdown.dayIndex,
+  //                     dropdown.slotIndex,
+  //                     dropdown.type === "start" ? "startTime" : "endTime",
+  //                     time
+  //                   )
+  //                 }
+  //                 className="p-2 border-b border-gray-300"
+  //               >
+  //                 <Text className="font-[Inter] text-center text-lg">
+  //                   {time}
+  //                 </Text>
+  //               </TouchableOpacity>
+  //             ))}
+  //           </ScrollView>
+  //         </Animated.View>
+  //       )}
+  //     </View>
+  //     {/* </> */}
+  //   </TouchableWithoutFeedback>
+  // );
 }
 
 const style = StyleSheet.create({

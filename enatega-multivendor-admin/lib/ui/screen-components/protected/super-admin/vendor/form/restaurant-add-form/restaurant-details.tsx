@@ -50,13 +50,19 @@ import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import {
   CREATE_RESTAURANT,
   GET_CUISINES,
+  GET_RESTAURANTS,
   GET_RESTAURANTS_BY_OWNER,
 } from '@/lib/api/graphql';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { toTextCase } from '@/lib/utils/methods';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
-import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
+import {
+  ApolloCache,
+  ApolloError,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
@@ -95,6 +101,8 @@ export default function RestaurantDetails({
     useContext(RestaurantContext);
 
   // API
+  const { data: restaurantData } = useQuery(GET_RESTAURANTS);
+  console.log('restaurant data ==> ', restaurantData);
   // Mutation
   const [createRestaurant] = useMutation(CREATE_RESTAURANT, {
     onError,
@@ -118,6 +126,8 @@ export default function RestaurantDetails({
     },
     update: update,
   });
+
+  // call GET_RESTAURANTS query
 
   const cuisineResponse = useQueryGQL(GET_CUISINES, {
     debounceMs: 300,
@@ -146,27 +156,46 @@ export default function RestaurantDetails({
         return;
       }
 
-      await createRestaurant({
-        variables: {
-          owner: vendorId,
-          restaurant: {
-            name: data.name,
-            address: data.address,
-            phone: data.phoneNumber,
-            image: data.image,
-            logo: data.logo,
-            deliveryTime: data.deliveryTime,
-            minimumOrder: data.minOrder,
-            username: data.username,
-            password: data.password,
-            shopType: data.shopType?.code,
-            salesTax: data.salesTax,
-            cuisines: data.cuisines.map(
-              (cuisin: IDropdownSelectItem) => cuisin.code
-            ),
+      // check if values.name is present in restaurantData and show error toast
+      const existingRestaurant = restaurantData?.restaurants.find(
+        // @ts-ignore
+        (restaurant) =>
+          restaurant.name.toLowerCase() === data.name.toLowerCase()
+      );
+      console.log('existingRestaurant ==> ', existingRestaurant);
+      if (existingRestaurant) {
+        showToast({
+          type: 'error',
+          title: `Restaurant Already Exists`,
+          message: 'Restaurant with same name already exists',
+          duration: 2500,
+        });
+        return;
+      } else {
+        await createRestaurant({
+          variables: {  
+            owner: vendorId,
+            restaurant: {
+              name: data.name,
+              address: data.address,
+              phone: data.phoneNumber,
+              image: data.image,
+              logo: data.logo,
+              deliveryTime: data.deliveryTime,
+              minimumOrder: data.minOrder,
+              username: data.username,
+              password: data.password,
+              shopType: data.shopType?.code,
+              salesTax: data.salesTax,
+              cuisines: data.cuisines.map(
+                (cuisin: IDropdownSelectItem) => cuisin.code
+              ),
+            },
           },
-        },
-      });
+        });
+      }
+
+      
     } catch (error) {
       showToast({
         type: 'error',

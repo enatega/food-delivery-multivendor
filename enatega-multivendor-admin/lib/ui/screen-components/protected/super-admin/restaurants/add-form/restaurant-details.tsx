@@ -54,7 +54,7 @@ import {
 import { IRestaurantsAddRestaurantComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 import { toTextCase } from '@/lib/utils/methods';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
-import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
+import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 
@@ -93,6 +93,7 @@ export default function RestaurantDetailsForm({
     useContext(RestaurantsContext);
 
   // API
+  const { data: restaurantData } = useQuery(GET_RESTAURANTS);
   // Mutation
   const [createRestaurant] = useMutation(CREATE_RESTAURANT, {
     onError,
@@ -147,6 +148,22 @@ export default function RestaurantDetailsForm({
           type: 'error',
           title: t('Create Store'),
           message: t(`Store Creation Failed - Please select a vendor.`),
+          duration: 2500,
+        });
+        return;
+      }
+
+       // check if values.name is present in restaurantData and show error toast
+       const existingRestaurant = restaurantData?.restaurants.find(
+        (restaurant:IRestaurantForm) =>
+          restaurant.name.toLowerCase() === data.name.toLowerCase()
+      );
+      console.log('existingRestaurant ==> ', existingRestaurant);
+      if (existingRestaurant) {
+        showToast({
+          type: 'error',
+          title: `Restaurant Already Exists`,
+          message: 'Restaurant with same name already exists',
           duration: 2500,
         });
         return;
