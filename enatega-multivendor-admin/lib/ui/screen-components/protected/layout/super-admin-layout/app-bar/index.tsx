@@ -126,7 +126,7 @@ const AppTopbar = () => {
   // Handlers
   const toggleDropdown = () => {
     markAllAsRead();
-    setIsNtfnOpen(!isNtfnOpen);
+    setIsNtfnOpen((prevState) => !prevState);
   };
 
   const onDevicePixelRatioChange = useCallback(() => {
@@ -181,26 +181,23 @@ const AppTopbar = () => {
   }, [onDevicePixelRatioChange]);
 
   useEffect(() => {
-    const ntfnClickOutside = (event: MouseEvent) => {
-      // Close the dropdown if the click is outside the dropdown
+    const handleClickOutside = (event: MouseEvent) => {
+      // Close the notification dropdown if the click is outside the dropdown or on the bell icon
       if (
         ntfnDropdownRef.current &&
-        !ntfnDropdownRef.current.contains(event.target as Node)
+        !ntfnDropdownRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest('.fa-bell')
       ) {
         setIsNtfnOpen(false);
       }
     };
 
-    if (isNtfnOpen) {
-      document.addEventListener('mousedown', ntfnClickOutside);
-    } else {
-      document.removeEventListener('mousedown', ntfnClickOutside);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', ntfnClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isNtfnOpen]);
+  }, []);
 
   return (
     <div className={`${classes['layout-topbar']}`}>
@@ -248,7 +245,7 @@ const AppTopbar = () => {
             icon={faBell}
             className="cursor-pointer text-gray-600 hover:text-black"
             onClick={toggleDropdown}
-            title='Notifications' // 👈 native tooltip added here
+            title="Notifications" // 👈 native tooltip added here
           />
           {!loading &&
             notifications?.filter((ntfn) => !ntfn.read).length > 0 && (
@@ -320,8 +317,7 @@ const AppTopbar = () => {
             onClick={(event) => languageMenuRef.current?.toggle(event)}
             aria-controls="popup_menu_right"
             aria-haspopup
-            title='Languages'
-
+            title="Languages"
           >
             <FontAwesomeIcon icon={faGlobe} />
 
@@ -579,8 +575,8 @@ const AppTopbar = () => {
           className="rounded-md p-2 hover:bg-[#d8d8d837] cursor-pointer"
           onClick={(event) => languageMenuRef.current?.toggle(event)}
           aria-controls="popup_menu_right"
-          aria-haspopup 
-          title='Languages'
+          aria-haspopup
+          title="Languages"
         >
           <FontAwesomeIcon icon={faGlobe} />
 
