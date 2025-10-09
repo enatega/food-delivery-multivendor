@@ -6,7 +6,8 @@ import {
   ScrollView,
   Platform,
   TextInput,
-  Text
+  Text,
+  ActivityIndicator
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
@@ -21,6 +22,7 @@ import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { scale } from '../../utils/scaling'
 import { I18nManager } from 'react-native'
+import PhoneNumberInput from '../../components/PhoneNumberInput'
 
 function Register(props) {
   const {
@@ -45,7 +47,9 @@ function Register(props) {
     countryCode,
     registerAction,
     onCountrySelect,
-    currentTheme
+    currentTheme,
+    setPhoneError,
+    isCountryLoading
   } = useRegister()
 
   const { t } = useTranslation()
@@ -219,19 +223,30 @@ function Register(props) {
                       { padding: Platform.OS === 'ios' ? scale(5) : scale(12) }
                     ]}
                   >
-                    <CountryPicker
-                      countryCode={countryCode}
-                      onSelect={(country) => onCountrySelect(country)}
-                      withAlphaFilter
-                      withFilter
-                    />
-                    <TextDefault
-                      textColor={currentTheme.newFontcolor}
-                      style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}
-                      isRTL
-                    >
-                      {/* {country?.cca2} */}+{country?.callingCode[0]}
-                    </TextDefault>
+
+                    {
+                      isCountryLoading ?
+
+                        <ActivityIndicator size='small' color={currentTheme.white} />
+                        :
+                        <>
+                          <CountryPicker
+                            countryCode={countryCode}
+                            onSelect={(country) => onCountrySelect(country)}
+                            withAlphaFilter
+                            withFilter
+                          />
+                          <TextDefault
+                            textColor={currentTheme.newFontcolor}
+                            style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}
+                            isRTL
+                          >
+                            {/* {country?.cca2} */}+{country?.callingCode[0]}
+                          </TextDefault>
+                        </>
+
+
+                    }
                   </View>
                   <View
                     style={[
@@ -242,16 +257,7 @@ function Register(props) {
                     ]}
                   >
                     <View style={styles().phoneFieldInner}>
-                      {/* <TextDefault textColor={currentTheme.newFontcolor}>
-                        +{country.callingCode[0]}{' '}
-                      </TextDefault> */}
-                      <TextInput
-                        placeholder={t('phoneNumber')}
-                        placeholderTextColor={currentTheme.fontSecondColor}
-                        value={phone}
-                        onChangeText={(e) => setPhone(e)}
-                        style={styles(currentTheme).phoneField}
-                      />
+                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.fontSecondColor} style={styles(currentTheme).phoneField} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
                     </View>
                   </View>
                 </View>
