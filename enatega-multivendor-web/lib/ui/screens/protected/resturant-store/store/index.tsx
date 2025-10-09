@@ -219,7 +219,7 @@ export default function StoreDetailsScreen() {
             if (!groupedFoods[subCatId]) groupedFoods[subCatId] = [];
             groupedFoods[subCatId].push({
               ...food,
-              title: food.title.toLowerCase(),
+              title: food.title
             });
           });
 

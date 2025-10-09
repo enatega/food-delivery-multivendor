@@ -335,7 +335,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           {foodItem?.variations && foodItem.variations.length > 1 && (
             <ItemDetailSection
               key="variations"
-              title={`${t("select_label")} ${t("select_variation")}`}
+              title={`${t("select_variation")}`}
               name="variation" // This is a string literal, no undefined issue
               singleSelected={selectedVariation}
               onSingleSelect={setSelectedVariation}

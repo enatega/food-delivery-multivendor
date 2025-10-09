@@ -59,7 +59,7 @@ export default function CustomNumberField({
             });
           }
           // prevent floating point numbers. only allow numbers
-          if (e.key === '.' || e.key === 'e' || e.key === '-') {
+          if ((e.key === '.' || e.key === 'e' || e.key === '-')) {
             e.preventDefault();
           }
         }}
