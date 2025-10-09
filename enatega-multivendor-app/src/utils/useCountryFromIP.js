@@ -18,7 +18,7 @@ export const useCountryFromIP = () => {
   const [error, setError] = useState(null)
   const retryCount = 3
   const currentRetry = useRef(0)
-  const [trigger, setTrigger] = useState(0) // for manual refetch
+  const [trigger, setTrigger] = useState(0) 
 
   const fetchIpAddress = async () => {
     try {
@@ -52,7 +52,7 @@ export const useCountryFromIP = () => {
           setCountry({
             callingCode: [callingCode.toString()],
             cca2: code,
-            currency: ['PKR'], // you can make this dynamic later
+            currency: ['PKR'], 
             flag: 'flag-' + code,
             name: code,
             region: '',

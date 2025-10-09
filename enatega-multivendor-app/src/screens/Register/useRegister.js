@@ -176,7 +176,9 @@ const useRegister = () => {
     registerAction,
     onCountrySelect,
     themeContext,
-    currentTheme
+    currentTheme,
+    setPhoneError,
+    isCountryLoading
   }
 }
 
