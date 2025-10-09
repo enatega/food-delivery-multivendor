@@ -45,6 +45,8 @@ const Order = ({
   const configuration = useContext(ConfigurationContext);
   const router = useRouter();
 
+
+
   if (
     !orderId ||
     !_id ||
@@ -275,7 +277,7 @@ const Order = ({
                         Number(restaurant?.location?.coordinates[0]),
                         Number(restaurant?.location?.coordinates[1]),
                         deliveryAddress?.location?.coordinates[0],
-                        deliveryAddress?.location?.coordinates[1],
+                        deliveryAddress?.location?.coordinates[1]
                       )
                         .toFixed(2)
                         .toLocaleString()}

@@ -90,7 +90,7 @@ function NewRestaurantCard(props) {
         { cancelable: true }
       )
     } else {
-      if (props.shopType === 'grocery') {
+      if (props?.shopType === 'grocery') {
         navigation.navigate('NewRestaurantDetailDesign', { ...props })
       } else {
         navigation.navigate('Restaurant', { ...props })

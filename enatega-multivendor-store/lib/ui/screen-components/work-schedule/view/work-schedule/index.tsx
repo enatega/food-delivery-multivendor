@@ -17,6 +17,7 @@ export default function WorkScheduleStack({
   addSlot,
   dropdown,
   setDropdown,
+  isTogglingDay
 }: {
   item: WorkSchedule;
   index: number;
@@ -35,6 +36,7 @@ export default function WorkScheduleStack({
       type: "start" | "end";
     } | null>
   >;
+  isTogglingDay: number;
 }) {
   // Hooks
   const { appTheme } = useApptheme();
@@ -61,11 +63,12 @@ export default function WorkScheduleStack({
           onValueChange={() => toggleDay(index)}
           activeText={""}
           inActiveText={""}
-          circleSize={20}
+          circleSize={25}
           barHeight={25}
           backgroundActive={appTheme.primary}
           backgroundInactive={appTheme.gray}
           circleBorderWidth={0}
+          disabled={isTogglingDay !== index && isTogglingDay !== -1}
         />
       </View>
 

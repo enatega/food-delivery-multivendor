@@ -417,6 +417,10 @@ function Main(props) {
                       </View>
                       <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                     </ScrollView>
+                  ) : !location ? (
+                    <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
+                      <Spinner backColor="transparent"/>
+                    </View>
                   ) : (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <TextDefault bold H4 style={{ textAlign: 'center', marginBottom: 4 }}>

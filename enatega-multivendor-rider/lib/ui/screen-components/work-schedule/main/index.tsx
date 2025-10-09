@@ -120,9 +120,7 @@ export default function ScheduleScreen() {
   const toggleDay = (index: number) => {
     const updatedSchedule = [...(schedule ?? [])];
     updatedSchedule[index].enabled = !updatedSchedule[index].enabled;
-
     setSchedule(updatedSchedule);
-    console.log("my updated schedule is ", updatedSchedule);
   };
 
   const hasOverlappingSlots = (schedule: WorkSchedule[]): string => {
