@@ -116,7 +116,6 @@ export default function OrderCheckoutScreen() {
       : null,
     loading: false,
   };
-
   // Load restaurant data from localStorage if not available from GraphQL
   const [localRestaurantData, setLocalRestaurantData] = useState(null);
 

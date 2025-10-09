@@ -155,7 +155,7 @@ export default function RestaurantDetails({
         });
         return;
       }
-      
+
       // check if values.name is present in restaurantData and show error toast
       const existingRestaurant = restaurantData?.restaurants.find(
         // @ts-ignore
@@ -171,29 +171,31 @@ export default function RestaurantDetails({
           duration: 2500,
         });
         return;
+      } else {
+        await createRestaurant({
+          variables: {  
+            owner: vendorId,
+            restaurant: {
+              name: data.name,
+              address: data.address,
+              phone: data.phoneNumber,
+              image: data.image,
+              logo: data.logo,
+              deliveryTime: data.deliveryTime,
+              minimumOrder: data.minOrder,
+              username: data.username,
+              password: data.password,
+              shopType: data.shopType?.code,
+              salesTax: data.salesTax,
+              cuisines: data.cuisines.map(
+                (cuisin: IDropdownSelectItem) => cuisin.code
+              ),
+            },
+          },
+        });
       }
 
-      await createRestaurant({
-        variables: {
-          owner: vendorId,
-          restaurant: {
-            name: data.name,
-            address: data.address,
-            phone: data.phoneNumber,
-            image: data.image,
-            logo: data.logo,
-            deliveryTime: data.deliveryTime,
-            minimumOrder: data.minOrder,
-            username: data.username,
-            password: data.password,
-            shopType: data.shopType?.code,
-            salesTax: data.salesTax,
-            cuisines: data.cuisines.map(
-              (cuisin: IDropdownSelectItem) => cuisin.code
-            ),
-          },
-        },
-      });
+      
     } catch (error) {
       showToast({
         type: 'error',
