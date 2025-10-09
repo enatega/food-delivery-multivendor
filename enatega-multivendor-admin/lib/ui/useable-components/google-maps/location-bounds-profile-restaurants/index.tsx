@@ -21,6 +21,7 @@ import React, {
 import {
   GET_RESTAURANT_DELIVERY_ZONE_INFO,
   GET_RESTAURANT_PROFILE,
+  GET_ZONES,
   UPDATE_DELIVERY_BOUNDS_AND_LOCATION,
 } from '@/lib/api/graphql';
 
@@ -37,6 +38,8 @@ import {
   IRestaurantProfile,
   IRestaurantProfileResponse,
   IUpdateRestaurantDeliveryZoneVariables,
+  IZoneResponse,
+  IZonesResponse,
 } from '@/lib/utils/interfaces';
 
 // Utilities
@@ -66,7 +69,7 @@ const autocompleteService: {
 
 const CustomGoogleMapsLocationBounds: React.FC<
   ICustomGoogleMapsLocationBoundsComponentProps
-> = ({ onStepChange, hideControls, height }) => {
+> = ({ onStepChange, hideControls, height }) =>   {
   // Context
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const { restaurantId } = restaurantLayoutContextData;
@@ -96,6 +99,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
   const [selectedPlaceObject, setSelectedPlaceObject] =
     useState<IPlaceSelectedOption | null>(null);
   const [search, setSearch] = useState<string>('');
+  const [zones, setZones] = useState<IZoneResponse[]>([]);
 
   // Ref
   const polygonRef = useRef<google.maps.Polygon | null>(null);
@@ -129,12 +133,20 @@ const CustomGoogleMapsLocationBounds: React.FC<
         if (data) {
           updateCache(cache, { data } as IRestaurantProfileResponse);
         }
-      },
+      },  
 
       onCompleted: onRestaurantZoneUpdateCompleted,
       onError: onErrorLocationZoneUpdate,
     }
   );
+  useQuery<IZonesResponse>(GET_ZONES, {
+    onCompleted: (data) => {
+      if (data) {
+        setZones(data.zones);
+      }
+    },
+  });
+  
 
   // Memos
   const radiusInMeter = useMemo(() => {
@@ -148,6 +160,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
     []
   );
 
+  console.log("Zones........ ", zones);
   // API Handlers
   function updateCache(
     cache: ApolloCache<unknown>,
@@ -675,6 +688,27 @@ const CustomGoogleMapsLocationBounds: React.FC<
               deliveryZoneType === 'point' ? onClickGoogleMaps : undefined
             }
           >
+            {zones.map(
+              (zone) =>
+                zone.location && (
+                  // Zone boundary polygon
+                  <Polygon
+                    key={zone._id}
+                    paths={zone.location.coordinates[0].map(
+                      (coords: number[]) => ({ lat: coords[1], lng: coords[0] })
+                    )}
+                    options={{
+                      strokeColor: 'blue',
+                      strokeOpacity: 0.8,
+                      strokeWeight: 2,
+                      fillColor: 'lightblue',
+                      fillOpacity: 0.3,
+                    }}
+                  />
+                )
+            )}
+            
+            {/* Delivery zone boundary. */}
             <Polygon
               editable={!hideControls}
               draggable={!hideControls}

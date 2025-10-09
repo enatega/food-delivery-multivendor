@@ -2,7 +2,7 @@ import React from "react";
 import { ISvgComponentProps } from "../../interfaces";
 
 export default function CircleCrossSvg(props: ISvgComponentProps) {
-  const { width = "22", height = "15", darkColor="white" } = props;
+  const { width = "24", height = "24", darkColor="white" } = props;
 // dark color green-#
   return (
     <svg
@@ -11,6 +11,7 @@ export default function CircleCrossSvg(props: ISvgComponentProps) {
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="dark:bg-gray-900 dark:rounded-full"
     >
       {/* Light mode */}
       <path
@@ -24,7 +25,7 @@ export default function CircleCrossSvg(props: ISvgComponentProps) {
 
       {/* Dark Mode */}
       <path
-      className="hidden dark:block"
+      className="hidden dark:block "
         d="M13 13L19 19M19 13L13 19M28 16C28 22.6274 22.6274 28 16 28C9.37258 28 4 22.6274 4 16C4 9.37258 9.37258 4 16 4C22.6274 4 28 9.37258 28 16Z"
         stroke={darkColor}
         strokeWidth="1.5"

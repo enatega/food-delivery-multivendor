@@ -51,7 +51,7 @@ export default function WithdrawRequestsAdminMain() {
   const selectedStatus = selectedActions.find((action) =>
     ['REQUESTED', 'TRANSFERRED', 'CANCELLED'].includes(action)
   );
-
+  console.log("Restaurant ID:", restaurantId); // Debugging line
   // Query with proper typing and hardcoded STORE userType
   const { data, loading } = useQuery(GET_ALL_WITHDRAW_REQUESTS, {
     variables: {
@@ -65,6 +65,8 @@ export default function WithdrawRequestsAdminMain() {
     IGetWithDrawRequestsData | undefined,
     undefined
   >;
+
+  
 
   // Rest of your code remains the same...
 

@@ -127,14 +127,15 @@ const ChatScreen = ({ navigation, route }) => {
   const renderChatEmpty = (props) => {
     return (
       <View>
-        <TextDefault
+        <TextDefault></TextDefault>
+       {/*  <TextDefault
           style={styles().emptyChat}
           textColor={currentTheme.fontSecondColor}
           center
           H3
         >
           {t('chatWithRider')}
-        </TextDefault>
+        </TextDefault> */}
       </View>
     )
   }

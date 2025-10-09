@@ -47,11 +47,13 @@ export const GET_DASHBOARD_RESTAURANT_ORDERS = gql`
     $restaurant: String!
     $starting_date: String!
     $ending_date: String!
+    $dateKeyword: String
   ) {
     getRestaurantDashboardOrdersSalesStats(
       restaurant: $restaurant
       starting_date: $starting_date
       ending_date: $ending_date
+      dateKeyword: $dateKeyword
     ) {
       totalOrders
       totalSales

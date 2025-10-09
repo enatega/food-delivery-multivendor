@@ -47,6 +47,7 @@ export default function PaymentMain() {
       const data = await response.json();
       window.location.href = data.url;
     } catch (error) {
+      console.log(error)
       showToast({
         type: 'error',
         title: t('Stripe Payment'),
