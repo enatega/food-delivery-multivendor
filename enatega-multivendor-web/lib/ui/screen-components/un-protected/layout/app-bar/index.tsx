@@ -99,7 +99,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     fetchProfile,
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
-
   const { getCurrentLocation } = useLocation();
   const { onSetUserLocation } = useSetUserCurrentLocation();
   const {
