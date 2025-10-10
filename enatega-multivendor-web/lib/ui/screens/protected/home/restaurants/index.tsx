@@ -75,6 +75,7 @@ export default function RestaurantsScreen() {
 
   return (
     <GenericListingComponent
+    queryData= {queryData}
       headingTitle={t("RestaurantPage.headingTitle")}
       cuisineSectionTitle={t("RestaurantPage.cuisineSectionTitle")}
       mainSectionTitle={t("RestaurantPage.mainSectionTitle")}
