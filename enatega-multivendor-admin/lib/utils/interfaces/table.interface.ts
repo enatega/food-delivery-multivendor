@@ -33,18 +33,19 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   handleRowClick?: (event: DataTableRowClickEvent) => void;
   rowsPerPage?: number;
   moduleName?: string;
-  
+
   // Server-side pagination props (optional)
   totalRecords?: number;
   onPageChange?: (page: number, rows: number) => void;
   currentPage?: number;
-  
+
   // Legacy/unused props
   onPage?: (e: DataTableStateEvent) => void;
   scrollable?: boolean;
   scrollHeight?: string;
   sortField?: string;
   sortOrder?: SortOrder;
+  minWidth?: string;
 }
 
 export interface ITableExtends extends IGlobalComponentProps {

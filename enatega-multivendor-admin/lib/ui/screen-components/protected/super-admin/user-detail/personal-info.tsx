@@ -20,7 +20,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
                 </div>
                 <div>
                     <h4 className="text-base font-semibold">Email</h4>
-                    <p>{user.email}</p>
+                    <p>{user.email || "N/A"}</p>
                 </div>
                 <div>
                     <h4 className="text-base font-semibold">Email Verified</h4>
@@ -28,7 +28,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
                 </div>
                 <div>
                     <h4 className="text-base font-semibold">Phone</h4>
-                    <p>{user.phone}</p>
+                    <p>{user.phone || "N/A"}</p>
                 </div>
                 <div>
                     <h4 className="text-base font-semibold">Phone Verified</h4>
@@ -73,6 +73,10 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
                 <div>
                     <h4 className="text-base font-semibold">Notification Token</h4>
                     <p>{user.notificationToken || 'N/A'}</p>
+                </div>
+                <div>
+                    <h4 className="text-base font-semibold">Internal Notes</h4>
+                    <p>{user.notes || 'N/A'}</p>
                 </div>
             </div>
         </div>

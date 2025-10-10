@@ -1,3 +1,4 @@
+import { ActionMenu } from '@/lib/ui/screen-components/protected/super-admin/users/view/main/ActionMenu';
 import { IExtendedOrder } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
 
@@ -41,7 +42,26 @@ export const ORDER_SUPER_ADMIN_COLUMNS = () => {
       headerName: t('Created At'),
       propertyName: 'createdAt',
       body: (rowData: IExtendedOrder) => {
-        let date: Date | null = rowData?.createdAt ? new Date(rowData.createdAt) : null;
+        let date: Date | null = null;
+        console.log("rowData.createdAt", rowData.createdAt)
+        if (rowData?.createdAt) {
+          const createdAt = rowData.createdAt;
+          if (typeof createdAt === 'number') {
+
+            date = new Date(createdAt);
+          } else if (typeof createdAt === 'string') {
+
+            const numericTimestamp = Number(createdAt);
+            if (!isNaN(numericTimestamp) && createdAt.trim().length >= 10) {
+
+              date = new Date(numericTimestamp);
+            } else if (!isNaN(Date.parse(createdAt))) {
+
+              date = new Date(createdAt);
+            }
+          }
+        }
+
         if (date) {
           const newDate = date.toLocaleDateString(
             'en-US',
@@ -58,9 +78,19 @@ export const ORDER_SUPER_ADMIN_COLUMNS = () => {
       body: (rowData: IExtendedOrder) => rowData.restaurant?.name || 'N/A',
     },
     {
+
       headerName: t('Delivery Address'),
       propertyName: 'deliveryAddress.deliveryAddress',
-      body: (rowData: IExtendedOrder) => rowData.deliveryAddress?.deliveryAddress || 'N/A',
+      body: (rowData: IExtendedOrder) => (
+        <div
+          className="max-w-[250px] truncate"
+          title={rowData.deliveryAddress?.deliveryAddress || 'N/A'}
+        >
+          {rowData.deliveryAddress?.deliveryAddress || 'N/A'}
+        </div>
+      ),
+
     },
+
   ];
 };

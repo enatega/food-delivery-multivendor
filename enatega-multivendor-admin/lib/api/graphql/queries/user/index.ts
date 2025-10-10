@@ -11,6 +11,7 @@ export const GET_USERS = gql`
       userType
       status
       lastLogin
+      notes
       addresses {
         location {
           coordinates
@@ -47,6 +48,7 @@ export const GET_USER_BY_ID = gql`
       notificationToken
       userType
       favourite
+      notes
       addresses {
         _id
         deliveryAddress

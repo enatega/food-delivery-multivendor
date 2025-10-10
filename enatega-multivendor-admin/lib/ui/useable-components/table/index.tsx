@@ -35,6 +35,7 @@ const Table = <T extends ITableExtends>({
   totalRecords,
   onPageChange,
   currentPage = 1,
+  minWidth,
 }: IDataTableProps<T>) => {
   const handleSelectionChange = (
     e: DataTableSelectionMultipleChangeEvent<T[]>
@@ -104,7 +105,7 @@ const Table = <T extends ITableExtends>({
         className={className}
         dataKey="_id"
         tableStyle={{
-          minWidth: '50rem',
+          minWidth: minWidth ? minWidth : '50rem',
           minHeight: 'auto',
           maxHeight: '480px',
         }}

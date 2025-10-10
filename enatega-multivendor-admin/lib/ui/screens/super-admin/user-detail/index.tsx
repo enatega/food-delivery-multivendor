@@ -131,9 +131,22 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({ userId }) => {
         );
     }
 
+    const NoAddressesCard = () => (
+        <div className="p-4">
+            <Card title="No Addresses Found" className="shadow-md border border-gray-200 bg-gray-50">
+                <p>This user has not added any addresses yet.</p>
+            </Card>
+        </div>
+    );
+
     const tabs = [
         { label: "Personal Info", content: <PersonalInfo user={user} /> },
-        { label: "Addresses", content: <Addresses addresses={user.addresses || []} /> },
+        {
+            label: "Addresses",
+            content: user.addresses && user.addresses.length > 0
+                ? <Addresses addresses={user.addresses} />
+                : <NoAddressesCard />
+        },
         { label: "Order History", content: <OrderHistory orders={orders} totalRecords={totalOrders} rowsPerPage={limit} currentPage={currentPage} onPageChange={setCurrentPage} onLimitChange={setLimit} /> },
     ];
 

@@ -30,8 +30,9 @@ export interface IUserResponse {
   updatedAt: string;
   notificationToken: string;
   userType: string;
-  favourite: string[];
-  addresses: IAddress[];
+  favourite?: string[];
+  addresses?: IAddress[];
+  notes?: string;
 }
 
 export interface IUsersDataResponse {
