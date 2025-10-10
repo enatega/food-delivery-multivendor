@@ -525,16 +525,16 @@ export default function RestaurantDetailsScreen() {
           <Skeleton width="100%" height="18rem" borderRadius="0" />
         ) : (
           <div className="relative">
-                <Image
-                  src={restaurantInfo.image}
-                  alt="McDonald's banner with a burger and fries"
-                  width={1200}
-                  height={300}
-                  className="w-full h-72 object-cover"
-                />
-                {/* Dark overlay */}
-                <div className="absolute inset-0 bg-black/10" />
-              </div>
+            <Image
+              src={restaurantInfo.image}
+              alt="McDonald's banner with a burger and fries"
+              width={1200}
+              height={300}
+              className="w-full h-72 object-cover"
+            />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/10" />
+          </div>
         )}
 
         {!loading && (
@@ -754,7 +754,7 @@ export default function RestaurantDetailsScreen() {
                           )}
                         </div>
 
-                        <p className="text-gray-500 dark:text-gray-400 text-sm text-wrap">
+                        <p className="text-gray-500 text-sm dark:text-gray-400 line-clamp-2 hover:line-clamp-none">
                           {meal.description}
                         </p>
 

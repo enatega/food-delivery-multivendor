@@ -18,6 +18,7 @@ function MainSection({
   loading,
   search,
   hasMore,
+  queryData
   // onLoadMore, // 🔹 added callback from parent
 }: IMainSectionProps ) {
   const router = useRouter();
@@ -70,8 +71,8 @@ function MainSection({
           />
         )}
       </div>
-
-      {data?.length > 0 ? (
+        {/* if queryData.length not zero then show */}
+      {data?.length > 0 && queryData?.length !== 0 ? (
         <>
           <div
             className={`grid grid-cols-1 gap-2 mt-4 items-center ${
