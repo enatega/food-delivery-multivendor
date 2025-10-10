@@ -109,7 +109,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     refetchProfileData,
     setRefetchProfileData,
   } = useAuth();
-  const { queryData = [] } = useNearByRestaurantsPreview();
+  const { queryData = [] } = useNearByRestaurantsPreview(true, 1,100);
 
   const {
     isSearchFocused,
