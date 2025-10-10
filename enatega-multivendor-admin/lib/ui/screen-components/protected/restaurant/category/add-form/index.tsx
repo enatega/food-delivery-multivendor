@@ -50,6 +50,7 @@ import {
 } from '@/lib/api/graphql/queries/sub-categories';
 import CustomLoader from '@/lib/ui/useable-components/custom-progress-indicator';
 import { useTranslations } from 'next-intl';
+import { onUseLocalStorage } from '@/lib/utils/methods';
 
 export default function CategoryAddForm({
   onHide,
@@ -72,6 +73,8 @@ export default function CategoryAddForm({
   });
    const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
+
+  const shopType = onUseLocalStorage('get', "shopType" )
 
   // Fetch all categories for duplicate check
   const {
@@ -100,8 +103,8 @@ export default function CategoryAddForm({
 
   // Context
  
-  const shopType = restaurantLayoutContextData?.shopType || '';
-  console.log("🚀 ~ shopType:", shopType)
+  // const shopType = restaurantLayoutContextData?.shopType || '';
+  // console.log("🚀 ~ shopType:", shopType)
 
   // Mutations
   const [deleteSubCategory, { loading: deleteSubCategoryLoading }] =

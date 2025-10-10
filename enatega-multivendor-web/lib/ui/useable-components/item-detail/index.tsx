@@ -332,7 +332,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
 
         <div id="addon-sections">
           {/* Variation Selection - With required tag */}
-          {foodItem?.variations && foodItem.variations.length > 1 && (
+          {foodItem?.variations && foodItem.variations.length > 0 && (
             <ItemDetailSection
               key="variations"
               title={`${t("select_variation")}`}
