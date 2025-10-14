@@ -52,9 +52,18 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     }
 
     if (graphQLErrors) {
-      (graphQLErrors || [])?.forEach((error) =>
-        console.error("GraphQL Error:", error?.message)
-      );
+      (graphQLErrors || [])?.forEach((error) => {
+        console.error("GraphQL Error:", error?.message);
+        if (error.extensions?.code === "UNAUTHENTICATED") {
+          if (typeof window !== "undefined") {
+            localStorage.clear();
+            sessionStorage.clear();
+            if (window.location.pathname !== "/") {
+              window.location.href = "/";
+            }
+          }
+        }
+      });
     }
   });
 
