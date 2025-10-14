@@ -112,6 +112,7 @@ export interface IFoodCategory {
 
 export interface IRestaurant {
   _id: string;
+  name?: string;
   categories: IFoodCategory[];
   __typename: string;
 }
