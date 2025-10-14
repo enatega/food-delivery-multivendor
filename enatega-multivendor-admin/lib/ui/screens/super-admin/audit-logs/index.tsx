@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_AUDIT_LOGS } from '@/lib/api/graphql/queries/audit';
-import AuditLogCard from '@/lib/ui/screen-components/protected/super-admin/audit-logs/AuditLogCard';
+import AuditLogCard, { AuditLog } from '@/lib/ui/screen-components/protected/super-admin/audit-logs/AuditLogCard';
 import HeaderText from '@/lib/ui/useable-components/header-text';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 import { Skeleton } from 'primereact/skeleton';
@@ -36,7 +36,7 @@ const AuditLogScreen = () => {
     if (error) {
         return (
             <div className="p-4 md:p-6">
-                 <Card title="Error Loading Audit Logs" className="shadow-md border border-red-300 bg-red-50 text-red-800">
+                <Card title="Error Loading Audit Logs" className="shadow-md border border-red-300 bg-red-50 text-red-800">
                     <p className="mb-3">We encountered an issue while trying to fetch the audit logs.</p>
                     <p className="font-semibold">Details: {error.message}</p>
                 </Card>
@@ -58,7 +58,7 @@ const AuditLogScreen = () => {
                 <div className="h-[calc(100vh-280px)] overflow-y-auto pr-2">
                     {auditLogs.length > 0 ? (
                         <div className="relative">
-                            {auditLogs.map((log: any, index: number) => (
+                            {auditLogs.map((log: AuditLog, index: number) => (
                                 <AuditLogCard key={log._id} log={log} isLast={index === auditLogs.length - 1} />
                             ))}
                         </div>
