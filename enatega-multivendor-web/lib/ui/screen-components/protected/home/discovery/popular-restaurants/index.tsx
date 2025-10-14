@@ -8,6 +8,8 @@ import CuisinesSliderSkeleton from "@/lib/ui/useable-components/custom-skeletons
 function PopularRestaurants() {
   const { error, loading, queryData } = useMostOrderedRestaurants(true,1,8,"restaurant");
 
+  console.log({PopularRestaurants:queryData})
+
   if (loading) {
     return <CuisinesSliderSkeleton />;
   }

@@ -60,6 +60,7 @@ export default function WorkScheduleMain() {
     slotIndex: number;
     type: "start" | "end";
   } | null>(null);
+  const [isTogglingDay, setIsTogglingDay] = useState<number>(-1);
 
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -133,6 +134,8 @@ export default function WorkScheduleMain() {
 
   // Handlers
   const toggleDay = (index: number) => {
+    setIsTogglingDay(index);
+
     const updatedSchedule = [...(schedule ?? [])];
     // If times array is empty, add default time slot
     if (updatedSchedule[index].times.length === 0) {
@@ -147,6 +150,7 @@ export default function WorkScheduleMain() {
       updatedSchedule[index].times = [];
     }
     setSchedule(updatedSchedule);
+    setIsTogglingDay(-1);
   };
 
   function transformSchedule(schedule: WorkSchedule[] | undefined) {
@@ -394,6 +398,7 @@ export default function WorkScheduleMain() {
               <WorkScheduleStack
                 key={String(index).concat("_workschedule_stack")}
                 item={item}
+                isTogglingDay={isTogglingDay}
                 index={index}
                 toggleDay={toggleDay}
                 removeSlot={removeSlot}

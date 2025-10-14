@@ -20,3 +20,4 @@ export * from './transaction-history';
 export * from './earnings';
 export * from './concurrent';
 export * from './shop-types'
+export * from './audit';

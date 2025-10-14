@@ -1,18 +1,19 @@
 import { IExtendedOrder } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-  hour12: true,
-};
 
 export const ORDER_SUPER_ADMIN_COLUMNS = () => {
-  // Hooks
   const t = useTranslations();
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  };
+
   return [
     {
       headerName: t('Order ID'),
@@ -20,7 +21,13 @@ export const ORDER_SUPER_ADMIN_COLUMNS = () => {
     },
     {
       headerName: t('Items'),
-      propertyName: 'itemsTitle',
+      propertyName: 'items',
+      body: (rowData: IExtendedOrder) => {
+        if (rowData.items && rowData.items.length > 0) {
+          return <span>{rowData.items.length} items</span>;
+        }
+        return <span>No items</span>;
+      },
     },
     {
       headerName: t('Payment'),
@@ -31,32 +38,58 @@ export const ORDER_SUPER_ADMIN_COLUMNS = () => {
       propertyName: 'orderStatus',
     },
     {
-      headerName: t('Reason'),
-      propertyName: 'reason',
-      body: (rowData: IExtendedOrder) => {
-        if (!rowData.reason) {
-          return <span>-</span>;
-        }
-        return <span>{rowData.reason}</span>;
-      },
-    },
-    {
       headerName: t('Created At'),
-      propertyName: 'DateCreated',
+      propertyName: 'createdAt',
       body: (rowData: IExtendedOrder) => {
-        let date: string | number | Date = Number(rowData?.createdAt || null);
+        let date: Date | null = null;
+        console.log("rowData.createdAt", rowData.createdAt)
+        if (rowData?.createdAt) {
+          const createdAt = rowData.createdAt;
+          if (typeof createdAt === 'number') {
+
+            date = new Date(createdAt);
+          } else if (typeof createdAt === 'string') {
+
+            const numericTimestamp = Number(createdAt);
+            if (!isNaN(numericTimestamp) && createdAt.trim().length >= 10) {
+
+              date = new Date(numericTimestamp);
+            } else if (!isNaN(Date.parse(createdAt))) {
+
+              date = new Date(createdAt);
+            }
+          }
+        }
+
         if (date) {
-          const newDate = new Date(date).toLocaleDateString(
+          const newDate = date.toLocaleDateString(
             'en-US',
             dateOptions
           );
           return <span className="text-center">{newDate}</span>;
         }
+        return <span>-</span>;
       },
     },
     {
-      headerName: t('Delivery Address'),
-      propertyName: 'OrderdeliveryAddress',
+      headerName: t('Restaurant'),
+      propertyName: 'restaurant.name',
+      body: (rowData: IExtendedOrder) => rowData.restaurant?.name || 'N/A',
     },
+    {
+
+      headerName: t('Delivery Address'),
+      propertyName: 'deliveryAddress.deliveryAddress',
+      body: (rowData: IExtendedOrder) => (
+        <div
+          className="max-w-[250px] truncate"
+          title={rowData.deliveryAddress?.deliveryAddress || 'N/A'}
+        >
+          {rowData.deliveryAddress?.deliveryAddress || 'N/A'}
+        </div>
+      ),
+
+    },
+
   ];
 };

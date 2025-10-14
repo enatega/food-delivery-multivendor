@@ -49,12 +49,14 @@ const Analytics = () => {
   const initialize = async () => {
     try {
       const trackingStatus = await getTrackingPermissions()
-      if (isInitialized || !apiKey || trackingStatus !== 'granted') {
+      if (isInitialized || !apiKey /*  || trackingStatus !== 'granted' */) {
         return
       }
-      await amplitude.init(apiKey)
+      amplitude.init(apiKey)
       isInitialized = true
-    } catch (err) {}
+    } catch (error) {
+      console.log('Amplitude init error', error)
+    }
   }
 
   const identify = async (options, userId) => {

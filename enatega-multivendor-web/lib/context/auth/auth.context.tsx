@@ -126,37 +126,37 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function checkPhoneExists(phone: string): Promise<boolean> {
-  try {
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const resp = await mutatePhoneCheck({ variables: { phone } });
-    const exists = Boolean(resp.data?.phoneExist?._id);
+      const resp = await mutatePhoneCheck({ variables: { phone } });
+      const exists = Boolean(resp.data?.phoneExist?._id);
 
-    if (exists) {
+      if (exists) {
+        showToast({
+          type: "error",
+          title: t("phone_check_error"),
+          message: t("phone_already_registered"), // fix punctuation in translations file
+        });
+      }
+
+      return exists; // true = already registered, false = not registered
+    } catch (err) {
+      const error = err as ApolloError;
+      console.error("Error while checking phone:", error);
+
       showToast({
         type: "error",
         title: t("phone_check_error"),
-        message: t("phone_already_registered"), // fix punctuation in translations file
+        message: error.cause?.message || t("error_checking_phone"),
       });
+
+      // Safer fallback: treat as "exists" so the flow stops on error
+      return true;
+    } finally {
+      setIsLoading(false);
     }
-
-    return exists; // true = already registered, false = not registered
-  } catch (err) {
-    const error = err as ApolloError;
-    console.error("Error while checking phone:", error);
-
-    showToast({
-      type: "error",
-      title: t("phone_check_error"),
-      message: error.cause?.message || t("error_checking_phone"),
-    });
-
-    // Safer fallback: treat as "exists" so the flow stops on error
-    return true;
-  } finally {
-    setIsLoading(false);
   }
-}
   // handlers
 
   const handlePasswordReset = async (
@@ -327,11 +327,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   function onLoginError(error: ApolloError) {
     console.error("Error while logging in:", error);
-    showToast({
-      type: "error",
-      title: t("login_error"),
-      message: t("invalid_credentials"),
-    });
+    if (
+      error.message
+    ) {
+      showToast({
+        type: "error",
+        title: t("login_error"),
+        message: error.message,
+      });
+    } else {
+      showToast({
+        type: "error",
+        title: t("login_error"),
+        message: t("invalid_credentials"),
+      });
+    }
   }
 
   // OTP Handlers
