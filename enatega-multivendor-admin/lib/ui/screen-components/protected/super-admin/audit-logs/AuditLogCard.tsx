@@ -1,13 +1,13 @@
+
 'use client';
 import React from 'react';
-import { Card } from 'primereact/card';
 import { Tag } from 'primereact/tag';
 import { format } from 'date-fns';
 import ChangesDiff from './ChangesDiff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faPlusCircle, faTrashAlt, faHistory } from '@fortawesome/free-solid-svg-icons';
 
-interface AuditLog {
+export interface AuditLog {
     _id: string;
     timestamp: string;
     admin: {
@@ -17,7 +17,7 @@ interface AuditLog {
     action: string;
     targetType: string;
     targetId: string;
-    changes: any;
+    changes: JSON;
 }
 
 interface AuditLogCardProps {

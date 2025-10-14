@@ -1,4 +1,3 @@
-import { ActionMenu } from '@/lib/ui/screen-components/protected/super-admin/users/view/main/ActionMenu';
 import { IExtendedOrder } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
 
