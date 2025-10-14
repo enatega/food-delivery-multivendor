@@ -20,7 +20,6 @@ import {
   faSliders,
   faUpRightFromSquare,
   faWallet,
-  faHistory,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Constants and Utiils

@@ -1,10 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
-import { Card } from 'primereact/card';
 
 interface ChangesDiffProps {
-    changes: any;
+    changes: JSON;
 }
 
 const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
@@ -20,7 +19,7 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
     // Check if this is a comparison between old and new
     const isComparison = changeKeys.length === 2 && changeKeys.some(k => k.startsWith('old')) && changeKeys.some(k => k.startsWith('new'));
 
-    const renderValue = (value: any) => {
+    const renderValue = (value: JSON) => {
         if (typeof value === 'object' && value !== null) {
             return JSON.stringify(value, null, 2);
         }
@@ -41,7 +40,7 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
                 };
             }
             return acc;
-        }, {} as Record<string, { old: any; new: any }>);
+        }, {} as Record<string, { old: JSON; new: JSON }>);
 
         if (Object.keys(diffs).length === 0) {
             return <p className="text-sm text-gray-500">No differences found in data.</p>;

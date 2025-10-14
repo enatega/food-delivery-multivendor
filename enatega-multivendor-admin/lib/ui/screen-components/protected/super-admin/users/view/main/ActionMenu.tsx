@@ -9,7 +9,7 @@ import { UPDATE_USER_STATUS, UPDATE_USER_NOTES, DELETE_USER, RESET_USER_SESSION 
 import useToast from '@/lib/hooks/useToast';
 
 // TODO: Setup useTranslation hook to get t function for i18n
-const t = (key: string, options?: any) => key;
+const t = (key: string,) => key;
 
 type ModalType = 'block' | 'unblock' | 'delete' | 'deactivate' | 'activate' | 'reset' | 'notes' | null;
 
