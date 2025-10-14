@@ -154,15 +154,21 @@ export default function OrderTrackingScreen({
   const handleSubmitRating = async (
     orderId: string | undefined,
     ratingValue: number,
-    comment?: string
+    comment?: string,
+    aspects: string[] = []
   ) => {
+    const reviewDescription = comment?.trim() || undefined;
+    const reviewComments =
+      aspects?.filter(Boolean).join(", ") || undefined;
+
     // Here you would  call an API to save the rating
     try {
       await mutate({
         variables: {
           order: orderId,
-          description: comment,
+          description: reviewDescription,
           rating: ratingValue,
+          comments: reviewComments,
         },
       });
     } catch (error) {
