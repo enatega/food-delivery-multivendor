@@ -33,6 +33,9 @@ export const RESTAURANTS_FRAGMENT = gql`
     slug
     shopType
     deliveryTime
+    location {
+      coordinates
+    }
     reviewAverage
     cuisines
     openingTimes {
