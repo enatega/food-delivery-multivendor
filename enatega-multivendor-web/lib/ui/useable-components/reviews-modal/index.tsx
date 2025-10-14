@@ -80,7 +80,7 @@ const ReviewsModal = ({
             {/* Average Rating & Breakdown */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 border border-gray-300 dark:border-gray-700 p-4 rounded-md shadow-sm bg-white dark:bg-gray-900">
               <div className="w-full md:w-1/3">
-              <h1 className="text-3xl md:text-5xl font-semibold text-gray-700 dark:text-gray-200">
+                <h1 className="text-3xl md:text-5xl font-semibold text-gray-700 dark:text-gray-200">
                   {averageRating.toFixed(2)}
                 </h1>
                 <p className="text-gray-500 dark:text-gray-400 mt-1 font-normal text-xl md:text-2xl">
@@ -114,7 +114,9 @@ const ReviewsModal = ({
                         style={{ width: `${percentage}%` }}
                       ></div>
                     </div>
-                    <span className="ml-2 text-gray-600 dark:text-gray-400">{percentage}%</span>
+                    <span className="ml-2 text-gray-600 dark:text-gray-400">
+                      {percentage}%
+                    </span>
                   </div>
                 ))}
               </div>
@@ -135,10 +137,18 @@ const ReviewsModal = ({
                       {formatDateForCreatedAt(review.createdAt)}
                     </span>
                   </div>
+
                   <div className="mb-2">{renderStars(review.rating)}</div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base break-words">
-                    {review.description}
-                  </p>
+                  <div className="space-y-2">
+                    <p className="text-gray-600 dark:text-gray-300 text-xs md:text-base break-words">
+                      {review.description}
+                    </p>
+                    {review?.comments?.length > 0 && (
+                      <div className="border border-[#0EA5E9] px-3 py-1 rounded-full text-sm w-fit">
+                        {review.comments}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
