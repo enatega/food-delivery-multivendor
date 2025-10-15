@@ -1,4 +1,4 @@
-"use client"
+"use client";
 // Icons
 import PersonIcon from "@/lib/utils/assets/svg/person";
 
@@ -20,7 +20,7 @@ import { FcGoogle } from "react-icons/fc";
 
 // Apollo
 import { ApolloError } from "@apollo/client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useUser from "@/lib/hooks/useUser";
 
 export default function SignUpWithEmail({
@@ -38,116 +38,131 @@ export default function SignUpWithEmail({
     setIsRegistering,
     setIsAuthModalVisible,
     handleCreateUser,
-  checkPhoneExists
+    checkPhoneExists,
   } = useAuth();
-  const { showToast } = useToast();               <q> </q>
+  const { showToast } = useToast();
+  <q> </q>;
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
+  const [isValid, setIsValid] = useState(true);
+  const { fetchProfile } = useUser();
 
-  const {fetchProfile} = useUser()
-
-   useEffect(() => {
+  useEffect(() => {
     fetchProfile();
   }, []);
 
-
   // Validation
   const validatePassword = (password: string) => {
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     return strongPasswordRegex.test(password);
   };
 
   // Handlers
   const handleSubmit = async () => {
-  try {
-    setIsLoading(true);
-    setIsRegistering(true);
+    try {
+      setIsLoading(true);
+      setIsRegistering(true);
 
-    // Required fields
-    if (Object.values(formData).some((val) => !val)) {
-      showToast({
-        type: "error",
-        title: t("create_user_label"),
-        message: t("all_fields_are_required_to_be_filled_message"),
-      });
-      return;
-    }
-
-    // Name validation
-    const namePattern = /^[A-Za-z\s]+$/;
-    if (!namePattern.test(formData.name || "")) {
-      showToast({
-        type: "error",
-        title: t("create_user_label"),
-        message: t("please_enter_a_valid_name_message"),
-      });
-      return;
-    }
-
-    // Password strength
-    if (!validatePassword(formData.password || "")) {
-      showToast({
-        type: "error",
-        title: t("create_user_label"),
-        message: t("password_not_strong_enough_message"),
-      });
-      return;
-    }
-
-    // If phone provided, check existence first
-    if (formData.phone) {
-      const exists = await checkPhoneExists(formData.phone);
-      if (exists) return; // stop if already registered (or on error fallback)
-    }
-
-    // Verification flow (prioritize email, then phone, then direct create)
-    if (formData.email && !SKIP_EMAIL_VERIFICATION) {
-      sendOtpToEmailAddress(formData.email);
-      handleChangePanel(3); // Email OTP step
-      // setIsAuthModalVisible(true); // uncomment if your UX shows modal here
-      return;
-    }
-
-    if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
-      sendOtpToPhoneNumber(formData.phone);
-      handleChangePanel(6); // Phone OTP step
-      // setIsAuthModalVisible(true); // uncomment if needed
-      return;
-    }
-
-    // If both verifications are skipped → create user immediately
-    if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
-      const userData = await handleCreateUser({
-        email: formData.email,
-        phone: formData.phone,
-        name: formData.name,
-        password: formData.password,
-        emailIsVerified: false,
-      });
-
-      handleChangePanel(0);
-      setIsAuthModalVisible(false);
-
-      if (userData) {
+      // Required fields
+      if (Object.values(formData).some((val) => !val)) {
         showToast({
-          type: "success",
-          title: t("register_label"),
-          message: t("successfully_registered_your_account_message"),
+          type: "error",
+          title: t("create_user_label"),
+          message: t("all_fields_are_required_to_be_filled_message"),
         });
+        return;
       }
+
+      // Name validation
+      const namePattern = /^[A-Za-z\s]+$/;
+      if (!namePattern.test(formData.name || "")) {
+        showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("please_enter_a_valid_name_message"),
+        });
+        return;
+      }
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setIsValid(emailRegex.test(formData.email || ""));
+
+      if (!emailRegex.test(formData.email || "")) {
+        showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("please_enter_valid_email_address_message"),
+        });
+        return;
+      }
+
+      // Password strength
+      if (!validatePassword(formData.password || "")) {
+        showToast({
+          type: "error",
+          title: t("create_user_label"),
+          message: t("password_not_strong_enough_message"),
+        });
+        return;
+      }
+
+      // If phone provided, check existence first
+      if (formData.phone) {
+        const exists = await checkPhoneExists(formData.phone);
+        if (exists) return; // stop if already registered (or on error fallback)
+      }
+
+      // Verification flow (prioritize email, then phone, then direct create)
+      if (formData.email && !SKIP_EMAIL_VERIFICATION) {
+        sendOtpToEmailAddress(formData.email);
+        handleChangePanel(3); // Email OTP step
+        // setIsAuthModalVisible(true); // uncomment if your UX shows modal here
+        return;
+      }
+
+      if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
+        sendOtpToPhoneNumber(formData.phone);
+        handleChangePanel(6); // Phone OTP step
+        // setIsAuthModalVisible(true); // uncomment if needed
+        return;
+      }
+
+      // If both verifications are skipped → create user immediately
+      if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
+        const userData = await handleCreateUser({
+          email: formData.email,
+          phone: formData.phone,
+          name: formData.name,
+          password: formData.password,
+          emailIsVerified: false,
+        });
+
+        handleChangePanel(0);
+        setIsAuthModalVisible(false);
+
+        if (userData) {
+          showToast({
+            type: "success",
+            title: t("register_label"),
+            message: t("successfully_registered_your_account_message"),
+          });
+        }
+      }
+    } catch (err) {
+      const error = err as ApolloError;
+      console.error("An error occured while registering a new user", error);
+      showToast({
+        type: "error",
+        title: t("register_label"),
+        message:
+          error?.cause?.message ||
+          t("an_error_occurred_while_registering_message"),
+      });
+    } finally {
+      setIsRegistering(false);
+      setIsLoading(false);
     }
-  } catch (err) {
-    const error = err as ApolloError;
-    console.error("An error occured while registering a new user", error);
-    showToast({
-      type: "error",
-      title: t("register_label"),
-      message: error?.cause?.message || t("an_error_occurred_while_registering_message"),
-    });
-  } finally {
-    setIsRegistering(false);
-    setIsLoading(false);
-  }
-};
+  };
   return (
     <div className="flex flex-col items-start justify-between w-full h-full dark:bg-gray-900 dark:text-gray-100">
       <PersonIcon lightColor="#000000" darkColor="#FFFFFF" />
@@ -178,6 +193,14 @@ export default function SignUpWithEmail({
           placeholder={t("emailLabel")}
           onChange={(e) => handleFormChange("email", e.target.value)}
         />
+      </div>
+      {/* Email Validation message */}
+      <div className={` ${isValid? `hidden`:``} h-[20px]  `}>
+        {!isValid && (
+          <p className="text-red-500 text-sm">
+            {t("please_enter_valid_email_address_message")}
+          </p>
+        )}
       </div>
       <div className="flex flex-col gap-y-1 my-3 w-full">
         <CustomPhoneTextField

@@ -1,9 +1,10 @@
 "use client";
 import type { FC } from "react";
-import { HomeSvg, MenuSvg } from "@/lib/utils/assets/svg";
+import { HomeSvg, MenuSvg, OfficeSvg, OtherSvg } from "@/lib/utils/assets/svg";
 import TextComponent from "@/lib/ui/useable-components/text-field";
 import { IAddressItemProps } from "@/lib/utils/interfaces/profile.interface";
 import { useTranslations } from "next-intl";
+import AppartmentSvg from "@/lib/utils/assets/svg/apartment";
 
 const AddressItem: FC<IAddressItemProps> = ({
   address,
@@ -19,9 +20,17 @@ const AddressItem: FC<IAddressItemProps> = ({
       key={address?._id}
       className="flex items-center justify-between p-4 border-b relative dark:border-gray-700"
     >
-      <div className="flex items-center">
+      <div className="flex items-center"> 
         <div className="mr-4 rtl:ml-4">
-          <HomeSvg color="black" width={28} height={28} darkColor="#ffffff" />
+          {address?.label === "House" ? (
+            <HomeSvg width={32} height={32} darkColor="#ffffff" />
+          ) : address?.label === "Office" ? (
+            <OfficeSvg width={32} height={32} darkColor="#ffffff" />
+          ) : address?.label === "Apartment" ? (
+            <AppartmentSvg width={32} height={32} darkColor="#ffffff" />
+          ) : (
+            <OtherSvg width={32} height={32} darkColor="#ffffff" />
+          )}
         </div>
         <div>
           <TextComponent

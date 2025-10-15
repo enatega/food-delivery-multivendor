@@ -45,7 +45,6 @@ const useGetCuisines = (enabled = true) => {
         (item) => item.shopType.toLowerCase() === "grocery"
       )
     : [];
-
   return {
     queryData,
     loading,

@@ -8,6 +8,7 @@ import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
 import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 import TextIconClickable from '../text-icon-clickable';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { twMerge } from 'tailwind-merge';
 
 const CustomMultiSelectComponent = ({
   name,
@@ -20,6 +21,8 @@ const CustomMultiSelectComponent = ({
   dropDownIcon,
   isLoading = false,
   onChange,
+  className,
+  multiSelectClassName,
   ...props
 }: IMultiSelectComponentProps) => {
   const itemTemplate = (option: { label: string }) => {
@@ -53,7 +56,7 @@ const CustomMultiSelectComponent = ({
   };
 
   return !isLoading ? (
-    <div className={`flex w-full flex-col justify-center gap-y-1`}>
+    <div className={twMerge(`flex w-full flex-col justify-center gap-y-1`, className)}>
       {showLabel && (
         <label htmlFor="username" className="text-sm font-[500]">
           {placeholder}
@@ -73,7 +76,7 @@ const CustomMultiSelectComponent = ({
         placeholder={placeholder}
         itemTemplate={itemTemplate}
         panelFooterTemplate={panelFooterTemplate}
-        className="md:w-20rem m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
+        className={twMerge("md:w-20rem m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none", multiSelectClassName)}
         panelClassName="border-gray-200 border-2"
         display="chip"
         dropdownIcon={(options) => (

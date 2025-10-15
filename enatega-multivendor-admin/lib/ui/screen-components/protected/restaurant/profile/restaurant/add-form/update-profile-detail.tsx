@@ -20,12 +20,13 @@ import {
   MAX_SQUARE_FILE_SIZE,
   ProfileErrors,
   RestaurantErrors,
+  SELECTED_SHOPTYPE,
   SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { EDIT_RESTAURANT, GET_CUISINES } from '@/lib/api/graphql';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
-import { onErrorMessageMatcher, toTextCase } from '@/lib/utils/methods';
+import { onErrorMessageMatcher, onUseLocalStorage, toTextCase } from '@/lib/utils/methods';
 
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 
@@ -160,6 +161,7 @@ export default function UpdateRestaurantDetails({
           },
         },
       });
+       onUseLocalStorage('save', SELECTED_SHOPTYPE, data.shopType?.code);
     } catch (error) {
       showToast({
         type: 'error',

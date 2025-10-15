@@ -25,9 +25,11 @@ import {
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native-gesture-handler";
+import { useUserContext } from "@/lib/context/global/user.context";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 export default function CustomDrawerContent(
-  props: DrawerContentComponentProps,
+  props: DrawerContentComponentProps
 ) {
   // Hooks
   const { appTheme, currentTheme } = useApptheme();

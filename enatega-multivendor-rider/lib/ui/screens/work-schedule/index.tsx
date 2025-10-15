@@ -7,11 +7,7 @@ export default function WorkScheduleScreen() {
   // Hooks
   const { appTheme } = useApptheme();
   return (
-    <View
-      className="flex-1"
-      style={{ backgroundColor: appTheme.screenBackground }}
-    >
+ 
       <WorkScheduleMainScreen />
-    </View>
   );
 }

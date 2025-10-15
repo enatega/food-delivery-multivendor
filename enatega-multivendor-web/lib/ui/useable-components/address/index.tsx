@@ -269,7 +269,7 @@ export default function UserAddressComponent(
     //set isDragged to true to enable save_address button
     setIsDragged(true);
     // setIsDragged(true); // to enable save_address button
-    console.log("isDragged set to true",isDragged);
+    // console.log("isDragged set to true", isDragged);
     setUserAddress({
       _id: "",
       deliveryAddress: formattedAddress,
@@ -328,10 +328,10 @@ export default function UserAddressComponent(
 
   // Define constants
   const ADDRESS_TYPES = {
-    OFFICE: "OFFICE",
-    HOUSE: "HOUSE",
-    APARTMENT: "APARTMENT",
-    OTHER: "OTHER",
+    OFFICE: "Office",
+    HOUSE: "House",
+    APARTMENT: "Apartment",
+    OTHER: "Other",
   } as const;
 
   const onHandleCreateAddress = () => {
@@ -450,6 +450,12 @@ export default function UserAddressComponent(
                 <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded-full">
                   {address?.label === ADDRESS_TYPES.OFFICE && (
                     <OfficeSvg
+                      height={18}
+                      darkColor={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : "#ffffff"
+                      }
                       color={
                         address.selected && !hasCurrentLocation
                           ? "#0EA5E9"
@@ -457,18 +463,14 @@ export default function UserAddressComponent(
                       }
                     />
                   )}
-                  {address?.label === ADDRESS_TYPES.OFFICE && (
+                  {address?.label === ADDRESS_TYPES.HOUSE && (
                     <HomeSvg
                       height={18}
-                      color={
+                      darkColor={
                         address.selected && !hasCurrentLocation
                           ? "#0EA5E9"
-                          : "black"
+                          : "#ffffff"
                       }
-                    />
-                  )}
-                  {address?.label === ADDRESS_TYPES.OFFICE && (
-                    <AppartmentSvg
                       color={
                         address.selected && !hasCurrentLocation
                           ? "#0EA5E9"
@@ -476,8 +478,29 @@ export default function UserAddressComponent(
                       }
                     />
                   )}
-                  {address?.label === ADDRESS_TYPES.OFFICE && (
+                  {address?.label === ADDRESS_TYPES.APARTMENT && (
+                    <AppartmentSvg
+                      height={18}
+                      darkColor={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : "#ffffff"
+                      }
+                      color={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : undefined
+                      }
+                    />
+                  )}
+                  {address?.label === ADDRESS_TYPES.OTHER && (
                     <OtherSvg
+                      height={18}
+                      darkColor={
+                        address.selected && !hasCurrentLocation
+                          ? "#0EA5E9"
+                          : "#ffffff"
+                      }
                       color={
                         address.selected && !hasCurrentLocation
                           ? "#0EA5E9"
@@ -680,26 +703,33 @@ export default function UserAddressComponent(
           <button
             className="w-full h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-black dark:border-gray-600 rounded-full text-base lg:text-[14px]"
             onClick={() => {
+              const selectedAddress = profile?.addresses.find(
+                (address) => address.selected
+              );
+              if (selectedAddress) {
+                setUserAddress(selectedAddress);
+              }
+
               setIndex([0, 0]);
               onHide();
             }}
           >
             <span>{t("cancel_address")}</span>
           </button>
-            <button
+          <button
             disabled={!isDragged && !selectedCity}
-            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-gray-700":"bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
+            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-gray-700" : "bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
             onClick={() => onHandleCreateAddress()}
-            >
+          >
             {modifyingAddressLoading ? (
               <FontAwesomeIcon
-              icon={faSpinner}
-              spin={modifyingAddressLoading}
+                icon={faSpinner}
+                spin={modifyingAddressLoading}
               />
             ) : (
               <span>{t("Save_address")}</span>
             )}
-            </button>
+          </button>
         </div>
       </div>
     </div>

@@ -40,7 +40,7 @@ export default function CuisineTableHeader({
 
   const menuItems = [
     {
-      label: t('Store'),
+      label: t('Restaurant'),
       value: 'restaurant',
     },
     {

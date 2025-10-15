@@ -69,8 +69,6 @@ function Checkout(props) {
   const configuration = useContext(ConfigurationContext)
   const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions, coupon, setCoupon } = useContext(UserContext)
 
-  console.log('rest===>', restaurant)
-
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
@@ -394,24 +392,6 @@ function Checkout(props) {
         currency: configuration.currency
       })
     }
-    // else if (paymentMode === 'HYP') {
-    //   // const items = transformOrder(cart)
-
-    //   // await AsyncStorage.setItem(
-    //   //   'hyp-session-id',
-    //   //   Math.random().toString(36).substring(2, 15) +
-    //   //     Math.random().toString(36).substring(2, 15)
-    //   // )
-
-    //   // props?.navigation.replace('HypCheckout', {
-    //   //   _id: data.placeOrder.orderId,
-    //   //   restaurantId: cartRestaurant,
-    //   //   orderInput: items,
-    //   //   amount: data.placeOrder.orderAmount,
-    //   //   email: data.placeOrder.user.email,
-    //   //   currency: configuration.currency
-    //   // })
-    // }
   }
   function onError(error) {
     setLoadingOrder(false)
@@ -434,7 +414,7 @@ function Checkout(props) {
       }
       if (error?.networkError.statusCode === 504) {
         FlashMessage({
-          message: "Request timed out. Please try again."
+          message: 'Request timed out. Please try again.'
         })
       }
     }
@@ -749,14 +729,8 @@ function Checkout(props) {
                         {/* <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
                           {orderConfirmedTime ? `${t(isPickup ? 'pickUp' : 'delivery')} (${deliveryTime} ${t('mins')})` : `${t(isPickup ? 'pickUp' : 'delivery')} (${restaurant?.deliveryTime} ${t('mins')})`}
                         </TextDefault> */}
-                        <TextDefault
-                          textColor={currentTheme.newFontcolor}
-                          numberOfLines={1}
-                          H5
-                          bolder
-                          isRTL
-                        >
-                          {t(isPickup ? 'pickUp' : 'delivery')} {deliveryTime} {""}
+                        <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
+                          {t(isPickup ? 'pickUp' : 'delivery')} {deliveryTime} {''}
                           {t('mins')}
                         </TextDefault>
                       </View>
@@ -788,7 +762,7 @@ function Checkout(props) {
                             setPaymentMode('COD')
                           }}
                         />
-                        <PaymentModeOption
+                        {/* <PaymentModeOption
                           title={t('paypal')}
                           icon={'credit-card'}
                           selected={paymentMode === 'PAYPAL'}
@@ -796,16 +770,18 @@ function Checkout(props) {
                           onSelect={() => {
                             setPaymentMode('PAYPAL')
                           }}
-                        />
-                        <PaymentModeOption
-                          title={t('Stripe')}
-                          icon={'credit-card'}
-                          selected={paymentMode === 'STRIPE'}
-                          theme={currentTheme}
-                          onSelect={() => {
-                            setPaymentMode('STRIPE')
-                          }}
-                        />
+                        /> */}
+                        {restaurant?.stripeDetailsSubmitted && (
+                          <PaymentModeOption
+                            title={t('Stripe')}
+                            icon={'credit-card'}
+                            selected={paymentMode === 'STRIPE'}
+                            theme={currentTheme}
+                            onSelect={() => {
+                              setPaymentMode('STRIPE')
+                            }}
+                          />
+                        )}
                       </View>
                     </View>
                   </>

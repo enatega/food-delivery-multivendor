@@ -30,9 +30,9 @@ export default function ComingSoonScreen() {
     );
     // reload window
     window.location.reload();
-  };
+  };  
   return (
-    <div className="relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] dark:bg-gradient-to-b dark:from-[#467e2e] dark:to-[#316e17] text-white">
+    <div onClick={handleClick} className=" cursor-pointer relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] hover:from-[#47a320] hover:to-[#51b427] dark:bg-gradient-to-b dark:from-[#467e2e]  dark:to-[#316e17] dark:hover:from-[#316e17] dark:hover:to-[#386425] text-white">
       {/* Floating Food Emojis */}
       <span
         aria-hidden="true"
@@ -88,8 +88,8 @@ export default function ComingSoonScreen() {
 
       {/* Explore Another Region Button */}
       <CustomButton
-        label={t("explore_restaurants_in_islamabad_pakistan")}
-        onClick={handleClick}
+        label={"Click anywhere on this screen to explore restaurants."}
+        // onClick={handleClick}
         className="px-8 py-3 rounded-full font-semibold bg-white text-[#5AC12F] shadow-lg 
                    hover:bg-white/90 hover:scale-105 transition-transform duration-200"
       />

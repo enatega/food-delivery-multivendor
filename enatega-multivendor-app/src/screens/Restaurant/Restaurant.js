@@ -88,7 +88,6 @@ function Restaurant(props) {
   const dataList =
     popularItems &&
     popularItems?.popularItems?.map((item) => {
-      console.log({ item })
       const foodDetails = fetchFoodDetails(item?.id)
       return foodDetails
     })

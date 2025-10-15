@@ -35,11 +35,14 @@ const Table = <T extends ITableExtends>({
   totalRecords,
   onPageChange,
   currentPage = 1,
+  minWidth,
 }: IDataTableProps<T>) => {
   const handleSelectionChange = (
     e: DataTableSelectionMultipleChangeEvent<T[]>
   ) => {
-    setSelectedData(e.value);
+    if (setSelectedData) {
+      setSelectedData(e.value);
+    }
   };
 
   // Hooks
@@ -74,18 +77,18 @@ const Table = <T extends ITableExtends>({
   // Prepare pagination props based on server pagination status
   const paginationProps = isServerPaginated
     ? {
-        lazy: true,
-        first: (currentPage - 1) * rowsPerPage,
-        totalRecords: totalRecords,
-        onPage: handlePageChange,
-      }
+      lazy: true,
+      first: (currentPage - 1) * rowsPerPage,
+      totalRecords: totalRecords,
+      onPage: handlePageChange,
+    }
     : {};
 
-    useEffect(() => {
-      if (data?.length === 0 && currentPage > 1 && onPageChange) {
-        onPageChange(1, rowsPerPage);
-      }
-    }, [data, currentPage, onPageChange, rowsPerPage]);
+  useEffect(() => {
+    if (data?.length === 0 && currentPage > 1 && onPageChange) {
+      onPageChange(1, rowsPerPage);
+    }
+  }, [data, currentPage, onPageChange, rowsPerPage]);
 
   return (
     <>
@@ -97,12 +100,12 @@ const Table = <T extends ITableExtends>({
         value={data}
         selectionAutoFocus={true}
         size={size}
-        selection={selectedData}
-        onSelectionChange={handleSelectionChange}
+        selection={isSelectable ? (selectedData || []) : []}
+        onSelectionChange={isSelectable ? handleSelectionChange : undefined}
         className={className}
         dataKey="_id"
         tableStyle={{
-          minWidth: '50rem',
+          minWidth: minWidth ? minWidth : '50rem',
           minHeight: 'auto',
           maxHeight: '480px',
         }}
