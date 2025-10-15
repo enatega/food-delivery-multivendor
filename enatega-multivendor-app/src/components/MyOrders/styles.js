@@ -68,8 +68,8 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props?.newheaderColor : '#90E36D',
       ...alignment.MTxSmall,
       borderRadius: 40,
-      width: '100%',
-      height: verticalScale(50),
+      width: '70%',
+      height: verticalScale(30),
       alignItems: 'center',
       justifyContent: 'center'
     },
