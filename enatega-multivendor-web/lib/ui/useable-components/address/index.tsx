@@ -711,6 +711,9 @@ export default function UserAddressComponent(
               }
 
               setIndex([0, 0]);
+              setInputValue("");
+              setSelectedCity(null);
+              setIsDragged(false)
               onHide();
             }}
           >
@@ -718,7 +721,7 @@ export default function UserAddressComponent(
           </button>
           <button
             disabled={!isDragged && !selectedCity}
-            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-gray-700" : "bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
+            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-[#429b1c6c] dark:bg-gray-700" : "bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
             onClick={() => onHandleCreateAddress()}
           >
             {modifyingAddressLoading ? (
