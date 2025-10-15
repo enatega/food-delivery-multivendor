@@ -121,3 +121,46 @@ export const AIMATE_FROM_CENTER = {
     }
   }
 }
+
+
+// NEW: Cart-specific animation - same as SLIDE_UP_RIGHT but with fixed header opacity
+export const SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER = {
+  cardStyleInterpolator: ({ current, layouts }) => {
+    const translateX = current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [layouts.screen.width, 0]
+    })
+
+    const translateY = current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-layouts.screen.height, 0]
+    })
+
+    return {
+      cardStyle: {
+        transform: [{ translateX }, { translateY }]
+      }
+    }
+  },
+  // This is the key addition - prevents header from fading during transition
+  headerStyleInterpolator: ({ current }) => ({
+    headerStyle: {
+      opacity: 1, // Keep header fully opaque throughout the animation
+    },
+  }),
+  transitionSpec: {
+    open: {
+      animation: 'timing',
+      config: {
+        duration: 250,
+        easing: Easing.inOut(Easing.ease)
+      }
+    },
+    close: {
+      animation: 'timing',
+      config: {
+        duration: 200
+      }
+    }
+  }
+}
