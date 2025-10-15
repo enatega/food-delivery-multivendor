@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
 import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, ScrollView, Dimensions } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
@@ -41,7 +41,6 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
 import useGeocoding from '../../ui/hooks/useGeocoding'
-
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -244,9 +243,9 @@ function Menu({ route, props }) {
   // }, [routeData, allCuisines])
 
   const collectionData = useMemo(() => {
-    if (routeData?.name === 'Restaurants') {
+    if (routeData?.name === 'Restaurants' || routeData?.params?.shopType == 'restaurant') {
       return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Restaurant')
-    } else if (routeData?.name === 'Store') {
+    } else if (routeData?.name === 'Store' || routeData?.params?.shopType == 'grocery') {
       return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Grocery')
     } else {
       return allCuisines?.cuisines
@@ -552,10 +551,10 @@ function Menu({ route, props }) {
         <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
           <View>
             <TextDefault bolder H2 isRTL>
-              {t(routeData?.name === 'Restaurants' ? 'Restaurants' : 'Stores')}
+              {t(heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants')}
             </TextDefault>
             <TextDefault bold H5 isRTL>
-              {t('BrowseCategories')}
+              {t('BrowseCuisines')}
             </TextDefault>
           </View>
           <Ripple
@@ -619,9 +618,9 @@ function Menu({ route, props }) {
           contentInset={{ top: containerPaddingTop }}
           contentContainerStyle={{
             paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-            paddingBottom: HEIGHT*0.34,
+            paddingBottom: HEIGHT * 0.34,
             padding: 15,
-            gap: 16,
+            gap: 16
           }}
           contentOffset={{ y: -containerPaddingTop }}
           onScroll={onScroll}
@@ -650,7 +649,7 @@ function Menu({ route, props }) {
           }}
         />
       </ScrollView>
-      <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />     
+      <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize
         ref={filtersModalRef}
         modalStyle={styles(currentTheme).modal}
@@ -677,7 +676,6 @@ function Menu({ route, props }) {
           }}
         />
       </Modalize>
-
     </SafeAreaView>
   )
 }

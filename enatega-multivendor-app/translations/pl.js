@@ -559,7 +559,7 @@ export const pl = {
     delete: 'Usuń',
     deleteAddressesTitle: 'Czy na pewno chcesz usunąć wybrane adresy?',
     notVerified: 'niezweryfikowane',
-    BrowseCategories: 'Przeglądaj kategorie',
+    BrowseCuisines: 'Przeglądaj kuchnie',
     'Popular right now': 'Popularne teraz',
     'I feel like eating': 'Chciałbym coś zjeść',
     'I feel like eating...': 'Chciałbym coś zjeść...',

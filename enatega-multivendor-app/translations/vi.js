@@ -593,7 +593,7 @@ export const vi = {
     delete: 'Xóa',
     deleteAddressesTitle: 'Bạn có chắc chắn muốn xóa các địa chỉ đã chọn không?',
     notVerified: 'Chưa xác minh',
-    BrowseCategories: 'Duyệt qua danh mục',
+    BrowseCuisines: 'Duyệt các món ăn',
     'Popular right now': 'Đang phổ biến hiện nay',
     'I feel like eating': 'Tôi muốn ăn',
     'I feel like eating...': 'Tôi muốn ăn...',
