@@ -70,7 +70,9 @@ const styles = (props = null) =>
       alignItems: 'center',
       ...alignment.Psmall,
       gap: scale(10)
-
+    },
+    searchbar: {
+      ...alignment.Psmall
     }
   })
 export default styles

@@ -8,7 +8,7 @@ import styles from './styles'
 import { theme } from '../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { restaurantListPreview } from '../../apollo/queries'
+import { restaurantListPreview, topRatedVendorsInfo, recentOrderRestaurantsQuery, mostOrderedRestaurantsQuery } from '../../apollo/queries'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import Item from '../../components/Main/Item/Item'
 import { LocationContext } from '../../context/Location'
@@ -28,6 +28,18 @@ import ErrorView from '../../components/ErrorView/ErrorView'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
+`
+
+const TOP_RATED_VENDORS = gql`
+  ${topRatedVendorsInfo}
+`
+
+const RECENT_ORDER_RESTAURANTS = gql`
+  ${recentOrderRestaurantsQuery}
+`
+
+const MOST_ORDERED_RESTAURANTS = gql`
+  ${mostOrderedRestaurantsQuery}
 `
 
 const SearchScreen = () => {
@@ -85,6 +97,30 @@ const SearchScreen = () => {
     fetchPolicy: 'network-only'
   })
 
+  const { data: topRatedData } = useQuery(TOP_RATED_VENDORS, {
+    variables: {
+      longitude: location.longitude || null,
+      latitude: location.latitude || null
+    },
+    skip: !location.latitude || !location.longitude
+  })
+
+  const { data: recentOrderData } = useQuery(RECENT_ORDER_RESTAURANTS, {
+    variables: {
+      longitude: location.longitude || null,
+      latitude: location.latitude || null
+    },
+    skip: !location.latitude || !location.longitude
+  })
+
+  const { data: mostOrderedData } = useQuery(MOST_ORDERED_RESTAURANTS, {
+    variables: {
+      longitude: location.longitude || null,
+      latitude: location.latitude || null
+    },
+    skip: !location.latitude || !location.longitude
+  })
+
   useEffect(() => {
     navigation.setOptions({
       title: t('searchTitle'),
@@ -114,7 +150,22 @@ const SearchScreen = () => {
 
   const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
 
-  const restaurants = data?.nearByRestaurantsPreview?.restaurants
+  const nearbyRestaurants = data?.nearByRestaurantsPreview?.restaurants || []
+  const topRatedRestaurants = topRatedData?.topRatedVendorsPreview || []
+  const recentOrderRestaurants = recentOrderData?.recentOrderRestaurantsPreview || []
+  const mostOrderedRestaurants = mostOrderedData?.mostOrderedRestaurantsPreview || []
+
+  // Combine all restaurants and remove duplicates
+  const allRestaurants = [
+    ...nearbyRestaurants,
+    ...topRatedRestaurants,
+    ...recentOrderRestaurants,
+    ...mostOrderedRestaurants
+  ]
+  
+  const restaurants = allRestaurants.filter((restaurant, index, self) => 
+    index === self.findIndex(r => r._id === restaurant._id)
+  )
 
   const searchAllShops = (searchText) => {
     const data = []
@@ -122,11 +173,15 @@ const SearchScreen = () => {
     const regex = new RegExp(escapedSearchText, 'i')
 
     restaurants?.forEach((restaurant) => {
-      const resultCatFoods = restaurant.keywords.some((keyword) => {
+      const nameMatch = restaurant.name.search(regex) > -1
+      const keywordMatch = restaurant.keywords?.some((keyword) => {
         const result = keyword.search(regex)
         return result > -1
       })
-      if (resultCatFoods) data.push(restaurant)
+      
+      if (nameMatch || keywordMatch) {
+        data.push(restaurant)
+      }
     })
     return data
   }
