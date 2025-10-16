@@ -53,6 +53,7 @@ export const UserProvider = (props) => {
     let isSubscribed = true
     ;(async () => {
       const restaurant = await AsyncStorage.getItem('restaurant')
+
       const cart = await AsyncStorage.getItem('cartItems')
       const savedCoupon = await AsyncStorage.getItem('coupon')
       isSubscribed && setRestaurant(restaurant || null)

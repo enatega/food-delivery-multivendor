@@ -60,37 +60,41 @@ const Analytics = () => {
   }
 
   const identify = async (options, userId) => {
-    await initialize()
-    if (!isInitialized) return
+    try {
+      await initialize()
+      if (!isInitialized) return
 
-    const properties = options
+      const properties = options
 
-    if (!apiKey) return
-    if (userId) {
-      amplitude.setUserId(userId)
-    }
-    if (properties) {
-      amplitude.Identify(properties)
-    } else {
-      const identifyObj = new amplitude.Identify()
-      identifyObj.remove(properties)
-      amplitude.Identify(identifyObj)
-    }
+      if (!apiKey) return
+      if (userId) {
+        amplitude.setUserId(userId)
+      }
+      if (properties) {
+        amplitude.Identify(properties)
+      } else {
+        const identifyObj = new amplitude.Identify()
+        identifyObj.remove(properties)
+        amplitude.Identify(identifyObj)
+      }
+    } catch (err) {}
   }
 
   const track = async (event, options) => {
-    await initialize()
-    if (!isInitialized) return
+    try {
+      await initialize()
+      if (!isInitialized) return
 
-    const properties = options
+      const properties = options
 
-    if (!apiKey) return
+      if (!apiKey) return
 
-    if (properties) {
-      await amplitude.track(event, properties)
-    } else {
-      await amplitude.track(event)
-    }
+      if (properties) {
+        await amplitude.track(event, properties)
+      } else {
+        await amplitude.track(event)
+      }
+    } catch (err) {}
   }
 
   useEffect(() => {

@@ -220,24 +220,22 @@ function CartAddresses(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-          {isAddressChanged && (
+          {tempSelectedAddress && (
             <View style={styles(currentTheme).containerButton}>
               <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles(currentTheme).addButton}
                 onPress={() => {
-                  if (tempSelectedAddress) {
-                    setLocation({
-                      _id: tempSelectedAddress._id,
-                      label: tempSelectedAddress.label,
-                      latitude: Number(tempSelectedAddress.location.coordinates[1]),
-                      longitude: Number(tempSelectedAddress.location.coordinates[0]),
-                      deliveryAddress: tempSelectedAddress.deliveryAddress,
-                      details: tempSelectedAddress.details
-                    })
-                    mutate({ variables: { id: tempSelectedAddress._id } })
-                    setSelectedAddress(tempSelectedAddress)
-                  }
+                  setLocation({
+                    _id: tempSelectedAddress._id,
+                    label: tempSelectedAddress.label,
+                    latitude: Number(tempSelectedAddress.location.coordinates[1]),
+                    longitude: Number(tempSelectedAddress.location.coordinates[0]),
+                    deliveryAddress: tempSelectedAddress.deliveryAddress,
+                    details: tempSelectedAddress.details
+                  })
+                  mutate({ variables: { id: tempSelectedAddress._id } })
+                  setSelectedAddress(tempSelectedAddress)
                   props.navigation.navigate('Checkout', {
                     longitude: +location.longitude,
                     latitude: +location.latitude,
