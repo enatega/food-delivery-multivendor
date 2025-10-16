@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback, useMemo } from 'react'
 import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, FlatList, Image, RefreshControl, ActivityIndicator } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
@@ -303,26 +303,45 @@ function Main(props) {
 
   const restaurantorders = data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant) => restaurant.shopType === 'restaurant')
 
-  const filterCusinies = () => {
-    if (data !== undefined) {
-      const cuisineShopTypeMap = new Map()
-      
-      for (let restaurant of data?.nearByRestaurantsPreview?.restaurants) {
-        for (let cuisine of restaurant.cuisines) {
-          const key = `${cuisine.name}-${restaurant.shopType}`
-          if (!cuisineShopTypeMap.has(key)) {
-            cuisineShopTypeMap.set(key, {
-              ...cuisine,
-              shopType: restaurant.shopType
-            })
-          }
-        }
+  // const filterCusinies = () => {
+  //   if (data !== undefined) {
+  //     const cuisineShopTypeMap = new Map()
+
+  //     for (let restaurant of data?.nearByRestaurantsPreview?.restaurants) {
+  //       for (let cuisine of restaurant.cuisines) {
+  //         const key = `${cuisine.name}-${restaurant.shopType}`
+  //         if (!cuisineShopTypeMap.has(key)) {
+  //           cuisineShopTypeMap.set(key, {
+  //             ...cuisine,
+  //             shopType: restaurant.shopType
+  //           })
+  //         }
+  //       }
+  //     }
+
+  //     return Array.from(cuisineShopTypeMap.values())
+  //   }
+  //   return []
+  // }
+
+  const useCuisinesData = (shopType, allCuisines) => {
+    const cuisinesData = useMemo(() => {
+      if (!allCuisines?.cuisines) return []
+
+      if (shopType === 'restaurant') {
+        return allCuisines.cuisines.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'restaurant')
+      } else if (shopType === 'grocery') {
+        return allCuisines.cuisines.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'grocery')
+      } else {
+        return allCuisines.cuisines
       }
-      
-      return Array.from(cuisineShopTypeMap.values())
-    }
-    return []
+    }, [shopType, allCuisines])
+
+    return cuisinesData
   }
+
+  const restaurantCuisines = useCuisinesData('restaurant', allCuisines)
+  const groceryCuisines = useCuisinesData('grocery', allCuisines)
 
   return (
     <>
@@ -350,7 +369,7 @@ function Main(props) {
                             {t('I feel like eating...')}
                           </TextDefault>
                           <FlatList
-                            data={filterCusinies()?.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'restaurant') ?? []}
+                            data={restaurantCuisines ?? []}
                             renderItem={({ item }) => {
                               return (
                                 <CollectionCard
@@ -379,13 +398,13 @@ function Main(props) {
                             }}
                           />
                         </View>
-                        <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard shopType="restaurant" orders={sortRestaurantsByOpenStatus(restaurantorders || [])} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
+                        <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard shopType='restaurant' orders={sortRestaurantsByOpenStatus(restaurantorders || [])} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
                         <View style={{ padding: 15, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>
                             {t('Fresh finds await...')}
                           </TextDefault>
                           <FlatList
-                            data={filterCusinies()?.filter((cuisine) => cuisine?.shopType.toLowerCase() === 'grocery') ?? []}
+                            data={groceryCuisines ?? []}
                             renderItem={({ item }) => {
                               return (
                                 <CollectionCard
@@ -411,15 +430,15 @@ function Main(props) {
                             inverted={currentTheme?.isRTL ? true : false}
                           />
                         </View>
-                        <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType="grocery" orders={sortRestaurantsByOpenStatus(groceryorders || [])} loading={orderLoading} error={orderError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View>
+                        <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(groceryorders || [])} loading={orderLoading} error={orderError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View>
 
-                        <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType="grocery" orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar?.filter((order) => order.shopType === 'grocery') || [])} loading={orderLoading} error={orderError} title={t('Top grocery picks')} queryType='grocery' icon='store' selectedType='grocery' />}</View>
+                        <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar?.filter((order) => order.shopType === 'grocery') || [])} loading={orderLoading} error={orderError} title={t('Top grocery picks')} queryType='grocery' icon='store' selectedType='grocery' />}</View>
                       </View>
                       <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                     </ScrollView>
                   ) : !location ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
-                      <Spinner backColor="transparent"/>
+                      <Spinner backColor='transparent' />
                     </View>
                   ) : (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
