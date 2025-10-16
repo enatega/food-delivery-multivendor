@@ -289,7 +289,8 @@ export default function UserAddressComponent(
 
   const LOCATIONT_TYPE = [
     {
-      name: t("loctype1"),
+      name: "House",
+      translatedName: t("loctype1"),
       icon: (color?: string, darkColor?: string) => (
         <HomeSvg
           darkColor={darkColor || "#ffffff"}
@@ -298,7 +299,8 @@ export default function UserAddressComponent(
       ),
     },
     {
-      name: t("loctype2"),
+      name: "Office",
+      translatedName: t("loctype2"),
       icon: (color?: string, darkColor?: string) => (
         <OfficeSvg
           darkColor={darkColor || "#ffffff"}
@@ -307,7 +309,8 @@ export default function UserAddressComponent(
       ),
     },
     {
-      name: t("loctype3"),
+      name: "Apartment",
+      translatedName: t("loctype3"),
       icon: (color?: string, darkColor?: string) => (
         <ApartmentSvg
           darkColor={darkColor || "#ffffff"}
@@ -316,7 +319,8 @@ export default function UserAddressComponent(
       ),
     },
     {
-      name: t("loctype4"),
+      name: "Other",
+      translatedName: t("loctype4"),
       icon: (color?: string, darkColor?: string) => (
         <OtherSvg
           darkColor={darkColor || "#ffffff"}
@@ -691,7 +695,7 @@ export default function UserAddressComponent(
                   <span
                     className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
                   >
-                    {item.name}
+                    {item.translatedName}
                   </span>
                 </div>
               </div>
@@ -709,11 +713,11 @@ export default function UserAddressComponent(
               if (selectedAddress) {
                 setUserAddress(selectedAddress);
               }
-
+              setSelectedLocationType("House");
               setIndex([0, 0]);
               setInputValue("");
               setSelectedCity(null);
-              setIsDragged(false)
+              setIsDragged(false);
               onHide();
             }}
           >
@@ -888,7 +892,7 @@ export default function UserAddressComponent(
                   <span
                     className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
                   >
-                    {item.name}
+                    {item.translatedName}
                   </span>
                 </div>
               </div>
@@ -900,7 +904,17 @@ export default function UserAddressComponent(
           <button
             className="w-full  h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-black dark:border-gray-600 rounded-full text-base lg:text-[14px]"
             onClick={() => {
+              const selectedAddress = profile?.addresses.find(
+                (address) => address.selected
+              );
+              if (selectedAddress) {
+                setUserAddress(selectedAddress);
+              }
+              setSelectedLocationType("House");
               setIndex([0, 0]);
+              setInputValue("");
+              setSelectedCity(null);
+              setIsDragged(false);
               onHide();
             }}
           >
