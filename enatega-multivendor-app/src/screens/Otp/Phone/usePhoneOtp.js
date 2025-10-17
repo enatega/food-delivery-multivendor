@@ -168,7 +168,7 @@ const usePhoneOtp = () => {
     if (!configuration.skipMobileVerification) {
       onSendOTPHandler()
     }
-  }, [configuration, phone])
+  }, [configuration,  phone])
 
   useEffect(() => {
     let timer = null
