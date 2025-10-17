@@ -593,7 +593,7 @@ export const ro = {
     delete: 'Ștergeți',
     deleteAddressesTitle: 'Sunteți sigur că doriți să ștergeți adresele selectate?',
     notVerified: 'neverificat',
-    BrowseCategories: 'Răsfoiți categorii',
+    BrowseCuisines: 'Răsfoiește bucătării',
     'Popular right now': 'Popular acum',
     'I feel like eating': 'Îmi vine să mănânc',
     'I feel like eating...': 'Îmi vine să mănânc...',

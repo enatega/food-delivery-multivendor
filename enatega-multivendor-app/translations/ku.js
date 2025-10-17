@@ -558,7 +558,7 @@ export const ku = {
     delete: 'سڕینەوە',
     deleteAddressesTitle: 'دڵنیایت کە دەتەوێت ناونیشانە هەڵبژێردراوەکان بسڕیتەوە؟',
     notVerified: 'پشتڕاست نەکراوە',
-    BrowseCategories: 'پۆلەکان بگەڕە',
+    BrowseCuisines: 'گەڕان بە چێشتخانەکاندا',
     'Popular right now': 'لە ئێستادا باوە',
     'I feel like eating': 'هەستم بە خواردنە',
     'I feel like eating...': 'هەستم بە خواردنە...',

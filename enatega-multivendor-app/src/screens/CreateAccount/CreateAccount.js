@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity, Dimensions, StatusBar, ScrollView } from 'react-native'
+import { View, Image, TouchableOpacity, Dimensions, StatusBar, Platform, KeyboardAvoidingView } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
@@ -10,48 +10,40 @@ import { useCreateAccount } from './useCreateAccount'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
-import LoginHeader from '../../assets/SVG/imageComponents/LoginHeader'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { decodeJwtToken } from '../../utils/decode-jwt'
 
+const { height } = Dimensions.get('window')
+
 const CreateAccount = (props) => {
-  const {
-    enableApple,
-    loginButton,
-    loginButtonSetter,
-    loading,
-    themeContext,
-    currentTheme,
-    mutateLogin,
-    navigateToLogin,
-    navigation,
-    signIn
-    //user
-  } = useCreateAccount()
+  const { enableApple, loginButton, loginButtonSetter, loading, themeContext, currentTheme, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
+
   const { t } = useTranslation()
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: '',
-      headerRight: null,
-      headerLeft: null,
-      headerTransparent: true,
-      headerTitleAlign: 'center'
+      headerShown: false
     })
   }, [navigation])
 
-  function renderAppleAction() {
+  const renderAppleAction = () => {
     if (loading && loginButton === 'Apple') {
       return (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles().loadingContainer}>
           <View style={styles(currentTheme).buttonBackground}>
             <Spinner backColor='transparent' spinnerColor={currentTheme.main} />
           </View>
         </View>
       )
     }
+
+    // Hide Apple login on Android if not enabled
+    if (Platform.OS === 'android' && !enableApple) {
+      return null
+    }
+
     return (
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
@@ -64,7 +56,6 @@ const CreateAccount = (props) => {
               requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL]
             })
             const access_token = credential?.identityToken
-
             const user_details = decodeJwtToken(access_token)
 
             if (!user_details) {
@@ -89,7 +80,9 @@ const CreateAccount = (props) => {
             mutateLogin(user)
             loginButtonSetter('Apple')
           } catch (e) {
-            console.error('Apple Sign In Error:', e)
+            if (e.code !== 'ERR_CANCELED') {
+              console.error('Apple Sign In Error:', e)
+            }
             loginButtonSetter(null)
           }
         }}
@@ -97,102 +90,64 @@ const CreateAccount = (props) => {
     )
   }
 
-  function renderGoogleAction() {
-    return <FdGoogleBtn loadingIcon={loading && loginButton === 'Google'} onPressIn={() => loginButtonSetter('Google')} disabled={loading && loginButton === 'Google'} onPress={signIn} />
-  }
+  const renderGoogleAction = () => <FdGoogleBtn loadingIcon={loading && loginButton === 'Google'} onPressIn={() => loginButtonSetter('Google')} disabled={loading && loginButton === 'Google'} onPress={signIn} />
 
-  function renderEmailAction() {
-    return (
-      <FdEmailBtn
-        loadingIcon={loading && loginButton === 'Email'}
-        onPress={() => {
-          loginButtonSetter('Email')
-          // eslint-disable-next-line no-unused-expressions
-          navigateToLogin()
-        }}
-      />
-    )
-  }
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  const renderEmailAction = () => (
+    <FdEmailBtn
+      loadingIcon={loading && loginButton === 'Email'}
+      onPress={() => {
+        loginButtonSetter('Email')
+        navigateToLogin()
+      }}
+    />
+  )
+
+  const renderGuestButton = () => (
+    <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).guestButton} onPress={() => navigation.navigate('Discovery')} disabled={props.loadingIcon}>
+      {props.loadingIcon ? (
+        <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
+      ) : (
+        <TextDefault H4 textColor={currentTheme.primary} center bold>
+          {t('continueAsGuest')}
+        </TextDefault>
+      )}
+    </TouchableOpacity>
+  )
+
+  const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
-      <StatusBar backgroundColor={currentTheme.main} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
-      <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
-        <View style={styles().container}>
-          <View style={styles(currentTheme).image}>
-            <View style={styles().image1}>
-              <LoginHeader blackStroke={currentTheme.themeBackground} whiteStroke={currentTheme.darkBgFont} fillColor={currentTheme.svgFill} />
-            </View>
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
+      <StatusBar backgroundColor='transparent' translucent barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
 
-            <View style={styles(currentTheme).mainHeadingTextOverlay}>
-              <TextDefault center H3 bold>
-                {t('brandName')}
-              </TextDefault>
-            </View>
+      <View style={styles().mainContainer}>
+        {/* GIF Section */}
+        <View style={styles().gifContainer}>
+          <Image source={require('../../assets/gifs/login.gif')} style={styles().gifImage} resizeMode='cover' />
+        </View>
 
-            <View style={styles(currentTheme).burgerImage}>
-              <Image
-                source={require('../../assets/images/burger.png')}
-                style={{
-                  height: 300,
-                  resizeMode: 'contain'
-                }}
-              />
-            </View>
+        {/* Content Section */}
+        <View styl>
+          {/* Welcome Text */}
+          <View style={styles().welcomeSection}>
+            <TextDefault H1 bolder center textColor={currentTheme.newFontcolor} style={styles(currentTheme).mainTitle}>
+              {t('welcomeText')}
+            </TextDefault>
+            <TextDefault center H5 textColor={currentTheme.newFontcolor} style={styles().subTitle}>
+              {t('createAccountDesc')}
+            </TextDefault>
           </View>
-          <View style={[styles(currentTheme).subContainer]}>
-            <View
-              style={{
-                width: '90%',
-                alignSelf: 'center',
-                marginBottom: scale(30),
-                marginTop: scale(10)
-              }}
-            >
-              <TextDefault H2 bolder center textColor={currentTheme.newFontcolor} style={{ marginBottom: scale(7) }}>
-                {t('welcomeText')}
-              </TextDefault>
-              <TextDefault center H5 textColor={currentTheme.newFontcolor} style={styles().descText}>
-                {t('createAccountDesc')}
-              </TextDefault>
-            </View>
 
-            <View style={[styles().signupContainer]}>
-              <View style={{ marginBottom: scale(5) }}>{renderGoogleAction()}</View>
-              {enableApple && <View style={{ marginBottom: scale(5) }}>{renderAppleAction()}</View>}
-              <View style={{ marginBottom: scale(5) }}>{renderEmailAction()}</View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={styles(currentTheme).line} />
-                <View style={{ marginBottom: scale(5) }}>
-                  <TextDefault H4 bolder textColor={currentTheme.newFontcolor} style={{ width: 50, textAlign: 'center' }}>
-                    {t('or')}
-                  </TextDefault>
-                </View>
-                <View style={styles(currentTheme).line} />
-              </View>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles(currentTheme).guestButton}
-                onPress={() => {
-                  navigation.navigate('Discovery')
-                }}
-              >
-                {props.loadingIcon ? (
-                  <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
-                ) : (
-                  <>
-                    <TextDefault H4 textColor={currentTheme.newFontcolor} style={alignment.MLsmall} bold>
-                      {t('continueAsGuest')}
-                    </TextDefault>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
+          {/* Login Buttons */}
+          <View style={styles().buttonsContainer}>
+            {renderGoogleAction()}
+            {Platform.OS === 'ios' && enableApple && renderAppleAction()}
+            {renderEmailAction()}
+            {renderGuestButton()}
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }
