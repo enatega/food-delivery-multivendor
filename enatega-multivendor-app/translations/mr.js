@@ -593,7 +593,7 @@ export const mr = {
     delete: 'हटवा',
     deleteAddressesTitle: 'आपण निवडलेले पत्ते हटवू इच्छिता याची खात्री आहे का?',
     notVerified: 'सत्यापित नाही',
-    BrowseCategories: 'श्रेण्या ब्राउझ करा',
+    BrowseCuisines: 'स्वयंपाक शैली ब्राउझ करा',
     'Popular right now': 'आता लोकप्रिय',
     'I feel like eating': 'मला खायला वाटतंय',
     'I feel like eating...': 'मला खायला वाटतंय...',

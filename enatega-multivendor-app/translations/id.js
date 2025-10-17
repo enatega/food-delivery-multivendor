@@ -558,7 +558,7 @@ export const id = {
     delete: 'Hapus',
     deleteAddressesTitle: 'Apakah Anda yakin ingin menghapus alamat yang dipilih?',
     notVerified: 'belum terverifikasi',
-    BrowseCategories: 'Jelajahi Kategori',
+    BrowseCuisines: 'Telusuri masakan',
     'Popular right now': 'Populer saat ini',
     'I feel like eating': 'Saya ingin makan',
     'I feel like eating...': 'Saya ingin makan...',

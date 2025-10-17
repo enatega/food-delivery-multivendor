@@ -597,7 +597,7 @@ export const en = {
   delete: 'Delete',
   deleteAddressesTitle: 'Are you sure you want to delete selected addresses?',
   notVerified: 'not verified',
-  BrowseCategories: 'Browse Categories',
+  BrowseCuisines: 'Browse Cuisines',
   'Popular right now': 'Popular right now',
   'I feel like eating': 'I feel like eating',
   'I feel like eating...': 'I feel like eating...',

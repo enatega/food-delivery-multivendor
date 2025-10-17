@@ -593,7 +593,7 @@ export const gu = {
   delete: 'ડિલીટ કરો',
   deleteAddressesTitle: 'શું તમે ખરેખર પસંદ કરેલ સરનામાં ડિલીટ કરવા માંગો છો?',
   notVerified: 'ચકાસાયેલ નથી',
-  BrowseCategories: 'શ્રેણીઓ બ્રાઉઝ કરો',
+  BrowseCuisines: 'રસોઇઓ બ્રાઉઝ કરો',
   'Popular right now': 'હાલમાં લોકપ્રિય',
   'I feel like eating': 'મને ખાવાનું મન થાય છે',
   'I feel like eating...': 'મને ખાવાનું મન થાય છે...',

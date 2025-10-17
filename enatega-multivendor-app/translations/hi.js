@@ -594,7 +594,7 @@ export const hi = {
     delete: 'हटाएं',
     deleteAddressesTitle: 'क्या आप सुनिश्चित हैं कि आप चयनित पते हटाना चाहते हैं?',
     notVerified: 'सत्यापित नहीं',
-    BrowseCategories: 'श्रेणियां ब्राउज़ करें',
+    BrowseCuisines: 'व्यंजनों को ब्राउज़ करें',
     'Popular right now': 'अभी लोकप्रिय',
     'I feel like eating': 'मुझे खाने का मन कर रहा है',
     'I feel like eating...': 'मुझे खाने का मन कर रहा है...',

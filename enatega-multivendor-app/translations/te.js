@@ -593,7 +593,7 @@ export const te = {
     delete: 'తొలగించు',
     deleteAddressesTitle: 'మీరు ఎంచుకున్న చిరునామాలను తొలగించాలని ఖచ్చితంగా కోరుకుంటున్నారా?',
     notVerified: 'ధృవీకరించబడలేదు',
-    BrowseCategories: 'వర్గాలను బ్రౌజ్ చేయండి',
+    BrowseCuisines: 'వంటకాలను బ్రౌజ్ చేయండి',
     'Popular right now': 'ఇప్పుడు ప్రజాదరణ పొందినవి',
     'I feel like eating': 'నాకు తినాలనిపిస్తోంది',
     'I feel like eating...': 'నాకు తినాలనిపిస్తోంది...',
