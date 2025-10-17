@@ -22,7 +22,7 @@ const SEND_OTP_TO_EMAIL = gql`
 const CREATEUSER = gql`
   ${createUser}
 `
-const useEmailOtp = () => {
+const useEmailOtp = (isPhoneExists) => {
   const { TEST_OTP } = useEnvVars()
   const Analytics = analytics()
 
@@ -122,6 +122,7 @@ const useEmailOtp = () => {
           console.log('Error catched in notificationToken:', error)
         }
       }
+      console.log('mutation variables: create user', isPhoneExists)
       await mutateUser({
         variables: {
           phone: user?.phone ?? '',
@@ -130,7 +131,8 @@ const useEmailOtp = () => {
           name: user.name,
           picture: '',
           notificationToken: notificationToken,
-          emailIsVerified: true
+          emailIsVerified: true,
+          isPhoneExists: isPhoneExists || false
         }
       })
     } catch (error) {
