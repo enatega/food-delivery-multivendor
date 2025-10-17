@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image, TextInput, Text } from 'react-native'
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image, TextInput, Text, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Spinner from '../../components/Spinner/Spinner'
 import styles from './styles'
@@ -13,9 +13,10 @@ import { useTranslation } from 'react-i18next'
 import { Ionicons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
+import PhoneNumberInput from '../../components/PhoneNumberInput'
 
 function PhoneNumber(props) {
-  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading } = usePhoneNumber()
+  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading, setPhoneError ,isCountryLoading} = usePhoneNumber()
 
   const { t } = useTranslation()
 
@@ -71,27 +72,29 @@ function PhoneNumber(props) {
               <View style={styles().form}>
                 <View style={styles(currentTheme).number}>
                   <View style={[styles(currentTheme).textField, styles().countryCode, { padding: Platform.OS === 'ios' ? scale(5) : scale(12) }]}>
-                    <CountryPicker countryCode={countryCode} onSelect={(country) => onCountrySelect(country)} withAlphaFilter withFilter />
-                    <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
-                      {/* {country?.cca2} */}+{country?.callingCode[0]}
-                    </TextDefault>
+                    {
+                      isCountryLoading ?
+
+                        <ActivityIndicator size='small' color={currentTheme.white} />
+                        :
+                        <>
+                          <CountryPicker countryCode={countryCode} onSelect={(country) => onCountrySelect(country)} withAlphaFilter withFilter />
+                          <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
+                            {/* {country?.cca2} */}+{country?.callingCode[0]}
+                          </TextDefault>
+                        </>
+                    }
                   </View>
                   <View style={[styles(currentTheme).textField, styles().phoneNumber, phoneError && styles(currentTheme).errorInput]}>
                     <View style={styles(currentTheme).phoneField}>
-                      {/* <TextDefault textColor={currentTheme.newFontcolor}>+{country.callingCode[0]} </TextDefault> */}
-                      <TextInput
-                        style={styles(currentTheme).phoneNo}
+                      <PhoneNumberInput
+                        setError={setPhoneError}
                         placeholder={t('phoneNumber')}
                         placeholderTextColor={currentTheme.color6}
+                        style={styles(currentTheme).phoneNo}
+                        countryCode={country?.callingCode[0]}
                         value={phone}
-                        maxLength={16}
-                        onChangeText={(e) => {
-                          if (e >= 0 || e <= 9) {
-                            setPhone(e)
-                          }
-                        }}
-                        keyboardType='numeric'
-                      />
+                        onChange={(e) => setPhone(e)} />
                     </View>
                   </View>
                 </View>
