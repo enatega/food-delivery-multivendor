@@ -345,7 +345,7 @@ export const login = `
   }
   `
 export const createUser = `
-    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean){
+    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean){
         createUser(userInput:{
             phone:$phone,
             email:$email,
@@ -354,6 +354,7 @@ export const createUser = `
             notificationToken:$notificationToken,
             appleId:$appleId,
             emailIsVerified:$emailIsVerified
+            isPhoneExists:$isPhoneExists
         }){
             userId
             token
