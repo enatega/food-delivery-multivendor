@@ -61,7 +61,8 @@ function MainRestaurantCard(props) {
             onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: props?.selectedType ?? 'restaurant',
-                queryType: props?.queryType ?? 'restaurant'
+                queryType: props?.queryType ?? 'restaurant',
+                shopType: props?.shopType ?? 'restaurant',
               })
             }}
             rippleColor={'#F5F5F5'}

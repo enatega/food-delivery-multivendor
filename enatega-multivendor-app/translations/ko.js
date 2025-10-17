@@ -558,7 +558,7 @@ export const ko = {
     delete: '삭제',
     deleteAddressesTitle: '선택한 주소를 삭제하시겠습니까?',
     notVerified: '확인되지 않음',
-    BrowseCategories: '카테고리 찾아보기',
+    BrowseCuisines: '요리를 둘러보기',
     'Popular right now': '현재 인기 있는 항목',
     'I feel like eating': '먹고 싶은 기분',
     'I feel like eating...': '먹고 싶은 기분...',

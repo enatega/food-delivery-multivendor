@@ -559,7 +559,7 @@ export const bn = {
   delete: 'মুছে ফেলুন',
   deleteAddressesTitle: 'আপনি কি নির্বাচিত ঠিকানাগুলি মুছে ফেলতে চান?',
   notVerified: 'যাচাই করা হয়নি',
-  BrowseCategories: 'ক্যাটাগরি ব্রাউজ করুন',
+  BrowseCuisines: 'খাবারের ধরন ব্রাউজ করুন',
   'Popular right now': 'এখন জনপ্রিয়',
   'I feel like eating': 'আমি কিছু খেতে চাই',
   'I feel like eating...': 'আমি কিছু খেতে চাই...',

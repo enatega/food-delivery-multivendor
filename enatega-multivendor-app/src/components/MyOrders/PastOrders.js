@@ -279,7 +279,7 @@ const Item = ({
               style={styles(currentTheme).subContainerButton}
               onPress={() => navigation.navigate('Reorder', { item })}
             >
-              <TextDefault textColor={currentTheme.black} H4 bolder B700 center>
+              <TextDefault textColor={currentTheme.black} H5 bolder B700 center>
                 {' '}
                 {t('reOrder')}
               </TextDefault>
