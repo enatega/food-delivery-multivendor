@@ -79,7 +79,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     data: dataAssigned,
     networkStatus: networkStatusAssigned,
     subscribeToMore,
-    refetch: refetchAssigned,
+   refetch: refetchAssigned
   } = useQuery(RIDER_ORDERS, {
     // onCompleted,
     // onError: error2,

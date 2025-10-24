@@ -20,10 +20,11 @@ const getEnvVars = (env = Updates.channel) => {
     };
   }
   return {
-    GRAPHQL_URL: "http://192.168.18.136:8001/graphql",
-    WS_GRAPHQL_URL: "ws://192.168.18.136:8001/graphql",
+   
       // GRAPHQL_URL: "https://aws-server.enatega.com/graphql",
       // WS_GRAPHQL_URL: "wss://aws-server.enatega.com/graphql",
+      GRAPHQL_URL: "http://192.168.18.107:8001/graphql",
+      WS_GRAPHQL_URL: "ws://192.168.18.107:8001/graphql",
 
     SENTRY_DSN:
       configuration?.restaurantAppSentryUrl ??
