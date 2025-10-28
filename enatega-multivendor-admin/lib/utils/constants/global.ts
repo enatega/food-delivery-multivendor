@@ -46,6 +46,8 @@ export const SEVERITY_STYLES: ISeverityStyles = {
   },
 };
 
+
+
 export const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
   { value: 'العربية', code: 'ar', index: 1 },
@@ -77,5 +79,5 @@ export const languageTypes = [
   { value: 'کوردی', code: 'ku', index: 27 },
   { value: 'ozbek', code: 'uz', index: 28 },
   { value: 'azərbaycan', code: 'az', index: 29 },
-  { value: 'Nederlands', code: 'nl', index: 30 },
-];
+  { value: 'Nederlands', code: 'nl', index: 30 }
+]
