@@ -558,7 +558,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                           template(item) {
                             return (
                               <div
-                                className={`${currentLocale === "en" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                className={` hover:bg-[#5AC12F] ${currentLocale === "en" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
                                 onClick={() => onLocaleChange("en")}
                               >
                                 {" "}
@@ -575,7 +575,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                           template(item) {
                             return (
                               <div
-                                className={`${currentLocale === "ar" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                className={` hover:bg-[#5AC12F] ${currentLocale === "ar" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
                                 onClick={() => onLocaleChange("ar")}
                               >
                                 {" "}
@@ -592,7 +592,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                           template(item) {
                             return (
                               <div
-                                className={`${currentLocale === "fr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                className={`hover:bg-[#5AC12F] ${currentLocale === "fr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
                                 onClick={() => onLocaleChange("fr")}
                               >
                                 {" "}
@@ -609,7 +609,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                           template(item) {
                             return (
                               <div
-                                className={`${currentLocale === "hr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+                                className={` hover:bg-[#5AC12F] ${currentLocale === "hr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
                                 onClick={() => onLocaleChange("hr")}
                               >
                                 {" "}
