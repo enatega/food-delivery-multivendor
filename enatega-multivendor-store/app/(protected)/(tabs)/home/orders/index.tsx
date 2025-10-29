@@ -1,5 +1,6 @@
 import HomeNewOrdersMain from "@/lib/ui/screen-components/home/orders/main/new-orders";
 import { useTranslation } from "react-i18next";
+import BluetoothPrinter from "./printer";
 
 export default function HomeScreen() {
   // Hooks
