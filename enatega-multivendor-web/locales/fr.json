@@ -239,6 +239,8 @@
   "AcceptedStoreSimple": "Le magasin prépare votre commande. {riderMessage}",
   "Assigned": "Un livreur a été assigné et viendra bientôt chercher votre commande.",
   "PickedElapsed": "Votre livreur a pris votre commande il y a {min} min et est en route vers vous !",
+  "PickedElapsedJustNow": "Votre livreur vient de prendre votre commande et est en route !",
+
   "Picked": "Votre livreur a pris votre commande et est en route vers vous !",
   "DeliveredRestaurant": "Votre commande a été livrée à {time}. Bon appétit !",
   "DeliveredStore": "Votre commande a été livrée à {time}. Merci d'avoir magasiné avec nous !",

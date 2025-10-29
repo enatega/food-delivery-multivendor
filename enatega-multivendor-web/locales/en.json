@@ -240,6 +240,7 @@
   "AcceptedStoreSimple": "Store is preparing your order. {riderMessage}",
   "Assigned": "A rider has been assigned and will pick up your order soon.",
   "PickedElapsed": "Your rider picked up your order {min} min ago and is heading your way!",
+  "PickedElapsedJustNow": "Your rider has picked up your order just now and is heading your way!",
   "Picked": "Your rider has picked up your order and is heading your way!",
   "DeliveredRestaurant": "Your order was delivered at {time}. Enjoy your meal!",
   "DeliveredStore": "Your order was delivered at {time}. Thank you for shopping with us!",
