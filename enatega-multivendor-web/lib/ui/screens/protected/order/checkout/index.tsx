@@ -607,7 +607,7 @@ export default function OrderCheckoutScreen() {
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
-          couponCode: coupon ? coupon.title : null,
+          couponCode: isCouponApplied? coupon? coupon.title : null : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
           // address: {
