@@ -687,7 +687,7 @@ export default function OrderCheckoutScreen() {
     cart.forEach((cartItem) => {
       itemTotal = itemTotal + Number(cartItem?.price || 0) * cartItem.quantity;
     });
-    if (withDiscount && coupon && coupon.discount) {
+    if (withDiscount && coupon && coupon.discount && isCouponApplied) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
     }
     const deliveryAmount = delivery > 0 ? deliveryCharges : 0;
