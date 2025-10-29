@@ -704,6 +704,13 @@ const AppTopbar = () => {
             ref={languageMenuRef}
             id="popup_menu_right"
             popupAlignment="right"
+            // className="max-h-72 overflow-y-auto [&_.p-menu-list]:max-h-72 [&_.p-menu-list]:overflow-y-auto"
+            className="
+        [&_.p-menu-list]:max-h-72 
+        [&_.p-menu-list]:overflow-y-auto
+        [&_.p-menu-list]:scrollbar-thin
+        shadow-lg
+      "
           />
         </div>
 
