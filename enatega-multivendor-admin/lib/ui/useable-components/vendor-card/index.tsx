@@ -40,6 +40,7 @@ import { ToastContext } from '@/lib/context/global/toast.context';
 // Utils & Constants
 import { SELECTED_VENDOR_EMAIL } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
+import { indexOf } from 'lodash';
 
 export default function VendorCard({
   _id,
@@ -52,20 +53,20 @@ export default function VendorCard({
 }: IVendorCardProps) {
   // Hooks
   const t = useTranslations();
+  console.log("isLast...", isLast)
 
   // Context
   const { vendorId, onSetVendorId, vendorResponse, onResetVendor } =
     useContext(VendorContext);
   const { onSetVendorFormVisible } = useContext(VendorContext);
   const { showToast } = useContext(ToastContext);
-  const {  ISPAID_VERSION } = useConfiguration();
-  
+  const { ISPAID_VERSION } = useConfiguration();
+
   // States
   const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
   const [isDeletePopupOpen, setDeletePopupOpen] = useState<boolean>(false);
 
   const router = useRouter();
-
 
   // API
   const [deleteVendor, { loading }] = useMutation(DELETE_VENDOR, {
@@ -110,16 +111,14 @@ export default function VendorCard({
       if (ISPAID_VERSION) {
         await deleteVendor({ variables: { id: vendorId } });
         setDeletePopupOpen(false);
-       
       } else {
         setDeletePopupOpen(false);
         showToast({
           type: 'error',
           title: t('You are using free version'),
           message: t('This Feature is only Available in Paid Version'),
-        });  
+        });
       }
-      
     } catch (error) {
       showToast({
         type: 'error',
@@ -213,7 +212,7 @@ export default function VendorCard({
           )}
           {isPopupOpen && (
             <div
-              className={`absolute left-2 top-[1.2rem] z-10 ${isLast ? '-mt-36' : 'mt-1'} -translate-x-full`}
+              className={`absolute left-2 top-[1.2rem] z-20 ${isLast ? '-mt-36' : 'mt-1'} -translate-x-full`}
             >
               <CustomPopupMenu
                 close={() => setPopupOpen(false)}

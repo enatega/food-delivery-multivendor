@@ -58,7 +58,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
   return (
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       <div
-        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 ${
+        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 z-10 ${
           activeTab === 'vendors' ? '' : 'hidden sm:block'
         }`}
       >
@@ -110,7 +110,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
                 userType={vendor.userType}
                 totalRestaurants={vendor?.restaurants?.length ?? 0}
                 uniqueId={vendor.unique_id}
-                isLast={vendors.length - 1 === index}
+                isLast={vendors.length - 1 === index && index !== 0}
               />
             ))
           ) : (

@@ -103,8 +103,11 @@ const AppTopbar = () => {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       setNotifications(data?.webNotifications);
+      console.log("Notification...",data )
+
     },
   });
+
 
   // Subscriptions
   useSubscription(RIDER_UPDATED_SUBSCRIPTION, {
