@@ -1530,6 +1530,7 @@ export default function OrderCheckoutScreen() {
       </PaddingContainer>
 
       <UserAddressComponent
+        confirmYourAddress={true}
         visible={isUserAddressModalOpen}
         onHide={() => {
           setIsUserAddressModalOpen(false);
