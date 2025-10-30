@@ -54,7 +54,7 @@ const SetTimeScreenAndAcceptOrder = ({
     try {
       // await acceptOrder(id, selectedTime?.toString() || "0");
       // await muteRing(orderId);
-      printOrder(id);
+      await printOrder(id);
 
       handleDismissModal();
     } catch (err) {
