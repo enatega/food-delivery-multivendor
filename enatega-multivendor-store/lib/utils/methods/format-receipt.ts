@@ -225,7 +225,7 @@ export const formatReceipt = (order) => {
     .join("\n");
 
   const text = `
-    *** STORE RECEIPT ${restaurant?.name} ***
+    *** ORDER RECEIPT ***
     ---------------------------
     Customer: ${email || "-"}
     Phone: ${phone || "-"}
