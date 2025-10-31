@@ -36,6 +36,7 @@ export interface ITwilioForm {
   twilioAuthToken: string | undefined;
   twilioPhoneNumber: number | null;
   twilioEnabled: boolean | undefined;
+  twilioWhatsAppNumber: number | null;
 }
 
 export interface ISentryForm {
@@ -88,6 +89,7 @@ export interface IAppConfigForm {
 export interface IVerificationConfigForm {
   skipEmailVerification: boolean;
   skipMobileVerification: boolean;
+  skipWhatsAppOTP: boolean;
 }
 
 export interface ICurrencyForm {

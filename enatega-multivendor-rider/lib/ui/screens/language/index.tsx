@@ -7,7 +7,9 @@ const index = () => {
   const { appTheme } = useApptheme();
   return (
     <SafeAreaView
+      // style={{ backgroundColor: appTheme.screenBackground, height: "100%" }}
       style={{ backgroundColor: appTheme.screenBackground, height: "100%" }}
+      className="h-full w-full"
     >
       <LanguageMain />
     </SafeAreaView>

@@ -57,7 +57,10 @@ import {
 } from "@/lib/utils/methods";
 
 // Constnats
-import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
+import {
+  languageTypes,
+  USER_CURRENT_LOCATION_LS_KEY,
+} from "@/lib/utils/constants";
 import EmptySearch from "@/lib/ui/useable-components/empty-search-results";
 import { useLocale, useTranslations } from "next-intl";
 import { TLocale } from "@/lib/utils/types/locale";
@@ -109,7 +112,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     refetchProfileData,
     setRefetchProfileData,
   } = useAuth();
-  const { queryData = [] } = useNearByRestaurantsPreview(true, 1,100);
+  const { queryData = [] } = useNearByRestaurantsPreview(true, 1, 100);
 
   const {
     isSearchFocused,
@@ -125,8 +128,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     cartCount > 0
       ? `${CURRENCY_SYMBOL}${calculateSubtotal()}`
       : `${CURRENCY_SYMBOL}0`;
-
-  console.log(userAddress);
 
   // Handlers
   const onInit = () => {
@@ -349,6 +350,24 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     return "";
   }
 
+  // Language Modal
+  const model = languageTypes.map((lang) => ({
+    label: lang.value.toUpperCase(),
+    template(item: any) {
+      return (
+        <div
+          className={`hover:bg-[#b1c748] ${currentLocale === lang.code ? "bg-[#b1c748]" : ""} p-2 cursor-pointer`}
+          onClick={() => onLocaleChange(lang.code)}
+        >
+          {item.label}
+        </div>
+      );
+    },
+    command: () => {
+      onLocaleChange(lang.code);
+    },
+  }));
+
   return (
     <>
       <nav
@@ -551,82 +570,20 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       />{" "}
                     </button>{" "}
                     <Menu
-                      className="dark:bg-gray-800 dark:text-white mt-5"
-                      model={[
-                        {
-                          label: "ENGLISH",
-                          template(item) {
-                            return (
-                              <div
-                                className={` hover:bg-[#5AC12F] ${currentLocale === "en" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
-                                onClick={() => onLocaleChange("en")}
-                              >
-                                {" "}
-                                {item.label}{" "}
-                              </div>
-                            );
-                          },
-                          command: () => {
-                            onLocaleChange("en");
-                          },
-                        },
-                        {
-                          label: "ARABIC",
-                          template(item) {
-                            return (
-                              <div
-                                className={` hover:bg-[#5AC12F] ${currentLocale === "ar" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
-                                onClick={() => onLocaleChange("ar")}
-                              >
-                                {" "}
-                                {item.label}{" "}
-                              </div>
-                            );
-                          },
-                          command: () => {
-                            onLocaleChange("ar");
-                          },
-                        },
-                        {
-                          label: "FRENCH",
-                          template(item) {
-                            return (
-                              <div
-                                className={`hover:bg-[#5AC12F] ${currentLocale === "fr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
-                                onClick={() => onLocaleChange("fr")}
-                              >
-                                {" "}
-                                {item.label}{" "}
-                              </div>
-                            );
-                          },
-                          command: () => {
-                            onLocaleChange("fr");
-                          },
-                        },
-                        {
-                          label: "HEBREW",
-                          template(item) {
-                            return (
-                              <div
-                                className={` hover:bg-[#5AC12F] ${currentLocale === "hr" ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
-                                onClick={() => onLocaleChange("hr")}
-                              >
-                                {" "}
-                                {item.label}{" "}
-                              </div>
-                            );
-                          },
-                          command: () => {
-                            onLocaleChange("hr");
-                          },
-                        },
-                      ]}
+                      // className="dark:bg-gray-800 dark:text-white mt-5"
+                      model={model}
                       popup
                       ref={languageMenuRef}
                       id="language_menu_popup"
                       popupAlignment="left"
-                    />{" "}
+                      className="
+                      dark:bg-gray-800 dark:text-white mt-5
+        [&_.p-menu-list]:max-h-72 
+        [&_.p-menu-list]:overflow-y-auto
+        [&_.p-menu-list]:scrollbar-thin
+        shadow-lg
+      "
+                    />
                   </div>
                 )}
                 {/* Cart Button */}

@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 
 // Core
@@ -49,6 +51,7 @@ import { IWebNotification } from '@/lib/utils/interfaces/notification.interface'
 // Constants
 import {
   APP_NAME,
+  languageTypes,
   SELECTED_RESTAURANT,
   SELECTED_VENDOR,
   SELECTED_VENDOR_EMAIL,
@@ -201,6 +204,24 @@ const AppTopbar = () => {
     };
   }, []);
 
+  // Language Modal
+  const model = languageTypes.map((lang) => ({
+    label: lang.value.toUpperCase(),
+    template(item: any) {
+      return (
+        <div
+          className={`hover:bg-[#b1c748] ${currentLocale === lang.code ? 'bg-[#b1c748]' : ''} p-2 cursor-pointer`}
+          onClick={() => onLocaleChange(lang.code)}
+        >
+          {item.label}
+        </div>
+      );
+    },
+    command: () => {
+      onLocaleChange(lang.code);
+    },
+  }));
+
   return (
     <div className={`${classes['layout-topbar']}`}>
       <div className="flex items-center cursor-pointer">
@@ -324,104 +345,7 @@ const AppTopbar = () => {
             <FontAwesomeIcon icon={faGlobe} />
 
             <Menu
-              model={[
-                {
-                  label: 'ENGLISH',
-                  template(item) {
-                    return (
-                      <div
-                        className={`hover:bg-[#b1c748] ${currentLocale === 'en' ? 'bg-[#b1c748]' : ''} p-2 cursor-pointer`}
-                        onClick={() => onLocaleChange('en')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('en');
-                  },
-                },
-                {
-                  label: 'ARABIC',
-                  template(item) {
-                    return (
-                      <div
-                        className={`hover:bg-[#b1c748] ${currentLocale === 'ar' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('ar')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('ar');
-                  },
-                },
-                {
-                  label: 'FRENCH',
-                  template(item) {
-                    return (
-                      <div
-                        className={` hover:bg-[#b1c748] ${currentLocale === 'fr' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('fr')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('fr');
-                  },
-                },
-                {
-                  label: 'KHMER',
-                  template(item) {
-                    return (
-                      <div
-                        className={`hover:bg-[#b1c748] ${currentLocale === 'km' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('km')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('km');
-                  },
-                },
-                {
-                  label: 'CHINESE',
-                  template(item) {
-                    return (
-                      <div
-                        className={`hover:bg-[#b1c748] ${currentLocale === 'zh' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('zh')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('zh');
-                  },
-                },
-                {
-                  label: 'HEBREW',
-                  template(item) {
-                    return (
-                      <div
-                        className={` hover:bg-[#b1c748] ${currentLocale === 'he' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('he')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('he');
-                  },
-                },
-              ]}
+              model={model}
               popup
               ref={languageMenuRef}
               id="popup_menu_right"
@@ -465,108 +389,11 @@ const AppTopbar = () => {
               popupAlignment="right"
             />
             <Menu
-              model={[
-                {
-                  label: 'ENGLISH',
-                  template(item) {
-                    return (
-                      <div
-                        className={`${currentLocale === 'en' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('en')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('en');
-                  },
-                },
-                {
-                  label: 'ARABIC',
-                  template(item) {
-                    return (
-                      <div
-                        className={`${currentLocale === 'ar' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('ar')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('ar');
-                  },
-                },
-                {
-                  label: 'FRENCH',
-                  template(item) {
-                    return (
-                      <div
-                        className={`${currentLocale === 'fr' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('fr')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('fr');
-                  },
-                },
-                {
-                  label: 'KHMER',
-                  template(item) {
-                    return (
-                      <div
-                        className={`${currentLocale === 'km' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('km')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('km');
-                  },
-                },
-                {
-                  label: 'CHINESE',
-                  template(item) {
-                    return (
-                      <div
-                        className={`${currentLocale === 'zh' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('zh')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('zh');
-                  },
-                },
-                {
-                  label: 'HEBREW',
-                  template(item) {
-                    return (
-                      <div
-                        className={`${currentLocale === 'he' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
-                        onClick={() => onLocaleChange('he')}
-                      >
-                        {item.label}
-                      </div>
-                    );
-                  },
-                  command: () => {
-                    onLocaleChange('he');
-                  },
-                },
-              ]}
               popup
               ref={languageMenuRef}
               id="popup_menu_right"
               popupAlignment="right"
+              model={model}
             />
           </div>
         </div>
@@ -589,7 +416,7 @@ const AppTopbar = () => {
                 template(item) {
                   return (
                     <div
-                      className={`hover:bg-[#b1c748] ${currentLocale === 'en' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
+                      className={`${currentLocale === 'en' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
                       onClick={() => onLocaleChange('en')}
                     >
                       {item.label}
@@ -605,7 +432,7 @@ const AppTopbar = () => {
                 template(item) {
                   return (
                     <div
-                      className={`hover:bg-[#b1c748] ${currentLocale === 'ar' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
+                      className={`${currentLocale === 'ar' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
                       onClick={() => onLocaleChange('ar')}
                     >
                       {item.label}
@@ -621,7 +448,7 @@ const AppTopbar = () => {
                 template(item) {
                   return (
                     <div
-                      className={`hover:bg-[#b1c748] ${currentLocale === 'fr' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
+                      className={`${currentLocale === 'fr' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
                       onClick={() => onLocaleChange('fr')}
                     >
                       {item.label}
@@ -637,7 +464,7 @@ const AppTopbar = () => {
                 template(item) {
                   return (
                     <div
-                      className={`hover:bg-[#b1c748] ${currentLocale === 'km' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
+                      className={`${currentLocale === 'km' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
                       onClick={() => onLocaleChange('km')}
                     >
                       {item.label}
@@ -653,7 +480,7 @@ const AppTopbar = () => {
                 template(item) {
                   return (
                     <div
-                      className={`hover:bg-[#b1c748] ${currentLocale === 'zh' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
+                      className={`${currentLocale === 'zh' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
                       onClick={() => onLocaleChange('zh')}
                     >
                       {item.label}
@@ -669,7 +496,7 @@ const AppTopbar = () => {
                 template(item) {
                   return (
                     <div
-                      className={`hover:bg-[#b1c748] ${currentLocale === 'he' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
+                      className={`${currentLocale === 'he' ? 'bg-[#b1c748]' : ''} p-2  cursor-pointer`}
                       onClick={() => onLocaleChange('he')}
                     >
                       {item.label}
@@ -685,6 +512,13 @@ const AppTopbar = () => {
             ref={languageMenuRef}
             id="popup_menu_right"
             popupAlignment="right"
+            // className="max-h-72 overflow-y-auto [&_.p-menu-list]:max-h-72 [&_.p-menu-list]:overflow-y-auto"
+            className="
+        [&_.p-menu-list]:max-h-72 
+        [&_.p-menu-list]:overflow-y-auto
+        [&_.p-menu-list]:scrollbar-thin
+        shadow-lg
+      "
           />
         </div>
 
