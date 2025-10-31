@@ -117,8 +117,8 @@ export default function SidebarItem({
               expanded ? 'ml-3 w-44' : 'w-0'
             }`}
           >
-            {/* {text} */}
-            {label}
+            {text}
+            {/* {label} */}
           </span>
           {subMenu && (
             <div
