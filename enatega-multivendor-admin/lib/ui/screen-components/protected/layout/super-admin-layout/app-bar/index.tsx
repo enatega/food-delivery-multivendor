@@ -103,7 +103,6 @@ const AppTopbar = () => {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       setNotifications(data?.webNotifications);
-      console.log("Notification...",data )
 
     },
   });
