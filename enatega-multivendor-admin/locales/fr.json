@@ -307,7 +307,7 @@
   "ASSIGNED": "ATTRIBUÉ",
   "DELIVERED": "LIVRÉ",
   "REJECTED": "REJETÉ",
-  "shopType": "Type de magasin",
+  "ShopType": "Type de magasin",
   "UploadaLogo": "Télécharger un logo",
   "StatusUpdated": "Statut mis à jour !",
   "Status updated to {{status}}": "Statut mis à jour sur {{status}}",

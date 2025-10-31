@@ -313,7 +313,7 @@
   "ASSIGNED": "تم التعيين",
   "DELIVERED": "تم التوصيل",
   "REJECTED": "مرفوض",
-  "shopType": "نوع المتجر",
+  "ShopType": "نوع المتجر",
   "UploadaLogo": "رفع شعار",
   "StatusUpdated": "تم تحديث الحالة!",
   "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",

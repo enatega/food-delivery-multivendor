@@ -27,7 +27,7 @@ export default function EarningsDetailStacks({
     <FlatList
       data={riderEarningsData?.riderEarningsGraph?.earnings}
       contentContainerClassName="scroll-smooth pb-12"
-      keyExtractor={(_, index) => index.toString()}
+      keyExtractor={(_, index) => index?.toString()}
       style={{ height: "55%" }}
       ListEmptyComponent={
         <Text
