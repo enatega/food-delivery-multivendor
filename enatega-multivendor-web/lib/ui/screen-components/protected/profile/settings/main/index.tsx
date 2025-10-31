@@ -1,9 +1,9 @@
 "use client";
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 // Api
-import { DEACTIVATE_USER, GET_USER_PROFILE } from "@/lib/api/graphql";
+import { DEACTIVATE_USER, GET_USER_PROFILE, ORDERS } from "@/lib/api/graphql";
 import { useMutation, useQuery } from "@apollo/client";
 // Components
 import CustomButton from "@/lib/ui/useable-components/button";
@@ -22,11 +22,16 @@ import { Dialog } from "primereact/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "@/lib/ui/useable-components/theme-button";
+import ActiveOrderDialog from "./active-order";
+import { ACTIVE_STATUS } from "@/lib/utils/constants/orders";
+import { IOrder } from "@/lib/utils/interfaces";
 
 export default function SettingsMain() {
   // States for current values
   const [sendReceipts, setSendReceipts] = useState<boolean>(false);
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
+  const [activeOrderDialog, setActiveOrderDialog] = useState(false);
+  const [hasNoActiveOrders, setHasNoActiveOrders] = useState(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [deleteReason, setDeleteReason] = useState<string>("");
   const [logoutConfirmationVisible, setLogoutConfirmationVisible] =
@@ -52,6 +57,16 @@ export default function SettingsMain() {
       fetchPolicy: "cache-and-network",
     }
   );
+  const { data: ordersData, loading: isOrdersLoading } = useQuery(ORDERS, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  const activeOrders =
+  ordersData?.orders?.filter((o: IOrder) =>
+    ACTIVE_STATUS.includes(o.orderStatus)
+  ) || [];
+
+
   // Update user muattion
   const [Deactivate] = useMutation(DEACTIVATE_USER, {
     onCompleted: () => {
@@ -69,6 +84,30 @@ export default function SettingsMain() {
       });
     },
   });
+
+// Handle Delete Account button click
+const handleDeleteAccount = () => {
+  setActiveOrderDialog(true);
+  setHasNoActiveOrders(false); // reset
+};
+
+// When orders finish loading, update state
+useEffect(() => {
+  if (!isOrdersLoading && activeOrderDialog) {
+    if (activeOrders.length === 0) {
+      // No active orders found → show Continue button
+      setHasNoActiveOrders(true);
+    } else {
+      setHasNoActiveOrders(false);
+    }
+  }
+}, [isOrdersLoading, activeOrders, activeOrderDialog]);
+
+// When user clicks "Continue" inside active order dialog
+const handleContinueToDelete = () => {
+  setActiveOrderDialog(false);
+  setDeleteAccount(true);
+};
 
   // Handle send receipts toggle
   const handleSendReceiptsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,11 +127,6 @@ export default function SettingsMain() {
       message: t("logoutSuccessToastMessage"),
     });
     router.push("/");
-  };
-
-  // Handle Delete Account
-  const handleDeleteAccount = () => {
-    setDeleteAccount(true);
   };
 
   const handleConfirmDelete = () => {
@@ -133,6 +167,15 @@ export default function SettingsMain() {
 
   return (
     <div className="w-full mx-auto bg-white dark:bg-gray-900">
+      {/* Active Order Dialog */}
+      <ActiveOrderDialog
+        visible={activeOrderDialog}
+        onHide={() => setActiveOrderDialog(false)}
+        isOrdersLoading={isOrdersLoading}
+        hasNoActiveOrders={hasNoActiveOrders}
+        activeOrdersCount={activeOrders.length }
+        onContinue={handleContinueToDelete}
+      />
       <DeleteAccountDialog
         visible={deleteAccount}
         onHide={handleCancelDelete}
@@ -146,6 +189,7 @@ export default function SettingsMain() {
         setDeleteReason={setDeleteReason}
         loading={isDeleting}
       />
+
       {/* Email */}
       <div className="py-4 border-b">
         <div className="flex justify-between items-center dark:border-gray-700">
@@ -240,8 +284,7 @@ export default function SettingsMain() {
             text={t("theme")}
             className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg"
           />
-          <ThemeToggle/>
-         
+          <ThemeToggle />
         </div>
       </div>
 
@@ -277,7 +320,7 @@ export default function SettingsMain() {
 
         {/* Logout Confirmation Dialog */}
         <Dialog
-        contentClassName="dark:bg-gray-800"
+          contentClassName="dark:bg-gray-800"
           maskClassName="bg-black/80"
           visible={logoutConfirmationVisible}
           onHide={() => setLogoutConfirmationVisible(false)}
@@ -306,7 +349,7 @@ export default function SettingsMain() {
                 className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
                 onClick={handleLogout}
               >
-                <FontAwesomeIcon icon={faSignOutAlt} /> 
+                <FontAwesomeIcon icon={faSignOutAlt} />
                 Logout
               </button>
             </div>

@@ -702,7 +702,6 @@
   "restrictions": "Restrictions",
   "Enatega": "Enatega",
   "restrictions_on_goods": "Restrictions on Goods",
-  "orders": "Orders",
   "prices_and_payments": "Prices and Payments",
   "delivery_pickup_vendor_delivery": "Delivery, Pick-Up and Vendor Delivery",
   "vouchers_discounts_promotions": "Vouchers, Discounts and Promotions",
@@ -941,5 +940,19 @@
   "Thursday": "Thursday",
   "Friday": "Friday",
   "Saturday": "Saturday",
-  "Sunday": "Sunday"
+  "Sunday": "Sunday",
+  "checking_for_active_orders": "Checking for Active Orders",
+  "no_active_orders_found": "No Active Orders Found",
+  "active_orders_found": "Active Orders Found",
+  "checking_active_orders_message": "Please wait while we check your active orders...",
+  "no_active_orders_delete_allowed": "You currently have no active orders. You can continue to delete your account",
+  "cancel": "Cancel",
+  "continue": "Continue",
+  "active_orders_message": "You currently have {{count}} active {{orderText}}. You can only delete your account once all your orders are completed.",
+  "order": "order",
+  "orders": "orders",
+  "ok": "OK",
+  "you_currently_have": "You currently have",
+  "active": "active",
+  "you_can_only_delete_account": "You can only delete your account once all your orders are completed"
 }

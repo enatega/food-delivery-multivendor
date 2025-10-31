@@ -1,1 +1,11 @@
-{}
+{ "checking_for_active_orders": "בודק הזמנות פעילות",
+"no_active_orders_found": "לא נמצאו הזמנות פעילות",
+"active_orders_found": "נמצאו הזמנות פעילות",
+"checking_active_orders_message": "אנא המתן בזמן שאנו בודקים את ההזמנות הפעילות שלך...",
+"no_active_orders_delete_allowed": "אין לך כרגע הזמנות פעילות. אתה יכול להמשיך ולמחוק את חשבונך",
+"cancel": "ביטול",
+"continue": "המשך",
+"active_orders_message": "יש לך כרגע {{count}} {{orderText}} פעילות. תוכל למחוק את החשבון רק לאחר שכל ההזמנות שלך יושלמו.",
+"order": "הזמנה",
+"orders": "הזמנות",
+"ok": "אישור"}
