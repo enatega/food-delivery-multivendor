@@ -20,6 +20,8 @@ export const GET_CONFIGURATION = gql`
       twilioAuthToken
       twilioPhoneNumber
       twilioEnabled
+      skipWhatsAppOTP
+      twilioWhatsAppNumber
       formEmail
       sendGridApiKey
       sendGridEnabled
