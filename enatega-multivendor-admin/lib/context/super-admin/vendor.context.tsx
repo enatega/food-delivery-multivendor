@@ -80,7 +80,7 @@ export const VendorProvider = ({ children }: IProvider) => {
     const _filtered: IVendorReponse[] = onFilterObjects(
       vendorResponse?.data?.vendors ?? [],
       globalFilter,
-      ['email', 'userType', 'unique_id']
+      [`name`,'email', 'userType', 'unique_id']
     );
 
     setVendorId(_filtered[0]?._id ?? '');
