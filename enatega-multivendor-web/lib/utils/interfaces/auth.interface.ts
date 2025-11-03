@@ -166,6 +166,7 @@ export interface IEnterPasswordProps {
 }
 
 export interface IUserAddressComponentProps {
+  confirmYourAddress?:boolean
   editAddress?: IUserAddress | null;
   visible: boolean;
   onHide: () => void;
