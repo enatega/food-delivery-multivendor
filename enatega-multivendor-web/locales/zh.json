@@ -17,6 +17,16 @@
     "title3": "适用于餐厅和商店",
     "subText3": "让我们一起发展您的业务"
   },
+  "checking_for_active_orders": "正在检查活动订单",
+  "no_active_orders_found": "未找到活动订单",
+  "active_orders_found": "已发现活动订单",
+  "checking_active_orders_message": "请稍候，我们正在检查您的活动订单…",
+  "no_active_orders_delete_allowed": "您目前没有活动订单。您可以继续删除您的账户",
+  "cancel": "取消",
+  "continue": "继续",
+  "active_orders_message": "您目前有 {{count}} 个有效 {{orderText}}。您只有在所有订单完成后才能删除您的账户。",
+  "order": "订单",
+  "ok": "确认",
   "MiniCardsHomeScreen": {
     "title1": "提升销售额",
     "subText1": "Enatega订单中有91%是您原本无法获得的额外销售额。",

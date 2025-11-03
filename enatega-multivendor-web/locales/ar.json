@@ -233,6 +233,8 @@
   "AcceptedStoreSimple": "المتجر يحضر طلبك. {riderMessage}",
   "Assigned": "تم تعيين سائق وسيأتي لاستلام طلبك قريبًا.",
   "PickedElapsed": "قام السائق باستلام طلبك قبل {min} دقيقة وهو في طريقه إليك!",
+  "PickedElapsedJustNow": "استلم مندوب التوصيل طلبك للتو وهو في طريقه إليك! ",
+
   "Picked": "قام السائق باستلام طلبك وهو في طريقه إليك!",
   "DeliveredRestaurant": "تم توصيل طلبك في {time}. استمتع بوجبتك!",
   "DeliveredStore": "تم توصيل طلبك في {time}. شكرًا لتسوقك معنا!",
@@ -669,7 +671,6 @@
   "restrictions": "قيود",
   "Enatega": "Enatega",
   "restrictions_on_goods": "قيود على السلع",
-  "orders": "الطلبات",
   "prices_and_payments": "الأسعار والمدفوعات",
   "delivery_pickup_vendor_delivery": "التوصيل، الاستلام وتوصيل البائع",
   "vouchers_discounts_promotions": "قسائم، خصومات وعروض ترويجية",
@@ -904,7 +905,7 @@
   "invalid_credentials": "بيانات الاعتماد غير صحيحة!",
   "Qty:": "الكمية:",
   "theme": " المظهر",
-    "confirm_reorder_button": "تأكيد إعادة الطلب",
+  "confirm_reorder_button": "تأكيد إعادة الطلب",
   "Horrible": " فظيع",
   "Bad": " سيء",
   "Good": " جيد",
@@ -927,5 +928,16 @@
     "weak": "ضعيف",
     "medium": "متوسط",
     "strong": "قوي"
-  }
+  },
+  "checking_for_active_orders": "التحقق من الطلبات النشطة",
+  "no_active_orders_found": "لم يتم العثور على طلبات نشطة",
+  "active_orders_found": "تم العثور على طلبات نشطة",
+  "checking_active_orders_message": "يرجى الانتظار أثناء التحقق من الطلبات النشطة الخاصة بك...",
+  "no_active_orders_delete_allowed": "ليس لديك أي طلبات نشطة حاليًا. يمكنك متابعة حذف حسابك",
+  "cancel": "إلغاء",
+  "continue": "متابعة",
+  "active_orders_message": "لديك حالياً {{count}} {{orderText}} نشطة. يمكنك حذف حسابك فقط بعد اكتمال جميع طلباتك.",
+  "order": "طلب",
+  "orders": "طلبات",
+  "ok": "موافق"
 }

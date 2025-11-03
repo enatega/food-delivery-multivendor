@@ -89,7 +89,7 @@ export default function UserAddressComponent(
   props: IUserAddressComponentProps
 ) {
   // Props
-  const { visible, onHide, editAddress } = props;
+  const { visible, onHide, editAddress, confirmYourAddress } = props;
 
   // States
   const [modifiyingId, setModifyingId] = useState("");
@@ -420,9 +420,15 @@ export default function UserAddressComponent(
     <div className="w-full space-y-4 flex flex-col items-center">
       {/* Header */}
       <div className="w-full">
-        <span className="font-inter font-bold text-[25px] tracking-normal">
-          {t("where_to_address_label")}
-        </span>
+        {confirmYourAddress ? (
+          <span className="font-inter font-bold text-[25px] tracking-normal">
+            {t("confirm") + " " + t("Address")}
+          </span>
+        ) : (
+          <span className="font-inter font-bold text-[25px] tracking-normal">
+            {t("where_to_address_label")}
+          </span>
+        )}
       </div>
 
       <button
@@ -547,6 +553,12 @@ export default function UserAddressComponent(
         >
           <FontAwesomeIcon icon={faPlus} />{" "}
           <span> {t("add_new_address_button")}</span>
+        </button>
+        <button
+          className={` ${confirmYourAddress ? "block" : "hidden"} w-[90%] h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px] mt-4`}
+          onClick={() => onHide()}
+        >
+          <span> {t("confirm")}</span>
         </button>
       </div>
     </div>

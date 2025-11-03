@@ -905,5 +905,15 @@
   "Thursday": "गुरुवार",
   "Friday": "शुक्रवार",
   "Saturday": "शनिवार",
-  "Sunday": "रविवार"
+  "Sunday": "रविवार",
+  "checking_for_active_orders": "सक्रिय ऑर्डर की जाँच की जा रही है",
+  "no_active_orders_found": "कोई सक्रिय ऑर्डर नहीं मिला",
+  "active_orders_found": "सक्रिय ऑर्डर मिले",
+  "checking_active_orders_message": "कृपया प्रतीक्षा करें जब तक हम आपके सक्रिय ऑर्डर की जाँच कर रहे हैं...",
+  "no_active_orders_delete_allowed": "आपके पास कोई सक्रिय ऑर्डर नहीं है। आप अपना खाता हटाना जारी रख सकते हैं",
+  "cancel": "रद्द करें",
+  "continue": "जारी रखें",
+  "active_orders_message": "आपके पास वर्तमान में {{count}} सक्रिय {{orderText}} हैं। आप अपना खाता तभी हटा सकते हैं जब आपकी सभी ऑर्डर पूरी हो जाएँ।",
+  "order": "ऑर्डर",
+  "ok": "ठीक है"
 }

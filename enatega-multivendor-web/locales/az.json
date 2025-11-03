@@ -903,5 +903,15 @@
   "Thursday": "Cümə axşamı",
   "Friday": "Cümə",
   "Saturday": "Şənbə",
-  "Sunday": "Bazar"
+  "Sunday": "Bazar",
+  "checking_for_active_orders": "Aktiv sifarişlər yoxlanılır",
+  "no_active_orders_found": "Aktiv sifariş tapılmadı",
+  "active_orders_found": "Aktiv sifarişlər tapıldı",
+  "checking_active_orders_message": "Zəhmət olmasa, aktiv sifarişləriniz yoxlanılır, gözləyin...",
+  "no_active_orders_delete_allowed": "Hazırda aktiv sifarişiniz yoxdur. Hesabınızı silməyə davam edə bilərsiniz",
+  "cancel": "Ləğv et",
+  "continue": "Davam et",
+  "active_orders_message": "Hazırda {{count}} aktiv {{orderText}} var. Hesabınızı yalnız bütün sifarişlər tamamlandıqdan sonra silə bilərsiniz.",
+  "order": "sifariş",
+  "ok": "OK"
 }
