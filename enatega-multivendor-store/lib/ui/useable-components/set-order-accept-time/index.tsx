@@ -54,6 +54,8 @@ const SetTimeScreenAndAcceptOrder = ({
     try {
       const status = await printOrder(id);
 
+      return;
+
       if (status !== false) {
         // null means it's ioS so ignore printing and true mean print wa successfull
         await acceptOrder(id, selectedTime?.toString() || "0");
