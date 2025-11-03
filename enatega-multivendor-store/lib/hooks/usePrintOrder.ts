@@ -73,7 +73,13 @@ export default function usePrintOrder() {
       if (Platform.OS === "android") {
         if (!loading && !error) {
           const status = await requestBluetoothPermissions();
-          if (!status) return;
+          if (!status) {
+            FlashMessageComponent({
+              message:
+                "Please grant Bluetooth permission.",
+            });
+            return;
+          };
 
           const devices = await ThermalPrinterModule.getBluetoothDeviceList();
 
