@@ -61,8 +61,7 @@ export default function OrderSuperAdminMain() {
     { allOrdersWithoutPagination: IOrder[] } | undefined,
     undefined
   >;
-  if (!loading) {
-  }
+
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({
     global: {

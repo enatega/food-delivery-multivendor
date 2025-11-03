@@ -38,7 +38,6 @@ function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
 export default function SidebarItem({
   icon,
   text,
-  label,
   expanded = false,
   subMenu = null,
   route,

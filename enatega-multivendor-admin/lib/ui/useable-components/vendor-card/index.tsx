@@ -40,7 +40,6 @@ import { ToastContext } from '@/lib/context/global/toast.context';
 // Utils & Constants
 import { SELECTED_VENDOR_EMAIL } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
-import { indexOf } from 'lodash';
 
 export default function VendorCard({
   _id,
