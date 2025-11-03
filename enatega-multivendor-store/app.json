@@ -3,12 +3,10 @@
     "name": "Enatega Store",
     "slug": "enatega-multivendor-restaurant",
     "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "version": "1.0.58",
+    "version": "1.0.61",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -34,27 +32,29 @@
         }
       ],
       "expo-asset"
+      
     ],
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "multivendor.enatega.restaurant",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
-        "UIBackgroundModes": [
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["remote-notification"],
         "ITSAppUsesNonExemptEncryption": false,
-        "UIRequiresFullScreen": true
+        "UIRequiresFullScreen": true,
+        "NSBluetoothAlwaysUsageDescription": "We use Bluetooth to connect to your thermal printer.",
+        "NSBluetoothPeripheralUsageDescription": "We use Bluetooth to connect to your thermal printer."
       }
     },
     "android": {
-      "versionCode": 58,
+      "versionCode": 61,
       "googleServicesFile": "./google-services.json",
       "permissions": [
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_SCAN",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ],

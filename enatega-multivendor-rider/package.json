@@ -88,7 +88,6 @@
     "react-native-switch": "^1.5.1",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
-    "react-native-worklets": "^0.6.1",
     "sentry-expo": "~7.0.0",
     "subscriptions-transport-ws": "^0.11.0",
     "tailwindcss": "^3.4.17",
