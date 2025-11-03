@@ -27,6 +27,7 @@ export default function SettingsMain() {
   // States for current values
   const [sendReceipts, setSendReceipts] = useState<boolean>(false);
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
+
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [deleteReason, setDeleteReason] = useState<string>("");
   const [logoutConfirmationVisible, setLogoutConfirmationVisible] =
@@ -52,6 +53,7 @@ export default function SettingsMain() {
       fetchPolicy: "cache-and-network",
     }
   );
+
   // Update user muattion
   const [Deactivate] = useMutation(DEACTIVATE_USER, {
     onCompleted: () => {
@@ -69,6 +71,11 @@ export default function SettingsMain() {
       });
     },
   });
+
+  // Handle Delete Account button click
+  const handleDeleteAccount = () => {
+    setDeleteAccount(true);
+  };
 
   // Handle send receipts toggle
   const handleSendReceiptsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,11 +95,6 @@ export default function SettingsMain() {
       message: t("logoutSuccessToastMessage"),
     });
     router.push("/");
-  };
-
-  // Handle Delete Account
-  const handleDeleteAccount = () => {
-    setDeleteAccount(true);
   };
 
   const handleConfirmDelete = () => {
@@ -146,6 +148,7 @@ export default function SettingsMain() {
         setDeleteReason={setDeleteReason}
         loading={isDeleting}
       />
+
       {/* Email */}
       <div className="py-4 border-b">
         <div className="flex justify-between items-center dark:border-gray-700">
@@ -240,8 +243,7 @@ export default function SettingsMain() {
             text={t("theme")}
             className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg"
           />
-          <ThemeToggle/>
-         
+          <ThemeToggle />
         </div>
       </div>
 
@@ -277,7 +279,7 @@ export default function SettingsMain() {
 
         {/* Logout Confirmation Dialog */}
         <Dialog
-        contentClassName="dark:bg-gray-800"
+          contentClassName="dark:bg-gray-800"
           maskClassName="bg-black/80"
           visible={logoutConfirmationVisible}
           onHide={() => setLogoutConfirmationVisible(false)}
@@ -306,7 +308,7 @@ export default function SettingsMain() {
                 className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
                 onClick={handleLogout}
               >
-                <FontAwesomeIcon icon={faSignOutAlt} /> 
+                <FontAwesomeIcon icon={faSignOutAlt} />
                 Logout
               </button>
             </div>

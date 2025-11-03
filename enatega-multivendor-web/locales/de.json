@@ -1,1 +1,13 @@
-{}
+{
+    "checking_for_active_orders": "Überprüfung aktiver Bestellungen",
+  "no_active_orders_found": "Keine aktiven Bestellungen gefunden",
+  "active_orders_found": "Aktive Bestellungen gefunden",
+  "checking_active_orders_message": "Bitte warten Sie, während wir Ihre aktiven Bestellungen überprüfen...",
+  "no_active_orders_delete_allowed": "Sie haben derzeit keine aktiven Bestellungen. Sie können Ihr Konto löschen.",
+  "cancel": "Abbrechen",
+  "continue": "Fortfahren",
+  "active_orders_message": "Sie haben derzeit {{count}} aktive {{orderText}}. Sie können Ihr Konto erst löschen, wenn alle Ihre Bestellungen abgeschlossen sind.",
+  "order": "Bestellung",
+  "orders": "Bestellungen",
+  "ok": "OK"
+}

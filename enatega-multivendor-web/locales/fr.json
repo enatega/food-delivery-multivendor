@@ -239,6 +239,8 @@
   "AcceptedStoreSimple": "Le magasin prépare votre commande. {riderMessage}",
   "Assigned": "Un livreur a été assigné et viendra bientôt chercher votre commande.",
   "PickedElapsed": "Votre livreur a pris votre commande il y a {min} min et est en route vers vous !",
+  "PickedElapsedJustNow": "Votre livreur vient de prendre votre commande et est en route !",
+
   "Picked": "Votre livreur a pris votre commande et est en route vers vous !",
   "DeliveredRestaurant": "Votre commande a été livrée à {time}. Bon appétit !",
   "DeliveredStore": "Votre commande a été livrée à {time}. Merci d'avoir magasiné avec nous !",
@@ -675,7 +677,6 @@
   "restrictions": "Restrictions",
   "Enatega": "Enatega",
   "restrictions_on_goods": "Restrictions sur les marchandises",
-  "orders": "Commandes",
   "prices_and_payments": "Prix et paiements",
   "delivery_pickup_vendor_delivery": "Livraison, retrait et livraison par le vendeur",
   "vouchers_discounts_promotions": "Bons, réductions et promotions",
@@ -827,5 +828,16 @@
   "Friday": " Vendredi",
   "Saturday": " Samedi",
   "Sunday": " Dimanche",
-  "Favourites": "Favoris"
+  "Favourites": "Favoris",
+  "checking_for_active_orders": "Vérification des commandes actives",
+  "no_active_orders_found": "Aucune commande active trouvée",
+  "active_orders_found": "Commandes actives trouvées",
+  "checking_active_orders_message": "Veuillez patienter pendant que nous vérifions vos commandes actives...",
+  "no_active_orders_delete_allowed": "Vous n'avez actuellement aucune commande active. Vous pouvez continuer à supprimer votre compte",
+  "cancel": "Annuler",
+  "continue": "Continuer",
+  "active_orders_message": "Vous avez actuellement {{count}} {{orderText}} active(s). Vous ne pouvez supprimer votre compte qu'une fois toutes vos commandes terminées.",
+  "order": "commande",
+  "orders": "commandes",
+  "ok": "OK"
 }
