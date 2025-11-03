@@ -5,7 +5,7 @@
       "channel": "development",
       "distribution": "internal",
       "ios": {
-        "simulator": true
+        "simulator": false
       },
        "android": {
         "buildType": "apk"
