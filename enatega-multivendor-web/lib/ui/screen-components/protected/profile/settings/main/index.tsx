@@ -1,9 +1,9 @@
 "use client";
 import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 // Api
-import { DEACTIVATE_USER, GET_USER_PROFILE, ORDERS } from "@/lib/api/graphql";
+import { DEACTIVATE_USER, GET_USER_PROFILE } from "@/lib/api/graphql";
 import { useMutation, useQuery } from "@apollo/client";
 // Components
 import CustomButton from "@/lib/ui/useable-components/button";
