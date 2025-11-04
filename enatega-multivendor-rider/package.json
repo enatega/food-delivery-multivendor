@@ -64,7 +64,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "moti": "^0.30.0",
-    "nativewind": "^4.1.23",
+    "nativewind": "^4.1.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-i18next": "^15.4.0",

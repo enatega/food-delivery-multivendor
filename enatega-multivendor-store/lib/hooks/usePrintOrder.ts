@@ -24,29 +24,31 @@ export default function usePrintOrder() {
   const { loading, error, data } = useOrders();
 
   // States
-  const [pairedDevices, setPairedDevices] = useState<any[]>([]);
   const [status, setStatus] = useState("Idle");
 
-  const requestBluetoothPermissions = async () => {
+  const requestBluetoothPermissions = async (): Promise<boolean> => {
     if (Platform.OS === "android") {
       const permissions = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       ]);
-      if (
-        permissions["android.permission.BLUETOOTH_CONNECT"] !== "granted" ||
-        permissions["android.permission.BLUETOOTH_SCAN"] !== "granted" ||
-        permissions["android.permission.ACCESS_FINE_LOCATION"] !== "granted"
-      ) {
-        // alert("Bluetooth permissions not granted");
-        FlashMessageComponent({
-          message: "Bluetooth permissions not granted",
-        });
-        return false;
+
+      const granted =
+        permissions["android.permission.BLUETOOTH_CONNECT"] === "granted" &&
+        permissions["android.permission.BLUETOOTH_SCAN"] === "granted" &&
+        permissions["android.permission.ACCESS_FINE_LOCATION"] === "granted";
+
+      if (!granted) {
+        FlashMessageComponent({ message: "Bluetooth permissions not granted" });
       }
+
+      return granted;
+    } else if (Platform.OS === "ios") {
       return true;
     }
+
+    return false;
   };
 
   const printReceipt = async (order: IOrder) => {
@@ -68,39 +70,51 @@ export default function usePrintOrder() {
 
   const printOrder = async (id: string) => {
     try {
-      if (!loading && !error) {
-        const status = await requestBluetoothPermissions();
-        if (!status) return;
+      if (Platform.OS === "android") {
+        if (!loading && !error) {
+          const status = await requestBluetoothPermissions();
+          if (!status) {
+            FlashMessageComponent({
+              message: "Please grant Bluetooth permission.",
+            });
+            return;
+          }
 
-        const devices = await ThermalPrinterModule.getBluetoothDeviceList();
+          const devices = await ThermalPrinterModule.getBluetoothDeviceList();
 
-        if (devices?.length === 0) {
-          // alert("No printer found. Please connect to the thermal printer by pairing using Bluetooth.")
-          FlashMessageComponent({
-            message:
-              "No printer found. Please connect to the thermal printer by pairing using Bluetooth.",
+          if (devices?.length === 0) {
+            // alert("No printer found. Please connect to the thermal printer by pairing using Bluetooth.")
+            FlashMessageComponent({
+              message:
+                "No printer found. Please connect to the thermal printer by pairing using Bluetooth.",
+            });
+            return false;
+          }
+
+          /**
+           * Please use some kind of get-by-id API to fetch the order details
+           * Current approach is very unoptmized and will down drastically if store order exceeds certain number.
+           */
+          const order = data.restaurantOrders.find(
+            (order: IOrder) => order._id === id
+          );
+
+          await printReceipt({
+            ...order,
+            currencySymbol: configuration?.currencySymbol,
           });
-          return;
+          return true;
         }
-
-        /**
-         * Please use some kind of get-by-id API to fetch the order details
-         * Current approach is very unoptmized and will down drastically if store order exceeds certain number.
-         */
-        const order = data.restaurantOrders.find(
-          (order: IOrder) => order._id === id
-        );
-
-        await printReceipt({
-          ...order,
-          currencySymbol: configuration?.currencySymbol,
-        });
       }
+
+      return null;
     } catch (err) {
+      console.log({ err });
       FlashMessageComponent({
         message:
           err?.message || "Something went wrong while print the receipt.",
       });
+      return false;
     }
   };
   const selectPrinter = async () => {
