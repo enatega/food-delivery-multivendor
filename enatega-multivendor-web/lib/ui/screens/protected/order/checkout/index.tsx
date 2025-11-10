@@ -101,12 +101,13 @@ export default function OrderCheckoutScreen() {
 
   const {
     cart,
-    restaurant: restaurantId,
+    restaurant: restaurantId, 
     clearCart,
     profile,
     fetchProfile,
     loadingProfile,
   } = useUser();
+  console.log("restaurant from useUser and cart item:", restaurantId, cart);
 
   const { userAddress } = useUserAddress();
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
@@ -601,6 +602,7 @@ export default function OrderCheckoutScreen() {
 
     if (checkPaymentMethod(CURRENCY, paymentMethod)) {
       const items = transformOrder(cart);
+
       placeOrder({
         variables: {
           restaurant: restaurantId,
