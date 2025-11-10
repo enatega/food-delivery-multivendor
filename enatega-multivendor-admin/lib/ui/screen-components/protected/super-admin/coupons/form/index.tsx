@@ -29,6 +29,7 @@ import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { CouponErrors } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
+import { set } from 'lodash';
 
 export default function CouponForm({
   setVisible,
@@ -143,6 +144,16 @@ export default function CouponForm({
       visible={visible}
       onHide={() => {
         setVisible(false);
+        setIsEditing({
+          bool: false,
+          data: {
+            __typename: '',
+            _id: '',
+            discount: 0,
+            enabled: true,
+            title: '',
+          },
+        });
       }}
       position="right"
       className="w-full sm:w-[450px]"
