@@ -51,7 +51,7 @@
     "react-icons": "^5.5.0",
     "react-international-phone": "^4.3.0",
     "react-phone-input-2": "^2.15.1",
-    "react-tooltip": "^5.28.1",
+    "react-tooltip": "^5.29.1",
     "sendemail": "^4.0.3",
     "sharp": "^0.34.1",
     "subscriptions-transport-ws": "^0.11.0",
