@@ -154,8 +154,8 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
             ? ""
             : t.raw("Assigned");
           return isRestaurant
-            ? t("AcceptedRestaurantElapsed", { min: timeElapsed, riderMessage })
-            : t("AcceptedStoreElapsed", { min: timeElapsed, riderMessage });
+            ? timeElapsed <= 0 ? t("AcceptedRestaurantJustnow",{riderMessage}) : t("AcceptedRestaurantElapsed", { min: timeElapsed, riderMessage })
+            : timeElapsed <= 0 ? t("AcceptedStoreJustnow", {riderMessage}): t("AcceptedStoreElapsed", { min: timeElapsed, riderMessage });
         }
 
         const riderMessage = orderTrackingDetails.isPickedUp
@@ -174,7 +174,7 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
           const timeElapsed = Math.floor(
             (now.getTime() - pickedTime.getTime()) / 60000
           );
-          if (timeElapsed === 0) {
+          if (timeElapsed <= 0) {
             return t("PickedElapsedJustNow");
           } else {
             return t("PickedElapsed", { min: timeElapsed });
