@@ -74,7 +74,7 @@
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-get-random-values": "~1.11.0",
-    "react-native-gifted-charts": "^1.4.56",
+    "react-native-gifted-charts": "^1.4.64",
     "react-native-gifted-chat": "^2.6.5",
     "react-native-keyboard-controller": "^1.16.7",
     "react-native-linear-gradient": "^2.8.3",
