@@ -254,6 +254,7 @@ export const en = {
   Comment: "Comment",
   Decline: "Decline",
   Accept: "Accept",
+  "AcceptAndPrint": "Accept and Print",
   "Time Left": "Time Left",
   "Hand Order to Rider": "Hand Order to Rider",
   "Something went wrong Please refresh": "Something went wrong Please refresh",
