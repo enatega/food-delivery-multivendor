@@ -9,6 +9,9 @@ export interface IStatsCardProps extends IGlobalComponentProps {
   icon?: IconDefinition;
   loading?: boolean;
   isClickable?: boolean;
+  SvgIcon?: React.ComponentType<any>;
+  positiveTrending?: boolean;
+  trendChange?: string;
   amountConfig?: {
     format: 'currency' | 'number';
     currency: string;
