@@ -82,6 +82,53 @@ export const SUBSCRIPTION_PLACE_ORDER = gql`
   }
 `;
 
+export const SUBSCRIPTION_DISPATCH_ORDER = gql`
+  subscription SubscriptionDispatcher {
+    subscriptionDispatcher {
+      _id
+      zone {
+        _id
+      }
+      orderId
+      restaurant {
+        _id
+        name
+        image
+        address
+        location {
+          coordinates
+        }
+      }
+      deliveryAddress {
+        location {
+          coordinates
+        }
+        deliveryAddress
+      }
+      user {
+        name
+        phone
+      }
+      paymentMethod
+      orderStatus
+      preparationTime
+      expectedTime
+      acceptedAt
+      selectedPrepTime
+      isPickedUp
+      status
+      isActive
+      createdAt
+      rider {
+        _id
+        name
+        username
+        available
+      }
+    }
+  }
+`;
+
 export const SUBSCRIPTION_ORDER = gql`
   subscription SubscriptionOrder($id: String!) {
     subscriptionOrder(id: $id) {
