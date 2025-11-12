@@ -8,14 +8,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
+import LevelForm from './forms/level.form';
+import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 interface LevelCardProps {
   name: string;
   point: number;
+  isCustomer: boolean;
   onMenuClick: () => void;
 }
 
-function LevelCard({ name, point, onMenuClick }: LevelCardProps) {
+function LevelCard({ name, point, isCustomer, onMenuClick }: LevelCardProps) {
+  const { CURRENCY_SYMBOL } = useConfiguration();
+
   return (
     <div className="bg-[#F9FAFB] border border-[#E4E4E7] rounded-2xl p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
@@ -31,13 +37,17 @@ function LevelCard({ name, point, onMenuClick }: LevelCardProps) {
       </div>
 
       <div className="text-4xl text-foreground font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
-        {point}
+        {point} {isCustomer ? 'pts' : CURRENCY_SYMBOL}
       </div>
     </div>
   );
 }
 
 export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
+  // Hooks
+  const { loyaltyType, levelFormVisible, setLevelFormFormVisible } =
+    useLoyaltyContext();
+
   const [levels, setLevels] = useState([
     { id: 1, name: 'Level 01', point: 15 },
     { id: 2, name: 'Level 02', point: 10 },
@@ -66,59 +76,67 @@ export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
   }, []);
 
   return (
-    <div className="m-3 p-6 pb-2 bg-background border border-border rounded-2xl">
-      <div className="">
-        {/* Header Section */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-              Customer Referral System
-            </h1>
-            <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
-              Monitor loyalty growth and reward distribution across all customer
-              tiers.
-            </p>
-          </div>
-          <button className="bg-black text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary/90 transition-colors">
-            <FontAwesomeIcon icon={faAdd} /> Create Level
-          </button>
-        </div>
-
-        {/* Levels Grid */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
-          ref={menuRef}
-        >
-          {levels.map((level) => (
-            <div key={level.id} className="relative">
-              <LevelCard
-                name={level.name}
-                point={level.point}
-                onMenuClick={() =>
-                  setOpenMenu(openMenu === level.id ? null : level.id)
-                }
-              />
-
-              {/* Dropdown Menu */}
-              {openMenu === level.id && (
-                <div className="absolute top-14 right-2 bg-background border border-border rounded-lg shadow-lg z-10 w-40">
-                  <button className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm">
-                    <FontAwesomeIcon icon={faEdit} />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteLevel(level.id)}
-                    className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm text-destructive"
-                  >
-                    <FontAwesomeIcon icon={faTrash} color="#EF4444" />
-                    Delete
-                  </button>
-                </div>
-              )}
+    <>
+      <div className="m-3 p-6 pb-2 bg-background border border-border rounded-2xl">
+        <div className="">
+          {/* Header Section */}
+          <div className="flex justify-between items-start mb-8">
+            <div>
+              <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
+                Customer Referral System
+              </h1>
+              <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
+                Monitor loyalty growth and reward distribution across all
+                customer tiers.
+              </p>
             </div>
-          ))}
+            <button
+              className="bg-black text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary/90 transition-colors"
+              onClick={() => setLevelFormFormVisible(true)}
+            >
+              <FontAwesomeIcon icon={faAdd} /> Create Level
+            </button>
+          </div>
+
+          {/* Levels Grid */}
+          <div
+            className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
+            ref={menuRef}
+          >
+            {levels.map((level) => (
+              <div key={level.id} className="relative">
+                <LevelCard
+                  name={level.name}
+                  point={level.point}
+                  isCustomer={loyaltyType === 'Customer Loyalty Program'}
+                  onMenuClick={() =>
+                    setOpenMenu(openMenu === level.id ? null : level.id)
+                  }
+                />
+
+                {/* Dropdown Menu */}
+                {openMenu === level.id && (
+                  <div className="absolute top-14 right-2 bg-background border border-border rounded-lg shadow-lg z-10 w-40">
+                    <button className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm">
+                      <FontAwesomeIcon icon={faEdit} />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteLevel(level.id)}
+                      className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm text-destructive"
+                    >
+                      <FontAwesomeIcon icon={faTrash} color="#EF4444" />
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      {levelFormVisible && <LevelForm />}
+    </>
   );
 }

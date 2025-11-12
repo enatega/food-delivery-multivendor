@@ -49,7 +49,7 @@ export default function VendorHeader() {
             onChange={(e) => onSetGlobalFilter(e.target.value)}
           />
         </div>
-        {/* <VendorCustomTab
+        {/* <CustomTab
           options={options}
           selectedTab={selectedVendorFilter}
           setSelectedTab={setSelectedVendorFilter}

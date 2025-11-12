@@ -9,7 +9,7 @@ interface ITabsItem {
 
 export interface IHeaderTabsItem extends ITabsItem {}
 
-export interface IVendorCustomTabProps extends IGlobalComponentProps {
+export interface ICustomTabProps extends IGlobalComponentProps {
   options: string[];
   selectedTab: string | undefined;
   setSelectedTab: (tab: string) => void;

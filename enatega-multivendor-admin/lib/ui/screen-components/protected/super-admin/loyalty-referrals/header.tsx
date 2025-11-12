@@ -1,21 +1,14 @@
 'use client';
 
+import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
 import HeaderText from '@/lib/ui/useable-components/header-text';
-import VendorCustomTab from '@/lib/ui/useable-components/vendor-custom-tab';
-import type React from 'react';
-
+import CustomTab from '@/lib/ui/useable-components/vendor-custom-tab';
+import { LoyaltyType } from '@/lib/utils/types/loyalty';
 import { useState } from 'react';
 
-interface ProgramTabsProps {
-  children?: React.ReactNode;
-}
-
-type LoyaltyType = 'Customer Loyalty Program' | 'Driver Loyalty Program';
-
 export default function LoyaltyAndReferralHeader() {
-  const [activeTab, setActiveTab] = useState<LoyaltyType>(
-    'Customer Loyalty Program'
-  );
+  // Hooks
+  const { loyaltyType, setLoyaltyType } = useLoyaltyContext();
 
   return (
     <div className="p-3 space-y-6">
@@ -24,10 +17,10 @@ export default function LoyaltyAndReferralHeader() {
         <div className="flex justify-between items-center">
           <HeaderText text="Loyalty and Referrals" />
           <div className="flex gap-4">
-            <VendorCustomTab
+            <CustomTab
               options={['Customer Loyalty Program', 'Driver Loyalty Program']}
-              selectedTab={activeTab}
-              setSelectedTab={(tab) => setActiveTab(tab as LoyaltyType)}
+              selectedTab={loyaltyType}
+              setSelectedTab={(tab) => setLoyaltyType(tab as LoyaltyType)}
             />
           </div>
         </div>

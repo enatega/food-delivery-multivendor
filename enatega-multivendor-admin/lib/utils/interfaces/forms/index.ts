@@ -11,3 +11,4 @@ export * from './vendor.form.interface';
 export * from './updateProfile.form.interface';
 export * from './variation.form.interface';
 export * from './shop-type.form.interface'
+export * from './loyalty.form.interface'

@@ -14,3 +14,4 @@ export * from './commission-rate';
 export * from './dashboard';
 export * from './routes';
 export * from './vehicle-type';
+export * from './loyalty'
