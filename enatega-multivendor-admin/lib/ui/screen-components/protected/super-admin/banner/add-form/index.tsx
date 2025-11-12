@@ -12,8 +12,6 @@ import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/uploa
 import {
   ACTION_TYPES,
   BannersErrors,
-  MAX_LANSDCAPE_FILE_SIZE,
-  MAX_VIDEO_FILE_SIZE,
   SCREEN_NAMES,
 } from '@/lib/utils/constants';
 import {

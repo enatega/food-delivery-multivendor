@@ -29,7 +29,6 @@ import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { CouponErrors } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
-import { set } from 'lodash';
 
 export default function CouponForm({
   setVisible,
