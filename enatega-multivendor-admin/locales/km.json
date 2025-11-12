@@ -1019,5 +1019,7 @@
   "Connect with Stripe for payments": "ភ្ជាប់ជាមួយ Stripe សម្រាប់ការទូទាត់",
   "Payment Required": "ត្រូវការបង់ប្រាក់",
   "Please complete your purchase to gain full access to the product": "សូមបញ្ចប់ការទិញរបស់អ្នកដើម្បីទទួលបានការចូលប្រើផលិតផលបានពេញលេញ",
-   "As commission rate is a %age value so it cannot exceed a max value of 100": "ព្រោះអត្រាកម្រៃជើងសារជា% តម្លៃដូច្នេះវាមិនអាចលើសពីតម្លៃអតិបរមា 100 បានទេ"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "ព្រោះអត្រាកម្រៃជើងសារជា% តម្លៃដូច្នេះវាមិនអាចលើសពីតម្លៃអតិបរមា 100 បានទេ",
+  "ShopType": "ប្រភេទហាង",
+  "Audit Logs": "កំណត់ត្រាសវនកម្ម"
 }

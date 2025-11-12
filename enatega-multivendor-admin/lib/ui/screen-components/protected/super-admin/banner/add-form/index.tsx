@@ -12,8 +12,6 @@ import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/uploa
 import {
   ACTION_TYPES,
   BannersErrors,
-  MAX_LANSDCAPE_FILE_SIZE,
-  MAX_VIDEO_FILE_SIZE,
   SCREEN_NAMES,
 } from '@/lib/utils/constants';
 import {
@@ -269,19 +267,13 @@ const BannersAddForm = ({
                             title={t('Upload file')}
                             fileTypes={[
                               'image/jpg',
-                              'image/webp',
-                              'video/mp4',
-                              '.webm',
-                              'video/webm',
-                              '.mp4',
                               'image/jpeg',
+                              'image/png',
+                              'image/webp',
                               'image/gif',
+                              'video/mp4',
+                              'video/webm',
                             ]}
-                            maxFileHeight={841}
-                            maxFileWidth={1980}
-                            maxFileSize={MAX_LANSDCAPE_FILE_SIZE}
-                            maxVideoSize={MAX_VIDEO_FILE_SIZE}
-                            orientation="LANDSCAPE"
                             onSetImageUrl={setFieldValue}
                             showExistingImage={banner ? true : false}
                             existingImageUrl={banner && values.file}
