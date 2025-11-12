@@ -22,10 +22,10 @@ export interface IImageUploadComponentProps extends IGlobalComponentProps {
   showExistingImage?: boolean;
   existingImageUrl?: string | null;
   style?: React.CSSProperties;
-  maxFileSize: number;
-  maxFileWidth: maxFileWidth;
-  maxFileHeight: maxFileHeight;
-  fileTypes: FileTypes[];
+  maxFileSize?: number;
+  maxFileWidth?: maxFileWidth;
+  maxFileHeight?: maxFileHeight;
+  fileTypes?: FileTypes[];
   orientation?: ImageOrientation;
   maxVideoSize?: number;
   error?:string;

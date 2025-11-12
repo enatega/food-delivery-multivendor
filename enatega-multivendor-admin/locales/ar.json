@@ -314,6 +314,9 @@
   "DELIVERED": "تم التوصيل",
   "REJECTED": "مرفوض",
   "ShopType": "نوع المتجر",
+  "shopType": "نوع المتجر",
+  "ShopType": "نوع المتجر",
+  "Audit Logs": "سجلات التدقيق",
   "UploadaLogo": "رفع شعار",
   "StatusUpdated": "تم تحديث الحالة!",
   "Status updated to {{status}}": "تم تحديث الحالة إلى {{status}}",
@@ -418,6 +421,7 @@
   "Total Orders": "إجمالي الطلبات",
   "Total COD Orders": "إجمالي طلبات الدفع عند الاستلام",
   "Total Card Orders": "إجمالي طلبات البطاقات",
+  "CustomerSupport": "دعم العملاء",
   "Total Sales": "إجمالي المبيعات",
   "Business Overview": "نظرة عامة على الأعمال",
   "Automatically calculate your delivery fees based on a set distance and then per km thereafter": "احتساب رسوم التوصيل تلقائياً بناءً على مسافة محددة ثم لكل كيلومتر بعد ذلك",
@@ -1028,4 +1032,5 @@
   "Payment Required": "الدفع مطلوب",
   "Please complete your purchase to gain full access to the product": "يرجى إتمام عملية الشراء للحصول على وصول كامل إلى المنتج",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "نظرًا لأن معدل العمولة هو قيمة مئوية، فلا يمكن أن يتجاوز القيمة القصوى 100"
+
 }

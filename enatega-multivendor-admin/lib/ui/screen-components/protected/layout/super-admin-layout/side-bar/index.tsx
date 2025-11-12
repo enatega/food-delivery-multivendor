@@ -201,16 +201,19 @@ export default function MakeSidebar() {
       subMenu: useCheckAllowedRoutes([
         {
           text: t('Transaction History'),
+          label: t('Transaction History'),
           route: '/wallet/transaction-history',
           isParent: false,
         },
         {
           text: 'Withdrawal Request',
+          label: t('Withdrawal Request'),
           route: '/wallet/withdraw-requests',
           isParent: false,
         },
         {
           text: t('Earnings'),
+          label: t('Earnings'),
           route: '/wallet/earnings',
           isParent: false,
         },
