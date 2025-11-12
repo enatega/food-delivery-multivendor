@@ -119,8 +119,8 @@ const Card: React.FC<ICardProps> = ({
             >
               {item?.name}
             </p>
-            <p className="text-xs xl:text-sm text-[#4B5563] font-light line-clamp-1 dark:text-gray-400">
-              {item?.cuisines[0]}
+            <p  className="text-xs xl:text-sm text-[#4B5563] font-light line-clamp-1 dark:text-gray-400 hover:line-clamp-2">
+              {item?.cuisines.map((cuisine) => cuisine).join(", ")}
             </p>
           </div>
 

@@ -7,3 +7,4 @@ export * from './local-storage';
 export * from './sentence-case';
 export * from './zoom-calculator';
 export * from './image';
+export * from './video';

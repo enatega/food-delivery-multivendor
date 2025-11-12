@@ -16,7 +16,7 @@ import Image from 'next/image';
 import { memo, useCallback, useContext, useState } from 'react';
 
 // Utils
-import { compressImage } from '@/lib/utils/methods';
+import { compressImage, compressVideo } from '@/lib/utils/methods';
 
 // Components
 import CustomLoader from '../custom-progress-indicator';
@@ -88,10 +88,15 @@ function CustomUploadImageComponent({
       setImageFile(URL.createObjectURL(file));
       
       try {
-        // Compress image if it's an image file
-        const processedFile = file.type.startsWith('image/') 
-          ? await compressImage(file, 800, 0.7)
-          : file;
+        // Compress file based on type
+        let processedFile: File;
+        if (file.type.startsWith('image/')) {
+          processedFile = await compressImage(file, 800, 0.7);
+        } else if (file.type.startsWith('video/')) {
+          processedFile = await compressVideo(file);
+        } else {
+          processedFile = file;
+        }
         
         // Convert to base64
         const base64 = await new Promise<string>((resolve) => {
