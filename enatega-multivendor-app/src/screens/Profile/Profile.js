@@ -287,6 +287,13 @@ function Profile(props) {
                 </TextDefault>
 
                 <ButtonContainer
+                  icon={'gift-outline'}
+                  iconType={'Ionicons'}
+                  onPress={() => navigation.navigate('ReferralAndLoyaltyRewards')}
+                  title="Referral & Loyalty Rewards"
+                  currentTheme={currentTheme}
+                />
+                <ButtonContainer
                   icon={'people-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('Help')}
