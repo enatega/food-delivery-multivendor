@@ -67,6 +67,9 @@ import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
 import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 import * as LocationImport from 'expo-location'
+import QRAndReferral from '../screens/QR-And-Referral/QR-And-Referral'
+import ReferralAndLoyaltyRecentActivity from '../screens/Referral-And-Loyalty-Recent-Activity/Referral-And-Loyalty-Recent-Activity'
+import LoyaltyPoints from '../screens/Loyalty-Points/Loyalty-Points'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -152,6 +155,9 @@ function MainNavigator() {
       <NavigationStack.Screen name='Reorder' component={Reorder} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='ReferralAndLoyaltyRewards' component={ReferralAndLoyaltyRewards} />
+      <NavigationStack.Screen name='LoyaltyPoints' component={LoyaltyPoints} />
+      <NavigationStack.Screen name='QRAndReferral' component={QRAndReferral} />
+      <NavigationStack.Screen name='ReferralAndLoyaltyRecentActivity' component={ReferralAndLoyaltyRecentActivity} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />

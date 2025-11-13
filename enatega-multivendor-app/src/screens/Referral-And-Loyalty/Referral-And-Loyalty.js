@@ -1,6 +1,6 @@
 import { useState, useLayoutEffect, useContext } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, SafeAreaView, FlatList } from 'react-native'
-import { MaterialCommunityIcons, Feather, Ionicons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, Feather, Ionicons, Fontisto } from '@expo/vector-icons'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -8,77 +8,76 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { scale } from '../../utils/scaling'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
+import { useNavigation } from '@react-navigation/native'
 
+const activities = [
+  {
+    id: '1',
+    title: '+120 pts from new order',
+    description: 'Sofia joined using your code #4532',
+    points: 120,
+    time: '10:42 AM · Today',
+    icon: 'shopping'
+  },
+  {
+    id: '2',
+    title: '+250 pts from referral',
+    description: 'Sofia joined using your code',
+    points: 250,
+    time: 'Yesterday',
+    icon: 'share',
+    isNegative: false
+  },
+  {
+    id: '3',
+    title: '-400 pts redeemed',
+    description: 'Used points for discount on your last order',
+    points: -400,
+    time: '2 days ago',
+    icon: 'gift',
+    isNegative: true
+  },
+  {
+    id: '4',
+    title: '+80 pts from in-store purchase',
+    description: 'Earned by scanning QR at checkout',
+    points: 80,
+    time: '3 days ago',
+    icon: 'shop',
+    isNegative: false
+  },
+  {
+    id: '5',
+    title: '+80 pts from in-store purchase',
+    description: 'Earned by scanning QR at checkout',
+    points: 80,
+    time: '3 days ago',
+    icon: 'shop',
+    isNegative: false
+  },
+  {
+    id: '6',
+    title: '+80 pts from in-store purchase',
+    description: 'Earned by scanning QR at checkout',
+    points: 80,
+    time: '3 days ago',
+    icon: 'shop',
+    isNegative: false
+  },
+  {
+    id: '7',
+    title: '+8990 pts from in-store purchase',
+    description: 'Earned by scanning QR at checkout',
+    points: 80,
+    time: '3 days ago',
+    icon: 'shop',
+    isNegative: false
+  }
+]
 function ReferralAndLoyaltyRewards(props) {
+  const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
-  // Sontats
-  const [loading, loadingSetter] = useState(true)
-  const [activities] = useState([
-    {
-      id: '1',
-      title: '+120 pts from new order',
-      description: 'Sofia joined using your code #4532',
-      points: 120,
-      time: '10:42 AM · Today',
-      icon: 'shopping'
-    },
-    {
-      id: '2',
-      title: '+250 pts from referral',
-      description: 'Sofia joined using your code',
-      points: 250,
-      time: 'Yesterday',
-      icon: 'share',
-      isNegative: false
-    },
-    {
-      id: '3',
-      title: '-400 pts redeemed',
-      description: 'Used points for discount on your last order',
-      points: -400,
-      time: '2 days ago',
-      icon: 'gift',
-      isNegative: true
-    },
-    {
-      id: '4',
-      title: '+80 pts from in-store purchase',
-      description: 'Earned by scanning QR at checkout',
-      points: 80,
-      time: '3 days ago',
-      icon: 'shop',
-      isNegative: false
-    },
-    {
-      id: '4',
-      title: '+80 pts from in-store purchase',
-      description: 'Earned by scanning QR at checkout',
-      points: 80,
-      time: '3 days ago',
-      icon: 'shop',
-      isNegative: false
-    },
-    {
-      id: '4',
-      title: '+80 pts from in-store purchase',
-      description: 'Earned by scanning QR at checkout',
-      points: 80,
-      time: '3 days ago',
-      icon: 'shop',
-      isNegative: false
-    },
-    {
-      id: '4',
-      title: '+8990 pts from in-store purchase',
-      description: 'Earned by scanning QR at checkout',
-      points: 80,
-      time: '3 days ago',
-      icon: 'shop',
-      isNegative: false
-    }
-  ])
 
   // Handlers
   const renderActivityIcon = (iconType) => {
@@ -154,7 +153,6 @@ function ReferralAndLoyaltyRewards(props) {
                 backgroundColor: 'white',
                 borderRadius: 50,
                 marginLeft: 10,
-                width: 55,
                 alignItems: 'center'
               }}
             >
@@ -171,82 +169,84 @@ function ReferralAndLoyaltyRewards(props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton}>
-          <Feather name='chevron-left' size={24} color='#000' />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Loyalty rewards</Text>
-        <View style={{ width: 40 }} />
-      </View>
-
       {/* Loyalty Points Card */}
       <View style={styles.loyaltyCard}>
         <View style={styles.loyaltyCardFirstChild}>
-          <View style={styles.cardTop}>
-            <View>
-              <Text style={styles.cardTitle}>Loyalty Points</Text>
-              <View style={styles.tier}>
-                <Text style={styles.tierText}>🏅 Gold</Text>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={styles.cardTop}>
+              <View>
+                <Text style={styles.cardTitle}>Loyalty Points</Text>
+                <View style={styles.tier}>
+                  <Text style={styles.tierText}>🏅 Gold</Text>
+                </View>
               </View>
             </View>
-          </View>
-
-          <View style={styles.pointsContainer}>
-            <View style={styles.pointsBadge}>
-              <Text style={styles.pointsText}>Points</Text>
-              <Text style={styles.pointsValue}>1900pts</Text>
-            </View>
-            <View style={styles.pointsBadge}>
-              <Text style={styles.pointsValue}>19 $</Text>
+            <View style={styles.pointsContainer}>
+              <View style={styles.pointsBadge}>
+                <Text style={styles.pointsText}>Points</Text>
+                <Text style={styles.pointsValue}>1900pts</Text>
+              </View>
+              <Fontisto name='arrow-swap' color='#293D34' size={15} style={{ marginTop: 4 }} />
+              <View style={styles.pointsBadge}>
+                <Text style={styles.pointsValue}>19 $</Text>
+              </View>
             </View>
           </View>
 
           {/* Progress Section */}
           <View style={styles.progressContainer}>
-            <Text style={styles.progressLabel}>🏅 100 points until Gold</Text>
+            <Text style={styles.progressLabel}>
+              <Feather name='database' /> 100 points until Gold
+            </Text>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '95%' }]} />
             </View>
-            <Text style={styles.progressText}>1900/2000</Text>
+            <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+              <Text style={styles.progressText}>Gold</Text>
+              <Text style={styles.progressText}>1900/2000</Text>
+            </View>
           </View>
         </View>
 
         {/* See Details Link */}
         <View style={styles.loyaltyCardSecondChild}>
-          <View style={styles.detailsLink}>
-            <Text style={styles.detailsText}>See details</Text>
-            <Feather name='chevron-right' size={20} color='#0F172A' />
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate('LoyaltyPoints')}>
+            <View style={styles.detailsLink}>
+              <Text style={styles.detailsText}>See details</Text>
+              <Feather name='chevron-right' size={20} color='#0F172A' />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
 
       {/* Refer & Earn Points */}
       <View style={styles.section}>
-        <View style={styles.referCard}>
-          <View style={styles.referContent}>
-            <View style={styles.referIcon}>
-              <Feather name='gift' size={20} color='#6b7280' />
+        <TouchableOpacity onPress={() => navigation.navigate('QRAndReferral')}>
+          <View style={styles.referCard}>
+            <View style={styles.referContent}>
+              <View style={styles.referIcon}>
+                <Feather name='gift' size={20} color='#6b7280' />
+              </View>
+              <View style={styles.referText}>
+                <Text style={styles.referLabel}>Refer & Earn Points</Text>
+                <Text style={styles.referDesc}>Invite or scan qr code to earn points</Text>
+              </View>
             </View>
-            <View style={styles.referText}>
-              <Text style={styles.referLabel}>Refer & Earn Points</Text>
-              <Text style={styles.referDesc}>Invite or scan qr code to earn points</Text>
-            </View>
+            <Feather name='chevron-right' size={20} color='#0F172A' />
           </View>
-          <Feather name='chevron-right' size={20} color='#0F172A' />
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* Recent Activity Header */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Recent Activity</Text>
-          <TouchableOpacity style={styles.sectionAction}>
+          <TouchableOpacity style={styles.sectionAction} onPress={() => navigation.navigate('ReferralAndLoyaltyRecentActivity')}>
             <Text style={styles.sectionActionText}>See All</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{height:1, width:"auto", backgroundColor:"#E5E7EB"}}/>
+      <View style={{ height: 1, width: 'auto', backgroundColor: '#E5E7EB' }} />
       <FlatList data={activities} renderItem={renderActivity} keyExtractor={(item) => item.id} scrollEnabled={true} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }} />
     </SafeAreaView>
   )
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff'
+    color: '#293D34'
   },
   tier: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -320,26 +320,22 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   pointsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 12
+    flexDirection: 'row'
   },
   pointsBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     paddingHorizontal: 10,
-    paddingVertical: 6,
     borderRadius: 8,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'start',
     gap: 4
   },
   pointsText: {
-    color: '#fff',
+    color: '#293D34',
     fontWeight: '600',
     fontSize: 14
   },
   pointsValue: {
-    color: '#fff',
+    color: '#293D34',
     fontWeight: '700',
     fontSize: 14
   },
@@ -348,7 +344,7 @@ const styles = StyleSheet.create({
   },
   progressLabel: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#111827',
     marginBottom: 8,
     fontWeight: '500'
   },
@@ -366,7 +362,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.8)'
+    color: '#111827'
   },
   detailsLink: {
     padding: 16,
@@ -381,7 +377,7 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   section: {
-    marginHorizontal: 16,
+    marginHorizontal: 16
     // marginBottom: 10
   },
   sectionHeader: {
