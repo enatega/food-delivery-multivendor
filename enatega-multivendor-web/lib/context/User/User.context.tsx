@@ -233,6 +233,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       subscribeToMore: subscribeToMoreOrders,
     },
   ] = useLazyQuery(ORDERS, {
+    variables:{
+      page: 1,
+      limit: 300,
+    },
     fetchPolicy: "network-only",
     onError,
   });
