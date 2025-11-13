@@ -107,9 +107,8 @@ export default function OrderCheckoutScreen() {
     fetchProfile,
     loadingProfile,
   } = useUser();
-  console.log("restaurant from useUser and cart item:", restaurantId, cart);
-
   const { userAddress } = useUserAddress();
+  console.log("User Address:", userAddress);
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
   const { data: restaurantData } = useRestaurant(restaurantId || "") || {
     data: restaurantFromLocalStorage
