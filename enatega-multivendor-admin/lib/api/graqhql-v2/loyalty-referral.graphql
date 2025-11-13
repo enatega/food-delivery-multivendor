@@ -1,0 +1,156 @@
+############
+# Level
+############
+query FetchLoyaltyLevelById($id: String!) {
+  fetchLoyaltyLevelById(id: $id) {
+    _id
+    name
+    amount
+    points
+  }
+}
+
+query FetchLoyaltyLevelsByUserType($userType: String!) {
+  fetchLoyaltyLevelsByUserType(userType: $userType) {
+    _id
+    name
+    amount
+    points
+  }
+}
+
+mutation CreateLoyaltyLevel($input: LoyaltyLevelInput!) {
+  createLoyaltyLevel(input: $input) {
+    _id
+    name
+    amount
+    points
+  }
+}
+
+mutation EditLoyaltyLevel($id: String!, $input: UpdateLoyaltyLevelInput!) {
+  updateLoyaltyLevel(id: $id, input: $input) {
+    _id
+    name
+    amount
+    points
+  }
+}
+
+mutation DeleteLoyaltyLevel($id: String!) {
+  deleteLoyaltyLevel(id: $id) {
+    _id
+    name
+    amount
+    points
+  }
+}
+
+############
+# Tier
+############
+query FetchLoyaltyTierById($id: String!) {
+  fetchLoyaltyTierById(id: $id) {
+    _id
+    name
+    points
+  }
+}
+
+query FetchLoyaltyTiers {
+  fetchLoyaltyTiers {
+    _id
+    name
+    points
+  }
+}
+
+mutation CreateLoyaltyTier($input: LoyaltyTierInput!) {
+  createLoyaltyTier(input: $input) {
+    _id
+    name
+    points
+  }
+}
+
+mutation EditLoyaltyTier($id: String!, $input: UpdateLoyaltyTierInput!) {
+  updateLoyaltyTier(id: $id, input: $input) {
+    _id
+    name
+    points
+  }
+}
+
+mutation DeleteLoyaltyTier($id: String!) {
+  deleteLoyaltyTier(id: $id) {
+    _id
+    name
+    points
+  }
+}
+
+############
+# Breakdown
+############
+query FetchLoyaltyBreakdownById($id: String!) {
+  fetchLoyaltyBreakdownById(id: $id) {
+    _id
+    min
+    max
+    bronze
+    silver
+    gold
+    platinum
+  }
+}
+
+query FetchLoyaltyBreakdowns {
+  fetchLoyaltyBreakdowns {
+    _id
+    min
+    max
+    bronze
+    silver
+    gold
+    platinum
+  }
+}
+
+mutation CreateLoyaltyBreakdown($input: LoyaltyBreakdownInput!) {
+  createLoyaltyBreakdown(input: $input) {
+    _id
+    min
+    max
+    bronze
+    silver
+    gold
+    platinum
+  }
+}
+
+mutation EditLoyaltyBreakdown(
+  $id: String!
+  $input: UpdateLoyaltyBreakdownInput!
+) {
+  updateLoyaltyBreakdown(id: $id, input: $input) {
+    _id
+    min
+    max
+    bronze
+    silver
+    gold
+    platinum
+  }
+}
+
+mutation DeleteLoyaltyBreakdown($id: String!) {
+  deleteLoyaltyBreakdown(id: $id) {
+    _id
+    min
+    max
+    bronze
+    silver
+    gold
+    platinum
+  }
+}

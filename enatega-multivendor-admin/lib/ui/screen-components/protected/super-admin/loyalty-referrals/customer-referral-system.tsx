@@ -11,15 +11,32 @@ import { useEffect, useRef, useState } from 'react';
 import LevelForm from './forms/level.form';
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import {
+  FetchLoyaltyLevelsByUserTypeDocument,
+  useDeleteLoyaltyLevelMutation,
+  useFetchLoyaltyLevelsByUserTypeQuery,
+} from '@/lib/graphql-generated';
+import { toTextCase } from '@/lib/utils/methods';
+import DashboardStatsCardSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.stats.card.skeleton';
+import useToast from '@/lib/hooks/useToast';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import NoData from '@/lib/ui/useable-components/no-data';
 
 interface LevelCardProps {
   name: string;
   point: number;
   isCustomer: boolean;
+  loading?: boolean;
   onMenuClick: () => void;
 }
 
-function LevelCard({ name, point, isCustomer, onMenuClick }: LevelCardProps) {
+function LevelCard({
+  name,
+  point,
+  loading,
+  isCustomer,
+  onMenuClick,
+}: LevelCardProps) {
   const { CURRENCY_SYMBOL } = useConfiguration();
 
   return (
@@ -28,12 +45,21 @@ function LevelCard({ name, point, isCustomer, onMenuClick }: LevelCardProps) {
         <span className="inline-block bg-[#F0FFEA] border border-[#5AC12F] px-3 py-1 rounded-full text-sm font-medium">
           {name}
         </span>
-        <button
-          onClick={onMenuClick}
-          className="text-muted-foreground hover:text-foreground transition-colors p-1"
-        >
-          <FontAwesomeIcon icon={faEllipsisVertical} />
-        </button>
+        {loading ? (
+          <ProgressSpinner
+            className="m-0 h-6 w-6 items-center self-center p-0"
+            strokeWidth="5"
+            style={{ fill: 'white', accentColor: 'white' }}
+            color="white"
+          />
+        ) : (
+          <button
+            onClick={onMenuClick}
+            className="text-muted-foreground hover:text-foreground transition-colors p-1"
+          >
+            <FontAwesomeIcon icon={faEllipsisVertical} />
+          </button>
+        )}
       </div>
 
       <div className="text-4xl text-foreground font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
@@ -45,23 +71,61 @@ function LevelCard({ name, point, isCustomer, onMenuClick }: LevelCardProps) {
 
 export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
   // Hooks
-  const { loyaltyType, levelFormVisible, setLevelFormFormVisible } =
-    useLoyaltyContext();
+  const {
+    loyaltyType,
+    levelFormVisible,
+    setLevelFormVisible,
+    setLoyaltyData,
+  } = useLoyaltyContext();
+  const { showToast } = useToast();
 
-  const [levels, setLevels] = useState([
-    { id: 1, name: 'Level 01', point: 15 },
-    { id: 2, name: 'Level 02', point: 10 },
-    { id: 3, name: 'Level 03', point: 5 },
-    { id: 4, name: 'Level 04', point: 5 },
-  ]);
-
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
+  // States
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // API
+  const { data, loading } = useFetchLoyaltyLevelsByUserTypeQuery({
+    variables: {
+      userType:
+        loyaltyType === 'Customer Loyalty Program' ? 'customer' : 'driver',
+    },
+  });
+  const [deleteLoyaltyLevel, { loading: deletingLevel }] =
+    useDeleteLoyaltyLevelMutation();
+
   // Handlers
-  const handleDeleteLevel = (id: number) => {
-    setLevels(levels.filter((level) => level.id !== id));
-    setOpenMenu(null);
+  const handleDeleteLevel = async (id: string) => {
+    try {
+      setOpenMenu(null);
+      await deleteLoyaltyLevel({
+        variables: {
+          id,
+        },
+        refetchQueries: [
+          {
+            query: FetchLoyaltyLevelsByUserTypeDocument,
+            variables: {
+              userType:
+                loyaltyType === 'Customer Loyalty Program'
+                  ? 'customer'
+                  : 'driver',
+            },
+          },
+        ],
+      });
+
+      showToast({
+        type: 'success',
+        title: 'Delete Level',
+        message: 'Level has been deleted successfully.',
+      });
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: 'Failed.',
+        message: (err as Error)?.message || 'Please try again later',
+      });
+    }
   };
 
   useEffect(() => {
@@ -92,7 +156,9 @@ export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
             </div>
             <button
               className="bg-black text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary/90 transition-colors"
-              onClick={() => setLevelFormFormVisible(true)}
+              onClick={() => {
+                setLevelFormVisible(true);
+              }}
             >
               <FontAwesomeIcon icon={faAdd} /> Create Level
             </button>
@@ -103,35 +169,63 @@ export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
             className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
             ref={menuRef}
           >
-            {levels.map((level) => (
-              <div key={level.id} className="relative">
-                <LevelCard
-                  name={level.name}
-                  point={level.point}
-                  isCustomer={loyaltyType === 'Customer Loyalty Program'}
-                  onMenuClick={() =>
-                    setOpenMenu(openMenu === level.id ? null : level.id)
-                  }
-                />
+            {loading ? (
+              <>
+                {new Array(3).fill(0).map((_, index) => (
+                  <DashboardStatsCardSkeleton key={index} />
+                ))}
+              </>
+            ) : !data?.fetchLoyaltyLevelsByUserType ||
+              data?.fetchLoyaltyLevelsByUserType?.length === 0 ? (
+              <NoData />
+            ) : (
+              data?.fetchLoyaltyLevelsByUserType?.map((level) => {
+                if (!level) return;
 
-                {/* Dropdown Menu */}
-                {openMenu === level.id && (
-                  <div className="absolute top-14 right-2 bg-background border border-border rounded-lg shadow-lg z-10 w-40">
-                    <button className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm">
-                      <FontAwesomeIcon icon={faEdit} />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteLevel(level.id)}
-                      className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm text-destructive"
-                    >
-                      <FontAwesomeIcon icon={faTrash} color="#EF4444" />
-                      Delete
-                    </button>
+                return (
+                  <div key={level?._id} className="relative">
+                    <LevelCard
+                      name={toTextCase(level?.name || '', 'title')}
+                      point={
+                        (loyaltyType === 'Customer Loyalty Program'
+                          ? level?.points
+                          : level?.amount) || 0
+                      }
+                      isCustomer={loyaltyType === 'Customer Loyalty Program'}
+                      loading={deletingLevel}
+                      onMenuClick={() =>
+                        setOpenMenu(openMenu === level?._id ? null : level?._id)
+                      }
+                    />
+
+                    {/* Dropdown Menu */}
+                    {openMenu === level?._id && (
+                      <div className="absolute top-14 right-2 bg-background border border-border rounded-lg shadow-lg z-10 w-40">
+                        <button
+                          className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm"
+                          onClick={() => {
+                              setOpenMenu(null)
+                            setLoyaltyData({ levelId: level?._id });
+                            setLevelFormVisible(true);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteLevel(level?._id)}
+                          disabled={deletingLevel}
+                          className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm text-destructive"
+                        >
+                          <FontAwesomeIcon icon={faTrash} color="#EF4444" />
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
+                );
+              })
+            )}
           </div>
         </div>
       </div>

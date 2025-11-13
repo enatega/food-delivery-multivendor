@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState} from 'react';
 
 interface BreakdownRow {
   id: number;
@@ -13,7 +13,7 @@ interface BreakdownRow {
 }
 
 export default function LoyaltyAndReferralHistoryComponent() {
-  const [breakdowns, setBreakdowns] = useState<BreakdownRow[]>([
+  const [breakdowns] = useState<BreakdownRow[]>([
     {
       id: 1,
       customer_name: 'Jennifer Oliver',

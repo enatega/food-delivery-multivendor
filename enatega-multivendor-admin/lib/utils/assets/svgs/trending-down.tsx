@@ -1,11 +1,5 @@
-import { IGlobalSVGProps } from '../../interfaces/svg.interface';
 
-export function TrendingDownSVG({
-  width = '24',
-  height = '24',
-  strokeColor = '#09090B',
-  ...props
-}: IGlobalSVGProps) {
+export function TrendingDownSVG() {
   return (
      <svg
       width="24"

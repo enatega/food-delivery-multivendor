@@ -15,7 +15,8 @@
     "prettier": "prettier --write .",
     "prepare": "husky",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
@@ -48,6 +49,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@graphql-codegen/cli": "^6.0.2",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.3",
     "@types/autosuggest-highlight": "^3.2.3",
     "@types/lodash": "^4.17.7",
     "@types/node": "^20.14.12",
@@ -72,7 +75,7 @@
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
-    "typescript": "^5.6.2",
+    "typescript": "^5.9.3",
     "webpack-bundle-analyzer": "^4.10.2"
   }
 }

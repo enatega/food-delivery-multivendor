@@ -9,6 +9,7 @@ export interface IStatsCardProps extends IGlobalComponentProps {
   icon?: IconDefinition;
   loading?: boolean;
   isClickable?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   SvgIcon?: React.ComponentType<any>;
   positiveTrending?: boolean;
   trendChange?: string;

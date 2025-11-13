@@ -1,11 +1,5 @@
-import { IGlobalSVGProps } from '../../interfaces/svg.interface';
 
-export function PointsSVG({
-  width = '24',
-  height = '24',
-  strokeColor = '#09090B',
-  ...props
-}: IGlobalSVGProps) {
+export function PointsSVG() {
   return (
     <svg
       width="24"

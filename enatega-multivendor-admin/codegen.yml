@@ -1,0 +1,24 @@
+overwrite: true
+schema: "http://localhost:8001/graphql"
+documents: "lib/api/**/*.graphql"
+generates:
+  lib/graphql-generated/index.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true        # Generate React hooks
+      withHOC: false         # Skip HOCs (legacy)
+      withComponent: false   # Skip components (legacy)
+      scalars:               # Map Hasura scalars to TS
+        uuid: string
+        timestamptz: string
+        jsonb: any
+        numeric: number
+      namingConvention: change-case#pascalCase
+      avoidOptionals:
+        object: true       # Keep objects required (optional for your types)
+        inputValue: false  # <--- makes input fields optional
+      maybeValue: 'T | null | undefined'
+      

@@ -4,7 +4,7 @@ import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
 import HeaderText from '@/lib/ui/useable-components/header-text';
 import CustomTab from '@/lib/ui/useable-components/vendor-custom-tab';
 import { LoyaltyType } from '@/lib/utils/types/loyalty';
-import { useState } from 'react';
+
 
 export default function LoyaltyAndReferralHeader() {
   // Hooks

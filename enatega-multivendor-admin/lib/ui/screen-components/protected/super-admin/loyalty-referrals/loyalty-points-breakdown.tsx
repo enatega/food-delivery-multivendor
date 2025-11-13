@@ -10,71 +10,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect, useRef } from 'react';
 import BreakdownForm from './forms/breakdown.form';
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
+import {
+  FetchLoyaltyBreakdownsDocument,
+  useDeleteLoyaltyBreakdownMutation,
+  useFetchLoyaltyBreakdownsQuery,
+} from '@/lib/graphql-generated';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import useToast from '@/lib/hooks/useToast';
+import NoData from '@/lib/ui/useable-components/no-data';
+import DataTableColumnSkeleton from '@/lib/ui/useable-components/custom-skeletons/datatable.column.skeleton';
 
-interface BreakdownRow {
-  id: number;
-  min: number;
-  max: number;
-  bronze: number;
-  silver: number;
-  gold: number;
-  platinum: number;
-}
 
 export default function LoyaltyAndReferralBreakdownSectionComponent() {
-  const { breakdownFormVisible, setBreakdownFormVisible } = useLoyaltyContext();
+  const { breakdownFormVisible, setBreakdownFormVisible, setLoyaltyData } =
+    useLoyaltyContext();
+  const { showToast } = useToast();
 
   // States
-  const [breakdowns, setBreakdowns] = useState<BreakdownRow[]>([
-    {
-      id: 1,
-      bronze: 10,
-      silver: 20,
-      gold: 30,
-      platinum: 40,
-      min: 0,
-      max: 1000,
-    },
-    {
-      id: 2,
-      bronze: 15,
-      silver: 25,
-      gold: 35,
-      platinum: 45,
-      min: 1001,
-      max: 5000,
-    },
-    {
-      id: 3,
-      bronze: 20,
-      silver: 30,
-      gold: 40,
-      platinum: 50,
-      min: 5001,
-      max: 10000,
-    },
-    {
-      id: 4,
-      bronze: 25,
-      silver: 35,
-      gold: 45,
-      platinum: 55,
-      min: 10001,
-      max: 50000,
-    },
-    {
-      id: 5,
-      bronze: 30,
-      silver: 40,
-      gold: 50,
-      platinum: 60,
-      min: 50001,
-      max: 100000,
-    },
-  ]);
-
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // API
+  const { data, loading } = useFetchLoyaltyBreakdownsQuery();
+  const [deleteLoyaltyBreakdown, { loading: deletingBreakdown }] =
+    useDeleteLoyaltyBreakdownMutation();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -87,9 +47,35 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleDelete = (id: number) => {
-    setBreakdowns(breakdowns.filter((item) => item.id !== id));
-    setOpenMenu(null);
+  const handleDelete = async (id: string) => {
+    try {
+      setDeletingId(id);
+      setOpenMenu(null);
+      await deleteLoyaltyBreakdown({
+        variables: {
+          id,
+        },
+        refetchQueries: [
+          {
+            query: FetchLoyaltyBreakdownsDocument,
+          },
+        ],
+      });
+
+      showToast({
+        type: 'success',
+        title: 'Delete Breakdown',
+        message: 'Breakdown has been deleted successfully.',
+      });
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: 'Failed.',
+        message: (err as Error)?.message || 'Please try again later',
+      });
+    } finally {
+      setDeletingId('');
+    }
   };
 
   return (
@@ -141,62 +127,119 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
               </tr>
             </thead>
             <tbody>
-              {breakdowns.map((row, index) => (
-                <tr
-                  key={row.id}
-                  className={
-                    index !== breakdowns.length - 1
-                      ? 'border-b border-border'
-                      : ''
-                  }
-                >
-                  <td className="px-6 py-4 text-foreground text-sm">
-                    {row.min}
-                  </td>
-                  <td className="px-6 py-4 text-foreground text-sm">
-                    {row.max}
-                  </td>
-                  <td className="px-6 py-4 text-foreground text-sm font-medium">
-                    {row.bronze}
-                  </td>
-                  <td className="px-6 py-4 text-foreground text-sm font-medium">
-                    {row.silver}
-                  </td>
-                  <td className="px-6 py-4 text-foreground text-sm font-medium">
-                    {row.gold}
-                  </td>
-                  <td className="px-6 py-4 text-foreground text-sm font-medium">
-                    {row.platinum}
-                  </td>
+              {loading ? (
+                <>
+                  {new Array(5).fill(0).map((_, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
 
-                  <td className="px-6 py-4 text-right relative">
-                    <button
-                      onClick={() =>
-                        setOpenMenu(openMenu === row.id ? null : row.id)
+                      <td className="px-6 py-4 text-foreground text-sm">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        <DataTableColumnSkeleton key={index} />
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              ) : !data?.fetchLoyaltyBreakdowns ||
+                data?.fetchLoyaltyBreakdowns?.length === 0 ? (
+                <NoData />
+              ) : (
+                data?.fetchLoyaltyBreakdowns?.map((row, index) => {
+                  if (!row) return;
+                  return (
+                    <tr
+                      key={row._id}
+                      className={
+                        index !==
+                        (data?.fetchLoyaltyBreakdowns?.length || 0) - 1
+                          ? 'border-b border-border'
+                          : ''
                       }
-                      className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <FontAwesomeIcon icon={faEllipsisVertical} />
-                    </button>
+                      <td className="px-6 py-4 text-foreground text-sm">
+                        {row.min}
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm">
+                        {row.max}
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        {row.bronze}
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        {row.silver}
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        {row.gold}
+                      </td>
+                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                        {row.platinum}
+                      </td>
 
-                    {openMenu === row.id && (
-                      <div className="absolute top-12 right-0 mt-1 w-40 bg-white border border-border rounded-lg shadow-lg z-50">
-                        <button className="w-full text-left px-4 py-2 flex items-center gap-2 text-sm bg-white">
-                          <FontAwesomeIcon icon={faEdit} />
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(row.id)}
-                          className="w-full text-left px-4 py-2 flex items-center gap-2 bg-white text-sm text-destructive border-t border-border"
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                      <td className="px-6 py-4 text-right relative">
+                        {loading && row?._id === deletingId ? (
+                          <ProgressSpinner
+                            className="m-0 h-6 w-6 items-center self-center p-0"
+                            strokeWidth="5"
+                            style={{ fill: 'white', accentColor: 'white' }}
+                            color="white"
+                          />
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setOpenMenu(
+                                openMenu === row._id ? null : row._id
+                              );
+                            }}
+                            disabled={deletingBreakdown && row?._id === deletingId}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <FontAwesomeIcon icon={faEllipsisVertical} />
+                          </button>
+                        )}
+
+                        {openMenu === row._id && (
+                          <div className="absolute top-12 right-0 mt-1 w-40 bg-white border border-border rounded-lg shadow-lg z-50">
+                            <button
+                              className="w-full text-left px-4 py-2 flex items-center gap-2 text-sm bg-white"
+                              onClick={() => {
+                                setOpenMenu(null);
+                                setLoyaltyData({ breakdownId: row?._id });
+                                setBreakdownFormVisible(true);
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faEdit} />
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(row._id)}
+                              className="w-full text-left px-4 py-2 flex items-center gap-2 bg-white text-sm text-destructive border-t border-border"
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

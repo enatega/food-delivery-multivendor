@@ -2,10 +2,9 @@ import StatsCard from '@/lib/ui/useable-components/stats-card';
 import { PeopleSVG } from '@/lib/utils/assets/svgs/people';
 import { PointsSVG } from '@/lib/utils/assets/svgs/points';
 import { PointsRedeemedSVG } from '@/lib/utils/assets/svgs/points-redeemed';
-import { useTranslations } from 'next-intl';
+
 
 export default function LoyaltyAndReferralStatsCardComponent() {
-  const t = useTranslations();
 
   return (
     <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-3 cursor-pointer">

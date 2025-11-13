@@ -2,7 +2,7 @@
 import { useTranslations } from 'next-intl';
 
 // Interfaces
-import { IBreakdownForm, ITierForm } from '@/lib/utils/interfaces';
+import { IBreakdownForm } from '@/lib/utils/interfaces';
 
 // Hooks
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
@@ -18,26 +18,142 @@ import { useConfiguration } from '@/lib/hooks/useConfiguration';
 import { BreakdownSchema } from '@/lib/utils/schema/breakdown';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import { BreakdownErrors } from '@/lib/utils/constants';
+import { useEffect, useState } from 'react';
+import {
+  FetchLoyaltyBreakdownsDocument,
+  useCreateLoyaltyBreakdownMutation,
+  useEditLoyaltyBreakdownMutation,
+  useFetchLoyaltyBreakdownByIdLazyQuery,
+} from '@/lib/graphql-generated';
+import useToast from '@/lib/hooks/useToast';
+
+// Initial values
+const initialData: IBreakdownForm = {
+  min: 0,
+  max: 1,
+  bronze: 1,
+  silver: 1,
+  gold: 1,
+  platinum: 1,
+};
 
 export default function BreakdownForm() {
   // Hooks
-  const { CURRENCY_SYMBOL, CURRENCY_CODE } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
   const t = useTranslations();
+  const {
+    loyaltyData,
+    setLoyaltyData,
+    breakdownFormVisible,
+    setBreakdownFormVisible,
+  } = useLoyaltyContext();
+  const { showToast } = useToast();
 
-  const { breakdownFormVisible, setBreakdownFormVisible } = useLoyaltyContext();
+  // States
+  const [initialValues, setInitialValues] =
+    useState<IBreakdownForm>(initialData);
 
-  // Initial values
-  const initialValues: IBreakdownForm = {
-    min: 0,
-    max: 1,
-    bronze: 0,
-    silver: 0,
-    gold: 0,
-    platinum: 0,
-  };
+  // API
+  const [fetchLoyaltyLevelsById, { loading }] =
+    useFetchLoyaltyBreakdownByIdLazyQuery();
+  const [createLoyaltyBreakdown, { loading: creatingBreakdown }] =
+    useCreateLoyaltyBreakdownMutation();
+  const [updateLoyaltyBreakdown, { loading: updatingBreakdown }] =
+    useEditLoyaltyBreakdownMutation();
 
   // Handler
-  const onHandleSubmit = (values: IBreakdownForm) => {};
+  const init = async () => {
+    try {
+      const { levelId } = loyaltyData || {};
+
+      if (!levelId) return;
+
+      const { data } = await fetchLoyaltyLevelsById({
+        variables: {
+          id: levelId,
+        },
+      });
+
+      if (!data) {
+        showToast({
+          type: 'error',
+          title: 'Failed to fetch',
+          message: 'Something went wrong. Please try again later',
+        });
+        return;
+      }
+
+      const { min, max, bronze, silver, gold, platinum } =
+        data?.fetchLoyaltyBreakdownById || initialData;
+
+      setInitialValues({
+        min,
+        max,
+        bronze,
+        silver,
+        gold,
+        platinum,
+      });
+    } catch (error) {
+      showToast({
+        type: 'error',
+        title: 'Failed to fetch',
+        message: (error as Error)?.message || 'Please try again later',
+      });
+    }
+  };
+
+  const onHide = () => {
+    setBreakdownFormVisible(false);
+    setLoyaltyData({ breakdownId: '' });
+  };
+
+  const onHandleSubmit = async (values: IBreakdownForm) => {
+    try {
+      const { breakdownId } = loyaltyData || {};
+
+      if (breakdownId) {
+        await updateLoyaltyBreakdown({
+          variables: {
+            id: breakdownId,
+            input: {
+              ...values,
+            },
+          },
+          refetchQueries: [
+            {
+              query: FetchLoyaltyBreakdownsDocument,
+            },
+          ],
+        });
+      } else {
+        await createLoyaltyBreakdown({
+          variables: {
+            input: {
+              ...values,
+            },
+          },
+          refetchQueries: [
+            {
+              query: FetchLoyaltyBreakdownsDocument,
+            },
+          ],
+        });
+      }
+      onHide();
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: 'Failed.',
+        message: (err as Error)?.message || 'Please try again later',
+      });
+    }
+  };
+
+  // Use Effect
+  useEffect(() => {
+    init();
+  }, [loyaltyData?.breakdownId]);
 
   return (
     <Sidebar
@@ -65,6 +181,7 @@ export default function BreakdownForm() {
                   showLabel={true}
                   value={values.min}
                   onChange={setFieldValue}
+                  isLoading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'min',
@@ -84,6 +201,7 @@ export default function BreakdownForm() {
                   showLabel={true}
                   value={values.max}
                   onChange={setFieldValue}
+                  isLoading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'max',
@@ -102,6 +220,7 @@ export default function BreakdownForm() {
                   showLabel={true}
                   value={values.bronze}
                   onChange={setFieldValue}
+                  isLoading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'bronze',
@@ -120,6 +239,7 @@ export default function BreakdownForm() {
                   showLabel={true}
                   value={values.silver}
                   onChange={setFieldValue}
+                  isLoading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'silver',
@@ -138,6 +258,7 @@ export default function BreakdownForm() {
                   showLabel={true}
                   value={values.gold}
                   onChange={setFieldValue}
+                  isLoading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'gold',
@@ -157,6 +278,7 @@ export default function BreakdownForm() {
                   showLabel={true}
                   value={values.platinum}
                   onChange={setFieldValue}
+                  isLoading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'platinum',
@@ -173,14 +295,14 @@ export default function BreakdownForm() {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  {isSubmitting ? (
+                  {isSubmitting || creatingBreakdown || updatingBreakdown ? (
                     <ProgressSpinner
                       className="m-0 h-6 w-6 items-center self-center p-0"
                       strokeWidth="5"
                       style={{ fill: 'white', accentColor: 'white' }}
                       color="white"
                     />
-                  ) : false ? (
+                  ) : loyaltyData?.breakdownId ? (
                     t('Update')
                   ) : (
                     t('Add')

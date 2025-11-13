@@ -2,7 +2,10 @@
 import { useTranslations } from 'next-intl';
 
 // Interfaces
-import { ILevelForm, ILevelFormProps } from '@/lib/utils/interfaces';
+import {
+  IDropdownSelectItem,
+  ILevelForm,
+} from '@/lib/utils/interfaces';
 
 // Hooks
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
@@ -24,40 +27,180 @@ import { LevelErrors, LOYALTY_LEVELS } from '@/lib/utils/constants';
 import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
+import {
+  FetchLoyaltyLevelsByUserTypeDocument,
+  useCreateLoyaltyLevelMutation,
+  useEditLoyaltyLevelMutation,
+  useFetchLoyaltyLevelByIdLazyQuery,
+} from '@/lib/graphql-generated';
+import useToast from '@/lib/hooks/useToast';
+import { useEffect, useState } from 'react';
 
-export default function LevelForm(props: ILevelFormProps) {
+// Initial values
+const initialData: ILevelForm = {
+  type: null,
+  value: 0.0,
+};
+
+export default function LevelForm() {
   // Hooks
   const t = useTranslations();
   const { CURRENCY_SYMBOL } = useConfiguration();
-  const { loyaltyType, levelFormVisible, setLevelFormFormVisible } =
-    useLoyaltyContext();
+  const {
+    loyaltyType,
+    levelFormVisible,
+    setLevelFormVisible,
+    loyaltyData,
+    setLoyaltyData,
+  } = useLoyaltyContext();
+  const { showToast } = useToast();
 
-  // Initial values
-  const customerInitialValues: ILevelForm = {
-    type: null,
-    value: 0.00,
-  };
-  const driverInitialValues: ILevelForm = {
-    type: null,
-    value: 0.00,
-  };
+  // States
+  const [initialValues, setInitialValues] = useState<ILevelForm>(initialData);
+
+  // API
+  const [fetchLoyaltyLevelsById, { loading }] =
+    useFetchLoyaltyLevelByIdLazyQuery();
+  const [createLoyaltyLevel, { loading: creatingLevel }] =
+    useCreateLoyaltyLevelMutation();
+  const [updateLoyaltyLevel, { loading: updatingLevel }] =
+    useEditLoyaltyLevelMutation();
 
   // Handler
-  const onHandleSubmit = (values: ILevelForm) => {};
+  const init = async () => {
+    try {
+      const { levelId } = loyaltyData || {};
+
+      if (!levelId) return;
+
+      const { data } = await fetchLoyaltyLevelsById({
+        variables: {
+          id: levelId,
+        },
+      });
+
+      if (!data) {
+        showToast({
+          type: 'error',
+          title: 'Failed to fetch',
+          message: 'Something went wrong. Please try again later',
+        });
+        return;
+      }
+
+      const { amount, points, name } = data?.fetchLoyaltyLevelById || {};
+
+      setInitialValues({
+        type: LOYALTY_LEVELS.find(
+          (ll) => ll.code === name
+        ) as IDropdownSelectItem,
+        value:
+          (loyaltyType === 'Customer Loyalty Program' ? points : amount) || 0,
+      });
+    } catch (error) {
+      showToast({
+        type: 'error',
+        title: 'Failed to fetch',
+        message: (error as Error)?.message || 'Please try again later',
+      });
+    }
+  };
+
+  const onHide = () => {
+    setLevelFormVisible(false);
+    setLoyaltyData({ levelId: '' });
+  };
+
+  const onHandleSubmit = async (values: ILevelForm) => {
+    try {
+      const { levelId } = loyaltyData || {};
+
+      if (!values?.type?.code || !values?.value) {
+        showToast({
+          type: 'warn',
+          title: 'Missing Fields',
+          message: 'Enter complete details',
+        });
+        return;
+      }
+
+      const userType =
+        loyaltyType === 'Customer Loyalty Program' ? 'customer' : 'driver';
+
+      if (levelId) {
+        await updateLoyaltyLevel({
+          variables: {
+            id: levelId,
+            input: {
+              name: values.type?.code,
+              ...(loyaltyType === 'Customer Loyalty Program'
+                ? { points: values.value }
+                : { amount: values.value }),
+            },
+          },
+          refetchQueries: [
+            {
+              query: FetchLoyaltyLevelsByUserTypeDocument,
+              variables: {
+                userType:
+                  loyaltyType === 'Customer Loyalty Program'
+                    ? 'customer'
+                    : 'driver',
+              },
+            },
+          ],
+        });
+      } else {
+        await createLoyaltyLevel({
+          variables: {
+            input: {
+              userType,
+              name: values.type?.code,
+              ...(loyaltyType === 'Customer Loyalty Program'
+                ? { points: values.value }
+                : { amount: values.value }),
+            },
+          },
+          refetchQueries: [
+            {
+              query: FetchLoyaltyLevelsByUserTypeDocument,
+              variables: {
+                userType:
+                  loyaltyType === 'Customer Loyalty Program'
+                    ? 'customer'
+                    : 'driver',
+              },
+            },
+          ],
+        });
+      }
+      onHide();
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: 'Failed.',
+        message: (err as Error)?.message || 'Please try again later',
+      });
+    }
+  };
+
+  // Use Effect
+  useEffect(() => {
+    init();
+  }, [loyaltyData?.levelId]);
 
   return (
     <Sidebar
       visible={levelFormVisible}
-      onHide={() => setLevelFormFormVisible(false)}
+      onHide={() => {
+        setLevelFormVisible(false);
+        setLoyaltyData({ levelId: '' });
+      }}
       position="right"
       className="w-full sm:w-[450px]"
     >
       <Formik
-        initialValues={
-          loyaltyType === 'Customer Loyalty Program'
-            ? customerInitialValues
-            : driverInitialValues
-        }
+        initialValues={initialValues}
         validationSchema={
           loyaltyType === 'Customer Loyalty Program'
             ? CustomerLevelSchema
@@ -65,6 +208,7 @@ export default function LevelForm(props: ILevelFormProps) {
         }
         onSubmit={onHandleSubmit}
         validateOnChange={true}
+        enableReinitialize
       >
         {({ values, errors, setFieldValue, handleSubmit, isSubmitting }) => {
           return (
@@ -77,6 +221,7 @@ export default function LevelForm(props: ILevelFormProps) {
                   setSelectedItem={setFieldValue}
                   options={LOYALTY_LEVELS}
                   showLabel={true}
+                  loading={loading}
                   style={{
                     borderColor: onErrorMessageMatcher(
                       'type',
@@ -99,6 +244,7 @@ export default function LevelForm(props: ILevelFormProps) {
                     showLabel={true}
                     value={values.value}
                     onChange={setFieldValue}
+                    isLoading={loading}
                     style={{
                       borderColor: onErrorMessageMatcher(
                         'value',
@@ -128,14 +274,14 @@ export default function LevelForm(props: ILevelFormProps) {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  {isSubmitting ? (
+                  {isSubmitting || creatingLevel || updatingLevel ? (
                     <ProgressSpinner
                       className="m-0 h-6 w-6 items-center self-center p-0"
                       strokeWidth="5"
                       style={{ fill: 'white', accentColor: 'white' }}
                       color="white"
                     />
-                  ) : false ? (
+                  ) : loyaltyData?.levelId ? (
                     t('Update')
                   ) : (
                     t('Add')
