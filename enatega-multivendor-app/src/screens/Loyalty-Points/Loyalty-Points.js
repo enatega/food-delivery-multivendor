@@ -2,8 +2,6 @@ import { useState, useLayoutEffect, useContext } from 'react'
 import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 
-const { height } = Dimensions.get('window')
-
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -11,6 +9,10 @@ import { scale } from '../../utils/scaling'
 import { Feather, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useNavigation } from '@react-navigation/native'
+import BronzeIcon from '../../assets/SVG/bronze'
+import SilverIcon from '../../assets/SVG/silver'
+import GoldIcon from '../../assets/SVG/gold'
+import PlatinumIcon from '../../assets/SVG/platinum'
 
 function LoyaltyPoints(props) {
   const navigation = useNavigation()
@@ -92,15 +94,20 @@ function LoyaltyPoints(props) {
     scrollContent: {
       paddingBottom: 40
     },
-    header: {
-      height: height * 0.15,
+    pointsCardHeader: {
+      height: 65,
       backgroundColor: '#1a4d2e',
-      borderBottomLeftRadius: 20,
-      borderBottomRightRadius: 20,
+      borderTopStartRadius: 20,
+      borderTopEndRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      marginBottom: 4
+    },
+    pointsCardBody: {
+      backgroundColor: '#F8F9FA',
+      paddingBottom: 16
     },
     sparkles: {
       position: 'absolute',
@@ -108,38 +115,46 @@ function LoyaltyPoints(props) {
       height: '100%',
       opacity: 0.3
     },
+    dottedBar: {
+      borderTopWidth: 1,
+      borderTopColor: '#E5E7EB', // your color
+      borderStyle: 'dashed',
+      marginVertical: 8
+    },
     headerContent: {
       alignItems: 'center',
       zIndex: 1
     },
     totalPointsText: {
-      fontSize: 32,
-      fontWeight: '700',
-      color: '#000',
+      fontFamily: 'Inter',
+      fontWeight: 'bold', // Semi Bold = 600
+      fontSize: 18,
+      lineHeight: 28,
+      letterSpacing: 0,
+      color: '#111827',
       marginBottom: 4
     },
     headerSubtext: {
-      fontSize: 14,
-      color: '#666',
-      fontWeight: '500'
+      fontFamily: 'Inter',
+      fontWeight: '600', // Regular = 400
+      fontSize: 12,
+      lineHeight: 16,
+      letterSpacing: 0,
+      color: '#4B5563'
     },
     pointsCard: {
       backgroundColor: '#fff',
       borderRadius: 12,
       marginHorizontal: 16,
-      marginTop: -40,
-      padding: 16,
       marginBottom: 16,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3
+      borderWidth: 1,
+      borderColor: '#E5E7EB'
     },
     pointsRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 12
+      marginBottom: 12,
+      marginHorizontal: 16
     },
     pointsRowLast: {
       marginBottom: 0
@@ -155,14 +170,21 @@ function LoyaltyPoints(props) {
       flex: 1
     },
     pointsLabel: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#000',
-      marginBottom: 2
+      fontFamily: 'Inter',
+      fontWeight: 'bold', // Semi Bold = 600
+      fontSize: 14,
+      lineHeight: 20,
+      letterSpacing: 0,
+      marginBottom: 2,
+      color: '#111827'
     },
     pointsDescription: {
+      fontFamily: 'Inter',
+      fontWeight: '400', // Regular = 400
       fontSize: 12,
-      color: '#999'
+      lineHeight: 16,
+      letterSpacing: 0,
+      color: '#4B5563'
     },
     pointsAmount: {
       fontSize: 16,
@@ -179,19 +201,22 @@ function LoyaltyPoints(props) {
       borderColor: '#e0e0e0'
     },
     exchangeText: {
+      fontFamily: 'Inter', // or 'Inter-Regular' if using custom font file
+      fontWeight: '400', // Regular weight
       fontSize: 12,
-      color: '#666',
-      fontWeight: '500'
+      lineHeight: 16,
+      letterSpacing: 0,
+      color: '#4B5563'
     },
     referralSection: {
-      marginBottom: 16,
-      paddingRight: 16,
+      marginBottom: 25,
+      paddingRight: 16
     },
-    referralTitleContainer: {
+    referralLoyaltyTitleContainer: {
       flex: 1,
       marginLeft: 12
     },
-    referIcon: {
+    referILoyaltycon: {
       width: 40,
       height: 40,
       backgroundColor: '#e5e7eb',
@@ -209,7 +234,7 @@ function LoyaltyPoints(props) {
     },
     referralTitle: {
       fontFamily: 'Inter',
-      fontWeight: '600', // Semi Bold
+      fontWeight: 'bold', // Semi Bold
       fontSize: 18,
       lineHeight: 28,
       letterSpacing: 0,
@@ -238,6 +263,7 @@ function LoyaltyPoints(props) {
       backgroundColor: '#fff',
       borderRadius: 12,
       padding: 16,
+      paddingBottom: 10,
       border: 1,
       borderBottomColor: '#F8F9FA'
     },
@@ -273,47 +299,67 @@ function LoyaltyPoints(props) {
       marginRight: 8
     },
     levelCard: {
-      backgroundColor: '#fff',
-      borderRadius: 12,
-      padding: 16,
+      backgroundColor: '#F8F9FA',
+      width: 361,
+      height: 66,
+      borderWidth: 1,
+      borderRadius: 8,
+      borderColor: '#E5E7EB',
+      paddingTop: 9,
+      paddingRight: 12,
+      paddingBottom: 9,
+      paddingLeft: 12,
+      opacity: 1,
+
       marginBottom: 12,
       flexDirection: 'row',
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 2
+      alignItems: 'center'
+
+      // shadowColor: '#000',
+      // shadowOffset: { width: 0, height: 2 },
+      // shadowOpacity: 0.1,
+      // shadowRadius: 4,
+      // elevation: 2
     },
     levelBadge: {
       width: 50,
       height: 50,
-      borderRadius: 25,
+      borderRadius: 8,
       justifyContent: 'center',
       alignItems: 'center',
-      marginRight: 12
+      marginRight: 12,
+      backgroundColor: '#FFFFFF',
+      border: 1,
+      borderColor: '#E5E7EB'
     },
     silverBadge: {
-      backgroundColor: '#d4af37'
+      // backgroundColor: '#d4af37'
     },
     goldBadge: {
-      backgroundColor: '#ffd700'
+      // backgroundColor: '#ffd700'
     },
     platinumBadge: {
-      backgroundColor: '#e5e4e2'
+      // backgroundColor: '#e5e4e2'
     },
     levelInfo: {
       flex: 1
     },
     levelName: {
+      fontFamily: 'Inter', // or 'Inter-SemiBold' if using a custom font file
+      fontWeight: '800', // Semi Bold
       fontSize: 16,
-      fontWeight: '700',
-      color: '#000',
-      marginBottom: 4
+      lineHeight: 18,
+      letterSpacing: 0,
+      marginBottom: 4,
+      color: '#000000'
     },
     levelDescription: {
-      fontSize: 12,
-      color: '#999'
+      fontFamily: 'Inter', // or 'Inter-Regular' if using a custom font file
+      fontWeight: '400', // Regular
+      fontSize: 14,
+      lineHeight: 18,
+      letterSpacing: 0,
+      color: '#000000'
     },
     levelStatus: {
       width: 24,
@@ -324,53 +370,62 @@ function LoyaltyPoints(props) {
       alignItems: 'center'
     },
     unlocked: {
-      backgroundColor: '#1a4d2e'
+      backgroundColor: '#5AC12F'
     },
     locked: {
-      backgroundColor: '#ddd'
+      backgroundColor: '#E5E7EB'
     }
   })
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <SparkleBackground />
-          <View style={styles.headerContent}>
-            <Text style={styles.totalPointsText}>1,900 Points</Text>
-            <Text style={styles.headerSubtext}>Your total earned points so far.</Text>
-          </View>
-        </View>
-
         {/* Points Breakdown Card */}
         <View style={styles.pointsCard}>
-          {/* Shopping Cart Row */}
-          <View style={styles.pointsRow}>
-            <View style={styles.icon}>
-              <MaterialCommunityIcons name='shopping-bag' size={24} color='#1a4d2e' />
-            </View>
-            <View style={styles.pointsInfo}>
-              <Text style={styles.pointsLabel}>1400 points</Text>
-              <Text style={styles.pointsDescription}>From orders</Text>
-            </View>
+          <View style={styles.pointsCardHeader}>
+            <SparkleBackground />
           </View>
 
-          {/* Gift Row */}
-          <View style={[styles.pointsRow, styles.pointsRowLast]}>
-            <View style={styles.icon}>
-              <MaterialCommunityIcons name='gift' size={24} color='#1a4d2e' />
+          <View style={styles.pointsCardBody}>
+            {/* Total Points */}
+            <View style={styles.pointsRow}>
+              <View style={styles.pointsInfo}>
+                <Text style={styles.totalPointsText}>1,900 Points</Text>
+                <Text style={styles.headerSubtext}>Your total earned points so far.</Text>
+              </View>
             </View>
-            <View style={styles.pointsInfo}>
-              <Text style={styles.pointsLabel}>500 points</Text>
-              <Text style={styles.pointsDescription}>From referrals</Text>
+
+            <View style={styles.dottedBar} />
+
+            {/* Shopping Cart Row */}
+            <View style={styles.pointsRow}>
+              <View style={styles.icon}>
+                <MaterialCommunityIcons name='cart-outline' size={24} color='#0F172A' />
+              </View>
+              <View style={styles.pointsInfo}>
+                <Text style={styles.pointsLabel}>1400 points</Text>
+                <Text style={styles.pointsDescription}>From orders</Text>
+              </View>
+            </View>
+
+            {/* Gift Row */}
+            <View style={styles.pointsRow}>
+              <View style={styles.icon}>
+                <MaterialCommunityIcons name='gift-outline' size={24} color='#0F172A' />
+              </View>
+              <View style={styles.pointsInfo}>
+                <Text style={styles.pointsLabel}>500 points</Text>
+                <Text style={styles.pointsDescription}>From referrals</Text>
+              </View>
+            </View>
+
+            <View style={styles.dottedBar} />
+
+            {/* Exchange Rate */}
+            <View style={[styles.pointsRow, styles.pointsRowLast]}>
+              <Text style={styles.exchangeText}>Exchange Rate: 100 points = 1 $</Text>
             </View>
           </View>
-        </View>
-
-        {/* Exchange Rate */}
-        <View style={styles.exchangeSection}>
-          <Text style={styles.exchangeText}>Exchange Rate: 100 points = 1 $</Text>
         </View>
 
         {/* Referral Rewards Section */}
@@ -379,11 +434,11 @@ function LoyaltyPoints(props) {
             <View style={styles.referralHeader}>
               {/* Left side */}
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={styles.referIcon}>
-                  <Ionicons name='trophy-sharp' size={24} color='gray' />
+                <View style={styles.referILoyaltycon}>
+                  <Ionicons name='trophy-outline' size={24} color='#0F172A' />
                 </View>
 
-                <View style={styles.referralTitleContainer}>
+                <View style={styles.referralLoyaltyTitleContainer}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={styles.referralTitle}>Referral Rewards</Text>
                     <MaterialCommunityIcons
@@ -400,67 +455,94 @@ function LoyaltyPoints(props) {
               </View>
 
               {/* Right side */}
-              <Feather name='chevron-right' size={20} color='#0F172A' />
+              <Feather name={referralExpanded ? 'chevron-up' : 'chevron-down'} size={20} color='#0F172A' />
             </View>
           </TouchableOpacity>
 
           {/* Expanded Referral Content */}
           {referralExpanded && (
             <View style={styles.referralContent}>
-              <Text style={styles.referralPoints}>600 pts</Text>
-              <Text style={styles.referralDescription}>earned so far</Text>
-              <Text style={styles.referralCta}>Tap to view detailed breakdown</Text>
+              <Text>3 Tabs here</Text>
+              <Text>Tab Body</Text>
             </View>
           )}
         </View>
 
         {/* Loyalty Levels Section */}
         <View style={styles.loyaltySection}>
-          <View style={styles.sectionTitleContainer}>
-            <Text style={styles.sectionTitle}>Your Loyalty Level</Text>
-            <MaterialCommunityIcons name='information-outline' size={20} color='#999' />
-          </View>
-          <Text style={styles.sectionDescription}>Earn more points to unlock new benefits.</Text>
+          {/* Left side */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+            <View style={styles.referILoyaltycon}>
+              <Ionicons name='gift-outline' size={24} color='#0F172A' />
+            </View>
 
+            <View style={styles.referralLoyaltyTitleContainer}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.referralTitle}>Your Loyalty Level</Text>
+                <MaterialCommunityIcons
+                  name='information-outline'
+                  size={20}
+                  color='#999'
+                  style={{ marginLeft: 4 }} // small spacing
+                />
+              </View>
+
+              <Text style={styles.referralSubtitle}>Earn more points to unlock new benefits</Text>
+            </View>
+          </View>
+
+          {/* Bronze Level - Unlocked */}
+          <View style={styles.levelCard}>
+            <View style={[styles.levelBadge, styles.silverBadge]}>
+              <BronzeIcon />
+            </View>
+            <View style={styles.levelInfo}>
+              <Text style={styles.levelName}>Bronze</Text>
+              <Text style={styles.levelDescription}>100+ more points to unlock</Text>
+            </View>
+            <View style={[styles.levelStatus, styles.locked]}>
+              <MaterialCommunityIcons name='lock' size={16} color='#6B7280' />
+            </View>
+          </View>
           {/* Silver Level - Unlocked */}
           <View style={styles.levelCard}>
             <View style={[styles.levelBadge, styles.silverBadge]}>
-              <MaterialCommunityIcons name='medal' size={28} color='#333' />
+              <SilverIcon/>
             </View>
             <View style={styles.levelInfo}>
               <Text style={styles.levelName}>Silver</Text>
               <Text style={styles.levelDescription}>Congrats you have unlock level</Text>
             </View>
             <View style={[styles.levelStatus, styles.unlocked]}>
-              <MaterialCommunityIcons name='check' size={16} color='#fff' />
+              <MaterialCommunityIcons name='lock-open' size={16} color='#111827' />
             </View>
           </View>
 
           {/* Gold Level - Locked */}
           <View style={styles.levelCard}>
             <View style={[styles.levelBadge, styles.goldBadge]}>
-              <MaterialCommunityIcons name='trophy' size={28} color='#333' />
+              <GoldIcon/>
             </View>
             <View style={styles.levelInfo}>
               <Text style={styles.levelName}>Gold</Text>
               <Text style={styles.levelDescription}>100+ more points to unlock</Text>
             </View>
             <View style={[styles.levelStatus, styles.locked]}>
-              <MaterialCommunityIcons name='lock' size={16} color='#999' />
+              <MaterialCommunityIcons name='lock' size={16} color='#6B7280' />
             </View>
           </View>
 
           {/* Platinum Level - Locked */}
           <View style={styles.levelCard}>
             <View style={[styles.levelBadge, styles.platinumBadge]}>
-              <MaterialCommunityIcons name='diamond' size={28} color='#333' />
+              <PlatinumIcon/>
             </View>
             <View style={styles.levelInfo}>
               <Text style={styles.levelName}>Platinum</Text>
               <Text style={styles.levelDescription}>5000 more points to unlock</Text>
             </View>
             <View style={[styles.levelStatus, styles.locked]}>
-              <MaterialCommunityIcons name='lock' size={16} color='#999' />
+              <MaterialCommunityIcons name='lock' size={16} color='#6B7280' />
             </View>
           </View>
         </View>
