@@ -132,7 +132,7 @@ const nextConfig = {
       },
        {
         protocol: 'https',
-        hostname: 'un2x3-bucket.s3.us-east-2.amazonaws.com',
+        hostname: 'enatega-backend.s3.eu-north-1.amazonaws.com',
       },
       {
         protocol: 'https',
