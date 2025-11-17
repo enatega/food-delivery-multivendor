@@ -13,7 +13,7 @@ export default function OrderHistoryScreen() {
   const [page, setPage] = useState(1);
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const limit = 15;
+  const limit = 10;
 
   const { data, loading, fetchMore, networkStatus } = useQuery(ORDERS, {
     variables: { page, limit },
