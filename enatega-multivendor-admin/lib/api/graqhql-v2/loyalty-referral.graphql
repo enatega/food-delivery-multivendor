@@ -1,3 +1,20 @@
+################
+# Configuration
+################
+query FetchLoyaltyConfiguraion {
+  fetchLoyaltyConfiguration {
+    _id
+    pointsPerDollar
+  }
+}
+
+mutation SetLoyaltyConfiguration($input: LoyaltyConfigurationInput) {
+  setLoyaltyConfiguration(input: $input) {
+    _id
+    pointsPerDollar
+  }
+}
+
 ############
 # Level
 ############
@@ -152,5 +169,20 @@ mutation DeleteLoyaltyBreakdown($id: String!) {
     silver
     gold
     platinum
+  }
+}
+
+################
+# History
+################
+query FetchReferralLoyaltyHistory {
+  fetchReferralLoyaltyHistory {
+    _id
+    user_name
+    user_rank
+    type
+    level
+    value
+    createdAt
   }
 }

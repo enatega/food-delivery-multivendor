@@ -147,11 +147,10 @@ export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-                Customer Referral System
+                {loyaltyType === "Customer Loyalty Program" ? "Customer" : "Driver"} Referral System
               </h1>
               <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
-                Monitor loyalty growth and reward distribution across all
-                customer tiers.
+                Set rewards thresholds levels for {loyaltyType === "Customer Loyalty Program" ? " customer" : " driver"} referrals.
               </p>
             </div>
             <button

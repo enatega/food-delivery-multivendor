@@ -1,6 +1,9 @@
 'use client';
 
-import { useState} from 'react';
+import { useFetchReferralLoyaltyHistoryQuery } from '@/lib/graphql-generated';
+import DataTableColumnSkeleton from '@/lib/ui/useable-components/custom-skeletons/datatable.column.skeleton';
+import NoData from '@/lib/ui/useable-components/no-data';
+import { useState } from 'react';
 
 interface BreakdownRow {
   id: number;
@@ -13,6 +16,10 @@ interface BreakdownRow {
 }
 
 export default function LoyaltyAndReferralHistoryComponent() {
+  // API
+  const { data, loading } = useFetchReferralLoyaltyHistoryQuery();
+  const logs = data?.fetchReferralLoyaltyHistory || [];
+
   const [breakdowns] = useState<BreakdownRow[]>([
     {
       id: 1,
@@ -60,9 +67,6 @@ export default function LoyaltyAndReferralHistoryComponent() {
       last_purchase: '03-11-2025 17:00:00',
     },
   ]);
-
-
-
 
   return (
     <div className="m-3 p-6 border border-border rounded-2xl">
@@ -123,35 +127,78 @@ export default function LoyaltyAndReferralHistoryComponent() {
             </tr>
           </thead>
           <tbody>
-            {breakdowns.map((row, index) => (
-              <tr
-                key={row.id}
-                className={
-                  index !== breakdowns.length - 1
-                    ? 'border-b border-border'
-                    : ''
-                }
-              >
-                <td className="px-6 py-4 text-foreground text-sm">
-                  {row.customer_name}
-                </td>
-                <td className="px-6 py-4 text-foreground text-sm font-medium">
-                  {row.rank}
-                </td>
-                <td className="px-6 py-4 text-foreground text-sm font-medium">
-                  {row.total_points}
-                </td>
-                <td className="px-6 py-4 text-foreground text-sm font-medium">
-                  {row.type}
-                </td>
-                <td className="px-6 py-4 text-foreground text-sm font-medium">
-                  {row.tier}
-                </td>
-                <td className="px-6 py-4 text-foreground text-sm font-medium">
-                  {row.last_purchase}
-                </td>
-              </tr>
-            ))}
+            {loading ? (
+              <>
+                {new Array(5).fill(0).map((_, index) => (
+                  <tr key={index}>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <DataTableColumnSkeleton key={index} />
+                    </td>
+
+                    <td className="px-6 py-4 text-foreground text-sm">
+                      <DataTableColumnSkeleton key={index} />
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <DataTableColumnSkeleton key={index} />
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <DataTableColumnSkeleton key={index} />
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <DataTableColumnSkeleton key={index} />
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <DataTableColumnSkeleton key={index} />
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ) : !logs || logs?.length === 0 ? (
+              <NoData />
+            ) : (
+              logs.map((row, index) => {
+                if (!row) return;
+
+                return (
+                  <tr
+                    key={row._id}
+                    className={
+                      index !== breakdowns.length - 1
+                        ? 'border-b border-border'
+                        : ''
+                    }
+                  >
+                    <td className="px-6 py-4 text-foreground text-sm">
+                      {row.user_name}
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      {row.user_rank}
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      {row.value}
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      {row.type}
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      {row.level}
+                    </td>
+                    <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      {new Date(parseInt(row.createdAt)).toLocaleString(
+                        'en-US',
+                        {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        }
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

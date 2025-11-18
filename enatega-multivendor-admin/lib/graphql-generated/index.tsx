@@ -821,6 +821,16 @@ export type LoyaltyBreakdownInput = {
   silver: Scalars['Float']['input'];
 };
 
+export type LoyaltyConfiguration = {
+  __typename?: 'LoyaltyConfiguration';
+  _id: Scalars['String']['output'];
+  pointsPerDollar: Scalars['Int']['output'];
+};
+
+export type LoyaltyConfigurationInput = {
+  pointsPerDollar: Scalars['Int']['input'];
+};
+
 export type LoyaltyLevel = {
   __typename?: 'LoyaltyLevel';
   _id: Scalars['String']['output'];
@@ -846,6 +856,17 @@ export type LoyaltyTier = {
 export type LoyaltyTierInput = {
   name: Scalars['String']['input'];
   points?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type LoyalyReferralHistory = {
+  __typename?: 'LoyalyReferralHistory';
+  _id: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  level: Scalars['Int']['output'];
+  type: Scalars['String']['output'];
+  user_name: Scalars['String']['output'];
+  user_rank: Scalars['String']['output'];
+  value: Scalars['Int']['output'];
 };
 
 export type Message = {
@@ -1001,6 +1022,7 @@ export type Mutation = {
   sendNotificationUser: Scalars['String']['output'];
   sendOtpToEmail: Otp;
   sendOtpToPhoneNumber: Otp;
+  setLoyaltyConfiguration?: Maybe<LoyaltyConfiguration>;
   setVersions?: Maybe<Scalars['Boolean']['output']>;
   toggleAvailability: Restaurant;
   toggleAvailablity: Rider;
@@ -1761,6 +1783,11 @@ export type MutationSendOtpToPhoneNumberArgs = {
 };
 
 
+export type MutationSetLoyaltyConfigurationArgs = {
+  input: InputMaybe<LoyaltyConfigurationInput>;
+};
+
+
 export type MutationSetVersionsArgs = {
   customerAppVersion: InputMaybe<AppTypeInput>;
   restaurantAppVersion: InputMaybe<AppTypeInput>;
@@ -2308,10 +2335,12 @@ export type Query = {
   fetchCategoryDetailsByStoreIdForMobile?: Maybe<Array<Maybe<CategoryDetailsResponseForMobile>>>;
   fetchLoyaltyBreakdownById?: Maybe<LoyaltyBreakdown>;
   fetchLoyaltyBreakdowns?: Maybe<Array<Maybe<LoyaltyBreakdown>>>;
+  fetchLoyaltyConfiguration?: Maybe<LoyaltyConfiguration>;
   fetchLoyaltyLevelById?: Maybe<LoyaltyLevel>;
   fetchLoyaltyLevelsByUserType?: Maybe<Array<Maybe<LoyaltyLevel>>>;
   fetchLoyaltyTierById?: Maybe<LoyaltyTier>;
   fetchLoyaltyTiers?: Maybe<Array<Maybe<LoyaltyTier>>>;
+  fetchReferralLoyaltyHistory?: Maybe<Array<Maybe<LoyalyReferralHistory>>>;
   foodByCategory: Array<Food>;
   foodByIds?: Maybe<Array<CartFood>>;
   foods: Array<Food>;
@@ -3287,6 +3316,7 @@ export type RiderInput = {
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
+  referralCode?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
   vehicleDetails?: InputMaybe<VehicleDetailsInput>;
   vehicleType?: InputMaybe<Scalars['String']['input']>;
@@ -3732,6 +3762,7 @@ export type UserInput = {
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   phoneIsVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  referralCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum UserTypeEnum {
@@ -3912,6 +3943,18 @@ export type EditOptionInput = {
   restaurant: Scalars['String']['input'];
 };
 
+export type FetchLoyaltyConfiguraionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchLoyaltyConfiguraionQuery = { __typename?: 'Query', fetchLoyaltyConfiguration?: { __typename?: 'LoyaltyConfiguration', _id: string, pointsPerDollar: number } | null | undefined };
+
+export type SetLoyaltyConfigurationMutationVariables = Exact<{
+  input: InputMaybe<LoyaltyConfigurationInput>;
+}>;
+
+
+export type SetLoyaltyConfigurationMutation = { __typename?: 'Mutation', setLoyaltyConfiguration?: { __typename?: 'LoyaltyConfiguration', _id: string, pointsPerDollar: number } | null | undefined };
+
 export type FetchLoyaltyLevelByIdQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
@@ -4016,7 +4059,86 @@ export type DeleteLoyaltyBreakdownMutationVariables = Exact<{
 
 export type DeleteLoyaltyBreakdownMutation = { __typename?: 'Mutation', deleteLoyaltyBreakdown?: { __typename?: 'LoyaltyBreakdown', _id: string, min: number, max: number, bronze: number, silver: number, gold: number, platinum: number } | null | undefined };
 
+export type FetchReferralLoyaltyHistoryQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type FetchReferralLoyaltyHistoryQuery = { __typename?: 'Query', fetchReferralLoyaltyHistory?: Array<{ __typename?: 'LoyalyReferralHistory', _id: string, user_name: string, user_rank: string, type: string, level: number, value: number, createdAt: string } | null | undefined> | null | undefined };
+
+
+export const FetchLoyaltyConfiguraionDocument = gql`
+    query FetchLoyaltyConfiguraion {
+  fetchLoyaltyConfiguration {
+    _id
+    pointsPerDollar
+  }
+}
+    `;
+
+/**
+ * __useFetchLoyaltyConfiguraionQuery__
+ *
+ * To run a query within a React component, call `useFetchLoyaltyConfiguraionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchLoyaltyConfiguraionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchLoyaltyConfiguraionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchLoyaltyConfiguraionQuery(baseOptions?: Apollo.QueryHookOptions<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>(FetchLoyaltyConfiguraionDocument, options);
+      }
+export function useFetchLoyaltyConfiguraionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>(FetchLoyaltyConfiguraionDocument, options);
+        }
+export function useFetchLoyaltyConfiguraionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>(FetchLoyaltyConfiguraionDocument, options);
+        }
+export type FetchLoyaltyConfiguraionQueryHookResult = ReturnType<typeof useFetchLoyaltyConfiguraionQuery>;
+export type FetchLoyaltyConfiguraionLazyQueryHookResult = ReturnType<typeof useFetchLoyaltyConfiguraionLazyQuery>;
+export type FetchLoyaltyConfiguraionSuspenseQueryHookResult = ReturnType<typeof useFetchLoyaltyConfiguraionSuspenseQuery>;
+export type FetchLoyaltyConfiguraionQueryResult = Apollo.QueryResult<FetchLoyaltyConfiguraionQuery, FetchLoyaltyConfiguraionQueryVariables>;
+export const SetLoyaltyConfigurationDocument = gql`
+    mutation SetLoyaltyConfiguration($input: LoyaltyConfigurationInput) {
+  setLoyaltyConfiguration(input: $input) {
+    _id
+    pointsPerDollar
+  }
+}
+    `;
+export type SetLoyaltyConfigurationMutationFn = Apollo.MutationFunction<SetLoyaltyConfigurationMutation, SetLoyaltyConfigurationMutationVariables>;
+
+/**
+ * __useSetLoyaltyConfigurationMutation__
+ *
+ * To run a mutation, you first call `useSetLoyaltyConfigurationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetLoyaltyConfigurationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setLoyaltyConfigurationMutation, { data, loading, error }] = useSetLoyaltyConfigurationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetLoyaltyConfigurationMutation(baseOptions?: Apollo.MutationHookOptions<SetLoyaltyConfigurationMutation, SetLoyaltyConfigurationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetLoyaltyConfigurationMutation, SetLoyaltyConfigurationMutationVariables>(SetLoyaltyConfigurationDocument, options);
+      }
+export type SetLoyaltyConfigurationMutationHookResult = ReturnType<typeof useSetLoyaltyConfigurationMutation>;
+export type SetLoyaltyConfigurationMutationResult = Apollo.MutationResult<SetLoyaltyConfigurationMutation>;
+export type SetLoyaltyConfigurationMutationOptions = Apollo.BaseMutationOptions<SetLoyaltyConfigurationMutation, SetLoyaltyConfigurationMutationVariables>;
 export const FetchLoyaltyLevelByIdDocument = gql`
     query FetchLoyaltyLevelById($id: String!) {
   fetchLoyaltyLevelById(id: $id) {
@@ -4610,3 +4732,48 @@ export function useDeleteLoyaltyBreakdownMutation(baseOptions?: Apollo.MutationH
 export type DeleteLoyaltyBreakdownMutationHookResult = ReturnType<typeof useDeleteLoyaltyBreakdownMutation>;
 export type DeleteLoyaltyBreakdownMutationResult = Apollo.MutationResult<DeleteLoyaltyBreakdownMutation>;
 export type DeleteLoyaltyBreakdownMutationOptions = Apollo.BaseMutationOptions<DeleteLoyaltyBreakdownMutation, DeleteLoyaltyBreakdownMutationVariables>;
+export const FetchReferralLoyaltyHistoryDocument = gql`
+    query FetchReferralLoyaltyHistory {
+  fetchReferralLoyaltyHistory {
+    _id
+    user_name
+    user_rank
+    type
+    level
+    value
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useFetchReferralLoyaltyHistoryQuery__
+ *
+ * To run a query within a React component, call `useFetchReferralLoyaltyHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchReferralLoyaltyHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchReferralLoyaltyHistoryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchReferralLoyaltyHistoryQuery(baseOptions?: Apollo.QueryHookOptions<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>(FetchReferralLoyaltyHistoryDocument, options);
+      }
+export function useFetchReferralLoyaltyHistoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>(FetchReferralLoyaltyHistoryDocument, options);
+        }
+export function useFetchReferralLoyaltyHistorySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>(FetchReferralLoyaltyHistoryDocument, options);
+        }
+export type FetchReferralLoyaltyHistoryQueryHookResult = ReturnType<typeof useFetchReferralLoyaltyHistoryQuery>;
+export type FetchReferralLoyaltyHistoryLazyQueryHookResult = ReturnType<typeof useFetchReferralLoyaltyHistoryLazyQuery>;
+export type FetchReferralLoyaltyHistorySuspenseQueryHookResult = ReturnType<typeof useFetchReferralLoyaltyHistorySuspenseQuery>;
+export type FetchReferralLoyaltyHistoryQueryResult = Apollo.QueryResult<FetchReferralLoyaltyHistoryQuery, FetchReferralLoyaltyHistoryQueryVariables>;

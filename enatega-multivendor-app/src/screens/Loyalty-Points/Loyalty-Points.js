@@ -285,7 +285,7 @@ function LoyaltyPoints(props) {
     },
     loyaltySection: {
       marginHorizontal: 16,
-      marginBottom: 40
+      marginBottom: 40,
     },
     sectionTitle: {
       fontSize: 18,
@@ -300,7 +300,6 @@ function LoyaltyPoints(props) {
     },
     levelCard: {
       backgroundColor: '#F8F9FA',
-      width: 361,
       height: 66,
       borderWidth: 1,
       borderRadius: 8,

@@ -127,10 +127,10 @@ export default function LoyaltyAndReferralTierSystemComponent() {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-                Customer Tier System
+                Tier System
               </h1>
               <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
-                Monitor customer tier system
+                Set tier thresholds for customer/driver against their earned points
               </p>
             </div>
             <button

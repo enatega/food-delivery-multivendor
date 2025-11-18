@@ -122,7 +122,14 @@
         {
           "userTrackingPermission": "Allow this app to collect app-related data that can be used for tracking you or your device."
         }
-      ]
+      ],
+       [
+      "@config-plugins/react-native-branch",
+      {
+        "apiKey": "key_live_be3dN5e3ugtnbqt3W0zIvphjFqk8YBws",
+        "iosAppDomain": "awesome-alternate.app.link"
+      }
+    ]
     ],
     "extra": {
       "eas": {

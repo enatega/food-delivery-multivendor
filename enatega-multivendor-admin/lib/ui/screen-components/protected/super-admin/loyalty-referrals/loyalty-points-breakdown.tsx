@@ -19,12 +19,14 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import useToast from '@/lib/hooks/useToast';
 import NoData from '@/lib/ui/useable-components/no-data';
 import DataTableColumnSkeleton from '@/lib/ui/useable-components/custom-skeletons/datatable.column.skeleton';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 
 export default function LoyaltyAndReferralBreakdownSectionComponent() {
   const { breakdownFormVisible, setBreakdownFormVisible, setLoyaltyData } =
     useLoyaltyContext();
   const { showToast } = useToast();
+  const {CURRENCY_SYMBOL} = useConfiguration()
 
   // States
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -84,7 +86,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-1">
-              Loyalty Points Breakdown
+              Customer Loyalty Points Breakdown
             </h2>
             <p className="text-muted-foreground text-sm">
               See how spending translates into reward points.
@@ -106,10 +108,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
             <thead>
               <tr className="border-b border-border bg-[#F4F4F5]">
                 <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
-                  Min
-                </th>
-                <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
-                  Max
+                  Spending Range ({CURRENCY_SYMBOL})
                 </th>
                 <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
                   Bronze Pts
@@ -135,9 +134,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
                         <DataTableColumnSkeleton key={index} />
                       </td>
 
-                      <td className="px-6 py-4 text-foreground text-sm">
-                        <DataTableColumnSkeleton key={index} />
-                      </td>
+                   
                       <td className="px-6 py-4 text-foreground text-sm">
                         <DataTableColumnSkeleton key={index} />
                       </td>
@@ -173,11 +170,9 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
                       }
                     >
                       <td className="px-6 py-4 text-foreground text-sm">
-                        {row.min}
+                        {CURRENCY_SYMBOL}{row.min} - {CURRENCY_SYMBOL}{row.max}
                       </td>
-                      <td className="px-6 py-4 text-foreground text-sm">
-                        {row.max}
-                      </td>
+                   
                       <td className="px-6 py-4 text-foreground text-sm font-medium">
                         {row.bronze}
                       </td>

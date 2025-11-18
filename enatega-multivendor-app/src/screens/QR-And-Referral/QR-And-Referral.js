@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useContext, useState } from 'react'
+import React, { useLayoutEffect, useContext, useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, Share, Clipboard, StyleSheet, Alert } from 'react-native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -9,6 +9,7 @@ import navigationService from '../../routes/navigationService'
 // import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
 import { Ionicons } from '@expo/vector-icons'
+import { createReferralLink } from '../../utils/branch.io'
 
 function QRAndReferral(props) {
   const themeContext = useContext(ThemeContext)
@@ -17,10 +18,19 @@ function QRAndReferral(props) {
   // States
 
   const [activeTab, setActiveTab] = useState('myQR')
+  const [referralLink, setReferralLink] = useState('')
   const referralCode = 'F123456'
-  const referralLink = 'https://referral.app/F123456'
 
   // Handlers
+  const init = async () => {
+    const _referralLink = await createReferralLink(referralCode, {
+      name: 'John Doe'
+    })
+
+    console.log({ _referralLink })
+
+    setReferralLink(_referralLink.url)
+  }
   const handleCopyCode = async () => {
     Clipboard.setString(referralCode)
     Alert.alert('Copied', 'Referral code copied to clipboard')
@@ -85,6 +95,10 @@ function QRAndReferral(props) {
     })
   }, [props?.navigation])
 
+  useEffect(() => {
+    init()
+  }, [])
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='dark-content' backgroundColor='#ffffff' />
@@ -105,9 +119,7 @@ function QRAndReferral(props) {
           <>
             {/* QR Code Section */}
             <View style={styles.qrSection}>
-              <View style={styles.qrContainer}>
-                <QRCode value={referralLink} size={180} color='#000000' backgroundColor='#ffffff' quietZone={10} />
-              </View>
+              <View style={styles.qrContainer}>{referralLink && <QRCode value={referralLink} size={180} color='#000000' backgroundColor='#ffffff' quietZone={10} />}</View>
             </View>
 
             {/* Invite & Earn Section */}
