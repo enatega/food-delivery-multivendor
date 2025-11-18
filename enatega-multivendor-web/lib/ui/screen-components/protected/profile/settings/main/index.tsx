@@ -4,7 +4,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 // Api
 import { DEACTIVATE_USER, GET_USER_PROFILE } from "@/lib/api/graphql";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, ApolloError } from "@apollo/client";
+
 // Components
 import CustomButton from "@/lib/ui/useable-components/button";
 import CustomInputSwitch from "@/lib/ui/useable-components/custom-input-switch";
@@ -97,25 +98,54 @@ export default function SettingsMain() {
     router.push("/");
   };
 
-  const handleConfirmDelete = () => {
-    setIsDeleting(true);
-    // Simulate API call
-    setTimeout(() => {
-      // Actual Mutation Delete Logic implement here
-      Deactivate({
-        variables: {
-          isActive: false,
-          email: profileData?.profile?.email,
-        },
-      });
-      // Clear auth token and local storage
+
+
+
+const handleConfirmDelete = async () => {
+  setIsDeleting(true);
+
+  try {
+    const result = await Deactivate({
+      variables: {
+        isActive: false,
+        email: profileData?.profile?.email,
+      },
+    });
+
+    // Check if mutation returned data
+    if (result.data?.Deactivate) {
+      // Success: log out user
       setAuthToken("");
       localStorage.clear();
-      setIsDeleting(false);
       setDeleteAccount(false);
       router.push("/");
-    }, 1500);
-  };
+
+      showToast({
+        type: "success",
+        title: "Success",
+        message: "Your account has been deleted successfully",
+      });
+    }
+  } catch (err: unknown) {
+    // Handle unexpected errors
+    let errorMessage = "Unable to delete account";
+    if (err instanceof ApolloError) {
+      errorMessage = err.message;
+    } else if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+
+    showToast({
+      type: "error",
+      title: "Error",
+      message: errorMessage,
+    });
+  } finally {
+    setIsDeleting(false);
+  }
+};
+
+  
 
   // Close delete dialog
   const handleCancelDelete = useCallback(() => {
