@@ -88,7 +88,7 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
     latitude: location.latitude || null
   }
 
-  if (['grocery', 'restaurant'].includes(queryType)) {
+  if (['grocery', 'restaurant','topPicks'].includes(queryType)) {
     queryVariables.shopType = selectedType || null
     queryVariables.ip = null
   }
