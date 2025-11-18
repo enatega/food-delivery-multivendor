@@ -17,7 +17,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 
 function Login(props) {
-  const { setEmail, password, setPassword, emailError, passwordError, registeredEmail, loading, loginLoading, loginAction, currentTheme, showPassword, setShowPassword, checkEmailExist, emailRef, themeContext } = useLogin()
+  const { setEmail, password, setPassword, emailError, passwordError, registeredEmail, loading, loginLoading, loginAction, currentTheme, showPassword, setShowPassword, checkEmailExist, emailRef, themeContext, handleSetEmail } = useLogin()
   const { t } = useTranslation()
   const headerHeight = useHeaderHeight()
   useLayoutEffect(() => {
@@ -73,7 +73,7 @@ function Login(props) {
                         // value={setEmail}
                         // defaultValue='demo-customer@enatega.com'
                         defaultValue=''
-                        onChangeText={(e) => setEmail(e.toLowerCase().trim())}
+                        onChangeText={(e) => handleSetEmail(e.toLowerCase().trim())}
                       />
                       {emailError !== null && (
                         <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
@@ -114,7 +114,7 @@ function Login(props) {
               </View>
 
               <View>
-                <TouchableOpacity onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} activeOpacity={0.7} style={styles(currentTheme).btn}>
+                <TouchableOpacity onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} activeOpacity={0.7} style={styles(currentTheme).btn} disabled={loading || loginLoading}>
                   <TextDefault H4 textColor={currentTheme.black} bold>
                     {loading || loginLoading ? <Spinner backColor='transparent' spinnerColor={currentTheme.white} size='small' /> : registeredEmail ? t('loginBtn') : t('continueBtn')}
                   </TextDefault>
