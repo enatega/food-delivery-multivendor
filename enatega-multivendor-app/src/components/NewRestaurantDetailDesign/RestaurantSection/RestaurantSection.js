@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import styles from './styles'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 import { useTranslation } from 'react-i18next'
+import { isOpen } from '../../../utils/customFunctions'
 
 const CARD_SPACING = scale(10)
 
@@ -223,9 +224,9 @@ const RestaurantSections = ({
   }, [categories.data])
 
   // Check if restaurant is closed
-  const isRestaurantOpen = restaurant?.isOpen
+  // const isRestaurantOpen = restaurant?.isOpe
   const isAvailable = restaurant?.isAvailable
-  const isRestaurantClosed = !isRestaurantOpen || !isAvailable
+  const isRestaurantClosed = !isAvailable || !isOpen(restaurant)
 
   const handleItemClick = (item) => {
     if (isRestaurantClosed) {
