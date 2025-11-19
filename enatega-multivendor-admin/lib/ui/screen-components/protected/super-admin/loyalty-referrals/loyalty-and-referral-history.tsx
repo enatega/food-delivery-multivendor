@@ -3,6 +3,7 @@
 import { useFetchReferralLoyaltyHistoryQuery } from '@/lib/graphql-generated';
 import DataTableColumnSkeleton from '@/lib/ui/useable-components/custom-skeletons/datatable.column.skeleton';
 import NoData from '@/lib/ui/useable-components/no-data';
+import { toTextCase } from '@/lib/utils/methods';
 import { useState } from 'react';
 
 interface BreakdownRow {
@@ -172,7 +173,7 @@ export default function LoyaltyAndReferralHistoryComponent() {
                       {row.user_name}
                     </td>
                     <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      {row.user_rank}
+                      {toTextCase(row.user_rank,"title")}
                     </td>
                     <td className="px-6 py-4 text-foreground text-sm font-medium">
                       {row.value}

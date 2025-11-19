@@ -1,5 +1,5 @@
-import { useState, useLayoutEffect, useContext } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, SafeAreaView, FlatList } from 'react-native'
+import { useLayoutEffect, useContext } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, FlatList } from 'react-native'
 import { MaterialCommunityIcons, Feather, Ionicons, Fontisto } from '@expo/vector-icons'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -9,6 +9,11 @@ import { scale } from '../../utils/scaling'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useNavigation } from '@react-navigation/native'
+import { useQuery } from '@apollo/client'
+import { FETCH_LOYALTY_CONFIGURATIon, FETCH_LOYALTY_REFERRAL_HISTORY } from '../../apollo/queries'
+import { useUserContext } from '../../context/User'
+import { toTitleCase } from '../../utils/string-transformer'
+import { getReferralIcon } from '../../utils/loyalty-helper'
 
 const activities = [
   {
@@ -78,14 +83,30 @@ function ReferralAndLoyaltyRewards(props) {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { profile } = useUserContext()
+
+  // API
+  const { data } = useQuery(FETCH_LOYALTY_CONFIGURATIon, { fetchPolicy: 'cache-and-network' })
+  const { data: loyaltyActivityData } = useQuery(FETCH_LOYALTY_REFERRAL_HISTORY, {
+    variables: {
+      filter: {
+        userId: profile?._id
+      }
+    },
+    fetchPolicy: 'cache-and-network'
+  })
+  const loyalty_configuration = data?.fetchLoyaltyConfiguration
+  const loyaltyActivity = loyaltyActivityData?.fetchReferralLoyaltyHistory
 
   // Handlers
-  const renderActivityIcon = (iconType) => {
+  const renderActivityIcon = (activity) => {
+    const { source } = activity
+
     const iconProps = { size: 20, color: '#059669' }
-    switch (iconType) {
-      case 'shopping':
+    switch (source) {
+      case 'order':
         return <Feather name='shopping-cart' {...iconProps} />
-      case 'share':
+      case 'signup':
         return <MaterialCommunityIcons name='trending-up' {...iconProps} />
       case 'gift':
         return <Ionicons name='gift' size={20} color='#dc2626' />
@@ -95,13 +116,35 @@ function ReferralAndLoyaltyRewards(props) {
         return <Feather name='shopping-cart' {...iconProps} />
     }
   }
+  const generateTitle = (activity) => {
+    const { source, value } = activity
+
+    switch (source) {
+      case 'signup':
+        return `+${value} pts from referral`
+      case 'order':
+        return `+${value} pts from new order`
+    }
+  }
+  const generateDescription = (activity) => {
+    const { source, triggeredBy, level } = activity
+
+    switch (source) {
+      case 'signup':
+        return `${triggeredBy} signed up using ${level === 1 ? "your" : `level ${level}`} referral`
+      case 'order':
+        return ''
+    }
+  }
+
+  console.log({loyaltyActivity})
 
   const renderActivity = ({ item: activity }) => (
     <View style={styles.activityItem}>
-      <View style={styles.activityIcon}>{renderActivityIcon(activity.icon)}</View>
+      <View style={styles.activityIcon}>{renderActivityIcon(activity)}</View>
       <View style={styles.activityContent}>
-        <Text style={styles.activityTitle}>{activity.title}</Text>
-        <Text style={styles.activityDesc}>{activity.description}</Text>
+        <Text style={styles.activityTitle}>{generateTitle(activity)}</Text>
+        <Text style={styles.activityDesc}>{generateDescription(activity)}</Text>
       </View>
       {activity.id === '2' && (
         <View style={styles.avatarGroup}>
@@ -115,7 +158,7 @@ function ReferralAndLoyaltyRewards(props) {
       )}
       <View style={styles.activityMeta}>
         <Feather name='clock' size={12} color='#9ca3af' />
-        <Text style={styles.activityTime}>{activity.time}</Text>
+        <Text style={styles.activityTime}>{new Date(parseInt(activity.createdAt)).toLocaleString()}</Text>
       </View>
     </View>
   )
@@ -177,18 +220,19 @@ function ReferralAndLoyaltyRewards(props) {
               <View>
                 <Text style={styles.cardTitle}>Loyalty Points</Text>
                 <View style={styles.tier}>
-                  <Text style={styles.tierText}>🏅 Gold</Text>
+                  <Text>{getReferralIcon(profile?.tier?.current_tier_name)}</Text>
+                  <Text style={styles.tierText}>{toTitleCase(profile?.tier?.current_tier_name)}</Text>
                 </View>
               </View>
             </View>
             <View style={styles.pointsContainer}>
               <View style={styles.pointsBadge}>
                 <Text style={styles.pointsText}>Points</Text>
-                <Text style={styles.pointsValue}>1900pts</Text>
+                <Text style={styles.pointsValue}>{loyalty_configuration?.pointsPerDollar}pts</Text>
               </View>
               <Fontisto name='arrow-swap' color='#293D34' size={15} style={{ marginTop: 4 }} />
               <View style={styles.pointsBadge}>
-                <Text style={styles.pointsValue}>19 $</Text>
+                <Text style={styles.pointsValue}>1$</Text>
               </View>
             </View>
           </View>
@@ -196,14 +240,16 @@ function ReferralAndLoyaltyRewards(props) {
           {/* Progress Section */}
           <View style={styles.progressContainer}>
             <Text style={styles.progressLabel}>
-              <Feather name='database' /> 100 points until Gold
+              <Feather name='database' /> {Math.abs(profile?.tier?.current_earned_points - profile?.tier.next_tier_points)} points until {toTitleCase(profile?.tier?.next_tier_name)}
             </Text>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '95%' }]} />
             </View>
             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-              <Text style={styles.progressText}>Gold</Text>
-              <Text style={styles.progressText}>1900/2000</Text>
+              <Text style={styles.progressText}>{toTitleCase(profile?.tier?.next_tier_name)}</Text>
+              <Text style={styles.progressText}>
+                {profile?.tier?.current_earned_points}/{profile?.tier?.next_tier_points}
+              </Text>
             </View>
           </View>
         </View>
@@ -247,7 +293,7 @@ function ReferralAndLoyaltyRewards(props) {
         </View>
       </View>
       <View style={{ height: 1, width: 'auto', backgroundColor: '#E5E7EB' }} />
-      <FlatList data={activities} renderItem={renderActivity} keyExtractor={(item) => item.id} scrollEnabled={true} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }} />
+      <FlatList data={loyaltyActivity} renderItem={renderActivity} keyExtractor={(item) => item._id} scrollEnabled={true} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }} />
     </SafeAreaView>
   )
 }
@@ -312,7 +358,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 6,
     alignSelf: 'flex-start',
-    marginTop: 4
+    marginTop: 4,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   tierText: {
     fontSize: 12,

@@ -175,8 +175,10 @@ mutation DeleteLoyaltyBreakdown($id: String!) {
 ################
 # History
 ################
-query FetchReferralLoyaltyHistory {
-  fetchReferralLoyaltyHistory {
+query FetchReferralLoyaltyHistory(
+  $filter: FetchLoyaltyReferralHistoryFilterInput
+) {
+  fetchReferralLoyaltyHistory(filter: $filter) {
     _id
     user_name
     user_rank
