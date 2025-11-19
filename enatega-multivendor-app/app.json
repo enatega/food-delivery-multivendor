@@ -80,15 +80,22 @@
       "intentFilters": [
         {
           "action": "android.intent.action.VIEW",
+          "data": [{ "scheme": "whatsapp" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "android.intent.action.VIEW",
           "data": [
             {
-              "scheme": "whatsapp"
+              "scheme": "https",
+              "host": "390ag.app.link",
+              "pathPrefix": "/"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
-        "adaptiveIcon": {
+      "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#000000"
       }
@@ -123,13 +130,13 @@
           "userTrackingPermission": "Allow this app to collect app-related data that can be used for tracking you or your device."
         }
       ],
-       [
-      "@config-plugins/react-native-branch",
-      {
-        "apiKey": "key_live_be3dN5e3ugtnbqt3W0zIvphjFqk8YBws",
-        "iosAppDomain": "awesome-alternate.app.link"
-      }
-    ]
+      [
+        "@config-plugins/react-native-branch",
+        {
+          "apiKey": "key_live_be3dN5e3ugtnbqt3W0zIvphjFqk8YBws",
+          "iosAppDomain": "awesome-alternate.app.link"
+        }
+      ]
     ],
     "extra": {
       "eas": {

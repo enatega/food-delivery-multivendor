@@ -345,6 +345,7 @@ export const profile = `
               selected
             }
             favourite
+            referralCode
           }
         }`
 

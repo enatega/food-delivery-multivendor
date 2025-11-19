@@ -10,20 +10,22 @@ import navigationService from '../../routes/navigationService'
 import QRCode from 'react-native-qrcode-svg'
 import { Ionicons } from '@expo/vector-icons'
 import { createReferralLink } from '../../utils/branch.io'
+import { useUserContext } from '../../context/User'
 
 function QRAndReferral(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const {profile} = useUserContext()
 
   // States
 
   const [activeTab, setActiveTab] = useState('myQR')
   const [referralLink, setReferralLink] = useState('')
-  const referralCode = 'F123456'
+
 
   // Handlers
   const init = async () => {
-    const _referralLink = await createReferralLink(referralCode, {
+    const _referralLink = await createReferralLink(profile?.referralCode, {
       name: 'John Doe'
     })
 
@@ -32,14 +34,14 @@ function QRAndReferral(props) {
     setReferralLink(_referralLink.url)
   }
   const handleCopyCode = async () => {
-    Clipboard.setString(referralCode)
+    Clipboard.setString(profile?.referralCode)
     Alert.alert('Copied', 'Referral code copied to clipboard')
   }
 
   const handleShareLink = async () => {
     try {
       await Share.share({
-        message: `Join using my referral code: ${referralCode}\n${referralLink}`,
+        message: `Join using my referral code: ${profile?.referralCode}\n${referralLink}`,
         title: 'Share Referral Code'
       })
     } catch (error) {
@@ -131,7 +133,7 @@ function QRAndReferral(props) {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.codeButton} onPress={handleCopyCode}>
                   <Ionicons name='document' size={18} color='#000' />
-                  <Text style={styles.codeButtonText}>{referralCode}</Text>
+                  <Text style={styles.codeButtonText}>{profile?.referralCode}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.shareButton} onPress={handleShareLink}>

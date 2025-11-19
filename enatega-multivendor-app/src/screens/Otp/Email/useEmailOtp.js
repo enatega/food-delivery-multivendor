@@ -15,6 +15,7 @@ import AuthContext from '../../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
 import useEnvVars from '../../../../environment'
+import { getStoredReferralCode } from '../../../utils/branch.io'
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -115,14 +116,19 @@ const useEmailOtp = (isPhoneExists) => {
       if (Device.isDevice) {
         try {
           const { status } = await Notifications.requestPermissionsAsync()
-        if (status === 'granted') {
-          notificationToken = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data
-        }
+          if (status === 'granted') {
+            notificationToken = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data
+          }
         } catch (error) {
           console.log('Error catched in notificationToken:', error)
         }
       }
       console.log('mutation variables: create user', isPhoneExists)
+
+      const {code: referralCode} = await getStoredReferralCode()
+
+      
+    
       await mutateUser({
         variables: {
           phone: user?.phone ?? '',
@@ -132,7 +138,8 @@ const useEmailOtp = (isPhoneExists) => {
           picture: '',
           notificationToken: notificationToken,
           emailIsVerified: true,
-          isPhoneExists: isPhoneExists || false
+          isPhoneExists: isPhoneExists || false,
+          ...(referralCode && { referralCode: referralCode })
         }
       })
     } catch (error) {

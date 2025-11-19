@@ -192,9 +192,9 @@ export const waitForBranchReady = (timeout = 5000) => {
 // Store referral code in AsyncStorage (ONLY after validation)
 export const storeReferralCode = async (code, source = 'branch_link') => {
   try {
-    if (code && code.length >= 5 && code.length <= 8) {
+    if (code && code.length >= 5) {
       const referralData = {
-        code: code.toUpperCase(),
+        code: code,
         source: source,
         timestamp: new Date().toISOString()
       }
