@@ -294,7 +294,7 @@ const SearchOverlay = ({
               textColor={currentTheme.fontSecondColor}
               style={{ fontSize: scale(16) }}
             >
-              {search ? t('noResultsFound') : t('searchForFood')}
+              {search ? t('noResults') : t('searchForFood')}
             </TextDefault>
           </View>
         )}
