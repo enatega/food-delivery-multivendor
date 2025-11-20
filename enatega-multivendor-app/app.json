@@ -74,6 +74,7 @@
         }
       },
       "permissions": ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.FOREGROUND_SERVICE", "com.google.android.gms.permission.AD_ID"],
+      "icon": "./assets/appIcon.png",
       "queries": {
         "packages": ["com.whatsapp", "com.whatsapp.w4b"]
       },
