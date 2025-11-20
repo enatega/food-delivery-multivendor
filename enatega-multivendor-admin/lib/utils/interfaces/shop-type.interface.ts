@@ -92,3 +92,15 @@ export interface IShopTypesTableHeaderProps {
   globalFilterValue: string;
   onGlobalFilterChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
+
+export interface IUserShopTypeHookProps {
+  invoke_now?: boolean;
+  transform_to_dropdown_list?: boolean;
+}
+
+export interface IUseShopTypesHookResponse {
+  data: IGetShopTypesData | undefined | null;
+  dropdownList: IDropdownSelectItem[] | undefined
+  fetchShopTypes: () => void;
+  loading: boolean;
+}

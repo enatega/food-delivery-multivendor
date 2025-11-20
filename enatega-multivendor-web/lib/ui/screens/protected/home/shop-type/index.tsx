@@ -10,85 +10,84 @@ import { useParams } from "next/navigation";
 export default function ShopTypeScreen() {
     const params = useParams();
     const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-//   const t = useTranslations();
-//   const limit = 10;
+  const t = useTranslations();
+  const limit = 10;
 
-//   const [page, setPage] = useState(1);
-//   const [items, setItems] = useState<any[]>([]);
-//   const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(true);
 
-//   const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(
-//     true,
-//     page,
-//     limit,
-//     "restaurant"
-//   );
+  const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(
+    true,
+    page,
+    limit,
+    slug
+  );
 
-//   const { loading: cuisinesloading, restaurantCuisinesData } = useGetCuisines();
+//   const { loading: cuisinesloading, restaurantCuisinesData } = useGetCuisines(true, slug);
 
-//   // ✅ Initial load
-//   useEffect(() => {
-//     if (page === 1 && queryData?.length) {
-//       setItems(queryData);
-//     }
-//   }, [queryData, page]);
+  // ✅ Initial load
+  useEffect(() => {
+    if (page === 1 && queryData?.length) {
+      setItems(queryData);
+    }
+  }, [queryData, page]);
 
-//   // ✅ Load more
-//   const loadMore = useCallback(async () => {
-//     if (!hasMore || loading) return;
+  // ✅ Load more
+  const loadMore = useCallback(async () => {
+    if (!hasMore || loading) return;
 
-//     try {
-//       const res = await fetchMore({
-//         variables: { page: page + 1, limit, shopType: "restaurant" },
-//       });
+    try {
+      const res = await fetchMore({
+        variables: { page: page + 1, limit, shopType: slug },
+      });
 
-//       const newItems = res.data?.nearByRestaurantsPreview?.restaurants ?? [];
+      const newItems = res.data?.nearByRestaurantsPreview?.restaurants ?? [];
 
-//       if (newItems.length > 0) {
-//         setItems((prev) => [...prev, ...newItems]);
-//         setPage((p) => p + 1);
-//       } else {
-//         setHasMore(false);
-//       }
-//     } catch (err) {
-//       console.error("❌ Error fetching more:", err);
-//     }
-//   }, [page, hasMore, fetchMore, loading]);
+      if (newItems.length > 0) {
+        setItems((prev) => [...prev, ...newItems]);
+        setPage((p) => p + 1);
+      } else {
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error("❌ Error fetching more:", err);
+    }
+  }, [page, hasMore, fetchMore, loading]);
 
-//   // ✅ Scroll listener (your tested one)
-//   useEffect(() => {
-//     if (!fetchMore || !hasMore) return;
+  // ✅ Scroll listener (your tested one)
+  useEffect(() => {
+    if (!fetchMore || !hasMore) return;
 
-//     const handleScroll = () => {
-//       const scrollTop = document.body.scrollTop;
-//       const clientHeight = document.body.clientHeight;
-//       const scrollHeight = document.body.scrollHeight;
+    const handleScroll = () => {
+      const scrollTop = document.body.scrollTop;
+      const clientHeight = document.body.clientHeight;
+      const scrollHeight = document.body.scrollHeight;
  
-//       const bottom = scrollTop + clientHeight >= scrollHeight - 300;
+      const bottom = scrollTop + clientHeight >= scrollHeight - 300;
 
-//       if (bottom && !loading) {
+      if (bottom && !loading) {
        
-//         loadMore();
-//       }
-//     };
+        loadMore();
+      }
+    };
 
-//     document.body.addEventListener("scroll", handleScroll);
-//     return () => document.body.removeEventListener("scroll", handleScroll);
-//   }, [fetchMore, hasMore, loading, loadMore]);
+    document.body.addEventListener("scroll", handleScroll);
+    return () => document.body.removeEventListener("scroll", handleScroll);
+  }, [fetchMore, hasMore, loading, loadMore]);
 
-//   return (
-//     <GenericListingComponent
-//     queryData= {queryData}
-//       headingTitle={t("RestaurantPage.headingTitle")}
-//       cuisineSectionTitle={t("RestaurantPage.cuisineSectionTitle")}
-//       mainSectionTitle={t("RestaurantPage.mainSectionTitle")}
-//       mainData={items} // ✅ pass paginated items
-//       cuisineDataFromHook={restaurantCuisinesData}
-//       loading={loading}
-//       cuisinesloading={cuisinesloading}
-//       error={!!error}
-//       hasMore={hasMore} // ✅ pass down so MainSection can show "No more"
-//     />
-//   );
-return <div>Shop Type {slug}</div>
+return (
+    <GenericListingComponent
+        queryData={queryData}
+        headingTitle={`${slug.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())} near you`}
+        cuisineSectionTitle={""}
+        mainSectionTitle={""}
+        mainData={items} // ✅ pass paginated items
+        cuisineDataFromHook={[]}
+        loading={loading}
+        cuisinesloading={loading}
+        error={!!error}
+        hasMore={hasMore} // ✅ pass down so MainSection can show "No more"
+    />
+);
 }
