@@ -977,7 +977,7 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={styles(currentTheme).buttonContainer}>
+              <View style={[styles(currentTheme).buttonContainer, {padding: Platform.OS === 'android' ? inset.bottom + 10 : 0}]}>
                 <TouchableOpacity
                   disabled={loadingOrder}
                   activeOpacity={0.7}
