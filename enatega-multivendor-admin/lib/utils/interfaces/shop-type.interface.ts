@@ -5,7 +5,7 @@ import { IFilterType } from './table.interface';
 export interface IShopType {
   image: string;
   isActive: boolean;
-  title: string;
+  name: string;
   __typename: string;
   _id: string;
 }

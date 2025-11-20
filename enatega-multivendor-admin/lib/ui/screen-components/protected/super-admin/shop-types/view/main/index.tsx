@@ -55,7 +55,7 @@ export default function ShopTypesMain({
     data: {
       __typename: '',
       _id: '',
-      title: '',
+      name: '',
       image: "",
       isActive: false,
     },
@@ -114,7 +114,7 @@ export default function ShopTypesMain({
         _id: '',
         isActive: false,
         image:"",
-        title: '',
+        name: '',
       },
     });
   }
@@ -192,7 +192,7 @@ export default function ShopTypesMain({
               _id: '',
               isActive: false,
               image:"",
-              title: '',
+              name: '',
             },
           })
         }

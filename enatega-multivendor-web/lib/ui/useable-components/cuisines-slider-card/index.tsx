@@ -28,6 +28,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
   last,
   showLogo,
   cuisines,
+  shopTypes,
 }) => {
   const [page, setPage] = useState(0);
   const [numVisible, setNumVisible] = useState(getNumVisible());
@@ -157,14 +158,14 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
           className=""
           style={{
             width: data.length < 4 ? "max-content" : "100%",
-            minWidth: "300px",
+            minWidth: "800px",
           }}
         >
           <Carousel
             value={data}
             className={`discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
             itemTemplate={(item) => (
-              <SquareCard item={item} showLogo={showLogo} cuisines={cuisines} />
+              <SquareCard item={item} showLogo={showLogo} cuisines={cuisines} shoptype={shopTypes} />
             )}
             numVisible={numVisible}
             numScroll={1}
