@@ -25,6 +25,7 @@ import { escapeRegExp } from '../../utils/regex'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -154,13 +155,15 @@ const SearchScreen = () => {
   const topRatedRestaurants = topRatedData?.topRatedVendorsPreview || []
   const recentOrderRestaurants = recentOrderData?.recentOrderRestaurantsPreview || []
   const mostOrderedRestaurants = mostOrderedData?.mostOrderedRestaurantsPreview || []
+  const { restaurantData: nearByGroceryStores } = useRestaurantQueries('grocery', location, 'grocery')
 
   // Combine all restaurants and remove duplicates
   const allRestaurants = [
     ...nearbyRestaurants,
     ...topRatedRestaurants,
     ...recentOrderRestaurants,
-    ...mostOrderedRestaurants
+    ...mostOrderedRestaurants,
+    ...nearByGroceryStores
   ]
   
   const restaurants = allRestaurants.filter((restaurant, index, self) => 
