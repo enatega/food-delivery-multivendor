@@ -8,7 +8,7 @@ import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } fr
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import { getTipping, orderFragment } from '../../apollo/queries'
-import { getCoupon, placeOrder } from '../../apollo/mutations'
+import { applyCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
@@ -52,8 +52,8 @@ const PLACEORDER = gql`
 const TIPPING = gql`
   ${getTipping}
 `
-const GET_COUPON = gql`
-  ${getCoupon}
+const APPLY_COUPON = gql`
+  ${applyCoupon}
 `
 const { height: HEIGHT } = Dimensions.get('window')
 
@@ -93,6 +93,7 @@ function Checkout(props) {
   const [paymentMode, setPaymentMode] = useState('COD')
 
   const { loading, data } = useRestaurant(cartRestaurant)
+  console.log('data?.restaurant?._id', data?.restaurant?._id)
   const [loadingOrder, setLoadingOrder] = useState(false)
   const latOrigin = data?.restaurant?.location?.coordinates[1]
   const lonOrigin = data?.restaurant?.location?.coordinates[0]
@@ -127,9 +128,10 @@ function Checkout(props) {
   }
 
   function onCouponCompleted(data) {
-    if (data?.coupon) {
-      if (data?.coupon.enabled) {
-        setCoupon(data?.coupon)
+    const couponData = data?.coupon?.coupon
+    if (couponData) {
+      if (couponData.enabled) {
+        setCoupon(couponData)
         FlashMessage({
           message: t('coupanApply')
         })
@@ -142,6 +144,12 @@ function Checkout(props) {
         })
         setLoadingOrder(false)
       }
+    } else {
+      // If no coupon data, show the message from the response
+      FlashMessage({
+        message: data?.coupon?.message || t('invalidCoupan')
+      })
+      setLoadingOrder(false)
     }
   }
 
@@ -152,7 +160,7 @@ function Checkout(props) {
     setLoadingOrder(false)
   }
 
-  const [mutateCoupon, { loading: couponLoading }] = useMutation(GET_COUPON, {
+  const [mutateCoupon, { loading: couponLoading }] = useMutation(APPLY_COUPON, {
     onCompleted: onCouponCompleted,
     onError: onCouponError
   })
@@ -1070,7 +1078,7 @@ function Checkout(props) {
               disabled={!voucherCode || couponLoading}
               activeOpacity={0.7}
               onPress={() => {
-                mutateCoupon({ variables: { coupon: voucherCode } })
+                mutateCoupon({ variables: { coupon: voucherCode, restaurantId: data?.restaurant?._id } })
               }}
               style={[styles(currentTheme).button, !voucherCode && styles(currentTheme).buttonDisabled, { height: scale(40) }, { opacity: couponLoading ? 0.5 : 1 }]}
             >
