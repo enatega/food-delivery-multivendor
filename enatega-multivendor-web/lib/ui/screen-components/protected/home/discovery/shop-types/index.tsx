@@ -1,7 +1,6 @@
 "use client";
 import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card";
 // hook
-import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 // loading skeleton
 import CuisinesSliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/cuisines.slider.skeleton";
 import { useQuery } from "@apollo/client";

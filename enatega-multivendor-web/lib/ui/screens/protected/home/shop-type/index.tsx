@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
 import useGetCuisines from "@/lib/hooks/useGetCuisines";
 import GenericListingComponent from "@/lib/ui/screen-components/protected/home/GenericListingComponent";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
 export default function ShopTypeScreen() {
     const params = useParams();
     const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-  const t = useTranslations();
+  // const t = useTranslations();
   const limit = 10;
 
   const [page, setPage] = useState(1);
