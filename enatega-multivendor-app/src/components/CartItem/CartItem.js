@@ -109,7 +109,7 @@ const CartItem = (props) => {
                     Normal
                     isRTL
                   >
-                    {props?.optionsTitle?.slice(0, 3)?.length}{' '}
+                    {props?.optionsTitle?.length}{' '}
                     {t('additionalItems')}
                   </TextDefault>
                   <Feather

@@ -163,7 +163,7 @@ const SearchScreen = () => {
     ...topRatedRestaurants,
     ...recentOrderRestaurants,
     ...mostOrderedRestaurants,
-    ...nearByGroceryStores
+    ...(nearByGroceryStores || [])
   ]
   
   const restaurants = allRestaurants.filter((restaurant, index, self) => 
