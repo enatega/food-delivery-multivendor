@@ -109,7 +109,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
           <div className="flex items-center justify-end gap-x-2 mb-2">
             {pathname !== "/store" &&
               pathname !== "/restaurants" &&
-              !cuisines && (
+              !cuisines && !shopTypes && (
                 <CustomButton
                   label={t("see_all")}
                   onClick={onSeeAllClick}

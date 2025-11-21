@@ -19,12 +19,12 @@ export default function ShopTypeScreen() {
 
   const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(
     true,
-    page,
+    page, 
     limit,
     slug
   );
 
-//   const { loading: cuisinesloading, restaurantCuisinesData } = useGetCuisines(true, slug);
+  const { loading: cuisinesloading, queryData:CuisineData } = useGetCuisines(true, slug);
 
   // ✅ Initial load
   useEffect(() => {
@@ -80,12 +80,12 @@ return (
     <GenericListingComponent
         queryData={queryData}
         headingTitle={`${slug.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())} near you`}
-        cuisineSectionTitle={""}
-        mainSectionTitle={""}
+        cuisineSectionTitle={"Browse Categories"}
+        mainSectionTitle={"All Shops"}
         mainData={items} // ✅ pass paginated items
-        cuisineDataFromHook={[]}
+        cuisineDataFromHook={CuisineData || []}
         loading={loading}
-        cuisinesloading={loading}
+        cuisinesloading={cuisinesloading}
         error={!!error}
         hasMore={hasMore} // ✅ pass down so MainSection can show "No more"
     />
