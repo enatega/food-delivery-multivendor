@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-context'
 import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
@@ -186,6 +186,8 @@ function Checkout(props) {
 
   const [selectedTip, setSelectedTip] = useState()
   const inset = useSafeAreaInsets()
+
+  const insets = initialWindowMetrics?.insets || { top: 0, bottom: 0, left: 0, right: 0 }
 
   function onTipping() {
     if (isNaN(tipAmount)) FlashMessage({ message: t('invalidAmount') })
@@ -977,7 +979,7 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={[styles(currentTheme).buttonContainer, Platform.OS === 'android' && {paddingBottom: inset.bottom + 10}]}>
+              <View style={[styles(currentTheme).buttonContainer, Platform.OS === 'android' && {paddingBottom: insets.bottom + 70}]}>
                 <TouchableOpacity
                   disabled={loadingOrder}
                   activeOpacity={0.7}
