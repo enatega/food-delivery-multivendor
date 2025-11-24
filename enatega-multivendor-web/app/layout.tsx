@@ -31,7 +31,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" href="/favsicon.png" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
         {/* 🔥 Inline theme script to prevent flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{

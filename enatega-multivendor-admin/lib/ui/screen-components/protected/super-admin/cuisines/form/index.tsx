@@ -29,7 +29,6 @@ import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import {
   CuisineErrors,
   MAX_SQUARE_FILE_SIZE,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
 import { useShopTypes } from '@/lib/hooks/useShopType';
