@@ -161,6 +161,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
             minWidth: "800px",
           }}
         >
+        
           <Carousel
             value={data}
             className={`discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
