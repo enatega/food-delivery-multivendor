@@ -21,7 +21,6 @@ import {
   ProfileErrors,
   RestaurantErrors,
   SELECTED_SHOPTYPE,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { EDIT_RESTAURANT, GET_CUISINES } from '@/lib/api/graphql';

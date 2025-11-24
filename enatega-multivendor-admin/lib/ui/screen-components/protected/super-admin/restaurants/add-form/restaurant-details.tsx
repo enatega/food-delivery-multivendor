@@ -27,7 +27,6 @@ import {
   MAX_LANSDCAPE_FILE_SIZE,
   MAX_SQUARE_FILE_SIZE,
   RestaurantErrors,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 
 // Interface
