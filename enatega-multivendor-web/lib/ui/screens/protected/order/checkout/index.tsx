@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ApolloCache, ApolloError, useMutation } from "@apollo/client";
+import { ApolloCache, ApolloError, useMutation, useQuery } from "@apollo/client";
 import { Message } from "primereact/message";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +41,7 @@ import { InfoSvg } from "@/lib/utils/assets/svg";
 
 // Constants
 import { DAYS } from "@/lib/utils/constants/orders";
-import { PAYMENT_METHOD_LIST, TIPS } from "@/lib/utils/constants";
+import { PAYMENT_METHOD_LIST } from "@/lib/utils/constants";
 
 // API
 import { PLACE_ORDER, VERIFY_COUPON, ORDERS } from "@/lib/api/graphql";
@@ -67,6 +67,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
+import { GET_TIPS } from "@/lib/api/graphql/queries/tipping";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();
@@ -101,13 +102,12 @@ export default function OrderCheckoutScreen() {
 
   const {
     cart,
-    restaurant: restaurantId,
+    restaurant: restaurantId, 
     clearCart,
     profile,
     fetchProfile,
     loadingProfile,
   } = useUser();
-
   const { userAddress } = useUserAddress();
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
   const { data: restaurantData } = useRestaurant(restaurantId || "") || {
@@ -199,6 +199,7 @@ export default function OrderCheckoutScreen() {
   }, []);
 
   // API
+  const { data: tipData } = useQuery(GET_TIPS);
   const [placeOrder, { loading: loadingOrderMutation }] = useMutation(
     PLACE_ORDER,
     {
@@ -214,6 +215,7 @@ export default function OrderCheckoutScreen() {
     }
   );
 
+ console.log("Tipps from admin:", tipData);
   // Handlers
   const onInit = () => {
     if (!finalRestaurantData) return;
@@ -601,13 +603,14 @@ export default function OrderCheckoutScreen() {
 
     if (checkPaymentMethod(CURRENCY, paymentMethod)) {
       const items = transformOrder(cart);
+
       placeOrder({
         variables: {
           restaurant: restaurantId,
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
-          couponCode: coupon ? coupon.title : null,
+          couponCode: isCouponApplied? coupon? coupon.title : null : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
           // address: {
@@ -687,7 +690,7 @@ export default function OrderCheckoutScreen() {
     cart.forEach((cartItem) => {
       itemTotal = itemTotal + Number(cartItem?.price || 0) * cartItem.quantity;
     });
-    if (withDiscount && coupon && coupon.discount) {
+    if (withDiscount && coupon && coupon.discount && isCouponApplied) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
     }
     const deliveryAmount = delivery > 0 ? deliveryCharges : 0;
@@ -1106,7 +1109,8 @@ export default function OrderCheckoutScreen() {
                     {t("tip_courier_info")}
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {TIPS.map((tip: string, index: number) => (
+                  {tipData?.tips.tipVariations.map(
+                    (tip: string, index: number) => (
                       <button
                         key={index}
                         className={`text-[12px] ${
@@ -1125,7 +1129,8 @@ export default function OrderCheckoutScreen() {
                         {tip !== "Other" ? CURRENCY_SYMBOL : ""}
                         {tip}
                       </button>
-                    ))}
+                    )
+                  )}
                   </div>
                 </div>
               </div>
@@ -1530,6 +1535,7 @@ export default function OrderCheckoutScreen() {
       </PaddingContainer>
 
       <UserAddressComponent
+        confirmYourAddress={true}
         visible={isUserAddressModalOpen}
         onHide={() => {
           setIsUserAddressModalOpen(false);

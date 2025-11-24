@@ -1019,5 +1019,7 @@
   "Connect with Stripe for payments": "连接 Stripe 以进行付款",
   "Payment Required": "需要付款",
   "Please complete your purchase to gain full access to the product": "请完成购买以获得对产品的完全访问权限",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "由于佣金率是百分比值，因此不能超过最大值100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "由于佣金率是百分比值，因此不能超过最大值100",
+  "ShopType": "店铺类型",
+  "Audit Logs": "审计日志"
 }

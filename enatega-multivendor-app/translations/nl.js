@@ -594,7 +594,7 @@ export const nl = {
     delete: 'Verwijderen',
     deleteAddressesTitle: 'Weet je zeker dat je de geselecteerde adressen wilt verwijderen?',
     notVerified: 'niet geverifieerd',
-    BrowseCategories: 'Blader door Categorieën',
+    BrowseCuisines: 'Keukens doorbladeren',
     'Popular right now': 'Populair op dit moment',
     'I feel like eating': 'Ik heb zin om te eten',
     'I feel like eating...': 'Ik heb zin om te eten...',

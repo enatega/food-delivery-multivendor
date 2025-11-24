@@ -1,5 +1,5 @@
 import React, { useContext, useLayoutEffect } from 'react'
-import { View, FlatList, Image, Animated } from 'react-native'
+import { View, FlatList, Image, Animated, TouchableOpacity } from 'react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -32,7 +32,7 @@ const CustomItem = ({ index, children }) => {
   return (
     <Animated.View
       style={{
-        opacity: scaleValue,
+        opacity: 1,
         flex: 1 / 2,
         marginHorizontal: 5,
         marginVertical: 2

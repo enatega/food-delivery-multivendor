@@ -60,6 +60,9 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const [showDetails, setShowDetails] = useState<Record<string, boolean>>({});
+  // Printer States
+
+  //////////
 
   // Handlers
   const onInitOrders = () => {

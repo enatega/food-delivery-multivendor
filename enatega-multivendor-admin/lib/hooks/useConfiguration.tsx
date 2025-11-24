@@ -37,6 +37,7 @@ export const useConfiguration = () => {
 
   const SKIP_EMAIL_VERIFICATION = configuration?.skipEmailVerification;
   const SKIP_MOBILE_VERIFICATION = configuration?.skipMobileVerification;
+  const SKIP_WHATSAPP_OTP = configuration?.skipWhatsAppOTP;
   const CURRENT_SYMBOL = configuration?.currencySymbol;
   const EMAIL_NAME = configuration?.emailName;
   const EMAIL = configuration?.email;
@@ -47,6 +48,7 @@ export const useConfiguration = () => {
   const TWILIO_ACCOUNT_SID = configuration?.twilioAccountSid;
   const TWILIO_AUTH_TOKEN = configuration?.twilioAuthToken;
   const TWILIO_PHONE_NUMBER = configuration?.twilioPhoneNumber;
+  const TWILIO_WHATSAPP_NUMBER = configuration?.twilioWhatsAppNumber;
   const TWILIO_ENABLED = configuration?.twilioEnabled;
   const DASHBOARD_SENTRY_URL = configuration?.dashboardSentryUrl;
   const WEB_SENTRY_URL = configuration?.webSentryUrl;
@@ -100,6 +102,8 @@ export const useConfiguration = () => {
     TWILIO_AUTH_TOKEN,
     TWILIO_PHONE_NUMBER,
     TWILIO_ENABLED,
+    SKIP_WHATSAPP_OTP,
+    TWILIO_WHATSAPP_NUMBER,
 
     // SENTRY
     DASHBOARD_SENTRY_URL,

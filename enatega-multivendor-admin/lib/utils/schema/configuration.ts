@@ -30,6 +30,8 @@ export const TwilioValidationSchema = Yup.object().shape({
   twilioAccountSid: Yup.string().required('required'),
   twilioAuthToken: Yup.string().required('required'),
   twilioPhoneNumber: Yup.number().required('required'),
+  twilioWhatsAppNumber: Yup.number().nullable(),
+  skipWhatsAppOTP: Yup.boolean().nullable(),
 });
 
 export const SentryValidationSchema = Yup.object().shape({

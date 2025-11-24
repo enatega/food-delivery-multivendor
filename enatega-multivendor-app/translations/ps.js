@@ -560,7 +560,7 @@ export const ps = {
   delete: 'حذف کړئ',
   deleteAddressesTitle: 'ایا تاسو ډاډه یاست چې غواړئ ټاکل شوې پتې حذف کړئ؟',
   notVerified: 'تصدیق شوی نه دی',
-  BrowseCategories: 'کتګورۍ وپلټئ',
+  BrowseCuisines: 'د خوړو ډولونه وګورئ',
   'Popular right now': 'اوس مشهور',
   'I feel like eating': 'زه د خوړلو احساس کوم',
   'I feel like eating...': 'زه د خوړلو احساس کوم...',

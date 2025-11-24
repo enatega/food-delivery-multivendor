@@ -143,6 +143,16 @@ export default function CouponForm({
       visible={visible}
       onHide={() => {
         setVisible(false);
+        setIsEditing({
+          bool: false,
+          data: {
+            __typename: '',
+            _id: '',
+            discount: 0,
+            enabled: true,
+            title: '',
+          },
+        });
       }}
       position="right"
       className="w-full sm:w-[450px]"

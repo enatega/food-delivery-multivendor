@@ -89,7 +89,7 @@ export default function UserAddressComponent(
   props: IUserAddressComponentProps
 ) {
   // Props
-  const { visible, onHide, editAddress } = props;
+  const { visible, onHide, editAddress, confirmYourAddress } = props;
 
   // States
   const [modifiyingId, setModifyingId] = useState("");
@@ -289,7 +289,8 @@ export default function UserAddressComponent(
 
   const LOCATIONT_TYPE = [
     {
-      name: t("loctype1"),
+      name: "House",
+      translatedName: t("loctype1"),
       icon: (color?: string, darkColor?: string) => (
         <HomeSvg
           darkColor={darkColor || "#ffffff"}
@@ -298,7 +299,8 @@ export default function UserAddressComponent(
       ),
     },
     {
-      name: t("loctype2"),
+      name: "Office",
+      translatedName: t("loctype2"),
       icon: (color?: string, darkColor?: string) => (
         <OfficeSvg
           darkColor={darkColor || "#ffffff"}
@@ -307,7 +309,8 @@ export default function UserAddressComponent(
       ),
     },
     {
-      name: t("loctype3"),
+      name: "Apartment",
+      translatedName: t("loctype3"),
       icon: (color?: string, darkColor?: string) => (
         <ApartmentSvg
           darkColor={darkColor || "#ffffff"}
@@ -316,7 +319,8 @@ export default function UserAddressComponent(
       ),
     },
     {
-      name: t("loctype4"),
+      name: "Other",
+      translatedName: t("loctype4"),
       icon: (color?: string, darkColor?: string) => (
         <OtherSvg
           darkColor={darkColor || "#ffffff"}
@@ -416,9 +420,15 @@ export default function UserAddressComponent(
     <div className="w-full space-y-4 flex flex-col items-center">
       {/* Header */}
       <div className="w-full">
-        <span className="font-inter font-bold text-[25px] tracking-normal">
-          {t("where_to_address_label")}
-        </span>
+        {confirmYourAddress ? (
+          <span className="font-inter font-bold text-[25px] tracking-normal">
+            {t("confirm") + " " + t("Address")}
+          </span>
+        ) : (
+          <span className="font-inter font-bold text-[25px] tracking-normal">
+            {t("where_to_address_label")}
+          </span>
+        )}
       </div>
 
       <button
@@ -543,6 +553,12 @@ export default function UserAddressComponent(
         >
           <FontAwesomeIcon icon={faPlus} />{" "}
           <span> {t("add_new_address_button")}</span>
+        </button>
+        <button
+          className={` ${confirmYourAddress ? "block" : "hidden"} w-[90%] h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px] mt-4`}
+          onClick={() => onHide()}
+        >
+          <span> {t("confirm")}</span>
         </button>
       </div>
     </div>
@@ -691,7 +707,7 @@ export default function UserAddressComponent(
                   <span
                     className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
                   >
-                    {item.name}
+                    {item.translatedName}
                   </span>
                 </div>
               </div>
@@ -709,8 +725,11 @@ export default function UserAddressComponent(
               if (selectedAddress) {
                 setUserAddress(selectedAddress);
               }
-
+              setSelectedLocationType("House");
               setIndex([0, 0]);
+              setInputValue("");
+              setSelectedCity(null);
+              setIsDragged(false);
               onHide();
             }}
           >
@@ -718,7 +737,7 @@ export default function UserAddressComponent(
           </button>
           <button
             disabled={!isDragged && !selectedCity}
-            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-gray-700" : "bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
+            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-[#429b1c6c] dark:bg-gray-700" : "bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
             onClick={() => onHandleCreateAddress()}
           >
             {modifyingAddressLoading ? (
@@ -885,7 +904,7 @@ export default function UserAddressComponent(
                   <span
                     className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
                   >
-                    {item.name}
+                    {item.translatedName}
                   </span>
                 </div>
               </div>
@@ -897,7 +916,17 @@ export default function UserAddressComponent(
           <button
             className="w-full  h-fit bg-transparent text-gray-900 dark:text-white py-2 border border-black dark:border-gray-600 rounded-full text-base lg:text-[14px]"
             onClick={() => {
+              const selectedAddress = profile?.addresses.find(
+                (address) => address.selected
+              );
+              if (selectedAddress) {
+                setUserAddress(selectedAddress);
+              }
+              setSelectedLocationType("House");
               setIndex([0, 0]);
+              setInputValue("");
+              setSelectedCity(null);
+              setIsDragged(false);
               onHide();
             }}
           >

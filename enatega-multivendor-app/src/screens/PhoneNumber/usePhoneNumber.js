@@ -12,6 +12,7 @@ import countryCallingCodes from './countryCodes'
 import { useIsFocused } from '@react-navigation/native'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
+import { useCountryFromIP } from '../../utils/useCountryFromIP'
 
 const UPDATEUSER = gql`
   ${updateUser}
@@ -25,79 +26,22 @@ const useRegister = () => {
   const [phoneError, setPhoneError] = useState(null)
   const configuration = useContext(ConfigurationContext)
   const isFocused = useIsFocused()
-  const [countryCode, setCountryCode] = useState('')
-  const [currentCountry, setCurrentCountry] = useState(null)
-  const [ipAddress, setIpAddress] = useState(null)
-  const [countryCallingCode, setCountryCallingCode] = useState(null)
-  const [count, setCount] = useState(0)
   const { name } = route?.params
+ 
 
-  const retryCount = 3 // Number of retries
-  let currentRetry = 0
+  const {
+      country,
+      setCountry,
+      currentCountry: countryCode,
+      setCurrentCountry: setCountryCode,
+      ipAddress,
+      isLoading: isCountryLoading,
+      error: countryError,
+      refetch
+    } = useCountryFromIP()
 
-  const [country, setCountry] = useState({
-    callingCode: [],
-    cca2: '',
-    currency: ['PKR'],
-    flag: '',
-    name: 'Pakistan',
-    region: 'Asia',
-    subregion: 'Southern Asia'
-  })
 
-  const fetchIpAddress = async () => {
-    try {
-      const response = await fetch('https://api.ipify.org/?format=json')
-      const data = await response.json()
-
-      setIpAddress(data.ip)
-
-      const response2 = await fetch(`https://ipinfo.io/${data.ip}/json`)
-      const data2 = await response2.json()
-      setCurrentCountry(data2.country)
-      setCountryCode(data2.country)
-
-      return currentCountry
-    } catch (error) {
-      console.error('Error getting IP address:', error)
-
-      if (currentRetry < retryCount) {
-        // Retry the request
-        currentRetry++
-        return fetchIpAddress()
-      }
-    }
-
-    // If all retries fail, you can return a default value or handle the error as needed.
-    return null
-  }
-
-  useEffect(() => {
-    const initializeCountry = async () => {
-      try {
-        const res = await fetchIpAddress()
-        if (res) {
-          const callingCode = countryCallingCodes[currentCountry]
-          if (callingCode) {
-            setCountry({
-              ...country,
-              callingCode: [callingCode.toString()],
-              cca2: currentCountry,
-              flag: 'flag-' + currentCountry
-            })
-          } else {
-            console.log('Unknown')
-          }
-        } else {
-          setCount(count + 1)
-        }
-      } catch (error) {
-        console.error('Error initializing country:', error)
-      }
-    }
-
-    initializeCountry()
-  }, [count])
+ 
 
   const onCountrySelect = country => {
     setCountryCode(country.cca2)
@@ -192,7 +136,9 @@ const useRegister = () => {
     themeContext,
     currentTheme,
     loading,
-    registerAction
+    registerAction,
+    setPhoneError,
+    isCountryLoading
   }
 }
 

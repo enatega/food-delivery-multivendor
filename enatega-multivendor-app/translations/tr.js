@@ -593,7 +593,7 @@ export const tr = {
     delete: 'Sil',
     deleteAddressesTitle: 'Seçilen adresleri silmek istediğinizden emin misiniz?',
     notVerified: 'doğrulanmadı',
-    BrowseCategories: 'Kategorilere Göz At',
+    BrowseCuisines: 'Mutfakları göz atın',
     'Popular right now': 'Şu anda popüler',
     'I feel like eating': 'Canım yemek istiyor',
     'I feel like eating...': 'Canım yemek istiyor...',

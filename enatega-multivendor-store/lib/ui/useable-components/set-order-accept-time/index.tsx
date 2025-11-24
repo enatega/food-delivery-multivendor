@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+
+import {
+  Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 // Hooks
 import useAcceptOrder from "@/lib/hooks/useAcceptOrder";
 import useOrderRing from "@/lib/hooks/useOrderRing";
-// import usePrintOrder from "@/lib/hooks/usePrintOrder";
 
 // Constants
 import { TIMES } from "@/lib/utils/constants";
@@ -20,6 +26,7 @@ import { useApptheme } from "@/lib/context/theme.context";
 import { useTranslation } from "react-i18next";
 import CustomContinueButton from "../custom-continue-button";
 import { CircleCrossIcon } from "../svg";
+import usePrintOrder from "@/lib/hooks/usePrintOrder";
 
 const SetTimeScreenAndAcceptOrder = ({
   id,
@@ -32,22 +39,42 @@ const SetTimeScreenAndAcceptOrder = ({
 
   // States
   const [selectedTime, setSelectedTime] = useState(TIMES[0]);
+  const [isAcceptingOrder, setIsAcceptingOrder] = useState(false);
 
   const { muteRing, loading: loadingRing } = useOrderRing();
   const { acceptOrder, loading: loadingAcceptOrder } = useAcceptOrder();
-  // const { printOrder } = usePrintOrder();
+  const { printOrder } = usePrintOrder();
 
   const onAcceptOrderHandler = async () => {
     try {
       await acceptOrder(id, selectedTime?.toString() || "0");
       await muteRing(orderId);
-      // printOrder(id);
-
       handleDismissModal();
     } catch (err) {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
       console.log(err);
     } finally {
+      handleDismissModal();
+    }
+  };
+  const onAcceptAndPrintOrderHandler = async () => {
+    try {
+      setIsAcceptingOrder(true);
+      const status = await printOrder(id);
+
+      if (status) {
+        // null means it's ioS so ignore printing and true mean print wa successfull
+        await acceptOrder(id, selectedTime?.toString() || "0");
+        await muteRing(orderId);
+      }
+
+      setIsAcceptingOrder(false);
+      handleDismissModal();
+    } catch (err) {
+      // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
+      console.log(err);
+    } finally {
+      setIsAcceptingOrder(false);
       handleDismissModal();
     }
   };
@@ -100,6 +127,16 @@ const SetTimeScreenAndAcceptOrder = ({
           title={t("Done")}
         />
       </View>
+      {Platform.OS === "android" && (
+        <View>
+          <CustomContinueButton
+            isLoading={(loadingAcceptOrder || loadingRing) && isAcceptingOrder}
+            style={{ backgroundColor: appTheme.primary }}
+            onPress={onAcceptAndPrintOrderHandler}
+            title={t("AcceptAndPrint")}
+          />
+        </View>
+      )}
     </View>
   );
 };

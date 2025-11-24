@@ -4,7 +4,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 // Api
 import { DEACTIVATE_USER, GET_USER_PROFILE } from "@/lib/api/graphql";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, ApolloError } from "@apollo/client";
+
 // Components
 import CustomButton from "@/lib/ui/useable-components/button";
 import CustomInputSwitch from "@/lib/ui/useable-components/custom-input-switch";
@@ -27,6 +28,7 @@ export default function SettingsMain() {
   // States for current values
   const [sendReceipts, setSendReceipts] = useState<boolean>(false);
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
+
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [deleteReason, setDeleteReason] = useState<string>("");
   const [logoutConfirmationVisible, setLogoutConfirmationVisible] =
@@ -52,6 +54,7 @@ export default function SettingsMain() {
       fetchPolicy: "cache-and-network",
     }
   );
+
   // Update user muattion
   const [Deactivate] = useMutation(DEACTIVATE_USER, {
     onCompleted: () => {
@@ -69,6 +72,11 @@ export default function SettingsMain() {
       });
     },
   });
+
+  // Handle Delete Account button click
+  const handleDeleteAccount = () => {
+    setDeleteAccount(true);
+  };
 
   // Handle send receipts toggle
   const handleSendReceiptsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,30 +98,54 @@ export default function SettingsMain() {
     router.push("/");
   };
 
-  // Handle Delete Account
-  const handleDeleteAccount = () => {
-    setDeleteAccount(true);
-  };
 
-  const handleConfirmDelete = () => {
-    setIsDeleting(true);
-    // Simulate API call
-    setTimeout(() => {
-      // Actual Mutation Delete Logic implement here
-      Deactivate({
-        variables: {
-          isActive: false,
-          email: profileData?.profile?.email,
-        },
-      });
-      // Clear auth token and local storage
+
+
+const handleConfirmDelete = async () => {
+  setIsDeleting(true);
+
+  try {
+    const result = await Deactivate({
+      variables: {
+        isActive: false,
+        email: profileData?.profile?.email,
+      },
+    });
+
+    // Check if mutation returned data
+    if (result.data?.Deactivate) {
+      // Success: log out user
       setAuthToken("");
       localStorage.clear();
-      setIsDeleting(false);
       setDeleteAccount(false);
       router.push("/");
-    }, 1500);
-  };
+
+      showToast({
+        type: "success",
+        title: "Success",
+        message: "Your account has been deleted successfully",
+      });
+    }
+  } catch (err: unknown) {
+    // Handle unexpected errors
+    let errorMessage = "Unable to delete account";
+    if (err instanceof ApolloError) {
+      errorMessage = err.message;
+    } else if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+
+    showToast({
+      type: "error",
+      title: "Error",
+      message: errorMessage,
+    });
+  } finally {
+    setIsDeleting(false);
+  }
+};
+
+  
 
   // Close delete dialog
   const handleCancelDelete = useCallback(() => {
@@ -146,6 +178,7 @@ export default function SettingsMain() {
         setDeleteReason={setDeleteReason}
         loading={isDeleting}
       />
+
       {/* Email */}
       <div className="py-4 border-b">
         <div className="flex justify-between items-center dark:border-gray-700">
@@ -240,8 +273,7 @@ export default function SettingsMain() {
             text={t("theme")}
             className="font-normal text-gray-700 dark:text-gray-300 text-base md:text-lg"
           />
-          <ThemeToggle/>
-         
+          <ThemeToggle />
         </div>
       </div>
 
@@ -277,7 +309,7 @@ export default function SettingsMain() {
 
         {/* Logout Confirmation Dialog */}
         <Dialog
-        contentClassName="dark:bg-gray-800"
+          contentClassName="dark:bg-gray-800"
           maskClassName="bg-black/80"
           visible={logoutConfirmationVisible}
           onHide={() => setLogoutConfirmationVisible(false)}
@@ -306,7 +338,7 @@ export default function SettingsMain() {
                 className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
                 onClick={handleLogout}
               >
-                <FontAwesomeIcon icon={faSignOutAlt} /> 
+                <FontAwesomeIcon icon={faSignOutAlt} />
                 Logout
               </button>
             </div>

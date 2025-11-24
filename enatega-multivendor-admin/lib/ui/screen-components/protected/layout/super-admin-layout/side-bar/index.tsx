@@ -193,23 +193,27 @@ export default function MakeSidebar() {
       },
     },
     {
-      text: t('Wallet'),
+      text: 'Wallet',
+      label: t('Wallet'),
       route: '/wallet',
       isParent: true,
       icon: faWallet,
       subMenu: useCheckAllowedRoutes([
         {
           text: t('Transaction History'),
+          label: t('Transaction History'),
           route: '/wallet/transaction-history',
           isParent: false,
         },
         {
           text: 'Withdrawal Request',
+          label: t('Withdrawal Request'),
           route: '/wallet/withdraw-requests',
           isParent: false,
         },
         {
           text: t('Earnings'),
+          label: t('Earnings'),
           route: '/wallet/earnings',
           isParent: false,
         },

@@ -21,6 +21,9 @@ import { scale } from '../../../utils/scaling'
 import SignUpSvg from '../../../assets/SVG/imageComponents/SignUpSvg'
 
 function EmailOtp(props) {
+  const route = useRoute()
+  const userData = route?.params?.user
+   const isPhoneExists = route?.params?.isPhoneExists || false
   const {
     otp,
     setOtp,
@@ -32,10 +35,10 @@ function EmailOtp(props) {
     resendOtp,
     currentTheme,
     themeContext
-  } = useEmailOtp()
+  } = useEmailOtp(isPhoneExists)
 
-  const route = useRoute()
-  const userData = route.params?.user
+  
+ 
 
   const { t, i18n } = useTranslation()
   useLayoutEffect(() => {

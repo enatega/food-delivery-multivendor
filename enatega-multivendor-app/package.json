@@ -60,7 +60,7 @@
     "core-js": "^3.33.3",
     "deprecated-react-native-prop-types": "^5.0.0",
     "eas-build-cache-provider": "^16.4.2",
-    "expo": "53.0.19",
+    "expo": "53.0.22",
     "expo-apple-authentication": "~7.2.4",
     "expo-application": "~6.1.4",
     "expo-auth-session": "~6.2.1",
