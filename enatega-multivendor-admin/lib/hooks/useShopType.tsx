@@ -16,18 +16,14 @@ export const useShopTypes = (
 ): IUseShopTypesHookResponse => {
   // Props
   const { invoke_now, transform_to_dropdown_list } = props;
-
-  const [loading, setLoading] = useState(false);
-
-  const { data, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
+  
+  const { data, loading, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
     fetchPolicy: 'network-only',
     debounceMs: 5000,
-    onCompleted: () => setLoading(false),
   }) as ILazyQueryResult<IGetShopTypesData | undefined, undefined>;
 
   // Handler
   const fetchShopTypes = () => {
-    setLoading(true);
     fetch();
   };
 
