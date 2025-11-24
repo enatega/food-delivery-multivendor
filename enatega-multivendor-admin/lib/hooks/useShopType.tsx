@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLazyQueryQL } from './useLazyQueryQL';
 import { GET_SHOP_TYPES } from '../api/graphql';
 import {
