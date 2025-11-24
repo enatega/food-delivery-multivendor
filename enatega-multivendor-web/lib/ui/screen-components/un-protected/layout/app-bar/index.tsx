@@ -384,7 +384,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     className="text-xl font-bold text-gray-900 dark:text-white"
                   >
                     <Logo
-                      className="w-32 h-auto"
                       fillColor="#000000"
                       darkmode="#FFFFFFFF"
                     />
