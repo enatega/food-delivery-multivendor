@@ -895,7 +895,7 @@ export default function StoreDetailsScreen() {
                           </h3>
                         )}
 
-                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 ">
+                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 items-start ">
                           {subCategory.foods.map((meal: IFood, mealIndex) => (
                             <div
                               key={mealIndex}

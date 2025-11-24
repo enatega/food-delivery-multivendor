@@ -2,8 +2,7 @@
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 
-// import * as Sentry from "sentry-expo";
-import * as Sentry from "@sentry/react-native";
+
 
 // Service
 import setupApollo from "@/lib/apollo";
@@ -13,8 +12,7 @@ import { AuthProvider } from "@/lib/context/global/auth.context";
 import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
 import { ApolloProvider } from "@apollo/client";
 
-// Service
-import { initSentry } from "@/lib/utils/service";
+
 
 // Locale
 import "@/i18next";
@@ -35,11 +33,11 @@ import InternetProvider from "@/lib/context/global/internet-provider";
 import AppThemeProvidor, { useApptheme } from "@/lib/context/theme.context";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
-import * as Clarity from '@microsoft/react-native-clarity';
+
 
 import { Slot } from "expo-router";
 
-initSentry();
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -96,4 +94,4 @@ function RootLayout() {
   );
 }
 
-export default Sentry.wrap(RootLayout);
+export default RootLayout;

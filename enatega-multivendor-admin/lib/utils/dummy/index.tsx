@@ -374,7 +374,7 @@ export const generateDummyShopTypes = (count: number = 10) => {
   for (let i = 0; i < count; i++) {
     shop_types.push({
       _id: `coupon_${i + 1}`,
-      title: `coupon_${i + 1}`,
+      name: `coupon_${i + 1}`,
       isActive: Math.random() * 3 > 2,
       image: '',
       __typename: ''
