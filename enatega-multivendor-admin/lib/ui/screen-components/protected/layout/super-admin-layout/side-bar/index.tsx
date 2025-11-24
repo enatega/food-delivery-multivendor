@@ -223,7 +223,7 @@ export default function MakeSidebar() {
       },
     },
     {
-      text: 'CustomerSupport',
+      text: 'CustomerSupport',  
       label: t('CustomerSupport'),
       route: '/customerSupport',
       icon: faHeadset,

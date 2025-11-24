@@ -11,11 +11,18 @@ const SquareCard: React.FC<ICuisinesCardProps> = ({
   item,
   cuisines = false,
   showLogo = false,
+  shoptype
 }) => {
   const router = useRouter();
   const getImgSrc = showLogo ? item?.logo : item?.image;
 
   const onClickHandler = () => {
+    if(shoptype){
+      router.push(
+        `/shop-type/${item?.slug}`
+      );
+      return;
+    }
     if (!cuisines) {
       router.push(
         `/${item?.shopType === "restaurant" ? "restaurant" : "store"}/${item?.slug}/${item._id}`

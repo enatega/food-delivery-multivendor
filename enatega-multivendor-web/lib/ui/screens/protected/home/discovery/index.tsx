@@ -17,6 +17,7 @@ import CuisinesSection from "@/lib/ui/useable-components/cuisines-section";
 import useGetCuisines from "@/lib/hooks/useGetCuisines";
 import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
 import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
+import ShopTypes from "@/lib/ui/screen-components/protected/home/discovery/shop-types";
 
 export default function DiscoveryScreen() {
   const { restaurantCuisinesData, groceryCuisinesData, error, loading } =
@@ -40,8 +41,10 @@ export default function DiscoveryScreen() {
   if (loading && restaurantsLoading) {
     return (
       <>
+        
         <DiscoveryBannerSection />
         <OrderItAgain />
+        <ShopTypes />
         <MostOrderedRestaurants
           data={queryData}
           loading={mostOrderedLoading}
@@ -70,9 +73,9 @@ export default function DiscoveryScreen() {
           error={!!restaurantsError}
         />
         <TopGroceryPicks
-          // // data={MostOrderedRestaurantsGroceryData}
-          // loading={mostOrderedLoading}
-          // error={!!mostorderedError}
+        // // data={MostOrderedRestaurantsGroceryData}
+        // loading={mostOrderedLoading}
+        // error={!!mostorderedError}
         />
         <TopRatedVendors />
         <PopularRestaurants />
@@ -93,8 +96,10 @@ export default function DiscoveryScreen() {
 
   return (
     <>
+     
       <DiscoveryBannerSection />
       <OrderItAgain />
+      <ShopTypes />
       <MostOrderedRestaurants
         data={queryData}
         loading={mostOrderedLoading}
@@ -123,9 +128,9 @@ export default function DiscoveryScreen() {
         error={!!restaurantsError}
       />
       <TopGroceryPicks
-        // // data={MostOrderedRestaurantsGroceryData}
-        // loading={mostOrderedLoading}
-        // error={!!mostorderedError}
+      // // data={MostOrderedRestaurantsGroceryData}
+      // loading={mostOrderedLoading}
+      // error={!!mostorderedError}
       />
       <TopRatedVendors />
       <PopularRestaurants />
