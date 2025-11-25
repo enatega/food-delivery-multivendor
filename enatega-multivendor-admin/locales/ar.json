@@ -64,6 +64,7 @@
   "Configuration": "الإعدادات",
   "Login": "تسجيل الدخول",
   "Food": "طعام",
+  "Status Changed Successfully": "تم تغيير الحالة بنجاح",
   "Character limit of max length 50": "الحد الأقصى للأحرف ٥٠ حرف",
   "Character limit of max length 15": "الحد الأقصى للأحرف ١٥ حرف",
   "Character limit of max length 100": "الحد الأقصى للأحرف ١٠٠ حرف",
@@ -932,6 +933,7 @@
   "Choose a plan": "اختر خطة",
   "That's right for you": "هذه هي الخطة المناسبة لك",
   "Monthly Billing": "الفوترة الشهرية",
+  "Vehicle Type": "نوع المركبة",
   "Annual Billing": "الفوترة السنوية",
   "total cost": "التكلفة الإجمالية",
   "Commission Fees": "رسوم العمولة",
@@ -1032,5 +1034,4 @@
   "Payment Required": "الدفع مطلوب",
   "Please complete your purchase to gain full access to the product": "يرجى إتمام عملية الشراء للحصول على وصول كامل إلى المنتج",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "نظرًا لأن معدل العمولة هو قيمة مئوية، فلا يمكن أن يتجاوز القيمة القصوى 100"
-
 }
