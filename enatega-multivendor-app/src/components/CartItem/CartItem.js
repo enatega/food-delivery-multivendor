@@ -109,7 +109,7 @@ const CartItem = (props) => {
                     Normal
                     isRTL
                   >
-                    {props?.optionsTitle?.slice(0, 3)?.length}{' '}
+                    {props?.optionsTitle?.length}{' '}
                     {t('additionalItems')}
                   </TextDefault>
                   <Feather
@@ -120,7 +120,7 @@ const CartItem = (props) => {
                 </TouchableOpacity>
                 {isDropdownOpen && (
                   <View style={styles().itemsDropdown}>
-                    {props?.optionsTitle?.slice(0, 3)?.map((item, index) => (
+                    {props?.optionsTitle?.map((item, index) => (
                       <TextDefault
                         key={index}
                         textColor={currentTheme.secondaryText}
