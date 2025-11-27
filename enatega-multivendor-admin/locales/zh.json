@@ -1032,6 +1032,17 @@
   "Business Details": "业务详情",
   "Account Number": "账户号码",
   "Select Product Category": "选择产品类别",
+  "at_least_6_characters": "至少 6 个字符",
+  "at_least_one_lowercase_letter_a_z": "至少一个小写字母 (a-z)",
+  "at_least_one_uppercase_letter_A_Z": "至少一个大写字母 (A-Z)",
+  "at_least_one_number_0_9": "至少一个数字 (0-9)",
+  "at_least_one_special_character": "至少一个特殊字符",
+  "password_does_not_match": "密码不匹配",
+  "tax_rate_%": "税率 %",
+  "withdraw_money": "提现",
+  "enter_amount": "输入金额",
+  "available_balance": "可用余额",
+  "submit_request": "提交申请",
   "Profit": "利润",
   "Markup": "加价",
   "Unlimited": "无限",
@@ -1050,5 +1061,9 @@
   "Please complete your purchase to gain full access to the product": "请完成购买以获得对产品的完全访问权限",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "由于佣金率是百分比值，因此不能超过最大值100",
   "ShopType": "店铺类型",
-  "Audit Logs": "审计日志"
+  "Audit Logs": "审计日志",
+  "withdraw_requests": "提现请求",
+  "updated": "已更新",
+  "this_Feature_is_only_Available_in_Paid_Version": "此功能仅在付费版本中可用",
+  "you_are_using_free_version": "您正在使用免费版本"
 }

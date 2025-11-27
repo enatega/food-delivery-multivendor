@@ -7,6 +7,7 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import useToast from '@/lib/hooks/useToast';
 import { useMutation } from '@apollo/client';
 import { CREATE_WITHDRAW_REQUEST } from '@/lib/api/graphql';
+import { useTranslations } from 'next-intl';
 import * as Yup from 'yup';
 
 interface IWithdrawRequestFormProps {
@@ -30,6 +31,8 @@ export default function WithdrawRequestAddForm({
   const { restaurantProfileResponse } = useContext(ProfileContext);
 
   console.log(restaurantProfileResponse?.data);
+
+  const t = useTranslations();
 
   const currentWalletAmount =
     restaurantProfileResponse?.data?.restaurant?.currentWalletAmount || 0;
@@ -87,7 +90,7 @@ export default function WithdrawRequestAddForm({
         <div className="h-full w-full">
           <div className="flex flex-col gap-2">
             <div className="mb-2 flex flex-col">
-              <span className="text-lg">Withdraw Request</span>
+              <span className="text-lg">{t('Withdraw Request')}</span>
             </div>
 
             <Formik
@@ -99,7 +102,7 @@ export default function WithdrawRequestAddForm({
                 <Form className="flex flex-col space-y-4">
                   <CustomNumberField
                     name="requestAmount"
-                    placeholder="Enter amount"
+                    placeholder={t('enter_amount')}
                     value={values.requestAmount}
                     onChange={(name, value) => setFieldValue(name, value)}
                     showLabel
@@ -107,6 +110,7 @@ export default function WithdrawRequestAddForm({
                     mode="decimal"
                     minFractionDigits={2}
                     maxFractionDigits={2}
+                    locale="en-US"
                     style={{
                       borderColor: errors.requestAmount ? 'red' : '',
                     }}
@@ -118,12 +122,12 @@ export default function WithdrawRequestAddForm({
                   )}
 
                   <div className="text-sm text-gray-500">
-                    Available Balance: ${currentWalletAmount?.toLocaleString()}
+                    {t('available_balance')}: ${currentWalletAmount?.toLocaleString('en-US')}
                   </div>
 
                   <CustomButton
                     className="ml-auto h-10 w-fit border-gray-300 bg-black px-8 text-white"
-                    label="Submit Request"
+                    label={t('submit_request')}
                     type="submit"
                     loading={mutationLoading}
                   />

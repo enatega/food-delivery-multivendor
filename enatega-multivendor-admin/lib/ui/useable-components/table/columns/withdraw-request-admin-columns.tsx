@@ -9,24 +9,24 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
     () => [
       {
         code: 'REQUESTED',
-        label: 'Requested',
+        label: t('REQUESTED'),
       },
       {
         code: 'TRANSFERRED',
-        label: 'Transferred',
+        label: t('TRANSFERRED'),
       },
       {
         code: 'CANCELLED',
-        label: 'Cancelled',
+        label: t('CANCELLED'),
       },
     ],
-    []
+    [t]
   );
 
   return useMemo(
     () => [
       {
-        headerName: t('Request Id'),
+        headerName: t('RequestID'),
         propertyName: 'requestId',
       },
       {
@@ -92,6 +92,6 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         },
       },
     ],
-    [options]
+    [options, t]
   );
 };
