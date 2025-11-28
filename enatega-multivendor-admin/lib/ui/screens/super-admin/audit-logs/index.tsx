@@ -7,10 +7,12 @@ import HeaderText from '@/lib/ui/useable-components/header-text';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 import { Skeleton } from 'primereact/skeleton';
 import { Card } from 'primereact/card';
+import { useTranslations } from 'next-intl';
 
 const AuditLogScreen = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(10);
+    const t = useTranslations();
 
     const { data, loading, error } = useQuery(GET_AUDIT_LOGS, {
         variables: { page: currentPage, limit },
@@ -25,7 +27,7 @@ const AuditLogScreen = () => {
     if (loading && !data) {
         return (
             <div className="p-4 md:p-6">
-                <HeaderText text="Audit Logs" />
+                <HeaderText text={t('Audit Logs')} />
                 <div className="mt-6">
                     {[...Array(5)].map((_, i) => <Skeleton key={i} height="8rem" className="mb-4" />)}
                 </div>
@@ -50,7 +52,7 @@ const AuditLogScreen = () => {
     return (
         <div className="p-4 md:p-6">
             <div className="mb-6">
-                <HeaderText text="Audit Logs" />
+                <HeaderText text={t('Audit Logs')} />
                 <p className="text-gray-500 mt-1">Track all administrative actions and changes within the system.</p>
             </div>
 

@@ -37,9 +37,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({
   ];
 
   const accountStatusOptions = [
-    { id: 1, label: t('Active'), code: 'active' },
-    { id: 2, label: t('Blocked'), code: 'blocked' },
-    { id: 3, label: t('Deactivated'), code: 'deactivated' },
+    { id: 1, label: t('active'), code: 'active' },
+    { id: 2, label: t('blocked'), code: 'blocked' },
+    { id: 3, label: t('deactivated'), code: 'deactivated' },
   ];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
