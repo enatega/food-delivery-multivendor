@@ -36,7 +36,8 @@ const styles = (props = null) =>
     },
     errorInput: {
       backgroundColor: props !== null ? props?.errorInputBack : '#F7E7E5',
-      borderColor: props !== null ? props?.errorInputBorder : '#DB4A39'
+      borderColor: props !== null ? props?.errorInputBorder : '#DB4A39',
+      color: props !== null ? props?.newFontcolor : '#F7E7E5'
     },
     btn: {
       width: '100%',
