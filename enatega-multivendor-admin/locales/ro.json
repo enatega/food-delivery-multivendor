@@ -1,4 +1,17 @@
-{
+{ "audit_log_header_desc": "Urmăriți toate acțiunile și modificările administrative din sistem.",
+  "Performed_by": "Realizat de",
+  "show_detail": "Afișează detalii",
+  "hide_detail": "Ascunde detalii",
+  "No_differences_found_in_data": "Nu s-au găsit diferențe în date.",
+  "read more": "Citește mai mult",
+  "read less": "Citește mai puțin",
+  "enter_password": {
+    "enter_a_password": "Introduceți o parolă",
+    "weak": "Slabă",
+    "medium": "Mediu",
+    "strong": "Puternică"
+  },
+  
   "Sign in credentials": "Credențiale de autentificare",
   "Sign in": "Autentificare",
   "CustomerSupport": "Suport clienți",

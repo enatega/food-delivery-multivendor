@@ -1,4 +1,17 @@
-{
+{"audit_log_header_desc": "Tizimdagi barcha ma'muriy harakatlar va o'zgarishlarni kuzatib boring.",
+  "Performed_by": "Bajaruvchi",
+  "show_detail": "Tafsilotlarni ko‘rsatish",
+  "hide_detail": "Tafsilotlarni yashirish",
+  "No_differences_found_in_data": "Ma’lumotlarda farq topilmadi.",
+  "read more": "Ko‘proq o‘qing",
+  "read less": "Kamroq o‘qing",
+  "enter_password": {
+    "enter_a_password": "Parol kiriting",
+    "weak": "Zaif",
+    "medium": "O‘rta",
+    "strong": "Kuchli"
+  },
+  
   "Sign in credentials": "Kirish ma'lumotlari",
   "Sign in": "Kirish",
   "CustomerSupport": "Mijozlarni qo'llab-quvvatlash",

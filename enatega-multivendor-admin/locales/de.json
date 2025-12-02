@@ -1088,5 +1088,19 @@
   "Please complete your purchase to gain full access to the product": "Bitte schließen Sie Ihren Kauf ab, um vollen Zugriff auf das Produkt zu erhalten",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "Da der Provisionssatz ein Prozentwert ist, kann er den Maximalwert von 100 nicht überschreiten",
   "ShopType": "Ladenart",
-  "Audit Logs": "Prüfprotokolle"
+  "Audit Logs": "Prüfprotokolle",
+  "audit_log_header_desc": "Verfolgen Sie alle administrativen Aktionen und Änderungen innerhalb des Systems.",
+"Performed_by": "Durchgeführt von",
+"show_detail": "Details anzeigen",
+"hide_detail": "Details ausblenden",
+"No_differences_found_in_data": "Keine Unterschiede in den Daten gefunden.",
+"read more": "Mehr lesen",
+"read less": "Weniger lesen",
+"enter_password": {
+  "enter_a_password": "Geben Sie ein Passwort ein",
+  "weak": "Schwach",
+  "medium": "Mittel",
+  "strong": "Stark"
+}
+
 }

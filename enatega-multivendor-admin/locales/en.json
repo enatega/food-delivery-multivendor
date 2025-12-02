@@ -459,6 +459,7 @@
   "failed_to_load_messages": "Failed to load messages",
   "this_ticket_is_closed_you_cannot_send_new_messages": " This ticket is closed. You cannot send new messages",
   "No_messages_yet": "No messages yet",
+  "no_user_found": "No user found",
   "type_your_message_here": "Type your message here ...",
   "Business Overview": "Business Overview",
   "Automatically calculate your delivery fees based on a set distance and then per km thereafter": "Automatically calculate your delivery fees based on a set distance and then per km thereafter",
@@ -1091,5 +1092,18 @@
   "Connect with Stripe for payments": "Connect with Stripe for payments",
   "Payment Required": "Payment Required",
   "Please complete your purchase to gain full access to the product": "Please complete your purchase to gain full access to the product",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "As commission rate is a %age value so it cannot exceed a max value of 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "As commission rate is a %age value so it cannot exceed a max value of 100",
+  "audit_log_header_desc": "Track all administrative actions and changes within the system.",
+  "Performed_by": "Performed by",
+  "show_detail": "Show Details",
+  "hide_detail": "Hide Details",
+  "No_differences_found_in_data": "No differences found in data.",
+   "read more": "Read More",
+  "read less": "Read Less",
+  "enter_password":{
+    "enter_a_password": "Enter a password",
+    "weak": "Weak",
+    "medium": "Medium",
+    "strong": "Strong"
+  }
 }

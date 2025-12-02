@@ -1099,5 +1099,18 @@
   "Connect with Stripe for payments": "เชื่อมต่อกับ Stripe สำหรับการชำระเงิน",
   "Payment Required": "ต้องชำระเงิน",
   "Please complete your purchase to gain full access to the product": "กรุณาชำระเงินเพื่อเข้าถึงสินค้าอย่างเต็มที่",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "เนื่องจากอัตราค่าคอมมิชชันเป็นค่าเปอร์เซ็นต์ จึงไม่สามารถเกิน 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "เนื่องจากอัตราค่าคอมมิชชันเป็นค่าเปอร์เซ็นต์ จึงไม่สามารถเกิน 100",
+    "audit_log_header_desc": "ติดตามการดำเนินการและการเปลี่ยนแปลงด้านการจัดการทั้งหมดภายในระบบ",
+  "Performed_by": "ดำเนินการโดย",
+  "show_detail": "แสดงรายละเอียด",
+  "hide_detail": "ซ่อนรายละเอียด",
+  "No_differences_found_in_data": "ไม่พบความแตกต่างในข้อมูล",
+  "read more": "อ่านเพิ่มเติม",
+  "read less": "อ่านน้อยลง",
+  "enter_password": {
+    "enter_a_password": "ป้อนรหัสผ่าน",
+    "weak": "อ่อน",
+    "medium": "ปานกลาง",
+    "strong": "แข็งแรง"
+  }
 }

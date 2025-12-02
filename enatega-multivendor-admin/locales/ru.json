@@ -1099,5 +1099,21 @@
   "Connect with Stripe for payments": "Подключиться к Stripe для платежей",
   "Payment Required": "Требуется оплата",
   "Please complete your purchase to gain full access to the product": "Завершите покупку для полного доступа к продукту",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Поскольку ставка комиссии является процентным значением, она не может превышать максимальное значение 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Поскольку ставка комиссии является процентным значением, она не может превышать максимальное значение 100",
+  
+  "audit_log_header_desc": "Отслеживайте все административные действия и изменения в системе.",
+  "Performed_by": "Выполнено",
+  "show_detail": "Показать детали",
+  "hide_detail": "Скрыть детали",
+  "No_differences_found_in_data": "Различий в данных не найдено.",
+  "read more": "Читать далее",
+  "read less": "Свернуть",
+  "enter_password": {
+    "enter_a_password": "Введите пароль",
+    "weak": "Слабый",
+    "medium": "Средний",
+    "strong": "Сильный"
+  
+}
+
 }

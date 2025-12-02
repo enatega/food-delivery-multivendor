@@ -1099,5 +1099,18 @@
   "Connect with Stripe for payments": "Kết nối với Stripe để thanh toán",
   "Payment Required": "Yêu cầu thanh toán",
   "Please complete your purchase to gain full access to the product": "Vui lòng hoàn tất mua hàng để có quyền truy cập đầy đủ vào sản phẩm",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Vì tỷ lệ hoa hồng là giá trị %, nên không thể vượt quá giá trị tối đa là 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Vì tỷ lệ hoa hồng là giá trị %, nên không thể vượt quá giá trị tối đa là 100",
+    "audit_log_header_desc": "Theo dõi tất cả các hành động và thay đổi quản trị trong hệ thống.",
+  "Performed_by": "Thực hiện bởi",
+  "show_detail": "Hiển thị chi tiết",
+  "hide_detail": "Ẩn chi tiết",
+  "No_differences_found_in_data": "Không tìm thấy sự khác biệt trong dữ liệu.",
+  "read more": "Đọc thêm",
+  "read less": "Thu gọn",
+  "enter_password": {
+    "enter_a_password": "Nhập mật khẩu",
+    "weak": "Yếu",
+    "medium": "Trung bình",
+    "strong": "Mạnh"
+  }
 }

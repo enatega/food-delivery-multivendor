@@ -1,4 +1,17 @@
-{
+{ "audit_log_header_desc": "Volg alle administratieve acties en wijzigingen binnen het systeem.",
+  "Performed_by": "Uitgevoerd door",
+  "show_detail": "Toon details",
+  "hide_detail": "Verberg details",
+  "No_differences_found_in_data": "Geen verschillen gevonden in de gegevens.",
+  "read more": "Lees meer",
+  "read less": "Lees minder",
+  "enter_password": {
+    "enter_a_password": "Voer een wachtwoord in",
+    "weak": "Zwak",
+    "medium": "Gemiddeld",
+    "strong": "Sterk"
+  },
+  
   "Sign in credentials": "Inloggegevens",
   "Sign in": "Inloggen",
   "CustomerSupport": "Klantenservice",

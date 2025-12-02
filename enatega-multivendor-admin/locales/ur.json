@@ -1099,5 +1099,21 @@
   "Connect with Stripe for payments": "ادائیگیوں کے لیے سٹرائپ سے رابطہ کریں",
   "Payment Required": "ادائیگی درکار",
   "Please complete your purchase to gain full access to the product": "پروڈکٹ تک مکمل رسائی حاصل کرنے کے لیے اپنی خریداری مکمل کریں",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "چونکہ کمیشن کی شرح ایک فیصد قدر ہے اس لیے یہ 100 کی زیادہ سے زیادہ قدر سے زیادہ نہیں ہو سکتی"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "چونکہ کمیشن کی شرح ایک فیصد قدر ہے اس لیے یہ 100 کی زیادہ سے زیادہ قدر سے زیادہ نہیں ہو سکتی",
+  
+  "audit_log_header_desc": "نظام کے اندر تمام انتظامی کارروائیوں اور تبدیلیوں کا سراغ لگائیں۔",
+  "Performed_by": "کی طرف سے انجام دیا گیا",
+  "show_detail": "تفصیلات دکھائیں",
+  "hide_detail": "تفصیلات چھپائیں",
+  "No_differences_found_in_data": "ڈیٹا میں کوئی فرق نہیں ملا۔",
+  "read more": "مزید پڑھیں",
+  "read less": "کم پڑھیں",
+  "enter_password": {
+    "enter_a_password": "ایک پاس ورڈ درج کریں",
+    "weak": "کمزور",
+    "medium": "درمیانہ",
+    "strong": "مضبوط"
+  
+}
+
 }

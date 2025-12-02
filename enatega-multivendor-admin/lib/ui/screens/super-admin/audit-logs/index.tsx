@@ -53,7 +53,7 @@ const AuditLogScreen = () => {
         <div className="p-4 md:p-6">
             <div className="mb-6">
                 <HeaderText text={t('Audit Logs')} />
-                <p className="text-gray-500 mt-1">Track all administrative actions and changes within the system.</p>
+                <p className="text-gray-500 mt-1">{t("audit_log_header_desc")}</p>
             </div>
 
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">

@@ -1098,5 +1098,19 @@
   "Please complete your purchase to gain full access to the product": "אנא השלם את הרכישה שלך כדי לקבל גישה מלאה למוצר",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "מכיוון ששיעור העמלה הוא ערך באחוזים, הוא אינו יכול לעלות על ערך מקסימלי של 100",
   "ShopType": "סוג חנות",
-  "Audit Logs": "יומני ביקורת"
+  "Audit Logs": "יומני ביקורת",
+  "audit_log_header_desc": "עקבו אחר כל הפעולות והשינויים המנהליים במערכת.",
+"Performed_by": "בוצע על ידי",
+"show_detail": "הצג פרטים",
+"hide_detail": "הסתר פרטים",
+"No_differences_found_in_data": "לא נמצאו הבדלים בנתונים.",
+"read more": "קרא עוד",
+"read less": "קרא פחות",
+"enter_password": {
+  "enter_a_password": "הזן סיסמה",
+  "weak": "חלשה",
+  "medium": "בינונית",
+  "strong": "חזקה"
+}
+
 }

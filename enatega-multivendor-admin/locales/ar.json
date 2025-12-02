@@ -1102,5 +1102,20 @@
   "Connect with Stripe for payments": "اتصل بـ Stripe للمدفوعات",
   "Payment Required": "الدفع مطلوب",
   "Please complete your purchase to gain full access to the product": "يرجى إتمام عملية الشراء للحصول على وصول كامل إلى المنتج",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "نظرًا لأن معدل العمولة هو قيمة مئوية، فلا يمكن أن يتجاوز القيمة القصوى 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "نظرًا لأن معدل العمولة هو قيمة مئوية، فلا يمكن أن يتجاوز القيمة القصوى 100",
+  "audit_log_header_desc": "تتبع كافة الإجراءات والتغييرات الإدارية داخل النظام",
+  "Performed_by": "تم تنفيذه بواسطة",
+  "show_detail": "إظهار التفاصيل",
+  "hide_detail": "إخفاء التفاصيل",
+  "No_differences_found_in_data": "لم يتم العثور على أي اختلافات في البيانات.",
+  "read more": "اقرأ المزيد",
+  "read less": "اقرأ أقل",
+    "no_user_found": "لم يتم العثور على أي مستخدم",
+    "enter_password": {
+    "enter_a_password": "أدخل كلمة المرور",
+    "weak": "ضعيف",
+    "medium": "متوسط",
+    "strong": "قوي"
+  }
+
 }

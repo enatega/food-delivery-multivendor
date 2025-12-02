@@ -38,7 +38,7 @@ const CustomMultiSelectComponent = ({
 
   const panelFooterTemplate = () => {
     const length = selectedItems ? selectedItems.length : 0;
-
+    const t = useTranslations()
     return (
       <div className="flex justify-between space-x-2">
         {extraFooterButton?.title ? (
@@ -46,7 +46,7 @@ const CustomMultiSelectComponent = ({
             className="w-full h-fit rounded  text-black"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title={`${extraFooterButton.title} (${length} Selected)`}
+            title={`${t(extraFooterButton.title)} (${length} ${t('selected')})`}
             onClick={extraFooterButton.onChange}
           />
         ) : (

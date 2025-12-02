@@ -1098,5 +1098,19 @@
   "Connect with Stripe for payments": "اتصال به استریپ برای پرداخت‌ها",
   "Payment Required": "پرداخت الزامی است",
   "Please complete your purchase to gain full access to the product": "لطفاً خرید خود را تکمیل کنید تا دسترسی کامل به محصول داشته باشید",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "از آنجا که نرخ کمیسیون یک مقدار درصدی است، نمی‌تواند از حداکثر مقدار ۱۰۰ بیشتر شود"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "از آنجا که نرخ کمیسیون یک مقدار درصدی است، نمی‌تواند از حداکثر مقدار ۱۰۰ بیشتر شود",
+  "audit_log_header_desc": "تمام اقدامات و تغییرات مدیریتی در سیستم را پیگیری کنید.",
+"Performed_by": "انجام شده توسط",
+"show_detail": "نمایش جزئیات",
+"hide_detail": "پنهان کردن جزئیات",
+"No_differences_found_in_data": "هیچ تفاوتی در داده‌ها پیدا نشد.",
+"read more": "بیشتر بخوانید",
+"read less": "کمتر بخوانید",
+"enter_password": {
+  "enter_a_password": "یک رمز عبور وارد کنید",
+  "weak": "ضعیف",
+  "medium": "متوسط",
+  "strong": "قوی"
+}
+
 }

@@ -1099,5 +1099,19 @@
   "Connect with Stripe for payments": "Ödənişlər üçün Stripe ilə əlaqə qurun",
   "Payment Required": "Ödəniş tələb olunur",
   "Please complete your purchase to gain full access to the product": "Məhsula tam giriş əldə etmək üçün alışınızı tamamlayın",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Komissiya dərəcəsi % dəyər olduğu üçün maksimum 100-ü keçə bilməz"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Komissiya dərəcəsi % dəyər olduğu üçün maksimum 100-ü keçə bilməz",
+  "audit_log_header_desc": "Sistem daxilində bütün inzibati hərəkətləri və dəyişiklikləri izləyin.",
+"Performed_by": "Tərəfindən yerinə yetirilib",
+"show_detail": "Ətraflı göstər",
+"hide_detail": "Ətraflı gizlət",
+"No_differences_found_in_data": "Məlumatlarda heç bir fərq tapılmadı.",
+"read more": "Daha çox oxu",
+"read less": "Daha az oxu",
+"enter_password": {
+  "enter_a_password": "Şifrə daxil edin",
+  "weak": "Zəif",
+  "medium": "Orta",
+  "strong": "Güclü"
+}
+
 }

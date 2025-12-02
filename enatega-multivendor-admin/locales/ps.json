@@ -1,4 +1,18 @@
 {
+   "audit_log_header_desc": "په سیستم کې ټول اداري اقدامات او بدلونونه تعقیب کړئ.",
+  "Performed_by": "اجرا شوی لخوا",
+  "show_detail": "جزییات وښایئ",
+  "hide_detail": "جزییات پټ کړئ",
+  "No_differences_found_in_data": "په معلوماتو کې هیڅ توپیر ونه موندل شو.",
+  "read more": "نور ولولئ",
+  "read less": "کم ولولئ",
+  "enter_password": {
+    "enter_a_password": "یو پاسورډ دننه کړئ",
+    "weak": "ضعیف",
+    "medium": "منځنی",
+    "strong": "قوي"
+  },
+  
   "Sign in credentials": "د ننوتلو اسناد",
   "Sign in": "ننوتل",
   "CustomerSupport": "د پیرودونکي ملاتړ",

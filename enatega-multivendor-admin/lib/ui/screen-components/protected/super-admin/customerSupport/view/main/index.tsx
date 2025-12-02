@@ -487,7 +487,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
               />
             ))
           ) : (
-            <NoData message={t('No users found')} />
+            <NoData message={t('no_user_found')} />
           )}
         </div>
       </div>

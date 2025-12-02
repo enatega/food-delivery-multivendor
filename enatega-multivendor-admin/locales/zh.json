@@ -1097,5 +1097,18 @@
   "withdraw_requests": "提现请求",
   "updated": "已更新",
   "this_Feature_is_only_Available_in_Paid_Version": "此功能仅在付费版本中可用",
-  "you_are_using_free_version": "您正在使用免费版本"
+  "you_are_using_free_version": "您正在使用免费版本",
+  "audit_log_header_desc": "跟踪系统中的所有管理操作和更改。",
+  "Performed_by": "执行者",
+  "show_detail": "显示详情",
+  "hide_detail": "隐藏详情",
+  "No_differences_found_in_data": "数据中未发现差异。",
+  "read more": "阅读更多",
+  "read less": "阅读更少",
+  "enter_password": {
+    "enter_a_password": "输入密码",
+    "weak": "弱",
+    "medium": "中",
+    "strong": "强"
+  }
 }

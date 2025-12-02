@@ -1099,5 +1099,19 @@
   "Connect with Stripe for payments": "পেমেন্টের জন্য স্ট্রাইপের সাথে সংযোগ করুন",
   "Payment Required": "পেমেন্ট প্রয়োজন",
   "Please complete your purchase to gain full access to the product": "পণ্যের সম্পূর্ণ অ্যাক্সেস পেতে আপনার ক্রয় সম্পূর্ণ করুন",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "কমিশন রেট % মূল্য হওয়ায় এটি ১০০ এর সর্বোচ্চ মূল্য অতিক্রম করতে পারবে না"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "কমিশন রেট % মূল্য হওয়ায় এটি ১০০ এর সর্বোচ্চ মূল্য অতিক্রম করতে পারবে না",
+  "audit_log_header_desc": "সিস্টেমের সকল প্রশাসনিক কার্যক্রম এবং পরিবর্তনগুলি ট্র্যাক করুন।",
+"Performed_by": "সম্পাদন করেছেন",
+"show_detail": "বিস্তারিত দেখুন",
+"hide_detail": "বিস্তারিত লুকান",
+"No_differences_found_in_data": "তথ্যে কোনো পার্থক্য পাওয়া যায়নি।",
+"read more": "আরও পড়ুন",
+"read less": "কম পড়ুন",
+"enter_password": {
+  "enter_a_password": "একটি পাসওয়ার্ড লিখুন",
+  "weak": "দুর্বল",
+  "medium": "মাঝারি",
+  "strong": "শক্তিশালী"
+}
+
 }

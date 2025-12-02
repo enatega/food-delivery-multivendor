@@ -1093,5 +1093,18 @@
   "Connect with Stripe for payments": "చెల్లింపుల కోసం Stripeతో కనెక్ట్ అవ్వండి",
   "Payment Required": "చెల్లింపు అవసరం",
   "Please complete your purchase to gain full access to the product": "ప్రొడక్ట్‌కు పూర్తి యాక్సెస్ పొందడానికి దయచేసి మీ కొనుగోలు పూర్తి చేయండి",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "కమిషన్ రేటు శాతం విలువ కాబట్టి ఇది 100 గరిష్ట విలువను మించకూడదు"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "కమిషన్ రేటు శాతం విలువ కాబట్టి ఇది 100 గరిష్ట విలువను మించకూడదు",
+   "audit_log_header_desc": "వ్యవస్థలోని అన్ని పరిపాలనా చర్యలు మరియు మార్పులను ట్రాక్ చేయండి.",
+  "Performed_by": "చేసింది",
+  "show_detail": "వివరాలను చూపించు",
+  "hide_detail": "వివరాలను దాచు",
+  "No_differences_found_in_data": "డేటాలో ఎలాంటి తేడాలు కనబడలేదు.",
+  "read more": "మరింత చదవండి",
+  "read less": "తక్కువ చదవండి",
+  "enter_password": {
+    "enter_a_password": "పాస్‌వర్డ్ నమోదు చేయండి",
+    "weak": "బలహీనమైన",
+    "medium": "సగటు",
+    "strong": "బలమైన"
+  }
 }

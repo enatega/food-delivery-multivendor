@@ -1100,5 +1100,21 @@
   "Connect with Stripe for payments": "支払いのためにStripeに接続",
   "Payment Required": "支払いが必要",
   "Please complete your purchase to gain full access to the product": "購入を完了して製品へのフルアクセスを取得してください",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "手数料率はパーセンテージ値であるため、最大100を超えることはできません"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "手数料率はパーセンテージ値であるため、最大100を超えることはできません",
+  
+  "audit_log_header_desc": "システム内のすべての管理操作と変更を追跡します。",
+  "Performed_by": "実行者",
+  "show_detail": "詳細を表示",
+  "hide_detail": "詳細を非表示",
+  "No_differences_found_in_data": "データに差異は見つかりませんでした。",
+  "read more": "もっと読む",
+  "read less": "少なく読む",
+  "enter_password": {
+    "enter_a_password": "パスワードを入力してください",
+    "weak": "弱い",
+    "medium": "普通",
+    "strong": "強い"
+  
+}
+
 }

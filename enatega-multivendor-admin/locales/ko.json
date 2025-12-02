@@ -1099,5 +1099,18 @@
   "Connect with Stripe for payments": "결제를 위해 Stripe에 연결",
   "Payment Required": "결제 필요",
   "Please complete your purchase to gain full access to the product": "구매를 완료하여 제품에 대한 전체 액세스 권한을 얻으세요",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "수수료율은 % 값이므로 최대 100을 초과할 수 없습니다"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "수수료율은 % 값이므로 최대 100을 초과할 수 없습니다",
+   "audit_log_header_desc": "시스템 내 모든 관리 작업과 변경 사항을 추적하세요.",
+  "Performed_by": "수행자",
+  "show_detail": "세부 정보 보기",
+  "hide_detail": "세부 정보 숨기기",
+  "No_differences_found_in_data": "데이터에서 차이를 찾을 수 없습니다.",
+  "read more": "더 보기",
+  "read less": "간단히 보기",
+  "enter_password": {
+    "enter_a_password": "비밀번호를 입력하세요",
+    "weak": "약함",
+    "medium": "중간",
+    "strong": "강함"
+  }
 }

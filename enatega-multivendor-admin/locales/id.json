@@ -1099,5 +1099,18 @@
   "Connect with Stripe for payments": "Hubungkan dengan Stripe untuk pembayaran",
   "Payment Required": "Pembayaran Diperlukan",
   "Please complete your purchase to gain full access to the product": "Selesaikan pembelian Anda untuk mendapatkan akses penuh ke produk",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Karena tarif komisi adalah nilai persentase, maka tidak boleh melebihi nilai maksimum 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Karena tarif komisi adalah nilai persentase, maka tidak boleh melebihi nilai maksimum 100",
+  "audit_log_header_desc": "Lacak semua tindakan dan perubahan administratif dalam sistem.",
+  "Performed_by": "Dilakukan oleh",
+  "show_detail": "Tampilkan detail",
+  "hide_detail": "Sembunyikan detail",
+  "No_differences_found_in_data": "Tidak ditemukan perbedaan dalam data.",
+  "read more": "Baca selengkapnya",
+  "read less": "Baca lebih sedikit",
+  "enter_password": {
+    "enter_a_password": "Masukkan kata sandi",
+    "weak": "Lemah",
+    "medium": "Sedang",
+    "strong": "Kuat"
+  }
 }

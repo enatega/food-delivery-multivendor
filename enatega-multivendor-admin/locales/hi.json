@@ -1099,5 +1099,19 @@
   "Connect with Stripe for payments": "भुगतान के लिए Stripe से कनेक्ट करें",
   "Payment Required": "भुगतान आवश्यक",
   "Please complete your purchase to gain full access to the product": "उत्पाद तक पूर्ण पहुँच प्राप्त करने के लिए कृपया अपनी खरीदारी पूरी करें",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "चूंकि कमीशन दर एक प्रतिशत मान है इसलिए यह 100 के अधिकतम मान से अधिक नहीं हो सकता"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "चूंकि कमीशन दर एक प्रतिशत मान है इसलिए यह 100 के अधिकतम मान से अधिक नहीं हो सकता",
+  "audit_log_header_desc": "सिस्टम के अंदर सभी प्रशासनिक कार्यों और परिवर्तनों को ट्रैक करें।",
+"Performed_by": "द्वारा किया गया",
+"show_detail": "विवरण दिखाएँ",
+"hide_detail": "विवरण छिपाएँ",
+"No_differences_found_in_data": "डेटा में कोई अंतर नहीं मिला।",
+"read more": "और पढ़ें",
+"read less": "कम पढ़ें",
+"enter_password": {
+  "enter_a_password": "एक पासवर्ड दर्ज करें",
+  "weak": "कमज़ोर",
+  "medium": "मध्यम",
+  "strong": "मजबूत"
+}
+
 }

@@ -1099,5 +1099,18 @@
   "Connect with Stripe for payments": "Conectar com Stripe para pagamentos",
   "Payment Required": "Pagamento necessário",
   "Please complete your purchase to gain full access to the product": "Conclua sua compra para obter acesso completo ao produto",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Como a taxa de comissão é um valor percentual, ela não pode exceder um valor máximo de 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Como a taxa de comissão é um valor percentual, ela não pode exceder um valor máximo de 100",
+  "audit_log_header_desc": "Acompanhe todas as ações e alterações administrativas dentro do sistema.",
+  "Performed_by": "Executado por",
+  "show_detail": "Mostrar detalhes",
+  "hide_detail": "Ocultar detalhes",
+  "No_differences_found_in_data": "Nenhuma diferença encontrada nos dados.",
+  "read more": "Ler mais",
+  "read less": "Ler menos",
+  "enter_password": {
+    "enter_a_password": "Digite uma senha",
+    "weak": "Fraca",
+    "medium": "Média",
+    "strong": "Forte"
+  }
 }

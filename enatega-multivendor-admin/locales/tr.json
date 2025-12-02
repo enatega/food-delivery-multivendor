@@ -1099,5 +1099,18 @@
   "Connect with Stripe for payments": "Ödemeler için Stripe'a bağlanın",
   "Payment Required": "Ödeme Gerekiyor",
   "Please complete your purchase to gain full access to the product": "Ürüne tam erişim için lütfen satın almanızı tamamlayın",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Komisyon oranı bir yüzde değeri olduğundan maksimum 100'ü geçemez"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Komisyon oranı bir yüzde değeri olduğundan maksimum 100'ü geçemez",
+  "audit_log_header_desc": "Sistem içindeki tüm yönetimsel işlemleri ve değişiklikleri takip edin.",
+  "Performed_by": "Yapan",
+  "show_detail": "Detayları Göster",
+  "hide_detail": "Detayları Gizle",
+  "No_differences_found_in_data": "Verilerde herhangi bir fark bulunamadı.",
+  "read more": "Daha fazla oku",
+  "read less": "Daha az oku",
+  "enter_password": {
+    "enter_a_password": "Bir şifre girin",
+    "weak": "Zayıf",
+    "medium": "Orta",
+    "strong": "Güçlü"
+  }
 }

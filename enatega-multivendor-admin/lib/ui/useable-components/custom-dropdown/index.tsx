@@ -6,6 +6,7 @@ import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import TextIconClickable from '../text-icon-clickable';
+import { useTranslations } from 'next-intl';
 
 
 const CustomDropdownComponent = ({
@@ -20,6 +21,7 @@ const CustomDropdownComponent = ({
   extraFooterButton,
   ...props
 }: IDropdownComponentProps) => {
+  const t = useTranslations()
   const itemTemplate = (option: { label: string }) => {
     return (
       <div className="align-items-center flex">
@@ -65,6 +67,7 @@ const CustomDropdownComponent = ({
         checkmark={true}
         panelFooterTemplate={panelFooterTemplate}
         {...props}
+        emptyMessage={t("No available options")}
       />
     </div>
   ) : (

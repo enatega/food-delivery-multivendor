@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import ChangesDiff from './ChangesDiff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faPlusCircle, faTrashAlt, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 export interface AuditLog {
     _id: string;
@@ -26,6 +27,7 @@ interface AuditLogCardProps {
 }
 
 const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
+    const t = useTranslations()
 
     const getActionDetails = (action: string) => {
         const lowerAction = action.toLowerCase();
@@ -52,7 +54,7 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
                     <div>
                         <p className="font-bold text-lg text-gray-800">API: {log.action}</p>
                         <p className="text-sm text-gray-500">
-                            Performed by <span className="font-semibold text-gray-700">{log.admin.email}</span>
+                            {t("Performed_by")} <span className="font-semibold text-gray-700">{log.admin.email}</span>
                         </p>
                     </div>
                     <div className="text-right">
