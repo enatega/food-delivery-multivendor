@@ -26,6 +26,7 @@ const CustomMultiSelectComponent = ({
   multiSelectClassName,
   ...props
 }: IMultiSelectComponentProps) => {
+   const t = useTranslations()
   const itemTemplate = (option: { label: string }) => {
     return (
       <div className="align-items-center flex">
@@ -34,16 +35,15 @@ const CustomMultiSelectComponent = ({
     );
   };
 
-  const t = useTranslations();
 
   const panelFooterTemplate = () => {
     const length = selectedItems ? selectedItems.length : 0;
-    const t = useTranslations()
+   
     return (
       <div className="flex justify-between space-x-2">
         {extraFooterButton?.title ? (
           <TextIconClickable
-            className="w-full h-fit rounded  text-black"
+            className="w-full h-fit rounded  text-blasck"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
             title={`${t(extraFooterButton.title)} (${length} ${t('selected')})`}
