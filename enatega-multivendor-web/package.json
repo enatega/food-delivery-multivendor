@@ -27,7 +27,7 @@
     "@react-oauth/google": "^0.12.1",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.8.4",
-    "chart.js": "^4.4.4",
+    "chart.js": "^4.5.0",
     "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
     "firebase": "^11.8.1",
