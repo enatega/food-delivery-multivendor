@@ -9,6 +9,7 @@ import {
 } from "../utils/interfaces/restaurants.interface";
 // context
 import { useUserAddress } from "../context/address/address.context";
+import { toFloatIfNeeded } from "../utils/methods/helpers";
 
 const useMostOrderedRestaurants = (enabled = true, page = 1, limit=10, shopType?: "restaurant" | "grocery" | null ) => {
   const { userAddress } = useUserAddress();
@@ -18,8 +19,8 @@ const useMostOrderedRestaurants = (enabled = true, page = 1, limit=10, shopType?
   const { data, loading, error, networkStatus, fetchMore } =
     useQuery<IMostOrderedRestaurantsData>(MOST_ORDER_RESTAURANTS, {
       variables: {
-        latitude: userLatitude,
-        longitude: userLongitude,
+        latitude: toFloatIfNeeded(userLatitude),
+        longitude: toFloatIfNeeded(userLongitude),
         page,
         limit,
         shopType: shopType ?? null,
