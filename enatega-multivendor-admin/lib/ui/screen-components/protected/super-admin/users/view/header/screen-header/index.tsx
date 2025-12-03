@@ -37,9 +37,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({
   ];
 
   const accountStatusOptions = [
-    { id: 1, label: t('Active'), code: 'active' },
-    { id: 2, label: t('Blocked'), code: 'blocked' },
-    { id: 3, label: t('Deactivated'), code: 'deactivated' },
+    { id: 1, label: t('active'), code: 'active' },
+    { id: 2, label: t('blocked'), code: 'blocked' },
+    { id: 3, label: t('deactivated'), code: 'deactivated' },
   ];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
           <CustomTextInput
             value={search}
             onChange={handleSearchChange}
-            placeholder={t('Search by name or email')}
+            placeholder={t('search_by_name_or_email')}
             className="min-w-[300px] px-2 py-3 border rounded-md"
           />
           <CustomMultiSelectComponent
@@ -70,7 +70,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             selectedItems={registrationMethodFilter}
             options={registrationMethodOptions}
             setSelectedItems={(key, items) => handleRegistrationMethodChange(items)}
-            placeholder={t('Registration Method')}
+            placeholder={t('registration_method')}
             className=" w-min border rounded-md py-1"
             multiSelectClassName='border-none'
 
@@ -80,7 +80,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             selectedItems={accountStatusFilter}
             options={accountStatusOptions}
             setSelectedItems={(key, items) => handleAccountStatusChange(items)}
-            placeholder={t('Account Status')}
+            placeholder={t('account_status')}
             className=" w-min border rounded-md py-1"
             multiSelectClassName='border-none'
 

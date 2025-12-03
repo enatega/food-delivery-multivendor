@@ -208,7 +208,7 @@ export default function CuisineForm({
                     onChange={handleChange}
                     value={values.name}
                     type="text"
-                    error={touched.name && errors.name ? errors.name : ''}
+                    error={touched.name && errors.name ? t(errors.name) : ''}
                     placeholder={t('Name')}
                     style={{
                       borderColor: onErrorMessageMatcher(
@@ -229,7 +229,7 @@ export default function CuisineForm({
                     value={values.description}
                     error={
                       touched.description && errors.description
-                        ? errors.description
+                        ? t(errors.description)
                         : ''
                     }
                     placeholder={t('Description')}
@@ -290,8 +290,8 @@ export default function CuisineForm({
                     type="submit"
                   >
                     {isSubmitting ||
-                    createCuisineLoading ||
-                    editCuisineLoading ? (
+                      createCuisineLoading ||
+                      editCuisineLoading ? (
                       <ProgressSpinner
                         className="m-0 h-6 w-6 items-center self-center p-0"
                         strokeWidth="5"

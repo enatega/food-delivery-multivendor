@@ -1,12 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
+import { useTranslations } from 'next-intl';
 
 interface ChangesDiffProps {
     changes: JSON;
 }
 
 const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
+    const t = useTranslations()
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (!changes) {
@@ -43,13 +45,13 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
         }, {} as Record<string, { old: JSON; new: JSON }>);
 
         if (Object.keys(diffs).length === 0) {
-            return <p className="text-sm text-gray-500">No differences found in data.</p>;
+            return <p className="text-sm text-gray-500">{t("No_differences_found_in_data")}</p>;
         }
 
         return (
             <div>
                 <Button
-                    label={isExpanded ? 'Read Less' : 'Read More'}
+                    label={t(isExpanded ? 'read less' : 'read more')}
                     link
                     className="p-0 mb-2 text-sm"
                     onClick={() => setIsExpanded(!isExpanded)}
@@ -76,7 +78,7 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
         return (
             <div>
                 <Button
-                    label={isExpanded ? 'Hide Details' : 'Show Details'}
+                    label={t(isExpanded ? 'hide_detail' : 'show_detail')}
                     link
                     className="p-0 mb-2 text-sm"
                     onClick={() => setIsExpanded(!isExpanded)}

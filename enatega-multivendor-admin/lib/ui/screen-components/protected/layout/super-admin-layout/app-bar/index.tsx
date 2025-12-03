@@ -281,7 +281,7 @@ const AppTopbar = () => {
               className="absolute flex select-none flex-col pb-2 top-5 right-0 mt-2 w-72 bg-white shadow-xl rounded-md border"
             >
               <p className="select-none text-center font-medium p-2 shadow-sm">
-                Notifications
+                {t("Notifications")}
               </p>
 
               <ul className="flex flex-col gap-1 pt-2 overflow-y-auto max-h-[368px]">

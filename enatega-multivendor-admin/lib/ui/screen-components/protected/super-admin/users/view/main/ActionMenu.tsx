@@ -5,11 +5,11 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { IUserResponse } from '@/lib/utils/interfaces';
 import { CustomDialog } from '@/lib/ui/useable-components/custom-dialog';
 import { useMutation } from '@apollo/client';
+import { useTranslations } from 'next-intl';
 import { UPDATE_USER_STATUS, UPDATE_USER_NOTES, DELETE_USER, RESET_USER_SESSION } from '@/lib/api/graphql/mutations/user';
 import useToast from '@/lib/hooks/useToast';
 
 // TODO: Setup useTranslation hook to get t function for i18n
-const t = (key: string,) => key;
 
 type ModalType = 'block' | 'unblock' | 'delete' | 'deactivate' | 'activate' | 'reset' | 'notes' | null;
 
@@ -19,7 +19,7 @@ interface ActionMenuProps {
 
 export const ActionMenu: React.FC<ActionMenuProps> = ({ rowData }) => {
     const menuRef = useRef<Menu | null>(null);
-
+    const t = useTranslations();
     const [activeModal, setActiveModal] = useState<ModalType>(null);
     const [internalNote, setInternalNote] = useState(rowData?.notes);
 
@@ -94,18 +94,18 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({ rowData }) => {
 
     if (rowData.status === "deactivate" || rowData.status === "blocked") {
         items.push({
-            label: t('Activate Account'),
+            label: t('activate_account'),
             icon: 'pi pi-user-plus',
             command: () => setActiveModal('activate'),
         });
     } else {
         items.push({
 
-            label: t('Deactivate Account'),
+            label: t('deactivate_account'),
             icon: 'pi pi-user-minus',
             command: () => setActiveModal('deactivate'),
         }, {
-            label: t('Block User'),
+            label: t('block_user'),
             icon: 'pi pi-ban',
             command: () => setActiveModal('block'),
         },);
@@ -114,12 +114,12 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({ rowData }) => {
 
     items.push(
         {
-            label: t('Reset Session'),
+            label: t('reset_session'),
             icon: 'pi pi-refresh',
             command: () => setActiveModal('reset'),
         },
         {
-            label: t('Internal Notes'),
+            label: t('internal_note'),
             icon: 'pi pi-file-edit',
             command: () => setActiveModal('notes'),
         },
@@ -127,7 +127,7 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({ rowData }) => {
             separator: true,
         },
         {
-            label: t('Delete Account'),
+            label: t('delete_account'),
             icon: 'pi pi-trash',
             className: '!text-red-500',
             command: () => setActiveModal('delete'),
