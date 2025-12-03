@@ -59,7 +59,7 @@
     "autoprefixer": "^10.4.19",
     "cross-env": "^7.0.3",
     "cypress": "^13.13.1",
-    "eslint": "^8.57.1",
+    "eslint": "^9.36.0",
     "eslint-config-next": "14.2.5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
