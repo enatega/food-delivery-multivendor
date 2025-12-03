@@ -43,10 +43,10 @@ const CustomMultiSelectComponent = ({
       <div className="flex justify-between space-x-2">
         {extraFooterButton?.title ? (
           <TextIconClickable
-            className="w-full h-fit rounded  text-blasck"
+            className="w-full h-fit rounded  text-black"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title={`${t(extraFooterButton.title)} (${length} ${t('selected')})`}
+            title={`${extraFooterButton.title} (${length} ${t('selected')})`}
             onClick={extraFooterButton.onChange}
           />
         ) : (

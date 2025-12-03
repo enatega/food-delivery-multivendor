@@ -9,6 +9,7 @@ export function usePrimeReactLocales() {
 
   useEffect(() => {
     // Define custom translation messages
+    
     addLocale("en", {
       weak: t("weak"),
       medium: t("medium"),
