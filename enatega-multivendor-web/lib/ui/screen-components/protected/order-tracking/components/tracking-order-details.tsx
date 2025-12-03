@@ -55,18 +55,18 @@ function TrackingOrderDetails({
     }, 0);
   };
 
-  console.log("order detail..",orderTrackingDetails);
+  // console.log("order detail..",orderTrackingDetails);
 
-  // Calculate total
-  const calculateTotal = () => {
-    const subtotal = calculateSubtotal();
-    const deliveryCharge = orderTrackingDetails?.deliveryCharges || 0;
-    const tax = orderTrackingDetails?.taxationAmount || 0;
-    const tip = orderTrackingDetails?.tipping || 0;
-    const addons = calculateTotalAddonPrice();
+  // // Calculate total
+  // const calculateTotal = () => {
+  //   const subtotal = calculateSubtotal();
+  //   const deliveryCharge = orderTrackingDetails?.deliveryCharges || 0;
+  //   const tax = orderTrackingDetails?.taxationAmount || 0;
+  //   const tip = orderTrackingDetails?.tipping || 0;
+  //   const addons = calculateTotalAddonPrice();
 
-    return subtotal + deliveryCharge + tax + tip + addons;
-  };
+  //   return subtotal + deliveryCharge + tax + tip + addons;
+  // };
 
   // Check if order can be cancelled (only PENDING or ACCEPTED)
   const canCancelOrder = () => {
