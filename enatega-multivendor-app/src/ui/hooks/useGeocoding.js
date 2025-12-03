@@ -1,5 +1,6 @@
 import axios from 'axios'
 import useEnvVars from '../../../environment'
+import { extractCity, findBestResult } from '../../utils/customFunctions'
 
 const useGeocoding = () => {
   const { GOOGLE_MAPS_KEY } = useEnvVars()
@@ -12,22 +13,27 @@ const useGeocoding = () => {
 
       // Check if the response is successful and contains results
       if (
-        response.data &&
-        response.data.results &&
-        response.data.results.length > 0
+        response.data.status === 'OK' && response.data.results.length > 0
       ) {
+        const bestResult = findBestResult(response.data.results)
+
+        if (!bestResult) {
+          throw new Error('No valid address found')
+        }
         // Extract the formatted address from the first result
-        const formattedAddress = response.data.results[0].formatted_address
+        const formattedAddress = bestResult.formatted_address || 'Address not available'
+
         // Extract the city from the address components
-        const cityComponent = response.data.results[0].address_components.find(
-          (component) =>
-            component.types.includes('locality') ||
-            component.types.includes('administrative_area_level_2')
-        )
-        const city = cityComponent ? cityComponent.long_name : null
-        
+        const city = extractCity(bestResult.address_components)
+
+        console.log('✅ Extracted address:', {
+          formattedAddress,
+          city,
+          resultType: bestResult.types?.[0]
+        })
+
         return { formattedAddress, city }
-        
+
       } else {
         throw new Error('No address found for the given coordinates.')
       }
@@ -36,7 +42,7 @@ const useGeocoding = () => {
       throw error
     }
   }
-  return {getAddress}
+  return { getAddress }
 }
 
 export default useGeocoding
