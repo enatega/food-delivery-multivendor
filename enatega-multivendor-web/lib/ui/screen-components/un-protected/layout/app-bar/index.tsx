@@ -203,7 +203,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // Logo click handler
   const logoClickHandler = () => {
     if (isLogin) {
-      router.push("/discovery");
+      router.push("/");
     } else {
       router.push("/");
     }

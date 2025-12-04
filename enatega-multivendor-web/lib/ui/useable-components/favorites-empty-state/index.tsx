@@ -24,7 +24,7 @@ export default function FavoritesEmptyState() {
         {t('favorites_empty_state_description')}
       </p>  
       <Link
-        href="/store"
+        href="/discovery"
         className="inline-flex items-center justify-center px-6 py-3 bg-[#F3FFEE]  text-black hover:text-white font-medium rounded-full transition-colors hover:bg-[#5AC12F] focus:outline-none focus:ring-2 focus:ring-[#5AC12F] focus:ring-offset-2"
       >
         {t('explore_store')}
