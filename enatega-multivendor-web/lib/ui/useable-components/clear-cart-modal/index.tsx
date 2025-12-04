@@ -38,7 +38,7 @@ export default function ClearCartModal({
 
         <div className="flex flex-col gap-3">
           <Button
-            className="bg-green-500 text-white border-none py-2 px-4 rounded-full font-medium"
+            className="bg-primary-color text-white border-none py-2 px-4 rounded-full font-medium"
             onClick={onConfirm}
             label={t('ok_label')}
           />

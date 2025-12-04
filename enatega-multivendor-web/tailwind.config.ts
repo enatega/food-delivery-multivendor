@@ -26,12 +26,12 @@ const config = {
         none: "none",
       },
       colors: {
-        "primary-color": "#5AC12F",
-        "secondary-color": "#d8e3a3",
-        "secondary-border-color": "#111827",
-        sky: {
-          500: "#0EA5E9", // Ensure sky-500 is set correctly
-        },
+         "primary-color": "#75d04b",
+        "primary-light": "#F3FFEE",
+        "primary-dark": "#5AC12F",
+        "secondary-color": "#0EA5E9",
+        "secondary-border-color": "#111827"
+          
       },
       width: {
         "custom-button": "110px",

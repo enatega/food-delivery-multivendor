@@ -269,7 +269,7 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
                     key={msg._id}
                     className={`rounded-lg p-3 max-w-[80%] ${
                       isUserMessage
-                        ? "bg-green-500 text-white ml-auto" 
+                        ? "bg-primary-color text-white ml-auto" 
                         : "bg-gray-100 text-gray-800 mr-auto"
                     }`}
                   >
@@ -304,14 +304,14 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Type your message here..."
-                className="flex-1 p-3 border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#5AC12F] resize-none"
+                className="flex-1 p-3 border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary-color resize-none"
                 rows={2}
                 disabled={isSending}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || isSending}
-                className={`bg-green-500 ${direction === "rtl" ? "rounded-l-md" : "rounded-r-md"} p-2 text-white flex items-center justify-center ${
+                className={`bg-primary-color ${direction === "rtl" ? "rounded-l-md" : "rounded-r-md"} p-2 text-white flex items-center justify-center ${
                   !message.trim() || isSending
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-green-600"

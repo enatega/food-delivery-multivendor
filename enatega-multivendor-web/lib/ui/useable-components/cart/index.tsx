@@ -105,7 +105,7 @@ export default function Cart({ onClose }: CartProps) {
 
               router.push("/discovery", { scroll: true });
             }}
-            className="bg-[#5AC12F] text-black px-6 py-2 rounded-full font-medium"
+            className="bg-primary-color text-black px-6 py-2 rounded-full font-medium"
             type="button"
           >
             {t("browse_restaurant")}
@@ -218,7 +218,7 @@ export default function Cart({ onClose }: CartProps) {
                       <h3 className="font-inter font-semibold text-sm text-gray-700 dark:text-white ">
                         {item.foodTitle || item.title || t("food_item_label")}
                       </h3>
-                      <p className="text-[#0EA5E9] font-semibold text-sm">
+                      <p className="text-secondary-color font-semibold text-sm">
                         {CURRENCY_SYMBOL}
                         {item.price || 0}
                       </p>
@@ -259,7 +259,7 @@ export default function Cart({ onClose }: CartProps) {
                       e.stopPropagation();
                       updateItemQuantity(item.key, 1);
                     }}
-                    className="bg-[#0EA5E9] text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    className="bg-secondary-color text-white rounded-full w-6 h-6 flex items-center justify-center"
                     type="button"
                   >
                     <FontAwesomeIcon icon={faPlus} size="xs" />
@@ -305,7 +305,7 @@ export default function Cart({ onClose }: CartProps) {
                         <p className="text-sm font-semibold text-gray-700 dark:text-white truncate">
                           {food.title}
                         </p>
-                        <p className="text-[#0EA5E9] text-sm font-semibold">
+                        <p className="text-secondary-color text-sm font-semibold">
                           {CURRENCY_SYMBOL}
                           {food.variations[0].price}
                         </p>
@@ -326,7 +326,7 @@ export default function Cart({ onClose }: CartProps) {
               </h2>
               <textarea
                 id="instructions"
-                className="w-full h-20 p-2 bg-white dark:bg-gray-800 border border-gray-300 rounded-md resize-none focus:border-[#0EA5E9] focus:outline-none text-sm"
+                className="w-full h-20 p-2 bg-white dark:bg-gray-800 border border-gray-300 rounded-md resize-none focus:border-secondary-color focus:outline-none text-sm"
                 placeholder={t("special_requests_placeholder")}
                 onChange={({ target: { value } }) => {
                   if (value?.length > 500) return;
@@ -351,7 +351,7 @@ export default function Cart({ onClose }: CartProps) {
         {/* Fixed Checkout Button */}
         <div className="p-4 flex flex-col justify-center items-center border-t bg-white dark:bg-gray-800 ">
           <button
-            className="flex justify-between items-center w-full bg-[#5AC12F] text-black rounded-full px-4 py-3"
+            className="flex justify-between items-center w-full bg-primary-color text-black rounded-full px-4 py-3"
             onClick={() => {
               router.push("/order/checkout");
               if (onClose) onClose();
@@ -359,7 +359,7 @@ export default function Cart({ onClose }: CartProps) {
             type="button"
           >
             <div className="flex items-center">
-              <span className="bg-black text-[#5AC12F] rounded-full w-6 h-6 flex items-center justify-center mr-2 rtl:ml-2 text-sm font-medium">
+              <span className="bg-black text-primary-color rounded-full w-6 h-6 flex items-center justify-center mr-2 rtl:ml-2 text-sm font-medium">
                 {cartCount}
               </span>
               <span className="text-black text-base font-medium">

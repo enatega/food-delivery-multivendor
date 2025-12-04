@@ -15,7 +15,7 @@ export const HeaderFavourite: React.FC<IHeaderFavourite> = ({ title, onSeeAllCli
         <CustomButton
           label={t("See_all")}
           onClick={onSeeAllClick}
-          className="text-[#0EA5E9] transition-colors duration-200 text-base md:text-lg font-light"
+          className="text-secondary-color transition-colors duration-200 text-base md:text-lg font-light"
         />  
     </div>
   )

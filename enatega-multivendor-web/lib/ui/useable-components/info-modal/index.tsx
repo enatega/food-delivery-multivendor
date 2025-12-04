@@ -126,7 +126,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               icon={faCircle}
               className={`text-[10px] md:text-xs font-normal md:text-[16px] mr-2 ${
                 restaurantInfo.isAvailable && getCurrentDayHours() !== t("Closed")
-                  ? "text-green-500"
+                  ? "text-primary-color"
                   : "text-red-500"
               }`}
             />
