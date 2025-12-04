@@ -2,7 +2,7 @@
 'use client';
 import React from 'react';
 import { Tag } from 'primereact/tag';
-import { format } from 'date-fns';
+import moment from 'moment';
 import ChangesDiff from './ChangesDiff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faPlusCircle, faTrashAlt, faHistory } from '@fortawesome/free-solid-svg-icons';
@@ -58,8 +58,8 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm text-gray-600">{format(new Date(log.timestamp), 'PPP')}</p>
-                        <p className="text-xs text-gray-400">{format(new Date(log.timestamp), 'p')}</p>
+                        <p className="text-sm text-gray-600">{moment.utc(log.timestamp).local().format('MMMM D, YYYY')}</p>
+                        <p className="text-xs text-gray-400">{moment.utc(log.timestamp).local().format('h:mm A')}</p>
                     </div>
                 </div>
 
