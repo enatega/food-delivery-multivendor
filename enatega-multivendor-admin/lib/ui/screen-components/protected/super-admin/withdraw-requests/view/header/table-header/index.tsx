@@ -122,7 +122,7 @@ export default function WithdrawRequestSuperAdminTableHeader({
               selectedActions.find(
                 (action) =>
                   filterOptions.find((opt) => opt.value === action)?.type ===
-                  'status'
+                  'userType'
               )
                 ? 'w-32' // Wider when a filter is selected
                 : 'w-20'
