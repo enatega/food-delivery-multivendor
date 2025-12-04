@@ -64,7 +64,7 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
                                     <strong className="font-semibold text-gray-700">{key}:</strong>
                                     <div className="flex gap-2 mt-1">
                                         <div className="text-red-700 bg-red-50 p-2 rounded-md w-1/2 border border-red-100"><strong>Old:</strong> {renderValue(value.old)}</div>
-                                        <div className="text-green-700 bg-green-50 p-2 rounded-md w-1/2 border border-green-100"><strong>New:</strong> {renderValue(value.new)}</div>
+                                        <div className="text-green-700 bg-green-50 p-2 rounded-md w-1/2 border border-primary-color"><strong>New:</strong> {renderValue(value.new)}</div>
                                     </div>
                                 </div>
                             ))}

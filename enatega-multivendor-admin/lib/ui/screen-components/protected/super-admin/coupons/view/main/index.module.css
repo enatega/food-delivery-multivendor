@@ -3,5 +3,5 @@
 }
 
 .p-inputswitch-checked .p-inputswitch-slider {
-  background-color: #5ac12f; /* Background color when checked */
+  background-color: "var(--primary-dark)"; /* Background color when checked */
 }
