@@ -11,6 +11,7 @@ export interface IToast {
   message: string;
   duration?: number;
   loading?: boolean;
+  sticky?: boolean;
 }
 
 export interface IToastNotificationComponentProps

@@ -7,7 +7,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslations } from 'next-intl';
 
-export const USERS_TABLE_COLUMNS = () => {
+export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: (id: string | null) => void) => {
   // Hooks
   const t = useTranslations();
   return [
@@ -96,7 +96,7 @@ export const USERS_TABLE_COLUMNS = () => {
     {
       headerName: t('Actions'),
       propertyName: '_id',
-      body: (rowData: IUserResponse) => <ActionMenu rowData={rowData} />,
+      body: (rowData: IUserResponse) => <ActionMenu rowData={rowData} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} />,
       style: { width: '60px', textAlign: 'right', paddingRight: '12px' },
       headerStyle: { textAlign: 'right', paddingRight: '12px' },
     }
