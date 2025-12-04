@@ -60,7 +60,7 @@ export const TRANSACTION_HISTORY_COLUMNS = ({
         <span
           className={`rounded-full px-2 py-1 text-sm ${
             transaction.status === 'COMPLETED'
-              ? 'bg-primary-color text-green-800'
+              ? 'bg-primary-color text-white'
               : 'bg-yellow-100 text-yellow-800'
           }`}
         >

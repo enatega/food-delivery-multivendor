@@ -20,8 +20,8 @@
 }
 
 .table :global(.p-checkbox.p-highlight .p-checkbox-box) {
-  background-color: "var(--primary-dark)"!important;
-  border-color: "var(--primary-dark)" !important;
+  background-color: var(--primary-dark)!important;
+  border-color: var(--primary-dark) !important;
 }
 
 .dialog {

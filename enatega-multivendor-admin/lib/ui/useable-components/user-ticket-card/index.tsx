@@ -124,7 +124,7 @@ function UserTicketCard({
                   ? 'bg-blue-100 text-blue-800'
                   : latestTicket.status === 'inProgress'
                     ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-primary-color text-green-800'
+                    : 'bg-primary-color text-white'
             }`}>
               {latestTicket.status === 'inProgress' ? 'In Progress' : 
                latestTicket.status.charAt(0).toUpperCase() + latestTicket.status.slice(1)}

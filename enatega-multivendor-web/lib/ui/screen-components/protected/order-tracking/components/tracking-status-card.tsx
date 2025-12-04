@@ -291,7 +291,7 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
             <div className="w-8 h-8 flex items-center justify-center bg-primary-color dark:bg-primary-light rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-primary-color"
+                className="h-5 w-5 text-white"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
