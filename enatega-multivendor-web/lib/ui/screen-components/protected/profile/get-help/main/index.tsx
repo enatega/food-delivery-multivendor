@@ -61,7 +61,7 @@ export default function GetHelpMain() {
       if (backendMessage.startsWith("Validation error:")) {
         backendMessage = backendMessage.replace("Validation error:", "").trim();
       }
-       backendMessage = backendMessage.replace(/"/g, "");
+      backendMessage = backendMessage.replace(/"/g, "");
       showToast({
         type: "error",
         title: t("toast_error"),

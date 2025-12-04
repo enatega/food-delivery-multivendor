@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 
 // Prime React
 import { DataTableRowClickEvent } from 'primereact/datatable';
+import { generateDummyUsers } from '@/lib/utils/dummy';
 
 // Interface and Types
 import {
@@ -53,18 +54,25 @@ export default function UsersMain({
 
     if (registrationMethodFilter.length > 0) {
       currentUsers = currentUsers.filter((user) =>
-        registrationMethodFilter.flatMap(item => item.code).includes(user.userType)
+        registrationMethodFilter
+          .flatMap((item) => item.code)
+          .includes(user.userType)
       );
     }
 
     if (accountStatusFilter.length > 0) {
       currentUsers = currentUsers.filter((user) =>
-        accountStatusFilter?.flatMap(item => item.code).includes(user.status)
+        accountStatusFilter?.flatMap((item) => item.code).includes(user.status)
       );
     }
 
     return currentUsers;
-  }, [allUsers, debouncedSearch, registrationMethodFilter, accountStatusFilter]);
+  }, [
+    allUsers,
+    debouncedSearch,
+    registrationMethodFilter,
+    accountStatusFilter,
+  ]);
 
   const paginatedUsers = useMemo(() => {
     const startIndex = (currentPage - 1) * limit;
@@ -75,17 +83,14 @@ export default function UsersMain({
   const totalFilteredUsers = filteredUsers.length;
 
   const handleRowClick = (event: DataTableRowClickEvent) => {
-
     router.push(`/general/users/user-detail/${event.data._id}`);
     console.log('Row clicked:', event.data);
   };
 
-
-
   return (
     <div className="flex flex-col gap-3 p-3 w-full overflow-auto">
       <Table
-        data={paginatedUsers}
+        data={loading ? generateDummyUsers() : paginatedUsers}
         columns={USERS_TABLE_COLUMNS()}
         rowsPerPage={limit}
         totalRecords={totalFilteredUsers}
