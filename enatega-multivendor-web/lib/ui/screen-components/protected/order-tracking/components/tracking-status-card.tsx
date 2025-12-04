@@ -274,7 +274,7 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
             </div>
           )}
           {orderTrackingDetails.orderStatus === "PICKED" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-green-100 dark:bg-green-900 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-primary-light rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-primary-color"
@@ -288,7 +288,7 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
           )}
           {(orderTrackingDetails.orderStatus === "DELIVERED" ||
             orderTrackingDetails.orderStatus === "COMPLETED") && (
-            <div className="w-8 h-8 flex items-center justify-center bg-green-100 dark:bg-green-900 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-primary-color dark:bg-primary-light rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-primary-color"

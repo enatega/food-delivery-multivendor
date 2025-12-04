@@ -314,7 +314,7 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
                 className={`bg-primary-color ${direction === "rtl" ? "rounded-l-md" : "rounded-r-md"} p-2 text-white flex items-center justify-center ${
                   !message.trim() || isSending
                     ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-green-600"
+                    : "hover:bg-primary-dark"
                 }`}
               >
                 {direction === "rtl" ? (
