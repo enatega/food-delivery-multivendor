@@ -375,7 +375,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       >
         <div className="w-full">
           <PaddingContainer>
-            <div className="flex items-center justify-between w-full h-16 gap-2 flex-wrap md:flex-nowrap">
+            <div className="flex items-center justify-between w-full h-20 sm:h-16 flex-wrap md:flex-nowrap">
               {/* Left Section */}
               <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
                 {!isSearchFocused && (
@@ -419,7 +419,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               <div
                 className={`flex-grow transition-all duration-500 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-md"} px-2`}
               >
-                <div className="relative w-full">
+                <div className="relative w-[14rem] sm:w-full">
                   <input
                     id="search-input"
                     value={filter}
