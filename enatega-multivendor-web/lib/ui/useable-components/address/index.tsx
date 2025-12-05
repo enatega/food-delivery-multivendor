@@ -432,7 +432,7 @@ export default function UserAddressComponent(
       </div>
 
       <button
-        className="w-[90%] h-fit bg-[#5AC12F] mb-2 text-gray-900 py-2 space-x-2 rtl:space-x-reverse  rounded-full text-base lg:text-[14px]"
+        className="w-[90%] h-fit bg-primary-color mb-2 text-gray-900 py-2 space-x-2 rtl:space-x-reverse  rounded-full text-base lg:text-[14px]"
         onClick={() => {
           getCurrentLocation(onSetUserLocation);
           onHide();
@@ -521,7 +521,7 @@ export default function UserAddressComponent(
                 </div>
                 <div className="w-full flex flex-col gap-y-[2px]">
                   <span
-                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${address.selected && !hasCurrentLocation ? "text-sky-500" : "text-gray-500"}`}
+                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${address.selected && !hasCurrentLocation ? "text-secondary-color" : "text-gray-500"}`}
                   >
                     {address.label}
                   </span>
@@ -538,7 +538,7 @@ export default function UserAddressComponent(
                     label={t("choose_Address_label")}
                     rounded
                     loading={modifiyingId === address._id && loading}
-                    className="border p-2 pl-4 pr-4 border-gray-300 text-sky-500 font-medium"
+                    className="border p-2 pl-4 pr-4 border-gray-300 text-secondary-color font-medium"
                     onClick={() => onHandleSelectAddress(address)}
                   />
                 </div>
@@ -548,14 +548,14 @@ export default function UserAddressComponent(
         )}
 
         <button
-          className="w-[90%] h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
+          className="w-[90%] h-fit bg-primary-color text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
           onClick={() => paginate(1)}
         >
           <FontAwesomeIcon icon={faPlus} />{" "}
           <span> {t("add_new_address_button")}</span>
         </button>
         <button
-          className={` ${confirmYourAddress ? "block" : "hidden"} w-[90%] h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px] mt-4`}
+          className={` ${confirmYourAddress ? "block" : "hidden"} w-[90%] h-fit bg-primary-color text-gray-900 py-2 rounded-full text-base lg:text-[14px] mt-4`}
           onClick={() => onHide()}
         >
           <span> {t("confirm")}</span>
@@ -705,7 +705,7 @@ export default function UserAddressComponent(
                 </div>
                 <div className="flex flex-col gap-y-[2px]">
                   <span
-                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
+                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-secondary-color" : "text-gray-500 dark:text-gray-300"}`}
                   >
                     {item.translatedName}
                   </span>
@@ -737,7 +737,7 @@ export default function UserAddressComponent(
           </button>
           <button
             disabled={!isDragged && !selectedCity}
-            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-[#429b1c6c] dark:bg-gray-700" : "bg-[#5AC12F]"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
+            className={`w-full h-fit  ${!isDragged && !selectedCity ? "bg-primary-light dark:bg-gray-700" : "bg-primary-color"} text-gray-900 py-2 rounded-full text-base lg:text-[14px]`}
             onClick={() => onHandleCreateAddress()}
           >
             {modifyingAddressLoading ? (
@@ -902,7 +902,7 @@ export default function UserAddressComponent(
                 </div>
                 <div className="flex flex-col gap-y-[2px]">
                   <span
-                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-sky-500" : "text-gray-500 dark:text-gray-300"}`}
+                    className={`font-inter font-medium text-sm leading-5 tracking-normal ${selectedLocationType === item.name ? "text-secondary-color" : "text-gray-500 dark:text-gray-300"}`}
                   >
                     {item.translatedName}
                   </span>
@@ -933,7 +933,7 @@ export default function UserAddressComponent(
             <span>{t("cancel_address")}</span>
           </button>
           <button
-            className="w-full h-fit bg-[#5AC12F] text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
+            className="w-full h-fit bg-primary-color text-gray-900 py-2 rounded-full text-base lg:text-[14px]"
             onClick={() => onHandleCreateAddress()}
           >
             {modifyingAddressLoading ? (

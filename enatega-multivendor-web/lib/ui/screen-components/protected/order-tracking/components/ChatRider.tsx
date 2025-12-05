@@ -15,7 +15,7 @@ const ChatRider:React.FC<ChatRiderProps> = ({orderId,customerId}) => {
   }
   return (
     <div>
-        <button onClick={showChatWithRider} className='p-2 bg-[#5AC12F] mx-2 my-2 rounded text-white w-[300px]'>Chat With Rider</button>
+        <button onClick={showChatWithRider} className='p-2 bg-primary-color mx-2 my-2 rounded text-white w-[300px]'>Chat With Rider</button>
         <ChatWithRiderModal 
         visible={showChats}
         onHide={() => setShowChats(false)}

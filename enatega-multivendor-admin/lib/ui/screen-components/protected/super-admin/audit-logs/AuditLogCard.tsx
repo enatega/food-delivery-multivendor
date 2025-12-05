@@ -32,7 +32,7 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
     const getActionDetails = (action: string) => {
         const lowerAction = action.toLowerCase();
         if (lowerAction.includes('delete')) return { icon: faTrashAlt, color: 'text-red-500', bgColor: 'bg-red-100' };
-        if (lowerAction.includes('create')) return { icon: faPlusCircle, color: 'text-green-500', bgColor: 'bg-green-100' };
+        if (lowerAction.includes('create')) return { icon: faPlusCircle, color: 'text-primary-dark', bgColor: 'bg-primary-color' };
         if (lowerAction.includes('edit')) return { icon: faPencilAlt, color: 'text-blue-500', bgColor: 'bg-blue-100' };
         return { icon: faHistory, color: 'text-gray-500', bgColor: 'bg-gray-100' };
     };

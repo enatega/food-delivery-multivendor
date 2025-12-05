@@ -38,7 +38,7 @@ export default function PersonalInfoMain() {
       <div className="p-6 w-full bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="flex items-center gap-4 mb-6 ">
           {/* Custom Avatar with Tailwind */}
-          <div className="relative h-16 w-16 flex-shrink-0 bg-[#F3FFEE] dark:bg-gray-800 rounded-full border-2 border-white dark:border-gray-700 shadow-sm  shadow-gray-400 dark:shadow-black/40">
+          <div className="relative h-16 w-16 flex-shrink-0 bg-primary-light dark:bg-gray-800 rounded-full border-2 border-white dark:border-gray-700 shadow-sm  shadow-gray-400 dark:shadow-black/40">
             <div className="flex h-full w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-gray-500 dark:text-gray-200">
               {initials}
             </div>

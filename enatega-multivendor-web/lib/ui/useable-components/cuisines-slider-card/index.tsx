@@ -113,7 +113,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
                 <CustomButton
                   label={t("see_all")}
                   onClick={onSeeAllClick}
-                  className="text-[#0EA5E9] transition-colors duration-200 text-sm md:text-base "
+                  className="text-secondary-color transition-colors duration-200 text-sm md:text-base "
                 />
               )}
             {data.length > numVisible && (

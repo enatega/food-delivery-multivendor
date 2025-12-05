@@ -45,7 +45,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
               <span
                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${
                   transaction.status === 'COMPLETED'
-                    ? 'bg-green-100 text-green-800'
+                    ? 'bg-primary-color text-white'
                     : transaction.status === 'PENDING'
                       ? 'bg-yellow-100 text-yellow-800'
                       : 'bg-red-100 text-red-800'
@@ -188,7 +188,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                       transaction?.store?.isActive
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-primary-color text-white'
                         : 'bg-red-100 text-red-800'
                     }`}
                   >
@@ -197,7 +197,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                       transaction?.store?.isAvailable
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-primary-color text-white'
                         : 'bg-red-100 text-red-800'
                     }`}
                   >

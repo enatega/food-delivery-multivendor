@@ -17,7 +17,7 @@ const MapViewButton: React.FC = () => {
         <Link href={`/mapview${pathname}`}>
         <CustomButton
               label={t("map_view")}
-              className="text-sky-500 transition-colors duration-200 text-sm md:text-base hidden sm:block"
+              className="text-secondary-color transition-colors duration-200 text-sm md:text-base hidden sm:block"
             />
         </Link>
         <Link

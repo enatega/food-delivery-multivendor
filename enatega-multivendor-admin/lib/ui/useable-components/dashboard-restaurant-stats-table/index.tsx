@@ -37,7 +37,7 @@ export default function DashboardRestaurantStatsTable({
               ].toString()
             )}
           </h2>
-          <i className="fas fa-arrow-down text-green-500"></i>
+          <i className="fas fa-arrow-down text-primary-dark"></i>
         </div>
         <div className="p-4 max-h-50 overflow-auto ">
           <div className={`flex justify-between py-2`}>
