@@ -32,7 +32,7 @@ const config = {
         'secondary-border-color': '#111827',
         'dark-950': 'var(--dark-950)',
         'dark-900': 'var(--dark-900)',
-        'border-dark-600': 'var(--border-dark-600)',
+        'dark-600': 'var(--dark-600)',
       },
       width: {
         'custom-button': '110px',
