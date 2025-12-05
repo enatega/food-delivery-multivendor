@@ -26,10 +26,17 @@ const config = {
         none: 'none',
       },
       colors: {
-        'primary-color': "var(--primary-color)",
-        'primary-dark': "var(--primary-dark)",
-        'secondary-color': "var(--secondary-color)",
+        'primary-color': 'var(--primary-color)',
+        'primary-dark': 'var(--primary-dark)',
+        'secondary-color': 'var(--secondary-color)',
         'secondary-border-color': '#111827',
+        darkBg: {
+          950: '#0a0a0a',
+          900: '#111111',
+        },
+        darkBorder: {
+          600: '#525252',
+        },
       },
       width: {
         'custom-button': '110px',
