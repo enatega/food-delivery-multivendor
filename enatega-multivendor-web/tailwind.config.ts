@@ -26,10 +26,10 @@ const config = {
         none: "none",
       },
       colors: {
-         "primary-color": "#75d04b",
-        "primary-light": "#F3FFEE",
-        "primary-dark": "#5AC12F",
-        "secondary-color": "#0EA5E9",
+         "primary-color": "var(--primary-color)",
+        "primary-light": "var(--primary-light)",
+        "primary-dark": "var(--primary-dark)",
+        "secondary-color": "var(--secondary-color)",
         "secondary-border-color": "#111827"
           
       },
