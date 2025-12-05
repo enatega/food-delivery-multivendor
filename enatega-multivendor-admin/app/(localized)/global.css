@@ -938,7 +938,7 @@ body {
 
 
 .dark .p-dialog-footer {
-  background-color: var(--dark-900);
+  background-color: var(--dark-950);
 }
 
 /* === DARK THEME FIX for PrimeReact Menu === */

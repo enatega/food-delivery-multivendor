@@ -120,12 +120,12 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
       </div>
 
       <div
-        className={`flex-1 overflow-y-auto border-l border-gray-200 px-2 ${
+        className={`flex-1 overflow-y-auto border-l border-gray-200  dark:border-dark-600 px-2 ${
           activeTab === 'restaurants' ? '' : 'hidden sm:block'
         }`}
       >
         {/* Header for Restaurants section */}
-        <div className="border-b pb-2 pt-3">
+        <div className="border-b pb-2 pt-3 dark:border-dark-600">
           <div className="mb-4 flex items-center justify-between">
             <div className="hidden sm:block">
               <HeaderText text={t('Stores')} />
@@ -139,7 +139,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
               />
             </div>
             <TextIconClickable
-              className="rounded border-gray-300 bg-black text-white sm:w-auto"
+              className="rounded border-gray-300 border dark:border-dark-600  bg-black text-white sm:w-auto"
               icon={faAdd}
               iconStyles={{ color: 'white' }}
               title={t('Add Store')}
