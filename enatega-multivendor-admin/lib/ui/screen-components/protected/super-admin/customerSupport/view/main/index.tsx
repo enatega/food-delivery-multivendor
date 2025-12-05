@@ -459,7 +459,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       {/* Left panel - Users list */}
       <div
-        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 ${activeTab === 'tickets' ? '' : 'hidden sm:block'
+        className={`w-full overflow-y-auto border-gray-200 bg-white dark:bg-dark-950 sm:w-1/3 ${activeTab === 'tickets' ? '' : 'hidden sm:block'
           }`}
       >
         {/* Mobile-only header for Users section */}
