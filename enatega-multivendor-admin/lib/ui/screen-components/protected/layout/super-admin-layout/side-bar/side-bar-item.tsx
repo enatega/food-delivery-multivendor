@@ -21,7 +21,7 @@ function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
       className={`my-3 rounded-md p-2 ${
         active
           ? 'bg-gray-300 dark:bg-dark-600 dark:text-white'
-          : 'hover:bg-indigo-50 dark:hover:bg-dark-900 dark:text-white'
+          : 'hover:bg-indigo-50 dark:hover:bg-dark-950 dark:text-white'
       }`}
     >
       <div className="flex items-center justify-center">
@@ -132,7 +132,7 @@ export default function SidebarItem({
 
           {!expanded && (
             <div
-              className={`text-primary-500 invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-indigo-100 px-2 py-1 text-sm opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100 dark:bg-dark-900 dark:border dark:border-dark-600 dark:text-white`}
+              className={`text-primary-500 invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-indigo-100 px-2 py-1 text-sm opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100 dark:bg-dark-950 dark:border dark:border-dark-600 dark:text-white`}
             >
               {!subMenu
                 ? (label || text)
