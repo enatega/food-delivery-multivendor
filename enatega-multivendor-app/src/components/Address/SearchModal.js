@@ -201,7 +201,7 @@ export default function SearchModal({
             input: query,
             key: GOOGLE_MAPS_KEY,
             language: 'en',
-            components: 'country:pk', // Restrict to Pakistan
+            // components: 'country:pk', // use to Restrict to Pakistan
             types: 'geocode'
           },
           timeout: 10000,

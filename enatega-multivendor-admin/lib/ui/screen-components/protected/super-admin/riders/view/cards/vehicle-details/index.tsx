@@ -14,7 +14,7 @@ const VehicleDetails = ({ loading, rider }: IRiderDetailsProps) => {
   return (
     <div className="flex flex-col gap-2 border rounded-lg overflow-hidden">
       <header className="bg-[#F4F4F5] px-6 py-3 border-b-[1px] text-lg font-medium">
-        {t('Vehicle Details')}
+        {t('vehicle_details')}
       </header>
 
       {/* columns */}
@@ -22,7 +22,7 @@ const VehicleDetails = ({ loading, rider }: IRiderDetailsProps) => {
         {/* left-column */}
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1">
-            <span className="text-xs">{t('Vehicle Plate Number')}</span>
+            <span className="text-xs">{t('vehicle_plate_number')}</span>
             <span className="font-medium">
               {loading ? (
                 <Skeleton height="1.5rem" />

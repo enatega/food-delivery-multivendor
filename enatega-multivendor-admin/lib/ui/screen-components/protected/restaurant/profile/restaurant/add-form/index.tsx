@@ -82,7 +82,7 @@ const UpdateRestaurantsProfileForm = ({
               }}
             />
           </StepperPanel>
-          <StepperPanel header={t('Update Timings')}>
+          <StepperPanel header={t('Update Timing')}>
             <UpdateTiming
               stepperProps={{
                 onStepChange: onHandleStepChange,

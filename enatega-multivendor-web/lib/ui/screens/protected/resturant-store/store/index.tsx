@@ -509,6 +509,7 @@ export default function StoreDetailsScreen() {
     _id: data?.restaurant?._id ?? "",
     name: data?.restaurant?.name ?? "...",
     image: data?.restaurant?.image ?? "",
+    logo: data?.restaurant?.logo ?? "",
     reviewData: data?.restaurant?.reviewData ?? {},
     address: data?.restaurant?.address ?? "",
     deliveryCharges: data?.restaurant?.deliveryCharges ?? "",
@@ -659,7 +660,7 @@ export default function StoreDetailsScreen() {
           >
             <div className="flex flex-col items-start">
               <Image
-                src={restaurantInfo.image}
+                src={restaurantInfo.logo}
                 alt={`${restaurantInfo.name} logo`}
                 width={50}
                 height={50}
@@ -895,7 +896,7 @@ export default function StoreDetailsScreen() {
                           </h3>
                         )}
 
-                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 ">
+                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 items-start ">
                           {subCategory.foods.map((meal: IFood, mealIndex) => (
                             <div
                               key={mealIndex}

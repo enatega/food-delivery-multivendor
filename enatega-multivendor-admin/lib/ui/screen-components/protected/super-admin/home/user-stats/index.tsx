@@ -47,7 +47,7 @@ export default function UserStats() {
       <StatsCard
         label={t('Total Users')}
         total={dashboardUsers?.usersCount ?? 0}
-        description={t('8.5% up from yesterday')}
+        description={t("eight_point_five_up_from_yesterday")}
         icon={faUsers}
         route="/general/users"
         loading={loading}
@@ -55,7 +55,7 @@ export default function UserStats() {
       <StatsCard
         label={t('Total Vendors')}
         total={dashboardUsers?.vendorsCount ?? 0}
-        description={t('2.4% up from yesterday')}
+        description={t("two_point_four_up_from_yesterday")}
         icon={faStore}
         route="/general/vendors"
         loading={loading}
@@ -63,7 +63,7 @@ export default function UserStats() {
       <StatsCard
         label={t('Total Stores')}
         total={dashboardUsers?.restaurantsCount ?? 0}
-        description={t('6.1% down from yesterday')}
+        description={t("six_point_one_down_from_yesterday")}
         icon={faUtensils}
         route="/general/stores"
         loading={loading}
@@ -71,7 +71,7 @@ export default function UserStats() {
       <StatsCard
         label={t('Total Riders')}
         total={dashboardUsers?.ridersCount ?? 0}
-        description={t('1.9% up from yesterday')}
+        description={t("one_point_nine_up_from_yesterday")}
         icon={faMotorcycle}
         route="/general/riders"
         loading={loading}

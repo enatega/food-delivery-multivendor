@@ -33,6 +33,7 @@ export default function UsersMain({
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const { data, loading } = useQuery<IUsersDataResponse>(GET_USERS, {
     fetchPolicy: 'network-only',
@@ -86,7 +87,7 @@ export default function UsersMain({
     <div className="flex flex-col gap-3 p-3 w-full overflow-auto">
       <Table
         data={paginatedUsers}
-        columns={USERS_TABLE_COLUMNS()}
+        columns={USERS_TABLE_COLUMNS(openMenuId, setOpenMenuId)}
         rowsPerPage={limit}
         totalRecords={totalFilteredUsers}
         currentPage={currentPage}

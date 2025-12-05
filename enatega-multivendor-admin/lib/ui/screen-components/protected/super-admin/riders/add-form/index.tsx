@@ -236,7 +236,7 @@ export default function RiderAddForm({
                         />
 
                         <CustomDropdownComponent
-                          placeholder={'Vehicle Type'}
+                          placeholder={t('Vehicle Type')}
                           options={VEHICLE_TYPE}
                           showLabel={true}
                           name="vehicleType"

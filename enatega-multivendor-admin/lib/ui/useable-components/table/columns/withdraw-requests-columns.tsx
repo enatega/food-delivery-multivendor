@@ -17,6 +17,7 @@ import {
 } from '@/lib/api/graphql';
 import { IWithDrawRequest } from '@/lib/utils/interfaces/withdraw-request.interface';
 import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
+import { useTranslations } from 'next-intl'
 
 export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   menuItems,
@@ -33,6 +34,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
 }) => {
   // Hooks
   const { showToast } = useContext(ToastContext);
+  const t = useTranslations();
 
   // States
   const [isChangingStatus, setIsChangingStatus] = useState({
@@ -49,7 +51,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         showToast({
           type: 'error',
           title: 'Update Withdraw Request',
-          message: err?.cause?.message || 'Faile  d to update the request',
+          message: err?.cause?.message || 'Failed to update the request',
         });
         setIsChangingStatus({ _id: '', bool: false });
       },
@@ -142,15 +144,15 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
     () => [
       {
         code: 'REQUESTED',
-        label: 'Requested',
+        label: t('REQUESTED'),
       },
       {
         code: 'TRANSFERRED',
-        label: 'Transferred',
+        label: t('TRANSFERRED'),
       },
       {
         code: 'CANCELLED',
-        label: 'Cancelled',
+        label: t('CANCELLED'),
       },
     ],
     []
@@ -225,11 +227,11 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   return useMemo(
     () => [
       {
-        headerName: 'Request ID',
+        headerName: t('RequestID'),
         propertyName: 'requestId',
       },
       {
-        headerName: 'User Type',
+        headerName: t('User Type'),
         propertyName: 'rider.name',
         body: (rowData: IWithDrawRequest) => (
           <div className="flex flex-col">
@@ -243,7 +245,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         ),
       },
       {
-        headerName: 'Amount',
+        headerName: t('Amount'),
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
           <span className="font-medium">
@@ -252,7 +254,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         ),
       },
       {
-        headerName: 'Date',
+        headerName: t('Date'),
         propertyName: 'requestTime',
         body: (rowData: IWithDrawRequest) => {
           const date = new Date(rowData.requestTime);
@@ -261,7 +263,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         },
       },
       {
-        headerName: 'Status',
+        headerName: t('Status'),
         propertyName: 'status',
         body: (rowData: IWithDrawRequest) => (
           <Dropdown

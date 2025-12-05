@@ -6,7 +6,7 @@ import Script from 'next/script';
 export const metadata = {
   title: 'Enatega Admin Dashboard',
   icons: {
-    icon: '/favicon.png',
+    icon: '/favsicons.png',
     // You can add more like:
     // shortcut: "/favicon.png",
     // apple: "/apple-touch-icon.png"

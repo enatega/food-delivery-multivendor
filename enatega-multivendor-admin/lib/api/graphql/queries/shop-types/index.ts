@@ -5,7 +5,7 @@ export const GET_SHOP_TYPES = gql`
   fetchShopTypes(filter: $filter, pagination: $pagination) {
     data {
       _id
-      title
+      name
       image
       isActive
     }
@@ -22,7 +22,7 @@ export const GET_UNIQUE_SHOP_TYPE = gql`
  query FetchUniqueShopType($dto: FetchUniqueShopTypeInput) {
   fetchShopTypeByUnique(dto: $dto) {
       _id
-      title
+      name
       image
       isActive
   }
