@@ -140,10 +140,10 @@ const RestaurantTiming = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 rounded">
+    <div className="flex flex-col gap-2 rounded dark:text-white dark:bg-dark-950">
       <div className="mb-2 flex flex-col">
         <span className="text-lg">{t('Store Timing')}</span>
-      </div>
+      </div> 
       <Formik
         initialValues={initialValues}
         validationSchema={TimingSchema}
@@ -304,7 +304,7 @@ const RestaurantTiming = ({
             })}
 
             <CustomButton
-              className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border-gray-300 bg-[black] px-10 text-white"
+              className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border dark:border-dark-600 border-gray-300 bg-[black] px-10 text-white"
               label={t('Save')}
               rounded={false}
               disabled={loading}

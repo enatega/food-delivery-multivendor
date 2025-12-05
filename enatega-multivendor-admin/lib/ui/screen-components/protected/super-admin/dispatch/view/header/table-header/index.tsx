@@ -73,7 +73,7 @@ export default function DispatchTableHeader({
   }, []);
 
   return (
-    <div className="mb-4 flex flex-col gap-6">
+    <div className="mb-4 flex flex-col gap-6 dark:bg-dark-950 dark:text-white">
       <div className="flex-colm:flex-row flex w-fit items-center gap-2">
         <div className="w-60">
           <CustomTextField

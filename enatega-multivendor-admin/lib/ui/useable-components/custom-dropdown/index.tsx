@@ -24,7 +24,7 @@ const CustomDropdownComponent = ({
   const t = useTranslations()
   const itemTemplate = (option: { label: string }) => {
     return (
-      <div className="align-items-center flex">
+      <div className="align-items-center flex dark:text-white ">
         <div>{option.label}</div>
       </div>
     );
@@ -32,10 +32,10 @@ const CustomDropdownComponent = ({
 
   const panelFooterTemplate = () => {
     return (
-      <div className="flex justify-between space-x-2">
+      <div className="flex justify-between space-x-2 dark:bg-dark-950">
         {extraFooterButton?.title && (
           <TextIconClickable
-            className="w-full h-fit rounded  text-black"
+            className="w-full h-fit rounded  text-black dark:text-white"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
             title={extraFooterButton.title}
@@ -49,7 +49,7 @@ const CustomDropdownComponent = ({
   return !isLoading ? (
     <div className={`flex w-full flex-col justify-center gap-y-1`}>
       {showLabel && (
-        <label htmlFor="username" className="text-sm font-[500]">
+        <label htmlFor="username" className="text-sm font-[500] dark:text-white">
           {placeholder}
         </label>
       )}
@@ -61,7 +61,7 @@ const CustomDropdownComponent = ({
         optionLabel="label"
         placeholder={placeholder}
         itemTemplate={itemTemplate}
-        className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
+        className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border dark:border-dark-600 dark:bg-dark-950 dark:text-white border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
         panelClassName="border-gray-200 border-2"
         filter={filter}
         checkmark={true}

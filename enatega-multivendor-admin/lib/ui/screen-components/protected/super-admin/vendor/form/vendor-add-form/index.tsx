@@ -178,7 +178,7 @@ export default function VendorAddForm({
       visible={vendorFormVisible}
       position={position}
       onHide={() => onSetVendorFormVisible(false, false)}
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600 "
     >
       <div className="flex h-full w-full items-center justify-start">
         <div className="h-full w-full">
@@ -363,7 +363,7 @@ export default function VendorAddForm({
 
                         <div className="py-4 flex justify-end">
                           <CustomButton
-                            className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                            className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black px-8 text-white"
                             label={isEditingVendor ? t('Update') : t('Add')}
                             type="submit"
                             loading={isSubmitting}
