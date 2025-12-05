@@ -21,9 +21,9 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
-  --dark-950: #0a0a0a;
-  --dark-900: #111111;
-  --dark-600: #525252;
+  --dark-950: #030712;
+  --dark-900: #111827;
+  --dark-600: #4b5563;
 }
 
 html,

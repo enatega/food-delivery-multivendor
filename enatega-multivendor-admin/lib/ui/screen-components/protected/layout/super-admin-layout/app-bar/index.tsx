@@ -286,7 +286,7 @@ const AppTopbar = () => {
           {isNtfnOpen && (
             <div
               ref={ntfnDropdownRef}
-              className="absolute flex select-none flex-col pb-2 top-5 right-0 mt-2 w-72 bg-white dark:bg-dark-900 shadow-xl rounded-md border dark:border-dark-600 dark:text-white"
+              className="absolute flex select-none flex-col pb-2 top-5 right-0 mt-2 w-72 bg-white dark:bg-dark-950 shadow-xl rounded-md border dark:border-dark-600 dark:text-white"
             >
               <p className="select-none text-center font-medium p-2 shadow-sm">
                 {t('Notifications')}
@@ -359,7 +359,7 @@ const AppTopbar = () => {
               ref={languageMenuRef}
               id="popup_menu_right"
               popupAlignment="right"
-              className="dark:bg-dark-900 dark:border-dark-600 dark:text-white"
+              className="dark:bg-dark-950 dark:border-dark-600 dark:text-white"
             />
           </div>
 
@@ -397,7 +397,7 @@ const AppTopbar = () => {
               ref={menuRef}
               id="popup_menu_right"
               popupAlignment="right"
-              className="dark:bg-dark-900 dark:border-dark-600 dark:text-white"
+              className="dark:bg-dark-950 dark:border-dark-600 dark:text-white"
             />
           </div>
         </div>
@@ -423,7 +423,7 @@ const AppTopbar = () => {
         [&_.p-menu-list]:overflow-y-auto
         [&_.p-menu-list]:scrollbar-thin
         shadow-lg
-        dark:bg-dark-900 dark:border-dark-600 dark:text-white
+        dark:bg-dark-950 dark:border-dark-600 dark:text-white
       "
           />
         </div>
@@ -435,7 +435,7 @@ const AppTopbar = () => {
 
       {isMenuOpen && (
         <div
-          className="absolute right-4 top-8 z-50 rounded-lg bg-white dark:bg-dark-900 p-4 shadow-lg dark:border dark:border-dark-600 dark:text-white"
+          className="absolute right-4 top-8 z-50 rounded-lg bg-white dark:bg-dark-950 p-4 shadow-lg dark:border dark:border-dark-600 dark:text-white"
           ref={containerRef}
         >
           <div className="flex flex-col items-center space-y-4">
