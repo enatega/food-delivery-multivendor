@@ -74,7 +74,7 @@ export default function FilterModal({
       <div className="m-[3%] dark:bg-gray-900 dark:text-white rounded-lg p-2">
         <button
           onClick={clearFilters}
-          className="text-sky-500 dark:text-sky-400 text-base font-semibold pb-2"
+          className="text-secondary-color dark:text-sky-400 text-base font-semibold pb-2"
         >
           {t("clear_filters")}
         </button>

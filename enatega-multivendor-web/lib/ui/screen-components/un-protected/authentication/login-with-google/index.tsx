@@ -60,7 +60,7 @@ export default function LoginWithGoogle({
       <div className="w-full max-w-sm mb-4">
         <CustomButton
           label={t("login")}
-          className="bg-[#5AC12F] hover:bg-[#54ad2e]  text-white dark:text-gray-100 w-full py-3 rounded-full border border-gray-300 dark:border-gray-600 flex justify-center items-center"
+          className="bg-primary-color hover:bg-[#54ad2e]  text-white dark:text-gray-100 w-full py-3 rounded-full border border-gray-300 dark:border-gray-600 flex justify-center items-center"
           onClick={() => handleChangePanel(1)}
         />
       </div>

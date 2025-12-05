@@ -13,6 +13,7 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { Checkbox } from 'primereact/checkbox';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl'
 
 interface FilterOption {
   label: string;
@@ -33,6 +34,9 @@ export default function WithdrawRequestSuperAdminTableHeader({
   // States
   const [searchValue, setSearchValue] = useState('');
 
+  // Translations
+  const t = useTranslations();
+
   const filterOptions: FilterOption[] = [
     // {
     //   label: 'Transferred',
@@ -50,12 +54,12 @@ export default function WithdrawRequestSuperAdminTableHeader({
     //   type: 'status',
     // },
     {
-      label: 'Rider',
+      label: t('Rider'),
       value: 'RIDER',
       type: 'userType',
     },
     {
-      label: 'Store',
+      label: t('Store'),
       value: 'STORE',
       type: 'userType',
     },
@@ -110,7 +114,7 @@ export default function WithdrawRequestSuperAdminTableHeader({
             showLabel={false}
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            placeholder={'Keyword Search'}
+            placeholder={t('Keyword Search')}
             className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3"
           />
         </div>
@@ -118,23 +122,23 @@ export default function WithdrawRequestSuperAdminTableHeader({
         {/* User Type Filter */}
         <div className="mx-4 flex items-center">
           <TextIconClickable
-            className={`${
-              selectedActions.find(
-                (action) =>
-                  filterOptions.find((opt) => opt.value === action)?.type ===
-                  'userType'
-              )
-                ? 'w-32' // Wider when a filter is selected
-                : 'w-20'
-            } rounded border border-dotted border-[#E4E4E7] text-black transition-all`}
+            className={`${selectedActions.find(
+              (action) =>
+                filterOptions.find((opt) => opt.value === action)?.type ===
+                'status'
+            )
+              } rounded border border-dotted border-[#E4E4E7] text-black transition-all`}
             icon={faAdd}
             iconStyles={{ color: 'black' }}
             title={
-              selectedActions.find(
-                (action) =>
-                  filterOptions.find((opt) => opt.value === action)?.type ===
-                  'userType'
-              ) || 'User'
+              (() => {
+                const selected = selectedActions.find((Action) => filterOptions.find((opt) => opt.value === Action)?.type === "userType")
+
+                const MatchedOption = filterOptions.find(opt => opt.value === selected)
+
+                return MatchedOption ? MatchedOption.label : t("User")
+
+              })()
             }
             onClick={(e) => userTypeOverlayRef.current?.toggle(e)}
           />
@@ -145,7 +149,7 @@ export default function WithdrawRequestSuperAdminTableHeader({
                 <CustomTextField
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Search"
+                  placeholder={t('Search')}
                   className="h-8 w-full"
                   type="text"
                   name="search"
@@ -180,7 +184,7 @@ export default function WithdrawRequestSuperAdminTableHeader({
                 className="mt-3 cursor-pointer text-center text-sm"
                 onClick={() => clearTypeFilters('userType')}
               >
-                Clear filters
+                {t('Clear filters')}
               </p>
             </div>
           </OverlayPanel>

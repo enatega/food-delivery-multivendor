@@ -60,8 +60,8 @@ export default function ActiveOrders({ activeOrders, isOrdersLoading }: IActiveO
               "border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800",
               //   order.orderStatus === "PENDING" && "border-l-4 border-l-yellow-500",
               //   order.orderStatus === "ACCEPTED" && "border-l-4 border-l-blue-500",
-              //   order.orderStatus === "ASSIGNED" && "border-l-4 border-l-[#0EA5E9]",
-              //   order.orderStatus === "PICKED" && "border-l-4 border-l-green-500",
+              //   order.orderStatus === "ASSIGNED" && "border-l-4 border-l-secondary-color",
+              //   order.orderStatus === "PICKED" && "border-l-4 border-l-primary-color",
             )}
           />
         ))}

@@ -33,7 +33,7 @@ export default function ChatMessage({ message, isAdmin = false }: IChatMessagePr
       
       <div className={`max-w-[70%] px-4 py-2 rounded-lg ${
         isAdmin 
-          ? 'bg-green-500 text-white rounded-tr-none' 
+          ? 'bg-primary-dark text-white rounded-tr-none' 
           : 'bg-gray-100 text-gray-800 rounded-tl-none'
       }`}>
         <p className="text-sm">{message.text}</p>
@@ -49,7 +49,7 @@ export default function ChatMessage({ message, isAdmin = false }: IChatMessagePr
             height={36}
             src="/logo.png" // Use your admin/support logo
             alt="Support avatar"
-            className="h-9 w-9 rounded-full bg-green-500 p-1"
+            className="h-9 w-9 rounded-full bg-primary-dark p-1"
           />
         </div>
       )}

@@ -129,7 +129,7 @@ if (!isLoaded || !window.google || debouncedCityName.length < 2) {
       ref={containerRef}
       className="w-full max-w-md mx-auto p-2 rounded-md relative"
     >
-      <div className="flex justify-center items-center gap-4 rounded-full bg-white p-4 border-2 border-transparent hover:border-[#7dd24f] ">
+      <div className="flex justify-center items-center gap-4 rounded-full bg-white p-4 border-2 border-transparent hover:border-primary-color ">
         <i
           className="pi pi-map-marker"
           style={{ fontSize: "1.5rem", color: "black" }}
@@ -165,7 +165,7 @@ if (!isLoaded || !window.google || debouncedCityName.length < 2) {
                   onClick={() =>
                     handleSelect(suggestion.place_id, suggestion.description)
                   }
-                  className=" hover:text-[#94e469] px-5 hover:cursor-pointer"
+                  className=" hover:text-primary-color px-5 hover:cursor-pointer"
                 >
                   {suggestion.description}
                 </li>

@@ -48,7 +48,7 @@ const Rider = () => {
         subHeading={t("enatega_rider_page_name_why_subheading")}
       />
       <WhyCardsList cards={cards} />
-      <hr className="w-[30%] ml-12 border-4 border-green-400 my-12 rounded" />
+      <hr className="w-[30%] ml-12 border-4 border-primary-color my-12 rounded" />
       <EmailForm
         heading={t("enatega_rider_page_name_form_heading")}
         role={t("enatega_rider_page_name_form_role")}

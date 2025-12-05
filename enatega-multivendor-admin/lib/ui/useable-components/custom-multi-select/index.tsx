@@ -9,6 +9,7 @@ import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 import TextIconClickable from '../text-icon-clickable';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { twMerge } from 'tailwind-merge';
+import { useTranslations } from 'next-intl';
 
 const CustomMultiSelectComponent = ({
   name,
@@ -25,6 +26,7 @@ const CustomMultiSelectComponent = ({
   multiSelectClassName,
   ...props
 }: IMultiSelectComponentProps) => {
+   const t = useTranslations()
   const itemTemplate = (option: { label: string }) => {
     return (
       <div className="align-items-center flex">
@@ -33,9 +35,10 @@ const CustomMultiSelectComponent = ({
     );
   };
 
+
   const panelFooterTemplate = () => {
     const length = selectedItems ? selectedItems.length : 0;
-
+   
     return (
       <div className="flex justify-between space-x-2">
         {extraFooterButton?.title ? (
@@ -43,12 +46,12 @@ const CustomMultiSelectComponent = ({
             className="w-full h-fit rounded  text-black"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title={`${extraFooterButton.title} (${length} Selected)`}
+            title={`${extraFooterButton.title} (${length} ${t('selected')})`}
             onClick={extraFooterButton.onChange}
           />
         ) : (
           <div className="px-3 py-2">
-            <b>{length}</b> item{length > 1 ? 's' : ''} selected.
+            <b>{length}</b> {length > 1 ? t('Items') : t('item')} {t('selected')}
           </div>
         )}
       </div>

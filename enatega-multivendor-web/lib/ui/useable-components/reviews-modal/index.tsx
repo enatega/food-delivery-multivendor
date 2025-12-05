@@ -144,7 +144,7 @@ const ReviewsModal = ({
                       {review.description}
                     </p>
                     {review?.comments?.length > 0 && (
-                      <div className="border border-[#0EA5E9] px-3 py-1 rounded-full text-sm w-fit">
+                      <div className="border border-secondary-color px-3 py-1 rounded-full text-sm w-fit">
                         {review.comments}
                       </div>
                     )}

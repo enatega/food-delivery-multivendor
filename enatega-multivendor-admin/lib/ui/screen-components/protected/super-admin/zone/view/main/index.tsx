@@ -44,7 +44,7 @@ export default function ZoneMain({
   // Hooks
   const t = useTranslations();
   const { showToast } = useToast();
-  const {ISPAID_VERSION} =useConfiguration()
+  const { ISPAID_VERSION } = useConfiguration()
   // State - Table
   const [deleteId, setDeleteId] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<IZoneResponse[]>([]);
@@ -95,9 +95,9 @@ export default function ZoneMain({
     },
   ];
 
-  const handleDeleteZone=async()=> {
-    if (ISPAID_VERSION){
-      await  mutateDelete({
+  const handleDeleteZone = async () => {
+    if (ISPAID_VERSION) {
+      await mutateDelete({
         variables: { id: deleteId },
         onCompleted: () => {
           showToast({
@@ -109,15 +109,15 @@ export default function ZoneMain({
           setDeleteId('');
         },
       });
-    }else {
+    } else {
       showToast({
         type: 'error',
-        title: t('You are using free version'),
-        message: t('This Feature is only Available in Paid Version'),
+        title: t('you_are_using_free_version'),
+        message: t('this_Feature_is_only_Available_in_Paid_Version'),
       });
       setDeleteId('');
     }
-     
+
   }
 
   return (
@@ -143,7 +143,7 @@ export default function ZoneMain({
           setDeleteId('');
         }}
         onConfirm={() => {
-        handleDeleteZone()
+          handleDeleteZone()
         }}
         message={t('Are you sure you want to delete this item?')}
       />
