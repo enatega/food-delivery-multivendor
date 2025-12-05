@@ -145,7 +145,7 @@ const AppTopbar = () => {
     template(item: any) {
       return (
         <div
-          className={`hover:bg-[#b1c748] ${currentLocale === lang.code ? 'bg-[#b1c748]' : ''} p-2 cursor-pointer`}
+          className={`hover:bg-primary-color ${currentLocale === lang.code ? 'bg-primary-color' : ''} p-2 cursor-pointer`}
           onClick={() => onLocaleChange(lang.code)}
         >
           {item.label}

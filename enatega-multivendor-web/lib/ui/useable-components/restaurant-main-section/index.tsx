@@ -67,7 +67,7 @@ function MainSection({
           <CustomButton
             label={t("see_all")}
             onClick={onSeeAllClick}
-            className="text-[#0EA5E9] dark:text-[#94e469] transition-colors duration-200 text-sm md:text-base"
+            className="text-secondary-color dark:text-primary-color transition-colors duration-200 text-sm md:text-base"
           />
         )}
       </div>

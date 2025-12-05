@@ -159,7 +159,7 @@ export default function SidebarItem({
             return (
               <li key={index} className="relative">
                 {isActive && (
-                  <div className="absolute -left-[0.26rem] top-1/2 z-10 h-2 w-2 -translate-y-1/2 transform rounded-full bg-green-500"></div>
+                  <div className="absolute -left-[0.26rem] top-1/2 z-10 h-2 w-2 -translate-y-1/2 transform rounded-full bg-primary-dark"></div>
                 )}
                 <SidebarItem {...item} expanded={expanded} />
               </li>

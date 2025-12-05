@@ -48,7 +48,7 @@ const FavoriteCard: React.FC<IFavoriteCardProps> = ({ item }) => {
                 className="text-sm text-gray-600 dark:text-gray-400 mb-6"
               />
             </div>
-            <p className=" text-[#5AC12F] bg-[#F3FFEE] dark:bg-gray-700 p-2 rounded-md font-light text-xs flex items-center justify-center">
+            <p className=" text-primary-color bg-primary-light dark:bg-gray-700 p-2 rounded-md font-light text-xs flex items-center justify-center">
               {`${item?.deliveryTime}`} min
             </p>
           </div>

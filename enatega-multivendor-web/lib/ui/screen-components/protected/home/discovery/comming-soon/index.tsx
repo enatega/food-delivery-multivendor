@@ -29,10 +29,10 @@ export default function ComingSoonScreen() {
       })
     );
     // reload window
-    window.location.reload();
+    window.location.reload(); 
   };  
   return (
-    <div onClick={handleClick} className=" cursor-pointer relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-[#5AC12F] to-[#51b427] hover:from-[#47a320] hover:to-[#51b427] dark:bg-gradient-to-b dark:from-[#467e2e]  dark:to-[#316e17] dark:hover:from-[#316e17] dark:hover:to-[#386425] text-white">
+    <div onClick={handleClick} className=" cursor-pointer relative flex flex-col rounded-lg items-center justify-center py-8  overflow-hidden  mt-10 text-center bg-gradient-to-b from-primary-color to-primary-dark hover:from-primary-dark hover:to-primary-color  text-white">
       {/* Floating Food Emojis */}
       <span
         aria-hidden="true"
@@ -90,7 +90,7 @@ export default function ComingSoonScreen() {
       <CustomButton
         label={"Click anywhere on this screen to explore restaurants."}
         // onClick={handleClick}
-        className="px-8 py-3 rounded-full font-semibold bg-white text-[#5AC12F] shadow-lg 
+        className="px-8 py-3 rounded-full font-semibold bg-white text-primary-color shadow-lg 
                    hover:bg-white/90 hover:scale-105 transition-transform duration-200"
       />
     </div>

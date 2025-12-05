@@ -320,7 +320,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         <h2 className="font-inter font-bold text-[#111827] dark:text-white text-[16px] md:text-[18px] lg:text-[19px] leading-[22px] md:leading-[24px]">
           {foodItem?.title}
         </h2>
-        <p className="text-[#0EA5E9] font-[600] text-[14px] md:text-[15px] lg:text-[16px] mb-2">
+        <p className="text-secondary-color font-[600] text-[14px] md:text-[15px] lg:text-[16px] mb-2">
           {CURRENCY_SYMBOL}
           {selectedVariation?.price.toFixed(2)}
         </p>
@@ -434,7 +434,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
 
           {/* Add to Order Button - Takes Remaining 80% */}
           <button
-            className={`${isFormValid() ? "bg-[#5AC12F]" : "bg-gray-300"} text-black px-4 py-2 text-[500] font-[14px] rounded-full flex flex-col md:flex-row items-center justify-between flex-[0.8]`}
+            className={`${isFormValid() ? "bg-primary-color" : "bg-gray-300"} text-black px-4 py-2 text-[500] font-[14px] rounded-full flex flex-col md:flex-row items-center justify-between flex-[0.8]`}
             onClick={handleAddToCart}
             disabled={!isFormValid()}
             type="button"

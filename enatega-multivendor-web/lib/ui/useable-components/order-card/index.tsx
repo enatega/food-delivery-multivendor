@@ -311,7 +311,7 @@ const OrderCard: FC<IOrderCardProps> = ({
                   : t("select_item_to_reorder")
               }
               iconColor="black"
-              classNames="bg-[#5AC12F]  w-[content] px-4 gap-x-0 text-[12px] font-medium m-0"
+              classNames="bg-primary-color  w-[content] px-4 gap-x-0 text-[12px] font-medium m-0"
               handleClick={
                 type === "active"
                   ? () => handleTrackOrder(order)
@@ -400,7 +400,7 @@ const OrderCard: FC<IOrderCardProps> = ({
                       <div className="flex items-center gap-3 w-full">
                         <input
                           type="checkbox"
-                          className="w-5 h-5 rounded border-gray-300 text-[#5AC12F] focus:ring-[#5AC12F] bg-white"
+                          className="w-5 h-5 rounded border-gray-300 text-primary-color focus:ring-primary-color bg-white"
                           checked={selectedItems.includes(id)}
                           onChange={() => {
                             if (selectedItems.includes(id)) {
@@ -475,7 +475,7 @@ const OrderCard: FC<IOrderCardProps> = ({
                 {t("cancel_label")}
               </button>
               <button
-                className="px-5 py-2 text-sm rounded-lg bg-[#5AC12F] hover:bg-[#4bb126] text-white w-full sm:w-auto disabled:opacity-50 transition"
+                className="px-5 py-2 text-sm rounded-lg bg-primary-color hover:bg-[#4bb126] text-white w-full sm:w-auto disabled:opacity-50 transition"
                 disabled={selectedItems.length === 0}
                 onClick={
                   handleConfirmReorder
@@ -519,7 +519,7 @@ const OrderCard: FC<IOrderCardProps> = ({
               Cancel
             </button>
             <button
-              className="px-5 py-2 text-sm rounded-lg bg-[#5AC12F] hover:bg-[#4bb126] text-white w-full sm:w-auto transition"
+              className="px-5 py-2 text-sm rounded-lg bg-primary-color hover:bg-[#4bb126] text-white w-full sm:w-auto transition"
               onClick={handleClearCartAndReorder}
             >
               Clear Cart & Reorder

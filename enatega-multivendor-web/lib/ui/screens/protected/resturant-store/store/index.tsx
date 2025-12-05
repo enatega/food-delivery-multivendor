@@ -153,15 +153,15 @@ export default function StoreDetailsScreen() {
       >
         <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
-            isClicked ? "[#5AC12F]" : "gray-600"
+            isClicked ? "primary-color" : "gray-600"
           }
-            dark:text-${isClicked ? "[#5AC12F]" : "gray-300"}`}
+            dark:text-${isClicked ? "primary-color" : "gray-300"}`}
         >
           {item.label}
         </span>
         {/* <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
-            isClicked ? "[#5AC12F]" : "gray-100"
+            isClicked ? "primary-color" : "gray-100"
           }`}
         >
           {item.label}
@@ -191,9 +191,9 @@ export default function StoreDetailsScreen() {
       >
         <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
-            isClicked ? "[#F3FFEE]" : "gray-600"
+            isClicked ? "secondary-color" : "gray-600"
           }
-          dark:text-${isClicked ? "[#5AC12F]" : "gray-300"}`}
+          dark:text-${isClicked ? "primary-color" : "gray-300"}`}
         >
           {item.label}
         </span>
@@ -721,7 +721,7 @@ export default function StoreDetailsScreen() {
 
                 {/* Info Link */}
                 <a
-                  className="flex items-center gap-2 text-[#0EA5E9] dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+                  className="flex items-center gap-2 text-secondary-color dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
@@ -737,7 +737,7 @@ export default function StoreDetailsScreen() {
                 </a>
                 {/* Review Link */}
                 <a
-                  className="flex items-center gap-2 text-[#0EA5E9] dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+                  className="flex items-center gap-2 text-secondary-color dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
@@ -788,11 +788,11 @@ export default function StoreDetailsScreen() {
                         <button
                           className={`bg-${
                             selectedCategory === _slug
-                              ? "[#F3FFEE]"
+                              ? "secondary-color"
                               : "gray-100"
                           } text-${
                             selectedCategory === _slug
-                              ? "[#5AC12F]"
+                              ? "primary-color"
                               : "gray-600"
                           } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
                           onClick={() => handleScroll(_slug, true, 100)}
@@ -822,11 +822,11 @@ export default function StoreDetailsScreen() {
                           <button
                             className={`bg-${
                               selectedSubCategory === _slug
-                                ? "[#F3FFEE]"
+                                ? "secondary-color"
                                 : "gray-100"
                             } text-${
                               selectedSubCategory === _slug
-                                ? "[#5AC12F]"
+                                ? "primary-color"
                                 : "gray-600"
                             } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
                             onClick={() => handleScroll(_slug, false, 170)}
@@ -922,7 +922,7 @@ export default function StoreDetailsScreen() {
                                 </p>
 
                                 <div className="flex items-center gap-2">
-                                  <span className="text-[#0EA5E9] dark:text-sky-400 text-lg font-semibold">
+                                  <span className="text-secondary-color dark:text-sky-400 text-lg font-semibold">
                                     {CURRENCY_SYMBOL} {meal.variations[0].price}
                                   </span>
                                 </div>
@@ -947,7 +947,7 @@ export default function StoreDetailsScreen() {
                                   className={`rounded-full shadow-md w-6 h-6 flex items-center justify-center ${
                                     meal.isOutOfStock
                                       ? "bg-gray-400 dark:bg-gray-600"
-                                      : "bg-[#0EA5E9] dark:bg-sky-600"
+                                      : "bg-secondary-color dark:bg-sky-600"
                                   }`}
                                   onClick={() => handleOpenFoodModal(meal)}
                                   type="button"

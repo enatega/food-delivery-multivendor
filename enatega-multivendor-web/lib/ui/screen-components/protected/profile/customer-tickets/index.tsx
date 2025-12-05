@@ -148,7 +148,7 @@ export default function CustomerTicketsMain() {
         <CustomButton 
           label={t('retry_button')}
           onClick={() => window.location.reload()}
-          className="bg-[#5AC12F] text-white px-4 py-2 rounded-full"
+          className="bg-primary-color text-white px-4 py-2 rounded-full"
         />
       </div>
     );
@@ -201,7 +201,7 @@ export default function CustomerTicketsMain() {
           <CustomButton 
             label={t("create_first_ticket_button")}
             onClick={handleCreateTicket}
-            className="bg-[#5AC12F] text-white px-4 py-2 rounded-full"
+            className="bg-primary-color text-white px-4 py-2 rounded-full"
           />
         </div>
       )}

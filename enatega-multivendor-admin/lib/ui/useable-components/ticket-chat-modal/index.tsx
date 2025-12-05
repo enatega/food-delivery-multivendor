@@ -346,7 +346,7 @@ export default function TicketChatModal({
                   <div
                     key={msg._id}
                     className={`rounded-lg p-3 max-w-[80%] ${isAdminMessage
-                      ? 'bg-green-500 text-white ml-auto'
+                      ? 'bg-primary-dark text-white ml-auto'
                       : 'bg-gray-100 text-gray-800 mr-auto'
                       }`}
                   >
@@ -381,14 +381,14 @@ export default function TicketChatModal({
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder={t('type_your_message_here')}
-                className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#5AC12F] resize-none"
+                className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none"
                 rows={2}
                 disabled={isSending}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || isSending}
-                className={`bg-green-500 rounded-r-md p-2 text-white flex items-center justify-center ${!message.trim() || isSending
+                className={`bg-primary-dark rounded-r-md p-2 text-white flex items-center justify-center ${!message.trim() || isSending
                   ? 'opacity-50 cursor-not-allowed'
                   : 'hover:bg-green-600'
                   }`}

@@ -98,7 +98,7 @@ export default function LoginWithEmail({
             onChange={(e) => handleChange(e.target.value)}
             className={`pl-10 w-full py-2 px-3 rounded-md border ${
               isValid ? "border-gray-300" : "border-red-500"
-            } focus:outline-none focus:ring-2 focus:ring-[#5AC12F] dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300`}
+            } focus:outline-none focus:ring-2 focus:ring-primary-color dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300`}
           />
         </div>
 
@@ -127,7 +127,7 @@ export default function LoginWithEmail({
         label={t("Continue_with_mail")}
         loading={isLoading}
         onClick={handleSubmit}
-        className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 mt-6 w-full md:w-72 self-center`}
+        className={`bg-primary-color flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 mt-6 w-full md:w-72 self-center`}
       />
     </div>
   );

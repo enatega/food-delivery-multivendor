@@ -246,7 +246,7 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
                 type="submit"
                 label={t("register_label")}
                 loading={isSubmitting}
-                className="mt-4 bg-[#5AC12F] text-[16px] font-medium w-[200px] p-2 rounded-full text-white  hover:bg-[#5AC12F] transition-all"
+                className="mt-4 bg-primary-color text-[16px] font-medium w-[200px] p-2 rounded-full text-white  hover:bg-primary-color transition-all"
               />
             </div>
           </Form>
