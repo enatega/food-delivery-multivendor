@@ -56,7 +56,7 @@ const AuditLogScreen = () => {
                 <p className="text-gray-500 mt-1">{t("audit_log_header_desc")}</p>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white dark:bg-dark-950 p-4 rounded-lg shadow-sm border border-gray-200">
                 <div className="h-[calc(100vh-280px)] overflow-y-auto pr-2">
                     {auditLogs.length > 0 ? (
                         <div className="relative">

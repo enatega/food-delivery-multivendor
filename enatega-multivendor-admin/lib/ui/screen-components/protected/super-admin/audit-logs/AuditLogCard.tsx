@@ -63,7 +63,7 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
                     </div>
                 </div>
 
-                <div className="mt-3 bg-white p-4 rounded-lg border border-gray-200">
+                <div className="mt-3 bg-white dark:bg-dark-950 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center gap-2 mb-3">
                         <Tag value={log.targetType} severity="info" />
                         <span className="text-gray-500 font-mono text-xs">{log.targetId}</span>

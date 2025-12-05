@@ -324,7 +324,7 @@ export default function TicketChatModal({
         )}
 
         {/* Messages Area (scrollable) */}
-        <div className="flex-1 p-4 overflow-y-auto bg-white">
+        <div className="flex-1 p-4 overflow-y-auto bg-white dark:bg-dark-950">
           {loading || ticketLoading ? (
             <ChatSkeleton />
           ) : error ? (
@@ -374,7 +374,7 @@ export default function TicketChatModal({
             </p>
           </div>
         ) : (
-          <div className="p-4 border-t border-gray-200 bg-white">
+          <div className="p-4 border-t border-gray-200 bg-white dark:bg-dark-950">
             <div className="flex gap-2">
               <textarea
                 value={message}

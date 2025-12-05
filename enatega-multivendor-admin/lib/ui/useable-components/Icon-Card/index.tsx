@@ -60,7 +60,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
       </div>
       {reviewContent && showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
+          <div className="bg-white dark:bg-dark-950 p-6 rounded-lg shadow-lg max-w-sm w-full relative">
             <h2 className="text-xl font-semibold mb-4">Review</h2>
             <p className="text-gray-700 mb-8">{reviewContent}</p>
             <div className="absolute bottom-4 right-4">

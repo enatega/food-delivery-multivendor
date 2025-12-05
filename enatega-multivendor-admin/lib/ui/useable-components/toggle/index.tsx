@@ -19,7 +19,7 @@ const Toggle = ({
           disabled={disabled}
         />
         <div className="peer h-6 w-11 rounded-full bg-gray-300 peer-checked:bg-primary-color peer-focus:outline-none dark:bg-gray-700"></div>
-        <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-5"></div>
+        <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white dark:bg-dark-950 transition-transform peer-checked:translate-x-5"></div>
       </label>
     </div>
   );

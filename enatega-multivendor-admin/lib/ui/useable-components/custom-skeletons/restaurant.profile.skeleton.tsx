@@ -3,7 +3,7 @@ import React from 'react';
 const RestaurantProfileSkeleton = () => {
   return (
     <div className="mt-8 flex animate-pulse items-center justify-center">
-      <div className="w-full rounded border-2 border-dotted border-inherit bg-white p-8">
+      <div className="w-full rounded border-2 border-dotted border-inherit bg-white dark:bg-dark-950 p-8">
         <div className="mb-6 flex items-center">
           <div className="h-14 w-14 rounded-full bg-gray-300"></div>
           <div className="ml-2">

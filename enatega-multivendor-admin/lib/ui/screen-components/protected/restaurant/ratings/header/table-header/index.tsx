@@ -74,7 +74,7 @@ const RatingsHeaderDataView: React.FC<ICommissionRateHeaderProps> = ({
 
         <div className="hidden sm:block">
           <TextIconClickable
-            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black bg-white"
+            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black bg-white dark:bg-dark-950"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
             title={t('Filter Ratings')}

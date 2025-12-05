@@ -13,7 +13,7 @@ export default function DashboardSubHeader({
 
   if (!isStoreView || !handleViewChange) return;
   return (
-    <div className="flex flex-row items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm">
+    <div className="flex flex-row items-center justify-between rounded-lg bg-white dark:bg-dark-950 px-4 py-3 shadow-sm">
       <div className="flex items-center space-x-4">
         <h2 className="text-xl font-semibold text-gray-800">
           {t('Business Overview')}
