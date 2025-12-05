@@ -21,6 +21,9 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+  --dark-950: #0a0a0a;
+  --dark-900: #111111;
+  --border-dark-600: #525252;
 }
 
 html,
@@ -47,6 +50,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    
 }
 
 /* Screen Container */
@@ -318,7 +322,7 @@ body {
 }
 
 .p-datatable-table .p-checkbox.p-highlight .p-checkbox-box {
-  background-color: var(--primary-dark)!important;
+  background-color: var(--primary-dark) !important;
   border-color: var(--primary-dark) !important;
 }
 
