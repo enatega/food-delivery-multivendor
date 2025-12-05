@@ -58,7 +58,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
   return (
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       <div
-        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 z-10 ${
+        className={`w-full overflow-y-auto border border-gray-200 bg-white dark:bg-dark-950 dark:border-dark-600 sm:w-1/3 z-10 ${
           activeTab === 'vendors' ? '' : 'hidden sm:block'
         }`}
       >
@@ -67,7 +67,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
           <div className="mb-4 flex items-center justify-between">
             <HeaderText text={t('Vendors')} />
             <TextIconClickable
-              className="rounded border-gray-300 bg-black text-white sm:w-auto"
+              className="rounded border-gray-300 bg-black dark:bg-dark-950 dark:border-dark-600 text-white sm:w-auto"
               icon={faAdd}
               iconStyles={{ color: 'white' }}
               title={t('Add Vendor')}
