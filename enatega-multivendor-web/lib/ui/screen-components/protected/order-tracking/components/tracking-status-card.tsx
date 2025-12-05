@@ -44,78 +44,57 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
 
   // Get dynamic estimated delivery time
   const getEstimatedDeliveryTime = () => {
-    if (!orderTrackingDetails?.createdAt) return "20 - 30 min";
+    const d = orderTrackingDetails;
+    if (!d?.createdAt) return "20 - 30 min";
 
-    const selectedPrepTime = orderTrackingDetails.selectedPrepTime || 0;
+    const prep = d.selectedPrepTime ?? 20; // default prep if not provided
+    const deliveryBuffer = 10; // add extra 10 min for delivery after prep
 
-    // Format a date to HH:MM format
-    const formatTimeHHMM = (date: Date) => {
-      return date.toLocaleTimeString([], {
+    const formatTime = (ts: string | number | Date) =>
+      new Date(ts).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
+        hour12: false,
       });
+
+    const getRangeFrom = (base: Date | string | number) => {
+      const min = new Date(base);
+      min.setMinutes(min.getMinutes() + Math.max(5, prep - 10));
+
+      const max = new Date(base);
+      max.setMinutes(max.getMinutes() + prep + deliveryBuffer);
+
+      return `${formatTime(min)} - ${formatTime(max)}`;
     };
 
-    // Handle different order statuses according to specified requirements
-    switch (orderTrackingDetails.orderStatus) {
+    switch (d.orderStatus) {
       case "PENDING":
-        // For PENDING, show when the order was placed
-        if (orderTrackingDetails.createdAt) {
-          const createdTime = new Date(orderTrackingDetails.createdAt);
-          return formatTimeHHMM(createdTime);
-        }
-        return "20 - 30 min"; // Fallback
+        return `${Math.max(5, prep - 10)} - ${prep} min`;
 
       case "ACCEPTED":
-        // For ACCEPTED, show the range [(selectedPrepTime - 10) - selectedPrepTime] minutes
-        if (selectedPrepTime > 0) {
-          const minTime = Math.max(0, selectedPrepTime - 10);
-          return `${minTime} - ${selectedPrepTime} min`;
-        }
-        return "20 - 30 min"; // Fallback
+        return getRangeFrom(d.createdAt);
+
+      case "ASSIGNED":
+        if (d.assignedAt) return getRangeFrom(d.assignedAt);
+        return `${Math.max(5, prep - 10)} - ${prep} min`;
 
       case "PICKED":
-        // For PICKED, show the exact time when rider picked up the order
-        if (orderTrackingDetails.pickedAt) {
-          const pickedTime = new Date(orderTrackingDetails.pickedAt);
-          return formatTimeHHMM(pickedTime);
-        }
-        return "10 - 15 min"; // Fallback
+        return d.pickedAt ? formatTime(d.pickedAt) : "10 - 15 min";
 
       case "DELIVERED":
       case "COMPLETED":
-        // For DELIVERED, show the exact delivery time
-        if (orderTrackingDetails.deliveredAt) {
-          const deliveredTime = new Date(orderTrackingDetails.deliveredAt);
-          return formatTimeHHMM(deliveredTime);
-        }
-        return "Delivered"; // Fallback
+        return d.deliveredAt ? formatTime(d.deliveredAt) : "Delivered";
 
       case "CANCELLED":
-        // For CANCELLED, show the cancellation time
-        if (orderTrackingDetails.cancelledAt) {
-          const cancelledTime = new Date(orderTrackingDetails.cancelledAt);
-          return formatTimeHHMM(cancelledTime);
-        }
-        return "Cancelled"; // Fallback
-
-      case "ASSIGNED":
-        // For ASSIGNED, use the assigned time or expected delivery time
-        if (orderTrackingDetails.assignedAt) {
-          const assignedTime = new Date(orderTrackingDetails.assignedAt);
-          return formatTimeHHMM(assignedTime);
-        }
-        // Fallback to the selectedPrepTime if available
-        if (selectedPrepTime > 0) {
-          const minTime = Math.max(0, selectedPrepTime - 10);
-          return `${minTime} - ${selectedPrepTime} min`;
-        }
-        return "15 - 25 min"; // Default fallback
+        return d.cancelledAt ? formatTime(d.cancelledAt) : "Cancelled";
 
       default:
-        return "20 - 30 min"; // Default fallback for unknown status
+        return "20 - 30 min";
     }
   };
+
+
+
 
   const StoreType = localStorage.getItem("currentShopType") || "store";
 
@@ -336,10 +315,10 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
             >
               <div
                 className={`h-full rounded-full transition-all duration-500 ${status === "completed"
-                    ? "bg-primary-color"
-                    : status === "active"
-                      ? "bg-primary-color animate-pulse"
-                      : "bg-gray-200 dark:bg-gray-700"
+                  ? "bg-primary-color"
+                  : status === "active"
+                    ? "bg-primary-color animate-pulse"
+                    : "bg-gray-200 dark:bg-gray-700"
                   }`}
                 style={{
                   width:
