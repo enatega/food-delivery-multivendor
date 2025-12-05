@@ -58,7 +58,7 @@ export default function CustomNumberTextField({
         </div>
 
         <InputNumber
-          className={`${classes.inputNumber} z-0 h-11 w-full border border-inherit bg-white px-10 text-center focus:shadow-none focus:outline-none ${className}`}
+          className={`${classes.inputNumber} z-0 h-11 w-full border border-inherit bg-white dark:bg-dark-950 px-10 text-center focus:shadow-none focus:outline-none ${className}`}
           name={name}
           value={value}
           prefix="$ "

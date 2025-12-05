@@ -28,7 +28,7 @@ export default function DashboardRestaurantStatsTable({
 
   return (
     <div className="w-full h-auto mx-auto">
-      <div className="bg-white h-full shadow-md rounded-lg border border-gray-300">
+      <div className="bg-white dark:bg-dark-950 h-full shadow-md rounded-lg border border-gray-300">
         <div className="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg">
           <h2 className="text-lg font-bold text-gray-800">
             {t(

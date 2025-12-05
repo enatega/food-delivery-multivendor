@@ -19,7 +19,7 @@ export default function PaymentCard({
   // Hooks
   const t = useTranslations();
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-6">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white dark:bg-dark-950 p-6">
       <div className="mb-6 flex items-center justify-center">
         {LogoComponent && <LogoComponent />}
       </div>

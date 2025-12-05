@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 export default function WithdrawRequestSuperAdminHeader() {
   const t = useTranslations();
   return (
-    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
+    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white dark:bg-dark-950 p-3 shadow-sm">
       <div className="flex w-full justify-between">
         <HeaderText text={t('withdraw_requests')} />
       </div>

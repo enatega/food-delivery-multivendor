@@ -9,7 +9,7 @@ export default function DashboardSubHeader({
   // Hooks
   const t = useTranslations();
   return (
-    <div className="flex flex-row items-center justify-between px-4 py-3 bg-white rounded-lg ">
+    <div className="flex flex-row items-center justify-between px-4 py-3 bg-white dark:bg-dark-950 rounded-lg ">
       <div className="flex items-center space-x-4">
         <h2 className="text-xl font-semibold text-gray-800">
           {t('Business Overview')}

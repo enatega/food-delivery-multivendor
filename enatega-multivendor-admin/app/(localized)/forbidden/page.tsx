@@ -6,7 +6,7 @@ import React from 'react';
 const Forbidden = () => {
   const router = useRouter();
   return (
-    <main className="h-screen w-full flex flex-col gap-2 justify-center items-center bg-white">
+    <main className="h-screen w-full flex flex-col gap-2 justify-center items-center bg-white dark:bg-dark-950">
       <h1 className="text-9xl font-extrabold text-black tracking-widest">
         403
       </h1>

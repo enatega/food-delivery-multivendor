@@ -18,7 +18,7 @@ const ProfileHeader: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex-shrink-0 top-0 bg-white z-10 shadow-sm p-3">
+    <div className="w-full flex-shrink-0 top-0 bg-white dark:bg-dark-950 z-10 shadow-sm p-3">
       <div className="flex w-full justify-between">
         <HeaderText className="heading" text={t('Profile')} />
         <TextIconClickable

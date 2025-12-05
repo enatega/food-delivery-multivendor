@@ -268,7 +268,7 @@ const AppTopbar = () => {
       </div>
       {isMenuOpen && (
         <div
-          className="absolute right-4 top-8 z-50 rounded-lg bg-white p-4 shadow-lg"
+          className="absolute right-4 top-8 z-50 rounded-lg bg-white dark:bg-dark-950 p-4 shadow-lg"
           ref={containerRef}
         >
           <div className="flex flex-col items-center space-y-4">

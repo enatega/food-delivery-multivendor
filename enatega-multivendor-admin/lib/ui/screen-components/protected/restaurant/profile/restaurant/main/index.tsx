@@ -40,7 +40,7 @@ const RestaurantMain: React.FC = () => {
   };
   return (
     <div className="flex items-center justify-center mt-8">
-      <div className="bg-white p-8 w-full border-2 border-dotted rounded border-inherit">
+      <div className="bg-white dark:bg-dark-950 p-8 w-full border-2 border-dotted rounded border-inherit">
         <div className="flex items-center mb-6">
           <ProfileLogoSVG width="55" height="55" strokeColor="#1E1E1E" />
           <div className="ml-2">

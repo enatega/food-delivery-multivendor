@@ -33,7 +33,7 @@ export default function CustomDateRange({
 
   return (
     <div className="flex items-center justify-center p-3">
-      <div className="w-full rounded-lg bg-white shadow-lg">
+      <div className="w-full rounded-lg bg-white dark:bg-dark-950 shadow-lg">
         <div className="rounded-t-lg bg-primary-color py-2 text-center text-white">
           <h2 className="text-lg font-semibold">{t("Graph Filter")}</h2>
         </div>

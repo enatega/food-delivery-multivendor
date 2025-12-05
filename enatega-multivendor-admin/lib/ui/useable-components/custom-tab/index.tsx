@@ -20,7 +20,7 @@ const CustomTab = ({
             key={String(option)}
             className={`flex cursor-pointer items-center justify-center rounded px-4 ${
               selectedTab === option
-                ? 'bg-white text-black shadow dark:bg-dark-950  dark:text-white'
+                ? 'bg-white  text-black shadow dark:bg-dark-950  dark:text-white'
                 : 'text-gray-500'
             }`}
             onClick={() => setSelectedTab(option)}
