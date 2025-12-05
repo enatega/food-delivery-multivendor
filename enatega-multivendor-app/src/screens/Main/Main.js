@@ -39,6 +39,7 @@ import ForceUpdate from '../../components/Update/ForceUpdate'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
+import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -107,6 +108,11 @@ function Main(props) {
   })
   const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
   const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
+
+  const { restaurantData: mostOrderedGroceryStores, loading: mostOrderedGroceryLoading, error: mostOrderedGroceryError } = useRestaurantQueries('topPicks', location, 'grocery')
+
+  const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
+  const { restaurantData: restaurantorders } = useRestaurantQueries('restaurant', location, 'restaurant')
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
     setHasActiveOrders(activeOrdersExist)
@@ -299,10 +305,6 @@ function Main(props) {
 
   if (error) return <ErrorView />
 
-  const groceryorders = data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant) => restaurant.shopType === 'grocery')
-
-  const restaurantorders = data?.nearByRestaurantsPreview?.restaurants?.filter((restaurant) => restaurant.shopType === 'restaurant')
-
   // const filterCusinies = () => {
   //   if (data !== undefined) {
   //     const cuisineShopTypeMap = new Map()
@@ -430,9 +432,9 @@ function Main(props) {
                             inverted={currentTheme?.isRTL ? true : false}
                           />
                         </View>
-                        <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(groceryorders || [])} loading={orderLoading} error={orderError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View>
+                        <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(nearByGroceryStores || [])} loading={nearByGroceryStoresLoading} error={nearByGroceryStoresError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View>
 
-                        <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar?.filter((order) => order.shopType === 'grocery') || [])} loading={orderLoading} error={orderError} title={t('Top grocery picks')} queryType='grocery' icon='store' selectedType='grocery' />}</View>
+                        <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(mostOrderedGroceryStores || [])} loading={mostOrderedGroceryLoading} error={mostOrderedGroceryError} title={t('Top grocery picks')} queryType='topPicks' icon='store' selectedType='grocery' />}</View>
                       </View>
                       <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                     </ScrollView>

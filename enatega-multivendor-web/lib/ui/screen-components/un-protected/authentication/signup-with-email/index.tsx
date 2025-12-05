@@ -232,7 +232,7 @@ export default function SignUpWithEmail({
       </div>
       <CustomButton
         label={t("continue_label")}
-        className={`bg-[#5AC12F] flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72`}
+        className={`bg-primary-color flex items-center justify-center gap-x-4 px-3 rounded-full border border-gray-300 p-3 m-auto w-72`}
         onClick={handleSubmit}
         loading={isLoading}
       />

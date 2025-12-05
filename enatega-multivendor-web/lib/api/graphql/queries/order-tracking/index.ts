@@ -70,6 +70,7 @@ export const ORDER_TRACKING = gql`query OrderDetails($orderDetailsId: String!) {
     paymentMethod
     paidAmount
     orderAmount
+    discountAmount
     orderStatus
     deliveryCharges
     tipping

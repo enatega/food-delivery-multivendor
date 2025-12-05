@@ -137,7 +137,7 @@ function ChatWithRiderModal({
       }}
     >
       <div className="flex flex-col h-full">
-        <div className="flex justify-between items-center bg-[#5AC12F] text-white p-2">
+        <div className="flex justify-between items-center bg-primary-color text-white p-2">
           <div>{t("chat_with_rider_button")}</div>
           <button onClick={onHide}>
             <i className="pi pi-times" style={{ fontSize: "1rem" }}></i>

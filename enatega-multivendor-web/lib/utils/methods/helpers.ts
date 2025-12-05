@@ -255,3 +255,14 @@ export const deleteSearchedKeywords = () => {
     // Do nothing or log if necessary
   }
 };
+
+
+export const toFloatIfNeeded = (value: string | number) => {
+  if (typeof value === "number") return value;        // already float/number
+
+  if (typeof value === "string") {
+    const num = parseFloat(value);
+    return isNaN(num) ? null : num;                   // convert if valid
+  }
+  return null;                                        // fallback
+}

@@ -2,10 +2,11 @@
 'use client';
 import React from 'react';
 import { Tag } from 'primereact/tag';
-import { format } from 'date-fns';
+import moment from 'moment';
 import ChangesDiff from './ChangesDiff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faPlusCircle, faTrashAlt, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 export interface AuditLog {
     _id: string;
@@ -26,11 +27,12 @@ interface AuditLogCardProps {
 }
 
 const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
+    const t = useTranslations()
 
     const getActionDetails = (action: string) => {
         const lowerAction = action.toLowerCase();
         if (lowerAction.includes('delete')) return { icon: faTrashAlt, color: 'text-red-500', bgColor: 'bg-red-100' };
-        if (lowerAction.includes('create')) return { icon: faPlusCircle, color: 'text-green-500', bgColor: 'bg-green-100' };
+        if (lowerAction.includes('create')) return { icon: faPlusCircle, color: 'text-primary-dark', bgColor: 'bg-primary-color' };
         if (lowerAction.includes('edit')) return { icon: faPencilAlt, color: 'text-blue-500', bgColor: 'bg-blue-100' };
         return { icon: faHistory, color: 'text-gray-500', bgColor: 'bg-gray-100' };
     };
@@ -52,12 +54,12 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
                     <div>
                         <p className="font-bold text-lg text-gray-800">API: {log.action}</p>
                         <p className="text-sm text-gray-500">
-                            Performed by <span className="font-semibold text-gray-700">{log.admin.email}</span>
+                            {t("Performed_by")} <span className="font-semibold text-gray-700">{log.admin.email}</span>
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm text-gray-600">{format(new Date(log.timestamp), 'PPP')}</p>
-                        <p className="text-xs text-gray-400">{format(new Date(log.timestamp), 'p')}</p>
+                        <p className="text-sm text-gray-600">{moment.utc(log.timestamp).local().format('MMMM D, YYYY')}</p>
+                        <p className="text-xs text-gray-400">{moment.utc(log.timestamp).local().format('h:mm A')}</p>
                     </div>
                 </div>
 

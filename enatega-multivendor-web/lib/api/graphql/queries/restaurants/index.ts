@@ -112,6 +112,7 @@ export const GET_RESTAURANT_BY_ID_SLUG = gql`
       isActive
       name
       image
+      logo
       slug
       username
       phone

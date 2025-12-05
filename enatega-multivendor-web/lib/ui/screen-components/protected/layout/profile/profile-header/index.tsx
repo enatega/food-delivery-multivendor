@@ -11,7 +11,7 @@ export default function ProfileHeader() {
   return (
   <div className='w-full flex justify-between'>
      <TextComponent text={t("ProfileSection.profile_label")} className='font-semibold md:text-3xl text-xl'/>
-     <CustomButton onClick={()=>router.push("/profile/getHelp")} label={t('ProfileSection.gethelp')} type='button' className='text-base font-light bg-[#F3FFEE] dark:bg-gray-800 px-[16px] py-[8px] text-[#63C43B]'/>
+     <CustomButton onClick={()=>router.push("/profile/getHelp")} label={t('ProfileSection.gethelp')} type='button' className='text-base font-light bg-primary-light dark:bg-gray-800 px-[16px] py-[8px] text-primary-color'/>
   </div>
   )
 }

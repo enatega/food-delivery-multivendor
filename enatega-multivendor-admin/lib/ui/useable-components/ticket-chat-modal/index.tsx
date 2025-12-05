@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import useToast from '@/lib/hooks/useToast';
 import ChatSkeleton from '../custom-skeletons/chat-skeleton';
+import { useTranslations } from 'next-intl';
 
 interface ITicketChatModalProps {
   visible: boolean;
@@ -37,7 +38,7 @@ export default function TicketChatModal({
   // const [initialMessageSent, setInitialMessageSent] = useState<boolean>(false);
 
   // Create a polling interval reference
- const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fetch single ticket details
   const { data: ticketData, loading: ticketLoading } = useQuery(
@@ -48,6 +49,8 @@ export default function TicketChatModal({
       fetchPolicy: 'network-only',
     }
   );
+
+  const t = useTranslations();
 
   // Fetch ticket messages with polling
   const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
@@ -222,17 +225,17 @@ export default function TicketChatModal({
 
   // Status options for dropdown
   const statusOptions = [
-    { label: 'Open', value: 'open' },
-    { label: 'In Progress', value: 'inProgress' },
-    { label: 'Closed', value: 'closed' },
+    { label: t('Open'), value: 'open' },
+    { label: t('in_progress'), value: 'inProgress' },
+    { label: t('closed'), value: 'closed' },
   ];
 
   // Get ticket title
   const getTicketTitle = () => {
-    if (!ticket) return 'Support Chat';
+    if (!ticket) return t('Support Chat');
 
     if (ticket.category === 'order related' && ticket.orderId) {
-      return `Order Issue - ${ticket.orderId}`;
+      return `${t('order_issue')} - ${ticket.orderId}`;
     }
 
     return ticket.title;
@@ -276,18 +279,17 @@ export default function TicketChatModal({
                 />
               ) : (
                 <span
-                  className={`text-xs ${
-                    ticket?.status === 'open'
-                      ? 'text-blue-300'
-                      : ticket?.status === 'inProgress'
-                        ? 'text-yellow-300'
-                        : 'text-gray-300'
-                  }`}
+                  className={`text-xs ${ticket?.status === 'open'
+                    ? 'text-blue-300'
+                    : ticket?.status === 'inProgress'
+                      ? 'text-yellow-300'
+                      : 'text-gray-300'
+                    }`}
                 >
                   {ticket?.status === 'inProgress'
                     ? 'In Progress'
                     : ticket?.status?.charAt(0).toUpperCase() +
-                      ticket?.status?.slice(1)}
+                    ticket?.status?.slice(1)}
                 </span>
               )}
             </div>
@@ -312,7 +314,7 @@ export default function TicketChatModal({
         {ticketDescription && (
           <div className="border-b border-gray-200 p-3 bg-gray-50">
             <div className="text-xs font-medium text-gray-500 mb-1">
-              Ticket Description:
+              {t('ticket_description')}
             </div>
             <p className="text-sm text-gray-700">{ticketDescription}</p>
             <div className="text-xs text-right mt-1 text-gray-500">
@@ -327,7 +329,7 @@ export default function TicketChatModal({
             <ChatSkeleton />
           ) : error ? (
             <div className="flex justify-center items-center h-full">
-              <p className="text-red-500">Failed to load messages</p>
+              <p className="text-red-500">{t('failed_to_load_messages')}</p>
             </div>
           ) : messages.length > 0 ? (
             <div className="space-y-4">
@@ -337,17 +339,16 @@ export default function TicketChatModal({
                 if (msg.content.trim() === ticketDescription.trim()) {
                   return null;
                 }
-                
+
                 // Normal message styling based on senderType
                 const isAdminMessage = msg.senderType === 'admin';
                 return (
                   <div
                     key={msg._id}
-                    className={`rounded-lg p-3 max-w-[80%] ${
-                      isAdminMessage
-                        ? 'bg-green-500 text-white ml-auto'
-                        : 'bg-gray-100 text-gray-800 mr-auto'
-                    }`}
+                    className={`rounded-lg p-3 max-w-[80%] ${isAdminMessage
+                      ? 'bg-primary-dark text-white ml-auto'
+                      : 'bg-gray-100 text-gray-800 mr-auto'
+                      }`}
                   >
                     <p className="break-words">{msg.content}</p>
                     <div className="text-xs mt-1 text-right">
@@ -360,7 +361,7 @@ export default function TicketChatModal({
             </div>
           ) : (
             <div className="flex justify-center items-center h-full">
-              <p className="text-gray-500">No messages yet</p>
+              <p className="text-gray-500">{t('No_messages_yet')}</p>
             </div>
           )}
         </div>
@@ -369,7 +370,7 @@ export default function TicketChatModal({
         {isClosed ? (
           <div className="p-4 border-t border-gray-200 bg-gray-50 text-center">
             <p className="text-gray-500">
-              This ticket is closed. You cannot send new messages.
+              {t('this_ticket_is_closed_you_cannot_send_new_messages')}
             </p>
           </div>
         ) : (
@@ -379,19 +380,18 @@ export default function TicketChatModal({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Type your message here..."
-                className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#5AC12F] resize-none"
+                placeholder={t('type_your_message_here')}
+                className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none"
                 rows={2}
                 disabled={isSending}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || isSending}
-                className={`bg-green-500 rounded-r-md p-2 text-white flex items-center justify-center ${
-                  !message.trim() || isSending
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-green-600'
-                }`}
+                className={`bg-primary-dark rounded-r-md p-2 text-white flex items-center justify-center ${!message.trim() || isSending
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:bg-green-600'
+                  }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

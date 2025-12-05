@@ -18,7 +18,7 @@ const AspectButton = ({
     className={twMerge(
       "px-4 py-2 rounded-full border border-gray-400  text-sm font-medium transition-colors",
       selected
-        ? "bg-[#5AC12F] text-white border-green-500" // Selected style
+        ? "bg-primary-color text-white border-primary-color" // Selected style
         : "bg-white dark:text-gray-300 dark:bg-gray-600 text-gray-700 border-gray-400 hover:bg-gray-50" // Unselected style
     )}
   >

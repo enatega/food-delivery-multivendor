@@ -13,7 +13,7 @@ const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
   return (
     <div className="flex flex-col gap-2 border rounded-lg overflow-hidden">
       <header className="bg-[#F4F4F5] px-6 py-3 border-b-[1px] text-lg font-medium">
-        {t('Rider Information')}
+        {t('rider_information')}
       </header>
 
       {/* columns */}
@@ -21,7 +21,7 @@ const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
         {/* left-column */}
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1">
-            <span className="text-xs">{t('Full Name')}</span>
+            <span className="text-xs">{t('full_name')}</span>
             <span className="font-medium">
               {loading ? <Skeleton height="1.5rem" /> : (rider?.name ?? '-')}
             </span>

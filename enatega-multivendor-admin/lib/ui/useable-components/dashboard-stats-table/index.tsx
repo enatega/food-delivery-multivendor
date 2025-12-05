@@ -22,7 +22,7 @@ export default function DashboardStatsTable({
       <div className="bg-white shadow-md rounded-lg border border-gray-300">
         <div className="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg">
           <h2 className="text-lg font-bold text-gray-800">{t(title)}</h2>
-          <i className="fas fa-arrow-down text-green-500"></i>
+          <i className="fas fa-arrow-down text-primary-dark"></i>
         </div>
         <div className="p-4 max-h-40 overflow-y-auto ">
           {data.map((item, index: number) => (

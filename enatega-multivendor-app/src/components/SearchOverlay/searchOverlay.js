@@ -17,6 +17,7 @@ import { scale } from '../../utils/scaling'
 import { escapeRegExp } from '../../utils/regex'
 import ShimmerImage from '../ShimmerImage/ShimmerImage'
 import { useTranslation } from 'react-i18next'
+import { isOpen } from '../../utils/customFunctions'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight
 
@@ -66,7 +67,8 @@ const SearchOverlay = ({
     }
   }, [search, restaurant])
 
-  const isRestaurantOpen = restaurant?.isOpen && restaurant?.isAvailable
+  const isRestaurantOpen = restaurant?.isOpen || restaurant?.isAvailable && isOpen(restaurant)
+  console.log('isRestaurantOpen :', isRestaurantOpen);
 
   const onPressItem = (food) => {
     if (food.isOutOfStock) {
@@ -294,7 +296,7 @@ const SearchOverlay = ({
               textColor={currentTheme.fontSecondColor}
               style={{ fontSize: scale(16) }}
             >
-              {search ? t('noResultsFound') : t('searchForFood')}
+              {search ? t('noResults') : t('searchForFood')}
             </TextDefault>
           </View>
         )}

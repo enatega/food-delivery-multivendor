@@ -13,7 +13,7 @@ const BankDetails = ({ loading, rider }: IRiderDetailsProps) => {
   return (
     <div className="flex flex-col gap-2 border rounded-lg overflow-hidden">
       <header className="bg-[#F4F4F5] px-6 py-3 border-b-[1px] text-lg font-medium">
-        {t('Bank Details')}
+        {t('bank_details')}
       </header>
 
       {/* columns */}
@@ -41,7 +41,7 @@ const BankDetails = ({ loading, rider }: IRiderDetailsProps) => {
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-xs">{t('BSB / IBAN / Swift Code')}</span>
+            <span className="text-xs">{t('bsb_iban_swift_code')}</span>
             <span className="font-medium ">
               {loading ? (
                 <Skeleton height="1.5rem" />

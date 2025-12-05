@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { View, TouchableOpacity, StatusBar, Linking } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { theme } from '../../utils/themeColors'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import styles from './styles'
@@ -16,7 +16,7 @@ import screenOptions from './screenOptions'
 import { useNavigation } from '@react-navigation/native'
 import { useLocation } from '../../ui/hooks'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import { mapStyle } from '../../utils/mapStyle'
+import darkMapStyle from '../../utils/DarkMapStyles'
 import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 import analytics from '../../utils/analytics'
 import { Feather, EvilIcons } from '@expo/vector-icons'
@@ -129,10 +129,10 @@ export default function SelectLocation(props) {
             initialRegion={coordinates}
             region={coordinates}
             style={{ flex: 1 }}
-            provider={PROVIDER_DEFAULT}
+            provider={PROVIDER_GOOGLE}
             showsTraffic={false}
             maxZoomLevel={15}
-            customMapStyle={customMapStyle}
+            customMapStyle={ themeContext.ThemeValue === 'Dark'  ? darkMapStyle  : customMapStyle }
             onRegionChangeComplete={onRegionChangeComplete}
           />
           <View style={styles().mainContainer}>
