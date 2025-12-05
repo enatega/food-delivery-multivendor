@@ -75,6 +75,7 @@ import {
   GET_WEB_NOTIFICATIONS,
   MARK_WEB_NOTIFICATIONS_AS_READ,
 } from '@/lib/api/graphql';
+import ThemeToggle from '@/lib/ui/useable-components/theme-button';
 
 const AppTopbar = () => {
   // States
@@ -333,6 +334,9 @@ const AppTopbar = () => {
         </div>
 
         <div className="hidden items-center space-x-3 md:flex">
+          <div className="flex items-center space-x-3">
+            <ThemeToggle />
+          </div>
           <div
             className="flex items-center space-x-2 rounded-md p-2 hover:bg-[#d8d8d837] cursor-pointer"
             onClick={(event) => languageMenuRef.current?.toggle(event)}
