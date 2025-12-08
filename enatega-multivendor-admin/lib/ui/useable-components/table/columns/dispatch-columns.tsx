@@ -322,7 +322,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                   handleAssignRider(e.value, rowData)
                 }
                 // filter={true}
-                className="min-w-[120px] outline outline-1 outline-gray-300"
+                className="min-w-[120px] outline outline-1 outline-gray-600 "
               />
             </div>
           );
@@ -349,7 +349,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                 //   handleAssignRider(e.value, rowData)
                 // }
                 // filter={true}
-                className="min-w-[150px] outline outline-1 outline-gray-300"
+                className="min-w-[150px] outline outline-1 outline-gray-600"
               />
             </div>
           );

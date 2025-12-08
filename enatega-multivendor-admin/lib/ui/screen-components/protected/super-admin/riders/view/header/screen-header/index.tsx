@@ -18,7 +18,7 @@ const RiderHeader = ({ setIsAddRiderVisible }: IRiderHeaderProps) => {
       <div className="flex w-full justify-between">
         <HeaderText className="heading" text={t('Riders')} />
         <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border-gray-300 bg-black border dark:border-dark-600 text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
           title={t('Add Rider')}
