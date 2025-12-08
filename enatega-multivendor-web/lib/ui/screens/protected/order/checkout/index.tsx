@@ -259,9 +259,12 @@ export default function OrderCheckoutScreen() {
       );
       if (stored_direction) {
         setDirections(JSON.parse(stored_direction));
+      } else {
+        setDirections(null);
       }
       setIsCheckingCache(false); // done checking
     } catch (err) {
+      setDirections(null);
       setIsCheckingCache(false);
     }
   };
@@ -881,8 +884,8 @@ export default function OrderCheckoutScreen() {
             <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full p-2 mb-6">
               <button
                 className={`w-1/2 ${deliveryType === "Delivery"
-                    ? "bg-primary-color"
-                    : "bg-gray-100 dark:bg-gray-700"
+                  ? "bg-primary-color"
+                  : "bg-gray-100 dark:bg-gray-700"
                   } text-white py-2 rounded-full flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Delivery");
@@ -900,8 +903,8 @@ export default function OrderCheckoutScreen() {
 
               <button
                 className={`w-1/2 ${deliveryType === "Pickup"
-                    ? "bg-primary-color"
-                    : "bg-gray-100 dark:bg-gray-700"
+                  ? "bg-primary-color"
+                  : "bg-gray-100 dark:bg-gray-700"
                   } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Pickup");
@@ -1124,8 +1127,8 @@ export default function OrderCheckoutScreen() {
                         <button
                           key={index}
                           className={`text-[12px] ${selectedTip === tip
-                              ? "text-white bg-secondary-color"
-                              : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
+                            ? "text-white bg-secondary-color"
+                            : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
                             } border border-secondary-color px-4 py-2 rounded-full w-full`}
                           onClick={() => {
                             if (selectedTip === tip) {
