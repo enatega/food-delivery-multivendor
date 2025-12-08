@@ -23,7 +23,7 @@ export default function PaymentCard({
       <div className="mb-6 flex items-center justify-center">
         {LogoComponent && <LogoComponent />}
       </div>
-      <h2 className="mb-2 text-lg font-bold text-black">{name}</h2>
+      <h2 className="mb-2 text-lg font-bold text-black dark:text-white">{name}</h2>
       <p className="mb-4 text-center text-gray-500">{isDetailsSubmitted ? "Details Submitted": t(description)}</p>
       {!isDetailsSubmitted && <TextIconClickable
         className="rounded border-gray-300 bg-black text-white"

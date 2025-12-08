@@ -436,7 +436,7 @@ export default function VariationAddForm({
                               )}
                             <div className="mt-4 flex justify-end">
                               <TextIconClickable
-                                className="w-full rounded border border-black bg-transparent text-black"
+                                className="w-full rounded border border-black bg-transparent text-black dark:text-white"
                                 icon={faAdd}
                                 iconStyles={{ color: 'black' }}
                                 title={t('Add New Variation')}
@@ -457,7 +457,7 @@ export default function VariationAddForm({
                           }}
                         />
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border-gray-300 bg-black dark:bg-white px-8 text-white"
                           label={
                             foodContextData?.isEditing ? t('Update') : t('Add')
                           }

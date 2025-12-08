@@ -266,7 +266,7 @@ export default function FoodDetails({
                             return (
                               <div className="flex justify-between space-x-2">
                                 <TextIconClickable
-                                  className="w-full h-fit rounded  text-black"
+                                  className="w-full h-fit rounded  text-black dark:text-white"
                                   icon={faAdd}
                                   iconStyles={{ color: 'black' }}
                                   title={t('Add New Category')}

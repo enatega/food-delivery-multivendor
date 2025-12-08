@@ -223,7 +223,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
       </div>
       <div className="mb-2 px-4">
         <CustomButton
-          className="h-10 w-full bg-primary-color text-black"
+          className="h-10 w-full bg-primary-color text-black dark:text-white"
           label={t('View Details')}
           onClick={() => {
             onUseLocalStorage('save', 'restaurantId', _id);
