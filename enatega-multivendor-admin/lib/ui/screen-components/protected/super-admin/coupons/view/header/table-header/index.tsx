@@ -121,7 +121,7 @@ export default function CouponTableHeader({
           </OverlayPanel>
 
           <TextIconClickable
-            className="w-20 rounded border border-dotted border-[#E4E4E7] text-black dark:text-white"
+            className="w-20 rounded border border-dotted border-[#E4E4E7] dark:border-dark-600 text-black dark:text-white"
             icon={faAdd}
             iconStyles={
               theme === 'dark' ? { color: 'white' } : { color: 'black' }

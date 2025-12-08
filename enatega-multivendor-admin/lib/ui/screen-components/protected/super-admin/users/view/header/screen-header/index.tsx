@@ -71,7 +71,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             options={registrationMethodOptions}
             setSelectedItems={(key, items) => handleRegistrationMethodChange(items)}
             placeholder={t('registration_method')}
-            className=" w-min border rounded-md py-1"
+            className=" w-min border dark:border-dark-600 rounded-md py-1"
             multiSelectClassName='border-none'
 
           />
@@ -81,7 +81,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             options={accountStatusOptions}
             setSelectedItems={(key, items) => handleAccountStatusChange(items)}
             placeholder={t('account_status')}
-            className=" w-min border rounded-md py-1"
+            className=" w-min border  border dark:border-dark-600 rounded-md py-1"
             multiSelectClassName='border-none'
 
           />

@@ -130,7 +130,7 @@ export default function CuisineForm({
         setVisible(false);
       }}
       position="right"
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div className="flex flex-col gap-4">
         <h2 className="mb-3 text-xl font-bold">
@@ -283,7 +283,7 @@ export default function CuisineForm({
                   />
 
                   <button
-                    className="float-end my-2 block rounded-md bg-black px-12 py-2 text-white"
+                    className="float-end my-2 block rounded-md border dark:border-dark-600 bg-black px-12 py-2 text-white"
                     disabled={
                       isSubmitting || createCuisineLoading || editCuisineLoading
                     }

@@ -10,6 +10,7 @@ import { IMenuItem } from '@/lib/utils/interfaces/orders/order-vendor.interface'
 
 import { useTranslations } from 'next-intl';
 import DateFilterCustomTab from '@/lib/ui/useable-components/date-filter-custom-tab';
+import { useTheme } from 'next-themes';
 
 const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
   setSelectedActions,
@@ -21,7 +22,7 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
 }) => {
   // Hooks
   const t = useTranslations();
-
+  const {theme} = useTheme()
   // Refs
   const overlayPanelRef = useRef<OverlayPanel>(null);
 
@@ -69,9 +70,9 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
 
         <div className="hidden sm:block">
           <TextIconClickable
-            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black dark:text-white"
+            className="w-44 rounded border border-dotted border-[#E4E4E7] dark:border-dark-600 text-black dark:text-white"
             icon={faAdd}
-            iconStyles={{ color: 'black' }}
+            iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
             title={t('Orders Status')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />

@@ -300,7 +300,7 @@ export default function RiderAddForm({
 
                         <div className="mt-4 flex justify-end">
                           <CustomButton
-                            className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black dark:bg-white px-8 text-white"
+                            className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black  px-8 text-white"
                             label={rider ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}

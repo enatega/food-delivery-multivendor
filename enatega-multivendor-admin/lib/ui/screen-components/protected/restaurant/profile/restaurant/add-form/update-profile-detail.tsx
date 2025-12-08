@@ -511,7 +511,7 @@ export default function UpdateRestaurantDetails({
                         <small className="p-error mr-4">{errors.address}</small>
                       )}
                       <CustomButton
-                        className="w-fit h-10 bg-black dark:bg-white text-white border-gray-300 px-8"
+                        className="w-fit h-10 bg-black  text-white border-gray-300 px-8"
                         label={t('Update')}
                         type="submit"
                         loading={isSubmitting}
