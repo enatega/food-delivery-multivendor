@@ -182,7 +182,7 @@ const DeliveryMain = () => {
 
                 <div className="col-span-2 flex justify-end self-end">
                   <CustomButton
-                    className="h-10 w-fit border-gray-300 bg-black dark:bg-white px-8 text-white"
+                    className="h-10 w-fit border-gray-300 bg-black  px-8 text-white"
                     label="Update"
                     type="submit"
                     loading={isSubmitting}

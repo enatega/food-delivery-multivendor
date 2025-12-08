@@ -175,7 +175,7 @@ function CustomUploadImageComponent({
         className={
           page && page === 'vendor-profile-edit'
             ? `bg-transparnt`
-            : `mx-auto flex h-48 w-48 flex-col items-center justify-start border-2 border-dashed ${imageValidationErr.bool ? 'border-red-900' : 'border-gray-300'}`
+            : `mx-auto flex h-48 w-48 flex-col items-center justify-start border-2 border-dashed ${imageValidationErr.bool ? 'border-red-900' : 'border-gray-300 dark:border-dark-600'}`
         }
         // className="bg-transparnt"
       >

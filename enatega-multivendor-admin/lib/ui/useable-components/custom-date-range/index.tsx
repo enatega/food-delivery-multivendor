@@ -39,7 +39,7 @@ export default function CustomDateRange({
         </div>
         <div className="flex flex-col items-center justify-between space-y-4 p-4 md:flex-row md:space-x-4 md:space-y-0">
           <div className="flex w-full flex-col">
-            <label className="mb-2 font-semibold">{t("Start Date")}</label>
+            <label className="mb-2 font-semibold dark:text-white">{t("Start Date")}</label>
             <div className="relative">
               <CustomDateInput
                 value={localDateFilter?.startDate ?? ''}
@@ -75,7 +75,7 @@ export default function CustomDateRange({
               </div>
             ) : (
               <button
-                className="mt-8 w-full rounded-full bg-black px-6 py-2 font-semibold text-white"
+                className="mt-8 w-full rounded-full border dark:border-dark-600  bg-black px-6 py-2 font-semibold text-white"
                 onClick={onApply}
               >
                 {t("APPLY")}

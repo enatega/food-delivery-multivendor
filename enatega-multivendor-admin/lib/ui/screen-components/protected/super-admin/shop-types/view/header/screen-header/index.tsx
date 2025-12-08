@@ -19,7 +19,7 @@ export default function ShopTypeScreenHeader({
       <div className="flex w-full justify-between">
         <HeaderText text={t('ShopType')} />
         <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border-gray-300 border dark:border-dark-600 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
           onClick={handleButtonClick}

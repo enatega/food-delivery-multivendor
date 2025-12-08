@@ -19,7 +19,7 @@ const BannersHeader = ({
       <div className="flex w-full justify-between">
         <HeaderText text={t('Banners')} />
         <TextIconClickable
-          className="rounded border-gray-300 bg-black dark:bg-white text-white dark:text-black sm:w-auto"
+          className="rounded border-gray-300 border dark:border-dark-600 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'currentColor' }}
           title={t('Add Banner')}
