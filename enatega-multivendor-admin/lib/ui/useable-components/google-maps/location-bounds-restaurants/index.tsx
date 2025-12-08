@@ -720,7 +720,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
               mapTypeControl: !hideControls,
               fullscreenControl: !hideControls,
               draggable: !hideControls,
-                  styles: theme === 'dark' ? darkMapStyle : null,
+              styles: theme === 'dark' ? darkMapStyle : null,
             }}
             onClick={
               deliveryZoneType === 'point' ? onClickGoogleMaps : undefined
