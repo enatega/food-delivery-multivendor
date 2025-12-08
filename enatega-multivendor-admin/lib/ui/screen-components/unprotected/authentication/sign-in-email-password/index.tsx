@@ -123,15 +123,15 @@ export default function LoginEmailPasswordMain() {
   };
 
   return (
-    <div className="flex h-full w-screen items-center justify-center">
+    <div className="flex h-full w-screen items-center justify-center bg-white dark:bg-dark-950">
       <div className="w-full md:w-1/2 lg:w-[30%]">
-        <Card>
-          <div className="flex flex-col gap-2">
+        <Card className='dark:bg-dark-900 border dark:border-dark-600'>
+          <div className="flex flex-col gap-2 ">
             <div className="mb-2 flex flex-col items-center gap-y-[0.5rem] p-2">
-              <span className="font-inter text-center text-3xl font-semibold">
+              <span className="font-inter text-center text-3xl font-semibold dark:text-white">
                 Login to your account
               </span>
-              <span className="font-inter text-center text-base font-normal text-[#667085]">
+              <span className="font-inter text-center text-base font-normal text-[#667085] dark:bg-dark-900 dark:text-white">
                 Welcome back! Please enter your details.
               </span>
             </div>
@@ -197,7 +197,7 @@ export default function LoginEmailPasswordMain() {
                       </div>
 
                       <CustomButton
-                        className="hover-border-black h-10 w-full border border-black bg-[#18181B] px-32 text-white hover:bg-white hover:text-black"
+                        className="hover-border-black h-10 w-full border border-black dark:border-dark-600 bg-[#18181B] px-32 text-white hover:bg-white hover:text-black"
                         label="Login"
                         type="submit"
                         loading={loading}
