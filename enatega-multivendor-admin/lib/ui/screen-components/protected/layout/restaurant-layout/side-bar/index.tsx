@@ -28,6 +28,7 @@ import SidebarItem from './side-bar-item';
 import { useUserContext } from '@/lib/hooks/useUser';
 import { onUseLocalStorage } from '@/lib/utils/methods';
 import { useTranslations } from 'next-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 function AdminSidebar({ children }: IGlobalComponentProps) {
   // Context
@@ -57,12 +58,46 @@ export default function MakeSidebar() {
   const { isRestaurantSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
   const { user } = useUserContext();
+  const { IS_MULTIVENDOR } = useConfiguration();
+  
   // Get the current route stack from localStorage without modifying it
   const [routeStack, setRouteStack] = useState<string[]>(
     JSON.parse(onUseLocalStorage('get', 'routeStack') || '[]')
   );
   const lastRoute =
     routeStack.length > 0 ? routeStack[routeStack.length - 1] : null;
+
+  // Create product management submenu with conditional Banners option
+  const productManagementSubmenu = [
+    {
+      text: t('Products'),
+      route: '/admin/store/product-management/food',
+      isParent: false,
+    },
+    {
+      text: t('Categories'),
+      route: '/admin/store/product-management/category',
+      isParent: false,
+    },
+    // Only include Banners when IS_MULTIVENDOR is false
+    ...(IS_MULTIVENDOR ? [] : [
+      {
+        text: t('Banners'),
+        route: '/admin/store/product-management/banners',
+        isParent: false,
+      }
+    ]),
+    {
+      text: t('Options'),
+      route: '/admin/store/product-management/options',
+      isParent: false,
+    },
+    {
+      text: t('Addons'),
+      route: '/admin/store/product-management/add-ons',
+      isParent: false,
+    },
+  ];
 
   const navBarItems: ISidebarMenuItem[] = [
     {
@@ -107,28 +142,7 @@ export default function MakeSidebar() {
       route: '/admin/store/product-management',
       isParent: true,
       icon: faCog,
-      subMenu: [
-        {
-          text: t('Products'),
-          route: '/admin/store/product-management/food',
-          isParent: false,
-        },
-        {
-          text: t('Categories'),
-          route: '/admin/store/product-management/category',
-          isParent: false,
-        },
-        {
-          text: t('Options'),
-          route: '/admin/store/product-management/options',
-          isParent: false,
-        },
-        {
-          text: t('Addons'),
-          route: '/admin/store/product-management/add-ons',
-          isParent: false,
-        },
-      ],
+      subMenu: productManagementSubmenu,
     },
 
     {

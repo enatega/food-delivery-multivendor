@@ -29,6 +29,7 @@ import useCheckAllowedRoutes from '@/lib/hooks/useCheckAllowedRoutes';
 import SidebarItem from './side-bar-item';
 import { useTranslations } from 'next-intl';
 import { faHeadset } from '@fortawesome/free-solid-svg-icons/faHeadset';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 function SuperAdminSidebar({ children }: IGlobalComponentProps) {
   // Contexts
@@ -54,6 +55,7 @@ function SuperAdminSidebar({ children }: IGlobalComponentProps) {
 export default function MakeSidebar() {
   // Hooks
   const t = useTranslations();
+  const { IS_MULTIVENDOR } = useConfiguration();
 
   // Contexts
   const { isSuperAdminSidebarVisible } =
@@ -89,10 +91,11 @@ export default function MakeSidebar() {
           label: t('Vendors'),
           route: '/general/vendors',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
-          text: 'Stores',
-          label: t('Stores'),
+          text: IS_MULTIVENDOR === true ? 'Stores' : 'Store',
+          label: IS_MULTIVENDOR === true ? t('Stores') : t('Store'),
           route: '/general/stores',
           isParent: false,
         },
@@ -137,6 +140,7 @@ export default function MakeSidebar() {
           label: t('Orders'),
           route: '/management/orders',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Coupons',
@@ -161,6 +165,7 @@ export default function MakeSidebar() {
           label: t('Banners'),
           route: '/management/banners',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Tipping',
@@ -192,44 +197,47 @@ export default function MakeSidebar() {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
     },
-    {
-      text: 'Wallet',
-      label: t('Wallet'),
-      route: '/wallet',
-      isParent: true,
-      icon: faWallet,
-      subMenu: useCheckAllowedRoutes([
-        {
-          text: t('Transaction History'),
-          label: t('Transaction History'),
-          route: '/wallet/transaction-history',
-          isParent: false,
-        },
-        {
-          text: 'Withdrawal Request',
-          label: t('Withdrawal Request'),
-          route: '/wallet/withdraw-requests',
-          isParent: false,
-        },
-        {
-          text: t('Earnings'),
-          label: t('Earnings'),
-          route: '/wallet/earnings',
-          isParent: false,
-        },
-      ]),
-      shouldShow: function () {
-        return this.subMenu ? this.subMenu.length > 0 : false;
-      },
-    },
-    {
-      text: 'CustomerSupport',  
-      label: t('CustomerSupport'),
-      route: '/customerSupport',
-      icon: faHeadset,
-      isClickable: true,
-      isParent: true,
-    },
+    ...(IS_MULTIVENDOR
+      ? [
+          {
+            text: t('Wallet'),
+            route: '/wallet',
+            isParent: true,
+            icon: faWallet,
+            subMenu: useCheckAllowedRoutes([
+              {
+                text: t('Transaction History'),
+                label: t('Transaction History'),
+                route: '/wallet/transaction-history',
+                isParent: false,
+              },
+              {
+                text: 'Withdrawal Request',
+                label: t('Withdrawal Request'),
+                route: '/wallet/withdraw-requests',
+                isParent: false,
+              },
+              {
+                text: t('Earnings'),
+                label: t('Earnings'),
+                route: '/wallet/earnings',
+                isParent: false,
+              },
+            ]),
+            shouldShow: function () {
+              return this.subMenu ? this.subMenu.length > 0 : false;
+            },
+          },
+          {
+            text: 'CustomerSupport',
+            label: t('CustomerSupport'),
+            route: '/customerSupport',
+            icon: faHeadset,
+            isClickable: true,
+            isParent: true,
+          },
+        ]
+      : []),
   ];
 
   return (

@@ -23,6 +23,7 @@ import { ICuisineErrors } from '../../interfaces/forms/cuisine.form.interface';
 import { ICouponErrors } from '../../interfaces/forms/coupon.form.interface';
 import { IFoodErrors } from '../../interfaces/forms/food.form.interface';
 import { INoticiationErrors } from '../../interfaces/forms/notification.form.interface';
+import { IBannerRestaurantErrors } from '../../interfaces/banner.restaurant.interface';
 
 export const PasswordErrors = [
   'at_least_6_characters',
@@ -134,6 +135,14 @@ export const OptionErrors: IOptionErrors = {
     'Minimum value must be greater than 0',
     'Maximum price is 99999',
   ],
+};
+
+
+export const BannerRestaurantErrors: IBannerRestaurantErrors = {
+  title: ['Required', 'Name cannot be only spaces'],
+  description: ['Required', 'Name cannot be only spaces'],
+  foodId: ['Required'],
+  file: ['Required'],
 };
 
 export const AddonsErrors: IAddonsErrors = {

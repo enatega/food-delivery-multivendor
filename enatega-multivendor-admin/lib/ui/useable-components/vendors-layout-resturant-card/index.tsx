@@ -39,8 +39,8 @@ import CustomLoader from '../custom-progress-indicator';
 import { VendorLayoutRestaurantContext } from '@/lib/context/vendor/restaurant.context';
 import { FrameSVG } from '@/lib/utils/assets/svgs/Frame';
 import { CarSVG } from '@/lib/utils/assets/svgs/Car';
-import { ConfigurationContext } from '@/lib/context/global/configuration.context';
 import { useTranslations } from 'next-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 export default function VendorsLayoutRestaurantCard({
   restaurant,
@@ -64,13 +64,8 @@ export default function VendorsLayoutRestaurantCard({
     VendorLayoutRestaurantContext
   );
 
-  const configuration = useContext(ConfigurationContext);
+  const { DELIVERY_RATE } = useConfiguration();
 
-  if (!configuration) {
-    throw new Error(t('Cannot get the value of configuration context'));
-  }
-
-  const { deliveryRate } = configuration;
   // Hooks
   const router = useRouter();
 
@@ -224,7 +219,7 @@ export default function VendorsLayoutRestaurantCard({
         <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
           <CarSVG width="24" height="24" />
           <span>
-            {'₪'} {deliveryRate}
+            {'₪'} {DELIVERY_RATE}
           </span>
         </div>
 
@@ -242,7 +237,7 @@ export default function VendorsLayoutRestaurantCard({
           className="h-10 w-full bg-[#EBEDE6] text-black"
           label={t('View Details')}
           onClick={() => {
-            onUseLocalStorage('save', 'shopType', shopType )
+            onUseLocalStorage('save', 'shopType', shopType);
             onUseLocalStorage('save', 'restaurantId', _id);
             // Get the existing route stack from local storage
             const existingRouteStack = JSON.parse(

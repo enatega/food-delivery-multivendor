@@ -12,29 +12,44 @@ import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 // Constants
 import HeaderText from '@/lib/ui/useable-components/header-text';
 import { useTranslations } from 'next-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 export default function VendorHeader() {
   // Hooks
   const t = useTranslations();
 
   // Context
-  const { onSetVendorFormVisible, globalFilter, onSetGlobalFilter } =
-    useContext(VendorContext);
+  const {
+    onSetVendorFormVisible,
+    globalFilter,
+    onSetGlobalFilter,
+    vendorResponse,
+    filtered,
+  } = useContext(VendorContext);
+
+  const { IS_MULTIVENDOR } = useConfiguration();
+
+  const vendors =
+    (filtered && filtered.length > 0) || globalFilter
+      ? filtered
+      : vendorResponse?.data?.vendors;
 
   return (
     <div className="hidden w-full flex-shrink-0 border-b p-3 sm:block">
       <div className="mb-4 flex flex-col items-center justify-between sm:flex-row">
         <HeaderText text={t('Vendors')} />
 
-        <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
-          icon={faAdd}
-          iconStyles={{ color: 'white' }}
-          title={t('Add Vendor')}
-          onClick={() => {
-            onSetVendorFormVisible(true);
-          }}
-        />
+        {IS_MULTIVENDOR && !(vendors && vendors.length > 1) && (
+          <TextIconClickable
+            className="rounded border-gray-300 bg-black text-white sm:w-auto"
+            icon={faAdd}
+            iconStyles={{ color: 'white' }}
+            title={t('Add Vendor')}
+            onClick={() => {
+              onSetVendorFormVisible(true);
+            }}
+          />
+        )}
       </div>
 
       <div className="flex-colm:flex-row flex w-fit items-center space-y-4 sm:space-x-4 sm:space-y-0">
