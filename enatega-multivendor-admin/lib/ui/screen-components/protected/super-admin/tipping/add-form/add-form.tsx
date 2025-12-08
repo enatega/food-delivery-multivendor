@@ -157,7 +157,7 @@ const TippingAddForm = () => {
               </div>
             </div>
             <CustomButton
-              className="mb-[2px] mt-auto flex h-11 rounded-md border-gray-300 bg-[black] dark:bg-white px-10 text-white dark:text-black"
+              className="mb-[2px] mt-auto flex h-11 rounded-md border-gray-300 bg-[black]  px-10 text-white dark:text-black"
               label={data?.tips._id ? t('Update') : t('Add')}
               rounded={false}
               type="submit"
